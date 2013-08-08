@@ -687,15 +687,15 @@
     <Content Include="content\themes\base\minified\jquery.ui.theme.min.css" />
     <Content Include="content\themes\base\minified\jquery.ui.tooltip.min.css" />
     <Content Include="images\bg\ui-bg_flat_black_40x100.png" />
-    <TypeScriptCompile Include="scripts\google\google.charts.d.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
     <TypeScriptCompile Include="scripts\google\ToolsOverlay.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\Flasher.ts" />
     <Content Include="images\icons\global\global_24_black.png" />
     <Content Include="images\icons\print\print-24-black.png" />
     <Content Include="images\icons\search\search-24-black.png" />
     <Content Include="images\icons\spinner\spinner-24-blue.gif" />
+    <None Include="scripts\google\google.charts.d.ts">
+      <SubType>Code</SubType>
+    </None>
     <None Include="scripts\jquery\jquery-1.9.1.intellisense.js" />
     <Content Include="scripts\jquery\jquery-1.9.1.js" />
     <Content Include="scripts\jquery\jquery-1.9.1.min.js" />
@@ -714,7 +714,7 @@
     <Content Include="scripts\google\ToolsOverlay.min.js">
       <DependentUpon>ToolsOverlay.ts</DependentUpon>
     </Content>
-    <Content Include="scripts\jquery\jquery.d.ts" />
+    <None Include="scripts\jquery\jquery.d.ts" />
     <Content Include="scripts\jquery\jquery.globalize\cultures\globalize.culture.af-ZA.js" />
     <Content Include="scripts\jquery\jquery.globalize\cultures\globalize.culture.af.js" />
     <Content Include="scripts\jquery\jquery.globalize\cultures\globalize.culture.am-ET.js" />
@@ -1068,10 +1068,10 @@
     <Content Include="scripts\jquery\jquery.globalize\cultures\globalize.culture.zu-ZA.js" />
     <Content Include="scripts\jquery\jquery.globalize\cultures\globalize.culture.zu.js" />
     <Content Include="scripts\jquery\jquery.globalize\cultures\globalize.cultures.js" />
-    <Content Include="scripts\jquery\jquery.globalize\globalize.d.ts" />
+    <None Include="scripts\jquery\jquery.globalize\globalize.d.ts" />
     <Content Include="scripts\jquery\jquery.globalize\globalize.js" />
     <Content Include="scripts\jquery\jquery.globalize\globalize.require.js" />
-    <Content Include="scripts\jquery\jqueryui.d.ts" />
+    <None Include="scripts\jquery\jqueryui.d.ts" />
     <Content Include="scripts\kendo\2013.2.716\kendo.web.js" />
     <Content Include="scripts\kendo\2013.2.716\cultures\kendo.culture.af-ZA.min.js" />
     <Content Include="scripts\kendo\2013.2.716\cultures\kendo.culture.af.min.js" />
@@ -1484,12 +1484,12 @@
     <None Include="scripts\kendo\2013.2.716\kendo.window.min.js" />
     <Content Include="scripts\ko\knockout-2.3.0.debug.js" />
     <Content Include="scripts\ko\knockout-2.3.0.js" />
-    <Content Include="scripts\ko\knockout.d.ts" />
+    <None Include="scripts\ko\knockout.d.ts" />
     <Content Include="scripts\ko\knockout.mapping-latest.debug.js" />
     <Content Include="scripts\ko\knockout.mapping-latest.js" />
-    <Content Include="scripts\ko\knockout.mapping.d.ts" />
-    <Content Include="scripts\modernizr\modernizr.d.ts" />
-    <Content Include="scripts\oss\moment.d.ts" />
+    <None Include="scripts\ko\knockout.mapping.d.ts" />
+    <None Include="scripts\modernizr\modernizr.d.ts" />
+    <None Include="scripts\oss\moment.d.ts" />
     <Content Include="scripts\require\requireConfig_debug.js" />
     <Content Include="scripts\require\requireConfig.js" />
     <TypeScriptCompile Include="scripts\app\App.ts" />
@@ -1528,8 +1528,8 @@
     <Content Include="scripts\app\SideSwiper.min.js">
       <DependentUpon>SideSwiper.ts</DependentUpon>
     </Content>
-    <Content Include="scripts\kendo\kendo.all.d.ts" />
-    <Content Include="scripts\ko\knockout.extensions.d.ts" />
+    <None Include="scripts\kendo\kendo.all.d.ts" />
+    <None Include="scripts\ko\knockout.extensions.d.ts" />
     <Content Include="scripts\ko\knockout.binding-handlers.js">
       <DependentUpon>knockout.binding-handlers.ts</DependentUpon>
     </Content>
@@ -1544,15 +1544,15 @@
     <TypeScriptCompile Include="scripts\viewmodels\establishments\Search.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\languages\ServerApiModel.ts" />
     <Content Include="scripts\require\main.js" />
-    <Content Include="scripts\oss\jquery.tinymce.d.ts" />
+    <None Include="scripts\oss\jquery.tinymce.d.ts" />
     <Content Include="scripts\oss\jquery.tinymce.js" />
     <Content Include="scripts\oss\moment.js" />
     <Content Include="scripts\oss\moment.min.js" />
-    <TypeScriptCompile Include="scripts\require\require.d.ts" />
+    <None Include="scripts\require\require.d.ts" />
     <Content Include="scripts\require\require.js" />
     <Content Include="scripts\sammy\sammy-0.7.4.js" />
     <Content Include="scripts\sammy\sammy-0.7.4.min.js" />
-    <Content Include="scripts\sammy\sammyjs.d.ts" />
+    <None Include="scripts\sammy\sammyjs.d.ts" />
     <Content Include="scripts\tinymce\css\content.css" />
     <Content Include="scripts\tinymce\langs\en.js" />
     <Content Include="scripts\tinymce\license.txt" />
@@ -1803,7 +1803,7 @@
     <Content Include="scripts\tinymce\themes\simple\skins\o2k7\content.css" />
     <Content Include="scripts\tinymce\themes\simple\skins\o2k7\img\button_bg.png" />
     <Content Include="scripts\tinymce\themes\simple\skins\o2k7\ui.css" />
-    <Content Include="scripts\tinymce\tinymce.d.ts" />
+    <None Include="scripts\tinymce\tinymce.d.ts" />
     <Content Include="scripts\tinymce\tiny_mce.js" />
     <Content Include="scripts\tinymce\tiny_mce_popup.js" />
     <Content Include="scripts\tinymce\tiny_mce_src.js" />
@@ -2330,7 +2330,7 @@
     <None Include="styles\_resharper-unused.css" />
     <Content Include="styles\tinymce.css" />
     <Content Include="T4MVC.tt.settings.xml" />
-    <Content Include="scripts\google\google.maps.d.ts" />
+    <None Include="scripts\google\google.maps.d.ts" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -2413,6 +2413,7 @@
     <Content Include="Views\FacultyStaff\_Bib.cshtml" />
     <Content Include="Views\FacultyStaff\_SearchSideBar.cshtml" />
     <Content Include="Views\FacultyStaff\_StatsSideBar.cshtml" />
+    <Content Include="Views\FacultyStaff\OldIndex.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
