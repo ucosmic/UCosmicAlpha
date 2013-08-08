@@ -35,7 +35,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [GET("")]
-        public PageOfDegreeApiModel Get([FromUri] MyDegreeSearchInputModel input)
+        public PageOfDegreeApiModel Get([FromUri] DegreeSearchInputModel input)
         {
             if (input.PageSize < 1) { throw new HttpResponseException(HttpStatusCode.BadRequest); }
 
