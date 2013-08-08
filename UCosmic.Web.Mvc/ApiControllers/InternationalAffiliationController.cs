@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
@@ -57,7 +59,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
          * Get an affiliation
         */
         // --------------------------------------------------------------------------------
-        [GET("{affiliationId}")]
+        [GET("{affiliationId:int}", ControllerPrecedence = 1)]
         public InternationalAffiliationApiModel Get(int affiliationId)
         {
             var affiliation = _queryProcessor.Execute(new InternationalAffiliationById(affiliationId));
@@ -77,31 +79,36 @@ namespace UCosmic.Web.Mvc.ApiControllers
         */
         // --------------------------------------------------------------------------------
         [POST("")]
-        public HttpResponseMessage Post(InternationalAffiliationApiModel newModel)
+        public HttpResponseMessage Post(InternationalAffiliationApiModel model)
         {
-            if ( (newModel == null) ||
-                 (newModel.Locations == null) ||
-                 (newModel.Locations.Count == 0) )
-            {
+            if (model == null || model.Locations == null || !model.Locations.Any())
                 return Request.CreateResponse(HttpStatusCode.BadRequest);
-            }
 
             var newLocations = new Collection<int>();
-            foreach (var location in newModel.Locations)
+            foreach (var location in model.Locations)
             {
                 newLocations.Add(location.PlaceId);
             }
             var createDeepInternationalAffiliationCommand = new CreateDeepInternationalAffiliation(User, newLocations)
             {
-                From = new DateTime(newModel.From,1,1),
-                To = newModel.To.HasValue ? new DateTime(newModel.To.Value,1,1) : (DateTime?)null,
-                OnGoing = newModel.OnGoing,
-                Institution = newModel.Institution,
-                Position = newModel.Position
+                From = new DateTime(model.From,1,1),
+                To = model.To.HasValue ? new DateTime(model.To.Value,1,1) : (DateTime?)null,
+                OnGoing = model.OnGoing,
+                Institution = model.Institution,
+                Position = model.Position
             };
             _createDeepInternationalAffiliation.Handle(createDeepInternationalAffiliationCommand);
-            var id = createDeepInternationalAffiliationCommand.CreatedInternationalAffiliation.RevisionId;
-            return Request.CreateResponse(HttpStatusCode.OK, id);
+
+            var response = Request.CreateResponse(HttpStatusCode.Created, "Language expertise was successfully created.");
+            var url = Url.Link(null, new
+            {
+                controller = "InternationalAffiliations",
+                action = "Get",
+                affiliationId = createDeepInternationalAffiliationCommand.CreatedInternationalAffiliationId,
+            });
+            Debug.Assert(url != null);
+            response.Headers.Location = new Uri(url);
+            return response;
         }
 
         // --------------------------------------------------------------------------------
@@ -109,7 +116,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
          * Update an affiliation
         */
         // --------------------------------------------------------------------------------
-        [PUT("{affiliationId}")]
+        [PUT("{affiliationId:int}")]
         public HttpResponseMessage Put(int affiliationId, InternationalAffiliationApiModel model)
         {
             if ((affiliationId == 0) || (model == null))
@@ -143,7 +150,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
          * Delete an affiliation
         */
         // --------------------------------------------------------------------------------
-        [DELETE("{affiliationId}")]
+        [DELETE("{affiliationId:int}")]
         public HttpResponseMessage Delete(int affiliationId)
         {
             try

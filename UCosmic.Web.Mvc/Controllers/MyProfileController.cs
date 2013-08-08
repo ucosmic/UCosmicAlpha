@@ -96,12 +96,20 @@ namespace UCosmic.Web.Mvc.Controllers
         }
 
         [Authorize]
+        [GET("my/international-affiliations/new", ControllerPrecedence = 1)]
+        public virtual ActionResult NewInternationalAffiliation()
+        {
+            ViewBag.AffiliationId = 0;
+            return View(MVC.MyProfile.Views.InternationalAffiliationForm);
+        }
+
+        [Authorize]
         [GET("my/international-affiliations/{affiliationId:int}")]
         [GET("my/international-affiliations/{affiliationId:int}/edit", ActionPrecedence = 1)]
-        public virtual ActionResult InternationalAffiliationEdit(int affiliationId)
+        public virtual ActionResult EditInternationalAffiliation(int affiliationId)
         {
             ViewBag.AffiliationId = affiliationId;
-            return View();
+            return View(MVC.MyProfile.Views.InternationalAffiliationForm);
         }
     }
 }

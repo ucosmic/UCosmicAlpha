@@ -581,25 +581,20 @@ module App.Routes {
 
         export module InternationalAffiliations {
             export function get (affiliationId?: number): string {
-                var url = makeUrl('international-affiliations');
-                if (affiliationId) {
-                    url += affiliationId;
-                }
-                return url;
+                var url = 'international-affiliations';
+                if (affiliationId) url += '/' + affiliationId;
+                return makeUrl(url);
             }
-
             export function post(): string {
-                return makeUrl('international-affiliations');
+                return get();
             }
-
             export function put(affiliationId: number): string {
-                return makeUrl('international-affiliations/' + affiliationId);
+                return get(affiliationId);
             }
-
             export function del(affiliationId: number): string {
-                return makeUrl('international-affiliations/' + affiliationId);
+                return get(affiliationId);
             }
-        } // InternationalAffiliations
+        }
 
         export module Degrees {
             export function get (degreeId?: number): string {
@@ -714,8 +709,17 @@ module App.Routes {
                 export function activityEdit(activityId: number) {
                     return makeUrl('my/activities/{0}'.format(activityId));
                 }
-                export function internationalAffiliationEdit(affiliationId: string) {
-                    return makeUrl('my/international-affiliations/{0}'.format(affiliationId));
+            }
+
+            export module InternationalAffiliations {
+                function formatUrl(resource: any): string {
+                    return 'my/international-affiliations/{0}'.format(resource);
+                }
+                export function create() {
+                    return makeUrl(formatUrl('new'));
+                }
+                export function edit(affiliationId: number) {
+                    return makeUrl(formatUrl(affiliationId));
                 }
             }
 

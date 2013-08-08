@@ -12,6 +12,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
     [RoutePrefix("api/language-proficiency")]
     public class LanguageProficiencyController : ApiController
     {
+        [CacheHttpGet(Duration = 86400)]
         [GET("")]
         public LanguageProficiencyApiModel Get()
         {

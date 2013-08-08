@@ -16,11 +16,7 @@ var ViewModels;
                 for(var i = 0; i < fromToYearRange; i += 1) {
                     this.years[i] = thisYear - i;
                 }
-                if(affiliationId === "new") {
-                    this.id = ko.observable(0);
-                } else {
-                    this.id = ko.observable(Number(affiliationId));
-                }
+                this.id = ko.observable(affiliationId);
             };
             InternationalAffiliation.prototype.setupWidgets = function (locationSelectorId) {
                 var _this = this;
@@ -186,9 +182,7 @@ var ViewModels;
                     type: type,
                     async: false,
                     url: url,
-                    data: ko.toJSON(model),
-                    dataType: 'json',
-                    contentType: 'application/json',
+                    data: model,
                     success: function (data, textStatus, jqXhr) {
                     },
                     error: function (jqXhr, textStatus, errorThrown) {

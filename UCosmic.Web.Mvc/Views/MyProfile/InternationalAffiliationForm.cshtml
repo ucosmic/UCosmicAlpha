@@ -34,8 +34,7 @@
 
     <script type="text/javascript">
         $(function() {
-            var affiliationId = '@ViewBag.AffiliationId';
-            var affiliationViewModel = new ViewModels.InternationalAffiliations.InternationalAffiliation(affiliationId);
+            var affiliationViewModel = new ViewModels.InternationalAffiliations.InternationalAffiliation(@ViewBag.AffiliationId);
             affiliationViewModel.load()
                 .done(function() {
 

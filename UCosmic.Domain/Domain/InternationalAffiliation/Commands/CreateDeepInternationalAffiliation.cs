@@ -10,15 +10,16 @@ namespace UCosmic.Domain.InternationalAffiliation
     public class CreateDeepInternationalAffiliation
     {
         public Guid? EntityId { get; set; }
-        public IPrincipal Principal { get; protected set; }
-        public ICollection<int> PlaceIds { get; protected set; }
+        public IPrincipal Principal { get; private set; }
+        public ICollection<int> PlaceIds { get; private set; }
         public DateTime From { get; set; }
         public DateTime? To { get; set; }
         public bool OnGoing { get; set; }
         public string Institution { get; set; }
         public string Position { get; set; }
-        public bool NoCommit { get; set; }
-        public InternationalAffiliation CreatedInternationalAffiliation { get; protected internal set; }
+        public int CreatedInternationalAffiliationId { get; internal set; }
+        internal InternationalAffiliation CreatedInternationalAffiliation { get; set; }
+        internal bool NoCommit { get; set; }
 
         public CreateDeepInternationalAffiliation(IPrincipal principal, ICollection<int> placeIds)
         {
@@ -93,6 +94,7 @@ namespace UCosmic.Domain.InternationalAffiliation
             }
 
             command.CreatedInternationalAffiliation = createExpertiseCommand.CreatedInternationalAffiliation;
+            command.CreatedInternationalAffiliationId = command.CreatedInternationalAffiliation.RevisionId;
         }
     }
 }

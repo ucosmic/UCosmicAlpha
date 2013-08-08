@@ -2,7 +2,7 @@
     <header>
         <h2>
             <span>International Affiliations</span>
-            <a href="#" title="Add a new affiliation" data-bind="click: function (data, event) { newAffiliation(data, event); }">
+            <a href="@Url.Action(MVC.MyProfile.NewInternationalAffiliation())" title="Add a new affiliation">
                 <img src="~/images/icons/plus/plus-24-green.png" alt="Add a new affiliation" />
             </a>
         </h2>
@@ -19,21 +19,23 @@
 </div>
 
 <!-- KNOCKOUT TEMPLATES -->
+
 <script type="text/html" id="international-affiliations-template">
-    <tr class="hover-hilite"  
-        data-bind="click: function (item, event) { $parent.editAffiliation(item, event, id()); }, attr: { href: App.Routes.Mvc.My.Profile.internationalAffiliationEdit(id()) }">
+    <tr class="hover-hilite">
         <td>
-            <!-- INSTITUTION AND COUNTRY -->
-            <div style="height: 30px">
-                <span style="font-size: large; font-weight: bold" data-bind="text: institution()"></span>
-                <span>, </span>
-                <span style="font-size: large" data-bind="text: $parent.formatLocations( locations() )"></span>
-            </div>
-            <!-- POSITION -->
-            <div style="height: 30px">
-                <span data-bind="text: position()"></span>
-                <span data-bind="text: $parent.formatDates( from(), to(), onGoing() )"></span>
-            </div>
+            <a href="#" data-bind="attr: { href: $parent.editUrl(id()) }" style="display: block; color: inherit; text-decoration: inherit">
+                <!-- INSTITUTION AND COUNTRY -->
+                <div style="height: 30px">
+                    <span style="font-size: large; font-weight: bold" data-bind="text: institution()"></span>
+                    <span>, </span>
+                    <span style="font-size: large" data-bind="text: $parent.formatLocations(locations())"></span>
+                </div>
+                <!-- POSITION -->
+                <div style="height: 30px">
+                    <span data-bind="text: position()"></span>
+                    <span data-bind="text: $parent.formatDates(from(), to(), onGoing())"></span>
+                </div>
+            </a>
         </td>
         <!-- 'Remove' BUTTON -->
         <td style="text-align: center; vertical-align: middle">

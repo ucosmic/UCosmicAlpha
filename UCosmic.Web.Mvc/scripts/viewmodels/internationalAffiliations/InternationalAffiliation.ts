@@ -51,7 +51,7 @@ module ViewModels.InternationalAffiliations {
         /*
         */
         // --------------------------------------------------------------------------------
-        _initialize( affiliationId: string ): void {
+        _initialize( affiliationId: number ): void {
 
             var fromToYearRange: number = 80;
             var thisYear: number = Number(moment().format('YYYY'));
@@ -61,11 +61,7 @@ module ViewModels.InternationalAffiliations {
                 this.years[i] = thisYear - i;
             }
 
-            if (affiliationId === "new") {
-                this.id = ko.observable( 0 );
-            } else {
-                this.id = ko.observable( Number(affiliationId) );
-            }
+            this.id = ko.observable(affiliationId);
         }
 
         // --------------------------------------------------------------------------------
@@ -171,7 +167,7 @@ module ViewModels.InternationalAffiliations {
         /*
         */
         // --------------------------------------------------------------------------------  
-        constructor( affiliationId: string ) {
+        constructor( affiliationId: number ) {
             this._initialize( affiliationId );
         }
 
@@ -285,9 +281,7 @@ module ViewModels.InternationalAffiliations {
                 type: type,
                 async: false,
                 url: url,
-                data: ko.toJSON(model),
-                dataType: 'json',
-                contentType: 'application/json',
+                data: model,
                 success: ( data: any, textStatus: string, jqXhr: JQueryXHR ): void => {
                 },
                 error: ( jqXhr: JQueryXHR, textStatus: string, errorThrown: string ): void => {

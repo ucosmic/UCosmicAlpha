@@ -118,33 +118,8 @@ module ViewModels.InternationalAffiliations
             });
         }
 
-        // --------------------------------------------------------------------------------
-        /*  
-        */
-        // --------------------------------------------------------------------------------
-        editAffiliation(data: any, event: any, affiliationId: number): void {
-            var element = event.target;
-            var url = null;
-
-            while ( ( element != null ) && ( element.nodeName != 'TR' ) ) {
-                element = element.parentElement;
-            }
-
-            if ( element != null ) {
-                url = element.attributes["href"].value;
-            }
-
-            if ( url != null ) {
-                location.href = url;
-            }
-        }
-
-        // --------------------------------------------------------------------------------
-        /*  
-        */
-        // --------------------------------------------------------------------------------
-        newAffiliation(data: any, event: any): void {
-            location.href = App.Routes.Mvc.My.Profile.internationalAffiliationEdit("new");
+        editUrl(affiliationId: number): string {
+            return App.Routes.Mvc.My.InternationalAffiliations.edit(affiliationId);
         }
 
         // --------------------------------------------------------------------------------

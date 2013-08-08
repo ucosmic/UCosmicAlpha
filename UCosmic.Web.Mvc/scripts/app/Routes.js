@@ -669,23 +669,23 @@ var App;
             var LanguageExpertise = WebApi.LanguageExpertise;
             (function (InternationalAffiliations) {
                 function get(affiliationId) {
-                    var url = makeUrl('international-affiliations');
+                    var url = 'international-affiliations';
                     if(affiliationId) {
-                        url += affiliationId;
+                        url += '/' + affiliationId;
                     }
-                    return url;
+                    return makeUrl(url);
                 }
                 InternationalAffiliations.get = get;
                 function post() {
-                    return makeUrl('international-affiliations');
+                    return get();
                 }
                 InternationalAffiliations.post = post;
                 function put(affiliationId) {
-                    return makeUrl('international-affiliations/' + affiliationId);
+                    return get(affiliationId);
                 }
                 InternationalAffiliations.put = put;
                 function del(affiliationId) {
-                    return makeUrl('international-affiliations/' + affiliationId);
+                    return get(affiliationId);
                 }
                 InternationalAffiliations.del = del;
             })(WebApi.InternationalAffiliations || (WebApi.InternationalAffiliations = {}));
@@ -825,12 +825,22 @@ var App;
                         return makeUrl('my/activities/{0}'.format(activityId));
                     }
                     Profile.activityEdit = activityEdit;
-                    function internationalAffiliationEdit(affiliationId) {
-                        return makeUrl('my/international-affiliations/{0}'.format(affiliationId));
-                    }
-                    Profile.internationalAffiliationEdit = internationalAffiliationEdit;
                 })(My.Profile || (My.Profile = {}));
                 var Profile = My.Profile;
+                (function (InternationalAffiliations) {
+                    function formatUrl(resource) {
+                        return 'my/international-affiliations/{0}'.format(resource);
+                    }
+                    function create() {
+                        return makeUrl(formatUrl('new'));
+                    }
+                    InternationalAffiliations.create = create;
+                    function edit(affiliationId) {
+                        return makeUrl(formatUrl(affiliationId));
+                    }
+                    InternationalAffiliations.edit = edit;
+                })(My.InternationalAffiliations || (My.InternationalAffiliations = {}));
+                var InternationalAffiliations = My.InternationalAffiliations;
                 (function (Degrees) {
                     function formatUrl(resource) {
                         return 'my/degrees/{0}'.format(resource);

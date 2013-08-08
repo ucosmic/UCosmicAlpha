@@ -68,21 +68,8 @@ var ViewModels;
                     ]
                 });
             };
-            InternationalAffiliationList.prototype.editAffiliation = function (data, event, affiliationId) {
-                var element = event.target;
-                var url = null;
-                while((element != null) && (element.nodeName != 'TR')) {
-                    element = element.parentElement;
-                }
-                if(element != null) {
-                    url = element.attributes["href"].value;
-                }
-                if(url != null) {
-                    location.href = url;
-                }
-            };
-            InternationalAffiliationList.prototype.newAffiliation = function (data, event) {
-                location.href = App.Routes.Mvc.My.Profile.internationalAffiliationEdit("new");
+            InternationalAffiliationList.prototype.editUrl = function (affiliationId) {
+                return App.Routes.Mvc.My.InternationalAffiliations.edit(affiliationId);
             };
             InternationalAffiliationList.prototype.formatLocations = function (locations) {
                 var formattedLocations = "";

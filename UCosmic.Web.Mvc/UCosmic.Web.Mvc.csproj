@@ -2404,7 +2404,6 @@
     <Content Include="Views\Agreements\Show.cshtml" />
     <Content Include="Views\Agreements\Owners.cshtml" />
     <Content Include="Views\MyProfile\_InternationalAffiliations.cshtml" />
-    <Content Include="Views\MyProfile\InternationalAffiliationEdit.cshtml" />
     <Content Include="Views\Reps\Settings.cshtml" />
     <Content Include="Views\FacultyStaff\Index.cshtml" />
     <Content Include="Views\FacultyStaff\_Bib.cshtml" />
@@ -2414,6 +2413,7 @@
     <Content Include="Views\MyProfile\GeographicExpertiseForm.cshtml" />
     <Content Include="Views\MyProfile\DegreeForm.cshtml" />
     <Content Include="Views\MyProfile\LanguageExpertiseForm.cshtml" />
+    <Content Include="Views\MyProfile\InternationalAffiliationForm.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
