@@ -43,7 +43,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 this.name = name;
                 this.id = id;
             };
-            this.percentOffBodyHeight = .6;
+            this.percentOffBodyHeight = .2;
             this.dfdPopParticipants = $.Deferred();
             this.dfdPopContacts = $.Deferred();
             this.dfdPopFiles = $.Deferred();
@@ -260,6 +260,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
         InstitutionalAgreementEditModel.prototype.populateAgreementData = function () {
             var _this = this;
             $.get(App.Routes.WebApi.Agreements.get(this.agreementId)).done(function (response) {
+                var dropdownlist;
                 _this.content(response.content);
                 _this.expDate(Globalize.format(new Date(response.expiresOn), 'd'));
                 _this.startDate(Globalize.format(new Date(response.startsOn), 'd'));
@@ -277,7 +278,27 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 ko.mapping.fromJS(response.participants, _this.participants);
                 _this.dfdPopParticipants.resolve();
                 _this.uAgreementSelected(response.umbrellaId);
+                dropdownlist = $("#uAgreements").data("kendoDropDownList");
+                dropdownlist.select(function (dataItem) {
+                    return dataItem.name === _this.uAgreementSelected();
+                });
+                if(_this.isCustomStatusAllowed()) {
+                    dropdownlist = $("#statusOptions").data("kendoComboBox");
+                } else {
+                    dropdownlist = $("#statusOptions").data("kendoDropDownList");
+                }
+                dropdownlist.select(function (dataItem) {
+                    return dataItem.name === _this.statusOptionSelected();
+                });
                 _this.typeOptionSelected(response.type);
+                if(_this.isCustomTypeAllowed()) {
+                    dropdownlist = $("#typeOptions").data("kendoComboBox");
+                } else {
+                    dropdownlist = $("#typeOptions").data("kendoDropDownList");
+                }
+                dropdownlist.select(function (dataItem) {
+                    return dataItem.name === _this.typeOptionSelected();
+                });
             });
         };
         InstitutionalAgreementEditModel.prototype.populateFiles = function () {
@@ -1285,19 +1306,29 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 this.$addContactDialog.data("kendoWindow").close();
                 $("#addAContact").fadeIn(500);
                 if(this.agreementIsEdit()) {
-                    var data = ko.mapping.toJS({
-                        agreementId: this.agreementId,
-                        PersonId: this.contacts()[this.contactIndex].personId,
-                        Type: this.contacts()[this.contactIndex].type,
-                        DisplayName: this.contacts()[this.contactIndex].displayName,
-                        FirstName: this.contacts()[this.contactIndex].firstName,
-                        MiddleName: this.contacts()[this.contactIndex].middleName,
-                        LastName: this.contacts()[this.contactIndex].lastName,
-                        Suffix: this.contacts()[this.contactIndex].suffix,
-                        EmailAddress: this.contacts()[this.contactIndex].emailAddress,
-                        PersonId: this.contacts()[this.contactIndex].personId,
-                        Phones: this.contacts()[this.contactIndex].phones
+                    this.contacts()[this.contactIndex].agreementId(this.agreementId);
+                    var phoneData = [];
+                    $.each(this.contacts()[this.contactIndex].phones(), function (i, item) {
+                        var data = ko.mapping.toJS({
+                            contactId: item.contactId,
+                            type: item.type,
+                            value: item.value
+                        });
+                        phoneData.push(data);
                     });
+                    var data = {
+                        agreementId: this.contacts()[this.contactIndex].agreementId(),
+                        PersonId: this.contacts()[this.contactIndex].personId(),
+                        Type: this.contacts()[this.contactIndex].type(),
+                        DisplayName: this.contacts()[this.contactIndex].displayName(),
+                        FirstName: this.contacts()[this.contactIndex].firstName(),
+                        MiddleName: this.contacts()[this.contactIndex].middleName(),
+                        LastName: this.contacts()[this.contactIndex].lastName(),
+                        Suffix: this.contacts()[this.contactIndex].suffix(),
+                        EmailAddress: this.contacts()[this.contactIndex].emailAddress(),
+                        PersonId: this.contacts()[this.contactIndex].personId(),
+                        Phones: phoneData
+                    };
                     var url = App.Routes.WebApi.Agreements.Contacts.put(this.agreementId, this.contacts()[this.contactIndex].id());
                     $.ajax({
                         type: 'PUT',
@@ -1335,7 +1366,8 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 if(this.contactDisplayName() == undefined || this.contactDisplayName() == "") {
                     this.contactDisplayName(this.contactFirstName() + " " + this.contactLastName());
                 }
-                this.contacts.push(ko.mapping.fromJS({
+                var data = {
+                    agreementId: this.agreementId,
                     title: this.contactJobTitle(),
                     firstName: this.contactFirstName(),
                     lastName: this.contactLastName(),
@@ -1345,32 +1377,18 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                     phones: ko.mapping.toJS(this.contactPhones()),
                     emailAddress: this.contactEmail(),
                     type: this.contactTypeOptionSelected(),
-                    suffix: this.contactSuffix(),
-                    salutation: this.contactSalutation(),
+                    suffix: this.contactSuffixSelected(),
+                    salutation: this.contactSalutationSelected(),
                     displayName: this.contactDisplayName(),
                     middleName: this.contactMiddleName
-                }));
+                };
+                this.contacts.push(ko.mapping.fromJS(data));
                 this.$addContactDialog.data("kendoWindow").close();
                 $("#addAContact").fadeIn(500);
                 $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * .85)));
                 if(this.agreementIsEdit()) {
-                    var data = ko.mapping.toJS({
-                        agreementId: this.agreementId,
-                        PersonId: me.personId,
-                        Type: me.type,
-                        DisplayName: me.displayName,
-                        FirstName: me.firstName,
-                        MiddleName: me.middleName,
-                        LastName: me.lastName,
-                        Suffix: me.suffix,
-                        EmailAddress: me.emailAddress,
-                        PersonId: me.personId,
-                        Phones: me.phones
-                    });
                     var url = App.Routes.WebApi.Agreements.Contacts.post(this.agreementId);
                     $.post(url, data).done(function (response, statusText, xhr) {
-                        _this.agreementPostFiles(response, statusText, xhr);
-                        _this.agreementPostContacts(response, statusText, xhr);
                     }).fail(function (xhr, statusText, errorThrown) {
                         _this.spinner.stop();
                         if(xhr.status === 400) {
@@ -1680,8 +1698,8 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 }
                 var $LoadingPage = $("#LoadingPage").find("strong");
                 $LoadingPage.text("Saving agreement...");
-                $("#allParticipants").fadeOut(500, function () {
-                    $("#LoadingPage").fadeIn(500);
+                $("#allParticipants").show().fadeOut(500, function () {
+                    $("#LoadingPage").hide().fadeIn(500);
                 });
                 $.each(this.participants(), function (i, item) {
                     _this.participantsExport.push({
@@ -1716,8 +1734,8 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                         success: function (response, statusText, xhr) {
                             $LoadingPage.text("Agreement Saved...");
                             setTimeout(function () {
-                                $("#LoadingPage").fadeOut(500, function () {
-                                    $("#allParticipants").fadeIn(500);
+                                $("#LoadingPage").show().fadeOut(500, function () {
+                                    $("#allParticipants").hide().fadeIn(500);
                                 });
                             }, 5000);
                         },
@@ -1750,7 +1768,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                             $("#LoadingPage").fadeOut(500, function () {
                                 if(xhr != undefined) {
                                     window.location.hash = "";
-                                    window.location.pathname = "/agreements/" + xhr.getResponseHeader('Location').substring(xhr.getResponseHeader('Location').lastIndexOf("/") + 1) + "/edit/";
+                                    window.location.href = "/agreements/" + xhr.getResponseHeader('Location').substring(xhr.getResponseHeader('Location').lastIndexOf("/") + 1) + "/edit/";
                                 } else {
                                     alert("success, but no location");
                                 }

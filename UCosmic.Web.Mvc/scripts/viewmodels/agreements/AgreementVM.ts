@@ -200,7 +200,7 @@ export class InstitutionalAgreementEditModel {
     editOrNewUrl;
 
 
-    percentOffBodyHeight = .6;
+    percentOffBodyHeight = .2;
     dfdPopParticipants = $.Deferred();
     dfdPopContacts = $.Deferred();
     dfdPopFiles = $.Deferred();
@@ -333,6 +333,7 @@ export class InstitutionalAgreementEditModel {
     populateAgreementData(): void {
         $.get(App.Routes.WebApi.Agreements.get(this.agreementId))
             .done((response: any): void => {
+                var dropdownlist;
                 this.content(response.content);
                 this.expDate(Globalize.format(new Date(response.expiresOn), 'd'));
                 this.startDate(Globalize.format(new Date(response.startsOn), 'd'));
@@ -350,7 +351,29 @@ export class InstitutionalAgreementEditModel {
                 ko.mapping.fromJS(response.participants, this.participants);
                 this.dfdPopParticipants.resolve();
                 this.uAgreementSelected(response.umbrellaId);
+                dropdownlist = $("#uAgreements").data("kendoDropDownList");
+                dropdownlist.select( (dataItem) => {
+                    return dataItem.name === this.uAgreementSelected();
+                });
+
+                if (this.isCustomStatusAllowed()) {
+                    dropdownlist = $("#statusOptions").data("kendoComboBox");
+                } else {
+                    dropdownlist = $("#statusOptions").data("kendoDropDownList");
+                }
+                dropdownlist.select((dataItem) => {
+                    return dataItem.name === this.statusOptionSelected();
+                });
+
                 this.typeOptionSelected(response.type);
+                if (this.isCustomTypeAllowed()) {
+                    dropdownlist = $("#typeOptions").data("kendoComboBox");
+                } else {
+                    dropdownlist = $("#typeOptions").data("kendoDropDownList");
+                }
+                dropdownlist.select((dataItem) => {
+                    return dataItem.name === this.typeOptionSelected();
+                });
             });
     }
 
@@ -1438,19 +1461,31 @@ export class InstitutionalAgreementEditModel {
             $("#addAContact").fadeIn(500);
 
             if (this.agreementIsEdit()) {
-                var data = ko.mapping.toJS({
-                    agreementId: this.agreementId,
-                    PersonId: this.contacts()[this.contactIndex].personId,
-                    Type: this.contacts()[this.contactIndex].type,
-                    DisplayName: this.contacts()[this.contactIndex].displayName,
-                    FirstName: this.contacts()[this.contactIndex].firstName,
-                    MiddleName: this.contacts()[this.contactIndex].middleName,
-                    LastName: this.contacts()[this.contactIndex].lastName,
-                    Suffix: this.contacts()[this.contactIndex].suffix,
-                    EmailAddress: this.contacts()[this.contactIndex].emailAddress,
-                    PersonId: this.contacts()[this.contactIndex].personId,
-                    Phones: this.contacts()[this.contactIndex].phones
-                })
+                this.contacts()[this.contactIndex].agreementId(this.agreementId)// may not need this later
+                var phoneData = [];
+                $.each(this.contacts()[this.contactIndex].phones(), function (i, item) => {
+                    var data = ko.mapping.toJS({
+                        contactId: item.contactId,
+                        type: item.type,
+                        value: item.value
+                    })
+                    phoneData.push(data);
+                });
+
+                var data = {
+                    agreementId: this.contacts()[this.contactIndex].agreementId(),
+                    PersonId: this.contacts()[this.contactIndex].personId(),
+                    Type: this.contacts()[this.contactIndex].type(),
+                    DisplayName: this.contacts()[this.contactIndex].displayName(),
+                    FirstName: this.contacts()[this.contactIndex].firstName(),
+                    MiddleName: this.contacts()[this.contactIndex].middleName(),
+                    LastName: this.contacts()[this.contactIndex].lastName(),
+                    Suffix: this.contacts()[this.contactIndex].suffix(),
+                    EmailAddress: this.contacts()[this.contactIndex].emailAddress(),
+                    PersonId: this.contacts()[this.contactIndex].personId(),
+                    Phones: phoneData// ko.mapping.toJS(this.contacts()[this.contactIndex].phones())
+                }
+                //var data = ko.mapping.toJS(this.contacts()[this.contactIndex])
                 var url = App.Routes.WebApi.Agreements.Contacts.put(this.agreementId, this.contacts()[this.contactIndex].id());
                 $.ajax({
                     type: 'PUT',
@@ -1487,32 +1522,39 @@ export class InstitutionalAgreementEditModel {
             if (this.contactDisplayName() == undefined || this.contactDisplayName() == "") {
                 this.contactDisplayName(this.contactFirstName() + " " + this.contactLastName());
             }
-            this.contacts.push(ko.mapping.fromJS({ title: this.contactJobTitle(), firstName: this.contactFirstName(), lastName: this.contactLastName(), id: 1, personId: this.contactPersonId(), userId: this.contactUserId, phones: ko.mapping.toJS(this.contactPhones()), emailAddress: this.contactEmail(), type: this.contactTypeOptionSelected(), suffix: this.contactSuffix(), salutation: this.contactSalutation(), displayName: this.contactDisplayName(), middleName: this.contactMiddleName }));
+            var data = {
+                agreementId: this.agreementId,
+                title: this.contactJobTitle(),
+                firstName: this.contactFirstName(),
+                lastName: this.contactLastName(),
+                id: 1,
+                personId: this.contactPersonId(),
+                userId: this.contactUserId,
+                phones: ko.mapping.toJS(this.contactPhones()),
+                emailAddress: this.contactEmail(),
+                type: this.contactTypeOptionSelected(),
+                suffix: this.contactSuffixSelected(),
+                salutation: this.contactSalutationSelected(),
+                displayName: this.contactDisplayName(),
+                middleName: this.contactMiddleName
+            }
+            this.contacts.push(ko.mapping.fromJS(data));
+            //this.contacts.push(ko.mapping.fromJS({ title: this.contactJobTitle(), firstName: this.contactFirstName(), lastName: this.contactLastName(), id: 1, personId: this.contactPersonId(), userId: this.contactUserId, phones: ko.mapping.toJS(this.contactPhones()), emailAddress: this.contactEmail(), type: this.contactTypeOptionSelected(), suffix: this.contactSuffix(), salutation: this.contactSalutation(), displayName: this.contactDisplayName(), middleName: this.contactMiddleName }));
+
+
             this.$addContactDialog.data("kendoWindow").close();
 
             $("#addAContact").fadeIn(500);
             $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * .85)));
 
             if (this.agreementIsEdit()) {
-                var data = ko.mapping.toJS({
-                    agreementId: this.agreementId,
-                    PersonId: me.personId,
-                    Type: me.type,
-                    DisplayName: me.displayName,
-                    FirstName: me.firstName,
-                    MiddleName: me.middleName,
-                    LastName: me.lastName,
-                    Suffix: me.suffix,
-                    EmailAddress: me.emailAddress,
-                    PersonId: me.personId,
-                    Phones: me.phones
-                })
+                
                 var url = App.Routes.WebApi.Agreements.Contacts.post(this.agreementId);
                 $.post(url, data)
                     .done((response: any, statusText: string, xhr: JQueryXHR): void => {
                         //this.agreementId = 2;//response.agreementId
-                        this.agreementPostFiles(response, statusText, xhr);
-                        this.agreementPostContacts(response, statusText, xhr);
+                        //this.agreementPostFiles(response, statusText, xhr);
+                        //this.agreementPostContacts(response, statusText, xhr);
                     })
                     .fail((xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
                         this.spinner.stop();
@@ -1846,8 +1888,8 @@ export class InstitutionalAgreementEditModel {
             }
             var $LoadingPage = $("#LoadingPage").find("strong")
             $LoadingPage.text("Saving agreement...");
-            $("#allParticipants").fadeOut(500, function () => {
-                $("#LoadingPage").fadeIn(500);
+            $("#allParticipants").show().fadeOut(500, function () => {
+                $("#LoadingPage").hide().fadeIn(500);
             });
 
             $.each(this.participants(), function (i, item) => {
@@ -1883,8 +1925,8 @@ export class InstitutionalAgreementEditModel {
                     success: (response: any, statusText: string, xhr: JQueryXHR): void => {
                         $LoadingPage.text("Agreement Saved...");
                         setTimeout(function () => {
-                            $("#LoadingPage").fadeOut(500, function () {
-                                $("#allParticipants").fadeIn(500);
+                            $("#LoadingPage").show().fadeOut(500, function () {
+                                $("#allParticipants").hide().fadeIn(500);
                             });
                         }, 5000);
                     },
@@ -1919,7 +1961,9 @@ export class InstitutionalAgreementEditModel {
                             $("#LoadingPage").fadeOut(500, function () {
                                 if (xhr != undefined) {
                                     window.location.hash = ""
-                                    window.location.pathname = "/agreements/" + xhr.getResponseHeader('Location').substring(xhr.getResponseHeader('Location').lastIndexOf("/")+1) + "/edit/"
+                                    window.location.href = "/agreements/" + xhr.getResponseHeader('Location').substring(xhr.getResponseHeader('Location').lastIndexOf("/") + 1) + "/edit/"
+
+                                    //window.location.pathname = "/agreements/" + xhr.getResponseHeader('Location').substring(xhr.getResponseHeader('Location').lastIndexOf("/")+1) + "/edit/"
                                 }
                                 else {
                                     alert("success, but no location")
