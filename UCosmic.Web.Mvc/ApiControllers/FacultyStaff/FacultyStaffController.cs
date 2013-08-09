@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Web.Http;
@@ -25,186 +26,436 @@ namespace UCosmic.Web.Mvc.ApiControllers
             _entities = entities;
         }
 
-        [GET("summary")]
-        public FacultyStaffActivitiesSummaryModel Get()
+        //[GET("summary")]
+        //public FacultyStaffSummaryModel Get()
+        //{
+        //    var model = new FacultyStaffSummaryModel();
+
+        //    var tenancy = Request.Tenancy();
+        //    Establishment establishment = null;
+
+        //    if (tenancy.TenantId.HasValue)
+        //    {
+        //        establishment = _queryProcessor.Execute(new EstablishmentById(tenancy.TenantId.Value));
+        //    }
+        //    else if (!String.IsNullOrEmpty(tenancy.StyleDomain) && !"default".Equals(tenancy.StyleDomain))
+        //    {
+        //        establishment = _queryProcessor.Execute(new EstablishmentByEmail(tenancy.StyleDomain));
+        //    }
+
+        //    if (establishment != null)
+        //    {
+        //        var settings =
+        //            _queryProcessor.Execute(new EmployeeModuleSettingsByEstablishmentId(establishment.RevisionId));
+        //        DateTime toDateUtc = new DateTime(DateTime.UtcNow.Year + 1, 1, 1);
+        //        DateTime fromDateUtc = settings.ReportsDefaultYearRange.HasValue
+        //                                   ? toDateUtc.AddYears(-(settings.ReportsDefaultYearRange.Value + 1))
+        //                                   : new DateTime(DateTime.MinValue.Year, 1, 1);
+
+        //        /* ----- Activity Counts ----- */
+        //        {
+        //            if ((settings != null) && (settings.ActivityTypes.Any()))
+        //            {
+        //                foreach (var type in settings.ActivityTypes)
+        //                {
+        //                    var typeCount = new FacultyStaffCountModel
+        //                    {
+        //                        TypeId = type.Id,
+        //                        Type = type.Type,
+        //                        Count = 0
+        //                    };
+
+        //                    model.WorldActivityCounts.Add(typeCount);
+        //                }
+        //            }
+
+        //            int totalPlacesWithActivities = 0;
+
+        //            var places = _entities.Query<Place>().Where(p => p.IsCountry || p.IsWater || p.IsRegion);
+        //            foreach (var place in places)
+        //            {
+        //                var activityPlaceCount = new FacultyStaffPlaceCountModel();
+
+        //                activityPlaceCount.PlaceId = place.RevisionId;
+        //                activityPlaceCount.OfficialName = place.OfficialName;
+        //                activityPlaceCount.Count =
+        //                    _queryProcessor.Execute(new ActivityCountByPlaceIdEstablishmentId(place.RevisionId,
+        //                                                                                      establishment.RevisionId,
+        //                                                                                      fromDateUtc, toDateUtc));
+
+        //                if (activityPlaceCount.Count > 0)
+        //                {
+        //                    totalPlacesWithActivities += 1;
+        //                }
+
+        //                var typeCounts = new Collection<FacultyStaffCountModel>();
+        //                if ((settings != null) && (settings.ActivityTypes.Any()))
+        //                {
+        //                    foreach (var type in settings.ActivityTypes)
+        //                    {
+        //                        var typeCount = new FacultyStaffCountModel();
+
+        //                        typeCount.TypeId = type.Id;
+        //                        typeCount.Type = type.Type;
+        //                        typeCount.Count =
+        //                            _queryProcessor.Execute(new ActivityCountByTypeIdPlaceIdEstablishmentId(type.Id,
+        //                                                                                                    place
+        //                                                                                                        .RevisionId,
+        //                                                                                                    establishment
+        //                                                                                                        .RevisionId,
+        //                                                                                                    fromDateUtc,
+        //                                                                                                    toDateUtc));
+
+        //                        typeCounts.Add(typeCount);
+
+        //                        model.WorldActivityCounts.Single(a => a.TypeId == typeCount.TypeId).Count +=
+        //                            typeCount.Count;
+        //                    }
+        //                }
+        //                activityPlaceCount.TypeCounts = typeCounts;
+
+        //                model.PlaceActivityCounts.Add(activityPlaceCount);
+        //            }
+
+        //            model.TotalActivities =
+        //                _queryProcessor.Execute(new ActivityCountByEstablishmentId(establishment.RevisionId,
+        //                                                                           fromDateUtc, toDateUtc));
+        //            model.TotalPlacesWithActivities = totalPlacesWithActivities;
+        //        }
+
+        //        /* ----- People Counts ----- */
+        //        {
+        //            if ((settings != null) && (settings.ActivityTypes.Any()))
+        //            {
+        //                foreach (var type in settings.ActivityTypes)
+        //                {
+        //                    var typeCount = new FacultyStaffCountModel
+        //                    {
+        //                        TypeId = type.Id,
+        //                        Type = type.Type,
+        //                        Count = 0
+        //                    };
+
+        //                    model.WorldPeopleCounts.Add(typeCount);
+        //                }
+        //            }
+
+        //            int totalPlacesWithPeople = 0;
+
+        //            var places = _entities.Query<Place>().Where(p => p.IsCountry || p.IsWater);
+        //            foreach (var place in places)
+        //            {
+        //                var peoplePlaceCount = new FacultyStaffPlaceCountModel();
+
+        //                peoplePlaceCount.PlaceId = place.RevisionId;
+        //                peoplePlaceCount.OfficialName = place.OfficialName;
+        //                peoplePlaceCount.Count =
+        //                    _queryProcessor.Execute(new PeopleCountByPlaceIdEstablishmentId(place.RevisionId,
+        //                                                                                    establishment.RevisionId,
+        //                                                                                    fromDateUtc, toDateUtc));
+
+        //                if (peoplePlaceCount.Count > 0)
+        //                {
+        //                    totalPlacesWithPeople += 1;
+        //                }
+
+        //                var typeCounts = new Collection<FacultyStaffCountModel>();
+        //                if ((settings != null) && (settings.ActivityTypes.Any()))
+        //                {
+        //                    foreach (var type in settings.ActivityTypes)
+        //                    {
+        //                        var typeCount = new FacultyStaffCountModel();
+
+        //                        typeCount.TypeId = type.Id;
+        //                        typeCount.Type = type.Type;
+        //                        typeCount.Count =
+        //                            _queryProcessor.Execute(new PeopleCountByTypeIdPlaceIdEstablishmentId(type.Id,
+        //                                                                                                  place
+        //                                                                                                      .RevisionId,
+        //                                                                                                  establishment
+        //                                                                                                      .RevisionId,
+        //                                                                                                  fromDateUtc,
+        //                                                                                                  toDateUtc));
+
+        //                        typeCounts.Add(typeCount);
+
+        //                        model.WorldPeopleCounts.Single(a => a.TypeId == typeCount.TypeId).Count +=
+        //                            typeCount.Count;
+        //                    }
+        //                }
+        //                peoplePlaceCount.TypeCounts = typeCounts;
+
+        //                model.PlacePeopleCounts.Add(peoplePlaceCount);
+        //            }
+
+        //            model.TotalPeople =
+        //                _queryProcessor.Execute(new PeopleCountByEstablishmentId(establishment.RevisionId));
+        //            model.TotalPlacesWithPeople = totalPlacesWithPeople;
+        //        }
+
+
+        //        /* ----- Activity Trend ----- */
+        //        {
+        //            //var places = _entities.Query<Place>().Where(p => p.IsCountry || p.IsWater);
+        //            //foreach (var place in places)
+        //            //{
+        //            //    var placeActivitiesCount = _queryProcessor.Execute(
+        //            //        new ActivityCountPerYearByPlaceIdEstablishmentId(place.RevisionId,
+        //            //                                                         establishment.RevisionId,
+        //            //                                                         fromDateUtc, toDateUtc));
+        //            //}
+        //        }
+        //    }
+
+        //    return model;
+        //}
+
+        /* Returns activity type counts for given place.*/
+        [GET("activity-count/{placeId?}")]
+        public FacultyStaffSummaryModel GetActivityCount(int? placeId)
         {
-            var model = new FacultyStaffActivitiesSummaryModel();
+            var model = new FacultyStaffSummaryModel();
 
-            var tenancy = Request.Tenancy();
-            Establishment establishment = null;
+            //var tenancy = Request.Tenancy();
+            //Establishment establishment = null;
 
-            if (tenancy.TenantId.HasValue)
-            {
-                establishment = _queryProcessor.Execute(new EstablishmentById(tenancy.TenantId.Value));
-            }
-            else if (!String.IsNullOrEmpty(tenancy.StyleDomain) && !"default".Equals(tenancy.StyleDomain))
-            {
-                establishment = _queryProcessor.Execute(new EstablishmentByEmail(tenancy.StyleDomain));
-            }
+            //if (tenancy.TenantId.HasValue)
+            //{
+            //    establishment = _queryProcessor.Execute(new EstablishmentById(tenancy.TenantId.Value));
+            //}
+            //else if (!String.IsNullOrEmpty(tenancy.StyleDomain) && !"default".Equals(tenancy.StyleDomain))
+            //{
+            //    establishment = _queryProcessor.Execute(new EstablishmentByEmail(tenancy.StyleDomain));
+            //}
 
-            if (establishment != null)
-            {
-                var settings =
-                    _queryProcessor.Execute(new EmployeeModuleSettingsByEstablishmentId(establishment.RevisionId));
-                DateTime toDateUtc = new DateTime(DateTime.UtcNow.Year + 1, 1, 1);
-                DateTime fromDateUtc = settings.ReportsDefaultYearRange.HasValue
-                                           ? toDateUtc.AddYears(-(settings.ReportsDefaultYearRange.Value + 1))
-                                           : new DateTime(DateTime.MinValue.Year, 1, 1);
+            //if (establishment != null)
+            //{
+            //    var settings =
+            //        _queryProcessor.Execute(new EmployeeModuleSettingsByEstablishmentId(establishment.RevisionId));
+            //    DateTime toDateUtc = new DateTime(DateTime.UtcNow.Year + 1, 1, 1);
+            //    DateTime fromDateUtc = settings.ReportsDefaultYearRange.HasValue
+            //                               ? toDateUtc.AddYears(-(settings.ReportsDefaultYearRange.Value + 1))
+            //                               : new DateTime(DateTime.MinValue.Year, 1, 1);
 
-                /* ----- Activity Counts ----- */
-                {
-                    if ((settings != null) && (settings.ActivityTypes.Any()))
-                    {
-                        foreach (var type in settings.ActivityTypes)
-                        {
-                            var typeCount = new FacultyStaffCountModel
-                            {
-                                TypeId = type.Id,
-                                Type = type.Type,
-                                Count = 0
-                            };
+            //    /* ----- Activity Counts ----- */
+            //    {
+            //        int totalPlacesWithActivities = 0;
 
-                            model.WorldActivityCounts.Add(typeCount);
-                        }
-                    }
+            //        IEnumerable<Place> places = null;
+                    
+            //        if (!placeId.HasValue || (placeId.Value == 1 /* global */))
+            //        {
+            //            places = _entities.Query<Place>().Where(p => p.IsCountry || p.IsWater);
+            //        }
+            //        else
+            //        {
+            //            places = _entities.Query<Place>().Where(p => p.RevisionId == placeId.Value);
+            //        }
+                    
+            //        foreach (var place in places)
+            //        {
+            //            var activityPlaceCount = new FacultyStaffPlaceCountModel();
 
-                    int totalPlacesWithActivities = 0;
+            //            activityPlaceCount.PlaceId = place.RevisionId;
+            //            activityPlaceCount.OfficialName = place.OfficialName;
+            //            activityPlaceCount.Count =
+            //                _queryProcessor.Execute(new ActivityCountByPlaceIdEstablishmentId(place.RevisionId,
+            //                                                                                  establishment.RevisionId,
+            //                                                                                  fromDateUtc, toDateUtc));
 
-                    var places = _entities.Query<Place>().Where(p => p.IsCountry || p.IsWater || p.IsRegion);
-                    foreach (var place in places)
-                    {
-                        var activityPlaceCount = new FacultyStaffPlaceCountModel();
+            //            if (activityPlaceCount.Count > 0)
+            //            {
+            //                totalPlacesWithActivities += 1;
+            //            }
 
-                        activityPlaceCount.PlaceId = place.RevisionId;
-                        activityPlaceCount.OfficialName = place.OfficialName;
-                        activityPlaceCount.Count =
-                            _queryProcessor.Execute(new ActivityCountByPlaceIdEstablishmentId(place.RevisionId,
-                                                                                              establishment.RevisionId,
-                                                                                              fromDateUtc, toDateUtc));
+            //            var typeCounts = new Collection<FacultyStaffTypeCountModel>();
+            //            if (settings.ActivityTypes.Any())
+            //            {
+            //                foreach (var type in settings.ActivityTypes)
+            //                {
+            //                    var typeCount = new FacultyStaffTypeCountModel();
 
-                        if (activityPlaceCount.Count > 0)
-                        {
-                            totalPlacesWithActivities += 1;
-                        }
+            //                    typeCount.TypeId = type.Id;
+            //                    typeCount.Type = type.Type;
+            //                    typeCount.Count =
+            //                        _queryProcessor.Execute(
+            //                            new ActivityCountByTypeIdPlaceIdEstablishmentId(type.Id,
+            //                                                                            place
+            //                                                                                .RevisionId,
+            //                                                                            establishment
+            //                                                                                .RevisionId,
+            //                                                                            fromDateUtc,
+            //                                                                            toDateUtc));
 
-                        var typeCounts = new Collection<FacultyStaffCountModel>();
-                        if ((settings != null) && (settings.ActivityTypes.Any()))
-                        {
-                            foreach (var type in settings.ActivityTypes)
-                            {
-                                var typeCount = new FacultyStaffCountModel();
+            //                    typeCounts.Add(typeCount);
 
-                                typeCount.TypeId = type.Id;
-                                typeCount.Type = type.Type;
-                                typeCount.Count =
-                                    _queryProcessor.Execute(new ActivityCountByTypeIdPlaceIdEstablishmentId(type.Id,
-                                                                                                            place
-                                                                                                                .RevisionId,
-                                                                                                            establishment
-                                                                                                                .RevisionId,
-                                                                                                            fromDateUtc,
-                                                                                                            toDateUtc));
+            //                    //model.Counts.Single(a => a. == typeCount.TypeId).Count +=
+            //                    //    typeCount.Count;
+            //                }
+            //            }
+            //            activityPlaceCount.TypeCounts = typeCounts;
 
-                                typeCounts.Add(typeCount);
+            //            model.Counts.Add(activityPlaceCount);
+            //        }
 
-                                model.WorldActivityCounts.Single(a => a.TypeId == typeCount.TypeId).Count +=
-                                    typeCount.Count;
-                            }
-                        }
-                        activityPlaceCount.TypeCounts = typeCounts;
+            //        if (!placeId.HasValue || (placeId.Value == 1 /* global */))
+            //        {
+            //            model.TotalActivities =
+            //                _queryProcessor.Execute(new ActivityCountByEstablishmentId(establishment.RevisionId,
+            //                                                                           fromDateUtc, toDateUtc));
+            //        }
+            //        else
+            //        {
+            //            var activityPlaceCount = model.Counts.ToArray();
+            //            model.TotalActivities = activityPlaceCount[0].Count;
+            //        }
+                        
 
-                        model.PlaceActivityCounts.Add(activityPlaceCount);
-                    }
+            //        model.TotalPlaces = totalPlacesWithActivities;
+            //    }
+            //}
 
-                    model.TotalActivities =
-                        _queryProcessor.Execute(new ActivityCountByEstablishmentId(establishment.RevisionId,
-                                                                                   fromDateUtc, toDateUtc));
-                    model.TotalPlacesWithActivities = totalPlacesWithActivities;
-                }
+            return model;
+        }
 
-                /* ----- People Counts ----- */
-                {
-                    if ((settings != null) && (settings.ActivityTypes.Any()))
-                    {
-                        foreach (var type in settings.ActivityTypes)
-                        {
-                            var typeCount = new FacultyStaffCountModel
-                            {
-                                TypeId = type.Id,
-                                Type = type.Type,
-                                Count = 0
-                            };
+        /* Returns people counts for given place. */
+        [GET("people-count/{placeId?}")]
+        public FacultyStaffSummaryModel GetPeopleCount(int? placeId)
+        {
+            var model = new FacultyStaffSummaryModel();
 
-                            model.WorldPeopleCounts.Add(typeCount);
-                        }
-                    }
+            //var tenancy = Request.Tenancy();
+            //Establishment establishment = null;
 
-                    int totalPlacesWithPeople = 0;
+            //if (tenancy.TenantId.HasValue)
+            //{
+            //    establishment = _queryProcessor.Execute(new EstablishmentById(tenancy.TenantId.Value));
+            //}
+            //else if (!String.IsNullOrEmpty(tenancy.StyleDomain) && !"default".Equals(tenancy.StyleDomain))
+            //{
+            //    establishment = _queryProcessor.Execute(new EstablishmentByEmail(tenancy.StyleDomain));
+            //}
 
-                    var places = _entities.Query<Place>().Where(p => p.IsCountry || p.IsWater);
-                    foreach (var place in places)
-                    {
-                        var peoplePlaceCount = new FacultyStaffPlaceCountModel();
+            //if (establishment != null)
+            //{
+            //    var settings =
+            //        _queryProcessor.Execute(new EmployeeModuleSettingsByEstablishmentId(establishment.RevisionId));
+            //    DateTime toDateUtc = new DateTime(DateTime.UtcNow.Year + 1, 1, 1);
+            //    DateTime fromDateUtc = settings.ReportsDefaultYearRange.HasValue
+            //                               ? toDateUtc.AddYears(-(settings.ReportsDefaultYearRange.Value + 1))
+            //                               : new DateTime(DateTime.MinValue.Year, 1, 1);
 
-                        peoplePlaceCount.PlaceId = place.RevisionId;
-                        peoplePlaceCount.OfficialName = place.OfficialName;
-                        peoplePlaceCount.Count =
-                            _queryProcessor.Execute(new PeopleCountByPlaceIdEstablishmentId(place.RevisionId,
-                                                                                            establishment.RevisionId,
-                                                                                            fromDateUtc, toDateUtc));
+            //    /* ----- Activity Counts ----- */
+            //    {
+            //        if (settings.ActivityTypes.Any())
+            //        {
+            //            foreach (var type in settings.ActivityTypes)
+            //            {
+            //                var typeCount = new StaffFacultyCountModel
+            //                {
+            //                    TypeId = type.Id,
+            //                    Type = type.Type,
+            //                    Count = 0
+            //                };
 
-                        if (peoplePlaceCount.Count > 0)
-                        {
-                            totalPlacesWithPeople += 1;
-                        }
+            //                model.Counts.Add(typeCount);
+            //            }
+            //        }
 
-                        var typeCounts = new Collection<FacultyStaffCountModel>();
-                        if ((settings != null) && (settings.ActivityTypes.Any()))
-                        {
-                            foreach (var type in settings.ActivityTypes)
-                            {
-                                var typeCount = new FacultyStaffCountModel();
+            //        int totalPlacesWithPeople = 0;
 
-                                typeCount.TypeId = type.Id;
-                                typeCount.Type = type.Type;
-                                typeCount.Count =
-                                    _queryProcessor.Execute(new PeopleCountByTypeIdPlaceIdEstablishmentId(type.Id,
-                                                                                                          place
-                                                                                                              .RevisionId,
-                                                                                                          establishment
-                                                                                                              .RevisionId,
-                                                                                                          fromDateUtc,
-                                                                                                          toDateUtc));
+            //        IEnumerable<Place> places = null;
 
-                                typeCounts.Add(typeCount);
+            //        if (!placeId.HasValue || (placeId.Value == 1 /* global */))
+            //        {
+            //            places = _entities.Query<Place>().Where(p => p.IsCountry || p.IsWater);
+            //        }
+            //        else
+            //        {
+            //            places = _entities.Query<Place>().Where(p => p.RevisionId == placeId.Value);
+            //        }
 
-                                model.WorldPeopleCounts.Single(a => a.TypeId == typeCount.TypeId).Count +=
-                                    typeCount.Count;
-                            }
-                        }
-                        peoplePlaceCount.TypeCounts = typeCounts;
+            //        foreach (var place in places)
+            //        {
+            //            var activityPlaceCount = new FacultyStaffPlaceCountModel();
 
-                        model.PlacePeopleCounts.Add(peoplePlaceCount);
-                    }
+            //            activityPlaceCount.PlaceId = place.RevisionId;
+            //            activityPlaceCount.OfficialName = place.OfficialName;
+            //            activityPlaceCount.Count =
+            //                _queryProcessor.Execute(new PeopleCountByPlaceIdEstablishmentId(place.RevisionId,
+            //                                                                                  establishment.RevisionId,
+            //                                                                                  fromDateUtc, toDateUtc));
 
-                    model.TotalPeople =
-                        _queryProcessor.Execute(new PeopleCountByEstablishmentId(establishment.RevisionId));
-                    model.TotalPlacesWithPeople = totalPlacesWithPeople;
-                }
+            //            if (activityPlaceCount.Count > 0)
+            //            {
+            //                totalPlacesWithPeople += 1;
+            //            }
+
+            //            var typeCounts = new Collection<FacultyStaffTypeCountModel>();
+            //            if (settings.ActivityTypes.Any())
+            //            {
+            //                foreach (var type in settings.ActivityTypes)
+            //                {
+            //                    var typeCount = new FacultyStaffPlaceCountModel();
+
+            //                    typeCount.TypeId = type.Id;
+            //                    typeCount.Type = type.Type;
+            //                    typeCount.Count =
+            //                        _queryProcessor.Execute(
+            //                            new PeopleCountByTypeIdPlaceIdEstablishmentId(type.Id,
+            //                                                                            place
+            //                                                                                .RevisionId,
+            //                                                                            establishment
+            //                                                                                .RevisionId,
+            //                                                                            fromDateUtc,
+            //                                                                            toDateUtc));
+
+            //                    typeCounts.Add(typeCount);
+
+            //                    model.WorldPeopleCounts.Single(a => a.TypeId == typeCount.TypeId).Count +=
+            //                        typeCount.Count;
+            //                }
+            //            }
+            //            activityPlaceCount.TypeCounts = typeCounts;
+
+            //            model.PlacePeopleCounts.Add(activityPlaceCount);
+            //        }
+
+            //        if (!placeId.HasValue || (placeId.Value == 1 /* global */))
+            //        {
+            //            model.TotalPeople =
+            //                _queryProcessor.Execute(new PeopleCountByEstablishmentId(establishment.RevisionId,
+            //                                                                           fromDateUtc, toDateUtc));
+            //        }
+            //        else
+            //        {
+            //            var peoplePlaceCount = model.PlacePeopleCounts.ToArray();
+            //            model.TotalPeople = peoplePlaceCount[0].Count;
+            //        }
 
 
-                /* ----- Activity Trend ----- */
-                {
-                    //var places = _entities.Query<Place>().Where(p => p.IsCountry || p.IsWater);
-                    //foreach (var place in places)
-                    //{
-                    //    var placeActivitiesCount = _queryProcessor.Execute(
-                    //        new ActivityCountPerYearByPlaceIdEstablishmentId(place.RevisionId,
-                    //                                                         establishment.RevisionId,
-                    //                                                         fromDateUtc, toDateUtc));
-                    //}
-                }
-            }
+            //        model.TotalPlacesWithPeople = totalPlacesWithPeople;
+            //    }
+            //}
+
+            return model;
+        }
+
+        /* Returns activity trend count for place. */
+        [GET("activity-trend/{placeId?}")]
+        public FacultyStaffTrendModel GetActivityTrend(int? placeId)
+        {
+            var model = new FacultyStaffTrendModel();
+
+
+            return model;
+        }
+
+        /* Returns people trend count for place. */
+        [GET("people-trend/{placeId?}")]
+        public FacultyStaffTrendModel GetPeopleTrend(int? placeId)
+        {
+            var model = new FacultyStaffTrendModel();
 
             return model;
         }

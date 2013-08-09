@@ -50,14 +50,16 @@ namespace UCosmic.Domain.People
                     a.Values.Any(v =>
                         /* and, include activities that are undated... */
                         (!v.StartsOn.HasValue && !v.EndsOn.HasValue) ||
+ 
+                        (
+                            /* or, there is no start date, or there is a start date and its >= the FromDate... */
+                            (!v.StartsOn.HasValue || (v.StartsOn.Value >= query.FromDate)) &&
 
-                        /* or, there is no start date, or there is a start date and its >= the FromDate... */
-                        (!v.StartsOn.HasValue || (v.StartsOn.Value >= query.FromDate)) &&
-
-                        /* and, OnGoing has value and true,
-                            * or there is no end date, or there is an end date and its earlier than ToDate. */
-                        ((v.OnGoing.HasValue && v.OnGoing.Value) ||
-                            (!v.EndsOn.HasValue || (v.EndsOn.Value < query.ToDate)))
+                            /* and, OnGoing has value and true,
+                                * or there is no end date, or there is an end date and its earlier than ToDate. */
+                            ((v.OnGoing.HasValue && v.OnGoing.Value) ||
+                                (!v.EndsOn.HasValue || (v.EndsOn.Value < query.ToDate)))
+                        )
                     )
                 )
                 .GroupBy(g => g.PersonId);

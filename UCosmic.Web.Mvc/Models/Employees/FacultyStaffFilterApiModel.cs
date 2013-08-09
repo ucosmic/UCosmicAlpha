@@ -31,7 +31,7 @@ namespace UCosmic.Web.Mvc.Models
         public int? DepartmentId { get; set; }
     }
 
-    public class FacultyStaffCountModel
+    public class FacultyStaffTypeCountModel
     {
         public int TypeId { get; set; }
         public string Type { get; set; }
@@ -43,53 +43,40 @@ namespace UCosmic.Web.Mvc.Models
         public int PlaceId { get; set; }
         public string OfficialName { get; set; }
         public int Count { get; set; }
-        public ICollection<FacultyStaffCountModel> TypeCounts { get; set; }
+        public ICollection<FacultyStaffTypeCountModel> TypeCounts { get; set; }
 
         public FacultyStaffPlaceCountModel()
         {
-            TypeCounts = new Collection<FacultyStaffCountModel>();
+            TypeCounts = new Collection<FacultyStaffTypeCountModel>();
         }
-    }
-
-    public class FacultyStaffTrendModel
-    {
-        public ICollection<int> Counts { get; set; }
     }
 
     public class FacultyStaffPlaceTrendModel
     {
         public int PlaceId { get; set; }
         public string OfficialName { get; set; }
-        public ICollection<int> Counts { get; set; }
+        public ICollection<int> CountPerYear { get; set; }
     }
 
-    public class FacultyStaffActivitiesSummaryModel
+    public class FacultyStaffSummaryModel
     {
         public int TotalActivities { get; set; }
-        public int TotalPlacesWithActivities { get; set; }
-        public ICollection<FacultyStaffPlaceCountModel> PlaceActivityCounts { get; set; }
-        public ICollection<FacultyStaffCountModel> WorldActivityCounts { get; set; }
-        public ICollection<FacultyStaffPlaceTrendModel> PlaceTrendActivityCounts { get; set; }
-        public ICollection<FacultyStaffTrendModel> WorldTrendActivityCounts { get; set; }
+        public int TotalPlaces { get; set; }
+        public ICollection<FacultyStaffPlaceCountModel> Counts { get; set; }
 
-        public int TotalPeople { get; set; }
-        public int TotalPlacesWithPeople { get; set; }
-        public ICollection<FacultyStaffPlaceCountModel> PlacePeopleCounts { get; set; }
-        public ICollection<FacultyStaffCountModel> WorldPeopleCounts { get; set; }
-        public ICollection<FacultyStaffPlaceTrendModel> PlaceTrendPeopleCounts { get; set; }
-        public ICollection<FacultyStaffTrendModel> WorldTrendPeopleCounts { get; set; }
-
-        public FacultyStaffActivitiesSummaryModel()
+        public FacultyStaffSummaryModel()
         {
-            PlaceActivityCounts = new Collection<FacultyStaffPlaceCountModel>();
-            WorldActivityCounts = new Collection<FacultyStaffCountModel>();
-            PlaceTrendActivityCounts = new Collection<FacultyStaffPlaceTrendModel>();
-            WorldTrendActivityCounts = new Collection<FacultyStaffTrendModel>();
+            Counts = new Collection<FacultyStaffPlaceCountModel>();
+        }
+    }
 
-            PlacePeopleCounts = new Collection<FacultyStaffPlaceCountModel>();
-            WorldPeopleCounts = new Collection<FacultyStaffCountModel>();
-            PlaceTrendPeopleCounts = new Collection<FacultyStaffPlaceTrendModel>();
-            WorldTrendPeopleCounts = new Collection<FacultyStaffTrendModel>();
+    public class FacultyStaffTrendModel
+    {
+        public ICollection<FacultyStaffPlaceTrendModel> PlaceTrendActivityCounts { get; set; }
+
+        public FacultyStaffTrendModel()
+        {
+            PlaceTrendActivityCounts = new Collection<FacultyStaffPlaceTrendModel>();
         }
     }
 }
