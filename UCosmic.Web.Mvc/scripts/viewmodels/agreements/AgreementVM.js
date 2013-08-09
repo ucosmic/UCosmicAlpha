@@ -1,4 +1,4 @@
-define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../amd-modules/Establishments/Search', '../amd-modules/Establishments/Item', '../amd-modules/Widgets/Spinner', "../../jquery.globalize/globalize.require"], function(require, exports, __SearchResultModule__, __SearchModule__, __ItemModule__, __Spinner__) {
+define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../amd-modules/Establishments/Search', '../amd-modules/Establishments/Item', '../amd-modules/Widgets/Spinner', "../../jquery/jquery.globalize/globalize.require"], function(require, exports, __SearchResultModule__, __SearchModule__, __ItemModule__, __Spinner__) {
     var SearchResultModule = __SearchResultModule__;
 
     var SearchModule = __SearchModule__;
@@ -138,16 +138,12 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             this.establishmentSearchViewModel = new Search();
             this.hasBoundSearch = false;
             this.hasBoundItem = false;
-            require([
-                "../../jquery.globalize/cultures/globalize.culture." + "fr-FR" + ""
-            ], function (html) {
-                Globalize.culture("fr-FR");
-            });
+            var culture = $("meta[name='accept-language']").attr("content");
             if(window.location.href.toLowerCase().indexOf("agreements/new") > 0) {
                 require([
-                    "../../jquery.globalize/cultures/globalize.culture." + "fr-FR" + ""
+                    "../../jquery/jquery.globalize/cultures/globalize.culture." + culture + ""
                 ], function (html) {
-                    Globalize.culture("fr-FR");
+                    Globalize.culture(culture);
                 });
                 this.dfdPopParticipants.resolve();
                 this.editOrNewUrl = "new/";
@@ -167,9 +163,9 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                 this.populateFiles();
                 this.populateContacts();
                 require([
-                    "../../jquery.globalize/cultures/globalize.culture." + "fr-FR" + ""
+                    "../../jquery/jquery.globalize/cultures/globalize.culture." + culture + ""
                 ], function (html) {
-                    Globalize.culture("fr-FR");
+                    Globalize.culture(culture);
                     _this.populateAgreementData();
                 });
                 $("#LoadingPage").hide();
@@ -645,8 +641,15 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             $(".hasDate").each(function (index, item) {
                 $(item).kendoDatePicker({
                     value: new Date($(item).val()),
+                    change: function (e) {
+                        if(this.value() != null) {
+                            $(e.sender.element).val(Globalize.format(this.value(), 'd'));
+                        }
+                    },
                     close: function (e) {
-                        $(e.sender.element).val(Globalize.format(this.value(), 'd'));
+                        if(this.value() != null) {
+                            $(e.sender.element).val(Globalize.format(this.value(), 'd'));
+                        }
                     }
                 });
             });
@@ -858,7 +861,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                     "superscript", 
                     "viewHtml", 
                     {
-                        name: "formatBlock",
+                        name: "formatting",
                         items: [
                             {
                                 text: "Paragraph",
@@ -1473,7 +1476,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                     if(otherVal() == undefined) {
                         return true;
                     } else {
-                        return new Date(val) > new Date(otherVal());
+                        return Globalize.parseDate(val) > Globalize.parseDate(otherVal());
                     }
                 },
                 message: 'The field must be greater than start date'
@@ -1747,7 +1750,7 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
                             $("#LoadingPage").fadeOut(500, function () {
                                 if(xhr != undefined) {
                                     window.location.hash = "";
-                                    window.location.pathname = "agreements/" + xhr.getResponseHeader('Location').substring(xhr.getResponseHeader('Location').lastIndexOf("/") + 1) + "/edit";
+                                    window.location.pathname = "/agreements/" + xhr.getResponseHeader('Location').substring(xhr.getResponseHeader('Location').lastIndexOf("/") + 1) + "/edit/";
                                 } else {
                                     alert("success, but no location");
                                 }

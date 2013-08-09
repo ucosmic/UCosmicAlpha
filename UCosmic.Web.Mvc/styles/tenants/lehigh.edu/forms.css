@@ -411,6 +411,9 @@ section {
   background-color: white !important;
   color: black !important; }
 
+.k-editor-toolbar {
+  white-space: normal; }
+
 ::-webkit-input-placeholder {
   color: grey; }
 

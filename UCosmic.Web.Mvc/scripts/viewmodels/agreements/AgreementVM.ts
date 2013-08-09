@@ -10,7 +10,7 @@
 /// <reference path="../../app/Routes.ts" />
 /// <reference path="../../oss/moment.d.ts" />
 /// <reference path="../../sammy/sammyjs.d.ts" />
-/// <amd-dependency path="../../jquery.globalize/globalize.require" />
+/// <amd-dependency path="../../jquery/jquery.globalize/globalize.require" />
 
 import SearchResultModule = module('../amd-modules/Establishments/SearchResult');
 import SearchModule = module('../amd-modules/Establishments/Search');
@@ -58,9 +58,10 @@ export class InstitutionalAgreementEditModel {
         //require(["../../kendo/2013.2.716/cultures/kendo.culture." + "fr" + ".min"], function (html) {
         //    kendo.culture("fr")
         //});
-        require(["../../jquery.globalize/cultures/globalize.culture." + "fr-FR" + ""], function (html) {
-            Globalize.culture("fr-FR")
-        });
+        //require(["../../jquery/jquery.globalize/cultures/globalize.culture." + "fr-FR" + ""], function (html) {
+        //    Globalize.culture("fr-FR")
+        //});
+
         //Globalize.culture($("meta[name='accept-language']").attr("content"));
 
         //ko.extenders['date'] = function (target, format) {
@@ -77,11 +78,13 @@ export class InstitutionalAgreementEditModel {
         //};
 
         //alert($("meta[name='accept-language']").attr("content"));
+        var culture = $("meta[name='accept-language']").attr("content");
         if (window.location.href.toLowerCase().indexOf("agreements/new") > 0) {
-            require(["../../jquery.globalize/cultures/globalize.culture." + "fr-FR" + ""], function (html) {
-                Globalize.culture("fr-FR")
+            require(["../../jquery/jquery.globalize/cultures/globalize.culture." + culture + ""], function (html) {
+                //Globalize.culture("fr-FR")
+                Globalize.culture(culture)
             });
-            //Globalize.culture($("meta[name='accept-language']").attr("content"));
+            //;
             this.dfdPopParticipants.resolve();
             this.editOrNewUrl = "new/"
             this.agreementIsEdit(false);
@@ -101,8 +104,8 @@ export class InstitutionalAgreementEditModel {
             this.populateFiles();
             this.populateContacts();
 
-            require(["../../jquery.globalize/cultures/globalize.culture." + "fr-FR" + ""], (html) => {
-                Globalize.culture("fr-FR")
+            require(["../../jquery/jquery.globalize/cultures/globalize.culture." + culture + ""], (html) => {
+                Globalize.culture(culture)
                 this.populateAgreementData();
             });
             //Globalize.culture($("meta[name='accept-language']").attr("content"));
@@ -755,10 +758,17 @@ export class InstitutionalAgreementEditModel {
         });
         $(".hasDate").each(function (index, item) {
             $(item).kendoDatePicker({
-
                 value: new Date($(item).val()),
+                //have to use change event for ko validation-change does a double call so need to check for null
+                change: function (e) {
+                    if (this.value() != null) {
+                        $(e.sender.element).val(Globalize.format(this.value(), 'd'));
+                    }
+                },
                 close: function (e) {
-                    $(e.sender.element).val(Globalize.format(this.value(), 'd'));
+                    if (this.value() != null) {
+                        $(e.sender.element).val(Globalize.format(this.value(), 'd'));
+                    }
                 }
             });
         });
@@ -981,7 +991,7 @@ export class InstitutionalAgreementEditModel {
             "superscript",
             "viewHtml",
             {
-                name: "formatBlock",
+                name: "formatting",
                 items: [
             { text: "Paragraph", value: "p" },
             { text: "Quotation", value: "blockquote" },
@@ -1618,7 +1628,8 @@ export class InstitutionalAgreementEditModel {
                 if (otherVal() == undefined) {
                     return true;
                 } else {
-                    return new Date(val) > new Date(otherVal());
+                    return Globalize.parseDate(val) > Globalize.parseDate(otherVal())
+                    //return new Date(val) > new Date(otherVal());
                 }
             },
             message: 'The field must be greater than start date'//{0}'
@@ -1908,7 +1919,7 @@ export class InstitutionalAgreementEditModel {
                             $("#LoadingPage").fadeOut(500, function () {
                                 if (xhr != undefined) {
                                     window.location.hash = ""
-                                    window.location.pathname = "agreements/" + xhr.getResponseHeader('Location').substring(xhr.getResponseHeader('Location').lastIndexOf("/")+1) + "/edit"
+                                    window.location.pathname = "/agreements/" + xhr.getResponseHeader('Location').substring(xhr.getResponseHeader('Location').lastIndexOf("/")+1) + "/edit/"
                                 }
                                 else {
                                     alert("success, but no location")

@@ -415,6 +415,9 @@ section {
     color: black!important;
 }
 
+//kendo toolbar bug http://www.kendoui.com/forums/kendo-ui-web/editor/-bug-report-2013-2-716-editor-toolbar-layout-issue.aspx
+.k-editor-toolbar{ white-space: normal;}
+
 ::-webkit-input-placeholder { color: grey; }
 ::-moz-placeholder { color:grey; } /* FF 19+ */
 :-moz-placeholder { color:grey; } /* FF 18- */
