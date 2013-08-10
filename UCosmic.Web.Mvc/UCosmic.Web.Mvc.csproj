@@ -361,7 +361,8 @@
     <Compile Include="Models\Agreements\AgreementUmbrellaOptionApiProfiler.cs" />
     <Compile Include="Models\Degrees\DegreeApiModel.cs" />
     <Compile Include="Models\Degrees\DegreeSearchInputModel.cs" />
-    <Compile Include="Models\Employees\FacultyStaffFilterApiModel.cs" />
+    <Compile Include="Models\Employees\FacultyStaffSearchApiModel.cs" />
+    <Compile Include="Models\Employees\FacultyStaffSummaryApiModel.cs" />
     <Compile Include="Models\Establishments\EstablishmentChildrenSearchInputModel.cs" />
     <Compile Include="Models\InternationalAffiliationApiModel.cs" />
     <Compile Include="Models\Agreements\AgreementContactPhoneApiModel.cs" />

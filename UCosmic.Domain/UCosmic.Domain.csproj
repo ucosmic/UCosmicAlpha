@@ -154,8 +154,13 @@
     <Compile Include="Domain\Activities\Queries\ActivityValuesByActivityIdAndMode.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityCountByPlaceId.cs" />
     <Compile Include="Domain\Activities\Validation\MustHaveActivityMode.cs" />
-    <Compile Include="Domain\Activities\Views\ActivityCountView.cs" />
-    <Compile Include="Domain\Activities\Views\ActivityTrendView.cs" />
+    <Compile Include="Domain\Activities\Views\ActivityGlobalActivityCountView.cs" />
+    <Compile Include="Domain\Activities\Views\ActivityGlobalPeopleCountView.cs" />
+    <Compile Include="Domain\Activities\Views\ActivityPlaceActivityCountView.cs" />
+    <Compile Include="Domain\Activities\Views\ActivityPlacePeopleCountView.cs" />
+    <Compile Include="Domain\Activities\Views\ActivityGlobalTrendActivityView.cs" />
+    <Compile Include="Domain\Activities\Views\ActivityGlobalTrendPeopleView.cs" />
+    <Compile Include="Domain\Activities\Views\ActivityPlacelTrendActivityView.cs" />
     <Compile Include="Domain\Agreements\Commands\PurgeContact.cs" />
     <Compile Include="Domain\Agreements\Commands\UpdateContact.cs" />
     <Compile Include="Domain\Agreements\Commands\CreateContact.cs" />
