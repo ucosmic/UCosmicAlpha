@@ -3,6 +3,7 @@
 /// <reference path="../../../typings/knockout/knockout.d.ts" />
 define(["require", "exports", './Spinner'], function(require, exports, __Spinner__) {
     var Spinner = __Spinner__;
+
     var PagedSearch = (function () {
         function PagedSearch() {
             var _this = this;
@@ -77,7 +78,7 @@ define(["require", "exports", './Spinner'], function(require, exports, __Spinner
         // paging methods
         PagedSearch.prototype.nextPage = function () {
             if (this.nextEnabled()) {
-                var pageNumber = parseInt(this.pageNumber()) + 1;
+                var pageNumber = parseInt(this.pageNumber().toString()) + 1;
                 this.pageNumber(pageNumber);
             }
         };

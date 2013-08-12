@@ -9,10 +9,7 @@
 /// <reference path="../../app/Routes.ts" />
 
 module ViewModels.LanguageExpertises {
-    // ================================================================================
-    /* 
-    */
-    // ================================================================================
+
     export class LanguageExpertise {
         /* Initialization errors. */
         inititializationErrors: string = "";
@@ -48,18 +45,10 @@ module ViewModels.LanguageExpertises {
         languageDroplist: any;
         isOther: KnockoutObservable<boolean> = ko.observable(false);
 
-        // --------------------------------------------------------------------------------
-        /*
-        */
-        // --------------------------------------------------------------------------------
         _initialize( expertiseId: number ): void {
             this.id = ko.observable(expertiseId);
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-        */
-        // --------------------------------------------------------------------------------   
         setupWidgets( languageInputId: string,
                       speakingInputId: string,
                       listeningInputId: string,
@@ -128,10 +117,6 @@ module ViewModels.LanguageExpertises {
             });
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-        */
-        // --------------------------------------------------------------------------------
         setupValidation(): void {
 
             //ko.validation.rules['otherRequired'] = {
@@ -156,10 +141,6 @@ module ViewModels.LanguageExpertises {
             ko.validation.group( this );
         }
 
-        // --------------------------------------------------------------------------------
-        /* 
-        */
-        // --------------------------------------------------------------------------------
         setupSubscriptions(): void {
             this.languageId.subscribe((newValue: any): void => { this.dirtyFlag(true); });
             this.other.subscribe((newValue: any): void => { this.dirtyFlag(true); });
@@ -170,18 +151,10 @@ module ViewModels.LanguageExpertises {
             this.writingProficiency.subscribe((newValue: any): void => { this.dirtyFlag(true); });
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-        */
-        // --------------------------------------------------------------------------------  
         constructor( expertiseId: number ) {
             this._initialize( expertiseId );
         }
 
-        // --------------------------------------------------------------------------------
-        /* 
-        */
-        // --------------------------------------------------------------------------------
         load(): JQueryPromise {
             var deferred: JQueryDeferred<void> = $.Deferred();
 
@@ -261,10 +234,6 @@ module ViewModels.LanguageExpertises {
             return deferred;
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-        */
-        // --------------------------------------------------------------------------------
         save( viewModel: any, event: any ): void {
 
             if (!this.isValid()) {
@@ -321,10 +290,6 @@ module ViewModels.LanguageExpertises {
             } );
         }
 
-        // --------------------------------------------------------------------------------
-        /*  
-        */
-        // --------------------------------------------------------------------------------
         cancel( item: any, event: any, mode: string ): void {
             if ( this.dirtyFlag() == true ) {
                 $( "#cancelConfirmDialog" ).dialog( {

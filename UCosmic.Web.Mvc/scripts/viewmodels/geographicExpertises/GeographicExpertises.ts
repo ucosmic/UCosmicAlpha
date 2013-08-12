@@ -6,43 +6,27 @@
 /// <reference path="../../typings/kendo/kendo.all.d.ts" />
 /// <reference path="../../app/Routes.ts" />
 
-module ViewModels.GeographicExpertises
-{
-    export class GeographicExpertiseSearchInput
-    {
+module ViewModels.GeographicExpertises {
+
+    export class GeographicExpertiseSearchInput {
         personId: number;
         orderBy: string;
         pageSize: number;
         pageNumber: number;
     }
 
-    // ================================================================================
-    /* 
-    */
-    // ================================================================================
-    export class GeographicExpertiseList
-    {
+    export class GeographicExpertiseList {
         personId: number;
         orderBy: string;
         pageSize: number;
         pageNumber: number;
         items: KnockoutObservableArray<any>;
 
-        // --------------------------------------------------------------------------------
-        /* 
-        */
-        // --------------------------------------------------------------------------------                        
-        constructor(personId: number)
-        {
+        constructor(personId: number) {
             this.personId = personId;
         }
 
-        // --------------------------------------------------------------------------------
-        /* 
-        */
-        // --------------------------------------------------------------------------------
-        load(): JQueryPromise
-        {
+        load(): JQueryPromise {
             var deferred: JQueryDeferred<void> = $.Deferred();
             var expertiseSearchInput: GeographicExpertiseSearchInput = new GeographicExpertiseSearchInput();
 
@@ -67,10 +51,6 @@ module ViewModels.GeographicExpertises
             return deferred;
         }
 
-        // --------------------------------------------------------------------------------
-        /* 
-        */
-        // --------------------------------------------------------------------------------
         deleteExpertiseById(expertiseId: number): void {
             $.ajax({
                 async: false,
@@ -85,10 +65,6 @@ module ViewModels.GeographicExpertises
             });
         }
 
-        // --------------------------------------------------------------------------------
-        /*  
-        */
-        // --------------------------------------------------------------------------------
         deleteExpertise(data: any, event: any, viewModel: any): void {
             $("#confirmGeographicExpertiseDeleteDialog").dialog({
                 dialogClass: 'jquery-ui',
@@ -118,12 +94,7 @@ module ViewModels.GeographicExpertises
             return App.Routes.Mvc.My.GeographicExpertise.edit(expertiseId);
         }
 
-        // --------------------------------------------------------------------------------
-        /*  
-        */
-        // --------------------------------------------------------------------------------
-        formatLocations(locations: any): string
-        {
+        formatLocations(locations: any): string {
             var formattedLocations: string = "";
 
             for (var i = 0; i < locations.length; i += 1)

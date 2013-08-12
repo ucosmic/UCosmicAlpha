@@ -15,22 +15,10 @@ var ViewModels;
         })();
         GeographicExpertises.GeographicExpertiseSearchInput = GeographicExpertiseSearchInput;
 
-        // ================================================================================
-        /*
-        */
-        // ================================================================================
         var GeographicExpertiseList = (function () {
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             function GeographicExpertiseList(personId) {
                 this.personId = personId;
             }
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             GeographicExpertiseList.prototype.load = function () {
                 var _this = this;
                 var deferred = $.Deferred();
@@ -55,10 +43,6 @@ var ViewModels;
                 return deferred;
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             GeographicExpertiseList.prototype.deleteExpertiseById = function (expertiseId) {
                 $.ajax({
                     async: false,
@@ -72,10 +56,6 @@ var ViewModels;
                 });
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             GeographicExpertiseList.prototype.deleteExpertise = function (data, event, viewModel) {
                 $("#confirmGeographicExpertiseDeleteDialog").dialog({
                     dialogClass: 'jquery-ui',
@@ -107,10 +87,6 @@ var ViewModels;
                 return App.Routes.Mvc.My.GeographicExpertise.edit(expertiseId);
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             GeographicExpertiseList.prototype.formatLocations = function (locations) {
                 var formattedLocations = "";
 

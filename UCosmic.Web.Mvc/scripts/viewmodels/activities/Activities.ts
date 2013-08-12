@@ -8,23 +8,17 @@
 /// <reference path="../../typings/moment/moment.d.ts" />
 /// <reference path="../activities/ServiceApiModel.d.ts" />
 
-module ViewModels.Activities
-{
+module ViewModels.Activities {
 
-    export class ActivitySearchInput
-    {
+    export class ActivitySearchInput {
         personId: number;
         orderBy: string;
         pageSize: number;
         pageNumber: number;
     }
 
-    // ================================================================================
-    /* 
-    */
-    // ================================================================================
-    export class ActivityList implements KnockoutValidationGroup
-    {
+    export class ActivityList implements KnockoutValidationGroup {
+
         private static iconMaxSide: number = 64;
 
         activityLocationsList: Service.ApiModels.IActivityLocation[];
@@ -36,21 +30,11 @@ module ViewModels.Activities
         pageNumber: number;
         items: KnockoutObservableArray<any>; // array of IObservableActivity
 
-        // --------------------------------------------------------------------------------
-        /* 
-        */
-        // --------------------------------------------------------------------------------                        
-        constructor(personId: number)
-        {
+        constructor(personId: number) {
             this.personId = personId;
         }
 
-        // --------------------------------------------------------------------------------
-        /* 
-        */
-        // --------------------------------------------------------------------------------
-        load(): JQueryPromise
-        {
+        load(): JQueryPromise {
             var deferred: JQueryDeferred<void> = $.Deferred();
 
             var locationsPact = $.Deferred();
@@ -132,10 +116,6 @@ module ViewModels.Activities
             return deferred;
         }
 
-        // --------------------------------------------------------------------------------
-        /* 
-        */
-        // --------------------------------------------------------------------------------
         deleteActivityById(activityId: number): void {
             $.ajax({
                 async: false,
@@ -150,10 +130,6 @@ module ViewModels.Activities
             });
         }
 
-        // --------------------------------------------------------------------------------
-        /*  
-        */
-        // --------------------------------------------------------------------------------
         deleteActivity(data: any, e: any, viewModel: any): void {
             $("#confirmActivityDeleteDialog").dialog({
                 dialogClass: 'jquery-ui',
@@ -181,10 +157,6 @@ module ViewModels.Activities
             });
         }
 
-        // --------------------------------------------------------------------------------
-        /*  
-        */
-        // --------------------------------------------------------------------------------
         editActivity(activityId: number): boolean {
             var returnValue = false;
             $.ajax({
@@ -221,10 +193,6 @@ module ViewModels.Activities
             return App.Routes.Mvc.My.Profile.activityEdit(id);
         }
 
-        // --------------------------------------------------------------------------------
-        /*  
-        */
-        // --------------------------------------------------------------------------------
         newActivity(data: any, event: any): void {
             $.ajax({
                 type: "POST",
@@ -240,12 +208,7 @@ module ViewModels.Activities
             });
         }
 
-        // --------------------------------------------------------------------------------
-        /*  
-        */
-        // --------------------------------------------------------------------------------
-        getTypeName(id: number): string
-        {
+        getTypeName(id: number): string {
             var typeName: string = "";
 
             if (this.activityTypesList != null)
@@ -263,12 +226,7 @@ module ViewModels.Activities
             return typeName;
         }
 
-        // --------------------------------------------------------------------------------
-        /*  
-        */
-        // --------------------------------------------------------------------------------
-        getLocationName(id: number): string
-        {
+        getLocationName(id: number): string {
             var locationName: string = "";
 
             if (this.activityLocationsList != null)
@@ -286,12 +244,7 @@ module ViewModels.Activities
             return locationName;
         }
 
-        // --------------------------------------------------------------------------------
-        /*  
-        */
-        // --------------------------------------------------------------------------------
-        activityDatesFormatted(startsOnStr: Date, endsOnStr: Date, onGoing: boolean, dateFormat: string): string
-        {
+        activityDatesFormatted(startsOnStr: Date, endsOnStr: Date, onGoing: boolean, dateFormat: string): string {
             var formattedDateRange: string = "";
 
             /* May need a separate function to convert from CLR custom date formats to moment formats */
@@ -323,12 +276,7 @@ module ViewModels.Activities
             return formattedDateRange;
         }
 
-        // --------------------------------------------------------------------------------
-        /*  
-        */
-        // --------------------------------------------------------------------------------
-        activityTypesFormatted(types: Service.ApiModels.IObservableValuesActivityType[]): string
-        {
+        activityTypesFormatted(types: Service.ApiModels.IObservableValuesActivityType[]): string {
             var formattedTypes: string = "";
             var location: Service.ApiModels.IActivityLocation;
 
@@ -348,12 +296,7 @@ module ViewModels.Activities
             return formattedTypes;
         }
 
-        // --------------------------------------------------------------------------------
-        /*  
-        */
-        // --------------------------------------------------------------------------------
-        activityLocationsFormatted(locations: Service.ApiModels.IObservableValuesActivityLocation[]): string
-        {
+        activityLocationsFormatted(locations: Service.ApiModels.IObservableValuesActivityLocation[]): string {
             var formattedLocations: string = "";
             var location: Service.ApiModels.IActivityLocation;
 

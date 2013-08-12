@@ -15,22 +15,10 @@ var ViewModels;
         })();
         LanguageExpertises.LanguageExpertiseSearchInput = LanguageExpertiseSearchInput;
 
-        // ================================================================================
-        /*
-        */
-        // ================================================================================
         var LanguageExpertiseList = (function () {
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             function LanguageExpertiseList(personId) {
                 this.personId = personId;
             }
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             LanguageExpertiseList.prototype.load = function () {
                 var _this = this;
                 var deferred = $.Deferred();
@@ -55,10 +43,6 @@ var ViewModels;
                 return deferred;
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             LanguageExpertiseList.prototype.deleteExpertiseById = function (expertiseId) {
                 $.ajax({
                     async: false,
@@ -72,10 +56,6 @@ var ViewModels;
                 });
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             LanguageExpertiseList.prototype.deleteExpertise = function (data, event, viewModel) {
                 $("#confirmLanguageExpertiseDeleteDialog").dialog({
                     dialogClass: 'jquery-ui',
@@ -107,10 +87,6 @@ var ViewModels;
                 return App.Routes.Mvc.My.LanguageExpertise.edit(expertiseId);
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             LanguageExpertiseList.prototype.formatLocations = function (locations) {
                 var formattedLocations = "";
 

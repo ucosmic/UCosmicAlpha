@@ -8,12 +8,8 @@
 /// <reference path="../../typings/moment/moment.d.ts" />
 /// <reference path="../../app/Routes.ts" />
 
-
 module ViewModels.GeographicExpertises {
-    // ================================================================================
-    /* 
-    */
-    // ================================================================================
+
     export class GeographicExpertise {
         /* Initialization errors. */
         inititializationErrors: string = "";
@@ -39,18 +35,10 @@ module ViewModels.GeographicExpertises {
         isValid: () => boolean;
         isAnyMessageShown: () => boolean;
 
-        // --------------------------------------------------------------------------------
-        /*
-        */
-        // --------------------------------------------------------------------------------
         _initialize( expertiseId: number ): void {
             this.id = ko.observable(expertiseId);
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-        */
-        // --------------------------------------------------------------------------------   
         setupWidgets( locationSelectorId: string ): void {
             this.locationSelectorId = locationSelectorId;
 
@@ -85,10 +73,6 @@ module ViewModels.GeographicExpertises {
             } );
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-        */
-        // --------------------------------------------------------------------------------
         setupValidation(): void {
             ko.validation.rules['atLeast'] = {
                 validator: ( val: any, otherVal: any ): boolean => {
@@ -105,26 +89,14 @@ module ViewModels.GeographicExpertises {
             ko.validation.group( this );
         }
 
-        // --------------------------------------------------------------------------------
-        /* 
-        */
-        // --------------------------------------------------------------------------------
         setupSubscriptions(): void {
             this.description.subscribe((newValue: any): void => { this.dirtyFlag(true); });
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-        */
-        // --------------------------------------------------------------------------------  
         constructor( expertiseId: number ) {
             this._initialize( expertiseId );
         }
 
-        // --------------------------------------------------------------------------------
-        /* 
-        */
-        // --------------------------------------------------------------------------------
         load(): JQueryPromise {
             var deferred: JQueryDeferred<void> = $.Deferred();
 
@@ -177,10 +149,6 @@ module ViewModels.GeographicExpertises {
             return deferred;
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-        */
-        // --------------------------------------------------------------------------------
         save( viewModel: any, event: any ): void {
 
             if (!this.isValid()) {
@@ -234,10 +202,6 @@ module ViewModels.GeographicExpertises {
             });
         }
 
-        // --------------------------------------------------------------------------------
-        /*  
-        */
-        // --------------------------------------------------------------------------------
         cancel( item: any, event: any, mode: string ): void {
             if ( this.dirtyFlag() == true ) {
                 $( "#cancelConfirmDialog" ).dialog( {
@@ -260,10 +224,6 @@ module ViewModels.GeographicExpertises {
             }
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-        */
-        // --------------------------------------------------------------------------------
         updateLocations( items: any[] ): void {
             this.locations.removeAll();
             for ( var i = 0; i < items.length; i += 1 ) {

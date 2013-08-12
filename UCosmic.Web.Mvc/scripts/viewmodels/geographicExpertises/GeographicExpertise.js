@@ -10,15 +10,7 @@ var ViewModels;
     /// <reference path="../../typings/moment/moment.d.ts" />
     /// <reference path="../../app/Routes.ts" />
     (function (GeographicExpertises) {
-        // ================================================================================
-        /*
-        */
-        // ================================================================================
         var GeographicExpertise = (function () {
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             function GeographicExpertise(expertiseId) {
                 /* Initialization errors. */
                 this.inititializationErrors = "";
@@ -28,18 +20,10 @@ var ViewModels;
                 this.selectedLocationValues = [];
                 this._initialize(expertiseId);
             }
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             GeographicExpertise.prototype._initialize = function (expertiseId) {
                 this.id = ko.observable(expertiseId);
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             GeographicExpertise.prototype.setupWidgets = function (locationSelectorId) {
                 var _this = this;
                 this.locationSelectorId = locationSelectorId;
@@ -75,10 +59,6 @@ var ViewModels;
                 });
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             GeographicExpertise.prototype.setupValidation = function () {
                 ko.validation.rules['atLeast'] = {
                     validator: function (val, otherVal) {
@@ -95,10 +75,6 @@ var ViewModels;
                 ko.validation.group(this);
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             GeographicExpertise.prototype.setupSubscriptions = function () {
                 var _this = this;
                 this.description.subscribe(function (newValue) {
@@ -106,10 +82,6 @@ var ViewModels;
                 });
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             GeographicExpertise.prototype.load = function () {
                 var _this = this;
                 var deferred = $.Deferred();
@@ -159,10 +131,6 @@ var ViewModels;
                 return deferred;
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             GeographicExpertise.prototype.save = function (viewModel, event) {
                 if (!this.isValid()) {
                     // TBD - need dialog here.
@@ -210,10 +178,6 @@ var ViewModels;
                 });
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             GeographicExpertise.prototype.cancel = function (item, event, mode) {
                 if (this.dirtyFlag() == true) {
                     $("#cancelConfirmDialog").dialog({
@@ -235,10 +199,6 @@ var ViewModels;
                 }
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             GeographicExpertise.prototype.updateLocations = function (items) {
                 this.locations.removeAll();
                 for (var i = 0; i < items.length; i += 1) {

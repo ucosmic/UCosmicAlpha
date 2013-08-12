@@ -11,6 +11,7 @@ define(["require", "exports", '../Widgets/Spinner'], function(require, exports, 
     
     
     var Spinner = __Spinner__;
+
     var ServerUrlApiModel = (function () {
         function ServerUrlApiModel(ownerId) {
             this.id = 0;

@@ -2,15 +2,8 @@
 /// <reference path="../places/ServerApiModel.ts" />
 /// <reference path="Name.ts" />
 /// <reference path="Url.ts" />
-//interface KnockoutObservableSharedNameViewModelArray extends KnockoutObservableArrayFunctions {
-//    (): Name[];
-//    (value: Name[]): void;
 
-//    subscribe(callback: (newValue: Name[]) => void , target?: any, topic?: string): KnockoutSubscription;
-//    notifySubscribers(valueToWrite: Name[], topic?: string);
-//}
-
-import Places= require('../places/ServerApiModel');
+import Places = require('../places/ServerApiModel');
 
 export interface IServerApiFlatModel {
     id: number;

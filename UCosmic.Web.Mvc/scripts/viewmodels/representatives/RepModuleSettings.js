@@ -9,8 +9,8 @@ var ViewModels;
     (function (RepModuleSettings) {
         var RepModuleSettings = (function () {
             function RepModuleSettings(welcomeMessage, emailMessage) {
-                this._welcomeMessage = welcomeMessage;
-                this._emailMessage = emailMessage;
+                this.welcomeMessage = welcomeMessage;
+                this.emailMessage = emailMessage;
             }
             return RepModuleSettings;
         })();

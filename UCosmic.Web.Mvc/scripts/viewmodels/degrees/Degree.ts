@@ -10,10 +10,7 @@
 /// <reference path="../degrees/ServiceApiModel.d.ts" />
 
 module ViewModels.Degrees {
-    // ================================================================================
-    /* 
-    */
-    // ================================================================================
+
     export class Degree implements Service.ApiModels.Degree.IObservableDegree {
         /* Initialization errors. */
         inititializationErrors: string = "";
@@ -40,18 +37,10 @@ module ViewModels.Degrees {
         isValid: () => boolean;
         isAnyMessageShown: () => boolean;
 
-        // --------------------------------------------------------------------------------
-        /*
-        */
-        // --------------------------------------------------------------------------------
         _initialize( degreeId: number ): void {
             this.id = ko.observable(degreeId);
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-        */
-        // --------------------------------------------------------------------------------   
         setupWidgets( institutionSelectorId: string ): void {
 
             this.institutionSelectorId = institutionSelectorId;
@@ -98,10 +87,6 @@ module ViewModels.Degrees {
             } );
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-        */
-        // --------------------------------------------------------------------------------
         checkInstitutionForNull() {
             var me = $( "#" + this.institutionSelectorId ).data( "kendoAutoComplete" );
             var value = (me.value() != null) ? me.value().toString() : null;
@@ -115,10 +100,6 @@ module ViewModels.Degrees {
             }
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-        */
-        // --------------------------------------------------------------------------------
         setupValidation(): void {
             this.title.extend( { required: true, minLength: 1, maxLength: 256} );
             this.yearAwarded.extend( { min: 1900 } );
@@ -126,10 +107,6 @@ module ViewModels.Degrees {
             ko.validation.group( this );
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-        */
-        // --------------------------------------------------------------------------------
         setupSubscriptions(): void {
             this.title.subscribe((newValue: any): void => { this.dirtyFlag(true); });
             this.fieldOfStudy.subscribe((newValue: any): void => { this.dirtyFlag(true); });
@@ -137,18 +114,10 @@ module ViewModels.Degrees {
             this.institutionId.subscribe((newValue: any): void => { this.dirtyFlag(true); });
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-        */
-        // --------------------------------------------------------------------------------  
         constructor( educationId: number ) {
             this._initialize( educationId );
         }
 
-        // --------------------------------------------------------------------------------
-        /* 
-        */
-        // --------------------------------------------------------------------------------
         load(): JQueryPromise {
             var deferred: JQueryDeferred<void> = $.Deferred();
 
@@ -193,10 +162,6 @@ module ViewModels.Degrees {
             return deferred;
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-        */
-        // --------------------------------------------------------------------------------
         save( viewModel: any, event: any ): void {
             if (!this.isValid()) {
                 // TBD - need dialog here.
@@ -252,10 +217,6 @@ module ViewModels.Degrees {
             } );
         }
 
-        // --------------------------------------------------------------------------------
-        /*  
-        */
-        // --------------------------------------------------------------------------------
         cancel( item: any, event: any, mode: string ): void {
             if ( this.dirtyFlag() == true ) {
                 $( "#cancelConfirmDialog" ).dialog( {

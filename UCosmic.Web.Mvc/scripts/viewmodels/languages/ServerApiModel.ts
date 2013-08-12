@@ -1,4 +1,5 @@
 module ViewModels.Languages {
+
     export interface IServerApiModel {
         code: string;
         name: string;

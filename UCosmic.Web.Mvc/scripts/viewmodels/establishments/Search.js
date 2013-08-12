@@ -166,7 +166,7 @@ var ViewModels;
 
                 var pageNumber = sammyContext.params['pageNumber'];
 
-                if (pageNumber && parseInt(pageNumber) !== parseInt(this.pageNumber()))
+                if (pageNumber && parseInt(pageNumber) !== Number(this.pageNumber()))
                     this.pageNumber(parseInt(pageNumber));
                 return true;
             };

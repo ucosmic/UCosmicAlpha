@@ -7,43 +7,27 @@
 /// <reference path="../../app/Routes.ts" />
 /// <reference path="../degrees/ServiceApiModel.d.ts" />
 
-module ViewModels.Degrees
-{
-    export class DegreeSearchInput
-    {
+module ViewModels.Degrees {
+
+    export class DegreeSearchInput {
         personId: number;
         orderBy: string;
         pageSize: number;
         pageNumber: number;
     }
 
-    // ================================================================================
-    /* 
-    */
-    // ================================================================================
-    export class DegreeList
-    {
+    export class DegreeList {
         personId: number;
         orderBy: string;
         pageSize: number;
         pageNumber: number;
         items: KnockoutObservableArray<any>;
 
-        // --------------------------------------------------------------------------------
-        /* 
-        */
-        // --------------------------------------------------------------------------------                        
-        constructor(personId: number)
-        {
+        constructor(personId: number) {
             this.personId = personId;
         }
 
-        // --------------------------------------------------------------------------------
-        /* 
-        */
-        // --------------------------------------------------------------------------------
-        load(): JQueryPromise
-        {
+        load(): JQueryPromise {
             var deferred: JQueryDeferred<void> = $.Deferred();
             var expertiseSearchInput: DegreeSearchInput = new DegreeSearchInput();
 
@@ -67,10 +51,6 @@ module ViewModels.Degrees
             return deferred;
         }
 
-        // --------------------------------------------------------------------------------
-        /* 
-        */
-        // --------------------------------------------------------------------------------
         deleteEducationById(expertiseId: number): void {
             $.ajax({
                 async: false,
@@ -85,10 +65,6 @@ module ViewModels.Degrees
             });
         }
 
-        // --------------------------------------------------------------------------------
-        /*  
-        */
-        // --------------------------------------------------------------------------------
         deleteEducation(data: any, event: any, viewModel: any): void {
             $("#confirmDegreeDeleteDialog").dialog({
                 dialogClass: 'jquery-ui',

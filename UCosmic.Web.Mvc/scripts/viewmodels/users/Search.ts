@@ -127,7 +127,7 @@ module ViewModels.Users {
 
             this.sammy.get(this.getPageHash(':pageNumber'), function () {
                 var pageNumber = this.params['pageNumber'];
-                if (pageNumber && parseInt(pageNumber) !== parseInt(self.pageNumber()))
+                if (pageNumber && parseInt(pageNumber) !== Number(self.pageNumber()))
                     self.pageNumber(parseInt(pageNumber));
                 document.title = 'Users (Page #' + self.pageNumber() + ')';
             });

@@ -7,29 +7,18 @@ var ViewModels;
     /// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
     /// <reference path="../../typings/kendo/kendo.all.d.ts" />
     /// <reference path="../../typings/moment/moment.d.ts" />
+    /// <reference path="../../typings/googlemaps/google.maps.d.ts" />
     /// <reference path="../../app/Routes.ts" />
     /// <reference path="../../typings/sammyjs/sammyjs.d.ts" />
     /// <reference path="../Spinner.ts" />
     /// <reference path="../activities/ServiceApiModel.d.ts" />
     (function (Employees) {
-        // ================================================================================
-        /*
-        */
-        // ================================================================================
         var FacultyAndStaff = (function () {
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             function FacultyAndStaff(institutionInfo) {
                 /* Initialization errors. */
                 this.inititializationErrors = "";
                 this._initialize(institutionInfo);
             }
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             FacultyAndStaff.prototype._initialize = function (institutionInfo) {
                 this.sammy = Sammy();
                 this.initialLocations = [];
@@ -74,10 +63,6 @@ var ViewModels;
                 }
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             FacultyAndStaff.prototype.setupWidgets = function (locationSelectorId, fromDatePickerId, toDatePickerId, institutionSelectorId, campusDropListId, collegeDropListId, departmentDropListId) {
                 var _this = this;
                 this.locationSelectorId = locationSelectorId;
@@ -311,10 +296,6 @@ var ViewModels;
                 //});
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             FacultyAndStaff.prototype.setupValidation = function () {
                 //ko.validation.rules['atLeast'] = {
                 //    validator: (val: any, otherVal: any): boolean => {
@@ -329,10 +310,6 @@ var ViewModels;
                 //ko.validation.group(this);
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             FacultyAndStaff.prototype.setupSubscriptions = function () {
                 //this.from.subscribe((newValue: any): void => { this.dirtyFlag(true); });
                 //this.to.subscribe((newValue: any): void => { this.dirtyFlag(true); });
@@ -341,10 +318,6 @@ var ViewModels;
                 //this.position.subscribe((newValue: any): void => { this.dirtyFlag(true); });
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             FacultyAndStaff.prototype.setupRouting = function () {
                 var _this = this;
                 this.sammy.get('#/summary', function () {
@@ -360,10 +333,6 @@ var ViewModels;
                 this.sammy.run('#/summary');
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             FacultyAndStaff.prototype.setupMaps = function () {
                 var me = this;
 
@@ -530,10 +499,6 @@ var ViewModels;
                 this.linechart = new this.google.visualization.LineChart($('#facultystaff-summary-linechart')[0]);
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             FacultyAndStaff.prototype.getActivityDataTable = function (place) {
                 var dt = new this.google.visualization.DataTable();
 
@@ -569,10 +534,6 @@ var ViewModels;
                 return view;
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             FacultyAndStaff.prototype.getPeopleDataTable = function (place) {
                 var dt = new this.google.visualization.DataTable();
 
@@ -605,10 +566,6 @@ var ViewModels;
                 return dt;
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             FacultyAndStaff.prototype.getActivityTrendDataTable = function (place) {
                 var dt = new this.google.visualization.DataTable();
 
@@ -644,10 +601,6 @@ var ViewModels;
                 return view;
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             FacultyAndStaff.prototype.getPeopleTrendDataTable = function (place) {
                 var dt = new this.google.visualization.DataTable();
 
@@ -680,10 +633,6 @@ var ViewModels;
                 return dt;
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             FacultyAndStaff.prototype.load = function () {
                 var _this = this;
                 var me = this;
@@ -736,10 +685,6 @@ var ViewModels;
                 return deferred;
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             FacultyAndStaff.prototype.checkInstitutionForNull = function () {
                 var me = $("#" + this.institutionSelectorId).data("kendoAutoComplete");
                 var value = (me.value() != null) ? me.value().toString() : null;
@@ -753,10 +698,6 @@ var ViewModels;
                 }
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             FacultyAndStaff.prototype.updateLocations = function (items) {
                 if (this.locations != null) {
                     this.locations.removeAll();
@@ -767,10 +708,6 @@ var ViewModels;
                 }
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             FacultyAndStaff.prototype.selectMap = function (type) {
                 $('#heatmapText').css("font-weight", "normal");
                 this.isHeatmapVisible(false);
@@ -822,10 +759,6 @@ var ViewModels;
                 }
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             FacultyAndStaff.prototype.selectSearchType = function (type) {
                 if (type === 'activities') {
                     this.setActivitiesSearch();
@@ -838,30 +771,18 @@ var ViewModels;
                 }
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             FacultyAndStaff.prototype.setActivitiesSearch = function () {
                 $('#activitiesButton').css("font-weight", "bold");
                 $('#peopleButton').css("font-weight", "normal");
                 this.searchType('activities');
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             FacultyAndStaff.prototype.setPeopleSearch = function () {
                 $('#activitiesButton').css("font-weight", "normal");
                 $('#peopleButton').css("font-weight", "bold");
                 this.searchType('people');
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             FacultyAndStaff.prototype.addActivityType = function (activityTypeId) {
                 var existingIndex = this.getActivityTypeIndexById(activityTypeId);
                 if (existingIndex == -1) {
@@ -870,10 +791,6 @@ var ViewModels;
                 }
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             FacultyAndStaff.prototype.removeActivityType = function (activityTypeId) {
                 var existingIndex = this.getActivityTypeIndexById(activityTypeId);
                 if (existingIndex != -1) {
@@ -882,10 +799,6 @@ var ViewModels;
                 }
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             FacultyAndStaff.prototype.getTypeName = function (id) {
                 var name = "";
                 var index = this.getActivityTypeIndexById(id);
@@ -895,10 +808,6 @@ var ViewModels;
                 return name;
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             FacultyAndStaff.prototype.getActivityTypeIndexById = function (activityTypeId) {
                 var index = -1;
 
@@ -916,18 +825,10 @@ var ViewModels;
                 return index;
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             FacultyAndStaff.prototype.hasActivityType = function (activityTypeId) {
                 return this.getActivityTypeIndexById(activityTypeId) != -1;
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             FacultyAndStaff.prototype.defHasActivityTypeCallback = function (activityTypeIndex) {
                 var _this = this;
                 var def = {
@@ -947,10 +848,6 @@ var ViewModels;
                 return def;
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             FacultyAndStaff.prototype.heatmapSelectHandler = function () {
                 var selection = this.heatmap.getSelection();
                 if (this.searchType() === 'activities') {
@@ -961,10 +858,6 @@ var ViewModels;
                 this.selectedPlace(str);
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             FacultyAndStaff.prototype.globalViewClickHandler = function (item, event) {
                 this.selectedPlace(null);
                 this.selectMap('heatmap');

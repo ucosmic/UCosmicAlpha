@@ -16,22 +16,10 @@ var ViewModels;
         })();
         InternationalAffiliations.InternationalAffiliationSearchInput = InternationalAffiliationSearchInput;
 
-        // ================================================================================
-        /*
-        */
-        // ================================================================================
         var InternationalAffiliationList = (function () {
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             function InternationalAffiliationList(personId) {
                 this.personId = personId;
             }
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             InternationalAffiliationList.prototype.load = function () {
                 var _this = this;
                 var deferred = $.Deferred();
@@ -56,10 +44,6 @@ var ViewModels;
                 return deferred;
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             InternationalAffiliationList.prototype.deleteAffiliationById = function (affiliationId) {
                 $.ajax({
                     async: false,
@@ -73,10 +57,6 @@ var ViewModels;
                 });
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             InternationalAffiliationList.prototype.deleteAffiliation = function (data, event, viewModel) {
                 $("#confirmInternationalAffiliationDeleteDialog").dialog({
                     dialogClass: 'jquery-ui',
@@ -108,10 +88,6 @@ var ViewModels;
                 return App.Routes.Mvc.My.InternationalAffiliations.edit(affiliationId);
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             InternationalAffiliationList.prototype.formatLocations = function (locations) {
                 var formattedLocations = "";
 
@@ -125,10 +101,6 @@ var ViewModels;
                 return formattedLocations;
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             InternationalAffiliationList.prototype.formatDates = function (from, to, onGoing) {
                 var formattedDateRange = from.toString();
 

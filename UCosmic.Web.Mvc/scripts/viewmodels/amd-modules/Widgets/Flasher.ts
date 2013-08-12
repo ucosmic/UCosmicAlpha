@@ -1,115 +1,115 @@
 /// <reference path="../../../typings/knockout/knockout.d.ts" />
 /// <reference path="../../../typings/jquery/jquery.d.ts" />
 
-    // private properties
-    var ticks: number;
-    var tickInterval: number;
+// private properties
+var ticks: number;
+var tickInterval: number;
 
-    //private methods
-    function init(flasher: IFlasher): void {
-        // executes once each time the flasher text changes
-        if (flasher.text()) { // when there is flasher text
-            window.clearInterval(tickInterval); // clear the tick interval
-            ticks = 9; // reset ticks to top value
-            flasher.tickCount(ticks); // update the viewmodel tick count
-            tickInterval = window.setInterval(() => { // set up new tick interval
-                tick(flasher); // tick once each second
-            }, 1000);
-            flasher.isDismissing(false);
-            flasher.isDismissed(false);
-            flasher.$element.hide().removeClass('hide').fadeIn('fast'); // fade in element
-        }
-        else { // when there is no flasher text
-            flasher.isDismissed(true);
-            flasher.isDismissing(false);
-            if (tickInterval) // clear the tick interval
-                window.clearInterval(tickInterval);
-            if (flasher.$element) // hide the flasher element
-                flasher.$element.addClass('hide');
-        }
-    }
-
-    function tick(flasher: IFlasher): void {
-        // executes once each second until tick interval is cleared
-        if (ticks <= 0) { // if ticks is zero or lower,
-            ticks = 0; // reset ticks to zero
-            window.clearInterval(tickInterval); // clear the tick interval
-            flasher.dismiss(); // dismiss the flasher (fade out & hide)
-        }
-        else { // when ticks is greater than zero
-            --ticks; // decrement the ticks (one second has passed)
-        }
+//private methods
+function init(flasher: IFlasher): void {
+    // executes once each time the flasher text changes
+    if (flasher.text()) { // when there is flasher text
+        window.clearInterval(tickInterval); // clear the tick interval
+        ticks = 9; // reset ticks to top value
         flasher.tickCount(ticks); // update the viewmodel tick count
+        tickInterval = window.setInterval(() => { // set up new tick interval
+            tick(flasher); // tick once each second
+        }, 1000);
+        flasher.isDismissing(false);
+        flasher.isDismissed(false);
+        flasher.$element.hide().removeClass('hide').fadeIn('fast'); // fade in element
+    }
+    else { // when there is no flasher text
+        flasher.isDismissed(true);
+        flasher.isDismissing(false);
+        if (tickInterval) // clear the tick interval
+            window.clearInterval(tickInterval);
+        if (flasher.$element) // hide the flasher element
+            flasher.$element.addClass('hide');
+    }
+}
+
+function tick(flasher: IFlasher): void {
+    // executes once each second until tick interval is cleared
+    if (ticks <= 0) { // if ticks is zero or lower,
+        ticks = 0; // reset ticks to zero
+        window.clearInterval(tickInterval); // clear the tick interval
+        flasher.dismiss(); // dismiss the flasher (fade out & hide)
+    }
+    else { // when ticks is greater than zero
+        --ticks; // decrement the ticks (one second has passed)
+    }
+    flasher.tickCount(ticks); // update the viewmodel tick count
+}
+
+export interface IFlasher {
+    text: KnockoutObservable<string>;
+    tickCount: KnockoutObservable<number>;
+    isDismissing: KnockoutObservable<boolean>;
+    isDismissed: KnockoutObservable<boolean>;
+    $element: JQuery;
+    flash(text: string): void;
+    dismiss(): void;
+}
+
+// keep class private but implement exported interface
+export class Flasher implements IFlasher {
+
+    constructor () {
+        // register init as a computed so that it will execute
+        // whenever an observable changes
+        ko.computed(() => { init(this); });
     }
 
-    export interface IFlasher {
-        text: KnockoutObservable<string>;
-        tickCount: KnockoutObservable<number>;
-        isDismissing: KnockoutObservable<boolean>;
-        isDismissed: KnockoutObservable<boolean>;
-        $element: JQuery;
-        flash(text: string): void;
-        dismiss(): void;
+    // text to be displayed in the flasher
+    text: KnockoutObservable<string> = ko.observable();
+
+    // number of seconds to display the flashed text
+    tickCount: KnockoutObservable<number> = ko.observable(9);
+
+    isDismissing: KnockoutObservable<boolean> = ko.observable();
+    isDismissed: KnockoutObservable<boolean> = ko.observable();
+
+    // DOM element that wraps the flasher markup
+    $element: JQuery = undefined;
+
+    // set the text to be displayed in the flasher
+    flash(text: string): void {
+        this.text(undefined);
+        if (text) this.text(text);
     }
 
-    // keep class private but implement exported interface
-    export class Flasher implements IFlasher {
+    // fade out and then hide the flasher DOM element
+    dismiss(): void {
+        this.isDismissing(true);
+        this.$element.fadeOut('slow', () => { // lambda captures outer 'this'
+            this.text('');
+            this.$element.addClass('hide');
+        });
+    }
+}
 
-        constructor () {
-            // register init as a computed so that it will execute
-            // whenever an observable changes
-            ko.computed(() => { init(this); });
-        }
+export var flasher: IFlasher = new Flasher(); // implement flasher as singleton instance
 
-        // text to be displayed in the flasher
-        text: KnockoutObservable<string> = ko.observable();
+// proxy to display flasher info on other page sections
+export class FlasherProxy {
 
-        // number of seconds to display the flashed text
-        tickCount: KnockoutObservable<number> = ko.observable(9);
+    text: KnockoutComputed<string>;
+    isVisible: KnockoutComputed<boolean>;
 
-        isDismissing: KnockoutObservable<boolean> = ko.observable();
-        isDismissed: KnockoutObservable<boolean> = ko.observable();
-
-        // DOM element that wraps the flasher markup
-        $element: JQuery = undefined;
-
-        // set the text to be displayed in the flasher
-        flash(text: string): void {
-            this.text(undefined);
-            if (text) this.text(text);
-        }
-
-        // fade out and then hide the flasher DOM element
-        dismiss(): void {
-            this.isDismissing(true);
-            this.$element.fadeOut('slow', () => { // lambda captures outer 'this'
-                this.text('');
-                this.$element.addClass('hide');
-            });
-        }
+    constructor() {
+        this.text = ko.computed((): string => {
+            return flasher.text();
+        });
+        this.isVisible = ko.computed((): boolean => {
+            if (flasher.isDismissing() || flasher.isDismissed()) {
+                return false;
+            }
+            return this.text() ? true : false;
+        });
     }
 
-    export var flasher: IFlasher = new Flasher(); // implement flasher as singleton instance
-
-    // proxy to display flasher info on other page sections
-    export class FlasherProxy {
-
-        text: KnockoutComputed<string>;
-        isVisible: KnockoutComputed<boolean>;
-
-        constructor() {
-            this.text = ko.computed((): string => {
-                return flasher.text();
-            });
-            this.isVisible = ko.computed((): boolean => {
-                if (flasher.isDismissing() || flasher.isDismissed()) {
-                    return false;
-                }
-                return this.text() ? true : false;
-            });
-        }
-
-        dismiss(): void {
-            flasher.dismiss();
-        }
+    dismiss(): void {
+        flasher.dismiss();
     }
+}

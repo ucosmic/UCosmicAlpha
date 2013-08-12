@@ -7,43 +7,27 @@
 /// <reference path="../../typings/moment/moment.d.ts" />
 /// <reference path="../../app/Routes.ts" />
 
-module ViewModels.InternationalAffiliations
-{
-    export class InternationalAffiliationSearchInput
-    {
+module ViewModels.InternationalAffiliations {
+
+    export class InternationalAffiliationSearchInput {
         personId: number;
         orderBy: string;
         pageSize: number;
         pageNumber: number;
     }
 
-    // ================================================================================
-    /* 
-    */
-    // ================================================================================
-    export class InternationalAffiliationList
-    {
+    export class InternationalAffiliationList {
         personId: number;
         orderBy: string;
         pageSize: number;
         pageNumber: number;
         items: KnockoutObservableArray<any>;
 
-        // --------------------------------------------------------------------------------
-        /* 
-        */
-        // --------------------------------------------------------------------------------                        
-        constructor(personId: number)
-        {
+        constructor(personId: number) {
             this.personId = personId;
         }
 
-        // --------------------------------------------------------------------------------
-        /* 
-        */
-        // --------------------------------------------------------------------------------
-        load(): JQueryPromise
-        {
+        load(): JQueryPromise {
             var deferred: JQueryDeferred<void> = $.Deferred();
             var affiliationSearchInput: InternationalAffiliationSearchInput = new InternationalAffiliationSearchInput();
 
@@ -68,10 +52,6 @@ module ViewModels.InternationalAffiliations
             return deferred;
         }
 
-        // --------------------------------------------------------------------------------
-        /* 
-        */
-        // --------------------------------------------------------------------------------
         deleteAffiliationById(affiliationId: number): void {
             $.ajax({
                 async: false,
@@ -86,10 +66,6 @@ module ViewModels.InternationalAffiliations
             });
         }
 
-        // --------------------------------------------------------------------------------
-        /*  
-        */
-        // --------------------------------------------------------------------------------
         deleteAffiliation(data: any, event: any, viewModel: any): void {
             $("#confirmInternationalAffiliationDeleteDialog").dialog({
                 dialogClass: 'jquery-ui',
@@ -119,12 +95,7 @@ module ViewModels.InternationalAffiliations
             return App.Routes.Mvc.My.InternationalAffiliations.edit(affiliationId);
         }
 
-        // --------------------------------------------------------------------------------
-        /*  
-        */
-        // --------------------------------------------------------------------------------
-        formatLocations(locations: any): string
-        {
+        formatLocations(locations: any): string {
             var formattedLocations: string = "";
 
             for (var i = 0; i < locations.length; i += 1)
@@ -136,12 +107,7 @@ module ViewModels.InternationalAffiliations
             return formattedLocations;
         }
 
-        // --------------------------------------------------------------------------------
-        /*  
-        */
-        // --------------------------------------------------------------------------------
-        formatDates(from: number, to: number, onGoing: boolean): string
-        {
+        formatDates(from: number, to: number, onGoing: boolean): string {
             var formattedDateRange: string = from.toString();
 
             if (onGoing) {

@@ -10,10 +10,7 @@
 
 
 module ViewModels.InternationalAffiliations {
-    // ================================================================================
-    /* 
-    */
-    // ================================================================================
+
     export class InternationalAffiliation {
         /* Initialization errors. */
         inititializationErrors: string = "";
@@ -45,10 +42,6 @@ module ViewModels.InternationalAffiliations {
 
         years: number[];
 
-        // --------------------------------------------------------------------------------
-        /*
-        */
-        // --------------------------------------------------------------------------------
         _initialize( affiliationId: number ): void {
 
             var fromToYearRange: number = 80;
@@ -62,10 +55,6 @@ module ViewModels.InternationalAffiliations {
             this.id = ko.observable(affiliationId);
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-        */
-        // --------------------------------------------------------------------------------   
         setupWidgets( locationSelectorId: string ): void {
             this.locationSelectorId = locationSelectorId;
 
@@ -127,10 +116,6 @@ module ViewModels.InternationalAffiliations {
             });
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-        */
-        // --------------------------------------------------------------------------------
         setupValidation(): void {
             ko.validation.rules['atLeast'] = {
                 validator: ( val: any, otherVal: any ): boolean => {
@@ -149,10 +134,6 @@ module ViewModels.InternationalAffiliations {
             ko.validation.group( this );
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-        */
-        // --------------------------------------------------------------------------------  
         setupSubscriptions(): void {
             this.from.subscribe((newValue: any): void => { this.dirtyFlag(true); });
             this.to.subscribe((newValue: any): void => { this.dirtyFlag(true); });
@@ -161,18 +142,10 @@ module ViewModels.InternationalAffiliations {
             this.position.subscribe((newValue: any): void => { this.dirtyFlag(true); });
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-        */
-        // --------------------------------------------------------------------------------  
         constructor( affiliationId: number ) {
             this._initialize( affiliationId );
         }
 
-        // --------------------------------------------------------------------------------
-        /* 
-        */
-        // --------------------------------------------------------------------------------
         load(): JQueryPromise {
             var me = this;
             var deferred: JQueryDeferred<void> = $.Deferred();
@@ -230,10 +203,6 @@ module ViewModels.InternationalAffiliations {
             return deferred;
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-        */
-        // --------------------------------------------------------------------------------
         save( viewModel: any, event: any ): void {
 
             if (!this.isValid()) {
@@ -291,10 +260,6 @@ module ViewModels.InternationalAffiliations {
             } );
         }
 
-        // --------------------------------------------------------------------------------
-        /*  
-        */
-        // --------------------------------------------------------------------------------
         cancel( item: any, event: any, mode: string ): void {
             if ( this.dirtyFlag() == true ) {
                 $( "#cancelConfirmDialog" ).dialog( {
@@ -317,10 +282,6 @@ module ViewModels.InternationalAffiliations {
             }
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-        */
-        // --------------------------------------------------------------------------------
         updateLocations( items: any[] ): void {
             this.locations.removeAll();
             for ( var i = 0; i < items.length; i += 1 ) {

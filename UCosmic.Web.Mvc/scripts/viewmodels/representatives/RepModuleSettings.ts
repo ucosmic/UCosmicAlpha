@@ -5,16 +5,11 @@
 /// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
 /// <reference path="../../typings/kendo/kendo.all.d.ts" />
 
-module ViewModels.RepModuleSettings{
+module ViewModels.RepModuleSettings {
 
+    export class RepModuleSettings {
 
-    export class RepModuleSettings{
-        _welcomeMessage: string;
-        _emailMessage: string;
-
-        constructor(welcomeMessage:string, emailMessage:string){
-            this._welcomeMessage = welcomeMessage;
-            this._emailMessage = emailMessage;
+        constructor(public welcomeMessage:string, public emailMessage:string){
         }
     }
 }

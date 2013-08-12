@@ -11,15 +11,7 @@ var ViewModels;
     /// <reference path="../../app/Routes.ts" />
     /// <reference path="../degrees/ServiceApiModel.d.ts" />
     (function (Degrees) {
-        // ================================================================================
-        /*
-        */
-        // ================================================================================
         var Degree = (function () {
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             function Degree(educationId) {
                 /* Initialization errors. */
                 this.inititializationErrors = "";
@@ -27,18 +19,10 @@ var ViewModels;
                 this.dirtyFlag = ko.observable(false);
                 this._initialize(educationId);
             }
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             Degree.prototype._initialize = function (degreeId) {
                 this.id = ko.observable(degreeId);
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             Degree.prototype.setupWidgets = function (institutionSelectorId) {
                 var _this = this;
                 this.institutionSelectorId = institutionSelectorId;
@@ -84,10 +68,6 @@ var ViewModels;
                 });
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             Degree.prototype.checkInstitutionForNull = function () {
                 var me = $("#" + this.institutionSelectorId).data("kendoAutoComplete");
                 var value = (me.value() != null) ? me.value().toString() : null;
@@ -101,10 +81,6 @@ var ViewModels;
                 }
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             Degree.prototype.setupValidation = function () {
                 this.title.extend({ required: true, minLength: 1, maxLength: 256 });
                 this.yearAwarded.extend({ min: 1900 });
@@ -112,10 +88,6 @@ var ViewModels;
                 ko.validation.group(this);
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             Degree.prototype.setupSubscriptions = function () {
                 var _this = this;
                 this.title.subscribe(function (newValue) {
@@ -132,10 +104,6 @@ var ViewModels;
                 });
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             Degree.prototype.load = function () {
                 var _this = this;
                 var deferred = $.Deferred();
@@ -179,10 +147,6 @@ var ViewModels;
                 return deferred;
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             Degree.prototype.save = function (viewModel, event) {
                 if (!this.isValid()) {
                     // TBD - need dialog here.
@@ -235,10 +199,6 @@ var ViewModels;
                 });
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             Degree.prototype.cancel = function (item, event, mode) {
                 if (this.dirtyFlag() == true) {
                     $("#cancelConfirmDialog").dialog({

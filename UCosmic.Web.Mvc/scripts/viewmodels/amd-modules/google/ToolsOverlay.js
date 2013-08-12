@@ -1,6 +1,7 @@
 /// <reference path="../../../typings/knockout/knockout.d.ts" />
 /// <reference path="../../../typings/jquery/jquery.d.ts" />
 /// <reference path="../../../typings/jqueryui/jqueryui.d.ts" />
+/// <reference path="../../../typings/googlemaps/google.maps.d.ts" />
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }

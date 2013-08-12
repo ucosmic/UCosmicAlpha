@@ -139,7 +139,7 @@ module ViewModels.Establishments {
             var pageNumber = sammyContext.params['pageNumber'];
 
             // make sure the viewmodel pagenumber is in sync with the route
-            if (pageNumber && parseInt(pageNumber) !== parseInt(this.pageNumber()))
+            if (pageNumber && parseInt(pageNumber) !== Number(this.pageNumber()))
                 this.pageNumber(parseInt(pageNumber));
             return true;
         }

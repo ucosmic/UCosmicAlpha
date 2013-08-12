@@ -8,8 +8,8 @@
 define(["require", "exports", '../Widgets/Spinner'], function(require, exports, __Spinner__) {
     
     
-
     var Spinner = __Spinner__;
+
     var ServerNameApiModel = (function () {
         function ServerNameApiModel(ownerId) {
             this.id = 0;

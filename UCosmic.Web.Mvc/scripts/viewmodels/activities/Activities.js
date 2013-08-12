@@ -17,22 +17,10 @@ var ViewModels;
         })();
         Activities.ActivitySearchInput = ActivitySearchInput;
 
-        // ================================================================================
-        /*
-        */
-        // ================================================================================
         var ActivityList = (function () {
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             function ActivityList(personId) {
                 this.personId = personId;
             }
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             ActivityList.prototype.load = function () {
                 var _this = this;
                 var deferred = $.Deferred();
@@ -109,10 +97,6 @@ var ViewModels;
                 return deferred;
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             ActivityList.prototype.deleteActivityById = function (activityId) {
                 $.ajax({
                     async: false,
@@ -126,10 +110,6 @@ var ViewModels;
                 });
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             ActivityList.prototype.deleteActivity = function (data, e, viewModel) {
                 $("#confirmActivityDeleteDialog").dialog({
                     dialogClass: 'jquery-ui',
@@ -158,10 +138,6 @@ var ViewModels;
                 });
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             ActivityList.prototype.editActivity = function (activityId) {
                 var returnValue = false;
                 $.ajax({
@@ -195,10 +171,6 @@ var ViewModels;
                 return App.Routes.Mvc.My.Profile.activityEdit(id);
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             ActivityList.prototype.newActivity = function (data, event) {
                 $.ajax({
                     type: "POST",
@@ -212,10 +184,6 @@ var ViewModels;
                 });
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             ActivityList.prototype.getTypeName = function (id) {
                 var typeName = "";
 
@@ -233,10 +201,6 @@ var ViewModels;
                 return typeName;
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             ActivityList.prototype.getLocationName = function (id) {
                 var locationName = "";
 
@@ -254,10 +218,6 @@ var ViewModels;
                 return locationName;
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             ActivityList.prototype.activityDatesFormatted = function (startsOnStr, endsOnStr, onGoing, dateFormat) {
                 var formattedDateRange = "";
 
@@ -284,10 +244,6 @@ var ViewModels;
                 return formattedDateRange;
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             ActivityList.prototype.activityTypesFormatted = function (types) {
                 var formattedTypes = "";
                 var location;
@@ -306,10 +262,6 @@ var ViewModels;
                 return formattedTypes;
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             ActivityList.prototype.activityLocationsFormatted = function (locations) {
                 var formattedLocations = "";
                 var location;

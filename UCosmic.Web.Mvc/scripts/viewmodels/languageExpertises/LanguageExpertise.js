@@ -10,15 +10,7 @@ var ViewModels;
     /// <reference path="../../typings/moment/moment.d.ts" />
     /// <reference path="../../app/Routes.ts" />
     (function (LanguageExpertises) {
-        // ================================================================================
-        /*
-        */
-        // ================================================================================
         var LanguageExpertise = (function () {
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             function LanguageExpertise(expertiseId) {
                 /* Initialization errors. */
                 this.inititializationErrors = "";
@@ -27,18 +19,10 @@ var ViewModels;
                 this.isOther = ko.observable(false);
                 this._initialize(expertiseId);
             }
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             LanguageExpertise.prototype._initialize = function (expertiseId) {
                 this.id = ko.observable(expertiseId);
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             LanguageExpertise.prototype.setupWidgets = function (languageInputId, speakingInputId, listeningInputId, readingInputId, writingInputId) {
                 var _this = this;
                 $("#" + languageInputId).kendoDropDownList({
@@ -103,10 +87,6 @@ var ViewModels;
                 });
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             LanguageExpertise.prototype.setupValidation = function () {
                 //ko.validation.rules['otherRequired'] = {
                 //    validator: (val: any, otherVal: any): boolean => {
@@ -127,10 +107,6 @@ var ViewModels;
                 ko.validation.group(this);
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             LanguageExpertise.prototype.setupSubscriptions = function () {
                 var _this = this;
                 this.languageId.subscribe(function (newValue) {
@@ -156,10 +132,6 @@ var ViewModels;
                 });
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             LanguageExpertise.prototype.load = function () {
                 var _this = this;
                 var deferred = $.Deferred();
@@ -231,10 +203,6 @@ var ViewModels;
                 return deferred;
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             LanguageExpertise.prototype.save = function (viewModel, event) {
                 if (!this.isValid()) {
                     // TBD - need dialog here.
@@ -287,10 +255,6 @@ var ViewModels;
                 });
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             LanguageExpertise.prototype.cancel = function (item, event, mode) {
                 if (this.dirtyFlag() == true) {
                     $("#cancelConfirmDialog").dialog({

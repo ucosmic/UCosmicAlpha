@@ -6,44 +6,28 @@
 /// <reference path="../../typings/kendo/kendo.all.d.ts" />
 /// <reference path="../../app/Routes.ts" />
 
+module ViewModels.LanguageExpertises {
 
-module ViewModels.LanguageExpertises
-{
-    export class LanguageExpertiseSearchInput
-    {
+    export class LanguageExpertiseSearchInput {
         personId: number;
         orderBy: string;
         pageSize: number;
         pageNumber: number;
     }
 
-    // ================================================================================
-    /* 
-    */
-    // ================================================================================
-    export class LanguageExpertiseList
-    {
+    export class LanguageExpertiseList {
+
         personId: number;
         orderBy: string;
         pageSize: number;
         pageNumber: number;
         items: KnockoutObservableArray<any>;
 
-        // --------------------------------------------------------------------------------
-        /* 
-        */
-        // --------------------------------------------------------------------------------                        
-        constructor(personId: number)
-        {
+        constructor(personId: number) {
             this.personId = personId;
         }
 
-        // --------------------------------------------------------------------------------
-        /* 
-        */
-        // --------------------------------------------------------------------------------
-        load(): JQueryPromise
-        {
+        load(): JQueryPromise {
             var deferred: JQueryDeferred<void> = $.Deferred();
             var expertiseSearchInput: LanguageExpertiseSearchInput = new LanguageExpertiseSearchInput();
 
@@ -68,10 +52,6 @@ module ViewModels.LanguageExpertises
             return deferred;
         }
 
-        // --------------------------------------------------------------------------------
-        /* 
-        */
-        // --------------------------------------------------------------------------------
         deleteExpertiseById(expertiseId: number): void {
             $.ajax({
                 async: false,
@@ -86,10 +66,6 @@ module ViewModels.LanguageExpertises
             });
         }
 
-        // --------------------------------------------------------------------------------
-        /*  
-        */
-        // --------------------------------------------------------------------------------
         deleteExpertise(data: any, event: any, viewModel: any): void {
             $("#confirmLanguageExpertiseDeleteDialog").dialog({
                 dialogClass: 'jquery-ui',
@@ -119,12 +95,7 @@ module ViewModels.LanguageExpertises
             return App.Routes.Mvc.My.LanguageExpertise.edit(expertiseId);
         }
 
-        // --------------------------------------------------------------------------------
-        /*  
-        */
-        // --------------------------------------------------------------------------------
-        formatLocations(locations: any): string
-        {
+        formatLocations(locations: any): string {
             var formattedLocations: string = "";
 
             for (var i = 0; i < locations.length; i += 1)

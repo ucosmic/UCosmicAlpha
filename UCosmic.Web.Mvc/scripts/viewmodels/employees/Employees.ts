@@ -5,6 +5,7 @@
 /// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
 /// <reference path="../../typings/kendo/kendo.all.d.ts" />
 /// <reference path="../../typings/moment/moment.d.ts" />
+/// <reference path="../../typings/googlemaps/google.maps.d.ts" />
 /// <reference path="../../app/Routes.ts" />
 /// <reference path="../../typings/sammyjs/sammyjs.d.ts" />
 /// <reference path="../Spinner.ts" />
@@ -12,10 +13,6 @@
 
 module ViewModels.Employees {
 
-    // ================================================================================
-    /* 
-    */
-    // ================================================================================
     export class FacultyAndStaff {
 
         google: any;
@@ -86,10 +83,6 @@ module ViewModels.Employees {
         summary: KnockoutObservable<any>;
         loadSpinner: ViewModels.Spinner;
 
-        // --------------------------------------------------------------------------------
-        /*
-        */
-        // --------------------------------------------------------------------------------
         _initialize(institutionInfo: any): void {
             this.sammy = Sammy();
             this.initialLocations = [];        // Bug - To overcome bug in Multiselect.
@@ -136,18 +129,10 @@ module ViewModels.Employees {
 
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-        */
-        // --------------------------------------------------------------------------------  
         constructor(institutionInfo: any) {
             this._initialize(institutionInfo);
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-        */
-        // --------------------------------------------------------------------------------   
         setupWidgets(locationSelectorId: string,
                 fromDatePickerId: string,
                 toDatePickerId: string,
@@ -390,10 +375,6 @@ module ViewModels.Employees {
             //});
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-        */
-        // --------------------------------------------------------------------------------
         setupValidation(): void {
             //ko.validation.rules['atLeast'] = {
             //    validator: (val: any, otherVal: any): boolean => {
@@ -411,10 +392,6 @@ module ViewModels.Employees {
             //ko.validation.group(this);
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-        */
-        // --------------------------------------------------------------------------------  
         setupSubscriptions(): void {
             //this.from.subscribe((newValue: any): void => { this.dirtyFlag(true); });
             //this.to.subscribe((newValue: any): void => { this.dirtyFlag(true); });
@@ -423,10 +400,6 @@ module ViewModels.Employees {
             //this.position.subscribe((newValue: any): void => { this.dirtyFlag(true); });
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-        */
-        // --------------------------------------------------------------------------------  
         setupRouting(): void {
             this.sammy.get('#/summary', ():void => { this.selectMap('heatmap'); });
             this.sammy.get('#/search', (): void => { this.selectMap('pointmap'); });
@@ -435,10 +408,6 @@ module ViewModels.Employees {
             this.sammy.run('#/summary');
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-        */
-        // --------------------------------------------------------------------------------
         setupMaps(): void {
             var me = this;
 
@@ -665,10 +634,6 @@ module ViewModels.Employees {
             this.linechart = new this.google.visualization.LineChart($('#facultystaff-summary-linechart')[0]);
         }
 
-        // --------------------------------------------------------------------------------
-        /* 
-        */
-        // --------------------------------------------------------------------------------
         getActivityDataTable(place: string): any {
 
             var dt = new this.google.visualization.DataTable();
@@ -706,10 +671,6 @@ module ViewModels.Employees {
             return view;
         }
 
-        // --------------------------------------------------------------------------------
-        /* 
-        */
-        // --------------------------------------------------------------------------------
         getPeopleDataTable(place: string): any {
 
             var dt = new this.google.visualization.DataTable();
@@ -744,10 +705,6 @@ module ViewModels.Employees {
             return dt;
         }
 
-        // --------------------------------------------------------------------------------
-        /* 
-        */
-        // --------------------------------------------------------------------------------
         getActivityTrendDataTable(place: string): any {
 
             var dt = new this.google.visualization.DataTable();
@@ -785,10 +742,6 @@ module ViewModels.Employees {
             return view;
         }
 
-        // --------------------------------------------------------------------------------
-        /* 
-        */
-        // --------------------------------------------------------------------------------
         getPeopleTrendDataTable(place: string): any {
 
             var dt = new this.google.visualization.DataTable();
@@ -823,10 +776,6 @@ module ViewModels.Employees {
             return dt;
         }
 
-        // --------------------------------------------------------------------------------
-        /* 
-        */
-        // --------------------------------------------------------------------------------
         load(): JQueryPromise {
             var me = this;
             var deferred: JQueryDeferred<void> = $.Deferred();
@@ -887,10 +836,6 @@ module ViewModels.Employees {
             return deferred;
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-        */
-        // --------------------------------------------------------------------------------
         checkInstitutionForNull() {
             var me = $("#" + this.institutionSelectorId).data("kendoAutoComplete");
             var value = (me.value() != null) ? me.value().toString() : null;
@@ -904,11 +849,6 @@ module ViewModels.Employees {
             }
         }
 
-
-        // --------------------------------------------------------------------------------
-        /*
-        */
-        // --------------------------------------------------------------------------------
         updateLocations(items: any[]): void {
             if (this.locations != null) {
                 this.locations.removeAll();
@@ -919,10 +859,6 @@ module ViewModels.Employees {
             }
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-        */
-        // --------------------------------------------------------------------------------
         selectMap(type: string): void {
 
             $('#heatmapText').css("font-weight", "normal");
@@ -974,10 +910,6 @@ module ViewModels.Employees {
             }
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-        */
-        // --------------------------------------------------------------------------------
         selectSearchType(type: string): void {
             if (type === 'activities') {
                 this.setActivitiesSearch();
@@ -991,30 +923,18 @@ module ViewModels.Employees {
             }
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-        */
-        // --------------------------------------------------------------------------------
         setActivitiesSearch(): void {
             $('#activitiesButton').css("font-weight", "bold");
             $('#peopleButton').css("font-weight", "normal");
             this.searchType('activities');
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-        */
-        // --------------------------------------------------------------------------------
         setPeopleSearch(): void {
             $('#activitiesButton').css("font-weight", "normal");
             $('#peopleButton').css("font-weight", "bold");
             this.searchType('people');
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-        */
-        // --------------------------------------------------------------------------------
         addActivityType(activityTypeId: number): void {
             var existingIndex: number = this.getActivityTypeIndexById(activityTypeId);
             if (existingIndex == -1) {
@@ -1023,10 +943,6 @@ module ViewModels.Employees {
             }
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-        */
-        // --------------------------------------------------------------------------------
         removeActivityType(activityTypeId: number): void {
             var existingIndex: number = this.getActivityTypeIndexById(activityTypeId);
             if (existingIndex != -1) {
@@ -1035,10 +951,6 @@ module ViewModels.Employees {
             }
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-        */
-        // --------------------------------------------------------------------------------
         getTypeName(id: number): string {
             var name: string = "";
             var index: number = this.getActivityTypeIndexById(id);
@@ -1046,10 +958,6 @@ module ViewModels.Employees {
             return name;
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-        */
-        // --------------------------------------------------------------------------------
         getActivityTypeIndexById(activityTypeId: number): number {
             var index: number = -1;
 
@@ -1066,18 +974,10 @@ module ViewModels.Employees {
             return index;
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-        */
-        // --------------------------------------------------------------------------------
         hasActivityType(activityTypeId: number): boolean {
             return this.getActivityTypeIndexById(activityTypeId) != -1;
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-        */
-        // --------------------------------------------------------------------------------
         defHasActivityTypeCallback(activityTypeIndex: number): KnockoutComputedDefine<boolean> {
             var def: KnockoutComputedDefine<boolean> = {
                 read: (): boolean => {
@@ -1096,10 +996,6 @@ module ViewModels.Employees {
             return def;
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-        */
-        // --------------------------------------------------------------------------------
         heatmapSelectHandler():void {
             var selection = this.heatmap.getSelection();
             if (this.searchType() === 'activities') {
@@ -1110,10 +1006,6 @@ module ViewModels.Employees {
             this.selectedPlace(str);
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-        */
-        // --------------------------------------------------------------------------------
         globalViewClickHandler(item: any, event: any): void {
             this.selectedPlace(null);
             this.selectMap('heatmap');

@@ -27,7 +27,7 @@ module ViewModels {
         // paging methods
         nextPage(): void {
             if (this.nextEnabled()) {
-                var pageNumber = parseInt(this.pageNumber()) + 1;
+                var pageNumber = Number(this.pageNumber()) + 1;
                 this.pageNumber(pageNumber);
             }
         }

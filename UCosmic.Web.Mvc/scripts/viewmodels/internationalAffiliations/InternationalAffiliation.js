@@ -10,15 +10,7 @@ var ViewModels;
     /// <reference path="../../typings/moment/moment.d.ts" />
     /// <reference path="../../app/Routes.ts" />
     (function (InternationalAffiliations) {
-        // ================================================================================
-        /*
-        */
-        // ================================================================================
         var InternationalAffiliation = (function () {
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             function InternationalAffiliation(affiliationId) {
                 /* Initialization errors. */
                 this.inititializationErrors = "";
@@ -28,10 +20,6 @@ var ViewModels;
                 this.selectedLocationValues = [];
                 this._initialize(affiliationId);
             }
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             InternationalAffiliation.prototype._initialize = function (affiliationId) {
                 var fromToYearRange = 80;
                 var thisYear = Number(moment().format('YYYY'));
@@ -43,10 +31,6 @@ var ViewModels;
                 this.id = ko.observable(affiliationId);
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             InternationalAffiliation.prototype.setupWidgets = function (locationSelectorId) {
                 var _this = this;
                 this.locationSelectorId = locationSelectorId;
@@ -108,10 +92,6 @@ var ViewModels;
                 });
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             InternationalAffiliation.prototype.setupValidation = function () {
                 ko.validation.rules['atLeast'] = {
                     validator: function (val, otherVal) {
@@ -130,10 +110,6 @@ var ViewModels;
                 ko.validation.group(this);
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             InternationalAffiliation.prototype.setupSubscriptions = function () {
                 var _this = this;
                 this.from.subscribe(function (newValue) {
@@ -153,10 +129,6 @@ var ViewModels;
                 });
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             InternationalAffiliation.prototype.load = function () {
                 var _this = this;
                 var me = this;
@@ -211,10 +183,6 @@ var ViewModels;
                 return deferred;
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             InternationalAffiliation.prototype.save = function (viewModel, event) {
                 if (!this.isValid()) {
                     // TBD - need dialog here.
@@ -269,10 +237,6 @@ var ViewModels;
                 });
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             InternationalAffiliation.prototype.cancel = function (item, event, mode) {
                 if (this.dirtyFlag() == true) {
                     $("#cancelConfirmDialog").dialog({
@@ -294,10 +258,6 @@ var ViewModels;
                 }
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             InternationalAffiliation.prototype.updateLocations = function (items) {
                 this.locations.removeAll();
                 for (var i = 0; i < items.length; i += 1) {
