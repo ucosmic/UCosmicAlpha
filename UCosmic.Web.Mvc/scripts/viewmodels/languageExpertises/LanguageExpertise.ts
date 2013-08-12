@@ -1,15 +1,12 @@
-/// <reference path="../../jquery/jquery.d.ts" />
-/// <reference path="../../jquery/jqueryui.d.ts" />
-/// <reference path="../../ko/knockout.d.ts" />
-/// <reference path="../../ko/knockout.mapping.d.ts" />
-/// <reference path="../../ko/knockout.extensions.d.ts" />
-/// <reference path="../../ko/knockout.validation.d.ts" />
-/// <reference path="../../kendo/kendo.all.d.ts" />
-/// <reference path="../../tinymce/tinymce.d.ts" />
-/// <reference path="../../oss/moment.d.ts" />
+/// <reference path="../../typings/jquery/jquery.d.ts" />
+/// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
+/// <reference path="../../typings/knockout/knockout.d.ts" />
+/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
+/// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
+/// <reference path="../../typings/kendo/kendo.all.d.ts" />
+/// <reference path="../../typings/tinymce/tinymce.d.ts" />
+/// <reference path="../../typings/moment/moment.d.ts" />
 /// <reference path="../../app/Routes.ts" />
-/// <reference path="../../kendo/kendo.all.d.ts" />
-
 
 module ViewModels.LanguageExpertises {
     // ================================================================================
@@ -21,7 +18,7 @@ module ViewModels.LanguageExpertises {
         inititializationErrors: string = "";
 
         /* True if any field changes. */
-        dirtyFlag: KnockoutObservableBool = ko.observable( false );
+        dirtyFlag: KnockoutObservable<boolean> = ko.observable( false );
 
         /* Languages */
         languageList: any;
@@ -30,26 +27,26 @@ module ViewModels.LanguageExpertises {
         proficiencyInfo: any;
 
         /* Api Model */
-        id: KnockoutObservableNumber;           // if 0, new expertise
-        version: KnockoutObservableString;      // byte[] converted to base64
-        personId: KnockoutObservableNumber;
-        whenLastUpdated: KnockoutObservableString;
-        whoLastUpdated: KnockoutObservableString;
-        languageId: KnockoutObservableAny;
-        dialect: KnockoutObservableString;
-        other: KnockoutObservableString;
-        speakingProficiency: KnockoutObservableNumber;
-        listeningProficiency: KnockoutObservableNumber;
-        readingProficiency: KnockoutObservableNumber;
-        writingProficiency: KnockoutObservableNumber;
+        id: KnockoutObservable<number>;           // if 0, new expertise
+        version: KnockoutObservable<string>;      // byte[] converted to base64
+        personId: KnockoutObservable<number>;
+        whenLastUpdated: KnockoutObservable<string>;
+        whoLastUpdated: KnockoutObservable<string>;
+        languageId: KnockoutObservable<any>;
+        dialect: KnockoutObservable<string>;
+        other: KnockoutObservable<string>;
+        speakingProficiency: KnockoutObservable<number>;
+        listeningProficiency: KnockoutObservable<number>;
+        readingProficiency: KnockoutObservable<number>;
+        writingProficiency: KnockoutObservable<number>;
 
         /* Validation */
         errors: KnockoutValidationErrors;
-        isValid: () => bool;
-        isAnyMessageShown: () => bool;
+        isValid: () => boolean;
+        isAnyMessageShown: () => boolean;
 
         languageDroplist: any;
-        isOther: KnockoutObservableBool = ko.observable(false);
+        isOther: KnockoutObservable<boolean> = ko.observable(false);
 
         // --------------------------------------------------------------------------------
         /*
@@ -138,7 +135,7 @@ module ViewModels.LanguageExpertises {
         setupValidation(): void {
 
             //ko.validation.rules['otherRequired'] = {
-            //    validator: (val: any, otherVal: any): bool => {
+            //    validator: (val: any, otherVal: any): boolean => {
             //        debugger;
                     
             //        var selectedIndex = this.languageDroplist.select();
@@ -186,7 +183,7 @@ module ViewModels.LanguageExpertises {
         */
         // --------------------------------------------------------------------------------
         load(): JQueryPromise {
-            var deferred: JQueryDeferred = $.Deferred();
+            var deferred: JQueryDeferred<void> = $.Deferred();
 
             var proficienciesPact = $.Deferred();
             $.get( App.Routes.WebApi.LanguageExpertise.Proficiencies.get() )

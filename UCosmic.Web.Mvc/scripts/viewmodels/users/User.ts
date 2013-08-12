@@ -1,8 +1,7 @@
-/// <reference path="../../jquery/jquery.d.ts" />
-/// <reference path="../../ko/knockout.d.ts" />
-/// <reference path="../../ko/knockout.extensions.d.ts" />
-/// <reference path="../../ko/knockout.mapping.d.ts" />
-/// <reference path="../../ko/knockout.validation.d.ts" />
+/// <reference path="../../typings/jquery/jquery.d.ts" />
+/// <reference path="../../typings/knockout/knockout.d.ts" />
+/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
+/// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
 /// <reference path="../../app/Routes.ts" />
 /// <reference path="../Spinner.ts" />
 
@@ -10,8 +9,8 @@ module ViewModels.Users {
 
     //class UserNameValidator implements KnockoutValidationAsyncRuleDefinition {
     //    private _ruleName: string = 'validUserName';
-    //    private _isAwaitingResponse: bool = false;
-    //    async: bool = true;
+    //    private _isAwaitingResponse: boolean = false;
+    //    async: boolean = true;
     //    message: string = 'error';
     //    validator(val: string, vm: User, callback: KnockoutValidationAsyncCallback) {
     //        if (!this._isAwaitingResponse) {
@@ -38,15 +37,15 @@ module ViewModels.Users {
 
     export class User implements KnockoutValidationGroup {
 
-        id: KnockoutObservableNumber = ko.observable();
-        name: KnockoutObservableString = ko.observable();
+        id: KnockoutObservable<number> = ko.observable();
+        name: KnockoutObservable<string> = ko.observable();
 
         saveSpinner = new Spinner(new SpinnerOptions(200));
-        errorMessage: KnockoutObservableString = ko.observable();
+        errorMessage: KnockoutObservable<string> = ko.observable();
 
-        isValid: () => bool;
+        isValid: () => boolean;
         errors: KnockoutValidationErrors;
-        //isValidating: KnockoutComputed;
+        //isValidating: KnockoutComputed<boolean>;
 
         constructor() {
 
@@ -58,14 +57,14 @@ module ViewModels.Users {
                 validUserName: this
             });
 
-            //this.isValidating = ko.computed((): bool => {
+            //this.isValidating = ko.computed((): boolean => {
             //    return this.name.isValidating();
             //});
 
             ko.validation.group(this);
         }
 
-        save(): bool {
+        save(): boolean {
 
             if ( !this.isValid() ) { // validate
                 this.errors.showAllMessages();
@@ -92,7 +91,7 @@ module ViewModels.Users {
             }
 
             //if (this.isValidating()) {
-            //    setTimeout((): bool => { this.save(); }, 50);
+            //    setTimeout((): boolean => { this.save(); }, 50);
             //    return false;
             //}
 

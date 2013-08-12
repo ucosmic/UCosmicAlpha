@@ -1,17 +1,17 @@
-/// <reference path="../ko/knockout.d.ts" />
+/// <reference path="../typings/knockout/knockout.d.ts" />
 
 module ViewModels {
 
     export interface ISpinnerOptions {
         delay?: number;
-        isVisible?: bool;
+        isVisible?: boolean;
     }
 
     export class SpinnerOptions implements ISpinnerOptions {
         delay: number;
-        isVisible: bool;
+        isVisible: boolean;
 
-        constructor (delay?: number = 0, isVisible: bool = false) {
+        constructor (delay: number = 0, isVisible: boolean = false) {
             this.delay = delay;
             this.isVisible = isVisible;
         }
@@ -23,10 +23,10 @@ module ViewModels {
 
         // this offers a way to short circuit the spinner when its activity time is 
         // greater than zero but less than the delay
-        private isActivated: KnockoutObservableBool = ko.observable(true);
+        private isActivated: KnockoutObservable<boolean> = ko.observable(true);
 
-        //private inTransition: KnockoutObservableBool = ko.observable(false);
-        isVisible: KnockoutObservableBool = ko.observable(false);
+        //private inTransition: KnockoutObservable<boolean> = ko.observable(false);
+        isVisible: KnockoutObservable<boolean> = ko.observable(false);
 
         start(): void {
             this.isActivated(true); // we are entering an ajax call

@@ -1,24 +1,23 @@
-/// <reference path="../../../jquery/jquery.d.ts" />
-/// <reference path="../../../ko/knockout.d.ts" />
-/// <reference path="../../../ko/knockout.mapping.d.ts" />
-/// <reference path="../../../ko/knockout.extensions.d.ts" />
-/// <reference path="../../../sammy/sammyjs.d.ts" />
+/// <reference path="../../../typings/jquery/jquery.d.ts" />
+/// <reference path="../../../typings/knockout/knockout.d.ts" />
+/// <reference path="../../../typings/knockout.mapping/knockout.mapping.d.ts" />
+/// <reference path="../../../typings/sammyjs/sammyjs.d.ts" />
 /// <reference path="../../../app/App.ts" />
 /// <reference path="../../../app/SideSwiper.ts" />
 /// <reference path="../../../app/Routes.ts" />
 
-import PagedSearch = module('../Widgets/PagedSearch');
-import SearchResult = module('./SearchResult');
-import Lens = module('../Widgets/Lens');
-import Places = module('../places/ServerApiModel');
-import SearchApiModel = module('./ServerApiModel');
-import Spinner = module('../Widgets/Spinner');
+import PagedSearch= require('../Widgets/PagedSearch');
+import SearchResult= require('./SearchResult');
+import Lens= require('../Widgets/Lens');
+import Places= require('../places/ServerApiModel');
+import SearchApiModel= require('./ServerApiModel');
+import Spinner= require('../Widgets/Spinner');
 
 
 export class Search extends PagedSearch.PagedSearch {
         
 
-        constructor (public initDefaultPageRoute?: bool = true) {
+        constructor (public initDefaultPageRoute: boolean = true) {
             super();
 
             this._setupCountryDropDown();
@@ -29,7 +28,7 @@ export class Search extends PagedSearch.PagedSearch {
             ko.computed((): void => {
                 this.requestResults();
             }).extend({ throttle: 1 });
-            //this.addParticipant = <() => bool > this.addParticipant.bind(this);
+            //this.addParticipant = <() => boolean > this.addParticipant.bind(this);
         }
 
         // countries dropdown
@@ -133,7 +132,7 @@ export class Search extends PagedSearch.PagedSearch {
             trail.push(sammyContext.path);
         }
 
-        beforePage(sammyContext: Sammy.EventContext): bool {
+        beforePage(sammyContext: Sammy.EventContext): boolean {
             if (this.nextForceDisabled() || this.prevForceDisabled())
                 return false;
 
@@ -156,18 +155,18 @@ export class Search extends PagedSearch.PagedSearch {
         }
 
         // filtering
-        countries: Places.KnockoutObservableCountryModelArray = ko.observableArray();
-        countryCode: KnockoutObservableString = ko.observable();
+        countries: KnockoutObservableArray<Places.IServerCountryApiModel> = ko.observableArray();
+        countryCode: KnockoutObservable<string> = ko.observable();
 
         // lensing
-        lenses: KnockoutObservableArray = ko.observableArray([
+        lenses: KnockoutObservableArray<Lens> = ko.observableArray([
             { text: 'Table', value: 'table' },
             { text: 'List', value: 'list' }//,
             //{ text: 'Grid', value: 'grid' },
             //{ text: 'Map', value: 'map' },
             //{ text: 'Tree', value: 'tree' }
         ]);
-        lens: KnockoutObservableString = ko.observable();
+        lens: KnockoutObservable<string> = ko.observable();
         changeLens: (lens: Lens.Lens) => void;
 
         // items page
@@ -177,7 +176,7 @@ export class Search extends PagedSearch.PagedSearch {
             speed: 'fast',
             root: '#search'
         });
-        trail: KnockoutObservableStringArray = ko.observableArray([]);
+        trail: KnockoutObservableArray<string> = ko.observableArray([]);
         lockAnimation(): void {
             this.nextForceDisabled(true);
             this.prevForceDisabled(true);
@@ -235,13 +234,13 @@ export class Search extends PagedSearch.PagedSearch {
         }
 
         // go to add new
-        gotoAddNew(): bool {
+        gotoAddNew(): boolean {
             return true;
         }
          
         // click item
         // TODO: is this still needed?
-        clickAction(viewModel: SearchResult.SearchResult, e: JQueryEventObject): bool {
+        clickAction(viewModel: SearchResult.SearchResult, e: JQueryEventObject): boolean {
             //var href, $target = $(e.target);
             //while ($target.length && !$target.attr('href') && !$target.attr('data-href')) {
             //    $target = $target.parent();

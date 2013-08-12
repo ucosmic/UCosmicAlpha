@@ -694,9 +694,6 @@
     <Content Include="images\icons\print\print-24-black.png" />
     <Content Include="images\icons\search\search-24-black.png" />
     <Content Include="images\icons\spinner\spinner-24-blue.gif" />
-    <None Include="scripts\google\google.charts.d.ts">
-      <SubType>Code</SubType>
-    </None>
     <None Include="scripts\jquery\jquery-1.9.1.intellisense.js" />
     <Content Include="images\transparent.png" />
     <Content Include="scripts\jquery\jquery-1.9.1.js" />
@@ -716,7 +713,6 @@
     <Content Include="scripts\google\ToolsOverlay.min.js">
       <DependentUpon>ToolsOverlay.ts</DependentUpon>
     </Content>
-    <None Include="scripts\jquery\jquery.d.ts" />
     <Content Include="scripts\jquery\jquery.globalize\cultures\globalize.culture.af-ZA.js" />
     <Content Include="scripts\jquery\jquery.globalize\cultures\globalize.culture.af.js" />
     <Content Include="scripts\jquery\jquery.globalize\cultures\globalize.culture.am-ET.js" />
@@ -1070,10 +1066,8 @@
     <Content Include="scripts\jquery\jquery.globalize\cultures\globalize.culture.zu-ZA.js" />
     <Content Include="scripts\jquery\jquery.globalize\cultures\globalize.culture.zu.js" />
     <Content Include="scripts\jquery\jquery.globalize\cultures\globalize.cultures.js" />
-    <None Include="scripts\jquery\jquery.globalize\globalize.d.ts" />
     <Content Include="scripts\jquery\jquery.globalize\globalize.js" />
     <Content Include="scripts\jquery\jquery.globalize\globalize.require.js" />
-    <None Include="scripts\jquery\jqueryui.d.ts" />
     <Content Include="scripts\kendo\2013.2.716\kendo.web.js" />
     <Content Include="scripts\kendo\2013.2.716\cultures\kendo.culture.af-ZA.min.js" />
     <Content Include="scripts\kendo\2013.2.716\cultures\kendo.culture.af.min.js" />
@@ -1486,12 +1480,8 @@
     <None Include="scripts\kendo\2013.2.716\kendo.window.min.js" />
     <Content Include="scripts\ko\knockout-2.3.0.debug.js" />
     <Content Include="scripts\ko\knockout-2.3.0.js" />
-    <None Include="scripts\ko\knockout.d.ts" />
     <Content Include="scripts\ko\knockout.mapping-latest.debug.js" />
     <Content Include="scripts\ko\knockout.mapping-latest.js" />
-    <None Include="scripts\ko\knockout.mapping.d.ts" />
-    <None Include="scripts\modernizr\modernizr.d.ts" />
-    <None Include="scripts\oss\moment.d.ts" />
     <Content Include="scripts\require\requireConfig_debug.js" />
     <Content Include="scripts\require\requireConfig.js" />
     <TypeScriptCompile Include="scripts\app\App.ts" />
@@ -1530,8 +1520,6 @@
     <Content Include="scripts\app\SideSwiper.min.js">
       <DependentUpon>SideSwiper.ts</DependentUpon>
     </Content>
-    <None Include="scripts\kendo\kendo.all.d.ts" />
-    <None Include="scripts\ko\knockout.extensions.d.ts" />
     <Content Include="scripts\ko\knockout.binding-handlers.js">
       <DependentUpon>knockout.binding-handlers.ts</DependentUpon>
     </Content>
@@ -1539,22 +1527,16 @@
       <DependentUpon>knockout.binding-handlers.ts</DependentUpon>
     </Content>
     <None Include="scripts\lib-ext.d.ts" />
-    <None Include="scripts\ko\knockout.validation.d.ts" />
-    <None Include="scripts\oss\jquery.placeholder.d.ts" />
-    <None Include="scripts\oss\jquery.autosize.d.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\establishments\SearchResult.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\establishments\Search.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\languages\ServerApiModel.ts" />
     <Content Include="scripts\require\main.js" />
-    <None Include="scripts\oss\jquery.tinymce.d.ts" />
     <Content Include="scripts\oss\jquery.tinymce.js" />
     <Content Include="scripts\oss\moment.js" />
     <Content Include="scripts\oss\moment.min.js" />
-    <None Include="scripts\require\require.d.ts" />
     <Content Include="scripts\require\require.js" />
     <Content Include="scripts\sammy\sammy-0.7.4.js" />
     <Content Include="scripts\sammy\sammy-0.7.4.min.js" />
-    <None Include="scripts\sammy\sammyjs.d.ts" />
     <Content Include="scripts\tinymce\css\content.css" />
     <Content Include="scripts\tinymce\langs\en.js" />
     <Content Include="scripts\tinymce\license.txt" />
@@ -1805,7 +1787,6 @@
     <Content Include="scripts\tinymce\themes\simple\skins\o2k7\content.css" />
     <Content Include="scripts\tinymce\themes\simple\skins\o2k7\img\button_bg.png" />
     <Content Include="scripts\tinymce\themes\simple\skins\o2k7\ui.css" />
-    <None Include="scripts\tinymce\tinymce.d.ts" />
     <Content Include="scripts\tinymce\tiny_mce.js" />
     <Content Include="scripts\tinymce\tiny_mce_popup.js" />
     <Content Include="scripts\tinymce\tiny_mce_src.js" />
@@ -1815,6 +1796,24 @@
     <Content Include="scripts\tinymce\utils\validate.js" />
     <TypeScriptCompile Include="scripts\viewmodels\agreements\RequireAgreement.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\agreements\AgreementVM.ts" />
+    <Content Include="scripts\typings\globalize\globalize.d.ts" />
+    <Content Include="scripts\typings\googlecharts\google.charts.d.ts" />
+    <Content Include="scripts\typings\googlemaps\google.maps.d.ts" />
+    <Content Include="scripts\typings\jquery.plugins\jquery.autosize.d.ts" />
+    <Content Include="scripts\typings\jquery.plugins\jquery.placeholder.d.ts" />
+    <Content Include="scripts\typings\jquery.plugins\jquery.tinymce.d.ts" />
+    <Content Include="scripts\typings\jqueryui\jqueryui.d.ts" />
+    <Content Include="scripts\typings\jquery\jquery.d.ts" />
+    <Content Include="scripts\typings\kendo\kendo.all.d.ts" />
+    <Content Include="scripts\typings\knockout.mapping\knockout.mapping.d.ts" />
+    <Content Include="scripts\typings\knockout.validation\knockout.validation.d.ts" />
+    <Content Include="scripts\typings\knockout\knockout.amd.d.ts" />
+    <Content Include="scripts\typings\knockout\knockout.d.ts" />
+    <Content Include="scripts\typings\modernizr\modernizr.d.ts" />
+    <Content Include="scripts\typings\moment\moment.d.ts" />
+    <Content Include="scripts\typings\requirejs\require.d.ts" />
+    <Content Include="scripts\typings\sammyjs\sammyjs.d.ts" />
+    <Content Include="scripts\typings\tinymce\tinymce.d.ts" />
     <Content Include="scripts\viewmodels\agreements\AgreementVM.js">
       <DependentUpon>AgreementVM.ts</DependentUpon>
     </Content>
@@ -2332,7 +2331,6 @@
     <None Include="styles\_resharper-unused.css" />
     <Content Include="styles\tinymce.css" />
     <Content Include="T4MVC.tt.settings.xml" />
-    <None Include="scripts\google\google.maps.d.ts" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>

@@ -1,15 +1,8 @@
-/// <reference path="../../ko/knockout.d.ts" />
-
-//interface KnockoutObservableSomethingArray extends KnockoutObservableArrayFunctions {
-//    (): ViewModels.My.IServerSomethingApiModel[];
-//    (value: ViewModels.My.IServerSomethingApiModel[]): void;
-//}
-
-module ViewModels.My {
+declare module ViewModels.My {
     export interface IServerProfileApiModel {
-        hasPhoto: bool;
-        isActive: bool;
-        isDisplayNameDerived: bool;
+        hasPhoto: boolean;
+        isActive: boolean;
+        isDisplayNameDerived: boolean;
         personId: number;
         displayName: string;
         firstName: string;

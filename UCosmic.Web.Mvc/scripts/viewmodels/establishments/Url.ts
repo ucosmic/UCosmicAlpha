@@ -1,8 +1,8 @@
-/// <reference path="../../jquery/jquery.d.ts" />
-/// <reference path="../../jquery/jqueryui.d.ts" />
-/// <reference path="../../ko/knockout.d.ts" />
-/// <reference path="../../ko/knockout.mapping.d.ts" />
-/// <reference path="../../ko/knockout.validation.d.ts" />
+/// <reference path="../../typings/jquery/jquery.d.ts" />
+/// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
+/// <reference path="../../typings/knockout/knockout.d.ts" />
+/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
+/// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
 /// <reference path="../../app/Routes.ts" />
 /// <reference path="../Flasher.ts" />
 /// <reference path="../Spinner.ts" />
@@ -16,8 +16,8 @@ module ViewModels.Establishments {
         id: number = 0;
         ownerId: number = 0;
         value: string = '';
-        isOfficialUrl: bool = false;
-        isFormerUrl: bool = false;
+        isOfficialUrl: boolean = false;
+        isFormerUrl: boolean = false;
 
         constructor (ownerId: number) {
             this.ownerId = ownerId;
@@ -26,8 +26,8 @@ module ViewModels.Establishments {
 
     class EstablishmentUrlValueValidator implements KnockoutValidationAsyncRuleDefinition {
         private _ruleName: string = 'validEstablishmentUrlValue';
-        private _isAwaitingResponse: bool = false;
-        async: bool = true;
+        private _isAwaitingResponse: boolean = false;
+        async: boolean = true;
         message: string =  'error';
         validator(val: string, vm: Url, callback: KnockoutValidationAsyncCallback) {
             if (!vm.isValueValidatableAsync()) {
@@ -59,24 +59,24 @@ module ViewModels.Establishments {
     export class Url implements KnockoutValidationGroup {
 
         // api observables
-        id: KnockoutObservableNumber = ko.observable();
-        ownerId: KnockoutObservableNumber = ko.observable();
-        value: KnockoutObservableString = ko.observable();
-        isOfficialUrl: KnockoutObservableBool = ko.observable();
-        isFormerUrl: KnockoutObservableBool = ko.observable();
+        id: KnockoutObservable<number> = ko.observable();
+        ownerId: KnockoutObservable<number> = ko.observable();
+        value: KnockoutObservable<string> = ko.observable();
+        isOfficialUrl: KnockoutObservable<boolean> = ko.observable();
+        isFormerUrl: KnockoutObservable<boolean> = ko.observable();
 
         // other observables
-        editMode: KnockoutObservableBool = ko.observable();
+        editMode: KnockoutObservable<boolean> = ko.observable();
         $valueElement: JQuery = undefined; // bind to this so we can focus it on actions
         $confirmPurgeDialog: JQuery = undefined;
-        isValid: () => bool;
+        isValid: () => boolean;
         errors: KnockoutValidationErrors;
 
         // computeds
-        isOfficialUrlEnabled: KnockoutComputed;
-        isValueValidatableAsync: KnockoutComputed;
-        isDeletable: KnockoutComputed;
-        valueHref: KnockoutComputed;
+        isOfficialUrlEnabled: KnockoutComputed<boolean>;
+        isValueValidatableAsync: KnockoutComputed<boolean>;
+        isDeletable: KnockoutComputed<boolean>;
+        valueHref: KnockoutComputed<string>;
 
         // spinners
         saveSpinner: Spinner = new Spinner(new SpinnerOptions(0, false));
@@ -84,7 +84,7 @@ module ViewModels.Establishments {
         valueValidationSpinner = new Spinner(new SpinnerOptions(0, false));
 
         // private fields
-        private saveEditorClicked: bool = false;
+        private saveEditorClicked: boolean = false;
         private originalValues: ServerUrlApiModel;
         private owner: Item;
         private mutationSuccess: (response: string) => void;
@@ -104,12 +104,12 @@ module ViewModels.Establishments {
             ko.mapping.fromJS(js, {}, this);
 
             // view computeds
-            this.isOfficialUrlEnabled = ko.computed((): bool => {
+            this.isOfficialUrlEnabled = ko.computed((): boolean => {
                 return !this.originalValues.isOfficialUrl;
             });
 
             // value validation
-            this.isValueValidatableAsync = ko.computed((): bool => {
+            this.isValueValidatableAsync = ko.computed((): boolean => {
                 return this.value() !== this.originalValues.value;
             });
             this.value.extend({
@@ -123,7 +123,7 @@ module ViewModels.Establishments {
                     },
                 });
             }
-            this.value.isValidating.subscribe((isValidating: bool): void => {
+            this.value.isValidating.subscribe((isValidating: boolean): void => {
                 if (isValidating) {
                     this.valueValidationSpinner.start();
                 }
@@ -134,7 +134,7 @@ module ViewModels.Establishments {
             });
 
             // official URL cannot be former URL
-            this.isOfficialUrl.subscribe((newValue: bool): void => {
+            this.isOfficialUrl.subscribe((newValue: boolean): void => {
                 if (newValue) this.isFormerUrl(false);
             });
 
@@ -145,7 +145,7 @@ module ViewModels.Establishments {
                 return 'http://' + url;
             });
 
-            this.isDeletable = ko.computed((): bool => {
+            this.isDeletable = ko.computed((): boolean => {
                 if (this.owner.editingUrl()) return false;
                 if (this.owner.urls().length == 1) return true;
                 return !this.isOfficialUrl();
@@ -183,12 +183,12 @@ module ViewModels.Establishments {
             ko.validation.group(this);
         }
 
-        clickLink(vm: Url, e: JQueryEventObject): bool {
+        clickLink(vm: Url, e: JQueryEventObject): boolean {
             e.stopPropagation();
             return true;
         }
 
-        clickOfficialUrlCheckbox(): bool { // educate users on how to change the official URL
+        clickOfficialUrlCheckbox(): boolean { // educate users on how to change the official URL
             if (this.originalValues.isOfficialUrl) { // only when the URL is already official in the db
                 this.owner.$genericAlertDialog.find('p.content')
                     .html('In order to choose a different official URL for this establishment, edit the URL you wish to make the new official URL.');
@@ -216,7 +216,7 @@ module ViewModels.Establishments {
             }
         }
 
-        saveEditor(): bool {
+        saveEditor(): boolean {
             this.saveEditorClicked = true;
             if (!this.isValid()) { // validate
                 this.saveEditorClicked = false;

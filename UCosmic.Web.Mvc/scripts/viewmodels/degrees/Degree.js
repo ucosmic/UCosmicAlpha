@@ -1,18 +1,48 @@
 var ViewModels;
 (function (ViewModels) {
+    /// <reference path="../../typings/jquery/jquery.d.ts" />
+    /// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
+    /// <reference path="../../typings/knockout/knockout.d.ts" />
+    /// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
+    /// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
+    /// <reference path="../../typings/kendo/kendo.all.d.ts" />
+    /// <reference path="../../typings/tinymce/tinymce.d.ts" />
+    /// <reference path="../../typings/moment/moment.d.ts" />
+    /// <reference path="../../app/Routes.ts" />
+    /// <reference path="../degrees/ServiceApiModel.d.ts" />
     (function (Degrees) {
+        // ================================================================================
+        /*
+        */
+        // ================================================================================
         var Degree = (function () {
+            // --------------------------------------------------------------------------------
+            /*
+            */
+            // --------------------------------------------------------------------------------
             function Degree(educationId) {
+                /* Initialization errors. */
                 this.inititializationErrors = "";
+                /* True if any field changes. */
                 this.dirtyFlag = ko.observable(false);
                 this._initialize(educationId);
             }
+            // --------------------------------------------------------------------------------
+            /*
+            */
+            // --------------------------------------------------------------------------------
             Degree.prototype._initialize = function (degreeId) {
                 this.id = ko.observable(degreeId);
             };
+
+            // --------------------------------------------------------------------------------
+            /*
+            */
+            // --------------------------------------------------------------------------------
             Degree.prototype.setupWidgets = function (institutionSelectorId) {
                 var _this = this;
                 this.institutionSelectorId = institutionSelectorId;
+
                 $("#" + institutionSelectorId).kendoAutoComplete({
                     minLength: 3,
                     filter: "contains",
@@ -45,7 +75,7 @@ var ViewModels;
                         var dataItem = me.dataItem(e.item.index());
                         _this.institutionOfficialName(dataItem.officialName);
                         _this.institutionId(dataItem.id);
-                        if((dataItem.countryName != null) && (dataItem.countryName.length > 0)) {
+                        if ((dataItem.countryName != null) && (dataItem.countryName.length > 0)) {
                             _this.institutionCountryOfficialName(dataItem.countryName);
                         } else {
                             _this.institutionCountryOfficialName(null);
@@ -53,29 +83,39 @@ var ViewModels;
                     }
                 });
             };
+
+            // --------------------------------------------------------------------------------
+            /*
+            */
+            // --------------------------------------------------------------------------------
             Degree.prototype.checkInstitutionForNull = function () {
                 var me = $("#" + this.institutionSelectorId).data("kendoAutoComplete");
                 var value = (me.value() != null) ? me.value().toString() : null;
-                if(value != null) {
+                if (value != null) {
                     value = $.trim(value);
                 }
-                if((value == null) || (value.length == 0)) {
+                if ((value == null) || (value.length == 0)) {
                     me.value(null);
                     this.institutionOfficialName(null);
                     this.institutionId(null);
                 }
             };
+
+            // --------------------------------------------------------------------------------
+            /*
+            */
+            // --------------------------------------------------------------------------------
             Degree.prototype.setupValidation = function () {
-                this.title.extend({
-                    required: true,
-                    minLength: 1,
-                    maxLength: 256
-                });
-                this.yearAwarded.extend({
-                    min: 1900
-                });
+                this.title.extend({ required: true, minLength: 1, maxLength: 256 });
+                this.yearAwarded.extend({ min: 1900 });
+
                 ko.validation.group(this);
             };
+
+            // --------------------------------------------------------------------------------
+            /*
+            */
+            // --------------------------------------------------------------------------------
             Degree.prototype.setupSubscriptions = function () {
                 var _this = this;
                 this.title.subscribe(function (newValue) {
@@ -91,10 +131,16 @@ var ViewModels;
                     _this.dirtyFlag(true);
                 });
             };
+
+            // --------------------------------------------------------------------------------
+            /*
+            */
+            // --------------------------------------------------------------------------------
             Degree.prototype.load = function () {
                 var _this = this;
                 var deferred = $.Deferred();
-                if(this.id() == 0) {
+
+                if (this.id() == 0) {
                     this.version = ko.observable(null);
                     this.personId = ko.observable(0);
                     this.title = ko.observable(null);
@@ -108,6 +154,7 @@ var ViewModels;
                     deferred.resolve();
                 } else {
                     var dataPact = $.Deferred();
+
                     $.ajax({
                         type: "GET",
                         url: App.Routes.WebApi.My.Degrees.get(this.id()),
@@ -118,29 +165,42 @@ var ViewModels;
                             dataPact.reject(jqXhr, textStatus, errorThrown);
                         }
                     });
+
+                    // only process after all requests have been resolved
                     $.when(dataPact).done(function (data) {
-                        ko.mapping.fromJS(data, {
-                        }, _this);
+                        ko.mapping.fromJS(data, {}, _this);
+
                         deferred.resolve();
                     }).fail(function (xhr, textStatus, errorThrown) {
                         deferred.reject(xhr, textStatus, errorThrown);
                     });
                 }
+
                 return deferred;
             };
+
+            // --------------------------------------------------------------------------------
+            /*
+            */
+            // --------------------------------------------------------------------------------
             Degree.prototype.save = function (viewModel, event) {
-                if(!this.isValid()) {
+                if (!this.isValid()) {
+                    // TBD - need dialog here.
                     this.errors.showAllMessages();
                     return;
                 }
-                if(this.yearAwarded() != null) {
+
+                if (this.yearAwarded() != null) {
                     var yearAwaredStr = this.yearAwarded().toString();
                     yearAwaredStr = $.trim(yearAwaredStr);
-                    if(yearAwaredStr.length == 0) {
+                    if (yearAwaredStr.length == 0) {
                         this.yearAwarded(null);
                     }
                 }
+
+                /* If there is no institution, return institutionId as null, not 0 */
                 this.checkInstitutionForNull();
+
                 var mapSource = {
                     id: this.id,
                     version: this.version,
@@ -152,9 +212,13 @@ var ViewModels;
                     yearAwarded: this.yearAwarded,
                     institutionId: this.institutionId
                 };
+
                 var model = ko.mapping.toJS(mapSource);
+
                 var url = (viewModel.id() == 0) ? App.Routes.WebApi.My.Degrees.post() : App.Routes.WebApi.My.Degrees.put(viewModel.id());
+
                 var type = (viewModel.id() == 0) ? "POST" : "PUT";
+
                 $.ajax({
                     type: type,
                     async: false,
@@ -170,8 +234,13 @@ var ViewModels;
                     }
                 });
             };
+
+            // --------------------------------------------------------------------------------
+            /*
+            */
+            // --------------------------------------------------------------------------------
             Degree.prototype.cancel = function (item, event, mode) {
-                if(this.dirtyFlag() == true) {
+                if (this.dirtyFlag() == true) {
                     $("#cancelConfirmDialog").dialog({
                         modal: true,
                         resizable: false,
@@ -187,12 +256,13 @@ var ViewModels;
                         }
                     });
                 } else {
+                    //location.href = App.Routes.Mvc.My.Profile.get() + '#/formal-education';
                     history.back();
                 }
             };
             return Degree;
         })();
-        Degrees.Degree = Degree;        
+        Degrees.Degree = Degree;
     })(ViewModels.Degrees || (ViewModels.Degrees = {}));
     var Degrees = ViewModels.Degrees;
 })(ViewModels || (ViewModels = {}));

@@ -1,9 +1,16 @@
-define(["require", "exports", './ServerApiModel', '../Widgets/Spinner'], function(require, exports, __SearchApiModel__, __Spinner__) {
+/// <reference path="../../../typings/jquery/jquery.d.ts" />
+/// <reference path="../../../typings/jqueryui/jqueryui.d.ts" />
+/// <reference path="../../../typings/knockout/knockout.d.ts" />
+/// <reference path="../../../typings/knockout.mapping/knockout.mapping.d.ts" />
+/// <reference path="../../../typings/knockout.validation/knockout.validation.d.ts" />
+/// <reference path="../../../app/Routes.ts" />
+/// <reference path="../../Flasher.ts" />
+/// <reference path="../../Spinner.ts" />
+/// <reference path="Item.ts" />
+define(["require", "exports", '../Widgets/Spinner'], function(require, exports, __Spinner__) {
     
-    var SearchApiModel = __SearchApiModel__;
-
+    
     var Spinner = __Spinner__;
-
     var ServerUrlApiModel = (function () {
         function ServerUrlApiModel(ownerId) {
             this.id = 0;
@@ -15,7 +22,8 @@ define(["require", "exports", './ServerApiModel', '../Widgets/Spinner'], functio
         }
         return ServerUrlApiModel;
     })();
-    exports.ServerUrlApiModel = ServerUrlApiModel;    
+    exports.ServerUrlApiModel = ServerUrlApiModel;
+
     var EstablishmentUrlValueValidator = (function () {
         function EstablishmentUrlValueValidator() {
             this._ruleName = 'validEstablishmentUrlValue';
@@ -27,9 +35,9 @@ define(["require", "exports", './ServerApiModel', '../Widgets/Spinner'], functio
         }
         EstablishmentUrlValueValidator.prototype.validator = function (val, vm, callback) {
             var _this = this;
-            if(!vm.isValueValidatableAsync()) {
+            if (!vm.isValueValidatableAsync()) {
                 callback(true);
-            } else if(!this._isAwaitingResponse && vm.value()) {
+            } else if (!this._isAwaitingResponse && vm.value()) {
                 var route = App.Routes.WebApi.Establishments.Urls.validateValue(vm.ownerId(), vm.id());
                 this._isAwaitingResponse = true;
                 $.post(route, vm.serializeData()).always(function () {
@@ -37,44 +45,52 @@ define(["require", "exports", './ServerApiModel', '../Widgets/Spinner'], functio
                 }).done(function () {
                     callback(true);
                 }).fail(function (xhr) {
-                    callback({
-                        isValid: false,
-                        message: xhr.responseText
-                    });
+                    callback({ isValid: false, message: xhr.responseText });
                 });
             }
         };
         return EstablishmentUrlValueValidator;
-    })();    
+    })();
     new EstablishmentUrlValueValidator();
+
     var Url = (function () {
         function Url(js, owner) {
             var _this = this;
+            // api observables
             this.id = ko.observable();
             this.ownerId = ko.observable();
             this.value = ko.observable();
             this.isOfficialUrl = ko.observable();
             this.isFormerUrl = ko.observable();
+            // other observables
             this.editMode = ko.observable();
             this.$valueElement = undefined;
             this.$confirmPurgeDialog = undefined;
+            // spinners
             this.saveSpinner = new Spinner.Spinner(new Spinner.SpinnerOptions(0, false));
             this.purgeSpinner = new Spinner.Spinner(new Spinner.SpinnerOptions(0, false));
             this.valueValidationSpinner = new Spinner.Spinner(new Spinner.SpinnerOptions(0, false));
+            // private fields
             this.saveEditorClicked = false;
             this.owner = owner;
-            if(!js) {
+
+            if (!js)
                 js = new ServerUrlApiModel(this.owner.id);
-            }
-            if(js.id === 0) {
+            if (js.id === 0)
                 js.ownerId = this.owner.id;
-            }
+
+            // hold onto original values so they can be reset on cancel
             this.originalValues = js;
-            ko.mapping.fromJS(js, {
-            }, this);
+
+            // map api properties to observables
+            ko.mapping.fromJS(js, {}, this);
+
+            // view computeds
             this.isOfficialUrlEnabled = ko.computed(function () {
                 return !_this.originalValues.isOfficialUrl;
             });
+
+            // value validation
             this.isValueValidatableAsync = ko.computed(function () {
                 return _this.value() !== _this.originalValues.value;
             });
@@ -82,7 +98,7 @@ define(["require", "exports", './ServerApiModel', '../Widgets/Spinner'], functio
                 maxLength: 200,
                 validEstablishmentUrlValue: this
             });
-            if(this.owner.id) {
+            if (this.owner.id) {
                 this.value.extend({
                     required: {
                         message: 'Establishment URL is required.'
@@ -90,36 +106,37 @@ define(["require", "exports", './ServerApiModel', '../Widgets/Spinner'], functio
                 });
             }
             this.value.isValidating.subscribe(function (isValidating) {
-                if(isValidating) {
+                if (isValidating) {
                     _this.valueValidationSpinner.start();
                 } else {
                     _this.valueValidationSpinner.stop();
-                    if(_this.saveEditorClicked) {
+                    if (_this.saveEditorClicked)
                         _this.saveEditor();
-                    }
                 }
             });
+
+            // official URL cannot be former URL
             this.isOfficialUrl.subscribe(function (newValue) {
-                if(newValue) {
+                if (newValue)
                     _this.isFormerUrl(false);
-                }
             });
+
+            // prepend protocol to URL for hrefs
             this.valueHref = ko.computed(function () {
                 var url = _this.value();
-                if(!url) {
+                if (!url)
                     return url;
-                }
                 return 'http://' + url;
             });
+
             this.isDeletable = ko.computed(function () {
-                if(_this.owner.editingUrl()) {
+                if (_this.owner.editingUrl())
                     return false;
-                }
-                if(_this.owner.urls().length == 1) {
+                if (_this.owner.urls().length == 1)
                     return true;
-                }
                 return !_this.isOfficialUrl();
             });
+
             this.mutationSuccess = function (response) {
                 _this.owner.requestUrls(function () {
                     _this.owner.editingUrl(0);
@@ -129,8 +146,9 @@ define(["require", "exports", './ServerApiModel', '../Widgets/Spinner'], functio
                     App.flasher.flash(response);
                 });
             };
+
             this.mutationError = function (xhr) {
-                if(xhr.status === 400) {
+                if (xhr.status === 400) {
                     _this.owner.$genericAlertDialog.find('p.content').html(xhr.responseText.replace('\n', '<br /><br />'));
                     _this.owner.$genericAlertDialog.dialog({
                         title: 'Alert Message',
@@ -148,15 +166,17 @@ define(["require", "exports", './ServerApiModel', '../Widgets/Spinner'], functio
                 _this.saveSpinner.stop();
                 _this.purgeSpinner.stop();
             };
+
             ko.validation.group(this);
         }
         Url.prototype.clickLink = function (vm, e) {
             e.stopPropagation();
             return true;
         };
+
         Url.prototype.clickOfficialUrlCheckbox = function () {
             var _this = this;
-            if(this.originalValues.isOfficialUrl) {
+            if (this.originalValues.isOfficialUrl) {
                 this.owner.$genericAlertDialog.find('p.content').html('In order to choose a different official URL for this establishment, edit the URL you wish to make the new official URL.');
                 this.owner.$genericAlertDialog.dialog({
                     title: 'Alert Message',
@@ -173,30 +193,33 @@ define(["require", "exports", './ServerApiModel', '../Widgets/Spinner'], functio
             }
             return true;
         };
+
         Url.prototype.showEditor = function () {
             var editingUrl = this.owner.editingUrl();
-            if(!editingUrl) {
+            if (!editingUrl) {
                 this.owner.editingUrl(this.id() || -1);
                 this.editMode(true);
                 this.$valueElement.trigger('autosize');
                 this.$valueElement.focus();
             }
         };
+
         Url.prototype.saveEditor = function () {
             this.saveEditorClicked = true;
-            if(!this.isValid()) {
+            if (!this.isValid()) {
                 this.saveEditorClicked = false;
                 this.errors.showAllMessages();
-            } else if(!this.value.isValidating()) {
+            } else if (!this.value.isValidating()) {
                 this.saveEditorClicked = false;
                 this.saveSpinner.start();
-                if(this.id()) {
+
+                if (this.id()) {
                     $.ajax({
                         url: App.Routes.WebApi.Establishments.Urls.put(this.owner.id, this.id()),
                         type: 'PUT',
                         data: this.serializeData()
                     }).done(this.mutationSuccess).fail(this.mutationError);
-                } else if(this.owner.id) {
+                } else if (this.owner.id) {
                     $.ajax({
                         url: App.Routes.WebApi.Establishments.Urls.post(this.owner.id),
                         type: 'POST',
@@ -206,23 +229,24 @@ define(["require", "exports", './ServerApiModel', '../Widgets/Spinner'], functio
             }
             return false;
         };
+
         Url.prototype.cancelEditor = function () {
             this.owner.editingUrl(0);
-            if(this.id()) {
-                ko.mapping.fromJS(this.originalValues, {
-                }, this);
+            if (this.id()) {
+                ko.mapping.fromJS(this.originalValues, {}, this);
                 this.editMode(false);
             } else {
                 this.owner.urls.shift();
             }
         };
+
         Url.prototype.purge = function (vm, e) {
             var _this = this;
             e.stopPropagation();
-            if(this.owner.editingUrl()) {
+            if (this.owner.editingUrl())
                 return;
-            }
-            if(this.isOfficialUrl() && this.owner.urls().length > 1) {
+
+            if (this.isOfficialUrl() && this.owner.urls().length > 1) {
                 this.owner.$genericAlertDialog.find('p.content').html('You cannot delete an establishment\'s official URL.<br />To delete this URL, first assign another URL as official.');
                 this.owner.$genericAlertDialog.dialog({
                     title: 'Alert Message',
@@ -246,9 +270,8 @@ define(["require", "exports", './ServerApiModel', '../Widgets/Spinner'], functio
                 resizable: false,
                 modal: true,
                 close: function () {
-                    if(!shouldRemainSpinning) {
+                    if (!shouldRemainSpinning)
                         _this.purgeSpinner.stop();
-                    }
                 },
                 buttons: [
                     {
@@ -261,7 +284,7 @@ define(["require", "exports", './ServerApiModel', '../Widgets/Spinner'], functio
                                 type: 'DELETE'
                             }).done(_this.mutationSuccess).fail(_this.mutationError);
                         }
-                    }, 
+                    },
                     {
                         text: 'No, cancel delete',
                         click: function () {
@@ -273,6 +296,7 @@ define(["require", "exports", './ServerApiModel', '../Widgets/Spinner'], functio
                 ]
             });
         };
+
         Url.prototype.serializeData = function () {
             return {
                 id: this.id(),
@@ -284,5 +308,5 @@ define(["require", "exports", './ServerApiModel', '../Widgets/Spinner'], functio
         };
         return Url;
     })();
-    exports.Url = Url;    
-})
+    exports.Url = Url;
+});

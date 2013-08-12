@@ -1,12 +1,11 @@
-/// <reference path="../../jquery/jquery.d.ts" />
-/// <reference path="../../jquery/jqueryui.d.ts" />
-/// <reference path="../../ko/knockout.d.ts" />
-/// <reference path="../../ko/knockout.mapping.d.ts" />
-/// <reference path="../../ko/knockout.extensions.d.ts" />
-/// <reference path="../../ko/knockout.validation.d.ts" />
-/// <reference path="../../kendo/kendo.all.d.ts" />
+/// <reference path="../../typings/jquery/jquery.d.ts" />
+/// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
+/// <reference path="../../typings/knockout/knockout.d.ts" />
+/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
+/// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
+/// <reference path="../../typings/kendo/kendo.all.d.ts" />
 /// <reference path="../../app/Routes.ts" />
-/// <reference path="../../oss/moment.d.ts" />
+/// <reference path="../../typings/moment/moment.d.ts" />
 /// <reference path="../activities/ServiceApiModel.d.ts" />
 
 module ViewModels.Activities
@@ -35,7 +34,7 @@ module ViewModels.Activities
         orderBy: string;
         pageSize: number;
         pageNumber: number;
-        items: KnockoutObservableArray; // array of IObservableActivity
+        items: KnockoutObservableArray<any>; // array of IObservableActivity
 
         // --------------------------------------------------------------------------------
         /* 
@@ -52,7 +51,7 @@ module ViewModels.Activities
         // --------------------------------------------------------------------------------
         load(): JQueryPromise
         {
-            var deferred: JQueryDeferred = $.Deferred();
+            var deferred: JQueryDeferred<void> = $.Deferred();
 
             var locationsPact = $.Deferred();
             $.get(App.Routes.WebApi.Activities.Locations.get())
@@ -110,12 +109,12 @@ module ViewModels.Activities
                                 },
                             },
                             'startsOn': {
-                                create: ( options: any ): KnockoutObservableDate => {
+                                create: ( options: any ): KnockoutObservable<Date> => {
                                     return ( options.data != null ) ? ko.observable( moment( options.data ).toDate() ) : ko.observable();
                                 }
                             },
                             'endsOn': {
-                                create: ( options: any ): KnockoutObservableDate => {
+                                create: ( options: any ): KnockoutObservable<Date> => {
                                     return ( options.data != null ) ? ko.observable( moment( options.data ).toDate() ) : ko.observable();
                                 }
                             }
@@ -186,7 +185,7 @@ module ViewModels.Activities
         /*  
         */
         // --------------------------------------------------------------------------------
-        editActivity(activityId: number): bool {
+        editActivity(activityId: number): boolean {
             var returnValue = false;
             $.ajax({
                 type: 'GET',
@@ -291,7 +290,7 @@ module ViewModels.Activities
         /*  
         */
         // --------------------------------------------------------------------------------
-        activityDatesFormatted(startsOnStr: Date, endsOnStr: Date, onGoing: bool, dateFormat: string): string
+        activityDatesFormatted(startsOnStr: Date, endsOnStr: Date, onGoing: boolean, dateFormat: string): string
         {
             var formattedDateRange: string = "";
 

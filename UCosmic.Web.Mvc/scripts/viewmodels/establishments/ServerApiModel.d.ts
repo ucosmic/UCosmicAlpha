@@ -1,41 +1,9 @@
-/// <reference path="../../ko/knockout.d.ts" />
+/// <reference path="../../typings/knockout/knockout.d.ts" />
 /// <reference path="../places/ServerApiModel.ts" />
 /// <reference path="Name.ts" />
 /// <reference path="Url.ts" />
 
-interface KnockoutObservableEstablishmentNameModelArray extends KnockoutObservableArrayFunctions {
-    (): ViewModels.Establishments.IServerNameApiModel[];
-    (value: ViewModels.Establishments.IServerNameApiModel[]): void;
-
-    subscribe(callback: (newValue: ViewModels.Establishments.IServerNameApiModel[]) => void, target?:any, topic?: string): KnockoutSubscription;
-    notifySubscribers(valueToWrite: ViewModels.Establishments.IServerNameApiModel[], topic?: string);
-}
-
-interface KnockoutObservableEstablishmentNameViewModelArray extends KnockoutObservableArrayFunctions {
-    (): ViewModels.Establishments.Name[];
-    (value: ViewModels.Establishments.Name[]): void;
-
-    subscribe(callback: (newValue: ViewModels.Establishments.Name[]) => void, target?:any, topic?: string): KnockoutSubscription;
-    notifySubscribers(valueToWrite: ViewModels.Establishments.Name[], topic?: string);
-}
-
-interface KnockoutObservableEstablishmentUrlModelArray extends KnockoutObservableArrayFunctions {
-    (): ViewModels.Establishments.IServerUrlApiModel[];
-    (value: ViewModels.Establishments.IServerUrlApiModel[]): void;
-
-    subscribe(callback: (newValue: ViewModels.Establishments.IServerUrlApiModel[]) => void, target?:any, topic?: string): KnockoutSubscription;
-    notifySubscribers(valueToWrite: ViewModels.Establishments.IServerUrlApiModel[], topic?: string);
-}
-
-interface KnockoutObservableEstablishmentUrlViewModelArray extends KnockoutObservableArrayFunctions {
-    (): ViewModels.Establishments.Url[];
-    (value: ViewModels.Establishments.Url[]): void;
-
-    subscribe(callback: (newValue: ViewModels.Establishments.Url[]) => void, target?:any, topic?: string): KnockoutSubscription;
-    notifySubscribers(valueToWrite: ViewModels.Establishments.Url[], topic?: string);
-}
-
-module ViewModels.Establishments {
+declare module ViewModels.Establishments {
 
     export interface IServerApiFlatModel {
         id: number;
@@ -59,8 +27,8 @@ module ViewModels.Establishments {
         id: number;
         ownerId: number;
         text: string;
-        isOfficialName: bool;
-        isFormerName: bool;
+        isOfficialName: boolean;
+        isFormerName: boolean;
         languageCode: string;
     }
 
@@ -72,8 +40,8 @@ module ViewModels.Establishments {
         id: number;
         ownerId: number;
         value: string;
-        isOfficialUrl: bool;
-        isFormerUrl: bool;
+        isOfficialUrl: boolean;
+        isFormerUrl: boolean;
     }
 
     export interface IServerLocationApiModel {

@@ -1,5 +1,5 @@
-/// <reference path="../../../ko/knockout.d.ts" />
-/// <reference path="../../../jquery/jquery.d.ts" />
+/// <reference path="../../../typings/knockout/knockout.d.ts" />
+/// <reference path="../../../typings/jquery/jquery.d.ts" />
 
     // private properties
     var ticks: number;
@@ -43,10 +43,10 @@
     }
 
     export interface IFlasher {
-        text: KnockoutObservableString;
-        tickCount: KnockoutObservableNumber;
-        isDismissing: KnockoutObservableBool;
-        isDismissed: KnockoutObservableBool;
+        text: KnockoutObservable<string>;
+        tickCount: KnockoutObservable<number>;
+        isDismissing: KnockoutObservable<boolean>;
+        isDismissed: KnockoutObservable<boolean>;
         $element: JQuery;
         flash(text: string): void;
         dismiss(): void;
@@ -62,13 +62,13 @@
         }
 
         // text to be displayed in the flasher
-        text: KnockoutObservableString = ko.observable();
+        text: KnockoutObservable<string> = ko.observable();
 
         // number of seconds to display the flashed text
-        tickCount: KnockoutObservableNumber = ko.observable(9);
+        tickCount: KnockoutObservable<number> = ko.observable(9);
 
-        isDismissing: KnockoutObservableBool = ko.observable();
-        isDismissed: KnockoutObservableBool = ko.observable();
+        isDismissing: KnockoutObservable<boolean> = ko.observable();
+        isDismissed: KnockoutObservable<boolean> = ko.observable();
 
         // DOM element that wraps the flasher markup
         $element: JQuery = undefined;
@@ -94,18 +94,18 @@
     // proxy to display flasher info on other page sections
     export class FlasherProxy {
 
-        text: KnockoutComputed;
-        isVisible: KnockoutComputed;
+        text: KnockoutComputed<string>;
+        isVisible: KnockoutComputed<boolean>;
 
         constructor() {
             this.text = ko.computed((): string => {
                 return flasher.text();
             });
-            this.isVisible = ko.computed((): bool => {
+            this.isVisible = ko.computed((): boolean => {
                 if (flasher.isDismissing() || flasher.isDismissed()) {
                     return false;
                 }
-                return this.text();
+                return this.text() ? true : false;
             });
         }
 

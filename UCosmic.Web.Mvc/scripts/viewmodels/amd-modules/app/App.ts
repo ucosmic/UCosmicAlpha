@@ -1,6 +1,6 @@
-/// <reference path="../../../jquery/jquery.d.ts" />
-/// <reference path="../../../oss/jquery.autosize.d.ts" />
-/// <reference path="../../../oss/jquery.placeholder.d.ts" />
+/// <reference path="../../../typings/jquery/jquery.d.ts" />
+/// <reference path="../../../typings/jquery.plugins/jquery.autosize.d.ts" />
+/// <reference path="../../../typings/jquery.plugins/jquery.placeholder.d.ts" />
 
     // track & get/set window scroll position
     export class WindowScroller {

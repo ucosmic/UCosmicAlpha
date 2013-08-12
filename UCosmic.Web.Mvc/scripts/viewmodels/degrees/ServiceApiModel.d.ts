@@ -1,6 +1,6 @@
-/// <reference path="../../ko/knockout.d.ts" />
+/// <reference path="../../typings/knockout/knockout.d.ts" />
 
-module Service.ApiModels.Degree {
+declare module Service.ApiModels.Degree {
 
     export interface IDegree {
         id: number;
@@ -15,21 +15,21 @@ module Service.ApiModels.Degree {
     }
 
     export interface IObservableDegree {
-        id: KnockoutObservableNumber;
-        version: KnockoutObservableString;      // byte[] converted to base64
-        personId: KnockoutObservableNumber;
-        whenLastUpdated: KnockoutObservableString;
-        whoLastUpdated: KnockoutObservableString;
-        title: KnockoutObservableString;
-        yearAwarded: KnockoutObservableAny;
-        institutionId: KnockoutObservableAny;
-        institutionOfficialName: KnockoutObservableString;
-        institutionCountryOfficialName: KnockoutObservableString;
+        id: KnockoutObservable<number>;
+        version: KnockoutObservable<string>;      // byte[] converted to base64
+        personId: KnockoutObservable<number>;
+        whenLastUpdated: KnockoutObservable<string>;
+        whoLastUpdated: KnockoutObservable<string>;
+        title: KnockoutObservable<string>;
+        yearAwarded: KnockoutObservable<any>;
+        institutionId: KnockoutObservable<any>;
+        institutionOfficialName: KnockoutObservable<string>;
+        institutionCountryOfficialName: KnockoutObservable<string>;
 
         /* Knockout-Validation */
         errors: KnockoutValidationErrors;
-        isValid: () => bool;
-        isAnyMessageShown: () => bool;
+        isValid: () => boolean;
+        isAnyMessageShown: () => boolean;
     }
 
     export interface IDegreeCountries {
@@ -43,11 +43,11 @@ module Service.ApiModels.Degree {
     }
 
     export interface IDegreePage {
-        personId: KnockoutObservableNumber;
-        orderBy: KnockoutObservableString;
-        pageSize: KnockoutObservableNumber;
-        pageNumber: KnockoutObservableNumber;
-        items: KnockoutObservableArray;
+        personId: KnockoutObservable<number>;
+        orderBy: KnockoutObservable<string>;
+        pageSize: KnockoutObservable<number>;
+        pageNumber: KnockoutObservable<number>;
+        items: KnockoutObservableArray<any>;
     }
 
 }

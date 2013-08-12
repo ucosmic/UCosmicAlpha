@@ -1,4 +1,4 @@
-/// <reference path="../jquery/jquery.d.ts" />
+/// <reference path="../typings/jquery/jquery.d.ts" />
 
 interface JQueryStatic {
     extend(target: App.SideSwiperOptions, obj?: App.SideSwiperOptions): App.SideSwiperOptions;
@@ -111,6 +111,6 @@ module App {
                 // invoke callback if one was passed
                 if (callback) callback();
             });
-        };
+        }
     }
 }

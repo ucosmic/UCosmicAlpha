@@ -1,6 +1,6 @@
-﻿/// <reference path="../../ko/knockout.d.ts" />
+﻿/// <reference path="../../typings/knockout/knockout.d.ts" />
 
-module Service.ApiModels {
+declare module Service.ApiModels {
 
     export interface IEmployeeActivityType {
         id: number;
@@ -10,9 +10,9 @@ module Service.ApiModels {
 
     export interface IActivityLocation {
         id: number;
-        isCountry: bool;
-        isBodyOfWater: bool;
-        isEarth: bool;
+        isCountry: boolean;
+        isBodyOfWater: boolean;
+        isEarth: boolean;
         officialName: string;
     }
 
@@ -22,84 +22,84 @@ module Service.ApiModels {
     }
 
     export interface IObservableValuesActivityLocation {
-        id: KnockoutObservableNumber;
-        placeId: KnockoutObservableNumber;
+        id: KnockoutObservable<number>;
+        placeId: KnockoutObservable<number>;
     }
 
     export interface IObservableInstitution {
-        id: KnockoutObservableNumber;
-        officialName: KnockoutObservableString;
+        id: KnockoutObservable<number>;
+        officialName: KnockoutObservable<string>;
     }
 
     export interface IObservableActivityType {
-        id: KnockoutObservableNumber;
-        type: KnockoutObservableString;
-        checked: KnockoutComputed;
+        id: KnockoutObservable<number>;
+        type: KnockoutObservable<string>;
+        checked: KnockoutComputed<boolean>;
     }
 
     export interface IObservableValuesActivityType {
-        id: KnockoutObservableNumber;
-        typeId: KnockoutObservableNumber;
+        id: KnockoutObservable<number>;
+        typeId: KnockoutObservable<number>;
     }
 
     export interface IObservableActivityTag {
-        id: KnockoutObservableNumber;
-        number: KnockoutObservableNumber;
-        text: KnockoutObservableString; 
-        domainTypeText: KnockoutObservableString; 
-        domainKey: KnockoutObservableNumber;
-        modeText: KnockoutObservableString; 
-        isInstitution: KnockoutObservableBool;
+        id: KnockoutObservable<number>;
+        number: KnockoutObservable<number>;
+        text: KnockoutObservable<string>; 
+        domainTypeText: KnockoutObservable<string>; 
+        domainKey: KnockoutObservable<number>;
+        modeText: KnockoutObservable<string>; 
+        isInstitution: KnockoutObservable<boolean>;
     }
 
     export interface IObservableActivityDocument
     {
-        id: KnockoutObservableNumber;
-        activityId: KnockoutObservableNumber;
-        title: KnockoutObservableString;
-        fileExt: KnockoutObservableString;
-        length: KnockoutObservableNumber;
-        size: KnockoutObservableString;
+        id: KnockoutObservable<number>;
+        activityId: KnockoutObservable<number>;
+        title: KnockoutObservable<string>;
+        fileExt: KnockoutObservable<string>;
+        length: KnockoutObservable<number>;
+        size: KnockoutObservable<string>;
     }
 
     export interface IObservableActivityValues {
-        id: KnockoutObservableNumber;
-        title: KnockoutObservableString;
-        content: KnockoutObservableString;
-        startsOn?: KnockoutObservableDate;
-        endsOn?: KnockoutObservableDate;
-        onGoing?: KnockoutObservableBool;
-        dateFormat: KnockoutObservableString;
-        wasExternallyFunded: KnockoutObservableBool;
-        wasInternallyFunded: KnockoutObservableBool;
-        locations: KnockoutObservableArray;
-        types: KnockoutObservableArray;         // IObservableValuesActivityType
-        modeText: KnockoutObservableString;
-        tags: KnockoutObservableArray;
-        documents: KnockoutObservableArray;
+        id: KnockoutObservable<number>;
+        title: KnockoutObservable<string>;
+        content: KnockoutObservable<string>;
+        startsOn?: KnockoutObservable<Date>;
+        endsOn?: KnockoutObservable<Date>;
+        onGoing?: KnockoutObservable<boolean>;
+        dateFormat: KnockoutObservable<string>;
+        wasExternallyFunded: KnockoutObservable<boolean>;
+        wasInternallyFunded: KnockoutObservable<boolean>;
+        locations: KnockoutObservableArray<any>;
+        types: KnockoutObservableArray<any>;         // IObservableValuesActivityType
+        modeText: KnockoutObservable<string>;
+        tags: KnockoutObservableArray<any>;
+        documents: KnockoutObservableArray<any>;
 
         /* Knockout-Validation */
         errors: KnockoutValidationErrors;
-        isValid: () => bool;
-        isAnyMessageShown: () => bool;
+        isValid: () => boolean;
+        isAnyMessageShown: () => boolean;
     }
 
     export interface IObservableActivity {
-        id: KnockoutObservableNumber;
-        version: KnockoutObservableString;      // byte[] converted to base64
-        personId: KnockoutObservableNumber;
-        number: KnockoutObservableNumber;
-        entityId: KnockoutObservableString;     // guid converted to string
-        modeText: KnockoutObservableString;
+        id: KnockoutObservable<number>;
+        version: KnockoutObservable<string>;      // byte[] converted to base64
+        personId: KnockoutObservable<number>;
+        number: KnockoutObservable<number>;
+        entityId: KnockoutObservable<string>;     // guid converted to string
+        modeText: KnockoutObservable<string>;
         values: IObservableActivityValues;
     }
 
     export interface IActivityPage {
-        personId: KnockoutObservableNumber;
-        orderBy: KnockoutObservableString;
-        pageSize: KnockoutObservableNumber;
-        pageNumber: KnockoutObservableNumber;
-        items: KnockoutObservableArray;
+        personId: KnockoutObservable<number>;
+        orderBy: KnockoutObservable<string>;
+        pageSize: KnockoutObservable<number>;
+        pageNumber: KnockoutObservable<number>;
+        items: KnockoutObservableArray<any>;
     }
 
 }

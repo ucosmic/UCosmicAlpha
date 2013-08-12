@@ -1,32 +1,32 @@
 // Type definitions for Kendo UI
 
-module kendo {
-    declare function bind(selector: string, viewModel: any, namespace?: any): void;
-    declare function bind(element: JQuery, viewModel: any, namespace?: any): void;
-    declare function bind(element: Element, viewModel: any, namespace?: any): void;
-    declare function culture(value: string): void;
-    declare function culture(): string;
-    declare function destroy(selector: string): void;
-    declare function destroy(element: Element): void;
-    declare function destroy(element: JQuery): void;
-    declare function format(format: string, ...values: any[]): string;
-    declare function htmlEncode(value: string): string;
-    declare function observable(data: any): kendo.data.ObservableObject;
-    declare function parseDate(value: any, format?: string, culture?: string): Date;
-    declare function parseFloat(value: any, culture?: string): number;
-    declare function parseInt(value: any, culture?: string): number;
-    declare function render(template:(data: any) => string, data: any[]): string;
-    declare function template(template: string, options?: TemplateOptions): (data: any) => string;
-    declare function touchScroller(selector: string): void;
-    declare function touchScroller(element: Element): void;
-    declare function touchScroller(element: JQuery): void;
-    declare function toString(value: number, format: string): string;
-    declare function toString(value: Date, format: string): string;
-    declare function unbind(selector: string): void;
-    declare function unbind(element: JQuery): void;
-    declare function unbind(element: Element): void;
+declare module kendo {
+    function bind(selector: string, viewModel: any, namespace?: any): void;
+    function bind(element: JQuery, viewModel: any, namespace?: any): void;
+    function bind(element: Element, viewModel: any, namespace?: any): void;
+    function culture(value: string): void;
+    function culture(): string;
+    function destroy(selector: string): void;
+    function destroy(element: Element): void;
+    function destroy(element: JQuery): void;
+    function format(format: string, ...values: any[]): string;
+    function htmlEncode(value: string): string;
+    function observable(data: any): kendo.data.ObservableObject;
+    function parseDate(value: any, format?: string, culture?: string): Date;
+    function parseFloat(value: any, culture?: string): number;
+    function parseInt(value: any, culture?: string): number;
+    function render(template:(data: any) => string, data: any[]): string;
+    function template(template: string, options?: TemplateOptions): (data: any) => string;
+    function touchScroller(selector: string): void;
+    function touchScroller(element: Element): void;
+    function touchScroller(element: JQuery): void;
+    function toString(value: number, format: string): string;
+    function toString(value: Date, format: string): string;
+    function unbind(selector: string): void;
+    function unbind(element: JQuery): void;
+    function unbind(element: Element): void;
 
-    declare var keys: {
+    var keys: {
         INSERT: number;
         DELETE: number;
         BACKSPACE: number;
@@ -47,14 +47,14 @@ module kendo {
         F12: number;
     }
 
-    declare var support: {
-        touch: bool;
-        pointers: bool;
+    var support: {
+        touch: boolean;
+        pointers: boolean;
         scrollbar(): number;
-        hasHW3D: bool;
-        hasNativeScrolling: bool;
+        hasHW3D: boolean;
+        hasNativeScrolling: boolean;
         devicePixelRatio: number;
-        placeHolder: bool;
+        placeHolder: boolean;
         zoomLevel: number;
         mobileOS: {
             device: string;
@@ -64,31 +64,31 @@ module kendo {
             majorVersion: string;
             minorVersion: string;
             flatVersion: number;
-            appMode: bool;
+            appMode: boolean;
         };
         browser: {
-            msie: bool;
-            webkit: bool;
-            safari: bool;
-            opera: bool;
+            msie: boolean;
+            webkit: boolean;
+            safari: boolean;
+            opera: boolean;
             version: string;
         };
     }
 
     interface TemplateOptions {
         paramName?: string;
-        useWithBlock?: bool;
+        useWithBlock?: boolean;
     }
 
     class Observable {
         bind(eventName: string, handler: Function): Observable;
         one(eventName: string, handler: Function): Observable;
-        trigger(eventName: string, e?: any): bool;
+        trigger(eventName: string, e?: any): boolean;
         unbind(eventName: string, handler?: any): Observable;
     }
 }
 
-module kendo.data {
+declare module kendo.data {
     interface ObservableObjectEvent {
         sender?: ObservableObject;
         field?: string;
@@ -114,10 +114,10 @@ module kendo.data {
         fields: DataSourceSchemaModelFields;
         defaults: any;
         constructor(data?: any);
-        dirty: bool;
+        dirty: boolean;
         id: any;
-        editable(field: string): bool;
-        isNew(): bool;
+        editable(field: string): boolean;
+        isNew(): boolean;
         static define(options: DataSourceSchemaModelWithFieldsObject): {
             idField: string;
             fields: DataSourceSchemaModelFields;
@@ -136,8 +136,8 @@ module kendo.data {
         append(model: any): void;
         level(): number;
         load(id: any): void;
-        loaded(value: bool): void;
-        loaded(): bool;
+        loaded(value: boolean): void;
+        loaded(): boolean;
         parentNode(): Node;
     }
 
@@ -235,15 +235,15 @@ module kendo.data {
     interface DataSourceSchemaModelField {
         field?: string;
         defaultValue?: any;
-        editable?: bool;
-        nullable?: bool;
+        editable?: boolean;
+        nullable?: boolean;
         parse?: Function;
         type?: string;
         validation?: DataSourceSchemaModelFieldValidation;
     }
 
     interface DataSourceSchemaModelFieldValidation {
-        required?: bool;
+        required?: boolean;
         min?: any;
         max?: any;
     }
@@ -284,7 +284,7 @@ module kendo.data {
         getByUid(uid: string): kendo.data.Model;
         group(groups: any): void;
         group(): any;
-        hasChanges(): bool;
+        hasChanges(): boolean;
         indexOf(value: kendo.data.ObservableObject): number;
         insert(index: number, model: kendo.data.Model): kendo.data.Model;
         insert(index: number, model: Object): kendo.data.Model;
@@ -350,7 +350,7 @@ module kendo.data {
     }
 
     interface DataSourceTransportCreate {
-        cache?: bool;
+        cache?: boolean;
         contentType?: string;
         data?: any;
         dataType?: string;
@@ -359,7 +359,7 @@ module kendo.data {
     }
 
     interface DataSourceTransportDestroy {
-        cache?: bool;
+        cache?: boolean;
         contentType?: string;
         data?: any;
         dataType?: string;
@@ -368,7 +368,7 @@ module kendo.data {
     }
 
     interface DataSourceTransportRead {
-        cache?: bool;
+        cache?: boolean;
         contentType?: string;
         data?: any;
         dataType?: string;
@@ -377,7 +377,7 @@ module kendo.data {
     }
 
     interface DataSourceTransportUpdate {
-        cache?: bool;
+        cache?: boolean;
         contentType?: string;
         data?: any;
         dataType?: string;
@@ -433,19 +433,19 @@ module kendo.data {
 
     interface DataSourceOptions {
         aggregate?: DataSourceAggregateItem[];
-        autoSync?: bool;
-        batch?: bool;
+        autoSync?: boolean;
+        batch?: boolean;
         data?: any;
         filter?: any;
         group?: DataSourceGroupItem[];
         page?: number;
         pageSize?: number;
         schema?: DataSourceSchema;
-        serverAggregates?: bool;
-        serverFiltering?: bool;
-        serverGrouping?: bool;
-        serverPaging?: bool;
-        serverSorting?: bool;
+        serverAggregates?: boolean;
+        serverFiltering?: boolean;
+        serverGrouping?: boolean;
+        serverPaging?: boolean;
+        serverSorting?: boolean;
         sort?: any;
         transport?: DataSourceTransport;
         type?: string;
@@ -477,8 +477,8 @@ module kendo.data {
     }
 }
 
-module kendo.ui {
-    declare function progress(container: JQuery, toggle: bool);
+declare module kendo.ui {
+    function progress(container: JQuery, toggle: boolean);
 
     class Widget extends Observable {
         destroy(): void;
@@ -580,7 +580,7 @@ module kendo.ui {
     }
 }
 
-module kendo.mobile.ui {
+declare module kendo.mobile.ui {
     class Widget extends kendo.ui.Widget {
     }
 
@@ -604,7 +604,7 @@ module kendo.mobile.ui {
     }
 }
 
-module kendo.ui {
+declare module kendo.ui {
     class AutoComplete extends kendo.ui.Widget {
         element: JQuery;
         wrapper: JQuery;
@@ -614,7 +614,7 @@ module kendo.ui {
         close(): void;
         dataItem(index: number): any;
         destroy(): void;
-        enable(enable: bool): void;
+        enable(enable: boolean): void;
         refresh(): void;
         search(word: string): void;
         select(li: JQuery): void;
@@ -644,15 +644,15 @@ module kendo.ui {
         dataSource?: any;
         dataTextField?: string;
         delay?: number;
-        enable?: bool;
+        enable?: boolean;
         filter?: string;
         height?: number;
-        highlightFirst?: bool;
-        ignoreCase?: bool;
+        highlightFirst?: boolean;
+        ignoreCase?: boolean;
         minLength?: number;
         placeholder?: string;
         separator?: string;
-        suggest?: bool;
+        suggest?: boolean;
         template?: any;
         change?(e: AutoCompleteEvent): void;
         close?(e: AutoCompleteEvent): void;
@@ -765,13 +765,13 @@ module kendo.ui {
     }
 
     interface ColorPickerOptions {
-        buttons?: bool;
+        buttons?: boolean;
         columns?: number;
         tileSize?: ColorPickerTileSize;
         messages?: any;
         palette?: string;
-        opacity?: bool;
-        preview?: bool;
+        opacity?: boolean;
+        preview?: boolean;
         toolIcon?: string;
         value?: string;
         change?(e: ColorPickerEvent): void;
@@ -794,7 +794,7 @@ module kendo.ui {
         close(): void;
         dataItem(index: number): any;
         destroy(): void;
-        enable(enable: bool): void;
+        enable(enable: boolean): void;
         open(): void;
         refresh(): void;
         search(word: string): void;
@@ -803,7 +803,7 @@ module kendo.ui {
         suggest(value: string): void;
         text(): string;
         text(text: string): void;
-        toggle(toggle: bool): void;
+        toggle(toggle: boolean): void;
         value(): string;
         value(value: string): void;
     }
@@ -825,21 +825,21 @@ module kendo.ui {
 
     interface ComboBoxOptions {
         animation?: ComboBoxAnimation;
-        autoBind?: bool;
+        autoBind?: boolean;
         cascadeFrom?: string;
         dataSource?: any;
         dataTextField?: string;
         dataValueField?: string;
         delay?: number;
-        enable?: bool;
+        enable?: boolean;
         filter?: string;
         height?: number;
-        highlightFirst?: bool;
+        highlightFirst?: boolean;
         ignoreCase?: string;
         index?: number;
         minLength?: number;
         placeholder?: string;
-        suggest?: bool;
+        suggest?: boolean;
         template?: string;
         text?: string;
         value?: string;
@@ -867,7 +867,7 @@ module kendo.ui {
         options: DatePickerOptions;
         close(): void;
         destroy(): void;
-        enable(enable: bool): void;
+        enable(enable: boolean): void;
         max(): Date;
         max(value: any): void;
         min(): Date;
@@ -927,7 +927,7 @@ module kendo.ui {
         options: DateTimePickerOptions;
         close(view: string): void;
         destroy(): void;
-        enable(enable: bool): void;
+        enable(enable: boolean): void;
         max(): Date;
         max(value: any): void;
         min(): Date;
@@ -1000,7 +1000,7 @@ module kendo.ui {
         close(): void;
         dataItem(index: number): any;
         destroy(): void;
-        enable(enable: bool): void;
+        enable(enable: boolean): void;
         open(): void;
         refresh(): void;
         search(word: string): void;
@@ -1008,7 +1008,7 @@ module kendo.ui {
         setDataSource(dataSource: kendo.data.DataSource): void;
         text(): string;
         text(text: string): void;
-        toggle(toggle: bool): void;
+        toggle(toggle: boolean): void;
         value(): string;
         value(value: string): void;
     }
@@ -1030,13 +1030,13 @@ module kendo.ui {
 
     interface DropDownListOptions {
         animation?: DropDownListAnimation;
-        autoBind?: bool;
+        autoBind?: boolean;
         cascadeFrom?: string;
         dataSource?: any;
         dataTextField?: string;
         dataValueField?: string;
         delay?: number;
-        enable?: bool;
+        enable?: boolean;
         height?: number;
         ignoreCase?: string;
         index?: number;
@@ -1181,7 +1181,7 @@ module kendo.ui {
     }
 
     interface EditorOptions {
-        encoded?: bool;
+        encoded?: boolean;
         messages?: any;
         stylesheets?: any;
         tools?: EditorTool[];
@@ -1221,10 +1221,10 @@ module kendo.ui {
     }
 
     interface FlatColorPickerOptions {
-        opacity?: bool;
-        buttons?: bool;
+        opacity?: boolean;
+        buttons?: boolean;
         value?: string;
-        preview?: bool;
+        preview?: boolean;
         messages?: any;
         change?(e: FlatColorPickerEvent): void;
     }
@@ -1274,9 +1274,9 @@ module kendo.ui {
     }
 
     interface GridColumnMenu {
-        columns?: bool;
-        filterable?: bool;
-        sortable?: bool;
+        columns?: boolean;
+        filterable?: boolean;
+        sortable?: boolean;
         messages?: GridColumnMenuMessages;
     }
 
@@ -1294,14 +1294,14 @@ module kendo.ui {
     interface GridColumn {
         attributes?: any;
         command?: GridColumnCommandItem[];
-        encoded?: bool;
+        encoded?: boolean;
         field?: string;
         filterable?: GridColumnFilterable;
         format?: string;
         headerAttributes?: any;
         headerTemplate?: string;
-        hidden?: bool;
-        sortable?: bool;
+        hidden?: boolean;
+        sortable?: boolean;
         template?: string;
         aggregates?: any;
         groupHeaderTemplate?: string;
@@ -1310,16 +1310,16 @@ module kendo.ui {
         title?: string;
         width?: string;
         values?: any;
-        menu?: bool;
+        menu?: boolean;
     }
 
     interface GridEditable {
         confirmation?: any;
         createAt?: string;
-        destroy?: bool;
+        destroy?: boolean;
         mode?: string;
         template?: string;
-        update?: bool;
+        update?: boolean;
     }
 
     interface GridFilterableMessages {
@@ -1373,7 +1373,7 @@ module kendo.ui {
     }
 
     interface GridFilterable {
-        extra?: bool;
+        extra?: boolean;
         messages?: GridFilterableMessages;
         operators?: GridFilterableOperators;
     }
@@ -1401,22 +1401,22 @@ module kendo.ui {
 
     interface GridPageable {
         pageSize?: number;
-        previousNext?: bool;
-        numeric?: bool;
+        previousNext?: boolean;
+        numeric?: boolean;
         buttonCount?: number;
-        input?: bool;
+        input?: boolean;
         pageSizes?: any;
-        refresh?: bool;
-        info?: bool;
+        refresh?: boolean;
+        info?: boolean;
         messages?: GridPageableMessages;
     }
 
     interface GridScrollable {
-        virtual?: bool;
+        virtual?: boolean;
     }
 
     interface GridSortable {
-        allowUnsort?: bool;
+        allowUnsort?: boolean;
         mode?: string;
     }
 
@@ -1428,18 +1428,18 @@ module kendo.ui {
 
     interface GridOptions {
         altRowTemplate?: Function;
-        autoBind?: bool;
+        autoBind?: boolean;
         columns?: GridColumn[];
         columnMenu?: GridColumnMenu;
         dataSource?: any;
         detailTemplate?: Function;
         editable?: GridEditable;
         filterable?: GridFilterable;
-        reorderable?: bool;
-        resizable?: bool;
+        reorderable?: boolean;
+        resizable?: boolean;
         groupable?: GridGroupable;
         height?: any;
-        navigatable?: bool;
+        navigatable?: boolean;
         pageable?: GridPageable;
         rowTemplate?: Function;
         scrollable?: GridScrollable;
@@ -1559,10 +1559,10 @@ module kendo.ui {
     }
 
     interface ListViewOptions {
-        autoBind?: bool;
+        autoBind?: boolean;
         dataSource?: any;
         editTemplate?: Function;
-        navigatable?: bool;
+        navigatable?: boolean;
         selectable?: string;
         template?: Function;
         altTemplate?: Function;
@@ -1603,7 +1603,7 @@ module kendo.ui {
         append(item: string, referenceItem: string): kendo.ui.Menu;
         close(element: string): kendo.ui.Menu;
         destroy(): void;
-        enable(element: string, enable: bool): kendo.ui.Menu;
+        enable(element: string, enable: boolean): kendo.ui.Menu;
         insertAfter(item: string, referenceItem: string): kendo.ui.Menu;
         insertBefore(item: string, referenceItem: string): kendo.ui.Menu;
         open(element: string): kendo.ui.Menu;
@@ -1627,10 +1627,10 @@ module kendo.ui {
 
     interface MenuOptions {
         animation?: MenuAnimation;
-        closeOnClick?: bool;
+        closeOnClick?: boolean;
         direction?: string;
         hoverDelay?: number;
-        openOnClick?: bool;
+        openOnClick?: boolean;
         orientation?: string;
         popupCollision?: string;
         close?(e: MenuCloseEvent): void;
@@ -1664,12 +1664,12 @@ module kendo.ui {
         close(): void;
         dataItems(): any;
         destroy(): void;
-        enable(enable: bool): void;
+        enable(enable: boolean): void;
         open(): void;
         refresh(): void;
         search(word: string): void;
         setDataSource(dataSource: kendo.data.DataSource): void;
-        toggle(toggle: bool): void;
+        toggle(toggle: boolean): void;
         value(): any;
         value(value: any): void;
     }
@@ -1691,15 +1691,15 @@ module kendo.ui {
 
     interface MultiSelectOptions {
         animation?: MultiSelectAnimation;
-        autoBind?: bool;
+        autoBind?: boolean;
         dataSource?: any;
         dataTextField?: string;
         dataValueField?: string;
         delay?: number;
-        enable?: bool;
+        enable?: boolean;
         filter?: string;
         height?: number;
-        highlightFirst?: bool;
+        highlightFirst?: boolean;
         ignoreCase?: string;
         minLength?: number;
         maxSelectedItems?: number;
@@ -1729,7 +1729,7 @@ module kendo.ui {
         constructor(element: Element, options?: NumericTextBoxOptions);
         options: NumericTextBoxOptions;
         destroy(): void;
-        enable(enable: bool): void;
+        enable(enable: boolean): void;
         focus(): void;
         max(): number;
         max(value: any): void;
@@ -1749,7 +1749,7 @@ module kendo.ui {
         max?: number;
         min?: number;
         placeholder?: string;
-        spinners?: bool;
+        spinners?: boolean;
         step?: number;
         upArrowText?: string;
         value?: number;
@@ -1789,17 +1789,17 @@ module kendo.ui {
     }
 
     interface PagerOptions {
-        autoBind?: bool;
+        autoBind?: boolean;
         buttonCount?: number;
         dataSource?: any;
         selectTemplate?: string;
         linkTemplate?: string;
-        info?: bool;
-        input?: bool;
-        numeric?: bool;
+        info?: boolean;
+        input?: boolean;
+        numeric?: boolean;
         pageSizes?: any;
-        previousNext?: bool;
-        refresh?: bool;
+        previousNext?: boolean;
+        refresh?: boolean;
         messages?: PagerMessages;
         change?(e: PagerEvent): void;
     }
@@ -1815,10 +1815,10 @@ module kendo.ui {
         constructor(element: Element, options?: PanelBarOptions);
         options: PanelBarOptions;
         append(item: string, referenceItem: string): kendo.ui.PanelBar;
-        collapse(element: string, useAnimation: bool): kendo.ui.PanelBar;
+        collapse(element: string, useAnimation: boolean): kendo.ui.PanelBar;
         destroy(): void;
-        enable(element: any, enable: bool): void;
-        expand(element: string, useAnimation: bool): kendo.ui.PanelBar;
+        enable(element: any, enable: boolean): void;
+        expand(element: string, useAnimation: boolean): kendo.ui.PanelBar;
         insertAfter(item: string, referenceItem: string): void;
         insertBefore(item: string, referenceItem: string): kendo.ui.PanelBar;
         reload(element: string): void;
@@ -1834,7 +1834,7 @@ module kendo.ui {
     interface PanelBarAnimationExpand {
         duration?: number;
         effects?: string;
-        show?: bool;
+        show?: boolean;
     }
 
     interface PanelBarAnimation {
@@ -1890,13 +1890,13 @@ module kendo.ui {
         constructor(element: Element, options?: RangeSliderOptions);
         options: RangeSliderOptions;
         destroy(): void;
-        enable(enable: bool): void;
+        enable(enable: boolean): void;
         value(): void;
         value(value: number): void;
     }
 
     interface RangeSliderTooltip {
-        enabled?: bool;
+        enabled?: boolean;
         format?: string;
         template?: string;
     }
@@ -1934,13 +1934,13 @@ module kendo.ui {
         constructor(element: Element, options?: SliderOptions);
         options: SliderOptions;
         destroy(): void;
-        enable(enable: bool): void;
+        enable(enable: boolean): void;
         value(): void;
         value(value: string): void;
     }
 
     interface SliderTooltip {
-        enabled?: bool;
+        enabled?: boolean;
         format?: string;
         template?: string;
     }
@@ -1952,7 +1952,7 @@ module kendo.ui {
         max?: number;
         min?: number;
         orientation?: string;
-        showButtons?: bool;
+        showButtons?: boolean;
         smallStep?: number;
         tickPlacement?: string;
         tooltip?: SliderTooltip;
@@ -1986,17 +1986,17 @@ module kendo.ui {
         max(pane: any, value: string): void;
         min(pane: any, value: string): void;
         size(pane: any, value: string): void;
-        toggle(pane: any, expand: bool): void;
+        toggle(pane: any, expand: boolean): void;
     }
 
     interface SplitterPane {
-        collapsed?: bool;
-        collapsible?: bool;
+        collapsed?: boolean;
+        collapsible?: boolean;
         contentUrl?: string;
         max?: string;
         min?: string;
-        resizable?: bool;
-        scrollable?: bool;
+        resizable?: boolean;
+        scrollable?: boolean;
         size?: string;
     }
 
@@ -2032,14 +2032,14 @@ module kendo.ui {
         wrapper: JQuery;
         constructor(element: Element, options?: TabStripOptions);
         options: TabStripOptions;
-        activateTab(item: string): bool;
+        activateTab(item: string): boolean;
         append(tab: string): kendo.ui.TabStrip;
         contentElement(itemIndex: number): Element;
         contentHolder(itemIndex: number): Element;
         deactivateTab(item: string): void;
         destroy(): void;
         disable(element: string): kendo.ui.TabStrip;
-        enable(element: string, enable?: bool): kendo.ui.TabStrip;
+        enable(element: string, enable?: boolean): kendo.ui.TabStrip;
         insertAfter(item: string, referenceTab: string): kendo.ui.TabStrip;
         insertBefore(item: string, referenceTab: string): kendo.ui.TabStrip;
         reload(element: string): kendo.ui.TabStrip;
@@ -2056,7 +2056,7 @@ module kendo.ui {
     interface TabStripAnimationOpen {
         duration?: number;
         effects?: string;
-        show?: bool;
+        show?: boolean;
     }
 
     interface TabStripAnimation {
@@ -2066,7 +2066,7 @@ module kendo.ui {
 
     interface TabStripOptions {
         animation?: TabStripAnimation;
-        collapsible?: bool;
+        collapsible?: boolean;
         dataContentField?: string;
         dataContentUrlField?: string;
         dataImageUrlField?: string;
@@ -2111,7 +2111,7 @@ module kendo.ui {
         options: TimePickerOptions;
         close(): void;
         destroy(): void;
-        enable(enable: bool): void;
+        enable(enable: boolean): void;
         max(): Date;
         max(value: any): void;
         min(): Date;
@@ -2186,12 +2186,12 @@ module kendo.ui {
     }
 
     interface TooltipOptions {
-        autoHide?: bool;
+        autoHide?: boolean;
         animation?: TooltipAnimation;
         content?: TooltipContent;
-        callout?: bool;
+        callout?: boolean;
         filter?: string;
-        iframe?: bool;
+        iframe?: boolean;
         height?: number;
         width?: number;
         position?: string;
@@ -2228,9 +2228,9 @@ module kendo.ui {
     }
 
     interface TouchOptions {
-        global?: bool;
-        multiTouch?: bool;
-        enableSwipe?: bool;
+        global?: boolean;
+        multiTouch?: boolean;
+        enableSwipe?: boolean;
         minXDelta?: number;
         maxYDelta?: number;
         maxDuration?: number;
@@ -2326,7 +2326,7 @@ module kendo.ui {
         dataItem(node: any): void;
         destroy(): void;
         detach(node: string): JQuery;
-        enable(nodes: string, enable?: bool): void;
+        enable(nodes: string, enable?: boolean): void;
         expand(nodes: string): void;
         findByText(text: string): JQuery;
         findByUid(text: string): JQuery;
@@ -2350,7 +2350,7 @@ module kendo.ui {
     interface TreeViewAnimationExpand {
         duration?: number;
         effects?: string;
-        show?: bool;
+        show?: boolean;
     }
 
     interface TreeViewAnimation {
@@ -2360,7 +2360,7 @@ module kendo.ui {
 
     interface TreeViewCheckboxes {
         name?: string;
-        checkChildren?: bool;
+        checkChildren?: boolean;
         template?: any;
     }
 
@@ -2372,8 +2372,8 @@ module kendo.ui {
         dataSpriteCssClassField?: string;
         dataTextField?: any;
         dataUrlField?: string;
-        dragAndDrop?: bool;
-        loadOnDemand?: bool;
+        dragAndDrop?: boolean;
+        loadOnDemand?: boolean;
         template?: any;
         collapse?(e: TreeViewCollapseEvent): void;
         dataBound?(e: TreeViewDataBoundEvent): void;
@@ -2420,7 +2420,7 @@ module kendo.ui {
     interface TreeViewDropEvent extends TreeViewEvent {
         sourceNode?: Element;
         destinationNode?: Element;
-        valid?: bool;
+        valid?: boolean;
         setValid?: Function;
         dropTarget?: Element;
         dropPosition?: string;
@@ -2446,13 +2446,13 @@ module kendo.ui {
         options: UploadOptions;
         destroy(): void;
         disable(): void;
-        enable(enable: bool): void;
-        toggle(enable: bool): void;
+        enable(enable: boolean): void;
+        toggle(enable: boolean): void;
     }
 
     interface UploadAsync {
-        autoUpload?: bool;
-        batch?: bool;
+        autoUpload?: boolean;
+        batch?: boolean;
         removeField?: string;
         removeUrl?: string;
         removeVerb?: string;
@@ -2474,10 +2474,10 @@ module kendo.ui {
 
     interface UploadOptions {
         async?: UploadAsync;
-        enabled?: bool;
+        enabled?: boolean;
         localization?: UploadLocalization;
-        multiple?: bool;
-        showFileList?: bool;
+        multiple?: boolean;
+        showFileList?: boolean;
         cancel?(e: UploadCancelEvent): void;
         complete?(e: UploadEvent): void;
         error?(e: UploadErrorEvent): void;
@@ -2529,7 +2529,7 @@ module kendo.ui {
         files?: any;
         data?: any;
         preventDefault: Function;
-        isDefaultPrevented: () => bool;
+        isDefaultPrevented: () => boolean;
     }
 
 
@@ -2539,14 +2539,14 @@ module kendo.ui {
         constructor(element: Element, options?: ValidatorOptions);
         options: ValidatorOptions;
         errors(): any;
-        validate(): bool;
-        validateInput(input: Element): bool;
+        validate(): boolean;
+        validateInput(input: Element): boolean;
     }
 
     interface ValidatorOptions {
         messages?: any;
         rules?: any;
-        validateOnBlur?: bool;
+        validateOnBlur?: boolean;
     }
 
     interface ValidatorEvent {
@@ -2600,7 +2600,7 @@ module kendo.ui {
         data?: any;
         type?: string;
         template?: string;
-        iframe?: bool;
+        iframe?: boolean;
     }
 
     interface WindowOptions {
@@ -2608,16 +2608,16 @@ module kendo.ui {
         animation?: WindowAnimation;
         appendTo?: any;
         content?: WindowContent;
-        draggable?: bool;
-        iframe?: bool;
+        draggable?: boolean;
+        iframe?: boolean;
         maxHeight?: number;
         maxWidth?: number;
         minHeight?: number;
         minWidth?: number;
-        modal?: bool;
-        resizable?: bool;
+        modal?: boolean;
+        resizable?: boolean;
         title?: any;
-        visible?: bool;
+        visible?: boolean;
         width?: number;
         height?: number;
         activate?(e: WindowEvent): void;
@@ -2642,7 +2642,7 @@ module kendo.ui {
 
 
 }
-module kendo.dataviz.ui {
+declare module kendo.dataviz.ui {
     class Chart extends kendo.ui.Widget {
         element: JQuery;
         wrapper: JQuery;
@@ -2668,7 +2668,7 @@ module kendo.dataviz.ui {
         format?: string;
         padding?: any;
         template?: any;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface ChartCategoryAxisItemCrosshair {
@@ -2676,7 +2676,7 @@ module kendo.dataviz.ui {
         width?: number;
         opacity?: number;
         dashType?: number;
-        visible?: bool;
+        visible?: boolean;
         tooltip?: ChartCategoryAxisItemCrosshairTooltip;
     }
 
@@ -2693,13 +2693,13 @@ module kendo.dataviz.ui {
         font?: string;
         format?: string;
         margin?: any;
-        mirror?: bool;
+        mirror?: boolean;
         padding?: any;
         rotation?: number;
         skip?: number;
         step?: number;
         template?: any;
-        visible?: bool;
+        visible?: boolean;
         culture?: string;
         dateFormats?: any;
     }
@@ -2707,32 +2707,32 @@ module kendo.dataviz.ui {
     interface ChartCategoryAxisItemLine {
         color?: string;
         dashType?: string;
-        visible?: bool;
+        visible?: boolean;
         width?: number;
     }
 
     interface ChartCategoryAxisItemMajorGridLines {
         color?: string;
         dashType?: string;
-        visible?: bool;
+        visible?: boolean;
         width?: number;
     }
 
     interface ChartCategoryAxisItemMajorTicks {
         size?: number;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface ChartCategoryAxisItemMinorGridLines {
         color?: string;
         dashType?: string;
-        visible?: bool;
+        visible?: boolean;
         width?: number;
     }
 
     interface ChartCategoryAxisItemMinorTicks {
         size?: number;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface ChartCategoryAxisItemPlotBand {
@@ -2757,7 +2757,7 @@ module kendo.dataviz.ui {
         position?: string;
         rotation?: number;
         text?: string;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface ChartCategoryAxisItem {
@@ -2765,7 +2765,7 @@ module kendo.dataviz.ui {
         categories?: any;
         color?: string;
         field?: string;
-        justified?: bool;
+        justified?: boolean;
         labels?: ChartCategoryAxisItemLabels;
         line?: ChartCategoryAxisItemLine;
         majorGridLines?: ChartCategoryAxisItemMajorGridLines;
@@ -2775,7 +2775,7 @@ module kendo.dataviz.ui {
         name?: string;
         pane?: string;
         plotBands?: ChartCategoryAxisItemPlotBand[];
-        reverse?: bool;
+        reverse?: boolean;
         title?: ChartCategoryAxisItemTitle;
         type?: string;
         autoBaseUnitSteps?: any;
@@ -2783,10 +2783,10 @@ module kendo.dataviz.ui {
         baseUnitStep?: any;
         max?: any;
         min?: any;
-        roundToBaseUnit?: bool;
+        roundToBaseUnit?: boolean;
         weekStartDay?: number;
         maxDateGroups?: number;
-        visible?: bool;
+        visible?: boolean;
         crosshair?: ChartCategoryAxisItemCrosshair;
     }
 
@@ -2826,7 +2826,7 @@ module kendo.dataviz.ui {
         offsetY?: number;
         padding?: any;
         position?: string;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface ChartPaneBorder {
@@ -2849,7 +2849,7 @@ module kendo.dataviz.ui {
         margin?: any;
         position?: string;
         text?: string;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface ChartPane {
@@ -2924,7 +2924,7 @@ module kendo.dataviz.ui {
         padding?: any;
         position?: string;
         template?: any;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface ChartSeriesItemLine {
@@ -2943,12 +2943,12 @@ module kendo.dataviz.ui {
         border?: ChartSeriesItemMarkersBorder;
         size?: number;
         type?: string;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface ChartSeriesItemNegativeValues {
         color?: string;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface ChartSeriesItemOverlay {
@@ -2984,7 +2984,7 @@ module kendo.dataviz.ui {
         format?: string;
         padding?: any;
         template?: any;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface ChartSeriesItem {
@@ -3061,7 +3061,7 @@ module kendo.dataviz.ui {
         margin?: any;
         padding?: any;
         template?: any;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface ChartSeriesDefaultsTooltipBorder {
@@ -3077,7 +3077,7 @@ module kendo.dataviz.ui {
         format?: string;
         padding?: any;
         template?: any;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface ChartSeriesDefaults {
@@ -3097,7 +3097,7 @@ module kendo.dataviz.ui {
         scatter?: any;
         scatterLine?: any;
         spacing?: number;
-        stack?: bool;
+        stack?: boolean;
         tooltip?: ChartSeriesDefaultsTooltip;
         verticalArea?: any;
         verticalLine?: any;
@@ -3118,7 +3118,7 @@ module kendo.dataviz.ui {
         padding?: any;
         position?: string;
         text?: string;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface ChartTooltipBorder {
@@ -3134,8 +3134,8 @@ module kendo.dataviz.ui {
         format?: string;
         padding?: any;
         template?: any;
-        visible?: bool;
-        shared?: bool;
+        visible?: boolean;
+        shared?: boolean;
         sharedTemplate?: string;
     }
 
@@ -3152,7 +3152,7 @@ module kendo.dataviz.ui {
         format?: string;
         padding?: any;
         template?: any;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface ChartValueAxisItemCrosshair {
@@ -3160,7 +3160,7 @@ module kendo.dataviz.ui {
         width?: number;
         opacity?: number;
         dashType?: number;
-        visible?: bool;
+        visible?: boolean;
         tooltip?: ChartValueAxisItemCrosshairTooltip;
     }
 
@@ -3177,43 +3177,43 @@ module kendo.dataviz.ui {
         font?: string;
         format?: string;
         margin?: any;
-        mirror?: bool;
+        mirror?: boolean;
         padding?: any;
         rotation?: number;
         skip?: number;
         step?: number;
         template?: any;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface ChartValueAxisItemLine {
         color?: string;
         dashType?: string;
-        visible?: bool;
+        visible?: boolean;
         width?: number;
     }
 
     interface ChartValueAxisItemMajorGridLines {
         color?: string;
-        visible?: bool;
+        visible?: boolean;
         width?: number;
     }
 
     interface ChartValueAxisItemMajorTicks {
         size?: number;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface ChartValueAxisItemMinorGridLines {
         color?: string;
         dashType?: string;
-        visible?: bool;
+        visible?: boolean;
         width?: number;
     }
 
     interface ChartValueAxisItemMinorTicks {
         size?: number;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface ChartValueAxisItemPlotBand {
@@ -3239,7 +3239,7 @@ module kendo.dataviz.ui {
         position?: string;
         rotation?: number;
         text?: string;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface ChartValueAxisItem {
@@ -3256,12 +3256,12 @@ module kendo.dataviz.ui {
         minorTicks?: ChartValueAxisItemMinorTicks;
         minorUnit?: number;
         name?: any;
-        narrowRange?: bool;
+        narrowRange?: boolean;
         pane?: string;
         plotBands?: ChartValueAxisItemPlotBand[];
-        reverse?: bool;
+        reverse?: boolean;
         title?: ChartValueAxisItemTitle;
-        visible?: bool;
+        visible?: boolean;
         crosshair?: ChartValueAxisItemCrosshair;
     }
 
@@ -3278,7 +3278,7 @@ module kendo.dataviz.ui {
         format?: string;
         padding?: any;
         template?: any;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface ChartXAxisItemCrosshair {
@@ -3286,7 +3286,7 @@ module kendo.dataviz.ui {
         width?: number;
         opacity?: number;
         dashType?: number;
-        visible?: bool;
+        visible?: boolean;
         tooltip?: ChartXAxisItemCrosshairTooltip;
     }
 
@@ -3303,13 +3303,13 @@ module kendo.dataviz.ui {
         font?: string;
         format?: string;
         margin?: any;
-        mirror?: bool;
+        mirror?: boolean;
         padding?: any;
         rotation?: number;
         skip?: number;
         step?: number;
         template?: any;
-        visible?: bool;
+        visible?: boolean;
         culture?: string;
         dateFormats?: any;
     }
@@ -3317,19 +3317,19 @@ module kendo.dataviz.ui {
     interface ChartXAxisItemLine {
         color?: string;
         dashType?: string;
-        visible?: bool;
+        visible?: boolean;
         width?: number;
     }
 
     interface ChartXAxisItemMajorGridLines {
         color?: string;
-        visible?: bool;
+        visible?: boolean;
         width?: number;
     }
 
     interface ChartXAxisItemMajorTicks {
         size?: number;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface ChartXAxisItemPlotBand {
@@ -3355,7 +3355,7 @@ module kendo.dataviz.ui {
         position?: string;
         rotation?: number;
         text?: string;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface ChartXAxisItem {
@@ -3372,12 +3372,12 @@ module kendo.dataviz.ui {
         majorGridLines?: ChartXAxisItemMajorGridLines;
         majorTicks?: ChartXAxisItemMajorTicks;
         name?: any;
-        narrowRange?: bool;
+        narrowRange?: boolean;
         pane?: string;
         plotBands?: ChartXAxisItemPlotBand[];
-        reverse?: bool;
+        reverse?: boolean;
         title?: ChartXAxisItemTitle;
-        visible?: bool;
+        visible?: boolean;
         crosshair?: ChartXAxisItemCrosshair;
     }
 
@@ -3394,7 +3394,7 @@ module kendo.dataviz.ui {
         format?: string;
         padding?: any;
         template?: any;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface ChartYAxisItemCrosshair {
@@ -3402,7 +3402,7 @@ module kendo.dataviz.ui {
         width?: number;
         opacity?: number;
         dashType?: number;
-        visible?: bool;
+        visible?: boolean;
         tooltip?: ChartYAxisItemCrosshairTooltip;
     }
 
@@ -3419,13 +3419,13 @@ module kendo.dataviz.ui {
         font?: string;
         format?: string;
         margin?: any;
-        mirror?: bool;
+        mirror?: boolean;
         padding?: any;
         rotation?: number;
         skip?: number;
         step?: number;
         template?: any;
-        visible?: bool;
+        visible?: boolean;
         culture?: string;
         dateFormats?: any;
     }
@@ -3433,19 +3433,19 @@ module kendo.dataviz.ui {
     interface ChartYAxisItemLine {
         color?: string;
         dashType?: string;
-        visible?: bool;
+        visible?: boolean;
         width?: number;
     }
 
     interface ChartYAxisItemMajorGridLines {
         color?: string;
-        visible?: bool;
+        visible?: boolean;
         width?: number;
     }
 
     interface ChartYAxisItemMajorTicks {
         size?: number;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface ChartYAxisItemPlotBand {
@@ -3471,7 +3471,7 @@ module kendo.dataviz.ui {
         position?: string;
         rotation?: number;
         text?: string;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface ChartYAxisItem {
@@ -3488,12 +3488,12 @@ module kendo.dataviz.ui {
         majorGridLines?: ChartYAxisItemMajorGridLines;
         majorTicks?: ChartYAxisItemMajorTicks;
         name?: any;
-        narrowRange?: bool;
+        narrowRange?: boolean;
         pane?: string;
         plotBands?: ChartYAxisItemPlotBand[];
-        reverse?: bool;
+        reverse?: boolean;
         title?: ChartYAxisItemTitle;
-        visible?: bool;
+        visible?: boolean;
         crosshair?: ChartYAxisItemCrosshair;
     }
 
@@ -3514,7 +3514,7 @@ module kendo.dataviz.ui {
         categoryAxis?: ChartCategoryAxisItem[];
         chartArea?: ChartChartArea;
         dataSource?: any;
-        autoBind?: bool;
+        autoBind?: boolean;
         legend?: ChartLegend;
         panes?: ChartPane[];
         plotArea?: ChartPlotArea;
@@ -3524,7 +3524,7 @@ module kendo.dataviz.ui {
         theme?: string;
         title?: ChartTitle;
         tooltip?: ChartTooltip;
-        transitions?: bool;
+        transitions?: boolean;
         valueAxis?: ChartValueAxisItem[];
         xAxis?: ChartXAxisItem[];
         yAxis?: ChartYAxisItem[];
@@ -3670,7 +3670,7 @@ module kendo.dataviz.ui {
         color?: string;
         opacity?: number;
         size?: number;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface LinearGaugePointer {
@@ -3699,27 +3699,27 @@ module kendo.dataviz.ui {
         margin?: any;
         padding?: any;
         template?: any;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface LinearGaugeScaleLine {
         color?: string;
         dashType?: string;
-        visible?: bool;
+        visible?: boolean;
         width?: number;
     }
 
     interface LinearGaugeScaleMajorTicks {
         color?: string;
         size?: number;
-        visible?: bool;
+        visible?: boolean;
         width?: number;
     }
 
     interface LinearGaugeScaleMinorTicks {
         color?: string;
         size?: number;
-        visible?: bool;
+        visible?: boolean;
         width?: number;
     }
 
@@ -3739,17 +3739,17 @@ module kendo.dataviz.ui {
         min?: number;
         minorTicks?: LinearGaugeScaleMinorTicks;
         minorUnit?: number;
-        mirror?: bool;
+        mirror?: boolean;
         ranges?: LinearGaugeScaleRange[];
-        reverse?: bool;
-        vertical?: bool;
+        reverse?: boolean;
+        vertical?: boolean;
     }
 
     interface LinearGaugeOptions {
         gaugeArea?: LinearGaugeGaugeArea;
         pointer?: LinearGaugePointer;
         scale?: LinearGaugeScale;
-        transitions?: bool;
+        transitions?: boolean;
     }
 
     interface LinearGaugeEvent {
@@ -3809,20 +3809,20 @@ module kendo.dataviz.ui {
         padding?: any;
         position?: string;
         template?: any;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface RadialGaugeScaleMajorTicks {
         color?: string;
         size?: number;
-        visible?: bool;
+        visible?: boolean;
         width?: number;
     }
 
     interface RadialGaugeScaleMinorTicks {
         color?: string;
         size?: number;
-        visible?: bool;
+        visible?: boolean;
         width?: number;
     }
 
@@ -3843,7 +3843,7 @@ module kendo.dataviz.ui {
         minorTicks?: RadialGaugeScaleMinorTicks;
         minorUnit?: number;
         ranges?: RadialGaugeScaleRange[];
-        reverse?: bool;
+        reverse?: boolean;
         startAngle?: number;
     }
 
@@ -3853,7 +3853,7 @@ module kendo.dataviz.ui {
         rangeSize?: number;
         rangeDistance?: number;
         scale?: RadialGaugeScale;
-        transitions?: bool;
+        transitions?: boolean;
     }
 
     interface RadialGaugeEvent {
@@ -3886,7 +3886,7 @@ module kendo.dataviz.ui {
         format?: string;
         padding?: any;
         template?: any;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface SparklineCategoryAxisItemCrosshair {
@@ -3894,7 +3894,7 @@ module kendo.dataviz.ui {
         width?: number;
         opacity?: number;
         dashType?: number;
-        visible?: bool;
+        visible?: boolean;
         tooltip?: SparklineCategoryAxisItemCrosshairTooltip;
     }
 
@@ -3911,13 +3911,13 @@ module kendo.dataviz.ui {
         font?: string;
         format?: string;
         margin?: any;
-        mirror?: bool;
+        mirror?: boolean;
         padding?: any;
         rotation?: number;
         skip?: number;
         step?: number;
         template?: any;
-        visible?: bool;
+        visible?: boolean;
         culture?: string;
         dateFormats?: any;
     }
@@ -3925,32 +3925,32 @@ module kendo.dataviz.ui {
     interface SparklineCategoryAxisItemLine {
         color?: string;
         dashType?: string;
-        visible?: bool;
+        visible?: boolean;
         width?: number;
     }
 
     interface SparklineCategoryAxisItemMajorGridLines {
         color?: string;
         dashType?: string;
-        visible?: bool;
+        visible?: boolean;
         width?: number;
     }
 
     interface SparklineCategoryAxisItemMajorTicks {
         size?: number;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface SparklineCategoryAxisItemMinorGridLines {
         color?: string;
         dashType?: string;
-        visible?: bool;
+        visible?: boolean;
         width?: number;
     }
 
     interface SparklineCategoryAxisItemMinorTicks {
         size?: number;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface SparklineCategoryAxisItemPlotBand {
@@ -3975,7 +3975,7 @@ module kendo.dataviz.ui {
         position?: string;
         rotation?: number;
         text?: string;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface SparklineCategoryAxisItem {
@@ -3983,7 +3983,7 @@ module kendo.dataviz.ui {
         categories?: any;
         color?: string;
         field?: string;
-        justified?: bool;
+        justified?: boolean;
         labels?: SparklineCategoryAxisItemLabels;
         line?: SparklineCategoryAxisItemLine;
         majorGridLines?: SparklineCategoryAxisItemMajorGridLines;
@@ -3992,7 +3992,7 @@ module kendo.dataviz.ui {
         minorTicks?: SparklineCategoryAxisItemMinorTicks;
         name?: string;
         plotBands?: SparklineCategoryAxisItemPlotBand[];
-        reverse?: bool;
+        reverse?: boolean;
         title?: SparklineCategoryAxisItemTitle;
         type?: string;
         autoBaseUnitSteps?: any;
@@ -4000,10 +4000,10 @@ module kendo.dataviz.ui {
         baseUnitStep?: any;
         max?: any;
         min?: any;
-        roundToBaseUnit?: bool;
+        roundToBaseUnit?: boolean;
         weekStartDay?: number;
         maxDateGroups?: number;
-        visible?: bool;
+        visible?: boolean;
         crosshair?: SparklineCategoryAxisItemCrosshair;
     }
 
@@ -4077,7 +4077,7 @@ module kendo.dataviz.ui {
         padding?: any;
         position?: string;
         template?: any;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface SparklineSeriesItemLine {
@@ -4096,7 +4096,7 @@ module kendo.dataviz.ui {
         border?: SparklineSeriesItemMarkersBorder;
         size?: number;
         type?: string;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface SparklineSeriesItemOverlay {
@@ -4132,7 +4132,7 @@ module kendo.dataviz.ui {
         format?: string;
         padding?: any;
         template?: any;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface SparklineSeriesItem {
@@ -4192,7 +4192,7 @@ module kendo.dataviz.ui {
         margin?: any;
         padding?: any;
         template?: any;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface SparklineSeriesDefaultsTooltipBorder {
@@ -4208,7 +4208,7 @@ module kendo.dataviz.ui {
         format?: string;
         padding?: any;
         template?: any;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface SparklineSeriesDefaults {
@@ -4222,7 +4222,7 @@ module kendo.dataviz.ui {
         overlay?: any;
         pie?: any;
         spacing?: number;
-        stack?: bool;
+        stack?: boolean;
         tooltip?: SparklineSeriesDefaultsTooltip;
     }
 
@@ -4239,8 +4239,8 @@ module kendo.dataviz.ui {
         format?: string;
         padding?: any;
         template?: any;
-        visible?: bool;
-        shared?: bool;
+        visible?: boolean;
+        shared?: boolean;
         sharedTemplate?: string;
     }
 
@@ -4257,7 +4257,7 @@ module kendo.dataviz.ui {
         format?: string;
         padding?: any;
         template?: any;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface SparklineValueAxisItemCrosshair {
@@ -4265,7 +4265,7 @@ module kendo.dataviz.ui {
         width?: number;
         opacity?: number;
         dashType?: number;
-        visible?: bool;
+        visible?: boolean;
         tooltip?: SparklineValueAxisItemCrosshairTooltip;
     }
 
@@ -4282,43 +4282,43 @@ module kendo.dataviz.ui {
         font?: string;
         format?: string;
         margin?: any;
-        mirror?: bool;
+        mirror?: boolean;
         padding?: any;
         rotation?: number;
         skip?: number;
         step?: number;
         template?: any;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface SparklineValueAxisItemLine {
         color?: string;
         dashType?: string;
-        visible?: bool;
+        visible?: boolean;
         width?: number;
     }
 
     interface SparklineValueAxisItemMajorGridLines {
         color?: string;
-        visible?: bool;
+        visible?: boolean;
         width?: number;
     }
 
     interface SparklineValueAxisItemMajorTicks {
         size?: number;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface SparklineValueAxisItemMinorGridLines {
         color?: string;
         dashType?: string;
-        visible?: bool;
+        visible?: boolean;
         width?: number;
     }
 
     interface SparklineValueAxisItemMinorTicks {
         size?: number;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface SparklineValueAxisItemPlotBand {
@@ -4344,7 +4344,7 @@ module kendo.dataviz.ui {
         position?: string;
         rotation?: number;
         text?: string;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface SparklineValueAxisItem {
@@ -4361,11 +4361,11 @@ module kendo.dataviz.ui {
         minorTicks?: SparklineValueAxisItemMinorTicks;
         minorUnit?: number;
         name?: any;
-        narrowRange?: bool;
+        narrowRange?: boolean;
         plotBands?: SparklineValueAxisItemPlotBand[];
-        reverse?: bool;
+        reverse?: boolean;
         title?: SparklineValueAxisItemTitle;
-        visible?: bool;
+        visible?: boolean;
         crosshair?: SparklineValueAxisItemCrosshair;
     }
 
@@ -4387,7 +4387,7 @@ module kendo.dataviz.ui {
         chartArea?: SparklineChartArea;
         data?: any;
         dataSource?: any;
-        autoBind?: bool;
+        autoBind?: boolean;
         plotArea?: SparklinePlotArea;
         pointWidth?: number;
         series?: SparklineSeriesItem[];
@@ -4395,7 +4395,7 @@ module kendo.dataviz.ui {
         seriesDefaults?: SparklineSeriesDefaults;
         theme?: string;
         tooltip?: SparklineTooltip;
-        transitions?: bool;
+        transitions?: boolean;
         type?: string;
         valueAxis?: SparklineValueAxisItem[];
         axisLabelClick?(e: SparklineAxisLabelClickEvent): void;
@@ -4501,7 +4501,7 @@ module kendo.dataviz.ui {
         format?: string;
         padding?: any;
         template?: any;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface StockChartCategoryAxisItemCrosshair {
@@ -4509,7 +4509,7 @@ module kendo.dataviz.ui {
         width?: number;
         opacity?: number;
         dashType?: number;
-        visible?: bool;
+        visible?: boolean;
         tooltip?: StockChartCategoryAxisItemCrosshairTooltip;
     }
 
@@ -4526,13 +4526,13 @@ module kendo.dataviz.ui {
         font?: string;
         format?: string;
         margin?: any;
-        mirror?: bool;
+        mirror?: boolean;
         padding?: any;
         rotation?: number;
         skip?: number;
         step?: number;
         template?: any;
-        visible?: bool;
+        visible?: boolean;
         culture?: string;
         dateFormats?: any;
     }
@@ -4540,32 +4540,32 @@ module kendo.dataviz.ui {
     interface StockChartCategoryAxisItemLine {
         color?: string;
         dashType?: string;
-        visible?: bool;
+        visible?: boolean;
         width?: number;
     }
 
     interface StockChartCategoryAxisItemMajorGridLines {
         color?: string;
         dashType?: string;
-        visible?: bool;
+        visible?: boolean;
         width?: number;
     }
 
     interface StockChartCategoryAxisItemMajorTicks {
         size?: number;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface StockChartCategoryAxisItemMinorGridLines {
         color?: string;
         dashType?: string;
-        visible?: bool;
+        visible?: boolean;
         width?: number;
     }
 
     interface StockChartCategoryAxisItemMinorTicks {
         size?: number;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface StockChartCategoryAxisItemPlotBand {
@@ -4590,7 +4590,7 @@ module kendo.dataviz.ui {
         position?: string;
         rotation?: number;
         text?: string;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface StockChartCategoryAxisItem {
@@ -4598,7 +4598,7 @@ module kendo.dataviz.ui {
         categories?: any;
         color?: string;
         field?: string;
-        justified?: bool;
+        justified?: boolean;
         labels?: StockChartCategoryAxisItemLabels;
         line?: StockChartCategoryAxisItemLine;
         majorGridLines?: StockChartCategoryAxisItemMajorGridLines;
@@ -4608,7 +4608,7 @@ module kendo.dataviz.ui {
         name?: string;
         pane?: string;
         plotBands?: StockChartCategoryAxisItemPlotBand[];
-        reverse?: bool;
+        reverse?: boolean;
         title?: StockChartCategoryAxisItemTitle;
         type?: string;
         autoBaseUnitSteps?: any;
@@ -4616,10 +4616,10 @@ module kendo.dataviz.ui {
         baseUnitStep?: any;
         max?: any;
         min?: any;
-        roundToBaseUnit?: bool;
+        roundToBaseUnit?: boolean;
         weekStartDay?: number;
         maxDateGroups?: number;
-        visible?: bool;
+        visible?: boolean;
         crosshair?: StockChartCategoryAxisItemCrosshair;
     }
 
@@ -4659,11 +4659,11 @@ module kendo.dataviz.ui {
         offsetY?: number;
         padding?: any;
         position?: string;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface StockChartNavigatorHint {
-        visible?: bool;
+        visible?: boolean;
         template?: any;
         format?: string;
     }
@@ -4714,7 +4714,7 @@ module kendo.dataviz.ui {
         padding?: any;
         position?: string;
         template?: any;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface StockChartNavigatorSeriesItemLine {
@@ -4733,7 +4733,7 @@ module kendo.dataviz.ui {
         border?: StockChartNavigatorSeriesItemMarkersBorder;
         size?: number;
         type?: string;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface StockChartNavigatorSeriesItemOverlay {
@@ -4753,7 +4753,7 @@ module kendo.dataviz.ui {
         format?: string;
         padding?: any;
         template?: any;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface StockChartNavigatorSeriesItem {
@@ -4790,9 +4790,9 @@ module kendo.dataviz.ui {
 
     interface StockChartNavigator {
         dataSource?: any;
-        autoBind?: bool;
+        autoBind?: boolean;
         dateField?: string;
-        visible?: bool;
+        visible?: boolean;
         series?: StockChartNavigatorSeriesItem[];
         select?: StockChartNavigatorSelect;
         hint?: StockChartNavigatorHint;
@@ -4818,7 +4818,7 @@ module kendo.dataviz.ui {
         margin?: any;
         position?: string;
         text?: string;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface StockChartPane {
@@ -4885,7 +4885,7 @@ module kendo.dataviz.ui {
         padding?: any;
         position?: string;
         template?: any;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface StockChartSeriesItemLine {
@@ -4904,7 +4904,7 @@ module kendo.dataviz.ui {
         border?: StockChartSeriesItemMarkersBorder;
         size?: number;
         type?: string;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface StockChartSeriesItemOverlay {
@@ -4940,7 +4940,7 @@ module kendo.dataviz.ui {
         format?: string;
         padding?: any;
         template?: any;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface StockChartSeriesItem {
@@ -5000,7 +5000,7 @@ module kendo.dataviz.ui {
         margin?: any;
         padding?: any;
         template?: any;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface StockChartSeriesDefaultsTooltipBorder {
@@ -5016,7 +5016,7 @@ module kendo.dataviz.ui {
         format?: string;
         padding?: any;
         template?: any;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface StockChartSeriesDefaults {
@@ -5031,7 +5031,7 @@ module kendo.dataviz.ui {
         overlay?: any;
         pie?: any;
         spacing?: number;
-        stack?: bool;
+        stack?: boolean;
         tooltip?: StockChartSeriesDefaultsTooltip;
     }
 
@@ -5050,7 +5050,7 @@ module kendo.dataviz.ui {
         padding?: any;
         position?: string;
         text?: string;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface StockChartTooltipBorder {
@@ -5066,8 +5066,8 @@ module kendo.dataviz.ui {
         format?: string;
         padding?: any;
         template?: any;
-        visible?: bool;
-        shared?: bool;
+        visible?: boolean;
+        shared?: boolean;
         sharedTemplate?: string;
     }
 
@@ -5084,7 +5084,7 @@ module kendo.dataviz.ui {
         format?: string;
         padding?: any;
         template?: any;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface StockChartValueAxisItemCrosshair {
@@ -5092,7 +5092,7 @@ module kendo.dataviz.ui {
         width?: number;
         opacity?: number;
         dashType?: number;
-        visible?: bool;
+        visible?: boolean;
         tooltip?: StockChartValueAxisItemCrosshairTooltip;
     }
 
@@ -5109,43 +5109,43 @@ module kendo.dataviz.ui {
         font?: string;
         format?: string;
         margin?: any;
-        mirror?: bool;
+        mirror?: boolean;
         padding?: any;
         rotation?: number;
         skip?: number;
         step?: number;
         template?: any;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface StockChartValueAxisItemLine {
         color?: string;
         dashType?: string;
-        visible?: bool;
+        visible?: boolean;
         width?: number;
     }
 
     interface StockChartValueAxisItemMajorGridLines {
         color?: string;
-        visible?: bool;
+        visible?: boolean;
         width?: number;
     }
 
     interface StockChartValueAxisItemMajorTicks {
         size?: number;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface StockChartValueAxisItemMinorGridLines {
         color?: string;
         dashType?: string;
-        visible?: bool;
+        visible?: boolean;
         width?: number;
     }
 
     interface StockChartValueAxisItemMinorTicks {
         size?: number;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface StockChartValueAxisItemPlotBand {
@@ -5171,7 +5171,7 @@ module kendo.dataviz.ui {
         position?: string;
         rotation?: number;
         text?: string;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface StockChartValueAxisItem {
@@ -5188,12 +5188,12 @@ module kendo.dataviz.ui {
         minorTicks?: StockChartValueAxisItemMinorTicks;
         minorUnit?: number;
         name?: any;
-        narrowRange?: bool;
+        narrowRange?: boolean;
         pane?: string;
         plotBands?: StockChartValueAxisItemPlotBand[];
-        reverse?: bool;
+        reverse?: boolean;
         title?: StockChartValueAxisItemTitle;
-        visible?: bool;
+        visible?: boolean;
         crosshair?: StockChartValueAxisItemCrosshair;
     }
 
@@ -5210,7 +5210,7 @@ module kendo.dataviz.ui {
         format?: string;
         padding?: any;
         template?: any;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface StockChartXAxisItemCrosshair {
@@ -5218,7 +5218,7 @@ module kendo.dataviz.ui {
         width?: number;
         opacity?: number;
         dashType?: number;
-        visible?: bool;
+        visible?: boolean;
         tooltip?: StockChartXAxisItemCrosshairTooltip;
     }
 
@@ -5235,13 +5235,13 @@ module kendo.dataviz.ui {
         font?: string;
         format?: string;
         margin?: any;
-        mirror?: bool;
+        mirror?: boolean;
         padding?: any;
         rotation?: number;
         skip?: number;
         step?: number;
         template?: any;
-        visible?: bool;
+        visible?: boolean;
         culture?: string;
         dateFormats?: any;
     }
@@ -5249,19 +5249,19 @@ module kendo.dataviz.ui {
     interface StockChartXAxisItemLine {
         color?: string;
         dashType?: string;
-        visible?: bool;
+        visible?: boolean;
         width?: number;
     }
 
     interface StockChartXAxisItemMajorGridLines {
         color?: string;
-        visible?: bool;
+        visible?: boolean;
         width?: number;
     }
 
     interface StockChartXAxisItemMajorTicks {
         size?: number;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface StockChartXAxisItemPlotBand {
@@ -5287,7 +5287,7 @@ module kendo.dataviz.ui {
         position?: string;
         rotation?: number;
         text?: string;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface StockChartXAxisItem {
@@ -5304,12 +5304,12 @@ module kendo.dataviz.ui {
         majorGridLines?: StockChartXAxisItemMajorGridLines;
         majorTicks?: StockChartXAxisItemMajorTicks;
         name?: any;
-        narrowRange?: bool;
+        narrowRange?: boolean;
         pane?: string;
         plotBands?: StockChartXAxisItemPlotBand[];
-        reverse?: bool;
+        reverse?: boolean;
         title?: StockChartXAxisItemTitle;
-        visible?: bool;
+        visible?: boolean;
         crosshair?: StockChartXAxisItemCrosshair;
     }
 
@@ -5326,7 +5326,7 @@ module kendo.dataviz.ui {
         format?: string;
         padding?: any;
         template?: any;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface StockChartYAxisItemCrosshair {
@@ -5334,7 +5334,7 @@ module kendo.dataviz.ui {
         width?: number;
         opacity?: number;
         dashType?: number;
-        visible?: bool;
+        visible?: boolean;
         tooltip?: StockChartYAxisItemCrosshairTooltip;
     }
 
@@ -5351,13 +5351,13 @@ module kendo.dataviz.ui {
         font?: string;
         format?: string;
         margin?: any;
-        mirror?: bool;
+        mirror?: boolean;
         padding?: any;
         rotation?: number;
         skip?: number;
         step?: number;
         template?: any;
-        visible?: bool;
+        visible?: boolean;
         culture?: string;
         dateFormats?: any;
     }
@@ -5365,19 +5365,19 @@ module kendo.dataviz.ui {
     interface StockChartYAxisItemLine {
         color?: string;
         dashType?: string;
-        visible?: bool;
+        visible?: boolean;
         width?: number;
     }
 
     interface StockChartYAxisItemMajorGridLines {
         color?: string;
-        visible?: bool;
+        visible?: boolean;
         width?: number;
     }
 
     interface StockChartYAxisItemMajorTicks {
         size?: number;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface StockChartYAxisItemPlotBand {
@@ -5403,7 +5403,7 @@ module kendo.dataviz.ui {
         position?: string;
         rotation?: number;
         text?: string;
-        visible?: bool;
+        visible?: boolean;
     }
 
     interface StockChartYAxisItem {
@@ -5420,12 +5420,12 @@ module kendo.dataviz.ui {
         majorGridLines?: StockChartYAxisItemMajorGridLines;
         majorTicks?: StockChartYAxisItemMajorTicks;
         name?: any;
-        narrowRange?: bool;
+        narrowRange?: boolean;
         pane?: string;
         plotBands?: StockChartYAxisItemPlotBand[];
-        reverse?: bool;
+        reverse?: boolean;
         title?: StockChartYAxisItemTitle;
-        visible?: bool;
+        visible?: boolean;
         crosshair?: StockChartYAxisItemCrosshair;
     }
 
@@ -5448,7 +5448,7 @@ module kendo.dataviz.ui {
         categoryAxis?: StockChartCategoryAxisItem[];
         chartArea?: StockChartChartArea;
         dataSource?: any;
-        autoBind?: bool;
+        autoBind?: boolean;
         legend?: StockChartLegend;
         panes?: StockChartPane[];
         plotArea?: StockChartPlotArea;
@@ -5458,7 +5458,7 @@ module kendo.dataviz.ui {
         theme?: string;
         title?: StockChartTitle;
         tooltip?: StockChartTooltip;
-        transitions?: bool;
+        transitions?: boolean;
         valueAxis?: StockChartValueAxisItem[];
         xAxis?: StockChartXAxisItem[];
         yAxis?: StockChartYAxisItem[];
@@ -5563,14 +5563,14 @@ module kendo.dataviz.ui {
 
 
 }
-module FX {
+declare module FX {
     class FX  {
         options: FXOptions;
-        kendoAnimate(duration: number, reverse: bool, complete: Function, show: bool, hide: bool): void;
-        kendoStop(gotoEnd: bool): void;
+        kendoAnimate(duration: number, reverse: boolean, complete: Function, show: boolean, hide: boolean): void;
+        kendoStop(gotoEnd: boolean): void;
         kendoAddClass(classes: string, options: FXKendoAddClassOptions): void;
         kendoRemoveClass(classes: string, options: FXKendoRemoveClassOptions): void;
-        kendoToggleClass(classes: string, options: FXKendoToggleClassOptions, toggle: bool): void;
+        kendoToggleClass(classes: string, options: FXKendoToggleClassOptions, toggle: boolean): void;
     }
 
     interface FXKendoAddClassOptions {
@@ -5600,7 +5600,7 @@ module FX {
 
 
 }
-module kendo {
+declare module kendo {
     class Layout extends Observable {
         options: LayoutOptions;
         showIn(container: string, view: kendo.View): void;
@@ -5619,7 +5619,7 @@ module kendo {
         start(): void;
         Example(): void;
         route(route: string, callback: Function): void;
-        navigate(route: string, silent: bool): void;
+        navigate(route: string, silent: boolean): void;
         destroy(): void;
     }
 
@@ -5661,7 +5661,7 @@ module kendo {
 
 
 }
-module kendo.mobile.ui {
+declare module kendo.mobile.ui {
     class ActionSheet extends kendo.mobile.ui.Widget {
         element: JQuery;
         wrapper: JQuery;
@@ -5832,25 +5832,25 @@ module kendo.mobile.ui {
 
     interface ListViewFilterable {
         placeholder?: string;
-        autoFilter?: bool;
+        autoFilter?: boolean;
         field?: string;
-        ignoreCase?: bool;
+        ignoreCase?: boolean;
         operator?: string;
     }
 
     interface ListViewOptions {
-        appendOnRefresh?: bool;
-        autoBind?: bool;
+        appendOnRefresh?: boolean;
+        autoBind?: boolean;
         dataSource?: any;
-        endlessScroll?: bool;
+        endlessScroll?: boolean;
         endlessScrollParameters?: Function;
-        fixedHeaders?: bool;
+        fixedHeaders?: boolean;
         headerTemplate?: string;
-        loadMore?: bool;
+        loadMore?: boolean;
         loadMoreText?: string;
         loadMoreParameters?: Function;
         pullTemplate?: string;
-        pullToRefresh?: bool;
+        pullToRefresh?: boolean;
         pullParameters?: Function;
         refreshTemplate?: string;
         releaseTemplate?: string;
@@ -5906,7 +5906,7 @@ module kendo.mobile.ui {
 
     interface ModalViewOptions {
         height?: number;
-        modal?: bool;
+        modal?: boolean;
         width?: number;
         open?(e: ModalViewOpenEvent): void;
     }
@@ -6017,7 +6017,7 @@ module kendo.mobile.ui {
         content(content: any): void;
         destroy(): void;
         refresh(): void;
-        scrollTo(page: number, instant: bool): void;
+        scrollTo(page: number, instant: boolean): void;
     }
 
     interface ScrollViewOptions {
@@ -6051,11 +6051,11 @@ module kendo.mobile.ui {
     }
 
     interface ScrollerOptions {
-        zoom?: bool;
-        elastic?: bool;
+        zoom?: boolean;
+        elastic?: boolean;
         pullOffset?: number;
         pullTemplate?: string;
-        pullToRefresh?: bool;
+        pullToRefresh?: boolean;
         refreshTemplate?: string;
         releaseTemplate?: string;
         pull?(e: ScrollerEvent): void;
@@ -6120,14 +6120,14 @@ module kendo.mobile.ui {
         wrapper: JQuery;
         constructor(element: Element, options?: SwitchOptions);
         options: SwitchOptions;
-        check(): bool;
-        check(check: bool): void;
+        check(): boolean;
+        check(check: boolean): void;
         destroy(): void;
         toggle(): void;
     }
 
     interface SwitchOptions {
-        checked?: bool;
+        checked?: boolean;
         offLabel?: string;
         onLabel?: string;
         change?(e: SwitchChangeEvent): void;
@@ -6178,10 +6178,10 @@ module kendo.mobile.ui {
 
     interface ViewOptions {
         model?: string;
-        reload?: bool;
-        stretch?: bool;
+        reload?: boolean;
+        stretch?: boolean;
         title?: string;
-        zoom?: bool;
+        zoom?: boolean;
         beforeShow?(e: ViewBeforeShowEvent): void;
         hide?(e: ViewHideEvent): void;
         init?(e: ViewInitEvent): void;
@@ -6210,7 +6210,7 @@ module kendo.mobile.ui {
 
 
 }
-module kendo.mobile {
+declare module kendo.mobile {
     class Application extends Observable {
         constructor(options?: ApplicationOptions);
         options: ApplicationOptions;
@@ -6222,8 +6222,8 @@ module kendo.mobile {
     }
 
     interface ApplicationOptions {
-        hideAddressBar?: bool;
-        updateDocumentTitle?: bool;
+        hideAddressBar?: boolean;
+        updateDocumentTitle?: boolean;
         initial?: string;
         layout?: string;
         loading?: string;

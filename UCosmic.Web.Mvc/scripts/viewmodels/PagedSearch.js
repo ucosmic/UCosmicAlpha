@@ -1,18 +1,27 @@
+/// <reference path="../lib-ext.d.ts" />
+/// <reference path="../typings/jquery/jquery.d.ts" />
+/// <reference path="../typings/knockout/knockout.d.ts" />
+/// <reference path="Spinner.ts" />
 var ViewModels;
 (function (ViewModels) {
     var PagedSearch = (function () {
         function PagedSearch() {
             var _this = this;
+            // paging observables
             this.pageSize = ko.observable();
             this.pageNumber = ko.observable();
             this.transitionedPageNumber = ko.observable();
             this.itemTotal = ko.observable();
             this.nextForceDisabled = ko.observable(false);
             this.prevForceDisabled = ko.observable(false);
+            // results
             this.items = ko.observableArray();
+            // filtering
             this.orderBy = ko.observable();
             this.keyword = ko.observable($('input[type=hidden][data-bind="value: keyword"]').val());
+            // spinner component
             this.spinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(400, true));
+            // paging computeds
             this.pageCount = ko.computed(function () {
                 return Math.ceil(_this.itemTotal() / _this.pageSize());
             });
@@ -26,9 +35,8 @@ var ViewModels;
                 return _this.firstIndex() + 1;
             });
             this.lastNumber = ko.computed(function () {
-                if(!_this.items) {
+                if (!_this.items)
                     return 0;
-                }
                 return _this.firstIndex() + _this.items().length;
             });
             this.lastIndex = ko.computed(function () {
@@ -40,11 +48,14 @@ var ViewModels;
             this.prevEnabled = ko.computed(function () {
                 return _this.pageNumber() > 1 && !_this.prevForceDisabled();
             });
+
+            // paging subscriptions
             this.pageCount.subscribe(function (newValue) {
-                if(_this.pageNumber() && _this.pageNumber() > newValue) {
+                if (_this.pageNumber() && _this.pageNumber() > newValue)
                     _this.pageNumber(1);
-                }
             });
+
+            // result computeds
             this.hasItems = ko.computed(function () {
                 return _this.items() && _this.items().length > 0;
             });
@@ -60,25 +71,25 @@ var ViewModels;
             this.showStatus = ko.computed(function () {
                 return _this.hasItems() && !_this.spinner.isVisible();
             });
-            this.throttledKeyword = ko.computed(this.keyword).extend({
-                throttle: 400
-            });
+
+            // filtering computeds
+            this.throttledKeyword = ko.computed(this.keyword).extend({ throttle: 400 });
         }
+        // paging methods
         PagedSearch.prototype.nextPage = function () {
-            if(this.nextEnabled()) {
+            if (this.nextEnabled()) {
                 var pageNumber = parseInt(this.pageNumber()) + 1;
                 this.pageNumber(pageNumber);
             }
         };
         PagedSearch.prototype.prevPage = function () {
-            if(this.prevEnabled()) {
+            if (this.prevEnabled())
                 history.back();
-            }
         };
         PagedSearch.prototype.getPageHash = function (pageNumber) {
             return '#/page/{0}/'.replace('{0}', pageNumber);
         };
         return PagedSearch;
     })();
-    ViewModels.PagedSearch = PagedSearch;    
+    ViewModels.PagedSearch = PagedSearch;
 })(ViewModels || (ViewModels = {}));

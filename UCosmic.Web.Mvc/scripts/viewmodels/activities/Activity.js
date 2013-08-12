@@ -1,58 +1,85 @@
 var ViewModels;
 (function (ViewModels) {
+    /// <reference path="../../typings/jquery/jquery.d.ts" />
+    /// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
+    /// <reference path="../../typings/knockout/knockout.d.ts" />
+    /// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
+    /// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
+    /// <reference path="../../typings/kendo/kendo.all.d.ts" />
+    /// <reference path="../../typings/tinymce/tinymce.d.ts" />
+    /// <reference path="../../typings/moment/moment.d.ts" />
+    /// <reference path="../../app/Routes.ts" />
+    /// <reference path="../Spinner.ts" />
+    /// <reference path="../activities/ServiceApiModel.d.ts" />
     (function (Activities) {
         var Activity = (function () {
             function Activity(activityId) {
                 this.ready = ko.observable(false);
+                /* Array of all locations offered in Country/Location multiselect. */
                 this.locations = ko.observableArray();
+                /* Array of placeIds of selected locations. */
                 this.selectedLocations = ko.observableArray();
+                /* Array of activity types displayed as list of checkboxes */
                 this.activityTypes = ko.observableArray();
+                /* Data bound to new tag textArea */
                 this.newTag = ko.observable();
+                // array to hold file upload errors
                 this.fileUploadErrors = ko.observableArray();
+                /* Initialization errors. */
                 this.inititializationErrors = "";
+                /* Autosave after so many keydowns. */
                 this.AUTOSAVE_KEYCOUNT = 10;
                 this.keyCounter = 0;
+                /* Dirty */
                 this.dirtyFlag = ko.observable(false);
+                /* In the process of saving */
                 this.saving = false;
                 this.saveSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(200));
                 this._initialize(activityId);
             }
-            Activity.iconMaxSide = 64;
             Activity.prototype._initialize = function (activityId) {
                 var _this = this;
                 this.id = ko.observable(activityId);
+
                 this.dirty = ko.computed(function () {
-                    if(_this.dirtyFlag()) {
+                    if (_this.dirtyFlag()) {
                         _this.autoSave(_this, null);
                     }
                 });
             };
+
             Activity.prototype.dismissFileUploadError = function (index) {
                 this.fileUploadErrors.splice(index, 1);
             };
+
             Activity.prototype.setupWidgets = function (fromDatePickerId, toDatePickerId, countrySelectorId, uploadFileId, newTagId) {
                 var _this = this;
                 $("#" + fromDatePickerId).kendoDatePicker({
+                    /* If user clicks date picker button, reset format */
                     open: function (e) {
                         this.options.format = "MM/dd/yyyy";
                     }
                 });
+
                 $("#" + toDatePickerId).kendoDatePicker({
                     open: function (e) {
                         this.options.format = "MM/dd/yyyy";
                     }
                 });
+
                 $("#" + countrySelectorId).kendoMultiSelect({
                     filter: 'contains',
                     ignoreCase: 'true',
                     dataTextField: "officialName()",
                     dataValueField: "id()",
                     dataSource: this.locations(),
+                    //values: activityViewModel.selectedLocations(), // This doesn't work.  See below.
                     change: function (event) {
                         _this.updateLocations(event.sender.value());
                     },
                     placeholder: "[Select Country/Location, Body of Water or Global]"
                 });
+
                 var invalidFileNames = [];
                 $("#" + uploadFileId).kendoUpload({
                     multiple: true,
@@ -64,7 +91,7 @@ var ViewModels;
                         saveUrl: App.Routes.WebApi.Activities.Documents.post(this.id(), this.modeText())
                     },
                     select: function (e) {
-                        for(var i = 0; i < e.files.length; i++) {
+                        for (var i = 0; i < e.files.length; i++) {
                             var file = e.files[i];
                             $.ajax({
                                 async: false,
@@ -75,10 +102,9 @@ var ViewModels;
                                     length: file.size
                                 }
                             }).fail(function (xhr) {
-                                if(xhr.status === 400) {
-                                    if($.inArray(e.files[i].name, invalidFileNames) < 0) {
+                                if (xhr.status === 400) {
+                                    if ($.inArray(e.files[i].name, invalidFileNames) < 0)
                                         invalidFileNames.push(file.name);
-                                    }
                                     _this.fileUploadErrors.push({
                                         message: xhr.responseText
                                     });
@@ -89,7 +115,7 @@ var ViewModels;
                     upload: function (e) {
                         var file = e.files[0];
                         var indexOfInvalidName = $.inArray(file.name, invalidFileNames);
-                        if(indexOfInvalidName >= 0) {
+                        if (indexOfInvalidName >= 0) {
                             e.preventDefault();
                             invalidFileNames.splice(indexOfInvalidName, 1);
                             return;
@@ -99,7 +125,7 @@ var ViewModels;
                         _this.loadDocuments();
                     },
                     error: function (e) {
-                        if(e.XMLHttpRequest.responseText && e.XMLHttpRequest.responseText.length < 1000) {
+                        if (e.XMLHttpRequest.responseText && e.XMLHttpRequest.responseText.length < 1000) {
                             _this.fileUploadErrors.push({
                                 message: e.XMLHttpRequest.responseText
                             });
@@ -110,6 +136,7 @@ var ViewModels;
                         }
                     }
                 });
+
                 $("#" + newTagId).kendoAutoComplete({
                     minLength: 3,
                     placeholder: "[Enter tag or keyword]",
@@ -135,13 +162,11 @@ var ViewModels;
                     select: function (e) {
                         var me = $("#" + newTagId).data("kendoAutoComplete");
                         var dataItem = me.dataItem(e.item.index());
-                        _this.newEstablishment = {
-                            officialName: dataItem.officialName,
-                            id: dataItem.id
-                        };
+                        _this.newEstablishment = { officialName: dataItem.officialName, id: dataItem.id };
                     }
                 });
             };
+
             Activity.prototype.setupValidation = function () {
                 ko.validation.rules['atLeast'] = {
                     validator: function (val, otherVal) {
@@ -149,6 +174,7 @@ var ViewModels;
                     },
                     message: 'At least {0} must be selected.'
                 };
+
                 ko.validation.rules['nullSafeDate'] = {
                     validator: function (val, otherVal) {
                         var valid = true;
@@ -156,48 +182,41 @@ var ViewModels;
                         var YYYYPattern = new RegExp("^\\d{4}$");
                         var MMYYYYPattern = new RegExp("^\\d{1,}/\\d{4}$");
                         var MMDDYYYYPattern = new RegExp("^\\d{1,}/\\d{1,}/\\d{4}$");
-                        if((val != null) && (val.length > 0)) {
+
+                        if ((val != null) && (val.length > 0)) {
                             val = $.trim(val);
-                            if(YYYYPattern.test(val)) {
+
+                            if (YYYYPattern.test(val)) {
                                 val = "01/01/" + val;
                                 format = "YYYY";
-                            } else if(MMYYYYPattern.test(val)) {
+                            } else if (MMYYYYPattern.test(val)) {
                                 format = "MM/YYYY";
-                            } else if(MMDDYYYYPattern.test(val)) {
+                            } else if (MMDDYYYYPattern.test(val)) {
                                 format = "MM/DD/YYYY";
                             }
+
                             valid = (format != null) ? moment(val, format).isValid() : false;
                         }
+
                         return valid;
                     },
                     message: "Date must be valid."
                 };
+
                 ko.validation.registerExtenders();
+
                 ko.validation.group(this.values);
-                this.values.title.extend({
-                    required: true,
-                    minLength: 1,
-                    maxLength: 500
-                });
-                this.values.locations.extend({
-                    atLeast: 1
-                });
-                this.values.types.extend({
-                    atLeast: 1
-                });
-                this.values.startsOn.extend({
-                    nullSafeDate: {
-                        message: "Start date must valid."
-                    }
-                });
-                this.values.endsOn.extend({
-                    nullSafeDate: {
-                        message: "End date must valid."
-                    }
-                });
+
+                this.values.title.extend({ required: true, minLength: 1, maxLength: 500 });
+                this.values.locations.extend({ atLeast: 1 });
+                this.values.types.extend({ atLeast: 1 });
+                this.values.startsOn.extend({ nullSafeDate: { message: "Start date must valid." } });
+                this.values.endsOn.extend({ nullSafeDate: { message: "End date must valid." } });
             };
+
             Activity.prototype.setupSubscriptions = function () {
                 var _this = this;
+                /* Autosave when fields change. */
                 this.values.title.subscribe(function (newValue) {
                     _this.dirtyFlag(true);
                 });
@@ -223,22 +242,27 @@ var ViewModels;
                     _this.dirtyFlag(true);
                 });
             };
+
             Activity.prototype.load = function () {
                 var _this = this;
                 var deferred = $.Deferred();
+
                 var locationsPact = $.Deferred();
                 $.get(App.Routes.WebApi.Activities.Locations.get()).done(function (data, textStatus, jqXHR) {
                     locationsPact.resolve(data);
                 }).fail(function (jqXHR, textStatus, errorThrown) {
                     locationsPact.reject(jqXHR, textStatus, errorThrown);
                 });
+
                 var typesPact = $.Deferred();
                 $.get(App.Routes.WebApi.Employees.ModuleSettings.ActivityTypes.get()).done(function (data, textStatus, jqXHR) {
                     typesPact.resolve(data);
                 }).fail(function (jqXHR, textStatus, errorThrown) {
                     typesPact.reject(jqXHR, textStatus, errorThrown);
                 });
+
                 var dataPact = $.Deferred();
+
                 $.ajax({
                     type: "GET",
                     url: App.Routes.WebApi.Activities.getEdit(this.id()),
@@ -249,17 +273,18 @@ var ViewModels;
                         dataPact.reject(jqXhr, textStatus, errorThrown);
                     }
                 });
+
+                // only process after all requests have been resolved
                 $.when(typesPact, locationsPact, dataPact).done(function (types, locations, data) {
                     _this.activityTypes = ko.mapping.fromJS(types);
                     _this.locations = ko.mapping.fromJS(locations);
- {
+
+                     {
                         var augmentedDocumentModel = function (data) {
-                            ko.mapping.fromJS(data, {
-                            }, this);
-                            this.proxyImageSource = ko.observable(App.Routes.WebApi.Activities.Documents.Thumbnail.get(data.activityId, data.id, {
-                                maxSide: Activity.iconMaxSide
-                            }));
+                            ko.mapping.fromJS(data, {}, this);
+                            this.proxyImageSource = ko.observable(App.Routes.WebApi.Activities.Documents.Thumbnail.get(data.activityId, data.id, { maxSide: Activity.iconMaxSide }));
                         };
+
                         var mapping = {
                             'documents': {
                                 create: function (options) {
@@ -277,99 +302,116 @@ var ViewModels;
                                 }
                             }
                         };
+
                         ko.mapping.fromJS(data, mapping, _this);
                     }
-                    for(var i = 0; i < _this.values.locations().length; i += 1) {
+
+                    for (var i = 0; i < _this.values.locations().length; i += 1) {
                         _this.selectedLocations.push(_this.values.locations()[i].placeId());
                     }
-                    for(var i = 0; i < _this.activityTypes().length; i += 1) {
+
+                    for (var i = 0; i < _this.activityTypes().length; i += 1) {
                         _this.activityTypes()[i].checked = ko.computed(_this.defHasActivityTypeCallback(i));
                     }
+
                     deferred.resolve();
                 }).fail(function (xhr, textStatus, errorThrown) {
                     deferred.reject(xhr, textStatus, errorThrown);
                 });
+
                 return deferred;
             };
+
             Activity.prototype.keyCountAutoSave = function (newValue) {
                 this.keyCounter += 1;
-                if(this.keyCounter >= this.AUTOSAVE_KEYCOUNT) {
+                if (this.keyCounter >= this.AUTOSAVE_KEYCOUNT) {
                     this.dirtyFlag(true);
                     this.keyCounter = 0;
                 }
             };
+
             Activity.prototype.getDateFormat = function (dateStr) {
                 var format = null;
                 var YYYYPattern = new RegExp("^\\d{4}$");
                 var MMYYYYPattern = new RegExp("^\\d{1,}/\\d{4}$");
                 var MMDDYYYYPattern = new RegExp("^\\d{1,}/\\d{1,}/\\d{4}$");
-                if((dateStr != null) && (dateStr.length > 0)) {
+
+                if ((dateStr != null) && (dateStr.length > 0)) {
                     dateStr = $.trim(dateStr);
-                    if(YYYYPattern.test(dateStr)) {
+
+                    if (YYYYPattern.test(dateStr)) {
                         format = "yyyy";
-                    } else if(MMYYYYPattern.test(dateStr)) {
+                    } else if (MMYYYYPattern.test(dateStr)) {
                         format = "MM/yyyy";
                     } else {
                         format = "MM/dd/yyyy";
                     }
                 }
+
                 return format;
             };
+
             Activity.prototype.convertDate = function (date) {
                 var formatted = null;
                 var YYYYPattern = new RegExp("^\\d{4}$");
                 var MMYYYYPattern = new RegExp("^\\d{1,}/\\d{4}$");
                 var MMDDYYYYPattern = new RegExp("^\\d{1,}/\\d{1,}/\\d{4}$");
-                if(typeof (date) === "object") {
+
+                if (typeof (date) === "object") {
                     formatted = moment(date).format();
                 } else {
                     var dateStr = date;
-                    if((dateStr != null) && (dateStr.length > 0)) {
+                    if ((dateStr != null) && (dateStr.length > 0)) {
                         dateStr = $.trim(dateStr);
-                        if(YYYYPattern.test(dateStr)) {
+
+                        if (YYYYPattern.test(dateStr)) {
                             dateStr = "01/01/" + dateStr;
-                            formatted = moment(dateStr, [
-                                "MM/DD/YYYY"
-                            ]).format();
-                        } else if(MMYYYYPattern.test(dateStr)) {
-                            formatted = moment(dateStr, [
-                                "MM/YYYY"
-                            ]).format();
-                        } else if(MMDDYYYYPattern.test(dateStr)) {
-                            formatted = moment(dateStr, [
-                                "MM/DD/YYYY"
-                            ]).format();
+                            formatted = moment(dateStr, ["MM/DD/YYYY"]).format();
+                        } else if (MMYYYYPattern.test(dateStr)) {
+                            formatted = moment(dateStr, ["MM/YYYY"]).format();
+                        } else if (MMDDYYYYPattern.test(dateStr)) {
+                            formatted = moment(dateStr, ["MM/DD/YYYY"]).format();
                         }
                     }
                 }
+
                 return formatted;
             };
+
             Activity.prototype.autoSave = function (viewModel, event) {
                 var _this = this;
                 var deferred = $.Deferred();
-                if(this.saving) {
+
+                if (this.saving) {
                     deferred.resolve();
                     return deferred;
                 }
-                if(!this.dirtyFlag() && (this.keyCounter == 0)) {
+
+                if (!this.dirtyFlag() && (this.keyCounter == 0)) {
                     deferred.resolve();
                     return deferred;
                 }
+
                 this.saving = true;
+
                 var model = ko.mapping.toJS(this);
-                if(model.values.startsOn != null) {
+
+                if (model.values.startsOn != null) {
                     var dateStr = $("#fromDatePicker").get(0).value;
                     model.values.dateFormat = this.getDateFormat(dateStr);
                     model.values.startsOn = this.convertDate(model.values.startsOn);
                 }
-                if((this.values.onGoing != null) && (this.values.onGoing())) {
+
+                if ((this.values.onGoing != null) && (this.values.onGoing())) {
                     model.values.endsOn = null;
                 } else {
-                    if(model.values.endsOn != null) {
+                    if (model.values.endsOn != null) {
                         model.values.endsOn = this.convertDate(model.values.endsOn);
                     }
                 }
+
                 this.saveSpinner.start();
+
                 $.ajax({
                     type: 'PUT',
                     url: App.Routes.WebApi.Activities.put(viewModel.id()),
@@ -389,16 +431,20 @@ var ViewModels;
                         deferred.reject(jqXhr, textStatus, errorThrown);
                     }
                 });
+
                 return deferred;
             };
+
             Activity.prototype.save = function (viewModel, event, mode) {
                 var _this = this;
                 this.autoSave(viewModel, event).done(function (data, textStatus, jqXHR) {
-                    if(!_this.values.isValid()) {
+                    if (!_this.values.isValid()) {
                         _this.values.errors.showAllMessages();
                         return;
                     }
+
                     _this.saveSpinner.start();
+
                     $.ajax({
                         async: false,
                         type: 'PUT',
@@ -422,6 +468,7 @@ var ViewModels;
                     location.href = App.Routes.Mvc.My.Profile.get();
                 });
             };
+
             Activity.prototype.cancel = function (item, event, mode) {
                 $("#cancelConfirmDialog").dialog({
                     modal: true,
@@ -442,54 +489,94 @@ var ViewModels;
                                     alert(textStatus + "; " + errorThrown);
                                 }
                             });
+
                             $(this).dialog("close");
                             location.href = App.Routes.Mvc.My.Profile.get();
                         }
                     }
                 });
             };
+
             Activity.prototype.addActivityType = function (activityTypeId) {
                 var existingIndex = this.getActivityTypeIndexById(activityTypeId);
-                if(existingIndex == -1) {
-                    var newActivityType = ko.mapping.fromJS({
-                        id: 0,
-                        typeId: activityTypeId,
-                        version: ""
-                    });
+                if (existingIndex == -1) {
+                    var newActivityType = ko.mapping.fromJS({ id: 0, typeId: activityTypeId, version: "" });
                     this.values.types.push(newActivityType);
                 }
             };
+
             Activity.prototype.removeActivityType = function (activityTypeId) {
                 var existingIndex = this.getActivityTypeIndexById(activityTypeId);
-                if(existingIndex != -1) {
+                if (existingIndex != -1) {
                     var activityType = this.values.types()[existingIndex];
                     this.values.types.remove(activityType);
                 }
             };
+
             Activity.prototype.getTypeName = function (id) {
                 var name = "";
                 var index = this.getActivityTypeIndexById(id);
-                if(index != -1) {
+                if (index != -1) {
                     name = this.activityTypes[index].type;
                 }
                 return name;
             };
+
             Activity.prototype.getActivityTypeIndexById = function (activityTypeId) {
                 var index = -1;
-                if((this.values.types != null) && (this.values.types().length > 0)) {
+
+                if ((this.values.types != null) && (this.values.types().length > 0)) {
                     var i = 0;
-                    while((i < this.values.types().length) && (activityTypeId != this.values.types()[i].typeId())) {
+                    while ((i < this.values.types().length) && (activityTypeId != this.values.types()[i].typeId())) {
                         i += 1;
                     }
-                    if(i < this.values.types().length) {
+
+                    if (i < this.values.types().length) {
                         index = i;
                     }
                 }
+
                 return index;
             };
+
             Activity.prototype.hasActivityType = function (activityTypeId) {
                 return this.getActivityTypeIndexById(activityTypeId) != -1;
             };
+
+            /*
+            ActivityTypes Theory of Operation:
+            
+            Challenge: Present user with a checkbox for each ActivityType as defined
+            by EmployeeActivityTypes.  User must select at least one
+            ActivityType.  The ViewModel will maintain a list of
+            ActivityTypes as selected by the user.
+            
+            The ViewModel contains both a list of possible ActivityTypes (in the
+            activityTypes field) and the array of actually selected ActivityTypes
+            in vm.values.types.
+            
+            In order to support data binding, the ActivityType is augmented with
+            a "checked" property.
+            
+            The desired behavior is to make use of the "checked" data binding
+            attribute as follows:
+            
+            <input type="checkbox" data-bind="checked: checked"/>
+            
+            See the "activity-types-template" for exact usage.
+            
+            However, checking/unchecking needes to result in an ActivityType
+            being added/removed from the Activity.values.types array.
+            
+            To accomplish this, we use a computed observable that has split
+            read and write behavior.  A Read results in interrogating the
+            Activity.values.types array for the existence of a typeId. A
+            write will either add or remove a typeId depending upon checked
+            state.
+            
+            Due to the use of computed observable array (activityTypes) we need to
+            create a closure in order to capture state of array index/element.
+            */
             Activity.prototype.defHasActivityTypeCallback = function (activityTypeIndex) {
                 var _this = this;
                 var def = {
@@ -497,7 +584,7 @@ var ViewModels;
                         return _this.hasActivityType(_this.activityTypes()[activityTypeIndex].id());
                     },
                     write: function (checked) {
-                        if(checked) {
+                        if (checked) {
                             _this.addActivityType(_this.activityTypes()[activityTypeIndex].id());
                         } else {
                             _this.removeActivityType(_this.activityTypes()[activityTypeIndex].id());
@@ -505,26 +592,26 @@ var ViewModels;
                     },
                     owner: this
                 };
+
                 return def;
             };
+
+            // Rebuild values.location with supplied (non-observable) array.
             Activity.prototype.updateLocations = function (locations) {
                 this.values.locations.removeAll();
-                for(var i = 0; i < locations.length; i += 1) {
-                    var location = ko.mapping.fromJS({
-                        id: 0,
-                        placeId: locations[i],
-                        version: ""
-                    });
+                for (var i = 0; i < locations.length; i += 1) {
+                    var location = ko.mapping.fromJS({ id: 0, placeId: locations[i], version: "" });
                     this.values.locations.push(location);
                 }
                 this.dirtyFlag(true);
             };
+
             Activity.prototype.addTag = function (item, event) {
                 var newText = null;
                 var domainTypeText = "Custom";
                 var domainKey = null;
                 var isInstitution = false;
-                if(this.newEstablishment == null) {
+                if (this.newEstablishment == null) {
                     newText = this.newTag();
                 } else {
                     newText = this.newEstablishment.officialName;
@@ -534,7 +621,7 @@ var ViewModels;
                     this.newEstablishment = null;
                 }
                 newText = (newText != null) ? $.trim(newText) : null;
-                if((newText != null) && (newText.length != 0) && (!this.haveTag(newText))) {
+                if ((newText != null) && (newText.length != 0) && (!this.haveTag(newText))) {
                     var tag = {
                         id: 0,
                         number: 0,
@@ -547,23 +634,28 @@ var ViewModels;
                     var observableTag = ko.mapping.fromJS(tag);
                     this.values.tags.push(observableTag);
                 }
+
                 this.newTag(null);
                 this.dirtyFlag(true);
             };
+
             Activity.prototype.removeTag = function (item, event) {
                 this.values.tags.remove(item);
                 this.dirtyFlag(true);
             };
+
             Activity.prototype.haveTag = function (text) {
                 return this.tagIndex(text) != -1;
             };
+
             Activity.prototype.tagIndex = function (text) {
                 var i = 0;
-                while((i < this.values.tags().length) && (text != this.values.tags()[i].text())) {
+                while ((i < this.values.tags().length) && (text != this.values.tags()[i].text())) {
                     i += 1;
                 }
                 return ((this.values.tags().length > 0) && (i < this.values.tags().length)) ? i : -1;
             };
+
             Activity.prototype.loadDocuments = function () {
                 var _this = this;
                 $.ajax({
@@ -571,21 +663,22 @@ var ViewModels;
                     url: App.Routes.WebApi.Activities.Documents.get(this.id(), null, this.modeText()),
                     dataType: 'json',
                     success: function (documents, textStatus, jqXhr) {
+                        /* TBD - This needs to be combined with the initial load mapping. */
                         var augmentedDocumentModel = function (data) {
-                            ko.mapping.fromJS(data, {
-                            }, this);
-                            this.proxyImageSource = ko.observable(App.Routes.WebApi.Activities.Documents.Thumbnail.get(data.activityId, data.id, {
-                                maxSide: Activity.iconMaxSide
-                            }));
+                            ko.mapping.fromJS(data, {}, this);
+                            this.proxyImageSource = ko.observable(App.Routes.WebApi.Activities.Documents.Thumbnail.get(data.activityId, data.id, { maxSide: Activity.iconMaxSide }));
                         };
+
                         var mapping = {
                             create: function (options) {
                                 return new augmentedDocumentModel(options.data);
                             }
                         };
+
                         var observableDocs = ko.mapping.fromJS(documents, mapping);
+
                         _this.values.documents.removeAll();
-                        for(var i = 0; i < observableDocs().length; i += 1) {
+                        for (var i = 0; i < observableDocs().length; i += 1) {
                             _this.values.documents.push(observableDocs()[i]);
                         }
                     },
@@ -594,6 +687,7 @@ var ViewModels;
                     }
                 });
             };
+
             Activity.prototype.deleteDocument = function (item, index, event) {
                 var _this = this;
                 $.ajax({
@@ -608,6 +702,7 @@ var ViewModels;
                     }
                 });
             };
+
             Activity.prototype.startDocumentTitleEdit = function (item, event) {
                 var _this = this;
                 var textElement = event.target;
@@ -619,17 +714,19 @@ var ViewModels;
                     _this.endDocumentTitleEdit(item, event);
                 });
                 $(inputElement).keypress(event, function (event) {
-                    if(event.which == 13) {
+                    if (event.which == 13) {
                         inputElement.blur();
                     }
                 });
             };
+
             Activity.prototype.endDocumentTitleEdit = function (item, event) {
                 var _this = this;
                 var inputElement = event.target;
                 $(inputElement).unbind("focusout");
                 $(inputElement).unbind("keypress");
                 $(inputElement).attr("disabled", "disabled");
+
                 $.ajax({
                     type: 'PUT',
                     url: App.Routes.WebApi.Activities.Documents.rename(this.id(), item.id()),
@@ -653,18 +750,17 @@ var ViewModels;
                             modal: true,
                             resizable: false,
                             width: 400,
-                            buttons: {
-                                Ok: function () {
+                            buttons: { Ok: function () {
                                     $(this).dialog("close");
-                                }
-                            }
+                                } }
                         });
                     }
                 });
             };
+            Activity.iconMaxSide = 64;
             return Activity;
         })();
-        Activities.Activity = Activity;        
+        Activities.Activity = Activity;
     })(ViewModels.Activities || (ViewModels.Activities = {}));
     var Activities = ViewModels.Activities;
 })(ViewModels || (ViewModels = {}));

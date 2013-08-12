@@ -13,57 +13,57 @@ module ViewModels.Establishments {
 
         ownerId: number;
         map: google.maps.Map;
-        mapZoom: KnockoutObservableNumber = ko.observable(1);
+        mapZoom: KnockoutObservable<number> = ko.observable(1);
         mapTools: KnockoutObservableGoogleMapsToolsOverlay = ko.observable();
-        toolsMarkerLat: KnockoutComputed;
-        toolsMarkerLng: KnockoutComputed;
-        $mapCanvas: KnockoutObservableJQuery = ko.observable();
-        isMapVisible: KnockoutObservableBool = ko.observable();
-        isLoaded: KnockoutObservableBool = ko.observable();
-        continents: KnockoutObservablePlaceModelArray = ko.observableArray();
-        continentId: KnockoutObservableNumber = ko.observable();
-        continentName: KnockoutComputed;
-        countries: KnockoutObservablePlaceModelArray = ko.observableArray();
-        countryId: KnockoutObservableNumber = ko.observable();
-        countryName: KnockoutComputed;
-        countryOptionsCaption: KnockoutComputed;
+        toolsMarkerLat: KnockoutComputed<number>;
+        toolsMarkerLng: KnockoutComputed<number>;
+        $mapCanvas: KnockoutObservable<JQuery> = ko.observable();
+        isMapVisible: KnockoutObservable<boolean> = ko.observable();
+        isLoaded: KnockoutObservable<boolean> = ko.observable();
+        continents: KnockoutObservableArray<Places.IServerApiModel> = ko.observableArray();
+        continentId: KnockoutObservable<number> = ko.observable();
+        continentName: KnockoutComputed<string>;
+        countries: KnockoutObservableArray<Places.IServerApiModel> = ko.observableArray();
+        countryId: KnockoutObservable<number> = ko.observable();
+        countryName: KnockoutComputed<string>;
+        countryOptionsCaption: KnockoutComputed<string>;
         private _countryId: number;
-        private allowCountryFitBounds: bool = true;
-        admin1s: KnockoutObservablePlaceModelArray = ko.observableArray();
-        admin1Id: KnockoutObservableNumber = ko.observable();
-        admin1Name: KnockoutComputed;
-        admin1OptionsCaption: KnockoutComputed;
-        admin1sLoading: KnockoutObservableBool = ko.observable(false);
+        private allowCountryFitBounds: boolean = true;
+        admin1s:  KnockoutObservableArray<Places.IServerApiModel> = ko.observableArray();
+        admin1Id: KnockoutObservable<number> = ko.observable();
+        admin1Name: KnockoutComputed<string>;
+        admin1OptionsCaption: KnockoutComputed<string>;
+        admin1sLoading: KnockoutObservable<boolean> = ko.observable(false);
         private _admin1Id: number;
-        showAdmin1Input: KnockoutComputed;
-        admin2s: KnockoutObservablePlaceModelArray = ko.observableArray();
-        admin2Id: KnockoutObservableNumber = ko.observable();
-        admin2Name: KnockoutComputed;
-        admin2OptionsCaption: KnockoutComputed;
-        admin2sLoading: KnockoutObservableBool = ko.observable(false);
+        showAdmin1Input: KnockoutComputed<boolean>;
+        admin2s:  KnockoutObservableArray<Places.IServerApiModel> = ko.observableArray();
+        admin2Id: KnockoutObservable<number> = ko.observable();
+        admin2Name: KnockoutComputed<string>;
+        admin2OptionsCaption: KnockoutComputed<string>;
+        admin2sLoading: KnockoutObservable<boolean> = ko.observable(false);
         private _admin2Id: number;
-        showAdmin2Input: KnockoutComputed;
-        admin3s: KnockoutObservablePlaceModelArray = ko.observableArray();
-        admin3Id: KnockoutObservableNumber = ko.observable();
-        admin3Name: KnockoutComputed;
-        admin3OptionsCaption: KnockoutComputed;
-        admin3sLoading: KnockoutObservableBool = ko.observable(false);
+        showAdmin2Input: KnockoutComputed<boolean>;
+        admin3s:  KnockoutObservableArray<Places.IServerApiModel> = ko.observableArray();
+        admin3Id: KnockoutObservable<number> = ko.observable();
+        admin3Name: KnockoutComputed<string>;
+        admin3OptionsCaption: KnockoutComputed<string>;
+        admin3sLoading: KnockoutObservable<boolean> = ko.observable(false);
         private _admin3Id: number;
-        showAdmin3Input: KnockoutComputed;
-        places: KnockoutObservablePlaceModelArray = ko.observableArray();
-        subAdmins: KnockoutObservablePlaceModelArray = ko.observableArray();
+        showAdmin3Input: KnockoutComputed<boolean>;
+        places:  KnockoutObservableArray<Places.IServerApiModel> = ko.observableArray();
+        subAdmins:  KnockoutObservableArray<Places.IServerApiModel> = ko.observableArray();
         loadSpinner: Spinner = new Spinner(new SpinnerOptions(400));
         saveSpinner: Spinner = new Spinner(new SpinnerOptions(400));
         $dataLoadingDialog: JQuery;
-        isEditable: () => bool;
-        isEditIconVisible: () => bool;
-        isEditing: KnockoutObservableBool = ko.observable();
+        isEditable: () => boolean;
+        isEditIconVisible: () => boolean;
+        isEditing: KnockoutObservable<boolean> = ko.observable();
 
         constructor(ownerId: number) {
             this.ownerId = ownerId;
             this._initComputedsAndSubscriptions();
 
-            this.loadSpinner.isVisible.subscribe((newValue: bool): void => {
+            this.loadSpinner.isVisible.subscribe((newValue: boolean): void => {
                 if (!this.$dataLoadingDialog || !this.$dataLoadingDialog.length) {
                     return;
                 }
@@ -80,20 +80,20 @@ module ViewModels.Establishments {
                 }
             });
 
-            this.isEditable = ko.computed((): bool => {
+            this.isEditable = ko.computed((): boolean => {
                 // may be a bad name for this property
                 // this only returns true for the edit page, returns false for add page
                 return this.ownerId && this.ownerId !== 0;
             });
 
-            this.isEditIconVisible = ko.computed((): bool => {
+            this.isEditIconVisible = ko.computed((): boolean => {
                 // whether or not to display edit icon to user
                 // should never show on add page, because is always editable
                 // should only display on edit page to make isEditing() === true
                 return this.isEditable() && !this.isEditing();
             });
 
-            this.isEditing.subscribe((newValue: bool): void => {
+            this.isEditing.subscribe((newValue: boolean): void => {
                 // when edit mode is changed, show or hide marker tool overlay
                 if (newValue) {
                     // show map marker tool
@@ -202,7 +202,7 @@ module ViewModels.Establishments {
             this.admin1OptionsCaption = ko.computed((): string => {
                 return !this.admin1sLoading() ? '[Unspecified]' : '[Loading...]';
             }).extend({ throttle: 400 });
-            this.showAdmin1Input = ko.computed((): bool => {
+            this.showAdmin1Input = ko.computed((): boolean => {
                 return this.countryId() && (this.admin1s().length > 0 || this.admin1sLoading());
             });
             this.admin1Id.subscribe((newValue: number): void => {
@@ -235,7 +235,7 @@ module ViewModels.Establishments {
             this.admin2OptionsCaption = ko.computed((): string => {
                 return !this.admin2sLoading() ? '[Unspecified]' : '[Loading...]';
             }).extend({ throttle: 400 });
-            this.showAdmin2Input = ko.computed((): bool => {
+            this.showAdmin2Input = ko.computed((): boolean => {
                 return this.countryId() && this.admin1Id()
                     && (this.admin2s().length > 0 || this.admin2sLoading());
             });
@@ -269,7 +269,7 @@ module ViewModels.Establishments {
             this.admin3OptionsCaption = ko.computed((): string => {
                 return !this.admin3sLoading() ? '[Unspecified]' : '[Loading...]';
             }).extend({ throttle: 400 });
-            this.showAdmin3Input = ko.computed((): bool => {
+            this.showAdmin3Input = ko.computed((): boolean => {
                 return this.countryId() && this.admin1Id() && this.admin2Id()
                     && (this.admin3s().length > 0 || this.admin3sLoading());
             });

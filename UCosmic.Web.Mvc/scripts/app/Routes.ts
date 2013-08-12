@@ -1,15 +1,15 @@
-/// <reference path="../jquery/jquery.d.ts" />
+/// <reference path="../typings/jquery/jquery.d.ts" />
 /// <reference path="App.ts" />
 
 module App.Routes {
 
     export var applicationPath: string = '/';
 
-    function hasTrailingSlash(value: string): bool {
+    function hasTrailingSlash(value: string): boolean {
         return value.lastIndexOf('/') == value.length - 1;
     }
 
-    function hasTrailingQM(value: string): bool {
+    function hasTrailingQM(value: string): boolean {
         return value.lastIndexOf('?') == value.length - 1;
     }
 
@@ -717,7 +717,7 @@ module App.Routes {
                     //}
                     return url;
                 }
-                export function post(startEditing: bool, startTabName: string) {
+                export function post(startEditing: boolean, startTabName: string) {
                     var url = makeUrlWithParams('my/profile') + "startEditing=" + startEditing + "&startTabName=" + startTabName;
                     return url;
                 }

@@ -1,5 +1,15 @@
 var ViewModels;
 (function (ViewModels) {
+    /// <reference path="../../typings/jquery/jquery.d.ts" />
+    /// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
+    /// <reference path="../../typings/knockout/knockout.d.ts" />
+    /// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
+    /// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
+    /// <reference path="../../app/Routes.ts" />
+    /// <reference path="../Flasher.ts" />
+    /// <reference path="../Spinner.ts" />
+    /// <reference path="Item.ts" />
+    /// <reference path="ServerApiModel.d.ts" />
     (function (Establishments) {
         var ServerNameApiModel = (function () {
             function ServerNameApiModel(ownerId) {
@@ -14,7 +24,8 @@ var ViewModels;
             }
             return ServerNameApiModel;
         })();
-        Establishments.ServerNameApiModel = ServerNameApiModel;        
+        Establishments.ServerNameApiModel = ServerNameApiModel;
+
         var EstablishmentNameTextValidator = (function () {
             function EstablishmentNameTextValidator() {
                 this._ruleName = 'validEstablishmentNameText';
@@ -26,9 +37,9 @@ var ViewModels;
             }
             EstablishmentNameTextValidator.prototype.validator = function (val, vm, callback) {
                 var _this = this;
-                if(!vm.isTextValidatableAsync()) {
+                if (!vm.isTextValidatableAsync()) {
                     callback(true);
-                } else if(!this._isAwaitingResponse) {
+                } else if (!this._isAwaitingResponse) {
                     var route = App.Routes.WebApi.Establishments.Names.validateText(vm.ownerId(), vm.id());
                     this._isAwaitingResponse = true;
                     $.post(route, vm.serializeData()).always(function () {
@@ -36,19 +47,18 @@ var ViewModels;
                     }).done(function () {
                         callback(true);
                     }).fail(function (xhr) {
-                        callback({
-                            isValid: false,
-                            message: xhr.responseText
-                        });
+                        callback({ isValid: false, message: xhr.responseText });
                     });
                 }
             };
             return EstablishmentNameTextValidator;
-        })();        
+        })();
         new EstablishmentNameTextValidator();
+
         var Name = (function () {
             function Name(js, owner) {
                 var _this = this;
+                // api observables
                 this.id = ko.observable();
                 this.ownerId = ko.observable();
                 this.text = ko.observable();
@@ -56,27 +66,36 @@ var ViewModels;
                 this.isFormerName = ko.observable();
                 this.languageName = ko.observable();
                 this.languageCode = ko.observable();
+                // other observables
                 this.editMode = ko.observable();
                 this.$textElement = undefined;
                 this.$languagesElement = undefined;
                 this.$confirmPurgeDialog = undefined;
+                // spinners
                 this.saveSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(0, false));
                 this.purgeSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(0, false));
                 this.textValidationSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(0, false));
+                // private fields
                 this.saveEditorClicked = false;
                 this.owner = owner;
-                if(!js) {
+
+                if (!js)
                     js = new ServerNameApiModel(this.owner.id);
-                }
-                if(js.id === 0) {
+                if (js.id === 0)
                     js.ownerId = this.owner.id;
-                }
+
+                // hold onto original values so they can be reset on cancel
                 this.originalValues = js;
-                ko.mapping.fromJS(js, {
-                }, this);
+
+                // map api properties to observables
+                ko.mapping.fromJS(js, {}, this);
+
+                // view computeds
                 this.isOfficialNameEnabled = ko.computed(function () {
                     return !_this.originalValues.isOfficialName;
                 });
+
+                // text validation
                 this.isTextValidatableAsync = ko.computed(function () {
                     return _this.text() !== _this.originalValues.text;
                 });
@@ -88,24 +107,27 @@ var ViewModels;
                     validEstablishmentNameText: this
                 });
                 this.text.isValidating.subscribe(function (isValidating) {
-                    if(isValidating) {
+                    if (isValidating) {
                         _this.textValidationSpinner.start();
                     } else {
                         _this.textValidationSpinner.stop();
-                        if(_this.saveEditorClicked) {
+                        if (_this.saveEditorClicked)
                             _this.saveEditor();
-                        }
                     }
                 });
+
+                // languages
                 this.selectedLanguageCode = ko.observable(this.originalValues.languageCode);
                 this.owner.languages.subscribe(function () {
                     _this.selectedLanguageCode(_this.languageCode());
                 });
+
+                // official name cannot be former name
                 this.isOfficialName.subscribe(function (newValue) {
-                    if(newValue) {
+                    if (newValue)
                         _this.isFormerName(false);
-                    }
                 });
+
                 this.mutationSuccess = function (response) {
                     _this.owner.requestNames(function () {
                         _this.owner.editingName(0);
@@ -115,8 +137,9 @@ var ViewModels;
                         App.flasher.flash(response);
                     });
                 };
+
                 this.mutationError = function (xhr) {
-                    if(xhr.status === 400) {
+                    if (xhr.status === 400) {
                         _this.owner.$genericAlertDialog.find('p.content').html(xhr.responseText.replace('\n', '<br /><br />'));
                         _this.owner.$genericAlertDialog.dialog({
                             title: 'Alert Message',
@@ -134,11 +157,12 @@ var ViewModels;
                     _this.saveSpinner.stop();
                     _this.purgeSpinner.stop();
                 };
+
                 ko.validation.group(this);
             }
             Name.prototype.clickOfficialNameCheckbox = function () {
                 var _this = this;
-                if(this.originalValues.isOfficialName) {
+                if (this.originalValues.isOfficialName) {
                     this.owner.$genericAlertDialog.find('p.content').html('In order to choose a different official name for this establishment, edit the name you wish to make the new official name.');
                     this.owner.$genericAlertDialog.dialog({
                         title: 'Alert Message',
@@ -155,30 +179,33 @@ var ViewModels;
                 }
                 return true;
             };
+
             Name.prototype.showEditor = function () {
                 var editingName = this.owner.editingName();
-                if(!editingName) {
+                if (!editingName) {
                     this.owner.editingName(this.id() || -1);
                     this.editMode(true);
                     this.$textElement.trigger('autosize');
                     this.$textElement.focus();
                 }
             };
+
             Name.prototype.saveEditor = function () {
                 this.saveEditorClicked = true;
-                if(!this.isValid()) {
+                if (!this.isValid()) {
                     this.saveEditorClicked = false;
                     this.errors.showAllMessages();
-                } else if(!this.text.isValidating()) {
+                } else if (!this.text.isValidating()) {
                     this.saveEditorClicked = false;
                     this.saveSpinner.start();
-                    if(this.id()) {
+
+                    if (this.id()) {
                         $.ajax({
                             url: App.Routes.WebApi.Establishments.Names.put(this.owner.id, this.id()),
                             type: 'PUT',
                             data: this.serializeData()
                         }).done(this.mutationSuccess).fail(this.mutationError);
-                    } else if(this.owner.id) {
+                    } else if (this.owner.id) {
                         $.ajax({
                             url: App.Routes.WebApi.Establishments.Names.post(this.owner.id),
                             type: 'POST',
@@ -188,23 +215,23 @@ var ViewModels;
                 }
                 return false;
             };
+
             Name.prototype.cancelEditor = function () {
                 this.owner.editingName(0);
-                if(this.id()) {
-                    ko.mapping.fromJS(this.originalValues, {
-                    }, this);
+                if (this.id()) {
+                    ko.mapping.fromJS(this.originalValues, {}, this);
                     this.editMode(false);
                 } else {
                     this.owner.names.shift();
                 }
             };
+
             Name.prototype.purge = function (vm, e) {
                 var _this = this;
                 e.stopPropagation();
-                if(this.owner.editingName()) {
+                if (this.owner.editingName())
                     return;
-                }
-                if(this.isOfficialName()) {
+                if (this.isOfficialName()) {
                     this.owner.$genericAlertDialog.find('p.content').html('You cannot delete an establishment\'s official name.<br />To delete this name, first assign another name as official.');
                     this.owner.$genericAlertDialog.dialog({
                         title: 'Alert Message',
@@ -228,9 +255,8 @@ var ViewModels;
                     resizable: false,
                     modal: true,
                     close: function () {
-                        if(!shouldRemainSpinning) {
+                        if (!shouldRemainSpinning)
                             _this.purgeSpinner.stop();
-                        }
                     },
                     buttons: [
                         {
@@ -243,7 +269,7 @@ var ViewModels;
                                     type: 'DELETE'
                                 }).done(_this.mutationSuccess).fail(_this.mutationError);
                             }
-                        }, 
+                        },
                         {
                             text: 'No, cancel delete',
                             click: function () {
@@ -255,6 +281,7 @@ var ViewModels;
                     ]
                 });
             };
+
             Name.prototype.serializeData = function () {
                 return {
                     id: this.id(),
@@ -267,7 +294,7 @@ var ViewModels;
             };
             return Name;
         })();
-        Establishments.Name = Name;        
+        Establishments.Name = Name;
     })(ViewModels.Establishments || (ViewModels.Establishments = {}));
     var Establishments = ViewModels.Establishments;
 })(ViewModels || (ViewModels = {}));

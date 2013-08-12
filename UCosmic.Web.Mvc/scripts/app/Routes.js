@@ -1,90 +1,103 @@
 var App;
 (function (App) {
+    /// <reference path="../typings/jquery/jquery.d.ts" />
+    /// <reference path="App.ts" />
     (function (Routes) {
         Routes.applicationPath = '/';
+
         function hasTrailingSlash(value) {
             return value.lastIndexOf('/') == value.length - 1;
         }
+
         function hasTrailingQM(value) {
             return value.lastIndexOf('?') == value.length - 1;
         }
+
         (function (WebApi) {
             WebApi.urlPrefix = 'api';
+
             function makeUrl(relativeUrl) {
                 var apiPrefix = WebApi.urlPrefix;
-                if(!hasTrailingSlash(apiPrefix)) {
+                if (!hasTrailingSlash(apiPrefix))
                     apiPrefix = apiPrefix + '/';
-                }
-                var url = Routes.applicationPath + apiPrefix + relativeUrl;
-                if(!hasTrailingSlash(url)) {
+                var url = App.Routes.applicationPath + apiPrefix + relativeUrl;
+                if (!hasTrailingSlash(url))
                     url = url + '/';
-                }
                 return url;
             }
+
             function makeUrlWithParams(relativeUrl) {
                 var apiPrefix = WebApi.urlPrefix;
-                if(!hasTrailingSlash(apiPrefix)) {
+                if (!hasTrailingSlash(apiPrefix))
                     apiPrefix = apiPrefix + '/';
-                }
-                var url = Routes.applicationPath + apiPrefix + relativeUrl;
-                if(!hasTrailingSlash(url)) {
+                var url = App.Routes.applicationPath + apiPrefix + relativeUrl;
+                if (!hasTrailingSlash(url))
                     url = url + '?';
-                }
                 return url;
             }
+
             (function (Identity) {
                 function signIn() {
                     return makeUrl('sign-in');
                 }
                 Identity.signIn = signIn;
+
                 function signOut() {
                     return makeUrl('sign-out');
                 }
                 Identity.signOut = signOut;
+
                 (function (Users) {
                     function get(id) {
                         var url = 'users';
-                        if(id) {
+                        if (id)
                             url += '/' + id;
-                        }
                         return makeUrl(url);
                     }
                     Users.get = get;
+
                     function post() {
                         return makeUrl('users');
                     }
                     Users.post = post;
+
                     function validateName(id) {
                         id = id ? id : 0;
                         var url = 'users/' + id + '/validate-name';
                         return makeUrl(url);
                     }
                     Users.validateName = validateName;
+
                     function del(id) {
                         var url = 'users/' + id;
                         return makeUrl(url);
                     }
                     Users.del = del;
+
                     (function (Roles) {
                         function get(userId) {
                             var url = 'users/' + userId + '/roles';
                             return makeUrl(url);
                         }
                         Roles.get = get;
+
                         function put(userId, roleId) {
                             var url = 'users/' + userId + '/roles/' + roleId;
                             return makeUrl(url);
                         }
                         Roles.put = put;
+
                         function del(userId, roleId) {
                             return put(userId, roleId);
                         }
                         Roles.del = del;
+
                         function validateGrant(userId, roleId) {
                             var url = 'users/' + userId + '/roles/' + roleId + '/validate-grant';
                             return makeUrl(url);
                         }
                         Roles.validateGrant = validateGrant;
+
                         function validateRevoke(userId, roleId) {
                             var url = 'users/' + userId + '/roles/' + roleId + '/validate-revoke';
                             return makeUrl(url);
@@ -94,12 +107,12 @@ var App;
                     var Roles = Users.Roles;
                 })(Identity.Users || (Identity.Users = {}));
                 var Users = Identity.Users;
+
                 (function (Roles) {
                     function get(roleId) {
                         var url = 'roles';
-                        if(roleId) {
+                        if (roleId)
                             url += '/' + roleId;
-                        }
                         return makeUrl(url);
                     }
                     Roles.get = get;
@@ -107,6 +120,7 @@ var App;
                 var Roles = Identity.Roles;
             })(WebApi.Identity || (WebApi.Identity = {}));
             var Identity = WebApi.Identity;
+
             (function (Languages) {
                 function get() {
                     return makeUrl('languages');
@@ -114,6 +128,7 @@ var App;
                 Languages.get = get;
             })(WebApi.Languages || (WebApi.Languages = {}));
             var Languages = WebApi.Languages;
+
             (function (Countries) {
                 function get() {
                     return makeUrl('countries');
@@ -121,15 +136,16 @@ var App;
                 Countries.get = get;
             })(WebApi.Countries || (WebApi.Countries = {}));
             var Countries = WebApi.Countries;
+
             (function (Places) {
                 function get(placeId) {
                     var url = 'places';
-                    if(placeId) {
+                    if (placeId)
                         url += '/' + placeId;
-                    }
                     return makeUrl(url);
                 }
                 Places.get = get;
+
                 (function (ByCoordinates) {
                     function get(latitude, longitude) {
                         var url = 'places/by-coordinates/' + latitude + '/' + longitude;
@@ -140,144 +156,168 @@ var App;
                 var ByCoordinates = Places.ByCoordinates;
             })(WebApi.Places || (WebApi.Places = {}));
             var Places = WebApi.Places;
+
             (function (Establishments) {
                 function get(establishmentId) {
                     var url = 'establishments';
-                    if(establishmentId) {
+                    if (establishmentId)
                         url += '/' + establishmentId;
-                    }
                     return makeUrl(url);
                 }
                 Establishments.get = get;
+
                 function getChildren(establishmentId) {
                     return makeUrl('establishments/{0}/children'.format(establishmentId));
                 }
                 Establishments.getChildren = getChildren;
+
                 function post() {
                     return makeUrl('establishments');
                 }
                 Establishments.post = post;
+
                 function put(establishmentId) {
                     return get(establishmentId);
                 }
                 Establishments.put = put;
+
                 function validateCeebCode(establishmentId) {
                     return makeUrl('establishments/' + establishmentId + '/validate-ceeb-code');
                 }
                 Establishments.validateCeebCode = validateCeebCode;
+
                 function validateUCosmicCode(establishmentId) {
                     return makeUrl('establishments/' + establishmentId + '/validate-ucosmic-code');
                 }
                 Establishments.validateUCosmicCode = validateUCosmicCode;
+
                 function validateParentId(establishmentId) {
                     return makeUrl('establishments/' + establishmentId + '/validate-parent-id');
                 }
                 Establishments.validateParentId = validateParentId;
+
                 var Names = (function () {
-                    function Names() { }
-                    Names.get = function get(establishmentId, establishmentNameId) {
+                    function Names() {
+                    }
+                    Names.get = function (establishmentId, establishmentNameId) {
                         var url = 'establishments/' + establishmentId + '/names';
-                        if(establishmentNameId) {
+                        if (establishmentNameId)
                             url += '/' + establishmentNameId;
-                        }
                         return makeUrl(url);
                     };
-                    Names.post = function post(establishmentId) {
+
+                    Names.post = function (establishmentId) {
                         return Names.get(establishmentId);
                     };
-                    Names.put = function put(establishmentId, establishmentNameId) {
+
+                    Names.put = function (establishmentId, establishmentNameId) {
                         return makeUrl('establishments/' + establishmentId + '/names/' + establishmentNameId);
                     };
-                    Names.del = function del(establishmentId, establishmentNameId) {
+
+                    Names.del = function (establishmentId, establishmentNameId) {
                         return Names.put(establishmentId, establishmentNameId);
                     };
-                    Names.validateText = function validateText(establishmentId, establishmentNameId) {
+
+                    Names.validateText = function (establishmentId, establishmentNameId) {
                         return makeUrl('establishments/' + establishmentId + '/names/' + establishmentNameId + '/validate-text');
                     };
                     return Names;
                 })();
-                Establishments.Names = Names;                
+                Establishments.Names = Names;
+
                 var Urls = (function () {
-                    function Urls() { }
-                    Urls.get = function get(establishmentId, establishmentUrlId) {
+                    function Urls() {
+                    }
+                    Urls.get = function (establishmentId, establishmentUrlId) {
                         var url = 'establishments/' + establishmentId + '/urls';
-                        if(establishmentUrlId) {
+                        if (establishmentUrlId)
                             url += '/' + establishmentUrlId;
-                        }
                         return makeUrl(url);
                     };
-                    Urls.post = function post(establishmentId) {
+
+                    Urls.post = function (establishmentId) {
                         return Urls.get(establishmentId);
                     };
-                    Urls.put = function put(establishmentId, establishmentUrlId) {
+
+                    Urls.put = function (establishmentId, establishmentUrlId) {
                         return makeUrl('establishments/' + establishmentId + '/urls/' + establishmentUrlId);
                     };
-                    Urls.del = function del(establishmentId, establishmentUrlId) {
+
+                    Urls.del = function (establishmentId, establishmentUrlId) {
                         return Urls.put(establishmentId, establishmentUrlId);
                     };
-                    Urls.validateValue = function validateValue(establishmentId, establishmentUrlId) {
+
+                    Urls.validateValue = function (establishmentId, establishmentUrlId) {
                         return makeUrl('establishments/' + establishmentId + '/urls/' + establishmentUrlId + '/validate-value');
                     };
                     return Urls;
                 })();
-                Establishments.Urls = Urls;                
+                Establishments.Urls = Urls;
+
                 var Locations = (function () {
-                    function Locations() { }
-                    Locations.get = function get(establishmentId) {
+                    function Locations() {
+                    }
+                    Locations.get = function (establishmentId) {
                         var url = 'establishments/' + establishmentId + '/location';
                         return makeUrl(url);
                     };
-                    Locations.put = function put(establishmentId) {
-                        return Locations.get(establishmentId);
+
+                    Locations.put = function (establishmentId) {
+                        return get(establishmentId);
                     };
                     return Locations;
                 })();
-                Establishments.Locations = Locations;                
+                Establishments.Locations = Locations;
+
                 var Categories = (function () {
-                    function Categories() { }
-                    Categories.get = function get(id) {
+                    function Categories() {
+                    }
+                    Categories.get = function (id) {
                         var url = 'establishment-categories';
-                        if(id) {
+                        if (id)
                             url += '/' + id;
-                        }
                         return makeUrl(url);
                     };
                     return Categories;
                 })();
-                Establishments.Categories = Categories;                
+                Establishments.Categories = Categories;
             })(WebApi.Establishments || (WebApi.Establishments = {}));
             var Establishments = WebApi.Establishments;
+
             (function (Agreements) {
                 function get(agreementId) {
                     return makeUrl('agreements/' + agreementId);
                 }
                 Agreements.get = get;
+
                 function put(agreementId) {
                     var url = 'agreements/{0}'.format(agreementId.toString());
+
                     return makeUrl(url);
                 }
                 Agreements.put = put;
+
                 function post() {
                     return makeUrl('agreements');
                 }
                 Agreements.post = post;
+
                 (function (Participants) {
                     function get(agreementId, establishmentId) {
                         var url = 'agreements/{0}/participants'.format(agreementId);
-                        if(establishmentId) {
+                        if (establishmentId)
                             url += '/' + establishmentId;
-                        }
                         return makeUrl(url);
                     }
                     Participants.get = get;
                 })(Agreements.Participants || (Agreements.Participants = {}));
                 var Participants = Agreements.Participants;
+
                 (function (Contacts) {
                     function get(agreementId, contactId) {
                         var url = 'agreements/{0}/contacts'.format(agreementId);
-                        if(contactId) {
+                        if (contactId)
                             url += '/' + contactId;
-                        }
                         return makeUrl(url);
                     }
                     Contacts.get = get;
@@ -296,12 +336,12 @@ var App;
                     Contacts.del = del;
                 })(Agreements.Contacts || (Agreements.Contacts = {}));
                 var Contacts = Agreements.Contacts;
+
                 (function (Files) {
                     function get(agreementId, fileId) {
                         var url = 'agreements/{0}/files'.format(agreementId);
-                        if(fileId) {
+                        if (fileId)
                             url += '/' + fileId;
-                        }
                         return makeUrl(url);
                     }
                     Files.get = get;
@@ -318,6 +358,7 @@ var App;
                         return put(agreementId, fileId);
                     }
                     Files.del = del;
+
                     (function (Validate) {
                         function post() {
                             return makeUrl('agreements/files/validate');
@@ -325,15 +366,16 @@ var App;
                         Validate.post = post;
                     })(Files.Validate || (Files.Validate = {}));
                     var Validate = Files.Validate;
+
                     (function (Content) {
                         function view(agreementId, fileId) {
-                            var url = Files.get(agreementId, fileId);
+                            var url = Agreements.Files.get(agreementId, fileId);
                             url += '/content';
                             return makeUrl(url);
                         }
                         Content.view = view;
                         function download(agreementId, fileId) {
-                            var url = Files.get(agreementId, fileId);
+                            var url = Agreements.Files.get(agreementId, fileId);
                             url += '/download';
                             return makeUrl(url);
                         }
@@ -342,6 +384,7 @@ var App;
                     var Content = Files.Content;
                 })(Agreements.Files || (Agreements.Files = {}));
                 var Files = Agreements.Files;
+
                 (function (Settings) {
                     function get() {
                         return makeUrl('agreements/settings');
@@ -349,12 +392,12 @@ var App;
                     Settings.get = get;
                 })(Agreements.Settings || (Agreements.Settings = {}));
                 var Settings = Agreements.Settings;
+
                 (function (UmbrellaOptions) {
                     function get(agreementId) {
                         var url = 'agreements/0/umbrellas';
-                        if(agreementId) {
+                        if (agreementId)
                             url = url.replace('0', agreementId.toString());
-                        }
                         return makeUrl(url);
                     }
                     UmbrellaOptions.get = get;
@@ -362,6 +405,7 @@ var App;
                 var UmbrellaOptions = Agreements.UmbrellaOptions;
             })(WebApi.Agreements || (WebApi.Agreements = {}));
             var Agreements = WebApi.Agreements;
+
             (function (My) {
                 (function (Profile) {
                     function get() {
@@ -374,12 +418,12 @@ var App;
                     Profile.put = put;
                 })(My.Profile || (My.Profile = {}));
                 var Profile = My.Profile;
+
                 (function (Affiliations) {
                     function get(affiliationId) {
                         var url = 'my/affiliations';
-                        if(affiliationId) {
+                        if (affiliationId)
                             url += '/' + affiliationId;
-                        }
                         return makeUrl(url);
                     }
                     Affiliations.get = get;
@@ -401,12 +445,12 @@ var App;
                     Affiliations.del = del;
                 })(My.Affiliations || (My.Affiliations = {}));
                 var Affiliations = My.Affiliations;
+
                 (function (Photo) {
                     function get(params) {
                         var url = post();
-                        if(params) {
+                        if (params)
                             url += '?' + $.param(params);
-                        }
                         return url;
                     }
                     Photo.get = get;
@@ -424,12 +468,12 @@ var App;
                     Photo.del = del;
                 })(My.Photo || (My.Photo = {}));
                 var Photo = My.Photo;
+
                 (function (Degrees) {
                     function get(degreeId) {
                         var url = 'my/degrees';
-                        if(degreeId) {
+                        if (degreeId)
                             url += '/' + degreeId;
-                        }
                         return makeUrl(url);
                     }
                     Degrees.get = get;
@@ -449,84 +493,93 @@ var App;
                 var Degrees = My.Degrees;
             })(WebApi.My || (WebApi.My = {}));
             var My = WebApi.My;
+
             (function (People) {
                 function get(personId) {
                     var url = 'people';
-                    if(personId) {
+                    if (personId)
                         url += '/' + personId;
-                    }
                     return makeUrl(url);
                 }
                 People.get = get;
+
                 function del(personId) {
                     var url = 'people/' + personId;
                     url = makeUrl(url);
                     return url;
                 }
                 People.del = del;
+
                 (function (Photo) {
                     function get(personId, params) {
                         var url = 'people/' + personId + '/photo';
                         url = makeUrl(url);
-                        if(params) {
+                        if (params)
                             url += '?' + $.param(params);
-                        }
                         return url;
                     }
                     Photo.get = get;
                 })(People.Photo || (People.Photo = {}));
                 var Photo = People.Photo;
+
                 (function (Names) {
                     var Salutations = (function () {
-                        function Salutations() { }
-                        Salutations.get = function get() {
+                        function Salutations() {
+                        }
+                        Salutations.get = function () {
                             return makeUrl('person-names/salutations');
                         };
                         return Salutations;
                     })();
-                    Names.Salutations = Salutations;                    
+                    Names.Salutations = Salutations;
                     var Suffixes = (function () {
-                        function Suffixes() { }
-                        Suffixes.get = function get() {
+                        function Suffixes() {
+                        }
+                        Suffixes.get = function () {
                             return makeUrl('person-names/suffixes');
                         };
                         return Suffixes;
                     })();
-                    Names.Suffixes = Suffixes;                    
+                    Names.Suffixes = Suffixes;
                     var DeriveDisplayName = (function () {
-                        function DeriveDisplayName() { }
-                        DeriveDisplayName.get = function get() {
+                        function DeriveDisplayName() {
+                        }
+                        DeriveDisplayName.get = function () {
                             return makeUrl('person-names/derive-display-name');
                         };
                         return DeriveDisplayName;
                     })();
-                    Names.DeriveDisplayName = DeriveDisplayName;                    
+                    Names.DeriveDisplayName = DeriveDisplayName;
                 })(People.Names || (People.Names = {}));
                 var Names = People.Names;
             })(WebApi.People || (WebApi.People = {}));
             var People = WebApi.People;
+
             (function (Employees) {
                 (function (ModuleSettings) {
                     var FacultyRanks = (function () {
-                        function FacultyRanks() { }
-                        FacultyRanks.get = function get() {
+                        function FacultyRanks() {
+                        }
+                        FacultyRanks.get = function () {
                             return makeUrl('my/employee-module-settings/faculty-ranks');
                         };
                         return FacultyRanks;
                     })();
-                    ModuleSettings.FacultyRanks = FacultyRanks;                    
+                    ModuleSettings.FacultyRanks = FacultyRanks;
                     var ActivityTypes = (function () {
-                        function ActivityTypes() { }
-                        ActivityTypes.get = function get() {
+                        function ActivityTypes() {
+                        }
+                        ActivityTypes.get = function () {
                             return makeUrl('my/employee-module-settings/activity-types');
                         };
                         return ActivityTypes;
                     })();
-                    ModuleSettings.ActivityTypes = ActivityTypes;                    
+                    ModuleSettings.ActivityTypes = ActivityTypes;
                 })(Employees.ModuleSettings || (Employees.ModuleSettings = {}));
                 var ModuleSettings = Employees.ModuleSettings;
             })(WebApi.Employees || (WebApi.Employees = {}));
             var Employees = WebApi.Employees;
+
             (function (FacultyStaff) {
                 function getSummary() {
                     return makeUrl('faculty-staff/summary');
@@ -534,78 +587,91 @@ var App;
                 FacultyStaff.getSummary = getSummary;
             })(WebApi.FacultyStaff || (WebApi.FacultyStaff = {}));
             var FacultyStaff = WebApi.FacultyStaff;
+
             (function (Activities) {
                 function get(activityId) {
                     var url = makeUrl('activities');
-                    if(activityId) {
+                    if (activityId) {
                         url += '/' + activityId;
                     }
                     return url;
                 }
                 Activities.get = get;
+
                 function post() {
                     return makeUrl('activities');
                 }
                 Activities.post = post;
+
                 function getEdit(activityId) {
                     return makeUrl('activities/' + activityId + "/edit");
                 }
                 Activities.getEdit = getEdit;
+
                 function getEditState(activityId) {
                     return makeUrl('activities/' + activityId + "/edit-state");
                 }
                 Activities.getEditState = getEditState;
+
                 function put(activityId) {
                     return makeUrl('activities/' + activityId);
                 }
                 Activities.put = put;
+
                 function putEdit(activityId) {
                     return makeUrl('activities/' + activityId + "/edit");
                 }
                 Activities.putEdit = putEdit;
+
                 function del(activityId) {
                     return makeUrl('activities/' + activityId);
                 }
                 Activities.del = del;
+
                 (function (Documents) {
                     function get(activityId, documentId, activityMode) {
                         var url = makeUrl('activities/' + activityId + '/documents');
-                        if(documentId) {
+                        if (documentId) {
                             url += '/' + documentId;
-                        } else if(activityId) {
+                        } else if (activityId) {
                             url += '/?activityMode=' + activityMode;
                         }
                         return url;
                     }
                     Documents.get = get;
+
                     function post(activityId, activityMode) {
                         var url = makeUrl('activities/' + activityId + '/documents/');
                         url += '?activityMode=' + activityMode;
                         return url;
                     }
                     Documents.post = post;
+
                     function put(activityId, documentId) {
                         return makeUrl('activities/' + activityId + '/documents/' + documentId);
                     }
                     Documents.put = put;
+
                     function del(activityId, documentId) {
                         return makeUrl('activities/' + activityId + '/documents/' + documentId);
                     }
                     Documents.del = del;
+
                     function rename(activityId, documentId) {
                         return makeUrl('activities/' + activityId + '/documents/' + documentId + "/title");
                     }
                     Documents.rename = rename;
+
                     function validateUpload() {
                         return makeUrl('activities/documents/validate-upload');
                     }
                     Documents.validateUpload = validateUpload;
+
                     (function (Thumbnail) {
                         function get(activityId, documentId, params) {
                             var url = makeUrl('activities/' + activityId + '/documents/' + documentId + '/thumbnail');
-                            if(params) {
+                            if (params)
                                 url += '?' + $.param(params);
-                            }
                             return url;
                         }
                         Thumbnail.get = get;
@@ -613,6 +679,7 @@ var App;
                     var Thumbnail = Documents.Thumbnail;
                 })(Activities.Documents || (Activities.Documents = {}));
                 var Documents = Activities.Documents;
+
                 (function (Locations) {
                     function get() {
                         return makeUrl('activity-locations');
@@ -620,6 +687,7 @@ var App;
                     Locations.get = get;
                 })(Activities.Locations || (Activities.Locations = {}));
                 var Locations = Activities.Locations;
+
                 (function (CountryCounts) {
                     function get() {
                         return makeUrl('activity-country-counts');
@@ -633,12 +701,12 @@ var App;
                 var CountryCounts = Activities.CountryCounts;
             })(WebApi.Activities || (WebApi.Activities = {}));
             var Activities = WebApi.Activities;
+
             (function (GeographicExpertise) {
                 function get(expertiseId) {
                     var url = 'geographic-expertise';
-                    if(expertiseId) {
+                    if (expertiseId)
                         url += '/' + expertiseId;
-                    }
                     return makeUrl(url);
                 }
                 GeographicExpertise.get = get;
@@ -656,12 +724,12 @@ var App;
                 GeographicExpertise.del = del;
             })(WebApi.GeographicExpertise || (WebApi.GeographicExpertise = {}));
             var GeographicExpertise = WebApi.GeographicExpertise;
+
             (function (LanguageExpertise) {
                 function get(expertiseId) {
                     var url = 'language-expertise';
-                    if(expertiseId) {
+                    if (expertiseId)
                         url += '/' + expertiseId;
-                    }
                     return makeUrl(url);
                 }
                 LanguageExpertise.get = get;
@@ -686,12 +754,12 @@ var App;
                 var Proficiencies = LanguageExpertise.Proficiencies;
             })(WebApi.LanguageExpertise || (WebApi.LanguageExpertise = {}));
             var LanguageExpertise = WebApi.LanguageExpertise;
+
             (function (InternationalAffiliations) {
                 function get(affiliationId) {
                     var url = 'international-affiliations';
-                    if(affiliationId) {
+                    if (affiliationId)
                         url += '/' + affiliationId;
-                    }
                     return makeUrl(url);
                 }
                 InternationalAffiliations.get = get;
@@ -709,29 +777,50 @@ var App;
                 InternationalAffiliations.del = del;
             })(WebApi.InternationalAffiliations || (WebApi.InternationalAffiliations = {}));
             var InternationalAffiliations = WebApi.InternationalAffiliations;
+
+            //export module Degrees {
+            //    export function get (degreeId?: number): string {
+            //        var url = 'degrees';
+            //        if (degreeId) url += '/' + degreeId;
+            //        return makeUrl(url);
+            //    }
+            //    export function post(): string {
+            //        return get();
+            //    }
+            //    export function put(degreeId: number): string {
+            //        return get(degreeId);
+            //    }
+            //    export function del(degreeId: number): string {
+            //        return get(degreeId);
+            //    }
+            //}
             (function (Affiliations) {
                 function get(affiliationId) {
                     var url = makeUrl('affiliations');
-                    if(affiliationId) {
+                    if (affiliationId) {
                         url += '/' + affiliationId;
                     }
                     return url;
                 }
                 Affiliations.get = get;
+
                 function post() {
                     return makeUrl('affiliations');
                 }
                 Affiliations.post = post;
+
                 function put(affiliationId) {
                     return makeUrl('affiliations/' + affiliationId);
                 }
                 Affiliations.put = put;
+
                 function del(affiliationId) {
                     return makeUrl('affiliations/' + affiliationId);
                 }
                 Affiliations.del = del;
             })(WebApi.Affiliations || (WebApi.Affiliations = {}));
             var Affiliations = WebApi.Affiliations;
+
             (function (Uploads) {
                 function post() {
                     return makeUrl('uploads');
@@ -746,21 +835,22 @@ var App;
             var Uploads = WebApi.Uploads;
         })(Routes.WebApi || (Routes.WebApi = {}));
         var WebApi = Routes.WebApi;
+
         (function (Mvc) {
             function makeUrl(relativeUrl) {
-                var url = Routes.applicationPath + relativeUrl;
-                if(!hasTrailingSlash(url)) {
+                var url = App.Routes.applicationPath + relativeUrl;
+                if (!hasTrailingSlash(url))
                     url = url + '/';
-                }
                 return url;
             }
+
             function makeUrlWithParams(relativeUrl) {
-                var url = Routes.applicationPath + relativeUrl;
-                if(!hasTrailingQM(url)) {
+                var url = App.Routes.applicationPath + relativeUrl;
+                if (!hasTrailingQM(url))
                     url = url + '?';
-                }
                 return url;
             }
+
             (function (Establishments) {
                 function show(establishmentId) {
                     return makeUrl('establishments/' + establishmentId);
@@ -768,14 +858,14 @@ var App;
                 Establishments.show = show;
                 function created(params) {
                     var url = makeUrl('establishments/created');
-                    if(params) {
+                    if (params)
                         url += '?' + $.param(params);
-                    }
                     return url;
                 }
                 Establishments.created = created;
             })(Mvc.Establishments || (Mvc.Establishments = {}));
             var Establishments = Mvc.Establishments;
+
             (function (Shared) {
                 function show(SharedId) {
                     return makeUrl('Shared/' + SharedId);
@@ -783,21 +873,20 @@ var App;
                 Shared.show = show;
                 function created(params) {
                     var url = makeUrl('Shared/created');
-                    if(params) {
+                    if (params)
                         url += '?' + $.param(params);
-                    }
                     return url;
                 }
                 Shared.created = created;
             })(Mvc.Shared || (Mvc.Shared = {}));
             var Shared = Mvc.Shared;
+
             (function (Identity) {
                 (function (Users) {
                     function created(params) {
                         var url = makeUrl('users/created');
-                        if(params) {
+                        if (params)
                             url += '?' + $.param(params);
-                        }
                         return url;
                     }
                     Users.created = created;
@@ -805,10 +894,16 @@ var App;
                 var Users = Identity.Users;
             })(Mvc.Identity || (Mvc.Identity = {}));
             var Identity = Mvc.Identity;
+
             (function (My) {
                 (function (Profile) {
                     function get(tab) {
                         var url = makeUrl('my/profile');
+
+                        // Workaround until we figure out how to go from ?tab to #/
+                        //if (tab != null) {
+                        //    url = makeUrlWithParams( 'my/profile' ) + "tab=" + tab;
+                        //}
                         return url;
                     }
                     Profile.get = get;
@@ -823,6 +918,7 @@ var App;
                     Profile.activityEdit = activityEdit;
                 })(My.Profile || (My.Profile = {}));
                 var Profile = My.Profile;
+
                 (function (InternationalAffiliations) {
                     function formatUrl(resource) {
                         return 'my/international-affiliations/{0}'.format(resource);
@@ -837,6 +933,7 @@ var App;
                     InternationalAffiliations.edit = edit;
                 })(My.InternationalAffiliations || (My.InternationalAffiliations = {}));
                 var InternationalAffiliations = My.InternationalAffiliations;
+
                 (function (Degrees) {
                     function formatUrl(resource) {
                         return 'my/degrees/{0}'.format(resource);
@@ -851,6 +948,7 @@ var App;
                     Degrees.edit = edit;
                 })(My.Degrees || (My.Degrees = {}));
                 var Degrees = My.Degrees;
+
                 (function (GeographicExpertise) {
                     function formatUrl(resource) {
                         return 'my/geographic-expertise/{0}'.format(resource);
@@ -865,6 +963,7 @@ var App;
                     GeographicExpertise.edit = edit;
                 })(My.GeographicExpertise || (My.GeographicExpertise = {}));
                 var GeographicExpertise = My.GeographicExpertise;
+
                 (function (LanguageExpertise) {
                     function formatUrl(resource) {
                         return 'my/language-expertise/{0}'.format(resource);
@@ -883,14 +982,15 @@ var App;
             var My = Mvc.My;
         })(Routes.Mvc || (Routes.Mvc = {}));
         var Mvc = Routes.Mvc;
+
         (function (Content) {
             function makeUrl(relativeUrl) {
-                var url = Routes.applicationPath + relativeUrl;
-                if(!hasTrailingSlash(url)) {
+                var url = App.Routes.applicationPath + relativeUrl;
+                if (!hasTrailingSlash(url))
                     url = url + '/';
-                }
                 return url;
             }
+
             function styles(relativePath) {
                 var url = 'styles';
                 url = makeUrl(url);

@@ -1,11 +1,10 @@
-/// <reference path="../../jquery/jquery.d.ts" />
-/// <reference path="../../jquery/jqueryui.d.ts" />
-/// <reference path="../../ko/knockout.d.ts" />
-/// <reference path="../../ko/knockout.mapping.d.ts" />
-/// <reference path="../../ko/knockout.extensions.d.ts" />
-/// <reference path="../../ko/knockout.validation.d.ts" />
-/// <reference path="../../kendo/kendo.all.d.ts" />
-/// <reference path="../../sammy/sammyjs.d.ts" />
+/// <reference path="../../typings/jquery/jquery.d.ts" />
+/// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
+/// <reference path="../../typings/knockout/knockout.d.ts" />
+/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
+/// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
+/// <reference path="../../typings/kendo/kendo.all.d.ts" />
+/// <reference path="../../typings/sammyjs/sammyjs.d.ts" />
 /// <reference path="../../app/Routes.ts" />
 /// <reference path="../Flasher.ts" />
 /// <reference path="../Spinner.ts" />
@@ -16,27 +15,26 @@
 /// <reference path="../languageExpertises/LanguageExpertises.ts" />
 /// <reference path="../degrees/Degrees.ts" />
 /// <reference path="../internationalAffiliations/InternationalAffiliations.ts" />
-/// <reference path="../../kendo/kendo.all.d.ts" />
 
 module ViewModels.My {
 
     export class Affiliation {
-        id: KnockoutObservableNumber = ko.observable();
-        establishmentId: KnockoutObservableNumber = ko.observable();
-        establishment: KnockoutObservableString = ko.observable();
-        jobTitles: KnockoutObservableNumber = ko.observable();
-        isDefault: KnockoutObservableBool = ko.observable(false);
-        isAcknowledged: KnockoutObservableBool = ko.observable(false);
-        isClaimingStudent: KnockoutObservableBool = ko.observable(false);
-        isClaimingEmployee: KnockoutObservableBool = ko.observable(false);
-        isClaimingInternationalOffice: KnockoutObservableBool = ko.observable(false);
-        isClaimingAdministrator: KnockoutObservableBool = ko.observable(false);
-        isClaimingFaculty: KnockoutObservableBool = ko.observable(false);
-        isClaimingStaff: KnockoutObservableBool = ko.observable(false);
-        campusId: KnockoutObservableAny = ko.observable(null);      // nullable
-        collegeId: KnockoutObservableAny = ko.observable(null);     // nullable
-        departmentId: KnockoutObservableAny = ko.observable(null);  // nullable
-        facultyRankId: KnockoutObservableAny = ko.observable(null); // nullable
+        id: KnockoutObservable<number> = ko.observable();
+        establishmentId: KnockoutObservable<number> = ko.observable();
+        establishment: KnockoutObservable<string> = ko.observable();
+        jobTitles: KnockoutObservable<number> = ko.observable();
+        isDefault: KnockoutObservable<boolean> = ko.observable(false);
+        isAcknowledged: KnockoutObservable<boolean> = ko.observable(false);
+        isClaimingStudent: KnockoutObservable<boolean> = ko.observable(false);
+        isClaimingEmployee: KnockoutObservable<boolean> = ko.observable(false);
+        isClaimingInternationalOffice: KnockoutObservable<boolean> = ko.observable(false);
+        isClaimingAdministrator: KnockoutObservable<boolean> = ko.observable(false);
+        isClaimingFaculty: KnockoutObservable<boolean> = ko.observable(false);
+        isClaimingStaff: KnockoutObservable<boolean> = ko.observable(false);
+        campusId: KnockoutObservable<any> = ko.observable(null);      // nullable
+        collegeId: KnockoutObservable<any> = ko.observable(null);     // nullable
+        departmentId: KnockoutObservable<any> = ko.observable(null);  // nullable
+        facultyRankId: KnockoutObservable<any> = ko.observable(null); // nullable
 
         campus: string;
         college: string;
@@ -47,7 +45,7 @@ module ViewModels.My {
     export class Profile implements KnockoutValidationGroup {
 
         private _sammy: Sammy.Application = Sammy();
-        //private _isInitialized: bool = false;
+        //private _isInitialized: boolean = false;
         private _originalValues: IServerProfileApiModel;
         private _activitiesViewModel: ViewModels.Activities.ActivityList = null;
         private _geographicExpertisesViewModel: ViewModels.GeographicExpertises.GeographicExpertiseList = null;
@@ -55,16 +53,16 @@ module ViewModels.My {
         private _degreesViewModel: ViewModels.Degrees.DegreeList = null;
         private _internationalAffiliationsViewModel: ViewModels.InternationalAffiliations.InternationalAffiliationList = null;
 
-        hasPhoto: KnockoutObservableBool = ko.observable();
-        photoUploadError: KnockoutObservableString = ko.observable();
+        hasPhoto: KnockoutObservable<boolean> = ko.observable();
+        photoUploadError: KnockoutObservable<string> = ko.observable();
         static photoUploadUnexpectedErrorMessage = 'UCosmic experienced an unexpected error managing your photo, please try again. If you continue to experience this issue, please use the Feedback & Support link on this page to report it.';
-        photoSrc: KnockoutObservableString = ko.observable(
+        photoSrc: KnockoutObservable<string> = ko.observable(
             App.Routes.WebApi.My.Photo.get({ maxSide: 128, refresh: new Date().toUTCString() }));
         photoUploadSpinner = new Spinner(new SpinnerOptions(400));
         photoDeleteSpinner = new Spinner(new SpinnerOptions(400));
 
-        isDisplayNameDerived: KnockoutObservableBool = ko.observable();
-        displayName: KnockoutObservableString = ko.observable();
+        isDisplayNameDerived: KnockoutObservable<boolean> = ko.observable();
+        displayName: KnockoutObservable<string> = ko.observable();
         private _userDisplayName: string = '';
 
         campuses: any[];
@@ -73,42 +71,42 @@ module ViewModels.My {
 
         personId: number = 0;
 
-        salutation: KnockoutObservableString = ko.observable();
-        firstName: KnockoutObservableString = ko.observable();
-        middleName: KnockoutObservableString = ko.observable();
-        lastName: KnockoutObservableString = ko.observable();
-        suffix: KnockoutObservableString = ko.observable();
+        salutation: KnockoutObservable<string> = ko.observable();
+        firstName: KnockoutObservable<string> = ko.observable();
+        middleName: KnockoutObservable<string> = ko.observable();
+        lastName: KnockoutObservable<string> = ko.observable();
+        suffix: KnockoutObservable<string> = ko.observable();
 
-        isFacultyRankEditable: () => bool;
-        isFacultyRankVisible: () => bool;
+        isFacultyRankEditable: () => boolean;
+        isFacultyRankVisible: () => boolean;
         facultyRankText: () => string;
-        facultyRanks: KnockoutObservableFacultyRankModelArray = ko.observableArray();
-        facultyRankId: KnockoutObservableAny = ko.observable(null);
+        facultyRanks: KnockoutObservableArray<Employees.IServerFacultyRankApiModel> = ko.observableArray();
+        facultyRankId: KnockoutObservable<any> = ko.observable(null);
 
-        defaultEstablishmentHasCampuses: KnockoutObservableBool = ko.observable(false);
+        defaultEstablishmentHasCampuses: KnockoutObservable<boolean> = ko.observable(false);
 
-        preferredTitle: KnockoutObservableString = ko.observable();
-        affiliations: KnockoutObservableArray = ko.observableArray();
+        preferredTitle: KnockoutObservable<string> = ko.observable();
+        affiliations: KnockoutObservableArray<any> = ko.observableArray();
 
-        gender: KnockoutObservableString = ko.observable();
-        isActive: KnockoutObservableBool = ko.observable();
+        gender: KnockoutObservable<string> = ko.observable();
+        isActive: KnockoutObservable<boolean> = ko.observable();
         genderText: () => string;
         isActiveText: () => string;
 
-        $photo: KnockoutObservableJQuery = ko.observable();
-        $facultyRanks: KnockoutObservableJQuery = ko.observable();
-        $nameSalutation: KnockoutObservableJQuery = ko.observable();
-        $nameSuffix: KnockoutObservableJQuery = ko.observable();
+        $photo: KnockoutObservable<JQuery> = ko.observable();
+        $facultyRanks: KnockoutObservable<JQuery> = ko.observable();
+        $nameSalutation: KnockoutObservable<JQuery> = ko.observable();
+        $nameSuffix: KnockoutObservable<JQuery> = ko.observable();
         $editSection: JQuery;
         $confirmPurgeDialog: JQuery;
 
-        isValid: () => bool;
+        isValid: () => boolean;
         errors: KnockoutValidationErrors;
-        editMode: KnockoutObservableBool = ko.observable(false);
+        editMode: KnockoutObservable<boolean> = ko.observable(false);
         saveSpinner = new Spinner(new SpinnerOptions(200));
 
-        startInEdit: KnockoutObservableBool = ko.observable(false);
-        startTabName: KnockoutObservableString = ko.observable("Activities");
+        startInEdit: KnockoutObservable<boolean> = ko.observable(false);
+        startTabName: KnockoutObservable<string> = ko.observable("Activities");
 
         private _initialize() {
         }
@@ -126,7 +124,7 @@ module ViewModels.My {
         }
 
         load(startTab: string): JQueryPromise {
-            var deferred: JQueryDeferred = $.Deferred();
+            var deferred: JQueryDeferred<void> = $.Deferred();
 
             // start both requests at the same time
             var facultyRanksPact = $.Deferred();
@@ -610,7 +608,7 @@ module ViewModels.My {
 
             // do not display faculty rank editor for tenants that do not have
             // employee module settings or faculty rank options
-            this.isFacultyRankEditable = ko.computed((): bool => {
+            this.isFacultyRankEditable = ko.computed((): boolean => {
                 return this.facultyRanks() && this.facultyRanks().length > 0;
             });
 
@@ -633,7 +631,7 @@ module ViewModels.My {
 
             // do not display faculty rank on the form card when it is not set
             // or when it is set to other
-            this.isFacultyRankVisible = ko.computed((): bool => {
+            this.isFacultyRankVisible = ko.computed((): boolean => {
                 return this.isFacultyRankEditable() &&
                     this.facultyRankId() &&
                     this.facultyRankText() &&

@@ -1,11 +1,10 @@
-/// <reference path="../../jquery/jquery.d.ts" />
-/// <reference path="../../jquery/jqueryui.d.ts" />
-/// <reference path="../../ko/knockout.d.ts" />
-/// <reference path="../../ko/knockout.extensions.d.ts" />
-/// <reference path="../../ko/knockout.mapping.d.ts" />
-/// <reference path="../../ko/knockout.validation.d.ts" />
-/// <reference path="../../sammy/sammyjs.d.ts" />
-/// <reference path="../../kendo/kendo.all.d.ts" />
+/// <reference path="../../typings/jquery/jquery.d.ts" />
+/// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
+/// <reference path="../../typings/knockout/knockout.d.ts" />
+/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
+/// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
+/// <reference path="../../typings/sammyjs/sammyjs.d.ts" />
+/// <reference path="../../typings/kendo/kendo.all.d.ts" />
 /// <reference path="../PagedSearch.ts" />
 /// <reference path="../Flasher.ts" />
 /// <reference path="../../app/Routes.ts" />
@@ -15,8 +14,8 @@ module ViewModels.Users {
 
     class RoleGrantValidator implements KnockoutValidationAsyncRuleDefinition {
         private _ruleName: string = 'validRoleGrant';
-        private _isAwaitingResponse: bool = false;
-        async: bool = true;
+        private _isAwaitingResponse: boolean = false;
+        async: boolean = true;
         message: string = 'error';
         validator(val: string, vm: SearchResult, callback: KnockoutValidationAsyncCallback) {
             if (!vm.selectedRoleOption()) {
@@ -48,8 +47,8 @@ module ViewModels.Users {
 
     class RoleRevokeValidator implements KnockoutValidationAsyncRuleDefinition {
         private _ruleName: string = 'validRoleRevoke';
-        private _isAwaitingResponse: bool = false;
-        async: bool = true;
+        private _isAwaitingResponse: boolean = false;
+        async: boolean = true;
         message: string = 'error';
         validator(val: string, vm: SearchResult, callback: KnockoutValidationAsyncCallback) {
             if (!vm.roleToRevoke()) {
@@ -81,34 +80,34 @@ module ViewModels.Users {
 
     export class SearchResult implements KnockoutValidationGroup {
         private _owner: Search;
-        id: KnockoutObservableNumber;
-        personId: KnockoutObservableNumber;
-        name: KnockoutObservableString;
-        personDisplayName: KnockoutObservableString;
-        roles: KnockoutObservableArray;
-        roleOptions: KnockoutObservableArray = ko.observableArray();
-        roleOptionsCaption: KnockoutObservableString = ko.observable('[Loading...]');
-        selectedRoleOption: KnockoutObservableNumber = ko.observable();
-        roleToRevoke: KnockoutObservableNumber = ko.observable();
-        $roleSelect: KnockoutObservableJQuery = ko.observable();
-        isRoleGrantDisabled: KnockoutComputed;
+        id: KnockoutObservable<number>;
+        personId: KnockoutObservable<number>;
+        name: KnockoutObservable<string>;
+        personDisplayName: KnockoutObservable<string>;
+        roles: KnockoutObservableArray<any>;
+        roleOptions: KnockoutObservableArray<any> = ko.observableArray();
+        roleOptionsCaption: KnockoutObservable<string> = ko.observable('[Loading...]');
+        selectedRoleOption: KnockoutObservable<number> = ko.observable();
+        roleToRevoke: KnockoutObservable<number> = ko.observable();
+        $roleSelect: KnockoutObservable<JQuery> = ko.observable();
+        isRoleGrantDisabled: KnockoutComputed<boolean>;
         roleSpinner = new Spinner({ delay: 0, isVisible: true });
-        isRevokeError: KnockoutObservableBool = ko.observable();
-        revokeErrorText: KnockoutObservableString = ko.observable();
-        isGrantError: KnockoutObservableBool = ko.observable();
-        grantErrorText: KnockoutObservableString = ko.observable();
+        isRevokeError: KnockoutObservable<boolean> = ko.observable();
+        revokeErrorText: KnockoutObservable<string> = ko.observable();
+        isGrantError: KnockoutObservable<boolean> = ko.observable();
+        grantErrorText: KnockoutObservable<string> = ko.observable();
 
-        $menu: KnockoutObservableJQuery = ko.observable();
-        isEditingRoles: KnockoutObservableBool = ko.observable(false);
+        $menu: KnockoutObservable<JQuery> = ko.observable();
+        isEditingRoles: KnockoutObservable<boolean> = ko.observable(false);
 
-        hasGrants: KnockoutComputed;
-        hasNoGrants: KnockoutComputed;
-        hasUniqueDisplayName: KnockoutComputed;
-        photoSrc: KnockoutComputed;
+        hasGrants: KnockoutComputed<boolean>;
+        hasNoGrants: KnockoutComputed<boolean>;
+        hasUniqueDisplayName: KnockoutComputed<boolean>;
+        photoSrc: KnockoutComputed<string>;
 
-        isValid: () => bool;
+        isValid: () => boolean;
         errors: KnockoutValidationErrors;
-        isValidating: KnockoutComputed;
+        isValidating: KnockoutComputed<boolean>;
 
         constructor(values: any, owner: Search) {
             this._owner = owner;
@@ -137,19 +136,19 @@ module ViewModels.Users {
         }
 
         private _setupNamingComputeds(): void {
-            this.hasUniqueDisplayName = ko.computed((): bool => {
+            this.hasUniqueDisplayName = ko.computed((): boolean => {
                 return this.name() !== this.personDisplayName();
             });
         }
 
         private _setupRoleGrantComputeds(): void {
-            this.hasGrants = ko.computed((): bool => {
+            this.hasGrants = ko.computed((): boolean => {
                 return this.roles().length > 0;
             });
-            this.hasNoGrants = ko.computed((): bool => {
+            this.hasNoGrants = ko.computed((): boolean => {
                 return !this.hasGrants();
             });
-            this.isRoleGrantDisabled = ko.computed((): bool => {
+            this.isRoleGrantDisabled = ko.computed((): boolean => {
                 return this.roleSpinner.isVisible() || !this.selectedRoleOption();
             });
             this.selectedRoleOption.subscribe((newValue: any): void => {
@@ -178,7 +177,7 @@ module ViewModels.Users {
                 validRoleRevoke: this
             });
 
-            this.isValidating = ko.computed((): bool => {
+            this.isValidating = ko.computed((): boolean => {
                 return this.selectedRoleOption.isValidating()
                     || this.roleToRevoke.isValidating();
             });
@@ -308,19 +307,19 @@ module ViewModels.Users {
             this.isEditingRoles(false);
         }
 
-        grantRole(): bool {
+        grantRole(): void {
             this.roleSpinner.start();
             this.roleToRevoke(undefined);
 
             if (this.isValidating()) {
-                setTimeout((): bool => { this.grantRole(); }, 50);
-                return false;
+                setTimeout((): void => { this.grantRole(); }, 50);
+                return;
             }
 
             if (!this.isValid()) { // validate
                 this.errors.showAllMessages();
                 this.roleSpinner.stop();
-                return false;
+                return;
             }
 
             var url = App.Routes.WebApi.Identity.Users.Roles.put(this.id(), this.selectedRoleOption());
@@ -330,7 +329,7 @@ module ViewModels.Users {
             })
             .done((response: string, textStatus: string, xhr: JQueryXHR): void => {
                 App.flasher.flash(response);
-                this.roleOptions.remove((item: any): bool => {
+                this.roleOptions.remove((item: any): boolean => {
                     return item.id() == this.selectedRoleOption();
                 });
                 this.pullRoleGrants()
@@ -349,20 +348,20 @@ module ViewModels.Users {
             });
         }
 
-        revokeRole(roleId: number): bool {
+        revokeRole(roleId: number): void {
             this.roleSpinner.start();
 
             this.roleToRevoke(roleId);
 
             if (this.isValidating()) {
-                setTimeout((): bool => { this.revokeRole(roleId); }, 50);
-                return false;
+                setTimeout((): void => { this.revokeRole(roleId); }, 50);
+                return;
             }
 
             if (!this.isValid()) { // validate
                 this.errors.showAllMessages();
                 this.roleSpinner.stop();
-                return false;
+                return;
             }
 
             var url = App.Routes.WebApi.Identity.Users.Roles.del(this.id(), roleId);
@@ -435,7 +434,7 @@ module ViewModels.Users {
 
     export class RoleGrant {
         private _owner: SearchResult;
-        id: KnockoutObservableNumber;
+        id: KnockoutObservable<number>;
         $confirmPurgeDialog: JQuery;
 
         constructor(values: any, owner: SearchResult) {

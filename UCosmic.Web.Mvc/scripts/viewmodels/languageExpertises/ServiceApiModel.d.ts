@@ -1,10 +1,10 @@
-/// <reference path="../../ko/knockout.d.ts" />
+/// <reference path="../../typings/knockout/knockout.d.ts" />
 
-module Service.ApiModels.LanguageExpertise {
+declare module Service.ApiModels.LanguageExpertise {
 
     export interface IObservableLanguageExpertise {
-        id: KnockoutObservableNumber;
-        version: KnockoutObservableString;      // byte[] converted to base64
-        entityId: KnockoutObservableString;     // guid converted to string
+        id: KnockoutObservable<number>;
+        version: KnockoutObservable<string>;      // byte[] converted to base64
+        entityId: KnockoutObservable<string>;     // guid converted to string
     }
 }

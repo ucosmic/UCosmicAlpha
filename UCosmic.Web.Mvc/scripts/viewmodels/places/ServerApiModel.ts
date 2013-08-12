@@ -1,34 +1,18 @@
-/// <reference path="../../ko/knockout.d.ts" />
-/// <reference path="../../google/google.maps.d.ts" />
-
-interface KnockoutObservableCountryModelArray extends KnockoutObservableArrayFunctions {
-    (): ViewModels.Places.IServerCountryApiModel[];
-    (value: ViewModels.Places.IServerCountryApiModel[]): void;
-
-    subscribe(callback: (newValue: ViewModels.Places.IServerCountryApiModel[]) => void, target?:any, topic?: string): KnockoutSubscription;
-    notifySubscribers(valueToWrite: ViewModels.Places.IServerCountryApiModel[], topic?: string);
-}
-
-interface KnockoutObservablePlaceModelArray extends KnockoutObservableArrayFunctions {
-    (): ViewModels.Places.IServerApiModel[];
-    (value: ViewModels.Places.IServerApiModel[]): void;
-
-    subscribe(callback: (newValue: ViewModels.Places.IServerApiModel[]) => void, target?:any, topic?: string): KnockoutSubscription;
-    notifySubscribers(valueToWrite: ViewModels.Places.IServerApiModel[], topic?: string);
-}
+/// <reference path="../../typings/knockout/knockout.d.ts" />
+/// <reference path="../../typings/googlemaps/google.maps.d.ts" />
 
 module ViewModels.Places {
 
     export interface IServerPointModel {
         latitude: number;
         longitude: number;
-        hasValue?: bool;
+        hasValue?: boolean;
     }
 
     export interface IServerBoxModel {
         northEast: IServerPointModel;
         southWest: IServerPointModel;
-        hasValue?: bool;
+        hasValue?: boolean;
     }
 
     export interface IServerApiModel {
@@ -37,12 +21,12 @@ module ViewModels.Places {
         officialName: string;
         center: IServerPointModel;
         box: IServerBoxModel;
-        isEarth: bool;
-        isContinent: bool;
-        isCountry: bool;
-        isAdmin1: bool;
-        isAdmin2: bool;
-        isAdmin3: bool;
+        isEarth: boolean;
+        isContinent: boolean;
+        isCountry: boolean;
+        isAdmin1: boolean;
+        isAdmin2: boolean;
+        isAdmin3: boolean;
         countryCode: string;
         placeTypeEnglishName: string;
     }

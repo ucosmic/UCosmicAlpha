@@ -8,7 +8,7 @@ var ViewModels;
             }
             return ServerApiModel;
         })();
-        Languages.ServerApiModel = ServerApiModel;        
+        Languages.ServerApiModel = ServerApiModel;
     })(ViewModels.Languages || (ViewModels.Languages = {}));
     var Languages = ViewModels.Languages;
 })(ViewModels || (ViewModels = {}));

@@ -1,14 +1,11 @@
-/// <reference path="../../jquery/jquery.d.ts" />
-/// <reference path="../../jquery/jqueryui.d.ts" />
-/// <reference path="../../ko/knockout.d.ts" />
-/// <reference path="../../ko/knockout.mapping.d.ts" />
-/// <reference path="../../ko/knockout.extensions.d.ts" />
-/// <reference path="../../ko/knockout.validation.d.ts" />
-/// <reference path="../../kendo/kendo.all.d.ts" />
-/// <reference path="../../oss/moment.d.ts" />
+/// <reference path="../../typings/jquery/jquery.d.ts" />
+/// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
+/// <reference path="../../typings/knockout/knockout.d.ts" />
+/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
+/// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
+/// <reference path="../../typings/kendo/kendo.all.d.ts" />
+/// <reference path="../../typings/moment/moment.d.ts" />
 /// <reference path="../../app/Routes.ts" />
-/// <reference path="../../kendo/kendo.all.d.ts" />
-
 
 module ViewModels.InternationalAffiliations
 {
@@ -30,7 +27,7 @@ module ViewModels.InternationalAffiliations
         orderBy: string;
         pageSize: number;
         pageNumber: number;
-        items: KnockoutObservableArray;
+        items: KnockoutObservableArray<any>;
 
         // --------------------------------------------------------------------------------
         /* 
@@ -47,7 +44,7 @@ module ViewModels.InternationalAffiliations
         // --------------------------------------------------------------------------------
         load(): JQueryPromise
         {
-            var deferred: JQueryDeferred = $.Deferred();
+            var deferred: JQueryDeferred<void> = $.Deferred();
             var affiliationSearchInput: InternationalAffiliationSearchInput = new InternationalAffiliationSearchInput();
 
             affiliationSearchInput.personId = this.personId;
@@ -143,7 +140,7 @@ module ViewModels.InternationalAffiliations
         /*  
         */
         // --------------------------------------------------------------------------------
-        formatDates(from: number, to: number, onGoing: bool): string
+        formatDates(from: number, to: number, onGoing: boolean): string
         {
             var formattedDateRange: string = from.toString();
 

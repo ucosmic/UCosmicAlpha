@@ -1,25 +1,22 @@
-/// <reference path="../../../jquery/jquery.d.ts" />
-/// <reference path="../../../jquery/jqueryui.d.ts" />
-/// <reference path="../../../ko/knockout.d.ts" />
-/// <reference path="../../../ko/knockout.mapping.d.ts" />
-/// <reference path="../../../ko/knockout.validation.d.ts" />
+/// <reference path="../../../typings/jquery/jquery.d.ts" />
+/// <reference path="../../../typings/jqueryui/jqueryui.d.ts" />
+/// <reference path="../../../typings/knockout/knockout.d.ts" />
+/// <reference path="../../../typings/knockout.mapping/knockout.mapping.d.ts" />
+/// <reference path="../../../typings/knockout.validation/knockout.validation.d.ts" />
 /// <reference path="../../../app/Routes.ts" />
 /// <reference path="../../Flasher.ts" />
 
-  
+import SearchApiModel= require('./ServerApiModel')
+import Item= require('./Item')
 
-
-import SearchApiModel = module('./ServerApiModel')
-import Item = module('./Item')
-
-import Spinner = module('../Widgets/Spinner')
+import Spinner= require('../Widgets/Spinner')
 export class ServerNameApiModel implements SearchApiModel.IServerNameApiModel {
         
         id: number = 0;
         ownerId: number = 0;
         text: string = '';
-        isOfficialName: bool = false;
-        isFormerName: bool = false;
+        isOfficialName: boolean = false;
+        isFormerName: boolean = false;
         languageCode: string = '';
         languageName: string = '';
 
@@ -30,8 +27,8 @@ export class ServerNameApiModel implements SearchApiModel.IServerNameApiModel {
 
     class EstablishmentNameTextValidator implements KnockoutValidationAsyncRuleDefinition {
         private _ruleName: string = 'validEstablishmentNameText';
-        private _isAwaitingResponse: bool = false;
-        async: bool = true;
+        private _isAwaitingResponse: boolean = false;
+        async: boolean = true;
         message: string =  'error';
         validator(val: string, vm: Name, callback: KnockoutValidationAsyncCallback) {
             if (!vm.isTextValidatableAsync()) {
@@ -63,26 +60,26 @@ export class ServerNameApiModel implements SearchApiModel.IServerNameApiModel {
     export class Name implements KnockoutValidationGroup {
 
         // api observables
-        id: KnockoutObservableNumber = ko.observable();
-        ownerId: KnockoutObservableNumber = ko.observable();
-        text: KnockoutObservableString = ko.observable();
-        isOfficialName: KnockoutObservableBool = ko.observable();
-        isFormerName: KnockoutObservableBool = ko.observable();
-        languageName: KnockoutObservableString = ko.observable();
-        languageCode: KnockoutObservableString = ko.observable();
+        id: KnockoutObservable<number> = ko.observable();
+        ownerId: KnockoutObservable<number> = ko.observable();
+        text: KnockoutObservable<string> = ko.observable();
+        isOfficialName: KnockoutObservable<boolean> = ko.observable();
+        isFormerName: KnockoutObservable<boolean> = ko.observable();
+        languageName: KnockoutObservable<string> = ko.observable();
+        languageCode: KnockoutObservable<string> = ko.observable();
 
         // other observables
-        editMode: KnockoutObservableBool = ko.observable();
+        editMode: KnockoutObservable<boolean> = ko.observable();
         $textElement: JQuery = undefined; // bind to this so we can focus it on actions
         $languagesElement: JQuery = undefined; // bind to this so we can restore on back button
-        selectedLanguageCode: KnockoutObservableString; // shadow to restore after list Item.Items are bound
+        selectedLanguageCode: KnockoutObservable<string>; // shadow to restore after list Item.Items are bound
         $confirmPurgeDialog: JQuery = undefined;
-        isValid: () => bool;
+        isValid: () => boolean;
         errors: KnockoutValidationErrors;
 
         // computeds
-        isOfficialNameEnabled: KnockoutComputed;
-        isTextValidatableAsync: KnockoutComputed;
+        isOfficialNameEnabled: KnockoutComputed<boolean>;
+        isTextValidatableAsync: KnockoutComputed<boolean>;
 
         
         // spinners
@@ -92,7 +89,7 @@ export class ServerNameApiModel implements SearchApiModel.IServerNameApiModel {
 
         
         // private fields
-        private saveEditorClicked: bool = false;
+        private saveEditorClicked: boolean = false;
         private originalValues: ServerNameApiModel;
         private owner: Item.Item;
         private mutationSuccess: (response: string) => void;
@@ -112,12 +109,12 @@ export class ServerNameApiModel implements SearchApiModel.IServerNameApiModel {
             ko.mapping.fromJS(js, {}, this);
 
             // view computeds
-            this.isOfficialNameEnabled = ko.computed((): bool => {
+            this.isOfficialNameEnabled = ko.computed((): boolean => {
                 return !this.originalValues.isOfficialName;
             });
 
             // text validation
-            this.isTextValidatableAsync = ko.computed((): bool => {
+            this.isTextValidatableAsync = ko.computed((): boolean => {
                 return this.text() !== this.originalValues.text;
             });
             this.text.extend({
@@ -127,7 +124,7 @@ export class ServerNameApiModel implements SearchApiModel.IServerNameApiModel {
                 maxLength: 400,
                 validEstablishmentNameText: this
             });
-            this.text.isValidating.subscribe((isValidating: bool): void => {
+            this.text.isValidating.subscribe((isValidating: boolean): void => {
                 if (isValidating) {
                     this.textValidationSpinner.start();
                 }
@@ -144,7 +141,7 @@ export class ServerNameApiModel implements SearchApiModel.IServerNameApiModel {
             });
 
             // official name cannot be former name
-            this.isOfficialName.subscribe((newValue: bool): void => {
+            this.isOfficialName.subscribe((newValue: boolean): void => {
                 if (newValue) this.isFormerName(false);
             });
 
@@ -180,7 +177,7 @@ export class ServerNameApiModel implements SearchApiModel.IServerNameApiModel {
             ko.validation.group(this);
         }
 
-        clickOfficialNameCheckbox(): bool { // educate users on how to change the official name
+        clickOfficialNameCheckbox(): boolean { // educate users on how to change the official name
             if (this.originalValues.isOfficialName) { // only when the name is already official in the db
                 this.owner.$genericAlertDialog.find('p.content')
                     .html('In order to choose a different official name for this establishment, edit the name you wish to make the new official name.');
@@ -208,7 +205,7 @@ export class ServerNameApiModel implements SearchApiModel.IServerNameApiModel {
             }
         }
 
-        saveEditor(): bool {
+        saveEditor(): boolean {
             this.saveEditorClicked = true;
             if (!this.isValid()) { // validate
                 this.saveEditorClicked = false;

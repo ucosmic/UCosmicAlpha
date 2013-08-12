@@ -1,6 +1,6 @@
-/// <reference path="../../require/require.d.ts" />
-/// <reference path="../../jquery/jquery.d.ts" />
-/// <reference path="../../ko/knockout.d.ts" />
+/// <reference path="../../typings/requirejs/require.d.ts" />
+/// <reference path="../../typings/jquery/jquery.d.ts" />
+/// <reference path="../../typings/knockout/knockout.d.ts" />
 
 require(["../../viewmodels/agreements/AgreementVM"],
 function (Agreement) {
@@ -10,7 +10,7 @@ function (Agreement) {
         //agreementViewModel.sammy.run();
 });
 
-//import agreement = module('../agreements/AgreementVM');
+//import agreement= require('../agreements/AgreementVM');
 
 //var establishmentSearchViewModel = new agreement.InstitutionalAgreementEditModel();
 //    ko.applyBindings(establishmentSearchViewModel, $('#main')[0]);

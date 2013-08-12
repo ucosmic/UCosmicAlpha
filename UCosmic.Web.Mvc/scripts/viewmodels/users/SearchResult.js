@@ -1,5 +1,16 @@
 var ViewModels;
 (function (ViewModels) {
+    /// <reference path="../../typings/jquery/jquery.d.ts" />
+    /// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
+    /// <reference path="../../typings/knockout/knockout.d.ts" />
+    /// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
+    /// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
+    /// <reference path="../../typings/sammyjs/sammyjs.d.ts" />
+    /// <reference path="../../typings/kendo/kendo.all.d.ts" />
+    /// <reference path="../PagedSearch.ts" />
+    /// <reference path="../Flasher.ts" />
+    /// <reference path="../../app/Routes.ts" />
+    /// <reference path="Search.ts" />
     (function (Users) {
         var RoleGrantValidator = (function () {
             function RoleGrantValidator() {
@@ -12,11 +23,11 @@ var ViewModels;
             }
             RoleGrantValidator.prototype.validator = function (val, vm, callback) {
                 var _this = this;
-                if(!vm.selectedRoleOption()) {
+                if (!vm.selectedRoleOption()) {
                     callback(true);
                     return;
                 }
-                if(!this._isAwaitingResponse) {
+                if (!this._isAwaitingResponse) {
                     var route = App.Routes.WebApi.Identity.Users.Roles.validateGrant(vm.id(), vm.selectedRoleOption());
                     this._isAwaitingResponse = true;
                     $.post(route).always(function () {
@@ -24,16 +35,14 @@ var ViewModels;
                     }).done(function () {
                         callback(true);
                     }).fail(function (xhr) {
-                        callback({
-                            isValid: false,
-                            message: xhr.responseText
-                        });
+                        callback({ isValid: false, message: xhr.responseText });
                     });
                 }
             };
             return RoleGrantValidator;
-        })();        
+        })();
         new RoleGrantValidator();
+
         var RoleRevokeValidator = (function () {
             function RoleRevokeValidator() {
                 this._ruleName = 'validRoleRevoke';
@@ -45,11 +54,11 @@ var ViewModels;
             }
             RoleRevokeValidator.prototype.validator = function (val, vm, callback) {
                 var _this = this;
-                if(!vm.roleToRevoke()) {
+                if (!vm.roleToRevoke()) {
                     callback(true);
                     return;
                 }
-                if(!this._isAwaitingResponse) {
+                if (!this._isAwaitingResponse) {
                     var route = App.Routes.WebApi.Identity.Users.Roles.validateRevoke(vm.id(), vm.roleToRevoke());
                     this._isAwaitingResponse = true;
                     $.post(route).always(function () {
@@ -57,16 +66,14 @@ var ViewModels;
                     }).done(function () {
                         callback(true);
                     }).fail(function (xhr) {
-                        callback({
-                            isValid: false,
-                            message: xhr.responseText
-                        });
+                        callback({ isValid: false, message: xhr.responseText });
                     });
                 }
             };
             return RoleRevokeValidator;
-        })();        
+        })();
         new RoleRevokeValidator();
+
         var SearchResult = (function () {
             function SearchResult(values, owner) {
                 var _this = this;
@@ -75,10 +82,7 @@ var ViewModels;
                 this.selectedRoleOption = ko.observable();
                 this.roleToRevoke = ko.observable();
                 this.$roleSelect = ko.observable();
-                this.roleSpinner = new ViewModels.Spinner({
-                    delay: 0,
-                    isVisible: true
-                });
+                this.roleSpinner = new ViewModels.Spinner({ delay: 0, isVisible: true });
                 this.isRevokeError = ko.observable();
                 this.revokeErrorText = ko.observable();
                 this.isGrantError = ko.observable();
@@ -86,6 +90,8 @@ var ViewModels;
                 this.$menu = ko.observable();
                 this.isEditingRoles = ko.observable(false);
                 this._owner = owner;
+
+                // map api data to observables
                 var userMapping = {
                     roles: {
                         create: function (options) {
@@ -94,6 +100,7 @@ var ViewModels;
                     }
                 };
                 ko.mapping.fromJS(values, userMapping, this);
+
                 this._setupPhotoComputeds();
                 this._setupNamingComputeds();
                 this._setupRoleGrantComputeds();
@@ -103,17 +110,17 @@ var ViewModels;
             SearchResult.prototype._setupPhotoComputeds = function () {
                 var _this = this;
                 this.photoSrc = ko.computed(function () {
-                    return App.Routes.WebApi.People.Photo.get(_this.personId(), {
-                        maxSide: 100
-                    });
+                    return App.Routes.WebApi.People.Photo.get(_this.personId(), { maxSide: 100 });
                 });
             };
+
             SearchResult.prototype._setupNamingComputeds = function () {
                 var _this = this;
                 this.hasUniqueDisplayName = ko.computed(function () {
                     return _this.name() !== _this.personDisplayName();
                 });
             };
+
             SearchResult.prototype._setupRoleGrantComputeds = function () {
                 var _this = this;
                 this.hasGrants = ko.computed(function () {
@@ -126,34 +133,41 @@ var ViewModels;
                     return _this.roleSpinner.isVisible() || !_this.selectedRoleOption();
                 });
                 this.selectedRoleOption.subscribe(function (newValue) {
-                    if(newValue && typeof (newValue) === 'string') {
+                    if (newValue && typeof (newValue) === 'string') {
                         _this.selectedRoleOption(parseInt(newValue));
                     }
                 });
             };
+
             SearchResult.prototype._setupMenuSubscription = function () {
                 this.$menu.subscribe(function (newValue) {
-                    if(newValue && newValue.length) {
+                    if (newValue && newValue.length) {
                         newValue.kendoMenu();
                     }
                 });
             };
+
             SearchResult.prototype._setupValidation = function () {
                 var _this = this;
                 this.selectedRoleOption.extend({
                     validRoleGrant: this
                 });
+
                 this.roleToRevoke.extend({
                     validRoleRevoke: this
                 });
+
                 this.isValidating = ko.computed(function () {
                     return _this.selectedRoleOption.isValidating() || _this.roleToRevoke.isValidating();
                 });
+
                 this.selectedRoleOption.subscribe(function (newValue) {
                     _this.roleToRevoke(undefined);
                 });
+
                 ko.validation.group(this);
             };
+
             SearchResult.prototype._pullRoleOptions = function () {
                 var _this = this;
                 this.selectedRoleOption(undefined);
@@ -172,18 +186,18 @@ var ViewModels;
                 });
                 return deferred;
             };
+
             SearchResult.prototype._loadRoleOptions = function (results) {
-                ko.mapping.fromJS(results.items, {
-                }, this.roleOptions);
+                ko.mapping.fromJS(results.items, {}, this.roleOptions);
                 this.roleOptionsCaption('[Select access to grant...]');
                 this._syncRoleOptions();
-                if(this.$roleSelect && this.$roleSelect().length) {
+                if (this.$roleSelect && this.$roleSelect().length) {
                     var roleOptions = this.roleOptions();
                     var roleData = [];
                     roleData.push({
                         name: this.roleOptionsCaption()
                     });
-                    for(var i = 0; i < roleOptions.length; i++) {
+                    for (var i = 0; i < roleOptions.length; i++) {
                         roleData.push({
                             id: roleOptions[i].id(),
                             name: roleOptions[i].name(),
@@ -199,15 +213,16 @@ var ViewModels;
                     });
                 }
             };
+
             SearchResult.prototype._syncRoleOptions = function () {
-                for(var i = 0; i < this.roleOptions().length; i++) {
+                for (var i = 0; i < this.roleOptions().length; i++) {
                     var option = this.roleOptions()[i];
-                    for(var ii = 0; ii < this.roles().length; ii++) {
+                    for (var ii = 0; ii < this.roles().length; ii++) {
                         var grant = this.roles()[ii];
-                        if(option.id() == grant.id()) {
-                            if(i === 0) {
+                        if (option.id() == grant.id()) {
+                            if (i === 0) {
                                 this.roleOptions.shift();
-                            } else if(i == this.roleOptions().length) {
+                            } else if (i == this.roleOptions().length) {
                                 this.roleOptions.pop();
                             } else {
                                 this.roleOptions.splice(i, 1);
@@ -217,6 +232,7 @@ var ViewModels;
                     }
                 }
             };
+
             SearchResult.prototype.pullRoleGrants = function () {
                 var _this = this;
                 this.roleSpinner.start();
@@ -230,6 +246,7 @@ var ViewModels;
                 });
                 return deferred;
             };
+
             SearchResult.prototype.loadRoleGrants = function (results) {
                 var _this = this;
                 var grantMapping = {
@@ -239,13 +256,15 @@ var ViewModels;
                 };
                 ko.mapping.fromJS(results, grantMapping, this.roles);
             };
+
             SearchResult.prototype.impersonate = function () {
                 var form = this._owner.impersonateForm;
-                if(form) {
+                if (form) {
                     this._owner.impersonateUserName(this.name());
                     $(form).submit();
                 }
             };
+
             SearchResult.prototype.showRoleEditor = function () {
                 var _this = this;
                 this.isEditingRoles(true);
@@ -257,21 +276,25 @@ var ViewModels;
                 this.roleToRevoke(undefined);
                 this.isEditingRoles(false);
             };
+
             SearchResult.prototype.grantRole = function () {
                 var _this = this;
                 this.roleSpinner.start();
                 this.roleToRevoke(undefined);
-                if(this.isValidating()) {
+
+                if (this.isValidating()) {
                     setTimeout(function () {
                         _this.grantRole();
                     }, 50);
-                    return false;
+                    return;
                 }
-                if(!this.isValid()) {
+
+                if (!this.isValid()) {
                     this.errors.showAllMessages();
                     this.roleSpinner.stop();
-                    return false;
+                    return;
                 }
+
                 var url = App.Routes.WebApi.Identity.Users.Roles.put(this.id(), this.selectedRoleOption());
                 $.ajax({
                     url: url,
@@ -293,21 +316,26 @@ var ViewModels;
                     _this.roleSpinner.stop();
                 });
             };
+
             SearchResult.prototype.revokeRole = function (roleId) {
                 var _this = this;
                 this.roleSpinner.start();
+
                 this.roleToRevoke(roleId);
-                if(this.isValidating()) {
+
+                if (this.isValidating()) {
                     setTimeout(function () {
                         _this.revokeRole(roleId);
                     }, 50);
-                    return false;
+                    return;
                 }
-                if(!this.isValid()) {
+
+                if (!this.isValid()) {
                     this.errors.showAllMessages();
                     this.roleSpinner.stop();
-                    return false;
+                    return;
                 }
+
                 var url = App.Routes.WebApi.Identity.Users.Roles.del(this.id(), roleId);
                 $.ajax({
                     url: url,
@@ -327,12 +355,14 @@ var ViewModels;
                     _this.roleSpinner.stop();
                 });
             };
+
             SearchResult.prototype.dismissError = function () {
                 this.isRevokeError(false);
                 this.revokeErrorText(undefined);
                 this.isGrantError(false);
                 this.grantErrorText(undefined);
             };
+
             SearchResult.prototype.deleteUser = function () {
                 var me = this;
                 $("#confirmUserDeleteDialog").dialog({
@@ -348,7 +378,7 @@ var ViewModels;
                                 type: "DELETE",
                                 url: App.Routes.WebApi.Identity.Users.del(me.id()),
                                 success: function (data, statusText, jqXHR) {
-                                    if(statusText !== "success") {
+                                    if (statusText !== "success") {
                                         alert(jqXHR.statusText);
                                     }
                                 },
@@ -369,12 +399,14 @@ var ViewModels;
             };
             return SearchResult;
         })();
-        Users.SearchResult = SearchResult;        
+        Users.SearchResult = SearchResult;
+
         var RoleGrant = (function () {
             function RoleGrant(values, owner) {
                 this._owner = owner;
-                ko.mapping.fromJS(values, {
-                }, this);
+
+                // map api data to observables
+                ko.mapping.fromJS(values, {}, this);
             }
             RoleGrant.prototype.revokeRole = function () {
                 var _this = this;
@@ -390,7 +422,7 @@ var ViewModels;
                                 _this._owner.revokeRole(_this.id());
                                 _this.$confirmPurgeDialog.dialog('close');
                             }
-                        }, 
+                        },
                         {
                             text: 'No, cancel revoke',
                             click: function () {
@@ -403,7 +435,7 @@ var ViewModels;
             };
             return RoleGrant;
         })();
-        Users.RoleGrant = RoleGrant;        
+        Users.RoleGrant = RoleGrant;
     })(ViewModels.Users || (ViewModels.Users = {}));
     var Users = ViewModels.Users;
 })(ViewModels || (ViewModels = {}));

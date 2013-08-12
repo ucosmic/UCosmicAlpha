@@ -1,11 +1,10 @@
-/// <reference path="../../jquery/jquery.d.ts" />
-/// <reference path="../../jquery/jqueryui.d.ts" />
-/// <reference path="../../ko/knockout.d.ts" />
-/// <reference path="../../ko/knockout.extensions.d.ts" />
-/// <reference path="../../ko/knockout.mapping.d.ts" />
-/// <reference path="../../ko/knockout.validation.d.ts" />
-/// <reference path="../../sammy/sammyjs.d.ts" />
-/// <reference path="../../kendo/kendo.all.d.ts" />
+/// <reference path="../../typings/jquery/jquery.d.ts" />
+/// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
+/// <reference path="../../typings/knockout/knockout.d.ts" />
+/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
+/// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
+/// <reference path="../../typings/sammyjs/sammyjs.d.ts" />
+/// <reference path="../../typings/kendo/kendo.all.d.ts" />
 /// <reference path="../PagedSearch.ts" />
 /// <reference path="../Flasher.ts" />
 /// <reference path="../../app/Routes.ts" />
@@ -20,11 +19,11 @@ module ViewModels.Users {
         static OrderBySessionKey = 'UserSearchOrderBy';
 
         sammy: Sammy.Application = Sammy();
-        $historyJson: KnockoutObservableJQuery = ko.observable();
-        private _history: KnockoutObservableStringArray = ko.observableArray([]);
+        $historyJson: KnockoutObservable<JQuery> = ko.observable();
+        private _history: KnockoutObservableArray<string> = ko.observableArray([]);
         private _historyIndex: number = 0;
         impersonateForm: Element;
-        impersonateUserName: KnockoutObservableString = ko.observable();
+        impersonateUserName: KnockoutObservable<string> = ko.observable();
         flasherProxy = new App.FlasherProxy();
 
         constructor() {

@@ -1,7 +1,6 @@
-/// <reference path="../../../ko/knockout.d.ts" />
-/// <reference path="../../../ko/knockout.extensions.d.ts" />
-/// <reference path="../../../jquery/jquery.d.ts" />
-/// <reference path="../../../jquery/jqueryui.d.ts" />
+/// <reference path="../../../typings/knockout/knockout.d.ts" />
+/// <reference path="../../../typings/jquery/jquery.d.ts" />
+/// <reference path="../../../typings/jqueryui/jqueryui.d.ts" />
 
 export interface KnockoutObservableGoogleMapsToolsOverlay extends KnockoutObservableBase {
     (): ToolsOverlay;
@@ -25,7 +24,7 @@ export interface KnockoutObservableGoogleMapsToolsOverlay extends KnockoutObserv
 
         position: gm.ControlPosition; // which google maps control position to render the tools in
         elementId: string; // id of the element wrapping the tools DOM markup (excludes #)
-        markerLatLng: KnockoutObservableGoogleMapsLatLng = ko.observable(); // position of the marker
+        markerLatLng: KnockoutObservable<gm.LatLng> = ko.observable(); // position of the marker
 
         private element: Element; // reference to actual element with elementId
         private $element: JQuery; // jQuery wrapper for the element
@@ -38,7 +37,7 @@ export interface KnockoutObservableGoogleMapsToolsOverlay extends KnockoutObserv
         private markerDropListener: gm.MapsEventListener;
 
         constructor (map: gm.Map,
-            options?: ToolsOverlayOptions = new ToolsOverlayOptions()) {
+            options: ToolsOverlayOptions = new ToolsOverlayOptions()) {
             super();
 
             // apply options
@@ -55,7 +54,7 @@ export interface KnockoutObservableGoogleMapsToolsOverlay extends KnockoutObserv
             this.setMap(map); // invokes onAdd() then draw()
         }
 
-        private onAdd(): void { // initialize the map tools overlay
+        onAdd(): void { // initialize the map tools overlay
 
             // render the tools element on the map canvas
             this.getMap().controls[this.position].push(this.element);
@@ -73,11 +72,11 @@ export interface KnockoutObservableGoogleMapsToolsOverlay extends KnockoutObserv
             this.$element.show(); // unhide the tools element
         }
 
-        private onRemove(): void { // detach the tools element from the DOM
+        onRemove(): void { // detach the tools element from the DOM
             this.element.parentNode.removeChild(this.element);
         }
 
-        private draw(): void {
+        draw(): void {
             // NOTE: this method is invoked each time the map is panned or zoomed
         }
 
@@ -88,7 +87,7 @@ export interface KnockoutObservableGoogleMapsToolsOverlay extends KnockoutObserv
         }
 
         placeMarker(latLng: gm.LatLng): void {
-            var isDraggable: bool = this.$markerButtonsContainer.is(':visible');
+            var isDraggable: boolean = this.$markerButtonsContainer.is(':visible');
             this.marker = new gm.Marker({ // set a draggable marker at the coordinates
                 map: this.getMap(),
                 position: latLng,

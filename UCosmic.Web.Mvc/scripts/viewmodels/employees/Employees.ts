@@ -1,19 +1,14 @@
-/// <reference path="../../jquery/jquery.d.ts" />
-/// <reference path="../../jquery/jqueryui.d.ts" />
-/// <reference path="../../ko/knockout.d.ts" />
-/// <reference path="../../ko/knockout.mapping.d.ts" />
-/// <reference path="../../ko/knockout.extensions.d.ts" />
-/// <reference path="../../ko/knockout.validation.d.ts" />
-/// <reference path="../../kendo/kendo.all.d.ts" />
-/// <reference path="../../oss/moment.d.ts" />
+/// <reference path="../../typings/jquery/jquery.d.ts" />
+/// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
+/// <reference path="../../typings/knockout/knockout.d.ts" />
+/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
+/// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
+/// <reference path="../../typings/kendo/kendo.all.d.ts" />
+/// <reference path="../../typings/moment/moment.d.ts" />
 /// <reference path="../../app/Routes.ts" />
-/// <reference path="../../kendo/kendo.all.d.ts" />
-/// <reference path="../../sammy/sammyjs.d.ts" />
+/// <reference path="../../typings/sammyjs/sammyjs.d.ts" />
 /// <reference path="../Spinner.ts" />
 /// <reference path="../activities/ServiceApiModel.d.ts" />
-
-
-
 
 module ViewModels.Employees {
 
@@ -30,46 +25,46 @@ module ViewModels.Employees {
         inititializationErrors: string = "";
 
         /* True if any field changes. */
-        ///dirtyFlag: KnockoutObservableBool = ko.observable(false);
+        ///dirtyFlag: KnockoutObservable<boolean> = ko.observable(false);
 
-        searchType: KnockoutObservableString;
-        selectedPlace: KnockoutObservableString;
+        searchType: KnockoutObservable<string>;
+        selectedPlace: KnockoutObservable<string>;
 
         /* Element id of institution autocomplete */
         institutionSelectorId: string;
-        institutionId: KnockoutObservableAny;
-        institutionOfficialName: KnockoutObservableString;
-        institutionCountryOfficialName: KnockoutObservableString;
+        institutionId: KnockoutObservable<any>;
+        institutionOfficialName: KnockoutObservable<string>;
+        institutionCountryOfficialName: KnockoutObservable<string>;
 
-        institutionHasCampuses: KnockoutObservableBool;
+        institutionHasCampuses: KnockoutObservable<boolean>;
 
         /* Array of activity types displayed as list of checkboxes */
-        activityTypes: KnockoutObservableArray;
-        selectedActivityIds: KnockoutObservableArray;
+        activityTypes: KnockoutObservableArray<any>;
+        selectedActivityIds: KnockoutObservableArray<any>;
 
         /* Locations for multiselect. */
         locationSelectorId: string;
         initialLocations: any[];        // Bug - To overcome bug in Multiselect.
         selectedLocationValues: any[];
 
-        fromDate: KnockoutObservableDate;
-        toDate: KnockoutObservableDate;
-        institutions: KnockoutObservableString;
-        locations: KnockoutObservableArray;
+        fromDate: KnockoutObservable<Date>;
+        toDate: KnockoutObservable<Date>;
+        institutions: KnockoutObservable<string>;
+        locations: KnockoutObservableArray<any>;
 
         errors: KnockoutValidationErrors;
-        isValid: () => bool;
-        isAnyMessageShown: () => bool;
+        isValid: () => boolean;
+        isAnyMessageShown: () => boolean;
 
-        isHeatmapVisible: KnockoutObservableBool;
-        isPointmapVisible: KnockoutObservableBool;
-        isTableVisible: KnockoutObservableBool;
+        isHeatmapVisible: KnockoutObservable<boolean>;
+        isPointmapVisible: KnockoutObservable<boolean>;
+        isTableVisible: KnockoutObservable<boolean>;
 
         heatmap: any;
         heatmapOptions: any;
         heatmapActivityData: any;
         heatmapPeopleData: any;
-        isGlobalView: KnockoutObservableBool;
+        isGlobalView: KnockoutObservable<boolean>;
 
         barchart: any;
         barchartActivityOptions: any;
@@ -88,7 +83,7 @@ module ViewModels.Employees {
         //resultsTableOptions: any;
         //resultsTableData: any;
 
-        summary: KnockoutObservableAny;
+        summary: KnockoutObservable<any>;
         loadSpinner: ViewModels.Spinner;
 
         // --------------------------------------------------------------------------------
@@ -97,8 +92,8 @@ module ViewModels.Employees {
         // --------------------------------------------------------------------------------
         _initialize(institutionInfo: any): void {
             this.sammy = Sammy();
-            this.initialLocations = new any[];        // Bug - To overcome bug in Multiselect.
-            this.selectedLocationValues = new any[];
+            this.initialLocations = [];        // Bug - To overcome bug in Multiselect.
+            this.selectedLocationValues = [];
             this.fromDate = ko.observable();
             this.toDate = ko.observable();
             this.institutionId = ko.observable(null);
@@ -401,7 +396,7 @@ module ViewModels.Employees {
         // --------------------------------------------------------------------------------
         setupValidation(): void {
             //ko.validation.rules['atLeast'] = {
-            //    validator: (val: any, otherVal: any): bool => {
+            //    validator: (val: any, otherVal: any): boolean => {
             //        return val.length >= otherVal;
             //    },
             //    message: 'At least {0} must be selected.'
@@ -476,7 +471,7 @@ module ViewModels.Employees {
 
                 //if (((<any>this.summary).placeActivityCounts() != null) &&
                 //    ((<any>this.summary).placeActivityCounts().length > 0)) {
-                //    var placeActivityCounts: KnockoutObservableAny = (<any>this.summary).placeActivityCounts;
+                //    var placeActivityCounts: KnockoutObservable<any> = (<any>this.summary).placeActivityCounts;
                 //    if ((placeActivityCounts()[0].typeCounts() != null) &&
                 //         (placeActivityCounts()[0].typeCounts().length > 0)) {
                 //        //--for (var i = 0; i < placeActivityCounts()[0].typeCounts().length; i += 1) {
@@ -490,7 +485,7 @@ module ViewModels.Employees {
 
                 if (((<any>this.summary).placeActivityCounts() != null) &&
                     ((<any>this.summary).placeActivityCounts().length > 0)) {
-                    var placeActivityCounts: KnockoutObservableAny = (<any>this.summary).placeActivityCounts;
+                    var placeActivityCounts: KnockoutObservable<any> = (<any>this.summary).placeActivityCounts;
           
                     for (var i = 0; i < placeActivityCounts().length; i += 1) {
 
@@ -548,7 +543,7 @@ module ViewModels.Employees {
 
                 if (((<any>this.summary).placePeopleCounts() != null) &&
                     ((<any>this.summary).placePeopleCounts().length > 0)) {
-                    var placePeopleCounts: KnockoutObservableAny = (<any>this.summary).placePeopleCounts;
+                    var placePeopleCounts: KnockoutObservable<any> = (<any>this.summary).placePeopleCounts;
 
                     for (var i = 0; i < placePeopleCounts().length; i += 1) {
 
@@ -834,7 +829,7 @@ module ViewModels.Employees {
         // --------------------------------------------------------------------------------
         load(): JQueryPromise {
             var me = this;
-            var deferred: JQueryDeferred = $.Deferred();
+            var deferred: JQueryDeferred<void> = $.Deferred();
 
             this.loadSpinner.start();
 
@@ -914,7 +909,7 @@ module ViewModels.Employees {
         /*
         */
         // --------------------------------------------------------------------------------
-        updateLocations(items: Array): void {
+        updateLocations(items: any[]): void {
             if (this.locations != null) {
                 this.locations.removeAll();
                 for (var i = 0; i < items.length; i += 1) {
@@ -1023,7 +1018,7 @@ module ViewModels.Employees {
         addActivityType(activityTypeId: number): void {
             var existingIndex: number = this.getActivityTypeIndexById(activityTypeId);
             if (existingIndex == -1) {
-                var newActivityType: KnockoutObservableAny = ko.mapping.fromJS({ id: 0, typeId: activityTypeId, version: "" });
+                var newActivityType: KnockoutObservable<any> = ko.mapping.fromJS({ id: 0, typeId: activityTypeId, version: "" });
                 this.selectedActivityIds.push(newActivityType);
             }
         }
@@ -1075,7 +1070,7 @@ module ViewModels.Employees {
         /*
         */
         // --------------------------------------------------------------------------------
-        hasActivityType(activityTypeId: number): bool {
+        hasActivityType(activityTypeId: number): boolean {
             return this.getActivityTypeIndexById(activityTypeId) != -1;
         }
 
@@ -1083,12 +1078,12 @@ module ViewModels.Employees {
         /*
         */
         // --------------------------------------------------------------------------------
-        defHasActivityTypeCallback(activityTypeIndex: number): KnockoutComputedDefine {
-            var def: KnockoutComputedDefine = {
-                read: (): bool => {
+        defHasActivityTypeCallback(activityTypeIndex: number): KnockoutComputedDefine<boolean> {
+            var def: KnockoutComputedDefine<boolean> = {
+                read: (): boolean => {
                     return this.hasActivityType(this.activityTypes()[activityTypeIndex].id());
                 },
-                write: function (checked) => {
+                write: (checked: boolean) => {
                     if (checked) {
                         this.addActivityType(this.activityTypes()[activityTypeIndex].id());
                     } else {

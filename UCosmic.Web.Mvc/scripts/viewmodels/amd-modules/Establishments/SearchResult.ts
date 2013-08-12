@@ -1,10 +1,10 @@
-/// <reference path="../../../jquery/jquery.d.ts" />
-/// <reference path="../../../ko/knockout.d.ts" />
-/// <reference path="../../../ko/knockout.mapping.d.ts" />
+/// <reference path="../../../typings/jquery/jquery.d.ts" />
+/// <reference path="../../../typings/knockout/knockout.d.ts" />
+/// <reference path="../../../typings/knockout.mapping/knockout.mapping.d.ts" />
 /// <reference path="Search.ts" />
  
-import Search = module('./Search')
-import SearchApiModel = module('./ServerApiModel')
+import Search= require('./Search')
+import SearchApiModel= require('./ServerApiModel')
  
     export class SearchResult { 
 
@@ -18,14 +18,14 @@ import SearchApiModel = module('./ServerApiModel')
         
         //#region Observable data
 
-        id: KnockoutObservableNumber;
-        officialName: KnockoutObservableString;
-        translatedName: KnockoutObservableString;
-        officialUrl: KnockoutObservableString;
-        countryName: KnockoutObservableString;
-        countryCode: KnockoutObservableString;
-        uCosmicCode: KnockoutObservableString;
-        ceebCode: KnockoutObservableString;
+        id: KnockoutObservable<number>;
+        officialName: KnockoutObservable<string>;
+        translatedName: KnockoutObservable<string>;
+        officialUrl: KnockoutObservable<string>;
+        countryName: KnockoutObservable<string>;
+        countryCode: KnockoutObservable<string>;
+        uCosmicCode: KnockoutObservable<string>;
+        ceebCode: KnockoutObservable<string>;
 
         private _pullData(values: SearchApiModel.IServerApiFlatModel): void {
             // map input model to observables
@@ -44,7 +44,7 @@ import SearchApiModel = module('./ServerApiModel')
 
         //#region Country computeds
 
-        nullDisplayCountryName: KnockoutComputed;
+        nullDisplayCountryName: KnockoutComputed<string>;
 
         private _setupCountryComputeds(): void {
             // show alternate text when country is undefined
@@ -56,8 +56,8 @@ import SearchApiModel = module('./ServerApiModel')
         //#endregion
         //#region Url computeds
 
-        fitOfficialUrl: KnockoutComputed;
-        officialUrlTooltip: KnockoutComputed;
+        fitOfficialUrl: KnockoutComputed<string>;
+        officialUrlTooltip: KnockoutComputed<string>;
 
         private _setupUrlComputeds(): void {
 
@@ -94,15 +94,15 @@ import SearchApiModel = module('./ServerApiModel')
         //#endregion
         //#region Name computeds
 
-        officialNameMatchesTranslation: KnockoutComputed;
-        officialNameDoesNotMatchTranslation: KnockoutComputed;
+        officialNameMatchesTranslation: KnockoutComputed<boolean>;
+        officialNameDoesNotMatchTranslation: KnockoutComputed<boolean>;
 
         private _setupNameComputeds(): void {
             // are the official name and translated name the same?
-            this.officialNameMatchesTranslation = ko.computed((): bool => {
+            this.officialNameMatchesTranslation = ko.computed((): boolean => {
                 return this.officialName() === this.translatedName();
             });
-            this.officialNameDoesNotMatchTranslation = ko.computed((): bool => {
+            this.officialNameDoesNotMatchTranslation = ko.computed((): boolean => {
                 return !this.officialNameMatchesTranslation();
             });
         }
@@ -110,8 +110,8 @@ import SearchApiModel = module('./ServerApiModel')
         //#endregion
         //#region Link computeds
 
-        detailHref: KnockoutComputed;
-        detailTooltip: KnockoutComputed;
+        detailHref: KnockoutComputed<string>;
+        detailTooltip: KnockoutComputed<string>;
 
         private _setupLinkComputeds(): void {
             
@@ -132,12 +132,12 @@ import SearchApiModel = module('./ServerApiModel')
         //#region Click handlers
 
         // navigate to detail page
-        clickAction(viewModel: SearchResult, e: JQueryEventObject): bool {
+        clickAction(viewModel: SearchResult, e: JQueryEventObject): boolean {
             return this._owner.clickAction(viewModel, e);
         }
 
         // open official URL page
-        openOfficialUrl(viewModel: SearchResult, e: JQueryEventObject): bool {
+        openOfficialUrl(viewModel: SearchResult, e: JQueryEventObject): boolean {
             e.stopPropagation();
             return true;
         }

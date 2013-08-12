@@ -1,8 +1,7 @@
-﻿/// <reference path="../../../jquery/jquery.d.ts" />
-/// <reference path="../../../ko/knockout.d.ts" />
-/// <reference path="../../../ko/knockout.mapping.d.ts" />
-/// <reference path="../../../ko/knockout.extensions.d.ts" />
-/// <reference path="../../../google/google.maps.d.ts" />
+﻿/// <reference path="../../../typings/jquery/jquery.d.ts" />
+/// <reference path="../../../typings/knockout/knockout.d.ts" />
+/// <reference path="../../../typings/knockout.mapping/knockout.mapping.d.ts" />
+/// <reference path="../../../typings/googlemaps/google.maps.d.ts" />
 /// <reference path="../../../google/ToolsOverlay.ts" />
 /// <reference path="../../../app/App.ts" />
 /// <reference path="../../../app/SideSwiper.ts" />
@@ -10,20 +9,20 @@
 /// <reference path="../../Spinner.ts" />
 
 
-import SearchApiModel = module('./ServerApiModel')
+import SearchApiModel= require('./ServerApiModel')
 import gm = google.maps
-import SearchResult = module('./SearchResult')
-import Search = module('./Search')
-import Name = module('./Name')
-import Location = module('./Location')
-import Url = module('./Url')
-import Spinner = module('../Widgets/Spinner')
-import Languages = module('../languages/ServerApiModel')
+import SearchResult= require('./SearchResult')
+import Search= require('./Search')
+import Name= require('./Name')
+import Location= require('./Location')
+import Url= require('./Url')
+import Spinner= require('../Widgets/Spinner')
+import Languages= require('../languages/ServerApiModel')
 
     class CeebCodeValidator implements KnockoutValidationAsyncRuleDefinition {
-        async: bool = true;
+        async: boolean = true;
         message: string = 'error';
-        private _isAwaitingResponse: bool = false;
+        private _isAwaitingResponse: boolean = false;
         private _ruleName: string = 'validEstablishmentCeebCode';
         validator(val: string, vm: Item, callback: KnockoutValidationAsyncCallback) {
             if (this._isValidatable(vm)) {
@@ -45,14 +44,14 @@ import Languages = module('../languages/ServerApiModel')
                 callback(true);
             }
         }
-        private _isValidatable(vm: Item): bool {
+        private _isValidatable(vm: Item): boolean {
             var originalValues = vm.originalValues();
             if (vm.id && vm.id !== 0)
                 return !this._isAwaitingResponse && vm && vm.ceebCode() && originalValues
                     && originalValues.ceebCode !== vm.ceebCode(); // edit
             return vm && vm.ceebCode() && !this._isAwaitingResponse; // create
         }
-        private _isOk(vm: Item): bool {
+        private _isOk(vm: Item): boolean {
             var originalValues = vm.originalValues();
             if (vm.id && vm.id !== 0)
                 return vm && vm.ceebCode() !== undefined && originalValues
@@ -67,9 +66,9 @@ import Languages = module('../languages/ServerApiModel')
     new CeebCodeValidator();
 
     class UCosmicCodeValidator implements KnockoutValidationAsyncRuleDefinition {
-        async: bool = true;
+        async: boolean = true;
         message: string = 'error';
-        private _isAwaitingResponse: bool = false;
+        private _isAwaitingResponse: boolean = false;
         private _ruleName: string = 'validEstablishmentUCosmicCode';
         validator(val: string, vm: Item, callback: KnockoutValidationAsyncCallback) {
             if (this._isValidatable(vm)) {
@@ -91,14 +90,14 @@ import Languages = module('../languages/ServerApiModel')
                 callback(true);
             }
         }
-        private _isValidatable(vm: Item): bool {
+        private _isValidatable(vm: Item): boolean {
             var originalValues = vm.originalValues();
             if (vm.id && vm.id !== 0)
                 return !this._isAwaitingResponse && vm && vm.uCosmicCode() && originalValues
                     && originalValues.uCosmicCode !== vm.uCosmicCode(); // edit
             return vm && vm.uCosmicCode() && !this._isAwaitingResponse; // create
         }
-        private _isOk(vm: Item): bool {
+        private _isOk(vm: Item): boolean {
             var originalValues = vm.originalValues();
             if (vm.id && vm.id !== 0)
                 return vm && vm.uCosmicCode() !== undefined && originalValues
@@ -113,9 +112,9 @@ import Languages = module('../languages/ServerApiModel')
     new UCosmicCodeValidator();
 
     class ParentIdValidator implements KnockoutValidationAsyncRuleDefinition {
-        async: bool = true;
+        async: boolean = true;
         message: string = 'error';
-        private _isAwaitingResponse: bool = false;
+        private _isAwaitingResponse: boolean = false;
         private _ruleName: string = 'validEstablishmentParentId';
         validator(val: string, vm: Item, callback: KnockoutValidationAsyncCallback) {
             if (this._isValidatable(vm)) {
@@ -137,14 +136,14 @@ import Languages = module('../languages/ServerApiModel')
                 callback(true);
             }
         }
-        private _isValidatable(vm: Item): bool {
+        private _isValidatable(vm: Item): boolean {
             var originalValues = vm.originalValues();
             if (vm.id && vm.id !== 0)
                 return !this._isAwaitingResponse && vm && vm.parentId() && originalValues
                     && originalValues.parentId !== vm.parentId(); // edit
             return false; // create
         }
-        private _isOk(vm: Item): bool {
+        private _isOk(vm: Item): boolean {
             var originalValues = vm.originalValues();
             if (vm.id && vm.id !== 0)
                 return vm && vm.parentId() && originalValues
@@ -162,24 +161,24 @@ import Languages = module('../languages/ServerApiModel')
 
         // fields
         id: number = 0;
-        originalValues: KnockoutObservableAny = ko.observable();
-        private _isInitialized: KnockoutObservableBool = ko.observable(false);
+        originalValues: KnockoutObservable<any> = ko.observable();
+        private _isInitialized: KnockoutObservable<boolean> = ko.observable(false);
         $genericAlertDialog: JQuery = undefined;
         location: Location.Location;
         createSpinner: Spinner.Spinner = new Spinner.Spinner(new Spinner.SpinnerOptions(0));
         validatingSpinner: Spinner.Spinner = new Spinner.Spinner(new Spinner.SpinnerOptions(200));
-        categories: KnockoutObservableArray = ko.observableArray();
+        categories: KnockoutObservableArray<any> = ko.observableArray();
         typeIdSaveSpinner: Spinner.Spinner = new Spinner.Spinner(new Spinner.SpinnerOptions(200));
         typeIdValidatingSpinner: Spinner.Spinner = new Spinner.Spinner(new Spinner.SpinnerOptions(200));
-        isTypeIdSaveDisabled: KnockoutComputed;
-        typeId: KnockoutObservableNumber = ko.observable();
-        typeText: KnockoutObservableString = ko.observable('[Loading...]');
-        ceebCode: KnockoutObservableString = ko.observable();
-        uCosmicCode: KnockoutObservableString = ko.observable();
-        isEditingTypeId: KnockoutObservableBool = ko.observable();
+        isTypeIdSaveDisabled: KnockoutComputed<boolean>;
+        typeId: KnockoutObservable<number> = ko.observable();
+        typeText: KnockoutObservable<string> = ko.observable('[Loading...]');
+        ceebCode: KnockoutObservable<string> = ko.observable();
+        uCosmicCode: KnockoutObservable<string> = ko.observable();
+        isEditingTypeId: KnockoutObservable<boolean> = ko.observable();
         isValidationSummaryVisible = ko.observable(false);
-        typeEmptyText: KnockoutComputed;
-        isValid: () => bool;
+        typeEmptyText: KnockoutComputed<string>;
+        isValid: () => boolean;
         errors: KnockoutValidationErrors;
         flasherProxy = new App.FlasherProxy();
 
@@ -231,7 +230,7 @@ import Languages = module('../languages/ServerApiModel')
                     this.uCosmicCode($.trim(this.uCosmicCode()));
             });
 
-            this.isTypeIdSaveDisabled = ko.computed((): bool => {
+            this.isTypeIdSaveDisabled = ko.computed((): boolean => {
                 return this.typeId.isValidating()
                     || this.uCosmicCode.isValidating()
                     || this.ceebCode.isValidating()
@@ -294,10 +293,10 @@ import Languages = module('../languages/ServerApiModel')
         //#region Names
         
         // observables, computeds, & variables
-        languages: Languages.KnockoutObservableLanguageModelArray = ko.observableArray(); // select options
-        names: KnockoutObservableArray = ko.observableArray();
-        editingName: KnockoutObservableNumber = ko.observable(0);
-        canAddName: KnockoutComputed;
+        languages: KnockoutObservableArray<Languages.IServerApiModel> = ko.observableArray(); // select options
+        names: KnockoutObservableArray<any> = ko.observableArray();
+        editingName: KnockoutObservable<number> = ko.observable(0);
+        canAddName: KnockoutComputed<boolean>;
         private _NamesMapping: any;
         namesSpinner: Spinner.Spinner= new Spinner.Spinner(new Spinner.SpinnerOptions(0, true));
         //NamesSpinner.isVisible = false;
@@ -347,7 +346,7 @@ import Languages = module('../languages/ServerApiModel')
                 }
             };
 
-            this.canAddName = ko.computed((): bool => {
+            this.canAddName = ko.computed((): boolean => {
                 return !this.namesSpinner.isVisible() && this.editingName() === 0 && this.id !== 0;
             });
 
@@ -367,9 +366,9 @@ import Languages = module('../languages/ServerApiModel')
         //#region URLs
 
         // observables, computeds, & variables
-        urls: KnockoutObservableArray = ko.observableArray();
-        editingUrl: KnockoutObservableNumber = ko.observable(0);
-        canAddUrl: KnockoutComputed;
+        urls: KnockoutObservableArray<any> = ko.observableArray();
+        editingUrl: KnockoutObservable<number> = ko.observable(0);
+        canAddUrl: KnockoutComputed<boolean>;
         private _urlsMapping: any;
         urlsSpinner: Spinner.Spinner = new Spinner.Spinner(new Spinner.SpinnerOptions(0, true));
 
@@ -407,7 +406,7 @@ import Languages = module('../languages/ServerApiModel')
                 }
             };
 
-            this.canAddUrl = ko.computed((): bool => {
+            this.canAddUrl = ko.computed((): boolean => {
                 return !this.urlsSpinner.isVisible() && this.editingUrl() === 0 && this.id !== 0;
             });
 
@@ -425,7 +424,7 @@ import Languages = module('../languages/ServerApiModel')
 
         //#endregion
 
-        submitToCreate(formElement: HTMLFormElement): bool {
+        submitToCreate(formElement: HTMLFormElement): boolean {
             if (!this.id || this.id === 0) {
                 var me = this;
                 this.validatingSpinner.start();
@@ -438,7 +437,7 @@ import Languages = module('../languages/ServerApiModel')
                 // wait for async validation to stop
                 if (officialName.text.isValidating() || officialUrl.value.isValidating() ||
                     this.ceebCode.isValidating() || this.uCosmicCode.isValidating()) {
-                    setTimeout((): bool => {
+                    setTimeout((): boolean => {
                         var waitResult = this.submitToCreate(formElement);
                         return false;
                     }, 50);
@@ -503,7 +502,7 @@ import Languages = module('../languages/ServerApiModel')
         }
 
         // hit /api/Shared/{id} for scalar values
-        private _loadScalars(): JQueryDeferred {
+        private _loadScalars(): JQueryDeferred<void> {
             var deferred = $.Deferred();
             if (this.id) {
                 $.get(App.Routes.WebApi.Establishments.get(this.id))
@@ -587,9 +586,9 @@ import Languages = module('../languages/ServerApiModel')
         });
         parentSearch = new Search.Search(false);
         sammy: Sammy.Application = Sammy();
-        private _findingParent: bool = false;
-        parentEstablishment: KnockoutObservableAny = ko.observable();
-        parentId: KnockoutObservableNumber = ko.observable();
+        private _findingParent: boolean = false;
+        parentEstablishment: KnockoutObservable<any> = ko.observable();
+        parentId: KnockoutObservable<number> = ko.observable();
         private _parentScrollTop: number;
         parentIdSaveSpinner: Spinner.Spinner = new Spinner.Spinner(new Spinner.SpinnerOptions(200));
         parentIdValidatingSpinner: Spinner.Spinner = new Spinner.Spinner(new Spinner.SpinnerOptions(200));
@@ -606,7 +605,7 @@ import Languages = module('../languages/ServerApiModel')
                     this.parentSearch.sammy.setLocation(location);
             }
 
-            this.parentSearch.clickAction = (viewModel: SearchResult.SearchResult, e: JQueryEventObject): bool => {
+            this.parentSearch.clickAction = (viewModel: SearchResult.SearchResult, e: JQueryEventObject): boolean => {
                 this.parentEstablishment(viewModel);
                 this.parentId(viewModel.id());
                 this.sammy.setLocation('/Shared/' + this.id + '/#/');
@@ -648,13 +647,13 @@ import Languages = module('../languages/ServerApiModel')
             this.sammy.setLocation('#/');
         }
 
-        hasParent: KnockoutComputed;
-        isParentDirty: KnockoutComputed;
-        isParentIdSaveDisabled: KnockoutComputed;
+        hasParent: KnockoutComputed<boolean>;
+        isParentDirty: KnockoutComputed<boolean>;
+        isParentIdSaveDisabled: KnockoutComputed<boolean>;
         private _setupParentComputeds(): void {
             var parentId = this.parentId();
 
-            this.isParentDirty = ko.computed((): bool => {
+            this.isParentDirty = ko.computed((): boolean => {
                 var parentId = this.parentId();
                 var originalValues = this.originalValues();
                 if (!this.id) return false;
@@ -663,11 +662,11 @@ import Languages = module('../languages/ServerApiModel')
                 return false;
             });
 
-            this.hasParent = ko.computed((): bool => {
+            this.hasParent = ko.computed((): boolean => {
                 return this.parentId() !== undefined && this.parentId() > 0;
             });
 
-            this.isParentIdSaveDisabled = ko.computed((): bool => {
+            this.isParentIdSaveDisabled = ko.computed((): boolean => {
                 return this.parentId.isValidating()
                     || this.parentIdSaveSpinner.isVisible()
                     || this.parentIdValidatingSpinner.isVisible()

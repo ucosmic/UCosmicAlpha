@@ -1,3 +1,4 @@
+/// <reference path="../../../typings/knockout/knockout.d.ts" />
 define(["require", "exports"], function(require, exports) {
     var ServerApiModel = (function () {
         function ServerApiModel(code, name) {
@@ -6,5 +7,5 @@ define(["require", "exports"], function(require, exports) {
         }
         return ServerApiModel;
     })();
-    exports.ServerApiModel = ServerApiModel;    
-})
+    exports.ServerApiModel = ServerApiModel;
+});

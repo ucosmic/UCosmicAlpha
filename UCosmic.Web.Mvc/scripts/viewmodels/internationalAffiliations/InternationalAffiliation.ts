@@ -1,14 +1,12 @@
-/// <reference path="../../jquery/jquery.d.ts" />
-/// <reference path="../../jquery/jqueryui.d.ts" />
-/// <reference path="../../ko/knockout.d.ts" />
-/// <reference path="../../ko/knockout.mapping.d.ts" />
-/// <reference path="../../ko/knockout.extensions.d.ts" />
-/// <reference path="../../ko/knockout.validation.d.ts" />
-/// <reference path="../../kendo/kendo.all.d.ts" />
-/// <reference path="../../tinymce/tinymce.d.ts" />
-/// <reference path="../../oss/moment.d.ts" />
+/// <reference path="../../typings/jquery/jquery.d.ts" />
+/// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
+/// <reference path="../../typings/knockout/knockout.d.ts" />
+/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
+/// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
+/// <reference path="../../typings/kendo/kendo.all.d.ts" />
+/// <reference path="../../typings/tinymce/tinymce.d.ts" />
+/// <reference path="../../typings/moment/moment.d.ts" />
 /// <reference path="../../app/Routes.ts" />
-/// <reference path="../../kendo/kendo.all.d.ts" />
 
 
 module ViewModels.InternationalAffiliations {
@@ -21,29 +19,29 @@ module ViewModels.InternationalAffiliations {
         inititializationErrors: string = "";
 
         /* True if any field changes. */
-        dirtyFlag: KnockoutObservableBool = ko.observable( false );
+        dirtyFlag: KnockoutObservable<boolean> = ko.observable( false );
 
         /* Locations for multiselect. */
         locationSelectorId: string;
-        initialLocations: any[] = new any[];        // Bug - To overcome bug in Multiselect.
-        selectedLocationValues: any[] = new any[];
+        initialLocations: any[] = [];        // Bug - To overcome bug in Multiselect.
+        selectedLocationValues: any[] = [];
 
         /* IObservableDegree implemented */
-        id: KnockoutObservableNumber;           // if 0, new expertise
-        version: KnockoutObservableString;      // byte[] converted to base64
-        personId: KnockoutObservableNumber;
-        from: KnockoutObservableNumber;
-        to: KnockoutObservableAny;              // nullable
-        onGoing: KnockoutObservableBool;
-        institution: KnockoutObservableString;
-        position: KnockoutObservableString;
-        locations: KnockoutObservableArray;
-        whenLastUpdated: KnockoutObservableString;
-        whoLastUpdated: KnockoutObservableString;
+        id: KnockoutObservable<number>;           // if 0, new expertise
+        version: KnockoutObservable<string>;      // byte[] converted to base64
+        personId: KnockoutObservable<number>;
+        from: KnockoutObservable<number>;
+        to: KnockoutObservable<any>;              // nullable
+        onGoing: KnockoutObservable<boolean>;
+        institution: KnockoutObservable<string>;
+        position: KnockoutObservable<string>;
+        locations: KnockoutObservableArray<any>;
+        whenLastUpdated: KnockoutObservable<string>;
+        whoLastUpdated: KnockoutObservable<string>;
 
         errors: KnockoutValidationErrors;
-        isValid: () => bool;
-        isAnyMessageShown: () => bool;
+        isValid: () => boolean;
+        isAnyMessageShown: () => boolean;
 
         years: number[];
 
@@ -135,7 +133,7 @@ module ViewModels.InternationalAffiliations {
         // --------------------------------------------------------------------------------
         setupValidation(): void {
             ko.validation.rules['atLeast'] = {
-                validator: ( val: any, otherVal: any ): bool => {
+                validator: ( val: any, otherVal: any ): boolean => {
                     return val.length >= otherVal;
                 },
                 message: 'At least {0} must be selected.'
@@ -177,7 +175,7 @@ module ViewModels.InternationalAffiliations {
         // --------------------------------------------------------------------------------
         load(): JQueryPromise {
             var me = this;
-            var deferred: JQueryDeferred = $.Deferred();
+            var deferred: JQueryDeferred<void> = $.Deferred();
 
             if ( this.id() == 0 ) {
                 this.version = ko.observable( null );
@@ -323,7 +321,7 @@ module ViewModels.InternationalAffiliations {
         /*
         */
         // --------------------------------------------------------------------------------
-        updateLocations( items: Array ): void {
+        updateLocations( items: any[] ): void {
             this.locations.removeAll();
             for ( var i = 0; i < items.length; i += 1 ) {
                 var location = ko.mapping.fromJS( { id: 0, placeId: items[i].id, version: "" } );

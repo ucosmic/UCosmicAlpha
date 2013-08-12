@@ -1,24 +1,23 @@
-/// <reference path="../../jquery/jquery.globalize/globalize.d.ts" />
-/// <reference path="../../ko/knockout.d.ts" />
-/// <reference path="../../ko/knockout.extensions.d.ts" />
-/// <reference path="../../kendo/kendo.all.d.ts" />
-/// <reference path="../../jquery/jquery.d.ts" />
-/// <reference path="../../ko/knockout.mapping.d.ts" />
-/// <reference path="../../require/require.d.ts" />
+/// <reference path="../../typings/globalize/globalize.d.ts" />
+/// <reference path="../../typings/knockout/knockout.d.ts" />
+/// <reference path="../../typings/kendo/kendo.all.d.ts" />
+/// <reference path="../../typings/jquery/jquery.d.ts" />
+/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
+/// <reference path="../../typings/requirejs/require.d.ts" />
 /// <reference path="../../app/App.ts" />
 /// <reference path="../../app/SideSwiper.ts" />
 /// <reference path="../../app/Routes.ts" />
-/// <reference path="../../oss/moment.d.ts" />
-/// <reference path="../../sammy/sammyjs.d.ts" />
+/// <reference path="../../typings/moment/moment.d.ts" />
+/// <reference path="../../typings/sammyjs/sammyjs.d.ts" />
 /// <amd-dependency path="../../jquery/jquery.globalize/globalize.require" />
 
-import SearchResultModule = module('../amd-modules/Establishments/SearchResult');
-import SearchModule = module('../amd-modules/Establishments/Search');
-import ItemModule = module('../amd-modules/Establishments/Item');
-import SearchApiModel = module('../amd-modules/Establishments/ServerApiModel');
-import Spinner = module('../amd-modules/Widgets/Spinner');
-import Name = module('../amd-modules/Establishments/Name')
-import Url = module('../amd-modules/Establishments/Url')
+import SearchResultModule= require('../amd-modules/Establishments/SearchResult');
+import SearchModule= require('../amd-modules/Establishments/Search');
+import ItemModule= require('../amd-modules/Establishments/Item');
+import SearchApiModel= require('../amd-modules/Establishments/ServerApiModel');
+import Spinner= require('../amd-modules/Widgets/Spinner');
+import Name= require('../amd-modules/Establishments/Name')
+import Url= require('../amd-modules/Establishments/Url')
 var Search = SearchModule.Search;
 var Item = ItemModule.Item;
 var SearchResult = SearchResultModule.SearchResult;
@@ -53,7 +52,7 @@ export class InstitutionalAgreementParticipantModel {
 };
 
 export class InstitutionalAgreementEditModel {
-    constructor(public initDefaultPageRoute?: bool = true) {
+    constructor(public initDefaultPageRoute: boolean = true) {
         //Globalize.culture("en-GB");
         //require(["../../kendo/2013.2.716/cultures/kendo.culture." + "fr" + ".min"], function (html) {
         //    kendo.culture("fr")
@@ -91,7 +90,7 @@ export class InstitutionalAgreementEditModel {
             this.visibility("Public");
             $("#LoadingPage").hide();
             $.when(this.dfdPopParticipants, this.dfdPageFadeIn)
-                .done(function () => {
+                .done(() => {
                     this.updateKendoDialog($(window).width());
                     $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * this.percentOffBodyHeight)));
                 });
@@ -112,33 +111,33 @@ export class InstitutionalAgreementEditModel {
             
             $("#LoadingPage").hide();
             $.when(this.dfdPopContacts, this.dfdPopFiles, this.dfdPopParticipants, this.dfdPageFadeIn)
-                .done(function () => {
+                .done(() => {
                     this.updateKendoDialog($(window).width());
                     $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * this.percentOffBodyHeight)));
                 });
         }
         this.populateUmbrella();
 
-        $(window).resize(function () => {
+        $(window).resize(() => {
             this.updateKendoDialog($(window).width());
         });
         
         this.isBound(true);
-        this.removeParticipant = <() => bool> this.removeParticipant.bind(this);
-        this.editAContact = <() => bool> this.editAContact.bind(this);
-        this.removeContact = <() => bool> this.removeContact.bind(this);
+        this.removeParticipant = <() => boolean> this.removeParticipant.bind(this);
+        this.editAContact = <() => boolean> this.editAContact.bind(this);
+        this.removeContact = <() => boolean> this.removeContact.bind(this);
         this.removePhone = <() => void > this.removePhone.bind(this);
         this.viewAFile = <() => void > this.viewAFile.bind(this);
         this.downloadAFile = <() => void > this.downloadAFile.bind(this);
         this.addPhone = <() => void > this.addPhone.bind(this);
         this.closeEditAFile = <() => void > this.closeEditAFile.bind(this);
-        this.fileVisibilityClicked = <() => bool > this.fileVisibilityClicked.bind(this);
+        this.fileVisibilityClicked = <() => boolean > this.fileVisibilityClicked.bind(this);
         this.removeFile = <() => void > this.removeFile.bind(this);
         this._setupValidation = <() => void > this._setupValidation.bind(this);
-        this.participantsShowErrorMsg = ko.computed(function () => {
+        this.participantsShowErrorMsg = ko.computed(() => {
             var validateParticipantsHasOwner = false;
             var validateParticipantsHasParticipant = false;
-            $.each(this.participants(), function (i, item) => {
+            $.each(this.participants(), (i, item) => {
                 if (item.isOwner() == true) {
                     validateParticipantsHasOwner = true;
                 }
@@ -209,28 +208,28 @@ export class InstitutionalAgreementEditModel {
     agreementIsEdit = ko.observable();
     agreementId;// = 1;
     visibility = ko.observable();
-    trail: KnockoutObservableStringArray = ko.observableArray([]);
-    nextForceDisabled: KnockoutObservableBool = ko.observable(false);
-    prevForceDisabled: KnockoutObservableBool = ko.observable(false);
-    pageNumber: KnockoutObservableNumber = ko.observable();
-    $typeOptions: KnockoutObservableJQuery = ko.observable();
+    trail: KnockoutObservableArray<string> = ko.observableArray([]);
+    nextForceDisabled: KnockoutObservable<boolean> = ko.observable(false);
+    prevForceDisabled: KnockoutObservable<boolean> = ko.observable(false);
+    pageNumber: KnockoutObservable<number> = ko.observable();
+    $typeOptions: KnockoutObservable<JQuery> = ko.observable();
     typeOptions = ko.mapping.fromJS([]);
-    typeOptionSelected: KnockoutObservableString = ko.observable();
-    $statusOptions: KnockoutObservableJQuery = ko.observable();
+    typeOptionSelected: KnockoutObservable<string> = ko.observable();
+    $statusOptions: KnockoutObservable<JQuery> = ko.observable();
     statusOptions = ko.mapping.fromJS([]);
-    statusOptionSelected: KnockoutObservableString = ko.observable();
-    $contactTypeOptions: KnockoutObservableJQuery = ko.observable();
+    statusOptionSelected: KnockoutObservable<string> = ko.observable();
+    $contactTypeOptions: KnockoutObservable<JQuery> = ko.observable();
     contactTypeOptions = ko.mapping.fromJS([]);
-    contactTypeOptionSelected: KnockoutObservableString = ko.observable();
+    contactTypeOptionSelected: KnockoutObservable<string> = ko.observable();
     contactsIsEdit = ko.observable(false);
     contactFirstName = ko.observable();
     contactLastName = ko.observable();
     contactSuffix = ko.mapping.fromJS([]);
     contactSuffixSelected = ko.observable();
-    $$contactSuffix: KnockoutObservableJQuery = ko.observable();
+    $$contactSuffix: KnockoutObservable<JQuery> = ko.observable();
     contactSalutation = ko.mapping.fromJS([]);
     contactSalutationSelected = ko.observable();
-    $$contactSalutation: KnockoutObservableJQuery = ko.observable();
+    $$contactSalutation: KnockoutObservable<JQuery> = ko.observable();
     contactJobTitle = ko.observable();
     contactPersonId = ko.observable();
     contactUserId;
@@ -250,7 +249,7 @@ export class InstitutionalAgreementEditModel {
     validateBasicInfo;
     validateEffectiveDatesCurrentStatus;
 
-    $uAgreements: KnockoutObservableJQuery = ko.observable();
+    $uAgreements: KnockoutObservable<JQuery> = ko.observable();
     uAgreements = ko.mapping.fromJS([]);
     uAgreementSelected = ko.observable("");
     nickname = ko.observable();
@@ -266,18 +265,18 @@ export class InstitutionalAgreementEditModel {
     isCustomStatusAllowed = ko.observable();
     isCustomContactTypeAllowed = ko.observable();
     phoneTypes = ko.mapping.fromJS([]);
-    $phoneTypes: KnockoutObservableJQuery = ko.observable();
+    $phoneTypes: KnockoutObservable<JQuery> = ko.observable();
     phoneTypeSelected = ko.observable();
-    $file: KnockoutObservableJQuery = ko.observable();
-    hasFile: KnockoutObservableBool = ko.observable();
-    isFileExtensionInvalid: KnockoutObservableBool = ko.observable(false);
-    isFileTooManyBytes: KnockoutObservableBool = ko.observable(false);
-    isFileFailureUnexpected: KnockoutObservableBool = ko.observable(false);
-    isFileInvalid: KnockoutObservableBool = ko.observable(false);
-    fileError: KnockoutObservableString = ko.observable();
-    fileFileExtension: KnockoutObservableString = ko.observable();
-    fileFileName: KnockoutObservableString = ko.observable();
-    fileSrc: KnockoutObservableString = ko.observable();
+    $file: KnockoutObservable<JQuery> = ko.observable();
+    hasFile: KnockoutObservable<boolean> = ko.observable();
+    isFileExtensionInvalid: KnockoutObservable<boolean> = ko.observable(false);
+    isFileTooManyBytes: KnockoutObservable<boolean> = ko.observable(false);
+    isFileFailureUnexpected: KnockoutObservable<boolean> = ko.observable(false);
+    isFileInvalid: KnockoutObservable<boolean> = ko.observable(false);
+    fileError: KnockoutObservable<string> = ko.observable();
+    fileFileExtension: KnockoutObservable<string> = ko.observable();
+    fileFileName: KnockoutObservable<string> = ko.observable();
+    fileSrc: KnockoutObservable<string> = ko.observable();
     fileUploadSpinner = new Spinner.Spinner(new Spinner.SpinnerOptions(400));
     fileDeleteSpinner = new Spinner.Spinner(new Spinner.SpinnerOptions(400));
     $confirmPurgeDialog: JQuery;
@@ -296,7 +295,6 @@ export class InstitutionalAgreementEditModel {
         return !(this.participants.establishmentOfficialName === this.participants.establishmentTranslatedName);
     });
 
-    addNewParticipant: KnockoutComputed;
     isBound = ko.observable();
 
     back = function () {
@@ -380,7 +378,7 @@ export class InstitutionalAgreementEditModel {
     populateFiles(): void {
         $.get(App.Routes.WebApi.Agreements.Files.get(this.agreementId), { useTestData: true })
             .done((response: any): void => {
-                $.each(response, function (i, item) => {
+                $.each(response, (i, item) => {
                     this.files.push(ko.mapping.fromJS({
                         id: item.id,
                         originalName: item.originalName,
@@ -472,8 +470,8 @@ export class InstitutionalAgreementEditModel {
                 //this.isFileExtensionInvalid(false);
                 //this.isFileTooManyBytes(false);
                 //this.isFileFailureUnexpected(false);
-                //var isExtensionAllowed: bool = false;
-                //var isByteNumberAllowed: bool = false;
+                //var isExtensionAllowed: boolean = false;
+                //var isByteNumberAllowed: boolean = false;
                 //var extension: string = e.files[0].extension;
                 //this.fileFileExtension(extension || '[NONE]');
                 //this.fileFileName(e.files[0].name);
@@ -586,9 +584,9 @@ export class InstitutionalAgreementEditModel {
 
     editAFile(me, e): void {
         me.isEdit(true);
-    };
+    }
 
-    cancelEditAFile(me, e): bool {
+    cancelEditAFile(me, e): boolean {
         me.customNameFile(me.customName().substring(0, me.customName().lastIndexOf(".")))
         me.isEdit(false);
         e.stopImmediatePropagation();
@@ -633,9 +631,9 @@ export class InstitutionalAgreementEditModel {
                 }
             });
         }
-    };
+    }
 
-    fileVisibilityClicked(me, e): bool {
+    fileVisibilityClicked(me, e): boolean {
         
         if (this.agreementIsEdit()) {
             var data = ko.mapping.toJS({
@@ -673,13 +671,13 @@ export class InstitutionalAgreementEditModel {
             });
         }
         return true;
-    };
+    }
 
     downloadAFile(me, e): void {
         //this.agreementId = 2
         var url = App.Routes.WebApi.Agreements.Files.Content.download(this.agreementId, me.id());
         window.location.href = url;
-    };
+    }
 
     viewAFile(me, e): void {
         //this.agreementId = 2
@@ -688,7 +686,7 @@ export class InstitutionalAgreementEditModel {
           url,
           '_blank'
         );
-    };
+    }
 
     updateKendoDialog(windowWidth): void {
 
@@ -821,7 +819,7 @@ export class InstitutionalAgreementEditModel {
 
         this.$addContactDialog.kendoWindow({
             width: 950,
-            close: function () => {
+            close: () => {
                 $("#addAContact").fadeIn(500);
                 this.clearContactInfo();
             },
@@ -836,7 +834,7 @@ export class InstitutionalAgreementEditModel {
             top: '20px'
         });
 
-        function kacSelext(me, e) => {
+        var kacSelect = (me, e) => {
             var dataItem = me.dataItem(e.item.index());
             this.contactDisplayName(dataItem.displayName)
             this.contactFirstName(dataItem.firstName);
@@ -881,7 +879,7 @@ export class InstitutionalAgreementEditModel {
                 }
             }),
             select: (e: any): void => {
-                kacSelext(this.$contactEmail.data("kendoAutoComplete"), e);
+                kacSelect(this.$contactEmail.data("kendoAutoComplete"), e);
             }
         });
 
@@ -909,7 +907,7 @@ export class InstitutionalAgreementEditModel {
                 }
             }),
             select: (e: any): void => {
-                kacSelext(this.$contactLastName.data("kendoAutoComplete"), e);
+                kacSelect(this.$contactLastName.data("kendoAutoComplete"), e);
             }
         });
 
@@ -937,7 +935,7 @@ export class InstitutionalAgreementEditModel {
                 }
             }),
             select: (e: any): void => {
-                kacSelext(this.$contactFirstName.data("kendoAutoComplete"), e);
+                kacSelect(this.$contactFirstName.data("kendoAutoComplete"), e);
             }
         });
         
@@ -1037,7 +1035,7 @@ export class InstitutionalAgreementEditModel {
             url: eval(url),
             type: 'GET'
         })
-        .done(function (result) => {
+        .done((result) => {
             this.bindjQueryKendo(result);
         })
         .fail(function (xhr) {
@@ -1051,7 +1049,7 @@ export class InstitutionalAgreementEditModel {
         $("#addEstablishment").css("visibility", "").hide();
     }
 
-    removeParticipant(establishmentResultViewModel, e): bool {
+    removeParticipant(establishmentResultViewModel, e): boolean {
         if (confirm('Are you sure you want to remove "' +
             establishmentResultViewModel.establishmentTranslatedName() +
             '" as a participant from this agreement?')) {
@@ -1069,7 +1067,7 @@ export class InstitutionalAgreementEditModel {
         e.preventDefault();
         e.stopPropagation();
         return false;
-    };
+    }
 
     establishmentSearchViewModel = new Search();
     establishmentItemViewModel; 
@@ -1084,20 +1082,20 @@ export class InstitutionalAgreementEditModel {
         };
         $cancelAddParticipant.off();
         $searchSideBarAddNew.off();
-        $searchSideBarAddNew.on("click", function (e) => {
+        $searchSideBarAddNew.on("click", (e) => {
             this.establishmentSearchViewModel.sammy.setLocation('#/new/');
             e.preventDefault();
             return false;
         });
         if (parentOrParticipant === "parent") {
-            $cancelAddParticipant.on("click", function (e) => {
+            $cancelAddParticipant.on("click", (e) => {
                 this.percentOffBodyHeight = .2;
                 this.establishmentSearchViewModel.sammy.setLocation('#/new/');
                 e.preventDefault();
                 return false;
             });
         } else {
-            $cancelAddParticipant.on("click", function (e) => {
+            $cancelAddParticipant.on("click", (e) => {
                 this.percentOffBodyHeight = .2;
                 this.establishmentSearchViewModel.sammy.setLocation('#/index');
                 e.preventDefault();
@@ -1111,11 +1109,11 @@ export class InstitutionalAgreementEditModel {
         var time = 500;
         this.fadeModsOut(dfd, dfd2, $obj, $obj2, time);
         $.when(dfd, dfd2)
-            .done(function () => {
-                $("#estSearch").fadeIn(500, function () => {
+            .done(() => {
+                $("#estSearch").fadeIn(500, () => {
                 });
             });
-    };
+    }
 
     fadeModsOut(dfd, dfd2, $obj, $obj2, time): void {
         if ($obj.css("display") !== "none") {
@@ -1134,7 +1132,7 @@ export class InstitutionalAgreementEditModel {
         else {
             dfd2.resolve();
         }
-    };
+    }
 
     scrollMyBody(position): void {
         var $body;
@@ -1163,7 +1161,7 @@ export class InstitutionalAgreementEditModel {
             if (sessionStorage.getItem("addest") == undefined) {
                 sessionStorage.setItem("addest", "no");
             }
-            this.establishmentSearchViewModel.sammy.bind("location-changed", function () => {
+            this.establishmentSearchViewModel.sammy.bind("location-changed", () => {
                 if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf(lastURL) < 0) {
                     var $asideRootSearch = $("#asideRootSearch");
                     var $asideParentSearch = $("#asideParentSearch");
@@ -1176,15 +1174,15 @@ export class InstitutionalAgreementEditModel {
                         var time = 500;
                         this.fadeModsOut(dfd, dfd2, $obj, $obj2, time);
                         $.when(dfd, dfd2)
-                            .done(function () => {
-                                $addEstablishment.css("visibility", "").hide().fadeIn(500, function () => {
+                            .done(() => {
+                                $addEstablishment.css("visibility", "").hide().fadeIn(500, () => {
                                     if (!this.hasBoundItem) {
                                         this.establishmentItemViewModel = new Item();
-                                        this.establishmentItemViewModel.goToSearch = function () => {
+                                        this.establishmentItemViewModel.goToSearch = () => {
                                             sessionStorage.setItem("addest", "yes");
                                             this.establishmentSearchViewModel.sammy.setLocation('#/page/1/');
                                         }
-                                        this.establishmentItemViewModel.submitToCreate = function(formElement: HTMLFormElement): bool => {
+                                        this.establishmentItemViewModel.submitToCreate = (formElement: HTMLFormElement): boolean => {
                                             if (!this.establishmentItemViewModel.id || this.establishmentItemViewModel.id === 0) {
                                                 var me = this.establishmentItemViewModel;
                                                 this.establishmentItemViewModel.validatingSpinner.start();
@@ -1195,7 +1193,7 @@ export class InstitutionalAgreementEditModel {
                                                 // wait for async validation to stop
                                                 if (officialName.text.isValidating() || officialUrl.value.isValidating() ||
                                                     this.establishmentItemViewModel.ceebCode.isValidating() || this.establishmentItemViewModel.uCosmicCode.isValidating()) {
-                                                    setTimeout((): bool => {
+                                                    setTimeout((): boolean => {
                                                         var waitResult = this.establishmentItemViewModel.submitToCreate(formElement);
                                                         return false;
                                                     }, 50);
@@ -1227,10 +1225,10 @@ export class InstitutionalAgreementEditModel {
                                                     .done((response: any, statusText: string, xhr: JQueryXHR): void => {
                                                         this.establishmentItemViewModel.createSpinner.stop();
                                                         $LoadingPage.text("Establishment created, you are being redirected to previous page...");
-                                                        $("#addEstablishment").fadeOut(500, function () => {
+                                                        $("#addEstablishment").fadeOut(500, () => {
                                                             this.percentOffBodyHeight = .2;
                                                             $("#LoadingPage").fadeIn(500);
-                                                            setTimeout(function () => {
+                                                            setTimeout(() => {
                                                                 $("#LoadingPage").fadeOut(500, function () {
                                                                     $LoadingPage.text("Loading Page...");
                                                                 });
@@ -1261,7 +1259,7 @@ export class InstitutionalAgreementEditModel {
                                         }
                                         ko.applyBindings(this.establishmentItemViewModel, $addEstablishment[0]);
                                         var $cancelAddEstablishment = $("#cancelAddEstablishment");
-                                        $cancelAddEstablishment.on("click", function (e) => {
+                                        $cancelAddEstablishment.on("click", (e) => {
                                             sessionStorage.setItem("addest", "no");
                                             this.establishmentSearchViewModel.sammy.setLocation('#/page/1/');
                                             e.preventDefault();
@@ -1275,10 +1273,11 @@ export class InstitutionalAgreementEditModel {
                         lastURL = "#/new/";
                     } else if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("" + this.editOrNewUrl + "#/page/") > 0) {
                         if (sessionStorage.getItem("addest") === "yes") {
-                            this.establishmentSearchViewModel.clickAction = function (context): bool => {
+                            this.establishmentSearchViewModel.clickAction = (context): boolean => {
                                 this.establishmentItemViewModel.parentEstablishment(context);
                                 this.establishmentItemViewModel.parentId(context.id());
                                 this.establishmentSearchViewModel.sammy.setLocation('#/new/');
+                                return false;
                             };
                             this.establishmentSearchViewModel.header("Choose a parent establishment");
                             $asideRootSearch.hide();
@@ -1291,7 +1290,7 @@ export class InstitutionalAgreementEditModel {
                             $asideParentSearch.hide();
                             this.SearchPageBind("participant");
                             this.establishmentSearchViewModel.header("Choose a participant");
-                            this.establishmentSearchViewModel.clickAction = function (context): bool => {
+                            this.establishmentSearchViewModel.clickAction = (context): boolean => {
                                 var myParticipant = new InstitutionalAgreementParticipantModel(
                                     false,
                                     context.id(),
@@ -1311,14 +1310,14 @@ export class InstitutionalAgreementEditModel {
                                         type: 'GET',
                                         async: false
                                     })
-                                    .done(function (response) => {
+                                    .done((response) => {
                                         myParticipant.isOwner(response.isOwner);
                                         this.participants.push(myParticipant);
                                         this.percentOffBodyHeight = .2;
                                         this.establishmentSearchViewModel.sammy.setLocation("agreements/" + this.editOrNewUrl + "");
                                         $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * .85)));
                                     })
-                                    .fail(function () => {
+                                    .fail(() => {
                                         this.percentOffBodyHeight = .2;
                                         this.participants.push(myParticipant);
                                         this.establishmentSearchViewModel.sammy.setLocation("agreements/" + this.editOrNewUrl + "");
@@ -1326,6 +1325,7 @@ export class InstitutionalAgreementEditModel {
                                 } else {
                                     alert("This Participant has already been added.")
                                 }
+                                return false;
                             }
                         }
                         this.scrollMyBody(0);
@@ -1341,8 +1341,8 @@ export class InstitutionalAgreementEditModel {
                         var time = 500;
                         this.fadeModsOut(dfd, dfd2, $obj, $obj2, time);
                         $.when(dfd, dfd2)
-                            .done(function () => {
-                                $("#allParticipants").fadeIn(500).promise().done(function () => {
+                            .done(() => {
+                                $("#allParticipants").fadeIn(500).promise().done(() => {
                                     $(this).show();
                                     this.scrollMyBody(0);
                                     this.dfdPageFadeIn.resolve();
@@ -1355,7 +1355,7 @@ export class InstitutionalAgreementEditModel {
             });
             this.establishmentSearchViewModel.sammy.run();
         }
-    };
+    }
 
     editAContact(me): void {
         this.$addContactDialog.data("kendoWindow").open().title("Edit Contact")
@@ -1463,7 +1463,7 @@ export class InstitutionalAgreementEditModel {
             if (this.agreementIsEdit()) {
                 this.contacts()[this.contactIndex].agreementId(this.agreementId)// may not need this later
                 var phoneData = [];
-                $.each(this.contacts()[this.contactIndex].phones(), function (i, item) => {
+                $.each(this.contacts()[this.contactIndex].phones(), (i, item) => {
                     var data = ko.mapping.toJS({
                         contactId: item.contactId,
                         type: item.type,
@@ -1614,7 +1614,7 @@ export class InstitutionalAgreementEditModel {
         this.validateContact.errors.showAllMessages(false);
     }
 
-    removeContact(me, e): bool {
+    removeContact(me, e): boolean {
         if (confirm('Are you sure you want to remove "' +
             me.firstName() + " " + me.lastName() +
             '" as a contact from this agreement?')) {
@@ -1624,7 +1624,7 @@ export class InstitutionalAgreementEditModel {
         e.preventDefault();
         e.stopPropagation();
         return false;
-    };
+    }
 
     removePhone(me, e): void {
         this.contactPhones.remove(me);
@@ -1649,7 +1649,7 @@ export class InstitutionalAgreementEditModel {
     addParticipant(establishmentResultViewModel): void {
         this.establishmentSearchViewModel.sammy.setLocation('#/page/1/');
         this.hasBoundSearch = true;
-    };
+    }
        
     swipeCallback(): void {
     }
@@ -1666,7 +1666,7 @@ export class InstitutionalAgreementEditModel {
     
     private _setupValidation(): void {
         ko.validation.rules['greaterThan'] = {
-            validator: function (val, otherVal) => {
+            validator: (val, otherVal) => {
                 if (otherVal() == undefined) {
                     return true;
                 } else {
@@ -1785,7 +1785,7 @@ export class InstitutionalAgreementEditModel {
         }
         $(event.target).closest("ul").find("li").removeClass("current");
         $(event.target).closest("li").addClass("current");
-    };
+    }
 
     postMe(data, url): void {
         $.post(url, data)
@@ -1813,7 +1813,7 @@ export class InstitutionalAgreementEditModel {
     agreementPostFiles(response: any, statusText: string, xhr: JQueryXHR): void {
         var tempUrl = App.Routes.WebApi.Agreements.Files.post(this.agreementId);
 
-        $.each(this.files(), function (i, item) => {
+        $.each(this.files(), (i, item) => {
             var data = ko.mapping.toJS({
                 agreementId: item.agreementId,
                 uploadGuid: item.guid,
@@ -1830,7 +1830,7 @@ export class InstitutionalAgreementEditModel {
     agreementPostContacts(response: any, statusText: string, xhr: JQueryXHR): void {
         var tempUrl = App.Routes.WebApi.Agreements.Contacts.post(this.agreementId);
 
-        $.each(this.contacts(), function (i, item) => {
+        $.each(this.contacts(), (i, item) => {
             var data = ko.mapping.toJS({
                 agreementId: this.agreementId,
                 PersonId: item.personId,
@@ -1852,20 +1852,20 @@ export class InstitutionalAgreementEditModel {
         var offset;
         // validate in this order to put scroll in right place
         if (!this.validateEffectiveDatesCurrentStatus.isValid()) {
-            var offset = $("#effectiveDatesCurrentStatus").offset();
+            offset = $("#effectiveDatesCurrentStatus").offset();
             this.validateEffectiveDatesCurrentStatus.errors.showAllMessages(true);
             $("#navEffectiveDatesCurrentStatus").closest("ul").find("li").removeClass("current");
             $("#navEffectiveDatesCurrentStatus").addClass("current");
         }
         if (!this.validateBasicInfo.isValid()) {
-            var offset = $("#basicInfo").offset();
+            offset = $("#basicInfo").offset();
             this.validateBasicInfo.errors.showAllMessages(true);
             $("#navValidateBasicInfo").closest("ul").find("li").removeClass("current");
             $("#navValidateBasicInfo").addClass("current");
         }
         $("#participantsErrorMsg").show();
         if (this.participantsShowErrorMsg()) {
-            var offset = $("#participants").offset();
+            offset = $("#participants").offset();
             $("#navParticipants").closest("ul").find("li").removeClass("current");
             $("#navParticipants").addClass("current");
         } 
@@ -1888,11 +1888,11 @@ export class InstitutionalAgreementEditModel {
             }
             var $LoadingPage = $("#LoadingPage").find("strong")
             $LoadingPage.text("Saving agreement...");
-            $("#allParticipants").show().fadeOut(500, function () => {
+            $("#allParticipants").show().fadeOut(500, () => {
                 $("#LoadingPage").hide().fadeIn(500);
             });
 
-            $.each(this.participants(), function (i, item) => {
+            $.each(this.participants(), (i, item) => {
                 this.participantsExport.push({
                     agreementId: item.agreementId,
                     establishmentId: item.establishmentId,
@@ -1924,7 +1924,7 @@ export class InstitutionalAgreementEditModel {
                     data: data,
                     success: (response: any, statusText: string, xhr: JQueryXHR): void => {
                         $LoadingPage.text("Agreement Saved...");
-                        setTimeout(function () => {
+                        setTimeout(() => {
                             $("#LoadingPage").show().fadeOut(500, function () {
                                 $("#allParticipants").hide().fadeIn(500);
                             });
@@ -1957,7 +1957,7 @@ export class InstitutionalAgreementEditModel {
                         this.agreementPostContacts(response, statusText, xhr);
                         //change url to edit
                         $LoadingPage.text("Agreement Saved...");
-                        setTimeout(function () => {
+                        setTimeout(() => {
                             $("#LoadingPage").fadeOut(500, function () {
                                 if (xhr != undefined) {
                                     window.location.hash = ""
@@ -1991,9 +1991,6 @@ export class InstitutionalAgreementEditModel {
                     });
             }
         }
-
-
-    };
-
+    }
 }
 

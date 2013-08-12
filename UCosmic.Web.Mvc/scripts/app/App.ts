@@ -1,6 +1,6 @@
-/// <reference path="../jquery/jquery.d.ts" />
-/// <reference path="../oss/jquery.autosize.d.ts" />
-/// <reference path="../oss/jquery.placeholder.d.ts" />
+/// <reference path="../typings/jquery/jquery.d.ts" />
+/// <reference path="../typings/jquery.plugins/jquery.autosize.d.ts" />
+/// <reference path="../typings/jquery.plugins/jquery.placeholder.d.ts" />
 
 interface String {
     format(...args: any[]): string;
@@ -20,7 +20,7 @@ module App {
 
     // react to unexpected situations
     export module Failures {
-        export function message(xhr: JQueryXHR, reason: string = '', autoAlert: bool = false): string {
+        export function message(xhr: JQueryXHR, reason: string = '', autoAlert: boolean = false): string {
 
             // do not report error if user clicked on link or browser control
             if (xhr.readyState === 0 || xhr.status === 0) return null;

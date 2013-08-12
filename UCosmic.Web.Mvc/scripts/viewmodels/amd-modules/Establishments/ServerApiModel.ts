@@ -1,4 +1,4 @@
-/// <reference path="../../../ko/knockout.d.ts" />
+/// <reference path="../../../typings/knockout/knockout.d.ts" />
 /// <reference path="../places/ServerApiModel.ts" />
 /// <reference path="Name.ts" />
 /// <reference path="Url.ts" />
@@ -10,7 +10,7 @@
 //    notifySubscribers(valueToWrite: Name[], topic?: string);
 //}
 
-import Places = module('../places/ServerApiModel');
+import Places= require('../places/ServerApiModel');
 
 export interface IServerApiFlatModel {
     id: number;
@@ -34,8 +34,8 @@ export interface IServerNameInputModel {
     id: number;
     ownerId: number;
     text: string;
-    isOfficialName: bool;
-    isFormerName: bool;
+    isOfficialName: boolean;
+    isFormerName: boolean;
     languageCode: string;
 }
 
@@ -47,8 +47,8 @@ export interface IServerUrlApiModel {
     id: number;
     ownerId: number;
     value: string;
-    isOfficialUrl: bool;
-    isFormerUrl: bool;
+    isOfficialUrl: boolean;
+    isFormerUrl: boolean;
 }
 
 export interface IServerLocationApiModel {

@@ -1,12 +1,15 @@
+/// <reference path="../../../app/Routes.ts" />
+/// <reference path="../../places/ServerApiModel.ts" />
+/// <reference path="../../Spinner.ts" />
+/// <reference path="../../Flasher.ts" />
 define(["require", "exports", '../places/ServerApiModel', '../Widgets/Spinner', '../google/ToolsOverlay'], function(require, exports, __Places__, __Spinner__, __ToolsOverlay__) {
     
     var Places = __Places__;
-
     var Spinner = __Spinner__;
-
     var ToolsOverlay = __ToolsOverlay__;
 
     var gm = google.maps;
+
     var Location = (function () {
         function Location(ownerId) {
             var _this = this;
@@ -36,11 +39,12 @@ define(["require", "exports", '../places/ServerApiModel', '../Widgets/Spinner', 
             this.isEditing = ko.observable();
             this.ownerId = ownerId;
             this._initComputedsAndSubscriptions();
+
             this.loadSpinner.isVisible.subscribe(function (newValue) {
-                if(!_this.$dataLoadingDialog || !_this.$dataLoadingDialog.length) {
+                if (!_this.$dataLoadingDialog || !_this.$dataLoadingDialog.length) {
                     return;
                 }
-                if(newValue) {
+                if (newValue) {
                     _this.$dataLoadingDialog.dialog({
                         modal: true,
                         resizable: false,
@@ -51,16 +55,26 @@ define(["require", "exports", '../places/ServerApiModel', '../Widgets/Spinner', 
                     _this.$dataLoadingDialog.dialog('close');
                 }
             });
+
             this.isEditable = ko.computed(function () {
+                // may be a bad name for this property
+                // this only returns true for the edit page, returns false for add page
                 return _this.ownerId && _this.ownerId !== 0;
             });
+
             this.isEditIconVisible = ko.computed(function () {
+                // whether or not to display edit icon to user
+                // should never show on add page, because is always editable
+                // should only display on edit page to make isEditing() === true
                 return _this.isEditable() && !_this.isEditing();
             });
+
             this.isEditing.subscribe(function (newValue) {
-                if(newValue) {
+                if (newValue) {
+                    // show map marker tool
                     _this.mapTools().showMarkerTools();
-                } else if(_this.isEditable()) {
+                } else if (_this.isEditable()) {
+                    // always display for add page, but hide for edit page
                     _this.mapTools().hideMarkerTools();
                 }
             });
@@ -74,72 +88,70 @@ define(["require", "exports", '../places/ServerApiModel', '../Widgets/Spinner', 
                 return _this.mapTools() && _this.mapTools().markerLatLng() ? _this.mapTools().markerLatLng().lng() : null;
             });
             this.$mapCanvas.subscribe(function (newValue) {
-                if(!_this.map) {
+                if (!_this.map)
                     _this.initMap();
-                }
             });
+
+            // continents section
             ko.computed(function () {
-                $.get(App.Routes.WebApi.Places.get(), {
-                    isContinent: true
-                }).done(function (response) {
+                $.get(App.Routes.WebApi.Places.get(), { isContinent: true }).done(function (response) {
                     _this.continents(response);
                 });
-            }).extend({
-                throttle: 1
-            });
+            }).extend({ throttle: 1 });
             this.continentName = ko.computed(function () {
                 var continentId = _this.continentId();
-                if(!continentId) {
+                if (!continentId)
                     return '[Unspecified]';
-                }
                 var continent = Places.Utils.getPlaceById(_this.continents(), continentId);
                 return continent ? continent.officialName : '[Unknown]';
             });
+
+            // countries dropdown
             this.countryOptionsCaption = ko.computed(function () {
                 return _this.countries().length > 0 ? '[Unspecified]' : '[Loading...]';
             });
             ko.computed(function () {
-                $.get(App.Routes.WebApi.Places.get(), {
-                    isCountry: true
-                }).done(function (response) {
+                $.get(App.Routes.WebApi.Places.get(), { isCountry: true }).done(function (response) {
                     _this.countries(response);
-                    if(_this._countryId) {
+                    if (_this._countryId) {
                         var countryId = _this._countryId;
                         _this._countryId = undefined;
                         _this.countryId(countryId);
                     }
                 });
-            }).extend({
-                throttle: 1
-            });
+            }).extend({ throttle: 1 });
             this.countryName = ko.computed(function () {
                 var countryId = _this.countryId();
-                if(!countryId) {
+                if (!countryId)
                     return '[Unspecified]';
-                }
                 var country = Places.Utils.getPlaceById(_this.countries(), countryId);
                 return country ? country.officialName : '[Unknown]';
             });
             this.countryId.subscribe(function (newValue) {
-                if(newValue && _this.countries().length == 0) {
+                if (newValue && _this.countries().length == 0)
                     _this._countryId = newValue;
-                }
-                if(newValue && _this.countries().length > 0) {
+
+                if (newValue && _this.countries().length > 0) {
                     var country = Places.Utils.getPlaceById(_this.countries(), newValue);
-                    if(country) {
-                        if(_this.allowCountryFitBounds) {
+                    if (country) {
+                        if (_this.allowCountryFitBounds) {
                             _this.map.fitBounds(Places.Utils.convertToLatLngBounds(country.box));
                         } else {
                             setTimeout(function () {
                                 _this.allowCountryFitBounds = true;
                             }, 1000);
                         }
+
+                        // cascade the continent
                         _this.continentId(country.parentId);
+
+                        // load admin1 options
                         _this.loadAdmin1s(country.id);
                     }
-                } else if(!newValue && _this.countries().length > 0) {
+                } else if (!newValue && _this.countries().length > 0) {
+                    // when changing to unspecified, zoom out menu
                     _this.map.setCenter(new gm.LatLng(0, 0));
-                    if(_this.allowCountryFitBounds) {
+                    if (_this.allowCountryFitBounds) {
                         _this.map.setZoom(1);
                     } else {
                         setTimeout(function () {
@@ -149,21 +161,22 @@ define(["require", "exports", '../places/ServerApiModel', '../Widgets/Spinner', 
                     _this.continentId(null);
                 }
             });
+
+            // admin1 dropdown
             this.admin1OptionsCaption = ko.computed(function () {
                 return !_this.admin1sLoading() ? '[Unspecified]' : '[Loading...]';
-            }).extend({
-                throttle: 400
-            });
+            }).extend({ throttle: 400 });
             this.showAdmin1Input = ko.computed(function () {
                 return _this.countryId() && (_this.admin1s().length > 0 || _this.admin1sLoading());
             });
             this.admin1Id.subscribe(function (newValue) {
-                if(newValue && _this.admin1s().length == 0) {
+                if (newValue && _this.admin1s().length == 0)
                     _this._admin1Id = newValue;
-                }
-                if(newValue && _this.admin1s().length > 0) {
+
+                if (newValue && _this.admin1s().length > 0) {
                     var admin1 = Places.Utils.getPlaceById(_this.admin1s(), newValue);
-                    if(admin1) {
+                    if (admin1) {
+                        // load admin2 options
                         _this.loadAdmin2s(admin1.id);
                     } else {
                         _this._admin1Id = newValue;
@@ -173,27 +186,27 @@ define(["require", "exports", '../places/ServerApiModel', '../Widgets/Spinner', 
             });
             this.admin1Name = ko.computed(function () {
                 var admin1Id = _this.admin1Id();
-                if(!admin1Id) {
+                if (!admin1Id)
                     return '[Unspecified]';
-                }
                 var admin1 = Places.Utils.getPlaceById(_this.admin1s(), admin1Id);
                 return admin1 ? admin1.officialName : '[Unknown]';
             });
+
+            // admin2 dropdown
             this.admin2OptionsCaption = ko.computed(function () {
                 return !_this.admin2sLoading() ? '[Unspecified]' : '[Loading...]';
-            }).extend({
-                throttle: 400
-            });
+            }).extend({ throttle: 400 });
             this.showAdmin2Input = ko.computed(function () {
                 return _this.countryId() && _this.admin1Id() && (_this.admin2s().length > 0 || _this.admin2sLoading());
             });
             this.admin2Id.subscribe(function (newValue) {
-                if(newValue && _this.admin2s().length == 0) {
+                if (newValue && _this.admin2s().length == 0)
                     _this._admin2Id = newValue;
-                }
-                if(newValue && _this.admin2s().length > 0) {
+
+                if (newValue && _this.admin2s().length > 0) {
                     var admin2 = Places.Utils.getPlaceById(_this.admin2s(), newValue);
-                    if(admin2) {
+                    if (admin2) {
+                        // load admin3 options
                         _this.loadAdmin3s(admin2.id);
                     } else {
                         _this._admin2Id = newValue;
@@ -203,27 +216,26 @@ define(["require", "exports", '../places/ServerApiModel', '../Widgets/Spinner', 
             });
             this.admin2Name = ko.computed(function () {
                 var admin2Id = _this.admin2Id();
-                if(!admin2Id) {
+                if (!admin2Id)
                     return '[Unspecified]';
-                }
                 var admin2 = Places.Utils.getPlaceById(_this.admin2s(), admin2Id);
                 return admin2 ? admin2.officialName : '[Unknown]';
             });
+
+            // admin3 dropdown
             this.admin3OptionsCaption = ko.computed(function () {
                 return !_this.admin3sLoading() ? '[Unspecified]' : '[Loading...]';
-            }).extend({
-                throttle: 400
-            });
+            }).extend({ throttle: 400 });
             this.showAdmin3Input = ko.computed(function () {
                 return _this.countryId() && _this.admin1Id() && _this.admin2Id() && (_this.admin3s().length > 0 || _this.admin3sLoading());
             });
             this.admin3Id.subscribe(function (newValue) {
-                if(newValue && _this.admin3s().length == 0) {
+                if (newValue && _this.admin3s().length == 0)
                     _this._admin3Id = newValue;
-                }
-                if(newValue && _this.admin3s().length > 0) {
+
+                if (newValue && _this.admin3s().length > 0) {
                     var admin3 = Places.Utils.getPlaceById(_this.admin3s(), newValue);
-                    if(!admin3) {
+                    if (!admin3) {
                         _this._admin3Id = newValue;
                         _this.loadAdmin3s(_this.admin2Id() || _this._admin2Id);
                     }
@@ -231,16 +243,18 @@ define(["require", "exports", '../places/ServerApiModel', '../Widgets/Spinner', 
             });
             this.admin3Name = ko.computed(function () {
                 var admin3Id = _this.admin3Id();
-                if(!admin3Id) {
+                if (!admin3Id)
                     return '[Unspecified]';
-                }
                 var admin3 = Places.Utils.getPlaceById(_this.admin3s(), admin3Id);
                 return admin3 ? admin3.officialName : '[Unknown]';
             });
         };
+
         Location.prototype.initMap = function () {
             var _this = this;
             var me = this;
+
+            // do everything necessary to initialize the google map
             var mapOptions = {
                 mapTypeId: gm.MapTypeId.ROADMAP,
                 center: new gm.LatLng(0, 0),
@@ -250,13 +264,19 @@ define(["require", "exports", '../places/ServerApiModel', '../Widgets/Spinner', 
             };
             this.map = new gm.Map(this.$mapCanvas()[0], mapOptions);
             this.isMapVisible(true);
+
             gm.event.addListenerOnce(this.map, 'idle', function () {
                 _this.mapTools(new ToolsOverlay.ToolsOverlay(_this.map));
+
                 _this.mapTools().hideMarkerTools();
+
                 gm.event.addListener(_this.map, 'zoom_changed', function () {
+                    // track the map zoom
                     _this.mapZoom(_this.map.getZoom());
                 });
             });
+
+            // tools overlay marker
             this.$mapCanvas().on('marker_destroyed', function () {
                 var center = _this.map.getCenter();
                 var zoom = _this.map.getZoom();
@@ -269,27 +289,31 @@ define(["require", "exports", '../places/ServerApiModel', '../Widgets/Spinner', 
                 _this.map.setCenter(center);
                 _this.map.setZoom(zoom);
             });
+
             this.$mapCanvas().on('marker_dragend marker_created', function () {
                 var latLng = _this.mapTools().markerLatLng();
                 var route = App.Routes.WebApi.Places.ByCoordinates.get(latLng.lat(), latLng.lng());
                 _this.loadSpinner.start();
                 $.get(route).done(function (response) {
-                    if(response && response.length) {
+                    if (response && response.length) {
                         _this.allowCountryFitBounds = false;
                         _this.fillPlacesHierarchy(response);
                     }
                 }).always(function () {
                     _this.loadSpinner.stop();
                 }).fail(function (arg1, arg2, arg3, arg4, arg5) {
+                    //alert('update call fail :(');
                 });
             });
-            if(this.ownerId) {
+
+            if (this.ownerId) {
                 this.isLoaded(false);
                 $.get(App.Routes.WebApi.Establishments.Locations.get(this.ownerId)).done(function (response) {
                     gm.event.addListenerOnce(_this.map, 'idle', function () {
                         _this.loadMapZoom(response);
                         _this.loadMapMarker(response);
                     });
+
                     _this.fillPlacesHierarchy(response.places);
                     _this.isLoaded(true);
                 });
@@ -299,135 +323,140 @@ define(["require", "exports", '../places/ServerApiModel', '../Widgets/Spinner', 
                 });
             }
         };
+
         Location.prototype.loadMapZoom = function (response) {
-            if(response.googleMapZoomLevel && response.center && response.center.hasValue) {
+            if (response.googleMapZoomLevel && response.center && response.center.hasValue)
                 this.map.setZoom(response.googleMapZoomLevel);
-            } else if(response.box.hasValue) {
+else if (response.box.hasValue)
                 this.map.fitBounds(Places.Utils.convertToLatLngBounds(response.box));
-            }
-            if(response.googleMapZoomLevel && response.googleMapZoomLevel > 1) {
+
+            if (response.googleMapZoomLevel && response.googleMapZoomLevel > 1)
                 this.map.setZoom(response.googleMapZoomLevel);
-            }
-            if(response.googleMapZoomLevel || response.box.hasValue) {
+            if (response.googleMapZoomLevel || response.box.hasValue)
                 this.allowCountryFitBounds = false;
-            }
         };
+
         Location.prototype.loadMapMarker = function (response) {
-            if(response.center.hasValue) {
+            if (response.center.hasValue) {
                 var latLng = Places.Utils.convertToLatLng(response.center);
                 this.mapTools().placeMarker(latLng);
                 this.map.setCenter(latLng);
             }
         };
+
         Location.prototype.fillPlacesHierarchy = function (places) {
+            // make places array observable
             this.places(places);
+
+            // populate continent menu
             var continent = Places.Utils.getContinent(places);
-            if(continent) {
+            if (continent)
                 this.continentId(continent.id);
-            }
+
+            // populate country menu
             var country = Places.Utils.getCountry(places);
-            if(country) {
+            if (country)
                 this.countryId(country.id);
-            } else {
+else
                 this.countryId(undefined);
-            }
+
+            // populate admin1 menu
             var admin1 = Places.Utils.getAdmin1(places);
-            if(admin1) {
+            if (admin1)
                 this.admin1Id(admin1.id);
-            } else {
+else
                 this.admin1Id(undefined);
-            }
+
+            // populate admin2 menu
             var admin2 = Places.Utils.getAdmin2(places);
-            if(admin2) {
+            if (admin2)
                 this.admin2Id(admin2.id);
-            } else {
+else
                 this.admin2Id(undefined);
-            }
+
+            // populate admin3 menu
             var admin3 = Places.Utils.getAdmin3(places);
-            if(admin3) {
+            if (admin3)
                 this.admin3Id(admin3.id);
-            } else {
+else
                 this.admin3Id(undefined);
-            }
+
             var subAdmins = Places.Utils.getSubAdmins(places);
-            if(subAdmins && subAdmins.length) {
+            if (subAdmins && subAdmins.length)
                 this.subAdmins(subAdmins);
-            } else {
+else
                 this.subAdmins([]);
-            }
         };
+
         Location.prototype.loadAdmin1s = function (countryId) {
             var _this = this;
+            //this.admin1s([]);
             var admin1Url = App.Routes.WebApi.Places.get();
             this.admin1sLoading(true);
             $.ajax({
                 type: 'GET',
                 url: admin1Url,
-                data: {
-                    isAdmin1: true,
-                    parentId: countryId
-                },
+                data: { isAdmin1: true, parentId: countryId },
                 cache: false
             }).done(function (results) {
                 _this.admin1s(results);
-                if(_this._admin1Id) {
+                if (_this._admin1Id)
                     _this.admin1Id(_this._admin1Id);
-                }
                 _this.admin1sLoading(false);
             });
         };
+
         Location.prototype.loadAdmin2s = function (admin1Id) {
             var _this = this;
+            //this.admin2s([]);
             var admin2Url = App.Routes.WebApi.Places.get();
             this.admin2sLoading(true);
             $.ajax({
                 type: 'GET',
-                data: {
-                    isAdmin2: true,
-                    parentId: admin1Id
-                },
+                data: { isAdmin2: true, parentId: admin1Id },
                 url: admin2Url,
                 cache: false
             }).done(function (results) {
                 _this.admin2s(results);
-                if(_this._admin2Id) {
+                if (_this._admin2Id)
                     _this.admin2Id(_this._admin2Id);
-                }
                 _this.admin2sLoading(false);
             });
         };
+
         Location.prototype.loadAdmin3s = function (admin2Id) {
             var _this = this;
+            //this.admin3s([]);
             var admin3Url = App.Routes.WebApi.Places.get();
             this.admin3sLoading(true);
             $.ajax({
                 type: 'GET',
-                data: {
-                    isAdmin3: true,
-                    parentId: admin2Id
-                },
+                data: { isAdmin3: true, parentId: admin2Id },
                 url: admin3Url,
                 cache: false
             }).done(function (results) {
                 _this.admin3s(results);
-                if(_this._admin3Id) {
+                if (_this._admin3Id)
                     _this.admin3Id(_this._admin3Id);
-                }
                 _this.admin3sLoading(false);
             });
         };
+
         Location.prototype.changePlaceInLocation = function () {
             this.subAdmins([]);
         };
+
         Location.prototype.clickToEdit = function () {
             this.isEditing(true);
         };
+
         Location.prototype.clickToSave = function () {
             var _this = this;
             var me = this;
-            if(!this.ownerId) {
+
+            if (!this.ownerId)
                 return;
-            }
+
             this.saveSpinner.start();
             $.ajax({
                 url: App.Routes.WebApi.Establishments.Locations.put(me.ownerId),
@@ -439,21 +468,23 @@ define(["require", "exports", '../places/ServerApiModel', '../Widgets/Spinner', 
                 App.flasher.flash(response);
                 _this.isEditing(false);
             }).fail(function (arg1, arg2, arg3) {
+                //alert('fail :(');
             });
         };
+
         Location.prototype.serializeData = function () {
             var center, centerLat = this.toolsMarkerLat(), centerLng = this.toolsMarkerLng(), zoom = this.map.getZoom();
-            if(centerLat != null && centerLng != null) {
+            if (centerLat != null && centerLng != null)
                 center = {
                     latitude: centerLat,
                     longitude: centerLng
                 };
-            }
-            if(center) {
+
+            if (center)
                 this.map.setCenter(Places.Utils.convertToLatLng(center));
-            }
+
             var box, northEast, northEastLat = this.map.getBounds().getNorthEast().lat(), northEastLng = this.map.getBounds().getNorthEast().lng(), southWest, southWestLat = this.map.getBounds().getSouthWest().lat(), southWestLng = this.map.getBounds().getSouthWest().lng(), placeId;
-            if(zoom && zoom > 1) {
+            if (zoom && zoom > 1)
                 box = {
                     northEast: {
                         latitude: northEastLat,
@@ -464,20 +495,20 @@ define(["require", "exports", '../places/ServerApiModel', '../Widgets/Spinner', 
                         longitude: southWestLng
                     }
                 };
-            }
-            if(this.subAdmins().length) {
+
+            if (this.subAdmins().length)
                 placeId = this.subAdmins()[this.subAdmins().length - 1].id;
-            } else if(this.admin3Id()) {
+else if (this.admin3Id())
                 placeId = this.admin3Id();
-            } else if(this.admin2Id()) {
+else if (this.admin2Id())
                 placeId = this.admin2Id();
-            } else if(this.admin1Id()) {
+else if (this.admin1Id())
                 placeId = this.admin1Id();
-            } else if(this.countryId()) {
+else if (this.countryId())
                 placeId = this.countryId();
-            } else if(this.continentId()) {
+else if (this.continentId())
                 placeId = this.continentId();
-            }
+
             var js = {
                 center: center,
                 box: box,
@@ -486,26 +517,34 @@ define(["require", "exports", '../places/ServerApiModel', '../Widgets/Spinner', 
             };
             return js;
         };
+
         Location.prototype.clickToCancelEdit = function () {
             var _this = this;
             this.isEditing(false);
-            if(!this.ownerId) {
+
+            if (!this.ownerId)
                 return;
-            }
+
+            // restore initial values
             this.isLoaded(false);
             $.get(App.Routes.WebApi.Establishments.Locations.get(this.ownerId)).done(function (response) {
+                // reset zoom
                 _this.map.setZoom(1);
                 _this.loadMapZoom(response);
+
+                // reset marker
                 _this.mapTools().destroyMarker();
                 _this.loadMapMarker(response);
+
                 _this.fillPlacesHierarchy(response.places);
                 _this.isLoaded(true);
             });
         };
+
         Location.prototype.clickForHelp = function () {
             alert('TODO: Show location help dialog here.');
         };
         return Location;
     })();
-    exports.Location = Location;    
-})
+    exports.Location = Location;
+});

@@ -1,12 +1,10 @@
-/// <reference path="../../jquery/jquery.d.ts" />
-/// <reference path="../../jquery/jqueryui.d.ts" />
-/// <reference path="../../ko/knockout.d.ts" />
-/// <reference path="../../ko/knockout.mapping.d.ts" />
-/// <reference path="../../ko/knockout.extensions.d.ts" />
-/// <reference path="../../ko/knockout.validation.d.ts" />
-/// <reference path="../../kendo/kendo.all.d.ts" />
+/// <reference path="../../typings/jquery/jquery.d.ts" />
+/// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
+/// <reference path="../../typings/knockout/knockout.d.ts" />
+/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
+/// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
+/// <reference path="../../typings/kendo/kendo.all.d.ts" />
 /// <reference path="../../app/Routes.ts" />
-/// <reference path="../../kendo/kendo.all.d.ts" />
 
 
 module ViewModels.LanguageExpertises
@@ -29,7 +27,7 @@ module ViewModels.LanguageExpertises
         orderBy: string;
         pageSize: number;
         pageNumber: number;
-        items: KnockoutObservableArray;
+        items: KnockoutObservableArray<any>;
 
         // --------------------------------------------------------------------------------
         /* 
@@ -46,7 +44,7 @@ module ViewModels.LanguageExpertises
         // --------------------------------------------------------------------------------
         load(): JQueryPromise
         {
-            var deferred: JQueryDeferred = $.Deferred();
+            var deferred: JQueryDeferred<void> = $.Deferred();
             var expertiseSearchInput: LanguageExpertiseSearchInput = new LanguageExpertiseSearchInput();
 
             expertiseSearchInput.personId = this.personId;

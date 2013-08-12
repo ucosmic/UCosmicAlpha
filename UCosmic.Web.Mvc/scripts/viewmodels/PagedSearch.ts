@@ -1,28 +1,28 @@
 /// <reference path="../lib-ext.d.ts" />
-/// <reference path="../jquery/jquery.d.ts" />
-/// <reference path="../ko/knockout.d.ts" />
+/// <reference path="../typings/jquery/jquery.d.ts" />
+/// <reference path="../typings/knockout/knockout.d.ts" />
 /// <reference path="Spinner.ts" />
 
 module ViewModels {
     export class PagedSearch {
 
         // paging observables
-        pageSize: KnockoutObservableNumber = ko.observable();
-        pageNumber: KnockoutObservableNumber = ko.observable();
-        transitionedPageNumber: KnockoutObservableNumber = ko.observable();
-        itemTotal: KnockoutObservableNumber = ko.observable();
-        nextForceDisabled: KnockoutObservableBool = ko.observable(false);
-        prevForceDisabled: KnockoutObservableBool = ko.observable(false);
+        pageSize: KnockoutObservable<number> = ko.observable();
+        pageNumber: KnockoutObservable<number> = ko.observable();
+        transitionedPageNumber: KnockoutObservable<number> = ko.observable();
+        itemTotal: KnockoutObservable<number> = ko.observable();
+        nextForceDisabled: KnockoutObservable<boolean> = ko.observable(false);
+        prevForceDisabled: KnockoutObservable<boolean> = ko.observable(false);
 
         // paging computeds
-        pageCount: KnockoutComputed;
-        pageIndex: KnockoutComputed;
-        firstIndex: KnockoutComputed;
-        firstNumber: KnockoutComputed;
-        lastNumber: KnockoutComputed;
-        lastIndex: KnockoutComputed;
-        nextEnabled: KnockoutComputed;
-        prevEnabled: KnockoutComputed;
+        pageCount: KnockoutComputed<number>;
+        pageIndex: KnockoutComputed<number>;
+        firstIndex: KnockoutComputed<number>;
+        firstNumber: KnockoutComputed<number>;
+        lastNumber: KnockoutComputed<number>;
+        lastIndex: KnockoutComputed<number>;
+        nextEnabled: KnockoutComputed<boolean>;
+        prevEnabled: KnockoutComputed<boolean>;
 
         // paging methods
         nextPage(): void {
@@ -40,18 +40,18 @@ module ViewModels {
         }
 
         // results
-        items: KnockoutObservableArray = ko.observableArray();
-        hasItems: KnockoutComputed;
-        hasNoItems: KnockoutComputed;
-        hasManyItems: KnockoutComputed;
-        hasManyPages: KnockoutComputed;
-        showStatus: KnockoutComputed;
+        items: KnockoutObservableArray<any> = ko.observableArray();
+        hasItems: KnockoutComputed<boolean>;
+        hasNoItems: KnockoutComputed<boolean>;
+        hasManyItems: KnockoutComputed<boolean>;
+        hasManyPages: KnockoutComputed<boolean>;
+        showStatus: KnockoutComputed<boolean>;
 
         // filtering
-        orderBy: KnockoutObservableString = ko.observable();
-        keyword: KnockoutObservableString =
+        orderBy: KnockoutObservable<string> = ko.observable();
+        keyword: KnockoutObservable<string> =
             ko.observable($('input[type=hidden][data-bind="value: keyword"]').val());
-        throttledKeyword: KnockoutComputed;
+        throttledKeyword: KnockoutComputed<string>;
 
         // spinner component
         spinner: Spinner = new Spinner(new SpinnerOptions(400, true));
@@ -78,10 +78,10 @@ module ViewModels {
             this.lastIndex = ko.computed((): number => {
                 return this.lastNumber() - 1;
             });
-            this.nextEnabled = ko.computed((): bool => {
+            this.nextEnabled = ko.computed((): boolean => {
                 return this.pageNumber() < this.pageCount() && !this.nextForceDisabled();
             });
-            this.prevEnabled = ko.computed((): bool => {
+            this.prevEnabled = ko.computed((): boolean => {
                 return this.pageNumber() > 1 && !this.prevForceDisabled();
             });
 
@@ -92,19 +92,19 @@ module ViewModels {
             });
 
             // result computeds
-            this.hasItems = ko.computed((): bool => {
+            this.hasItems = ko.computed((): boolean => {
                 return this.items() && this.items().length > 0;
             });
-            this.hasManyItems = ko.computed((): bool => {
+            this.hasManyItems = ko.computed((): boolean => {
                 return this.lastNumber() > this.firstNumber();
             });
-            this.hasNoItems = ko.computed((): bool => {
+            this.hasNoItems = ko.computed((): boolean => {
                 return !this.spinner.isVisible() && !this.hasItems();
             });
-            this.hasManyPages = ko.computed((): bool => {
+            this.hasManyPages = ko.computed((): boolean => {
                 return this.pageCount() > 1;
             });
-            this.showStatus = ko.computed((): bool => {
+            this.showStatus = ko.computed((): boolean => {
                 return this.hasItems() && !this.spinner.isVisible();
             });
 

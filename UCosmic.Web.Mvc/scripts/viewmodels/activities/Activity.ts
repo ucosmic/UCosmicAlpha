@@ -1,39 +1,37 @@
-/// <reference path="../../jquery/jquery.d.ts" />
-/// <reference path="../../jquery/jqueryui.d.ts" />
-/// <reference path="../../ko/knockout.d.ts" />
-/// <reference path="../../ko/knockout.mapping.d.ts" />
-/// <reference path="../../ko/knockout.extensions.d.ts" />
-/// <reference path="../../ko/knockout.validation.d.ts" />
-/// <reference path="../../kendo/kendo.all.d.ts" />
-/// <reference path="../../tinymce/tinymce.d.ts" />
-/// <reference path="../../oss/moment.d.ts" />
+/// <reference path="../../typings/jquery/jquery.d.ts" />
+/// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
+/// <reference path="../../typings/knockout/knockout.d.ts" />
+/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
+/// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
+/// <reference path="../../typings/kendo/kendo.all.d.ts" />
+/// <reference path="../../typings/tinymce/tinymce.d.ts" />
+/// <reference path="../../typings/moment/moment.d.ts" />
 /// <reference path="../../app/Routes.ts" />
-/// <reference path="../activities/ServiceApiModel.d.ts" />
-/// <reference path="../../kendo/kendo.all.d.ts" />
 /// <reference path="../Spinner.ts" />
+/// <reference path="../activities/ServiceApiModel.d.ts" />
 
 module ViewModels.Activities {
     export class Activity implements Service.ApiModels.IObservableActivity {
 
         private static iconMaxSide: number = 64;
 
-        ready: KnockoutObservableBool = ko.observable(false);
+        ready: KnockoutObservable<boolean> = ko.observable(false);
 
         /* Array of all locations offered in Country/Location multiselect. */
-        locations: KnockoutObservableArray = ko.observableArray();
+        locations: KnockoutObservableArray<any> = ko.observableArray();
 
         /* Array of placeIds of selected locations. */
-        selectedLocations: KnockoutObservableArray = ko.observableArray();
+        selectedLocations: KnockoutObservableArray<any> = ko.observableArray();
 
         /* Array of activity types displayed as list of checkboxes */
-        activityTypes: KnockoutObservableArray = ko.observableArray();
+        activityTypes: KnockoutObservableArray<any> = ko.observableArray();
 
         /* Data bound to new tag textArea */
-        newTag: KnockoutObservableString = ko.observable();
+        newTag: KnockoutObservable<string> = ko.observable();
         newEstablishment: any; // Because KendoUI autocomplete does not offer dataValueField.
 
         // array to hold file upload errors
-        fileUploadErrors : KnockoutObservableArray = ko.observableArray();
+        fileUploadErrors : KnockoutObservableArray<any> = ko.observableArray();
 
         /* Old document name - used during document rename. */
         previousDocumentTitle: string;
@@ -46,20 +44,20 @@ module ViewModels.Activities {
         keyCounter: number = 0;
 
         /* Dirty */
-        dirtyFlag: KnockoutObservableBool = ko.observable( false );
-        dirty: KnockoutComputed;
+        dirtyFlag: KnockoutObservable<boolean> = ko.observable( false );
+        dirty: KnockoutComputed<void>;
 
         /* In the process of saving */
-        saving: bool = false;
+        saving: boolean = false;
         saveSpinner: ViewModels.Spinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(200));
 
         /* IObservableActivity implemented */
-        id: KnockoutObservableNumber;
-        version: KnockoutObservableString;                      // byte[] converted to base64
-        personId: KnockoutObservableNumber;
-        number: KnockoutObservableNumber;
-        entityId: KnockoutObservableString;                     // guid converted to string
-        modeText: KnockoutObservableString;
+        id: KnockoutObservable<number>;
+        version: KnockoutObservable<string>;                      // byte[] converted to base64
+        personId: KnockoutObservable<number>;
+        number: KnockoutObservable<number>;
+        entityId: KnockoutObservable<string>;                     // guid converted to string
+        modeText: KnockoutObservable<string>;
         values: Service.ApiModels.IObservableActivityValues;    // only values for modeText
 
         _initialize( activityId: number ): void {
@@ -194,15 +192,15 @@ module ViewModels.Activities {
 
         setupValidation(): void {
             ko.validation.rules['atLeast'] = {
-                validator: ( val: any, otherVal: any ): bool => {
+                validator: ( val: any, otherVal: any ): boolean => {
                     return val.length >= otherVal;
                 },
                 message: 'At least {0} must be selected.'
             };
 
             ko.validation.rules['nullSafeDate'] = {
-                validator: ( val: any, otherVal: any ): bool => {
-                    var valid: bool = true;
+                validator: ( val: any, otherVal: any ): boolean => {
+                    var valid: boolean = true;
                     var format:string = null;
                     var YYYYPattern = new RegExp( "^\\d{4}$" );
                     var MMYYYYPattern = new RegExp( "^\\d{1,}/\\d{4}$" );
@@ -258,7 +256,7 @@ module ViewModels.Activities {
         }
 
         load(): JQueryPromise {
-            var deferred: JQueryDeferred = $.Deferred();
+            var deferred: JQueryDeferred<void> = $.Deferred();
 
             var locationsPact = $.Deferred();
             $.get( App.Routes.WebApi.Activities.Locations.get() )
@@ -311,17 +309,17 @@ module ViewModels.Activities {
 
                                   var mapping = {
                                       'documents': {
-                                          create: ( options: any ): KnockoutObservableAny => {
+                                          create: ( options: any ): KnockoutObservable<any> => {
                                               return new augmentedDocumentModel( options.data );
                                           }
                                       }
                                       ,'startsOn': {
-                                          create: ( options: any ): KnockoutObservableDate => {
+                                          create: ( options: any ): KnockoutObservable<Date> => {
                                               return ( options.data != null ) ? ko.observable( moment( options.data ).toDate() ) : ko.observable();
                                           }
                                       }
                                       ,'endsOn': {
-                                          create: ( options: any ): KnockoutObservableDate => {
+                                          create: ( options: any ): KnockoutObservable<Date> => {
                                               return ( options.data != null ) ? ko.observable( moment( options.data ).toDate() ) : ko.observable();
                                           }
                                       }
@@ -411,7 +409,7 @@ module ViewModels.Activities {
         }
 
         autoSave(viewModel: any, event: any): JQueryPromise {
-            var deferred: JQueryDeferred = $.Deferred();
+            var deferred: JQueryDeferred<void> = $.Deferred();
 
             if (this.saving) {
                 deferred.resolve();
@@ -535,7 +533,7 @@ module ViewModels.Activities {
         addActivityType( activityTypeId: number ): void {
             var existingIndex: number = this.getActivityTypeIndexById( activityTypeId );
             if ( existingIndex == -1 ) {
-                var newActivityType: KnockoutObservableAny = ko.mapping.fromJS( { id: 0, typeId: activityTypeId, version: "" } );
+                var newActivityType: KnockoutObservable<any> = ko.mapping.fromJS( { id: 0, typeId: activityTypeId, version: "" } );
                 this.values.types.push( newActivityType );
             }
         }
@@ -571,7 +569,7 @@ module ViewModels.Activities {
             return index;
         }
 
-        hasActivityType( activityTypeId: number ): bool {
+        hasActivityType( activityTypeId: number ): boolean {
             return this.getActivityTypeIndexById( activityTypeId ) != -1;
         }
 
@@ -609,12 +607,12 @@ module ViewModels.Activities {
             Due to the use of computed observable array (activityTypes) we need to
             create a closure in order to capture state of array index/element.
         */
-        defHasActivityTypeCallback( activityTypeIndex: number ): KnockoutComputedDefine {
-            var def: KnockoutComputedDefine = {
-                read: (): bool => {
+        defHasActivityTypeCallback( activityTypeIndex: number ): KnockoutComputedDefine<boolean> {
+            var def: KnockoutComputedDefine<boolean> = {
+                read: (): boolean => {
                     return this.hasActivityType( this.activityTypes()[activityTypeIndex].id() );
                 },
-                write: function ( checked ) => {
+                write: (checked: boolean) => {
                     if ( checked ) {
                         this.addActivityType( this.activityTypes()[activityTypeIndex].id() );
                     } else {
@@ -641,7 +639,7 @@ module ViewModels.Activities {
             var newText: string = null;
             var domainTypeText: string = "Custom";
             var domainKey: number = null;
-            var isInstitution: bool = false;
+            var isInstitution: boolean = false;
             if ( this.newEstablishment == null ) {
                 newText = this.newTag();
             }
@@ -678,7 +676,7 @@ module ViewModels.Activities {
             this.dirtyFlag(true);
         }
 
-        haveTag( text: string ): bool {
+        haveTag( text: string ): boolean {
             return this.tagIndex( text ) != -1;
         }
 

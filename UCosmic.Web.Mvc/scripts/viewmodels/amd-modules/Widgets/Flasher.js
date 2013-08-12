@@ -1,8 +1,13 @@
 define(["require", "exports"], function(require, exports) {
+    /// <reference path="../../../typings/knockout/knockout.d.ts" />
+    /// <reference path="../../../typings/jquery/jquery.d.ts" />
+    // private properties
     var ticks;
     var tickInterval;
+
+    //private methods
     function init(flasher) {
-        if(flasher.text()) {
+        if (flasher.text()) {
             window.clearInterval(tickInterval);
             ticks = 9;
             flasher.tickCount(ticks);
@@ -15,16 +20,15 @@ define(["require", "exports"], function(require, exports) {
         } else {
             flasher.isDismissed(true);
             flasher.isDismissing(false);
-            if(tickInterval) {
+            if (tickInterval)
                 window.clearInterval(tickInterval);
-            }
-            if(flasher.$element) {
+            if (flasher.$element)
                 flasher.$element.addClass('hide');
-            }
         }
     }
+
     function tick(flasher) {
-        if(ticks <= 0) {
+        if (ticks <= 0) {
             ticks = 0;
             window.clearInterval(tickInterval);
             flasher.dismiss();
@@ -33,24 +37,33 @@ define(["require", "exports"], function(require, exports) {
         }
         flasher.tickCount(ticks);
     }
+
+    // keep class private but implement exported interface
     var Flasher = (function () {
         function Flasher() {
             var _this = this;
+            // text to be displayed in the flasher
             this.text = ko.observable();
+            // number of seconds to display the flashed text
             this.tickCount = ko.observable(9);
             this.isDismissing = ko.observable();
             this.isDismissed = ko.observable();
+            // DOM element that wraps the flasher markup
             this.$element = undefined;
+            // register init as a computed so that it will execute
+            // whenever an observable changes
             ko.computed(function () {
                 init(_this);
             });
         }
+        // set the text to be displayed in the flasher
         Flasher.prototype.flash = function (text) {
             this.text(undefined);
-            if(text) {
+            if (text)
                 this.text(text);
-            }
         };
+
+        // fade out and then hide the flasher DOM element
         Flasher.prototype.dismiss = function () {
             var _this = this;
             this.isDismissing(true);
@@ -61,8 +74,11 @@ define(["require", "exports"], function(require, exports) {
         };
         return Flasher;
     })();
-    exports.Flasher = Flasher;    
+    exports.Flasher = Flasher;
+
     exports.flasher = new Flasher();
+
+    // proxy to display flasher info on other page sections
     var FlasherProxy = (function () {
         function FlasherProxy() {
             var _this = this;
@@ -70,10 +86,10 @@ define(["require", "exports"], function(require, exports) {
                 return exports.flasher.text();
             });
             this.isVisible = ko.computed(function () {
-                if(exports.flasher.isDismissing() || exports.flasher.isDismissed()) {
+                if (exports.flasher.isDismissing() || exports.flasher.isDismissed()) {
                     return false;
                 }
-                return _this.text();
+                return _this.text() ? true : false;
             });
         }
         FlasherProxy.prototype.dismiss = function () {
@@ -81,5 +97,5 @@ define(["require", "exports"], function(require, exports) {
         };
         return FlasherProxy;
     })();
-    exports.FlasherProxy = FlasherProxy;    
-})
+    exports.FlasherProxy = FlasherProxy;
+});

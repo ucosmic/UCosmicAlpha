@@ -1,15 +1,13 @@
-/// <reference path="../../jquery/jquery.d.ts" />
-/// <reference path="../../jquery/jqueryui.d.ts" />
-/// <reference path="../../ko/knockout.d.ts" />
-/// <reference path="../../ko/knockout.mapping.d.ts" />
-/// <reference path="../../ko/knockout.extensions.d.ts" />
-/// <reference path="../../ko/knockout.validation.d.ts" />
-/// <reference path="../../kendo/kendo.all.d.ts" />
-/// <reference path="../../tinymce/tinymce.d.ts" />
-/// <reference path="../../oss/moment.d.ts" />
+/// <reference path="../../typings/jquery/jquery.d.ts" />
+/// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
+/// <reference path="../../typings/knockout/knockout.d.ts" />
+/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
+/// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
+/// <reference path="../../typings/kendo/kendo.all.d.ts" />
+/// <reference path="../../typings/tinymce/tinymce.d.ts" />
+/// <reference path="../../typings/moment/moment.d.ts" />
 /// <reference path="../../app/Routes.ts" />
 /// <reference path="../degrees/ServiceApiModel.d.ts" />
-/// <reference path="../../kendo/kendo.all.d.ts" />
 
 module ViewModels.Degrees {
     // ================================================================================
@@ -21,26 +19,26 @@ module ViewModels.Degrees {
         inititializationErrors: string = "";
 
         /* True if any field changes. */
-        dirtyFlag: KnockoutObservableBool = ko.observable( false );
+        dirtyFlag: KnockoutObservable<boolean> = ko.observable( false );
 
         /* Element id of institution autocomplete */
         institutionSelectorId: string;
 
         /* IObservableDegree implemented */
-        id: KnockoutObservableNumber;
-        version: KnockoutObservableString;
-        personId: KnockoutObservableNumber;
-        whenLastUpdated: KnockoutObservableString;
-        whoLastUpdated: KnockoutObservableString;
-        title: KnockoutObservableString;
-        fieldOfStudy: KnockoutObservableString;
-        yearAwarded: KnockoutObservableAny;
-        institutionId: KnockoutObservableAny;
-        institutionOfficialName: KnockoutObservableString;
-        institutionCountryOfficialName: KnockoutObservableString;
+        id: KnockoutObservable<number>;
+        version: KnockoutObservable<string>;
+        personId: KnockoutObservable<number>;
+        whenLastUpdated: KnockoutObservable<string>;
+        whoLastUpdated: KnockoutObservable<string>;
+        title: KnockoutObservable<string>;
+        fieldOfStudy: KnockoutObservable<string>;
+        yearAwarded: KnockoutObservable<any>;
+        institutionId: KnockoutObservable<any>;
+        institutionOfficialName: KnockoutObservable<string>;
+        institutionCountryOfficialName: KnockoutObservable<string>;
         errors: KnockoutValidationErrors;
-        isValid: () => bool;
-        isAnyMessageShown: () => bool;
+        isValid: () => boolean;
+        isAnyMessageShown: () => boolean;
 
         // --------------------------------------------------------------------------------
         /*
@@ -152,7 +150,7 @@ module ViewModels.Degrees {
         */
         // --------------------------------------------------------------------------------
         load(): JQueryPromise {
-            var deferred: JQueryDeferred = $.Deferred();
+            var deferred: JQueryDeferred<void> = $.Deferred();
 
             if ( this.id() == 0 ) {
                 this.version = ko.observable( null );

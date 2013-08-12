@@ -1,16 +1,44 @@
 var ViewModels;
 (function (ViewModels) {
+    /// <reference path="../../typings/jquery/jquery.d.ts" />
+    /// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
+    /// <reference path="../../typings/knockout/knockout.d.ts" />
+    /// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
+    /// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
+    /// <reference path="../../typings/kendo/kendo.all.d.ts" />
+    /// <reference path="../../typings/tinymce/tinymce.d.ts" />
+    /// <reference path="../../typings/moment/moment.d.ts" />
+    /// <reference path="../../app/Routes.ts" />
     (function (LanguageExpertises) {
+        // ================================================================================
+        /*
+        */
+        // ================================================================================
         var LanguageExpertise = (function () {
+            // --------------------------------------------------------------------------------
+            /*
+            */
+            // --------------------------------------------------------------------------------
             function LanguageExpertise(expertiseId) {
+                /* Initialization errors. */
                 this.inititializationErrors = "";
+                /* True if any field changes. */
                 this.dirtyFlag = ko.observable(false);
                 this.isOther = ko.observable(false);
                 this._initialize(expertiseId);
             }
+            // --------------------------------------------------------------------------------
+            /*
+            */
+            // --------------------------------------------------------------------------------
             LanguageExpertise.prototype._initialize = function (expertiseId) {
                 this.id = ko.observable(expertiseId);
             };
+
+            // --------------------------------------------------------------------------------
+            /*
+            */
+            // --------------------------------------------------------------------------------
             LanguageExpertise.prototype.setupWidgets = function (languageInputId, speakingInputId, listeningInputId, readingInputId, writingInputId) {
                 var _this = this;
                 $("#" + languageInputId).kendoDropDownList({
@@ -20,9 +48,9 @@ var ViewModels;
                     dataSource: this.languageList,
                     value: this.languageId() != null ? this.languageId() : 0,
                     change: function (e) {
-                        if(e.sender.selectedIndex > 0) {
+                        if (e.sender.selectedIndex > 0) {
                             var item = _this.languageList[e.sender.selectedIndex - 1];
-                            if(item.name == "Other") {
+                            if (item.name == "Other") {
                                 _this.languageId(null);
                             } else {
                                 _this.languageId(item.id);
@@ -32,12 +60,16 @@ var ViewModels;
                         }
                     }
                 });
+
+                /* For some reason, setting the value in the droplist creation above to 0,
+                does not set the item to "Other" */
                 this.languageDroplist = $("#" + languageInputId).data("kendoDropDownList");
-                if(this.languageId() == null) {
+                if (this.languageId() == null) {
                     this.languageDroplist.select(function (dataItem) {
                         return dataItem.name === "Other";
                     });
                 }
+
                 $("#" + speakingInputId).kendoDropDownList({
                     dataTextField: "title",
                     dataValueField: "weight",
@@ -45,6 +77,7 @@ var ViewModels;
                     value: this.speakingProficiency().toString(),
                     template: kendo.template($("#proficiency-template").html())
                 });
+
                 $("#" + listeningInputId).kendoDropDownList({
                     dataTextField: "title",
                     dataValueField: "weight",
@@ -52,6 +85,7 @@ var ViewModels;
                     value: this.listeningProficiency().toString(),
                     template: kendo.template($("#proficiency-template").html())
                 });
+
                 $("#" + readingInputId).kendoDropDownList({
                     dataTextField: "title",
                     dataValueField: "weight",
@@ -59,6 +93,7 @@ var ViewModels;
                     value: this.readingProficiency().toString(),
                     template: kendo.template($("#proficiency-template").html())
                 });
+
                 $("#" + writingInputId).kendoDropDownList({
                     dataTextField: "title",
                     dataValueField: "weight",
@@ -67,12 +102,35 @@ var ViewModels;
                     template: kendo.template($("#proficiency-template").html())
                 });
             };
+
+            // --------------------------------------------------------------------------------
+            /*
+            */
+            // --------------------------------------------------------------------------------
             LanguageExpertise.prototype.setupValidation = function () {
-                this.languageId.extend({
-                    notEqual: 0
-                });
+                //ko.validation.rules['otherRequired'] = {
+                //    validator: (val: any, otherVal: any): boolean => {
+                //        debugger;
+                //        var selectedIndex = this.languageDroplist.select();
+                //        var selectedName = this.languageList[selectedIndex].name;
+                //        if (selectedName !== "Other") {
+                //            return true;
+                //        }
+                //        return (this.other !== null) && (this.other.length > 0);
+                //    },
+                //    message: 'Please provide the other language.'
+                //};
+                //ko.validation.registerExtenders();
+                this.languageId.extend({ notEqual: 0 });
+
+                //this.other.extend({ otherRequired: true });
                 ko.validation.group(this);
             };
+
+            // --------------------------------------------------------------------------------
+            /*
+            */
+            // --------------------------------------------------------------------------------
             LanguageExpertise.prototype.setupSubscriptions = function () {
                 var _this = this;
                 this.languageId.subscribe(function (newValue) {
@@ -97,22 +155,30 @@ var ViewModels;
                     _this.dirtyFlag(true);
                 });
             };
+
+            // --------------------------------------------------------------------------------
+            /*
+            */
+            // --------------------------------------------------------------------------------
             LanguageExpertise.prototype.load = function () {
                 var _this = this;
                 var deferred = $.Deferred();
+
                 var proficienciesPact = $.Deferred();
                 $.get(App.Routes.WebApi.LanguageExpertise.Proficiencies.get()).done(function (data, textStatus, jqXHR) {
                     proficienciesPact.resolve(data);
                 }).fail(function (jqXHR, textStatus, errorThrown) {
                     proficienciesPact.reject(jqXHR, textStatus, errorThrown);
                 });
+
                 var languagesPact = $.Deferred();
                 $.get(App.Routes.WebApi.Languages.get()).done(function (data, textStatus, jqXHR) {
                     languagesPact.resolve(data);
                 }).fail(function (jqXHR, textStatus, errorThrown) {
                     languagesPact.reject(jqXHR, textStatus, errorThrown);
                 });
-                if(this.id() == 0) {
+
+                if (this.id() == 0) {
                     this.version = ko.observable(null);
                     this.personId = ko.observable(0);
                     this.whenLastUpdated = ko.observable(null);
@@ -124,14 +190,13 @@ var ViewModels;
                     this.listeningProficiency = ko.observable(0);
                     this.readingProficiency = ko.observable(0);
                     this.writingProficiency = ko.observable(0);
+
                     $.when(languagesPact, proficienciesPact).done(function (languages, proficiencyInfo, data) {
                         _this.languageList = languages;
-                        _this.languageList.push({
-                            name: "Other",
-                            code: "",
-                            id: 0
-                        });
+                        _this.languageList.push({ name: "Other", code: "", id: 0 });
+
                         _this.proficiencyInfo = proficiencyInfo;
+
                         deferred.resolve();
                     }).fail(function (xhr, textStatus, errorThrown) {
                         deferred.reject(xhr, textStatus, errorThrown);
@@ -148,36 +213,44 @@ var ViewModels;
                             dataPact.reject(jqXhr, textStatus, errorThrown);
                         }
                     });
+
                     $.when(languagesPact, proficienciesPact, dataPact).done(function (languages, proficiencyInfo, data) {
                         _this.languageList = languages;
-                        _this.languageList.push({
-                            name: "Other",
-                            code: "",
-                            id: 0
-                        });
+                        _this.languageList.push({ name: "Other", code: "", id: 0 });
+
                         _this.proficiencyInfo = proficiencyInfo;
-                        ko.mapping.fromJS(data, {
-                        }, _this);
+
+                        ko.mapping.fromJS(data, {}, _this);
+
                         deferred.resolve();
                     }).fail(function (xhr, textStatus, errorThrown) {
                         deferred.reject(xhr, textStatus, errorThrown);
                     });
                 }
+
                 return deferred;
             };
+
+            // --------------------------------------------------------------------------------
+            /*
+            */
+            // --------------------------------------------------------------------------------
             LanguageExpertise.prototype.save = function (viewModel, event) {
-                if(!this.isValid()) {
+                if (!this.isValid()) {
+                    // TBD - need dialog here.
                     this.errors.showAllMessages();
                     return;
                 }
+
                 var selectedLanguageIndex = this.languageDroplist.select() - 1;
                 var selectedLanguageName = this.languageList[selectedLanguageIndex].name;
-                if(selectedLanguageName === "Other") {
-                    if((this.other() == null) || (this.other().length == 0)) {
+                if (selectedLanguageName === "Other") {
+                    if ((this.other() == null) || (this.other().length == 0)) {
                         this.isOther(true);
                         return;
                     }
                 }
+
                 var mapSource = {
                     id: this.id,
                     version: this.version,
@@ -192,9 +265,12 @@ var ViewModels;
                     readingProficiency: this.readingProficiency,
                     writingProficiency: this.writingProficiency
                 };
+
                 var model = ko.mapping.toJS(mapSource);
+
                 var url = (viewModel.id() == 0) ? App.Routes.WebApi.LanguageExpertise.post() : App.Routes.WebApi.LanguageExpertise.put(viewModel.id());
                 var type = (viewModel.id() == 0) ? "POST" : "PUT";
+
                 $.ajax({
                     type: type,
                     async: false,
@@ -210,8 +286,13 @@ var ViewModels;
                     }
                 });
             };
+
+            // --------------------------------------------------------------------------------
+            /*
+            */
+            // --------------------------------------------------------------------------------
             LanguageExpertise.prototype.cancel = function (item, event, mode) {
-                if(this.dirtyFlag() == true) {
+                if (this.dirtyFlag() == true) {
                     $("#cancelConfirmDialog").dialog({
                         modal: true,
                         resizable: false,
@@ -232,7 +313,7 @@ var ViewModels;
             };
             return LanguageExpertise;
         })();
-        LanguageExpertises.LanguageExpertise = LanguageExpertise;        
+        LanguageExpertises.LanguageExpertise = LanguageExpertise;
     })(ViewModels.LanguageExpertises || (ViewModels.LanguageExpertises = {}));
     var LanguageExpertises = ViewModels.LanguageExpertises;
 })(ViewModels || (ViewModels = {}));
