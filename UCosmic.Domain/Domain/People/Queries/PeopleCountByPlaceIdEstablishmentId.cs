@@ -41,9 +41,12 @@ namespace UCosmic.Domain.People
             var activityGroups = _entities.Query<Activity>().Where(a =>
                                             (a.ModeText == publicMode) && (a.EditSourceId == null) &&
 
-                                            a.Values.Any(v =>  (v.Locations.Any( vl => vl.PlaceId == query.PlaceId))) &&
+                                            a.Values.Any(v => (v.Locations.Any(vl => vl.PlaceId == query.PlaceId))) &&
 
-                                            a.Person.Affiliations.Any( f => f.EstablishmentId == query.EstablishmentId) &&
+                                            a.Person.Affiliations.Any(x => x.IsDefault &&
+                                            (x.EstablishmentId == query.EstablishmentId ||
+                                                x.Establishment.Ancestors.Any(y => y.AncestorId ==
+                                                    query.EstablishmentId))) &&
 
                                             a.Values.Any(v =>
                                                 /* and, include activities that are undated... */
@@ -56,7 +59,7 @@ namespace UCosmic.Domain.People
                                                  * or there is no end date, or there is an end date and its earlier than ToDate. */
                                                 ((v.OnGoing.HasValue && v.OnGoing.Value) ||
                                                     (!v.EndsOn.HasValue || (v.EndsOn.Value < query.ToDate)))
-                                            )                                                                                                
+                                            )
                                       )
                                       .GroupBy(g => g.PersonId);
 

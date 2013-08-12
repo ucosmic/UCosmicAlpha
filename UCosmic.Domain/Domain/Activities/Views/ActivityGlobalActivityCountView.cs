@@ -16,7 +16,8 @@ namespace UCosmic.Domain.Activities
             public int Count { get; set; }
         }
 
-        public int PlaceCount { get; set; }                       // Total places with activity/people
+        public int EstablishmentId { get; private set; }
+        public int PlaceCount { get; private set; }               // Total places with activity/people
         public int Count { get; private set; }                    // Global count of activities
         public ICollection<TypeCount> TypeCounts { get; set; }    // Global count of types
 
@@ -24,6 +25,7 @@ namespace UCosmic.Domain.Activities
                                                IQueryEntities entities,
                                                int establishmentId )
         {
+            EstablishmentId = establishmentId;
             TypeCounts = new Collection<TypeCount>();
 
             var settings = queryProcessor.Execute(new EmployeeModuleSettingsByEstablishmentId(establishmentId));

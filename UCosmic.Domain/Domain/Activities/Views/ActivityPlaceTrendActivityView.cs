@@ -15,13 +15,15 @@ namespace UCosmic.Domain.Activities
             public int Count { get; set; }
         }
 
-        public ICollection<YearCount> Data { get; set; }
+        public int EstablishmentId { get; private set; }
+        public ICollection<YearCount> Data { get; private set; }
 
         public ActivityTrendActivityView( IProcessQueries queryProcessor,
                                           IQueryEntities entities,
                                           int establishmentId,
                                           int placeId )
         {
+            EstablishmentId = establishmentId;
             Data = new Collection<YearCount>();
 
             var settings = queryProcessor.Execute(new EmployeeModuleSettingsByEstablishmentId(establishmentId));

@@ -24,23 +24,33 @@ namespace UCosmic.Web.Mvc.Models
         }
     }
 
+    public class FacultyStaffSummaryModel
+    {
+        /* Holds the total number of activities or people, worldwide */
+        public int GlobalCount { get; set; }
+
+        /* Holds the total number of locations (countries/waters) that contain activities/people */
+        public int PlaceCount { get; set; }
+
+        /* If establishment has activity types, this holds count of those types, worldwide */
+        public ICollection<FacultyStaffTypeCountModel> GlobalTypeCounts { get; set; }
+
+        /* Holds counts for all locations (countries/waters), worldwide */
+        public ICollection<FacultyStaffPlaceCountModel> PlaceCounts { get; set; }
+
+        public FacultyStaffSummaryModel()
+        {
+            GlobalTypeCounts = new Collection<FacultyStaffTypeCountModel>();
+            PlaceCounts = new Collection<FacultyStaffPlaceCountModel>();
+        }
+    }
+
+
     public class FacultyStaffPlaceTrendModel
     {
         public int PlaceId { get; set; }
         public string OfficialName { get; set; }
         public ICollection<int> CountPerYear { get; set; }
-    }
-
-    public class FacultyStaffSummaryModel
-    {
-        public int TotalActivities { get; set; }
-        public int TotalPlaces { get; set; }
-        public ICollection<FacultyStaffPlaceCountModel> Counts { get; set; }
-
-        public FacultyStaffSummaryModel()
-        {
-            Counts = new Collection<FacultyStaffPlaceCountModel>();
-        }
     }
 
     public class FacultyStaffTrendModel

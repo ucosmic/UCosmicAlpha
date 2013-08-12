@@ -35,8 +35,10 @@ namespace UCosmic.Domain.Activities
                                                           (a.EditSourceId == null) &&
                                                           a.Values.Any(v => (v.ModeText == publicMode)) &&
 
-                                                          a.Person.Affiliations.Any(
-                                                              f => f.EstablishmentId == query.EstablishmentId) &&
+                                                          a.Person.Affiliations.Any(x => x.IsDefault &&
+                                                            (x.EstablishmentId == query.EstablishmentId ||
+                                                             x.Establishment.Ancestors.Any(y => y.AncestorId ==
+                                                                    query.EstablishmentId))) &&
 
                                                           a.Values.Any(v =>
                                                                        /* and, include activities that are undated... */

@@ -17,13 +17,15 @@ namespace UCosmic.Domain.Activities
             public int Count { get; set; }
         }
 
-        public int Count { get; private set; }                    // Global count of people
-        public ICollection<TypeCount> TypeCounts { get; set; }    // Global count of types
+        public int EstablishmentId { get; private set; }
+        public int Count { get; private set; }                            // Global count of people
+        public ICollection<TypeCount> TypeCounts { get; private set; }    // Global count of types
 
         public ActivityGlobalPeopleCountView( IProcessQueries queryProcessor,
                                               IQueryEntities entities,
                                               int establishmentId)
         {
+            EstablishmentId = establishmentId;
             TypeCounts = new Collection<TypeCount>();
 
             var settings = queryProcessor.Execute(new EmployeeModuleSettingsByEstablishmentId(establishmentId));

@@ -18,10 +18,13 @@ namespace UCosmic.Domain.Activities
         }
 
         private readonly IProcessQueries _queryProcessor;
+        private readonly IQueryEntities _entities;
 
-        public string OfficialName { get; set; }
-        public int Count { get; set; }
-        public ICollection<TypeCount> TypeCounts { get; set; }
+        public int EstablishmentId { get; private set; }
+        public int PlaceId { get; private set; }
+        public string OfficialName { get; private set; }
+        public int Count { get; private set; }
+        public ICollection<TypeCount> TypeCounts { get; private set; }
 
         public ActivityPlacePeopleCountView( IProcessQueries queryProcessor,
                                              IQueryEntities entities,
@@ -29,6 +32,10 @@ namespace UCosmic.Domain.Activities
                                              int placeId)
         {
             _queryProcessor = queryProcessor;
+            _entities = entities;
+            EstablishmentId = establishmentId;
+            PlaceId = placeId;
+
             TypeCounts = new Collection<TypeCount>();
 
             var settings = _queryProcessor.Execute(new EmployeeModuleSettingsByEstablishmentId(establishmentId));

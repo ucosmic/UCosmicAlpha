@@ -45,7 +45,10 @@ namespace UCosmic.Domain.Activities
                      a.Values.Any(v => (v.Locations.Any(vl => vl.PlaceId == query.PlaceId)) &&
                                        (v.Types.Any(vt => vt.TypeId == query.TypeId))) &&
 
-                     a.Person.Affiliations.Any(f => f.EstablishmentId == query.EstablishmentId) &&
+                     a.Person.Affiliations.Any(x => x.IsDefault &&
+                                                    (x.EstablishmentId == query.EstablishmentId ||
+                                                     x.Establishment.Ancestors.Any(y => y.AncestorId ==
+                                                                                        query.EstablishmentId))) &&
 
                      a.Values.Any(v =>
                                   /* and, include activities that are undated... */

@@ -33,8 +33,11 @@ namespace UCosmic.Domain.Activities
             string publicMode = ActivityMode.Public.AsSentenceFragment();
             return _entities.Query<Activity>().Count(a => (a.ModeText == publicMode) &&
                                                           (a.EditSourceId == null) &&
-                                                          a.Person.Affiliations.Any(
-                                                              f => f.EstablishmentId == query.EstablishmentId) &&
+
+                                                          a.Person.Affiliations.Any(x => x.IsDefault &&
+                                                            (x.EstablishmentId == query.EstablishmentId ||
+                                                             x.Establishment.Ancestors.Any(y => y.AncestorId ==
+                                                                    query.EstablishmentId))) &&
 
                                                           a.Values.Any(v =>
                                                                        /* and, include activities that are undated... */

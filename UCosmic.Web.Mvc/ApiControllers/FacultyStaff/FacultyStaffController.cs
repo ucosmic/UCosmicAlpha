@@ -1,15 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 using System.Web.Http;
 using AttributeRouting;
 using AttributeRouting.Web.Http;
 using UCosmic.Domain.Activities;
-using UCosmic.Domain.Employees;
 using UCosmic.Domain.Establishments;
-using UCosmic.Domain.People;
-using UCosmic.Domain.Places;
 using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc.ApiControllers
@@ -215,6 +209,51 @@ namespace UCosmic.Web.Mvc.ApiControllers
         public FacultyStaffSummaryModel GetActivityCount(int? placeId)
         {
             var model = new FacultyStaffSummaryModel();
+
+            var tenancy = Request.Tenancy();
+            Establishment establishment = null;
+
+            if (tenancy.TenantId.HasValue)
+            {
+                establishment = _queryProcessor.Execute(new EstablishmentById(tenancy.TenantId.Value));
+            }
+            else if (!String.IsNullOrEmpty(tenancy.StyleDomain) && !"default".Equals(tenancy.StyleDomain))
+            {
+                establishment = _queryProcessor.Execute(new EstablishmentByEmail(tenancy.StyleDomain));
+            }
+
+            if (establishment != null)
+            {
+                if (placeId.HasValue)
+                {
+                    var view = new ActivityPlaceActivityCountView(_queryProcessor,
+                                                                   _entities,
+                                                                   establishment.RevisionId,
+                                                                   placeId.Value);
+
+                    model.GlobalCount = view.Count;
+
+                }
+                else
+                {
+                    var view = new ActivityGlobalActivityCountView(_queryProcessor,
+                                                                    _entities,
+                                                                    establishment.RevisionId);
+
+                    model.GlobalCount = view.Count;
+                    model.PlaceCount = view.PlaceCount;
+                    foreach (var type in view.TypeCounts)
+                    {
+                        model.GlobalTypeCounts.Add(new FacultyStaffTypeCountModel
+                        {
+                            TypeId = type.TypeId,
+                            Type = type.Type,
+                            Count = type.Count
+                        });
+                    }
+                }
+            }
+
 
             return model;
         }
