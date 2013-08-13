@@ -25,45 +25,58 @@ namespace UCosmic.Domain.People
 
     public class HandlePeopleCountByCountryIdEstablishmentIdQuery : IHandleQueries<PeopleCountByPlaceIdEstablishmentId, int>
     {
-        private readonly IQueryEntities _entities;
+        private readonly ActivityViewProjector _projector;
 
-        public HandlePeopleCountByCountryIdEstablishmentIdQuery(IQueryEntities entities)
+        public HandlePeopleCountByCountryIdEstablishmentIdQuery(ActivityViewProjector projector)
         {
-            _entities = entities;
+            _projector = projector;
         }
 
         public int Handle(PeopleCountByPlaceIdEstablishmentId query)
         {
             if (query == null) throw new ArgumentNullException("query");
+            int count = 0;
 
-            string publicMode = ActivityMode.Public.AsSentenceFragment();
+            try
+            {
+                var possibleNullView = _projector.BeginReadView();
+                if (possibleNullView != null)
+                {
+                    var view = possibleNullView.AsQueryable();
 
-            var activityGroups = _entities.Query<Activity>().Where(a =>
-                                            (a.ModeText == publicMode) && (a.EditSourceId == null) &&
+                    var groups = view.Where(a =>
+                                            /* PlaceId must be found in list placeIds...*/
+                                            a.PlaceIds.Any(e => e == query.PlaceId) &&
 
-                                            a.Values.Any(v => (v.Locations.Any(vl => vl.PlaceId == query.PlaceId))) &&
+                                            /* and, EstablishmentId must be found in list of affiliated establishments...*/
+                                            a.EstablishmentIds.Any(e => e == query.EstablishmentId) &&
 
-                                            a.Person.Affiliations.Any(x => x.IsDefault &&
-                                            (x.EstablishmentId == query.EstablishmentId ||
-                                                x.Establishment.Ancestors.Any(y => y.AncestorId ==
-                                                    query.EstablishmentId))) &&
-
-                                            a.Values.Any(v =>
-                                                /* and, include activities that are undated... */
-                                                (!v.StartsOn.HasValue && !v.EndsOn.HasValue) ||
-
-                                                /* or, there is no start date, or there is a start date and its >= the FromDate... */
-                                                (!v.StartsOn.HasValue || (v.StartsOn.Value >= query.FromDate)) &&
+                                            /* and, include activities that are undated... */
+                                            (!a.StartsOn.HasValue && !a.EndsOn.HasValue) ||
+                                            /* or */
+                                            (
+                                                /* there is no start date, or there is a start date and its >= the FromDate... */
+                                                (!a.StartsOn.HasValue ||
+                                                 (a.StartsOn.Value >= query.FromDate)) &&
 
                                                 /* and, OnGoing has value and true,
-                                                 * or there is no end date, or there is an end date and its earlier than ToDate. */
-                                                ((v.OnGoing.HasValue && v.OnGoing.Value) ||
-                                                    (!v.EndsOn.HasValue || (v.EndsOn.Value < query.ToDate)))
+                                                * or there is no end date, or there is an end date and its earlier than ToDate. */
+                                                ((a.OnGoing.HasValue && a.OnGoing.Value) ||
+                                                 (!a.EndsOn.HasValue ||
+                                                  (a.EndsOn.Value < query.ToDate)))
                                             )
-                                      )
-                                      .GroupBy(g => g.PersonId);
+                        )
+                                     .GroupBy(g => g.PersonId);
 
-            return activityGroups.Count();
+                    count = groups.Count();
+                }
+            }
+            finally
+            {
+                _projector.EndReadView();
+            }
+
+            return count;
         }
     }
 }

@@ -78,11 +78,15 @@ namespace UCosmic.Domain.People
     {
         private readonly ICommandEntities _entities;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IProcessEvents _eventProcessor;
 
-        public HandleUpdateAffliliationCommand(ICommandEntities entities, IUnitOfWork unitOfWork)
+        public HandleUpdateAffliliationCommand(ICommandEntities entities,
+                                               IUnitOfWork unitOfWork,
+                                               IProcessEvents eventProcessor)
         {
             _entities = entities;
             _unitOfWork = unitOfWork;
+            _eventProcessor = eventProcessor;
         }
 
         public void Handle(UpdateMyAffiliation command)
@@ -144,6 +148,8 @@ namespace UCosmic.Domain.People
 
                 _entities.Update(affiliation);
                 _unitOfWork.SaveChanges();
+
+                _eventProcessor.Raise(new AffiliationChanged());
             }
         }
     }

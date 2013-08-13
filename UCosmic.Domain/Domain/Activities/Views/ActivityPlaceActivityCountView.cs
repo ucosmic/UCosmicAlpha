@@ -27,8 +27,7 @@ namespace UCosmic.Domain.Activities
 
         public ActivityPlaceActivityCountView( IProcessQueries queryProcessor,
                                                IQueryEntities entities,
-                                               int establishmentId,
-                                               int placeId )
+                                               int establishmentId, int placeId )
         {
             _queryProcessor = queryProcessor;
             _entities = entities;

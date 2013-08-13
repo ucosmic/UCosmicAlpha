@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace UCosmic.Domain.Activities
 {
-    public class ActivityCountByEstablishmentId : BaseEntityQuery<Activity>, IDefineQuery<int>
+    public class ActivityCountByEstablishmentId : BaseViewsQuery<ActivityView>, IDefineQuery<int>
     {
         public int EstablishmentId { get; private set; }
         public DateTime FromDate { get; private set; }
@@ -19,43 +19,52 @@ namespace UCosmic.Domain.Activities
 
     public class HandleActivityCountByEstablishmentIdQuery : IHandleQueries<ActivityCountByEstablishmentId, int>
     {
-        private readonly IQueryEntities _entities;
+        private readonly ActivityViewProjector _projector;
 
-        public HandleActivityCountByEstablishmentIdQuery(IQueryEntities entities)
+        public HandleActivityCountByEstablishmentIdQuery(ActivityViewProjector projector)
         {
-            _entities = entities;
+            _projector = projector;
         }
 
         public int Handle(ActivityCountByEstablishmentId query)
         {
             if (query == null) throw new ArgumentNullException("query");
+            int count = 0;
 
-            string publicMode = ActivityMode.Public.AsSentenceFragment();
-            return _entities.Query<Activity>().Count(a => (a.ModeText == publicMode) &&
-                                                          (a.EditSourceId == null) &&
+            try
+            {
+                var possibleNullView = _projector.BeginReadView();
+                if (possibleNullView != null)
+                {
+                    var view = possibleNullView.AsQueryable();
 
-                                                          a.Person.Affiliations.Any(x => x.IsDefault &&
-                                                            (x.EstablishmentId == query.EstablishmentId ||
-                                                             x.Establishment.Ancestors.Any(y => y.AncestorId ==
-                                                                    query.EstablishmentId))) &&
+                    count = view.Count(a =>
+                                       /* EstablishmentId must be found in list of affiliated establishments...*/
+                                       a.EstablishmentIds.Any(e => e == query.EstablishmentId) &&
 
-                                                          a.Values.Any(v =>
-                                                                       /* and, include activities that are undated... */
-                                                                       (!v.StartsOn.HasValue && !v.EndsOn.HasValue) ||
-                                                                       /* or */
-                                                                       (
-                                                                           /* there is no start date, or there is a start date and its >= the FromDate... */
-                                                                           (!v.StartsOn.HasValue ||
-                                                                            (v.StartsOn.Value >= query.FromDate)) &&
+                                       /* and, include activities that are undated... */
+                                       (!a.StartsOn.HasValue && !a.EndsOn.HasValue) ||
+                                       /* or */
+                                       (
+                                           /* there is no start date, or there is a start date and its >= the FromDate... */
+                                           (!a.StartsOn.HasValue ||
+                                            (a.StartsOn.Value >= query.FromDate)) &&
 
-                                                                           /* and, OnGoing has value and true,
-                                                                            * or there is no end date, or there is an end date and its earlier than ToDate. */
-                                                                           ((v.OnGoing.HasValue && v.OnGoing.Value) ||
-                                                                            (!v.EndsOn.HasValue ||
-                                                                             (v.EndsOn.Value < query.ToDate)))
-                                                                       )
-                                                              )
-                );
+                                           /* and, OnGoing has value and true,
+                                            * or there is no end date, or there is an end date and its earlier than ToDate. */
+                                           ((a.OnGoing.HasValue && a.OnGoing.Value) ||
+                                            (!a.EndsOn.HasValue ||
+                                             (a.EndsOn.Value < query.ToDate)))
+                                       )
+                        );
+                }
+            }
+            finally
+            {
+                _projector.EndReadView();
+            }
+
+            return count;
         }
     }
 }

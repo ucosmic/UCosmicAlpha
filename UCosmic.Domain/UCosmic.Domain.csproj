@@ -149,16 +149,13 @@
     <Compile Include="Domain\Activities\Queries\ActivityCountByPlaceIdEstablishmentId.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityCountByEstablishmentId.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityCountByTypeIdPlaceIdEstablishmentId.cs" />
-    <Compile Include="Domain\Activities\Queries\ActivityCountryCountByEstablishmentId.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityDocumentById.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityDocumentsByActivityIdAndMode.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityDocumentsByValuesId.cs" />
-    <Compile Include="Domain\Activities\Queries\ActivityPlaceActivityCountViewProjector.cs" />
+    <Compile Include="Domain\Activities\Queries\ActivityViewProjector.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityValuesByActivityIdAndMode.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityCountByPlaceId.cs" />
     <Compile Include="Domain\Activities\Validation\MustHaveActivityMode.cs" />
-    <Compile Include="Domain\Activities\Views\ActivityCountTrendViewsDirtyFlag.cs" />
-    <Compile Include="Domain\Activities\Views\ActivityCountTrendViewsDirtyFlagger.cs" />
     <Compile Include="Domain\Activities\Views\ActivityGlobalActivityCountView.cs" />
     <Compile Include="Domain\Activities\Views\ActivityGlobalPeopleCountView.cs" />
     <Compile Include="Domain\Activities\Views\ActivityPlaceActivityCountView.cs" />
@@ -167,6 +164,8 @@
     <Compile Include="Domain\Activities\Views\ActivityGlobalTrendPeopleView.cs" />
     <Compile Include="Domain\Activities\Views\ActivityPlaceTrendActivityView.cs" />
     <Compile Include="Domain\Activities\Views\ActivityView.cs" />
+    <Compile Include="Domain\Activities\Views\ActivityViewDirtyFlag.cs" />
+    <Compile Include="Domain\Activities\Views\ActivityPlaceTrendPeopleView.cs" />
     <Compile Include="Domain\Agreements\Commands\PurgeContact.cs" />
     <Compile Include="Domain\Agreements\Commands\UpdateContact.cs" />
     <Compile Include="Domain\Agreements\Commands\CreateContact.cs" />
@@ -389,6 +388,7 @@
     <Compile Include="Domain\People\Commands\DeleteMyAffiliation.cs" />
     <Compile Include="Domain\People\Commands\DeletePerson.cs" />
     <Compile Include="Domain\People\Commands\UpdateMyAffiliation.cs" />
+    <Compile Include="Domain\People\Events\AffiliationChanged.cs" />
     <Compile Include="Domain\People\Queries\AffiliationByDepartment.cs" />
     <Compile Include="Domain\People\Queries\MyDefaultAffiliation.cs" />
     <Compile Include="Domain\People\Queries\MyAffiliations.cs" />

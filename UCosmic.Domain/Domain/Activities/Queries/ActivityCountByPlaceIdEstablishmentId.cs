@@ -11,9 +11,9 @@ namespace UCosmic.Domain.Activities
         public DateTime ToDate { get; private set; }
 
         public ActivityCountByPlaceIdEstablishmentId(int inPlaceId,
-                                                       int inEstablishmentId,
-                                                       DateTime fromDateUtc,
-                                                       DateTime toDateUtc)
+                                                     int inEstablishmentId,
+                                                     DateTime fromDateUtc,
+                                                     DateTime toDateUtc)
         {
             PlaceId = inPlaceId;
             EstablishmentId = inEstablishmentId;
@@ -24,48 +24,55 @@ namespace UCosmic.Domain.Activities
 
     public class HandleActivityCountByCountryIdEstablishmentIdQuery : IHandleQueries<ActivityCountByPlaceIdEstablishmentId, int>
     {
-        private readonly IQueryEntities _entities;
+        private readonly ActivityViewProjector _projector;
 
-        public HandleActivityCountByCountryIdEstablishmentIdQuery(IQueryEntities entities)
+        public HandleActivityCountByCountryIdEstablishmentIdQuery(ActivityViewProjector projector)
         {
-            _entities = entities;
+            _projector = projector;
         }
 
         public int Handle(ActivityCountByPlaceIdEstablishmentId query)
         {
             if (query == null) throw new ArgumentNullException("query");
+            int count = 0;
 
-            string publicMode = ActivityMode.Public.AsSentenceFragment();
+            try
+            {
+                var possibleNullView = _projector.BeginReadView();
+                if (possibleNullView != null)
+                {
+                    var view = possibleNullView.AsQueryable();
 
-            return _entities.Query<Activity>().Count(a => (a.ModeText == publicMode) &&
+                    count = view.Count(a =>
+                                       /* PlaceId must be found in list placeIds...*/
+                                       a.PlaceIds.Any(e => e == query.PlaceId) &&
 
-                                                          (a.EditSourceId == null) &&
+                                       /* and, EstablishmentId must be found in list of affiliated establishments...*/
+                                       a.EstablishmentIds.Any(e => e == query.EstablishmentId) &&
 
-                                                          a.Values.Any(
-                                                              v => (v.Locations.Any(vl => vl.PlaceId == query.PlaceId))) &&
+                                       /* and, include activities that are undated... */
+                                       (!a.StartsOn.HasValue && !a.EndsOn.HasValue) ||
+                                       /* or */
+                                       (
+                                           /* there is no start date, or there is a start date and its >= the FromDate... */
+                                           (!a.StartsOn.HasValue ||
+                                            (a.StartsOn.Value >= query.FromDate)) &&
 
-                                                          a.Person.Affiliations.Any(x => x.IsDefault &&
-                                                            (x.EstablishmentId == query.EstablishmentId ||
-                                                             x.Establishment.Ancestors.Any( y => y.AncestorId ==
-                                                                    query.EstablishmentId))) &&
+                                           /* and, OnGoing has value and true,
+                                            * or there is no end date, or there is an end date and its earlier than ToDate. */
+                                           ((a.OnGoing.HasValue && a.OnGoing.Value) ||
+                                            (!a.EndsOn.HasValue ||
+                                             (a.EndsOn.Value < query.ToDate)))
+                                       )
+                        );
+                }
+            }
+            finally
+            {
+                _projector.EndReadView();
+            }
 
-                                                          a.Values.Any(v =>
-                                                                       /* and, include activities that are undated... */
-                                                                       (!v.StartsOn.HasValue && !v.EndsOn.HasValue) ||
-                                                                       /* or */
-                                                                       (
-                                                                           /* there is no start date, or there is a start date and its >= the FromDate... */
-                                                                           (!v.StartsOn.HasValue ||
-                                                                            (v.StartsOn.Value >= query.FromDate)) &&
-
-                                                                           /* and, OnGoing has value and true,
-                                                                            * or there is no end date, or there is an end date and its earlier than ToDate. */
-                                                                           ((v.OnGoing.HasValue && v.OnGoing.Value) ||
-                                                                            (!v.EndsOn.HasValue ||
-                                                                             (v.EndsOn.Value < query.ToDate)))
-                                                                       )
-                                                              )
-                );
+            return count;
         }
     }
 }

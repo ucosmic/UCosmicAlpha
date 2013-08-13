@@ -46,19 +46,27 @@ namespace UCosmic.Web.Mvc.Models
     }
 
 
+    public class FacultyStaffTrendDataModel
+    {
+        public int Year { get; set; }
+        public int Count { get; set; }
+    }
+
     public class FacultyStaffPlaceTrendModel
     {
         public int PlaceId { get; set; }
         public string OfficialName { get; set; }
-        public ICollection<int> CountPerYear { get; set; }
+        public ICollection<FacultyStaffTrendDataModel> Data { get; set; }
     }
 
     public class FacultyStaffTrendModel
     {
+        public ICollection<FacultyStaffTrendDataModel> GlobalData { get; set; }
         public ICollection<FacultyStaffPlaceTrendModel> PlaceTrendActivityCounts { get; set; }
 
         public FacultyStaffTrendModel()
         {
+            GlobalData = new Collection<FacultyStaffTrendDataModel>();
             PlaceTrendActivityCounts = new Collection<FacultyStaffPlaceTrendModel>();
         }
     }

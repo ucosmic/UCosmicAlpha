@@ -2,6 +2,6 @@
 {
     public class PublicActivityChanged : BaseEvent
     {
-        public int EstablishmentId { get; set; }
+        public int ActivityId { get; set; }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace UCosmic.Domain.Activities
 {
-    class ActivityCountTrendViewsDirtyFlag
+    class ActivityViewDirtyFlag
     {
         public bool IsDirty { get; set; }
     }

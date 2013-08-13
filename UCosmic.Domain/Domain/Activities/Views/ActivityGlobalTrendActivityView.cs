@@ -5,7 +5,7 @@ using UCosmic.Domain.Employees;
 
 namespace UCosmic.Domain.Activities
 {
-    class ActivityGlobalTrendActivityView
+    public class ActivityGlobalTrendActivityView
     {
         public class YearCount
         {

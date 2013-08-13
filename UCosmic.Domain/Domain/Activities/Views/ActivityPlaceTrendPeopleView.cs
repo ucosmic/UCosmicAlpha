@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using UCosmic.Domain.Employees;
+using UCosmic.Domain.People;
 using UCosmic.Domain.Places;
 
 namespace UCosmic.Domain.Activities
 {
-    public class ActivityPlaceTrendActivityView
+    public class ActivityPlaceTrendPeopleView
     {
         public class YearCount
         {
@@ -19,10 +20,10 @@ namespace UCosmic.Domain.Activities
         public string OfficialName { get; private set; }
         public ICollection<YearCount> Data { get; private set; }
 
-        public ActivityPlaceTrendActivityView(IProcessQueries queryProcessor,
+        public ActivityPlaceTrendPeopleView(IProcessQueries queryProcessor,
                                           IQueryEntities entities,
                                           int establishmentId,
-                                          int placeId )
+                                          int placeId)
         {
             EstablishmentId = establishmentId;
             Data = new Collection<YearCount>();
@@ -44,7 +45,7 @@ namespace UCosmic.Domain.Activities
                     var yearCount = new YearCount
                     {
                         Year = year,
-                        Count = queryProcessor.Execute(new ActivityCountByPlaceIdEstablishmentId(placeId,
+                        Count = queryProcessor.Execute(new PeopleCountByPlaceIdEstablishmentId(placeId,
                                                                                                  establishmentId,
                                                                                                  new DateTime(year, 1, 1),
                                                                                                  new DateTime(year + 1, 1, 1)))

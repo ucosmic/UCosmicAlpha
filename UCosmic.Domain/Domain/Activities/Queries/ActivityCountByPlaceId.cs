@@ -19,47 +19,52 @@ namespace UCosmic.Domain.Activities
 
     public class HandleActivityCountByLocationQuery : IHandleQueries<ActivityCountByPlaceId, int>
     {
-        private readonly IQueryEntities _entities;
+        private readonly ActivityViewProjector _projector;
 
-        public HandleActivityCountByLocationQuery(IQueryEntities entities)
+        public HandleActivityCountByLocationQuery(ActivityViewProjector projector)
         {
-            _entities = entities;
+            _projector = projector;
         }
 
         public int Handle(ActivityCountByPlaceId query)
         {
             if (query == null) throw new ArgumentNullException("query");
+            int count = 0;
 
-            string publicMode = ActivityMode.Public.AsSentenceFragment();
-            return _entities.Query<Activity>().Count(a =>
+            try
+            {
+                var possibleNullView = _projector.BeginReadView();
+                if (possibleNullView != null)
+                {
+                    var view = possibleNullView.AsQueryable();
 
-                                                     /* Include all activities in count that are public... */
-                                                     (a.ModeText == publicMode) &&
-                                                     /* and, there is no edit source (don't include edit copies)... */
-                                                     (a.EditSourceId == null) &&
+                    count = view.Count(a =>
+                                       /* PlaceId must be found in list placeIds...*/
+                                       a.PlaceIds.Any(e => e == query.PlaceId) &&
 
-                                                     a.Values.Any(v =>
-                                                                  /* and, the locations include the country we want... */
-                                                                  v.Locations.Any(
-                                                                      l => l.Place.RevisionId == query.PlaceId)) &&
+                                       /* and, include activities that are undated... */
+                                       (!a.StartsOn.HasValue && !a.EndsOn.HasValue) ||
+                                       /* or */
+                                       (
+                                           /* there is no start date, or there is a start date and its >= the FromDate... */
+                                           (!a.StartsOn.HasValue ||
+                                            (a.StartsOn.Value >= query.FromDate)) &&
 
-                                                     a.Values.Any(v =>
-                                                                  /* and, include activities that are undated... */
-                                                                  (!v.StartsOn.HasValue && !v.EndsOn.HasValue) ||
-                                                                  /* or */
-                                                                  (
-                                                                      /* there is no start date, or there is a start date and its >= the FromDate... */
-                                                                      (!v.StartsOn.HasValue ||
-                                                                       (v.StartsOn.Value >= query.FromDate)) &&
+                                           /* and, OnGoing has value and true,
+                                            * or there is no end date, or there is an end date and its earlier than ToDate. */
+                                           ((a.OnGoing.HasValue && a.OnGoing.Value) ||
+                                            (!a.EndsOn.HasValue ||
+                                             (a.EndsOn.Value < query.ToDate)))
+                                       )
+                        );
+                }
+            }
+            finally
+            {
+                _projector.EndReadView();
+            }
 
-                                                                      /* and, OnGoing has value and true,
-                                                                            * or there is no end date, or there is an end date and its earlier than ToDate. */
-                                                                      ((v.OnGoing.HasValue && v.OnGoing.Value) ||
-                                                                       (!v.EndsOn.HasValue ||
-                                                                        (v.EndsOn.Value < query.ToDate)))
-                                                                  )
-                                                         )
-                );
+            return count;
         }
     }
 }

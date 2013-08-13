@@ -226,8 +226,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             {
                 if (placeId.HasValue)
                 {
-                    var view = new ActivityPlaceActivityCountView(_queryProcessor,
-                                                                   _entities,
+                    var view = new ActivityPlaceActivityCountView(_queryProcessor, _entities, 
                                                                    establishment.RevisionId,
                                                                    placeId.Value);
 
@@ -236,8 +235,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 }
                 else
                 {
-                    var view = new ActivityGlobalActivityCountView(_queryProcessor,
-                                                                    _entities,
+                    var view = new ActivityGlobalActivityCountView(_queryProcessor, _entities,
                                                                     establishment.RevisionId);
 
                     model.GlobalCount = view.Count;
@@ -264,6 +262,48 @@ namespace UCosmic.Web.Mvc.ApiControllers
         {
             var model = new FacultyStaffSummaryModel();
 
+            var tenancy = Request.Tenancy();
+            Establishment establishment = null;
+
+            if (tenancy.TenantId.HasValue)
+            {
+                establishment = _queryProcessor.Execute(new EstablishmentById(tenancy.TenantId.Value));
+            }
+            else if (!String.IsNullOrEmpty(tenancy.StyleDomain) && !"default".Equals(tenancy.StyleDomain))
+            {
+                establishment = _queryProcessor.Execute(new EstablishmentByEmail(tenancy.StyleDomain));
+            }
+
+            if (establishment != null)
+            {
+                if (placeId.HasValue)
+                {
+                    var view = new ActivityPlacePeopleCountView(_queryProcessor, _entities,
+                                                                   establishment.RevisionId,
+                                                                   placeId.Value);
+
+                    model.GlobalCount = view.Count;
+
+                }
+                else
+                {
+                    var view = new ActivityGlobalPeopleCountView(_queryProcessor, _entities,
+                                                                    establishment.RevisionId);
+
+                    model.GlobalCount = view.Count;
+                    foreach (var type in view.TypeCounts)
+                    {
+                        model.GlobalTypeCounts.Add(new FacultyStaffTypeCountModel
+                        {
+                            TypeId = type.TypeId,
+                            Type = type.Type,
+                            Count = type.Count
+                        });
+                    }
+                }
+            }
+
+
             return model;
         }
 
@@ -273,6 +313,59 @@ namespace UCosmic.Web.Mvc.ApiControllers
         {
             var model = new FacultyStaffTrendModel();
 
+            var tenancy = Request.Tenancy();
+            Establishment establishment = null;
+
+            if (tenancy.TenantId.HasValue)
+            {
+                establishment = _queryProcessor.Execute(new EstablishmentById(tenancy.TenantId.Value));
+            }
+            else if (!String.IsNullOrEmpty(tenancy.StyleDomain) && !"default".Equals(tenancy.StyleDomain))
+            {
+                establishment = _queryProcessor.Execute(new EstablishmentByEmail(tenancy.StyleDomain));
+            }
+
+            if (establishment != null)
+            {
+                if (placeId.HasValue)
+                {
+                    var view = new ActivityPlaceTrendActivityView( _queryProcessor, _entities,
+                                                              establishment.RevisionId,
+                                                              placeId.Value);
+
+                    var placeTrendActivityCount = new FacultyStaffPlaceTrendModel
+                    {
+                        PlaceId = placeId.Value,
+                        OfficialName = view.OfficialName
+                    };
+
+                    foreach (var data in view.Data)
+                    {
+                        placeTrendActivityCount.Data.Add(new FacultyStaffTrendDataModel
+                        {
+                           Year = data.Year,
+                           Count = data.Count
+                        });
+                    }
+                    model.PlaceTrendActivityCounts.Add(placeTrendActivityCount);
+
+                }
+                else
+                {
+                    var view = new ActivityGlobalTrendActivityView( _queryProcessor, 
+                                                                    establishment.RevisionId );
+
+                    foreach (var data in view.Data)
+                    {
+                        model.GlobalData.Add(new FacultyStaffTrendDataModel
+                        {
+                            Year = data.Year,
+                            Count = data.Count
+                        });
+                    }
+                }
+            }
+
             return model;
         }
 
@@ -281,6 +374,59 @@ namespace UCosmic.Web.Mvc.ApiControllers
         public FacultyStaffTrendModel GetPeopleTrend(int? placeId)
         {
             var model = new FacultyStaffTrendModel();
+
+            var tenancy = Request.Tenancy();
+            Establishment establishment = null;
+
+            if (tenancy.TenantId.HasValue)
+            {
+                establishment = _queryProcessor.Execute(new EstablishmentById(tenancy.TenantId.Value));
+            }
+            else if (!String.IsNullOrEmpty(tenancy.StyleDomain) && !"default".Equals(tenancy.StyleDomain))
+            {
+                establishment = _queryProcessor.Execute(new EstablishmentByEmail(tenancy.StyleDomain));
+            }
+
+            if (establishment != null)
+            {
+                if (placeId.HasValue)
+                {
+                    var view = new ActivityPlaceTrendPeopleView(_queryProcessor, _entities,
+                                                              establishment.RevisionId,
+                                                              placeId.Value);
+
+                    var placeTrendActivityCount = new FacultyStaffPlaceTrendModel
+                    {
+                        PlaceId = placeId.Value,
+                        OfficialName = view.OfficialName
+                    };
+
+                    foreach (var data in view.Data)
+                    {
+                        placeTrendActivityCount.Data.Add(new FacultyStaffTrendDataModel
+                        {
+                            Year = data.Year,
+                            Count = data.Count
+                        });
+                    }
+                    model.PlaceTrendActivityCounts.Add(placeTrendActivityCount);
+
+                }
+                else
+                {
+                    var view = new ActivityGlobalTrendPeopleView( _queryProcessor,
+                                                                  establishment.RevisionId );
+
+                    foreach (var data in view.Data)
+                    {
+                        model.GlobalData.Add(new FacultyStaffTrendDataModel
+                        {
+                            Year = data.Year,
+                            Count = data.Count
+                        });
+                    }
+                }
+            }
 
             return model;
         }

@@ -48,11 +48,15 @@ namespace UCosmic.Domain.People
     {
         private readonly ICommandEntities _entities;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IProcessEvents _eventProcessor;
 
-        public HandleDeleteAffliliationCommand(ICommandEntities entities, IUnitOfWork unitOfWork)
+        public HandleDeleteAffliliationCommand(ICommandEntities entities,
+                                               IUnitOfWork unitOfWork,
+                                               IProcessEvents eventProcessor)
         {
             _entities = entities;
             _unitOfWork = unitOfWork;
+            _eventProcessor = eventProcessor;
         }
 
         public void Handle(DeleteMyAffiliation command)
@@ -63,6 +67,8 @@ namespace UCosmic.Domain.People
 
             _entities.Purge(affiliation);
             _unitOfWork.SaveChanges();
+
+            _eventProcessor.Raise(new AffiliationChanged());
         }
     }
 }

@@ -8,7 +8,7 @@ using UCosmic.Domain.Places;
 
 namespace UCosmic.Domain.Activities
 {
-    class ActivityGlobalTrendPeopleView
+    public class ActivityGlobalTrendPeopleView
     {
         public class YearCount
         {
@@ -17,16 +17,12 @@ namespace UCosmic.Domain.Activities
         }
 
         public int EstablishmentId { get; private set; }
-        public int PlaceId { get; private set; }
         public ICollection<YearCount> Data { get; private set; }
 
-        public ActivityGlobalTrendPeopleView( IProcessQueries queryProcessor,
-                                              IQueryEntities entities,
-                                              int establishmentId,
-                                              int placeId )
+        public ActivityGlobalTrendPeopleView(IProcessQueries queryProcessor,
+                                             int establishmentId)
         {
             EstablishmentId = establishmentId;
-            PlaceId = placeId;
             Data = new Collection<YearCount>();
 
             var settings = queryProcessor.Execute(new EmployeeModuleSettingsByEstablishmentId(establishmentId));
@@ -36,21 +32,18 @@ namespace UCosmic.Domain.Activities
                                        ? toDateUtc.AddYears(-(settings.ReportsDefaultYearRange.Value + 1))
                                        : new DateTime(DateTime.MinValue.Year, 1, 1);
 
-            Place place = entities.Query<Place>().SingleOrDefault(p => p.RevisionId == placeId);
-            if (place != null)
-            {
-                for (int year = fromDateUtc.Year; year < toDateUtc.Year; year += 1)
-                {
-                    var yearCount = new YearCount
-                    {
-                        Year = year,
-                        Count = queryProcessor.Execute(new PeopleCountByPlaceIdEstablishmentId(placeId, establishmentId,
-                                                                                               new DateTime(year, 1, 1),
-                                                                                               new DateTime(year + 1, 1, 1)))
-                    };
 
-                    Data.Add(yearCount);
-                }
+            for (int year = fromDateUtc.Year; year < toDateUtc.Year; year += 1)
+            {
+                var yearCount = new YearCount
+                {
+                    Year = year,
+                    Count = queryProcessor.Execute(new PeopleCountByEstablishmentId(establishmentId,
+                                                                                    new DateTime(year, 1, 1),
+                                                                                    new DateTime(year + 1, 1, 1)))
+                };
+
+                Data.Add(yearCount);
             }
         }
     }
