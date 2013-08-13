@@ -86,7 +86,7 @@ textarea {
 /* Kendo ComboBox overrides */
 .k-combobox {
     @include border-box;
-    width: 100%;
+    width: 99%;
     .k-dropdown-wrap, .k-dropdown-wrap.k-state-default, .k-dropdown-wrap.k-state-border-down, .k-dropdown-wrap.k-state-hover, .k-dropdown-wrap.k-state-focused {
         @include border-radius(0);
         border: solid 1px #aaa;
@@ -399,12 +399,6 @@ fieldset {
     width: 120px;
 }
 
-.required {
-    &:after {
-        content: ' *';
-    }
-}
-
 section {
     margin-bottom: 40px;
 }
@@ -678,5 +672,11 @@ section {
         {
           content: '';
         }
+    }
+}
+
+.required {
+    &:after {
+        content: ' *';
     }
 }

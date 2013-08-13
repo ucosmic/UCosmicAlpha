@@ -305,8 +305,8 @@ define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../
             $.get(App.Routes.WebApi.Agreements.get(this.agreementId)).done(function (response) {
                 var dropdownlist;
                 _this.content(response.content);
-                _this.expDate(Globalize.format(new Date(response.expiresOn), 'd'));
-                _this.startDate(Globalize.format(new Date(response.startsOn), 'd'));
+                _this.expDate(Globalize.format(new Date(response.expiresOn.substring(0, response.expiresOn.lastIndexOf("T"))), 'd'));
+                _this.startDate(Globalize.format(new Date(response.startsOn.substring(0, response.startsOn.lastIndexOf("T"))), 'd'));
                 if (response.isAutoRenew == null) {
                     _this.autoRenew(2);
                 } else {
@@ -771,7 +771,7 @@ else
                 width: 950,
                 close: function () {
                     $("#addAContact").fadeIn(500);
-                    _this.clearContactInfo();
+                    _this.clearContact();
                 },
                 visible: false,
                 draggable: false,
@@ -1053,8 +1053,7 @@ else
             var time = 500;
             this.fadeModsOut(dfd, dfd2, $obj, $obj2, time);
             $.when(dfd, dfd2).done(function () {
-                $("#estSearch").fadeIn(500, function () {
-                });
+                $("#estSearch").fadeIn(500);
             });
         };
 
@@ -1294,7 +1293,7 @@ else
             this.contactEmail(me.emailAddress());
             this.contactDisplayName(me.displayName());
             this.contactPersonId(me.personId());
-            this.contactUserId = me.userId();
+            this.contactUserId = me.userId;
             this.contactJobTitle(me.title());
             this.contactFirstName(me.firstName());
             this.contactLastName(me.lastName());
@@ -1348,29 +1347,8 @@ else
             });
         };
 
-        InstitutionalAgreementEditModel.prototype.clearContactInfo = function () {
-            this.contactEmail('');
-            this.contactDisplayName('');
-            this.contactPersonId('');
-            this.contactUserId = '';
-            this.contactJobTitle('');
-            this.contactFirstName('');
-            this.contactMiddleName('');
-            this.contactLastName('');
-            this.contactPhones('');
-            this.contactTypeOptionSelected('');
 
-            if (this.isCustomContactTypeAllowed) {
-                var dropdownlist = $("#contactTypeOptions").data("kendoComboBox");
-            } else {
-                var dropdownlist = $("#contactTypeOptions").data("kendoDropDownList");
-            }
-            dropdownlist.select(0);
-            var dropdownlist = $("#contactSalutation").data("kendoDropDownList");
-            dropdownlist.select(0);
-            var dropdownlist = $("#contactSuffix").data("kendoDropDownList");
-            dropdownlist.select(0);
-        };
+            if(this.isCustomContactTypeAllowed) {
 
         InstitutionalAgreementEditModel.prototype.editContact = function (me) {
             var _this = this;
@@ -1462,7 +1440,7 @@ else
                     title: this.contactJobTitle(),
                     firstName: this.contactFirstName(),
                     lastName: this.contactLastName(),
-                    id: 1,
+                    id: this.contactUserId,
                     personId: this.contactPersonId(),
                     userId: this.contactUserId,
                     phones: ko.mapping.toJS(this.contactPhones()),
@@ -1513,16 +1491,9 @@ else
 
         InstitutionalAgreementEditModel.prototype.addAContact = function (me, e) {
             this.contactsIsEdit(false);
-            this.$contactEmail.prop('disabled', false);
-            this.$contactLastName.prop('disabled', false);
-            this.$contactFirstName.prop('disabled', false);
-            $("#contactMiddleName").prop('disabled', false);
-            this.$contactSalutation.data("kendoDropDownList").enable(true);
-            this.$contactSuffix.data("kendoDropDownList").enable(true);
-            this.validateContact.errors.showAllMessages(false);
+            this.clearContact();
             this.$addContactDialog.data("kendoWindow").open().title("Add Contact");
-            $("#addAContact").fadeOut(500, function () {
-            });
+            $("#addAContact").fadeOut(500);
         };
 
         InstitutionalAgreementEditModel.prototype.cancelContact = function () {
@@ -1531,18 +1502,34 @@ else
         };
 
         InstitutionalAgreementEditModel.prototype.clearContact = function () {
-            this.clearContactInfo();
-            var $contactEmail = $("#contactEmail");
-            var $contactLastName = $("#contactLastName");
-            var $contactFirstName = $("#contactFirstName");
-            var $contactSalutation = $("#contactSalutation");
-            var $contactSuffix = $("#contactSuffix");
-            $contactEmail.prop('disabled', false);
-            $contactLastName.prop('disabled', false);
-            $contactFirstName.prop('disabled', false);
-            $("#contactMiddleName").prop('disabled', false);
-            $contactSalutation.data("kendoComboBox").enable(true);
-            $contactSuffix.data("kendoDropDownList").enable(true);
+            this.$contactEmail.removeProp('disabled');
+            this.$contactLastName.removeProp('disabled');
+            this.$contactFirstName.removeProp('disabled');
+            $("#contactMiddleName").removeProp('disabled');
+            this.$contactSalutation.data("kendoDropDownList").enable(true);
+            this.$contactSuffix.data("kendoDropDownList").enable(true);
+            this.validateContact.errors.showAllMessages(false);
+            this.validateContact.errors.showAllMessages(false);
+            this.contactEmail('');
+            this.contactDisplayName('');
+            this.contactPersonId('');
+            this.contactUserId = '';
+            this.contactJobTitle('');
+            this.contactFirstName('');
+            this.contactMiddleName('');
+            this.contactLastName('');
+            this.contactPhones.removeAll();
+            this.contactTypeOptionSelected('');
+            if(this.isCustomContactTypeAllowed) {
+                var dropdownlist = $("#contactTypeOptions").data("kendoComboBox");
+            } else {
+                var dropdownlist = $("#contactTypeOptions").data("kendoDropDownList");
+            }
+            dropdownlist.select(0);
+            var dropdownlist = $("#contactSalutation").data("kendoDropDownList");
+            dropdownlist.select(0);
+            var dropdownlist = $("#contactSuffix").data("kendoDropDownList");
+            dropdownlist.select(0);
             this.validateContact.errors.showAllMessages(false);
         };
 
@@ -1756,19 +1743,21 @@ else
             var tempUrl = App.Routes.WebApi.Agreements.Contacts.post(this.agreementId);
 
             $.each(this.contacts(), function (i, item) {
-                var data = ko.mapping.toJS({
+                var data = {
                     agreementId: _this.agreementId,
-                    PersonId: item.personId,
-                    Type: item.type,
-                    DisplayName: item.displayName,
-                    FirstName: item.firstName,
-                    MiddleName: item.middleName,
-                    LastName: item.lastName,
-                    Suffix: item.suffix,
-                    EmailAddress: item.emailAddress,
-                    PersonId: item.personId,
-                    Phones: item.phones
-                });
+                    title: item.title(),
+                    firstName: item.firstName(),
+                    lastName: item.lastName(),
+                    userId: item.id(),
+                    personId: item.personId(),
+                    phones: item.phones(),
+                    emailAddress: item.emailAddress(),
+                    type: item.type(),
+                    suffix: item.suffix(),
+                    salutation: item.salutation(),
+                    displayName: item.displayName(),
+                    middleName: item.middleName
+                };
                 _this.postMe(data, tempUrl);
             });
         };
@@ -1877,23 +1866,22 @@ else
                 } else {
                     url = App.Routes.WebApi.Agreements.post();
                     $.post(url, data).done(function (response, statusText, xhr) {
-                        //this.agreementId = 2;//response.agreementId
+                        var myUrl = xhr.getResponseHeader('Location');
+                        _this.agreementId = parseInt(myUrl.substring(myUrl.lastIndexOf("/") + 1));
                         _this.agreementPostFiles(response, statusText, xhr);
                         _this.agreementPostContacts(response, statusText, xhr);
 
                         //change url to edit
                         $LoadingPage.text("Agreement Saved...");
                         setTimeout(function () {
-                            $("#LoadingPage").fadeOut(500, function () {
-                                if (xhr != undefined) {
-                                    window.location.hash = "";
-                                    window.location.href = "/agreements/" + xhr.getResponseHeader('Location').substring(xhr.getResponseHeader('Location').lastIndexOf("/") + 1) + "/edit/";
+                                if(xhr != undefined) {
+                                window.location.hash = "";
+                                window.location.href = "/agreements/" + xhr.getResponseHeader('Location').substring(xhr.getResponseHeader('Location').lastIndexOf("/") + 1) + "/edit/";
                                     //window.location.pathname = "/agreements/" + xhr.getResponseHeader('Location').substring(xhr.getResponseHeader('Location').lastIndexOf("/")+1) + "/edit/"
-                                } else {
-                                    alert("success, but no location");
-                                }
+                            } else {
+                                alert("success, but no location");
+                            }
                                 // $("#allParticipants").fadeIn(500);
-                            });
                         }, 5000);
                     }).fail(function (xhr, statusText, errorThrown) {
                         _this.spinner.stop();

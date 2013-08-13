@@ -106,7 +106,7 @@ textarea {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  width: 100%; }
+  width: 99%; }
   .k-combobox .k-dropdown-wrap, .k-combobox .k-dropdown-wrap.k-state-default, .k-combobox .k-dropdown-wrap.k-state-border-down, .k-combobox .k-dropdown-wrap.k-state-hover, .k-combobox .k-dropdown-wrap.k-state-focused {
     -moz-border-radius: 0;
     -webkit-border-radius: 0;
@@ -397,9 +397,6 @@ fieldset legend {
 
 .k-editor-selectbox {
   width: 120px; }
-
-.required:after {
-  content: ' *'; }
 
 section {
   margin-bottom: 40px; }
@@ -694,4 +691,7 @@ section {
       content: ', '; }
     .typed-item2 .phoneList:last-child:after {
       content: ''; }
+
+.required:after {
+  content: ' *'; }
 
