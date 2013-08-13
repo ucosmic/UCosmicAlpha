@@ -5,12 +5,12 @@
 /// <reference path="../../../app/App.ts" />
 /// <reference path="../../../app/SideSwiper.ts" />
 /// <reference path="../../../app/Routes.ts" />
+/// <reference path="ServerApiModel.d.ts" />
 
 import PagedSearch = require('../Widgets/PagedSearch');
 import SearchResult = require('./SearchResult');
 import Lens = require('../Widgets/Lens');
 import Places = require('../places/ServerApiModel');
-import SearchApiModel = require('./ServerApiModel');
 import Spinner = require('../Widgets/Spinner');
 
 export class Search extends PagedSearch.PagedSearch {
@@ -137,7 +137,7 @@ export class Search extends PagedSearch.PagedSearch {
         var pageNumber = sammyContext.params['pageNumber'];
 
         // make sure the viewmodel pagenumber is in sync with the route
-        if (pageNumber && parseInt(pageNumber) !== parseInt(this.pageNumber()))
+        if (pageNumber && parseInt(pageNumber) !== Number(this.pageNumber()))
             this.pageNumber(parseInt(pageNumber));
         return true;
     }
@@ -198,7 +198,7 @@ export class Search extends PagedSearch.PagedSearch {
     };
     swipeCallback(): void {
     }
-    receiveResults(js: SearchApiModel.IServerApiFlatModel[]): void {
+    receiveResults(js: ViewModels.Establishments.IServerApiFlatModel[]): void {
         if (!js) {
             ko.mapping.fromJS({
                 items: [],
@@ -226,7 +226,7 @@ export class Search extends PagedSearch.PagedSearch {
             keyword: this.throttledKeyword(),
             orderBy: this.orderBy()
         })
-        .done((response: SearchApiModel.IServerApiFlatModel[]): void => {
+        .done((response: ViewModels.Establishments.IServerApiFlatModel[]): void => {
             this.receiveResults(response);
         });
     }

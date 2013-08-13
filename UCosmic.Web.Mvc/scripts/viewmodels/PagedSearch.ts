@@ -1,4 +1,3 @@
-/// <reference path="../lib-ext.d.ts" />
 /// <reference path="../typings/jquery/jquery.d.ts" />
 /// <reference path="../typings/knockout/knockout.d.ts" />
 /// <reference path="Spinner.ts" />
@@ -62,8 +61,8 @@ module ViewModels {
             this.pageCount = ko.computed((): number => {
                 return Math.ceil(this.itemTotal() / this.pageSize());
             });
-            this.pageIndex = ko.computed((): number =>  {
-                return parseInt(this.transitionedPageNumber()) - 1;
+            this.pageIndex = ko.computed((): number => {
+                return Number(this.transitionedPageNumber()) - 1;
             });
             this.firstIndex = ko.computed((): number => {
                 return this.pageIndex() * this.pageSize();

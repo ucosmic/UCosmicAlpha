@@ -180,7 +180,7 @@ module ViewModels.Users {
         applySession(): void {
             this.keyword(sessionStorage.getItem(Search.KeywordSessionKey) || this.keyword());
             this.pageSize(parseInt(window.sessionStorage.getItem('UserSearchPageSize'))
-                || parseInt(this.pageSize()));
+                || Number(this.pageSize()));
             this.orderBy(sessionStorage.getItem(Search.OrderBySessionKey) || this.orderBy());
         }
 
@@ -194,7 +194,7 @@ module ViewModels.Users {
             if (pageDelta == 0) return;
             var isEnabled = pageDelta < 0 ? this.prevEnabled() : this.nextEnabled();
             if (isEnabled) {
-                var pageNumber = parseInt(this.pageNumber()) + pageDelta;
+                var pageNumber = Number(this.pageNumber()) + pageDelta;
                 if (pageNumber > 0 && pageNumber <= this.pageCount()) {
                     // detect forward or back button
                     if (this._history().length > 1) {

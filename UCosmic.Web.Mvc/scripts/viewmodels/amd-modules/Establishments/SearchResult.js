@@ -1,9 +1,8 @@
 /// <reference path="../../../typings/jquery/jquery.d.ts" />
 /// <reference path="../../../typings/knockout/knockout.d.ts" />
 /// <reference path="../../../typings/knockout.mapping/knockout.mapping.d.ts" />
-/// <reference path="Search.ts" />
+/// <reference path="ServerApiModel.d.ts" />
 define(["require", "exports"], function(require, exports) {
-    
     
 
     var SearchResult = (function () {

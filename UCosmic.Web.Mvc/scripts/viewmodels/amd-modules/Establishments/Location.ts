@@ -1,10 +1,8 @@
 /// <reference path="../../../app/Routes.ts" />
-/// <reference path="../../places/ServerApiModel.ts" />
 /// <reference path="../../Spinner.ts" />
 /// <reference path="../../Flasher.ts" />
+/// <reference path="ServerApiModel.d.ts" />
 
-
-import SearchApiModel = require('./ServerApiModel');
 import Places = require('../places/ServerApiModel');
 import Spinner = require('../Widgets/Spinner');
 import ToolsOverlay = require('../google/ToolsOverlay');
@@ -360,7 +358,7 @@ export class Location {
         if (this.ownerId) { // set up based on current owner id
             this.isLoaded(false);
             $.get(App.Routes.WebApi.Establishments.Locations.get(this.ownerId))
-            .done((response: SearchApiModel.IServerLocationApiModel): void => {
+            .done((response: ViewModels.Establishments.IServerLocationApiModel): void => {
                 gm.event.addListenerOnce(this.map, 'idle', (): void => {
                     this.loadMapZoom(response);
                     this.loadMapMarker(response);
@@ -377,7 +375,7 @@ export class Location {
         }
     }
 
-    private loadMapZoom(response: SearchApiModel.IServerLocationApiModel): void {
+    private loadMapZoom(response: ViewModels.Establishments.IServerLocationApiModel): void {
         // zoom map to reveal location
         if (response.googleMapZoomLevel && response.center && response.center.hasValue)
             this.map.setZoom(response.googleMapZoomLevel);
@@ -391,7 +389,7 @@ export class Location {
             this.allowCountryFitBounds = false;
     }
 
-    private loadMapMarker(response: SearchApiModel.IServerLocationApiModel): void {
+    private loadMapMarker(response: ViewModels.Establishments.IServerLocationApiModel): void {
         // place marker and set map center
         if (response.center.hasValue) {
             var latLng = Places.Utils.convertToLatLng(response.center);
@@ -519,7 +517,7 @@ export class Location {
         });
     }
 
-    serializeData(): SearchApiModel.IServerLocationPutModel {
+    serializeData(): ViewModels.Establishments.IServerLocationPutModel {
         var center: Places.IServerPointModel,
             centerLat: number = this.toolsMarkerLat(),
             centerLng: number = this.toolsMarkerLng(),
@@ -568,7 +566,7 @@ export class Location {
         else if (this.continentId())
             placeId = this.continentId();
 
-        var js: SearchApiModel.IServerLocationPutModel = {
+        var js: ViewModels.Establishments.IServerLocationPutModel = {
             center: center,
             box: box,
             googleMapZoomLevel: zoom,
@@ -586,7 +584,7 @@ export class Location {
         // restore initial values
         this.isLoaded(false);
         $.get(App.Routes.WebApi.Establishments.Locations.get(this.ownerId))
-            .done((response: SearchApiModel.IServerLocationApiModel): void => {
+            .done((response: ViewModels.Establishments.IServerLocationApiModel): void => {
                 // reset zoom
                 this.map.setZoom(1);
                 this.loadMapZoom(response);

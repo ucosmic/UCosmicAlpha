@@ -1,9 +1,8 @@
 /// <reference path="../../../app/Routes.ts" />
-/// <reference path="../../places/ServerApiModel.ts" />
 /// <reference path="../../Spinner.ts" />
 /// <reference path="../../Flasher.ts" />
+/// <reference path="ServerApiModel.d.ts" />
 define(["require", "exports", '../places/ServerApiModel', '../Widgets/Spinner', '../google/ToolsOverlay'], function(require, exports, __Places__, __Spinner__, __ToolsOverlay__) {
-    
     var Places = __Places__;
     var Spinner = __Spinner__;
     var ToolsOverlay = __ToolsOverlay__;

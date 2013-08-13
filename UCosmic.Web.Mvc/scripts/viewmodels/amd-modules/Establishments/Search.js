@@ -5,6 +5,7 @@
 /// <reference path="../../../app/App.ts" />
 /// <reference path="../../../app/SideSwiper.ts" />
 /// <reference path="../../../app/Routes.ts" />
+/// <reference path="ServerApiModel.d.ts" />
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -16,7 +17,6 @@ define(["require", "exports", '../Widgets/PagedSearch', './SearchResult', '../pl
     var SearchResult = __SearchResult__;
     
     var Places = __Places__;
-    
     
 
     var Search = (function (_super) {
@@ -169,7 +169,7 @@ define(["require", "exports", '../Widgets/PagedSearch', './SearchResult', '../pl
 
             var pageNumber = sammyContext.params['pageNumber'];
 
-            if (pageNumber && parseInt(pageNumber) !== parseInt(this.pageNumber()))
+            if (pageNumber && parseInt(pageNumber) !== Number(this.pageNumber()))
                 this.pageNumber(parseInt(pageNumber));
             return true;
         };

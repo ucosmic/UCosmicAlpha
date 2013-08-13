@@ -5,8 +5,8 @@
 /// <reference path="../../../typings/knockout.validation/knockout.validation.d.ts" />
 /// <reference path="../../../app/Routes.ts" />
 /// <reference path="../../Flasher.ts" />
+/// <reference path="ServerApiModel.d.ts" />
 define(["require", "exports", '../Widgets/Spinner'], function(require, exports, __Spinner__) {
-    
     
     var Spinner = __Spinner__;
 

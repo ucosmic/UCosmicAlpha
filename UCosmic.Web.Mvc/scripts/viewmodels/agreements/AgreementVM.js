@@ -9,29 +9,18 @@
 /// <reference path="../../app/Routes.ts" />
 /// <reference path="../../typings/moment/moment.d.ts" />
 /// <reference path="../../typings/sammyjs/sammyjs.d.ts" />
+/// <reference path="../amd-modules/Establishments/ServerApiModel.d.ts" />
 /// <amd-dependency path="../../jquery/jquery.globalize/globalize.require" />
 define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../amd-modules/Establishments/Search', '../amd-modules/Establishments/Item', '../amd-modules/Widgets/Spinner', "../../jquery/jquery.globalize/globalize.require"], function(require, exports, __SearchResultModule__, __SearchModule__, __ItemModule__, __Spinner__) {
     var SearchResultModule = __SearchResultModule__;
     var SearchModule = __SearchModule__;
     var ItemModule = __ItemModule__;
-    
     var Spinner = __Spinner__;
     
     
     var Search = SearchModule.Search;
     var Item = ItemModule.Item;
     var SearchResult = SearchResultModule.SearchResult;
-
-    if (!String.prototype.format) {
-        String.prototype.format = function () {
-            var formatted = this;
-            for (var i = 0; i < arguments.length; i++) {
-                var regexp = new RegExp('\\{' + i + '\\}', 'gi');
-                formatted = formatted.replace(regexp, arguments[i]);
-            }
-            return formatted;
-        };
-    }
 
     var InstitutionalAgreementParticipantModel = (function () {
         function InstitutionalAgreementParticipantModel(isOwner, establishmentId, establishmentOfficialName, establishmentTranslatedName) {

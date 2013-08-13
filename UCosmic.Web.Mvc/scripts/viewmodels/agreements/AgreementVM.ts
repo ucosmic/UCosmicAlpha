@@ -9,33 +9,18 @@
 /// <reference path="../../app/Routes.ts" />
 /// <reference path="../../typings/moment/moment.d.ts" />
 /// <reference path="../../typings/sammyjs/sammyjs.d.ts" />
+/// <reference path="../amd-modules/Establishments/ServerApiModel.d.ts" />
 /// <amd-dependency path="../../jquery/jquery.globalize/globalize.require" />
 
-import SearchResultModule= require('../amd-modules/Establishments/SearchResult');
-import SearchModule= require('../amd-modules/Establishments/Search');
-import ItemModule= require('../amd-modules/Establishments/Item');
-import SearchApiModel= require('../amd-modules/Establishments/ServerApiModel');
-import Spinner= require('../amd-modules/Widgets/Spinner');
-import Name= require('../amd-modules/Establishments/Name')
-import Url= require('../amd-modules/Establishments/Url')
+import SearchResultModule = require('../amd-modules/Establishments/SearchResult');
+import SearchModule = require('../amd-modules/Establishments/Search');
+import ItemModule = require('../amd-modules/Establishments/Item');
+import Spinner = require('../amd-modules/Widgets/Spinner');
+import Name = require('../amd-modules/Establishments/Name')
+import Url = require('../amd-modules/Establishments/Url')
 var Search = SearchModule.Search;
 var Item = ItemModule.Item;
 var SearchResult = SearchResultModule.SearchResult;
-
-interface String {
-    format(...args: any[]): string;
-}
-
-if (!String.prototype.format) {
-    String.prototype.format = function () {
-        var formatted = this;
-        for (var i = 0; i < arguments.length; i++) {
-            var regexp = new RegExp('\\{' + i + '\\}', 'gi');
-            formatted = formatted.replace(regexp, arguments[i]);
-        }
-        return formatted;
-    };
-}
 
 export class InstitutionalAgreementParticipantModel {
     constructor(isOwner: any, establishmentId: number, establishmentOfficialName: string,
@@ -307,7 +292,7 @@ export class InstitutionalAgreementEditModel {
     });
 
     spinner: Spinner.Spinner = new Spinner.Spinner(new Spinner.SpinnerOptions(400, true));
-    receiveResults(js: SearchApiModel.IServerApiFlatModel[]): void {
+    receiveResults(js: ViewModels.Establishments.IServerApiFlatModel[]): void {
         if (!js) {
             ko.mapping.fromJS({
                 items: [],
@@ -321,7 +306,7 @@ export class InstitutionalAgreementEditModel {
 
     populateParticipants(): void {
         $.get(App.Routes.WebApi.Agreements.Participants.get(this.agreementId))
-            .done((response: SearchApiModel.IServerApiFlatModel[]): void => {
+            .done((response: ViewModels.Establishments.IServerApiFlatModel[]): void => {
                 this.receiveResults(response);
                 this.dfdPopParticipants.resolve();
             });

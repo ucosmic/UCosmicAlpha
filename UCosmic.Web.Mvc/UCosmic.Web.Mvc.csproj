@@ -1526,7 +1526,6 @@
     <Content Include="scripts\ko\knockout.binding-handlers.min.js">
       <DependentUpon>knockout.binding-handlers.ts</DependentUpon>
     </Content>
-    <None Include="scripts\lib-ext.d.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\establishments\SearchResult.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\establishments\Search.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\languages\ServerApiModel.ts" />
@@ -1835,6 +1834,7 @@
       <DependentUpon>App.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="scripts\viewmodels\amd-modules\google\ToolsOverlay.ts" />
+    <None Include="scripts\viewmodels\amd-modules\Establishments\ServerApiModel.d.ts" />
     <Content Include="scripts\viewmodels\amd-modules\google\ToolsOverlay.js">
       <DependentUpon>ToolsOverlay.ts</DependentUpon>
     </Content>
@@ -2092,13 +2092,6 @@
     </Content>
     <Content Include="scripts\viewmodels\amd-modules\Establishments\SearchResult.min.js">
       <DependentUpon>SearchResult.ts</DependentUpon>
-    </Content>
-    <TypeScriptCompile Include="scripts\viewmodels\amd-modules\Establishments\ServerApiModel.ts" />
-    <Content Include="scripts\viewmodels\amd-modules\Establishments\ServerApiModel.js">
-      <DependentUpon>ServerApiModel.ts</DependentUpon>
-    </Content>
-    <Content Include="scripts\viewmodels\amd-modules\Establishments\ServerApiModel.min.js">
-      <DependentUpon>ServerApiModel.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="scripts\viewmodels\amd-modules\Widgets\Spinner.ts" />
     <Content Include="scripts\viewmodels\amd-modules\Widgets\Spinner.js">

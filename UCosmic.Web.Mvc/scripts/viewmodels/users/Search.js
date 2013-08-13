@@ -175,7 +175,7 @@ var ViewModels;
 
             Search.prototype.applySession = function () {
                 this.keyword(sessionStorage.getItem(Search.KeywordSessionKey) || this.keyword());
-                this.pageSize(parseInt(window.sessionStorage.getItem('UserSearchPageSize')) || parseInt(this.pageSize()));
+                this.pageSize(parseInt(window.sessionStorage.getItem('UserSearchPageSize')) || Number(this.pageSize()));
                 this.orderBy(sessionStorage.getItem(Search.OrderBySessionKey) || this.orderBy());
             };
 
@@ -190,7 +190,7 @@ var ViewModels;
                     return;
                 var isEnabled = pageDelta < 0 ? this.prevEnabled() : this.nextEnabled();
                 if (isEnabled) {
-                    var pageNumber = parseInt(this.pageNumber()) + pageDelta;
+                    var pageNumber = Number(this.pageNumber()) + pageDelta;
                     if (pageNumber > 0 && pageNumber <= this.pageCount()) {
                         if (this._history().length > 1) {
                             var toPath = location.pathname + this.getPageHash(pageNumber);

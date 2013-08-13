@@ -1,4 +1,3 @@
-/// <reference path="../../../lib-ext.d.ts" />
 /// <reference path="../../../typings/jquery/jquery.d.ts" />
 /// <reference path="../../../typings/knockout/knockout.d.ts" />
 define(["require", "exports", './Spinner'], function(require, exports, __Spinner__) {
@@ -26,7 +25,7 @@ define(["require", "exports", './Spinner'], function(require, exports, __Spinner
                 return Math.ceil(_this.itemTotal() / _this.pageSize());
             });
             this.pageIndex = ko.computed(function () {
-                return parseInt(_this.transitionedPageNumber()) - 1;
+                return Number(_this.transitionedPageNumber()) - 1;
             });
             this.firstIndex = ko.computed(function () {
                 return _this.pageIndex() * _this.pageSize();
