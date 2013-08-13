@@ -1347,9 +1347,28 @@ else
             });
         };
 
-
-            if(this.isCustomContactTypeAllowed) {
-
+        //clearContactInfo(): void {
+        //    this.contactEmail('');
+        //    this.contactDisplayName('');
+        //    this.contactPersonId('');
+        //    this.contactUserId = '';
+        //    this.contactJobTitle('');
+        //    this.contactFirstName('');
+        //    this.contactMiddleName('');
+        //    this.contactLastName('');
+        //    this.contactPhones = ko.mapping.fromJS([]);
+        //    this.contactTypeOptionSelected('');
+        //    if (this.isCustomContactTypeAllowed) {
+        //        var dropdownlist = $("#contactTypeOptions").data("kendoComboBox");
+        //    } else {
+        //        var dropdownlist = $("#contactTypeOptions").data("kendoDropDownList");
+        //    }
+        //    dropdownlist.select(0);
+        //    var dropdownlist = $("#contactSalutation").data("kendoDropDownList");
+        //    dropdownlist.select(0);
+        //    var dropdownlist = $("#contactSuffix").data("kendoDropDownList");
+        //    dropdownlist.select(0);
+        //}
         InstitutionalAgreementEditModel.prototype.editContact = function (me) {
             var _this = this;
             if (this.validateContact.isValid()) {
@@ -1502,6 +1521,7 @@ else
         };
 
         InstitutionalAgreementEditModel.prototype.clearContact = function () {
+            //this.clearContactInfo();
             this.$contactEmail.removeProp('disabled');
             this.$contactLastName.removeProp('disabled');
             this.$contactFirstName.removeProp('disabled');
@@ -1510,6 +1530,7 @@ else
             this.$contactSuffix.data("kendoDropDownList").enable(true);
             this.validateContact.errors.showAllMessages(false);
             this.validateContact.errors.showAllMessages(false);
+
             this.contactEmail('');
             this.contactDisplayName('');
             this.contactPersonId('');
@@ -1520,7 +1541,8 @@ else
             this.contactLastName('');
             this.contactPhones.removeAll();
             this.contactTypeOptionSelected('');
-            if(this.isCustomContactTypeAllowed) {
+
+            if (this.isCustomContactTypeAllowed) {
                 var dropdownlist = $("#contactTypeOptions").data("kendoComboBox");
             } else {
                 var dropdownlist = $("#contactTypeOptions").data("kendoDropDownList");
@@ -1743,6 +1765,19 @@ else
             var tempUrl = App.Routes.WebApi.Agreements.Contacts.post(this.agreementId);
 
             $.each(this.contacts(), function (i, item) {
+                //var data = ko.mapping.toJS({
+                //    agreementId: this.agreementId,
+                //    PersonId: item.personId,
+                //    Type: item.type,
+                //    DisplayName: item.displayName,
+                //    FirstName: item.firstName,
+                //    MiddleName: item.middleName,
+                //    LastName: item.lastName,
+                //    Suffix: item.suffix,
+                //    EmailAddress: item.emailAddress,
+                //    PersonId: item.personId,
+                //    Phones: item.phones
+                //})
                 var data = {
                     agreementId: _this.agreementId,
                     title: item.title(),
@@ -1868,20 +1903,21 @@ else
                     $.post(url, data).done(function (response, statusText, xhr) {
                         var myUrl = xhr.getResponseHeader('Location');
                         _this.agreementId = parseInt(myUrl.substring(myUrl.lastIndexOf("/") + 1));
+
+                        //this.agreementId = 2;//response.agreementId
                         _this.agreementPostFiles(response, statusText, xhr);
                         _this.agreementPostContacts(response, statusText, xhr);
 
                         //change url to edit
                         $LoadingPage.text("Agreement Saved...");
                         setTimeout(function () {
-                                if(xhr != undefined) {
+                            if (xhr != undefined) {
                                 window.location.hash = "";
                                 window.location.href = "/agreements/" + xhr.getResponseHeader('Location').substring(xhr.getResponseHeader('Location').lastIndexOf("/") + 1) + "/edit/";
-                                    //window.location.pathname = "/agreements/" + xhr.getResponseHeader('Location').substring(xhr.getResponseHeader('Location').lastIndexOf("/")+1) + "/edit/"
+                                //window.location.pathname = "/agreements/" + xhr.getResponseHeader('Location').substring(xhr.getResponseHeader('Location').lastIndexOf("/")+1) + "/edit/"
                             } else {
                                 alert("success, but no location");
                             }
-                                // $("#allParticipants").fadeIn(500);
                         }, 5000);
                     }).fail(function (xhr, statusText, errorThrown) {
                         _this.spinner.stop();

@@ -197,7 +197,6 @@ export class InstitutionalAgreementEditModel {
 
 
     editOrNewUrl;
-    editOrNewUrl;
 
     percentOffBodyHeight = .2;
     dfdPopParticipants = $.Deferred();
@@ -1276,6 +1275,7 @@ export class InstitutionalAgreementEditModel {
                                 this.establishmentItemViewModel.parentEstablishment(context);
                                 this.establishmentItemViewModel.parentId(context.id());
                                 this.establishmentSearchViewModel.sammy.setLocation('#/new/');
+                                return false;
                             }
                             this.establishmentSearchViewModel.header("Choose a parent establishment");
                             $asideRootSearch.hide();

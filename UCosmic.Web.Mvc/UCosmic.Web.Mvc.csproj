@@ -1796,24 +1796,24 @@
     <Content Include="scripts\tinymce\utils\validate.js" />
     <TypeScriptCompile Include="scripts\viewmodels\agreements\RequireAgreement.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\agreements\AgreementVM.ts" />
-    <Content Include="scripts\typings\globalize\globalize.d.ts" />
-    <Content Include="scripts\typings\googlecharts\google.charts.d.ts" />
-    <Content Include="scripts\typings\googlemaps\google.maps.d.ts" />
-    <Content Include="scripts\typings\jquery.plugins\jquery.autosize.d.ts" />
-    <Content Include="scripts\typings\jquery.plugins\jquery.placeholder.d.ts" />
-    <Content Include="scripts\typings\jquery.plugins\jquery.tinymce.d.ts" />
-    <Content Include="scripts\typings\jqueryui\jqueryui.d.ts" />
-    <Content Include="scripts\typings\jquery\jquery.d.ts" />
-    <Content Include="scripts\typings\kendo\kendo.all.d.ts" />
-    <Content Include="scripts\typings\knockout.mapping\knockout.mapping.d.ts" />
-    <Content Include="scripts\typings\knockout.validation\knockout.validation.d.ts" />
-    <Content Include="scripts\typings\knockout\knockout.amd.d.ts" />
-    <Content Include="scripts\typings\knockout\knockout.d.ts" />
-    <Content Include="scripts\typings\modernizr\modernizr.d.ts" />
-    <Content Include="scripts\typings\moment\moment.d.ts" />
-    <Content Include="scripts\typings\requirejs\require.d.ts" />
-    <Content Include="scripts\typings\sammyjs\sammyjs.d.ts" />
-    <Content Include="scripts\typings\tinymce\tinymce.d.ts" />
+    <None Include="scripts\typings\globalize\globalize.d.ts" />
+    <None Include="scripts\typings\googlecharts\google.charts.d.ts" />
+    <None Include="scripts\typings\googlemaps\google.maps.d.ts" />
+    <None Include="scripts\typings\jquery.plugins\jquery.autosize.d.ts" />
+    <None Include="scripts\typings\jquery.plugins\jquery.placeholder.d.ts" />
+    <None Include="scripts\typings\jquery.plugins\jquery.tinymce.d.ts" />
+    <None Include="scripts\typings\jqueryui\jqueryui.d.ts" />
+    <None Include="scripts\typings\jquery\jquery.d.ts" />
+    <None Include="scripts\typings\kendo\kendo.all.d.ts" />
+    <None Include="scripts\typings\knockout.mapping\knockout.mapping.d.ts" />
+    <None Include="scripts\typings\knockout.validation\knockout.validation.d.ts" />
+    <None Include="scripts\typings\knockout\knockout.amd.d.ts" />
+    <None Include="scripts\typings\knockout\knockout.d.ts" />
+    <None Include="scripts\typings\modernizr\modernizr.d.ts" />
+    <None Include="scripts\typings\moment\moment.d.ts" />
+    <None Include="scripts\typings\requirejs\require.d.ts" />
+    <None Include="scripts\typings\sammyjs\sammyjs.d.ts" />
+    <None Include="scripts\typings\tinymce\tinymce.d.ts" />
     <Content Include="scripts\viewmodels\agreements\AgreementVM.js">
       <DependentUpon>AgreementVM.ts</DependentUpon>
     </Content>
@@ -2061,17 +2061,11 @@
     <Content Include="scripts\viewmodels\amd-modules\Establishments\Location.min.js">
       <DependentUpon>Location.ts</DependentUpon>
     </Content>
-    <Content Include="scripts\viewmodels\amd-modules\Establishments\Location.min.js.map">
-      <DependentUpon>Location.js</DependentUpon>
-    </Content>
     <Content Include="scripts\viewmodels\amd-modules\Establishments\Name.js">
       <DependentUpon>Name.ts</DependentUpon>
     </Content>
     <Content Include="scripts\viewmodels\amd-modules\Establishments\Name.min.js">
       <DependentUpon>Name.ts</DependentUpon>
-    </Content>
-    <Content Include="scripts\viewmodels\amd-modules\Establishments\Name.min.js.map">
-      <DependentUpon>Name.js</DependentUpon>
     </Content>
     <TypeScriptCompile Include="scripts\viewmodels\amd-modules\places\ServerApiModel.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\amd-modules\Widgets\PagedSearch.ts" />
@@ -2093,17 +2087,11 @@
     <Content Include="scripts\viewmodels\amd-modules\Establishments\Search.min.js">
       <DependentUpon>Search.ts</DependentUpon>
     </Content>
-    <Content Include="scripts\viewmodels\amd-modules\Establishments\Search.min.js.map">
-      <DependentUpon>Search.js</DependentUpon>
-    </Content>
     <Content Include="scripts\viewmodels\amd-modules\Establishments\SearchResult.js">
       <DependentUpon>SearchResult.ts</DependentUpon>
     </Content>
     <Content Include="scripts\viewmodels\amd-modules\Establishments\SearchResult.min.js">
       <DependentUpon>SearchResult.ts</DependentUpon>
-    </Content>
-    <Content Include="scripts\viewmodels\amd-modules\Establishments\SearchResult.min.js.map">
-      <DependentUpon>SearchResult.js</DependentUpon>
     </Content>
     <TypeScriptCompile Include="scripts\viewmodels\amd-modules\Establishments\ServerApiModel.ts" />
     <Content Include="scripts\viewmodels\amd-modules\Establishments\ServerApiModel.js">
@@ -2124,9 +2112,6 @@
     </Content>
     <Content Include="scripts\viewmodels\amd-modules\Establishments\Url.min.js">
       <DependentUpon>Url.ts</DependentUpon>
-    </Content>
-    <Content Include="scripts\viewmodels\amd-modules\Establishments\Url.min.js.map">
-      <DependentUpon>Url.js</DependentUpon>
     </Content>
     <Content Include="scripts\viewmodels\users\Search.js">
       <DependentUpon>Search.ts</DependentUpon>
