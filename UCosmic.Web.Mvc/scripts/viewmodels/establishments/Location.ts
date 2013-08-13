@@ -1,6 +1,7 @@
 /// <reference path="../../google/ToolsOverlay.ts" />
 /// <reference path="../../app/Routes.ts" />
-/// <reference path="../places/ServerApiModel.ts" />
+/// <reference path="../places/ApiModels.d.ts" />
+/// <reference path="../places/Utils.ts" />
 /// <reference path="ServerApiModel.d.ts" />
 /// <reference path="../Spinner.ts" />
 /// <reference path="../Flasher.ts" />
@@ -20,38 +21,38 @@ module ViewModels.Establishments {
         $mapCanvas: KnockoutObservable<JQuery> = ko.observable();
         isMapVisible: KnockoutObservable<boolean> = ko.observable();
         isLoaded: KnockoutObservable<boolean> = ko.observable();
-        continents: KnockoutObservableArray<Places.IServerApiModel> = ko.observableArray();
+        continents: KnockoutObservableArray<Places.ApiModels.Place> = ko.observableArray();
         continentId: KnockoutObservable<number> = ko.observable();
         continentName: KnockoutComputed<string>;
-        countries: KnockoutObservableArray<Places.IServerApiModel> = ko.observableArray();
+        countries: KnockoutObservableArray<Places.ApiModels.Place> = ko.observableArray();
         countryId: KnockoutObservable<number> = ko.observable();
         countryName: KnockoutComputed<string>;
         countryOptionsCaption: KnockoutComputed<string>;
         private _countryId: number;
         private allowCountryFitBounds: boolean = true;
-        admin1s:  KnockoutObservableArray<Places.IServerApiModel> = ko.observableArray();
+        admin1s:  KnockoutObservableArray<Places.ApiModels.Place> = ko.observableArray();
         admin1Id: KnockoutObservable<number> = ko.observable();
         admin1Name: KnockoutComputed<string>;
         admin1OptionsCaption: KnockoutComputed<string>;
         admin1sLoading: KnockoutObservable<boolean> = ko.observable(false);
         private _admin1Id: number;
         showAdmin1Input: KnockoutComputed<boolean>;
-        admin2s:  KnockoutObservableArray<Places.IServerApiModel> = ko.observableArray();
+        admin2s:  KnockoutObservableArray<Places.ApiModels.Place> = ko.observableArray();
         admin2Id: KnockoutObservable<number> = ko.observable();
         admin2Name: KnockoutComputed<string>;
         admin2OptionsCaption: KnockoutComputed<string>;
         admin2sLoading: KnockoutObservable<boolean> = ko.observable(false);
         private _admin2Id: number;
         showAdmin2Input: KnockoutComputed<boolean>;
-        admin3s:  KnockoutObservableArray<Places.IServerApiModel> = ko.observableArray();
+        admin3s:  KnockoutObservableArray<Places.ApiModels.Place> = ko.observableArray();
         admin3Id: KnockoutObservable<number> = ko.observable();
         admin3Name: KnockoutComputed<string>;
         admin3OptionsCaption: KnockoutComputed<string>;
         admin3sLoading: KnockoutObservable<boolean> = ko.observable(false);
         private _admin3Id: number;
         showAdmin3Input: KnockoutComputed<boolean>;
-        places:  KnockoutObservableArray<Places.IServerApiModel> = ko.observableArray();
-        subAdmins:  KnockoutObservableArray<Places.IServerApiModel> = ko.observableArray();
+        places:  KnockoutObservableArray<Places.ApiModels.Place> = ko.observableArray();
+        subAdmins:  KnockoutObservableArray<Places.ApiModels.Place> = ko.observableArray();
         loadSpinner: Spinner = new Spinner(new SpinnerOptions(400));
         saveSpinner: Spinner = new Spinner(new SpinnerOptions(400));
         $dataLoadingDialog: JQuery;
@@ -122,7 +123,7 @@ module ViewModels.Establishments {
             // continents section
             ko.computed((): void => {
                 $.get(App.Routes.WebApi.Places.get(), { isContinent: true })
-                .done((response: Places.IServerApiModel[]): void => {
+                .done((response: Places.ApiModels.Place[]): void => {
                     this.continents(response);
                 });
             })
@@ -140,7 +141,7 @@ module ViewModels.Establishments {
             });
             ko.computed((): void => {
                 $.get(App.Routes.WebApi.Places.get(), { isCountry: true })
-                .done((response: Places.IServerApiModel[]): void => {
+                .done((response: Places.ApiModels.Place[]): void => {
                     this.countries(response);
                     if (this._countryId) {
                         var countryId = this._countryId;
@@ -164,8 +165,7 @@ module ViewModels.Establishments {
 
                 // scope the menu to the selected country
                 if (newValue && this.countries().length > 0) {
-                    var country: Places.IServerApiModel = Places.Utils
-                        .getPlaceById(this.countries(), newValue);
+                    var country = Places.Utils.getPlaceById(this.countries(), newValue);
                     if (country) {
                         if (this.allowCountryFitBounds) {
                             this.map.fitBounds(Places.Utils.convertToLatLngBounds(country.box));
@@ -212,8 +212,7 @@ module ViewModels.Establishments {
                     this._admin1Id = newValue; // stash the value to set it after menu loads
 
                 if (newValue && this.admin1s().length > 0) {
-                    var admin1: Places.IServerApiModel = Places.Utils
-                        .getPlaceById(this.admin1s(), newValue);
+                    var admin1 = Places.Utils.getPlaceById(this.admin1s(), newValue);
                     if (admin1) {
                         // load admin2 options
                         this.loadAdmin2s(admin1.id);
@@ -246,8 +245,7 @@ module ViewModels.Establishments {
                     this._admin2Id = newValue; // stash the value to set it after menu loads
 
                 if (newValue && this.admin2s().length > 0) {
-                    var admin2: Places.IServerApiModel = Places.Utils
-                        .getPlaceById(this.admin2s(), newValue);
+                    var admin2 = Places.Utils.getPlaceById(this.admin2s(), newValue);
                     if (admin2) {
                         // load admin3 options
                         this.loadAdmin3s(admin2.id);
@@ -280,8 +278,7 @@ module ViewModels.Establishments {
                     this._admin3Id = newValue; // stash the value to set it after menu loads
 
                 if (newValue && this.admin3s().length > 0) {
-                    var admin3: Places.IServerApiModel = Places.Utils
-                        .getPlaceById(this.admin3s(), newValue);
+                    var admin3 = Places.Utils.getPlaceById(this.admin3s(), newValue);
                     if (!admin3) {
                         this._admin3Id = newValue;
                         this.loadAdmin3s(this.admin2Id() || this._admin2Id);
@@ -340,7 +337,7 @@ module ViewModels.Establishments {
                     .get(latLng.lat(), latLng.lng());
                 this.loadSpinner.start();
                 $.get(route)
-                .done((response: Places.IServerApiModel[]): void => {
+                .done((response: Places.ApiModels.Place[]): void => {
                     if (response && response.length) {
                         this.allowCountryFitBounds = false;
                         this.fillPlacesHierarchy(response);
@@ -397,36 +394,35 @@ module ViewModels.Establishments {
             }
         }
 
-        private fillPlacesHierarchy(places: Places.IServerApiModel[]): void {
+        private fillPlacesHierarchy(places: Places.ApiModels.Place[]): void {
             // make places array observable
             this.places(places);
 
             // populate continent menu
-            var continent: Places.IServerApiModel = Places.Utils.getContinent(places);
+            var continent = Places.Utils.getContinent(places);
             if (continent) this.continentId(continent.id);
 
             // populate country menu
-            var country: Places.IServerApiModel = Places.Utils.getCountry(places);
+            var country = Places.Utils.getCountry(places);
             if (country) this.countryId(country.id);
             else this.countryId(undefined);
 
             // populate admin1 menu
-            var admin1: Places.IServerApiModel = Places.Utils.getAdmin1(places);
+            var admin1 = Places.Utils.getAdmin1(places);
             if (admin1) this.admin1Id(admin1.id);
             else this.admin1Id(undefined);
 
             // populate admin2 menu
-            var admin2: Places.IServerApiModel = Places.Utils.getAdmin2(places);
+            var admin2 = Places.Utils.getAdmin2(places);
             if (admin2) this.admin2Id(admin2.id);
             else this.admin2Id(undefined);
 
             // populate admin3 menu
-            var admin3: Places.IServerApiModel = Places.Utils.getAdmin3(places);
+            var admin3 = Places.Utils.getAdmin3(places);
             if (admin3) this.admin3Id(admin3.id);
             else this.admin3Id(undefined);
 
-            var subAdmins: Places.IServerApiModel[] = Places.Utils
-                .getSubAdmins(places);
+            var subAdmins = Places.Utils.getSubAdmins(places);
             if (subAdmins && subAdmins.length) this.subAdmins(subAdmins);
             else this.subAdmins([]);
         }
@@ -441,7 +437,7 @@ module ViewModels.Establishments {
                 url: admin1Url,
                 data: { isAdmin1: true, parentId: countryId },
                 cache: false
-            }).done((results: Places.IServerApiModel[]) => {
+            }).done((results: Places.ApiModels.Place[]) => {
                 this.admin1s(results);
                 if (this._admin1Id)
                     this.admin1Id(this._admin1Id);
@@ -459,7 +455,7 @@ module ViewModels.Establishments {
                 data: { isAdmin2: true, parentId: admin1Id },
                 url: admin2Url,
                 cache: false,
-            }).done((results: Places.IServerApiModel[]) => {
+            }).done((results: Places.ApiModels.Place[]) => {
                 this.admin2s(results);
                 if (this._admin2Id)
                     this.admin2Id(this._admin2Id);
@@ -477,7 +473,7 @@ module ViewModels.Establishments {
                 data: { isAdmin3: true, parentId: admin2Id },
                 url: admin3Url,
                 cache: false
-            }).done((results: Places.IServerApiModel[]) => {
+            }).done((results: Places.ApiModels.Place[]) => {
                 this.admin3s(results);
                 if (this._admin3Id)
                     this.admin3Id(this._admin3Id);
@@ -517,7 +513,7 @@ module ViewModels.Establishments {
         }
 
         serializeData(): IServerLocationPutModel {
-            var center: Places.IServerPointModel,
+            var center: Places.ApiModels.Point,
                 centerLat: number = this.toolsMarkerLat(),
                 centerLng: number = this.toolsMarkerLng(),
                 zoom: number = this.map.getZoom();
@@ -531,11 +527,11 @@ module ViewModels.Establishments {
             if (center)
                 this.map.setCenter(Places.Utils.convertToLatLng(center));
 
-            var box: Places.IServerBoxModel,
-                northEast: Places.IServerPointModel,
+            var box: Places.ApiModels.Box,
+                northEast: Places.ApiModels.Point,
                 northEastLat: number = this.map.getBounds().getNorthEast().lat(),
                 northEastLng: number = this.map.getBounds().getNorthEast().lng(),
-                southWest: Places.IServerPointModel,
+                southWest: Places.ApiModels.Point,
                 southWestLat: number = this.map.getBounds().getSouthWest().lat(),
                 southWestLng: number = this.map.getBounds().getSouthWest().lng(),
                 placeId: number

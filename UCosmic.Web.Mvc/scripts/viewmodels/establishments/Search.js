@@ -6,7 +6,7 @@
 /// <reference path="../../app/SideSwiper.ts" />
 /// <reference path="../../app/Routes.ts" />
 /// <reference path="../PagedSearch.ts" />
-/// <reference path="../places/ServerApiModel.ts" />
+/// <reference path="../places/ApiModels.d.ts" />
 /// <reference path="ServerApiModel.d.ts" />
 /// <reference path="SearchResult.ts" />
 var __extends = this.__extends || function (d, b) {
@@ -78,7 +78,10 @@ var ViewModels;
 
                     $.get(App.Routes.WebApi.Countries.get()).done(function (response) {
                         // setup empty value
-                        var emptyValue = new ViewModels.Places.ServerCountryApiModel('-1', '[Without country]');
+                        var emptyValue = {
+                            code: '-1',
+                            name: '[Without country]'
+                        };
                         response.splice(response.length, 0, emptyValue);
 
                         _this.countries(response);

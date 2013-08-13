@@ -7,7 +7,6 @@
 /// <reference path="../../app/SideSwiper.ts" />
 /// <reference path="../../app/Routes.ts" />
 /// <reference path="../Spinner.ts" />
-/// <reference path="../places/ServerApiModel.ts" />
 /// <reference path="../languages/ServerApiModel.ts" />
 /// <reference path="ServerApiModel.d.ts" />
 /// <reference path="Name.ts" />

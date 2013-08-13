@@ -6,7 +6,7 @@
 /// <reference path="../../app/SideSwiper.ts" />
 /// <reference path="../../app/Routes.ts" />
 /// <reference path="../PagedSearch.ts" />
-/// <reference path="../places/ServerApiModel.ts" />
+/// <reference path="../places/ApiModels.d.ts" />
 /// <reference path="ServerApiModel.d.ts" />
 /// <reference path="SearchResult.ts" />
 
@@ -40,10 +40,12 @@ module ViewModels.Establishments {
                 var lastCountryCode = $('input[type=hidden][data-bind="value: countryCode"]').val();
 
                 $.get(App.Routes.WebApi.Countries.get()) // hit the API
-                .done((response: Places.IServerCountryApiModel[]): void => {
+                .done((response: Places.ApiModels.Country[]): void => {
                     // setup empty value
-                    var emptyValue = new Places
-                        .ServerCountryApiModel('-1', '[Without country]');
+                    var emptyValue: Places.ApiModels.Country = {
+                        code: '-1',
+                        name: '[Without country]'
+                    };
                     response.splice(response.length, 0, emptyValue);
 
                     this.countries(response); // push into observable array
@@ -155,7 +157,7 @@ module ViewModels.Establishments {
         }
 
         // filtering
-        countries: KnockoutObservableArray<Places.IServerCountryApiModel> = ko.observableArray();
+        countries: KnockoutObservableArray<Places.ApiModels.Country> = ko.observableArray();
         countryCode: KnockoutObservable<string> = ko.observable();
 
         // lensing

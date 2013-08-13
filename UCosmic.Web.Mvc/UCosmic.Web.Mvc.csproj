@@ -1945,6 +1945,14 @@
     <Content Include="scripts\viewmodels\languageExpertises\ServiceApiModel.d.js">
       <DependentUpon>ServiceApiModel.d.ts</DependentUpon>
     </Content>
+    <None Include="scripts\viewmodels\places\ApiModels.d.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\places\Utils.ts" />
+    <Content Include="scripts\viewmodels\places\Utils.js">
+      <DependentUpon>Utils.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\places\Utils.min.js">
+      <DependentUpon>Utils.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\viewmodels\representatives\RepModuleSettings.js">
       <DependentUpon>RepModuleSettings.ts</DependentUpon>
     </Content>
@@ -2012,19 +2020,12 @@
     </Content>
     <None Include="scripts\viewmodels\establishments\ServerApiModel.d.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\establishments\Url.ts" />
-    <TypeScriptCompile Include="scripts\viewmodels\places\ServerApiModel.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\my\Profile.ts" />
     <Content Include="scripts\viewmodels\my\Profile.js">
       <DependentUpon>Profile.ts</DependentUpon>
     </Content>
     <Content Include="scripts\viewmodels\my\Profile.min.js">
       <DependentUpon>Profile.ts</DependentUpon>
-    </Content>
-    <Content Include="scripts\viewmodels\places\ServerApiModel.js">
-      <DependentUpon>ServerApiModel.ts</DependentUpon>
-    </Content>
-    <Content Include="scripts\viewmodels\places\ServerApiModel.min.js">
-      <DependentUpon>ServerApiModel.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="scripts\viewmodels\amd-modules\Establishments\Item.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\amd-modules\Establishments\Location.ts" />

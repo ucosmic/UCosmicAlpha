@@ -2,7 +2,8 @@ var ViewModels;
 (function (ViewModels) {
     /// <reference path="../../google/ToolsOverlay.ts" />
     /// <reference path="../../app/Routes.ts" />
-    /// <reference path="../places/ServerApiModel.ts" />
+    /// <reference path="../places/ApiModels.d.ts" />
+    /// <reference path="../places/Utils.ts" />
     /// <reference path="ServerApiModel.d.ts" />
     /// <reference path="../Spinner.ts" />
     /// <reference path="../Flasher.ts" />
@@ -101,7 +102,7 @@ var ViewModels;
                     var continentId = _this.continentId();
                     if (!continentId)
                         return '[Unspecified]';
-                    var continent = ViewModels.Places.Utils.getPlaceById(_this.continents(), continentId);
+                    var continent = Places.Utils.getPlaceById(_this.continents(), continentId);
                     return continent ? continent.officialName : '[Unknown]';
                 });
 
@@ -123,7 +124,7 @@ var ViewModels;
                     var countryId = _this.countryId();
                     if (!countryId)
                         return '[Unspecified]';
-                    var country = ViewModels.Places.Utils.getPlaceById(_this.countries(), countryId);
+                    var country = Places.Utils.getPlaceById(_this.countries(), countryId);
                     return country ? country.officialName : '[Unknown]';
                 });
                 this.countryId.subscribe(function (newValue) {
@@ -131,10 +132,10 @@ var ViewModels;
                         _this._countryId = newValue;
 
                     if (newValue && _this.countries().length > 0) {
-                        var country = ViewModels.Places.Utils.getPlaceById(_this.countries(), newValue);
+                        var country = Places.Utils.getPlaceById(_this.countries(), newValue);
                         if (country) {
                             if (_this.allowCountryFitBounds) {
-                                _this.map.fitBounds(ViewModels.Places.Utils.convertToLatLngBounds(country.box));
+                                _this.map.fitBounds(Places.Utils.convertToLatLngBounds(country.box));
                             } else {
                                 setTimeout(function () {
                                     _this.allowCountryFitBounds = true;
@@ -173,7 +174,7 @@ var ViewModels;
                         _this._admin1Id = newValue;
 
                     if (newValue && _this.admin1s().length > 0) {
-                        var admin1 = ViewModels.Places.Utils.getPlaceById(_this.admin1s(), newValue);
+                        var admin1 = Places.Utils.getPlaceById(_this.admin1s(), newValue);
                         if (admin1) {
                             // load admin2 options
                             _this.loadAdmin2s(admin1.id);
@@ -187,7 +188,7 @@ var ViewModels;
                     var admin1Id = _this.admin1Id();
                     if (!admin1Id)
                         return '[Unspecified]';
-                    var admin1 = ViewModels.Places.Utils.getPlaceById(_this.admin1s(), admin1Id);
+                    var admin1 = Places.Utils.getPlaceById(_this.admin1s(), admin1Id);
                     return admin1 ? admin1.officialName : '[Unknown]';
                 });
 
@@ -203,7 +204,7 @@ var ViewModels;
                         _this._admin2Id = newValue;
 
                     if (newValue && _this.admin2s().length > 0) {
-                        var admin2 = ViewModels.Places.Utils.getPlaceById(_this.admin2s(), newValue);
+                        var admin2 = Places.Utils.getPlaceById(_this.admin2s(), newValue);
                         if (admin2) {
                             // load admin3 options
                             _this.loadAdmin3s(admin2.id);
@@ -217,7 +218,7 @@ var ViewModels;
                     var admin2Id = _this.admin2Id();
                     if (!admin2Id)
                         return '[Unspecified]';
-                    var admin2 = ViewModels.Places.Utils.getPlaceById(_this.admin2s(), admin2Id);
+                    var admin2 = Places.Utils.getPlaceById(_this.admin2s(), admin2Id);
                     return admin2 ? admin2.officialName : '[Unknown]';
                 });
 
@@ -233,7 +234,7 @@ var ViewModels;
                         _this._admin3Id = newValue;
 
                     if (newValue && _this.admin3s().length > 0) {
-                        var admin3 = ViewModels.Places.Utils.getPlaceById(_this.admin3s(), newValue);
+                        var admin3 = Places.Utils.getPlaceById(_this.admin3s(), newValue);
                         if (!admin3) {
                             _this._admin3Id = newValue;
                             _this.loadAdmin3s(_this.admin2Id() || _this._admin2Id);
@@ -244,7 +245,7 @@ var ViewModels;
                     var admin3Id = _this.admin3Id();
                     if (!admin3Id)
                         return '[Unspecified]';
-                    var admin3 = ViewModels.Places.Utils.getPlaceById(_this.admin3s(), admin3Id);
+                    var admin3 = Places.Utils.getPlaceById(_this.admin3s(), admin3Id);
                     return admin3 ? admin3.officialName : '[Unknown]';
                 });
             };
@@ -326,7 +327,7 @@ var ViewModels;
                 if (response.googleMapZoomLevel && response.center && response.center.hasValue)
                     this.map.setZoom(response.googleMapZoomLevel);
 else if (response.box.hasValue)
-                    this.map.fitBounds(ViewModels.Places.Utils.convertToLatLngBounds(response.box));
+                    this.map.fitBounds(Places.Utils.convertToLatLngBounds(response.box));
 
                 if (response.googleMapZoomLevel && response.googleMapZoomLevel > 1)
                     this.map.setZoom(response.googleMapZoomLevel);
@@ -336,7 +337,7 @@ else if (response.box.hasValue)
 
             Location.prototype.loadMapMarker = function (response) {
                 if (response.center.hasValue) {
-                    var latLng = ViewModels.Places.Utils.convertToLatLng(response.center);
+                    var latLng = Places.Utils.convertToLatLng(response.center);
                     this.mapTools().placeMarker(latLng);
                     this.map.setCenter(latLng);
                 }
@@ -347,39 +348,39 @@ else if (response.box.hasValue)
                 this.places(places);
 
                 // populate continent menu
-                var continent = ViewModels.Places.Utils.getContinent(places);
+                var continent = Places.Utils.getContinent(places);
                 if (continent)
                     this.continentId(continent.id);
 
                 // populate country menu
-                var country = ViewModels.Places.Utils.getCountry(places);
+                var country = Places.Utils.getCountry(places);
                 if (country)
                     this.countryId(country.id);
 else
                     this.countryId(undefined);
 
                 // populate admin1 menu
-                var admin1 = ViewModels.Places.Utils.getAdmin1(places);
+                var admin1 = Places.Utils.getAdmin1(places);
                 if (admin1)
                     this.admin1Id(admin1.id);
 else
                     this.admin1Id(undefined);
 
                 // populate admin2 menu
-                var admin2 = ViewModels.Places.Utils.getAdmin2(places);
+                var admin2 = Places.Utils.getAdmin2(places);
                 if (admin2)
                     this.admin2Id(admin2.id);
 else
                     this.admin2Id(undefined);
 
                 // populate admin3 menu
-                var admin3 = ViewModels.Places.Utils.getAdmin3(places);
+                var admin3 = Places.Utils.getAdmin3(places);
                 if (admin3)
                     this.admin3Id(admin3.id);
 else
                     this.admin3Id(undefined);
 
-                var subAdmins = ViewModels.Places.Utils.getSubAdmins(places);
+                var subAdmins = Places.Utils.getSubAdmins(places);
                 if (subAdmins && subAdmins.length)
                     this.subAdmins(subAdmins);
 else
@@ -479,7 +480,7 @@ else
                     };
 
                 if (center)
-                    this.map.setCenter(ViewModels.Places.Utils.convertToLatLng(center));
+                    this.map.setCenter(Places.Utils.convertToLatLng(center));
 
                 var box, northEast, northEastLat = this.map.getBounds().getNorthEast().lat(), northEastLng = this.map.getBounds().getNorthEast().lng(), southWest, southWestLat = this.map.getBounds().getSouthWest().lat(), southWestLng = this.map.getBounds().getSouthWest().lng(), placeId;
                 if (zoom && zoom > 1)

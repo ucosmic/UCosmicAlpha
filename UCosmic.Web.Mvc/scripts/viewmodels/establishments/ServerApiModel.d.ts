@@ -1,5 +1,5 @@
 /// <reference path="../../typings/knockout/knockout.d.ts" />
-/// <reference path="../places/ServerApiModel.ts" />
+/// <reference path="../places/ApiModels.d.ts" />
 /// <reference path="Name.ts" />
 /// <reference path="Url.ts" />
 
@@ -45,15 +45,15 @@ declare module ViewModels.Establishments {
     }
 
     export interface IServerLocationApiModel {
-        center: Places.IServerPointModel;
-        box: Places.IServerBoxModel;
+        center: Places.ApiModels.Point;
+        box: Places.ApiModels.Box;
         googleMapZoomLevel?: number;
-        places: Places.IServerApiModel[];
+        places: Places.ApiModels.Place[];
     }
 
     export interface IServerLocationPutModel {
-        center?: Places.IServerPointModel;
-        box?: Places.IServerBoxModel;
+        center?: Places.ApiModels.Point;
+        box?: Places.ApiModels.Box;
         googleMapZoomLevel?: number;
         placeId?: number;
     }
