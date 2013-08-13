@@ -27,7 +27,7 @@ var ViewModels;
                 expertiseSearchInput.personId = this.personId;
                 expertiseSearchInput.orderBy = "";
                 expertiseSearchInput.pageNumber = 1;
-                expertiseSearchInput.pageSize = 2147483647;
+                expertiseSearchInput.pageSize = App.Constants.int32Max;
 
                 $.get(App.Routes.WebApi.LanguageExpertise.get(), expertiseSearchInput).done(function (data, textStatus, jqXHR) {
                      {

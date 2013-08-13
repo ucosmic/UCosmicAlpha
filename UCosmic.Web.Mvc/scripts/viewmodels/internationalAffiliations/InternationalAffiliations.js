@@ -28,7 +28,7 @@ var ViewModels;
                 affiliationSearchInput.personId = this.personId;
                 affiliationSearchInput.orderBy = "";
                 affiliationSearchInput.pageNumber = 1;
-                affiliationSearchInput.pageSize = 2147483647;
+                affiliationSearchInput.pageSize = App.Constants.int32Max;
 
                 $.get(App.Routes.WebApi.InternationalAffiliations.get(), affiliationSearchInput).done(function (data, textStatus, jqXHR) {
                      {

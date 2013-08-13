@@ -34,6 +34,11 @@ var App;
     })(App.Failures || (App.Failures = {}));
     var Failures = App.Failures;
 
+    (function (Constants) {
+        Constants.int32Max = 2147483647;
+    })(App.Constants || (App.Constants = {}));
+    var Constants = App.Constants;
+
     // track & get/set window scroll position
     var WindowScroller = (function () {
         function WindowScroller() {

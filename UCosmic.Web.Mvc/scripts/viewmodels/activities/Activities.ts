@@ -61,7 +61,7 @@ module ViewModels.Activities {
             activitiesSearchInput.personId = this.personId;
             activitiesSearchInput.orderBy = "";
             activitiesSearchInput.pageNumber = 1;
-            activitiesSearchInput.pageSize = 2147483647; /* C# Int32.Max */
+            activitiesSearchInput.pageSize = App.Constants.int32Max;
 
             $.get(App.Routes.WebApi.Activities.get(), activitiesSearchInput)
                 .done((data: Service.ApiModels.IEmployeeActivityType[], textStatus: string, jqXHR: JQueryXHR): void => {

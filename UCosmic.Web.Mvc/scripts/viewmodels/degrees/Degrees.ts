@@ -33,7 +33,7 @@ module ViewModels.Degrees {
 
             expertiseSearchInput.orderBy = "";
             expertiseSearchInput.pageNumber = 1;
-            expertiseSearchInput.pageSize = 2147483647; /* C# Int32.Max */
+            expertiseSearchInput.pageSize = App.Constants.int32Max;
 
             $.get(App.Routes.WebApi.My.Degrees.get(), expertiseSearchInput)
                 .done((data: any, textStatus: string, jqXHR: JQueryXHR): void => {

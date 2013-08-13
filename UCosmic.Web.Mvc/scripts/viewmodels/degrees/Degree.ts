@@ -60,7 +60,7 @@ module ViewModels.Degrees {
                                 data: {
                                     keyword: options.data.filter.filters[0].value,
                                     pageNumber: 1,
-                                    pageSize: 2147483647 /* C# Int32.Max */
+                                    pageSize: App.Constants.int32Max
                                 },
                                 success: ( results: any ): void => {
                                     options.success( results.items );

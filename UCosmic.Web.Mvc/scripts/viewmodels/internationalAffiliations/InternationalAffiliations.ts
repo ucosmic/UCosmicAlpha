@@ -34,7 +34,7 @@ module ViewModels.InternationalAffiliations {
             affiliationSearchInput.personId = this.personId;
             affiliationSearchInput.orderBy = "";
             affiliationSearchInput.pageNumber = 1;
-            affiliationSearchInput.pageSize = 2147483647; /* C# Int32.Max */
+            affiliationSearchInput.pageSize = App.Constants.int32Max;
 
             $.get(App.Routes.WebApi.InternationalAffiliations.get(), affiliationSearchInput)
                 .done((data: any, textStatus: string, jqXHR: JQueryXHR): void => {

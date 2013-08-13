@@ -42,7 +42,7 @@ var ViewModels;
                                     data: {
                                         keyword: options.data.filter.filters[0].value,
                                         pageNumber: 1,
-                                        pageSize: 2147483647
+                                        pageSize: App.Constants.int32Max
                                     },
                                     success: function (results) {
                                         options.success(results.items);

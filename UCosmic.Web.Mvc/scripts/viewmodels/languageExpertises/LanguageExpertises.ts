@@ -34,7 +34,7 @@ module ViewModels.LanguageExpertises {
             expertiseSearchInput.personId = this.personId;
             expertiseSearchInput.orderBy = "";
             expertiseSearchInput.pageNumber = 1;
-            expertiseSearchInput.pageSize = 2147483647; /* C# Int32.Max */
+            expertiseSearchInput.pageSize = App.Constants.int32Max;
 
             $.get(App.Routes.WebApi.LanguageExpertise.get(), expertiseSearchInput)
                 .done((data: any, textStatus: string, jqXHR: JQueryXHR): void => {

@@ -34,6 +34,10 @@ module App {
         }
     }
 
+    export module Constants {
+        export var int32Max: number = 2147483647;
+    }
+
     // track & get/set window scroll position
     export class WindowScroller {
 

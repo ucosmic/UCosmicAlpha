@@ -27,7 +27,7 @@ var ViewModels;
 
                 expertiseSearchInput.orderBy = "";
                 expertiseSearchInput.pageNumber = 1;
-                expertiseSearchInput.pageSize = 2147483647;
+                expertiseSearchInput.pageSize = App.Constants.int32Max;
 
                 $.get(App.Routes.WebApi.My.Degrees.get(), expertiseSearchInput).done(function (data, textStatus, jqXHR) {
                      {
