@@ -1,8 +1,8 @@
 /// <reference path="../typings/jquery/jquery.d.ts" />
 /// <reference path="../typings/knockout/knockout.d.ts" />
 /// <reference path="Spinner.ts" />
-var ViewModels;
-(function (ViewModels) {
+var App;
+(function (App) {
     var PagedSearch = (function () {
         function PagedSearch() {
             var _this = this;
@@ -19,7 +19,7 @@ var ViewModels;
             this.orderBy = ko.observable();
             this.keyword = ko.observable($('input[type=hidden][data-bind="value: keyword"]').val());
             // spinner component
-            this.spinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(400, true));
+            this.spinner = new App.Spinner(new App.SpinnerOptions(400, true));
             // paging computeds
             this.pageCount = ko.computed(function () {
                 return Math.ceil(_this.itemTotal() / _this.pageSize());
@@ -90,5 +90,5 @@ var ViewModels;
         };
         return PagedSearch;
     })();
-    ViewModels.PagedSearch = PagedSearch;
-})(ViewModels || (ViewModels = {}));
+    App.PagedSearch = PagedSearch;
+})(App || (App = {}));

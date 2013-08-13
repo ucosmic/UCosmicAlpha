@@ -4,13 +4,13 @@
 /// <reference path="Search.ts" />
 /// <reference path="ServerApiModel.d.ts" />
 
-module ViewModels.Establishments {
+module Establishments.ViewModels {
 
     export class SearchResult {
 
         private _owner: Search;
 
-        constructor (values: IServerApiFlatModel, owner: Search) {
+        constructor (values: ApiModels.FlatEstablishment, owner: Search) {
             this._owner = owner;
             this._pullData(values);
             this._setupComputeds();
@@ -27,7 +27,7 @@ module ViewModels.Establishments {
         uCosmicCode: KnockoutObservable<string>;
         ceebCode: KnockoutObservable<string>;
 
-        private _pullData(values: IServerApiFlatModel): void {
+        private _pullData(values: ApiModels.FlatEstablishment): void {
             // map input model to observables
             ko.mapping.fromJS(values, {}, this);
         }

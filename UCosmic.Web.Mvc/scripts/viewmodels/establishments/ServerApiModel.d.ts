@@ -1,11 +1,8 @@
-/// <reference path="../../typings/knockout/knockout.d.ts" />
 /// <reference path="../places/ApiModels.d.ts" />
-/// <reference path="Name.ts" />
-/// <reference path="Url.ts" />
 
-declare module ViewModels.Establishments {
+declare module Establishments.ApiModels {
 
-    export interface IServerApiFlatModel {
+    export interface FlatEstablishment {
         id: number;
         officialName: string;
         translatedName: string;
@@ -16,14 +13,14 @@ declare module ViewModels.Establishments {
         ceebCode: string;
     }
 
-    export interface IServerApiScalarModel {
+    export interface ScalarEstablishment {
         id: number;
         typeId: number;
         uCosmicCode: string;
         ceebCode: string;
     }
 
-    export interface IServerNameInputModel {
+    export interface NameInput {
         id: number;
         ownerId: number;
         text: string;
@@ -32,11 +29,11 @@ declare module ViewModels.Establishments {
         languageCode: string;
     }
 
-    export interface IServerNameApiModel extends IServerNameInputModel {
+    export interface Name extends NameInput {
         languageName: string;
     }
 
-    export interface IServerUrlApiModel {
+    export interface Url {
         id: number;
         ownerId: number;
         value: string;
@@ -44,14 +41,14 @@ declare module ViewModels.Establishments {
         isFormerUrl: boolean;
     }
 
-    export interface IServerLocationApiModel {
+    export interface Location {
         center: Places.ApiModels.Point;
         box: Places.ApiModels.Box;
         googleMapZoomLevel?: number;
         places: Places.ApiModels.Place[];
     }
 
-    export interface IServerLocationPutModel {
+    export interface PutLocation {
         center?: Places.ApiModels.Point;
         box?: Places.ApiModels.Box;
         googleMapZoomLevel?: number;

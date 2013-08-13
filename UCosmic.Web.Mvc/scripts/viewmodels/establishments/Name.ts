@@ -9,9 +9,8 @@
 /// <reference path="Item.ts" />
 /// <reference path="ServerApiModel.d.ts" />
 
-module ViewModels.Establishments {
-
-    export class ServerNameApiModel implements IServerNameApiModel {
+module Establishments.ServerModels {
+    export class Name implements ApiModels.Name {
 
         id: number = 0;
         ownerId: number = 0;
@@ -21,10 +20,13 @@ module ViewModels.Establishments {
         languageCode: string = '';
         languageName: string = '';
 
-        constructor (ownerId: number) {
+        constructor(ownerId: number) {
             this.ownerId = ownerId;
         }
     }
+}
+
+module Establishments.ViewModels {
 
     class EstablishmentNameTextValidator implements KnockoutValidationAsyncRuleDefinition {
         private _ruleName: string = 'validEstablishmentNameText';
@@ -83,22 +85,22 @@ module ViewModels.Establishments {
         isTextValidatableAsync: KnockoutComputed<boolean>;
 
         // spinners
-        saveSpinner: Spinner = new Spinner(new SpinnerOptions(0, false));
-        purgeSpinner: Spinner = new Spinner(new SpinnerOptions(0, false));
-        textValidationSpinner = new Spinner(new SpinnerOptions(0, false));
+        saveSpinner = new App.Spinner(new App.SpinnerOptions(0, false));
+        purgeSpinner = new App.Spinner(new App.SpinnerOptions(0, false));
+        textValidationSpinner = new App.Spinner(new App.SpinnerOptions(0, false));
 
         // private fields
         private saveEditorClicked: boolean = false;
-        private originalValues: ServerNameApiModel;
+        private originalValues: ApiModels.Name;
         private owner: Item;
         private mutationSuccess: (response: string) => void;
         private mutationError: (xhr: JQueryXHR) => void;
 
-        constructor (js: ServerNameApiModel, owner: Item) {
+        constructor (js: ApiModels.Name, owner: Item) {
             this.owner = owner;
 
             // when adding new name, js is not defined
-            if (!js) js = new ServerNameApiModel(this.owner.id);
+            if (!js) js = new ServerModels.Name(this.owner.id);
             if (js.id === 0) js.ownerId = this.owner.id;
 
             // hold onto original values so they can be reset on cancel
@@ -299,7 +301,7 @@ module ViewModels.Establishments {
             });
         }
 
-        serializeData(): IServerNameInputModel {
+        serializeData(): ApiModels.NameInput {
             return {
                 id: this.id(),
                 ownerId: this.ownerId(),

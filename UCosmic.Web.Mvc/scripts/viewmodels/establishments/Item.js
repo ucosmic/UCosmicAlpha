@@ -1,22 +1,24 @@
-﻿var ViewModels;
-(function (ViewModels) {
-    /// <reference path="../../typings/jquery/jquery.d.ts" />
-    /// <reference path="../../typings/knockout/knockout.d.ts" />
-    /// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
-    /// <reference path="../../typings/googlemaps/google.maps.d.ts" />
-    /// <reference path="../../google/ToolsOverlay.ts" />
-    /// <reference path="../../app/App.ts" />
-    /// <reference path="../../app/SideSwiper.ts" />
-    /// <reference path="../../app/Routes.ts" />
-    /// <reference path="../Spinner.ts" />
-    /// <reference path="../languages/ServerApiModel.ts" />
-    /// <reference path="ServerApiModel.d.ts" />
-    /// <reference path="Name.ts" />
-    /// <reference path="Url.ts" />
-    /// <reference path="Location.ts" />
-    /// <reference path="Search.ts" />
-    /// <reference path="SearchResult.ts" />
-    (function (Establishments) {
+﻿/// <reference path="../../typings/jquery/jquery.d.ts" />
+/// <reference path="../../typings/knockout/knockout.d.ts" />
+/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
+/// <reference path="../../typings/googlemaps/google.maps.d.ts" />
+/// <reference path="../../google/ToolsOverlay.ts" />
+/// <reference path="../../app/App.ts" />
+/// <reference path="../../app/SideSwiper.ts" />
+/// <reference path="../../app/Routes.ts" />
+/// <reference path="../Spinner.ts" />
+/// <reference path="../languages/ServerApiModel.ts" />
+/// <reference path="ServerApiModel.d.ts" />
+/// <reference path="Name.ts" />
+/// <reference path="Url.ts" />
+/// <reference path="Location.ts" />
+/// <reference path="Search.ts" />
+/// <reference path="SearchResult.ts" />
+var Languages = ViewModels.Languages;
+
+var Establishments;
+(function (Establishments) {
+    (function (ViewModels) {
         var gm = google.maps;
 
         var CeebCodeValidator = (function () {
@@ -150,11 +152,11 @@
                 this.originalValues = ko.observable();
                 this._isInitialized = ko.observable(false);
                 this.$genericAlertDialog = undefined;
-                this.createSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(0));
-                this.validatingSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(200));
+                this.createSpinner = new App.Spinner(new App.SpinnerOptions(0));
+                this.validatingSpinner = new App.Spinner(new App.SpinnerOptions(200));
                 this.categories = ko.observableArray();
-                this.typeIdSaveSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(200));
-                this.typeIdValidatingSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(200));
+                this.typeIdSaveSpinner = new App.Spinner(new App.SpinnerOptions(200));
+                this.typeIdValidatingSpinner = new App.Spinner(new App.SpinnerOptions(200));
                 this.typeId = ko.observable();
                 this.typeText = ko.observable('[Loading...]');
                 this.ceebCode = ko.observable();
@@ -167,31 +169,31 @@
                 this.languages = ko.observableArray();
                 this.names = ko.observableArray();
                 this.editingName = ko.observable(0);
-                this.namesSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(0, true));
+                this.namesSpinner = new App.Spinner(new App.SpinnerOptions(0, true));
                 //#endregion
                 //#region URLs
                 // observables, computeds, & variables
                 this.urls = ko.observableArray();
                 this.editingUrl = ko.observable(0);
-                this.urlsSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(0, true));
+                this.urlsSpinner = new App.Spinner(new App.SpinnerOptions(0, true));
                 this.sideSwiper = new App.SideSwiper({
                     frameWidth: 980,
                     speed: 'fast',
                     root: '#establishment_page'
                 });
-                this.parentSearch = new Establishments.Search(false);
+                this.parentSearch = new ViewModels.Search(false);
                 this.sammy = Sammy();
                 this._findingParent = false;
                 this.parentEstablishment = ko.observable();
                 this.parentId = ko.observable();
-                this.parentIdSaveSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(200));
-                this.parentIdValidatingSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(200));
+                this.parentIdSaveSpinner = new App.Spinner(new App.SpinnerOptions(200));
+                this.parentIdValidatingSpinner = new App.Spinner(new App.SpinnerOptions(200));
                 // initialize the aggregate id
                 this.id = id || 0;
 
                 this._initNamesComputeds();
                 this._initUrlsComputeds();
-                this.location = new Establishments.Location(this.id);
+                this.location = new ViewModels.Location(this.id);
 
                 this.typeEmptyText = ko.computed(function () {
                     return _this.categories().length > 0 ? '[Select a classification]' : '[Loading...]';
@@ -296,10 +298,10 @@
             };
 
             Item.prototype.addName = function () {
-                var apiModel = new Establishments.ServerNameApiModel(this.id);
+                var apiModel = new Establishments.ServerModels.Name(this.id);
                 if (this.names().length === 0)
                     apiModel.isOfficialName = true;
-                var newName = new Establishments.Name(apiModel, this);
+                var newName = new ViewModels.Name(apiModel, this);
                 this.names.unshift(newName);
                 newName.showEditor();
                 App.Obtruder.obtrude(document);
@@ -310,7 +312,7 @@
                 // languages dropdowns
                 ko.computed(function () {
                     $.getJSON(App.Routes.WebApi.Languages.get()).done(function (response) {
-                        var emptyValue = new ViewModels.Languages.ServerApiModel(undefined, '[Language Neutral]');
+                        var emptyValue = new Languages.ServerApiModel(undefined, '[Language Neutral]');
                         response.splice(0, 0, emptyValue);
                         _this.languages(response);
                     });
@@ -319,7 +321,7 @@
                 // set up names mapping
                 this._namesMapping = {
                     create: function (options) {
-                        return new Establishments.Name(options.data, _this);
+                        return new ViewModels.Name(options.data, _this);
                     }
                 };
 
@@ -357,10 +359,10 @@ else
             };
 
             Item.prototype.addUrl = function () {
-                var apiModel = new Establishments.ServerUrlApiModel(this.id);
+                var apiModel = new Establishments.ServerModels.Url(this.id);
                 if (this.urls().length === 0)
                     apiModel.isOfficialUrl = true;
-                var newUrl = new Establishments.Url(apiModel, this);
+                var newUrl = new ViewModels.Url(apiModel, this);
                 this.urls.unshift(newUrl);
                 newUrl.showEditor();
                 App.Obtruder.obtrude(document);
@@ -371,7 +373,7 @@ else
                 // set up URLs mapping
                 this._urlsMapping = {
                     create: function (options) {
-                        return new Establishments.Url(options.data, _this);
+                        return new ViewModels.Url(options.data, _this);
                     }
                 };
 
@@ -626,7 +628,7 @@ else
                         $.get(url, { id: newValue }).done(function (response) {
                             if (response && response.items && response.items.length) {
                                 var parent = response.items[0];
-                                _this.parentEstablishment(new Establishments.SearchResult(parent, _this.parentSearch));
+                                _this.parentEstablishment(new ViewModels.SearchResult(parent, _this.parentSearch));
                             }
                         });
                     }
@@ -684,7 +686,7 @@ else
             };
             return Item;
         })();
-        Establishments.Item = Item;
-    })(ViewModels.Establishments || (ViewModels.Establishments = {}));
-    var Establishments = ViewModels.Establishments;
-})(ViewModels || (ViewModels = {}));
+        ViewModels.Item = Item;
+    })(Establishments.ViewModels || (Establishments.ViewModels = {}));
+    var ViewModels = Establishments.ViewModels;
+})(Establishments || (Establishments = {}));

@@ -1,8 +1,6 @@
 var ViewModels;
 (function (ViewModels) {
     /// <reference path="../../typings/jquery/jquery.d.ts" />
-    /// <reference path="../../typings/knockout/knockout.d.ts" />
-    /// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
     /// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
     /// <reference path="../../app/Routes.ts" />
     /// <reference path="../Spinner.ts" />
@@ -39,7 +37,7 @@ var ViewModels;
             function User() {
                 this.id = ko.observable();
                 this.name = ko.observable();
-                this.saveSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(200));
+                this.saveSpinner = new App.Spinner(new App.SpinnerOptions(200));
                 this.errorMessage = ko.observable();
                 this.name.extend({
                     required: {

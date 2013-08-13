@@ -9,9 +9,8 @@
 /// <reference path="ServerApiModel.d.ts" />
 /// <reference path="Item.ts" />
 
-module ViewModels.Establishments {
-
-    export class ServerUrlApiModel implements IServerUrlApiModel {
+module Establishments.ServerModels {
+    export class Url implements ApiModels.Url {
 
         id: number = 0;
         ownerId: number = 0;
@@ -23,6 +22,9 @@ module ViewModels.Establishments {
             this.ownerId = ownerId;
         }
     }
+}
+
+module Establishments.ViewModels {
 
     class EstablishmentUrlValueValidator implements KnockoutValidationAsyncRuleDefinition {
         private _ruleName: string = 'validEstablishmentUrlValue';
@@ -79,22 +81,22 @@ module ViewModels.Establishments {
         valueHref: KnockoutComputed<string>;
 
         // spinners
-        saveSpinner: Spinner = new Spinner(new SpinnerOptions(0, false));
-        purgeSpinner: Spinner = new Spinner(new SpinnerOptions(0, false));
-        valueValidationSpinner = new Spinner(new SpinnerOptions(0, false));
+        saveSpinner = new App.Spinner(new App.SpinnerOptions(0, false));
+        purgeSpinner = new App.Spinner(new App.SpinnerOptions(0, false));
+        valueValidationSpinner = new App.Spinner(new App.SpinnerOptions(0, false));
 
         // private fields
         private saveEditorClicked: boolean = false;
-        private originalValues: ServerUrlApiModel;
+        private originalValues: ApiModels.Url;
         private owner: Item;
         private mutationSuccess: (response: string) => void;
         private mutationError: (xhr: JQueryXHR) => void;
 
-        constructor (js: ServerUrlApiModel, owner: Item) {
+        constructor (js: ApiModels.Url, owner: Item) {
             this.owner = owner;
 
             // when adding new URL, js is not defined
-            if (!js) js = new ServerUrlApiModel(this.owner.id);
+            if (!js) js = new ServerModels.Url(this.owner.id);
             if (js.id === 0) js.ownerId = this.owner.id;
 
             // hold onto original values so they can be reset on cancel
@@ -312,7 +314,7 @@ module ViewModels.Establishments {
             });
         }
 
-        serializeData(): IServerUrlApiModel {
+        serializeData(): ApiModels.Url {
             return {
                 id: this.id(),
                 ownerId: this.ownerId(),

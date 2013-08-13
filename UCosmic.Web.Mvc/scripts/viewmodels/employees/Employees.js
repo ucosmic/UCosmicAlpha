@@ -37,7 +37,7 @@ var ViewModels;
                 this.searchType = ko.observable('activities');
                 this.selectedPlace = ko.observable(null);
                 this.isGlobalView = ko.observable(true);
-                this.loadSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(200));
+                this.loadSpinner = new App.Spinner(new App.SpinnerOptions(200));
                 this.barchartWorldDataTable_cached = null;
 
                 this.selectSearchType('activities');

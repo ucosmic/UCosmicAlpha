@@ -1,11 +1,11 @@
-var ViewModels;
-(function (ViewModels) {
+var Establishments;
+(function (Establishments) {
     /// <reference path="../../typings/jquery/jquery.d.ts" />
     /// <reference path="../../typings/knockout/knockout.d.ts" />
     /// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
     /// <reference path="Search.ts" />
     /// <reference path="ServerApiModel.d.ts" />
-    (function (Establishments) {
+    (function (ViewModels) {
         var SearchResult = (function () {
             function SearchResult(values, owner) {
                 this._owner = owner;
@@ -106,7 +106,7 @@ var ViewModels;
             };
             return SearchResult;
         })();
-        Establishments.SearchResult = SearchResult;
-    })(ViewModels.Establishments || (ViewModels.Establishments = {}));
-    var Establishments = ViewModels.Establishments;
-})(ViewModels || (ViewModels = {}));
+        ViewModels.SearchResult = SearchResult;
+    })(Establishments.ViewModels || (Establishments.ViewModels = {}));
+    var ViewModels = Establishments.ViewModels;
+})(Establishments || (Establishments = {}));

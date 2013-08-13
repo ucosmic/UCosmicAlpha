@@ -7,7 +7,7 @@
 /// <reference path="../../../app/SideSwiper.ts" />
 /// <reference path="../../../app/Routes.ts" />
 /// <reference path="../../Spinner.ts" />
-/// <reference path="ServerApiModel.d.ts" />
+/// <reference path="../../establishments/ServerApiModel.d.ts" />
 
 import SearchResult = require('./SearchResult');
 import Search = require('./Search');
@@ -259,7 +259,7 @@ export class Item implements KnockoutValidationGroup {
         $.when(categoriesPact, viewModelPact).then(
 
             // all requests succeeded
-            (categories: any[], viewModel: ViewModels.Establishments.IServerApiScalarModel): void => {
+            (categories: any[], viewModel: Establishments.ApiModels.ScalarEstablishment): void => {
 
                 ko.mapping.fromJS(categories, {}, this.categories);
 
@@ -300,16 +300,16 @@ export class Item implements KnockoutValidationGroup {
     namesSpinner: Spinner.Spinner= new Spinner.Spinner(new Spinner.SpinnerOptions(0, true));
     //NamesSpinner.isVisible = false;
     // methods
-    requestNames(callback?: (response?: ViewModels.Establishments.IServerNameApiModel[]) => void ): void {
+    requestNames(callback?: (response?: Establishments.ApiModels.Name[]) => void ): void {
         this.namesSpinner.start();
         $.get(App.Routes.WebApi.Establishments.Names.get(this.id))
-            .done((response: ViewModels.Establishments.IServerNameApiModel[]): void => {
+            .done((response: Establishments.ApiModels.Name[]): void => {
                 this.receiveNames(response);
                 if (callback) callback(response);
             }); 
     }
 
-    receiveNames(js: ViewModels.Establishments.IServerNameApiModel[]): void {
+    receiveNames(js: Establishments.ApiModels.Name[]): void {
         ko.mapping.fromJS(js || [], this._NamesMapping, this.names);
         this.namesSpinner.stop();
         App.Obtruder.obtrude(document);
@@ -372,16 +372,16 @@ export class Item implements KnockoutValidationGroup {
     urlsSpinner: Spinner.Spinner = new Spinner.Spinner(new Spinner.SpinnerOptions(0, true));
 
     // methods
-    requestUrls(callback?: (response?: ViewModels.Establishments.IServerUrlApiModel[]) => void ): void {
+    requestUrls(callback?: (response?: Establishments.ApiModels.Url[]) => void ): void {
         this.urlsSpinner.start();
         $.get(App.Routes.WebApi.Establishments.Urls.get(this.id))
-            .done((response: ViewModels.Establishments.IServerUrlApiModel[]): void => {
+            .done((response: Establishments.ApiModels.Url[]): void => {
                 this.receiveUrls(response);
                 if (callback) callback(response);
             });
     }
 
-    receiveUrls(js: ViewModels.Establishments.IServerUrlApiModel[]): void {
+    receiveUrls(js: Establishments.ApiModels.Url[]): void {
         ko.mapping.fromJS(js || [], this._urlsMapping, this.urls);
         this.urlsSpinner.stop();
         App.Obtruder.obtrude(document);
@@ -505,7 +505,7 @@ export class Item implements KnockoutValidationGroup {
         var deferred = $.Deferred();
         if (this.id) {
             $.get(App.Routes.WebApi.Establishments.get(this.id))
-                .done((response: ViewModels.Establishments.IServerApiScalarModel, textStatus: string, jqXHR: JQueryXHR): void => {
+                .done((response: Establishments.ApiModels.ScalarEstablishment, textStatus: string, jqXHR: JQueryXHR): void => {
                     deferred.resolve(response);
                 })
                 .fail((jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void => {
@@ -519,7 +519,7 @@ export class Item implements KnockoutValidationGroup {
     }
 
     // populate scalar value observables from api values
-    private _pullScalars(response: ViewModels.Establishments.IServerApiScalarModel): void {
+    private _pullScalars(response: Establishments.ApiModels.ScalarEstablishment): void {
         this.originalValues(response);
         if (response) {
             ko.mapping.fromJS(response, {
@@ -575,7 +575,7 @@ export class Item implements KnockoutValidationGroup {
     // restore original values when cancelling edit of typeId & institution codes
     clickToCancelTypeIdEdit(): void {
         this.isEditingTypeId(false);
-        this._loadScalars().done((response: ViewModels.Establishments.IServerApiScalarModel): void => {
+        this._loadScalars().done((response: Establishments.ApiModels.ScalarEstablishment): void => {
             this._pullScalars(response);
         });
     }

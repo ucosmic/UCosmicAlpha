@@ -34,7 +34,7 @@ var ViewModels;
                 this.dirtyFlag = ko.observable(false);
                 /* In the process of saving */
                 this.saving = false;
-                this.saveSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(200));
+                this.saveSpinner = new App.Spinner(new App.SpinnerOptions(200));
                 this._initialize(activityId);
             }
             Activity.prototype._initialize = function (activityId) {

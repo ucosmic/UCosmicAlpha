@@ -49,7 +49,7 @@ module ViewModels.Activities {
 
         /* In the process of saving */
         saving: boolean = false;
-        saveSpinner: ViewModels.Spinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(200));
+        saveSpinner = new App.Spinner(new App.SpinnerOptions(200));
 
         /* IObservableActivity implemented */
         id: KnockoutObservable<number>;

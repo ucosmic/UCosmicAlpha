@@ -2,7 +2,7 @@
 /// <reference path="../typings/knockout/knockout.d.ts" />
 /// <reference path="Spinner.ts" />
 
-module ViewModels {
+module App {
     export class PagedSearch {
 
         // paging observables

@@ -91,7 +91,7 @@ module ViewModels.Users {
         roleToRevoke: KnockoutObservable<number> = ko.observable();
         $roleSelect: KnockoutObservable<JQuery> = ko.observable();
         isRoleGrantDisabled: KnockoutComputed<boolean>;
-        roleSpinner = new Spinner({ delay: 0, isVisible: true });
+        roleSpinner = new App.Spinner({ delay: 0, isVisible: true });
         isRevokeError: KnockoutObservable<boolean> = ko.observable();
         revokeErrorText: KnockoutObservable<string> = ko.observable();
         isGrantError: KnockoutObservable<boolean> = ko.observable();

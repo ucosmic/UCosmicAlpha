@@ -6,12 +6,11 @@
 /// <reference path="../Spinner.ts" />
 /// <reference path="../Flasher.ts" />
 
-module ViewModels.Establishments {
+module Establishments.ViewModels {
 
-    import gm = google.maps
+    import gm = google.maps;
 
     export class Location {
-
         ownerId: number;
         map: google.maps.Map;
         mapZoom: KnockoutObservable<number> = ko.observable(1);
@@ -53,8 +52,8 @@ module ViewModels.Establishments {
         showAdmin3Input: KnockoutComputed<boolean>;
         places:  KnockoutObservableArray<Places.ApiModels.Place> = ko.observableArray();
         subAdmins:  KnockoutObservableArray<Places.ApiModels.Place> = ko.observableArray();
-        loadSpinner: Spinner = new Spinner(new SpinnerOptions(400));
-        saveSpinner: Spinner = new Spinner(new SpinnerOptions(400));
+        loadSpinner = new App.Spinner(new App.SpinnerOptions(400));
+        saveSpinner = new App.Spinner(new App.SpinnerOptions(400));
         $dataLoadingDialog: JQuery;
         isEditable: () => boolean;
         isEditIconVisible: () => boolean;
@@ -354,7 +353,7 @@ module ViewModels.Establishments {
             if (this.ownerId) { // set up based on current owner id
                 this.isLoaded(false);
                 $.get(App.Routes.WebApi.Establishments.Locations.get(this.ownerId))
-                .done((response: IServerLocationApiModel): void => {
+                .done((response: ApiModels.Location): void => {
                     gm.event.addListenerOnce(this.map, 'idle', (): void => {
                         this.loadMapZoom(response);
                         this.loadMapMarker(response);
@@ -371,7 +370,7 @@ module ViewModels.Establishments {
             }
         }
 
-        private loadMapZoom(response: IServerLocationApiModel): void {
+        private loadMapZoom(response: ApiModels.Location): void {
             // zoom map to reveal location
             if (response.googleMapZoomLevel && response.center && response.center.hasValue)
                 this.map.setZoom(response.googleMapZoomLevel);
@@ -385,7 +384,7 @@ module ViewModels.Establishments {
                 this.allowCountryFitBounds = false;
         }
 
-        private loadMapMarker(response: IServerLocationApiModel): void {
+        private loadMapMarker(response: ApiModels.Location): void {
             // place marker and set map center
             if (response.center.hasValue) {
                 var latLng = Places.Utils.convertToLatLng(response.center);
@@ -512,7 +511,7 @@ module ViewModels.Establishments {
             });
         }
 
-        serializeData(): IServerLocationPutModel {
+        serializeData(): ApiModels.PutLocation {
             var center: Places.ApiModels.Point,
                 centerLat: number = this.toolsMarkerLat(),
                 centerLng: number = this.toolsMarkerLng(),
@@ -561,7 +560,7 @@ module ViewModels.Establishments {
             else if (this.continentId())
                 placeId = this.continentId();
 
-            var js: IServerLocationPutModel = {
+            var js: ApiModels.PutLocation = {
                 center: center,
                 box: box,
                 googleMapZoomLevel: zoom,
@@ -579,7 +578,7 @@ module ViewModels.Establishments {
             // restore initial values
             this.isLoaded(false);
             $.get(App.Routes.WebApi.Establishments.Locations.get(this.ownerId))
-                .done((response: IServerLocationApiModel): void => {
+                .done((response: ApiModels.Location): void => {
                     // reset zoom
                     this.map.setZoom(1);
                     this.loadMapZoom(response);

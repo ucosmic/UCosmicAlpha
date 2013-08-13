@@ -15,7 +15,9 @@
 /// <reference path="Search.ts" />
 /// <reference path="SearchResult.ts" />
 
-module ViewModels.Establishments {
+import Languages = ViewModels.Languages;
+
+module Establishments.ViewModels {
 
     import gm = google.maps
 
@@ -165,11 +167,11 @@ module ViewModels.Establishments {
         private _isInitialized: KnockoutObservable<boolean> = ko.observable(false);
         $genericAlertDialog: JQuery = undefined;
         location: Location;
-        createSpinner: Spinner = new Spinner(new SpinnerOptions(0));
-        validatingSpinner: Spinner = new Spinner(new SpinnerOptions(200));
+        createSpinner = new App.Spinner(new App.SpinnerOptions(0));
+        validatingSpinner = new App.Spinner(new App.SpinnerOptions(200));
         categories: KnockoutObservableArray<any> = ko.observableArray();
-        typeIdSaveSpinner: Spinner = new Spinner(new SpinnerOptions(200));
-        typeIdValidatingSpinner: Spinner = new Spinner(new SpinnerOptions(200));
+        typeIdSaveSpinner = new App.Spinner(new App.SpinnerOptions(200));
+        typeIdValidatingSpinner = new App.Spinner(new App.SpinnerOptions(200));
         isTypeIdSaveDisabled: KnockoutComputed<boolean>;
         typeId: KnockoutObservable<number> = ko.observable();
         typeText: KnockoutObservable<string> = ko.observable('[Loading...]');
@@ -260,7 +262,7 @@ module ViewModels.Establishments {
             $.when(categoriesPact, viewModelPact).then(
 
                 // all requests succeeded
-                (categories: any[], viewModel: IServerApiScalarModel): void => {
+                (categories: any[], viewModel: ApiModels.ScalarEstablishment): void => {
 
                     ko.mapping.fromJS(categories, {}, this.categories);
 
@@ -291,17 +293,17 @@ module ViewModels.Establishments {
 
         // observables, computeds, & variables
         languages: KnockoutObservableArray<Languages.IServerApiModel> = ko.observableArray(); // select options
-        names: KnockoutObservableArray<Establishments.Name> = ko.observableArray();
+        names: KnockoutObservableArray<Name> = ko.observableArray();
         editingName: KnockoutObservable<number> = ko.observable(0);
         canAddName: KnockoutComputed<boolean>;
         private _namesMapping: any;
-        namesSpinner: Spinner = new Spinner(new SpinnerOptions(0, true));
+        namesSpinner = new App.Spinner(new App.SpinnerOptions(0, true));
 
         // methods
-        requestNames(callback?: (response?: IServerNameApiModel[]) => void ): void {
+        requestNames(callback?: (response?: ApiModels.Name[]) => void ): void {
             this.namesSpinner.start();
             $.get(App.Routes.WebApi.Establishments.Names.get(this.id))
-                .done((response: IServerNameApiModel[]): void => {
+                .done((response: ApiModels.Name[]): void => {
                     this.receiveNames(response);
                     if (callback) callback(response);
                 });
@@ -311,14 +313,14 @@ module ViewModels.Establishments {
             window.location.hash = '#/select-parent/page/1/';
         }
 
-        receiveNames(js: IServerNameApiModel[]): void {
+        receiveNames(js: ApiModels.Name[]): void {
             ko.mapping.fromJS(js || [], this._namesMapping, this.names);
             this.namesSpinner.stop();
             App.Obtruder.obtrude(document);
         }
 
         addName(): void {
-            var apiModel = new ServerNameApiModel(this.id);
+            var apiModel = new ServerModels.Name(this.id);
             if (this.names().length === 0)
                 apiModel.isOfficialName = true;
             var newName = new Name(apiModel, this);
@@ -367,30 +369,30 @@ module ViewModels.Establishments {
         //#region URLs
 
         // observables, computeds, & variables
-        urls: KnockoutObservableArray<Establishments.Url> = ko.observableArray();
+        urls: KnockoutObservableArray<Url> = ko.observableArray();
         editingUrl: KnockoutObservable<number> = ko.observable(0);
         canAddUrl: KnockoutComputed<boolean>;
         private _urlsMapping: any;
-        urlsSpinner: Spinner = new Spinner(new SpinnerOptions(0, true));
+        urlsSpinner = new App.Spinner(new App.SpinnerOptions(0, true));
 
         // methods
-        requestUrls(callback?: (response?: IServerUrlApiModel[]) => void ): void {
+        requestUrls(callback?: (response?: ApiModels.Url[]) => void ): void {
             this.urlsSpinner.start();
             $.get(App.Routes.WebApi.Establishments.Urls.get(this.id))
-                .done((response: IServerUrlApiModel[]): void => {
+                .done((response: ApiModels.Url[]): void => {
                     this.receiveUrls(response);
                     if (callback) callback(response);
                 });
         }
 
-        receiveUrls(js: IServerUrlApiModel[]): void {
+        receiveUrls(js: ApiModels.Url[]): void {
             ko.mapping.fromJS(js || [], this._urlsMapping, this.urls);
             this.urlsSpinner.stop();
             App.Obtruder.obtrude(document);
         }
 
         addUrl(): void {
-            var apiModel = new ServerUrlApiModel(this.id);
+            var apiModel = new ServerModels.Url(this.id);
             if (this.urls().length === 0)
                 apiModel.isOfficialUrl = true;
             var newUrl = new Url(apiModel, this);
@@ -507,7 +509,7 @@ module ViewModels.Establishments {
             var deferred = $.Deferred();
             if (this.id) {
                 $.get(App.Routes.WebApi.Establishments.get(this.id))
-                    .done((response: IServerApiScalarModel, textStatus: string, jqXHR: JQueryXHR): void => {
+                    .done((response: ApiModels.ScalarEstablishment, textStatus: string, jqXHR: JQueryXHR): void => {
                         deferred.resolve(response);
                     })
                     .fail((jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void => {
@@ -521,7 +523,7 @@ module ViewModels.Establishments {
         }
 
         // populate scalar value observables from api values
-        private _pullScalars(response: IServerApiScalarModel): void {
+        private _pullScalars(response: ApiModels.ScalarEstablishment): void {
             this.originalValues(response);
             if (response) {
                 ko.mapping.fromJS(response, {
@@ -577,7 +579,7 @@ module ViewModels.Establishments {
         // restore original values when cancelling edit of typeId & institution codes
         clickToCancelTypeIdEdit(): void {
             this.isEditingTypeId(false);
-            this._loadScalars().done((response: IServerApiScalarModel): void => {
+            this._loadScalars().done((response: ApiModels.ScalarEstablishment): void => {
                 this._pullScalars(response);
             });
         }
@@ -591,8 +593,8 @@ module ViewModels.Establishments {
         parentEstablishment: KnockoutObservable<any> = ko.observable();
         parentId: KnockoutObservable<number> = ko.observable();
         private _parentScrollTop: number;
-        parentIdSaveSpinner: Spinner = new Spinner(new SpinnerOptions(200));
-        parentIdValidatingSpinner: Spinner = new Spinner(new SpinnerOptions(200));
+        parentIdSaveSpinner = new App.Spinner(new App.SpinnerOptions(200));
+        parentIdValidatingSpinner = new App.Spinner(new App.SpinnerOptions(200));
 
         private _setupSammy(): void {
             var self = this;

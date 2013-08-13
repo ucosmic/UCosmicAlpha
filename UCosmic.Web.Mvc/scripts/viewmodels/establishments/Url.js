@@ -1,5 +1,5 @@
-var ViewModels;
-(function (ViewModels) {
+var Establishments;
+(function (Establishments) {
     /// <reference path="../../typings/jquery/jquery.d.ts" />
     /// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
     /// <reference path="../../typings/knockout/knockout.d.ts" />
@@ -10,9 +10,9 @@ var ViewModels;
     /// <reference path="../Spinner.ts" />
     /// <reference path="ServerApiModel.d.ts" />
     /// <reference path="Item.ts" />
-    (function (Establishments) {
-        var ServerUrlApiModel = (function () {
-            function ServerUrlApiModel(ownerId) {
+    (function (ServerModels) {
+        var Url = (function () {
+            function Url(ownerId) {
                 this.id = 0;
                 this.ownerId = 0;
                 this.value = '';
@@ -20,10 +20,16 @@ var ViewModels;
                 this.isFormerUrl = false;
                 this.ownerId = ownerId;
             }
-            return ServerUrlApiModel;
+            return Url;
         })();
-        Establishments.ServerUrlApiModel = ServerUrlApiModel;
+        ServerModels.Url = Url;
+    })(Establishments.ServerModels || (Establishments.ServerModels = {}));
+    var ServerModels = Establishments.ServerModels;
+})(Establishments || (Establishments = {}));
 
+var Establishments;
+(function (Establishments) {
+    (function (ViewModels) {
         var EstablishmentUrlValueValidator = (function () {
             function EstablishmentUrlValueValidator() {
                 this._ruleName = 'validEstablishmentUrlValue';
@@ -67,15 +73,15 @@ var ViewModels;
                 this.$valueElement = undefined;
                 this.$confirmPurgeDialog = undefined;
                 // spinners
-                this.saveSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(0, false));
-                this.purgeSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(0, false));
-                this.valueValidationSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(0, false));
+                this.saveSpinner = new App.Spinner(new App.SpinnerOptions(0, false));
+                this.purgeSpinner = new App.Spinner(new App.SpinnerOptions(0, false));
+                this.valueValidationSpinner = new App.Spinner(new App.SpinnerOptions(0, false));
                 // private fields
                 this.saveEditorClicked = false;
                 this.owner = owner;
 
                 if (!js)
-                    js = new ServerUrlApiModel(this.owner.id);
+                    js = new Establishments.ServerModels.Url(this.owner.id);
                 if (js.id === 0)
                     js.ownerId = this.owner.id;
 
@@ -308,7 +314,7 @@ var ViewModels;
             };
             return Url;
         })();
-        Establishments.Url = Url;
-    })(ViewModels.Establishments || (ViewModels.Establishments = {}));
-    var Establishments = ViewModels.Establishments;
-})(ViewModels || (ViewModels = {}));
+        ViewModels.Url = Url;
+    })(Establishments.ViewModels || (Establishments.ViewModels = {}));
+    var ViewModels = Establishments.ViewModels;
+})(Establishments || (Establishments = {}));

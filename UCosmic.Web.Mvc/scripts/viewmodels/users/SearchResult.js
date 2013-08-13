@@ -82,7 +82,7 @@ var ViewModels;
                 this.selectedRoleOption = ko.observable();
                 this.roleToRevoke = ko.observable();
                 this.$roleSelect = ko.observable();
-                this.roleSpinner = new ViewModels.Spinner({ delay: 0, isVisible: true });
+                this.roleSpinner = new App.Spinner({ delay: 0, isVisible: true });
                 this.isRevokeError = ko.observable();
                 this.revokeErrorText = ko.observable();
                 this.isGrantError = ko.observable();

@@ -58,8 +58,8 @@ module ViewModels.My {
         static photoUploadUnexpectedErrorMessage = 'UCosmic experienced an unexpected error managing your photo, please try again. If you continue to experience this issue, please use the Feedback & Support link on this page to report it.';
         photoSrc: KnockoutObservable<string> = ko.observable(
             App.Routes.WebApi.My.Photo.get({ maxSide: 128, refresh: new Date().toUTCString() }));
-        photoUploadSpinner = new Spinner(new SpinnerOptions(400));
-        photoDeleteSpinner = new Spinner(new SpinnerOptions(400));
+        photoUploadSpinner = new App.Spinner(new App.SpinnerOptions(400));
+        photoDeleteSpinner = new App.Spinner(new App.SpinnerOptions(400));
 
         isDisplayNameDerived: KnockoutObservable<boolean> = ko.observable();
         displayName: KnockoutObservable<string> = ko.observable();
@@ -103,7 +103,7 @@ module ViewModels.My {
         isValid: () => boolean;
         errors: KnockoutValidationErrors;
         editMode: KnockoutObservable<boolean> = ko.observable(false);
-        saveSpinner = new Spinner(new SpinnerOptions(200));
+        saveSpinner = new App.Spinner(new App.SpinnerOptions(200));
 
         startInEdit: KnockoutObservable<boolean> = ko.observable(false);
         startTabName: KnockoutObservable<string> = ko.observable("Activities");

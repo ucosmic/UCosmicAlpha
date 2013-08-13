@@ -81,7 +81,7 @@ module ViewModels.Employees {
         //resultsTableData: any;
 
         summary: KnockoutObservable<any>;
-        loadSpinner: ViewModels.Spinner;
+        loadSpinner: App.Spinner;
 
         _initialize(institutionInfo: any): void {
             this.sammy = Sammy();
@@ -101,7 +101,7 @@ module ViewModels.Employees {
             this.searchType = ko.observable('activities');
             this.selectedPlace = ko.observable(null); // null for global view
             this.isGlobalView = ko.observable(true);
-            this.loadSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(200));
+            this.loadSpinner = new App.Spinner(new App.SpinnerOptions(200));
             this.barchartWorldDataTable_cached = null;
 
             this.selectSearchType('activities');

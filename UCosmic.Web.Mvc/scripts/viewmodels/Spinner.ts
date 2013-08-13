@@ -1,6 +1,6 @@
 /// <reference path="../typings/knockout/knockout.d.ts" />
 
-module ViewModels {
+module App {
 
     export interface ISpinnerOptions {
         delay?: number;

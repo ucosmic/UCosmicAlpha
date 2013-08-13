@@ -223,7 +223,7 @@ else
             Search.PageSizeSessionKey = 'UserSearchPageSize';
             Search.OrderBySessionKey = 'UserSearchOrderBy';
             return Search;
-        })(ViewModels.PagedSearch);
+        })(App.PagedSearch);
         Users.Search = Search;
     })(ViewModels.Users || (ViewModels.Users = {}));
     var Users = ViewModels.Users;

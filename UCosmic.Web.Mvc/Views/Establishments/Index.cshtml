@@ -12,7 +12,7 @@
     @Scripts.Render("~/bundles/establishments")
 
     <script type="text/javascript">
-        var establishmentSearchViewModel = new ViewModels.Establishments.Search();
+        var establishmentSearchViewModel = new Establishments.ViewModels.Search();
         ko.applyBindings(establishmentSearchViewModel, $('[data-current-module=admin]')[0]);
         establishmentSearchViewModel.sammy.run();
     </script>

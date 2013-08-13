@@ -9,8 +9,8 @@
 /// <reference path="../../app/Routes.ts" />
 /// <reference path="../../typings/moment/moment.d.ts" />
 /// <reference path="../../typings/sammyjs/sammyjs.d.ts" />
-/// <reference path="../amd-modules/Establishments/ServerApiModel.d.ts" />
 /// <amd-dependency path="../../jquery/jquery.globalize/globalize.require" />
+/// <reference path="../establishments/ServerApiModel.d.ts" />
 define(["require", "exports", '../amd-modules/Establishments/SearchResult', '../amd-modules/Establishments/Search', '../amd-modules/Establishments/Item', '../amd-modules/Widgets/Spinner', "../../jquery/jquery.globalize/globalize.require"], function(require, exports, __SearchResultModule__, __SearchModule__, __ItemModule__, __Spinner__) {
     var SearchResultModule = __SearchResultModule__;
     var SearchModule = __SearchModule__;

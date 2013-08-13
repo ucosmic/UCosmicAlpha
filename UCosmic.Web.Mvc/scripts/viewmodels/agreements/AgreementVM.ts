@@ -9,8 +9,8 @@
 /// <reference path="../../app/Routes.ts" />
 /// <reference path="../../typings/moment/moment.d.ts" />
 /// <reference path="../../typings/sammyjs/sammyjs.d.ts" />
-/// <reference path="../amd-modules/Establishments/ServerApiModel.d.ts" />
 /// <amd-dependency path="../../jquery/jquery.globalize/globalize.require" />
+/// <reference path="../establishments/ServerApiModel.d.ts" />
 
 import SearchResultModule = require('../amd-modules/Establishments/SearchResult');
 import SearchModule = require('../amd-modules/Establishments/Search');
@@ -292,7 +292,7 @@ export class InstitutionalAgreementEditModel {
     });
 
     spinner: Spinner.Spinner = new Spinner.Spinner(new Spinner.SpinnerOptions(400, true));
-    receiveResults(js: ViewModels.Establishments.IServerApiFlatModel[]): void {
+    receiveResults(js: Establishments.ApiModels.FlatEstablishment[]): void {
         if (!js) {
             ko.mapping.fromJS({
                 items: [],
@@ -306,7 +306,7 @@ export class InstitutionalAgreementEditModel {
     
     populateParticipants(): void {
         $.get(App.Routes.WebApi.Agreements.Participants.get(this.agreementId))
-            .done((response: ViewModels.Establishments.IServerApiFlatModel[]): void => {
+            .done((response: Establishments.ApiModels.FlatEstablishment[]): void => {
                 this.receiveResults(response);
                 this.dfdPopParticipants.resolve();
             });

@@ -1,5 +1,5 @@
-var ViewModels;
-(function (ViewModels) {
+var Establishments;
+(function (Establishments) {
     /// <reference path="../../typings/jquery/jquery.d.ts" />
     /// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
     /// <reference path="../../typings/knockout/knockout.d.ts" />
@@ -10,9 +10,9 @@ var ViewModels;
     /// <reference path="../Spinner.ts" />
     /// <reference path="Item.ts" />
     /// <reference path="ServerApiModel.d.ts" />
-    (function (Establishments) {
-        var ServerNameApiModel = (function () {
-            function ServerNameApiModel(ownerId) {
+    (function (ServerModels) {
+        var Name = (function () {
+            function Name(ownerId) {
                 this.id = 0;
                 this.ownerId = 0;
                 this.text = '';
@@ -22,10 +22,16 @@ var ViewModels;
                 this.languageName = '';
                 this.ownerId = ownerId;
             }
-            return ServerNameApiModel;
+            return Name;
         })();
-        Establishments.ServerNameApiModel = ServerNameApiModel;
+        ServerModels.Name = Name;
+    })(Establishments.ServerModels || (Establishments.ServerModels = {}));
+    var ServerModels = Establishments.ServerModels;
+})(Establishments || (Establishments = {}));
 
+var Establishments;
+(function (Establishments) {
+    (function (ViewModels) {
         var EstablishmentNameTextValidator = (function () {
             function EstablishmentNameTextValidator() {
                 this._ruleName = 'validEstablishmentNameText';
@@ -72,15 +78,15 @@ var ViewModels;
                 this.$languagesElement = undefined;
                 this.$confirmPurgeDialog = undefined;
                 // spinners
-                this.saveSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(0, false));
-                this.purgeSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(0, false));
-                this.textValidationSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(0, false));
+                this.saveSpinner = new App.Spinner(new App.SpinnerOptions(0, false));
+                this.purgeSpinner = new App.Spinner(new App.SpinnerOptions(0, false));
+                this.textValidationSpinner = new App.Spinner(new App.SpinnerOptions(0, false));
                 // private fields
                 this.saveEditorClicked = false;
                 this.owner = owner;
 
                 if (!js)
-                    js = new ServerNameApiModel(this.owner.id);
+                    js = new Establishments.ServerModels.Name(this.owner.id);
                 if (js.id === 0)
                     js.ownerId = this.owner.id;
 
@@ -294,7 +300,7 @@ var ViewModels;
             };
             return Name;
         })();
-        Establishments.Name = Name;
-    })(ViewModels.Establishments || (ViewModels.Establishments = {}));
-    var Establishments = ViewModels.Establishments;
-})(ViewModels || (ViewModels = {}));
+        ViewModels.Name = Name;
+    })(Establishments.ViewModels || (Establishments.ViewModels = {}));
+    var ViewModels = Establishments.ViewModels;
+})(Establishments || (Establishments = {}));

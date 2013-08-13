@@ -1,7 +1,7 @@
 /// <reference path="../../../typings/jquery/jquery.d.ts" />
 /// <reference path="../../../typings/knockout/knockout.d.ts" />
 /// <reference path="../../../typings/knockout.mapping/knockout.mapping.d.ts" />
-/// <reference path="ServerApiModel.d.ts" />
+/// <reference path="../../establishments/ServerApiModel.d.ts" />
 
 import Search = require('./Search');
  
@@ -9,7 +9,7 @@ export class SearchResult {
 
     private _owner: Search.Search; 
 
-    constructor (values: ViewModels.Establishments.IServerApiFlatModel, owner: Search.Search) {
+    constructor (values: Establishments.ApiModels.FlatEstablishment, owner: Search.Search) {
         this._owner = owner;
         this._pullData(values);
         this._setupComputeds();
@@ -26,7 +26,7 @@ export class SearchResult {
     uCosmicCode: KnockoutObservable<string>;
     ceebCode: KnockoutObservable<string>;
 
-    private _pullData(values: ViewModels.Establishments.IServerApiFlatModel): void {
+    private _pullData(values: Establishments.ApiModels.FlatEstablishment): void {
         // map input model to observables
         ko.mapping.fromJS(values, {}, this);
     }

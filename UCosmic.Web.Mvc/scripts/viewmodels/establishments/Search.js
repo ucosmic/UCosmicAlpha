@@ -15,9 +15,9 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
-var ViewModels;
-(function (ViewModels) {
-    (function (Establishments) {
+var Establishments;
+(function (Establishments) {
+    (function (ViewModels) {
         var Search = (function (_super) {
             __extends(Search, _super);
             function Search(initDefaultPageRoute) {
@@ -54,7 +54,7 @@ var ViewModels;
                             return ko.utils.unwrapObservable(data.id);
                         },
                         create: function (options) {
-                            return new ViewModels.Establishments.SearchResult(options.data, options.parent);
+                            return new ViewModels.SearchResult(options.data, options.parent);
                         }
                     },
                     ignore: ['pageSize', 'pageNumber']
@@ -254,8 +254,8 @@ var ViewModels;
                 return 'View & edit this establishment\'s details';
             };
             return Search;
-        })(ViewModels.PagedSearch);
-        Establishments.Search = Search;
-    })(ViewModels.Establishments || (ViewModels.Establishments = {}));
-    var Establishments = ViewModels.Establishments;
-})(ViewModels || (ViewModels = {}));
+        })(App.PagedSearch);
+        ViewModels.Search = Search;
+    })(Establishments.ViewModels || (Establishments.ViewModels = {}));
+    var ViewModels = Establishments.ViewModels;
+})(Establishments || (Establishments = {}));

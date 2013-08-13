@@ -1,6 +1,4 @@
 /// <reference path="../../typings/jquery/jquery.d.ts" />
-/// <reference path="../../typings/knockout/knockout.d.ts" />
-/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
 /// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
 /// <reference path="../../app/Routes.ts" />
 /// <reference path="../Spinner.ts" />
@@ -40,7 +38,7 @@ module ViewModels.Users {
         id: KnockoutObservable<number> = ko.observable();
         name: KnockoutObservable<string> = ko.observable();
 
-        saveSpinner = new Spinner(new SpinnerOptions(200));
+        saveSpinner = new App.Spinner(new App.SpinnerOptions(200));
         errorMessage: KnockoutObservable<string> = ko.observable();
 
         isValid: () => boolean;

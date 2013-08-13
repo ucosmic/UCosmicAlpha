@@ -5,12 +5,12 @@
 /// <reference path="../../../typings/knockout.validation/knockout.validation.d.ts" />
 /// <reference path="../../../app/Routes.ts" />
 /// <reference path="../../Flasher.ts" />
-/// <reference path="ServerApiModel.d.ts" />
+/// <reference path="../../establishments/ServerApiModel.d.ts" />
 
 import Item = require('./Item');
 import Spinner = require('../Widgets/Spinner');
 
-export class ServerUrlApiModel implements ViewModels.Establishments.IServerUrlApiModel {
+export class ServerUrlApiModel implements Establishments.ApiModels.Url {
         
     id: number = 0;
     ownerId: number = 0;
@@ -311,7 +311,7 @@ export class Url implements KnockoutValidationGroup {
         });
     }
 
-    serializeData(): ViewModels.Establishments.IServerUrlApiModel {
+    serializeData(): Establishments.ApiModels.Url {
         return {
             id: this.id(),
             ownerId: this.ownerId(),

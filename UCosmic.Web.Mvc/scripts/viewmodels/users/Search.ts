@@ -12,7 +12,7 @@
 
 module ViewModels.Users {
 
-    export class Search extends ViewModels.PagedSearch {
+    export class Search extends App.PagedSearch {
 
         static KeywordSessionKey = 'UserSearchKeyword';
         static PageSizeSessionKey = 'UserSearchPageSize';

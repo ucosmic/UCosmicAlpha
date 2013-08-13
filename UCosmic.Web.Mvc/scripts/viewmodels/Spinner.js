@@ -1,6 +1,6 @@
 /// <reference path="../typings/knockout/knockout.d.ts" />
-var ViewModels;
-(function (ViewModels) {
+var App;
+(function (App) {
     var SpinnerOptions = (function () {
         function SpinnerOptions(delay, isVisible) {
             if (typeof delay === "undefined") { delay = 0; }
@@ -10,7 +10,7 @@ var ViewModels;
         }
         return SpinnerOptions;
     })();
-    ViewModels.SpinnerOptions = SpinnerOptions;
+    App.SpinnerOptions = SpinnerOptions;
 
     var Spinner = (function () {
         function Spinner(options) {
@@ -42,5 +42,5 @@ else
         };
         return Spinner;
     })();
-    ViewModels.Spinner = Spinner;
-})(ViewModels || (ViewModels = {}));
+    App.Spinner = Spinner;
+})(App || (App = {}));

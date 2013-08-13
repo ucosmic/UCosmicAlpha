@@ -5,7 +5,7 @@
 /// <reference path="../../../app/App.ts" />
 /// <reference path="../../../app/SideSwiper.ts" />
 /// <reference path="../../../app/Routes.ts" />
-/// <reference path="ServerApiModel.d.ts" />
+/// <reference path="../../establishments/ServerApiModel.d.ts" />
 
 import PagedSearch = require('../Widgets/PagedSearch');
 import SearchResult = require('./SearchResult');
@@ -198,7 +198,7 @@ export class Search extends PagedSearch.PagedSearch {
     };
     swipeCallback(): void {
     }
-    receiveResults(js: ViewModels.Establishments.IServerApiFlatModel[]): void {
+    receiveResults(js: Establishments.ApiModels.FlatEstablishment[]): void {
         if (!js) {
             ko.mapping.fromJS({
                 items: [],
@@ -226,7 +226,7 @@ export class Search extends PagedSearch.PagedSearch {
             keyword: this.throttledKeyword(),
             orderBy: this.orderBy()
         })
-        .done((response: ViewModels.Establishments.IServerApiFlatModel[]): void => {
+        .done((response: Establishments.ApiModels.FlatEstablishment[]): void => {
             this.receiveResults(response);
         });
     }

@@ -15,9 +15,9 @@ interface Lens {
     value: string;
 }
 
-module ViewModels.Establishments {
+module Establishments.ViewModels {
 
-    export class Search extends ViewModels.PagedSearch {
+    export class Search extends App.PagedSearch {
 
         constructor (public initDefaultPageRoute: boolean = true) {
             super();
@@ -195,15 +195,14 @@ module ViewModels.Establishments {
                     return ko.utils.unwrapObservable(data.id);
                 },
                 create: function (options) {
-                    return new ViewModels.Establishments
-                        .SearchResult(options.data, options.parent);
+                    return new SearchResult(options.data, options.parent);
                 }
             },
             ignore: ['pageSize', 'pageNumber']
         };
         swipeCallback(): void {
         }
-        receiveResults(js: IServerApiFlatModel[]): void {
+        receiveResults(js: ApiModels.FlatEstablishment[]): void {
             if (!js) {
                 ko.mapping.fromJS({
                     items: [],
@@ -231,7 +230,7 @@ module ViewModels.Establishments {
                 keyword: this.throttledKeyword(),
                 orderBy: this.orderBy()
             })
-            .done((response: IServerApiFlatModel[]): void => {
+            .done((response: ApiModels.FlatEstablishment[]): void => {
                 this.receiveResults(response);
             });
         }

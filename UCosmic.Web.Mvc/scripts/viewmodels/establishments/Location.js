@@ -1,5 +1,5 @@
-var ViewModels;
-(function (ViewModels) {
+var Establishments;
+(function (Establishments) {
     /// <reference path="../../google/ToolsOverlay.ts" />
     /// <reference path="../../app/Routes.ts" />
     /// <reference path="../places/ApiModels.d.ts" />
@@ -7,7 +7,7 @@ var ViewModels;
     /// <reference path="ServerApiModel.d.ts" />
     /// <reference path="../Spinner.ts" />
     /// <reference path="../Flasher.ts" />
-    (function (Establishments) {
+    (function (ViewModels) {
         var gm = google.maps;
 
         var Location = (function () {
@@ -34,8 +34,8 @@ var ViewModels;
                 this.admin3sLoading = ko.observable(false);
                 this.places = ko.observableArray();
                 this.subAdmins = ko.observableArray();
-                this.loadSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(400));
-                this.saveSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(400));
+                this.loadSpinner = new App.Spinner(new App.SpinnerOptions(400));
+                this.saveSpinner = new App.Spinner(new App.SpinnerOptions(400));
                 this.isEditing = ko.observable();
                 this.ownerId = ownerId;
                 this._initComputedsAndSubscriptions();
@@ -545,7 +545,7 @@ else if (this.continentId())
             };
             return Location;
         })();
-        Establishments.Location = Location;
-    })(ViewModels.Establishments || (ViewModels.Establishments = {}));
-    var Establishments = ViewModels.Establishments;
-})(ViewModels || (ViewModels = {}));
+        ViewModels.Location = Location;
+    })(Establishments.ViewModels || (Establishments.ViewModels = {}));
+    var ViewModels = Establishments.ViewModels;
+})(Establishments || (Establishments = {}));

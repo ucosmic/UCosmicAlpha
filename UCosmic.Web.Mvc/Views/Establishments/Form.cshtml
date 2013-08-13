@@ -12,7 +12,7 @@
     @Scripts.Render("~/bundles/establishments/item")
 
     <script type="text/javascript">
-        var establishmentItemViewModel = new ViewModels.Establishments.Item(@ViewBag.Id);
+        var establishmentItemViewModel = new Establishments.ViewModels.Item(@ViewBag.Id);
         ko.applyBindings(establishmentItemViewModel, $('[data-current-module=admin]')[0]);
         establishmentItemViewModel.sammy.run();
     </script>

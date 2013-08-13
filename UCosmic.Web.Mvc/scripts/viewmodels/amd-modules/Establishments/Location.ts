@@ -1,7 +1,7 @@
 /// <reference path="../../../app/Routes.ts" />
 /// <reference path="../../Spinner.ts" />
 /// <reference path="../../Flasher.ts" />
-/// <reference path="ServerApiModel.d.ts" />
+/// <reference path="../../establishments/ServerApiModel.d.ts" />
 
 import Places = require('../places/ServerApiModel');
 import Spinner = require('../Widgets/Spinner');
@@ -358,7 +358,7 @@ export class Location {
         if (this.ownerId) { // set up based on current owner id
             this.isLoaded(false);
             $.get(App.Routes.WebApi.Establishments.Locations.get(this.ownerId))
-            .done((response: ViewModels.Establishments.IServerLocationApiModel): void => {
+            .done((response: Establishments.ApiModels.Location): void => {
                 gm.event.addListenerOnce(this.map, 'idle', (): void => {
                     this.loadMapZoom(response);
                     this.loadMapMarker(response);
@@ -375,7 +375,7 @@ export class Location {
         }
     }
 
-    private loadMapZoom(response: ViewModels.Establishments.IServerLocationApiModel): void {
+    private loadMapZoom(response: Establishments.ApiModels.Location): void {
         // zoom map to reveal location
         if (response.googleMapZoomLevel && response.center && response.center.hasValue)
             this.map.setZoom(response.googleMapZoomLevel);
@@ -389,7 +389,7 @@ export class Location {
             this.allowCountryFitBounds = false;
     }
 
-    private loadMapMarker(response: ViewModels.Establishments.IServerLocationApiModel): void {
+    private loadMapMarker(response: Establishments.ApiModels.Location): void {
         // place marker and set map center
         if (response.center.hasValue) {
             var latLng = Places.Utils.convertToLatLng(response.center);
@@ -517,7 +517,7 @@ export class Location {
         });
     }
 
-    serializeData(): ViewModels.Establishments.IServerLocationPutModel {
+    serializeData(): Establishments.ApiModels.PutLocation {
         var center: Places.IServerPointModel,
             centerLat: number = this.toolsMarkerLat(),
             centerLng: number = this.toolsMarkerLng(),
@@ -566,7 +566,7 @@ export class Location {
         else if (this.continentId())
             placeId = this.continentId();
 
-        var js: ViewModels.Establishments.IServerLocationPutModel = {
+        var js: Establishments.ApiModels.PutLocation = {
             center: center,
             box: box,
             googleMapZoomLevel: zoom,
@@ -584,7 +584,7 @@ export class Location {
         // restore initial values
         this.isLoaded(false);
         $.get(App.Routes.WebApi.Establishments.Locations.get(this.ownerId))
-            .done((response: ViewModels.Establishments.IServerLocationApiModel): void => {
+            .done((response: Establishments.ApiModels.Location): void => {
                 // reset zoom
                 this.map.setZoom(1);
                 this.loadMapZoom(response);
