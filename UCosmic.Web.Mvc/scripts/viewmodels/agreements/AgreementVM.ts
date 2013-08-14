@@ -10,7 +10,7 @@
 /// <reference path="../../typings/moment/moment.d.ts" />
 /// <reference path="../../typings/sammyjs/sammyjs.d.ts" />
 /// <amd-dependency path="../../jquery/jquery.globalize/globalize.require" />
-/// <reference path="../establishments/ServerApiModel.d.ts" />
+/// <reference path="../establishments/ApiModels.d.ts" />
 
 import SearchResultModule = require('../amd-modules/Establishments/SearchResult');
 import SearchModule = require('../amd-modules/Establishments/Search');

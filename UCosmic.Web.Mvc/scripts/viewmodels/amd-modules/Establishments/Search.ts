@@ -5,7 +5,7 @@
 /// <reference path="../../../app/App.ts" />
 /// <reference path="../../../app/SideSwiper.ts" />
 /// <reference path="../../../app/Routes.ts" />
-/// <reference path="../../establishments/ServerApiModel.d.ts" />
+/// <reference path="../../establishments/ApiModels.d.ts" />
 
 import PagedSearch = require('../Widgets/PagedSearch');
 import SearchResult = require('./SearchResult');

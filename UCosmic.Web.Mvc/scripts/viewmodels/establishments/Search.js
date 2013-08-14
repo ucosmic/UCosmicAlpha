@@ -7,8 +7,8 @@
 /// <reference path="../../app/Routes.ts" />
 /// <reference path="../PagedSearch.ts" />
 /// <reference path="../places/ApiModels.d.ts" />
-/// <reference path="ServerApiModel.d.ts" />
 /// <reference path="SearchResult.ts" />
+/// <reference path="ApiModels.d.ts" />
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }

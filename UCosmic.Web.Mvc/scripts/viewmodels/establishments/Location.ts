@@ -2,9 +2,9 @@
 /// <reference path="../../app/Routes.ts" />
 /// <reference path="../places/ApiModels.d.ts" />
 /// <reference path="../places/Utils.ts" />
-/// <reference path="ServerApiModel.d.ts" />
 /// <reference path="../Spinner.ts" />
 /// <reference path="../Flasher.ts" />
+/// <reference path="ApiModels.d.ts" />
 
 module Establishments.ViewModels {
 

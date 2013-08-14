@@ -1,7 +1,7 @@
 /// <reference path="../../../typings/jquery/jquery.d.ts" />
 /// <reference path="../../../typings/knockout/knockout.d.ts" />
 /// <reference path="../../../typings/knockout.mapping/knockout.mapping.d.ts" />
-/// <reference path="../../establishments/ServerApiModel.d.ts" />
+/// <reference path="../../establishments/ApiModels.d.ts" />
 define(["require", "exports"], function(require, exports) {
     
 

@@ -7,7 +7,7 @@
 /// <reference path="../../../app/SideSwiper.ts" />
 /// <reference path="../../../app/Routes.ts" />
 /// <reference path="../../Spinner.ts" />
-/// <reference path="../../establishments/ServerApiModel.d.ts" />
+/// <reference path="../../establishments/ApiModels.d.ts" />
 define(["require", "exports", './SearchResult', './Search', './Name', './Location', './Url', '../Widgets/Spinner', '../languages/ServerApiModel'], function(require, exports, __SearchResult__, __Search__, __Name__, __Location__, __Url__, __Spinner__, __Languages__) {
     var SearchResult = __SearchResult__;
     var Search = __Search__;

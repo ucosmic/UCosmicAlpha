@@ -7,7 +7,7 @@
 /// <reference path="../Flasher.ts" />
 /// <reference path="../Spinner.ts" />
 /// <reference path="Item.ts" />
-/// <reference path="ServerApiModel.d.ts" />
+/// <reference path="ApiModels.d.ts" />
 
 module Establishments.ServerModels {
     export class Name implements ApiModels.Name {

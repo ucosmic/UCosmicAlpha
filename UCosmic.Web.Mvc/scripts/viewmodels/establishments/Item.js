@@ -8,12 +8,12 @@
 /// <reference path="../../app/Routes.ts" />
 /// <reference path="../Spinner.ts" />
 /// <reference path="../languages/ServerApiModel.ts" />
-/// <reference path="ServerApiModel.d.ts" />
 /// <reference path="Name.ts" />
 /// <reference path="Url.ts" />
 /// <reference path="Location.ts" />
 /// <reference path="Search.ts" />
 /// <reference path="SearchResult.ts" />
+/// <reference path="ApiModels.d.ts" />
 var Languages = ViewModels.Languages;
 
 var Establishments;

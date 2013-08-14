@@ -176,13 +176,13 @@
         for some reason, kendo web ui does not work when jQuery is minified & bundled.
         current solution is to get jQuery separately from google's CDN and exclude it from the layout bundle.
     *@
-    @if (Html.IsOffline())
+    @if (!Html.IsOffline())
     {
-        @Scripts.Render("~/bundles/jquery")
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     }
     else
     {
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        @Scripts.Render("~/bundles/jquery")
     }
 
     @Html.Partial(MVC.Shared.Views._GoogleMapsScript)

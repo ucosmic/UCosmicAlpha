@@ -1887,6 +1887,7 @@
     <Content Include="scripts\viewmodels\employees\ServerApiModel.d.js">
       <DependentUpon>ServerApiModel.d.ts</DependentUpon>
     </Content>
+    <None Include="scripts\viewmodels\establishments\ApiModels.d.ts" />
     <Content Include="scripts\viewmodels\establishments\Location.js">
       <DependentUpon>Location.ts</DependentUpon>
     </Content>
@@ -2017,7 +2018,6 @@
     <Content Include="scripts\viewmodels\establishments\SearchResult.min.js">
       <DependentUpon>SearchResult.ts</DependentUpon>
     </Content>
-    <None Include="scripts\viewmodels\establishments\ServerApiModel.d.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\establishments\Url.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\my\Profile.ts" />
     <Content Include="scripts\viewmodels\my\Profile.js">

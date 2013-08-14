@@ -1,7 +1,7 @@
 /// <reference path="../../../app/Routes.ts" />
 /// <reference path="../../Spinner.ts" />
 /// <reference path="../../Flasher.ts" />
-/// <reference path="../../establishments/ServerApiModel.d.ts" />
+/// <reference path="../../establishments/ApiModels.d.ts" />
 
 import Places = require('../places/ServerApiModel');
 import Spinner = require('../Widgets/Spinner');

@@ -6,8 +6,8 @@
 /// <reference path="../../app/Routes.ts" />
 /// <reference path="../Flasher.ts" />
 /// <reference path="../Spinner.ts" />
-/// <reference path="ServerApiModel.d.ts" />
 /// <reference path="Item.ts" />
+/// <reference path="ApiModels.d.ts" />
 
 module Establishments.ServerModels {
     export class Url implements ApiModels.Url {

@@ -5,7 +5,7 @@
 /// <reference path="../../../app/App.ts" />
 /// <reference path="../../../app/SideSwiper.ts" />
 /// <reference path="../../../app/Routes.ts" />
-/// <reference path="../../establishments/ServerApiModel.d.ts" />
+/// <reference path="../../establishments/ApiModels.d.ts" />
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }

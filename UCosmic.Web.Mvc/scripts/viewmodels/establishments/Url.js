@@ -8,8 +8,8 @@ var Establishments;
     /// <reference path="../../app/Routes.ts" />
     /// <reference path="../Flasher.ts" />
     /// <reference path="../Spinner.ts" />
-    /// <reference path="ServerApiModel.d.ts" />
     /// <reference path="Item.ts" />
+    /// <reference path="ApiModels.d.ts" />
     (function (ServerModels) {
         var Url = (function () {
             function Url(ownerId) {

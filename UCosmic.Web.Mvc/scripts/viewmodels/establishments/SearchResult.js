@@ -4,7 +4,7 @@ var Establishments;
     /// <reference path="../../typings/knockout/knockout.d.ts" />
     /// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
     /// <reference path="Search.ts" />
-    /// <reference path="ServerApiModel.d.ts" />
+    /// <reference path="ApiModels.d.ts" />
     (function (ViewModels) {
         var SearchResult = (function () {
             function SearchResult(values, owner) {
