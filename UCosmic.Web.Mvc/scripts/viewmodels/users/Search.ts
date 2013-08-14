@@ -5,9 +5,9 @@
 /// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
 /// <reference path="../../typings/sammyjs/sammyjs.d.ts" />
 /// <reference path="../../typings/kendo/kendo.all.d.ts" />
-/// <reference path="../PagedSearch.ts" />
-/// <reference path="../Flasher.ts" />
 /// <reference path="../../app/Routes.ts" />
+/// <reference path="../../app/Flasher.ts" />
+/// <reference path="../../app/PagedSearch.ts" />
 /// <reference path="SearchResult.ts" />
 
 module ViewModels.Users {

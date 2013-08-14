@@ -2,10 +2,10 @@ var Establishments;
 (function (Establishments) {
     /// <reference path="../../google/ToolsOverlay.ts" />
     /// <reference path="../../app/Routes.ts" />
+    /// <reference path="../../app/Flasher.ts" />
+    /// <reference path="../../app/Spinner.ts" />
     /// <reference path="../places/ApiModels.d.ts" />
     /// <reference path="../places/Utils.ts" />
-    /// <reference path="../Spinner.ts" />
-    /// <reference path="../Flasher.ts" />
     /// <reference path="ApiModels.d.ts" />
     (function (ViewModels) {
         var gm = google.maps;

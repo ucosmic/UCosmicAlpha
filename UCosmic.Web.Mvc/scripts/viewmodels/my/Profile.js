@@ -8,8 +8,8 @@ var ViewModels;
     /// <reference path="../../typings/kendo/kendo.all.d.ts" />
     /// <reference path="../../typings/sammyjs/sammyjs.d.ts" />
     /// <reference path="../../app/Routes.ts" />
-    /// <reference path="../Flasher.ts" />
-    /// <reference path="../Spinner.ts" />
+    /// <reference path="../../app/Spinner.ts" />
+    /// <reference path="../../app/Flasher.ts" />
     /// <reference path="ServerApiModel.d.ts" />
     /// <reference path="../employees/ServerApiModel.d.ts" />
     /// <reference path="../activities/Activities.ts" />

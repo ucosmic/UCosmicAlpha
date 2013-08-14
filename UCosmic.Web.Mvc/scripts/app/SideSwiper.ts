@@ -1,9 +1,5 @@
 /// <reference path="../typings/jquery/jquery.d.ts" />
 
-interface JQueryStatic {
-    extend(target: App.SideSwiperOptions, obj?: App.SideSwiperOptions): App.SideSwiperOptions;
-}
-
 module App {
 
     export interface SideSwiperOptions {
@@ -27,7 +23,7 @@ module App {
         private $root: JQuery;
 
         constructor (options?: SideSwiperOptions) {
-            this.settings = $.extend(defaults, options);
+            this.settings = <SideSwiperOptions>$.extend(defaults, options);
             this.$root = $(this.settings.root);
             if (this.$root.attr('data-side-swiper') !== 'root')
                 this.$root = this.$root.find('[data-side-swiper=root]:first');

@@ -9,7 +9,7 @@ var ViewModels;
     /// <reference path="../../typings/tinymce/tinymce.d.ts" />
     /// <reference path="../../typings/moment/moment.d.ts" />
     /// <reference path="../../app/Routes.ts" />
-    /// <reference path="../Spinner.ts" />
+    /// <reference path="../../app/Spinner.ts" />
     /// <reference path="../activities/ServiceApiModel.d.ts" />
     (function (Activities) {
         var Activity = (function () {

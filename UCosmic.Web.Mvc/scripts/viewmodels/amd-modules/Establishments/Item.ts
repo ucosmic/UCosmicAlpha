@@ -6,7 +6,7 @@
 /// <reference path="../../../app/App.ts" />
 /// <reference path="../../../app/SideSwiper.ts" />
 /// <reference path="../../../app/Routes.ts" />
-/// <reference path="../../Spinner.ts" />
+/// <reference path="../../../app/Spinner.ts" />
 /// <reference path="../../establishments/ApiModels.d.ts" />
 
 import SearchResult = require('./SearchResult');

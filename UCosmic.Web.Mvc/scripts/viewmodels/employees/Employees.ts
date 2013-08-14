@@ -6,9 +6,9 @@
 /// <reference path="../../typings/kendo/kendo.all.d.ts" />
 /// <reference path="../../typings/moment/moment.d.ts" />
 /// <reference path="../../typings/googlemaps/google.maps.d.ts" />
-/// <reference path="../../app/Routes.ts" />
 /// <reference path="../../typings/sammyjs/sammyjs.d.ts" />
-/// <reference path="../Spinner.ts" />
+/// <reference path="../../app/Routes.ts" />
+/// <reference path="../../app/Spinner.ts" />
 /// <reference path="../activities/ServiceApiModel.d.ts" />
 
 module ViewModels.Employees {

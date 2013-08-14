@@ -1,7 +1,7 @@
 /// <reference path="../../typings/jquery/jquery.d.ts" />
 /// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
 /// <reference path="../../app/Routes.ts" />
-/// <reference path="../Spinner.ts" />
+/// <reference path="../../app/Spinner.ts" />
 
 module ViewModels.Users {
 

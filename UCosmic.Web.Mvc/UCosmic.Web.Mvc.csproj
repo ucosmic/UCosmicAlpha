@@ -689,13 +689,33 @@
     <Content Include="content\themes\base\minified\jquery.ui.tooltip.min.css" />
     <Content Include="images\bg\ui-bg_flat_black_40x100.png" />
     <TypeScriptCompile Include="scripts\google\ToolsOverlay.ts" />
-    <TypeScriptCompile Include="scripts\viewmodels\Flasher.ts" />
     <Content Include="images\icons\global\global_24_black.png" />
     <Content Include="images\icons\print\print-24-black.png" />
     <Content Include="images\icons\search\search-24-black.png" />
     <Content Include="images\icons\spinner\spinner-24-blue.gif" />
     <None Include="scripts\jquery\jquery-1.9.1.intellisense.js" />
     <Content Include="images\transparent.png" />
+    <TypeScriptCompile Include="scripts\app\Flasher.ts" />
+    <TypeScriptCompile Include="scripts\app\PagedSearch.ts" />
+    <Content Include="scripts\app\Flasher.js">
+      <DependentUpon>Flasher.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\app\Flasher.min.js">
+      <DependentUpon>Flasher.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\app\PagedSearch.js">
+      <DependentUpon>PagedSearch.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\app\PagedSearch.min.js">
+      <DependentUpon>PagedSearch.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\app\Spinner.js">
+      <DependentUpon>Spinner.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\app\Spinner.min.js">
+      <DependentUpon>Spinner.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\app\Spinner.ts" />
     <Content Include="scripts\jquery\jquery-1.9.1.js" />
     <Content Include="scripts\jquery\jquery-1.9.1.min.js" />
     <Content Include="images\icons\files\doc.png" />
@@ -1986,12 +2006,6 @@
     <Content Include="scripts\viewmodels\establishments\Url.min.js">
       <DependentUpon>Url.ts</DependentUpon>
     </Content>
-    <Content Include="scripts\viewmodels\Flasher.js">
-      <DependentUpon>Flasher.ts</DependentUpon>
-    </Content>
-    <Content Include="scripts\viewmodels\Flasher.min.js">
-      <DependentUpon>Flasher.ts</DependentUpon>
-    </Content>
     <Content Include="scripts\viewmodels\languages\ServerApiModel.js">
       <DependentUpon>ServerApiModel.ts</DependentUpon>
     </Content>
@@ -2136,20 +2150,6 @@
     <None Include="startup\sql\ElmahSqlSetup.sql" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
-    <TypeScriptCompile Include="scripts\viewmodels\PagedSearch.ts" />
-    <Content Include="scripts\viewmodels\PagedSearch.js">
-      <DependentUpon>PagedSearch.ts</DependentUpon>
-    </Content>
-    <Content Include="scripts\viewmodels\PagedSearch.min.js">
-      <DependentUpon>PagedSearch.ts</DependentUpon>
-    </Content>
-    <TypeScriptCompile Include="scripts\viewmodels\Spinner.ts" />
-    <Content Include="scripts\viewmodels\Spinner.js">
-      <DependentUpon>Spinner.ts</DependentUpon>
-    </Content>
-    <Content Include="scripts\viewmodels\Spinner.min.js">
-      <DependentUpon>Spinner.ts</DependentUpon>
-    </Content>
     <Content Include="scripts\jquery\jquery-ui-1.9.2.js" />
     <Content Include="scripts\jquery\jquery-ui-1.9.2.min.js" />
     <Content Include="scripts\oss\jquery.unobtrusive-ajax.js" />

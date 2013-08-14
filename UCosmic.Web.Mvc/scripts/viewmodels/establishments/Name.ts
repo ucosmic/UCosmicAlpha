@@ -4,8 +4,8 @@
 /// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
 /// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
 /// <reference path="../../app/Routes.ts" />
-/// <reference path="../Flasher.ts" />
-/// <reference path="../Spinner.ts" />
+/// <reference path="../../app/Flasher.ts" />
+/// <reference path="../../app/Spinner.ts" />
 /// <reference path="Item.ts" />
 /// <reference path="ApiModels.d.ts" />
 
