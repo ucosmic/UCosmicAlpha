@@ -1,23 +1,21 @@
-﻿/// <reference path="../../typings/jquery/jquery.d.ts" />
-/// <reference path="../../typings/knockout/knockout.d.ts" />
-/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
-/// <reference path="../../typings/googlemaps/google.maps.d.ts" />
-/// <reference path="../../google/ToolsOverlay.ts" />
-/// <reference path="../../app/App.ts" />
-/// <reference path="../../app/SideSwiper.ts" />
-/// <reference path="../../app/Routes.ts" />
-/// <reference path="../../app/Spinner.ts" />
-/// <reference path="../languages/ServerApiModel.ts" />
-/// <reference path="Name.ts" />
-/// <reference path="Url.ts" />
-/// <reference path="Location.ts" />
-/// <reference path="Search.ts" />
-/// <reference path="SearchResult.ts" />
-/// <reference path="ApiModels.d.ts" />
-var Languages = ViewModels.Languages;
-
-var Establishments;
+﻿var Establishments;
 (function (Establishments) {
+    /// <reference path="../../typings/jquery/jquery.d.ts" />
+    /// <reference path="../../typings/knockout/knockout.d.ts" />
+    /// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
+    /// <reference path="../../typings/googlemaps/google.maps.d.ts" />
+    /// <reference path="../../google/ToolsOverlay.ts" />
+    /// <reference path="../../app/App.ts" />
+    /// <reference path="../../app/SideSwiper.ts" />
+    /// <reference path="../../app/Routes.ts" />
+    /// <reference path="../../app/Spinner.ts" />
+    /// <reference path="../languages/ServerApiModel.ts" />
+    /// <reference path="Name.ts" />
+    /// <reference path="Url.ts" />
+    /// <reference path="Location.ts" />
+    /// <reference path="Search.ts" />
+    /// <reference path="SearchResult.ts" />
+    /// <reference path="ApiModels.d.ts" />
     (function (ViewModels) {
         var gm = google.maps;
 
@@ -312,7 +310,10 @@ var Establishments;
                 // languages dropdowns
                 ko.computed(function () {
                     $.getJSON(App.Routes.WebApi.Languages.get()).done(function (response) {
-                        var emptyValue = new Languages.ServerApiModel(undefined, '[Language Neutral]');
+                        var emptyValue = {
+                            code: undefined,
+                            name: '[Language Neutral]'
+                        };
                         response.splice(0, 0, emptyValue);
                         _this.languages(response);
                     });

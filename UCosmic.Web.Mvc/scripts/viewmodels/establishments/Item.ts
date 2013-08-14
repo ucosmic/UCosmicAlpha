@@ -15,8 +15,6 @@
 /// <reference path="SearchResult.ts" />
 /// <reference path="ApiModels.d.ts" />
 
-import Languages = ViewModels.Languages;
-
 module Establishments.ViewModels {
 
     import gm = google.maps
@@ -292,7 +290,7 @@ module Establishments.ViewModels {
         //#region Names
 
         // observables, computeds, & variables
-        languages: KnockoutObservableArray<Languages.IServerApiModel> = ko.observableArray(); // select options
+        languages: KnockoutObservableArray<Languages.ApiModels.Language> = ko.observableArray(); // select options
         names: KnockoutObservableArray<Name> = ko.observableArray();
         editingName: KnockoutObservable<number> = ko.observable(0);
         canAddName: KnockoutComputed<boolean>;
@@ -334,9 +332,11 @@ module Establishments.ViewModels {
             // languages dropdowns
             ko.computed((): void => { // get languages from the server
                 $.getJSON(App.Routes.WebApi.Languages.get())
-                    .done((response: Languages.IServerApiModel[]): void => {
-                        var emptyValue = new Languages.ServerApiModel(undefined,
-                            '[Language Neutral]');
+                    .done((response: Languages.ApiModels.Language[]): void => {
+                        var emptyValue: Languages.ApiModels.Language = {
+                            code: undefined,
+                            name: '[Language Neutral]'
+                        };
                         response.splice(0, 0, emptyValue); // add null option
                         this.languages(response); // set the options dropdown
                     });
