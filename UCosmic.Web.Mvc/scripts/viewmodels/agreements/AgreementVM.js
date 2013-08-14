@@ -1459,7 +1459,6 @@ else
                     displayName: this.contactDisplayName(),
                     middleName: this.contactMiddleName
                 };
-                this.contacts.push(ko.mapping.fromJS(data));
 
                 //this.contacts.push(ko.mapping.fromJS({ title: this.contactJobTitle(), firstName: this.contactFirstName(), lastName: this.contactLastName(), id: 1, personId: this.contactPersonId(), userId: this.contactUserId, phones: ko.mapping.toJS(this.contactPhones()), emailAddress: this.contactEmail(), type: this.contactTypeOptionSelected(), suffix: this.contactSuffix(), salutation: this.contactSalutation(), displayName: this.contactDisplayName(), middleName: this.contactMiddleName }));
                 this.$addContactDialog.data("kendoWindow").close();
@@ -1470,6 +1469,9 @@ else
                 if (this.agreementIsEdit()) {
                     var url = App.Routes.WebApi.Agreements.Contacts.post(this.agreementId);
                     $.post(url, data).done(function (response, statusText, xhr) {
+                        var myUrl = xhr.getResponseHeader('Location');
+                        data.id = parseInt(myUrl.substring(myUrl.lastIndexOf("/") + 1));
+                        _this.contacts.push(ko.mapping.fromJS(data));
                         //this.agreementId = 2;//response.agreementId
                         //this.agreementPostFiles(response, statusText, xhr);
                         //this.agreementPostContacts(response, statusText, xhr);
@@ -1545,9 +1547,21 @@ else
         };
 
         InstitutionalAgreementEditModel.prototype.removeContact = function (me, e) {
+            var _this = this;
             if (confirm('Are you sure you want to remove "' + me.firstName() + " " + me.lastName() + '" as a contact from this agreement?')) {
-                this.contacts.remove(me);
-                $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * 1.1)));
+                var url = "";
+                if (this.agreementIsEdit()) {
+                    url = App.Routes.WebApi.Agreements.Contacts.del(this.agreementId, me.id());
+
+                    $.ajax({
+                        url: url,
+                        type: 'DELETE',
+                        success: function () {
+                            _this.contacts.remove(me);
+                            $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * 1.1)));
+                        }
+                    });
+                }
             }
             e.preventDefault();
             e.stopPropagation();

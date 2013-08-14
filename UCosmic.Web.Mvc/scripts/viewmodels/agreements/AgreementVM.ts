@@ -303,7 +303,7 @@ export class InstitutionalAgreementEditModel {
             ko.mapping.fromJS(js, this.participants);
         }
     }
-
+    
     populateParticipants(): void {
         $.get(App.Routes.WebApi.Agreements.Participants.get(this.agreementId))
             .done((response: ViewModels.Establishments.IServerApiFlatModel[]): void => {
@@ -1521,7 +1521,6 @@ export class InstitutionalAgreementEditModel {
                 displayName: this.contactDisplayName(),
                 middleName: this.contactMiddleName
             }
-            this.contacts.push(ko.mapping.fromJS(data));
             //this.contacts.push(ko.mapping.fromJS({ title: this.contactJobTitle(), firstName: this.contactFirstName(), lastName: this.contactLastName(), id: 1, personId: this.contactPersonId(), userId: this.contactUserId, phones: ko.mapping.toJS(this.contactPhones()), emailAddress: this.contactEmail(), type: this.contactTypeOptionSelected(), suffix: this.contactSuffix(), salutation: this.contactSalutation(), displayName: this.contactDisplayName(), middleName: this.contactMiddleName }));
 
 
@@ -1535,6 +1534,9 @@ export class InstitutionalAgreementEditModel {
                 var url = App.Routes.WebApi.Agreements.Contacts.post(this.agreementId);
                 $.post(url, data)
                     .done((response: any, statusText: string, xhr: JQueryXHR): void => {
+                        var myUrl = xhr.getResponseHeader('Location');
+                        data.id = parseInt(myUrl.substring(myUrl.lastIndexOf("/") + 1));
+                        this.contacts.push(ko.mapping.fromJS(data));
                         //this.agreementId = 2;//response.agreementId
                         //this.agreementPostFiles(response, statusText, xhr);
                         //this.agreementPostContacts(response, statusText, xhr);
@@ -1613,9 +1615,20 @@ export class InstitutionalAgreementEditModel {
         if (confirm('Are you sure you want to remove "' +
             me.firstName() + " " + me.lastName() +
             '" as a contact from this agreement?')) {
-            this.contacts.remove(me);
-            $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * 1.1)));
-        }
+                var url = "";
+                if (this.agreementIsEdit()) {
+                    url = App.Routes.WebApi.Agreements.Contacts.del(this.agreementId, me.id());
+
+                    $.ajax({
+                        url: url,
+                        type: 'DELETE',
+                        success: (): void => {
+                            this.contacts.remove(me);
+                            $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * 1.1)));
+                        }
+                    })
+                }
+            }
         e.preventDefault();
         e.stopPropagation();
         return false;

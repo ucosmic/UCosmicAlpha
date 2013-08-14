@@ -23,7 +23,7 @@ export class ServerUrlApiModel implements ViewModels.Establishments.IServerUrlAp
     }
 }
 
-class EstablishmentUrlValueValidator implements KnockoutValidationAsyncRuleDefinition {
+export class EstablishmentUrlValueValidator implements KnockoutValidationAsyncRuleDefinition {
     private _ruleName: string = 'validEstablishmentUrlValue';
     private _isAwaitingResponse: boolean = false;
     async: boolean = true;

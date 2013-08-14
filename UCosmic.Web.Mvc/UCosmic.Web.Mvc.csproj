@@ -1834,7 +1834,7 @@
       <DependentUpon>App.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="scripts\viewmodels\amd-modules\google\ToolsOverlay.ts" />
-    <None Include="scripts\viewmodels\amd-modules\Establishments\ServerApiModel.d.ts" />
+    <Content Include="scripts\viewmodels\amd-modules\Establishments\ServerApiModel.ts" />
     <Content Include="scripts\viewmodels\amd-modules\google\ToolsOverlay.js">
       <DependentUpon>ToolsOverlay.ts</DependentUpon>
     </Content>

@@ -50,6 +50,7 @@ define(["require", "exports", '../Widgets/Spinner'], function(require, exports, 
         };
         return EstablishmentUrlValueValidator;
     })();
+    exports.EstablishmentUrlValueValidator = EstablishmentUrlValueValidator;
     new EstablishmentUrlValueValidator();
 
     var Url = (function () {
