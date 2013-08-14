@@ -1548,7 +1548,6 @@
     </Content>
     <TypeScriptCompile Include="scripts\viewmodels\establishments\SearchResult.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\establishments\Search.ts" />
-    <TypeScriptCompile Include="scripts\viewmodels\languages\ServerApiModel.ts" />
     <Content Include="scripts\require\main.js" />
     <Content Include="scripts\oss\jquery.tinymce.js" />
     <Content Include="scripts\oss\moment.js" />
@@ -1967,6 +1966,7 @@
     </Content>
     <None Include="scripts\viewmodels\places\ApiModels.d.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\places\Utils.ts" />
+    <None Include="scripts\viewmodels\languages\ApiModels.d.ts" />
     <Content Include="scripts\viewmodels\places\Utils.js">
       <DependentUpon>Utils.ts</DependentUpon>
     </Content>
@@ -2005,12 +2005,6 @@
     </Content>
     <Content Include="scripts\viewmodels\establishments\Url.min.js">
       <DependentUpon>Url.ts</DependentUpon>
-    </Content>
-    <Content Include="scripts\viewmodels\languages\ServerApiModel.js">
-      <DependentUpon>ServerApiModel.ts</DependentUpon>
-    </Content>
-    <Content Include="scripts\viewmodels\languages\ServerApiModel.min.js">
-      <DependentUpon>ServerApiModel.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="scripts\viewmodels\establishments\Name.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\establishments\Item.ts" />

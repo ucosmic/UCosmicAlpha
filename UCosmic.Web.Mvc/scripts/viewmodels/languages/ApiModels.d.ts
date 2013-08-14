@@ -1,4 +1,4 @@
-module Languages.ApiModels {
+declare module Languages.ApiModels {
 
     export interface Language {
         code: string;
