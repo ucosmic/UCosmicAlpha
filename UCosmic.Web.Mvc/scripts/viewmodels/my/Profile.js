@@ -125,6 +125,7 @@ var ViewModels;
                     //    this._isInitialized = true; // bindings have been applied
                     //    this.$facultyRanks().kendoDropDownList(); // kendoui dropdown for faculty ranks
                     //}
+                    _this._reloadAffiliations();
                     _this._setupValidation();
                     _this._setupKendoWidgets();
                     _this._setupDisplayNameDerivation();

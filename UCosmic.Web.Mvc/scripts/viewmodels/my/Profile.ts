@@ -166,7 +166,7 @@ module ViewModels.My {
                     //    this._isInitialized = true; // bindings have been applied
                     //    this.$facultyRanks().kendoDropDownList(); // kendoui dropdown for faculty ranks
                     //}
-                  
+                    this._reloadAffiliations();
                     this._setupValidation();
                     this._setupKendoWidgets();
                     this._setupDisplayNameDerivation();

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using AutoMapper;
+﻿using AutoMapper;
 using UCosmic.Domain.People;
 
 namespace UCosmic.Web.Mvc.Models
@@ -19,7 +17,7 @@ namespace UCosmic.Web.Mvc.Models
         public string Gender { get; set; }
         public bool HasPhoto { get; set; }
         public string PreferredTitle { get; set; }
-        public ICollection<MyAffiliationApiModel> Affiliations { get; set; }
+        //public ICollection<MyAffiliationApiModel> Affiliations { get; set; }
 
         public bool StartInEdit { get; set; }
         public string StartTabName { get; set; }
@@ -40,7 +38,7 @@ namespace UCosmic.Web.Mvc.Models
                     .ForMember(d => d.StartInEdit, o => o.Ignore())
                     .ForMember(d => d.StartTabName, o => o.Ignore())
                     .ForMember(d => d.DefaultEstablishmentHasCampuses, o => o.Ignore())
-                    .ForMember(d => d.Affiliations, o => o.MapFrom(s => s.Affiliations.Where(x => !x.IsDefault)))
+                    //.ForMember(d => d.Affiliations, o => o.MapFrom(s => s.Affiliations.Where(x => !x.IsDefault)))
                 ;
             }
         }
@@ -52,6 +50,7 @@ namespace UCosmic.Web.Mvc.Models
                 CreateMap<MyProfileApiModel, UpdateMyProfile>()
                     .ForMember(d => d.Principal, o => o.Ignore())
                     .ForMember(d => d.JobTitles, o => o.MapFrom(s => s.PreferredTitle))
+                    .ForMember(d => d.Affiliations, o => o.Ignore())
                 ;
             }
         }
