@@ -30,7 +30,7 @@ namespace UCosmic.Web.Mvc.Models
         public int GlobalCount { get; set; }
 
         /* Holds the total number of locations (countries/waters) that contain activities/people */
-        public int PlaceCount { get; set; }
+        public int CountOfPlaces { get; set; }
 
         /* If establishment has activity types, this holds count of those types, worldwide */
         public ICollection<FacultyStaffTypeCountModel> GlobalTypeCounts { get; set; }

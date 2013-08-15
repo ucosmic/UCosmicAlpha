@@ -41,16 +41,16 @@ namespace UCosmic.Domain.Activities
     {
         private readonly ICommandEntities _entities;
         private readonly IUnitOfWork _unitOfWork;
-        //private readonly IProcessEvents _eventProcessor;
+        private readonly IProcessEvents _eventProcessor;
 
         public HandleDeleteActivityCommand(ICommandEntities entities
             , IUnitOfWork unitOfWork
-            //, IProcessEvents eventProcessor
+            , IProcessEvents eventProcessor
         )
         {
             _entities = entities;
             _unitOfWork = unitOfWork;
-            //_eventProcessor = eventProcessor;
+            _eventProcessor = eventProcessor;
         }
 
         public void Handle(DeleteActivity command)
@@ -65,6 +65,11 @@ namespace UCosmic.Domain.Activities
             if (!command.NoCommit)
             {
                 _unitOfWork.SaveChanges();
+
+                _eventProcessor.Raise(new ActivityDeleted
+                {
+                    ActivityId = activity.RevisionId
+                });
             }
 
             // TBD

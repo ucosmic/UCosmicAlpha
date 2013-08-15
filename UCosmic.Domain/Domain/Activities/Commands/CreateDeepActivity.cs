@@ -26,22 +26,31 @@ namespace UCosmic.Domain.Activities
         private readonly IHandleCommands<CreateMyNewActivity> _createMyNewActivity;
         private readonly IHandleCommands<CreateDeepActivityValues> _createActivityValuesDeep;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IProcessEvents _eventProcessor;
 
         public HandleCreateDeepActivityCommand(IUnitOfWork unitOfWork,
                                                IHandleCommands<CreateMyNewActivity> createMyNewActivity,
-                                               IHandleCommands<CreateDeepActivityValues> createActivityValuesDeep)
+                                               IHandleCommands<CreateDeepActivityValues> createActivityValuesDeep,
+                                               IProcessEvents eventProcessor
+            )
         {
             _unitOfWork = unitOfWork;
             _createMyNewActivity = createMyNewActivity;
             _createActivityValuesDeep = createActivityValuesDeep;
+            _eventProcessor = eventProcessor;
         }
 
         public void Handle(CreateDeepActivity command)
         {
             if (command == null) throw new ArgumentNullException("command");
 
+            /* Need this to commit in order to have RevisionId. */
             var createMyNewActivityCommand = new CreateMyNewActivity(command.Principal,
-                                                                     command.ModeText);
+                                                                     command.ModeText)
+            {
+                NoEvents = true
+            };
+
             _createMyNewActivity.Handle(createMyNewActivityCommand);
 
             var activity = createMyNewActivityCommand.CreatedActivity;
@@ -51,13 +60,18 @@ namespace UCosmic.Domain.Activities
                                                                                activity.Mode);
             _createActivityValuesDeep.Handle(createActivityValuesDeepCommand);
 
+            command.CreatedActivity = activity;
 
             if (!command.NoCommit)
             {
                 _unitOfWork.SaveChanges();
-            }
 
-            command.CreatedActivity = activity;
+                _eventProcessor.Raise(new ActivityChanged
+                {
+                    ActivityMode = command.CreatedActivity.Mode,
+                    ActivityId = command.CreatedActivity.RevisionId
+                });
+            }
         }
     }
 }

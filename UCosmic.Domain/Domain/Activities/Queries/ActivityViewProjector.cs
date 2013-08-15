@@ -8,7 +8,8 @@ using UCosmic.Domain.People;
 namespace UCosmic.Domain.Activities
 {
     public class ActivityViewProjector : IHandleEvents<ApplicationStarted>,
-                                         IHandleEvents<PublicActivityChanged>,
+                                         IHandleEvents<ActivityChanged>,
+                                         IHandleEvents<ActivityDeleted>,
                                          IHandleEvents<EstablishmentChanged>,
                                          IHandleEvents<AffiliationChanged>
     {
@@ -54,7 +55,40 @@ namespace UCosmic.Domain.Activities
             }
         }
 
-        private void UpdateActivity(int activityId)
+        private void UpdateActivity(int activityId, ActivityMode activityMode)
+        {
+            if (activityMode == ActivityMode.Public)
+            {
+                var list = _viewManager.Get<ICollection<ActivityView>>();
+                if (list != null) // if null, could signify that ApplicationStarted build is not yet complete.
+                {
+                    Rwlock.EnterWriteLock();
+
+                    try
+                    {
+                        var entity = _entities.Query<Activity>().SingleOrDefault(a => a.RevisionId == activityId);
+                        if ((entity != null) &&
+                            (entity.Mode == ActivityMode.Public) &&
+                            (entity.EditSourceId == null))
+                        {
+                            var existingActivityView = list.SingleOrDefault(a => a.Id == entity.RevisionId);
+                            if (existingActivityView != null)
+                            {
+                                list.Remove(existingActivityView);                               
+                            }
+
+                            list.Add(new ActivityView(entity));
+                        }
+                    }
+                    finally
+                    {
+                        Rwlock.ExitWriteLock();
+                    }
+                }
+            }
+        }
+
+        private void DeleteActivity(int activityId)
         {
             var list = _viewManager.Get<ICollection<ActivityView>>();
             if (list != null) // if null, could signify that ApplicationStarted build is not yet complete.
@@ -63,15 +97,10 @@ namespace UCosmic.Domain.Activities
 
                 try
                 {
-                    var entity = _entities.Query<Activity>().SingleOrDefault(a => a.RevisionId == activityId);
-                    if (entity != null)
+                    var activityView = list.SingleOrDefault(a => a.Id == activityId);
+                    if (activityView != null)
                     {
-                        var activityView = list.SingleOrDefault(a => a.Id == entity.RevisionId);
-                        if (activityView != null)
-                        {
-                            list.Remove(activityView);
-                            list.Add(new ActivityView(entity));
-                        }
+                        list.Remove(activityView);
                     }
                 }
                 finally
@@ -107,9 +136,14 @@ namespace UCosmic.Domain.Activities
             BuildView();
         }
 
-        public void Handle(PublicActivityChanged @event)
+        public void Handle(ActivityChanged @event)
         {
-            UpdateActivity(@event.ActivityId);
+            UpdateActivity(@event.ActivityId, @event.ActivityMode);
+        }
+
+        public void Handle(ActivityDeleted @event)
+        {
+            DeleteActivity(@event.ActivityId);
         }
 
         public void Handle(EstablishmentChanged @event)

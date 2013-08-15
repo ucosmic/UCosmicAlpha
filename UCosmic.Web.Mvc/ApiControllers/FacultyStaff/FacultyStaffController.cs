@@ -239,7 +239,18 @@ namespace UCosmic.Web.Mvc.ApiControllers
                                                                     establishment.RevisionId);
 
                     model.GlobalCount = view.Count;
-                    model.PlaceCount = view.PlaceCount;
+                    model.CountOfPlaces = view.CountOfPlaces;
+
+                    foreach (var placeCount in view.PlaceCounts)
+                    {
+                        model.PlaceCounts.Add(new FacultyStaffPlaceCountModel
+                        {
+                            PlaceId = placeCount.PlaceId,
+                            OfficialName = placeCount.OfficialName,
+                            Count = placeCount.Count
+                        });
+                    }
+
                     foreach (var type in view.TypeCounts)
                     {
                         model.GlobalTypeCounts.Add(new FacultyStaffTypeCountModel

@@ -457,8 +457,33 @@ module App.Routes {
         }
 
         export module FacultyStaff {
-            export function getSummary (): string {
-                return makeUrl('faculty-staff/summary');
+            export function getActivityCount(placeId?:number): string {
+                if (placeId == null) {
+                    return makeUrl('faculty-staff/activity-count/placeId=');
+                } else {
+                    return makeUrl('faculty-staff/activity-count/placeId=' + placeId);
+                }
+            }
+            export function getPeopleCount(placeId?: number): string {
+                if (placeId == null) {
+                    return makeUrl('faculty-staff/people-count');
+                } else {
+                    return makeUrl('faculty-staff/people-count/' + placeId);
+                }
+            }
+            export function getActivityTrend(placeId?: number): string {
+                if (placeId == null) {
+                    return makeUrl('faculty-staff/activity-trend');
+                } else {
+                    return makeUrl('faculty-staff/activity-trend/' + placeId);
+                }
+            }
+            export function getPeopleTrend(placeId?: number): string {
+                if (placeId == null) {
+                    return makeUrl('faculty-staff/people-trend');
+                } else {
+                    return makeUrl('faculty-staff/people-trend/' + placeId);
+                }
             }
         }
 

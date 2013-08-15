@@ -581,10 +581,38 @@ var App;
             var Employees = WebApi.Employees;
 
             (function (FacultyStaff) {
-                function getSummary() {
-                    return makeUrl('faculty-staff/summary');
+                function getActivityCount(placeId) {
+                    if (placeId == null) {
+                        return makeUrl('faculty-staff/activity-count/placeId=');
+                    } else {
+                        return makeUrl('faculty-staff/activity-count/placeId=' + placeId);
+                    }
                 }
-                FacultyStaff.getSummary = getSummary;
+                FacultyStaff.getActivityCount = getActivityCount;
+                function getPeopleCount(placeId) {
+                    if (placeId == null) {
+                        return makeUrl('faculty-staff/people-count');
+                    } else {
+                        return makeUrl('faculty-staff/people-count/' + placeId);
+                    }
+                }
+                FacultyStaff.getPeopleCount = getPeopleCount;
+                function getActivityTrend(placeId) {
+                    if (placeId == null) {
+                        return makeUrl('faculty-staff/activity-trend');
+                    } else {
+                        return makeUrl('faculty-staff/activity-trend/' + placeId);
+                    }
+                }
+                FacultyStaff.getActivityTrend = getActivityTrend;
+                function getPeopleTrend(placeId) {
+                    if (placeId == null) {
+                        return makeUrl('faculty-staff/people-trend');
+                    } else {
+                        return makeUrl('faculty-staff/people-trend/' + placeId);
+                    }
+                }
+                FacultyStaff.getPeopleTrend = getPeopleTrend;
             })(WebApi.FacultyStaff || (WebApi.FacultyStaff = {}));
             var FacultyStaff = WebApi.FacultyStaff;
 

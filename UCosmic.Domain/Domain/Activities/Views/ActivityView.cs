@@ -16,6 +16,10 @@ namespace UCosmic.Domain.Activities
         public DateTime? EndsOn { get; set; }
         public bool? OnGoing { get; set; }
 
+        public ActivityView()
+        {
+        }
+
         public ActivityView(Activity entity)
         {
             Id = entity.RevisionId;

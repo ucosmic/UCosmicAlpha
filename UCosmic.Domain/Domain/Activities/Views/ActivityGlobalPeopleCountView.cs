@@ -49,19 +49,29 @@ namespace UCosmic.Domain.Activities
                 {
                     foreach (var type in settings.ActivityTypes)
                     {
-                        var typeCount = new TypeCount
-                        {
-                            TypeId = type.Id,
-                            Type = type.Type,
-                            Count = queryProcessor.Execute(
-                                new PeopleCountByTypeIdPlaceIdEstablishmentId( type.Id,
-                                                                               place.RevisionId,
-                                                                               establishmentId,
-                                                                               fromDateUtc,
-                                                                               toDateUtc ))
-                        };
+                        int placeTypeCount = queryProcessor.Execute(
+                            new PeopleCountByTypeIdPlaceIdEstablishmentId(type.Id,
+                                                                          place.RevisionId,
+                                                                          establishmentId,
+                                                                          fromDateUtc,
+                                                                          toDateUtc));
 
-                        TypeCounts.Add(typeCount);
+                        var typeCount = TypeCounts.SingleOrDefault(c => c.TypeId == type.Id);
+                        if (typeCount != null)
+                        {
+                            typeCount.Count += placeTypeCount;
+                        }
+                        else
+                        {
+                            typeCount = new TypeCount
+                            {
+                                TypeId = type.Id,
+                                Type = type.Type,
+                                Count = placeTypeCount
+                            };
+
+                            TypeCounts.Add(typeCount);
+                        }
                     }
                 }
             }

@@ -55,17 +55,20 @@ namespace UCosmic.Domain.Activities
         private readonly IUnitOfWork _unitOfWork;
         private readonly IHandleCommands<UpdateActivityValues> _updateActivityValues;
         private readonly IHandleCommands<CopyDeepActivityValues> _copyDeepActivityValues;
+        private readonly IProcessEvents _eventProcessor;
 
         public HandleUpdateMyActivityCommand(ICommandEntities entities
             , IUnitOfWork unitOfWork
             , IHandleCommands<UpdateActivityValues> updateActivityValues
             , IHandleCommands<CopyDeepActivityValues> copyDeepActivityValues
+            , IProcessEvents eventProcessor
         )
         {
             _entities = entities;
             _unitOfWork = unitOfWork;
             _updateActivityValues = updateActivityValues;
             _copyDeepActivityValues = copyDeepActivityValues;
+            _eventProcessor = eventProcessor;
         }
 
         public void Handle(UpdateActivity command)
@@ -126,6 +129,12 @@ namespace UCosmic.Domain.Activities
             if (!command.NoCommit)
             {
                 _unitOfWork.SaveChanges();
+
+                _eventProcessor.Raise(new ActivityChanged
+                {
+                    ActivityId = target.RevisionId,
+                    ActivityMode = target.Mode
+                });
             }
         }
     }

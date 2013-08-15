@@ -92,6 +92,17 @@ namespace UCosmic.Web.Mvc.ApiControllers
             /* Search for an "in progress edit" activity.  This can happen if the user
              * navigates away from Activity Edit page before saving. */
             var editActivity = _queryProcessor.Execute(new ActivityByEditSourceId(activity.RevisionId));
+
+            /* Not sure how this scenario arises, but I've seen it once. It might have been
+             * the result of debugging.  If we have an edit activity with no values, delete it.
+             */
+            if ((editActivity != null) && (editActivity.Values.Count == 0))
+            {
+                var deleteActivityCommand = new DeleteActivity(User, editActivity.RevisionId);
+                _deleteActivity.Handle(deleteActivityCommand);
+                editActivity = null;
+            }
+
             if (editActivity == null)
             {
                 //try
@@ -118,6 +129,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 //    throw new HttpResponseException(responseMessage);
                 //}
             }
+
 
             var model = Mapper.Map<ActivityApiModel>(editActivity);
             return model;

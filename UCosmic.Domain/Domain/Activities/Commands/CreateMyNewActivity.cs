@@ -14,6 +14,7 @@ namespace UCosmic.Domain.Activities
         public int? EditSourceId { get; set; }
         public Activity CreatedActivity { get; internal set; }
         public bool NoCommit { get; set; }
+        public bool NoEvents { get; set; }
 
         public CreateMyNewActivity(IPrincipal principal, string modeText)
         {
@@ -36,11 +37,15 @@ namespace UCosmic.Domain.Activities
     {
         private readonly ICommandEntities _entities;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IProcessEvents _eventProcessor;
 
-        public HandleCreateMyNewActivityCommand(ICommandEntities entities, IUnitOfWork unitOfWork)
+        public HandleCreateMyNewActivityCommand(ICommandEntities entities,
+                                                IUnitOfWork unitOfWork,
+                                                IProcessEvents eventProcessor)
         {
             _entities = entities;
             _unitOfWork = unitOfWork;
+            _eventProcessor = eventProcessor;
         }
 
         public void Handle(CreateMyNewActivity command)
@@ -78,12 +83,21 @@ namespace UCosmic.Domain.Activities
 
             _entities.Create(activity);
 
+            command.CreatedActivity = activity;
+
             if (!command.NoCommit)
             {
                 _unitOfWork.SaveChanges();
-            }
 
-            command.CreatedActivity = activity;
+                if (!command.NoEvents)
+                {
+                    _eventProcessor.Raise(new ActivityChanged
+                    {
+                        ActivityMode = command.CreatedActivity.Mode,
+                        ActivityId = command.CreatedActivity.RevisionId
+                    });                   
+                }
+            }
         }
     }
 }

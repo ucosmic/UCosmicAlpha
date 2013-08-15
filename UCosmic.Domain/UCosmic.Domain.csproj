@@ -113,7 +113,7 @@
     <Compile Include="Domain\Activities\Commands\CopyActivity.cs" />
     <Compile Include="Domain\Activities\Commands\CopyDeepActivity.cs" />
     <Compile Include="Domain\Activities\Commands\CopyDeepActivityValues.cs" />
-    <Compile Include="Domain\Activities\Commands\CreateDeepActivity..cs" />
+    <Compile Include="Domain\Activities\Commands\CreateDeepActivity.cs" />
     <Compile Include="Domain\Activities\Commands\CreateActivityDocument.cs" />
     <Compile Include="Domain\Activities\Commands\CreateActivityLocation.cs" />
     <Compile Include="Domain\Activities\Commands\CreateActivityTag.cs" />
@@ -141,8 +141,8 @@
     <Compile Include="Domain\Activities\Entities\ActivityTag.cs" />
     <Compile Include="Domain\Activities\Entities\ActivityTagDomainType.cs" />
     <Compile Include="Domain\Activities\Entities\ActivityValues.cs" />
-    <Compile Include="Domain\Activities\Events\ActivityCountTrendViewsRequested.cs" />
-    <Compile Include="Domain\Activities\Events\PublicActivityChanged.cs" />
+    <Compile Include="Domain\Activities\Events\ActivityChanged.cs" />
+    <Compile Include="Domain\Activities\Events\ActivityDeleted.cs" />
     <Compile Include="Domain\Activities\Queries\ActivitiesByPersonId.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityByEditSourceEntityId.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityById.cs" />
