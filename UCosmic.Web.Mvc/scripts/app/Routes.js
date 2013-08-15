@@ -290,17 +290,21 @@ var App;
                 }
                 Agreements.get = get;
 
-                function put(agreementId) {
-                    var url = 'agreements/{0}'.format(agreementId.toString());
-
-                    return makeUrl(url);
-                }
-                Agreements.put = put;
-
                 function post() {
                     return makeUrl('agreements');
                 }
                 Agreements.post = post;
+
+                function put(agreementId) {
+                    var url = 'agreements/{0}'.format(agreementId.toString());
+                    return makeUrl(url);
+                }
+                Agreements.put = put;
+
+                function del(agreementId) {
+                    return put(agreementId);
+                }
+                Agreements.del = del;
 
                 (function (Participants) {
                     function get(agreementId, establishmentId) {

@@ -115,7 +115,7 @@ namespace UCosmic.EntityFramework
             HasMany(p => p.Ancestors)
                 .WithRequired(d => d.Offspring)
                 .HasForeignKey(d => d.OffspringId)
-                .WillCascadeOnDelete(false);
+                .WillCascadeOnDelete(true);
 
             // has many offspring
             HasMany(p => p.Offspring)

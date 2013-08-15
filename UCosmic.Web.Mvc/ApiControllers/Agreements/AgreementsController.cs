@@ -23,17 +23,20 @@ namespace UCosmic.Web.Mvc.ApiControllers
         private readonly IValidator<CreateAgreement> _createValidator;
         private readonly IHandleCommands<CreateAgreement> _createHandler;
         private readonly IHandleCommands<UpdateAgreement> _updateHandler;
+        private readonly IHandleCommands<PurgeAgreement> _purgeHandler;
 
         public AgreementsController(IProcessQueries queryProcessor
             , IValidator<CreateAgreement> createValidator
             , IHandleCommands<CreateAgreement> createHandler
             , IHandleCommands<UpdateAgreement> updateHandler
+            , IHandleCommands<PurgeAgreement> purgeHandler
         )
         {
             _queryProcessor = queryProcessor;
             _createValidator = createValidator;
             _createHandler = createHandler;
             _updateHandler = updateHandler;
+            _purgeHandler = purgeHandler;
         }
 
         [GET("{agreementId:int}")]
@@ -103,6 +106,21 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return response;
         }
 
+        [POST("validate")]
+        [Authorize(Roles = RoleName.AgreementManagers)]
+        public HttpResponseMessage PostValidate(AgreementApiModel model)
+        {
+            var command = new CreateAgreement(User);
+            Mapper.Map(model, command);
+            var validationResult = _createValidator.Validate(command);
+
+            if (!validationResult.IsValid)
+                return Request.CreateResponse(HttpStatusCode.BadRequest,
+                    Mapper.Map<ValidationResultApiModel>(validationResult));
+
+            return Request.CreateResponse(HttpStatusCode.OK);
+        }
+
         [PUT("{agreementId:int}")]
         [Authorize(Roles = RoleName.AgreementManagers)]
         public HttpResponseMessage Put(int agreementId, AgreementApiModel model)
@@ -117,19 +135,16 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return response;
         }
 
-        [POST("validate")]
+        [DELETE("{agreementId:int}")]
         [Authorize(Roles = RoleName.AgreementManagers)]
-        public HttpResponseMessage PostValidate(AgreementApiModel model)
+        public HttpResponseMessage Delete(int agreementId)
         {
-            var command = new CreateAgreement(User);
-            Mapper.Map(model, command);
-            var validationResult = _createValidator.Validate(command);
+            var command = new PurgeAgreement(User, agreementId);
 
-            if (!validationResult.IsValid)
-                return Request.CreateResponse(HttpStatusCode.BadRequest,
-                    Mapper.Map<ValidationResultApiModel>(validationResult));
+            _purgeHandler.Handle(command);
 
-            return Request.CreateResponse(HttpStatusCode.OK);
+            var response = Request.CreateResponse(HttpStatusCode.OK, "Agreement was successfully deleted.");
+            return response;
         }
     }
 }

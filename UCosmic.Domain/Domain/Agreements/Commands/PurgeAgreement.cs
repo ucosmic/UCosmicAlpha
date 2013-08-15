@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Linq;
 using System.Security.Principal;
+using FluentValidation;
 using Newtonsoft.Json;
 using UCosmic.Domain.Audit;
+using UCosmic.Domain.Identity;
 
 namespace UCosmic.Domain.Agreements
 {
@@ -11,13 +13,43 @@ namespace UCosmic.Domain.Agreements
         public PurgeAgreement(IPrincipal principal, int agreementId)
         {
             if (principal == null) throw new ArgumentNullException("principal");
-            if (agreementId == 0) throw new ArgumentOutOfRangeException("agreementId", "Cannot be zero");
             Principal = principal;
             AgreementId = agreementId;
         }
 
         public IPrincipal Principal { get; private set; }
         public int AgreementId { get; private set; }
+    }
+
+    public class ValidatePurgeAgreementCommand : AbstractValidator<PurgeAgreement>
+    {
+        public ValidatePurgeAgreementCommand(IProcessQueries queryProcessor)
+        {
+            CascadeMode = CascadeMode.StopOnFirstFailure;
+
+            // principal must be authorized to perform this action
+            RuleFor(x => x.Principal)
+                .NotNull()
+                    .WithMessage(MustNotHaveNullPrincipal.FailMessage)
+                .MustNotHaveEmptyIdentityName()
+                    .WithMessage(MustNotHaveEmptyIdentityName.FailMessage)
+                .MustBeInAnyRole(RoleName.AgreementManagers)
+                    .WithMessage(MustBeInAnyRole.FailMessageFormat, x => x.Principal.Identity.Name, x => x.GetType().Name)
+            ;
+
+            RuleFor(x => x.AgreementId)
+                // agreement id must exist
+                .MustFindAgreementById(queryProcessor, x => x.Principal)
+                    .WithMessage(MustFindAgreementById<object>.FailMessageFormat, x => x.AgreementId)
+
+                // principal must own agreement
+                .MustBeOwnedByPrincipal(queryProcessor, x => x.Principal)
+                    .WithMessage(MustBeOwnedByPrincipal<object>.FailMessageFormat, x => x.AgreementId, x => x.Principal.Identity.Name)
+
+                // agreement cannot be umbrella for any other agreements
+                .MustNotHaveOffspring(queryProcessor, x => x.Principal)
+            ;
+        }
     }
 
     public class HandlePurgeAgreementCommand : IHandleCommands<PurgeAgreement>

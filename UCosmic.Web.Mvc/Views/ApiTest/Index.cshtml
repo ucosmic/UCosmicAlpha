@@ -63,7 +63,18 @@
                     alert(info);
                 });
         });
-        $('#agreement_contact_post_button').click(function() {
+        $('#agreement_delete_button').click(function () {
+            $.ajax({
+                url: App.Routes.WebApi.Agreements.del(2),
+                type: 'DELETE'
+            })
+                .done(function (responseText, statusText, xhr) {
+                    var info = 'delete of agreement data resulted in response "' + responseText + '"';
+                    console.log(info);
+                    alert(info);
+                });
+        });
+        $('#agreement_contact_post_button').click(function () {
             $.post(App.Routes.WebApi.Agreements.Contacts.post(3), {
                 personId: 13,
                 type: 'My Contact Type',
@@ -392,6 +403,7 @@
         <div>
             <input id="agreement_post_button" type="button" value="POST test agreement" />
             <input id="agreement_put_button" type="button" value="PUT test agreement" />
+            <input id="agreement_delete_button" type="button" value="DELETE test agreement" />
             <input id="agreement_contact_post_button" type="button" value="POST test agreement contact" />
             <input id="agreement_contact_put_button" type="button" value="PUT test agreement contact" />
             <input id="agreement_contact_delete_button" type="button" value="DELETE test agreement contact" />

@@ -245,14 +245,17 @@ module App.Routes {
                 return makeUrl('agreements/' + agreementId);
             }
 
+            export function post() {
+                return makeUrl('agreements');
+            }
+
             export function put(agreementId: number): string {
                 var url = 'agreements/{0}'.format(agreementId.toString());
-
                 return makeUrl(url);
             }
 
-            export function post() {
-                return makeUrl('agreements');
+            export function del(agreementId: number): string {
+                return put(agreementId);
             }
 
             export module Participants {

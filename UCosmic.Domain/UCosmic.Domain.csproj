@@ -177,6 +177,7 @@
     <Compile Include="Domain\Agreements\Queries\ContactById.cs" />
     <Compile Include="Domain\Agreements\Queries\UmbrellaOptions.cs" />
     <Compile Include="Domain\Agreements\Queries\FileById.cs" />
+    <Compile Include="Domain\Agreements\Validation\MustNotHaveOffspring.cs" />
     <Compile Include="Domain\Agreements\Validation\MustNotHaveCyclicHierarchy.cs" />
     <Compile Include="Domain\Agreements\Validation\MustOwnContactWithId.cs" />
     <Compile Include="Domain\Agreements\Validation\MustHaveContactType.cs" />
