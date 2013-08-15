@@ -1,21 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
 using FluentValidation;
+using Newtonsoft.Json;
+using UCosmic.Domain.Audit;
 using UCosmic.Domain.Identity;
 
 namespace UCosmic.Domain.Agreements
 {
-    public class CreateAgreement
+    public class UpdateAgreement
     {
-        public CreateAgreement(IPrincipal principal)
+        public UpdateAgreement(IPrincipal principal, int agreementId)
         {
             if (principal == null) throw new ArgumentNullException("principal");
             Principal = principal;
+            AgreementId = agreementId;
         }
 
         public IPrincipal Principal { get; private set; }
+        public int AgreementId { get; private set; }
         public int? UmbrellaId { get; set; }
         public string Type { get; set; }
         public string Name { get; set; }
@@ -27,13 +30,11 @@ namespace UCosmic.Domain.Agreements
         public bool? IsAutoRenew { get; set; }
         public string Status { get; set; }
         public string Visibility { get; set; }
-        public IEnumerable<CreateParticipant> Participants { get; set; }
-        public int CreatedAgreementId { get; internal set; }
     }
 
-    public class ValidateCreateAgreementCommand : AbstractValidator<CreateAgreement>
+    public class ValidateUpdateAgreementCommand : AbstractValidator<UpdateAgreement>
     {
-        public ValidateCreateAgreementCommand(IQueryEntities entities, IProcessQueries queryProcessor)
+        public ValidateUpdateAgreementCommand(IQueryEntities entities, IProcessQueries queryProcessor)
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
@@ -47,6 +48,16 @@ namespace UCosmic.Domain.Agreements
                     .WithMessage(MustBeInAnyRole.FailMessageFormat, x => x.Principal.Identity.Name, x => x.GetType().Name)
             ;
 
+            RuleFor(x => x.AgreementId)
+                // agreement id must exist
+                .MustFindAgreementById(entities)
+                    .WithMessage(MustFindAgreementById<object>.FailMessageFormat, x => x.AgreementId)
+
+                // principal must own agreement
+                .MustBeOwnedByPrincipal(queryProcessor, x => x.Principal)
+                    .WithMessage(MustBeOwnedByPrincipal<object>.FailMessageFormat, x => x.AgreementId, x => x.Principal.Identity.Name)
+            ;
+
             // when umbrella id has value
             When(x => x.UmbrellaId.HasValue, () =>
                 RuleFor(x => x.UmbrellaId.Value)
@@ -58,8 +69,11 @@ namespace UCosmic.Domain.Agreements
                     // it must be owned by the commanding principal
                     .MustBeOwnedByPrincipal(queryProcessor, x => x.Principal)
                         .WithMessage(MustBeOwnedByPrincipal<object>.FailMessageFormat, x => x.UmbrellaId,
-                            x => x.Principal.Identity.Name))
-                ;
+                            x => x.Principal.Identity.Name)
+
+                    // cannot have cyclic agreement hierarchies
+                    .MustNotHaveCyclicHierarchy(entities, x => x.AgreementId)
+            );
 
             // type is required
             RuleFor(x => x.Type)
@@ -110,74 +124,78 @@ namespace UCosmic.Domain.Agreements
                 .MustHaveAgreementVisibility()
                     .WithMessage(MustHaveAgreementVisibility.FailMessage)
             ;
-
-            // participants
-            RuleFor(x => x.Participants)
-                // cannot be null or zero-length
-                .Must(x => x != null && x.Any()).WithMessage(MustHaveParticipants.FailMessage)
-
-                // needs at least one owning participant
-                .Must(x => x.Any(y => y.IsOwner)).WithMessage(MustHaveOwningParticipant.FailMessage)
-            ;
         }
     }
 
-    public class HandleCreateAgreementCommand : IHandleCommands<CreateAgreement>
+    public class HandleUpdateAgreementCommand : IHandleCommands<UpdateAgreement>
     {
         private readonly ICommandEntities _entities;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IHandleCommands<CreateParticipant> _createParticipant;
         private readonly IHandleCommands<UpdateAgreementHierarchy> _hierarchyHandler;
 
-        public HandleCreateAgreementCommand(ICommandEntities entities
+        public HandleUpdateAgreementCommand(ICommandEntities entities
             , IUnitOfWork unitOfWork
-            , IHandleCommands<CreateParticipant> createParticipant
             , IHandleCommands<UpdateAgreementHierarchy> hierarchyHandler
         )
         {
             _entities = entities;
             _unitOfWork = unitOfWork;
-            _createParticipant = createParticipant;
             _hierarchyHandler = hierarchyHandler;
         }
 
-        public void Handle(CreateAgreement command)
+        public void Handle(UpdateAgreement command)
         {
             if (command == null) throw new ArgumentNullException("command");
+
+            var entity = _entities.Get<Agreement>().Single(x => x.Id == command.AgreementId);
 
             // umbrella entity reference is needed for domain to update the hierarchy nodes
             var umbrella = command.UmbrellaId.HasValue
                 ? _entities.Get<Agreement>().Single(x => x.Id == command.UmbrellaId.Value) : null;
 
-            var entity = new Agreement
+            // log audit
+            var audit = new CommandEvent
             {
-                Umbrella = umbrella,
-                UmbrellaId = umbrella != null ? umbrella.Id : (int?)null,
-                Type = command.Type,
-                Title = "",
-                Name = command.Name,
-                Content = command.Content,
-                Notes = command.Notes,
-                StartsOn = command.StartsOn,
-                ExpiresOn = command.ExpiresOn,
-                IsExpirationEstimated = command.IsExpirationEstimated,
-                IsAutoRenew = command.IsAutoRenew,
-                Status = command.Status,
-                Visibility = command.Visibility.AsEnum<AgreementVisibility>(),
+                RaisedBy = command.Principal.Identity.Name,
+                Name = command.GetType().FullName,
+                Value = JsonConvert.SerializeObject(new
+                {
+                    command.AgreementId,
+                    command.UmbrellaId,
+                    command.Type,
+                    command.Name,
+                    command.Content,
+                    command.Notes,
+                    command.StartsOn,
+                    command.ExpiresOn,
+                    command.IsExpirationEstimated,
+                    command.IsAutoRenew,
+                    command.Status,
+                    command.Visibility,
+                }),
+                PreviousState = entity.ToJsonAudit(),
             };
 
-            foreach (var participant in command.Participants)
-            {
-                participant.Principal = command.Principal;
-                participant.Agreement = entity;
-                participant.NoCommit = true;
-                _createParticipant.Handle(participant);
-            }
+            entity.Umbrella = umbrella;
+            entity.UmbrellaId = umbrella != null ? umbrella.Id : (int?) null;
+            entity.Type = command.Type;
+            entity.Name = command.Name;
+            entity.Content = command.Content;
+            entity.Notes = command.Notes;
+            entity.StartsOn = command.StartsOn;
+            entity.ExpiresOn = command.ExpiresOn;
+            entity.IsExpirationEstimated = command.IsExpirationEstimated;
+            entity.IsAutoRenew = command.IsAutoRenew;
+            entity.Status = command.Status;
+            entity.Visibility = command.Visibility.AsEnum<AgreementVisibility>();
+            entity.UpdatedByPrincipal = command.Principal.Identity.Name;
+            entity.UpdatedOnUtc = DateTime.UtcNow;
 
-            _entities.Create(entity);
+            audit.NewState = entity.ToJsonAudit();
+            _entities.Create(audit);
+            _entities.Update(entity);
             _hierarchyHandler.Handle(new UpdateAgreementHierarchy(entity));
             _unitOfWork.SaveChanges();
-            command.CreatedAgreementId = entity.Id;
         }
     }
 }

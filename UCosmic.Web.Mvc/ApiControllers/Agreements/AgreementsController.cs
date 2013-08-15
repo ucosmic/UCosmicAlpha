@@ -22,15 +22,18 @@ namespace UCosmic.Web.Mvc.ApiControllers
         private readonly IProcessQueries _queryProcessor;
         private readonly IValidator<CreateAgreement> _createValidator;
         private readonly IHandleCommands<CreateAgreement> _createHandler;
+        private readonly IHandleCommands<UpdateAgreement> _updateHandler;
 
         public AgreementsController(IProcessQueries queryProcessor
             , IValidator<CreateAgreement> createValidator
             , IHandleCommands<CreateAgreement> createHandler
+            , IHandleCommands<UpdateAgreement> updateHandler
         )
         {
             _queryProcessor = queryProcessor;
             _createValidator = createValidator;
             _createHandler = createHandler;
+            _updateHandler = updateHandler;
         }
 
         [GET("{agreementId:int}")]
@@ -100,16 +103,23 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return response;
         }
 
-        [PUT("{id}")]
-        public HttpResponseMessage Put(int id, AgreementApiModel model)
+        [PUT("{agreementId:int}")]
+        [Authorize(Roles = RoleName.AgreementManagers)]
+        public HttpResponseMessage Put(int agreementId, AgreementApiModel model)
         {
-            var response = Request.CreateResponse(HttpStatusCode.OK, "Establishment was successfully updated.");
+            model.Id = agreementId;
+            var command = new UpdateAgreement(User, agreementId);
+            Mapper.Map(model, command);
+
+            _updateHandler.Handle(command);
+
+            var response = Request.CreateResponse(HttpStatusCode.OK, "Agreement was successfully updated.");
             return response;
         }
 
         [POST("validate")]
         [Authorize(Roles = RoleName.AgreementManagers)]
-        public HttpResponseMessage Validate(AgreementApiModel model)
+        public HttpResponseMessage PostValidate(AgreementApiModel model)
         {
             var command = new CreateAgreement(User);
             Mapper.Map(model, command);

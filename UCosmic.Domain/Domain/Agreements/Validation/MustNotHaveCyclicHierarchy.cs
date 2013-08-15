@@ -4,18 +4,18 @@ using System.Linq.Expressions;
 using FluentValidation;
 using FluentValidation.Validators;
 
-namespace UCosmic.Domain.Establishments
+namespace UCosmic.Domain.Agreements
 {
     public class MustNotHaveCyclicHierarchy<T> : PropertyValidator
     {
-        public const string FailMessageFormat = "'{1}' is not a valid parent for '{0}' because {2}.";
+        public const string FailMessageFormat = "Agreement with id '{0}' is not a valid umbrella for agreement with id '{1}' because {2}.";
 
         private readonly IQueryEntities _entities;
         private readonly Func<T, int> _ownId;
 
         internal MustNotHaveCyclicHierarchy(IQueryEntities entities, Func<T, int> ownId)
-            : base(FailMessageFormat.Replace("{0}", "{EstablishmentName}")
-                .Replace("{1}", "{ParentName}")
+            : base(FailMessageFormat.Replace("{0}", "{UmbrellaId}")
+                .Replace("{1}", "{AgreementId}")
                 .Replace("{2}", "{FailJustification}"))
         {
             if (entities == null) throw new ArgumentNullException("entities");
@@ -30,36 +30,34 @@ namespace UCosmic.Domain.Establishments
                 throw new NotSupportedException(string.Format(
                     "The {0} PropertyValidator can only operate on integer properties", GetType().Name));
 
-            var parentId = (int)context.PropertyValue;
+            var umbrellaId = (int)context.PropertyValue;
             var ownId = _ownId((T)context.Instance);
-            var entity = _entities.Query<Establishment>()
-                .EagerLoad(_entities, new Expression<Func<Establishment, object>>[]
+            
+            var entity = _entities.Query<Agreement>()
+                .EagerLoad(_entities, new Expression<Func<Agreement, object>>[]
                 {
                     x => x.Offspring.Select(y => y.Offspring),
-                    x => x.Names.Select(y => y.TranslationToLanguage),
                 })
-                .Single(x => x.RevisionId == ownId);
+                .Single(x => x.Id == ownId);
 
             var isValid = true;
 
-            if (ownId == parentId)
+            if (ownId == umbrellaId)
             {
                 isValid = false;
-                context.MessageFormatter.AppendArgument("ParentName", entity.TranslatedName);
                 context.MessageFormatter.AppendArgument("FailJustification", "they are the same establishment");
             }
 
-            if (entity.Offspring.Select(x => x.OffspringId).Contains(parentId))
+            if (entity.Offspring.Select(x => x.OffspringId).Contains(umbrellaId))
             {
                 isValid = false;
-                context.MessageFormatter.AppendArgument("FailJustification", "'{ParentName}' is already a child of '{EstablishmentName}'");
-                var proposedParent = entity.Offspring.Select(x => x.Offspring).Single(x => x.RevisionId == parentId);
-                context.MessageFormatter.AppendArgument("ParentName", proposedParent.TranslatedName);
+                context.MessageFormatter.AppendArgument("FailJustification", "agreement with id '{UmbrellaId}' is already a child of agreement with id '{AgreementId}'");
             }
 
-            if (isValid)
+            if (!isValid)
             {
-                context.MessageFormatter.AppendArgument("EstablishmentName", entity.TranslatedName);
+                context.MessageFormatter.AppendArgument("UmbrellaId", umbrellaId);
+                context.MessageFormatter.AppendArgument("AgreementId", ownId);
             }
 
             return isValid;

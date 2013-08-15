@@ -37,13 +37,24 @@ namespace UCosmic.Web.Mvc.Models
             }
         }
 
-        public class ModelToCreateCommand : Profile
+        public class ModelToCreateCommandProfile : Profile
         {
             protected override void Configure()
             {
                 CreateMap<AgreementApiModel, CreateAgreement>()
                     .ForMember(d => d.Principal, o => o.Ignore())
                     .ForMember(d => d.CreatedAgreementId, o => o.Ignore())
+                ;
+            }
+        }
+
+        public class ModelToUpdateCommandProfile : Profile
+        {
+            protected override void Configure()
+            {
+                CreateMap<AgreementApiModel, UpdateAgreement>()
+                    .ForMember(d => d.Principal, o => o.Ignore())
+                    .ForMember(d => d.AgreementId, o => o.Ignore())
                 ;
             }
         }

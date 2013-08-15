@@ -166,6 +166,7 @@
     <Compile Include="Domain\Activities\Views\ActivityView.cs" />
     <Compile Include="Domain\Activities\Views\ActivityViewDirtyFlag.cs" />
     <Compile Include="Domain\Activities\Views\ActivityPlaceTrendPeopleView.cs" />
+    <Compile Include="Domain\Agreements\Commands\UpdateAgreement.cs" />
     <Compile Include="Domain\Agreements\Commands\PurgeContact.cs" />
     <Compile Include="Domain\Agreements\Commands\UpdateContact.cs" />
     <Compile Include="Domain\Agreements\Commands\CreateContact.cs" />
@@ -176,6 +177,7 @@
     <Compile Include="Domain\Agreements\Queries\ContactById.cs" />
     <Compile Include="Domain\Agreements\Queries\UmbrellaOptions.cs" />
     <Compile Include="Domain\Agreements\Queries\FileById.cs" />
+    <Compile Include="Domain\Agreements\Validation\MustNotHaveCyclicHierarchy.cs" />
     <Compile Include="Domain\Agreements\Validation\MustOwnContactWithId.cs" />
     <Compile Include="Domain\Agreements\Validation\MustHaveContactType.cs" />
     <Compile Include="Domain\Agreements\Validation\MustOwnFileWithId.cs" />

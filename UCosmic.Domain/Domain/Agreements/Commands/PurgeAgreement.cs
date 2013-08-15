@@ -49,6 +49,8 @@ namespace UCosmic.Domain.Agreements
             if (entity == null) return;
 
             entity = _entities.Get<Agreement>().ById(command.AgreementId);
+            var filePaths = entity.Files.Where(x => !string.IsNullOrEmpty(x.Path))
+                .Select(x => x.Path).ToArray();
 
             // log audit
             var audit = new CommandEvent
@@ -63,9 +65,8 @@ namespace UCosmic.Domain.Agreements
             _entities.Purge(entity);
             _unitOfWork.SaveChanges();
 
-            if (entity.Files == null || !entity.Files.Any()) return;
-            foreach (var file in entity.Files.Where(x => !string.IsNullOrWhiteSpace(x.Path)))
-                _binaryData.Delete(file.Path);
+            if (!filePaths.Any()) return;
+            foreach (var filePath in filePaths) _binaryData.Delete(filePath);
         }
     }
 }
