@@ -1,4 +1,3 @@
-/// <reference path="../Spinner.ts" />
 /// <reference path="../establishments/Url.ts" />
 /// <reference path="../establishments/SearchResult.ts" />
 /// <reference path="../establishments/Search.ts" />
@@ -11,8 +10,9 @@
 /// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
 /// <reference path="../../typings/requirejs/require.d.ts" />
 /// <reference path="../../app/App.ts" />
-/// <reference path="../../app/SideSwiper.ts" />
 /// <reference path="../../app/Routes.ts" />
+/// <reference path="../../app/SideSwiper.ts" />
+/// <reference path="../../app/Spinner.ts" />
 /// <reference path="../../typings/moment/moment.d.ts" />
 /// <reference path="../../typings/sammyjs/sammyjs.d.ts" />
 /// <reference path="../establishments/ApiModels.d.ts" />
@@ -264,8 +264,8 @@ class InstitutionalAgreementEditModel {
     fileFileExtension: KnockoutObservable<string> = ko.observable();
     fileFileName: KnockoutObservable<string> = ko.observable();
     fileSrc: KnockoutObservable<string> = ko.observable();
-    fileUploadSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(400));
-    fileDeleteSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(400));
+    fileUploadSpinner = new App.Spinner(new App.SpinnerOptions(400));
+    fileDeleteSpinner = new App.Spinner(new App.SpinnerOptions(400));
     $confirmPurgeDialog: JQuery;
     tempFileId = 0;
     files = ko.mapping.fromJS([]);
@@ -294,7 +294,7 @@ class InstitutionalAgreementEditModel {
         root: '[data-current-module=agreements]'
     });
 
-    spinner: ViewModels.Spinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(400, true));
+    spinner = new App.Spinner(new App.SpinnerOptions(400, true));
     receiveResults(js: Establishments.ApiModels.FlatEstablishment[]): void {
         if (!js) {
             ko.mapping.fromJS({
@@ -1057,7 +1057,7 @@ class InstitutionalAgreementEditModel {
         return false;
     }
 
-    establishmentSearchViewModel = new ViewModels.Establishments.Search();
+    establishmentSearchViewModel = new Establishments.ViewModels.Search();
     establishmentItemViewModel; 
     hasBoundSearch = false;
     hasBoundItem = false;
@@ -1164,7 +1164,7 @@ class InstitutionalAgreementEditModel {
                             .done(() => {
                                 $addEstablishment.css("visibility", "").hide().fadeIn(500, () => {
                                     if (!this.hasBoundItem) {
-                                        this.establishmentItemViewModel = new ViewModels.Establishments.Item();
+                                        this.establishmentItemViewModel = new Establishments.ViewModels.Item();
                                         this.establishmentItemViewModel.goToSearch = () => {
                                             sessionStorage.setItem("addest", "yes");
                                             this.establishmentSearchViewModel.sammy.setLocation('#/page/1/');
@@ -1174,8 +1174,8 @@ class InstitutionalAgreementEditModel {
                                                 var me = this.establishmentItemViewModel;
                                                 this.establishmentItemViewModel.validatingSpinner.start();
                                                 // reference the single name and url
-                                                var officialName: ViewModels.Establishments.Name = this.establishmentItemViewModel.names()[0];
-                                                var officialUrl: ViewModels.Establishments.Url = this.establishmentItemViewModel.urls()[0];
+                                                var officialName: Establishments.ViewModels.Name = this.establishmentItemViewModel.names()[0];
+                                                var officialUrl: Establishments.ViewModels.Url = this.establishmentItemViewModel.urls()[0];
                                                 var location = this.establishmentItemViewModel.location;
                                                 // wait for async validation to stop
                                                 if (officialName.text.isValidating() || officialUrl.value.isValidating() ||

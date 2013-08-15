@@ -1,9 +1,8 @@
-/// <reference path="../amd-modules/Establishments/Url.ts" />
-/// <reference path="../amd-modules/Establishments/Item.ts" />
-/// <reference path="../amd-modules/Widgets/Spinner.ts" />
-/// <reference path="../amd-modules/Establishments/Name.ts" />
-/// <reference path="../amd-modules/Establishments/Search.ts" />
-/// <reference path="../amd-modules/Establishments/SearchResult.ts" />
+/// <reference path="../establishments/Url.ts" />
+/// <reference path="../establishments/SearchResult.ts" />
+/// <reference path="../establishments/Search.ts" />
+/// <reference path="../establishments/Name.ts" />
+/// <reference path="../establishments/Item.ts" />
 /// <reference path="../../typings/globalize/globalize.d.ts" />
 /// <reference path="../../typings/knockout/knockout.d.ts" />
 /// <reference path="../../typings/kendo/kendo.all.d.ts" />
@@ -11,19 +10,20 @@
 /// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
 /// <reference path="../../typings/requirejs/require.d.ts" />
 /// <reference path="../../app/App.ts" />
-/// <reference path="../../app/SideSwiper.ts" />
 /// <reference path="../../app/Routes.ts" />
+/// <reference path="../../app/SideSwiper.ts" />
+/// <reference path="../../app/Spinner.ts" />
 /// <reference path="../../typings/moment/moment.d.ts" />
 /// <reference path="../../typings/sammyjs/sammyjs.d.ts" />
-//import SearchResultModule = require('../amd-modules/Establishments/SearchResult');
 /// <reference path="../establishments/ApiModels.d.ts" />
+//import SearchResultModule = require('../amd-modules/Establishments/SearchResult');
+//import SearchModule = require('../amd-modules/Establishments/Search');
 //import ItemModule = require('../amd-modules/Establishments/Item');
 //import Spinner = require('../amd-modules/Widgets/Spinner');
 //import Name = require('../amd-modules/Establishments/Name')
 //import Url = require('../amd-modules/Establishments/Url')
 //var Item = ItemModule.Item;
 //var SearchResult = SearchResultModule.SearchResult;
-var x = 2;
 var InstitutionalAgreementParticipantModel = (function () {
     function InstitutionalAgreementParticipantModel(isOwner, establishmentId, establishmentOfficialName, establishmentTranslatedName) {
         this.isOwner = ko.observable(isOwner);
@@ -114,8 +114,8 @@ var InstitutionalAgreementEditModel = (function () {
         this.fileFileExtension = ko.observable();
         this.fileFileName = ko.observable();
         this.fileSrc = ko.observable();
-        this.fileUploadSpinner = new Spinner.Spinner(new Spinner.SpinnerOptions(400));
-        this.fileDeleteSpinner = new Spinner.Spinner(new Spinner.SpinnerOptions(400));
+        this.fileUploadSpinner = new App.Spinner(new App.SpinnerOptions(400));
+        this.fileDeleteSpinner = new App.Spinner(new App.SpinnerOptions(400));
         this.tempFileId = 0;
         this.files = ko.mapping.fromJS([]);
         this.participantsExport = ko.mapping.fromJS([]);
@@ -135,8 +135,8 @@ var InstitutionalAgreementEditModel = (function () {
             frameWidth: 970,
             root: '[data-current-module=agreements]'
         });
-        this.spinner = new Spinner.Spinner(new Spinner.SpinnerOptions(400, true));
-        this.establishmentSearchViewModel = new Search();
+        this.spinner = new App.Spinner(new App.SpinnerOptions(400, true));
+        this.establishmentSearchViewModel = new Establishments.ViewModels.Search();
         this.hasBoundSearch = false;
         this.hasBoundItem = false;
         //Globalize.culture("en-GB");
@@ -162,11 +162,11 @@ var InstitutionalAgreementEditModel = (function () {
         //alert($("meta[name='accept-language']").attr("content"));
         var culture = $("meta[name='accept-language']").attr("content");
         if (window.location.href.toLowerCase().indexOf("agreements/new") > 0) {
-            require(["../../jquery/jquery.globalize/cultures/globalize.culture." + culture + ""], function (html) {
-                //Globalize.culture("fr-FR")
-                Globalize.culture(culture);
-            });
+            //require(["../../jquery/jquery.globalize/cultures/globalize.culture." + culture + ""], function (html) {
+            //Globalize.culture("fr-FR")
+            Globalize.culture(culture);
 
+            //});
             //;
             this.dfdPopParticipants.resolve();
             this.editOrNewUrl = "new/";
@@ -1108,7 +1108,7 @@ else
                         $.when(dfd, dfd2).done(function () {
                             $addEstablishment.css("visibility", "").hide().fadeIn(500, function () {
                                 if (!_this.hasBoundItem) {
-                                    _this.establishmentItemViewModel = new Item();
+                                    _this.establishmentItemViewModel = new Establishments.ViewModels.Item();
                                     _this.establishmentItemViewModel.goToSearch = function () {
                                         sessionStorage.setItem("addest", "yes");
                                         _this.establishmentSearchViewModel.sammy.setLocation('#/page/1/');
