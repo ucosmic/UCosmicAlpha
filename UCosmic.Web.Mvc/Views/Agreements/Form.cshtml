@@ -15,10 +15,14 @@
 {
 
 @*    <script data-main="../../../scripts/viewmodels/agreements/RequireAgreement.js" src="~/scripts/require/require.js"></script>*@
-    <script data-main="@Url.Content("~/scripts/viewmodels/agreements/RequireAgreement.js")" src="~/scripts/require/require.js"></script>
-    @*     @Scripts.Render("~/bundles/agreements")
-  @Scripts.Render("~/bundles/establishmentSearch")*@
+    @*<script data-main="@Url.Content("~/scripts/viewmodels/agreements/RequireAgreement.js")" src="~/scripts/require/require.js"></script>*@
+         @Scripts.Render("~/bundles/agreements")
+    <script type="text/javascript">
+        var agreementViewModel = new InstitutionalAgreementEditModel();
+        ko.applyBindings(agreementViewModel, $('#allParticipants')[0]);
+    </script>
 }
+
 <div class="content fixed to-top" data-current-module="agreements" id="LoadingPage">
     <div class="on-left from-top">
         <header>

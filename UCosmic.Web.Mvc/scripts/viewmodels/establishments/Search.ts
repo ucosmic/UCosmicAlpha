@@ -32,6 +32,7 @@ module Establishments.ViewModels {
             }).extend({ throttle: 1 });
         }
 
+        header = ko.observable();
         // countries dropdown
         private _setupCountryDropDown(): void {
             ko.computed((): void => {

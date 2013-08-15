@@ -1,3 +1,9 @@
+/// <reference path="../Spinner.ts" />
+/// <reference path="../establishments/Url.ts" />
+/// <reference path="../establishments/SearchResult.ts" />
+/// <reference path="../establishments/Search.ts" />
+/// <reference path="../establishments/Name.ts" />
+/// <reference path="../establishments/Item.ts" />
 /// <reference path="../../typings/globalize/globalize.d.ts" />
 /// <reference path="../../typings/knockout/knockout.d.ts" />
 /// <reference path="../../typings/kendo/kendo.all.d.ts" />
@@ -9,20 +15,18 @@
 /// <reference path="../../app/Routes.ts" />
 /// <reference path="../../typings/moment/moment.d.ts" />
 /// <reference path="../../typings/sammyjs/sammyjs.d.ts" />
-/// <amd-dependency path="../../jquery/jquery.globalize/globalize.require" />
 /// <reference path="../establishments/ApiModels.d.ts" />
 
-import SearchResultModule = require('../amd-modules/Establishments/SearchResult');
-import SearchModule = require('../amd-modules/Establishments/Search');
-import ItemModule = require('../amd-modules/Establishments/Item');
-import Spinner = require('../amd-modules/Widgets/Spinner');
-import Name = require('../amd-modules/Establishments/Name')
-import Url = require('../amd-modules/Establishments/Url')
-var Search = SearchModule.Search;
-var Item = ItemModule.Item;
-var SearchResult = SearchResultModule.SearchResult;
+//import SearchResultModule = require('../amd-modules/Establishments/SearchResult');
+//import SearchModule = require('../amd-modules/Establishments/Search');
+//import ItemModule = require('../amd-modules/Establishments/Item');
+//import Spinner = require('../amd-modules/Widgets/Spinner');
+//import Name = require('../amd-modules/Establishments/Name')
+//import Url = require('../amd-modules/Establishments/Url')
+//var Item = ItemModule.Item;
+//var SearchResult = SearchResultModule.SearchResult;
 
-export class InstitutionalAgreementParticipantModel {
+class InstitutionalAgreementParticipantModel {
     constructor(isOwner: any, establishmentId: number, establishmentOfficialName: string,
         establishmentTranslatedName: string) {
         this.isOwner = ko.observable(isOwner);
@@ -36,7 +40,7 @@ export class InstitutionalAgreementParticipantModel {
     establishmentTranslatedName;
 };
 
-export class InstitutionalAgreementEditModel {
+class InstitutionalAgreementEditModel {
     constructor(public initDefaultPageRoute: boolean = true) {
         //Globalize.culture("en-GB");
         //require(["../../kendo/2013.2.716/cultures/kendo.culture." + "fr" + ".min"], function (html) {
@@ -60,14 +64,13 @@ export class InstitutionalAgreementEditModel {
         //    target.formatted = formatted;
         //    return target;
         //};
-
         //alert($("meta[name='accept-language']").attr("content"));
         var culture = $("meta[name='accept-language']").attr("content");
         if (window.location.href.toLowerCase().indexOf("agreements/new") > 0) {
-            require(["../../jquery/jquery.globalize/cultures/globalize.culture." + culture + ""], function (html) {
+            //require(["../../jquery/jquery.globalize/cultures/globalize.culture." + culture + ""], function (html) {
                 //Globalize.culture("fr-FR")
                 Globalize.culture(culture)
-            });
+            //});
             //;
             this.dfdPopParticipants.resolve();
             this.editOrNewUrl = "new/";
@@ -261,8 +264,8 @@ export class InstitutionalAgreementEditModel {
     fileFileExtension: KnockoutObservable<string> = ko.observable();
     fileFileName: KnockoutObservable<string> = ko.observable();
     fileSrc: KnockoutObservable<string> = ko.observable();
-    fileUploadSpinner = new Spinner.Spinner(new Spinner.SpinnerOptions(400));
-    fileDeleteSpinner = new Spinner.Spinner(new Spinner.SpinnerOptions(400));
+    fileUploadSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(400));
+    fileDeleteSpinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(400));
     $confirmPurgeDialog: JQuery;
     tempFileId = 0;
     files = ko.mapping.fromJS([]);
@@ -291,7 +294,7 @@ export class InstitutionalAgreementEditModel {
         root: '[data-current-module=agreements]'
     });
 
-    spinner: Spinner.Spinner = new Spinner.Spinner(new Spinner.SpinnerOptions(400, true));
+    spinner: ViewModels.Spinner = new ViewModels.Spinner(new ViewModels.SpinnerOptions(400, true));
     receiveResults(js: Establishments.ApiModels.FlatEstablishment[]): void {
         if (!js) {
             ko.mapping.fromJS({
@@ -385,8 +388,7 @@ export class InstitutionalAgreementEditModel {
             });
 
     }
-
-
+    
     populateUmbrella(): void {
         $.get(App.Routes.WebApi.Agreements.UmbrellaOptions.get(this.agreementId))
             .done((response: any): void => {
@@ -409,6 +411,7 @@ export class InstitutionalAgreementEditModel {
                 //dropdownlist.select(0);
             });
     }
+
 
     $bindKendoFile(): void {
         var saveUrl = "";
@@ -435,6 +438,7 @@ export class InstitutionalAgreementEditModel {
                     async: false,
                     data: data,
                     success: (response: any, statusText: string, xhr: JQueryXHR): void => {
+                        this.isFileInvalid(false);
                     },
                     error: (xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
                         if (xhr.status !== 200) {
@@ -1053,7 +1057,7 @@ export class InstitutionalAgreementEditModel {
         return false;
     }
 
-    establishmentSearchViewModel = new Search();
+    establishmentSearchViewModel = new ViewModels.Establishments.Search();
     establishmentItemViewModel; 
     hasBoundSearch = false;
     hasBoundItem = false;
@@ -1160,7 +1164,7 @@ export class InstitutionalAgreementEditModel {
                             .done(() => {
                                 $addEstablishment.css("visibility", "").hide().fadeIn(500, () => {
                                     if (!this.hasBoundItem) {
-                                        this.establishmentItemViewModel = new Item();
+                                        this.establishmentItemViewModel = new ViewModels.Establishments.Item();
                                         this.establishmentItemViewModel.goToSearch = () => {
                                             sessionStorage.setItem("addest", "yes");
                                             this.establishmentSearchViewModel.sammy.setLocation('#/page/1/');
@@ -1170,8 +1174,8 @@ export class InstitutionalAgreementEditModel {
                                                 var me = this.establishmentItemViewModel;
                                                 this.establishmentItemViewModel.validatingSpinner.start();
                                                 // reference the single name and url
-                                                var officialName: Name.Name = this.establishmentItemViewModel.names()[0];
-                                                var officialUrl: Url.Url = this.establishmentItemViewModel.urls()[0];
+                                                var officialName: ViewModels.Establishments.Name = this.establishmentItemViewModel.names()[0];
+                                                var officialUrl: ViewModels.Establishments.Url = this.establishmentItemViewModel.urls()[0];
                                                 var location = this.establishmentItemViewModel.location;
                                                 // wait for async validation to stop
                                                 if (officialName.text.isValidating() || officialUrl.value.isValidating() ||
@@ -1558,6 +1562,9 @@ export class InstitutionalAgreementEditModel {
                             });
                         }
                     });
+            }
+            else {
+                this.contacts.push(ko.mapping.fromJS(data));
             }
         } else {
             this.validateContact.errors.showAllMessages(true);

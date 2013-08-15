@@ -87,6 +87,21 @@ namespace UCosmic.Web.Mvc
                 "~/scripts/viewmodels/establishments/Location.js",
                 "~/scripts/viewmodels/establishments/Item.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/agreements").Include(
+                "~/scripts/viewmodels/agreements/agreementVM.js",
+                "~/scripts/jquery/jquery.globalize/globalize.js",
+                "~/scripts/google/ToolsOverlay.js",
+                "~/scripts/viewmodels/Spinner.js",
+                "~/scripts/viewmodels/PagedSearch.js",
+                "~/scripts/viewmodels/languages/ServerApiModel.js",
+                "~/scripts/viewmodels/places/ServerApiModel.js",
+                "~/scripts/viewmodels/establishments/SearchResult.js",
+                "~/scripts/viewmodels/establishments/Search.js",
+                "~/scripts/viewmodels/establishments/Name.js",
+                "~/scripts/viewmodels/establishments/Url.js",
+                "~/scripts/viewmodels/establishments/Location.js",
+                "~/scripts/viewmodels/establishments/Item.js"));
+
             // employee personal profile page
             bundles.Add(new ScriptBundle("~/bundles/people").Include(
                 "~/scripts/datacontext/people.js",

@@ -9,7 +9,6 @@
 /// <reference path="../../app/Routes.ts" />
 /// <reference path="../../app/Spinner.ts" />
 /// <reference path="../activities/ServiceApiModel.d.ts" />
-
 module ViewModels.Activities {
     export class Activity implements Service.ApiModels.IObservableActivity {
 

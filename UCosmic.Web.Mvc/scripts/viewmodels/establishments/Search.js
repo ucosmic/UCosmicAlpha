@@ -25,6 +25,7 @@ var Establishments;
                 var _this = this;
                 _super.call(this);
                 this.initDefaultPageRoute = initDefaultPageRoute;
+                this.header = ko.observable();
                 // sammy & URL hashing
                 this.sammy = Sammy();
                 this.sammyBeforeRoute = /\#\/page\/(.*)\//;
