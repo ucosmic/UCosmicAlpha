@@ -1915,10 +1915,7 @@
     </Content>
     <TypeScriptCompile Include="scripts\viewmodels\representatives\RepModuleSettings.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\geographicExpertises\GeographicExpertises.ts" />
-    <TypeScriptCompile Include="scripts\viewmodels\degrees\ServiceApiModel.d.ts" />
-    <Content Include="scripts\viewmodels\degrees\ServiceApiModl.d.js">
-      <DependentUpon>ServiceApiModel.d.ts</DependentUpon>
-    </Content>
+    <None Include="scripts\viewmodels\degrees\ServiceApiModel.d.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\geographicExpertises\GeographicExpertise.ts" />
     <Content Include="scripts\viewmodels\geographicExpertises\GeographicExpertise.js">
       <DependentUpon>GeographicExpertise.ts</DependentUpon>
@@ -1960,10 +1957,6 @@
       <DependentUpon>LanguageExpertises.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="scripts\viewmodels\languageExpertises\LanguageExpertise.ts" />
-    <TypeScriptCompile Include="scripts\viewmodels\languageExpertises\ServiceApiModel.d.ts" />
-    <Content Include="scripts\viewmodels\languageExpertises\ServiceApiModel.d.js">
-      <DependentUpon>ServiceApiModel.d.ts</DependentUpon>
-    </Content>
     <None Include="scripts\viewmodels\places\ApiModels.d.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\places\Utils.ts" />
     <None Include="scripts\viewmodels\languages\ApiModels.d.ts" />

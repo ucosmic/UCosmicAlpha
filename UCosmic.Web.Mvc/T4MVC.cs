@@ -2891,8 +2891,6 @@ namespace Links
                               
                 public static readonly string Degrees_min_js = Url("Degrees.min.js");
                 public static readonly string ServiceApiModel_d_ts = Url("ServiceApiModel.d.ts");
-                public static readonly string ServiceApiModl_d_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/ServiceApiModl.d.min.js") ? Url("ServiceApiModl.d.min.js") : Url("ServiceApiModl.d.js");
-                              
             }
         
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -2984,9 +2982,6 @@ namespace Links
                 public static readonly string LanguageExpertises_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/LanguageExpertises.min.js") ? Url("LanguageExpertises.min.js") : Url("LanguageExpertises.js");
                               
                 public static readonly string LanguageExpertises_min_js = Url("LanguageExpertises.min.js");
-                public static readonly string ServiceApiModel_d_ts = Url("ServiceApiModel.d.ts");
-                public static readonly string ServiceApiModel_d_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/ServiceApiModel.d.min.js") ? Url("ServiceApiModel.d.min.js") : Url("ServiceApiModel.d.js");
-                              
             }
         
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
