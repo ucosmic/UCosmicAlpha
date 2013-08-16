@@ -1,3 +1,4 @@
+/// <reference path="../../app/Spinner.ts" />
 /// <reference path="../establishments/Url.ts" />
 /// <reference path="../establishments/SearchResult.ts" />
 /// <reference path="../establishments/Search.ts" />
@@ -91,10 +92,10 @@ class InstitutionalAgreementEditModel {
             this.populateFiles();
             this.populateContacts();
 
-            require(["../../jquery/jquery.globalize/cultures/globalize.culture." + culture + ""], (html) => {
+            //require(["../../jquery/jquery.globalize/cultures/globalize.culture." + culture + ""], (html) => {
                 Globalize.culture(culture)
                 this.populateAgreementData();
-            });
+            //});
             //Globalize.culture($("meta[name='accept-language']").attr("content"));
             
             $("#LoadingPage").hide();
@@ -294,7 +295,7 @@ class InstitutionalAgreementEditModel {
         root: '[data-current-module=agreements]'
     });
 
-    spinner = new App.Spinner(new App.SpinnerOptions(400, true));
+    spinner: App.Spinner = new App.Spinner(new App.SpinnerOptions(400, true));
     receiveResults(js: Establishments.ApiModels.FlatEstablishment[]): void {
         if (!js) {
             ko.mapping.fromJS({
@@ -1772,11 +1773,9 @@ class InstitutionalAgreementEditModel {
                 required: {
                     message: 'Email is required.',
                     maxLength: 100
-                }
-            }).extend({
-                pattern: {
-                    message: 'Email is in wrong format.',
-                    params: '^(?:(?!Email).)*$'
+                },
+                email: {
+                    message: 'Email is in wrong format'
                 }
             }),
 

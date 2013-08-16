@@ -1,3 +1,4 @@
+/// <reference path="../../app/Spinner.ts" />
 /// <reference path="../establishments/Url.ts" />
 /// <reference path="../establishments/SearchResult.ts" />
 /// <reference path="../establishments/Search.ts" />
@@ -186,11 +187,11 @@ var InstitutionalAgreementEditModel = (function () {
             this.populateFiles();
             this.populateContacts();
 
-            require(["../../jquery/jquery.globalize/cultures/globalize.culture." + culture + ""], function (html) {
-                Globalize.culture(culture);
-                _this.populateAgreementData();
-            });
+            //require(["../../jquery/jquery.globalize/cultures/globalize.culture." + culture + ""], (html) => {
+            Globalize.culture(culture);
+            this.populateAgreementData();
 
+            //});
             //Globalize.culture($("meta[name='accept-language']").attr("content"));
             $("#LoadingPage").hide();
             $.when(this.dfdPopContacts, this.dfdPopFiles, this.dfdPopParticipants, this.dfdPageFadeIn).done(function () {
@@ -1698,11 +1699,9 @@ else
                 required: {
                     message: 'Email is required.',
                     maxLength: 100
-                }
-            }).extend({
-                pattern: {
-                    message: 'Email is in wrong format.',
-                    params: '^(?:(?!Email).)*$'
+                },
+                email: {
+                    message: 'Email is in wrong format'
                 }
             }),
             contactSuffix: this.contactSuffix.extend({

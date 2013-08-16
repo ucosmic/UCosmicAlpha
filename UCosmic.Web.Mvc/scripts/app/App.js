@@ -82,8 +82,7 @@ var App;
                     var windowScrollTop = $window.scrollTop(), anchorOffsetTop = $anchor.offset().top;
                     if (windowScrollTop > anchorOffsetTop) {
                         $content.css({
-                            position: 'fixed',
-                            width: contentWidth
+                            position: 'fixed'
                         });
                         if ($content.height() > $window.height())
                             $content.css({

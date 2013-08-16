@@ -82,7 +82,7 @@ module App {
                         if (windowScrollTop > anchorOffsetTop) {
                             $content.css({
                                 position: 'fixed',
-                                width: contentWidth
+                                //width: contentWidth//this caused the side nav to seperate.
                             });
                             if ($content.height() > $window.height())
                                 $content.css({
