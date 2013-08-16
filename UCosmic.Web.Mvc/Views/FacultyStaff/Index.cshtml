@@ -163,7 +163,7 @@
                     
                     facultyAndStaffViewModel.loadSpinner.stop();
 
-                    facultyAndStaffViewModel.setupWidgets("location", "fromDate", "toDate", "institutionTextbox",
+                    facultyAndStaffViewModel.setupWidgets("location", "fromDate", "toDate", "establishmentDropList",
                         "campusDropList", "collegeDropList", "departmentDropList");
 
                     var rootElement = $("#faculty-staff")[0];
@@ -185,7 +185,7 @@
                                             and send a special character for the service to ignore.  Also,
                                             If options.success() is not actually call, the widget stops functioning
                                             altogether.
-                                        */
+                                    */
                                     data: {
                                         keyword: ((options.data.filter != null) &&
                                             (options.data.filter.filters != null) &&

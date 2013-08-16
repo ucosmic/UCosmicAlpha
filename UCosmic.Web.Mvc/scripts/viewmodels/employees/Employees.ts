@@ -28,10 +28,10 @@ module ViewModels.Employees {
         selectedPlace: KnockoutObservable<string>;
 
         /* Element id of institution autocomplete */
-        institutionSelectorId: string;
-        institutionId: KnockoutObservable<any>;
-        institutionOfficialName: KnockoutObservable<string>;
-        institutionCountryOfficialName: KnockoutObservable<string>;
+        establishmentDropListId: string;
+        establishmentId: KnockoutObservable<any>;
+        establishmentOfficialName: KnockoutObservable<string>;
+        establishmentCountryOfficialName: KnockoutObservable<string>;
 
         institutionHasCampuses: KnockoutObservable<boolean>;
 
@@ -75,20 +75,21 @@ module ViewModels.Employees {
         pointmap: google.maps.Map;
         pointmapOptions: any;
         pointmapData: any;
-        
+
         //resultsTable: any;
         //resultsTableOptions: any;
         //resultsTableData: any;
 
-        globalActivityCountData: KnockoutObservable<any>;
+        globalActivityCountData: any;
+        placeActivityCountData: any;
+        globalPeopleCountData: any;
+        placePeopleCountData: any;
+        globalActivityTrendData: any;
+        placeActivityTrendData: any;
+        globalPeopleTrendData: any;
+        placePeopleTrendData: any;
+
         loadSpinner: App.Spinner;
-        placeActivityCountData: KnockoutObservable<any>;
-        globalPeopleCountData: KnockoutObservable<any>;
-        placePeopleCountData: KnockoutObservable<any>;
-        globalActivityTrendData: KnockoutObservable<any>;
-        placeActivityTrendData: KnockoutObservable<any>;
-        globalPeopleTrendData: KnockoutObservable<any>;
-        placePeopleTrendData: KnockoutObservable<any>;
 
 
         _initialize(institutionInfo: any): void {
@@ -97,9 +98,9 @@ module ViewModels.Employees {
             this.selectedLocationValues = [];
             this.fromDate = ko.observable();
             this.toDate = ko.observable();
-            this.institutionId = ko.observable(null);
-            this.institutionOfficialName = ko.observable(null);
-            this.institutionCountryOfficialName = ko.observable(null);
+            this.establishmentId = ko.observable(null);
+            this.establishmentOfficialName = ko.observable(null);
+            this.establishmentCountryOfficialName = ko.observable(null);
             this.institutionHasCampuses = ko.observable(false);
             this.activityTypes = ko.observableArray();
             this.selectedActivityIds = ko.observableArray();
@@ -111,21 +112,21 @@ module ViewModels.Employees {
             this.isGlobalView = ko.observable(true);
             this.loadSpinner = new App.Spinner(new App.SpinnerOptions(200));
 
-            this.globalActivityCountData = ko.observable(null);
-            this.placeActivityCountData = ko.observable(null);
-            this.globalPeopleCountData = ko.observable(null);
-            this.placePeopleCountData = ko.observable(null);
-            this.globalActivityTrendData = ko.observable(null);
-            this.placeActivityTrendData = ko.observable(null);
-            this.globalPeopleTrendData = ko.observable(null);
-            this.placePeopleTrendData = ko.observable(null);
+            this.globalActivityCountData = null;
+            this.placeActivityCountData = null;
+            this.globalPeopleCountData = null;
+            this.placePeopleCountData = null;
+            this.globalActivityTrendData = null;
+            this.placeActivityTrendData = null;
+            this.globalPeopleTrendData = null;
+            this.placePeopleTrendData = null;
 
             this.selectSearchType('activities');
 
             if (institutionInfo != null) {
 
                 if (institutionInfo.InstitutionId != null) {
-                    this.institutionId(Number(institutionInfo.InstitutionId));
+                    this.establishmentId(Number(institutionInfo.InstitutionId));
                 }
 
                 if (institutionInfo.ActivityTypes != null) {
@@ -149,12 +150,12 @@ module ViewModels.Employees {
         }
 
         setupWidgets(locationSelectorId: string,
-                fromDatePickerId: string,
-                toDatePickerId: string,
-                institutionSelectorId: string,
-                campusDropListId: string,
-                collegeDropListId: string,
-                departmentDropListId: string
+            fromDatePickerId: string,
+            toDatePickerId: string,
+            establishmentDropListId: string,
+            campusDropListId: string,
+            collegeDropListId: string,
+            departmentDropListId: string
             ): void {
 
             this.locationSelectorId = locationSelectorId;
@@ -198,46 +199,61 @@ module ViewModels.Employees {
                 open: function (e) { this.options.format = "MM/dd/yyyy"; }
             });
 
-            this.institutionSelectorId = institutionSelectorId;
+            this.establishmentDropListId = establishmentDropListId;
 
-            $("#" + institutionSelectorId).kendoAutoComplete({
-                minLength: 3,
-                filter: "contains",
-                ignoreCase: true,
-                placeholder: "[Enter Institution]",
-                dataTextField: "officialName",
-                dataSource: new kendo.data.DataSource({
-                    serverFiltering: true,
-                    transport: {
-                        read: (options: any): void => {
-                            $.ajax({
-                                url: App.Routes.WebApi.Establishments.get(),
-                                data: {
-                                    typeEnglishNames: ['University', 'University System']
-                                },
-                                success: (results: any): void => {
-                                    options.success(results.items);
-                                }
-                            });
-                        }
+                //$("#" + establishmentDropListId).kendoAutoComplete({
+                //    minLength: 3,
+                //    filter: "contains",
+                //    ignoreCase: true,
+                //    placeholder: "[Enter Institution]",
+                //    dataTextField: "officialName",
+                //    dataSource: new kendo.data.DataSource({
+                //        serverFiltering: true,
+                //        transport: {
+                //            read: (options: any): void => {
+                //                $.ajax({
+                //                    url: App.Routes.WebApi.Establishments.get(),
+                //                    data: {
+                //                        typeEnglishNames: ['University', 'University System']
+                //                    },
+                //                    success: (results: any): void => {
+                //                        options.success(results.items);
+                //                    }
+                //                });
+                //            }
+                //        }
+                //    }),
+                //    change: (e: any): void => {
+                //        this.checkInstitutionForNull();
+                //    },
+                //    select: (e: any): void => {
+                //        var me = $("#" + establishmentDropListId).data("kendoAutoComplete");
+                //        var dataItem = me.dataItem(e.item.index());
+                //        this.establishmentOfficialName(dataItem.officialName);
+                //        this.establishmentId(dataItem.id);
+                //        if ((dataItem.countryName != null) && (dataItem.countryName.length > 0)) {
+                //            this.establishmentCountryOfficialName(dataItem.countryName);
+                //        }
+                //        else {
+                //            this.establishmentCountryOfficialName(null);
+                //        }
+                //    }
+                //});
+
+                $("#" + establishmentDropListId).kendoDropDownList({
+                    dataTextField: "officialName",
+                    dataValueField: "id",
+                    //optionLabel: { officialName: "ALL", id: 0 },
+                    dataSource: [
+                        { officialName: "USF System", id: 0 },
+                        { officialName: "USF Tampa", id: 0 },
+                        { officialName: "USF St. Petersburg", id: 0 },
+                        { officialName: "USF Sarasota-Manatee", id: 0 }
+                    ],
+                    change: function (e) {
+                        //var item = this.dataItem[e.sender.selectedIndex];
                     }
-                }),
-                change: (e: any): void => {
-                    this.checkInstitutionForNull();
-                },
-                select: (e: any): void => {
-                    var me = $("#" + institutionSelectorId).data("kendoAutoComplete");
-                    var dataItem = me.dataItem(e.item.index());
-                    this.institutionOfficialName(dataItem.officialName);
-                    this.institutionId(dataItem.id);
-                    if ((dataItem.countryName != null) && (dataItem.countryName.length > 0)) {
-                        this.institutionCountryOfficialName(dataItem.countryName);
-                    }
-                    else {
-                        this.institutionCountryOfficialName(null);
-                    }
-                }
-            });
+                });
 
             $("#" + departmentDropListId ).kendoDropDownList({
                 dataTextField: "officialName",
@@ -269,7 +285,7 @@ module ViewModels.Employees {
                 collegeDropListDataSource = new kendo.data.DataSource({
                     transport: {
                         read: {
-                            url: App.Routes.WebApi.Establishments.getChildren(this.institutionId()),
+                            url: App.Routes.WebApi.Establishments.getChildren(this.establishmentId()),
                             data: { orderBy: ['rank-asc', 'name-asc'] }
                         }
                     }
@@ -329,7 +345,7 @@ module ViewModels.Employees {
                     dataSource: new kendo.data.DataSource({
                         transport: {
                             read: {
-                                url: App.Routes.WebApi.Establishments.getChildren(this.institutionId()),
+                                url: App.Routes.WebApi.Establishments.getChildren(this.establishmentId()),
                                 data: { orderBy: ['rank-asc', 'name-asc'] }
                             }
                         }
@@ -564,9 +580,17 @@ module ViewModels.Employees {
 
             this.barchartActivityOptions = {
                 title: 'Activities',
-                vAxis: { title: 'Count' },
-                //axisTitlesPosition: 'in',
-                chartArea: { left: 80 },
+                hAxis: {
+                        textPosition: 'none'
+                    },
+                vAxis: {
+                    textPosition: 'none'
+                },
+                chartArea: {
+                    left: 10,
+                    width: '100%',
+                    height: '100'
+                },
                 legend: { position: 'none' },
                 series: {
                     0: {
@@ -650,9 +674,9 @@ module ViewModels.Employees {
         }
 
         getHeatmapActivityDataTable(): any {
-            debugger;
+            //debugger;
 
-            if (this.globalActivityCountData() == null) {
+            if (this.globalActivityCountData == null) {
                 this.getActivityDataTable(null);
             }
 
@@ -663,11 +687,11 @@ module ViewModels.Employees {
             dataTable.addColumn('number', 'Total Activities');
 
             var placeCounts = (<any>this.globalActivityCountData).placeCounts;
-            if ((placeCounts != null) && (placeCounts() != null) && (placeCounts().length > 0)) {
-                for (var i = 0; i < placeCounts().length; i += 1) {
+            if ((placeCounts != null) && (placeCounts.length > 0)) {
+                for (var i = 0; i < placeCounts.length; i += 1) {
                     var rowData = new Array();
-                    rowData.push(placeCounts()[i].officialName());
-                    rowData.push(placeCounts()[i].count());
+                    rowData.push(placeCounts[i].officialName);
+                    rowData.push(placeCounts[i].count);
                     dataTable.addRow(rowData)
                     }
             }
@@ -676,7 +700,7 @@ module ViewModels.Employees {
         }
 
         getHeatmapPeopleDataTable(): any {
-            debugger;
+            //debugger;
 
             if (this.globalPeopleCountData() == null) {
                 this.getPeopleDataTable(null);
@@ -689,11 +713,11 @@ module ViewModels.Employees {
             dataTable.addColumn('number', 'Total Activities');
 
             var placeCounts = (<any>this.globalPeopleCountData).placeCounts;
-            if ((placeCounts != null) && (placeCounts() != null) && (placeCounts().length > 0)) {
-                for (var i = 0; i < placeCounts().length; i += 1) {
+            if ((placeCounts != null) && (placeCounts.length > 0)) {
+                for (var i = 0; i < placeCounts.length; i += 1) {
                     var rowData = new Array();
-                    rowData.push(placeCounts()[i].officialName());
-                    rowData.push(placeCounts()[i].count());
+                    rowData.push(placeCounts[i].officialName);
+                    rowData.push(placeCounts[i].count);
                     dataTable.addRow(rowData)
                     }
             }
@@ -705,17 +729,18 @@ module ViewModels.Employees {
         *
         */
         getActivityDataTable(placeOfficialName: string): any {
+            //debugger;
 
             if (placeOfficialName == null) {
-                if (this.globalActivityCountData() == null) {
+                if (this.globalActivityCountData == null) {
                     $.ajax({
                         type: "GET",
                         async: false,
+                        data: { 'placeId': null },
                         dataType: 'json',
-                        url: App.Routes.WebApi.FacultyStaff.getActivityCount(null),
+                        url: App.Routes.WebApi.FacultyStaff.getActivityCount(),
                         success: (data: any, textStatus: string, jqXhr: JQueryXHR): void => {
-                            //debugger;
-                            this.globalActivityCountData = ko.mapping.fromJS(data);
+                            this.globalActivityCountData = data;
                         },
                         error: (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
                             alert('Error getting data ' + textStatus + ' | ' + errorThrown);
@@ -726,15 +751,15 @@ module ViewModels.Employees {
             else {
                 var placeId = this.getPlaceId(placeOfficialName);
                 if (placeId != null) {
-                    if (this.placeActivityCountData() == null) {
+                    if (this.placeActivityCountData == null) {
                         $.ajax({
                             type: "GET",
                             async: false,
+                            data: { 'placeId': placeId },
                             dataType: 'json',
-                            url: App.Routes.WebApi.FacultyStaff.getActivityCount(placeId),
+                            url: App.Routes.WebApi.FacultyStaff.getActivityCount(),
                             success: (data: any, textStatus: string, jqXhr: JQueryXHR): void => {
-                                //debugger;
-                                this.placeActivityCountData = ko.mapping.fromJS(data);
+                                this.placeActivityCountData = data;
                             },
                             error: (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
                                 alert('Error getting data ' + textStatus + ' | ' + errorThrown);
@@ -751,16 +776,16 @@ module ViewModels.Employees {
             dt.addColumn({ type: 'number', role: 'annotation' });
 
             if (placeOfficialName == null) { /* Add global counts */
-                for (var i = 0; i < (<any>this.globalActivityCountData).globalTypeCounts().length; i += 1) {
-                    var activityType = (<any>this.globalActivityCountData).globalTypeCounts()[i].type();
-                    var count = (<any>this.globalActivityCountData).globalTypeCounts()[i].count();
+                for (var i = 0; i < (<any>this.globalActivityCountData).globalTypeCounts.length; i += 1) {
+                    var activityType = (<any>this.globalActivityCountData).globalTypeCounts[i].type;
+                    var count = (<any>this.globalActivityCountData).globalTypeCounts[i].count;
                     dt.addRow([activityType, count, count]);
                 }
             } else { /* Add place counts */
-                var placeActivityCounts = (<any>this.placeActivityCountData).placeActivityCounts()[0];
-                for (var j = 0; j < placeActivityCounts.typeCounts().length; j += 1) {
-                    var activityType = placeActivityCounts.typeCounts[j].type();
-                    var count = placeActivityCounts.typeCounts[j].count();
+                var placeActivityCounts = (<any>this.placeActivityCountData).placeActivityCounts[0];
+                for (var j = 0; j < placeActivityCounts.typeCounts.length; j += 1) {
+                    var activityType = placeActivityCounts.typeCounts[j].type;
+                    var count = placeActivityCounts.typeCounts[j].count;
                     dt.addRow([activityType, count, count]);
                 }
             }
@@ -777,15 +802,15 @@ module ViewModels.Employees {
         getPeopleDataTable(placeOfficialName: string): any {
 
             if (placeOfficialName == null) {
-                if (this.globalActivityCountData() == null) {
+                if (this.globalActivityCountData == null) {
                     $.ajax({
                         type: "GET",
                         async: false,
+                        data: { 'placeId': null },
                         dataType: 'json',
-                        url: App.Routes.WebApi.FacultyStaff.getPeopleCount(null),
+                        url: App.Routes.WebApi.FacultyStaff.getPeopleCount(),
                         success: (data: any, textStatus: string, jqXhr: JQueryXHR): void => {
-                            //debugger;
-                            this.globalActivityCountData = ko.mapping.fromJS(data);
+                            this.globalActivityCountData = data;
                         },
                         error: (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
                             alert('Error getting data ' + textStatus + ' | ' + errorThrown);
@@ -796,15 +821,15 @@ module ViewModels.Employees {
             else {
                 var placeId = this.getPlaceId(placeOfficialName);
                 if (placeId != null) {
-                    if (this.placeActivityCountData() == null) {
+                    if (this.placeActivityCountData == null) {
                         $.ajax({
                             type: "GET",
                             async: false,
+                            data: { 'placeId': placeId },
                             dataType: 'json',
-                            url: App.Routes.WebApi.FacultyStaff.getPeopleCount(placeId),
+                            url: App.Routes.WebApi.FacultyStaff.getPeopleCount(),
                             success: (data: any, textStatus: string, jqXhr: JQueryXHR): void => {
-                                //debugger;
-                                this.placeActivityCountData = ko.mapping.fromJS(data);
+                                this.placeActivityCountData = data;
                             },
                             error: (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
                                 alert('Error getting data ' + textStatus + ' | ' + errorThrown);
@@ -821,16 +846,16 @@ module ViewModels.Employees {
             dt.addColumn({ type: 'string', role: 'annotation' });
 
             if (placeOfficialName == null) { /* Add world counts */
-                for (var i = 0; i < (<any>this.globalPeopleCountData).typeCounts().length; i += 1) {
-                    var activityType = (<any>this.globalPeopleCountData).typeCounts()[i].type();
-                    var count = (<any>this.globalPeopleCountData).typeCounts()[i].count();
+                for (var i = 0; i < (<any>this.globalPeopleCountData).typeCounts.length; i += 1) {
+                    var activityType = (<any>this.globalPeopleCountData).typeCounts[i].type;
+                    var count = (<any>this.globalPeopleCountData).typeCounts[i].count;
                     dt.addRow([activityType, count, String(count)]);
                 }
             } else { /* Add place counts */
-                var placePeopleCounts = (<any>this.placePeopleCountData).placePeopleCounts()[0];
-                for (var j = 0; j < placePeopleCounts.typeCounts().length; j += 1) {
-                    var activityType = placePeopleCounts.typeCounts[j].type();
-                    var count = placePeopleCounts.typeCounts[j].count();
+                var placePeopleCounts = (<any>this.placePeopleCountData).placePeopleCounts[0];
+                for (var j = 0; j < placePeopleCounts.typeCounts.length; j += 1) {
+                    var activityType = placePeopleCounts.typeCounts[j].type;
+                    var count = placePeopleCounts.typeCounts[j].count;
                     dt.addRow([activityType, count, String(count)]);
                 }
             }
@@ -941,8 +966,7 @@ module ViewModels.Employees {
 
             // only process after all requests have been resolved
             $.when(typesPact, placesPact  )
-                .done((types: Service.ApiModels.IEmployeeActivityType[], places: any
-                    ): void => {
+                .done((types: any, places: any): void => {
 
                     this.activityTypes = ko.mapping.fromJS(types);
 
@@ -951,18 +975,18 @@ module ViewModels.Employees {
                         this.activityTypes()[i].checked = ko.computed(this.defHasActivityTypeCallback(i));
                     }
 
-                    //ko.mapping.fromJS(data, {}, this);
+                        //ko.mapping.fromJS(data, {}, this);
 
-                    ///* Initialize the list of selected locations with current locations in values. */
-                    //for (var i = 0; i < this.locations().length; i += 1) {
+                        ///* Initialize the list of selected locations with current locations in values. */
+                        //for (var i = 0; i < this.locations().length; i += 1) {
 
-                    //    this.initialLocations.push({
-                    //        officialName: this.locations()[i].placeOfficialName(),
-                    //        id: this.locations()[i].placeId()
-                    //    });
+                        //    this.initialLocations.push({
+                        //        officialName: this.locations()[i].placeOfficialName(),
+                        //        id: this.locations()[i].placeId()
+                        //    });
 
-                    //    this.selectedLocationValues.push(this.locations()[i].placeId());
-                    //}
+                        //    this.selectedLocationValues.push(this.locations()[i].placeId());
+                        //}                  
 
                     this.places = ko.mapping.fromJS(places);
 
@@ -976,15 +1000,15 @@ module ViewModels.Employees {
         }
 
         checkInstitutionForNull() {
-            var me = $("#" + this.institutionSelectorId).data("kendoAutoComplete");
+            var me = $("#" + this.establishmentDropListId).data("kendoAutoComplete");
             var value = (me.value() != null) ? me.value().toString() : null;
             if (value != null) {
                 value = $.trim(value);
             }
             if ((value == null) || (value.length == 0)) {
                 me.value(null);
-                this.institutionOfficialName(null);
-                this.institutionId(null);
+                this.establishmentOfficialName(null);
+                this.establishmentId(null);
             }
         }
 

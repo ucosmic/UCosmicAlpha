@@ -1,20 +1,42 @@
 ﻿<div class="stats-sidebar" style="margin-top: 10px">
-@*    <div class="keywords-search">
+    @*    <div class="keywords-search">
         <h1>Keyword Search</h1>
         <input type="text" id="keywords" style="width: 85%"/>
         <input type="image" src="../../images/icons/search/search-24-black.png" style="width: 24px; height: 24px" alt="Search">
     </div>*@
+    <div>
+        <select id="establishmentDropList" style="width: 100%"></select>
+    </div>
     <div class="stats" style="margin-top: 80px" >
         <div style="display: none; font-size: medium; margin-bottom: 16px" data-bind="visible: searchType() == 'activities'">
-            <div style="margin-bottom: 8px"><span>Total Activities:&emsp;</span><span style="font-weight: bold" data-bind=""></span></div>
-            <div><span>Total Locations with Activities:&emsp;</span><span style="font-weight: bold" data-bind=""></span></div>
+            <div style="margin-bottom: 8px; text-align: center">
+                <div>Total Activities</div>
+                <div style="font-weight: bold" data-bind=""></div>
+            </div>
+            <div style="text-align: center; text-align: center">
+                <div>Total Locations with Activities</div>
+                <div style="font-weight: bold" data-bind=""></div>
+            </div>
         </div>
         <div style="display: none; margin-bottom: 16px" data-bind="visible: searchType() == 'people'">
-            <div style="font-size: medium; margin-bottom: 8px"><span>Total Staff & Faculty:&emsp;</span><span style="font-weight: bold" data-bind=""></span></div>
-            <div style="font-size: 10pt;"><span>Total Locations with Staff & Faculty:&emsp;</span><span style="font-weight: bold" data-bind=""></span></div>
+            <div style="font-size: medium; margin-bottom: 8px">
+                <div>Total Staff & Faculty</div>
+                <div style="font-weight: bold" data-bind=""></div>
+            </div>
+            <div style="font-size: 10pt;">
+                <div>Total Locations with Staff & Faculty</div>
+                <div style="font-weight: bold" data-bind=""></div>
+            </div>
         </div>
-        <div id="facultystaff-summary-barchart" style="width: 100%; height: 300px"></div>
-        <div id="facultystaff-summary-linechart" style="width: 100%; height: 300px"></div>
+        <div id="facultystaff-summary-barchart" style="width: 100%; height: 150px"></div>
+        <div>
+            <img src="../../images/icons/glyphs/glyphicons_375_classic_hammer.png"/>
+            <img src="../../images/icons/glyphs/glyphicons_071_book.png"/>
+            <img src="../../images/icons/glyphs/glyphicons_072_bookmark.png"/>
+            <img src="../../images/icons/glyphs/glyphicons_300_microphone.png"/>
+            <img src="../../images/icons/glyphs/glyphicons_341_briefcase.png"/>
+        </div>
+        <div id="facultystaff-summary-linechart" style="width: 100%; height: 200px"></div>
     </div>
 @*    <div class="type-filters" style="display: none" data-bind="visible: (searchType() === 'activities') && (activityTypes().length > 0)">
         <div style="font-size: small">

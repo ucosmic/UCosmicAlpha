@@ -585,36 +585,20 @@ var App;
             var Employees = WebApi.Employees;
 
             (function (FacultyStaff) {
-                function getActivityCount(placeId) {
-                    if (placeId == null) {
-                        return makeUrl('faculty-staff/activity-count/placeId=');
-                    } else {
-                        return makeUrl('faculty-staff/activity-count/placeId=' + placeId);
-                    }
+                function getActivityCount() {
+                    return makeUrl('faculty-staff/activity-count');
                 }
                 FacultyStaff.getActivityCount = getActivityCount;
-                function getPeopleCount(placeId) {
-                    if (placeId == null) {
-                        return makeUrl('faculty-staff/people-count');
-                    } else {
-                        return makeUrl('faculty-staff/people-count/' + placeId);
-                    }
+                function getPeopleCount() {
+                    return makeUrl('faculty-staff/people-count');
                 }
                 FacultyStaff.getPeopleCount = getPeopleCount;
-                function getActivityTrend(placeId) {
-                    if (placeId == null) {
-                        return makeUrl('faculty-staff/activity-trend');
-                    } else {
-                        return makeUrl('faculty-staff/activity-trend/' + placeId);
-                    }
+                function getActivityTrend() {
+                    return makeUrl('faculty-staff/activity-trend');
                 }
                 FacultyStaff.getActivityTrend = getActivityTrend;
-                function getPeopleTrend(placeId) {
-                    if (placeId == null) {
-                        return makeUrl('faculty-staff/people-trend');
-                    } else {
-                        return makeUrl('faculty-staff/people-trend/' + placeId);
-                    }
+                function getPeopleTrend() {
+                    return makeUrl('faculty-staff/people-trend');
                 }
                 FacultyStaff.getPeopleTrend = getPeopleTrend;
             })(WebApi.FacultyStaff || (WebApi.FacultyStaff = {}));

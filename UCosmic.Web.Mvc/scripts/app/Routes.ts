@@ -460,33 +460,17 @@ module App.Routes {
         }
 
         export module FacultyStaff {
-            export function getActivityCount(placeId?:number): string {
-                if (placeId == null) {
-                    return makeUrl('faculty-staff/activity-count/placeId=');
-                } else {
-                    return makeUrl('faculty-staff/activity-count/placeId=' + placeId);
-                }
+            export function getActivityCount(): string {
+                return makeUrl('faculty-staff/activity-count');
             }
-            export function getPeopleCount(placeId?: number): string {
-                if (placeId == null) {
-                    return makeUrl('faculty-staff/people-count');
-                } else {
-                    return makeUrl('faculty-staff/people-count/' + placeId);
-                }
+            export function getPeopleCount(): string {
+                return makeUrl('faculty-staff/people-count');
             }
-            export function getActivityTrend(placeId?: number): string {
-                if (placeId == null) {
-                    return makeUrl('faculty-staff/activity-trend');
-                } else {
-                    return makeUrl('faculty-staff/activity-trend/' + placeId);
-                }
+            export function getActivityTrend(): string {
+                return makeUrl('faculty-staff/activity-trend');
             }
-            export function getPeopleTrend(placeId?: number): string {
-                if (placeId == null) {
-                    return makeUrl('faculty-staff/people-trend');
-                } else {
-                    return makeUrl('faculty-staff/people-trend/' + placeId);
-                }
+            export function getPeopleTrend(): string {
+                return makeUrl('faculty-staff/people-trend');
             }
         }
 

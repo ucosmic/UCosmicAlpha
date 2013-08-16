@@ -25,9 +25,9 @@ var ViewModels;
                 this.selectedLocationValues = [];
                 this.fromDate = ko.observable();
                 this.toDate = ko.observable();
-                this.institutionId = ko.observable(null);
-                this.institutionOfficialName = ko.observable(null);
-                this.institutionCountryOfficialName = ko.observable(null);
+                this.establishmentId = ko.observable(null);
+                this.establishmentOfficialName = ko.observable(null);
+                this.establishmentCountryOfficialName = ko.observable(null);
                 this.institutionHasCampuses = ko.observable(false);
                 this.activityTypes = ko.observableArray();
                 this.selectedActivityIds = ko.observableArray();
@@ -39,20 +39,20 @@ var ViewModels;
                 this.isGlobalView = ko.observable(true);
                 this.loadSpinner = new App.Spinner(new App.SpinnerOptions(200));
 
-                this.globalActivityCountData = ko.observable(null);
-                this.placeActivityCountData = ko.observable(null);
-                this.globalPeopleCountData = ko.observable(null);
-                this.placePeopleCountData = ko.observable(null);
-                this.globalActivityTrendData = ko.observable(null);
-                this.placeActivityTrendData = ko.observable(null);
-                this.globalPeopleTrendData = ko.observable(null);
-                this.placePeopleTrendData = ko.observable(null);
+                this.globalActivityCountData = null;
+                this.placeActivityCountData = null;
+                this.globalPeopleCountData = null;
+                this.placePeopleCountData = null;
+                this.globalActivityTrendData = null;
+                this.placeActivityTrendData = null;
+                this.globalPeopleTrendData = null;
+                this.placePeopleTrendData = null;
 
                 this.selectSearchType('activities');
 
                 if (institutionInfo != null) {
                     if (institutionInfo.InstitutionId != null) {
-                        this.institutionId(Number(institutionInfo.InstitutionId));
+                        this.establishmentId(Number(institutionInfo.InstitutionId));
                     }
 
                     if (institutionInfo.ActivityTypes != null) {
@@ -71,7 +71,7 @@ var ViewModels;
                 }
             };
 
-            FacultyAndStaff.prototype.setupWidgets = function (locationSelectorId, fromDatePickerId, toDatePickerId, institutionSelectorId, campusDropListId, collegeDropListId, departmentDropListId) {
+            FacultyAndStaff.prototype.setupWidgets = function (locationSelectorId, fromDatePickerId, toDatePickerId, establishmentDropListId, campusDropListId, collegeDropListId, departmentDropListId) {
                 var _this = this;
                 this.locationSelectorId = locationSelectorId;
 
@@ -118,43 +118,58 @@ var ViewModels;
                     }
                 });
 
-                this.institutionSelectorId = institutionSelectorId;
+                this.establishmentDropListId = establishmentDropListId;
 
-                $("#" + institutionSelectorId).kendoAutoComplete({
-                    minLength: 3,
-                    filter: "contains",
-                    ignoreCase: true,
-                    placeholder: "[Enter Institution]",
+                //$("#" + establishmentDropListId).kendoAutoComplete({
+                //    minLength: 3,
+                //    filter: "contains",
+                //    ignoreCase: true,
+                //    placeholder: "[Enter Institution]",
+                //    dataTextField: "officialName",
+                //    dataSource: new kendo.data.DataSource({
+                //        serverFiltering: true,
+                //        transport: {
+                //            read: (options: any): void => {
+                //                $.ajax({
+                //                    url: App.Routes.WebApi.Establishments.get(),
+                //                    data: {
+                //                        typeEnglishNames: ['University', 'University System']
+                //                    },
+                //                    success: (results: any): void => {
+                //                        options.success(results.items);
+                //                    }
+                //                });
+                //            }
+                //        }
+                //    }),
+                //    change: (e: any): void => {
+                //        this.checkInstitutionForNull();
+                //    },
+                //    select: (e: any): void => {
+                //        var me = $("#" + establishmentDropListId).data("kendoAutoComplete");
+                //        var dataItem = me.dataItem(e.item.index());
+                //        this.establishmentOfficialName(dataItem.officialName);
+                //        this.establishmentId(dataItem.id);
+                //        if ((dataItem.countryName != null) && (dataItem.countryName.length > 0)) {
+                //            this.establishmentCountryOfficialName(dataItem.countryName);
+                //        }
+                //        else {
+                //            this.establishmentCountryOfficialName(null);
+                //        }
+                //    }
+                //});
+                $("#" + establishmentDropListId).kendoDropDownList({
                     dataTextField: "officialName",
-                    dataSource: new kendo.data.DataSource({
-                        serverFiltering: true,
-                        transport: {
-                            read: function (options) {
-                                $.ajax({
-                                    url: App.Routes.WebApi.Establishments.get(),
-                                    data: {
-                                        typeEnglishNames: ['University', 'University System']
-                                    },
-                                    success: function (results) {
-                                        options.success(results.items);
-                                    }
-                                });
-                            }
-                        }
-                    }),
+                    dataValueField: "id",
+                    //optionLabel: { officialName: "ALL", id: 0 },
+                    dataSource: [
+                        { officialName: "USF System", id: 0 },
+                        { officialName: "USF Tampa", id: 0 },
+                        { officialName: "USF St. Petersburg", id: 0 },
+                        { officialName: "USF Sarasota-Manatee", id: 0 }
+                    ],
                     change: function (e) {
-                        _this.checkInstitutionForNull();
-                    },
-                    select: function (e) {
-                        var me = $("#" + institutionSelectorId).data("kendoAutoComplete");
-                        var dataItem = me.dataItem(e.item.index());
-                        _this.institutionOfficialName(dataItem.officialName);
-                        _this.institutionId(dataItem.id);
-                        if ((dataItem.countryName != null) && (dataItem.countryName.length > 0)) {
-                            _this.institutionCountryOfficialName(dataItem.countryName);
-                        } else {
-                            _this.institutionCountryOfficialName(null);
-                        }
+                        //var item = this.dataItem[e.sender.selectedIndex];
                     }
                 });
 
@@ -186,7 +201,7 @@ var ViewModels;
                     collegeDropListDataSource = new kendo.data.DataSource({
                         transport: {
                             read: {
-                                url: App.Routes.WebApi.Establishments.getChildren(this.institutionId()),
+                                url: App.Routes.WebApi.Establishments.getChildren(this.establishmentId()),
                                 data: { orderBy: ['rank-asc', 'name-asc'] }
                             }
                         }
@@ -246,7 +261,7 @@ var ViewModels;
                         dataSource: new kendo.data.DataSource({
                             transport: {
                                 read: {
-                                    url: App.Routes.WebApi.Establishments.getChildren(this.institutionId()),
+                                    url: App.Routes.WebApi.Establishments.getChildren(this.establishmentId()),
                                     data: { orderBy: ['rank-asc', 'name-asc'] }
                                 }
                             }
@@ -454,9 +469,17 @@ var ViewModels;
                 /* ----- Setup ColumnChart ----- */
                 this.barchartActivityOptions = {
                     title: 'Activities',
-                    vAxis: { title: 'Count' },
-                    //axisTitlesPosition: 'in',
-                    chartArea: { left: 80 },
+                    hAxis: {
+                        textPosition: 'none'
+                    },
+                    vAxis: {
+                        textPosition: 'none'
+                    },
+                    chartArea: {
+                        left: 10,
+                        width: '100%',
+                        height: '100'
+                    },
                     legend: { position: 'none' },
                     series: {
                         0: {
@@ -507,9 +530,7 @@ var ViewModels;
             };
 
             FacultyAndStaff.prototype.getHeatmapActivityDataTable = function () {
-                debugger;
-
-                if (this.globalActivityCountData() == null) {
+                if (this.globalActivityCountData == null) {
                     this.getActivityDataTable(null);
                 }
 
@@ -520,11 +541,11 @@ var ViewModels;
                 dataTable.addColumn('number', 'Total Activities');
 
                 var placeCounts = (this.globalActivityCountData).placeCounts;
-                if ((placeCounts != null) && (placeCounts() != null) && (placeCounts().length > 0)) {
-                    for (var i = 0; i < placeCounts().length; i += 1) {
+                if ((placeCounts != null) && (placeCounts.length > 0)) {
+                    for (var i = 0; i < placeCounts.length; i += 1) {
                         var rowData = new Array();
-                        rowData.push(placeCounts()[i].officialName());
-                        rowData.push(placeCounts()[i].count());
+                        rowData.push(placeCounts[i].officialName);
+                        rowData.push(placeCounts[i].count);
                         dataTable.addRow(rowData);
                     }
                 }
@@ -533,8 +554,6 @@ var ViewModels;
             };
 
             FacultyAndStaff.prototype.getHeatmapPeopleDataTable = function () {
-                debugger;
-
                 if (this.globalPeopleCountData() == null) {
                     this.getPeopleDataTable(null);
                 }
@@ -546,11 +565,11 @@ var ViewModels;
                 dataTable.addColumn('number', 'Total Activities');
 
                 var placeCounts = (this.globalPeopleCountData).placeCounts;
-                if ((placeCounts != null) && (placeCounts() != null) && (placeCounts().length > 0)) {
-                    for (var i = 0; i < placeCounts().length; i += 1) {
+                if ((placeCounts != null) && (placeCounts.length > 0)) {
+                    for (var i = 0; i < placeCounts.length; i += 1) {
                         var rowData = new Array();
-                        rowData.push(placeCounts()[i].officialName());
-                        rowData.push(placeCounts()[i].count());
+                        rowData.push(placeCounts[i].officialName);
+                        rowData.push(placeCounts[i].count);
                         dataTable.addRow(rowData);
                     }
                 }
@@ -564,15 +583,15 @@ var ViewModels;
             FacultyAndStaff.prototype.getActivityDataTable = function (placeOfficialName) {
                 var _this = this;
                 if (placeOfficialName == null) {
-                    if (this.globalActivityCountData() == null) {
+                    if (this.globalActivityCountData == null) {
                         $.ajax({
                             type: "GET",
                             async: false,
+                            data: { 'placeId': null },
                             dataType: 'json',
-                            url: App.Routes.WebApi.FacultyStaff.getActivityCount(null),
+                            url: App.Routes.WebApi.FacultyStaff.getActivityCount(),
                             success: function (data, textStatus, jqXhr) {
-                                //debugger;
-                                _this.globalActivityCountData = ko.mapping.fromJS(data);
+                                _this.globalActivityCountData = data;
                             },
                             error: function (jqXhr, textStatus, errorThrown) {
                                 alert('Error getting data ' + textStatus + ' | ' + errorThrown);
@@ -582,15 +601,15 @@ var ViewModels;
                 } else {
                     var placeId = this.getPlaceId(placeOfficialName);
                     if (placeId != null) {
-                        if (this.placeActivityCountData() == null) {
+                        if (this.placeActivityCountData == null) {
                             $.ajax({
                                 type: "GET",
                                 async: false,
+                                data: { 'placeId': placeId },
                                 dataType: 'json',
-                                url: App.Routes.WebApi.FacultyStaff.getActivityCount(placeId),
+                                url: App.Routes.WebApi.FacultyStaff.getActivityCount(),
                                 success: function (data, textStatus, jqXhr) {
-                                    //debugger;
-                                    _this.placeActivityCountData = ko.mapping.fromJS(data);
+                                    _this.placeActivityCountData = data;
                                 },
                                 error: function (jqXhr, textStatus, errorThrown) {
                                     alert('Error getting data ' + textStatus + ' | ' + errorThrown);
@@ -607,16 +626,16 @@ var ViewModels;
                 dt.addColumn({ type: 'number', role: 'annotation' });
 
                 if (placeOfficialName == null) {
-                    for (var i = 0; i < (this.globalActivityCountData).globalTypeCounts().length; i += 1) {
-                        var activityType = (this.globalActivityCountData).globalTypeCounts()[i].type();
-                        var count = (this.globalActivityCountData).globalTypeCounts()[i].count();
+                    for (var i = 0; i < (this.globalActivityCountData).globalTypeCounts.length; i += 1) {
+                        var activityType = (this.globalActivityCountData).globalTypeCounts[i].type;
+                        var count = (this.globalActivityCountData).globalTypeCounts[i].count;
                         dt.addRow([activityType, count, count]);
                     }
                 } else {
-                    var placeActivityCounts = (this.placeActivityCountData).placeActivityCounts()[0];
-                    for (var j = 0; j < placeActivityCounts.typeCounts().length; j += 1) {
-                        var activityType = placeActivityCounts.typeCounts[j].type();
-                        var count = placeActivityCounts.typeCounts[j].count();
+                    var placeActivityCounts = (this.placeActivityCountData).placeActivityCounts[0];
+                    for (var j = 0; j < placeActivityCounts.typeCounts.length; j += 1) {
+                        var activityType = placeActivityCounts.typeCounts[j].type;
+                        var count = placeActivityCounts.typeCounts[j].count;
                         dt.addRow([activityType, count, count]);
                     }
                 }
@@ -633,15 +652,15 @@ var ViewModels;
             FacultyAndStaff.prototype.getPeopleDataTable = function (placeOfficialName) {
                 var _this = this;
                 if (placeOfficialName == null) {
-                    if (this.globalActivityCountData() == null) {
+                    if (this.globalActivityCountData == null) {
                         $.ajax({
                             type: "GET",
                             async: false,
+                            data: { 'placeId': null },
                             dataType: 'json',
-                            url: App.Routes.WebApi.FacultyStaff.getPeopleCount(null),
+                            url: App.Routes.WebApi.FacultyStaff.getPeopleCount(),
                             success: function (data, textStatus, jqXhr) {
-                                //debugger;
-                                _this.globalActivityCountData = ko.mapping.fromJS(data);
+                                _this.globalActivityCountData = data;
                             },
                             error: function (jqXhr, textStatus, errorThrown) {
                                 alert('Error getting data ' + textStatus + ' | ' + errorThrown);
@@ -651,15 +670,15 @@ var ViewModels;
                 } else {
                     var placeId = this.getPlaceId(placeOfficialName);
                     if (placeId != null) {
-                        if (this.placeActivityCountData() == null) {
+                        if (this.placeActivityCountData == null) {
                             $.ajax({
                                 type: "GET",
                                 async: false,
+                                data: { 'placeId': placeId },
                                 dataType: 'json',
-                                url: App.Routes.WebApi.FacultyStaff.getPeopleCount(placeId),
+                                url: App.Routes.WebApi.FacultyStaff.getPeopleCount(),
                                 success: function (data, textStatus, jqXhr) {
-                                    //debugger;
-                                    _this.placeActivityCountData = ko.mapping.fromJS(data);
+                                    _this.placeActivityCountData = data;
                                 },
                                 error: function (jqXhr, textStatus, errorThrown) {
                                     alert('Error getting data ' + textStatus + ' | ' + errorThrown);
@@ -676,16 +695,16 @@ var ViewModels;
                 dt.addColumn({ type: 'string', role: 'annotation' });
 
                 if (placeOfficialName == null) {
-                    for (var i = 0; i < (this.globalPeopleCountData).typeCounts().length; i += 1) {
-                        var activityType = (this.globalPeopleCountData).typeCounts()[i].type();
-                        var count = (this.globalPeopleCountData).typeCounts()[i].count();
+                    for (var i = 0; i < (this.globalPeopleCountData).typeCounts.length; i += 1) {
+                        var activityType = (this.globalPeopleCountData).typeCounts[i].type;
+                        var count = (this.globalPeopleCountData).typeCounts[i].count;
                         dt.addRow([activityType, count, String(count)]);
                     }
                 } else {
-                    var placePeopleCounts = (this.placePeopleCountData).placePeopleCounts()[0];
-                    for (var j = 0; j < placePeopleCounts.typeCounts().length; j += 1) {
-                        var activityType = placePeopleCounts.typeCounts[j].type();
-                        var count = placePeopleCounts.typeCounts[j].count();
+                    var placePeopleCounts = (this.placePeopleCountData).placePeopleCounts[0];
+                    for (var j = 0; j < placePeopleCounts.typeCounts.length; j += 1) {
+                        var activityType = placePeopleCounts.typeCounts[j].type;
+                        var count = placePeopleCounts.typeCounts[j].count;
                         dt.addRow([activityType, count, String(count)]);
                     }
                 }
@@ -817,15 +836,15 @@ var ViewModels;
             };
 
             FacultyAndStaff.prototype.checkInstitutionForNull = function () {
-                var me = $("#" + this.institutionSelectorId).data("kendoAutoComplete");
+                var me = $("#" + this.establishmentDropListId).data("kendoAutoComplete");
                 var value = (me.value() != null) ? me.value().toString() : null;
                 if (value != null) {
                     value = $.trim(value);
                 }
                 if ((value == null) || (value.length == 0)) {
                     me.value(null);
-                    this.institutionOfficialName(null);
-                    this.institutionId(null);
+                    this.establishmentOfficialName(null);
+                    this.establishmentId(null);
                 }
             };
 
