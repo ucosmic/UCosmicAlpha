@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using UCosmic.Domain.Employees;
 
 namespace UCosmic.Domain.Activities
@@ -18,8 +19,8 @@ namespace UCosmic.Domain.Activities
         public bool Equals(ActivityType other)
         {
             return other != null &&
-                TypeId == other.TypeId &&
-                ActivityValuesId == other.ActivityValuesId;
+                   TypeId == other.TypeId &&
+                   ActivityValuesId == other.ActivityValuesId;
         }
 
         public override bool Equals(object obj)

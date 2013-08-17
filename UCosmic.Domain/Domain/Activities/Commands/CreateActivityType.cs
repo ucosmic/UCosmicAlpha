@@ -11,10 +11,13 @@ namespace UCosmic.Domain.Activities
         public IPrincipal Principal { get; protected set; }
         public int ActivityValuesId { get; protected set; }
         public int EmployeeActivityTypeId { get; protected set; }
+        public string CssRgbColor { get; protected set; }
         public bool NoCommit { get; set; }
         public ActivityType CreatedActivityType { get; protected internal set; }
 
-        public CreateActivityType(IPrincipal principal, int activityValuesId, int employeeActivityTypeId)
+        public CreateActivityType(IPrincipal principal,
+                                  int activityValuesId,
+                                  int employeeActivityTypeId)
         {
             Principal = principal;
             ActivityValuesId = activityValuesId;
@@ -79,7 +82,6 @@ namespace UCosmic.Domain.Activities
                 CreatedByPrincipal = command.Principal.Identity.Name,
                 CreatedOnUtc = DateTime.UtcNow
             };
-
 
             _entities.Create(activityType);
 

@@ -76,6 +76,7 @@ namespace UCosmic.EntityFramework
             ToTable(typeof(EmployeeActivityType).Name, DbSchemaName.Employees);
 
             Property(p => p.Type).IsRequired().HasMaxLength(EmployeeFacultyRankConstraints.ActivityTypeMaxLength);
+            Property(p => p.CssColor).IsOptional();
         }
     }
 }

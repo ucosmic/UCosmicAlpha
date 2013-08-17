@@ -9,13 +9,13 @@
     </div>
     <div class="stats" style="margin-top: 80px" >
         <div style="display: none; font-size: medium; margin-bottom: 16px" data-bind="visible: searchType() == 'activities'">
-            <div style="margin-bottom: 8px; text-align: center">
-                <div>Total Activities</div>
-                <div style="font-weight: bold" data-bind=""></div>
+            <div>
+                <div class="total-count-header">Total Activities</div>
+                <div class="total-count" data-bind=""></div>
             </div>
-            <div style="text-align: center; text-align: center">
-                <div>Total Locations with Activities</div>
-                <div style="font-weight: bold" data-bind=""></div>
+            <div>
+                <div class="total-count-header">Total Locations with Activities</div>
+                <div class="total-count" data-bind=""></div>
             </div>
         </div>
         <div style="display: none; margin-bottom: 16px" data-bind="visible: searchType() == 'people'">

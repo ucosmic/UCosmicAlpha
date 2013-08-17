@@ -324,6 +324,14 @@ ul.selectableListItems li:hover {
   .stats-sidebar .section {
     background-color: #dddddd;
     padding-bottom: 8px; }
+  .stats-sidebar .total-count-header {
+    background-color: #dddddd;
+    color: #ff0302;
+    text-align: center;
+    text-transform: uppercase; }
+  .stats-sidebar .total {
+    text-align: center;
+    font-weight: bold; }
 
 .faculty-staff-summary-map-button {
   position: relative;

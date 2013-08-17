@@ -93,10 +93,10 @@ namespace UCosmic.SeedData
                     ActivityValues activityValues = createActivityValuesCommand.CreatedActivityValues;
 
                     _createActivityType.Handle(new CreateActivityType(principal, activityValues.RevisionId,
-                        employeeModuleSettings.ActivityTypes.Single(x => x.Type.Contains("Research")).Id ));
+                        employeeModuleSettings.ActivityTypes.Single(x => x.Type.Contains("Research")).Id));
 
                     _createActivityType.Handle(new CreateActivityType(principal, activityValues.RevisionId,
-                        employeeModuleSettings.ActivityTypes.Single(x => x.Type.Contains("Teaching")).Id ));
+                        employeeModuleSettings.ActivityTypes.Single(x => x.Type.Contains("Teaching")).Id));
 
                     _createActivityLocation.Handle(new CreateActivityLocation(principal)
                     {

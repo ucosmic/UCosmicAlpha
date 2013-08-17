@@ -183,7 +183,9 @@ namespace UCosmic.Domain.Activities
                 var targetType = target.Types.SingleOrDefault(x => x.TypeId == type.TypeId);
                 if (targetType == null)
                 {
-                    var createActivityType = new CreateActivityType(command.Principal,target.RevisionId, type.TypeId)
+                    var createActivityType = new CreateActivityType(command.Principal,
+                                                                    target.RevisionId,
+                                                                    type.TypeId)
                     {
                         NoCommit = true
                     };

@@ -2271,7 +2271,6 @@
     <Content Include="Views\FacultyStaff\_Bib.cshtml" />
     <Content Include="Views\FacultyStaff\_SearchSideBar.cshtml" />
     <Content Include="Views\FacultyStaff\_StatsSideBar.cshtml" />
-    <Content Include="Views\FacultyStaff\OldIndex.cshtml" />
     <Content Include="Views\MyProfile\GeographicExpertiseForm.cshtml" />
     <Content Include="Views\MyProfile\DegreeForm.cshtml" />
     <Content Include="Views\MyProfile\LanguageExpertiseForm.cshtml" />

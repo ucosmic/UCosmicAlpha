@@ -107,11 +107,11 @@ namespace UCosmic.SeedData
                 EstablishmentId = establishment.RevisionId,
                 EmployeeActivityTypes = new Collection<EmployeeActivityType>
                 {
-                    new EmployeeActivityType {Type = "Research or Creative Endeavor", Rank = 1},
-                    new EmployeeActivityType {Type = "Teaching or Mentoring", Rank = 2},
-                    new EmployeeActivityType {Type = "Award or Honor", Rank = 3},
-                    new EmployeeActivityType {Type = "Conference Presentation or Proceeding", Rank = 4},
-                    new EmployeeActivityType {Type = "Professional Development, Service or Consulting", Rank = 5}
+                    new EmployeeActivityType {Type = "Research or Creative Endeavor", Rank = 1, CssColor = "blue"},
+                    new EmployeeActivityType {Type = "Teaching or Mentoring", Rank = 2, CssColor = "green"},
+                    new EmployeeActivityType {Type = "Award or Honor", Rank = 3, CssColor = "yellow"},
+                    new EmployeeActivityType {Type = "Conference Presentation or Proceeding", Rank = 4, CssColor = "orange"},
+                    new EmployeeActivityType {Type = "Professional Development, Service or Consulting", Rank = 5, CssColor = "red"}
                 },
                 OfferCountry = true,
                 OfferActivityType = true,

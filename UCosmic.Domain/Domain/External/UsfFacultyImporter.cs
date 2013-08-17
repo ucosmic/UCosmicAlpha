@@ -493,8 +493,6 @@ namespace UCosmic.Domain.External
         // --------------------------------------------------------------------------------
         public void Handle(UserCreated @event)
         {
-            Debug.WriteLine("Start UsfFacultyImporter");
-
             try
             {
                 /* Get the user. */
@@ -510,7 +508,7 @@ namespace UCosmic.Domain.External
                 while (establishment.Parent != null)
                 {
                     establishment = establishment.Parent;
-                    Debug.WriteLine("Person root establishment = " + establishment.OfficialName);
+                    //Debug.WriteLine("Person root establishment = " + establishment.OfficialName);
                 }
 
                 /* Get root USF Establishment. */
@@ -525,10 +523,6 @@ namespace UCosmic.Domain.External
                 {
                     Debug.WriteLine(DateTime.Now + " USF: Importing faculty profile for " + user.Name);
                     Import(@event.Principal, @event.UserId);
-                }
-                else
-                {
-                    Debug.WriteLine("User is not part of USF");
                 }
             }
             catch (Exception ex)
@@ -569,8 +563,6 @@ namespace UCosmic.Domain.External
                     Debug.WriteLine(DateTime.Now + " USF: Fail " + ex1.Message);
                 }
             }
-
-            Debug.WriteLine("End UsfFacultyImporter");
 
             /* For those callers that need synchronization. */
             @event.Signal.Set();

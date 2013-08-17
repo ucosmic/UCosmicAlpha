@@ -11,9 +11,13 @@ namespace UCosmic.Domain.Activities
         public int Id { get; protected set; }
         public DateTime UpdatedOn { get; protected set; }
         public int TypeId { get; protected set; }
+        public string CssRgbColor { get; protected set; }
         public bool NoCommit { get; set; }
 
-        public UpdateActivityType(IPrincipal principal, int id, DateTime updatedOn, int typeId)
+        public UpdateActivityType(IPrincipal principal,
+                                  int id,
+                                  DateTime updatedOn,
+                                  int typeId)
         {
             if (principal == null) { throw new ArgumentNullException("principal"); }
             if (updatedOn == null) { throw new ArgumentNullException("updatedOn"); }
@@ -64,9 +68,9 @@ namespace UCosmic.Domain.Activities
             if (command == null) throw new ArgumentNullException("command");
 
             /* Get the activity values we are updating. */
-            var target = _entities.Get<ActivityLocation>().Single(x => x.RevisionId == command.Id);
+            var target = _entities.Get<ActivityType>().Single(x => x.RevisionId == command.Id);
 
-            target.PlaceId = command.TypeId;
+            target.TypeId = command.TypeId;
             target.UpdatedOnUtc = command.UpdatedOn.ToUniversalTime();
             target.UpdatedByPrincipal = command.Principal.Identity.Name;
 

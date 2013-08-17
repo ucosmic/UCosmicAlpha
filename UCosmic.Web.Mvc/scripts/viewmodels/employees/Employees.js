@@ -373,83 +373,6 @@ var ViewModels;
                     scrollwheel: false
                 });
 
-                /* ----- Setup Heatmap Activity (chart) ----- */
-                //var countryData = new Array();
-                //var dataTable = new this.google.visualization.DataTable();
-                //var colNames = new Array();
-                //dataTable.addColumn('string', 'Country');
-                //dataTable.addColumn('number', 'Total Activities');
-                //if (this.summary != null) {
-                //if (((<any>this.summary).placeActivityCounts() != null) &&
-                //    ((<any>this.summary).placeActivityCounts().length > 0)) {
-                //    var placeActivityCounts: KnockoutObservable<any> = (<any>this.summary).placeActivityCounts;
-                //    if ((placeActivityCounts()[0].typeCounts() != null) &&
-                //         (placeActivityCounts()[0].typeCounts().length > 0)) {
-                //        //--for (var i = 0; i < placeActivityCounts()[0].typeCounts().length; i += 1) {
-                //            //--colNames.push(placeActivityCounts()[0].typeCounts()[i].type());
-                //            //--dataTable.addColumn('number', placeActivityCounts()[0].typeCounts()[i].type());
-                //        dataTable.addColumn({ type: 'string', role: 'tooltip' });
-                //        //--}
-                //    }
-                //}
-                //countryData.push(colNames);
-                //if (((<any>this.summary).placeActivityCounts() != null) &&
-                //    ((<any>this.summary).placeActivityCounts().length > 0)) {
-                //    var placeActivityCounts: KnockoutObservable<any> = (<any>this.summary).placeActivityCounts;
-                //    for (var i = 0; i < placeActivityCounts().length; i += 1) {
-                //        var rowData = new Array();
-                //        rowData.push(placeActivityCounts()[i].officialName());
-                //        rowData.push(placeActivityCounts()[i].count());
-                //if ((placeActivityCounts()[0].typeCounts() != null) &&
-                //     (placeActivityCounts()[0].typeCounts().length > 0)) {
-                //    var tooltipText = "";
-                //    for (var j = 0; j < placeActivityCounts()[i].typeCounts().length; j += 1) {
-                //        tooltipText += placeActivityCounts()[i].typeCounts()[j].type() + ": " +
-                //                      placeActivityCounts()[i].typeCounts()[j].count();
-                //        //--rowData.push(Number(placeActivityCounts()[i].typeCounts()[j].count()));
-                //        //--rowData.push(tooltipText);
-                //    }
-                //    rowData.push(tooltipText);
-                //}
-                //--countryData.push(rowData);
-                //            dataTable.addRow(rowData)
-                //        }
-                //    }
-                //}
-                //$.ajax({
-                //    type: "GET",
-                //    async: false,
-                //    url: App.Routes.WebApi.Activities.placeActivityCounts.post(),
-                //    success: function (data, textStatus, jqXHR) {
-                //        for (var i = 0; i < data.length; i += 1) {
-                //            countryData.push([data[i].officialName, data[i].count]);
-                //        }
-                //    },
-                //    error: function (jqXhr, textStatus, errorThrown) {
-                //        //debugger;
-                //    },
-                //    dataType: 'json'
-                //});
-                //this.heatmapData = this.google.visualization.arrayToDataTable(countryData);
-                //this.heatmapActivityData = dataTable;
-                /* ----- Setup Heatmap Activity (chart) ----- */
-                //dataTable = new this.google.visualization.DataTable();
-                //colNames = new Array();
-                //dataTable.addColumn('string', 'Location');
-                //dataTable.addColumn('number', 'Total People');
-                //if (this.summary != null) {
-                //    if (((<any>this.summary).placePeopleCounts() != null) &&
-                //        ((<any>this.summary).placePeopleCounts().length > 0)) {
-                //        var placePeopleCounts: KnockoutObservable<any> = (<any>this.summary).placePeopleCounts;
-                //        for (var i = 0; i < placePeopleCounts().length; i += 1) {
-                //            var rowData = new Array();
-                //            rowData.push(placePeopleCounts()[i].officialName());
-                //            rowData.push(placePeopleCounts()[i].count());
-                //            dataTable.addRow(rowData)
-                //        }
-                //    }
-                //}
-                //this.heatmapPeopleData = dataTable;
                 this.heatmapOptions = {
                     //is3D: true,
                     width: 680,
@@ -481,6 +404,7 @@ var ViewModels;
                         height: '100'
                     },
                     legend: { position: 'none' },
+                    isStacked: true,
                     series: {
                         0: {
                             type: 'bars'

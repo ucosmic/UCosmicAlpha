@@ -76,9 +76,12 @@ namespace UCosmic.Web.Mvc.Controllers
                     model.ActivityTypes = new FacultyStaffActivityType[employeeModuleSettings.ActivityTypes.Count];
                     for (int i = 0; i < employeeModuleSettings.ActivityTypes.Count; i += 1)
                     {
-                        model.ActivityTypes[i] = new FacultyStaffActivityType();
-                        model.ActivityTypes[i].Id = employeeModuleSettings.ActivityTypes.ElementAt(i).Id;
-                        model.ActivityTypes[i].Name = employeeModuleSettings.ActivityTypes.ElementAt(i).Type;
+                        model.ActivityTypes[i] = new FacultyStaffActivityType
+                        {
+                            Id = employeeModuleSettings.ActivityTypes.ElementAt(i).Id,
+                            Name = employeeModuleSettings.ActivityTypes.ElementAt(i).Type,
+                            CssColor = employeeModuleSettings.ActivityTypes.ElementAt(i).CssColor
+                        };
                     }
                 }
             }

@@ -6,6 +6,7 @@ namespace UCosmic.Web.Mvc.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public string CssColor { get; set; }
     }
 
     public class FacultyStaffInstitutionInfoModel
