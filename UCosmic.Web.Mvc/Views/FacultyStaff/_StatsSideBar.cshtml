@@ -1,21 +1,21 @@
-﻿<div class="stats-sidebar" style="margin-top: 10px">
+﻿<div class="stats-sidebar" style="">
     @*    <div class="keywords-search">
         <h1>Keyword Search</h1>
         <input type="text" id="keywords" style="width: 85%"/>
         <input type="image" src="../../images/icons/search/search-24-black.png" style="width: 24px; height: 24px" alt="Search">
     </div>*@
     <div>
-        <select id="establishmentDropList" style="width: 100%"></select>
+        <select id="establishmentDropList" style="width: 100%; margin-top: 64px"></select>
     </div>
-    <div class="stats" style="margin-top: 80px" >
+    <div class="stats" style="width: 100%">
         <div style="display: none; font-size: medium; margin-bottom: 16px" data-bind="visible: searchType() == 'activities'">
-            <div>
+            <div style="margin-top: 10px">
                 <div class="total-count-header">Total Activities</div>
-                <div class="total-count" data-bind=""></div>
+                <div class="total-count" data-bind="text: totalCount()"></div>
             </div>
-            <div>
-                <div class="total-count-header">Total Locations with Activities</div>
-                <div class="total-count" data-bind=""></div>
+            <div style="margin-top: 10px">
+                <div class="total-count-header">Total Locations w/Activities</div>
+                <div class="total-count" data-bind="text: totalPlaceCount()"></div>
             </div>
         </div>
         <div style="display: none; margin-bottom: 16px" data-bind="visible: searchType() == 'people'">
@@ -28,15 +28,15 @@
                 <div style="font-weight: bold" data-bind=""></div>
             </div>
         </div>
-        <div id="facultystaff-summary-barchart" style="width: 100%; height: 150px"></div>
-        <div>
-            <img src="../../images/icons/glyphs/glyphicons_375_classic_hammer.png"/>
-            <img src="../../images/icons/glyphs/glyphicons_071_book.png"/>
-            <img src="../../images/icons/glyphs/glyphicons_072_bookmark.png"/>
-            <img src="../../images/icons/glyphs/glyphicons_300_microphone.png"/>
-            <img src="../../images/icons/glyphs/glyphicons_341_briefcase.png"/>
+        <div id="facultystaff-summary-barchart" style="width: 100%; height: 130px"></div>
+        <div style="">
+            <img src="../../images/icons/glyphs/glyphicons_375_classic_hammer.png" style="margin-left:22px; z-index: 1"/>
+            <img src="../../images/icons/glyphs/glyphicons_071_book.png" style="margin-left:26px; z-index: 1"/>
+            <img src="../../images/icons/glyphs/glyphicons_072_bookmark.png" style="margin-left:30px; z-index: 1"/>
+            <img src="../../images/icons/glyphs/glyphicons_300_microphone.png" style="margin-left:32px; z-index: 1"/>
+            <img src="../../images/icons/glyphs/glyphicons_341_briefcase.png" style="margin-left:32px; z-index: 1"/>
         </div>
-        <div id="facultystaff-summary-linechart" style="width: 100%; height: 200px"></div>
+        <div id="facultystaff-summary-linechart" style="width: 100%; height: 200px; margin-top: 20px"></div>
     </div>
 @*    <div class="type-filters" style="display: none" data-bind="visible: (searchType() === 'activities') && (activityTypes().length > 0)">
         <div style="font-size: small">

@@ -488,11 +488,15 @@ ul.selectableListItems li:hover {
         color: $sidebar-default-text-color;
         text-align: center;
         text-transform: uppercase;
+        padding-top: 6px;
+        padding-bottom: 4px;
     }
 
-    .total {
+    .total-count {
+        color: $sidebar-default-text-color;
         text-align: center;
-        font-weight: bold
+        font-weight: bold;
+        font-size: large;
     }
 }
 

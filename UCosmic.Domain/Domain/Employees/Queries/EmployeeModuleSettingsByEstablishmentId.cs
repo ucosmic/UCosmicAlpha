@@ -27,10 +27,17 @@ namespace UCosmic.Domain.Employees
         public EmployeeModuleSettings Handle(EmployeeModuleSettingsByEstablishmentId query)
         {
             if (query == null) throw new ArgumentNullException("query");
-
-            return _entities.Query<EmployeeModuleSettings>()
+                
+            var employeeModuleSettings = _entities.Query<EmployeeModuleSettings>()
                 .EagerLoad(_entities, query.EagerLoad)
                 .SingleOrDefault(p => p.Establishment.RevisionId == query.EstablishmentId);
+
+            if (employeeModuleSettings != null)
+            {
+                employeeModuleSettings.ActivityTypes.OrderBy(a => a.Rank);
+            }
+
+            return employeeModuleSettings;
         }
     }
 }

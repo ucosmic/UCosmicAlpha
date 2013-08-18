@@ -89,6 +89,9 @@ module ViewModels.Employees {
         globalPeopleTrendData: any;
         placePeopleTrendData: any;
 
+        totalCount: KnockoutObservable<number>;
+        totalPlaceCount: KnockoutObservable<number>;
+
         loadSpinner: App.Spinner;
 
 
@@ -120,6 +123,9 @@ module ViewModels.Employees {
             this.placeActivityTrendData = null;
             this.globalPeopleTrendData = null;
             this.placePeopleTrendData = null;
+
+            this.totalCount = ko.observable(0);
+            this.totalPlaceCount = ko.observable(0);
 
             this.selectSearchType('activities');
 
@@ -476,34 +482,58 @@ module ViewModels.Employees {
 
             /* ----- Setup ColumnChart ----- */
 
-            this.barchartActivityOptions = {
-                title: 'Activities',
-                hAxis: {
+            if (this.activityTypes() != null) {
+                this.barchartActivityOptions = {
+                    title: 'Activities',
+                    hAxis: {
                         textPosition: 'none'
                     },
-                vAxis: {
-                    textPosition: 'none'
-                },
-                chartArea: {
-                    left: 10,
-                    width: '100%',
-                    height: '100'
-                },
-                legend: { position: 'none' },
-                isStacked: true,
-                series: {
-                    0: {
-                        type: 'bars'
+                    vAxis: {
+                        textPosition: 'none'
                     },
-                    1: {
-                        type: 'line',
-                        color: 'black',
-                        lineWidth: 0,
-                        pointSize: 0,
-                        visibleInLegend: false
-                    }
-                }
-            };
+                    chartArea: {
+                        left: 10,
+                        width: '100%',
+                        height: '100'
+                    },
+                    legend: { position: 'none' },
+                    isStacked: true,
+                    series: [
+                        {
+                            type: 'bars'
+                        },
+                        {
+                            type: 'line',
+                            color: 'black',
+                            lineWidth: 0,
+                            pointSize: 0,
+                            visibleInLegend: false
+                        }
+                    ]
+                };
+
+                //this.barchartActivityOptions.series = new Array();
+
+                //for (var i = 0; i < this.activityTypes().length; i += 1) {
+                //    this.barchartActivityOptions.series.push({
+                //        i: {
+                //            type: 'bars',
+                //            color: this.activityTypes()[i].cssColor()
+                //        }
+                //    });
+                //}
+
+                //i = this.activityTypes().length;
+                //this.barchartActivityOptions.series.push({
+                //    i: {
+                //        type: 'line',
+                //        color: 'black',
+                //        lineWidth: 0,
+                //        pointSize: 0,
+                //        visibleInLegend: false
+                //    }
+                //});
+            }
 
             this.barchartPeopleOptions = {
                 title: 'People',
@@ -530,43 +560,25 @@ module ViewModels.Employees {
             /* ----- Setup LineChart ----- */
 
             this.linechartActivityOptions = {
-                title: 'Activities'
-                //vAxis: { title: 'Count' },
-                ////axisTitlesPosition: 'in',
-                //chartArea: { left: 80 },
-                //legend: { position: 'none' },
-                //series: {
-                //    0: {
-                //        type: 'bars'
-                //    },
-                //    1: {
-                //        type: 'line',
-                //        color: 'black',
-                //        lineWidth: 0,
-                //        pointSize: 0,
-                //        visibleInLegend: false
-                //    }
-                //}
+                title: 'Activities',
+                hAxis: {
+                    textPosition: 'none'
+                },
+                vAxis: {
+                    textPosition: 'none'
+                },
+                legend: { position: 'none' }
             };
 
-            this.linechartActivityOptions = {
-                title: 'People'
-                //vAxis: { title: 'Count' },
-                ////axisTitlesPosition: 'in',
-                //chartArea: { left: 80 },
-                //legend: { position: 'none' },
-                //series: {
-                //    0: {
-                //        type: 'bars'
-                //    },
-                //    1: {
-                //        type: 'line',
-                //        color: 'black',
-                //        lineWidth: 0,
-                //        pointSize: 0,
-                //        visibleInLegend: false
-                //    }
-                //}
+            this.linechartPeopleOptions = {
+                title: 'People',
+                hAxis: {
+                    textPosition: 'none'
+                },
+                vAxis: {
+                    textPosition: 'none'
+                },
+                legend: { position: 'none' }
             };
 
             this.linechart = new this.google.visualization.LineChart($('#facultystaff-summary-linechart')[0]);
@@ -640,6 +652,8 @@ module ViewModels.Employees {
                         url: App.Routes.WebApi.FacultyStaff.getActivityCount(),
                         success: (data: any, textStatus: string, jqXhr: JQueryXHR): void => {
                             this.globalActivityCountData = data;
+                            this.totalCount(this.globalActivityCountData.globalCount);
+                            this.totalPlaceCount(this.globalActivityCountData.countOfPlaces);
                         },
                         error: (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
                             alert('Error getting data ' + textStatus + ' | ' + errorThrown);
@@ -691,6 +705,10 @@ module ViewModels.Employees {
 
             var view = new this.google.visualization.DataView(dt);
             view.setColumns([0, 1, 1, 2]);
+
+            //if (this.activityTypes() == null) {
+
+            //}
 
             return view;
         }

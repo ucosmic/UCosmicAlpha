@@ -8,6 +8,7 @@ namespace UCosmic.Web.Mvc.Models
         public int Id { get; set; }
         public string Type { get; set; }
         public int Rank { get; set; }
+        public string CssColor { get; set; }
     }
 
     public static class EmployeeActivityApiProfiler

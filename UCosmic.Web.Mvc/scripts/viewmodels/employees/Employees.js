@@ -48,6 +48,9 @@ var ViewModels;
                 this.globalPeopleTrendData = null;
                 this.placePeopleTrendData = null;
 
+                this.totalCount = ko.observable(0);
+                this.totalPlaceCount = ko.observable(0);
+
                 this.selectSearchType('activities');
 
                 if (institutionInfo != null) {
@@ -389,35 +392,55 @@ var ViewModels;
                     me.heatmapSelectHandler();
                 });
 
-                /* ----- Setup ColumnChart ----- */
-                this.barchartActivityOptions = {
-                    title: 'Activities',
-                    hAxis: {
-                        textPosition: 'none'
-                    },
-                    vAxis: {
-                        textPosition: 'none'
-                    },
-                    chartArea: {
-                        left: 10,
-                        width: '100%',
-                        height: '100'
-                    },
-                    legend: { position: 'none' },
-                    isStacked: true,
-                    series: {
-                        0: {
-                            type: 'bars'
+                if (this.activityTypes() != null) {
+                    this.barchartActivityOptions = {
+                        title: 'Activities',
+                        hAxis: {
+                            textPosition: 'none'
                         },
-                        1: {
-                            type: 'line',
-                            color: 'black',
-                            lineWidth: 0,
-                            pointSize: 0,
-                            visibleInLegend: false
-                        }
-                    }
-                };
+                        vAxis: {
+                            textPosition: 'none'
+                        },
+                        chartArea: {
+                            left: 10,
+                            width: '100%',
+                            height: '100'
+                        },
+                        legend: { position: 'none' },
+                        isStacked: true,
+                        series: [
+                            {
+                                type: 'bars'
+                            },
+                            {
+                                type: 'line',
+                                color: 'black',
+                                lineWidth: 0,
+                                pointSize: 0,
+                                visibleInLegend: false
+                            }
+                        ]
+                    };
+                    //this.barchartActivityOptions.series = new Array();
+                    //for (var i = 0; i < this.activityTypes().length; i += 1) {
+                    //    this.barchartActivityOptions.series.push({
+                    //        i: {
+                    //            type: 'bars',
+                    //            color: this.activityTypes()[i].cssColor()
+                    //        }
+                    //    });
+                    //}
+                    //i = this.activityTypes().length;
+                    //this.barchartActivityOptions.series.push({
+                    //    i: {
+                    //        type: 'line',
+                    //        color: 'black',
+                    //        lineWidth: 0,
+                    //        pointSize: 0,
+                    //        visibleInLegend: false
+                    //    }
+                    //});
+                }
 
                 this.barchartPeopleOptions = {
                     title: 'People',
@@ -443,11 +466,25 @@ var ViewModels;
 
                 /* ----- Setup LineChart ----- */
                 this.linechartActivityOptions = {
-                    title: 'Activities'
+                    title: 'Activities',
+                    hAxis: {
+                        textPosition: 'none'
+                    },
+                    vAxis: {
+                        textPosition: 'none'
+                    },
+                    legend: { position: 'none' }
                 };
 
-                this.linechartActivityOptions = {
-                    title: 'People'
+                this.linechartPeopleOptions = {
+                    title: 'People',
+                    hAxis: {
+                        textPosition: 'none'
+                    },
+                    vAxis: {
+                        textPosition: 'none'
+                    },
+                    legend: { position: 'none' }
                 };
 
                 this.linechart = new this.google.visualization.LineChart($('#facultystaff-summary-linechart')[0]);
@@ -516,6 +553,8 @@ var ViewModels;
                             url: App.Routes.WebApi.FacultyStaff.getActivityCount(),
                             success: function (data, textStatus, jqXhr) {
                                 _this.globalActivityCountData = data;
+                                _this.totalCount(_this.globalActivityCountData.globalCount);
+                                _this.totalPlaceCount(_this.globalActivityCountData.countOfPlaces);
                             },
                             error: function (jqXhr, textStatus, errorThrown) {
                                 alert('Error getting data ' + textStatus + ' | ' + errorThrown);
@@ -567,6 +606,8 @@ var ViewModels;
                 var view = new this.google.visualization.DataView(dt);
                 view.setColumns([0, 1, 1, 2]);
 
+                //if (this.activityTypes() == null) {
+                //}
                 return view;
             };
 

@@ -57,10 +57,10 @@ namespace UCosmic.Web.Mvc.ApiControllers
                     new EmployeeModuleSettingsByUserName(User.Identity.Name)
                     {
                         EagerLoad = new Expression<Func<EmployeeModuleSettings, object>>[]
-                    {
-                        x => x.ActivityTypes
-                    }
-                    });                
+                        {
+                            x => x.ActivityTypes
+                        }
+                    });
             }
             else
             {
