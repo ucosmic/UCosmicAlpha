@@ -77,6 +77,7 @@ var InstitutionalAgreementEditModel = (function () {
         this.$$contactSalutation = ko.observable();
         this.contactJobTitle = ko.observable();
         this.contactPersonId = ko.observable();
+        this.contactUserId = ko.observable();
         this.contactDisplayName = ko.observable();
         this.contactIndex = 0;
         this.contactEmail = ko.observable();
@@ -276,6 +277,9 @@ var InstitutionalAgreementEditModel = (function () {
         $.when(this.dfdUAgreements).done(function () {
             $.get(App.Routes.WebApi.Agreements.get(_this.agreementId)).done(function (response) {
                 var dropdownlist;
+
+                var editor = $("#agreementContent").data("kendoEditor");
+                editor.value(response.content);
                 _this.content(response.content);
                 _this.expDate(Globalize.format(new Date(response.expiresOn.substring(0, response.expiresOn.lastIndexOf("T"))), 'd'));
                 _this.startDate(Globalize.format(new Date(response.startsOn.substring(0, response.startsOn.lastIndexOf("T"))), 'd'));
@@ -296,7 +300,7 @@ var InstitutionalAgreementEditModel = (function () {
                 _this.uAgreementSelected(response.umbrellaId);
                 dropdownlist = $("#uAgreements").data("kendoDropDownList");
                 dropdownlist.select(function (dataItem) {
-                    return dataItem.text === _this.uAgreementSelected();
+                    return dataItem.value == _this.uAgreementSelected();
                 });
 
                 if (_this.isCustomStatusAllowed()) {
@@ -347,7 +351,7 @@ var InstitutionalAgreementEditModel = (function () {
 
     InstitutionalAgreementEditModel.prototype.populateContacts = function () {
         var _this = this;
-        $.get(App.Routes.WebApi.Agreements.Contacts.get(this.agreementId), { useTestData: true }).done(function (response) {
+        $.get(App.Routes.WebApi.Agreements.Contacts.get(this.agreementId), { useTestData: false }).done(function (response) {
             ko.mapping.fromJS(response, _this.contacts);
             _this.dfdPopContacts.resolve();
         });
@@ -773,7 +777,7 @@ else
             _this.contactEmail(dataItem.defaultEmailAddress);
             _this.contactMiddleName(dataItem.middleName);
             _this.contactPersonId(dataItem.id);
-            _this.contactUserId = dataItem.userId;
+            _this.contactUserId(dataItem.userId);
             _this.contactSuffixSelected(dataItem.suffix);
             _this.contactSalutationSelected(dataItem.salutation);
             if (dataItem.userId != null) {
@@ -1275,7 +1279,7 @@ else
         this.contactEmail(me.emailAddress());
         this.contactDisplayName(me.displayName());
         this.contactPersonId(me.personId());
-        this.contactUserId = me.userId;
+        this.contactUserId(me.userId());
         this.contactJobTitle(me.title());
         this.contactFirstName(me.firstName());
         this.contactLastName(me.lastName());
@@ -1283,10 +1287,10 @@ else
         this.contactMiddleName(me.middleName());
         this.contactIndex = this.contacts.indexOf(me);
         if (me.userId() != null) {
-            this.$contactEmail.prop('disabled', true);
-            this.$contactLastName.prop('disabled', true);
-            this.$contactFirstName.prop('disabled', true);
-            $("#contactMiddleName").prop('disabled', true);
+            this.$contactEmail.prop('disabled', "disabled");
+            this.$contactLastName.prop('disabled', "disabled");
+            this.$contactFirstName.prop('disabled', "disabled");
+            $("#contactMiddleName").prop('disabled', "disabled");
             this.$contactSalutation.data("kendoDropDownList").enable(false);
             this.$contactSuffix.data("kendoDropDownList").enable(false);
         }
@@ -1357,9 +1361,13 @@ else
             this.contactsIsEdit(false);
             this.contacts()[this.contactIndex].emailAddress(this.contactEmail());
             this.contacts()[this.contactIndex].title(this.contactJobTitle());
-            this.contacts()[this.contactIndex].displayName(this.contactDisplayName());
+            if (this.contactUserId() != null) {
+                this.contacts()[this.contactIndex].displayName(this.contactDisplayName());
+            } else {
+                this.contacts()[this.contactIndex].displayName(this.contactFirstName() + " " + this.contactLastName());
+            }
             this.contacts()[this.contactIndex].personId(this.contactPersonId());
-            this.contacts()[this.contactIndex].userId(this.contactUserId);
+            this.contacts()[this.contactIndex].userId(this.contactUserId());
             this.contacts()[this.contactIndex].firstName(this.contactFirstName());
             this.contacts()[this.contactIndex].lastName(this.contactLastName());
             this.contacts()[this.contactIndex].middleName(this.contactMiddleName());
@@ -1441,9 +1449,9 @@ else
                 title: this.contactJobTitle(),
                 firstName: this.contactFirstName(),
                 lastName: this.contactLastName(),
-                id: this.contactUserId,
+                id: this.contactUserId(),
                 personId: this.contactPersonId(),
-                userId: this.contactUserId,
+                userId: this.contactUserId(),
                 phones: ko.mapping.toJS(this.contactPhones()),
                 emailAddress: this.contactEmail(),
                 type: this.contactTypeOptionSelected(),
@@ -1508,10 +1516,10 @@ else
 
     InstitutionalAgreementEditModel.prototype.clearContact = function () {
         //this.clearContactInfo();
-        this.$contactEmail.removeProp('disabled');
-        this.$contactLastName.removeProp('disabled');
-        this.$contactFirstName.removeProp('disabled');
-        $("#contactMiddleName").removeProp('disabled');
+        this.$contactEmail.prop('disabled', '');
+        this.$contactLastName.prop('disabled', '');
+        this.$contactFirstName.prop('disabled', '');
+        $("#contactMiddleName").prop('disabled', '');
         this.$contactSalutation.data("kendoDropDownList").enable(true);
         this.$contactSuffix.data("kendoDropDownList").enable(true);
         this.validateContact.errors.showAllMessages(false);
@@ -1520,7 +1528,7 @@ else
         this.contactEmail('');
         this.contactDisplayName('');
         this.contactPersonId('');
-        this.contactUserId = '';
+        this.contactUserId('');
         this.contactJobTitle('');
         this.contactFirstName('');
         this.contactMiddleName('');
@@ -1853,6 +1861,12 @@ else
             } else if (this.autoRenew() == 1) {
                 myAutoRenew = true;
             }
+
+            var editor = $("#agreementContent").data("kendoEditor");
+
+            //editor.value("<p>New content</p>");
+            this.content(editor.value());
+
             var data = ko.mapping.toJS({
                 content: this.content(),
                 expiresOn: this.expDate(),

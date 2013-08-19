@@ -29,7 +29,7 @@ namespace UCosmic.Web.Mvc.Models
             protected override void Configure()
             {
                 CreateMap<Agreement, AgreementApiModel>()
-                    .ForMember(d => d.Content, o => o.MapFrom(s => s.Description))
+                    //.ForMember(d => d.Content, o => o.MapFrom(s => s.Description))
                     .AfterMap((s, d) => d.Participants = d.Participants
                         .OrderByDescending(x => x.IsOwner)
                         .ThenBy(x => x.EstablishmentTranslatedName).ToArray())
