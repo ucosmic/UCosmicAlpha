@@ -484,7 +484,7 @@ module ViewModels.Employees {
 
             if (this.activityTypes() != null) {
                 this.barchartActivityOptions = {
-                    title: 'Activities',
+                    title: 'Global Activities',
                     hAxis: {
                         textPosition: 'none'
                     },
@@ -494,13 +494,14 @@ module ViewModels.Employees {
                     chartArea: {
                         left: 10,
                         width: '100%',
-                        height: '100'
+                        height: '80%'
                     },
                     legend: { position: 'none' },
                     isStacked: true,
                     series: [
                         {
-                            type: 'bars'
+                            type: 'bars',
+                            color: 'green'
                         },
                         {
                             type: 'line',
@@ -536,7 +537,7 @@ module ViewModels.Employees {
             }
 
             this.barchartPeopleOptions = {
-                title: 'People',
+                title: 'Global People',
                 vAxis: { title: 'Count' },
                 //axisTitlesPosition: 'in',
                 chartArea: { left: 80 },
@@ -560,24 +561,24 @@ module ViewModels.Employees {
             /* ----- Setup LineChart ----- */
 
             this.linechartActivityOptions = {
-                title: 'Activities',
-                hAxis: {
-                    textPosition: 'none'
+                chartArea: {
+                    left: 40,
+                    width: '85%',
+                    height: '60%'
                 },
-                vAxis: {
-                    textPosition: 'none'
-                },
+                title: 'Global Activity Trend',
+                colors: ['green'],
                 legend: { position: 'none' }
             };
 
             this.linechartPeopleOptions = {
-                title: 'People',
-                hAxis: {
-                    textPosition: 'none'
+                chartArea: {
+                    left: 40,
+                    width: '85%',
+                    height: '80%'
                 },
-                vAxis: {
-                    textPosition: 'none'
-                },
+                title: 'Global People Trend',
+                colors: ['green'],
                 legend: { position: 'none' }
             };
 
@@ -682,6 +683,8 @@ module ViewModels.Employees {
                 }
             }
 
+            $("#antarctica").attr('title', 'Antarctica');
+
             var dt = new this.google.visualization.DataTable();
 
             dt.addColumn('string', 'Activity');
@@ -783,41 +786,80 @@ module ViewModels.Employees {
        /*
         *
         */
-        getActivityTrendDataTable(place: string): any {
+        getActivityTrendDataTable(placeOfficialName: string): any {
+
+            if (placeOfficialName == null) {
+                if (this.globalActivityTrendData == null) {
+                    $.ajax({
+                        type: "GET",
+                        async: false,
+                        data: { 'placeId': null },
+                        dataType: 'json',
+                        url: App.Routes.WebApi.FacultyStaff.getActivityTrend(),
+                        success: (data: any, textStatus: string, jqXhr: JQueryXHR): void => {
+                            this.globalActivityTrendData = data;
+                        },
+                        error: (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
+                            alert('Error getting data ' + textStatus + ' | ' + errorThrown);
+                        },
+                    });
+                }
+            }
+            else {
+                var placeId = this.getPlaceId(placeOfficialName);
+                if (placeId != null) {
+                    if (this.placeActivityCountData == null) {
+                        $.ajax({
+                            type: "GET",
+                            async: false,
+                            data: { 'placeId': placeId },
+                            dataType: 'json',
+                            url: App.Routes.WebApi.FacultyStaff.getActivityCount(),
+                            success: (data: any, textStatus: string, jqXhr: JQueryXHR): void => {
+                                this.placeActivityCountData = data;
+                            },
+                            error: (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
+                                alert('Error getting data ' + textStatus + ' | ' + errorThrown);
+                            },
+                        });
+                    }
+                }
+            }
 
             var dt = new this.google.visualization.DataTable();
 
             dt.addColumn('string', 'Year');
             dt.addColumn('number', 'Count');
-            dt.addColumn({ type: 'number', role: 'annotation' });
+            //dt.addColumn({ type: 'number', role: 'annotation' });
 
-            //if (place == null) { /* Add world counts */
-            //    for (var i = 0; i < (<any>this.globalActivityTrendData).globalData().length; i += 1) {
-            //        var activityType = (<any>this.globalActivityTrendData).globalData()[i].type();
-            //        var count = (<any>this.globalActivityTrendData).globalData()[i].count();
-            //        dt.addRow([activityType, count, count]);
-            //    }
-            //} else { /* Add place counts */
-            //    var i = 0;
-            //    while ((i < (<any>this.summary).placeTrendActivityCounts().length) &&
-            //           ((<any>this.summary).placeTrendActivityCounts()[i].officialName !== place)) {
-            //        i += 1;
-            //    }
+            if (placeOfficialName == null) { /* Add world counts */
+                for (var i = 0; i < (<any>this.globalActivityTrendData).globalData.length; i += 1) {
+                    var year = (<any>this.globalActivityTrendData).globalData[i].year.toString();
+                    var count = (<any>this.globalActivityTrendData).globalData[i].count;
+                    dt.addRow([year, count]);
+                }
+            } else { /* Add place counts */
+                //var i = 0;
+                //while ((i < (<any>this.summary).placeTrendActivityCounts().length) &&
+                //       ((<any>this.summary).placeTrendActivityCounts()[i].officialName !== place)) {
+                //    i += 1;
+                //}
 
-            //    if (i < (<any>this.summary).placeTrendActivityCounts().length) {
-            //        var placeTrendActivityCounts = (<any>this.summary).placeTrendActivityCounts()[i];
-            //        for (var j = 0; j < placeTrendActivityCounts.typeCounts().length; j += 1) {
-            //            var activityType = placeTrendActivityCounts.typeCounts[j].type();
-            //            var count = placeTrendActivityCounts.typeCounts[j].count();
-            //            dt.addRow([activityType, count, count]);
-            //        }
-            //    }
-            //}
+                //if (i < (<any>this.summary).placeTrendActivityCounts().length) {
+                //    var placeTrendActivityCounts = (<any>this.summary).placeTrendActivityCounts()[i];
+                //    for (var j = 0; j < placeTrendActivityCounts.typeCounts().length; j += 1) {
+                //        var activityType = placeTrendActivityCounts.typeCounts[j].type();
+                //        var count = placeTrendActivityCounts.typeCounts[j].count();
+                //        dt.addRow([activityType, count, count]);
+                //    }
+                //}
+            }
 
-            var view = new this.google.visualization.DataView(dt);
-            view.setColumns([0, 1, 1, 2]);
+            //var view = new this.google.visualization.DataView(dt);
+            //view.setColumns([0, 1, 1, 2]);
 
-            return view;
+            //return view;
+            return dt;
         }
 
         getPeopleTrendDataTable(place: string): any {
@@ -1083,7 +1125,6 @@ module ViewModels.Employees {
         }
 
         heatmapSelectHandler(): void {
-            debugger;
             var selection = this.heatmap.getSelection();
             var str = '';
             if (this.searchType() === 'activities') {

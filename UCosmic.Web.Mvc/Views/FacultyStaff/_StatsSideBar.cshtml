@@ -9,7 +9,7 @@
     </div>
     <div class="stats" style="width: 100%">
         <div style="display: none; font-size: medium; margin-bottom: 16px" data-bind="visible: searchType() == 'activities'">
-            <div style="margin-top: 10px">
+            <div style="margin-top: 20px">
                 <div class="total-count-header">Total Activities</div>
                 <div class="total-count" data-bind="text: totalCount()"></div>
             </div>
@@ -28,15 +28,51 @@
                 <div style="font-weight: bold" data-bind=""></div>
             </div>
         </div>
-        <div id="facultystaff-summary-barchart" style="width: 100%; height: 130px"></div>
+        <div id="facultystaff-summary-barchart" style="width: 100%; height: 130px; margin-top: 20px"></div>
         <div style="">
-            <img src="../../images/icons/glyphs/glyphicons_375_classic_hammer.png" style="margin-left:22px; z-index: 1"/>
-            <img src="../../images/icons/glyphs/glyphicons_071_book.png" style="margin-left:26px; z-index: 1"/>
-            <img src="../../images/icons/glyphs/glyphicons_072_bookmark.png" style="margin-left:30px; z-index: 1"/>
-            <img src="../../images/icons/glyphs/glyphicons_300_microphone.png" style="margin-left:32px; z-index: 1"/>
-            <img src="../../images/icons/glyphs/glyphicons_341_briefcase.png" style="margin-left:32px; z-index: 1"/>
+            <div style="margin-left:12px; width: 40px; float: left">
+                <div style="width: 100%; text-align: center">
+                    <img src="../../images/icons/glyphs/glyphicons_375_classic_hammer.png" style="z-index: 1"/>
+                </div>
+                <div style="width: 100%; text-align: center; line-height: 0.8">
+                    <span style="font-size: x-small">Research or Creative Endeavor</span>
+                </div>
+            </div>   
+            <div style="margin-left:16px; width: 40px; float: left">
+                <div style="width: 100%; text-align: center">
+                    <img src="../../images/icons/glyphs/glyphicons_071_book.png" style="z-index: 1"/>
+                </div>
+                <div style="width: 100%; text-align: center; line-height: 0.8">
+                    <span style="font-size: x-small">Teaching or Mentoring</span>
+                </div>
+            </div>  
+            <div style="margin-left:14px; width: 40px; float: left">
+                <div style="width: 100%; text-align: center">
+                    <img src="../../images/icons/glyphs/glyphicons_072_bookmark.png" style="z-index: 1"/>
+                </div>
+                <div style="width: 100%; text-align: center; line-height: 0.8">
+                    <span style="font-size: x-small">Award or Honor</span>
+                </div>
+            </div>
+            <div style="margin-left:12px; width: 40px; float: left">
+                <div style="width: 100%; text-align: center">
+                    <img src="../../images/icons/glyphs/glyphicons_300_microphone.png" style="z-index: 1"/>
+                </div>
+                <div style="width: 100%; text-align: center; line-height: 0.8">
+                    <span style="font-size: x-small">Conference Presentation or Proceeding</span>
+                </div>
+            </div>                       
+            <div style="margin-left:12px; width: 40px; float: left">
+                <div style="width: 100%; text-align: center">
+                    <img src="../../images/icons/glyphs/glyphicons_341_briefcase.png" style="z-index: 1"/>
+                </div>
+                <div style="width: 100%; text-align: center; line-height: 0.8">
+                    <span style="font-size: x-small">Professional Development, Service or Consulting</span>
+                </div>
+            </div>             
+            
         </div>
-        <div id="facultystaff-summary-linechart" style="width: 100%; height: 200px; margin-top: 20px"></div>
+        <div id="facultystaff-summary-linechart" style="width: 100%; height: 130px; margin-top: 80px"></div>
     </div>
 @*    <div class="type-filters" style="display: none" data-bind="visible: (searchType() === 'activities') && (activityTypes().length > 0)">
         <div style="font-size: small">
