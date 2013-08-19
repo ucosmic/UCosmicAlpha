@@ -43,29 +43,6 @@ class InstitutionalAgreementParticipantModel {
 
 class InstitutionalAgreementEditModel {
     constructor(public initDefaultPageRoute: boolean = true) {
-        //Globalize.culture("en-GB");
-        //require(["../../kendo/2013.2.716/cultures/kendo.culture." + "fr" + ".min"], function (html) {
-        //    kendo.culture("fr")
-        //});
-        //require(["../../jquery/jquery.globalize/cultures/globalize.culture." + "fr-FR" + ""], function (html) {
-        //    Globalize.culture("fr-FR")
-        //});
-
-        //Globalize.culture($("meta[name='accept-language']").attr("content"));
-
-        //ko.extenders['date'] = function (target, format) {
-        //    var formatted = ko.computed({
-        //        'read': function () {
-        //            return Globalize.parseDate(target(), format);
-        //        },
-        //        'write': function (date) {
-        //            target(Globalize.format(date, format));
-        //        }
-        //    });
-        //    target.formatted = formatted;
-        //    return target;
-        //};
-        //alert($("meta[name='accept-language']").attr("content"));
         var culture = $("meta[name='accept-language']").attr("content");
         if (window.location.href.toLowerCase().indexOf("agreements/new") > 0) {
             //require(["../../jquery/jquery.globalize/cultures/globalize.culture." + culture + ""], function (html) {
@@ -73,12 +50,12 @@ class InstitutionalAgreementEditModel {
                 Globalize.culture(culture)
             //});
             //;
-            this.dfdPopParticipants.resolve();
+            //this.dfdPopParticipants.resolve();
             this.editOrNewUrl = "new/";
             this.agreementIsEdit(false);
             this.visibility("Public");
             $("#LoadingPage").hide();
-            $.when(this.dfdPopParticipants, this.dfdPageFadeIn)
+            $.when(this.dfdPageFadeIn)
                 .done(() => {
                     this.updateKendoDialog($(window).width());
                     $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * this.percentOffBodyHeight)));
@@ -187,7 +164,8 @@ class InstitutionalAgreementEditModel {
 
     editOrNewUrl;
 
-    percentOffBodyHeight = .2;
+    percentOffBodyHeight = .6;
+    dfdUAgreements = $.Deferred();
     dfdPopParticipants = $.Deferred();
     dfdPopContacts = $.Deferred();
     dfdPopFiles = $.Deferred();
@@ -317,49 +295,58 @@ class InstitutionalAgreementEditModel {
     }
 
     populateAgreementData(): void {
-        $.get(App.Routes.WebApi.Agreements.get(this.agreementId))
-            .done((response: any): void => {
-                var dropdownlist;
-                this.content(response.content);
-                this.expDate(Globalize.format(new Date(response.expiresOn.substring(0, response.expiresOn.lastIndexOf("T"))), 'd'));
-                this.startDate(Globalize.format(new Date(response.startsOn.substring(0, response.startsOn.lastIndexOf("T"))), 'd'));
-                if (response.isAutoRenew == null) {
-                    this.autoRenew(2);
-                } else {
-                    this.autoRenew(response.isAutoRenew);
-                };
-                
-                this.nickname(response.name);
-                this.privateNotes(response.notes);
-                this.statusOptionSelected(response.status);
-                this.visibility(response.visibility);
-                this.isEstimated(response.isExpirationEstimated);
-                ko.mapping.fromJS(response.participants, this.participants);
-                this.dfdPopParticipants.resolve();
-                this.uAgreementSelected(response.umbrellaId);
-                dropdownlist = $("#uAgreements").data("kendoDropDownList");
-                dropdownlist.select( (dataItem) => {
-                    return dataItem.name === this.uAgreementSelected();
-                });
+        $.when(this.dfdUAgreements)
+            .done(() => {
+                $.get(App.Routes.WebApi.Agreements.get(this.agreementId))
+                    .done((response: any): void => {
+                        var dropdownlist;
+                        this.content(response.content);
+                        this.expDate(Globalize.format(new Date(response.expiresOn.substring(0, response.expiresOn.lastIndexOf("T"))), 'd'));
+                        this.startDate(Globalize.format(new Date(response.startsOn.substring(0, response.startsOn.lastIndexOf("T"))), 'd'));
+                        if (response.isAutoRenew == null) {
+                            this.autoRenew(2);
+                        } else {
+                            this.autoRenew(response.isAutoRenew);
+                        };
 
-                if (this.isCustomStatusAllowed()) {
-                    dropdownlist = $("#statusOptions").data("kendoComboBox");
-                } else {
-                    dropdownlist = $("#statusOptions").data("kendoDropDownList");
-                }
-                dropdownlist.select((dataItem) => {
-                    return dataItem.name === this.statusOptionSelected();
-                });
+                        this.nickname(response.name);
+                        this.privateNotes(response.notes);
+                        this.statusOptionSelected(response.status);
+                        this.visibility(response.visibility);
+                        this.isEstimated(response.isExpirationEstimated);
+                        ko.mapping.fromJS(response.participants, this.participants);
+                        this.dfdPopParticipants.resolve();
+                        this.uAgreementSelected(response.umbrellaId);
+                        dropdownlist = $("#uAgreements").data("kendoDropDownList");
+                        dropdownlist.select((dataItem) => {
+                            return dataItem.text === this.uAgreementSelected();
+                        });
 
-                this.typeOptionSelected(response.type);
-                if (this.isCustomTypeAllowed()) {
-                    dropdownlist = $("#typeOptions").data("kendoComboBox");
-                } else {
-                    dropdownlist = $("#typeOptions").data("kendoDropDownList");
-                }
-                dropdownlist.select((dataItem) => {
-                    return dataItem.name === this.typeOptionSelected();
-                });
+                        if (this.isCustomStatusAllowed()) {
+                            dropdownlist = $("#statusOptions").data("kendoComboBox");
+                            dropdownlist.select((dataItem) => {
+                                return dataItem.name === this.statusOptionSelected();
+                            });
+                        } else {
+                            dropdownlist = $("#statusOptions").data("kendoDropDownList");
+                            dropdownlist.select((dataItem) => {
+                                return dataItem.text === this.statusOptionSelected();
+                            });
+                        }
+
+                        this.typeOptionSelected(response.type);
+                        if (this.isCustomTypeAllowed()) {
+                            dropdownlist = $("#typeOptions").data("kendoComboBox");
+                            dropdownlist.select((dataItem) => {
+                                return dataItem.name === this.typeOptionSelected();
+                            });
+                        } else {
+                            dropdownlist = $("#typeOptions").data("kendoDropDownList");
+                            dropdownlist.select((dataItem) => {
+                                return dataItem.text === this.typeOptionSelected();
+                            });
+                        }
+                    });
             });
     }
 
@@ -408,6 +395,7 @@ class InstitutionalAgreementEditModel {
                         data: this.uAgreements()
                     })
                 });
+                this.dfdUAgreements.resolve();
                 //var dropdownlist = $("#uAgreements").data("kendoComboBox");
                 //dropdownlist.select(0);
             });
@@ -1078,14 +1066,14 @@ class InstitutionalAgreementEditModel {
         });
         if (parentOrParticipant === "parent") {
             $cancelAddParticipant.on("click", (e) => {
-                this.percentOffBodyHeight = .2;
+                //this.percentOffBodyHeight = .6;
                 this.establishmentSearchViewModel.sammy.setLocation('#/new/');
                 e.preventDefault();
                 return false;
             });
         } else {
             $cancelAddParticipant.on("click", (e) => {
-                this.percentOffBodyHeight = .2;
+                //this.percentOffBodyHeight = .6;
                 this.establishmentSearchViewModel.sammy.setLocation('#/index');
                 e.preventDefault();
                 return false;
@@ -1214,7 +1202,7 @@ class InstitutionalAgreementEditModel {
                                                         this.establishmentItemViewModel.createSpinner.stop();
                                                         $LoadingPage.text("Establishment created, you are being redirected to previous page...");
                                                         $("#addEstablishment").fadeOut(500, () => {
-                                                            this.percentOffBodyHeight = .2;
+                                                            //this.percentOffBodyHeight = .6;
                                                             $("#LoadingPage").fadeIn(500);
                                                             setTimeout(() => {
                                                                 $("#LoadingPage").fadeOut(500, function () {
@@ -1301,12 +1289,12 @@ class InstitutionalAgreementEditModel {
                                     .done((response) => {
                                         myParticipant.isOwner(response.isOwner);
                                         this.participants.push(myParticipant);
-                                        this.percentOffBodyHeight = .2;
+                                        //this.percentOffBodyHeight = .6;
                                         this.establishmentSearchViewModel.sammy.setLocation("agreements/" + this.editOrNewUrl + "");
                                         $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * .85)));
                                     })
                                     .fail(() => {
-                                        this.percentOffBodyHeight = .2;
+                                        //this.percentOffBodyHeight = .6;
                                         this.participants.push(myParticipant);
                                         this.establishmentSearchViewModel.sammy.setLocation("agreements/" + this.editOrNewUrl + "");
                                     });
@@ -1932,11 +1920,17 @@ class InstitutionalAgreementEditModel {
                     center: item.center
                 });
             });
+            var myAutoRenew = null;
+            if (this.autoRenew()== 0) {
+                myAutoRenew = false;
+            } else if (this.autoRenew() == 1) {
+                myAutoRenew = true;
+            }
             var data = ko.mapping.toJS({
                 content: this.content(),
                 expiresOn: this.expDate(),
                 startsOn: this.startDate(),
-                isAutoRenew: this.autoRenew(),
+                isAutoRenew: myAutoRenew,
                 name: this.nickname(),
                 notes: this.privateNotes(),
                 status: this.statusOptionSelected(),

@@ -1812,7 +1812,6 @@
     <Content Include="scripts\tinymce\utils\form_utils.js" />
     <Content Include="scripts\tinymce\utils\mctabs.js" />
     <Content Include="scripts\tinymce\utils\validate.js" />
-    <TypeScriptCompile Include="scripts\viewmodels\agreements\RequireAgreement.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\agreements\AgreementVM.ts" />
     <None Include="scripts\typings\globalize\globalize.d.ts" />
     <None Include="scripts\typings\googlecharts\google.charts.d.ts" />
@@ -1837,12 +1836,6 @@
     </Content>
     <Content Include="scripts\viewmodels\agreements\AgreementVM.min.js">
       <DependentUpon>AgreementVM.ts</DependentUpon>
-    </Content>
-    <Content Include="scripts\viewmodels\agreements\RequireAgreement.js">
-      <DependentUpon>RequireAgreement.ts</DependentUpon>
-    </Content>
-    <Content Include="scripts\viewmodels\agreements\RequireAgreement.min.js">
-      <DependentUpon>RequireAgreement.ts</DependentUpon>
     </Content>
     <None Include="scripts\viewmodels\my\ServerApiModel.d.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\my\Affiliations.ts" />

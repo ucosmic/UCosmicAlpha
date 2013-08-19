@@ -2766,10 +2766,6 @@ namespace Links
                 public static readonly string AgreementVM_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/AgreementVM.min.js") ? Url("AgreementVM.min.js") : Url("AgreementVM.js");
                               
                 public static readonly string AgreementVM_min_js = Url("AgreementVM.min.js");
-                public static readonly string RequireAgreement_ts = Url("RequireAgreement.ts");
-                public static readonly string RequireAgreement_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/RequireAgreement.min.js") ? Url("RequireAgreement.min.js") : Url("RequireAgreement.js");
-                              
-                public static readonly string RequireAgreement_min_js = Url("RequireAgreement.min.js");
             }
         
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]

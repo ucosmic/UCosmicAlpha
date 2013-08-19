@@ -45,7 +45,8 @@ var InstitutionalAgreementEditModel = (function () {
             this.name = name;
             this.id = id;
         };
-        this.percentOffBodyHeight = .2;
+        this.percentOffBodyHeight = .6;
+        this.dfdUAgreements = $.Deferred();
         this.dfdPopParticipants = $.Deferred();
         this.dfdPopContacts = $.Deferred();
         this.dfdPopFiles = $.Deferred();
@@ -140,27 +141,6 @@ var InstitutionalAgreementEditModel = (function () {
         this.establishmentSearchViewModel = new Establishments.ViewModels.Search();
         this.hasBoundSearch = false;
         this.hasBoundItem = false;
-        //Globalize.culture("en-GB");
-        //require(["../../kendo/2013.2.716/cultures/kendo.culture." + "fr" + ".min"], function (html) {
-        //    kendo.culture("fr")
-        //});
-        //require(["../../jquery/jquery.globalize/cultures/globalize.culture." + "fr-FR" + ""], function (html) {
-        //    Globalize.culture("fr-FR")
-        //});
-        //Globalize.culture($("meta[name='accept-language']").attr("content"));
-        //ko.extenders['date'] = function (target, format) {
-        //    var formatted = ko.computed({
-        //        'read': function () {
-        //            return Globalize.parseDate(target(), format);
-        //        },
-        //        'write': function (date) {
-        //            target(Globalize.format(date, format));
-        //        }
-        //    });
-        //    target.formatted = formatted;
-        //    return target;
-        //};
-        //alert($("meta[name='accept-language']").attr("content"));
         var culture = $("meta[name='accept-language']").attr("content");
         if (window.location.href.toLowerCase().indexOf("agreements/new") > 0) {
             //require(["../../jquery/jquery.globalize/cultures/globalize.culture." + culture + ""], function (html) {
@@ -169,12 +149,12 @@ var InstitutionalAgreementEditModel = (function () {
 
             //});
             //;
-            this.dfdPopParticipants.resolve();
+            //this.dfdPopParticipants.resolve();
             this.editOrNewUrl = "new/";
             this.agreementIsEdit(false);
             this.visibility("Public");
             $("#LoadingPage").hide();
-            $.when(this.dfdPopParticipants, this.dfdPageFadeIn).done(function () {
+            $.when(this.dfdPageFadeIn).done(function () {
                 _this.updateKendoDialog($(window).width());
                 $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * _this.percentOffBodyHeight)));
             });
@@ -293,48 +273,56 @@ var InstitutionalAgreementEditModel = (function () {
 
     InstitutionalAgreementEditModel.prototype.populateAgreementData = function () {
         var _this = this;
-        $.get(App.Routes.WebApi.Agreements.get(this.agreementId)).done(function (response) {
-            var dropdownlist;
-            _this.content(response.content);
-            _this.expDate(Globalize.format(new Date(response.expiresOn.substring(0, response.expiresOn.lastIndexOf("T"))), 'd'));
-            _this.startDate(Globalize.format(new Date(response.startsOn.substring(0, response.startsOn.lastIndexOf("T"))), 'd'));
-            if (response.isAutoRenew == null) {
-                _this.autoRenew(2);
-            } else {
-                _this.autoRenew(response.isAutoRenew);
-            }
-            ;
+        $.when(this.dfdUAgreements).done(function () {
+            $.get(App.Routes.WebApi.Agreements.get(_this.agreementId)).done(function (response) {
+                var dropdownlist;
+                _this.content(response.content);
+                _this.expDate(Globalize.format(new Date(response.expiresOn.substring(0, response.expiresOn.lastIndexOf("T"))), 'd'));
+                _this.startDate(Globalize.format(new Date(response.startsOn.substring(0, response.startsOn.lastIndexOf("T"))), 'd'));
+                if (response.isAutoRenew == null) {
+                    _this.autoRenew(2);
+                } else {
+                    _this.autoRenew(response.isAutoRenew);
+                }
+                ;
 
-            _this.nickname(response.name);
-            _this.privateNotes(response.notes);
-            _this.statusOptionSelected(response.status);
-            _this.visibility(response.visibility);
-            _this.isEstimated(response.isExpirationEstimated);
-            ko.mapping.fromJS(response.participants, _this.participants);
-            _this.dfdPopParticipants.resolve();
-            _this.uAgreementSelected(response.umbrellaId);
-            dropdownlist = $("#uAgreements").data("kendoDropDownList");
-            dropdownlist.select(function (dataItem) {
-                return dataItem.name === _this.uAgreementSelected();
-            });
+                _this.nickname(response.name);
+                _this.privateNotes(response.notes);
+                _this.statusOptionSelected(response.status);
+                _this.visibility(response.visibility);
+                _this.isEstimated(response.isExpirationEstimated);
+                ko.mapping.fromJS(response.participants, _this.participants);
+                _this.dfdPopParticipants.resolve();
+                _this.uAgreementSelected(response.umbrellaId);
+                dropdownlist = $("#uAgreements").data("kendoDropDownList");
+                dropdownlist.select(function (dataItem) {
+                    return dataItem.text === _this.uAgreementSelected();
+                });
 
-            if (_this.isCustomStatusAllowed()) {
-                dropdownlist = $("#statusOptions").data("kendoComboBox");
-            } else {
-                dropdownlist = $("#statusOptions").data("kendoDropDownList");
-            }
-            dropdownlist.select(function (dataItem) {
-                return dataItem.name === _this.statusOptionSelected();
-            });
+                if (_this.isCustomStatusAllowed()) {
+                    dropdownlist = $("#statusOptions").data("kendoComboBox");
+                    dropdownlist.select(function (dataItem) {
+                        return dataItem.name === _this.statusOptionSelected();
+                    });
+                } else {
+                    dropdownlist = $("#statusOptions").data("kendoDropDownList");
+                    dropdownlist.select(function (dataItem) {
+                        return dataItem.text === _this.statusOptionSelected();
+                    });
+                }
 
-            _this.typeOptionSelected(response.type);
-            if (_this.isCustomTypeAllowed()) {
-                dropdownlist = $("#typeOptions").data("kendoComboBox");
-            } else {
-                dropdownlist = $("#typeOptions").data("kendoDropDownList");
-            }
-            dropdownlist.select(function (dataItem) {
-                return dataItem.name === _this.typeOptionSelected();
+                _this.typeOptionSelected(response.type);
+                if (_this.isCustomTypeAllowed()) {
+                    dropdownlist = $("#typeOptions").data("kendoComboBox");
+                    dropdownlist.select(function (dataItem) {
+                        return dataItem.name === _this.typeOptionSelected();
+                    });
+                } else {
+                    dropdownlist = $("#typeOptions").data("kendoDropDownList");
+                    dropdownlist.select(function (dataItem) {
+                        return dataItem.text === _this.typeOptionSelected();
+                    });
+                }
             });
         });
     };
@@ -384,6 +372,7 @@ var InstitutionalAgreementEditModel = (function () {
                     data: _this.uAgreements()
                 })
             });
+            _this.dfdUAgreements.resolve();
             //var dropdownlist = $("#uAgreements").data("kendoComboBox");
             //dropdownlist.select(0);
         });
@@ -1025,14 +1014,14 @@ else
         });
         if (parentOrParticipant === "parent") {
             $cancelAddParticipant.on("click", function (e) {
-                _this.percentOffBodyHeight = .2;
+                //this.percentOffBodyHeight = .6;
                 _this.establishmentSearchViewModel.sammy.setLocation('#/new/');
                 e.preventDefault();
                 return false;
             });
         } else {
             $cancelAddParticipant.on("click", function (e) {
-                _this.percentOffBodyHeight = .2;
+                //this.percentOffBodyHeight = .6;
                 _this.establishmentSearchViewModel.sammy.setLocation('#/index');
                 e.preventDefault();
                 return false;
@@ -1158,7 +1147,7 @@ else
                                                     _this.establishmentItemViewModel.createSpinner.stop();
                                                     $LoadingPage.text("Establishment created, you are being redirected to previous page...");
                                                     $("#addEstablishment").fadeOut(500, function () {
-                                                        _this.percentOffBodyHeight = .2;
+                                                        //this.percentOffBodyHeight = .6;
                                                         $("#LoadingPage").fadeIn(500);
                                                         setTimeout(function () {
                                                             $("#LoadingPage").fadeOut(500, function () {
@@ -1237,11 +1226,12 @@ else
                                     }).done(function (response) {
                                         myParticipant.isOwner(response.isOwner);
                                         _this.participants.push(myParticipant);
-                                        _this.percentOffBodyHeight = .2;
+
+                                        //this.percentOffBodyHeight = .6;
                                         _this.establishmentSearchViewModel.sammy.setLocation("agreements/" + _this.editOrNewUrl + "");
                                         $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * .85)));
                                     }).fail(function () {
-                                        _this.percentOffBodyHeight = .2;
+                                        //this.percentOffBodyHeight = .6;
                                         _this.participants.push(myParticipant);
                                         _this.establishmentSearchViewModel.sammy.setLocation("agreements/" + _this.editOrNewUrl + "");
                                     });
@@ -1857,11 +1847,17 @@ else
                     center: item.center
                 });
             });
+            var myAutoRenew = null;
+            if (this.autoRenew() == 0) {
+                myAutoRenew = false;
+            } else if (this.autoRenew() == 1) {
+                myAutoRenew = true;
+            }
             var data = ko.mapping.toJS({
                 content: this.content(),
                 expiresOn: this.expDate(),
                 startsOn: this.startDate(),
-                isAutoRenew: this.autoRenew(),
+                isAutoRenew: myAutoRenew,
                 name: this.nickname(),
                 notes: this.privateNotes(),
                 status: this.statusOptionSelected(),
