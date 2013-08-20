@@ -264,6 +264,13 @@ module App.Routes {
                     if (establishmentId) url += '/' + establishmentId;
                     return makeUrl(url);
                 }
+                export function put (agreementId: number, establishmentId: number): string {
+                    var url = 'agreements/{0}/participants/{1}'.format(agreementId, establishmentId);
+                    return makeUrl(url);
+                }
+                export function del (agreementId: number, establishmentId: number): string {
+                    return put(agreementId, establishmentId);
+                }
             }
 
             export module Contacts {

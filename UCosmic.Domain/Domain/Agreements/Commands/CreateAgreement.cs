@@ -167,12 +167,11 @@ namespace UCosmic.Domain.Agreements
             };
 
             foreach (var participant in command.Participants)
-            {
-                participant.Principal = command.Principal;
-                participant.Agreement = entity;
-                participant.NoCommit = true;
-                _createParticipant.Handle(participant);
-            }
+                _createParticipant.Handle(new CreateParticipant(command.Principal, entity, participant.EstablishmentId)
+                {
+                    NoCommit = true,
+                    IsOwner = participant.IsOwner,
+                });
 
             _entities.Create(entity);
             _hierarchyHandler.Handle(new UpdateAgreementHierarchy(entity));

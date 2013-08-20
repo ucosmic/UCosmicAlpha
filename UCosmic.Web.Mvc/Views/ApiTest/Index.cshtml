@@ -13,10 +13,13 @@
             //alert('have results');
         });
 
+        //#region Agreement
+        
         $('#agreement_post_button').click(function() {
             $.post(App.Routes.WebApi.Agreements.post(), {
                 participants: [
                     { establishmentId: 66, isOwner: true },
+                    //{ establishmentId: 1, isOwner: false },
                     { establishmentId: 1, isOwner: false }
                 ],
                 umbrellaId: 2,
@@ -74,6 +77,39 @@
                     alert(info);
                 });
         });
+        
+        //#endregion
+        //#region Participants
+        
+        $('#agreement_participant_put_button').click(function () {
+            $.ajax({
+                url: App.Routes.WebApi.Agreements.Participants.put(1, 67),
+                type: 'PUT',
+                data: {
+                    isOwner: true
+                }
+            })
+                .done(function (responseText, statusText, xhr) {
+                    var info = 'put of agreement data resulted in response "' + responseText + '"';
+                    console.log(info);
+                    alert(info);
+                });
+        });
+        $('#agreement_participant_delete_button').click(function () {
+            $.ajax({
+                url: App.Routes.WebApi.Agreements.Participants.del(1, 67),
+                type: 'DELETE'
+            })
+                .done(function (responseText, statusText, xhr) {
+                    var info = 'delete of agreement data resulted in response "' + responseText + '"';
+                    console.log(info);
+                    alert(info);
+                });
+        });
+
+        //#endregion
+        //#region Contact
+        
         $('#agreement_contact_post_button').click(function () {
             $.post(App.Routes.WebApi.Agreements.Contacts.post(3), {
                 personId: 13,
@@ -136,6 +172,10 @@
                     alert(info);
                 });
         });
+        
+        //#endregion
+        //#region Contact Phone
+        
         $('#agreement_contact_phone_post_button').click(function () {
             $.post(App.Routes.WebApi.Agreements.Contacts.Phones.post(1, 1), {
                 type: 'Posted Phone Type',
@@ -176,6 +216,8 @@
                 });
         });
 
+        //#endregion
+        
         //#endregion
         //#region Circle graphic
 
@@ -447,12 +489,16 @@
     </header>
     <section>
         <header>
-            <h2>Agreement POSTs & PUTs</h2>
+            <h2>Agreement POSTs, PUTs, &amp; DELETEs</h2>
         </header>
         <div>
             <input id="agreement_post_button" type="button" value="POST test agreement" />
             <input id="agreement_put_button" type="button" value="PUT test agreement" />
             <input id="agreement_delete_button" type="button" value="DELETE test agreement" />
+            <br/>
+            <br/>
+            <input id="agreement_participant_put_button" type="button" value="PUT test agreement participant" />
+            <input id="agreement_participant_delete_button" type="button" value="DELETE test agreement participant" />
             <br/>
             <br/>
             <input id="agreement_contact_post_button" type="button" value="POST test agreement contact" />

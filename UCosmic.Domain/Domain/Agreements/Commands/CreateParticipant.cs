@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Linq;
 using System.Security.Principal;
 using FluentValidation;
+using Newtonsoft.Json;
+using UCosmic.Domain.Audit;
 using UCosmic.Domain.Establishments;
 using UCosmic.Domain.Identity;
 
@@ -10,25 +13,28 @@ namespace UCosmic.Domain.Agreements
     {
         public CreateParticipant() { }
 
-        public CreateParticipant(IPrincipal principal, int agreementId)
+        public CreateParticipant(IPrincipal principal, int agreementId, int establishmentId)
         {
             if (principal == null) throw new ArgumentNullException("principal");
             Principal = principal;
             AgreementId = agreementId;
+            EstablishmentId = establishmentId;
         }
 
-        internal CreateParticipant(IPrincipal principal, Agreement agreement)
+        internal CreateParticipant(IPrincipal principal, Agreement agreement, int establishmentId)
         {
             if (principal == null) throw new ArgumentNullException("principal");
             if (agreement == null) throw new ArgumentNullException("agreement");
             Principal = principal;
             Agreement = agreement;
+            AgreementId = agreement.Id;
+            EstablishmentId = establishmentId;
         }
 
-        public IPrincipal Principal { get; internal set; }
-        public int AgreementId { get; set; }
-        internal Agreement Agreement { get; set; }
-        public int EstablishmentId { get; set; }
+        public IPrincipal Principal { get; private set; }
+        public int AgreementId { get; private set; }
+        internal Agreement Agreement { get; private set; }
+        public int EstablishmentId { get; private set; }
         public bool IsOwner { get; set; }
         internal bool NoCommit { get; set; }
     }
@@ -59,6 +65,17 @@ namespace UCosmic.Domain.Agreements
                     // it must be owned by principal
                     .MustBeOwnedByPrincipal(queryProcessor, x => x.Principal)
                         .WithMessage(MustBeOwnedByPrincipal<object>.FailMessageFormat, x => x.AgreementId, x => x.Principal.Identity.Name)
+
+                    // must not allow dupliucate participants
+                    .MustNotOwnParticipantWithId(queryProcessor, x => x.EstablishmentId, x => x.Principal)
+                        .WithMessage(MustNotOwnParticipantWithId<object>.FailMessageFormat, x => x.EstablishmentId, x => x.AgreementId)
+            );
+
+            // when agreement is not null
+            When(x => x.Agreement != null, () =>
+                RuleFor(x => x.Agreement)
+                    .Must((command, agreement) => agreement.Participants.All(x => x.EstablishmentId != command.EstablishmentId))
+                        .WithMessage(MustNotOwnParticipantWithId<object>.FailMessageNewFormat, x => x.EstablishmentId)
             );
 
             // establishment id must exist in database
@@ -103,6 +120,21 @@ namespace UCosmic.Domain.Agreements
                 entity.Agreement = command.Agreement;
             else
                 entity.AgreementId = command.AgreementId;
+
+            // log audit
+            var audit = new CommandEvent
+            {
+                RaisedBy = command.Principal.Identity.Name,
+                Name = command.GetType().FullName,
+                Value = JsonConvert.SerializeObject(new
+                {
+                    command.AgreementId,
+                    command.EstablishmentId,
+                    command.IsOwner,
+                }),
+                NewState = entity.ToJsonAudit(),
+            };
+            _entities.Create(audit);
 
             _entities.Create(entity);
             if (!command.NoCommit) _unitOfWork.SaveChanges();

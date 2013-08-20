@@ -24,6 +24,7 @@ namespace UCosmic.Domain.Agreements
             if (principal == null) throw new ArgumentNullException("principal");
             Principal = principal;
             Contact = contact;
+            ContactId = contact.Id;
         }
 
         public IPrincipal Principal { get; private set; }

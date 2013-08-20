@@ -314,6 +314,15 @@ var App;
                         return makeUrl(url);
                     }
                     Participants.get = get;
+                    function put(agreementId, establishmentId) {
+                        var url = 'agreements/{0}/participants/{1}'.format(agreementId, establishmentId);
+                        return makeUrl(url);
+                    }
+                    Participants.put = put;
+                    function del(agreementId, establishmentId) {
+                        return put(agreementId, establishmentId);
+                    }
+                    Participants.del = del;
                 })(Agreements.Participants || (Agreements.Participants = {}));
                 var Participants = Agreements.Participants;
 
