@@ -12,7 +12,7 @@ using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc.ApiControllers
 {
-    [RoutePrefix("api/agreements")]
+    [RoutePrefix("api/agreements/{agreementId:int}/contacts/{contactId:int}")]
     public class AgreementContactPhonesController : ApiController
     {
         private readonly IProcessQueries _queryProcessor;
@@ -32,19 +32,19 @@ namespace UCosmic.Web.Mvc.ApiControllers
             _purgeHandler = purgeHandler;
         }
 
-        [GET("{agreementId:int}/contacts/{contactId:int}/phones")]
+        [GET("phones")]
         public IEnumerable<AgreementContactPhoneApiModel> Get(int agreementId, int contactId)
         {
             throw new HttpResponseException(HttpStatusCode.NotImplemented);
         }
 
-        [GET("{agreementId:int}/contacts/{contactId:int}/phones/{phoneId:int}", ControllerPrecedence = 1)]
+        [GET("phones/{phoneId:int}", ControllerPrecedence = 1)]
         public AgreementContactPhoneApiModel Get(int agreementId, int contactId, int phoneId)
         {
             throw new HttpResponseException(HttpStatusCode.NotImplemented);
         }
 
-        [POST("{agreementId:int}/contacts/{contactId:int}/phones")]
+        [POST("phones")]
         public HttpResponseMessage Post(int agreementId, int contactId, [FromBody] AgreementContactPhoneApiModel model)
         {
             model.ContactId = contactId;
@@ -67,7 +67,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return response;
         }
 
-        [PUT("{agreementId:int}/contacts/{contactId:int}/phones/{phoneId:int}")]
+        [PUT("phones/{phoneId:int}")]
         public HttpResponseMessage Put(int agreementId, int contactId, int phoneId, [FromBody] AgreementContactPhoneApiModel model)
         {
             model.Id = phoneId;
@@ -81,7 +81,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return response;
         }
 
-        [DELETE("{agreementId:int}/contacts/{contactId:int}/phones/{phoneId:int}")]
+        [DELETE("phones/{phoneId:int}")]
         public HttpResponseMessage Delete(int agreementId, int contactId, int phoneId)
         {
             var command = new PurgeContactPhone(User, agreementId, contactId, phoneId);

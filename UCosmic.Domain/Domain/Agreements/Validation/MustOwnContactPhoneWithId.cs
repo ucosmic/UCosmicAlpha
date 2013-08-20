@@ -32,7 +32,7 @@ namespace UCosmic.Domain.Agreements
 
             var agreementId = (int)context.PropertyValue;
             var contactId = _contactId((T)context.Instance);
-            var phoneId = _contactId((T)context.Instance);
+            var phoneId = _phoneId((T)context.Instance);
             context.MessageFormatter.AppendArgument("AgreementId", agreementId);
             context.MessageFormatter.AppendArgument("ContactId", contactId);
             context.MessageFormatter.AppendArgument("PhoneId", phoneId);
