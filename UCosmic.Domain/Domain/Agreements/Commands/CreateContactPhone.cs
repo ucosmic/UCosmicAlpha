@@ -9,12 +9,21 @@ namespace UCosmic.Domain.Agreements
 {
     public class CreateContactPhone
     {
+        public CreateContactPhone() { }
+
         public CreateContactPhone(IPrincipal principal, int agreementId, int contactId)
         {
             if (principal == null) throw new ArgumentNullException("principal");
             Principal = principal;
             ContactId = contactId;
             AgreementId = agreementId;
+        }
+
+        internal CreateContactPhone(IPrincipal principal, AgreementContact contact)
+        {
+            if (principal == null) throw new ArgumentNullException("principal");
+            Principal = principal;
+            Contact = contact;
         }
 
         public IPrincipal Principal { get; private set; }
@@ -26,7 +35,7 @@ namespace UCosmic.Domain.Agreements
         public int CreatedContactPhoneId { get; internal set; }
         internal AgreementContactPhone CreatedContactPhone { get; set; }
         internal bool NoCommit { get; set; }
-        internal AgreementContact Contact { get; set; }
+        internal AgreementContact Contact { get; private set; }
     }
 
     public class ValidateCreateContactPhoneCommand : AbstractValidator<CreateContactPhone>

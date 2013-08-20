@@ -84,7 +84,17 @@
                 lastName: 'Preston',
                 suffix: 'Esquire',
                 emailAddress: 'bill@x-adventures.at',
-                jobTitle: 'Owner'
+                jobTitle: 'Owner',
+                phones: [
+                    {
+                        type: 'phone type 1 posted with contact',
+                        value: 'phone value 1 posted with contact'
+                    },
+                    {
+                        type: 'phone type 2 posted with contact',
+                        value: 'phone value 2 posted with contact'
+                    }
+                ]
             })
                 .done(function(responseText, statusText, xhr) {
                     var location = xhr.getResponseHeader('location');

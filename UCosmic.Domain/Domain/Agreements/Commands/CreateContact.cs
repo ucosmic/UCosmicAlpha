@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
 using FluentValidation;
@@ -28,6 +29,7 @@ namespace UCosmic.Domain.Agreements
         public string Suffix { get; set; }
         public string EmailAddress { get; set; }
         public string JobTitle { get; set; }
+        public IEnumerable<CreateContactPhone> Phones { get; set; }
 
         public int CreatedContactId { get; internal set; }
     }
@@ -126,17 +128,20 @@ namespace UCosmic.Domain.Agreements
         private readonly ICommandEntities _entities;
         private readonly IHandleCommands<CreatePerson> _createPerson;
         private readonly IHandleCommands<CreateEmailAddress> _createEmailAddress;
+        private readonly IHandleCommands<CreateContactPhone> _createPhone;
         private readonly IUnitOfWork _unitOfWork;
 
         public HandleCreateContactCommand(ICommandEntities entities
             , IHandleCommands<CreatePerson> createPerson
             , IHandleCommands<CreateEmailAddress> createEmailAddress
+            , IHandleCommands<CreateContactPhone> createPhone
             , IUnitOfWork unitOfWork
         )
         {
             _entities = entities;
             _createPerson = createPerson;
             _createEmailAddress = createEmailAddress;
+            _createPhone = createPhone;
             _unitOfWork = unitOfWork;
         }
 
@@ -181,6 +186,15 @@ namespace UCosmic.Domain.Agreements
                 Title = command.JobTitle,
             };
             _entities.Create(entity);
+
+            if (command.Phones != null)
+                foreach (var phone in command.Phones)
+                    _createPhone.Handle(new CreateContactPhone(command.Principal, entity)
+                    {
+                        NoCommit = true,
+                        Type = phone.Type,
+                        Value = phone.Value,
+                    });
 
             // log audit
             var audit = new CommandEvent
