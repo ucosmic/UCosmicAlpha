@@ -21,5 +21,18 @@ namespace UCosmic.Web.Mvc.Models
                 ;
             }
         }
+
+        public class ModelToCreateCommandProfile : Profile
+        {
+            protected override void Configure()
+            {
+                CreateMap<AgreementContactPhoneApiModel, CreateContactPhone>()
+                    .ForMember(d => d.Principal, o => o.Ignore())
+                    .ForMember(d => d.AgreementId, o => o.Ignore())
+                    .ForMember(d => d.ContactId, o => o.Ignore())
+                    .ForMember(d => d.CreatedContactPhoneId, o => o.Ignore())
+                ;
+            }
+        }
     }
 }

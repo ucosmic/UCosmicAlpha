@@ -172,8 +172,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
             _createHandler.Handle(command);
 
-            var response = Request.CreateResponse(HttpStatusCode.Created,
-               string.Format("Contact '{0}' was successfully created.", "name"));
+            var response = Request.CreateResponse(HttpStatusCode.Created, "Agreement contact was successfully created.");
             var url = Url.Link(null, new
             {
                 controller = "AgreementContacts",

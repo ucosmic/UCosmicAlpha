@@ -291,6 +291,7 @@
     <Compile Include="ApiControllers\Agreements\AgreementContactsController.cs" />
     <Compile Include="ApiControllers\Agreements\AgreementFilesController.cs" />
     <Compile Include="ApiControllers\Agreements\AgreementParticipantsController.cs" />
+    <Compile Include="ApiControllers\Agreements\AgreementContactPhonesController.cs" />
     <Compile Include="ApiControllers\Degrees\DegreesController.cs" />
     <Compile Include="ApiControllers\Degrees\MyDegreesController.cs" />
     <Compile Include="ApiControllers\Expertise\GeographicExpertiseController.cs" />

@@ -338,6 +338,15 @@ var App;
                         return put(agreementId, contactId);
                     }
                     Contacts.del = del;
+
+                    (function (Phones) {
+                        function post(agreementId, contactId) {
+                            var url = 'agreements/{0}/contacts/{1}/phones'.format(agreementId, contactId);
+                            return makeUrl(url);
+                        }
+                        Phones.post = post;
+                    })(Contacts.Phones || (Contacts.Phones = {}));
+                    var Phones = Contacts.Phones;
                 })(Agreements.Contacts || (Agreements.Contacts = {}));
                 var Contacts = Agreements.Contacts;
 

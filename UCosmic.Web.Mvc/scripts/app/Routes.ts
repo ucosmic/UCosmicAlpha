@@ -282,6 +282,13 @@ module App.Routes {
                 export function del(agreementId: number, contactId: number) {
                     return put(agreementId, contactId);
                 }
+
+                export module Phones {
+                    export function post(agreementId: number, contactId: number): string {
+                        var url = 'agreements/{0}/contacts/{1}/phones'.format(agreementId, contactId);
+                        return makeUrl(url);
+                    }
+                }
             }
 
             export module Files {
