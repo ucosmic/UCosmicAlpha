@@ -31,7 +31,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [GET("")]
-        public IEnumerable<AgreementParticipantApiModel> GetParticipants(int agreementId)
+        public IEnumerable<AgreementParticipantApiModel> Get(int agreementId)
         {
             var entities = _queryProcessor.Execute(new ParticipantsByAgreementId(User, agreementId)
             {
@@ -50,9 +50,9 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [GET("{establishmentId:int}", ControllerPrecedence = 1)]
-        public AgreementParticipantApiModel GetParticipant(int agreementId, int establishmentId)
+        public AgreementParticipantApiModel Get(int agreementId, int establishmentId)
         {
-            var entity = _queryProcessor.Execute(new ParticipantByEstablishmentId(User, establishmentId, agreementId)
+            var entity = _queryProcessor.Execute(new ParticipantByAgreementIdAndEstablishmentId(User, agreementId, establishmentId)
             {
                 EagerLoad = new Expression<Func<AgreementParticipant, object>>[]
                 {
@@ -64,7 +64,14 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return model;
         }
 
+        [GET("{establishmentId:int}/is-owner", ControllerPrecedence = 1)]
+        public bool GetIsOwner(int establishmentId)
+        {
+            return _queryProcessor.Execute(new OwnershipByEstablishmentId(User, establishmentId));
+        }
+
         [PUT("{establishmentId:int}")]
+        [Authorize(Roles = RoleName.AgreementManagers)]
         public HttpResponseMessage Put(int agreementId, int establishmentId, [FromBody] AgreementParticipantApiModel model)
         {
             model.AgreementId = agreementId;
@@ -79,6 +86,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [DELETE("{establishmentId:int}")]
+        [Authorize(Roles = RoleName.AgreementManagers)]
         public HttpResponseMessage Delete(int agreementId, int establishmentId)
         {
             var command = new PurgeParticipant(User, agreementId, establishmentId);

@@ -45,6 +45,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [POST("phones")]
+        [Authorize(Roles = RoleName.AgreementManagers)]
         public HttpResponseMessage Post(int agreementId, int contactId, [FromBody] AgreementContactPhoneApiModel model)
         {
             model.ContactId = contactId;
@@ -68,6 +69,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [PUT("phones/{phoneId:int}")]
+        [Authorize(Roles = RoleName.AgreementManagers)]
         public HttpResponseMessage Put(int agreementId, int contactId, int phoneId, [FromBody] AgreementContactPhoneApiModel model)
         {
             model.Id = phoneId;
@@ -82,6 +84,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [DELETE("phones/{phoneId:int}")]
+        [Authorize(Roles = RoleName.AgreementManagers)]
         public HttpResponseMessage Delete(int agreementId, int contactId, int phoneId)
         {
             var command = new PurgeContactPhone(User, agreementId, contactId, phoneId);

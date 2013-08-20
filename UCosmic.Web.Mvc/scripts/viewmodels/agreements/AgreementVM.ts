@@ -1287,12 +1287,12 @@ class InstitutionalAgreementEditModel {
                                 }
                                 if (alreadyExist !== true) {
                                     $.ajax({
-                                        url: App.Routes.WebApi.Agreements.Participants.get(0, myParticipant.establishmentId()),
+                                        url: App.Routes.WebApi.Agreements.Participants.isOwner(myParticipant.establishmentId()),
                                         type: 'GET',
                                         async: false
                                     })
                                     .done((response) => {
-                                        myParticipant.isOwner(response.isOwner);
+                                        myParticipant.isOwner(response);
                                         this.participants.push(myParticipant);
                                         //this.percentOffBodyHeight = .6;
                                         this.establishmentSearchViewModel.sammy.setLocation("agreements/" + this.editOrNewUrl + "");

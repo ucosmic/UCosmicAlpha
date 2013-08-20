@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Security.Principal;
 using FluentValidation;
 using FluentValidation.Validators;
@@ -38,8 +37,7 @@ namespace UCosmic.Domain.Agreements
             context.MessageFormatter.AppendArgument("AgreementId", agreementId);
             context.MessageFormatter.AppendArgument("EstablishmentId", establishmentId);
 
-            var entity = _queryProcessor.Execute(new ParticipantsByAgreementId(principal, agreementId))
-                .SingleOrDefault(x => x.EstablishmentId == establishmentId);
+            var entity = _queryProcessor.Execute(new ParticipantByAgreementIdAndEstablishmentId(principal, agreementId, establishmentId));
 
             return entity == null;
         }

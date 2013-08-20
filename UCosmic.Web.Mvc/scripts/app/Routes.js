@@ -258,12 +258,12 @@ var App;
                     function Locations() {
                     }
                     Locations.get = function (establishmentId) {
-                        var url = 'establishments/' + establishmentId + '/location';
+                        var url = 'establishments/{0}/location'.format(establishmentId);
                         return makeUrl(url);
                     };
 
                     Locations.put = function (establishmentId) {
-                        return get(establishmentId);
+                        return Locations.get(establishmentId);
                     };
                     return Locations;
                 })();
@@ -323,6 +323,11 @@ var App;
                         return put(agreementId, establishmentId);
                     }
                     Participants.del = del;
+                    function isOwner(establishmentId) {
+                        var url = get(0, establishmentId);
+                        return url + 'is-owner/';
+                    }
+                    Participants.isOwner = isOwner;
                 })(Agreements.Participants || (Agreements.Participants = {}));
                 var Participants = Agreements.Participants;
 

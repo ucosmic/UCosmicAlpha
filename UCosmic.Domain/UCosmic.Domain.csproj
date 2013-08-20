@@ -179,6 +179,7 @@
     <Compile Include="Domain\Agreements\Commands\CreateParticipant.cs" />
     <Compile Include="Domain\Agreements\Commands\CreateFile.cs" />
     <Compile Include="Domain\Agreements\Queries\ContactById.cs" />
+    <Compile Include="Domain\Agreements\Queries\OwnershipByEstablishmentId.cs" />
     <Compile Include="Domain\Agreements\Queries\UmbrellaOptions.cs" />
     <Compile Include="Domain\Agreements\Queries\FileById.cs" />
     <Compile Include="Domain\Agreements\Validation\MustNotOwnParticipantWithId.cs" />
@@ -194,6 +195,7 @@
     <Compile Include="Domain\Agreements\Validation\MustHaveOwningParticipant.cs" />
     <Compile Include="Domain\Agreements\Validation\MustHaveParticipants.cs" />
     <Compile Include="Domain\Agreements\Validation\MustBeOwnedByPrincipal.cs" />
+    <Compile Include="Domain\Agreements\_Internal\QueryAgreementParticipants.cs" />
     <Compile Include="Domain\Agreements\_Internal\QueryAgreementContacts.cs" />
     <Compile Include="Domain\Degrees\Queries\MyDegreeById.cs" />
     <Compile Include="Domain\Degrees\Queries\MyDegrees.cs" />
@@ -287,7 +289,7 @@
     <Compile Include="Domain\Agreements\Queries\PartnerParticipantsByOwnerDomain.cs" />
     <Compile Include="Domain\Agreements\Queries\PartnerPlacesByOwnerDomain.cs" />
     <Compile Include="Domain\Agreements\Queries\MyAgreementSettings.cs" />
-    <Compile Include="Domain\Agreements\Queries\ParticipantByEstablishmentId.cs" />
+    <Compile Include="Domain\Agreements\Queries\ParticipantByAgreementIdAndEstablishmentId.cs" />
     <Compile Include="Domain\Agreements\Queries\ParticipantsByAgreementId.cs" />
     <Compile Include="Domain\Agreements\_Internal\QueryAgreements.cs" />
     <Compile Include="Domain\Agreements\_Internal\SecureAgreements.cs" />

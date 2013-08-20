@@ -1225,11 +1225,11 @@ else
                                 }
                                 if (alreadyExist !== true) {
                                     $.ajax({
-                                        url: App.Routes.WebApi.Agreements.Participants.get(0, myParticipant.establishmentId()),
+                                        url: App.Routes.WebApi.Agreements.Participants.isOwner(myParticipant.establishmentId()),
                                         type: 'GET',
                                         async: false
                                     }).done(function (response) {
-                                        myParticipant.isOwner(response.isOwner);
+                                        myParticipant.isOwner(response);
                                         _this.participants.push(myParticipant);
 
                                         //this.percentOffBodyHeight = .6;

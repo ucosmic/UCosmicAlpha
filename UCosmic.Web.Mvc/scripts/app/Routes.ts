@@ -220,12 +220,12 @@ module App.Routes {
             export class Locations {
 
                 static get (establishmentId: number): string {
-                    var url = 'establishments/' + establishmentId + '/location';
+                    var url = 'establishments/{0}/location'.format(establishmentId);
                     return makeUrl(url);
                 }
 
                 static put(establishmentId: number): string {
-                    return get(establishmentId);
+                    return Locations.get(establishmentId);
                 }
             }
 
@@ -270,6 +270,10 @@ module App.Routes {
                 }
                 export function del (agreementId: number, establishmentId: number): string {
                     return put(agreementId, establishmentId);
+                }
+                export function isOwner(establishmentId: number): string {
+                    var url = get(0, establishmentId);
+                    return url + 'is-owner/';
                 }
             }
 
