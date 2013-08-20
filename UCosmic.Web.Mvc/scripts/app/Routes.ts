@@ -288,6 +288,10 @@ module App.Routes {
                         var url = 'agreements/{0}/contacts/{1}/phones'.format(agreementId, contactId);
                         return makeUrl(url);
                     }
+                    export function put(agreementId: number, contactId: number, phoneId: number): string {
+                        var url = 'agreements/{0}/contacts/{1}/phones/{2}'.format(agreementId, contactId, phoneId);
+                        return makeUrl(url);
+                    }
                 }
             }
 

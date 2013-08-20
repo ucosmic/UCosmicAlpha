@@ -345,6 +345,11 @@ var App;
                             return makeUrl(url);
                         }
                         Phones.post = post;
+                        function put(agreementId, contactId, phoneId) {
+                            var url = 'agreements/{0}/contacts/{1}/phones/{2}'.format(agreementId, contactId, phoneId);
+                            return makeUrl(url);
+                        }
+                        Phones.put = put;
                     })(Contacts.Phones || (Contacts.Phones = {}));
                     var Phones = Contacts.Phones;
                 })(Agreements.Contacts || (Agreements.Contacts = {}));

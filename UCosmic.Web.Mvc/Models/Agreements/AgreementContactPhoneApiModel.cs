@@ -5,6 +5,7 @@ namespace UCosmic.Web.Mvc.Models
 {
     public class AgreementContactPhoneApiModel
     {
+        public int Id { get; set; }
         public int ContactId { get; set; }
         public string Value { get; set; }
         public string Type { get; set; }
@@ -31,6 +32,19 @@ namespace UCosmic.Web.Mvc.Models
                     .ForMember(d => d.AgreementId, o => o.Ignore())
                     .ForMember(d => d.ContactId, o => o.Ignore())
                     .ForMember(d => d.CreatedContactPhoneId, o => o.Ignore())
+                ;
+            }
+        }
+
+        public class ModelToUpdateCommandProfile : Profile
+        {
+            protected override void Configure()
+            {
+                CreateMap<AgreementContactPhoneApiModel, UpdateContactPhone>()
+                    .ForMember(d => d.Principal, o => o.Ignore())
+                    .ForMember(d => d.AgreementId, o => o.Ignore())
+                    .ForMember(d => d.ContactId, o => o.Ignore())
+                    .ForMember(d => d.PhoneId, o => o.Ignore())
                 ;
             }
         }
