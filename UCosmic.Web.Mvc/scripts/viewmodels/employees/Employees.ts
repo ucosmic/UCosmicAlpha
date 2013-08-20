@@ -92,9 +92,34 @@ module ViewModels.Employees {
         totalCount: KnockoutObservable<number>;
         totalPlaceCount: KnockoutObservable<number>;
 
+        geochartCustomPlaces: any[] = [
+            {
+                name: 'Antarctica', id: 'antarctica', activityCount: 0, peopleCount: 0
+            },
+            {
+                name: 'Southern Ocean', id: 'southernOcean', activityCount: 0, peopleCount: 0
+            },
+            {
+                name: 'Indian Ocean', id: 'indianOcean', activityCount: 0, peopleCount: 0
+            },
+            {
+                name: 'Pacific Ocean', id: 'pacificOcean', activityCount: 0, peopleCount: 0
+            },
+            {
+                name: 'Atlantic Ocean', id: 'atlanticOcean', activityCount: 0, peopleCount: 0
+            },
+            {
+                name: 'Gulf of Mexico', id: 'gulfOfMexico', activityCount: 0, peopleCount: 0
+            },
+            {
+                name: 'Carribean', id: 'carribean', activityCount: 0, peopleCount: 0
+            }
+        ];
+
+
         loadSpinner: App.Spinner;
 
-
+        
         _initialize(institutionInfo: any): void {
             this.sammy = Sammy();
             this.initialLocations = [];        // Bug - To overcome bug in Multiselect.
@@ -586,7 +611,6 @@ module ViewModels.Employees {
         }
 
         getHeatmapActivityDataTable(): any {
-            //debugger;
 
             if (this.globalActivityCountData == null) {
                 this.getActivityDataTable(null);
@@ -604,15 +628,20 @@ module ViewModels.Employees {
                     var rowData = new Array();
                     rowData.push(placeCounts[i].officialName);
                     rowData.push(placeCounts[i].count);
-                    dataTable.addRow(rowData)
+                    dataTable.addRow(rowData);
+
+                    for (var j = 0; j < this.geochartCustomPlaces.length; j += 1) {
+                        if (placeCounts[i].officialName === this.geochartCustomPlaces[j].name) {
+                            this.geochartCustomPlaces[j].activityCount = placeCounts[i].count;
+                        }
                     }
+                }
             }
             
             return dataTable;
         }
 
         getHeatmapPeopleDataTable(): any {
-            //debugger;
 
             if (this.globalPeopleCountData() == null) {
                 this.getPeopleDataTable(null);
@@ -631,18 +660,22 @@ module ViewModels.Employees {
                     rowData.push(placeCounts[i].officialName);
                     rowData.push(placeCounts[i].count);
                     dataTable.addRow(rowData)
-                    }
-            }
 
-            return dataTable;
+                    for (var j = 0; j < this.geochartCustomPlaces.length; j += 1) {
+                        if (placeCounts[i].officialName === this.geochartCustomPlaces[j].name) {
+                            this.geochartCustomPlaces[j].peopleCount = placeCounts[i].count;
+                        }
+                    }
+                }
+
+                return dataTable;
+            }
         }
 
        /*
         *
         */
         getActivityDataTable(placeOfficialName: string): any {
-            //debugger;
-
             if (placeOfficialName == null) {
                 if (this.globalActivityCountData == null) {
                     $.ajax({
@@ -683,7 +716,6 @@ module ViewModels.Employees {
                 }
             }
 
-            $("#antarctica").attr('title', 'Antarctica');
 
             var dt = new this.google.visualization.DataTable();
 
@@ -708,10 +740,6 @@ module ViewModels.Employees {
 
             var view = new this.google.visualization.DataView(dt);
             view.setColumns([0, 1, 1, 2]);
-
-            //if (this.activityTypes() == null) {
-
-            //}
 
             return view;
         }
@@ -896,6 +924,52 @@ module ViewModels.Employees {
             return dt;
         }
 
+        makeActivityTooltip(name: string, count: number): string {
+            return "<b>" + name + "</b><br/>Total Activities: " + count.toString();
+        }
+
+        makePeopleTooltip(name: string, count: number): string {
+            return "<b>" + name + "</b><br/>Total People: " + count.toString();
+        }
+
+        updateCustomGeochartPlaceTooltips(selector: string): any {
+            var id: string = "";
+            var name:string = "";
+            var count:number = 0;
+            
+            for (var i = 0; i < this.geochartCustomPlaces.length; i += 1) {
+                if (selector === 'activities') {
+                    id = this.geochartCustomPlaces[i].id;
+                    name = this.geochartCustomPlaces[i].name;
+                    count = this.geochartCustomPlaces[i].activityCount;
+                    $("#" + id).tooltip({
+                        position: {
+                            my: "bottom+10 right+10"
+                        },
+                        track: true,
+                        tooltipClass: "geochartTooltip",
+                        items: "#" + id,
+                        content: this.makeActivityTooltip(name, count)
+                    })
+                }
+                else
+                {
+                    id = this.geochartCustomPlaces[i].id;
+                    name = this.geochartCustomPlaces[i].name;
+                    count = this.geochartCustomPlaces[i].activityCount;
+                    $("#" + id).tooltip({
+                        position: {
+                            my: "bottom+10 right+10"
+                        },
+                        track: true,
+                        tooltipClass: "geochartTooltip",
+                        items: "#" + id,
+                        content: this.makePeopleTooltip(name, count)
+                    })
+                }
+            }
+        }
+
         load(): JQueryPromise {
             var me = this;
             var deferred: JQueryDeferred<void> = $.Deferred();
@@ -983,8 +1057,6 @@ module ViewModels.Employees {
 
         selectMap(type: string): void {
 
-            //debugger;
-
             $('#heatmapText').css("font-weight", "normal");
             this.isHeatmapVisible(false);
 
@@ -1023,6 +1095,8 @@ module ViewModels.Employees {
                     dataTable = this.getPeopleTrendDataTable(this.selectedPlace());
                     this.linechart.draw(dataTable, this.linechartPeopleOptions);
                 }
+
+                this.updateCustomGeochartPlaceTooltips(this.searchType());
 
                 $("#bib-faculty-staff-summary").addClass("current");
             } else if (type === "pointmap") {
@@ -1141,7 +1215,6 @@ module ViewModels.Employees {
         }
 
         getPlaceId(officialName: string): number {
-            //debugger;
             var i = 0;
             while ((i < this.places.length) &&
                 (officialName !== this.places[i].officialName)) {

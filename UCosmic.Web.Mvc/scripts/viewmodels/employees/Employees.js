@@ -17,6 +17,50 @@ var ViewModels;
             function FacultyAndStaff(institutionInfo) {
                 /* Initialization errors. */
                 this.inititializationErrors = "";
+                this.geochartCustomPlaces = [
+                    {
+                        name: 'Antarctica',
+                        id: 'antarctica',
+                        activityCount: 0,
+                        peopleCount: 0
+                    },
+                    {
+                        name: 'Southern Ocean',
+                        id: 'southernOcean',
+                        activityCount: 0,
+                        peopleCount: 0
+                    },
+                    {
+                        name: 'Indian Ocean',
+                        id: 'indianOcean',
+                        activityCount: 0,
+                        peopleCount: 0
+                    },
+                    {
+                        name: 'Pacific Ocean',
+                        id: 'pacificOcean',
+                        activityCount: 0,
+                        peopleCount: 0
+                    },
+                    {
+                        name: 'Atlantic Ocean',
+                        id: 'atlanticOcean',
+                        activityCount: 0,
+                        peopleCount: 0
+                    },
+                    {
+                        name: 'Gulf of Mexico',
+                        id: 'gulfOfMexico',
+                        activityCount: 0,
+                        peopleCount: 0
+                    },
+                    {
+                        name: 'Carribean',
+                        id: 'carribean',
+                        activityCount: 0,
+                        peopleCount: 0
+                    }
+                ];
                 this._initialize(institutionInfo);
             }
             FacultyAndStaff.prototype._initialize = function (institutionInfo) {
@@ -509,6 +553,12 @@ var ViewModels;
                         rowData.push(placeCounts[i].officialName);
                         rowData.push(placeCounts[i].count);
                         dataTable.addRow(rowData);
+
+                        for (var j = 0; j < this.geochartCustomPlaces.length; j += 1) {
+                            if (placeCounts[i].officialName === this.geochartCustomPlaces[j].name) {
+                                this.geochartCustomPlaces[j].activityCount = placeCounts[i].count;
+                            }
+                        }
                     }
                 }
 
@@ -533,10 +583,16 @@ var ViewModels;
                         rowData.push(placeCounts[i].officialName);
                         rowData.push(placeCounts[i].count);
                         dataTable.addRow(rowData);
-                    }
-                }
 
-                return dataTable;
+                        for (var j = 0; j < this.geochartCustomPlaces.length; j += 1) {
+                            if (placeCounts[i].officialName === this.geochartCustomPlaces[j].name) {
+                                this.geochartCustomPlaces[j].peopleCount = placeCounts[i].count;
+                            }
+                        }
+                    }
+
+                    return dataTable;
+                }
             };
 
             /*
@@ -583,8 +639,6 @@ var ViewModels;
                     }
                 }
 
-                $("#antarctica").attr('title', 'Antarctica');
-
                 var dt = new this.google.visualization.DataTable();
 
                 dt.addColumn('string', 'Activity');
@@ -609,8 +663,6 @@ var ViewModels;
                 var view = new this.google.visualization.DataView(dt);
                 view.setColumns([0, 1, 1, 2]);
 
-                //if (this.activityTypes() == null) {
-                //}
                 return view;
             };
 
@@ -786,6 +838,50 @@ var ViewModels;
                 return dt;
             };
 
+            FacultyAndStaff.prototype.makeActivityTooltip = function (name, count) {
+                return "<b>" + name + "</b><br/>Total Activities: " + count.toString();
+            };
+
+            FacultyAndStaff.prototype.makePeopleTooltip = function (name, count) {
+                return "<b>" + name + "</b><br/>Total People: " + count.toString();
+            };
+
+            FacultyAndStaff.prototype.updateCustomGeochartPlaceTooltips = function (selector) {
+                var id = "";
+                var name = "";
+                var count = 0;
+
+                for (var i = 0; i < this.geochartCustomPlaces.length; i += 1) {
+                    if (selector === 'activities') {
+                        id = this.geochartCustomPlaces[i].id;
+                        name = this.geochartCustomPlaces[i].name;
+                        count = this.geochartCustomPlaces[i].activityCount;
+                        $("#" + id).tooltip({
+                            position: {
+                                my: "bottom+10 right+10"
+                            },
+                            track: true,
+                            tooltipClass: "geochartTooltip",
+                            items: "#" + id,
+                            content: this.makeActivityTooltip(name, count)
+                        });
+                    } else {
+                        id = this.geochartCustomPlaces[i].id;
+                        name = this.geochartCustomPlaces[i].name;
+                        count = this.geochartCustomPlaces[i].activityCount;
+                        $("#" + id).tooltip({
+                            position: {
+                                my: "bottom+10 right+10"
+                            },
+                            track: true,
+                            tooltipClass: "geochartTooltip",
+                            items: "#" + id,
+                            content: this.makePeopleTooltip(name, count)
+                        });
+                    }
+                }
+            };
+
             FacultyAndStaff.prototype.load = function () {
                 var _this = this;
                 var me = this;
@@ -865,7 +961,6 @@ var ViewModels;
             };
 
             FacultyAndStaff.prototype.selectMap = function (type) {
-                //debugger;
                 $('#heatmapText').css("font-weight", "normal");
                 this.isHeatmapVisible(false);
 
@@ -904,6 +999,8 @@ var ViewModels;
                         dataTable = this.getPeopleTrendDataTable(this.selectedPlace());
                         this.linechart.draw(dataTable, this.linechartPeopleOptions);
                     }
+
+                    this.updateCustomGeochartPlaceTooltips(this.searchType());
 
                     $("#bib-faculty-staff-summary").addClass("current");
                 } else if (type === "pointmap") {
@@ -1026,7 +1123,6 @@ var ViewModels;
             };
 
             FacultyAndStaff.prototype.getPlaceId = function (officialName) {
-                //debugger;
                 var i = 0;
                 while ((i < this.places.length) && (officialName !== this.places[i].officialName)) {
                     i += 1;

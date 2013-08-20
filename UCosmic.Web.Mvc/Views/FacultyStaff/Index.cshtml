@@ -138,6 +138,12 @@
             background-color: white;
         }
 
+        .geochartTooltip {
+            line-height: 1;
+            font-size: small;
+            width: 120px;
+            height: 48px;
+        }
 
     </style>
 }
@@ -213,129 +219,131 @@
     </script>    
 }
 
-    <div id="faculty-staff" class="content fixed to-top" data-current-module="employees">
-        <div class="on-left from-top">
-            <header>
-                <h1>@ViewBag.Title</h1>
-            </header>
-            <span style="margin-left: 50px" data-bind="visible: loadSpinner.isVisible()">
-                <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
-                <strong>Loading...</strong>
-            </span>
-            <div style="width: 680px; height: 500px">
-                <div style="display: none" data-bind="visible: isHeatmapVisible()">
-                    <div style="width: 100%; height: 28px; text-align: right" data-bind="click: function(item,event) { globalViewClickHandler(item,event); }">
-                        <span style="margin-right: 4px">Global View</span><img src="../../images/icons/global/global_24_black.png" alt="Global View"/>
-                    </div>
-                    <div style="position: relative">
-                        <div id="heatmap"></div>
+<div id="faculty-staff" class="content fixed to-top" data-current-module="employees">
+    <div class="on-left from-top">
+        <header>
+            <h1 id="pageTitle">@ViewBag.Title</h1>
+        </header>
+        <span style="margin-left: 50px" data-bind="visible: loadSpinner.isVisible()">
+            <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
+            <strong>Loading...</strong>
+        </span>
+        <div style="width: 680px; height: 500px">
+            <div style="display: none" data-bind="visible: isHeatmapVisible()">
+                <div style="width: 100%; height: 28px; text-align: right" data-bind="click: function(item,event) { globalViewClickHandler(item,event); }">
+                    <span style="margin-right: 4px">Global View</span><img src="../../images/icons/global/global_24_black.png" alt="Global View"/>
+                </div>
+                <div style="position: relative">
+                    <div id="heatmap"></div>
 
-                        <!-- Activities/People Buttons -->
-                        <div id="" style="z-index: 1; position: absolute; margin: 5px; right: 0; top: 0">
-                            <input type="button" id="activitiesButton" value="Activites" style="float: left" data-bind="click: function(data, event) { selectSearchType('activities'); }"/>
-                            <input type="button" id="peopleButton" value="People" style="float: left; border-left-style: none" data-bind="click: function(data, event) { selectSearchType('people'); }"/>
-                        </div>
+                    <!-- Activities/People Buttons -->
+                    <div id="" style="position: absolute; margin: 5px; right: 0; top: 0">
+                        <input type="button" id="activitiesButton" value="Activites" style="float: left" data-bind="click: function(data, event) { selectSearchType('activities'); }"/>
+                        <input type="button" id="peopleButton" value="People" style="float: left; border-left-style: none" data-bind="click: function(data, event) { selectSearchType('people'); }"/>
+                    </div>
                         
-                        <!-- Antarctica -->
-                        <div id="antarctica" style="z-index: 1; border-style: solid; padding: 4px; position: absolute; left: 400px; bottom: 0; width: 120px; height: 26px; background-color: white; text-align: center; border-top-left-radius: 4px; border-top-right-radius: 4px">
-                            <span style="margin-top: 4px">ANTARCTICA</span>
-                        </div>
+                    <!-- Antarctica -->
+                    <div id="antarctica" style="border-style: solid; padding: 4px; position: absolute; left: 400px; bottom: 0; width: 120px; height: 26px; background-color: white; text-align: center; border-top-left-radius: 4px; border-top-right-radius: 4px">
+                        <span style="margin-top: 4px">ANTARCTICA</span>
+                    </div>
                         
-                        <!-- Pacific Ocean -->
-                        <div id="pacificOcean" style="z-index: 1; position: absolute; left: 50px; top: 300px; width: 50px">
-                            <div style="width: 100%; text-align: center">
-                                <img src="../../images/icons/glyphs/glyphicons_261_buoy.png" />
-                            </div>
-                            <div style="width: 100%; text-align: center">
-                                <span style="font-size: small">Pacific Ocean</span>
-                            </div>
+                    <!-- Pacific Ocean -->
+                    <div id="pacificOcean" style="position: absolute; left: 50px; top: 300px; width: 50px">
+                        <div style="width: 100%; text-align: center">
+                            <img src="../../images/icons/glyphs/glyphicons_261_buoy.png" />
                         </div>
+                        <div style="width: 100%; text-align: center">
+                            <span style="font-size: small">Pacific Ocean</span>
+                        </div>
+                    </div>
                         
-                        <!-- Atlantic Ocean -->
-                        <div id="atlanticOcean" style="z-index: 1; position: absolute; left: 240px; top: 250px; width: 50px">
-                            <div style="width: 100%; text-align: center">
-                                <img src="../../images/icons/glyphs/glyphicons_261_buoy.png" />
-                            </div>
-                            <div style="width: 100%; text-align: center">
-                                <span style="font-size: small">Atlantic Ocean</span>
-                            </div>
+                    <!-- Atlantic Ocean -->
+                    <div id="atlanticOcean" style="position: absolute; left: 240px; top: 250px; width: 50px">
+                        <div style="width: 100%; text-align: center">
+                            <img src="../../images/icons/glyphs/glyphicons_261_buoy.png" />
                         </div>
+                        <div style="width: 100%; text-align: center">
+                            <span style="font-size: small">Atlantic Ocean</span>
+                        </div>
+                    </div>
                         
-                        <!-- Indian Ocean -->
-                        <div id="indianOcean" style="z-index: 1; position: absolute; left: 460px; top: 360px; width: 50px">
-                            <div style="width: 100%; text-align: center">
-                                <img src="../../images/icons/glyphs/glyphicons_261_buoy.png" />
-                            </div>
-                            <div style="width: 100%; text-align: center">
-                                <span style="font-size: small">Indian Ocean</span>
-                            </div>
+                    <!-- Indian Ocean -->
+                    <div id="indianOcean" style="position: absolute; left: 460px; top: 360px; width: 50px">
+                        <div style="width: 100%; text-align: center">
+                            <img src="../../images/icons/glyphs/glyphicons_261_buoy.png" />
                         </div>
+                        <div style="width: 100%; text-align: center">
+                            <span style="font-size: small">Indian Ocean</span>
+                        </div>
+                    </div>
                          
-                        <!-- Southern Ocean -->
-                        <div id="southernOcean" style="z-index: 1; position: absolute; left: 270px; top: 420px; width: 50px">
-                            <div style="width: 100%; text-align: center">
-                                <img src="../../images/icons/glyphs/glyphicons_261_buoy.png" />
-                            </div>
-                            <div style="width: 100%; text-align: center">
-                                <span style="font-size: small">Southern Ocean</span>
-                            </div>
+                    <!-- Southern Ocean -->
+                    <div id="southernOcean" style="position: absolute; left: 270px; top: 420px; width: 50px">
+                        <div style="width: 100%; text-align: center">
+                            <img src="../../images/icons/glyphs/glyphicons_261_buoy.png" />
                         </div>
-                          
-                        <!-- Gulf of Mexico -->
-                        <div id="gulfOfMexico" style="z-index: 1; position: absolute; left: 150px; top: 270px; width: 50px">
-                            <div style="width: 100%; text-align: center">
-                                <img src="../../images/icons/glyphs/glyphicons_261_buoy.png" width="12" height="12"/>
-                            </div>
-                            <div style="width: 100%; text-align: center; line-height: 0.5">
-                                <span style="font-size: x-small">Gulf of Mexico</span>
-                            </div>
-                        </div>                       
-                           
-                        <!-- Carribean -->
-                        <div id="carribean" style="z-index: 1; position: absolute; left: 200px; top: 300px; width: 50px">
-                            <div style="width: 100%; text-align: center">
-                                <img src="../../images/icons/glyphs/glyphicons_261_buoy.png" width="12" height="12"/>
-                            </div>
-                            <div style="width: 100%; text-align: center; line-height: 0.5">
-                                <span style="font-size: x-small">Carribean</span>
-                            </div>
-                        </div>                          
-
+                        <div style="width: 100%; text-align: center">
+                            <span style="font-size: small">Southern Ocean</span>
+                        </div>
                     </div>
-                </div>
-                <div style="display: none" data-bind="visible: isPointmapVisible()">
-                    <div id="pointmap" style="width: 680px; height: 500px"></div>
-                </div>
-                <div id="resultstable" style="display: none" data-bind="visible: isTableVisible()">
-                    
-                    <table class="data">
-                        <colgroup>
-                            <col style="width: 40%;" />
-                            <col style="width: 30%;" />
-                            <col style="width: 30%;" />
-                        </colgroup>
-                        <thead>
-                            <tr>
-                                <th>Faculty</th>
-                                <th>Activity</th>
-                                <th>Locations</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td> </td>
-                                <td> </td>
-                                <td> </td>
-                            </tr>
-                        </tbody>
-                    </table>                  
+                          
+                    <!-- Gulf of Mexico -->
+                    <div id="gulfOfMexico" style="position: absolute; left: 150px; top: 270px; width: 50px">
+                        <div style="width: 100%; text-align: center">
+                            <img src="../../images/icons/glyphs/glyphicons_261_buoy.png" width="12" height="12"/>
+                        </div>
+                        <div style="width: 100%; text-align: center; line-height: 0.5">
+                            <span style="font-size: x-small">Gulf of Mexico</span>
+                        </div>
+                    </div>                       
+                           
+                    <!-- Carribean -->
+                    <div id="carribean" style="position: absolute; left: 200px; top: 300px; width: 50px">
+                        <div style="width: 100%; text-align: center">
+                            <img src="../../images/icons/glyphs/glyphicons_261_buoy.png" width="12" height="12"/>
+                        </div>
+                        <div style="width: 100%; text-align: center; line-height: 0.5">
+                            <span style="font-size: x-small">Carribean</span>
+                        </div>
+                    </div>                          
+
                 </div>
             </div>
-        </div>
-        <div class="on-right from-top" style="display: none" data-bind="visible: isPointmapVisible() || isTableVisible()">
-            @Html.Partial(MVC.FacultyStaff.Views._SearchSideBar)
-        </div>
-        <div class="on-right from-top" style="display: none" data-bind="visible: isHeatmapVisible">
-            @Html.Partial(MVC.FacultyStaff.Views._StatsSideBar)
+            <div style="display: none" data-bind="visible: isPointmapVisible()">
+                <div id="pointmap" style="width: 680px; height: 500px"></div>
+            </div>
+            <div id="resultstable" style="display: none" data-bind="visible: isTableVisible()">
+                    
+                <table class="data">
+                    <colgroup>
+                        <col style="width: 40%;" />
+                        <col style="width: 30%;" />
+                        <col style="width: 30%;" />
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>Faculty</th>
+                            <th>Activity</th>
+                            <th>Locations</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td> </td>
+                            <td> </td>
+                            <td> </td>
+                        </tr>
+                    </tbody>
+                </table>                  
+            </div>
         </div>
     </div>
+    <div class="on-right from-top" style="display: none" data-bind="visible: isPointmapVisible() || isTableVisible()">
+        @Html.Partial(MVC.FacultyStaff.Views._SearchSideBar)
+    </div>
+    <div class="on-right from-top" style="display: none" data-bind="visible: isHeatmapVisible">
+        @Html.Partial(MVC.FacultyStaff.Views._StatsSideBar)
+    </div>
+</div>
+
+<div id="tooltipWindow" style="width: 100px; height: 40px"></div>

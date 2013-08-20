@@ -13,7 +13,6 @@ using PlaceByWoeId = UCosmic.Domain.Places.PlaceByWoeId;
 
 namespace UCosmic.Web.Mvc.ApiControllers
 {
-    [Authorize]
     [RoutePrefix("api/places")]
     public class PlacesController : ApiController
     {
