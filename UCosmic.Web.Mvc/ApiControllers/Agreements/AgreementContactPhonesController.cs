@@ -18,18 +18,18 @@ namespace UCosmic.Web.Mvc.ApiControllers
         private readonly IProcessQueries _queryProcessor;
         private readonly IHandleCommands<CreateContactPhone> _createHandler;
         private readonly IHandleCommands<UpdateContactPhone> _updateHandler;
-        //private readonly IHandleCommands<PurgeContact> _purgeHandler;
+        private readonly IHandleCommands<PurgeContactPhone> _purgeHandler;
 
         public AgreementContactPhonesController(IProcessQueries queryProcessor
             , IHandleCommands<CreateContactPhone> createHandler
             , IHandleCommands<UpdateContactPhone> updateHandler
-            //, IHandleCommands<PurgeContact> purgeHandler
+            , IHandleCommands<PurgeContactPhone> purgeHandler
         )
         {
             _queryProcessor = queryProcessor;
             _createHandler = createHandler;
             _updateHandler = updateHandler;
-            //_purgeHandler = purgeHandler;
+            _purgeHandler = purgeHandler;
         }
 
         [GET("{agreementId:int}/contacts/{contactId:int}/phones")]
@@ -81,13 +81,13 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return response;
         }
 
-        //[DELETE("{agreementId:int}/contacts/{contactId:int}")]
-        //public HttpResponseMessage Delete(int agreementId, int contactId)
-        //{
-        //    var command = new PurgeContact(User, agreementId, contactId);
-        //    _purgeHandler.Handle(command);
-        //    var response = Request.CreateResponse(HttpStatusCode.OK, "Agreement contact was successfully deleted.");
-        //    return response;
-        //}
+        [DELETE("{agreementId:int}/contacts/{contactId:int}/phones/{phoneId:int}")]
+        public HttpResponseMessage Delete(int agreementId, int contactId, int phoneId)
+        {
+            var command = new PurgeContactPhone(User, agreementId, contactId, phoneId);
+            _purgeHandler.Handle(command);
+            var response = Request.CreateResponse(HttpStatusCode.OK, "Agreement contact phone was successfully deleted.");
+            return response;
+        }
     }
 }

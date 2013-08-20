@@ -350,6 +350,10 @@ var App;
                             return makeUrl(url);
                         }
                         Phones.put = put;
+                        function del(agreementId, contactId, phoneId) {
+                            return put(agreementId, contactId, phoneId);
+                        }
+                        Phones.del = del;
                     })(Contacts.Phones || (Contacts.Phones = {}));
                     var Phones = Contacts.Phones;
                 })(Agreements.Contacts || (Agreements.Contacts = {}));

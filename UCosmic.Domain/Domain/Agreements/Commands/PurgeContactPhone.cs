@@ -8,24 +8,26 @@ using UCosmic.Domain.Identity;
 
 namespace UCosmic.Domain.Agreements
 {
-    public class PurgeContact
+    public class PurgeContactPhone
     {
-        public PurgeContact(IPrincipal principal, int agreementId, int contactId)
+        public PurgeContactPhone(IPrincipal principal, int agreementId, int contactId, int phoneId)
         {
             if (principal == null) throw new ArgumentNullException("principal");
             Principal = principal;
             AgreementId = agreementId;
             ContactId = contactId;
+            PhoneId = phoneId;
         }
 
         public IPrincipal Principal { get; private set; }
         public int AgreementId { get; private set; }
         public int ContactId { get; private set; }
+        public int PhoneId { get; private set; }
     }
 
-    public class ValidatePurgeContactCommand : AbstractValidator<PurgeContact>
+    public class ValidatePurgeContactPhoneCommand : AbstractValidator<PurgeContactPhone>
     {
-        public ValidatePurgeContactCommand(IQueryEntities entities, IProcessQueries queryProcessor)
+        public ValidatePurgeContactPhoneCommand(IQueryEntities entities, IProcessQueries queryProcessor)
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
@@ -51,16 +53,20 @@ namespace UCosmic.Domain.Agreements
                 // contact id must exist under this agreement
                 .MustOwnContactWithId(entities, x => x.ContactId)
                     .WithMessage(MustOwnContactWithId<object>.FailMessageFormat, x => x.AgreementId, x => x.ContactId)
+
+                // phone id must exist under this agreement & contact
+                .MustOwnContactPhoneWithId(entities, x => x.ContactId, x => x.PhoneId)
+                    .WithMessage(MustOwnContactPhoneWithId<object>.FailMessageFormat, x => x.PhoneId, x => x.ContactId, x => x.AgreementId)
             ;
         }
     }
 
-    public class HandlePurgeContactCommand : IHandleCommands<PurgeContact>
+    public class HandlePurgeContactPhoneCommand : IHandleCommands<PurgeContactPhone>
     {
         private readonly ICommandEntities _entities;
         private readonly IUnitOfWork _unitOfWork;
 
-        public HandlePurgeContactCommand(ICommandEntities entities
+        public HandlePurgeContactPhoneCommand(ICommandEntities entities
             , IUnitOfWork unitOfWork
         )
         {
@@ -68,11 +74,12 @@ namespace UCosmic.Domain.Agreements
             _unitOfWork = unitOfWork;
         }
 
-        public void Handle(PurgeContact command)
+        public void Handle(PurgeContactPhone command)
         {
             if (command == null) throw new ArgumentNullException("command");
 
-            var entity = _entities.Get<AgreementContact>().Single(x => x.Id == command.ContactId);
+            var entity = _entities.Get<AgreementContactPhone>()
+                .Single(x => x.Id == command.PhoneId && x.OwnerId == command.ContactId && x.Owner.AgreementId == command.AgreementId);
 
             // log audit
             var audit = new CommandEvent
@@ -83,6 +90,7 @@ namespace UCosmic.Domain.Agreements
                 {
                     command.AgreementId,
                     command.ContactId,
+                    command.PhoneId,
                 }),
                 PreviousState = entity.ToJsonAudit(),
             };

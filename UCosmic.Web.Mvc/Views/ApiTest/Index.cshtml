@@ -164,6 +164,17 @@
                     alert(info);
                 });
         });
+        $('#agreement_contact_phone_delete_button').click(function () {
+            $.ajax({
+                url: App.Routes.WebApi.Agreements.Contacts.Phones.del(3, 4, 3),
+                type: 'DELETE',
+            })
+                .done(function (responseText, statusText, xhr) {
+                    var info = 'delete of contact phone data resulted in response "' + responseText + '"';
+                    console.log(info);
+                    alert(info);
+                });
+        });
 
         //#endregion
         //#region Circle graphic
@@ -451,6 +462,7 @@
             <br/>
             <input id="agreement_contact_phone_post_button" type="button" value="POST test agreement contact phone" />
             <input id="agreement_contact_phone_put_button" type="button" value="PUT test agreement contact phone" />
+            <input id="agreement_contact_phone_delete_button" type="button" value="DELETE test agreement contact phone" />
         </div>
     </section>
     <section data-bind="visible: tempUpload" style="display: none;">

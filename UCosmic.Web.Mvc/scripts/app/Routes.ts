@@ -292,6 +292,9 @@ module App.Routes {
                         var url = 'agreements/{0}/contacts/{1}/phones/{2}'.format(agreementId, contactId, phoneId);
                         return makeUrl(url);
                     }
+                    export function del(agreementId: number, contactId: number, phoneId: number): string {
+                        return put(agreementId, contactId, phoneId);
+                    }
                 }
             }
 
