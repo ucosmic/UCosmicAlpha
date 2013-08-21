@@ -125,7 +125,7 @@ var InstitutionalAgreementEditModel = (function () {
         this.participants = ko.mapping.fromJS([]);
         this.participantsErrorMsg = ko.observable();
         this.contacts = ko.mapping.fromJS([]);
-        this.contactPhones = ko.mapping.fromJS([]);
+        this.contactPhones = ko.observableArray();
         this.officialNameDoesNotMatchTranslation = ko.computed(function () {
             return !(this.participants.establishmentOfficialName === this.participants.establishmentTranslatedName);
         });
@@ -740,7 +740,8 @@ else
 
         this.contactPhoneTextValue.subscribe(function (me) {
             if (_this.contactPhoneTextValue().length > 0) {
-                _this.contactPhones.push(ko.mapping.fromJS({ type: _this.contactPhoneType(), value: _this.contactPhoneTextValue() }));
+                _this.contactPhones.push({ type: '', contactId: '', value: _this.contactPhoneTextValue() });
+
                 _this.contactPhoneTextValue("");
                 $(".phoneTypes").kendoDropDownList({
                     dataTextField: "name",
@@ -1274,6 +1275,7 @@ else
     };
 
     InstitutionalAgreementEditModel.prototype.editAContact = function (me) {
+        var _this = this;
         this.$addContactDialog.data("kendoWindow").open().title("Edit Contact");
         this.contactsIsEdit(true);
         this.contactEmail(me.emailAddress());
@@ -1283,7 +1285,20 @@ else
         this.contactJobTitle(me.title());
         this.contactFirstName(me.firstName());
         this.contactLastName(me.lastName());
-        this.contactPhones(me.phones());
+
+        //this.contactPhones = ko.observableArray(me.phones());
+        //this.contactPhones = me.phones();
+        //this.contactPhones = ko.mapping.fromJS(me.phones());
+        //this.contactPhones.removeAll();
+        $.each(me.phones(), function (i, item) {
+            var data = ko.mapping.toJS({
+                contactId: item.contactId,
+                type: item.type,
+                value: item.value
+            });
+            _this.contactPhones.push(data);
+        });
+
         this.contactMiddleName(me.middleName());
         this.contactIndex = this.contacts.indexOf(me);
         if (me.userId() != null) {
@@ -1371,25 +1386,31 @@ else
             this.contacts()[this.contactIndex].firstName(this.contactFirstName());
             this.contacts()[this.contactIndex].lastName(this.contactLastName());
             this.contacts()[this.contactIndex].middleName(this.contactMiddleName());
-            this.contacts()[this.contactIndex].phones(this.contactPhones());
+
+            //this.contacts()[this.contactIndex].phones(ko.mapping.toJS(this.contactPhones()));
+            //this.contacts()[this.contactIndex].phones(this.contactPhones());
+            //var phoneData = [];
+            this.contacts()[this.contactIndex].phones.removeAll();
+            $.each(this.contactPhones(), function (i, item) {
+                var data = ko.mapping.toJS({
+                    contactId: item.contactId,
+                    type: item.type,
+                    value: item.value
+                });
+
+                //phoneData.push(data);
+                _this.contacts()[_this.contactIndex].phones.push(ko.mapping.fromJS(data));
+            });
+
+            //this.contacts()[this.contactIndex].phones(this.contactPhones());
             this.contacts()[this.contactIndex].type(this.contactTypeOptionSelected());
             this.contacts()[this.contactIndex].salutation(this.contactSalutationSelected());
             this.contacts()[this.contactIndex].suffix(this.contactSuffixSelected());
-            this.$addContactDialog.data("kendoWindow").close();
 
             $("#addAContact").fadeIn(500);
 
             if (this.agreementIsEdit()) {
                 this.contacts()[this.contactIndex].agreementId(this.agreementId);
-                var phoneData = [];
-                $.each(this.contacts()[this.contactIndex].phones(), function (i, item) {
-                    var data = ko.mapping.toJS({
-                        contactId: item.contactId,
-                        type: item.type,
-                        value: item.value
-                    });
-                    phoneData.push(data);
-                });
 
                 var data = {
                     agreementId: this.contacts()[this.contactIndex].agreementId(),
@@ -1402,7 +1423,7 @@ else
                     Suffix: this.contacts()[this.contactIndex].suffix(),
                     EmailAddress: this.contacts()[this.contactIndex].emailAddress(),
                     PersonId: this.contacts()[this.contactIndex].personId(),
-                    Phones: phoneData
+                    Phones: this.contacts()[this.contactIndex].phones()
                 };
 
                 //var data = ko.mapping.toJS(this.contacts()[this.contactIndex])
@@ -1436,6 +1457,7 @@ else
         } else {
             this.validateContact.errors.showAllMessages(true);
         }
+        this.$addContactDialog.data("kendoWindow").close();
     };
 
     InstitutionalAgreementEditModel.prototype.addContact = function (me, e) {
@@ -1534,6 +1556,8 @@ else
         this.contactMiddleName('');
         this.contactLastName('');
         this.contactPhones.removeAll();
+
+        //this.contactPhones = ko.mapping.fromJS([]);
         this.contactTypeOptionSelected('');
 
         if (this.isCustomContactTypeAllowed) {
@@ -1579,7 +1603,7 @@ else
 
     InstitutionalAgreementEditModel.prototype.addPhone = function (me, e) {
         if (this.contactPhoneTextValue().length > 0) {
-            this.contactPhones.push(ko.mapping.fromJS({ type: '', value: this.contactPhoneTextValue() }));
+            this.contactPhones.push({ type: '', contactId: '', value: this.contactPhoneTextValue() });
             this.contactPhoneTextValue("");
             $(".phoneTypes").kendoDropDownList({
                 dataTextField: "name",

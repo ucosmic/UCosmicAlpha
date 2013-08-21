@@ -255,7 +255,7 @@ class InstitutionalAgreementEditModel {
     participantsShowErrorMsg;
 
     contacts = ko.mapping.fromJS([]);
-    contactPhones = ko.mapping.fromJS([]);
+    contactPhones = ko.observableArray();// = ko.mapping.fromJS([]);
 
     officialNameDoesNotMatchTranslation = ko.computed( function() {
         return !(this.participants.establishmentOfficialName === this.participants.establishmentTranslatedName);
@@ -785,7 +785,9 @@ class InstitutionalAgreementEditModel {
 
         this.contactPhoneTextValue.subscribe((me: string): void => {
             if (this.contactPhoneTextValue().length > 0) {
-                this.contactPhones.push(ko.mapping.fromJS({ type: this.contactPhoneType(), value: this.contactPhoneTextValue() }))
+
+                this.contactPhones.push({ type: '', contactId: '', value: this.contactPhoneTextValue() })
+                
                 this.contactPhoneTextValue("");
                 $(".phoneTypes").kendoDropDownList({
                     dataTextField: "name",
@@ -1346,7 +1348,19 @@ class InstitutionalAgreementEditModel {
         this.contactJobTitle(me.title());
         this.contactFirstName(me.firstName());
         this.contactLastName(me.lastName());
-        this.contactPhones(me.phones());
+        //this.contactPhones = ko.observableArray(me.phones());
+        //this.contactPhones = me.phones();
+        //this.contactPhones = ko.mapping.fromJS(me.phones());
+        //this.contactPhones.removeAll();
+        $.each(me.phones(), (i, item) => {
+            var data = ko.mapping.toJS({
+                contactId: item.contactId,
+                type: item.type,
+                value: item.value
+            })
+            this.contactPhones.push(data);
+        });
+        
         this.contactMiddleName(me.middleName());
         this.contactIndex = this.contacts.indexOf(me)
         if (me.userId() != null) {
@@ -1435,25 +1449,28 @@ class InstitutionalAgreementEditModel {
             this.contacts()[this.contactIndex].firstName(this.contactFirstName());
             this.contacts()[this.contactIndex].lastName(this.contactLastName());
             this.contacts()[this.contactIndex].middleName(this.contactMiddleName());
-            this.contacts()[this.contactIndex].phones(this.contactPhones());
+            //this.contacts()[this.contactIndex].phones(ko.mapping.toJS(this.contactPhones()));
+            //this.contacts()[this.contactIndex].phones(this.contactPhones());
+            //var phoneData = [];
+            this.contacts()[this.contactIndex].phones.removeAll();
+            $.each(this.contactPhones(), (i, item) => {
+                var data = ko.mapping.toJS({
+                    contactId: item.contactId,
+                    type: item.type,
+                    value: item.value
+                })
+                    //phoneData.push(data);
+                this.contacts()[this.contactIndex].phones.push(ko.mapping.fromJS(data));
+            });
+            //this.contacts()[this.contactIndex].phones(this.contactPhones());
             this.contacts()[this.contactIndex].type(this.contactTypeOptionSelected());
             this.contacts()[this.contactIndex].salutation(this.contactSalutationSelected());
             this.contacts()[this.contactIndex].suffix(this.contactSuffixSelected());
-            this.$addContactDialog.data("kendoWindow").close()
 
             $("#addAContact").fadeIn(500);
 
             if (this.agreementIsEdit()) {
                 this.contacts()[this.contactIndex].agreementId(this.agreementId)// may not need this later
-                var phoneData = [];
-                $.each(this.contacts()[this.contactIndex].phones(), function (i, item) {
-                    var data = ko.mapping.toJS({
-                        contactId: item.contactId,
-                        type: item.type,
-                        value: item.value
-                    })
-                    phoneData.push(data);
-                });
 
                 var data = {
                     agreementId: this.contacts()[this.contactIndex].agreementId(),
@@ -1466,7 +1483,7 @@ class InstitutionalAgreementEditModel {
                     Suffix: this.contacts()[this.contactIndex].suffix(),
                     EmailAddress: this.contacts()[this.contactIndex].emailAddress(),
                     PersonId: this.contacts()[this.contactIndex].personId(),
-                    Phones: phoneData// ko.mapping.toJS(this.contacts()[this.contactIndex].phones())
+                    Phones: this.contacts()[this.contactIndex].phones()// ko.mapping.toJS(this.contacts()[this.contactIndex].phones())
                 }
                 //var data = ko.mapping.toJS(this.contacts()[this.contactIndex])
                 var url = App.Routes.WebApi.Agreements.Contacts.put(this.agreementId, this.contacts()[this.contactIndex].id());
@@ -1498,6 +1515,7 @@ class InstitutionalAgreementEditModel {
         } else {
             this.validateContact.errors.showAllMessages(true);
         }
+        this.$addContactDialog.data("kendoWindow").close()
     }
 
     addContact(me, e): void {
@@ -1598,7 +1616,8 @@ class InstitutionalAgreementEditModel {
         this.contactFirstName('');
         this.contactMiddleName('');
         this.contactLastName('');
-        this.contactPhones.removeAll();// = ([]);//ko.mapping.fromJS([]);
+        this.contactPhones.removeAll();// = ([]);//
+        //this.contactPhones = ko.mapping.fromJS([]);
         this.contactTypeOptionSelected('');
 
         if (this.isCustomContactTypeAllowed) {
@@ -1645,7 +1664,7 @@ class InstitutionalAgreementEditModel {
 
     addPhone(me, e): void {
         if (this.contactPhoneTextValue().length > 0) {
-            this.contactPhones.push(ko.mapping.fromJS({ type: '', value: this.contactPhoneTextValue() }))
+            this.contactPhones.push({ type: '', contactId: '', value: this.contactPhoneTextValue() })
             this.contactPhoneTextValue("");
             $(".phoneTypes").kendoDropDownList({
                 dataTextField: "name",
