@@ -26,8 +26,8 @@ namespace UCosmic.Domain.Activities
         public int EstablishmentId { get; private set; }
         public int CountOfPlaces { get; private set; }              // Total places with activity/people
         public int Count { get; private set; }                      // Global count of activities
-        public ICollection<TypeCount> TypeCounts { get; set; }      // Global count of types
-        public ICollection<PlaceCount> PlaceCounts { get; set; }    // Count of activities/people per place
+        public ICollection<TypeCount> TypeCounts { get; private set; }      // Global count of types
+        public ICollection<PlaceCount> PlaceCounts { get; private set; }    // Count of activities/people per place
 
         public ActivityGlobalActivityCountView(IProcessQueries queryProcessor,
                                                IQueryEntities entities,

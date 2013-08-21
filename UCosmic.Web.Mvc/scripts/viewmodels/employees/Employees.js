@@ -439,6 +439,11 @@ var ViewModels;
                 if (this.activityTypes() != null) {
                     this.barchartActivityOptions = {
                         title: 'Global Activities',
+                        titleTextStyle: {
+                            color: 'black',
+                            fontSize: 14,
+                            bold: true
+                        },
                         hAxis: {
                             textPosition: 'none'
                         },
@@ -448,7 +453,7 @@ var ViewModels;
                         chartArea: {
                             left: 10,
                             width: '100%',
-                            height: '80%'
+                            height: '75%'
                         },
                         legend: { position: 'none' },
                         isStacked: true,
@@ -466,45 +471,41 @@ var ViewModels;
                             }
                         ]
                     };
-                    //this.barchartActivityOptions.series = new Array();
-                    //for (var i = 0; i < this.activityTypes().length; i += 1) {
-                    //    this.barchartActivityOptions.series.push({
-                    //        i: {
-                    //            type: 'bars',
-                    //            color: this.activityTypes()[i].cssColor()
-                    //        }
-                    //    });
-                    //}
-                    //i = this.activityTypes().length;
-                    //this.barchartActivityOptions.series.push({
-                    //    i: {
-                    //        type: 'line',
-                    //        color: 'black',
-                    //        lineWidth: 0,
-                    //        pointSize: 0,
-                    //        visibleInLegend: false
-                    //    }
-                    //});
                 }
 
                 this.barchartPeopleOptions = {
                     title: 'Global People',
-                    vAxis: { title: 'Count' },
-                    //axisTitlesPosition: 'in',
-                    chartArea: { left: 80 },
+                    titleTextStyle: {
+                        color: 'black',
+                        fontSize: 14,
+                        bold: true
+                    },
+                    hAxis: {
+                        textPosition: 'none'
+                    },
+                    vAxis: {
+                        textPosition: 'none'
+                    },
+                    chartArea: {
+                        left: 10,
+                        width: '100%',
+                        height: '75%'
+                    },
                     legend: { position: 'none' },
-                    series: {
-                        0: {
-                            type: 'bars'
+                    isStacked: true,
+                    series: [
+                        {
+                            type: 'bars',
+                            color: 'green'
                         },
-                        1: {
+                        {
                             type: 'line',
                             color: 'black',
                             lineWidth: 0,
                             pointSize: 0,
                             visibleInLegend: false
                         }
-                    }
+                    ]
                 };
 
                 this.barchart = new this.google.visualization.ColumnChart($('#facultystaff-summary-barchart')[0]);
@@ -517,6 +518,11 @@ var ViewModels;
                         height: '60%'
                     },
                     title: 'Global Activity Trend',
+                    titleTextStyle: {
+                        color: 'black',
+                        fontSize: 14,
+                        bold: true
+                    },
                     colors: ['green'],
                     legend: { position: 'none' }
                 };
@@ -525,9 +531,14 @@ var ViewModels;
                     chartArea: {
                         left: 40,
                         width: '85%',
-                        height: '80%'
+                        height: '60%'
                     },
                     title: 'Global People Trend',
+                    titleTextStyle: {
+                        color: 'black',
+                        fontSize: 14,
+                        bold: true
+                    },
                     colors: ['green'],
                     legend: { position: 'none' }
                 };
@@ -566,7 +577,7 @@ var ViewModels;
             };
 
             FacultyAndStaff.prototype.getHeatmapPeopleDataTable = function () {
-                if (this.globalPeopleCountData() == null) {
+                if (this.globalPeopleCountData == null) {
                     this.getPeopleDataTable(null);
                 }
 
@@ -590,9 +601,9 @@ var ViewModels;
                             }
                         }
                     }
-
-                    return dataTable;
                 }
+
+                return dataTable;
             };
 
             /*
@@ -610,8 +621,8 @@ var ViewModels;
                             url: App.Routes.WebApi.FacultyStaff.getActivityCount(),
                             success: function (data, textStatus, jqXhr) {
                                 _this.globalActivityCountData = data;
-                                _this.totalCount(_this.globalActivityCountData.globalCount);
-                                _this.totalPlaceCount(_this.globalActivityCountData.countOfPlaces);
+                                //this.totalCount(this.globalActivityCountData.globalCount);
+                                //this.totalPlaceCount(this.globalActivityCountData.countOfPlaces);
                             },
                             error: function (jqXhr, textStatus, errorThrown) {
                                 alert('Error getting data ' + textStatus + ' | ' + errorThrown);
@@ -652,10 +663,10 @@ var ViewModels;
                         dt.addRow([activityType, count, count]);
                     }
                 } else {
-                    var placeActivityCounts = (this.placeActivityCountData).placeActivityCounts[0];
-                    for (var j = 0; j < placeActivityCounts.typeCounts.length; j += 1) {
-                        var activityType = placeActivityCounts.typeCounts[j].type;
-                        var count = placeActivityCounts.typeCounts[j].count;
+                    var placeCounts = (this.placeActivityCountData).placeCounts[0];
+                    for (var j = 0; j < placeCounts.typeCounts.length; j += 1) {
+                        var activityType = placeCounts.typeCounts[j].type;
+                        var count = placeCounts.typeCounts[j].count;
                         dt.addRow([activityType, count, count]);
                     }
                 }
@@ -672,7 +683,7 @@ var ViewModels;
             FacultyAndStaff.prototype.getPeopleDataTable = function (placeOfficialName) {
                 var _this = this;
                 if (placeOfficialName == null) {
-                    if (this.globalActivityCountData == null) {
+                    if (this.globalPeopleCountData == null) {
                         $.ajax({
                             type: "GET",
                             async: false,
@@ -680,7 +691,9 @@ var ViewModels;
                             dataType: 'json',
                             url: App.Routes.WebApi.FacultyStaff.getPeopleCount(),
                             success: function (data, textStatus, jqXhr) {
-                                _this.globalActivityCountData = data;
+                                _this.globalPeopleCountData = data;
+                                //this.totalCount(this.globalPeopleCountData.globalCount);
+                                //this.totalPlaceCount(this.globalPeopleCountData.countOfPlaces);
                             },
                             error: function (jqXhr, textStatus, errorThrown) {
                                 alert('Error getting data ' + textStatus + ' | ' + errorThrown);
@@ -690,7 +703,7 @@ var ViewModels;
                 } else {
                     var placeId = this.getPlaceId(placeOfficialName);
                     if (placeId != null) {
-                        if (this.placeActivityCountData == null) {
+                        if (this.placePeopleCountData == null) {
                             $.ajax({
                                 type: "GET",
                                 async: false,
@@ -698,7 +711,7 @@ var ViewModels;
                                 dataType: 'json',
                                 url: App.Routes.WebApi.FacultyStaff.getPeopleCount(),
                                 success: function (data, textStatus, jqXhr) {
-                                    _this.placeActivityCountData = data;
+                                    _this.placePeopleCountData = data;
                                 },
                                 error: function (jqXhr, textStatus, errorThrown) {
                                     alert('Error getting data ' + textStatus + ' | ' + errorThrown);
@@ -710,26 +723,29 @@ var ViewModels;
 
                 var dt = new this.google.visualization.DataTable();
 
-                dt.addColumn('string', 'People');
+                dt.addColumn('string', 'Activity');
                 dt.addColumn('number', 'Count');
-                dt.addColumn({ type: 'string', role: 'annotation' });
+                dt.addColumn({ type: 'number', role: 'annotation' });
 
                 if (placeOfficialName == null) {
-                    for (var i = 0; i < (this.globalPeopleCountData).typeCounts.length; i += 1) {
-                        var activityType = (this.globalPeopleCountData).typeCounts[i].type;
-                        var count = (this.globalPeopleCountData).typeCounts[i].count;
-                        dt.addRow([activityType, count, String(count)]);
+                    for (var i = 0; i < (this.globalPeopleCountData).globalTypeCounts.length; i += 1) {
+                        var activityType = (this.globalPeopleCountData).globalTypeCounts[i].type;
+                        var count = (this.globalPeopleCountData).globalTypeCounts[i].count;
+                        dt.addRow([activityType, count, count]);
                     }
                 } else {
-                    var placePeopleCounts = (this.placePeopleCountData).placePeopleCounts[0];
-                    for (var j = 0; j < placePeopleCounts.typeCounts.length; j += 1) {
-                        var activityType = placePeopleCounts.typeCounts[j].type;
-                        var count = placePeopleCounts.typeCounts[j].count;
-                        dt.addRow([activityType, count, String(count)]);
+                    var placeCounts = (this.globalPeopleCountData).placeCounts[0];
+                    for (var j = 0; j < placeCounts.typeCounts.length; j += 1) {
+                        var activityType = placeCounts.typeCounts[j].type;
+                        var count = placeCounts.typeCounts[j].count;
+                        dt.addRow([activityType, count, count]);
                     }
                 }
 
-                return dt;
+                var view = new this.google.visualization.DataView(dt);
+                view.setColumns([0, 1, 1, 2]);
+
+                return view;
             };
 
             /*
@@ -807,34 +823,75 @@ var ViewModels;
                 return dt;
             };
 
-            FacultyAndStaff.prototype.getPeopleTrendDataTable = function (place) {
+            FacultyAndStaff.prototype.getPeopleTrendDataTable = function (placeOfficialName) {
+                var _this = this;
+                if (placeOfficialName == null) {
+                    if (this.globalPeopleTrendData == null) {
+                        $.ajax({
+                            type: "GET",
+                            async: false,
+                            data: { 'placeId': null },
+                            dataType: 'json',
+                            url: App.Routes.WebApi.FacultyStaff.getPeopleTrend(),
+                            success: function (data, textStatus, jqXhr) {
+                                _this.globalPeopleTrendData = data;
+                            },
+                            error: function (jqXhr, textStatus, errorThrown) {
+                                alert('Error getting data ' + textStatus + ' | ' + errorThrown);
+                            }
+                        });
+                    }
+                } else {
+                    var placeId = this.getPlaceId(placeOfficialName);
+                    if (placeId != null) {
+                        if (this.placePeopleCountData == null) {
+                            $.ajax({
+                                type: "GET",
+                                async: false,
+                                data: { 'placeId': placeId },
+                                dataType: 'json',
+                                url: App.Routes.WebApi.FacultyStaff.getPeopleCount(),
+                                success: function (data, textStatus, jqXhr) {
+                                    _this.placePeopleCountData = data;
+                                },
+                                error: function (jqXhr, textStatus, errorThrown) {
+                                    alert('Error getting data ' + textStatus + ' | ' + errorThrown);
+                                }
+                            });
+                        }
+                    }
+                }
+
                 var dt = new this.google.visualization.DataTable();
 
                 dt.addColumn('string', 'Year');
                 dt.addColumn('number', 'Count');
-                dt.addColumn({ type: 'string', role: 'annotation' });
 
-                //if (place == null) { /* Add world counts */
-                //    for (var i = 0; i < (<any>this.summary).worldTrendPeopleCounts().length; i += 1) {
-                //        var activityType = (<any>this.summary).worldTrendPeopleCounts()[i].type();
-                //        var count = (<any>this.summary).worldTrendPeopleCounts()[i].count();
-                //        dt.addRow([activityType, count, String(count)]);
-                //    }
-                //} else { /* Add place counts */
-                //    var i = 0;
-                //    while ((i < (<any>this.summary).placeTrendPeopleCounts().length) &&
-                //           ((<any>this.summary).placeTrendPeopleCounts()[i].officialName !== place)) {
-                //        i += 1;
-                //    }
-                //    if (i < (<any>this.summary).placeTrendPeopleCounts().length) {
-                //        var placeTrendPeopleCounts = (<any>this.summary).placePeopleCounts()[i];
-                //        for (var j = 0; j < placeTrendPeopleCounts.typeCounts().length; j += 1) {
-                //            var activityType = placeTrendPeopleCounts.typeCounts[j].type();
-                //            var count = placeTrendPeopleCounts.typeCounts[j].count();
-                //            dt.addRow([activityType, count, String(count)]);
-                //        }
-                //    }
-                //}
+                if (placeOfficialName == null) {
+                    for (var i = 0; i < (this.globalActivityTrendData).globalData.length; i += 1) {
+                        var year = (this.globalActivityTrendData).globalData[i].year.toString();
+                        var count = (this.globalActivityTrendData).globalData[i].count;
+                        dt.addRow([year, count]);
+                    }
+                } else {
+                    //var i = 0;
+                    //while ((i < (<any>this.summary).placeTrendActivityCounts().length) &&
+                    //       ((<any>this.summary).placeTrendActivityCounts()[i].officialName !== place)) {
+                    //    i += 1;
+                    //}
+                    //if (i < (<any>this.summary).placeTrendActivityCounts().length) {
+                    //    var placeTrendActivityCounts = (<any>this.summary).placeTrendActivityCounts()[i];
+                    //    for (var j = 0; j < placeTrendActivityCounts.typeCounts().length; j += 1) {
+                    //        var activityType = placeTrendActivityCounts.typeCounts[j].type();
+                    //        var count = placeTrendActivityCounts.typeCounts[j].count();
+                    //        dt.addRow([activityType, count, count]);
+                    //    }
+                    //}
+                }
+
+                //var view = new this.google.visualization.DataView(dt);
+                //view.setColumns([0, 1, 1, 2]);
+                //return view;
                 return dt;
             };
 
@@ -989,6 +1046,9 @@ var ViewModels;
 
                         dataTable = this.getActivityTrendDataTable(this.selectedPlace());
                         this.linechart.draw(dataTable, this.linechartActivityOptions);
+
+                        this.totalCount(this.globalActivityCountData.globalCount);
+                        this.totalPlaceCount(this.globalActivityCountData.countOfPlaces);
                     } else {
                         dataTable = this.getHeatmapPeopleDataTable();
                         this.heatmap.draw(dataTable, this.heatmapOptions);
@@ -998,6 +1058,9 @@ var ViewModels;
 
                         dataTable = this.getPeopleTrendDataTable(this.selectedPlace());
                         this.linechart.draw(dataTable, this.linechartPeopleOptions);
+
+                        this.totalCount(this.globalPeopleCountData.globalCount);
+                        this.totalPlaceCount(this.globalPeopleCountData.countOfPlaces);
                     }
 
                     this.updateCustomGeochartPlaceTooltips(this.searchType());

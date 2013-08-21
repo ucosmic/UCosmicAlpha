@@ -18,61 +18,65 @@
                 <div class="total-count" data-bind="text: totalPlaceCount()"></div>
             </div>
         </div>
-        <div style="display: none; margin-bottom: 16px" data-bind="visible: searchType() == 'people'">
-            <div style="font-size: medium; margin-bottom: 8px">
-                <div>Total Staff & Faculty</div>
-                <div style="font-weight: bold" data-bind=""></div>
+        <div style="display: none; font-size: medium; margin-bottom: 16px" data-bind="visible: searchType() == 'people'">
+            <div style="margin-top: 20px">
+                <div class="total-count-header">Total People</div>
+                <div class="total-count" data-bind="text: totalCount()"></div>
             </div>
-            <div style="font-size: 10pt;">
-                <div>Total Locations with Staff & Faculty</div>
-                <div style="font-weight: bold" data-bind=""></div>
+            <div style="margin-top: 10px">
+                <div class="total-count-header">Total Locations w/People</div>
+                <div class="total-count" data-bind="text: totalPlaceCount()"></div>
             </div>
         </div>
-        <div id="facultystaff-summary-barchart" style="width: 100%; height: 130px; margin-top: 20px"></div>
-        <div style="">
-            <div style="margin-left:12px; width: 40px; float: left">
-                <div style="width: 100%; text-align: center">
-                    <img src="../../images/icons/glyphs/glyphicons_375_classic_hammer.png" style="z-index: 1"/>
-                </div>
-                <div style="width: 100%; text-align: center; line-height: 0.8">
-                    <span style="font-size: x-small">Research or Creative Endeavor</span>
-                </div>
-            </div>   
+
+        <div id="facultystaff-summary-barchart" style="width: 100%; height: 150px; margin-top: 30px"></div>
+
+        <div style="position: relative; top: -12px">
             <div style="margin-left:16px; width: 40px; float: left">
-                <div style="width: 100%; text-align: center">
-                    <img src="../../images/icons/glyphs/glyphicons_071_book.png" style="z-index: 1"/>
+                <div style="width: 100%; text-align: center" title="Research or Creative Endeavor">
+                    <img src="../../images/icons/nounproject/noun_project_762_idea.svg" width="32" height="32"/>
                 </div>
-                <div style="width: 100%; text-align: center; line-height: 0.8">
-                    <span style="font-size: x-small">Teaching or Mentoring</span>
-                </div>
-            </div>  
+                @*                <div style="width: 100%; text-align: center; line-height: 0.8">
+                    <span style="font-size: x-small">Research or Creative Endeavor</span>
+                </div>*@
+            </div>   
             <div style="margin-left:14px; width: 40px; float: left">
-                <div style="width: 100%; text-align: center">
-                    <img src="../../images/icons/glyphs/glyphicons_072_bookmark.png" style="z-index: 1"/>
+                <div style="width: 100%; text-align: center" title="Teaching or Mentoring">
+                    <img src="../../images/icons/nounproject/noun_project_14888_teacher.svg" width="32" height="32"/>
                 </div>
-                <div style="width: 100%; text-align: center; line-height: 0.8">
+                @*                <div style="width: 100%; text-align: center; line-height: 0.8">
+                    <span style="font-size: x-small">Teaching or Mentoring</span>
+                </div>*@
+            </div>  
+            <div style="margin-left:8px; width: 40px; float: left">
+                <div style="width: 100%; text-align: center" title="Award or Honor">
+                    <img src="../../images/icons/nounproject/noun_project_17372_medal.svg" width="32" height="32"/>
+                </div>
+                @*                <div style="width: 100%; text-align: center; line-height: 0.8">
                     <span style="font-size: x-small">Award or Honor</span>
-                </div>
+                </div>*@
             </div>
             <div style="margin-left:12px; width: 40px; float: left">
-                <div style="width: 100%; text-align: center">
-                    <img src="../../images/icons/glyphs/glyphicons_300_microphone.png" style="z-index: 1"/>
+                <div style="width: 100%; text-align: center" title="Conference Presentation or Proceeding">
+                    <img src="../../images/icons/nounproject/noun_project_16986_podium.svg" width="32" height="32"/>
                 </div>
-                <div style="width: 100%; text-align: center; line-height: 0.8">
+                @*                <div style="width: 100%; text-align: center; line-height: 0.8">
                     <span style="font-size: x-small">Conference Presentation or Proceeding</span>
-                </div>
+                </div>*@
             </div>                       
-            <div style="margin-left:12px; width: 40px; float: left">
+            <div style="margin-left:12px; width: 40px; float: left" title="Professional Development, Service or Consulting">
                 <div style="width: 100%; text-align: center">
-                    <img src="../../images/icons/glyphs/glyphicons_341_briefcase.png" style="z-index: 1"/>
+                    <img src="../../images/icons/nounproject/noun_project_401_briefcase.svg" width="28" height="28"/>
                 </div>
-                <div style="width: 100%; text-align: center; line-height: 0.8">
+                @*                <div style="width: 100%; text-align: center; line-height: 0.8">
                     <span style="font-size: x-small">Professional Development, Service or Consulting</span>
-                </div>
+                </div>*@
             </div>             
             
         </div>
-        <div id="facultystaff-summary-linechart" style="width: 100%; height: 130px; margin-top: 80px"></div>
+
+        <div id="facultystaff-summary-linechart" style="width: 100%; height: 130px; margin-top: 50px"></div>
+
     </div>
 @*    <div class="type-filters" style="display: none" data-bind="visible: (searchType() === 'activities') && (activityTypes().length > 0)">
         <div style="font-size: small">

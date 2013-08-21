@@ -62,12 +62,12 @@ namespace UCosmic.Web.Mvc.Models
     public class FacultyStaffTrendModel
     {
         public ICollection<FacultyStaffTrendDataModel> GlobalData { get; set; }
-        public ICollection<FacultyStaffPlaceTrendModel> PlaceTrendActivityCounts { get; set; }
+        public ICollection<FacultyStaffPlaceTrendModel> PlaceTrendCounts { get; set; }
 
         public FacultyStaffTrendModel()
         {
             GlobalData = new Collection<FacultyStaffTrendDataModel>();
-            PlaceTrendActivityCounts = new Collection<FacultyStaffPlaceTrendModel>();
+            PlaceTrendCounts = new Collection<FacultyStaffPlaceTrendModel>();
         }
     }
 }

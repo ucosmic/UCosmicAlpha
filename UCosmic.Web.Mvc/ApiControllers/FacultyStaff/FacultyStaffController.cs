@@ -301,7 +301,20 @@ namespace UCosmic.Web.Mvc.ApiControllers
                     var view = new ActivityGlobalPeopleCountView(_queryProcessor, _entities,
                                                                     establishment.RevisionId);
 
+
                     model.GlobalCount = view.Count;
+                    model.CountOfPlaces = view.CountOfPlaces;
+
+                    foreach (var placeCount in view.PlaceCounts)
+                    {
+                        model.PlaceCounts.Add(new FacultyStaffPlaceCountModel
+                        {
+                            PlaceId = placeCount.PlaceId,
+                            OfficialName = placeCount.OfficialName,
+                            Count = placeCount.Count
+                        });
+                    }
+
                     foreach (var type in view.TypeCounts)
                     {
                         model.GlobalTypeCounts.Add(new FacultyStaffTypeCountModel
@@ -358,7 +371,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                            Count = data.Count
                         });
                     }
-                    model.PlaceTrendActivityCounts.Add(placeTrendActivityCount);
+                    model.PlaceTrendCounts.Add(placeTrendActivityCount);
 
                 }
                 else
@@ -406,7 +419,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                                                               establishment.RevisionId,
                                                               placeId.Value);
 
-                    var placeTrendActivityCount = new FacultyStaffPlaceTrendModel
+                    var placeTrendCount = new FacultyStaffPlaceTrendModel
                     {
                         PlaceId = placeId.Value,
                         OfficialName = view.OfficialName
@@ -414,13 +427,13 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
                     foreach (var data in view.Data)
                     {
-                        placeTrendActivityCount.Data.Add(new FacultyStaffTrendDataModel
+                        placeTrendCount.Data.Add(new FacultyStaffTrendDataModel
                         {
                             Year = data.Year,
                             Count = data.Count
                         });
                     }
-                    model.PlaceTrendActivityCounts.Add(placeTrendActivityCount);
+                    model.PlaceTrendCounts.Add(placeTrendCount);
 
                 }
                 else

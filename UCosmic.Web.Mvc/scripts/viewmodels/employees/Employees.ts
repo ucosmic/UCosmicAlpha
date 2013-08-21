@@ -510,6 +510,11 @@ module ViewModels.Employees {
             if (this.activityTypes() != null) {
                 this.barchartActivityOptions = {
                     title: 'Global Activities',
+                    titleTextStyle: {
+                        color: 'black',
+                        fontSize: 14,
+                        bold: true
+                    },
                     hAxis: {
                         textPosition: 'none'
                     },
@@ -519,7 +524,7 @@ module ViewModels.Employees {
                     chartArea: {
                         left: 10,
                         width: '100%',
-                        height: '80%'
+                        height: '75%'
                     },
                     legend: { position: 'none' },
                     isStacked: true,
@@ -537,48 +542,41 @@ module ViewModels.Employees {
                         }
                     ]
                 };
-
-                //this.barchartActivityOptions.series = new Array();
-
-                //for (var i = 0; i < this.activityTypes().length; i += 1) {
-                //    this.barchartActivityOptions.series.push({
-                //        i: {
-                //            type: 'bars',
-                //            color: this.activityTypes()[i].cssColor()
-                //        }
-                //    });
-                //}
-
-                //i = this.activityTypes().length;
-                //this.barchartActivityOptions.series.push({
-                //    i: {
-                //        type: 'line',
-                //        color: 'black',
-                //        lineWidth: 0,
-                //        pointSize: 0,
-                //        visibleInLegend: false
-                //    }
-                //});
             }
 
             this.barchartPeopleOptions = {
                 title: 'Global People',
-                vAxis: { title: 'Count' },
-                //axisTitlesPosition: 'in',
-                chartArea: { left: 80 },
+                titleTextStyle: {
+                    color: 'black',
+                    fontSize: 14,
+                    bold: true
+                },
+                hAxis: {
+                    textPosition: 'none'
+                },
+                vAxis: {
+                    textPosition: 'none'
+                },
+                chartArea: {
+                    left: 10,
+                    width: '100%',
+                    height: '75%'
+                },
                 legend: { position: 'none' },
-                series: {
-                    0: {
-                        type: 'bars'
+                isStacked: true,
+                series: [
+                    {
+                        type: 'bars',
+                        color: 'green'
                     },
-                    1: {
+                    {
                         type: 'line',
                         color: 'black',
                         lineWidth: 0,
                         pointSize: 0,
                         visibleInLegend: false
                     }
-                }
+                ]
             };
 
             this.barchart = new this.google.visualization.ColumnChart($('#facultystaff-summary-barchart')[0]);
@@ -592,6 +590,11 @@ module ViewModels.Employees {
                     height: '60%'
                 },
                 title: 'Global Activity Trend',
+                titleTextStyle: {
+                    color: 'black',
+                    fontSize: 14,
+                    bold: true
+                },
                 colors: ['green'],
                 legend: { position: 'none' }
             };
@@ -600,9 +603,14 @@ module ViewModels.Employees {
                 chartArea: {
                     left: 40,
                     width: '85%',
-                    height: '80%'
+                    height: '60%'
                 },
                 title: 'Global People Trend',
+                titleTextStyle: {
+                    color: 'black',
+                    fontSize: 14,
+                    bold: true
+                },
                 colors: ['green'],
                 legend: { position: 'none' }
             };
@@ -643,7 +651,7 @@ module ViewModels.Employees {
 
         getHeatmapPeopleDataTable(): any {
 
-            if (this.globalPeopleCountData() == null) {
+            if (this.globalPeopleCountData == null) {
                 this.getPeopleDataTable(null);
             }
 
@@ -667,9 +675,9 @@ module ViewModels.Employees {
                         }
                     }
                 }
-
-                return dataTable;
             }
+
+            return dataTable;
         }
 
        /*
@@ -686,8 +694,8 @@ module ViewModels.Employees {
                         url: App.Routes.WebApi.FacultyStaff.getActivityCount(),
                         success: (data: any, textStatus: string, jqXhr: JQueryXHR): void => {
                             this.globalActivityCountData = data;
-                            this.totalCount(this.globalActivityCountData.globalCount);
-                            this.totalPlaceCount(this.globalActivityCountData.countOfPlaces);
+                            //this.totalCount(this.globalActivityCountData.globalCount);
+                            //this.totalPlaceCount(this.globalActivityCountData.countOfPlaces);
                         },
                         error: (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
                             alert('Error getting data ' + textStatus + ' | ' + errorThrown);
@@ -730,10 +738,10 @@ module ViewModels.Employees {
                     dt.addRow([activityType, count, count]);
                 }
             } else { /* Add place counts */
-                var placeActivityCounts = (<any>this.placeActivityCountData).placeActivityCounts[0];
-                for (var j = 0; j < placeActivityCounts.typeCounts.length; j += 1) {
-                    var activityType = placeActivityCounts.typeCounts[j].type;
-                    var count = placeActivityCounts.typeCounts[j].count;
+                var placeCounts = (<any>this.placeActivityCountData).placeCounts[0];
+                for (var j = 0; j < placeCounts.typeCounts.length; j += 1) {
+                    var activityType = placeCounts.typeCounts[j].type;
+                    var count = placeCounts.typeCounts[j].count;
                     dt.addRow([activityType, count, count]);
                 }
             }
@@ -748,9 +756,8 @@ module ViewModels.Employees {
         *
         */
         getPeopleDataTable(placeOfficialName: string): any {
-
             if (placeOfficialName == null) {
-                if (this.globalActivityCountData == null) {
+                if (this.globalPeopleCountData == null) {
                     $.ajax({
                         type: "GET",
                         async: false,
@@ -758,7 +765,9 @@ module ViewModels.Employees {
                         dataType: 'json',
                         url: App.Routes.WebApi.FacultyStaff.getPeopleCount(),
                         success: (data: any, textStatus: string, jqXhr: JQueryXHR): void => {
-                            this.globalActivityCountData = data;
+                            this.globalPeopleCountData = data;
+                            //this.totalCount(this.globalPeopleCountData.globalCount);
+                            //this.totalPlaceCount(this.globalPeopleCountData.countOfPlaces);
                         },
                         error: (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
                             alert('Error getting data ' + textStatus + ' | ' + errorThrown);
@@ -769,7 +778,7 @@ module ViewModels.Employees {
             else {
                 var placeId = this.getPlaceId(placeOfficialName);
                 if (placeId != null) {
-                    if (this.placeActivityCountData == null) {
+                    if (this.placePeopleCountData == null) {
                         $.ajax({
                             type: "GET",
                             async: false,
@@ -777,7 +786,7 @@ module ViewModels.Employees {
                             dataType: 'json',
                             url: App.Routes.WebApi.FacultyStaff.getPeopleCount(),
                             success: (data: any, textStatus: string, jqXhr: JQueryXHR): void => {
-                                this.placeActivityCountData = data;
+                                this.placePeopleCountData = data;
                             },
                             error: (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
                                 alert('Error getting data ' + textStatus + ' | ' + errorThrown);
@@ -787,28 +796,32 @@ module ViewModels.Employees {
                 }
             }
 
+
             var dt = new this.google.visualization.DataTable();
 
-            dt.addColumn('string', 'People');
+            dt.addColumn('string', 'Activity');
             dt.addColumn('number', 'Count');
-            dt.addColumn({ type: 'string', role: 'annotation' });
+            dt.addColumn({ type: 'number', role: 'annotation' });
 
-            if (placeOfficialName == null) { /* Add world counts */
-                for (var i = 0; i < (<any>this.globalPeopleCountData).typeCounts.length; i += 1) {
-                    var activityType = (<any>this.globalPeopleCountData).typeCounts[i].type;
-                    var count = (<any>this.globalPeopleCountData).typeCounts[i].count;
-                    dt.addRow([activityType, count, String(count)]);
+            if (placeOfficialName == null) { /* Add global counts */
+                for (var i = 0; i < (<any>this.globalPeopleCountData).globalTypeCounts.length; i += 1) {
+                    var activityType = (<any>this.globalPeopleCountData).globalTypeCounts[i].type;
+                    var count = (<any>this.globalPeopleCountData).globalTypeCounts[i].count;
+                    dt.addRow([activityType, count, count]);
                 }
             } else { /* Add place counts */
-                var placePeopleCounts = (<any>this.placePeopleCountData).placePeopleCounts[0];
-                for (var j = 0; j < placePeopleCounts.typeCounts.length; j += 1) {
-                    var activityType = placePeopleCounts.typeCounts[j].type;
-                    var count = placePeopleCounts.typeCounts[j].count;
-                    dt.addRow([activityType, count, String(count)]);
+                var placeCounts = (<any>this.globalPeopleCountData).placeCounts[0];
+                for (var j = 0; j < placeCounts.typeCounts.length; j += 1) {
+                    var activityType = placeCounts.typeCounts[j].type;
+                    var count = placeCounts.typeCounts[j].count;
+                    dt.addRow([activityType, count, count]);
                 }
             }
 
-            return dt;
+            var view = new this.google.visualization.DataView(dt);
+            view.setColumns([0, 1, 1, 2]);
+
+            return view;
         }
 
        /*
@@ -890,37 +903,79 @@ module ViewModels.Employees {
             return dt;
         }
 
-        getPeopleTrendDataTable(place: string): any {
+        getPeopleTrendDataTable(placeOfficialName: string): any {
+
+            if (placeOfficialName == null) {
+                if (this.globalPeopleTrendData == null) {
+                    $.ajax({
+                        type: "GET",
+                        async: false,
+                        data: { 'placeId': null },
+                        dataType: 'json',
+                        url: App.Routes.WebApi.FacultyStaff.getPeopleTrend(),
+                        success: (data: any, textStatus: string, jqXhr: JQueryXHR): void => {
+                            this.globalPeopleTrendData = data;
+                        },
+                        error: (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
+                            alert('Error getting data ' + textStatus + ' | ' + errorThrown);
+                        },
+                    });
+                }
+            }
+            else {
+                var placeId = this.getPlaceId(placeOfficialName);
+                if (placeId != null) {
+                    if (this.placePeopleCountData == null) {
+                        $.ajax({
+                            type: "GET",
+                            async: false,
+                            data: { 'placeId': placeId },
+                            dataType: 'json',
+                            url: App.Routes.WebApi.FacultyStaff.getPeopleCount(),
+                            success: (data: any, textStatus: string, jqXhr: JQueryXHR): void => {
+                                this.placePeopleCountData = data;
+                            },
+                            error: (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
+                                alert('Error getting data ' + textStatus + ' | ' + errorThrown);
+                            },
+                        });
+                    }
+                }
+            }
 
             var dt = new this.google.visualization.DataTable();
 
             dt.addColumn('string', 'Year');
             dt.addColumn('number', 'Count');
-            dt.addColumn({ type: 'string', role: 'annotation' });
+            //dt.addColumn({ type: 'number', role: 'annotation' });
 
-            //if (place == null) { /* Add world counts */
-            //    for (var i = 0; i < (<any>this.summary).worldTrendPeopleCounts().length; i += 1) {
-            //        var activityType = (<any>this.summary).worldTrendPeopleCounts()[i].type();
-            //        var count = (<any>this.summary).worldTrendPeopleCounts()[i].count();
-            //        dt.addRow([activityType, count, String(count)]);
-            //    }
-            //} else { /* Add place counts */
-            //    var i = 0;
-            //    while ((i < (<any>this.summary).placeTrendPeopleCounts().length) &&
-            //           ((<any>this.summary).placeTrendPeopleCounts()[i].officialName !== place)) {
-            //        i += 1;
-            //    }
+            if (placeOfficialName == null) { /* Add world counts */
+                for (var i = 0; i < (<any>this.globalActivityTrendData).globalData.length; i += 1) {
+                    var year = (<any>this.globalActivityTrendData).globalData[i].year.toString();
+                    var count = (<any>this.globalActivityTrendData).globalData[i].count;
+                    dt.addRow([year, count]);
+                }
+            } else { /* Add place counts */
+                //var i = 0;
+                //while ((i < (<any>this.summary).placeTrendActivityCounts().length) &&
+                //       ((<any>this.summary).placeTrendActivityCounts()[i].officialName !== place)) {
+                //    i += 1;
+                //}
 
-            //    if (i < (<any>this.summary).placeTrendPeopleCounts().length) {
-            //        var placeTrendPeopleCounts = (<any>this.summary).placePeopleCounts()[i];
-            //        for (var j = 0; j < placeTrendPeopleCounts.typeCounts().length; j += 1) {
-            //            var activityType = placeTrendPeopleCounts.typeCounts[j].type();
-            //            var count = placeTrendPeopleCounts.typeCounts[j].count();
-            //            dt.addRow([activityType, count, String(count)]);
-            //        }
-            //    }
-            //}
+                //if (i < (<any>this.summary).placeTrendActivityCounts().length) {
+                //    var placeTrendActivityCounts = (<any>this.summary).placeTrendActivityCounts()[i];
+                //    for (var j = 0; j < placeTrendActivityCounts.typeCounts().length; j += 1) {
+                //        var activityType = placeTrendActivityCounts.typeCounts[j].type();
+                //        var count = placeTrendActivityCounts.typeCounts[j].count();
+                //        dt.addRow([activityType, count, count]);
+                //    }
+                //}
+            }
 
+            //var view = new this.google.visualization.DataView(dt);
+            //view.setColumns([0, 1, 1, 2]);
+
+            //return view;
             return dt;
         }
 
@@ -1085,6 +1140,9 @@ module ViewModels.Employees {
 
                     dataTable = this.getActivityTrendDataTable(this.selectedPlace());
                     this.linechart.draw(dataTable, this.linechartActivityOptions);
+
+                    this.totalCount(this.globalActivityCountData.globalCount);
+                    this.totalPlaceCount(this.globalActivityCountData.countOfPlaces);
                 } else {
                     dataTable = this.getHeatmapPeopleDataTable();
                     this.heatmap.draw(dataTable, this.heatmapOptions);
@@ -1094,6 +1152,9 @@ module ViewModels.Employees {
 
                     dataTable = this.getPeopleTrendDataTable(this.selectedPlace());
                     this.linechart.draw(dataTable, this.linechartPeopleOptions);
+
+                    this.totalCount(this.globalPeopleCountData.globalCount);
+                    this.totalPlaceCount(this.globalPeopleCountData.countOfPlaces);
                 }
 
                 this.updateCustomGeochartPlaceTooltips(this.searchType());

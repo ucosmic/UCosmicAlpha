@@ -17,9 +17,18 @@ namespace UCosmic.Domain.Activities
             public int Count { get; set; }
         }
 
+        public class PlaceCount
+        {
+            public int PlaceId { get; set; }
+            public string OfficialName { get; set; }
+            public int Count { get; set; }
+        }
+
         public int EstablishmentId { get; private set; }
         public int Count { get; private set; }                            // Global count of people
+        public int CountOfPlaces { get; private set; }                      // Total places with activity/people
         public ICollection<TypeCount> TypeCounts { get; private set; }    // Global count of types
+        public ICollection<PlaceCount> PlaceCounts { get; private set; }    // Count of activities/people per place
 
         public ActivityGlobalPeopleCountView( IProcessQueries queryProcessor,
                                               IQueryEntities entities,
@@ -27,6 +36,7 @@ namespace UCosmic.Domain.Activities
         {
             EstablishmentId = establishmentId;
             TypeCounts = new Collection<TypeCount>();
+            PlaceCounts = new Collection<PlaceCount>();
 
             var settings = queryProcessor.Execute(new EmployeeModuleSettingsByEstablishmentId(establishmentId));
 
@@ -35,15 +45,30 @@ namespace UCosmic.Domain.Activities
                                        ? toDateUtc.AddYears(-(settings.ReportsDefaultYearRange.Value + 1))
                                        : new DateTime(DateTime.MinValue.Year, 1, 1);
 
+            CountOfPlaces = 0;
             Count = 0;
 
             IEnumerable<Place> places = entities.Query<Place>().Where(p => p.IsCountry || p.IsWater || p.IsEarth);
             foreach (var place in places)
             {
-                Count += queryProcessor.Execute(new PeopleCountByPlaceIdEstablishmentId(place.RevisionId,
-                                                                                        establishmentId,
-                                                                                        fromDateUtc,
-                                                                                        toDateUtc));
+                int peopleCount = queryProcessor.Execute(new PeopleCountByPlaceIdEstablishmentId(place.RevisionId,
+                                                                                                   establishmentId,
+                                                                                                   fromDateUtc,
+                                                                                                   toDateUtc));
+
+                PlaceCounts.Add(new PlaceCount
+                {
+                    PlaceId = place.RevisionId,
+                    OfficialName = place.OfficialName,
+                    Count = peopleCount
+                });
+
+                Count += peopleCount;
+
+                if (peopleCount > 0)
+                {
+                    CountOfPlaces += 1;
+                }
 
                 if (settings.ActivityTypes.Any())
                 {

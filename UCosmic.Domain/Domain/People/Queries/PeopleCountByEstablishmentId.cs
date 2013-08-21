@@ -9,7 +9,7 @@ namespace UCosmic.Domain.People
         public int EstablishmentId { get; protected set; }
         public DateTime FromDate { get; private set; }
         public DateTime ToDate { get; private set; }
-
+        public bool NoUndated { get; set; }
 
         public PeopleCountByEstablishmentId(int establishmentId,
                                             DateTime fromDateUtc,
@@ -18,6 +18,17 @@ namespace UCosmic.Domain.People
             EstablishmentId = establishmentId;
             FromDate = fromDateUtc;
             ToDate = toDateUtc;
+        }
+
+        public PeopleCountByEstablishmentId(int establishmentId,
+                                            DateTime fromDateUtc,
+                                            DateTime toDateUtc,
+                                            bool noUndated)
+        {
+            EstablishmentId = establishmentId;
+            FromDate = fromDateUtc;
+            ToDate = toDateUtc;
+            NoUndated = noUndated;
         }
     }
 
@@ -42,28 +53,51 @@ namespace UCosmic.Domain.People
                 {
                     var view = possibleNullView.AsQueryable();
 
-                    var groups = view.Where(a =>
-                                            /* EstablishmentId must be found in list of affiliated establishments...*/
-                                            a.EstablishmentIds.Any(e => e == query.EstablishmentId) &&
+                    if (!query.NoUndated)
+                    {
+                        var groups = view.Where(a =>
+                                                /* EstablishmentId must be found in list of affiliated establishments...*/
+                                                a.EstablishmentIds.Any(e => e == query.EstablishmentId) &&
 
-                                            /* and, include activities that are undated... */
-                                            ((!a.StartsOn.HasValue && !a.EndsOn.HasValue) ||
-                                             /* or */
-                                             (
-                                                 /* there is no start date, or there is a start date and its >= the FromDate... */
-                                                 (!a.StartsOn.HasValue ||
-                                                  (a.StartsOn.Value >= query.FromDate)) &&
+                                                /* and, include activities that are undated... */
+                                                ((!a.StartsOn.HasValue && !a.EndsOn.HasValue) ||
+                                                 /* or */
+                                                 (
+                                                     /* there is no start date, or there is a start date and its >= the FromDate... */
+                                                     (!a.StartsOn.HasValue ||
+                                                      (a.StartsOn.Value >= query.FromDate)) &&
 
-                                                 /* and, OnGoing has value and true,
-                                                * or there is no end date, or there is an end date and its earlier than ToDate. */
-                                                 ((a.OnGoing.HasValue && a.OnGoing.Value) ||
-                                                  (!a.EndsOn.HasValue ||
-                                                   (a.EndsOn.Value < query.ToDate)))
-                                             ))
-                        )
-                                     .GroupBy(g => g.PersonId);
+                                                     /* and, OnGoing has value and true,
+                                                    * or there is no end date, or there is an end date and its earlier than ToDate. */
+                                                     ((a.OnGoing.HasValue && a.OnGoing.Value) ||
+                                                      (!a.EndsOn.HasValue ||
+                                                       (a.EndsOn.Value < query.ToDate)))
+                                                 ))
+                            )
+                                         .GroupBy(g => g.PersonId);
 
-                    count = groups.Count();
+                        count = groups.Count();
+                    }
+                    else // no undated activities
+                    {
+                        var groups = view.Where(a =>
+                                                /* EstablishmentId must be found in list of affiliated establishments...*/
+                                                a.EstablishmentIds.Any(e => e == query.EstablishmentId) &&
+
+                                                /* and, only include activities that are dated (or ongoing)... */
+                                                /* there is a start date and its >= the FromDate... */
+                                                (
+                                                    (a.StartsOn.HasValue && (a.StartsOn.Value >= query.FromDate)) &&
+
+                                                    /* and, OnGoing has value and true,
+                                                     * or there is no end date, or there is an end date and its earlier than ToDate. */
+                                                    ((a.OnGoing.HasValue && a.OnGoing.Value) ||
+                                                     (!a.EndsOn.HasValue || (a.EndsOn.Value < query.ToDate)))
+                                                )
+                            );
+
+                        count = groups.Count();                        
+                    }
                 }
             }
             finally
