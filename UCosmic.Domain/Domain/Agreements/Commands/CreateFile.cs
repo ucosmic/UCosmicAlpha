@@ -62,7 +62,7 @@ namespace UCosmic.Domain.Agreements
             // visibility is required
             RuleFor(x => x.Visibility)
                 .NotEmpty()
-                    .WithMessage(MustHaveAgreementVisibility.FailMessage)
+                    .WithMessage(MustHaveAgreementVisibility.EnumFailMessage)
                 .MustHaveAgreementVisibility()
                     .WithMessage(MustHaveAgreementVisibility.FileFailMessage)
             ;
@@ -242,6 +242,7 @@ namespace UCosmic.Domain.Agreements
 
         internal static string GetExtensionedCustomName(string customName, string originalName)
         {
+            if (string.IsNullOrWhiteSpace(customName)) return null;
             var extension = Path.GetExtension(originalName);
             if (string.IsNullOrWhiteSpace(extension)) throw new InvalidOperationException(string.Format(
                 "The file name '{0}' does not have an extension.", originalName));

@@ -6,11 +6,12 @@ namespace UCosmic.Domain.Agreements
 {
     public class MustHaveAgreementVisibility : PropertyValidator
     {
-        public const string FailMessage = "Agreement visibility must be one of 'Public', 'Protected', or 'Private'.";
+        public const string RequiredFailMessage = "Agreement visibility is required and must be one of 'Public', 'Protected', or 'Private'.";
+        public const string EnumFailMessage = "Agreement visibility must be one of 'Public', 'Protected', or 'Private'.";
         public const string FileFailMessage = "Agreement file visibility must be one of 'Public', 'Protected', or 'Private'.";
 
         internal MustHaveAgreementVisibility()
-            : base(FailMessage)
+            : base(EnumFailMessage)
         {
         }
 

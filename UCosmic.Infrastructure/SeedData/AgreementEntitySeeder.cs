@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using UCosmic.Domain.Establishments;
-using UCosmic.Domain.Files;
 using UCosmic.Domain.Agreements;
 using System.Security.Principal;
 using UCosmic.Domain.People;
@@ -13,21 +12,24 @@ namespace UCosmic.SeedData
     {
         private readonly IProcessQueries _queryProcessor;
         private readonly ICommandEntities _entities;
-        private readonly IHandleCommands<CreateOrUpdateAgreement> _agreementHandler;
-        private readonly IHandleCommands<CreateLooseFile> _fileHandler;
+        private readonly IHandleCommands<CreateAgreement> _createAgreementHandler;
+        private readonly IHandleCommands<CreateContact> _createContactHandler;
+        private readonly IHandleCommands<CreateFile> _createFileHandler;
         private readonly IUnitOfWork _unitOfWork;
 
         public AgreementEntitySeeder(IProcessQueries queryProcessor
             , ICommandEntities entities
-            , IHandleCommands<CreateOrUpdateAgreement> agreementHandler
-            , IHandleCommands<CreateLooseFile> fileHandler
+            , IHandleCommands<CreateAgreement> createAgreementHandler
+            , IHandleCommands<CreateContact> createContactHandler
+            , IHandleCommands<CreateFile> createFileHandler
             , IUnitOfWork unitOfWork
         )
         {
             _queryProcessor = queryProcessor;
             _entities = entities;
-            _agreementHandler = agreementHandler;
-            _fileHandler = fileHandler;
+            _createAgreementHandler = createAgreementHandler;
+            _createContactHandler = createContactHandler;
+            _createFileHandler = createFileHandler;
             _unitOfWork = unitOfWork;
         }
 
@@ -38,240 +40,280 @@ namespace UCosmic.SeedData
             var ucId = uc.RevisionId;
             var principal = GetPrincipal("uc.edu");
 
-            Seed(new CreateOrUpdateAgreement(principal)
+            #region UC Agreement #1
+
+            var agreementId = Seed(new CreateAgreement(principal)
             {
                 Type = "Institutional Agreement",
-                Title = "1 Agreement Test",
+                Name = "1 Agreement Test",
                 StartsOn = new DateTime(2011, 8, 8),
                 ExpiresOn = new DateTime(2011, 12, 31),
                 Status = "Active",
-                IsTitleDerived = false,
                 IsAutoRenew = true,
-                Description = "This agreement is used to test scenarios for automatically generating a summary description.",
-                AddParticipantEstablishmentIds = new[] { ucId },
-                AddContactCommands = new[]
+                Content = "<p>This agreement is used to test scenarios for automatically generating a summary description.</p>",
+                Notes = "Here are some agreement notes.",
+                Visibility = "Public",
+                Participants = new[]
                 {
-                    new AddContactToAgreement(principal)
-                    {
-                        ContactType = "Seeded Contact",
-                        PersonEntityId = _queryProcessor.Execute(new PersonByEmail("ludwigd@uc.edu")).EntityId,
-                    },
+                    new CreateParticipant(principal, 0, ucId),
                 },
             });
-            Seed(new CreateOrUpdateAgreement(principal)
+            _createContactHandler.Handle(new CreateContact(principal)
+            {
+                AgreementId = agreementId,
+                Type = "Seeded Contact",
+                PersonId = _queryProcessor.Execute(new PersonByEmail("ludwigd@uc.edu")).RevisionId,
+            });
+
+            #endregion
+            #region UC Agreement #2
+
+            agreementId = Seed(new CreateAgreement(principal)
             {
                 Type = "Institutional Collaboration Agreement",
-                Title = "Institutional Collaboration Agreement between University of Cincinnati and Jinan University - Status is Active",
                 StartsOn = new DateTime(2010, 11, 29),
                 ExpiresOn = new DateTime(2015, 11, 28),
                 Status = "Active",
-                IsTitleDerived = true,
                 IsAutoRenew = false,
-                Description = "The University of Cincinnati and Jinan University have a mutual interest in promoting training, " +
-                    "research, education and publication through joint activities.",
-                AddParticipantEstablishmentIds = new[]
+                Content = "<p>The University of Cincinnati and Jinan University have a mutual interest in promoting training, " +
+                    "research, education and publication through joint activities.</p>",
+                Visibility = "Public",
+                Participants = new[]
                 {
-                    ucId,
-                    _queryProcessor.Execute(new EstablishmentByUrl("www.jnu.edu.cn")).RevisionId,
-                },
-                AttachFileIds = new[] { CreateLooseFile1() },
-                AddContactCommands = new[]
-                {
-                    new AddContactToAgreement(principal)
-                    {
-                        ContactType = "Seeded Contact",
-                        PersonEntityId = _queryProcessor.Execute(new PersonByEmail("ludwigd@uc.edu")).EntityId,
-                    },
+                    new CreateParticipant(principal, 0, ucId),
+                    new CreateParticipant(principal, 0, _queryProcessor.Execute(new EstablishmentByUrl("www.jnu.edu.cn")).RevisionId),
                 },
             });
+            _createContactHandler.Handle(new CreateContact(principal)
+            {
+                AgreementId = agreementId,
+                Type = "Seeded Contact",
+                PersonId = _queryProcessor.Execute(new PersonByEmail("ludwigd@uc.edu")).RevisionId,
+            });
+            _createFileHandler.Handle(new CreateFile(principal)
+            {
+                AgreementId = agreementId,
+                FileData = CreateFileWrapper("Jinan University ICA.pdf"),
+                Visibility = "Protected",
+            });
 
-            Seed(new CreateOrUpdateAgreement(principal)
+            #endregion
+            #region UC Agreement #3
+
+            Seed(new CreateAgreement(principal)
             {
                 Type = "Institutional Collaboration Agreement",
-                Title = "Institutional Collaboration Agreement between University of Cincinnati and Swinburne University of Technology - Status is Active",
                 StartsOn = new DateTime(2009, 8, 8),
                 ExpiresOn = new DateTime(2012, 8, 7),
                 Status = "Active",
-                IsTitleDerived = true,
                 IsAutoRenew = false,
-                Description = "Typical international collaboration agreement",
-                AddParticipantEstablishmentIds = new[]
+                Notes = "Typical international collaboration agreement",
+                Visibility = "Public",
+                Participants = new[]
                 {
-                    ucId,
-                    _queryProcessor.Execute(new EstablishmentByUrl("www.swinburne.edu.au")).RevisionId,
+                    new CreateParticipant(principal, 0, ucId),
+                    new CreateParticipant(principal, 0, _queryProcessor.Execute(new EstablishmentByUrl("www.swinburne.edu.au")).RevisionId),
                 },
             });
 
-            Seed(new CreateOrUpdateAgreement(principal)
+            #endregion
+            #region UC Agreement #4
+
+            Seed(new CreateAgreement(principal)
             {
                 Type = "Institutional Collaboration Agreement",
-                Title = "Institutional Collaboration Agreement between University of Cincinnati and Fachhochschule Nordwestschweiz - Status is Active",
+                Content = "<p>Institutional Collaboration Agreement between University of Cincinnati and Fachhochschule Nordwestschweiz</p>\r\n<p>Status is Active</p>",
                 StartsOn = new DateTime(2005, 2, 22),
                 ExpiresOn = new DateTime(2013, 5, 10),
                 Status = "Active",
-                IsTitleDerived = true,
                 IsAutoRenew = false,
-                Description = "Multiple collaboration",
-                AddParticipantEstablishmentIds = new[]
+                Notes = "Multiple collaboration",
+                Visibility = "Public",
+                Participants = new[]
                 {
-                    ucId,
-                    _queryProcessor.Execute(new EstablishmentByUrl("www.fhnw.ch")).RevisionId,
+                    new CreateParticipant(principal, 0, ucId),
+                    new CreateParticipant(principal, 0, _queryProcessor.Execute(new EstablishmentByUrl("www.fhnw.ch")).RevisionId),
                 },
             });
 
-            Seed(new CreateOrUpdateAgreement(principal)
+            #endregion
+            #region UC Agreement #5
+
+            Seed(new CreateAgreement(principal)
             {
                 Type = "Institutional Collaboration Agreement",
-                Title = "Institutional Collaboration Agreement between University of Cincinnati and Johannes Kepler Universität Linz - Status is Dead",
+                Notes = "Institutional Collaboration Agreement between University of Cincinnati and Johannes Kepler Universität Linz - Status is Dead",
                 StartsOn = new DateTime(1999, 4, 13),
                 ExpiresOn = new DateTime(2010, 6, 13),
                 Status = "Dead",
-                IsTitleDerived = true,
+                Visibility = "Protected",
                 IsAutoRenew = true,
-                Description = "Original ICA signed in 1999 and valid for 3 years; new MOU signed in 2000; addendum signed in 2005.",
-                AddParticipantEstablishmentIds = new[]
+                Content = "<p>Original ICA signed in 1999 and valid for 3 years</p>\r\n<p>New MOU signed in 2000; addendum signed in 2005.</p>",
+                Participants = new[]
                 {
-                    ucId,
-                    _queryProcessor.Execute(new EstablishmentByUrl("www.jku.at")).RevisionId,
+                    new CreateParticipant(principal, 0, ucId),
+                    new CreateParticipant(principal, 0, _queryProcessor.Execute(new EstablishmentByUrl("www.jku.at")).RevisionId),
                 },
             });
 
-            Seed(new CreateOrUpdateAgreement(principal)
+            #endregion
+            #region UC Agreement #6
+
+            Seed(new CreateAgreement(principal)
             {
                 Type = "Institutional Collaboration Agreement",
-                Title = "Institutional Collaboration Agreement between University of Cincinnati and Université catholique de Louvain - Status is Active",
+                Notes = "Institutional Collaboration Agreement between University of Cincinnati and Université catholique de Louvain - Status is Active",
                 StartsOn = new DateTime(2009, 8, 23),
                 ExpiresOn = new DateTime(2012, 8, 22),
                 Status = "Active",
-                IsTitleDerived = true,
+                Visibility = "Private",
                 IsAutoRenew = false,
-                Description = "The University of Cincinnati and the Université catholique de Louvain have a mutual interest " +
-                    "in promoting training, research, education and publication through joint activities.",
-                AddParticipantEstablishmentIds = new[]
+                Content = "<p>The University of Cincinnati and the Université catholique de Louvain have a mutual interest " +
+                    "in promoting training, research, education and publication through joint activities.</p>",
+                Participants = new[]
                 {
-                    ucId,
-                    _queryProcessor.Execute(new EstablishmentByUrl("www.uclouvain.be")).RevisionId,
+                    new CreateParticipant(principal, 0, ucId),
+                    new CreateParticipant(principal, 0, _queryProcessor.Execute(new EstablishmentByUrl("www.uclouvain.be")).RevisionId),
                 },
             });
 
-            var umbrella1Id = Seed(new CreateOrUpdateAgreement(principal)
+            #endregion
+            #region UC Agreement #7
+
+            var umbrella1Id = Seed(new CreateAgreement(principal)
             {
                 Type = "Activity Agreement",
-                Title = "FIPSE Brazil Activity Agreement",
+                Name = "FIPSE Brazil Activity Agreement",
                 StartsOn = new DateTime(2009, 8, 1),
                 ExpiresOn = new DateTime(2014, 7, 31),
                 Status = "Active",
-                IsTitleDerived = false,
+                Visibility = "Public",
                 IsAutoRenew = false,
-                Description = "This multilateral agreement is between four (4) institutions: the University of Cincinnati " +
+                Content = "<p>This multilateral agreement is between four (4) institutions: the University of Cincinnati " +
                     "(U.S. lead institution), the University of Florida, the Universidade Federal do Rio de Janeiro (Brazilian " +
-                    "lead institution), and the Universidade Federal do Parana. \r\n\r\nAgreement is for undergraduate and graduate " +
-                    "student exchange. \r\n\r\nThis agreement actually contains two different end dates: Page 1, Article 4, cites a " +
-                    "four-year span, ending July 31, 2013. Page 5, Article 22, says it is a 5-year span.",
-                AddParticipantEstablishmentIds = new[]
+                    "lead institution), and the Universidade Federal do Parana.</p>\r\n<p>Agreement is for undergraduate and graduate " +
+                    "student exchange.</p>\r\n<p>This agreement actually contains two different end dates: Page 1, Article 4, cites a " +
+                    "four-year span, ending July 31, 2013. Page 5, Article 22, says it is a 5-year span.</p>",
+                Participants = new[]
                 {
-                    ucId,
-                    _queryProcessor.Execute(new EstablishmentByUrl("www.ufl.edu")).RevisionId,
-                    _queryProcessor.Execute(new EstablishmentByUrl("www.ufrj.br")).RevisionId,
-                    _queryProcessor.Execute(new EstablishmentByUrl("www.ufpr.br")).RevisionId,
+                    new CreateParticipant(principal, 0, ucId),
+                    new CreateParticipant(principal, 0, _queryProcessor.Execute(new EstablishmentByUrl("www.ufl.edu")).RevisionId),
+                    new CreateParticipant(principal, 0, _queryProcessor.Execute(new EstablishmentByUrl("www.ufrj.br")).RevisionId),
+                    new CreateParticipant(principal, 0, _queryProcessor.Execute(new EstablishmentByUrl("www.ufpr.br")).RevisionId),
                 },
             });
 
-            Seed(new CreateOrUpdateAgreement(principal)
+            #endregion
+            #region UC Agreement #8
+
+            Seed(new CreateAgreement(principal)
             {
                 UmbrellaId = umbrella1Id,
                 Type = "Memorandum of Cooperation",
-                Title = "Memorandum of Cooperation between University of Cincinnati and Universidade Federal do Paraná - Status is Unknown",
+                Notes = "Memorandum of Cooperation between University of Cincinnati and Universidade Federal do Paraná - Status is Unknown",
                 StartsOn = new DateTime(1990, 7, 11),
                 ExpiresOn = new DateTime(2014, 7, 31),
                 Status = "Unknown",
-                IsTitleDerived = true,
+                Visibility = "Public",
                 IsAutoRenew = null,
-                Description = "Memorandum of Cooperation between University of Cincinnati. Cincinnati, Oh U.S.A. " +
+                Content = "<p>Memorandum of Cooperation between University of Cincinnati. Cincinnati, Oh U.S.A. " +
                     "and Universidade Federal DO Parana. Curitiba, Parana, Brazil and, as facilitators, the " +
-                    "Ohio-Parana and Parana-Ohio Committees of the Nation Association of the Partners of the Americas",
-                AddParticipantEstablishmentIds = new[]
+                    "Ohio-Parana and Parana-Ohio Committees of the Nation Association of the Partners of the Americas.</p>",
+                Participants = new[]
                 {
-                    ucId,
-                    _queryProcessor.Execute(new EstablishmentByUrl("www.ufpr.br")).RevisionId,
+                    new CreateParticipant(principal, 0, ucId),
+                    new CreateParticipant(principal, 0, _queryProcessor.Execute(new EstablishmentByUrl("www.ufpr.br")).RevisionId),
                 },
             });
 
-            Seed(new CreateOrUpdateAgreement(principal)
+            #endregion
+            #region UC Agreement #9
+
+            Seed(new CreateAgreement(principal)
             {
                 Type = "Institutional Collaboration Agreement",
-                Title = "Institutional Collaboration Agreement between University of Cincinnati and Instituto de Pesquisa e Planejamento Urbano de Curitiba - Status is Active",
+                Content = "Institutional Collaboration Agreement between University of Cincinnati and Instituto de Pesquisa e Planejamento Urbano de Curitiba - Status is Active",
                 StartsOn = new DateTime(2009, 9, 19),
                 ExpiresOn = new DateTime(2010, 9, 18),
                 Status = "Active",
-                IsTitleDerived = true,
+                Visibility = "Public",
                 IsAutoRenew = false,
-                Description = "Multiple collabation",
-                AddParticipantEstablishmentIds = new[]
+                Notes = "Multiple collabation",
+                Participants = new[]
                 {
-                    ucId,
-                    _queryProcessor.Execute(new EstablishmentByUrl("www.ippuc.org.br")).RevisionId,
+                    new CreateParticipant(principal, 0, ucId),
+                    new CreateParticipant(principal, 0, _queryProcessor.Execute(new EstablishmentByUrl("www.ippuc.org.br")).RevisionId),
                 },
             });
 
-            Seed(new CreateOrUpdateAgreement(principal)
+            #endregion
+            #region UC Agreement #10
+
+            Seed(new CreateAgreement(principal)
             {
                 Type = "Institutional Collaboration Agreement",
-                Title = "Institutional Collaboration Agreement between University of Cincinnati and Universidade Positivo - Status is Active",
+                Notes = "Institutional Collaboration Agreement between University of Cincinnati and Universidade Positivo - Status is Active",
                 StartsOn = new DateTime(2008, 3, 12),
                 ExpiresOn = new DateTime(2011, 3, 11),
                 Status = "Active",
-                IsTitleDerived = true,
+                Visibility = "Public",
                 IsAutoRenew = false,
-                Description = "The University of Cincinnati and the Universidade Positivo have a mutual interest " +
+                Content = "The University of Cincinnati and the Universidade Positivo have a mutual interest " +
                     "in promotin training, research, education and publication through joint activities.",
-                AddParticipantEstablishmentIds = new[]
+                Participants = new[]
                 {
-                    ucId,
-                    _queryProcessor.Execute(new EstablishmentByUrl("www.up.com.br")).RevisionId,
+                    new CreateParticipant(principal, 0, ucId),
+                    new CreateParticipant(principal, 0, _queryProcessor.Execute(new EstablishmentByUrl("www.up.com.br")).RevisionId),
                 },
             });
 
-            Seed(new CreateOrUpdateAgreement(principal)
+            #endregion
+            #region UC Agreement #11
+
+            Seed(new CreateAgreement(principal)
             {
                 Type = "Institutional Collaboration Agreement",
-                Title = "Institutional Collaboration Agreement between University of Cincinnati College of Medicine and Universidade de São Paulo - Status is Active",
+                Notes = "Institutional Collaboration Agreement between University of Cincinnati College of Medicine and Universidade de São Paulo - Status is Active",
                 StartsOn = new DateTime(2010, 2, 25),
                 ExpiresOn = new DateTime(2015, 2, 24),
                 Status = "Active",
-                IsTitleDerived = true,
+                Visibility = "Protected",
                 IsAutoRenew = false,
-                Description = "To promote academic cooperation for exchange of teaching staff, joint research projects, exchange of students, shared courses and subjects, etc.",
-                AddParticipantEstablishmentIds = new[]
+                Content = "<p>To promote academic cooperation for exchange of teaching staff, joint research projects, exchange of students, shared courses and subjects, etc.</p>",
+                Participants = new[]
                 {
-                    _queryProcessor.Execute(new EstablishmentByUrl("www.med.uc.edu")).RevisionId,
-                    _queryProcessor.Execute(new EstablishmentByUrl("www.usp.br")).RevisionId,
+                    new CreateParticipant(principal, 0, _queryProcessor.Execute(new EstablishmentByUrl("www.med.uc.edu")).RevisionId),
+                    new CreateParticipant(principal, 0, _queryProcessor.Execute(new EstablishmentByUrl("www.usp.br")).RevisionId),
                 },
             });
 
-            Seed(new CreateOrUpdateAgreement(principal)
+            #endregion
+            #region UC Agreement #12
+
+            Seed(new CreateAgreement(principal)
             {
                 Type = "Institutional Collaboration Agreement",
-                Title = "Institutional Collaboration Agreement between University of Cincinnati and Universidad de Desarrollo - Status is Active",
+                Content = "Institutional Collaboration Agreement between University of Cincinnati and Universidad de Desarrollo - Status is Active",
                 StartsOn = new DateTime(2006, 7, 19),
                 ExpiresOn = new DateTime(2012, 7, 18),
                 Status = "Active",
-                IsTitleDerived = true,
+                Visibility = "Private",
                 IsAutoRenew = true,
-                Description = "Update ICA - Auto Renews for 3 year periods.",
-                AddParticipantEstablishmentIds = new[]
+                Notes = "Update ICA - Auto Renews for 3 year periods.",
+                Participants = new[]
                 {
-                    ucId,
-                    _queryProcessor.Execute(new EstablishmentByUrl("www.udd.cl")).RevisionId,
+                    new CreateParticipant(principal, 0, ucId),
+                    new CreateParticipant(principal, 0, _queryProcessor.Execute(new EstablishmentByUrl("www.udd.cl")).RevisionId),
                 },
             });
 
+            #endregion
         }
 
-        protected int Seed(CreateOrUpdateAgreement command)
+        private int Seed(CreateAgreement command)
         {
-            _agreementHandler.Handle(command);
-            return command.Id;
+            _createAgreementHandler.Handle(command);
+            return command.CreatedAgreementId;
         }
 
         private IPrincipal GetPrincipal(string domain)
@@ -296,21 +338,18 @@ namespace UCosmic.SeedData
             });
         }
 
-        private int CreateLooseFile1()
+        private static CreateFile.FileDataWrapper CreateFileWrapper(string fileName, string mimeType = "application/pdf")
         {
-            const string fileName = "Jinan University ICA.pdf";
             using (var fileStream = File.OpenRead(string.Format("{0}{1}{2}", AppDomain.CurrentDomain.BaseDirectory,
                 @"..\UCosmic.Infrastructure\SeedData\SeedMediaFiles\", fileName)))
             {
                 var content = fileStream.ReadFully();
-                var fileCommand = new CreateLooseFile(GetPrincipal("uc.edu"))
+                return new CreateFile.FileDataWrapper
                 {
-                    MimeType = "application/pdf",
-                    Name = "Jinan University ICA.pdf",
                     Content = content,
+                    FileName = fileName,
+                    MimeType = mimeType,
                 };
-                _fileHandler.Handle(fileCommand);
-                return fileCommand.Created.RevisionId;
             }
         }
     }

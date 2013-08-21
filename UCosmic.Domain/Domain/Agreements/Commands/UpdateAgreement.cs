@@ -120,9 +120,9 @@ namespace UCosmic.Domain.Agreements
             // visibility is required
             RuleFor(x => x.Visibility)
                 .NotEmpty()
-                    .WithMessage(MustHaveAgreementVisibility.FailMessage)
+                    .WithMessage(MustHaveAgreementVisibility.RequiredFailMessage)
                 .MustHaveAgreementVisibility()
-                    .WithMessage(MustHaveAgreementVisibility.FailMessage)
+                    .WithMessage(MustHaveAgreementVisibility.EnumFailMessage)
             ;
         }
     }

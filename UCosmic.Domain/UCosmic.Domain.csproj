@@ -265,15 +265,8 @@
     <Compile Include="Domain\InternationalAffiliation\Validation\MustFindInternationalAffiliationLocationById.cs" />
     <Compile Include="Domain\InternationalAffiliation\Validation\MustOwnInternationalAffiliation.cs" />
     <Compile Include="Domain\InternationalAffiliation\Validation\MustOwnAffiliationLocation.cs" />
-    <Compile Include="Domain\Agreements\Commands\AddContactToAgreement.cs" />
-    <Compile Include="Domain\Agreements\Commands\AddParticipantToAgreement.cs" />
-    <Compile Include="Domain\Agreements\Commands\AttachFileToAgreement.cs" />
-    <Compile Include="Domain\Agreements\Commands\CreateOrUpdateAgreement.cs" />
     <Compile Include="Domain\Agreements\Commands\CreateOrUpdateSettings.cs" />
-    <Compile Include="Domain\Agreements\Commands\DetachFileFromAgreement.cs" />
     <Compile Include="Domain\Agreements\Commands\PurgeAgreement.cs" />
-    <Compile Include="Domain\Agreements\Commands\RemoveContactFromAgreement.cs" />
-    <Compile Include="Domain\Agreements\Commands\RemoveParticipantFromAgreement.cs" />
     <Compile Include="Domain\Agreements\Commands\UpdateAgreementHierarchies.cs" />
     <Compile Include="Domain\Agreements\Commands\UpdateAgreementHierarchy.cs" />
     <Compile Include="Domain\Agreements\Entities\Agreement.cs" />
