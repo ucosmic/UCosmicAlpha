@@ -70,13 +70,14 @@ namespace UCosmic.Domain.Agreements
                         .WithMessage(MustOwnContactWithId<object>.FailMessageFormat, x => x.AgreementId, x => x.ContactId)
             );
 
-            // type is required
-            RuleFor(x => x.Type)
-                .NotEmpty().WithMessage(MustHaveContactPhoneType.FailMessage)
-                .Length(1, AgreementContactPhoneConstraints.TypeMaxLength)
-                    .WithMessage(MustNotExceedStringLength.FailMessageFormat,
-                        x => "Contact phone type", x => AgreementContactPhoneConstraints.TypeMaxLength, x => x.Type.Length)
-            ;
+            // type must not exceed max length when provided
+            When(x => !string.IsNullOrWhiteSpace(x.Type), () =>
+                RuleFor(x => x.Type)
+                    .Length(1, AgreementContactPhoneConstraints.TypeMaxLength)
+                        .WithMessage(MustNotExceedStringLength.FailMessageFormat,
+                            x => "Contact phone type", x => AgreementContactPhoneConstraints.TypeMaxLength, x => x.Type.Length)
+
+            );
 
             // value is required
             RuleFor(x => x.Value)

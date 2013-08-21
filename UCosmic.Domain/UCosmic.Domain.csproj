@@ -188,7 +188,6 @@
     <Compile Include="Domain\Agreements\Validation\MustOwnParticipantWithId.cs" />
     <Compile Include="Domain\Agreements\Validation\MustOwnContactPhoneWithId.cs" />
     <Compile Include="Domain\Agreements\Validation\MustHaveContactPhoneValue.cs" />
-    <Compile Include="Domain\Agreements\Validation\MustHaveContactPhoneType.cs" />
     <Compile Include="Domain\Agreements\Validation\MustNotHaveOffspring.cs" />
     <Compile Include="Domain\Agreements\Validation\MustNotHaveCyclicHierarchy.cs" />
     <Compile Include="Domain\Agreements\Validation\MustOwnContactWithId.cs" />
