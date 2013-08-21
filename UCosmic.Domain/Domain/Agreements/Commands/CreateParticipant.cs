@@ -35,7 +35,6 @@ namespace UCosmic.Domain.Agreements
         public int AgreementId { get; private set; }
         internal Agreement Agreement { get; private set; }
         public int EstablishmentId { get; private set; }
-        public bool IsOwner { get; set; }
         internal bool NoCommit { get; set; }
     }
 
@@ -82,27 +81,22 @@ namespace UCosmic.Domain.Agreements
             RuleFor(x => x.EstablishmentId)
                 .MustFindEstablishmentById(queryProcessor)
                     .WithMessage(MustFindEstablishmentById.FailMessageFormat, x => x.EstablishmentId);
-
-            // when is owner
-            When(x => x.IsOwner, () =>
-                RuleFor(x => x.Principal)
-                    .MustBeTenantOfEstablishment(queryProcessor, x => x.EstablishmentId)
-                        .WithMessage(MustBeTenantOfEstablishment<object>.FailMessageFormat,
-                            x => x.Principal.Identity.Name, x => x.EstablishmentId)
-            );
         }
     }
 
     public class HandleCreateParticipantCommand : IHandleCommands<CreateParticipant>
     {
         private readonly ICommandEntities _entities;
+        private readonly IProcessQueries _queryProcessor;
         private readonly IUnitOfWork _unitOfWork;
 
         public HandleCreateParticipantCommand(ICommandEntities entities
+            , IProcessQueries queryProcessor
             , IUnitOfWork unitOfWork
         )
         {
             _entities = entities;
+            _queryProcessor = queryProcessor;
             _unitOfWork = unitOfWork;
         }
 
@@ -110,10 +104,12 @@ namespace UCosmic.Domain.Agreements
         {
             if (command == null) throw new ArgumentNullException("command");
 
+            var ownedTenantIds = _queryProcessor.Execute(new MyOwnedTenantIds(command.Principal));
+
             var entity = new AgreementParticipant
             {
                 EstablishmentId = command.EstablishmentId,
-                IsOwner = command.IsOwner,
+                IsOwner = ownedTenantIds.Contains(command.EstablishmentId),
             };
 
             if (command.Agreement != null)
@@ -130,7 +126,6 @@ namespace UCosmic.Domain.Agreements
                 {
                     command.AgreementId,
                     command.EstablishmentId,
-                    command.IsOwner,
                 }),
                 NewState = entity.ToJsonAudit(),
             };

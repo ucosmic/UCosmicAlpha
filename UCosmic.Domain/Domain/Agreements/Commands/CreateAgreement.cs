@@ -117,7 +117,8 @@ namespace UCosmic.Domain.Agreements
                 .Must(x => x != null && x.Any()).WithMessage(MustHaveParticipants.FailMessage)
 
                 // needs at least one owning participant
-                .Must(x => x.Any(y => y.IsOwner)).WithMessage(MustHaveOwningParticipant.FailMessage)
+                .MustHaveOwningParticipant(queryProcessor, x => x.Principal)
+                    .WithMessage(MustHaveOwningParticipant<object>.FailMessage)
             ;
         }
     }
@@ -170,7 +171,7 @@ namespace UCosmic.Domain.Agreements
                 _createParticipant.Handle(new CreateParticipant(command.Principal, entity, participant.EstablishmentId)
                 {
                     NoCommit = true,
-                    IsOwner = participant.IsOwner,
+                    //IsOwner = participant.IsOwner,
                 });
 
             _entities.Create(entity);
