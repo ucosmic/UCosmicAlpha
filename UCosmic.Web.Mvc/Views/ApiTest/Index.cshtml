@@ -68,7 +68,7 @@
         });
         $('#agreement_delete_button').click(function () {
             $.ajax({
-                url: App.Routes.WebApi.Agreements.del(2),
+                url: App.Routes.WebApi.Agreements.del(15),
                 type: 'DELETE'
             })
                 .done(function (responseText, statusText, xhr) {
@@ -97,7 +97,7 @@
         });
         $('#agreement_participant_delete_button').click(function () {
             $.ajax({
-                url: App.Routes.WebApi.Agreements.Participants.del(1, 67),
+                url: App.Routes.WebApi.Agreements.Participants.del(14, 1),
                 type: 'DELETE'
             })
                 .done(function (responseText, statusText, xhr) {

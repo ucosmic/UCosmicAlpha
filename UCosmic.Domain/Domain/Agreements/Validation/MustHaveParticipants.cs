@@ -2,6 +2,6 @@
 {
     public static class MustHaveParticipants
     {
-        public const string FailMessage = "Agreement participants are required.";
+        public const string FailMessage = "At least one owning agreement participant is required.";
     }
 }

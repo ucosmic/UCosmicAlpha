@@ -182,6 +182,7 @@
     <Compile Include="Domain\Agreements\Queries\OwnershipByEstablishmentId.cs" />
     <Compile Include="Domain\Agreements\Queries\UmbrellaOptions.cs" />
     <Compile Include="Domain\Agreements\Queries\FileById.cs" />
+    <Compile Include="Domain\Agreements\Validation\MustNotBeOnlyOwningParticipant.cs" />
     <Compile Include="Domain\Agreements\Validation\MustHaveOwningParticipant.cs" />
     <Compile Include="Domain\Agreements\Validation\MustNotOwnParticipantWithId.cs" />
     <Compile Include="Domain\Agreements\Validation\MustOwnParticipantWithId.cs" />

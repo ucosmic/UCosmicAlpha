@@ -52,6 +52,11 @@ namespace UCosmic.Domain.Agreements
                 .MustOwnParticipantWithId(entities, x => x.EstablishmentId)
                     .WithMessage(MustOwnParticipantWithId<object>.FailMessageFormat, x => x.EstablishmentId, x => x.AgreementId)
             ;
+
+            // cannot be only remaining owner participant
+            RuleFor(x => x.EstablishmentId)
+                .MustNotBeOnlyOwningParticipant(queryProcessor, x => x.AgreementId, x => x.Principal)
+                    .WithMessage(MustNotBeOnlyOwningParticipant<object>.FailMessageFormat, x => x.EstablishmentId, x => x.AgreementId);
         }
     }
 
