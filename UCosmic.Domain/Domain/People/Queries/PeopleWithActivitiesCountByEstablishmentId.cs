@@ -1,35 +1,38 @@
 ﻿using System;
 using System.Linq;
+using UCosmic.Domain.Activities;
 
-namespace UCosmic.Domain.Activities
+namespace UCosmic.Domain.People
 {
-    public class ActivityCountByPlaceId : BaseEntityQuery<Activity>, IDefineQuery<int>
+    public class PeopleWithActivitiesCountByEstablishmentId : BaseEntityQuery<Person>, IDefineQuery<int>
     {
-        public int PlaceId { get; private set; }
+        public int EstablishmentId { get; protected set; }
         public DateTime? FromDate { get; private set; }
         public DateTime? ToDate { get; private set; }
         public bool NoUndated { get; private set; }
         public bool IncludeFuture { get; private set; }
 
-        public ActivityCountByPlaceId(int placeId, DateTime? fromDateUtc, DateTime? toDateUtc)
+        public PeopleWithActivitiesCountByEstablishmentId(int establishmentId,
+                                            DateTime? fromDateUtc,
+                                            DateTime? toDateUtc)
         {
             if ((fromDateUtc.HasValue && !toDateUtc.HasValue) || (!fromDateUtc.HasValue && toDateUtc.HasValue))
             {
                 throw new ArgumentException("Both fromDateUtc and toDateUtc must be provided.");
             }
 
-            PlaceId = placeId;
+            EstablishmentId = establishmentId;
             FromDate = fromDateUtc;
             ToDate = toDateUtc;
         }
 
-        public ActivityCountByPlaceId(int placeId,
-                                      DateTime fromDateUtc,
-                                      DateTime toDateUtc,
-                                      bool noUndated,
-                                      bool includeFuture )
+        public PeopleWithActivitiesCountByEstablishmentId(int establishmentId,
+                                            DateTime fromDateUtc,
+                                            DateTime toDateUtc,
+                                            bool noUndated,
+                                            bool includeFuture)
         {
-            PlaceId = placeId;
+            EstablishmentId = establishmentId;
             FromDate = fromDateUtc;
             ToDate = toDateUtc;
             NoUndated = noUndated;
@@ -37,16 +40,16 @@ namespace UCosmic.Domain.Activities
         }
     }
 
-    public class HandleActivityCountByLocationQuery : IHandleQueries<ActivityCountByPlaceId, int>
+    public class HandlePeopleWithActivitiesCountByEstablishmentIdQuery : IHandleQueries<PeopleWithActivitiesCountByEstablishmentId, int>
     {
         private readonly ActivityViewProjector _projector;
 
-        public HandleActivityCountByLocationQuery(ActivityViewProjector projector)
+        public HandlePeopleWithActivitiesCountByEstablishmentIdQuery(ActivityViewProjector projector)
         {
             _projector = projector;
         }
 
-        public int Handle(ActivityCountByPlaceId query)
+        public int Handle(PeopleWithActivitiesCountByEstablishmentId query)
         {
             if (query == null) throw new ArgumentNullException("query");
             int count = 0;
@@ -66,7 +69,10 @@ namespace UCosmic.Domain.Activities
                                                    query.IncludeFuture);
                     }
 
-                    count = view.Count(a => a.PlaceIds.Any(e => e == query.PlaceId) );
+                    var groups = view.Where(a => a.EstablishmentIds.Any(e => e == query.EstablishmentId))
+                                     .GroupBy(g => g.PersonId);
+
+                    count = groups.Count();
                 }
             }
             finally

@@ -49,21 +49,25 @@ namespace UCosmic.Domain.Activities
             if (place != null)
             {
                 OfficialName = place.OfficialName;
-                Count = _queryProcessor.Execute(new PeopleCountByPlaceIdEstablishmentId(placeId,
-                                                                                        establishmentId,
-                                                                                        fromDateUtc,
-                                                                                        toDateUtc));
+                Count = _queryProcessor.Execute(new PeopleWithActivitiesCountByPlaceIdEstablishmentId(placeId,
+                                                                                                      establishmentId,
+                                                                                                      fromDateUtc,
+                                                                                                      toDateUtc,
+                                                                                                      false, /* include undated */
+                                                                                                      true /* include future */));
 
                 if (settings.ActivityTypes.Any())
                 {
                     foreach (var type in settings.ActivityTypes)
                     {
                         int placeTypeCount = queryProcessor.Execute(
-                            new PeopleCountByTypeIdPlaceIdEstablishmentId(type.Id,
-                                                                          place.RevisionId,
-                                                                          establishmentId,
-                                                                          fromDateUtc,
-                                                                          toDateUtc));
+                            new PeopleWithActivitiesCountByTypeIdPlaceIdEstablishmentId(type.Id,
+                                                                                        place.RevisionId,
+                                                                                        establishmentId,
+                                                                                        fromDateUtc,
+                                                                                        toDateUtc,
+                                                                                        false, /* include undated */
+                                                                                        true /* include future */));
 
                         var typeCount = TypeCounts.SingleOrDefault(c => c.TypeId == type.Id);
                         if (typeCount != null)

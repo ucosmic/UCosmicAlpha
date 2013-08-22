@@ -7,18 +7,40 @@ namespace UCosmic.Domain.Activities
     {
         public int PlaceId { get; private set; }
         public int EstablishmentId { get; private set; }
-        public DateTime FromDate { get; private set; }
-        public DateTime ToDate { get; private set; }
+        public DateTime? FromDate { get; private set; }
+        public DateTime? ToDate { get; private set; }
+        public bool NoUndated { get; private set; }
+        public bool IncludeFuture { get; private set; }
+
+        public ActivityCountByPlaceIdEstablishmentId(int inPlaceId,
+                                                     int inEstablishmentId,
+                                                     DateTime? fromDateUtc = null,
+                                                     DateTime? toDateUtc = null)
+        {
+            if ((fromDateUtc.HasValue && !toDateUtc.HasValue) || (!fromDateUtc.HasValue && toDateUtc.HasValue))
+            {
+                throw new ArgumentException("Both fromDateUtc and toDateUtc must be provided.");
+            }
+
+            PlaceId = inPlaceId;
+            EstablishmentId = inEstablishmentId;
+            FromDate = fromDateUtc;
+            ToDate = toDateUtc;
+        }
 
         public ActivityCountByPlaceIdEstablishmentId(int inPlaceId,
                                                      int inEstablishmentId,
                                                      DateTime fromDateUtc,
-                                                     DateTime toDateUtc)
+                                                     DateTime toDateUtc,
+                                                     bool noUndated,
+                                                     bool includeFuture)
         {
             PlaceId = inPlaceId;
             EstablishmentId = inEstablishmentId;
             FromDate = fromDateUtc;
             ToDate = toDateUtc;
+            NoUndated = noUndated;
+            IncludeFuture = includeFuture;
         }
     }
 
@@ -43,27 +65,20 @@ namespace UCosmic.Domain.Activities
                 {
                     var view = possibleNullView.AsQueryable();
 
+                    if (query.FromDate.HasValue && query.ToDate.HasValue)
+                    {
+                        view = view.ApplyDateRange(query.FromDate.Value,
+                                                   query.ToDate.Value,
+                                                   query.NoUndated,
+                                                   query.IncludeFuture);
+                    }
+
                     count = view.Count(a =>
                                        /* PlaceId must be found in list placeIds...*/
                                        a.PlaceIds.Any(e => e == query.PlaceId) &&
 
                                        /* and, EstablishmentId must be found in list of affiliated establishments...*/
-                                       a.EstablishmentIds.Any(e => e == query.EstablishmentId) &&
-
-                                       /* and, include activities that are undated... */
-                                       ((!a.StartsOn.HasValue && !a.EndsOn.HasValue) ||
-                                        /* or */
-                                        (
-                                            /* there is no start date, or there is a start date and its >= the FromDate... */
-                                            (!a.StartsOn.HasValue ||
-                                             (a.StartsOn.Value >= query.FromDate)) &&
-
-                                            /* and, OnGoing has value and true,
-                                            * or there is no end date, or there is an end date and its earlier than ToDate. */
-                                            ((a.OnGoing.HasValue && a.OnGoing.Value) ||
-                                             (!a.EndsOn.HasValue ||
-                                              (a.EndsOn.Value < query.ToDate)))
-                                        ))
+                                       a.EstablishmentIds.Any(e => e == query.EstablishmentId)
                         );
                 }
             }

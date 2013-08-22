@@ -38,10 +38,11 @@ namespace UCosmic.Domain.Activities
                 var yearCount = new YearCount
                 {
                     Year = year,
-                    Count = queryProcessor.Execute(new PeopleCountByEstablishmentId(establishmentId,
+                    Count = queryProcessor.Execute(new PeopleWithActivitiesCountByEstablishmentId(establishmentId,
                                                                                     new DateTime(year, 1, 1),
                                                                                     new DateTime(year + 1, 1, 1),
-                                                                                    true /* No Undated Activities */))
+                                                                                    true /* No Undated Activities */,
+                                                                                    (year == toDateUtc.Year-1) /* Include future in last year */ ))
                 };
 
                 Data.Add(yearCount);

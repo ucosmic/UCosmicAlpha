@@ -49,7 +49,9 @@ namespace UCosmic.Domain.Activities
                 Count = _queryProcessor.Execute(new ActivityCountByPlaceIdEstablishmentId(placeId,
                                                                                           establishmentId,
                                                                                           fromDateUtc,
-                                                                                          toDateUtc));
+                                                                                          toDateUtc,
+                                                                                          false, /* include undated */
+                                                                                          true /* include future */));
 
                 if (settings.ActivityTypes.Any())
                 {
@@ -57,10 +59,12 @@ namespace UCosmic.Domain.Activities
                     {
                         int placeTypeCount = queryProcessor.Execute(
                             new ActivityCountByTypeIdPlaceIdEstablishmentId(type.Id,
-                                                                          place.RevisionId,
-                                                                          establishmentId,
-                                                                          fromDateUtc,
-                                                                          toDateUtc));
+                                                                            place.RevisionId,
+                                                                            establishmentId,
+                                                                            fromDateUtc,
+                                                                            toDateUtc,
+                                                                            false, /* include undated */
+                                                                            true /* include future */));
 
                         var typeCount = TypeCounts.SingleOrDefault(c => c.TypeId == type.Id);
                         if (typeCount != null)

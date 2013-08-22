@@ -46,15 +46,20 @@ namespace UCosmic.Domain.Activities
                                        : new DateTime(DateTime.MinValue.Year, 1, 1);
 
             CountOfPlaces = 0;
-            Count = 0;
+            Count = queryProcessor.Execute(new PeopleWithActivitiesCountByEstablishmentId(establishmentId,
+                                                                            fromDateUtc,
+                                                                            toDateUtc));
 
             IEnumerable<Place> places = entities.Query<Place>().Where(p => p.IsCountry || p.IsWater || p.IsEarth);
             foreach (var place in places)
             {
-                int peopleCount = queryProcessor.Execute(new PeopleCountByPlaceIdEstablishmentId(place.RevisionId,
-                                                                                                   establishmentId,
-                                                                                                   fromDateUtc,
-                                                                                                   toDateUtc));
+                int peopleCount =
+                    queryProcessor.Execute(new PeopleWithActivitiesCountByPlaceIdEstablishmentId(place.RevisionId,
+                                                                                                 establishmentId,
+                                                                                                 fromDateUtc,
+                                                                                                 toDateUtc,
+                                                                                                 false, /* include undated */
+                                                                                                 true /* include future */));
 
                 PlaceCounts.Add(new PlaceCount
                 {
@@ -62,8 +67,6 @@ namespace UCosmic.Domain.Activities
                     OfficialName = place.OfficialName,
                     Count = peopleCount
                 });
-
-                Count += peopleCount;
 
                 if (peopleCount > 0)
                 {
@@ -75,11 +78,13 @@ namespace UCosmic.Domain.Activities
                     foreach (var type in settings.ActivityTypes)
                     {
                         int placeTypeCount = queryProcessor.Execute(
-                            new PeopleCountByTypeIdPlaceIdEstablishmentId(type.Id,
-                                                                          place.RevisionId,
-                                                                          establishmentId,
-                                                                          fromDateUtc,
-                                                                          toDateUtc));
+                            new PeopleWithActivitiesCountByTypeIdPlaceIdEstablishmentId(type.Id,
+                                                                                        place.RevisionId,
+                                                                                        establishmentId,
+                                                                                        fromDateUtc,
+                                                                                        toDateUtc,
+                                                                                        false, /* include undated */
+                                                                                        true /* include future */));
 
                         var typeCount = TypeCounts.SingleOrDefault(c => c.TypeId == type.Id);
                         if (typeCount != null)

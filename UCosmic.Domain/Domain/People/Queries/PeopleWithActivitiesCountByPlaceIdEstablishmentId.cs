@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Linq;
+using UCosmic.Domain.Activities;
 
-namespace UCosmic.Domain.Activities
+namespace UCosmic.Domain.People
 {
-    public class ActivityCountByTypeIdPlaceIdEstablishmentId : BaseEntityQuery<Activity>, IDefineQuery<int>
+    public class PeopleWithActivitiesCountByPlaceIdEstablishmentId : BaseEntityQuery<Person>, IDefineQuery<int>
     {
-        public int TypeId { get; private set; }
         public int PlaceId { get; private set; }
         public int EstablishmentId { get; private set; }
         public DateTime? FromDate { get; private set; }
@@ -13,34 +13,29 @@ namespace UCosmic.Domain.Activities
         public bool NoUndated { get; private set; }
         public bool IncludeFuture { get; private set; }
 
-        public ActivityCountByTypeIdPlaceIdEstablishmentId(int inTypeId,
-                                                             int inPlaceId,
-                                                             int inEstablishmentId,
-                                                             DateTime? fromDateUtc,
-                                                             DateTime? toDateUtc)
+        public PeopleWithActivitiesCountByPlaceIdEstablishmentId(int inPlaceId,
+                                                     int inEstablishmentId,
+                                                     DateTime? fromDateUtc,
+                                                     DateTime? toDateUtc )
         {
             if ((fromDateUtc.HasValue && !toDateUtc.HasValue) || (!fromDateUtc.HasValue && toDateUtc.HasValue))
             {
                 throw new ArgumentException("Both fromDateUtc and toDateUtc must be provided.");
             }
 
-
-            TypeId = inTypeId;
             PlaceId = inPlaceId;
             EstablishmentId = inEstablishmentId;
             FromDate = fromDateUtc;
             ToDate = toDateUtc;
         }
 
-        public ActivityCountByTypeIdPlaceIdEstablishmentId(int inTypeId,
-                                                             int inPlaceId,
-                                                             int inEstablishmentId,
-                                                             DateTime fromDateUtc,
-                                                             DateTime toDateUtc,
-                                                             bool noUndated,
-                                                             bool includeFuture)
+        public PeopleWithActivitiesCountByPlaceIdEstablishmentId(int inPlaceId,
+                                                     int inEstablishmentId,
+                                                     DateTime fromDateUtc,
+                                                     DateTime toDateUtc,
+                                                     bool noUndated,
+                                                     bool includeFuture )
         {
-            TypeId = inTypeId;
             PlaceId = inPlaceId;
             EstablishmentId = inEstablishmentId;
             FromDate = fromDateUtc;
@@ -50,16 +45,16 @@ namespace UCosmic.Domain.Activities
         }
     }
 
-    public class HandleActivityCountByTypeIdCountryIdEstablishmentIdQuery : IHandleQueries<ActivityCountByTypeIdPlaceIdEstablishmentId, int>
+    public class HandlePeopleWithActivitiesCountByCountryIdEstablishmentIdQuery : IHandleQueries<PeopleWithActivitiesCountByPlaceIdEstablishmentId, int>
     {
         private readonly ActivityViewProjector _projector;
 
-        public HandleActivityCountByTypeIdCountryIdEstablishmentIdQuery(ActivityViewProjector projector)
+        public HandlePeopleWithActivitiesCountByCountryIdEstablishmentIdQuery(ActivityViewProjector projector)
         {
             _projector = projector;
         }
 
-        public int Handle(ActivityCountByTypeIdPlaceIdEstablishmentId query)
+        public int Handle(PeopleWithActivitiesCountByPlaceIdEstablishmentId query)
         {
             if (query == null) throw new ArgumentNullException("query");
             int count = 0;
@@ -79,15 +74,16 @@ namespace UCosmic.Domain.Activities
                                                    query.IncludeFuture);
                     }
 
-                    count = view.Count(a =>
-                                       /* TypeId must be found in typeIds */
-                                       a.TypeIds.Any(t => t == query.TypeId) &&
 
-                                       /* and, PlaceId must be found in placeIds...*/
-                                       a.PlaceIds.Any(e => e == query.PlaceId) &&
+                    var groups = view.Where(a =>
+                                            /* PlaceId must be found in list placeIds...*/
+                                            a.PlaceIds.Any(e => e == query.PlaceId) &&
 
-                                       /* and, EstablishmentId must be found in establishmentids*/
-                                       a.EstablishmentIds.Any(e => e == query.EstablishmentId) );
+                                            /* and, EstablishmentId must be found in list of affiliated establishments...*/
+                                            a.EstablishmentIds.Any(e => e == query.EstablishmentId))
+                                     .GroupBy(g => g.PersonId);
+
+                    count = groups.Count();
                 }
             }
             finally
