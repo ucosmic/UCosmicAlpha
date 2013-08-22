@@ -77,7 +77,7 @@ namespace UCosmic.Domain.Agreements
             //        .WithMessage(MustNotExceedStringLength.FailMessageFormat,
             //            x => "Contact phone type", x => AgreementContactPhoneConstraints.TypeMaxLength, x => x.Type.Length)
             //;
-            );
+            //);
 
             // value is required
             RuleFor(x => x.Value)

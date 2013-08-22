@@ -52,6 +52,7 @@ var InstitutionalAgreementEditModel = (function () {
         this.dfdPopFiles = $.Deferred();
         this.dfdPageFadeIn = $.Deferred();
         this.agreementIsEdit = ko.observable();
+        this.agreementId = 0;
         this.visibility = ko.observable();
         this.trail = ko.observableArray([]);
         this.nextForceDisabled = ko.observable(false);
@@ -69,6 +70,7 @@ var InstitutionalAgreementEditModel = (function () {
         this.contactsIsEdit = ko.observable(false);
         this.contactFirstName = ko.observable();
         this.contactLastName = ko.observable();
+        this.contactId = ko.observable();
         this.contactSuffix = ko.mapping.fromJS([]);
         this.contactSuffixSelected = ko.observable();
         this.$$contactSuffix = ko.observable();
@@ -155,7 +157,8 @@ var InstitutionalAgreementEditModel = (function () {
             this.agreementIsEdit(false);
             this.visibility("Public");
             $("#LoadingPage").hide();
-            $.when(this.dfdPageFadeIn).done(function () {
+            this.populateParticipants();
+            $.when(this.dfdPageFadeIn, this.dfdPopParticipants).done(function () {
                 _this.updateKendoDialog($(window).width());
                 $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * _this.percentOffBodyHeight)));
             });
@@ -741,17 +744,59 @@ else
 
         this.contactPhoneTextValue.subscribe(function (me) {
             if (_this.contactPhoneTextValue().length > 0) {
-                _this.contactPhones.push({ type: '', contactId: '', value: _this.contactPhoneTextValue() });
+                if (_this.agreementIsEdit()) {
+                    var url = App.Routes.WebApi.Agreements.Contacts.Phones.post(_this.agreementId, _this.contactId());
+                    var data = { id: "0", type: '', contactId: '', value: _this.contactPhoneTextValue() };
 
-                _this.contactPhoneTextValue("");
+                    //var data = { id: 0, type: '', contactId: '', value: this.contactPhoneTextValue() };
+                    $.post(url, data).done(function (response, statusText, xhr) {
+                        var myUrl = xhr.getResponseHeader('Location');
+                        data.id = myUrl.substring(myUrl.lastIndexOf("/") + 1);
 
-                $(".phoneTypes").kendoDropDownList({
-                    dataTextField: "name",
-                    dataValueField: "id",
-                    dataSource: new kendo.data.DataSource({
-                        data: ko.mapping.toJS(_this.phoneTypes())
-                    })
-                });
+                        //data.id = parseInt(myUrl.substring(myUrl.lastIndexOf("/") + 1));
+                        _this.contactPhones.push(data);
+                        _this.contactPhoneTextValue("");
+
+                        $(".phoneTypes").kendoDropDownList({
+                            dataTextField: "name",
+                            dataValueField: "id",
+                            dataSource: new kendo.data.DataSource({
+                                data: ko.mapping.toJS(_this.phoneTypes())
+                            })
+                        });
+                        //this.agreementId = 2;//response.agreementId
+                        //this.agreementPostFiles(response, statusText, xhr);
+                        //this.agreementPostContacts(response, statusText, xhr);
+                    }).fail(function (xhr, statusText, errorThrown) {
+                        _this.spinner.stop();
+                        if (xhr.status === 400) {
+                            _this.establishmentItemViewModel.$genericAlertDialog.find('p.content').html(xhr.responseText.replace('\n', '<br /><br />'));
+                            _this.establishmentItemViewModel.$genericAlertDialog.dialog({
+                                title: 'Alert Message',
+                                dialogClass: 'jquery-ui',
+                                width: 'auto',
+                                resizable: false,
+                                modal: true,
+                                buttons: {
+                                    'Ok': function () {
+                                        _this.establishmentItemViewModel.$genericAlertDialog.dialog('close');
+                                    }
+                                }
+                            });
+                        }
+                    });
+                } else {
+                    _this.contactPhones.push({ id: '', type: '', contactId: '', value: _this.contactPhoneTextValue() });
+                    _this.contactPhoneTextValue("");
+
+                    $(".phoneTypes").kendoDropDownList({
+                        dataTextField: "name",
+                        dataValueField: "id",
+                        dataSource: new kendo.data.DataSource({
+                            data: ko.mapping.toJS(_this.phoneTypes())
+                        })
+                    });
+                }
             }
         });
 
@@ -973,35 +1018,33 @@ else
                 context.type = $(this).val();
                 //added for wierd bug for when adding more than 1 phone number then editing the type.
             }
-            if (self.agreementIsEdit) {
-                if (self.agreementIsEdit) {
-                    var url = App.Routes.WebApi.Agreements.Contacts.Phones.put(self.agreementId, context.contactId, context.id);
-                    $.ajax({
-                        type: 'PUT',
-                        url: url,
-                        data: context,
-                        success: function (response, statusText, xhr) {
-                        },
-                        error: function (xhr, statusText, errorThrown) {
-                            _this.spinner.stop();
-                            if (xhr.status === 400) {
-                                _this.establishmentItemViewModel.$genericAlertDialog.find('p.content').html(xhr.responseText.replace('\n', '<br /><br />'));
-                                _this.establishmentItemViewModel.$genericAlertDialog.dialog({
-                                    title: 'Alert Message',
-                                    dialogClass: 'jquery-ui',
-                                    width: 'auto',
-                                    resizable: false,
-                                    modal: true,
-                                    buttons: {
-                                        'Ok': function () {
-                                            _this.establishmentItemViewModel.$genericAlertDialog.dialog('close');
-                                        }
+            if (self.agreementIsEdit()) {
+                var url = App.Routes.WebApi.Agreements.Contacts.Phones.put(self.agreementId, context.contactId, context.id);
+                $.ajax({
+                    type: 'PUT',
+                    url: url,
+                    data: context,
+                    success: function (response, statusText, xhr) {
+                    },
+                    error: function (xhr, statusText, errorThrown) {
+                        _this.spinner.stop();
+                        if (xhr.status === 400) {
+                            _this.establishmentItemViewModel.$genericAlertDialog.find('p.content').html(xhr.responseText.replace('\n', '<br /><br />'));
+                            _this.establishmentItemViewModel.$genericAlertDialog.dialog({
+                                title: 'Alert Message',
+                                dialogClass: 'jquery-ui',
+                                width: 'auto',
+                                resizable: false,
+                                modal: true,
+                                buttons: {
+                                    'Ok': function () {
+                                        _this.establishmentItemViewModel.$genericAlertDialog.dialog('close');
                                     }
-                                });
-                            }
+                                }
+                            });
                         }
-                    });
-                }
+                    }
+                });
             }
         });
         $("#addContactDialog").on("change", ".phoneNumbers", function () {
@@ -1066,6 +1109,7 @@ else
     InstitutionalAgreementEditModel.prototype.removeParticipant = function (establishmentResultViewModel, e) {
         if (confirm('Are you sure you want to remove "' + establishmentResultViewModel.establishmentTranslatedName() + '" as a participant from this agreement?')) {
             var self = this;
+
             self.participants.remove(function (item) {
                 if (item.establishmentId() === establishmentResultViewModel.establishmentId()) {
                     $(item.participantEl).slideUp('fast', function () {
@@ -1360,6 +1404,7 @@ else
         this.contactDisplayName(me.displayName());
         this.contactPersonId(me.personId());
         this.contactUserId(me.userId());
+        this.contactId(me.id());
         this.contactJobTitle(me.title());
         this.contactFirstName(me.firstName());
         this.contactLastName(me.lastName());
@@ -1375,6 +1420,9 @@ else
                 type: item.type,
                 value: item.value
             });
+            if (data.type == null) {
+                data.type = '';
+            }
             _this.contactPhones.push(data);
         });
 
