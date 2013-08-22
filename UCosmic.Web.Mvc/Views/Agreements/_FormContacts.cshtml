@@ -140,7 +140,10 @@
                                 <label>Phones</label>
                             </div>
                             <div class="field-input-label-top">
-                                <input type="text" data-bind="value: value" />
+                                <input class="phoneNumbers" type="text" data-bind="value: value" />
+                            </div>
+                            <div style="color: red; visibility: hidden;" data-bind="attr: { id: 'phoneNumberValidate' + id }" class="field-label-description">
+                                Phone number is required.
                             </div>
                         </div>
                         <div class="field-column-right">
@@ -149,7 +152,7 @@
                             </div>
                             <div class="field-input-label-top" style="width: 395px">
                                 <input class="phoneTypes" type="text" placeholder="[None]" 
-                                       data-bind="value: type, valueUpdate: 'afterkeydown'" />
+                                       data-bind="value: type, valueUpdate: 'afterkeydown', attr: { id: 'phoneTypes' + $index }" />
                             </div>
                             <a title="Remove this phone" data-bind="click: $root.removePhone"><i class="red minus on-right"></i></a>
                         </div>

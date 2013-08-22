@@ -106,7 +106,7 @@ var InstitutionalAgreementEditModel = (function () {
         this.isCustomContactTypeAllowed = ko.observable();
         this.phoneTypes = ko.mapping.fromJS([]);
         this.$phoneTypes = ko.observable();
-        this.phoneTypeSelected = ko.observable();
+        //phoneTypeSelected = ko.observable();
         this.$file = ko.observable();
         this.hasFile = ko.observable();
         this.isFileExtensionInvalid = ko.observable(false);
@@ -629,6 +629,7 @@ else
 
     InstitutionalAgreementEditModel.prototype.bindjQueryKendo = function (result) {
         var _this = this;
+        var self = this;
         this.isCustomTypeAllowed(result.isCustomTypeAllowed);
         this.isCustomStatusAllowed(result.isCustomStatusAllowed);
         this.isCustomContactTypeAllowed(result.isCustomContactTypeAllowed);
@@ -743,6 +744,7 @@ else
                 _this.contactPhones.push({ type: '', contactId: '', value: _this.contactPhoneTextValue() });
 
                 _this.contactPhoneTextValue("");
+
                 $(".phoneTypes").kendoDropDownList({
                     dataTextField: "name",
                     dataValueField: "id",
@@ -962,6 +964,82 @@ else
                     width: "200px"
                 }
             ]
+        });
+
+        $("#addContactDialog").on("change", ".phoneTypes", function () {
+            var _this = this;
+            var context = ko.dataFor(this);
+            if (context.type != $(this).val() && $(this).val() !== "") {
+                context.type = $(this).val();
+                //added for wierd bug for when adding more than 1 phone number then editing the type.
+            }
+            if (self.agreementIsEdit) {
+                if (self.agreementIsEdit) {
+                    var url = App.Routes.WebApi.Agreements.Contacts.Phones.put(self.agreementId, context.contactId, context.id);
+                    $.ajax({
+                        type: 'PUT',
+                        url: url,
+                        data: context,
+                        success: function (response, statusText, xhr) {
+                        },
+                        error: function (xhr, statusText, errorThrown) {
+                            _this.spinner.stop();
+                            if (xhr.status === 400) {
+                                _this.establishmentItemViewModel.$genericAlertDialog.find('p.content').html(xhr.responseText.replace('\n', '<br /><br />'));
+                                _this.establishmentItemViewModel.$genericAlertDialog.dialog({
+                                    title: 'Alert Message',
+                                    dialogClass: 'jquery-ui',
+                                    width: 'auto',
+                                    resizable: false,
+                                    modal: true,
+                                    buttons: {
+                                        'Ok': function () {
+                                            _this.establishmentItemViewModel.$genericAlertDialog.dialog('close');
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }
+            }
+        });
+        $("#addContactDialog").on("change", ".phoneNumbers", function () {
+            var _this = this;
+            var context = ko.dataFor(this);
+            if (self.agreementIsEdit() && context.value == $(this).val()) {
+                if ($(this).val() == '') {
+                    $("#phoneNumberValidate" + context.id).css("visibility", "visible");
+                } else {
+                    $("#phoneNumberValidate" + context.id).css("visibility", "hidden");
+                    var url = App.Routes.WebApi.Agreements.Contacts.Phones.put(self.agreementId, context.contactId, context.id);
+                    $.ajax({
+                        type: 'PUT',
+                        url: url,
+                        data: context,
+                        success: function (response, statusText, xhr) {
+                        },
+                        error: function (xhr, statusText, errorThrown) {
+                            _this.spinner.stop();
+                            if (xhr.status === 400) {
+                                _this.establishmentItemViewModel.$genericAlertDialog.find('p.content').html(xhr.responseText.replace('\n', '<br /><br />'));
+                                _this.establishmentItemViewModel.$genericAlertDialog.dialog({
+                                    title: 'Alert Message',
+                                    dialogClass: 'jquery-ui',
+                                    width: 'auto',
+                                    resizable: false,
+                                    modal: true,
+                                    buttons: {
+                                        'Ok': function () {
+                                            _this.establishmentItemViewModel.$genericAlertDialog.dialog('close');
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }
+            }
         });
     };
 
@@ -1292,6 +1370,7 @@ else
         //this.contactPhones.removeAll();
         $.each(me.phones(), function (i, item) {
             var data = ko.mapping.toJS({
+                id: item.id,
                 contactId: item.contactId,
                 type: item.type,
                 value: item.value
@@ -1393,6 +1472,7 @@ else
             this.contacts()[this.contactIndex].phones.removeAll();
             $.each(this.contactPhones(), function (i, item) {
                 var data = ko.mapping.toJS({
+                    id: item.id,
                     contactId: item.contactId,
                     type: item.type,
                     value: item.value
@@ -1596,6 +1676,17 @@ else
     };
 
     InstitutionalAgreementEditModel.prototype.removePhone = function (me, e) {
+        var _this = this;
+        var url = App.Routes.WebApi.Agreements.Contacts.Phones.del(this.agreementId, me.contactId, me.id);
+        $.ajax({
+            url: url,
+            type: 'DELETE',
+            success: function () {
+                _this.files.remove(me);
+                $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * 1.1)));
+            }
+        });
+
         this.contactPhones.remove(me);
         e.preventDefault();
         e.stopPropagation();

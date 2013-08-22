@@ -81,13 +81,11 @@ namespace UCosmic.Web.Mvc.Controllers
                 public readonly string _SearchSideBar = "_SearchSideBar";
                 public readonly string _StatsSideBar = "_StatsSideBar";
                 public readonly string Index = "Index";
-                public readonly string OldIndex = "OldIndex";
             }
             public readonly string _Bib = "~/Views/FacultyStaff/_Bib.cshtml";
             public readonly string _SearchSideBar = "~/Views/FacultyStaff/_SearchSideBar.cshtml";
             public readonly string _StatsSideBar = "~/Views/FacultyStaff/_StatsSideBar.cshtml";
             public readonly string Index = "~/Views/FacultyStaff/Index.cshtml";
-            public readonly string OldIndex = "~/Views/FacultyStaff/OldIndex.cshtml";
         }
     }
 

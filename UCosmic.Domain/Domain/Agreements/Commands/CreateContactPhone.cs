@@ -71,12 +71,12 @@ namespace UCosmic.Domain.Agreements
             );
 
             // type must not exceed max length when provided
-            When(x => !string.IsNullOrWhiteSpace(x.Type), () =>
-                RuleFor(x => x.Type)
-                    .Length(1, AgreementContactPhoneConstraints.TypeMaxLength)
-                        .WithMessage(MustNotExceedStringLength.FailMessageFormat,
-                            x => "Contact phone type", x => AgreementContactPhoneConstraints.TypeMaxLength, x => x.Type.Length)
-
+            //RuleFor(x => x.Type)
+            //    .NotEmpty().WithMessage(MustHaveContactPhoneType.FailMessage)
+            //    .Length(1, AgreementContactPhoneConstraints.TypeMaxLength)
+            //        .WithMessage(MustNotExceedStringLength.FailMessageFormat,
+            //            x => "Contact phone type", x => AgreementContactPhoneConstraints.TypeMaxLength, x => x.Type.Length)
+            //;
             );
 
             // value is required

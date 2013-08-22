@@ -232,7 +232,7 @@ class InstitutionalAgreementEditModel {
     isCustomContactTypeAllowed = ko.observable();
     phoneTypes = ko.mapping.fromJS([]);
     $phoneTypes: KnockoutObservable<JQuery> = ko.observable();
-    phoneTypeSelected = ko.observable();
+    //phoneTypeSelected = ko.observable();
     $file: KnockoutObservable<JQuery> = ko.observable();
     hasFile: KnockoutObservable<boolean> = ko.observable();
     isFileExtensionInvalid: KnockoutObservable<boolean> = ko.observable(false);
@@ -676,7 +676,7 @@ class InstitutionalAgreementEditModel {
     }
 
     bindjQueryKendo(result): void {
-
+        var self = this;
         this.isCustomTypeAllowed(result.isCustomTypeAllowed);
         this.isCustomStatusAllowed(result.isCustomStatusAllowed);
         this.isCustomContactTypeAllowed(result.isCustomContactTypeAllowed);
@@ -789,6 +789,7 @@ class InstitutionalAgreementEditModel {
                 this.contactPhones.push({ type: '', contactId: '', value: this.contactPhoneTextValue() })
                 
                 this.contactPhoneTextValue("");
+                
                 $(".phoneTypes").kendoDropDownList({
                     dataTextField: "name",
                     dataValueField: "id",
@@ -1008,6 +1009,80 @@ class InstitutionalAgreementEditModel {
             }
             ]
         });
+        
+        $("#addContactDialog").on("change", ".phoneTypes", function () {
+            var context = ko.dataFor(this);
+            if (context.type != $(this).val() && $(this).val() !== "") {
+                context.type = $(this).val()
+                //added for wierd bug for when adding more than 1 phone number then editing the type.
+            }
+            if (self.agreementIsEdit) {
+                if (self.agreementIsEdit) {
+                    var url = App.Routes.WebApi.Agreements.Contacts.Phones.put(self.agreementId, context.contactId, context.id);
+                    $.ajax({
+                        type: 'PUT',
+                        url: url,
+                        data: context,
+                        success: (response: any, statusText: string, xhr: JQueryXHR): void => {
+                        },
+                        error: (xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
+                            this.spinner.stop();
+                            if (xhr.status === 400) { // validation message will be in xhr response text...
+                                this.establishmentItemViewModel.$genericAlertDialog.find('p.content')
+                                    .html(xhr.responseText.replace('\n', '<br /><br />'));
+                                this.establishmentItemViewModel.$genericAlertDialog.dialog({
+                                    title: 'Alert Message',
+                                    dialogClass: 'jquery-ui',
+                                    width: 'auto',
+                                    resizable: false,
+                                    modal: true,
+                                    buttons: {
+                                        'Ok': (): void => { this.establishmentItemViewModel.$genericAlertDialog.dialog('close'); }
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }
+            }
+        })
+        $("#addContactDialog").on("change", ".phoneNumbers", function () {
+            var context = ko.dataFor(this);
+            if (self.agreementIsEdit() && context.value == $(this).val()) {
+                //first do a validation for phone
+                if ($(this).val() == '') {
+                    $("#phoneNumberValidate" + context.id).css("visibility", "visible");
+                } else {
+                    $("#phoneNumberValidate" + context.id).css("visibility", "hidden");
+                    var url = App.Routes.WebApi.Agreements.Contacts.Phones.put(self.agreementId, context.contactId, context.id);
+                    $.ajax({
+                        type: 'PUT',
+                        url: url,
+                        data: context,
+                        success: (response: any, statusText: string, xhr: JQueryXHR): void => {
+                        },
+                        error: (xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
+                            this.spinner.stop();
+                            if (xhr.status === 400) { // validation message will be in xhr response text...
+                                this.establishmentItemViewModel.$genericAlertDialog.find('p.content')
+                                    .html(xhr.responseText.replace('\n', '<br /><br />'));
+                                this.establishmentItemViewModel.$genericAlertDialog.dialog({
+                                    title: 'Alert Message',
+                                    dialogClass: 'jquery-ui',
+                                    width: 'auto',
+                                    resizable: false,
+                                    modal: true,
+                                    buttons: {
+                                        'Ok': (): void => { this.establishmentItemViewModel.$genericAlertDialog.dialog('close'); }
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }
+            }
+        })
+        
     }
 
     getSettings(): void {
@@ -1354,6 +1429,7 @@ class InstitutionalAgreementEditModel {
         //this.contactPhones.removeAll();
         $.each(me.phones(), (i, item) => {
             var data = ko.mapping.toJS({
+                id: item.id,
                 contactId: item.contactId,
                 type: item.type,
                 value: item.value
@@ -1455,6 +1531,7 @@ class InstitutionalAgreementEditModel {
             this.contacts()[this.contactIndex].phones.removeAll();
             $.each(this.contactPhones(), (i, item) => {
                 var data = ko.mapping.toJS({
+                    id: item.id,
                     contactId: item.contactId,
                     type: item.type,
                     value: item.value
@@ -1657,6 +1734,17 @@ class InstitutionalAgreementEditModel {
     }
 
     removePhone(me, e): void {
+
+        var url = App.Routes.WebApi.Agreements.Contacts.Phones.del(this.agreementId, me.contactId, me.id);
+        $.ajax({
+            url: url,
+            type: 'DELETE',
+            success: (): void => {
+                this.files.remove(me);
+                $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * 1.1)));
+            }
+        });
+
         this.contactPhones.remove(me);
         e.preventDefault();
         e.stopPropagation();
