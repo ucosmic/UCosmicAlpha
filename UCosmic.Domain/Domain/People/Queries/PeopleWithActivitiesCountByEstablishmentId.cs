@@ -13,8 +13,8 @@ namespace UCosmic.Domain.People
         public bool IncludeFuture { get; private set; }
 
         public PeopleWithActivitiesCountByEstablishmentId(int establishmentId,
-                                            DateTime? fromDateUtc,
-                                            DateTime? toDateUtc)
+                                                          DateTime? fromDateUtc = null,
+                                                          DateTime? toDateUtc = null)
         {
             if ((fromDateUtc.HasValue && !toDateUtc.HasValue) || (!fromDateUtc.HasValue && toDateUtc.HasValue))
             {

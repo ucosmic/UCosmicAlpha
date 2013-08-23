@@ -15,8 +15,8 @@ namespace UCosmic.Domain.People
 
         public PeopleWithActivitiesCountByPlaceIdEstablishmentId(int inPlaceId,
                                                      int inEstablishmentId,
-                                                     DateTime? fromDateUtc,
-                                                     DateTime? toDateUtc )
+                                                     DateTime? fromDateUtc = null,
+                                                     DateTime? toDateUtc = null)
         {
             if ((fromDateUtc.HasValue && !toDateUtc.HasValue) || (!fromDateUtc.HasValue && toDateUtc.HasValue))
             {

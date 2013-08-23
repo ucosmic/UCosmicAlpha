@@ -26,48 +26,53 @@ namespace UCosmic.Web.Mvc.Models
 
     public class FacultyStaffSummaryModel
     {
-        /* Holds the total number of activities or people, worldwide */
-        public int GlobalCount { get; set; }
+        /* Global: Null */
+        /* Place: PlaceId */
+        public int? PlaceId { get; set; }
 
-        /* Holds the total number of locations (countries/waters) that contain activities/people */
+        /* Global: Total number of activities/people, worldwide */
+        /* Place: Total number of activities/people for place */
+        public int Count { get; set; }
+
+        /* Global: Holds the total number of places (countries/waters) that contain activities/people */
+        /* Place: 1 */
         public int CountOfPlaces { get; set; }
 
-        /* If establishment has activity types, this holds count of those types, worldwide */
-        public ICollection<FacultyStaffTypeCountModel> GlobalTypeCounts { get; set; }
+        /* Global: If establishment has activity types, count of types, worldwide.  Null otherwise. */
+        /* Place: If place has activity types, count of types for place.  Null otherwise. */
+        public ICollection<FacultyStaffTypeCountModel> TypeCounts { get; set; }
 
-        /* Holds counts for all locations (countries/waters), worldwide */
+        /* Global: Holds counts for each place (countries/waters) */
+        /* Place: Null */
         public ICollection<FacultyStaffPlaceCountModel> PlaceCounts { get; set; }
 
         public FacultyStaffSummaryModel()
         {
-            GlobalTypeCounts = new Collection<FacultyStaffTypeCountModel>();
+            TypeCounts = new Collection<FacultyStaffTypeCountModel>();
             PlaceCounts = new Collection<FacultyStaffPlaceCountModel>();
         }
     }
 
 
-    public class FacultyStaffTrendDataModel
+    public class FacultyStaffTrendCountModel
     {
         public int Year { get; set; }
         public int Count { get; set; }
     }
 
-    public class FacultyStaffPlaceTrendModel
-    {
-        public int PlaceId { get; set; }
-        public string OfficialName { get; set; }
-        public ICollection<FacultyStaffTrendDataModel> Data { get; set; }
-    }
-
     public class FacultyStaffTrendModel
     {
-        public ICollection<FacultyStaffTrendDataModel> GlobalData { get; set; }
-        public ICollection<FacultyStaffPlaceTrendModel> PlaceTrendCounts { get; set; }
+        /* Global: Null */
+        /* Place: PlaceId */
+        public int? PlaceId { get; set; }
+
+        /* Global: Yearly count of activities/people, worldwide */
+        /* Place: Yearly count of activities/people for place */
+        public ICollection<FacultyStaffTrendCountModel> TrendCounts { get; set; }
 
         public FacultyStaffTrendModel()
         {
-            GlobalData = new Collection<FacultyStaffTrendDataModel>();
-            PlaceTrendCounts = new Collection<FacultyStaffPlaceTrendModel>();
+            TrendCounts = new Collection<FacultyStaffTrendCountModel>();
         }
     }
 }

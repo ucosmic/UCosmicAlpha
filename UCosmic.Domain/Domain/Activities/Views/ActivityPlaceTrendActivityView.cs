@@ -46,7 +46,7 @@ namespace UCosmic.Domain.Activities
                         Year = year,
                         Count = queryProcessor.Execute(new ActivityCountByPlaceIdEstablishmentId(placeId,
                                                                                                  establishmentId,
-                                                                                                 new DateTime(year, 1, 1),
+                                                                                                 new DateTime(fromDateUtc.Year, 1, 1),
                                                                                                  new DateTime(year + 1, 1, 1),
                                                                                                  true /* No Undated Activities */,
                                                                                                  (year == toDateUtc.Year-1) /* Include future in last year */ ))

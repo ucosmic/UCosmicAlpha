@@ -11,7 +11,9 @@ namespace UCosmic.Domain.Activities
         public bool NoUndated { get; private set; }
         public bool IncludeFuture { get; private set; }
 
-        public ActivityCountByPlaceId(int placeId, DateTime? fromDateUtc, DateTime? toDateUtc)
+        public ActivityCountByPlaceId(int placeId,
+                                      DateTime? fromDateUtc = null,
+                                      DateTime? toDateUtc = null)
         {
             if ((fromDateUtc.HasValue && !toDateUtc.HasValue) || (!fromDateUtc.HasValue && toDateUtc.HasValue))
             {

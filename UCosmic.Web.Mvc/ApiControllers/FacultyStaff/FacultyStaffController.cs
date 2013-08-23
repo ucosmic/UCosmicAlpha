@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Web.Http;
 using AttributeRouting;
 using AttributeRouting.Web.Http;
@@ -230,15 +231,31 @@ namespace UCosmic.Web.Mvc.ApiControllers
                                                                    establishment.RevisionId,
                                                                    placeId.Value);
 
-                    model.GlobalCount = view.Count;
+                    model.PlaceId = view.PlaceId;
+                    model.Count = view.Count;
+                    model.CountOfPlaces = 1;
 
+                    model.PlaceCounts = null;
+
+                    if ((view.TypeCounts != null) && (view.TypeCounts.Count > 0))
+                    {
+                        foreach (var type in view.TypeCounts)
+                        {
+                            model.TypeCounts.Add(new FacultyStaffTypeCountModel
+                            {
+                                TypeId = type.TypeId,
+                                Type = type.Type,
+                                Count = type.Count
+                            });
+                        }
+                    }
                 }
                 else
                 {
                     var view = new ActivityGlobalActivityCountView(_queryProcessor, _entities,
                                                                     establishment.RevisionId);
 
-                    model.GlobalCount = view.Count;
+                    model.Count = view.Count;
                     model.CountOfPlaces = view.CountOfPlaces;
 
                     foreach (var placeCount in view.PlaceCounts)
@@ -253,7 +270,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
                     foreach (var type in view.TypeCounts)
                     {
-                        model.GlobalTypeCounts.Add(new FacultyStaffTypeCountModel
+                        model.TypeCounts.Add(new FacultyStaffTypeCountModel
                         {
                             TypeId = type.TypeId,
                             Type = type.Type,
@@ -293,8 +310,21 @@ namespace UCosmic.Web.Mvc.ApiControllers
                                                                    establishment.RevisionId,
                                                                    placeId.Value);
 
-                    model.GlobalCount = view.Count;
+                    model.PlaceId = view.PlaceId;
+                    model.Count = view.Count;
+                    model.CountOfPlaces = 1;
 
+                    model.PlaceCounts = null;
+
+                    foreach (var type in view.TypeCounts)
+                    {
+                        model.TypeCounts.Add(new FacultyStaffTypeCountModel
+                        {
+                            TypeId = type.TypeId,
+                            Type = type.Type,
+                            Count = type.Count
+                        });
+                    }
                 }
                 else
                 {
@@ -302,7 +332,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                                                                     establishment.RevisionId);
 
 
-                    model.GlobalCount = view.Count;
+                    model.Count = view.Count;
                     model.CountOfPlaces = view.CountOfPlaces;
 
                     foreach (var placeCount in view.PlaceCounts)
@@ -317,7 +347,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
                     foreach (var type in view.TypeCounts)
                     {
-                        model.GlobalTypeCounts.Add(new FacultyStaffTypeCountModel
+                        model.TypeCounts.Add(new FacultyStaffTypeCountModel
                         {
                             TypeId = type.TypeId,
                             Type = type.Type,
@@ -357,22 +387,16 @@ namespace UCosmic.Web.Mvc.ApiControllers
                                                               establishment.RevisionId,
                                                               placeId.Value);
 
-                    var placeTrendActivityCount = new FacultyStaffPlaceTrendModel
-                    {
-                        PlaceId = placeId.Value,
-                        OfficialName = view.OfficialName
-                    };
+                    model.PlaceId = placeId.Value;
 
                     foreach (var data in view.Data)
                     {
-                        placeTrendActivityCount.Data.Add(new FacultyStaffTrendDataModel
+                        model.TrendCounts.Add(new FacultyStaffTrendCountModel
                         {
-                           Year = data.Year,
-                           Count = data.Count
+                            Year = data.Year,
+                            Count = data.Count
                         });
                     }
-                    model.PlaceTrendCounts.Add(placeTrendActivityCount);
-
                 }
                 else
                 {
@@ -381,7 +405,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
                     foreach (var data in view.Data)
                     {
-                        model.GlobalData.Add(new FacultyStaffTrendDataModel
+                        model.TrendCounts.Add(new FacultyStaffTrendCountModel
                         {
                             Year = data.Year,
                             Count = data.Count
@@ -419,22 +443,16 @@ namespace UCosmic.Web.Mvc.ApiControllers
                                                               establishment.RevisionId,
                                                               placeId.Value);
 
-                    var placeTrendCount = new FacultyStaffPlaceTrendModel
-                    {
-                        PlaceId = placeId.Value,
-                        OfficialName = view.OfficialName
-                    };
+                    model.PlaceId = placeId.Value;
 
                     foreach (var data in view.Data)
                     {
-                        placeTrendCount.Data.Add(new FacultyStaffTrendDataModel
+                        model.TrendCounts.Add(new FacultyStaffTrendCountModel
                         {
                             Year = data.Year,
                             Count = data.Count
                         });
                     }
-                    model.PlaceTrendCounts.Add(placeTrendCount);
-
                 }
                 else
                 {
@@ -443,7 +461,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
                     foreach (var data in view.Data)
                     {
-                        model.GlobalData.Add(new FacultyStaffTrendDataModel
+                        model.TrendCounts.Add(new FacultyStaffTrendCountModel
                         {
                             Year = data.Year,
                             Count = data.Count
