@@ -143,6 +143,7 @@
             font-size: small;
             width: 120px;
             height: 48px;
+            z-index: 3;
         }
 
     </style>
@@ -235,85 +236,97 @@
                 </div>
                 <div style="position: relative">
                     
-                    <!-- GeoChart -->
-                    <div id="heatmap"></div>
-
-                    <!-- Activities/People Buttons -->
-                    <div id="" style="position: absolute; margin: 5px; right: 0; top: 0">
-                        <input type="button" id="activitiesButton" value="Activites" style="float: left" data-bind="click: function(data, event) { selectSearchType('activities'); }"/>
-                        <input type="button" id="peopleButton" value="People" style="float: left; border-left-style: none" data-bind="click: function(data, event) { selectSearchType('people'); }"/>
-                    </div>
+                    <div style="background-color: lightblue; width: 680px; height: 500px"></div>
+                    
+                    <div style="position: absolute; background-color: transparent; width: 680px; height: 500px; top: 0; left: 0; z-index: 1">
+                        <!-- Antarctica -->
+                        <div id="antarctica" style="border-style: solid; padding: 4px; position: absolute; left: 400px; bottom: 0; width: 120px; height: 26px; background-color: white; text-align: center; border-top-left-radius: 4px; border-top-right-radius: 4px">
+                            <span style="margin-top: 4px">ANTARCTICA</span>
+                        </div>
                         
-                    <!-- Antarctica -->
-                    <div id="antarctica" style="border-style: solid; padding: 4px; position: absolute; left: 400px; bottom: 0; width: 120px; height: 26px; background-color: white; text-align: center; border-top-left-radius: 4px; border-top-right-radius: 4px">
-                        <span style="margin-top: 4px">ANTARCTICA</span>
-                    </div>
+                        <!-- Pacific Ocean -->
+                        <div style="position: absolute; left: 70px; top: 320px; width: 50px">
+                            <div style="width: 100%; text-align: center">
+                                <img src="../../images/icons/glyphs/glyphicons_261_buoy.png" width="24" height="24"/>
+                            </div>
+                            <div style="width: 100%; text-align: center">
+                                <span style="font-size: small">Pacific Ocean</span>
+                            </div>
+                        </div>
                         
-                    <!-- Pacific Ocean -->
-                    <div id="pacificOcean" style="position: absolute; left: 50px; top: 300px; width: 50px">
-                        <div style="width: 100%; text-align: center">
-                            @*<img src="../../images/icons/nounproject/noun_project_7876_buoy.svg" width="24" height="24"/>*@
-                            <img src="../../images/icons/glyphs/glyphicons_261_buoy.png" width="24" height="24"/>
+                        <!-- Atlantic Ocean -->
+                        <div id="atlanticOcean" style="position: absolute; left: 240px; top: 250px; width: 50px">
+                            <div style="width: 100%; text-align: center">
+                                <img src="../../images/icons/glyphs/glyphicons_261_buoy.png" width="24" height="24"/>
+                            </div>
+                            <div style="width: 100%; text-align: center">
+                                <span style="font-size: small">Atlantic Ocean</span>
+                            </div>
                         </div>
-                        <div style="width: 100%; text-align: center">
-                            <span style="font-size: small">Pacific Ocean</span>
-                        </div>
-                    </div>
                         
-                    <!-- Atlantic Ocean -->
-                    <div id="atlanticOcean" style="position: absolute; left: 240px; top: 250px; width: 50px">
-                        <div style="width: 100%; text-align: center">
-                            @*<img src="../../images/icons/nounproject/noun_project_7876_buoy.svg" width="24" height="24"/>*@
-                            <img src="../../images/icons/glyphs/glyphicons_261_buoy.png" width="24" height="24"/>
+                        <!-- Indian Ocean -->
+                        <div id="indianOcean" style="position: absolute; left: 460px; top: 360px; width: 50px">
+                            <div style="width: 100%; text-align: center">
+                                <img src="../../images/icons/glyphs/glyphicons_261_buoy.png" width="24" height="24"/>
+                            </div>
+                            <div style="width: 100%; text-align: center">
+                                <span style="font-size: small">Indian Ocean</span>
+                            </div>
                         </div>
-                        <div style="width: 100%; text-align: center">
-                            <span style="font-size: small">Atlantic Ocean</span>
-                        </div>
-                    </div>
-                        
-                    <!-- Indian Ocean -->
-                    <div id="indianOcean" style="position: absolute; left: 460px; top: 360px; width: 50px">
-                        <div style="width: 100%; text-align: center">
-                            @*<img src="../../images/icons/nounproject/noun_project_7876_buoy.svg" width="24" height="24"/>*@
-                            <img src="../../images/icons/glyphs/glyphicons_261_buoy.png" width="24" height="24"/>
-                        </div>
-                        <div style="width: 100%; text-align: center">
-                            <span style="font-size: small">Indian Ocean</span>
-                        </div>
-                    </div>
                          
-                    <!-- Southern Ocean -->
-                    <div id="southernOcean" style="position: absolute; left: 270px; top: 420px; width: 50px">
-                        <div style="width: 100%; text-align: center">
-                            @*<img src="../../images/icons/nounproject/noun_project_7876_buoy.svg" width="24" height="24"/>*@
-                            <img src="../../images/icons/glyphs/glyphicons_261_buoy.png" width="24" height="24"/>
+                        <!-- Southern Ocean -->
+                        <div id="southernOcean" style="position: absolute; left: 270px; top: 420px; width: 50px">
+                            <div style="width: 100%; text-align: center">
+                                <img src="../../images/icons/glyphs/glyphicons_261_buoy.png" width="24" height="24"/>
+                            </div>
+                            <div style="width: 100%; text-align: center">
+                                <span style="font-size: small">Southern Ocean</span>
+                            </div>
                         </div>
-                        <div style="width: 100%; text-align: center">
-                            <span style="font-size: small">Southern Ocean</span>
+                          
+                        <!-- Gulf of Mexico -->
+@*                        <div id="gulfOfMexico" style="position: absolute; left: 150px; top: 270px; width: 50px">
+                            <div style="width: 100%; text-align: center">
+                                <img src="../../images/icons/glyphs/glyphicons_261_buoy.png" width="12" height="12"/>
+                            </div>
+                            <div style="width: 100%; text-align: center; line-height: 0.5">
+                                <span style="font-size: x-small">Gulf of Mexico</span>
+                            </div>
+                        </div>  *@                     
+                           
+                        <!-- Carribean -->
+                        <div id="carribean" style="position: absolute; left: 200px; top: 300px; width: 50px">
+                            <div style="width: 100%; text-align: center">
+                                <img src="../../images/icons/glyphs/glyphicons_261_buoy.png" width="12" height="12"/>
+                            </div>
+                            <div style="width: 100%; text-align: center; line-height: 0.5">
+                                <span style="font-size: x-small">Carribean</span>
+                            </div>
                         </div>
                     </div>
-                          
+
+                    <!-- GeoChart -->
+                    <div id="heatmap" style="position: absolute; top: 0; left: 0; z-index: 2"></div>
+                    
+                    <!-- Pacific Ocean Title Phantom -->
+                    <div id="pacificOcean" style="position: absolute; left: 70px; top: 320px; width: 50px; z-index: 3">
+                    </div>
+
                     <!-- Gulf of Mexico -->
-                    <div id="gulfOfMexico" style="position: absolute; left: 150px; top: 270px; width: 50px">
+                    <div id="gulfOfMexico" style="position: absolute; left: 150px; top: 270px; width: 50px; z-index: 3">
                         <div style="width: 100%; text-align: center">
-                            @*<img src="../../images/icons/nounproject/noun_project_7876_buoy.svg" width="12" height="12"/>*@
                             <img src="../../images/icons/glyphs/glyphicons_261_buoy.png" width="12" height="12"/>
                         </div>
                         <div style="width: 100%; text-align: center; line-height: 0.5">
                             <span style="font-size: x-small">Gulf of Mexico</span>
                         </div>
-                    </div>                       
-                           
-                    <!-- Carribean -->
-                    <div id="carribean" style="position: absolute; left: 200px; top: 300px; width: 50px">
-                        <div style="width: 100%; text-align: center">
-                            @*<img src="../../images/icons/nounproject/noun_project_7876_buoy.svg" width="12" height="12"/>*@
-                            <img src="../../images/icons/glyphs/glyphicons_261_buoy.png" width="12" height="12"/>
-                        </div>
-                        <div style="width: 100%; text-align: center; line-height: 0.5">
-                            <span style="font-size: x-small">Carribean</span>
-                        </div>
-                    </div>                          
+                    </div>     
+
+                    <!-- Activities/People Buttons -->
+                    <div id="" style="position: absolute; margin: 5px; right: 0; top: 0; z-index: 3">
+                        <input type="button" id="activitiesButton" value="Activites" style="float: left" data-bind="click: function(data, event) { selectSearchType('activities'); }"/>
+                        <input type="button" id="peopleButton" value="People" style="float: left; border-left-style: none" data-bind="click: function(data, event) { selectSearchType('people'); }"/>
+                    </div>                     
 
                 </div>
             </div>

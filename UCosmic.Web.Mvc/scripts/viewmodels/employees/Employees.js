@@ -433,9 +433,10 @@ var ViewModels;
                     height: 500,
                     //magnifyingGlass: { enable: true, zoomFactor: 7.5 },
                     region: 'world',
-                    backgroundColor: 'lightBlue',
+                    //backgroundColor: 'lightBlue',
                     keepAspectRatio: false,
-                    colorAxis: { colors: ['#FFFFFF', 'green'] }
+                    colorAxis: { colors: ['#FFFFFF', 'green'] },
+                    backgroundColor: { fill: 'transparent' }
                 };
 
                 this.heatmap = new this.google.visualization.GeoChart($('#heatmap')[0]);
@@ -858,7 +859,7 @@ var ViewModels;
                                 dataType: 'json',
                                 url: App.Routes.WebApi.FacultyStaff.getPeopleTrend(),
                                 success: function (data, textStatus, jqXhr) {
-                                    _this.placePeopleCountData = data;
+                                    _this.placePeopleTrendData = data;
                                 },
                                 error: function (jqXhr, textStatus, errorThrown) {
                                     alert('Error getting data ' + textStatus + ' | ' + errorThrown);

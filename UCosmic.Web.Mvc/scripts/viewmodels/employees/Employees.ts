@@ -501,9 +501,10 @@ module ViewModels.Employees {
                 height: 500,
                 //magnifyingGlass: { enable: true, zoomFactor: 7.5 },
                 region: 'world', //'150',    // 002 Africa, 142 Asia
-                backgroundColor: 'lightBlue',
+                //backgroundColor: 'lightBlue',
                 keepAspectRatio: false,
-                colorAxis: { colors: ['#FFFFFF', 'green'] }
+                colorAxis: { colors: ['#FFFFFF', 'green'] },
+                backgroundColor: { fill: 'transparent' }
                 //tooltip:{trigger: 'none'}
                 //displayMode: 'markers'
             };
@@ -944,7 +945,7 @@ module ViewModels.Employees {
                             dataType: 'json',
                             url: App.Routes.WebApi.FacultyStaff.getPeopleTrend(),
                             success: (data: any, textStatus: string, jqXhr: JQueryXHR): void => {
-                                this.placePeopleCountData = data;
+                                this.placePeopleTrendData = data;
                             },
                             error: (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
                                 alert('Error getting data ' + textStatus + ' | ' + errorThrown);
