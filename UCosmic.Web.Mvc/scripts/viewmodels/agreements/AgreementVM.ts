@@ -103,23 +103,24 @@ class InstitutionalAgreementEditModel {
         this._setupValidation = <() => void > this._setupValidation.bind(this);
         this.participantsShowErrorMsg = ko.computed(() => {
             var validateParticipantsHasOwner = false;
-            var validateParticipantsHasParticipant = false;
+            //var validateParticipantsHasParticipant = false;
             $.each(this.participants(), function (i, item) {
                 if (item.isOwner() == true) {
                     validateParticipantsHasOwner = true;
                 }
-                if (item.isOwner() == false) {
-                    validateParticipantsHasParticipant = true;
-                }
+                //if (item.isOwner() == false) {
+                //    validateParticipantsHasParticipant = true;
+                //}
             });
-            if (validateParticipantsHasOwner == false && validateParticipantsHasParticipant == false) {
-                this.participantsErrorMsg("Home and Partner participants are required.");
-                return true;
-            } else if (validateParticipantsHasOwner == false) {
+            //if (validateParticipantsHasOwner == false && validateParticipantsHasParticipant == false) {
+            //    this.participantsErrorMsg("Home and Partner participants are required.");
+            //    return true;
+            //} else if (validateParticipantsHasParticipant == false) {
+            //    this.participantsErrorMsg("Partner participant is required.");
+            //    return true;
+            //} else
+            if (validateParticipantsHasOwner == false) {
                 this.participantsErrorMsg("Home participant is required.");
-                return true;
-            } else if (validateParticipantsHasParticipant == false) {
-                this.participantsErrorMsg("Partner participant is required.");
                 return true;
             } else {
                 return false;
@@ -171,7 +172,8 @@ class InstitutionalAgreementEditModel {
     dfdPopContacts = $.Deferred();
     dfdPopFiles = $.Deferred();
     dfdPageFadeIn = $.Deferred();
-    
+
+    $genericAlertDialog: JQuery = undefined;
     agreementIsEdit = ko.observable();
     agreementId = 0;// = 1;
     visibility = ko.observable();
@@ -655,20 +657,20 @@ class InstitutionalAgreementEditModel {
         return true;
     }
 
-    downloadAFile(me, e): void {
-        //this.agreementId = 2
-        var url = App.Routes.WebApi.Agreements.Files.Content.download(this.agreementId, me.id());
-        window.location.href = url;
-    }
+    //downloadAFile(me, e): void {
+    //    //this.agreementId = 2
+    //    var url = App.Routes.WebApi.Agreements.Files.Content.download(this.agreementId, me.id());
+    //    window.location.href = url;
+    //}
 
-    viewAFile(me, e): void {
-        //this.agreementId = 2
-        var url = App.Routes.WebApi.Agreements.Files.Content.view(this.agreementId, me.id());
-        window.open(
-          url,
-          '_blank'
-        );
-    }
+    //viewAFile(me, e): void {
+    //    //this.agreementId = 2
+    //    var url = App.Routes.WebApi.Agreements.Files.Content.view(this.agreementId, me.id());
+    //    window.open(
+    //      url,
+    //      '_blank'
+    //    );
+    //}
 
     updateKendoDialog(windowWidth): void {
 
@@ -1155,16 +1157,37 @@ class InstitutionalAgreementEditModel {
             establishmentResultViewModel.establishmentTranslatedName() +
             '" as a participant from this agreement?')) {
                 var self = this;
-
-            self.participants.remove(function (item) {
-                if (item.establishmentId() === establishmentResultViewModel.establishmentId()) {
-                    $(item.participantEl).slideUp('fast', function () {
-                        self.participants.remove(item);
-                        $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * 1.1)));
+                if (this.agreementIsEdit()) {
+                    var url = App.Routes.WebApi.Agreements.Participants.del(this.agreementId, ko.dataFor(e.target).establishmentId());
+                    $.ajax({
+                        url: url,
+                        type: 'DELETE',
+                        success: (): void => {
+                            self.participants.remove(function (item) {
+                                if (item.establishmentId() === establishmentResultViewModel.establishmentId()) {
+                                    $(item.participantEl).slideUp('fast', function () {
+                                        self.participants.remove(item);
+                                        $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * 1.1)));
+                                    });
+                                }
+                                return false;
+                            });
+                        },
+                        error: (xhr: JQueryXHR, statusText: string, errorThrown: string): void => {// validation message will be in xhr response text...
+                            alert(xhr.responseText);
+                        }
+                    })
+                } else {
+                    self.participants.remove(function (item) {
+                        if (item.establishmentId() === establishmentResultViewModel.establishmentId()) {
+                            $(item.participantEl).slideUp('fast', function () {
+                                self.participants.remove(item);
+                                $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * 1.1)));
+                            });
+                        }
+                        return false;
                     });
                 }
-                return false;
-            });
         }
         e.preventDefault();
         e.stopPropagation();
@@ -1413,14 +1436,44 @@ class InstitutionalAgreementEditModel {
                                     })
                                     .done((response) => {
                                         myParticipant.isOwner(response);
-                                        this.participants.push(myParticipant);
+                                        if (this.agreementIsEdit()) {
+                                            var url = App.Routes.WebApi.Agreements.Participants.put(this.agreementId, myParticipant.establishmentId());
+                                            $.ajax({
+                                                type: 'PUT',
+                                                url: url,
+                                                data: myParticipant,
+                                                success: (response: any, statusText: string, xhr: JQueryXHR): void => {
+                                                    this.participants.push(myParticipant);
+                                                },
+                                                error: (xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
+                                                    alert(xhr.responseText);
+                                                }
+                                            });
+                                        } else {
+                                            this.participants.push(myParticipant);
+                                        }
                                         //this.percentOffBodyHeight = .6;
                                         this.establishmentSearchViewModel.sammy.setLocation("agreements/" + this.editOrNewUrl + "");
                                         $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * .85)));
                                     })
                                     .fail(() => {
                                         //this.percentOffBodyHeight = .6;
-                                        this.participants.push(myParticipant);
+                                        if (this.agreementIsEdit()) {
+                                            var url = App.Routes.WebApi.Agreements.Participants.put(this.agreementId, myParticipant.establishmentId());
+                                            $.ajax({
+                                                type: 'PUT',
+                                                url: url,
+                                                data: myParticipant,
+                                                success: (response: any, statusText: string, xhr: JQueryXHR): void => {
+                                                    this.participants.push(myParticipant);
+                                                },
+                                                error: (xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
+                                                    alert(xhr.responseText);
+                                                }
+                                            });
+                                        } else {
+                                            this.participants.push(myParticipant);
+                                        }
                                         this.establishmentSearchViewModel.sammy.setLocation("agreements/" + this.editOrNewUrl + "");
                                     });
                                 } else {

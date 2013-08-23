@@ -51,6 +51,7 @@ var InstitutionalAgreementEditModel = (function () {
         this.dfdPopContacts = $.Deferred();
         this.dfdPopFiles = $.Deferred();
         this.dfdPageFadeIn = $.Deferred();
+        this.$genericAlertDialog = undefined;
         this.agreementIsEdit = ko.observable();
         this.agreementId = 0;
         this.visibility = ko.observable();
@@ -203,23 +204,19 @@ var InstitutionalAgreementEditModel = (function () {
         this._setupValidation = this._setupValidation.bind(this);
         this.participantsShowErrorMsg = ko.computed(function () {
             var validateParticipantsHasOwner = false;
-            var validateParticipantsHasParticipant = false;
+
+            //var validateParticipantsHasParticipant = false;
             $.each(_this.participants(), function (i, item) {
                 if (item.isOwner() == true) {
                     validateParticipantsHasOwner = true;
                 }
-                if (item.isOwner() == false) {
-                    validateParticipantsHasParticipant = true;
-                }
+                //if (item.isOwner() == false) {
+                //    validateParticipantsHasParticipant = true;
+                //}
             });
-            if (validateParticipantsHasOwner == false && validateParticipantsHasParticipant == false) {
-                _this.participantsErrorMsg("Home and Partner participants are required.");
-                return true;
-            } else if (validateParticipantsHasOwner == false) {
+
+            if (validateParticipantsHasOwner == false) {
                 _this.participantsErrorMsg("Home participant is required.");
-                return true;
-            } else if (validateParticipantsHasParticipant == false) {
-                _this.participantsErrorMsg("Partner participant is required.");
                 return true;
             } else {
                 return false;
@@ -612,18 +609,19 @@ else
         return true;
     };
 
-    InstitutionalAgreementEditModel.prototype.downloadAFile = function (me, e) {
-        //this.agreementId = 2
-        var url = App.Routes.WebApi.Agreements.Files.Content.download(this.agreementId, me.id());
-        window.location.href = url;
-    };
-
-    InstitutionalAgreementEditModel.prototype.viewAFile = function (me, e) {
-        //this.agreementId = 2
-        var url = App.Routes.WebApi.Agreements.Files.Content.view(this.agreementId, me.id());
-        window.open(url, '_blank');
-    };
-
+    //downloadAFile(me, e): void {
+    //    //this.agreementId = 2
+    //    var url = App.Routes.WebApi.Agreements.Files.Content.download(this.agreementId, me.id());
+    //    window.location.href = url;
+    //}
+    //viewAFile(me, e): void {
+    //    //this.agreementId = 2
+    //    var url = App.Routes.WebApi.Agreements.Files.Content.view(this.agreementId, me.id());
+    //    window.open(
+    //      url,
+    //      '_blank'
+    //    );
+    //}
     InstitutionalAgreementEditModel.prototype.updateKendoDialog = function (windowWidth) {
         $(".k-window").css({
             left: (windowWidth / 2 - ($(".k-window").width() / 2) + 10)
@@ -1109,16 +1107,37 @@ else
     InstitutionalAgreementEditModel.prototype.removeParticipant = function (establishmentResultViewModel, e) {
         if (confirm('Are you sure you want to remove "' + establishmentResultViewModel.establishmentTranslatedName() + '" as a participant from this agreement?')) {
             var self = this;
-
-            self.participants.remove(function (item) {
-                if (item.establishmentId() === establishmentResultViewModel.establishmentId()) {
-                    $(item.participantEl).slideUp('fast', function () {
-                        self.participants.remove(item);
-                        $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * 1.1)));
-                    });
-                }
-                return false;
-            });
+            if (this.agreementIsEdit()) {
+                var url = App.Routes.WebApi.Agreements.Participants.del(this.agreementId, ko.dataFor(e.target).establishmentId());
+                $.ajax({
+                    url: url,
+                    type: 'DELETE',
+                    success: function () {
+                        self.participants.remove(function (item) {
+                            if (item.establishmentId() === establishmentResultViewModel.establishmentId()) {
+                                $(item.participantEl).slideUp('fast', function () {
+                                    self.participants.remove(item);
+                                    $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * 1.1)));
+                                });
+                            }
+                            return false;
+                        });
+                    },
+                    error: function (xhr, statusText, errorThrown) {
+                        alert(xhr.responseText);
+                    }
+                });
+            } else {
+                self.participants.remove(function (item) {
+                    if (item.establishmentId() === establishmentResultViewModel.establishmentId()) {
+                        $(item.participantEl).slideUp('fast', function () {
+                            self.participants.remove(item);
+                            $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * 1.1)));
+                        });
+                    }
+                    return false;
+                });
+            }
         }
         e.preventDefault();
         e.stopPropagation();
@@ -1352,14 +1371,43 @@ else
                                         async: false
                                     }).done(function (response) {
                                         myParticipant.isOwner(response);
-                                        _this.participants.push(myParticipant);
+                                        if (_this.agreementIsEdit()) {
+                                            var url = App.Routes.WebApi.Agreements.Participants.put(_this.agreementId, myParticipant.establishmentId());
+                                            $.ajax({
+                                                type: 'PUT',
+                                                url: url,
+                                                data: myParticipant,
+                                                success: function (response, statusText, xhr) {
+                                                    _this.participants.push(myParticipant);
+                                                },
+                                                error: function (xhr, statusText, errorThrown) {
+                                                    alert(xhr.responseText);
+                                                }
+                                            });
+                                        } else {
+                                            _this.participants.push(myParticipant);
+                                        }
 
                                         //this.percentOffBodyHeight = .6;
                                         _this.establishmentSearchViewModel.sammy.setLocation("agreements/" + _this.editOrNewUrl + "");
                                         $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * .85)));
                                     }).fail(function () {
-                                        //this.percentOffBodyHeight = .6;
-                                        _this.participants.push(myParticipant);
+                                        if (_this.agreementIsEdit()) {
+                                            var url = App.Routes.WebApi.Agreements.Participants.put(_this.agreementId, myParticipant.establishmentId());
+                                            $.ajax({
+                                                type: 'PUT',
+                                                url: url,
+                                                data: myParticipant,
+                                                success: function (response, statusText, xhr) {
+                                                    _this.participants.push(myParticipant);
+                                                },
+                                                error: function (xhr, statusText, errorThrown) {
+                                                    alert(xhr.responseText);
+                                                }
+                                            });
+                                        } else {
+                                            _this.participants.push(myParticipant);
+                                        }
                                         _this.establishmentSearchViewModel.sammy.setLocation("agreements/" + _this.editOrNewUrl + "");
                                     });
                                 } else {
