@@ -470,8 +470,6 @@ section {
       box-sizing: border-box;
       float: left;
       width: 100%; }
-      .field-table .field-row .field-input-label-top .k-dropdown .k-dropdown-wrap .k-input {
-        color: grey; }
       .field-table .field-row .field-input-label-top select {
         width: 690px;
         margin-left: 0; }

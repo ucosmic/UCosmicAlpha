@@ -3564,6 +3564,15 @@ namespace Links
             public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
             public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+            public static class cancel {
+                private const string URLPATH = "~/images/icons/cancel";
+                public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+                public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                public static readonly string black_cancel_24_png = Url("black-cancel-24.png");
+                public static readonly string undo_4_512_jpg = Url("undo-4-512.jpg");
+            }
+        
+            [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
             public static class closer {
                 private const string URLPATH = "~/images/icons/closer";
                 public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
@@ -3575,6 +3584,17 @@ namespace Links
                 public static readonly string closer_24_light_png = Url("closer-24-light.png");
                 public static readonly string closer_24_red_disc_png = Url("closer-24-red-disc.png");
                 public static readonly string closer_24_red_png = Url("closer-24-red.png");
+            }
+        
+            [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+            public static class download {
+                private const string URLPATH = "~/images/icons/download";
+                public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+                public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                public static readonly string down128_png = Url("down128.png");
+                public static readonly string green_down_128_png = Url("green-down-128.png");
+                public static readonly string green_down_24_png = Url("green-down-24.png");
+                public static readonly string Navigation_Green_Up_png = Url("Navigation Green Up.png");
             }
         
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -3607,6 +3627,19 @@ namespace Links
                 public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
                 public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
                 public static readonly string global_24_black_png = Url("global_24_black.png");
+            }
+        
+            [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+            public static class glyphs {
+                private const string URLPATH = "~/images/icons/glyphs";
+                public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+                public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                public static readonly string glyphicons_071_book_png = Url("glyphicons_071_book.png");
+                public static readonly string glyphicons_072_bookmark_png = Url("glyphicons_072_bookmark.png");
+                public static readonly string glyphicons_261_buoy_png = Url("glyphicons_261_buoy.png");
+                public static readonly string glyphicons_300_microphone_png = Url("glyphicons_300_microphone.png");
+                public static readonly string glyphicons_341_briefcase_png = Url("glyphicons_341_briefcase.png");
+                public static readonly string glyphicons_375_classic_hammer_png = Url("glyphicons_375_classic_hammer.png");
             }
         
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -3646,6 +3679,24 @@ namespace Links
             }
         
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+            public static class nounproject {
+                private const string URLPATH = "~/images/icons/nounproject";
+                public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+                public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                public static readonly string noun_project_14888_teacher_svg = Url("noun_project_14888_teacher.svg");
+                public static readonly string noun_project_14888_teacher_attr_html = Url("noun_project_14888_teacher_attr.html");
+                public static readonly string noun_project_16986_podium_svg = Url("noun_project_16986_podium.svg");
+                public static readonly string noun_project_16986_podium_attr_html = Url("noun_project_16986_podium_attr.html");
+                public static readonly string noun_project_17372_meda_attr_html = Url("noun_project_17372_meda_attr.html");
+                public static readonly string noun_project_17372_medal_svg = Url("noun_project_17372_medal.svg");
+                public static readonly string noun_project_401_briefcase_svg = Url("noun_project_401_briefcase.svg");
+                public static readonly string noun_project_401_briefcase_attr_html = Url("noun_project_401_briefcase_attr.html");
+                public static readonly string noun_project_762_idea_svg = Url("noun_project_762_idea.svg");
+                public static readonly string noun_project_762_idea_attr_html = Url("noun_project_762_idea_attr.html");
+                public static readonly string noun_project_7876_buoy_svg = Url("noun_project_7876_buoy.svg");
+            }
+        
+            [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
             public static class plus {
                 private const string URLPATH = "~/images/icons/plus";
                 public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
@@ -3662,6 +3713,15 @@ namespace Links
                 public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
                 public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
                 public static readonly string print_24_black_png = Url("print-24-black.png");
+            }
+        
+            [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+            public static class save {
+                private const string URLPATH = "~/images/icons/save";
+                public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+                public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                public static readonly string Save_24_png = Url("Save-24.png");
+                public static readonly string Save_256_png = Url("Save-256.png");
             }
         
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
