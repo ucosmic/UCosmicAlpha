@@ -19,6 +19,12 @@ var ViewModels;
                 this.inititializationErrors = "";
                 this.geochartCustomPlaces = [
                     {
+                        name: 'Arctic',
+                        id: 'arctic',
+                        activityCount: 0,
+                        peopleCount: 0
+                    },
+                    {
                         name: 'Antarctica',
                         id: 'antarctica',
                         activityCount: 0,
@@ -446,12 +452,13 @@ var ViewModels;
 
                 if (this.activityTypes() != null) {
                     this.barchartActivityOptions = {
-                        title: 'Global Activities',
-                        titleTextStyle: {
-                            color: 'black',
-                            fontSize: 14,
-                            bold: true
-                        },
+                        //title: 'Global Activities',
+                        //titlePosition: 'out',
+                        //titleTextStyle: {
+                        //    color: 'black',
+                        //    fontSize: 14,
+                        //    bold: true
+                        //},
                         hAxis: {
                             textPosition: 'none'
                         },
@@ -459,6 +466,7 @@ var ViewModels;
                             textPosition: 'none'
                         },
                         chartArea: {
+                            top: 8,
                             left: 10,
                             width: '100%',
                             height: '75%'
@@ -482,12 +490,13 @@ var ViewModels;
                 }
 
                 this.barchartPeopleOptions = {
-                    title: 'Global People',
-                    titleTextStyle: {
-                        color: 'black',
-                        fontSize: 14,
-                        bold: true
-                    },
+                    //title: 'Global People',
+                    //titlePosition: 'out',
+                    //titleTextStyle: {
+                    //    color: 'black',
+                    //    fontSize: 14,
+                    //    bold: true
+                    //},
                     hAxis: {
                         textPosition: 'none'
                     },
@@ -495,6 +504,7 @@ var ViewModels;
                         textPosition: 'none'
                     },
                     chartArea: {
+                        top: 8,
                         left: 10,
                         width: '100%',
                         height: '75%'
@@ -521,32 +531,36 @@ var ViewModels;
                 /* ----- Setup LineChart ----- */
                 this.linechartActivityOptions = {
                     chartArea: {
+                        top: 8,
                         left: 40,
                         width: '85%',
                         height: '60%'
                     },
-                    title: 'Global Activity Trend',
-                    titleTextStyle: {
-                        color: 'black',
-                        fontSize: 14,
-                        bold: true
-                    },
+                    //title: 'Global Activity Trend',
+                    //titlePosition: 'out',
+                    //titleTextStyle: {
+                    //    color: 'black',
+                    //    fontSize: 14,
+                    //    bold: true
+                    //},
                     colors: ['green'],
                     legend: { position: 'none' }
                 };
 
                 this.linechartPeopleOptions = {
                     chartArea: {
+                        top: 8,
                         left: 40,
                         width: '85%',
                         height: '60%'
                     },
-                    title: 'Global People Trend',
-                    titleTextStyle: {
-                        color: 'black',
-                        fontSize: 14,
-                        bold: true
-                    },
+                    //title: 'Global People Trend',
+                    //titlePosition: 'out',
+                    //titleTextStyle: {
+                    //    color: 'black',
+                    //    fontSize: 14,
+                    //    bold: true
+                    //},
                     colors: ['green'],
                     legend: { position: 'none' }
                 };
@@ -706,8 +720,6 @@ var ViewModels;
                             url: App.Routes.WebApi.FacultyStaff.getPeopleCount(),
                             success: function (data, textStatus, jqXhr) {
                                 _this.globalPeopleCountData = data;
-                                //this.totalCount(this.globalPeopleCountData.globalCount);
-                                //this.totalPlaceCount(this.globalPeopleCountData.countOfPlaces);
                             },
                             error: function (jqXhr, textStatus, errorThrown) {
                                 alert('Error getting data ' + textStatus + ' | ' + errorThrown);
@@ -717,7 +729,7 @@ var ViewModels;
                 } else {
                     var placeId = this.getPlaceId(placeOfficialName);
                     if (placeId != null) {
-                        if ((this.placePeopleCountData == null) || ((this.placeActivityCountData).placeId != placeId)) {
+                        if ((this.placePeopleCountData == null) || ((this.placePeopleCountData).placeId != placeId)) {
                             $.ajax({
                                 type: "GET",
                                 async: false,
@@ -748,10 +760,9 @@ var ViewModels;
                         dt.addRow([activityType, count, count]);
                     }
                 } else {
-                    var placeCounts = (this.globalPeopleCountData).placeCounts[0];
-                    for (var j = 0; j < placeCounts.typeCounts.length; j += 1) {
-                        var activityType = placeCounts.typeCounts[j].type;
-                        var count = placeCounts.typeCounts[j].count;
+                    for (var i = 0; i < (this.placePeopleCountData).typeCounts.length; i += 1) {
+                        var activityType = (this.placePeopleCountData).typeCounts[i].type;
+                        var count = (this.placePeopleCountData).typeCounts[i].count;
                         dt.addRow([activityType, count, count]);
                     }
                 }

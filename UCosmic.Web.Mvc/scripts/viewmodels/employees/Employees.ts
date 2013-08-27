@@ -97,6 +97,9 @@ module ViewModels.Employees {
 
         geochartCustomPlaces: any[] = [
             {
+                name: 'Arctic', id: 'arctic', activityCount: 0, peopleCount: 0
+            },
+            {
                 name: 'Antarctica', id: 'antarctica', activityCount: 0, peopleCount: 0
             },
             {
@@ -517,12 +520,13 @@ module ViewModels.Employees {
 
             if (this.activityTypes() != null) {
                 this.barchartActivityOptions = {
-                    title: 'Global Activities',
-                    titleTextStyle: {
-                        color: 'black',
-                        fontSize: 14,
-                        bold: true
-                    },
+                    //title: 'Global Activities',
+                    //titlePosition: 'out',
+                    //titleTextStyle: {
+                    //    color: 'black',
+                    //    fontSize: 14,
+                    //    bold: true
+                    //},
                     hAxis: {
                         textPosition: 'none'
                     },
@@ -530,6 +534,7 @@ module ViewModels.Employees {
                         textPosition: 'none'
                     },
                     chartArea: {
+                        top: 8,
                         left: 10,
                         width: '100%',
                         height: '75%'
@@ -553,12 +558,13 @@ module ViewModels.Employees {
             }
 
             this.barchartPeopleOptions = {
-                title: 'Global People',
-                titleTextStyle: {
-                    color: 'black',
-                    fontSize: 14,
-                    bold: true
-                },
+                //title: 'Global People',
+                //titlePosition: 'out',
+                //titleTextStyle: {
+                //    color: 'black',
+                //    fontSize: 14,
+                //    bold: true
+                //},
                 hAxis: {
                     textPosition: 'none'
                 },
@@ -566,6 +572,7 @@ module ViewModels.Employees {
                     textPosition: 'none'
                 },
                 chartArea: {
+                    top: 8,
                     left: 10,
                     width: '100%',
                     height: '75%'
@@ -593,32 +600,36 @@ module ViewModels.Employees {
 
             this.linechartActivityOptions = {
                 chartArea: {
+                    top: 8,
                     left: 40,
                     width: '85%',
                     height: '60%'
                 },
-                title: 'Global Activity Trend',
-                titleTextStyle: {
-                    color: 'black',
-                    fontSize: 14,
-                    bold: true
-                },
+                //title: 'Global Activity Trend',
+                //titlePosition: 'out',
+                //titleTextStyle: {
+                //    color: 'black',
+                //    fontSize: 14,
+                //    bold: true
+                //},
                 colors: ['green'],
                 legend: { position: 'none' }
             };
 
             this.linechartPeopleOptions = {
                 chartArea: {
+                    top: 8,
                     left: 40,
                     width: '85%',
                     height: '60%'
                 },
-                title: 'Global People Trend',
-                titleTextStyle: {
-                    color: 'black',
-                    fontSize: 14,
-                    bold: true
-                },
+                //title: 'Global People Trend',
+                //titlePosition: 'out',
+                //titleTextStyle: {
+                //    color: 'black',
+                //    fontSize: 14,
+                //    bold: true
+                //},
                 colors: ['green'],
                 legend: { position: 'none' }
             };
@@ -781,8 +792,6 @@ module ViewModels.Employees {
                         url: App.Routes.WebApi.FacultyStaff.getPeopleCount(),
                         success: (data: any, textStatus: string, jqXhr: JQueryXHR): void => {
                             this.globalPeopleCountData = data;
-                            //this.totalCount(this.globalPeopleCountData.globalCount);
-                            //this.totalPlaceCount(this.globalPeopleCountData.countOfPlaces);
                         },
                         error: (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
                             alert('Error getting data ' + textStatus + ' | ' + errorThrown);
@@ -794,7 +803,7 @@ module ViewModels.Employees {
                 var placeId = this.getPlaceId(placeOfficialName);
                 if (placeId != null) {
                     if ((this.placePeopleCountData == null) ||
-                        ((<any>this.placeActivityCountData).placeId != placeId)) {
+                        ((<any>this.placePeopleCountData).placeId != placeId)) {
                         $.ajax({
                             type: "GET",
                             async: false,
@@ -826,10 +835,9 @@ module ViewModels.Employees {
                     dt.addRow([activityType, count, count]);
                 }
             } else { /* Add place counts */
-                var placeCounts = (<any>this.globalPeopleCountData).placeCounts[0];
-                for (var j = 0; j < placeCounts.typeCounts.length; j += 1) {
-                    var activityType = placeCounts.typeCounts[j].type;
-                    var count = placeCounts.typeCounts[j].count;
+                for (var i = 0; i < (<any>this.placePeopleCountData).typeCounts.length; i += 1) {
+                    var activityType = (<any>this.placePeopleCountData).typeCounts[i].type;
+                    var count = (<any>this.placePeopleCountData).typeCounts[i].count;
                     dt.addRow([activityType, count, count]);
                 }
             }

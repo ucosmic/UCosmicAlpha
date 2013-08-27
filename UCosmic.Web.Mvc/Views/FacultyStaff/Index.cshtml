@@ -146,6 +146,20 @@
             z-index: 3;
         }
 
+        .customPlaceText {
+            width: 100%;
+            text-align: center;
+            color: mediumblue;
+            font-size: small;
+        }
+
+        .statsSideBarTitle {
+            font-family: 'Arial';
+            font-size: 14px;
+            font-weight: bold;
+            color: black;
+        }
+
     </style>
 }
 
@@ -236,58 +250,64 @@
                 </div>
                 <div style="position: relative">
                     
-                    <div style="background-color: lightblue; width: 680px; height: 500px"></div>
+                    <div style="background-color: #ACCCFD; width: 680px; height: 500px"></div>
                     
                     <div style="position: absolute; background-color: transparent; width: 680px; height: 500px; top: 0; left: 0; z-index: 1">
+                        
+                        <!-- Arctic -->
+                        <div style="position: absolute; left: 340px; top: 0;">                   
+                            <img src="../../images/arctic_193x20.png"/>
+                        </div>
+                        
                         <!-- Antarctica -->
-                        <div id="antarctica" style="border-style: solid; padding: 4px; position: absolute; left: 400px; bottom: 0; width: 120px; height: 26px; background-color: white; text-align: center; border-top-left-radius: 4px; border-top-right-radius: 4px">
-                            <span style="margin-top: 4px">ANTARCTICA</span>
+                        <div style="position: absolute; left: 340px; bottom: 0;">                   
+                            <img src="../../images/antarctica_283x35.png"/>
                         </div>
                         
                         <!-- Pacific Ocean -->
                         <div style="position: absolute; left: 70px; top: 320px; width: 50px">
                             <div style="width: 100%; text-align: center">
-                                <img src="../../images/icons/glyphs/glyphicons_261_buoy.png" width="24" height="24"/>
+                                <img src="../../images/icons/glyphs/glyphicons_261_buoy_blue.png" width="24" height="24"/>
                             </div>
-                            <div style="width: 100%; text-align: center">
-                                <span style="font-size: small">Pacific Ocean</span>
+                            <div class="customPlaceText">
+                                <span>Pacific Ocean</span>
                             </div>
                         </div>
                         
                         <!-- Atlantic Ocean -->
-                        <div id="atlanticOcean" style="position: absolute; left: 240px; top: 250px; width: 50px">
+                        <div style="position: absolute; left: 240px; top: 250px; width: 50px">
                             <div style="width: 100%; text-align: center">
-                                <img src="../../images/icons/glyphs/glyphicons_261_buoy.png" width="24" height="24"/>
+                                <img src="../../images/icons/glyphs/glyphicons_261_buoy_blue.png" width="24" height="24"/>
                             </div>
-                            <div style="width: 100%; text-align: center">
-                                <span style="font-size: small">Atlantic Ocean</span>
+                            <div class="customPlaceText">
+                                <span>Atlantic Ocean</span>
                             </div>
                         </div>
                         
                         <!-- Indian Ocean -->
-                        <div id="indianOcean" style="position: absolute; left: 460px; top: 360px; width: 50px">
+                        <div style="position: absolute; left: 460px; top: 360px; width: 50px">
                             <div style="width: 100%; text-align: center">
-                                <img src="../../images/icons/glyphs/glyphicons_261_buoy.png" width="24" height="24"/>
+                                <img src="../../images/icons/glyphs/glyphicons_261_buoy_blue.png" width="24" height="24"/>
                             </div>
-                            <div style="width: 100%; text-align: center">
-                                <span style="font-size: small">Indian Ocean</span>
+                            <div class="customPlaceText">
+                                <span>Indian Ocean</span>
                             </div>
                         </div>
                          
                         <!-- Southern Ocean -->
-                        <div id="southernOcean" style="position: absolute; left: 270px; top: 420px; width: 50px">
+                        <div style="position: absolute; left: 270px; top: 420px; width: 50px">
                             <div style="width: 100%; text-align: center">
-                                <img src="../../images/icons/glyphs/glyphicons_261_buoy.png" width="24" height="24"/>
+                                <img src="../../images/icons/glyphs/glyphicons_261_buoy_blue.png" width="24" height="24"/>
                             </div>
-                            <div style="width: 100%; text-align: center">
-                                <span style="font-size: small">Southern Ocean</span>
+                            <div class="customPlaceText">
+                                <span>Southern Ocean</span>
                             </div>
                         </div>
                           
                         <!-- Gulf of Mexico -->
-@*                        <div id="gulfOfMexico" style="position: absolute; left: 150px; top: 270px; width: 50px">
+                        @*                        <div style="position: absolute; left: 150px; top: 270px; width: 50px; z-index: 3">
                             <div style="width: 100%; text-align: center">
-                                <img src="../../images/icons/glyphs/glyphicons_261_buoy.png" width="12" height="12"/>
+                                <img src="../../images/icons/glyphs/glyphicons_261_buoy_blue.png" width="12" height="12"/>
                             </div>
                             <div style="width: 100%; text-align: center; line-height: 0.5">
                                 <span style="font-size: x-small">Gulf of Mexico</span>
@@ -295,11 +315,11 @@
                         </div>  *@                     
                            
                         <!-- Carribean -->
-                        <div id="carribean" style="position: absolute; left: 200px; top: 300px; width: 50px">
+                        <div style="position: absolute; left: 200px; top: 300px; width: 50px">
                             <div style="width: 100%; text-align: center">
-                                <img src="../../images/icons/glyphs/glyphicons_261_buoy.png" width="12" height="12"/>
+                                <img src="../../images/icons/glyphs/glyphicons_261_buoy_blue.png" width="12" height="12"/>
                             </div>
-                            <div style="width: 100%; text-align: center; line-height: 0.5">
+                            <div class="customPlaceText" style="line-height: 0.5">
                                 <span style="font-size: x-small">Carribean</span>
                             </div>
                         </div>
@@ -307,20 +327,56 @@
 
                     <!-- GeoChart -->
                     <div id="heatmap" style="position: absolute; top: 0; left: 0; z-index: 2"></div>
+
+                    <!-- Arctic Title Phantom -->
+                    <div id="arctic" style="position: absolute; left: 330px; top: 0; z-index: 4">                   
+                        <img src="../../images/transparent.png" width="200" height="40"/>
+                    </div>
+                    
+                    <!-- Antarctica Title Phantom -->
+                    <div id="antarctica" style="position: absolute; left: 330px; bottom: 0; z-index: 4">
+                        <img src="../../images/transparent.png" width="300" height="50"/>
+                    </div>
                     
                     <!-- Pacific Ocean Title Phantom -->
-                    <div id="pacificOcean" style="position: absolute; left: 70px; top: 320px; width: 50px; z-index: 3">
+                    <div id="pacificOcean" style="position: absolute; left: 70px; top: 320px; width: 50px; z-index: 4">
+                        <img src="../../images/transparent.png" width="50" height="50"/>
+                    </div>
+                    
+                    <!-- Atlantic Ocean Title Phantom -->
+                    <div id="atlanticOcean" style="position: absolute; left: 240px; top: 250px; width: 50px; z-index: 4">
+                        <img src="../../images/transparent.png" width="50" height="50"/>
+                    </div>
+                       
+                    <!-- Indian Ocean Title Phantom -->
+                    <div id="indianOcean" style="position: absolute; left: 460px; top: 360px; width: 50px; z-index: 4">
+                        <img src="../../images/transparent.png" width="50" height="50"/>
+                    </div>
+                  
+                    <!-- Southern Ocean Title Phantom -->
+                    <div id="southernOcean" style="position: absolute; left: 270px; top: 420px; width: 50px; z-index: 4">
+                        <img src="../../images/transparent.png" width="50" height="50"/>
                     </div>
 
-                    <!-- Gulf of Mexico -->
-                    <div id="gulfOfMexico" style="position: absolute; left: 150px; top: 270px; width: 50px; z-index: 3">
+                    <!-- Gulf of Mexico-->
+                    <div style="position: absolute; left: 150px; top: 270px; width: 50px; z-index: 3">
                         <div style="width: 100%; text-align: center">
-                            <img src="../../images/icons/glyphs/glyphicons_261_buoy.png" width="12" height="12"/>
+                            <img src="../../images/icons/glyphs/glyphicons_261_buoy_blue.png" width="12" height="12"/>
                         </div>
-                        <div style="width: 100%; text-align: center; line-height: 0.5">
+                        <div class="customPlaceText" style="line-height: 0.5">
                             <span style="font-size: x-small">Gulf of Mexico</span>
                         </div>
-                    </div>     
+                    </div>
+                    
+                    <!-- Gulf of Mexico Title Phantom  -->
+                    <div id="gulfOfMexico" style="position: absolute; left: 150px; top: 270px; width: 50px; z-index: 4">
+                        <img src="../../images/transparent.png" width="25" height="25"/>
+                    </div>
+                    
+                    <!-- Carribean Title Phantom -->
+                    <div id="carribean" style="position: absolute; left: 200px; top: 300px; width: 50px; z-index: 4">
+                        <img src="../../images/transparent.png" width="25" height="25"/>
+                    </div>   
 
                     <!-- Activities/People Buttons -->
                     <div id="" style="position: absolute; margin: 5px; right: 0; top: 0; z-index: 3">

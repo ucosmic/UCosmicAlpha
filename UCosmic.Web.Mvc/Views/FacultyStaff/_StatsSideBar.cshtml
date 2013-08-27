@@ -4,32 +4,74 @@
         <input type="text" id="keywords" style="width: 85%"/>
         <input type="image" src="../../images/icons/search/search-24-black.png" style="width: 24px; height: 24px" alt="Search">
     </div>*@
-    <div>
-        <select id="establishmentDropList" style="width: 100%; margin-top: 64px"></select>
-    </div>
-    <div class="stats" style="width: 100%">
-        <div style="display: none; font-size: medium; margin-bottom: 16px" data-bind="visible: searchType() == 'activities'">
-            <div style="margin-top: 20px">
-                <div class="total-count-header">Total Activities</div>
-                <div class="total-count" data-bind="text: totalCount()"></div>
-            </div>
-            <div style="margin-top: 10px">
-                <div class="total-count-header">Total Locations w/Activities</div>
-                <div class="total-count" data-bind="text: totalPlaceCount()"></div>
-            </div>
-        </div>
-        <div style="display: none; font-size: medium; margin-bottom: 16px" data-bind="visible: searchType() == 'people'">
-            <div style="margin-top: 20px">
-                <div class="total-count-header">Total People</div>
-                <div class="total-count" data-bind="text: totalCount()"></div>
-            </div>
-            <div style="margin-top: 10px">
-                <div class="total-count-header">Total Locations w/People</div>
-                <div class="total-count" data-bind="text: totalPlaceCount()"></div>
-            </div>
-        </div>
 
-        <div id="facultystaff-summary-barchart" style="width: 100%; height: 150px; margin-top: 30px"></div>
+
+    <div class="stats" style="width: 100%">
+        <div style="margin-top: 70px; margin-bottom: 16px">
+            <div style="display: none; font-size: medium" data-bind="visible: selectedPlace() == null">
+                <div class="total-count-header">Global</div>
+            </div>        
+            <div style="display: none; font-size: medium; margin-top: 20px; margin-bottom: 16px" data-bind="visible: selectedPlace() != null">
+                <div class="total-count-header" data-bind="text: selectedPlace()"></div>
+            </div>  
+        </div> 
+ 
+        <div>
+            <select id="establishmentDropList" style="width: 100%; margin-bottom: 20px"></select>
+        </div> 
+        
+        <div class="statsSideBarTitle" style="margin-bottom: 8px">
+            <span>Totals:</span>
+        </div> 
+        
+        <div style="color: black; display: inline; text-align: center">
+            <div style="width: 33%; float: left" data-bind="visible: searchType() == 'activities'">
+                <span>Activities</span>
+            </div>
+            <div style="width: 33%; float: left" data-bind="visible: searchType() == 'people'">
+                <span>People</span>
+            </div>
+            <div style="width: 33%; float: left">
+                <span>Degrees</span>
+            </div>
+            <div style="width: 33%; float: left" data-bind="visible: selectedPlace() == null">
+                <span>Locations</span>
+            </div>
+            <div style="width: 33%; float: left" data-bind="visible: selectedPlace() != null">
+                <span>&nbsp;</span>
+            </div>
+        </div>
+        
+        <div style="width: 100%; color: black; text-align: center; font-weight: bold">
+            <div style="width: 33%; float: left">
+                <span data-bind="text: totalCount()"></span>
+            </div>
+            <div style="width: 33%; float: left">
+                <span>0</span>
+            </div>
+            <div style="width: 33%; float: left;" data-bind="visible: selectedPlace() == null">
+                <span data-bind="text: totalPlaceCount()"></span>
+            </div>
+        </div>
+        
+        <div class="statsSideBarTitle" style="margin-top: 60px" data-bind="visible: selectedPlace() == null">
+            <div data-bind="visible: searchType() == 'activities'">
+                <span>Global Activity Types</span>
+            </div>
+            <div data-bind="visible: searchType() == 'people'">
+                <span>Global People by Activity Types</span>
+            </div>            
+        </div>
+        <div class="statsSideBarTitle" style="margin-top: 60px" data-bind="visible: selectedPlace() != null">
+            <div data-bind="visible: searchType() == 'activities'">
+                <span>Activity Types</span>
+            </div>
+            <div data-bind="visible: searchType() == 'people'">
+                <span>People by Activity Types</span>
+            </div>            
+        </div>
+        
+        <div id="facultystaff-summary-barchart" style="width: 100%; height: 100px"></div>
 
         <div style="position: relative; top: -12px">
             <div style="margin-left:16px; width: 40px; float: left">
@@ -75,7 +117,25 @@
             
         </div>
 
-        <div id="facultystaff-summary-linechart" style="width: 100%; height: 130px; margin-top: 50px"></div>
+        
+        <div class="statsSideBarTitle" style="margin-top: 60px" data-bind="visible: selectedPlace() == null">
+            <div data-bind="visible: searchType() == 'activities'">
+                <span>Global Activity Trend</span>
+            </div>
+            <div data-bind="visible: searchType() == 'people'">
+                <span>Global People Trend</span>
+            </div>            
+        </div>
+        <div class="statsSideBarTitle" style="margin-top: 60px" data-bind="visible: selectedPlace() != null">
+            <div data-bind="visible: searchType() == 'activities'">
+                <span>Activity Trend </span>
+            </div>
+            <div data-bind="visible: searchType() == 'people'">
+                <span>People Trend</span>
+            </div>            
+        </div>
+
+        <div id="facultystaff-summary-linechart" style="width: 100%; height: 120px"></div>
 
     </div>
 @*    <div class="type-filters" style="display: none" data-bind="visible: (searchType() === 'activities') && (activityTypes().length > 0)">
