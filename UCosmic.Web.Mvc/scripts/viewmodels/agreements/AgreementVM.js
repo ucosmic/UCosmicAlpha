@@ -12,7 +12,6 @@
 /// <reference path="../../typings/requirejs/require.d.ts" />
 /// <reference path="../../app/App.ts" />
 /// <reference path="../../app/Routes.ts" />
-/// <reference path="../../app/SideSwiper.ts" />
 /// <reference path="../../app/Spinner.ts" />
 /// <reference path="../../typings/moment/moment.d.ts" />
 /// <reference path="../../typings/sammyjs/sammyjs.d.ts" />
@@ -38,12 +37,12 @@ var InstitutionalAgreementEditModel = (function () {
             this.id = id;
         };
         this.percentOffBodyHeight = .6;
+        //jquery defered for setting body height.
         this.dfdUAgreements = $.Deferred();
         this.dfdPopParticipants = $.Deferred();
         this.dfdPopContacts = $.Deferred();
         this.dfdPopFiles = $.Deferred();
         this.dfdPageFadeIn = $.Deferred();
-        this.$genericAlertDialog = undefined;
         this.agreementIsEdit = ko.observable();
         this.agreementId = 0;
         this.visibility = ko.observable();
@@ -51,12 +50,8 @@ var InstitutionalAgreementEditModel = (function () {
         this.nextForceDisabled = ko.observable(false);
         this.prevForceDisabled = ko.observable(false);
         this.pageNumber = ko.observable();
-        this.$typeOptions = ko.observable();
-        this.typeOptions = ko.mapping.fromJS([]);
-        this.typeOptionSelected = ko.observable();
-        this.$statusOptions = ko.observable();
-        this.statusOptions = ko.mapping.fromJS([]);
-        this.statusOptionSelected = ko.observable();
+        this.$genericAlertDialog = undefined;
+        //contact vars
         this.$contactTypeOptions = ko.observable();
         this.contactTypeOptions = ko.mapping.fromJS([]);
         this.contactTypeOptionSelected = ko.observable();
@@ -85,22 +80,33 @@ var InstitutionalAgreementEditModel = (function () {
         this.$contactFirstName = $("#contactFirstName");
         this.$contactSalutation = $("#contactSalutation");
         this.$contactSuffix = $("#contactSuffix");
+        this.contacts = ko.mapping.fromJS([]);
+        this.contactPhones = ko.observableArray();
+        this.phoneTypes = ko.mapping.fromJS([]);
+        this.$phoneTypes = ko.observable();
+        //basic info vars
         this.$uAgreements = ko.observable();
         this.uAgreements = ko.mapping.fromJS([]);
         this.uAgreementSelected = ko.observable("");
         this.nickname = ko.observable();
         this.content = ko.observable();
-        this.startDate = ko.observable();
-        this.expDate = ko.observable();
-        this.isEstimated = ko.observable();
-        this.autoRenew = ko.observable(2);
         this.privateNotes = ko.observable();
+        this.$typeOptions = ko.observable();
+        this.typeOptions = ko.mapping.fromJS([]);
+        this.typeOptionSelected = ko.observable();
         this.agreementContent = ko.observable();
         this.isCustomTypeAllowed = ko.observable();
         this.isCustomStatusAllowed = ko.observable();
         this.isCustomContactTypeAllowed = ko.observable();
-        this.phoneTypes = ko.mapping.fromJS([]);
-        this.$phoneTypes = ko.observable();
+        //dates vars
+        this.startDate = ko.observable();
+        this.expDate = ko.observable();
+        this.isEstimated = ko.observable();
+        this.autoRenew = ko.observable(2);
+        this.$statusOptions = ko.observable();
+        this.statusOptions = ko.mapping.fromJS([]);
+        this.statusOptionSelected = ko.observable();
+        //file vars
         this.$file = ko.observable();
         this.hasFile = ko.observable();
         this.isFileExtensionInvalid = ko.observable(false);
@@ -115,11 +121,10 @@ var InstitutionalAgreementEditModel = (function () {
         this.fileDeleteSpinner = new App.Spinner(new App.SpinnerOptions(400));
         this.tempFileId = 0;
         this.files = ko.mapping.fromJS([]);
+        //participant vars
         this.participantsExport = ko.mapping.fromJS([]);
         this.participants = ko.mapping.fromJS([]);
         this.participantsErrorMsg = ko.observable();
-        this.contacts = ko.mapping.fromJS([]);
-        this.contactPhones = ko.observableArray();
         this.officialNameDoesNotMatchTranslation = ko.computed(function () {
             return !(this.participants.establishmentOfficialName === this.participants.establishmentTranslatedName);
         });
@@ -127,11 +132,11 @@ var InstitutionalAgreementEditModel = (function () {
         this.back = function () {
             history.back();
         };
-        this.sideSwiper = new App.SideSwiper({
-            speed: '',
-            frameWidth: 970,
-            root: '[data-current-module=agreements]'
-        });
+        //sideSwiper = new App.SideSwiper({
+        //    speed: '',
+        //    frameWidth: 970,
+        //    root: '[data-current-module=agreements]'
+        //});
         this.spinner = new App.Spinner(new App.SpinnerOptions(400, true));
         this.establishmentSearchViewModel = new Establishments.ViewModels.Search();
         this.hasBoundSearch = false;
@@ -149,6 +154,7 @@ var InstitutionalAgreementEditModel = (function () {
                 $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * _this.percentOffBodyHeight)));
             });
         } else {
+            this.percentOffBodyHeight = .2;
             this.editOrNewUrl = window.location.href.toLowerCase().substring(window.location.href.toLowerCase().indexOf("agreements/") + 11);
             this.editOrNewUrl = this.editOrNewUrl.substring(0, this.editOrNewUrl.indexOf("/edit") + 5) + "/";
             this.agreementIsEdit(true);
@@ -164,11 +170,6 @@ var InstitutionalAgreementEditModel = (function () {
                 $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * _this.percentOffBodyHeight)));
             });
         }
-        this.populateUmbrella();
-
-        $(window).resize(function () {
-            _this.updateKendoDialog($(window).width());
-        });
 
         this.isBound(true);
         this.removeParticipant = this.removeParticipant.bind(this);
@@ -195,9 +196,11 @@ var InstitutionalAgreementEditModel = (function () {
             }
         });
 
+        this.populateUmbrella();
         this.hideOtherGroups();
         this.bindSearch();
         this.getSettings();
+        this._setupValidation();
 
         this.contactSalutation = ko.mapping.fromJS([
             new this.selectConstructor("[None]", ""),
@@ -223,7 +226,9 @@ var InstitutionalAgreementEditModel = (function () {
             new this.selectConstructor("mobile", "mobile")
         ]);
 
-        this._setupValidation();
+        $(window).resize(function () {
+            _this.updateKendoDialog($(window).width());
+        });
     }
     InstitutionalAgreementEditModel.prototype.receiveResults = function (js) {
         if (!js) {
@@ -360,27 +365,27 @@ var InstitutionalAgreementEditModel = (function () {
                 select: 'Choose a file to upload...'
             },
             select: function (e) {
-                var data = ko.mapping.toJS({
-                    Name: e.files[0].name,
-                    Length: e.files[0].rawFile.size
-                });
-                var url = App.Routes.WebApi.Agreements.Files.Validate.post();
-                $.ajax({
-                    type: 'POST',
-                    url: url,
-                    async: false,
-                    data: data,
-                    success: function (response, statusText, xhr) {
-                        _this.isFileInvalid(false);
-                    },
-                    error: function (xhr, statusText, errorThrown) {
-                        if (xhr.status !== 200) {
+                for (var i = 0; i < e.files.length; i++) {
+                    var data = ko.mapping.toJS({
+                        Name: e.files[i].name,
+                        Length: e.files[i].rawFile.size
+                    });
+                    var url = App.Routes.WebApi.Agreements.Files.Validate.post();
+                    $.ajax({
+                        type: 'POST',
+                        url: url,
+                        async: false,
+                        data: data,
+                        success: function (response, statusText, xhr) {
+                            _this.isFileInvalid(false);
+                        },
+                        error: function (xhr, statusText, errorThrown) {
                             e.preventDefault();
                             _this.isFileInvalid(true);
                             _this.fileError(xhr.responseText);
                         }
-                    }
-                });
+                    });
+                }
             },
             async: {
                 saveUrl: saveUrl
@@ -416,7 +421,8 @@ var InstitutionalAgreementEditModel = (function () {
                         }
                         myId = parseInt(myUrl.substring(myUrl.lastIndexOf("/") + 1));
                     } else {
-                        myId = _this.tempFileId + .01;
+                        _this.tempFileId = _this.tempFileId + .01;
+                        myId = _this.tempFileId;
                     }
                     _this.files.push(ko.mapping.fromJS({
                         id: myId,

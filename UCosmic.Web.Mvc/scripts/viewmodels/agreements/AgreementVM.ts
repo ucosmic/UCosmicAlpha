@@ -12,7 +12,6 @@
 /// <reference path="../../typings/requirejs/require.d.ts" />
 /// <reference path="../../app/App.ts" />
 /// <reference path="../../app/Routes.ts" />
-/// <reference path="../../app/SideSwiper.ts" />
 /// <reference path="../../app/Spinner.ts" />
 /// <reference path="../../typings/moment/moment.d.ts" />
 /// <reference path="../../typings/sammyjs/sammyjs.d.ts" />
@@ -48,6 +47,7 @@ class InstitutionalAgreementEditModel {
                     $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * this.percentOffBodyHeight)));
                 });
         } else {
+            this.percentOffBodyHeight = .2;
             this.editOrNewUrl = window.location.href.toLowerCase().substring(window.location.href.toLowerCase().indexOf("agreements/") + 11);
             this.editOrNewUrl = this.editOrNewUrl.substring(0, this.editOrNewUrl.indexOf("/edit") + 5) + "/";
             this.agreementIsEdit(true);
@@ -64,11 +64,6 @@ class InstitutionalAgreementEditModel {
                     $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * this.percentOffBodyHeight)));
                 });
         }
-        this.populateUmbrella();
-
-        $(window).resize(() => {
-            this.updateKendoDialog($(window).width());
-        });
         
         this.isBound(true);
         this.removeParticipant = <() => boolean> this.removeParticipant.bind(this);
@@ -94,10 +89,12 @@ class InstitutionalAgreementEditModel {
                 return false;
             }
         });
-        
+
+        this.populateUmbrella();
         this.hideOtherGroups();
         this.bindSearch();
         this.getSettings();
+        this._setupValidation();
 
         this.contactSalutation = ko.mapping.fromJS([
                 new this.selectConstructor("[None]", ""),
@@ -123,7 +120,9 @@ class InstitutionalAgreementEditModel {
                 new this.selectConstructor("mobile", "mobile")
         ]);
 
-        this._setupValidation();
+        $(window).resize(() => {
+            this.updateKendoDialog($(window).width());
+        });
     }
 
     selectConstructor = function (name: string, id: string) {
@@ -132,29 +131,27 @@ class InstitutionalAgreementEditModel {
     }
 
 
-    editOrNewUrl;
-
     percentOffBodyHeight = .6;
+    //jquery defered for setting body height.
     dfdUAgreements = $.Deferred();
     dfdPopParticipants = $.Deferred();
     dfdPopContacts = $.Deferred();
     dfdPopFiles = $.Deferred();
     dfdPageFadeIn = $.Deferred();
 
-    $genericAlertDialog: JQuery = undefined;
     agreementIsEdit = ko.observable();
-    agreementId = 0;// = 1;
+    agreementId = 0;
     visibility = ko.observable();
+
+    //set the path for editing an agreement or new agreement.
+    editOrNewUrl;
     trail: KnockoutObservableArray<string> = ko.observableArray([]);
     nextForceDisabled: KnockoutObservable<boolean> = ko.observable(false);
     prevForceDisabled: KnockoutObservable<boolean> = ko.observable(false);
     pageNumber: KnockoutObservable<number> = ko.observable();
-    $typeOptions: KnockoutObservable<JQuery> = ko.observable();
-    typeOptions = ko.mapping.fromJS([]);
-    typeOptionSelected: KnockoutObservable<string> = ko.observable();
-    $statusOptions: KnockoutObservable<JQuery> = ko.observable();
-    statusOptions = ko.mapping.fromJS([]);
-    statusOptionSelected: KnockoutObservable<string> = ko.observable();
+    $genericAlertDialog: JQuery = undefined;
+
+    //contact vars
     $contactTypeOptions: KnockoutObservable<JQuery> = ko.observable();
     contactTypeOptions = ko.mapping.fromJS([]);
     contactTypeOptionSelected: KnockoutObservable<string> = ko.observable();
@@ -183,27 +180,41 @@ class InstitutionalAgreementEditModel {
     $contactFirstName = $("#contactFirstName");
     $contactSalutation = $("#contactSalutation");
     $contactSuffix = $("#contactSuffix");
+    contacts = ko.mapping.fromJS([]);
+    contactPhones = ko.observableArray();
+    phoneTypes = ko.mapping.fromJS([]);
+    $phoneTypes: KnockoutObservable<JQuery> = ko.observable();
+
+    //validate vars
     validateContact;
     validateBasicInfo;
     validateEffectiveDatesCurrentStatus;
 
+    //basic info vars
     $uAgreements: KnockoutObservable<JQuery> = ko.observable();
     uAgreements = ko.mapping.fromJS([]);
     uAgreementSelected = ko.observable("");
     nickname = ko.observable();
     content = ko.observable();
-    startDate = ko.observable();
-    expDate = ko.observable();
-
-    isEstimated = ko.observable();
-    autoRenew = ko.observable(2);
     privateNotes = ko.observable();
+    $typeOptions: KnockoutObservable<JQuery> = ko.observable();
+    typeOptions = ko.mapping.fromJS([]);
+    typeOptionSelected: KnockoutObservable<string> = ko.observable();
     agreementContent = ko.observable();
     isCustomTypeAllowed = ko.observable();
     isCustomStatusAllowed = ko.observable();
     isCustomContactTypeAllowed = ko.observable();
-    phoneTypes = ko.mapping.fromJS([]);
-    $phoneTypes: KnockoutObservable<JQuery> = ko.observable();
+
+    //dates vars
+    startDate = ko.observable();
+    expDate = ko.observable();
+    isEstimated = ko.observable();
+    autoRenew = ko.observable(2);
+    $statusOptions: KnockoutObservable<JQuery> = ko.observable();
+    statusOptions = ko.mapping.fromJS([]);
+    statusOptionSelected: KnockoutObservable<string> = ko.observable();
+
+    //file vars
     $file: KnockoutObservable<JQuery> = ko.observable();
     hasFile: KnockoutObservable<boolean> = ko.observable();
     isFileExtensionInvalid: KnockoutObservable<boolean> = ko.observable(false);
@@ -220,13 +231,12 @@ class InstitutionalAgreementEditModel {
     tempFileId = 0;
     files = ko.mapping.fromJS([]);
 
+    //participant vars
     participantsExport = ko.mapping.fromJS([]);
     participants = ko.mapping.fromJS([]);
     participantsErrorMsg = ko.observable();
     participantsShowErrorMsg;
 
-    contacts = ko.mapping.fromJS([]);
-    contactPhones = ko.observableArray();
 
     officialNameDoesNotMatchTranslation = ko.computed(function () {
         return !(this.participants.establishmentOfficialName === this.participants.establishmentTranslatedName);
@@ -238,11 +248,11 @@ class InstitutionalAgreementEditModel {
         history.back();
     };
 
-    sideSwiper = new App.SideSwiper({
-        speed: '',
-        frameWidth: 970,
-        root: '[data-current-module=agreements]'
-    });
+    //sideSwiper = new App.SideSwiper({
+    //    speed: '',
+    //    frameWidth: 970,
+    //    root: '[data-current-module=agreements]'
+    //});
 
     spinner: App.Spinner = new App.Spinner(new App.SpinnerOptions(400, true));
     receiveResults(js: Establishments.ApiModels.FlatEstablishment[]): void {
@@ -382,27 +392,27 @@ class InstitutionalAgreementEditModel {
                 select: 'Choose a file to upload...'
             },
             select: (e: any): void => {
-                var data = ko.mapping.toJS({
-                    Name: e.files[0].name,
-                    Length: e.files[0].rawFile.size
-                })
-                var url = App.Routes.WebApi.Agreements.Files.Validate.post();
-                $.ajax({
-                    type: 'POST',
-                    url: url,
-                    async: false,
-                    data: data,
-                    success: (response: any, statusText: string, xhr: JQueryXHR): void => {
-                        this.isFileInvalid(false);
-                    },
-                    error: (xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
-                        if (xhr.status !== 200) {
-                            e.preventDefault(); 
-                            this.isFileInvalid(true); 
+                for (var i = 0; i < e.files.length; i++) {
+                    var data = ko.mapping.toJS({
+                        Name: e.files[i].name,
+                        Length: e.files[i].rawFile.size
+                    })
+                    var url = App.Routes.WebApi.Agreements.Files.Validate.post();
+                    $.ajax({
+                        type: 'POST',
+                        url: url,
+                        async: false,
+                        data: data,
+                        success: (response: any, statusText: string, xhr: JQueryXHR): void => {
+                            this.isFileInvalid(false);
+                        },
+                        error: (xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
+                            e.preventDefault();
+                            this.isFileInvalid(true);
                             this.fileError(xhr.responseText);
                         }
-                    }
-                });
+                    });
+                }
             },
             async: {
                 saveUrl: saveUrl
@@ -440,7 +450,8 @@ class InstitutionalAgreementEditModel {
                         }
                         myId = parseInt(myUrl.substring(myUrl.lastIndexOf("/") + 1));
                     } else {
-                        myId = this.tempFileId + .01
+                        this.tempFileId = this.tempFileId + .01
+                        myId = this.tempFileId
                     }
                     this.files.push(ko.mapping.fromJS({
                         id: myId,
