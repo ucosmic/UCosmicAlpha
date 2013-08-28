@@ -24,7 +24,7 @@
             <span>Totals:</span>
         </div> 
         
-        <div style="color: black; display: inline; text-align: center">
+        <div style="color: black; text-align: center">
             <div style="width: 33%; float: left" data-bind="visible: searchType() == 'activities'">
                 <span>Activities</span>
             </div>
@@ -43,13 +43,13 @@
         </div>
         
         <div style="width: 100%; color: black; text-align: center; font-weight: bold">
-            <div style="width: 33%; float: left">
+            <div style="width: 33%; float: left; margin-top: 4px">
                 <span data-bind="text: totalCount()"></span>
             </div>
-            <div style="width: 33%; float: left">
+            <div style="width: 33%; float: left; margin-top: 4px">
                 <span>0</span>
             </div>
-            <div style="width: 33%; float: left;" data-bind="visible: selectedPlace() == null">
+            <div style="width: 33%; float: left; margin-top: 4px" data-bind="visible: selectedPlace() == null">
                 <span data-bind="text: totalPlaceCount()"></span>
             </div>
         </div>

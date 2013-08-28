@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Web.Mvc;
 using AttributeRouting.Web.Mvc;
+using AutoMapper;
 using UCosmic.Domain.Employees;
 using UCosmic.Domain.Establishments;
 using UCosmic.Web.Mvc.Models;
@@ -26,7 +29,6 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             var model = new FacultyStaffInstitutionInfoModel
             {
-                InstitutionId = null,
                 InstitutionHasCampuses = false,
                 ActivityTypes = null
             };
@@ -56,34 +58,39 @@ namespace UCosmic.Web.Mvc.Controllers
 
             if (establishment != null)
             {
-                model.InstitutionId = establishment.RevisionId;
+                Establishment rootEstablishment = establishment;
+                while (rootEstablishment.Parent != null)
+                {
+                    rootEstablishment = rootEstablishment.Parent;
+                }
+
+                model.InstitutionId = rootEstablishment.RevisionId;
+                model.InstitutionOfficialName = rootEstablishment.OfficialName;
 
                 var campusEstablishmentType =
                     _entities.Get<EstablishmentType>().Single(t => t.EnglishName == "University Campus");
+
                 model.InstitutionHasCampuses = _entities.Get<Establishment>()
-                                                        .Count(
+                                                        .Any(
                                                             e =>
                                                             (e.Parent.RevisionId == model.InstitutionId) &&
-                                                            (e.Type.RevisionId == campusEstablishmentType.RevisionId)) >
-                                               0;
+                                                            (e.Type.RevisionId == campusEstablishmentType.RevisionId));
 
-                //var employeeModuleSettings =
-                //    _queryProcessor.Execute(new EmployeeModuleSettingsByEstablishmentId(model.InstitutionId.Value));
-                //if (employeeModuleSettings != null)
-                //{
-                //    employeeModuleSettings.ActivityTypes.OrderBy(a => a.Rank);
-
-                //    model.ActivityTypes = new FacultyStaffActivityType[employeeModuleSettings.ActivityTypes.Count];
-                //    for (int i = 0; i < employeeModuleSettings.ActivityTypes.Count; i += 1)
-                //    {
-                //        model.ActivityTypes[i] = new FacultyStaffActivityType
-                //        {
-                //            Id = employeeModuleSettings.ActivityTypes.ElementAt(i).Id,
-                //            Name = employeeModuleSettings.ActivityTypes.ElementAt(i).Type,
-                //            CssColor = employeeModuleSettings.ActivityTypes.ElementAt(i).CssColor
-                //        };
-                //    }
-                //}
+                /* For now, return first level children of institution system. */
+                ICollection<int> childIds = new Collection<int>();
+                ICollection<string> childOfficialNames = new Collection<string>();
+                var query = new EstablishmentChildren(rootEstablishment.RevisionId);
+                var entities = _queryProcessor.Execute(query);
+                if (entities != null)
+                {
+                    foreach (var childEstablishment in entities)
+                    {
+                        childIds.Add(childEstablishment.RevisionId);
+                        childOfficialNames.Add(childEstablishment.OfficialName);
+                    }
+                }
+                model.InstitutionCampusIds = childIds.ToArray();
+                model.InstitutionCampusOfficialNames = childOfficialNames.ToArray();
             }
 
             return View(model);

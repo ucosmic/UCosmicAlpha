@@ -239,11 +239,15 @@
         <header>
             <h1 id="pageTitle">@ViewBag.Title</h1>
         </header>
-        <span style="margin-left: 50px" data-bind="visible: loadSpinner.isVisible()">
-            <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
-            <strong>Loading...</strong>
-        </span>
+               
         <div style="width: 680px; height: 500px">
+            <div style="width: 200px; height: 30px; background-color: white; z-index: 5" data-bind="visible: loadSpinner.isVisible()">
+                <span>
+                    <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
+                    <strong>Loading...</strong>
+                </span>
+            </div>
+
             <div style="display: none" data-bind="visible: isHeatmapVisible()">
                 <div style="width: 100%; height: 28px; text-align: right" data-bind="click: function(item,event) { globalViewClickHandler(item,event); }">
                     <span style="margin-right: 4px">Global View</span><img src="../../images/icons/global/global_24_black.png" alt="Global View"/>
@@ -415,6 +419,9 @@
             </div>
         </div>
     </div>
+
+
+
     <div class="on-right from-top" style="display: none" data-bind="visible: isPointmapVisible() || isTableVisible()">
         @Html.Partial(MVC.FacultyStaff.Views._SearchSideBar)
     </div>

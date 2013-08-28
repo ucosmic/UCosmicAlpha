@@ -11,8 +11,11 @@ namespace UCosmic.Web.Mvc.Models
 
     public class FacultyStaffInstitutionInfoModel
     {
-        public int? InstitutionId { get; set; }
+        public int InstitutionId { get; set; }
+        public string InstitutionOfficialName { get; set; }
         public bool InstitutionHasCampuses { get; set; }
+        public int[] InstitutionCampusIds { get; set; }
+        public string[] InstitutionCampusOfficialNames { get; set; }
         public FacultyStaffActivityType[] ActivityTypes { get; set; }
     }
 
