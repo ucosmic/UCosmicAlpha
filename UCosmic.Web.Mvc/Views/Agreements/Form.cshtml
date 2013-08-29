@@ -10,14 +10,19 @@
         @Html.Partial(MVC.Agreements.Views._Bib, new ViewDataDictionary { { "Edit", currentBib == "edit" ? true : (bool?)null } })
     </nav>
 }
-@*<script data-main="../scripts/main.js" src="~/scripts/require.js"></script>*@
 @section scripts
 {
 
-@*    <script data-main="../../../scripts/viewmodels/agreements/RequireAgreement.js" src="~/scripts/require/require.js"></script>*@
-    @*<script data-main="@Url.Content("~/scripts/viewmodels/agreements/RequireAgreement.js")" src="~/scripts/require/require.js"></script>*@
          @Scripts.Render("~/bundles/agreements")
     <script type="text/javascript">
+        ko.bindingHandlers.stopBinding = {
+            init: function () {
+                return { controlsDescendantBindings: true };
+            }
+        };
+
+        ko.virtualElements.allowedBindings.stopBinding = true;
+
         var agreementViewModel = new InstitutionalAgreementEditModel();
         ko.applyBindings(agreementViewModel, $('#allParticipants')[0]);
     </script>
@@ -47,7 +52,9 @@
             @Html.Partial(MVC.Agreements.Views._FormParticipants)
             @Html.Partial(MVC.Agreements.Views._FormBasicInfo)
             @Html.Partial(MVC.Agreements.Views._FormEffectiveDatesCurrentStatus)
+			<!-- ko stopBinding: true -->
             @Html.Partial(MVC.Agreements.Views._FormContacts)
+			<!-- /ko -->
             @Html.Partial(MVC.Agreements.Views._FormFileAttachments)
             @Html.Partial(MVC.Agreements.Views._FormOverallVisibility)
 

@@ -1884,6 +1884,20 @@
       <DependentUpon>Activity.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="scripts\viewmodels\degrees\Degree.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\agreements\scrollBody.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\agreements\contacts.ts" />
+    <Content Include="scripts\viewmodels\agreements\contacts.js">
+      <DependentUpon>contacts.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\agreements\contacts.min.js">
+      <DependentUpon>contacts.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\agreements\scrollBody.js">
+      <DependentUpon>scrollBody.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\agreements\scrollBody.min.js">
+      <DependentUpon>scrollBody.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\viewmodels\degrees\Degree.js">
       <DependentUpon>Degree.ts</DependentUpon>
     </Content>

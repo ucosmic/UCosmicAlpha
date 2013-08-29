@@ -16,6 +16,8 @@
 /// <reference path="../../typings/moment/moment.d.ts" />
 /// <reference path="../../typings/sammyjs/sammyjs.d.ts" />
 /// <reference path="../establishments/ApiModels.d.ts" />
+/// <reference path="./scrollBody.ts" />
+/// <reference path="./contacts.ts" />
 
 class InstitutionalAgreementParticipantModel {
     constructor(isOwner: any, establishmentId: number, establishmentOfficialName: string,
@@ -33,6 +35,10 @@ class InstitutionalAgreementParticipantModel {
 
 class InstitutionalAgreementEditModel {
     constructor(public initDefaultPageRoute: boolean = true) {
+        this.contactClass = new agreements.contacts(this.isCustomContactTypeAllowed, this.spinner, this.establishmentItemViewModel, this.agreementIsEdit, this.agreementId, this.kendoWindowBug);
+
+        ko.applyBindings(this.contactClass, $('#contacts')[0]);
+
         var culture = $("meta[name='accept-language']").attr("content");
         if (window.location.href.toLowerCase().indexOf("agreements/new") > 0) {
             Globalize.culture(culture)
@@ -67,10 +73,6 @@ class InstitutionalAgreementEditModel {
         
         this.isBound(true);
         this.removeParticipant = <() => boolean> this.removeParticipant.bind(this);
-        this.editAContact = <() => boolean> this.editAContact.bind(this);
-        this.removeContact = <() => boolean> this.removeContact.bind(this);
-        this.removePhone = <() => void > this.removePhone.bind(this);
-        this.addPhone = <() => void > this.addPhone.bind(this);
         this.updateFile = <() => void > this.updateFile.bind(this);
         this.fileVisibilityClicked = <() => boolean > this.fileVisibilityClicked.bind(this);
         this.removeFile = <() => void > this.removeFile.bind(this);
@@ -96,30 +98,6 @@ class InstitutionalAgreementEditModel {
         this.getSettings();
         this._setupValidation();
 
-        this.contactSalutation = ko.mapping.fromJS([
-                new this.selectConstructor("[None]", ""),
-                new this.selectConstructor("Dr.", "Dr."),
-                new this.selectConstructor("Mr.", "Mr."),
-                new this.selectConstructor("Ms.", "Ms."),
-                new this.selectConstructor("Mrs.", "Mrs."),
-                new this.selectConstructor("Prof.", "Prof.")
-        ]);
-
-        this.contactSuffix = ko.mapping.fromJS([
-                new this.selectConstructor("[None]", ""),
-                new this.selectConstructor("Esq.", "Esq."),
-                new this.selectConstructor("Jr.", "Jr."),
-                new this.selectConstructor("PhD", "PhD"),
-                new this.selectConstructor("Sr.", "Sr.")
-        ]);
-
-        this.phoneTypes = ko.mapping.fromJS([
-                new this.selectConstructor("[None]", ""),
-                new this.selectConstructor("home", "home"),
-                new this.selectConstructor("work", "work"),
-                new this.selectConstructor("mobile", "mobile")
-        ]);
-
         $(window).resize(() => {
             this.updateKendoDialog($(window).width());
         });
@@ -130,6 +108,7 @@ class InstitutionalAgreementEditModel {
         this.id = id;
     }
 
+    contactClass;
 
     percentOffBodyHeight = .6;
     //jquery defered for setting body height.
@@ -151,44 +130,10 @@ class InstitutionalAgreementEditModel {
     pageNumber: KnockoutObservable<number> = ko.observable();
     $genericAlertDialog: JQuery = undefined;
 
-    //contact vars
-    $contactTypeOptions: KnockoutObservable<JQuery> = ko.observable();
-    contactTypeOptions = ko.mapping.fromJS([]);
-    contactTypeOptionSelected: KnockoutObservable<string> = ko.observable();
-    contactsIsEdit = ko.observable(false);
-    contactFirstName = ko.observable();
-    contactLastName = ko.observable();
-    contactId = ko.observable();
-    contactSuffix = ko.mapping.fromJS([]);
-    contactSuffixSelected = ko.observable();
-    $$contactSuffix: KnockoutObservable<JQuery> = ko.observable();
-    contactSalutation = ko.mapping.fromJS([]);
-    contactSalutationSelected = ko.observable();
-    $$contactSalutation: KnockoutObservable<JQuery> = ko.observable();
-    contactJobTitle = ko.observable();
-    contactPersonId = ko.observable();
-    contactUserId = ko.observable();
-    contactDisplayName = ko.observable();
-    contactIndex = 0;
-    contactEmail = ko.observable();
-    contactMiddleName = ko.observable();
-    contactPhoneTextValue = ko.observable("");
-    contactPhoneType = ko.observable();
-    $addContactDialog = $("#addContactDialog");
-    $contactEmail = $("#contactEmail");
-    $contactLastName = $("#contactLastName");
-    $contactFirstName = $("#contactFirstName");
-    $contactSalutation = $("#contactSalutation");
-    $contactSuffix = $("#contactSuffix");
-    contacts = ko.mapping.fromJS([]);
-    contactPhones = ko.observableArray();
-    phoneTypes = ko.mapping.fromJS([]);
-    $phoneTypes: KnockoutObservable<JQuery> = ko.observable();
     //added this because kendo window after selecting a autocomplte and then clicking the window, the body would scroll to the top.
     kendoWindowBug = 0;
 
     //validate vars
-    validateContact;
     validateBasicInfo;
     validateEffectiveDatesCurrentStatus;
 
@@ -353,7 +298,7 @@ class InstitutionalAgreementEditModel {
     populateContacts(): void {
         $.get(App.Routes.WebApi.Agreements.Contacts.get(this.agreementId), { useTestData: false })
             .done((response: any): void => {
-                ko.mapping.fromJS(response, this.contacts)
+                ko.mapping.fromJS(response, this.contactClass.contacts)
                 this.dfdPopContacts.resolve();
             });
 
@@ -611,13 +556,13 @@ class InstitutionalAgreementEditModel {
         this.isCustomStatusAllowed(result.isCustomStatusAllowed);
         this.isCustomContactTypeAllowed(result.isCustomContactTypeAllowed);
         this.statusOptions.push(new this.selectConstructor("", ""));
-        this.contactTypeOptions.push(new this.selectConstructor("", undefined));
         this.typeOptions.push(new this.selectConstructor("", ""));
         for (var i = 0; i < result.statusOptions.length; i++) {
             this.statusOptions.push(new this.selectConstructor(result.statusOptions[i], result.statusOptions[i]));
         };
+        this.contactClass.contactTypeOptions.push(new this.selectConstructor("", undefined));
         for (var i = 0; i < result.contactTypeOptions.length; i++) {
-            this.contactTypeOptions.push(new this.selectConstructor(result.contactTypeOptions[i], result.contactTypeOptions[i]));
+            this.contactClass.contactTypeOptions.push(new this.selectConstructor(result.contactTypeOptions[i], result.contactTypeOptions[i]));
         };
         for (var i = 0; i < result.typeOptions.length; i++) {
             this.typeOptions.push(new this.selectConstructor(result.typeOptions[i], result.typeOptions[i]));
@@ -656,37 +601,6 @@ class InstitutionalAgreementEditModel {
                 })
             });
         }
-        if (this.isCustomContactTypeAllowed) {
-            $("#contactTypeOptions").kendoComboBox({
-                dataTextField: "name",
-                dataValueField: "id",
-                dataSource: new kendo.data.DataSource({
-                    data: this.contactTypeOptions()
-                })
-            });
-        } else {
-            $("#contactTypeOptions").kendoDropDownList({
-                dataTextField: "name",
-                dataValueField: "id",
-                dataSource: new kendo.data.DataSource({
-                    data: this.contactTypeOptions()
-                })
-            });
-        }
-        this.$contactSalutation.kendoDropDownList({
-            dataTextField: "name",
-            dataValueField: "id",
-            dataSource: new kendo.data.DataSource({
-                data: ko.mapping.toJS(this.contactSalutation())
-            })
-        });
-        this.$contactSuffix.kendoDropDownList({
-            dataTextField: "name",
-            dataValueField: "id",
-            dataSource: new kendo.data.DataSource({
-                data: ko.mapping.toJS(this.contactSuffix())
-            })
-        });
         $(".hasDate").each(function (index, item) {
             $(item).kendoDatePicker({
                 value: new Date($(item).val()),
@@ -713,195 +627,17 @@ class InstitutionalAgreementEditModel {
             autoHide: false
         })
 
-        this.contactPhoneTextValue.subscribe((me: string): void => {
-            if (this.contactPhoneTextValue().length > 0) {
-
-                if (this.agreementIsEdit()) {
-                    
-                    var url = App.Routes.WebApi.Agreements.Contacts.Phones.post(this.agreementId, this.contactId());
-                    var data = { id: "0", type: '', contactId: this.contactId(), value: this.contactPhoneTextValue() };
-                    $.post(url, data)
-                        .done((response: any, statusText: string, xhr: JQueryXHR): void => {
-                            var myUrl = xhr.getResponseHeader('Location');
-                            data.id = myUrl.substring(myUrl.lastIndexOf("/") + 1);
-                            this.contactPhones.push(data)
-                            this.contactPhoneTextValue("");
-
-                            $(".phoneTypes").kendoDropDownList({
-                                dataTextField: "name",
-                                dataValueField: "id",
-                                dataSource: new kendo.data.DataSource({
-                                    data: ko.mapping.toJS(this.phoneTypes())
-                                })
-                            });
-                        })
-                        .fail((xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
-                            this.spinner.stop();
-                            if (xhr.status === 400) { // validation message will be in xhr response text...
-                                this.establishmentItemViewModel.$genericAlertDialog.find('p.content')
-                                    .html(xhr.responseText.replace('\n', '<br /><br />'));
-                                this.establishmentItemViewModel.$genericAlertDialog.dialog({
-                                    title: 'Alert Message',
-                                    dialogClass: 'jquery-ui',
-                                    width: 'auto',
-                                    resizable: false,
-                                    modal: true,
-                                    buttons: {
-                                        'Ok': (): void => { this.establishmentItemViewModel.$genericAlertDialog.dialog('close'); }
-                                    }
-                                });
-                            }
-                        });
-                } else {
-                    this.contactPhones.push({ id: '', type: '', contactId: '', value: this.contactPhoneTextValue() })
-                    this.contactPhoneTextValue("");
-
-                    $(".phoneTypes").kendoDropDownList({
-                        dataTextField: "name",
-                        dataValueField: "id",
-                        dataSource: new kendo.data.DataSource({
-                            data: ko.mapping.toJS(this.phoneTypes())
-                        })
-                    });
-                }
-
-                
-            }
-        });
-
-        this.$addContactDialog.kendoWindow({
-            width: 950,
-            open:  () => {
-                this.kendoWindowBug = $("body").scrollTop() - 10;
-                $("html, body").css("overflow", "hidden");
-            },
-            close: () => {
-                this.kendoWindowBug = 0;
-                $("html, body").css("overflow", "");
-                $("#addAContact").fadeIn(500);
-                this.clearContact();
-            },
-            visible: false,
-            draggable: false,
-            resizable: false
-        });
 
         $(".k-window").css({
             position: 'fixed',
             margin: 'auto',
             top: '20px'
         });
-
-        //kendo autocomplete select 
-        var kacSelect = (me, e) => {
-            var dataItem = me.dataItem(e.item.index());
-            this.contactDisplayName(dataItem.displayName)
-            this.contactFirstName(dataItem.firstName);
-            this.contactLastName(dataItem.lastName);
-            this.contactEmail(dataItem.defaultEmailAddress);
-            this.contactMiddleName(dataItem.middleName);
-            this.contactPersonId(dataItem.id);
-            this.contactUserId(dataItem.userId);
-            this.contactSuffixSelected(dataItem.suffix);
-            this.contactSalutationSelected(dataItem.salutation);
-            if (dataItem.userId != null) {
-                this.$contactEmail.prop('disabled', 'disabled');
-                this.$contactLastName.prop('disabled', 'disabled');
-                this.$contactFirstName.prop('disabled', 'disabled');
-                $("#contactMiddleName").prop('disabled', 'disabled');
-                this.$contactSalutation.data("kendoDropDownList").enable(false);
-                this.$contactSuffix.data("kendoDropDownList").enable(false);
-            }
-            this.validateContact.errors.showAllMessages(true);
-        }
-
-        this.$contactEmail.kendoAutoComplete({
-            dataTextField: "defaultEmailAddress",
-            minLength: 3,
-            filter: "contains",
-            ignoreCase: true,
-            dataSource: new kendo.data.DataSource({
-                serverFiltering: true,
-                transport: {
-                    read: (options: any): void => {
-                        $.ajax({
-                            url: App.Routes.WebApi.People.get(),
-                            data: {
-                                email: this.contactEmail(),
-                                emailMatch: 'startsWith'
-                            },
-                            success: (results: any): void => {
-                                options.success(results.items);
-                            }
-                        });
-                    }
-                }
-            }),
-            select: (e: any): void => {
-                kacSelect(this.$contactEmail.data("kendoAutoComplete"), e);
-            }
-        });
-
-        this.$contactLastName.kendoAutoComplete({
-            dataTextField: "lastName",
-            template: "#=displayName#",
-            minLength: 3,
-            filter: "contains",
-            ignoreCase: true,
-            dataSource: new kendo.data.DataSource({
-                serverFiltering: true,
-                transport: {
-                    read: (options: any): void => {
-                        $.ajax({
-                            url: App.Routes.WebApi.People.get(),
-                            data: {
-                                lastName: this.contactLastName(),
-                                lastNameMatch: 'startsWith'
-                            },
-                            success: (results: any): void => {
-                                options.success(results.items);
-                            }
-                        });
-                    }
-                }
-            }),
-            select: (e: any): void => {
-                kacSelect(this.$contactLastName.data("kendoAutoComplete"), e);
-            }
-        });
-
-        this.$contactFirstName.kendoAutoComplete({
-            dataTextField: "firstName",
-            template: "#=displayName#",
-            minLength: 3,
-            filter: "contains",
-            ignoreCase: true,
-            dataSource: new kendo.data.DataSource({
-                serverFiltering: true,
-                transport: {
-                    read: (options: any): void => {
-                        $.ajax({
-                            url: App.Routes.WebApi.People.get(),
-                            data: {
-                                firstName: this.contactFirstName(),
-                                firstNameMatch: 'startsWith'
-                            },
-                            success: (results: any): void => {
-                                options.success(results.items);
-                            }
-                        });
-                    }
-                }
-            }),
-            select: (e: any): void => {
-                kacSelect(this.$contactFirstName.data("kendoAutoComplete"), e);
-            }
-        });
-        
+                
         //bind scroll to side nav
         $(window).scroll( () => {
             if (this.kendoWindowBug != 0) {
-                this.scrollMyBody(this.kendoWindowBug)
+                scrollBody.scrollMyBody(this.kendoWindowBug)
             }
             var $participants = $("#participants");
             var $basicInfo = $("#basicInfo");
@@ -990,77 +726,8 @@ class InstitutionalAgreementEditModel {
             }
             ]
         });
-        
-        $("#addContactDialog").on("change", ".phoneTypes", function () {
-            var context = ko.dataFor(this);
-            if (context.type != $(this).val() && $(this).val() !== "") {
-                context.type = $(this).val()
-                //added for weird bug for when adding more than 1 phone number then editing the type.
-            }
-            if (self.agreementIsEdit()) {
-                var url = App.Routes.WebApi.Agreements.Contacts.Phones.put(self.agreementId, context.contactId, context.id);
-                $.ajax({
-                    type: 'PUT',
-                    url: url,
-                    data: context,
-                    success: (response: any, statusText: string, xhr: JQueryXHR): void => {
-                    },
-                    error: (xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
-                        this.spinner.stop();
-                        if (xhr.status === 400) { // validation message will be in xhr response text...
-                            this.establishmentItemViewModel.$genericAlertDialog.find('p.content')
-                                .html(xhr.responseText.replace('\n', '<br /><br />'));
-                            this.establishmentItemViewModel.$genericAlertDialog.dialog({
-                                title: 'Alert Message',
-                                dialogClass: 'jquery-ui',
-                                width: 'auto',
-                                resizable: false,
-                                modal: true,
-                                buttons: {
-                                    'Ok': (): void => { this.establishmentItemViewModel.$genericAlertDialog.dialog('close'); }
-                                }
-                            });
-                        }
-                    }
-                });
-            }
-        })
-        $("#addContactDialog").on("change", ".phoneNumbers", function () {
-            var context = ko.dataFor(this);
-            if (self.agreementIsEdit() && context.value == $(this).val()) {
-                //first do a validation for phone
-                if ($(this).val() == '') {
-                    $("#phoneNumberValidate" + context.id).css("visibility", "visible");
-                } else {
-                    $("#phoneNumberValidate" + context.id).css("visibility", "hidden");
-                    var url = App.Routes.WebApi.Agreements.Contacts.Phones.put(self.agreementId, context.contactId, context.id);
-                    $.ajax({
-                        type: 'PUT',
-                        url: url,
-                        data: context,
-                        success: (response: any, statusText: string, xhr: JQueryXHR): void => {
-                        },
-                        error: (xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
-                            this.spinner.stop();
-                            if (xhr.status === 400) { // validation message will be in xhr response text...
-                                this.establishmentItemViewModel.$genericAlertDialog.find('p.content')
-                                    .html(xhr.responseText.replace('\n', '<br /><br />'));
-                                this.establishmentItemViewModel.$genericAlertDialog.dialog({
-                                    title: 'Alert Message',
-                                    dialogClass: 'jquery-ui',
-                                    width: 'auto',
-                                    resizable: false,
-                                    modal: true,
-                                    buttons: {
-                                        'Ok': (): void => { this.establishmentItemViewModel.$genericAlertDialog.dialog('close'); }
-                                    }
-                                });
-                            }
-                        }
-                    });
-                }
-            }
-        })
+
+        this.contactClass.bindJquery();
     }
 
     //get settings for agreements.
@@ -1126,6 +793,11 @@ class InstitutionalAgreementEditModel {
         e.preventDefault();
         e.stopPropagation();
         return false;
+    }
+
+    addParticipant(establishmentResultViewModel): void {
+        this.establishmentSearchViewModel.sammy.setLocation('#/page/1/');
+        this.hasBoundSearch = true;
     }
     
     SearchPageBind(parentOrParticipant: string): void {
@@ -1311,7 +983,7 @@ class InstitutionalAgreementEditModel {
                                     }
                                 });
                             })
-                        this.scrollMyBody(0);
+                        scrollBody.scrollMyBody(0);
                         lastURL = "#/new/";
                     } else if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("" + this.editOrNewUrl + "#/page/") > 0) {
                         if (sessionStorage.getItem("addest") === "yes") {
@@ -1398,7 +1070,7 @@ class InstitutionalAgreementEditModel {
                                 return false;
                             }
                         }
-                        this.scrollMyBody(0);
+                        scrollBody.scrollMyBody(0);
                         lastURL = "#/page/";
                     } else if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("agreements/" + this.editOrNewUrl + "") > 0) {
                         sessionStorage.setItem("addest", "no");
@@ -1414,7 +1086,7 @@ class InstitutionalAgreementEditModel {
                             .done(() => {
                                 $("#allParticipants").fadeIn(500).promise().done(() => {
                                     $(this).show();
-                                    this.scrollMyBody(0);
+                                    scrollBody.scrollMyBody(0);
                                     this.dfdPageFadeIn.resolve();
                                 });
                             });
@@ -1425,324 +1097,6 @@ class InstitutionalAgreementEditModel {
             });
             this.establishmentSearchViewModel.sammy.run();
         }
-    }
-
-    editAContact(me): void {
-        this.$addContactDialog.data("kendoWindow").open().title("Edit Contact")
-        this.contactsIsEdit(true);
-        this.contactEmail(me.emailAddress());
-        this.contactDisplayName(me.displayName());
-        this.contactPersonId(me.personId());
-        this.contactUserId(me.userId());
-        this.contactId(me.id());
-        this.contactJobTitle(me.title());
-        this.contactFirstName(me.firstName());
-        this.contactLastName(me.lastName());
-        $.each(me.phones(), (i, item) => {
-            var data = ko.mapping.toJS({
-                id: item.id,
-                contactId: item.contactId,
-                type: item.type,
-                value: item.value
-            })
-            if(data.type == null) {
-                data.type = '';
-            }
-            this.contactPhones.push(data);
-        })
-        
-        this.contactMiddleName(me.middleName());
-        this.contactIndex = this.contacts.indexOf(me)
-        if (me.userId() != null) {
-            this.$contactEmail.prop('disabled', "disabled");
-            this.$contactLastName.prop('disabled', "disabled");
-            this.$contactFirstName.prop('disabled', "disabled");
-            $("#contactMiddleName").prop('disabled', "disabled");
-            this.$contactSalutation.data("kendoDropDownList").enable(false);
-            this.$contactSuffix.data("kendoDropDownList").enable(false);
-        }
-        this.contactTypeOptionSelected(me.type());
-
-        if (this.isCustomContactTypeAllowed) {
-            var dropdownlist = $("#contactTypeOptions").data("kendoComboBox");
-        } else {
-            var dropdownlist = $("#contactTypeOptions").data("kendoDropDownList");
-        }
-        dropdownlist.select(function (dataItem) {
-            return dataItem.name === me.type();
-        })
-
-        dropdownlist = $("#contactSuffix").data("kendoDropDownList");
-        dropdownlist.select(function (dataItem) {
-            return dataItem.name === me.suffix();
-        })
-
-        dropdownlist = $("#contactSalutation").data("kendoDropDownList");
-        dropdownlist.select(function (dataItem) {
-            return dataItem.name === me.salutation();
-        })
-
-        $("#addAContact").fadeOut(500)
-
-        $("input.phoneTypes").kendoDropDownList({
-            dataTextField: "name",
-            dataValueField: "id",
-            dataSource: new kendo.data.DataSource({
-                data: ko.mapping.toJS(this.phoneTypes())
-            })
-        })
-
-        $("input.phoneTypes").each(function (index) {
-            dropdownlist = $(this).data("kendoDropDownList");
-            dropdownlist.select(function (dataItem) {
-                return dataItem.name === me.phones()[index].type();
-            })
-        })
-    }
-
-    editContact(me): void {
-        if (this.validateContact.isValid()) {
-            this.contactsIsEdit(false);
-            this.contacts()[this.contactIndex].emailAddress(this.contactEmail());
-            this.contacts()[this.contactIndex].title(this.contactJobTitle());
-            if (this.contactUserId() != null) {
-                this.contacts()[this.contactIndex].displayName(this.contactDisplayName());
-            } else {
-                this.contacts()[this.contactIndex].displayName(this.contactFirstName() + " " + this.contactLastName());
-            }
-            this.contacts()[this.contactIndex].personId(this.contactPersonId());
-            this.contacts()[this.contactIndex].userId(this.contactUserId());
-            this.contacts()[this.contactIndex].firstName(this.contactFirstName());
-            this.contacts()[this.contactIndex].lastName(this.contactLastName());
-            this.contacts()[this.contactIndex].middleName(this.contactMiddleName());
-            this.contacts()[this.contactIndex].phones.removeAll();
-            $.each(this.contactPhones(), (i, item) => {
-                var data = ko.mapping.toJS({
-                    id: item.id,
-                    contactId: item.contactId,
-                    type: item.type,
-                    value: item.value
-                })
-                this.contacts()[this.contactIndex].phones.push(ko.mapping.fromJS(data));
-            });
-            this.contacts()[this.contactIndex].type(this.contactTypeOptionSelected());
-            this.contacts()[this.contactIndex].salutation(this.contactSalutationSelected());
-            this.contacts()[this.contactIndex].suffix(this.contactSuffixSelected());
-
-            $("#addAContact").fadeIn(500);
-
-            if (this.agreementIsEdit()) {
-                this.contacts()[this.contactIndex].agreementId(this.agreementId)
-
-                var data = {
-                    agreementId: this.contacts()[this.contactIndex].agreementId(),
-                    PersonId: this.contacts()[this.contactIndex].personId(),
-                    Type: this.contacts()[this.contactIndex].type(),
-                    DisplayName: this.contacts()[this.contactIndex].displayName(),
-                    FirstName: this.contacts()[this.contactIndex].firstName(),
-                    MiddleName: this.contacts()[this.contactIndex].middleName(),
-                    LastName: this.contacts()[this.contactIndex].lastName(),
-                    Suffix: this.contacts()[this.contactIndex].suffix(),
-                    EmailAddress: this.contacts()[this.contactIndex].emailAddress(),
-                    PersonId: this.contacts()[this.contactIndex].personId(),
-                    Phones: this.contacts()[this.contactIndex].phones(),
-                    Title: this.contacts()[this.contactIndex].title()
-                }
-                var url = App.Routes.WebApi.Agreements.Contacts.put(this.agreementId, this.contacts()[this.contactIndex].id());
-                $.ajax({
-                    type: 'PUT',
-                    url: url,
-                    data: data,
-                    success: (response: any, statusText: string, xhr: JQueryXHR): void => {
-                    },
-                    error: (xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
-                        this.spinner.stop();
-                        if (xhr.status === 400) { // validation message will be in xhr response text...
-                            this.establishmentItemViewModel.$genericAlertDialog.find('p.content')
-                                .html(xhr.responseText.replace('\n', '<br /><br />'));
-                            this.establishmentItemViewModel.$genericAlertDialog.dialog({
-                                title: 'Alert Message',
-                                dialogClass: 'jquery-ui',
-                                width: 'auto',
-                                resizable: false,
-                                modal: true,
-                                buttons: {
-                                    'Ok': (): void => { this.establishmentItemViewModel.$genericAlertDialog.dialog('close'); }
-                                }
-                            });
-                        }
-                    }
-                });
-            }
-        } else {
-            this.validateContact.errors.showAllMessages(true);
-        }
-        this.$addContactDialog.data("kendoWindow").close()
-    }
-
-    addContact(me, e): void {
-        if (this.validateContact.isValid()) {
-            if (this.contactDisplayName() == undefined || this.contactDisplayName() == "") {
-                this.contactDisplayName(this.contactFirstName() + " " + this.contactLastName());
-            }
-            var data = {
-                agreementId: this.agreementId,
-                title: this.contactJobTitle(),
-                firstName: this.contactFirstName(),
-                lastName: this.contactLastName(),
-                id: this.contactUserId(),
-                personId: this.contactPersonId(),
-                userId: this.contactUserId(),
-                phones: ko.mapping.toJS(this.contactPhones()),
-                emailAddress: this.contactEmail(),
-                type: this.contactTypeOptionSelected(),
-                suffix: this.contactSuffixSelected(),
-                salutation: this.contactSalutationSelected(),
-                displayName: this.contactDisplayName(),
-                middleName: this.contactMiddleName()
-            }
-            
-            this.$addContactDialog.data("kendoWindow").close();
-
-            $("#addAContact").fadeIn(500);
-            $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * .85)));
-
-            if (this.agreementIsEdit()) {
-                
-                var url = App.Routes.WebApi.Agreements.Contacts.post(this.agreementId);
-                $.post(url, data)
-                    .done((response: any, statusText: string, xhr: JQueryXHR): void => {
-                        var myUrl = xhr.getResponseHeader('Location');
-                        data.id = parseInt(myUrl.substring(myUrl.lastIndexOf("/") + 1));
-                        this.contacts.push(ko.mapping.fromJS(data));
-                    })
-                    .fail((xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
-                        this.spinner.stop();
-                        if (xhr.status === 400) { // validation message will be in xhr response text...
-                            this.establishmentItemViewModel.$genericAlertDialog.find('p.content')
-                                .html(xhr.responseText.replace('\n', '<br /><br />'));
-                            this.establishmentItemViewModel.$genericAlertDialog.dialog({
-                                title: 'Alert Message',
-                                dialogClass: 'jquery-ui',
-                                width: 'auto',
-                                resizable: false,
-                                modal: true,
-                                buttons: {
-                                    'Ok': (): void => { this.establishmentItemViewModel.$genericAlertDialog.dialog('close'); }
-                                }
-                            });
-                        }
-                    });
-            }
-            else {
-                this.contacts.push(ko.mapping.fromJS(data));
-            }
-        } else {
-            this.validateContact.errors.showAllMessages(true);
-        }
-    }
-
-    addAContact(me, e): void {
-        this.contactsIsEdit(false);
-        this.clearContact()
-        this.$addContactDialog.data("kendoWindow").open().title("Add Contact")
-        $("#addAContact").fadeOut(500);
-    }
-
-    cancelContact(): void {
-        this.$addContactDialog.data("kendoWindow").close()
-        $("#addAContact").fadeIn(500);
-    }
-
-    clearContact(): void {
-        this.$contactEmail.prop('disabled', '');
-        this.$contactLastName.prop('disabled', '');
-        this.$contactFirstName.prop('disabled', '');
-        $("#contactMiddleName").prop('disabled', '');
-        this.$contactSalutation.data("kendoDropDownList").enable(true);
-        this.$contactSuffix.data("kendoDropDownList").enable(true);
-        this.validateContact.errors.showAllMessages(false);
-        this.validateContact.errors.showAllMessages(false);
-
-        this.contactEmail('');
-        this.contactDisplayName('');
-        this.contactPersonId('');
-        this.contactUserId('');
-        this.contactJobTitle('');
-        this.contactFirstName('');
-        this.contactMiddleName('');
-        this.contactLastName('');
-        this.contactPhones.removeAll();
-        this.contactTypeOptionSelected('');
-
-        if (this.isCustomContactTypeAllowed) {
-            var dropdownlist = $("#contactTypeOptions").data("kendoComboBox");
-        } else {
-            var dropdownlist = $("#contactTypeOptions").data("kendoDropDownList");
-        }
-        dropdownlist.select(0);
-        var dropdownlist = $("#contactSalutation").data("kendoDropDownList");
-        dropdownlist.select(0);
-        var dropdownlist = $("#contactSuffix").data("kendoDropDownList");
-        dropdownlist.select(0);
-        this.validateContact.errors.showAllMessages(false);
-    }
-
-    removeContact(me, e): boolean {
-        if (confirm('Are you sure you want to remove "' +
-            me.firstName() + " " + me.lastName() +
-            '" as a contact from this agreement?')) {
-                var url = "";
-                if (this.agreementIsEdit()) {
-                    url = App.Routes.WebApi.Agreements.Contacts.del(this.agreementId, me.id());
-
-                    $.ajax({
-                        url: url,
-                        type: 'DELETE',
-                        success: (): void => {
-                            this.contacts.remove(me);
-                            $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * 1.1)));
-                        }
-                    })
-                }
-            }
-        e.preventDefault();
-        e.stopPropagation();
-        return false;
-    }
-
-    removePhone(me, e): void {
-        var url = App.Routes.WebApi.Agreements.Contacts.Phones.del(this.agreementId, me.contactId, me.id);
-        $.ajax({
-            url: url,
-            type: 'DELETE',
-            success: (): void => {
-                this.files.remove(me);
-                $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * 1.1)));
-            }
-        });
-        this.contactPhones.remove(me);
-        e.preventDefault();
-        e.stopPropagation();
-    }
-
-    addPhone(me, e): void {
-        if (this.contactPhoneTextValue().length > 0) {
-            this.contactPhones.push({ type: '', contactId: '', value: this.contactPhoneTextValue() })
-            this.contactPhoneTextValue("");
-            $(".phoneTypes").kendoDropDownList({
-                dataTextField: "name",
-                dataValueField: "id",
-                dataSource: new kendo.data.DataSource({
-                    data: ko.mapping.toJS(this.phoneTypes())
-                })
-            });
-        }
-    }
-
-    addParticipant(establishmentResultViewModel): void {
-        this.establishmentSearchViewModel.sammy.setLocation('#/page/1/');
-        this.hasBoundSearch = true;
     }
            
     private _setupValidation(): void {
@@ -1804,79 +1158,10 @@ class InstitutionalAgreementEditModel {
             }),
             privateNotes: this.privateNotes.extend({
                 maxLength: 250
-            }),
-        });
-        this.validateContact = ko.validatedObservable({
-            
-            contactSalutation: this.contactSalutation.extend({
-                maxLength: 50
-            }),
-
-            contactFirstName: this.contactFirstName.extend({
-                required: {
-                    message: 'First name is required.'
-                },
-                maxLength: 50
-            }),
-
-            contactTypeOptionSelected: this.contactTypeOptionSelected.extend({
-                required: {
-                    message: 'Contact type is required.'
-                },
-                maxLength: 50
-            }),
-
-            contactLastName: this.contactLastName.extend({
-                required: {
-                    message: 'Last name is required.'
-                },
-                maxLength: 50
-            }),
-
-            contactEmail: this.contactEmail.extend({
-                required: {
-                    message: 'Email is required.',
-                    maxLength: 100
-                },
-                email: {
-                    message: 'Email is in wrong format'
-                }
-            }),
-
-            contactSuffix: this.contactSuffix.extend({
-                maxLength: 50
-            }),
-
-            contactJobTitle: this.contactJobTitle.extend({
-                maxLength: 50
             })
         });
     }
-
-    //scroll based on top position
-    scrollMyBody(position): void {
-        var $body;
-        //ie sucks!
-        if (!$("body").scrollTop()) {
-            $("html, body").scrollTop(position);
-        } else {
-            $("body").scrollTop(position);
-        }
-    }
     
-    //scroll based on side nav
-    goToSection(location, data, event): void {
-        var offset = $("#" + location).offset();
-        //ie sucks!
-        if (!$("body").scrollTop()) {
-            $("html, body").scrollTop(offset.top - 20);
-        } else {
-            $("body").scrollTop(offset.top - 20);
-        }
-        $(event.target).closest("ul").find("li").removeClass("current");
-        $(event.target).closest("li").addClass("current");
-    }
-
     //post files
     postMe(data, url): void {
         $.post(url, data)
@@ -1901,6 +1186,7 @@ class InstitutionalAgreementEditModel {
             });
     }
 
+    //part of save agreement
     agreementPostFiles(response: any, statusText: string, xhr: JQueryXHR): void {
         var tempUrl = App.Routes.WebApi.Agreements.Files.post(this.agreementId);
 
@@ -1918,10 +1204,11 @@ class InstitutionalAgreementEditModel {
         this.spinner.stop();
     }
 
+    //part of save agreement
     agreementPostContacts(response: any, statusText: string, xhr: JQueryXHR): void {
         var tempUrl = App.Routes.WebApi.Agreements.Contacts.post(this.agreementId);
 
-        $.each(this.contacts(), (i, item) => {
+        $.each(this.contactClass.contacts(), (i, item) => {
             var data = {
                 agreementId: this.agreementId,
                 title: item.title(),
