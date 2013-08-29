@@ -90,7 +90,7 @@ namespace UCosmic.SeedData
 
         public override void Seed()
         {
-            var establishment = _entities.Get<Establishment>().SingleOrDefault(x => x.OfficialName == "University of South Florida");
+            var establishment = _entities.Get<Establishment>().SingleOrDefault(x => x.OfficialName.Contains("University of South Florida"));
             if (establishment == null) throw new Exception("Establishment is null");
             CreatedEmployeeModuleSettings = Seed(new CreateEmployeeModuleSettings
             {

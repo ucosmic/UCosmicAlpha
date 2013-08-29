@@ -227,6 +227,8 @@ var ViewModels;
                 if (startsOnStr == null) {
                     if (endsOnStr != null) {
                         formattedDateRange = moment(endsOnStr).format(dateFormat);
+                    } else if (onGoing) {
+                        formattedDateRange = "(Ongoing)";
                     }
                 } else {
                     formattedDateRange = moment(startsOnStr).format(dateFormat);

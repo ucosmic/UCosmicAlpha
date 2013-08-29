@@ -19,12 +19,6 @@ var ViewModels;
                 this.inititializationErrors = "";
                 this.geochartCustomPlaces = [
                     {
-                        name: 'Arctic',
-                        id: 'arctic',
-                        activityCount: 0,
-                        peopleCount: 0
-                    },
-                    {
                         name: 'Antarctica',
                         id: 'antarctica',
                         activityCount: 0,
@@ -65,6 +59,12 @@ var ViewModels;
                         id: 'carribean',
                         activityCount: 0,
                         peopleCount: 0
+                    },
+                    {
+                        name: 'Arctic Ocean',
+                        id: 'arcticOcean',
+                        activityCount: 0,
+                        peopleCount: 0
                     }
                 ];
                 this._initialize(institutionInfo);
@@ -85,6 +85,7 @@ var ViewModels;
                 this.isHeatmapVisible = ko.observable(true);
                 this.isPointmapVisible = ko.observable(false);
                 this.isTableVisible = ko.observable(false);
+                this.mapType = ko.observable('heatmap');
                 this.searchType = ko.observable('activities');
                 this.selectedPlace = ko.observable(null);
                 this.isGlobalView = ko.observable(true);
@@ -235,6 +236,10 @@ var ViewModels;
                     dataSource: this.institutionDropListData,
                     change: function (e) {
                         var item = this.dataItem(e.sender.selectedIndex);
+                        me.clearCachedData();
+                        me.establishmentId(item.id);
+                        me.establishmentOfficialName(item.officialName);
+                        me.selectMap(me.mapType());
                     }
                 });
 
@@ -243,7 +248,7 @@ var ViewModels;
                     dataValueField: "id",
                     optionLabel: { officialName: "ALL", id: 0 },
                     change: function (e) {
-                        //var item = this.dataItem[e.sender.selectedIndex];
+                        //var item = this.dataItem(e.sender.selectedIndex);
                     },
                     dataBound: function (e) {
                         if ((this.selectedIndex != null) && (this.selectedIndex != -1)) {
@@ -451,7 +456,8 @@ var ViewModels;
                     //backgroundColor: 'lightBlue',
                     keepAspectRatio: false,
                     colorAxis: { colors: ['#FFFFFF', 'green'] },
-                    backgroundColor: { fill: 'transparent' }
+                    backgroundColor: { fill: 'transparent' },
+                    datalessRegionColor: 'FFFFFF'
                 };
 
                 this.heatmap = new this.google.visualization.GeoChart($('#heatmap')[0]);
@@ -623,10 +629,21 @@ var ViewModels;
             };
 
             FacultyAndStaff.prototype.getHeatmapPeopleDataTable = function () {
+                var _this = this;
+                var deferred = $.Deferred();
+
                 if (this.globalPeopleCountData == null) {
-                    this.getPeopleDataTable(null);
+                    this.getPeopleDataTable(null).done(function () {
+                        deferred.resolve(_this._getHeatmapPeopleDataTable());
+                    });
+                } else {
+                    deferred.resolve(this._getHeatmapPeopleDataTable());
                 }
 
+                return deferred;
+            };
+
+            FacultyAndStaff.prototype._getHeatmapPeopleDataTable = function () {
                 if (this.heatmapPeopleDataTable == null) {
                     var dataTable = new this.google.visualization.DataTable();
 
@@ -669,7 +686,7 @@ var ViewModels;
                         $.ajax({
                             type: "GET",
                             async: false,
-                            data: { 'establishmentId': null, 'placeId': null },
+                            data: { 'establishmentId': this.establishmentId(), 'placeId': null },
                             dataType: 'json',
                             url: App.Routes.WebApi.FacultyStaff.getActivityCount(),
                             success: function (data, textStatus, jqXhr) {
@@ -694,7 +711,7 @@ var ViewModels;
                             $.ajax({
                                 type: "GET",
                                 async: false,
-                                data: { 'placeId': placeId },
+                                data: { 'establishmentId': this.establishmentId(), 'placeId': placeId },
                                 dataType: 'json',
                                 url: App.Routes.WebApi.FacultyStaff.getActivityCount(),
                                 success: function (data, textStatus, jqXhr) {
@@ -712,7 +729,7 @@ var ViewModels;
                             deferred.resolve(this._getActivityDataTable(placeOfficialName));
                         }
                     } else {
-                        deferred.reject();
+                        deferred.reject("Unknown PlaceId");
                     }
                 }
 
@@ -721,9 +738,10 @@ var ViewModels;
 
             FacultyAndStaff.prototype._getActivityDataTable = function (placeOfficialName) {
                 var view = null;
+                var dt = null;
 
                 if (placeOfficialName == null) {
-                    var dt = new this.google.visualization.DataTable();
+                    dt = new this.google.visualization.DataTable();
 
                     dt.addColumn('string', 'Activity');
                     dt.addColumn('number', 'Count');
@@ -734,13 +752,10 @@ var ViewModels;
                         var count = (this.globalActivityCountData).typeCounts[i].count;
                         dt.addRow([activityType, count, count]);
                     }
-
-                    view = new this.google.visualization.DataView(dt);
-                    view.setColumns([0, 1, 1, 2]);
                 } else {
                     var placeId = this.getPlaceId(placeOfficialName);
                     if (placeId != null) {
-                        var dt = new this.google.visualization.DataTable();
+                        dt = new this.google.visualization.DataTable();
 
                         dt.addColumn('string', 'Activity');
                         dt.addColumn('number', 'Count');
@@ -751,10 +766,12 @@ var ViewModels;
                             var count = (this.placeActivityCountData).typeCounts[i].count;
                             dt.addRow([activityType, count, count]);
                         }
-
-                        view = new this.google.visualization.DataView(dt);
-                        view.setColumns([0, 1, 1, 2]);
                     }
+                }
+
+                if (dt != null) {
+                    view = new this.google.visualization.DataView(dt);
+                    view.setColumns([0, 1, 1, 2]);
                 }
 
                 return view;
@@ -765,20 +782,23 @@ var ViewModels;
             */
             FacultyAndStaff.prototype.getPeopleDataTable = function (placeOfficialName) {
                 var _this = this;
+                var deferred = $.Deferred();
+
                 if (placeOfficialName == null) {
                     if (this.globalPeopleCountData == null) {
                         this.loadSpinner.start();
                         $.ajax({
                             type: "GET",
                             async: false,
-                            data: { 'placeId': null },
+                            data: { 'establishmentId': this.establishmentId(), 'placeId': null },
                             dataType: 'json',
                             url: App.Routes.WebApi.FacultyStaff.getPeopleCount(),
                             success: function (data, textStatus, jqXhr) {
                                 _this.globalPeopleCountData = data;
+                                deferred.resolve(_this._getPeopleDataTable(null));
                             },
                             error: function (jqXhr, textStatus, errorThrown) {
-                                alert('Error getting data ' + textStatus + ' | ' + errorThrown);
+                                deferred.reject(errorThrown);
                             },
                             complete: function (jqXhr, textStatus) {
                                 _this.loadSpinner.stop();
@@ -793,23 +813,31 @@ var ViewModels;
                             $.ajax({
                                 type: "GET",
                                 async: false,
-                                data: { 'placeId': placeId },
+                                data: { 'establishmentId': this.establishmentId(), 'placeId': placeId },
                                 dataType: 'json',
                                 url: App.Routes.WebApi.FacultyStaff.getPeopleCount(),
                                 success: function (data, textStatus, jqXhr) {
                                     _this.placePeopleCountData = data;
+                                    deferred.resolve(_this._getPeopleDataTable(placeOfficialName));
                                 },
                                 error: function (jqXhr, textStatus, errorThrown) {
-                                    alert('Error getting data ' + textStatus + ' | ' + errorThrown);
+                                    deferred.reject(errorThrown);
                                 },
                                 complete: function (jqXhr, textStatus) {
                                     _this.loadSpinner.stop();
                                 }
                             });
                         }
+                    } else {
+                        deferred.reject("Unknown placeId.");
                     }
                 }
 
+                return deferred;
+            };
+
+            FacultyAndStaff.prototype._getPeopleDataTable = function (placeOfficialName) {
+                var view = null;
                 var dt = new this.google.visualization.DataTable();
 
                 dt.addColumn('string', 'Activity');
@@ -830,7 +858,7 @@ var ViewModels;
                     }
                 }
 
-                var view = new this.google.visualization.DataView(dt);
+                view = new this.google.visualization.DataView(dt);
                 view.setColumns([0, 1, 1, 2]);
 
                 return view;
@@ -849,7 +877,7 @@ var ViewModels;
                         $.ajax({
                             type: "GET",
                             async: false,
-                            data: { 'placeId': null },
+                            data: { 'establishmentId': this.establishmentId(), 'placeId': null },
                             dataType: 'json',
                             url: App.Routes.WebApi.FacultyStaff.getActivityTrend(),
                             success: function (data, textStatus, jqXhr) {
@@ -874,7 +902,7 @@ var ViewModels;
                             $.ajax({
                                 type: "GET",
                                 async: false,
-                                data: { 'placeId': placeId },
+                                data: { 'establishmentId': this.establishmentId(), 'placeId': null },
                                 dataType: 'json',
                                 url: App.Routes.WebApi.FacultyStaff.getActivityTrend(),
                                 success: function (data, textStatus, jqXhr) {
@@ -924,20 +952,23 @@ var ViewModels;
 
             FacultyAndStaff.prototype.getPeopleTrendDataTable = function (placeOfficialName) {
                 var _this = this;
+                var deferred = $.Deferred();
+
                 if (placeOfficialName == null) {
                     if (this.globalPeopleTrendData == null) {
                         this.loadSpinner.start();
                         $.ajax({
                             type: "GET",
                             async: false,
-                            data: { 'placeId': null },
+                            data: { 'establishmentId': this.establishmentId(), 'placeId': null },
                             dataType: 'json',
                             url: App.Routes.WebApi.FacultyStaff.getPeopleTrend(),
                             success: function (data, textStatus, jqXhr) {
                                 _this.globalPeopleTrendData = data;
+                                deferred.resolve(_this._getPeopleTrendDataTable(null));
                             },
                             error: function (jqXhr, textStatus, errorThrown) {
-                                alert('Error getting data ' + textStatus + ' | ' + errorThrown);
+                                deferred.reject(errorThrown);
                             },
                             complete: function (jqXhr, textStatus) {
                                 _this.loadSpinner.stop();
@@ -952,23 +983,30 @@ var ViewModels;
                             $.ajax({
                                 type: "GET",
                                 async: false,
-                                data: { 'placeId': placeId },
+                                data: { 'establishmentId': this.establishmentId(), 'placeId': placeId },
                                 dataType: 'json',
                                 url: App.Routes.WebApi.FacultyStaff.getPeopleTrend(),
                                 success: function (data, textStatus, jqXhr) {
                                     _this.placePeopleTrendData = data;
+                                    deferred.resolve(_this._getPeopleTrendDataTable(placeOfficialName));
                                 },
                                 error: function (jqXhr, textStatus, errorThrown) {
-                                    alert('Error getting data ' + textStatus + ' | ' + errorThrown);
+                                    deferred.reject(errorThrown);
                                 },
                                 complete: function (jqXhr, textStatus) {
                                     _this.loadSpinner.stop();
                                 }
                             });
                         }
+                    } else {
+                        deferred.reject("Unkown placeId");
                     }
                 }
 
+                return deferred;
+            };
+
+            FacultyAndStaff.prototype._getPeopleTrendDataTable = function (placeOfficialName) {
                 var dt = new this.google.visualization.DataTable();
 
                 dt.addColumn('string', 'Year');
@@ -988,9 +1026,6 @@ var ViewModels;
                     }
                 }
 
-                //var view = new this.google.visualization.DataView(dt);
-                //view.setColumns([0, 1, 1, 2]);
-                //return view;
                 return dt;
             };
 
@@ -1120,6 +1155,8 @@ var ViewModels;
 
             FacultyAndStaff.prototype.selectMap = function (type) {
                 var _this = this;
+                this.mapType(type);
+
                 $('#heatmapText').css("font-weight", "normal");
                 this.isHeatmapVisible(false);
 
@@ -1160,22 +1197,25 @@ var ViewModels;
                             _this.linechart.draw(dataTable, _this.linechartActivityOptions);
                         });
                     } else {
-                        dataTable = this.getHeatmapPeopleDataTable();
-                        this.heatmap.draw(dataTable, this.heatmapOptions);
+                        this.getHeatmapPeopleDataTable().done(function (dataTable) {
+                            _this.heatmap.draw(dataTable, _this.heatmapOptions);
+                            if (_this.selectedPlace() == null) {
+                                _this.totalCount(_this.globalPeopleCountData.count);
+                                _this.totalPlaceCount(_this.globalPeopleCountData.countOfPlaces);
+                            }
+                        });
 
-                        dataTable = this.getPeopleDataTable(this.selectedPlace());
-                        this.barchart.draw(dataTable, this.barchartPeopleOptions);
+                        this.getPeopleDataTable(this.selectedPlace()).done(function (dataTable) {
+                            _this.barchart.draw(dataTable, _this.barchartPeopleOptions);
+                            if (_this.selectedPlace() != null) {
+                                _this.totalCount(_this.placePeopleCountData.count);
+                                _this.totalPlaceCount(_this.placePeopleCountData.countOfPlaces);
+                            }
+                        });
 
-                        dataTable = this.getPeopleTrendDataTable(this.selectedPlace());
-                        this.linechart.draw(dataTable, this.linechartPeopleOptions);
-
-                        if (this.selectedPlace() == null) {
-                            this.totalCount(this.globalPeopleCountData.count);
-                            this.totalPlaceCount(this.globalPeopleCountData.countOfPlaces);
-                        } else {
-                            this.totalCount(this.placePeopleCountData.count);
-                            this.totalPlaceCount(this.placePeopleCountData.countOfPlaces);
-                        }
+                        dataTable = this.getPeopleTrendDataTable(this.selectedPlace()).done(function (dataTable) {
+                            _this.linechart.draw(dataTable, _this.linechartPeopleOptions);
+                        });
                     }
 
                     this.updateCustomGeochartPlaceTooltips(this.searchType());
@@ -1306,6 +1346,23 @@ var ViewModels;
                     i += 1;
                 }
                 return (i < this.places.length) ? this.places[i].id : null;
+            };
+
+            FacultyAndStaff.prototype.clearCachedData = function () {
+                this.globalActivityCountData = null;
+                this.placeActivityCountData = null;
+                this.globalPeopleCountData = null;
+                this.placePeopleCountData = null;
+                this.globalActivityTrendData = null;
+                this.placeActivityTrendData = null;
+                this.globalPeopleTrendData = null;
+                this.placePeopleTrendData = null;
+                this.heatmapActivityDataTable = null;
+                this.heatmapPeopleDataTable = null;
+            };
+
+            FacultyAndStaff.prototype.customPlaceClick = function (event, item, officialName) {
+                this.selectedPlace(officialName);
             };
             return FacultyAndStaff;
         })();

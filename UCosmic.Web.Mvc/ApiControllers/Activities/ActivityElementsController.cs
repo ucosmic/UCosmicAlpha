@@ -109,7 +109,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 {
                     PlaceId = countries[i].RevisionId,
                     OfficialName = countries[i].OfficialName,
-                    Count = _queryProcessor.Execute(new ActivityCountByPlaceId(countries[i].RevisionId, fromDateUtc, toDateUtc))
+                    Count = _queryProcessor.Execute(new ActivityCountByPlaceIds(countries[i].RevisionId, fromDateUtc, toDateUtc))
                 };
             }
 

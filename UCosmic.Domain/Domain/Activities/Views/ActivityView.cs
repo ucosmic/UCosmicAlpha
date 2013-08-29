@@ -35,12 +35,15 @@ namespace UCosmic.Domain.Activities
                 }
                 PlaceIds = placeIds.ToArray();
             }
-
+            
             {
                 ICollection<int> establishmentIds = new List<int>();
+
                 establishmentIds.Add(entity.Person.DefaultAffiliation.EstablishmentId);
-                var ancestorIds =
-                    entity.Person.Affiliations.SelectMany(x => x.Establishment.Ancestors).Select(x => x.AncestorId);
+
+                var ancestorIds = entity.Person.Affiliations
+                                        .SelectMany(x => x.Establishment.Ancestors)
+                                        .Select(o => o.AncestorId);
                 foreach (var ancestorId in ancestorIds)
                 {
                     establishmentIds.Add(ancestorId);
@@ -63,6 +66,7 @@ namespace UCosmic.Domain.Activities
                         establishmentIds.Add(affiliation.DepartmentId.Value);
                     }
                 }
+
 
                 EstablishmentIds = establishmentIds.Distinct().ToArray();
             }

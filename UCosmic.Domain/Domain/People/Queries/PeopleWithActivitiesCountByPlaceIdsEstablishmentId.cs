@@ -4,16 +4,16 @@ using UCosmic.Domain.Activities;
 
 namespace UCosmic.Domain.People
 {
-    public class PeopleWithActivitiesCountByPlaceIdEstablishmentId : BaseEntityQuery<Person>, IDefineQuery<int>
+    public class PeopleWithActivitiesCountByPlaceIdsEstablishmentId : BaseEntityQuery<Person>, IDefineQuery<int>
     {
-        public int PlaceId { get; private set; }
+        public int[] PlaceIds { get; private set; }
         public int EstablishmentId { get; private set; }
         public DateTime? FromDate { get; private set; }
         public DateTime? ToDate { get; private set; }
         public bool NoUndated { get; private set; }
         public bool IncludeFuture { get; private set; }
 
-        public PeopleWithActivitiesCountByPlaceIdEstablishmentId(int inPlaceId,
+        public PeopleWithActivitiesCountByPlaceIdsEstablishmentId(int inPlaceId,
                                                      int inEstablishmentId,
                                                      DateTime? fromDateUtc = null,
                                                      DateTime? toDateUtc = null)
@@ -23,20 +23,36 @@ namespace UCosmic.Domain.People
                 throw new ArgumentException("Both fromDateUtc and toDateUtc must be provided.");
             }
 
-            PlaceId = inPlaceId;
+            PlaceIds = new int[] { inPlaceId };
             EstablishmentId = inEstablishmentId;
             FromDate = fromDateUtc;
             ToDate = toDateUtc;
         }
 
-        public PeopleWithActivitiesCountByPlaceIdEstablishmentId(int inPlaceId,
+        public PeopleWithActivitiesCountByPlaceIdsEstablishmentId(int[] inPlaceIds,
+                                                     int inEstablishmentId,
+                                                     DateTime? fromDateUtc = null,
+                                                     DateTime? toDateUtc = null)
+        {
+            if ((fromDateUtc.HasValue && !toDateUtc.HasValue) || (!fromDateUtc.HasValue && toDateUtc.HasValue))
+            {
+                throw new ArgumentException("Both fromDateUtc and toDateUtc must be provided.");
+            }
+
+            PlaceIds = inPlaceIds;
+            EstablishmentId = inEstablishmentId;
+            FromDate = fromDateUtc;
+            ToDate = toDateUtc;
+        }
+
+        public PeopleWithActivitiesCountByPlaceIdsEstablishmentId(int[] inPlaceIds,
                                                      int inEstablishmentId,
                                                      DateTime fromDateUtc,
                                                      DateTime toDateUtc,
                                                      bool noUndated,
                                                      bool includeFuture )
         {
-            PlaceId = inPlaceId;
+            PlaceIds = inPlaceIds;
             EstablishmentId = inEstablishmentId;
             FromDate = fromDateUtc;
             ToDate = toDateUtc;
@@ -45,7 +61,7 @@ namespace UCosmic.Domain.People
         }
     }
 
-    public class HandlePeopleWithActivitiesCountByCountryIdEstablishmentIdQuery : IHandleQueries<PeopleWithActivitiesCountByPlaceIdEstablishmentId, int>
+    public class HandlePeopleWithActivitiesCountByCountryIdEstablishmentIdQuery : IHandleQueries<PeopleWithActivitiesCountByPlaceIdsEstablishmentId, int>
     {
         private readonly ActivityViewProjector _projector;
 
@@ -54,7 +70,7 @@ namespace UCosmic.Domain.People
             _projector = projector;
         }
 
-        public int Handle(PeopleWithActivitiesCountByPlaceIdEstablishmentId query)
+        public int Handle(PeopleWithActivitiesCountByPlaceIdsEstablishmentId query)
         {
             if (query == null) throw new ArgumentNullException("query");
             int count = 0;
@@ -74,16 +90,18 @@ namespace UCosmic.Domain.People
                                                    query.IncludeFuture);
                     }
 
+                    foreach (var placeId in query.PlaceIds)
+                    {
+                        var groups = view.Where(a =>
+                                                /* PlaceId must be found in list placeIds...*/
+                                                a.PlaceIds.Any(e => e == placeId) &&
 
-                    var groups = view.Where(a =>
-                                            /* PlaceId must be found in list placeIds...*/
-                                            a.PlaceIds.Any(e => e == query.PlaceId) &&
+                                                /* and, EstablishmentId must be found in list of affiliated establishments...*/
+                                                a.EstablishmentIds.Any(e => e == query.EstablishmentId))
+                                         .GroupBy(g => g.PersonId);
 
-                                            /* and, EstablishmentId must be found in list of affiliated establishments...*/
-                                            a.EstablishmentIds.Any(e => e == query.EstablishmentId))
-                                     .GroupBy(g => g.PersonId);
-
-                    count = groups.Count();
+                        count += groups.Count();
+                    }
                 }
             }
             finally

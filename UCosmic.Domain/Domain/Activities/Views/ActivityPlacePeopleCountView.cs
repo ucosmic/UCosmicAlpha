@@ -49,7 +49,7 @@ namespace UCosmic.Domain.Activities
             if (place != null)
             {
                 OfficialName = place.OfficialName;
-                Count = _queryProcessor.Execute(new PeopleWithActivitiesCountByPlaceIdEstablishmentId(placeId,
+                Count = _queryProcessor.Execute(new PeopleWithActivitiesCountByPlaceIdsEstablishmentId(new int[] { placeId },
                                                                                                       establishmentId,
                                                                                                       fromDateUtc,
                                                                                                       toDateUtc,
@@ -61,8 +61,8 @@ namespace UCosmic.Domain.Activities
                     foreach (var type in settings.ActivityTypes)
                     {
                         int placeTypeCount = queryProcessor.Execute(
-                            new PeopleWithActivitiesCountByTypeIdPlaceIdEstablishmentId(type.Id,
-                                                                                        place.RevisionId,
+                            new PeopleWithActivitiesCountByTypeIdPlaceIdsEstablishmentId(type.Id,
+                                                                                        new int[] { placeId },
                                                                                         establishmentId,
                                                                                         fromDateUtc,
                                                                                         toDateUtc,

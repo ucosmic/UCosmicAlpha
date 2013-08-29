@@ -37,6 +37,8 @@ namespace UCosmic.SeedData
 
         private void CopyFile(string fileName, string filePath)
         {
+            if (String.IsNullOrEmpty(fileName) || String.IsNullOrWhiteSpace(fileName)) { return; }
+
             var basePath = string.Format("{0}{1}",
                 AppDomain.CurrentDomain.BaseDirectory,
                 @"..\UCosmic.Infrastructure\SeedData\SeedMediaFiles\");

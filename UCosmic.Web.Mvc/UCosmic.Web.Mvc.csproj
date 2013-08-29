@@ -690,7 +690,6 @@
     <Content Include="content\themes\base\minified\jquery.ui.theme.min.css" />
     <Content Include="content\themes\base\minified\jquery.ui.tooltip.min.css" />
     <Content Include="images\antarctica_283x35.png" />
-    <Content Include="images\arctic_193x20.png" />
     <Content Include="images\bg\ui-bg_flat_black_40x100.png" />
     <TypeScriptCompile Include="scripts\google\ToolsOverlay.ts" />
     <Content Include="images\icons\cancel\black-cancel-24.png" />

@@ -22,7 +22,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         /* Returns activity type counts for given place.*/
-        [GET("activity-count/{establishment?}/{placeId?}")]
+        [GET("activity-count/{establishmentId?}/{placeId?}")]
         public FacultyStaffSummaryModel GetActivityCount(int? establishmentId, int? placeId)
         {
             var model = new FacultyStaffSummaryModel();
@@ -30,13 +30,20 @@ namespace UCosmic.Web.Mvc.ApiControllers
             var tenancy = Request.Tenancy();
             Establishment establishment = null;
 
-            if (tenancy.TenantId.HasValue)
+            if (establishmentId.HasValue && (establishmentId.Value != 0))
             {
-                establishment = _queryProcessor.Execute(new EstablishmentById(tenancy.TenantId.Value));
+                establishment = _queryProcessor.Execute(new EstablishmentById(establishmentId.Value)); 
             }
-            else if (!String.IsNullOrEmpty(tenancy.StyleDomain) && !"default".Equals(tenancy.StyleDomain))
+            else
             {
-                establishment = _queryProcessor.Execute(new EstablishmentByEmail(tenancy.StyleDomain));
+                if (tenancy.TenantId.HasValue)
+                {
+                    establishment = _queryProcessor.Execute(new EstablishmentById(tenancy.TenantId.Value));
+                }
+                else if (!String.IsNullOrEmpty(tenancy.StyleDomain) && !"default".Equals(tenancy.StyleDomain))
+                {
+                    establishment = _queryProcessor.Execute(new EstablishmentByEmail(tenancy.StyleDomain));
+                }
             }
 
             if (establishment != null)
@@ -101,21 +108,28 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         /* Returns people counts for given place. */
-        [GET("people-count/{placeId?}")]
-        public FacultyStaffSummaryModel GetPeopleCount(int? placeId)
+        [GET("people-count/{establishmentId?}/{placeId?}")]
+        public FacultyStaffSummaryModel GetPeopleCount(int? establishmentId, int? placeId)
         {
             var model = new FacultyStaffSummaryModel();
 
             var tenancy = Request.Tenancy();
             Establishment establishment = null;
 
-            if (tenancy.TenantId.HasValue)
+            if (establishmentId.HasValue && (establishmentId.Value != 0))
             {
-                establishment = _queryProcessor.Execute(new EstablishmentById(tenancy.TenantId.Value));
+                establishment = _queryProcessor.Execute(new EstablishmentById(establishmentId.Value));
             }
-            else if (!String.IsNullOrEmpty(tenancy.StyleDomain) && !"default".Equals(tenancy.StyleDomain))
+            else
             {
-                establishment = _queryProcessor.Execute(new EstablishmentByEmail(tenancy.StyleDomain));
+                if (tenancy.TenantId.HasValue)
+                {
+                    establishment = _queryProcessor.Execute(new EstablishmentById(tenancy.TenantId.Value));
+                }
+                else if (!String.IsNullOrEmpty(tenancy.StyleDomain) && !"default".Equals(tenancy.StyleDomain))
+                {
+                    establishment = _queryProcessor.Execute(new EstablishmentByEmail(tenancy.StyleDomain));
+                }
             }
 
             if (establishment != null)
@@ -178,21 +192,28 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         /* Returns activity trend count for place. */
-        [GET("activity-trend/{placeId?}")]
-        public FacultyStaffTrendModel GetActivityTrend(int? placeId)
+        [GET("activity-trend/{establishmentId?}/{placeId?}")]
+        public FacultyStaffTrendModel GetActivityTrend(int? establishmentId, int? placeId)
         {
             var model = new FacultyStaffTrendModel();
 
             var tenancy = Request.Tenancy();
             Establishment establishment = null;
 
-            if (tenancy.TenantId.HasValue)
+            if (establishmentId.HasValue && (establishmentId.Value != 0))
             {
-                establishment = _queryProcessor.Execute(new EstablishmentById(tenancy.TenantId.Value));
+                establishment = _queryProcessor.Execute(new EstablishmentById(establishmentId.Value));
             }
-            else if (!String.IsNullOrEmpty(tenancy.StyleDomain) && !"default".Equals(tenancy.StyleDomain))
+            else
             {
-                establishment = _queryProcessor.Execute(new EstablishmentByEmail(tenancy.StyleDomain));
+                if (tenancy.TenantId.HasValue)
+                {
+                    establishment = _queryProcessor.Execute(new EstablishmentById(tenancy.TenantId.Value));
+                }
+                else if (!String.IsNullOrEmpty(tenancy.StyleDomain) && !"default".Equals(tenancy.StyleDomain))
+                {
+                    establishment = _queryProcessor.Execute(new EstablishmentByEmail(tenancy.StyleDomain));
+                }
             }
 
             if (establishment != null)
@@ -234,21 +255,28 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         /* Returns people trend count for place. */
-        [GET("people-trend/{placeId?}")]
-        public FacultyStaffTrendModel GetPeopleTrend(int? placeId)
+        [GET("people-trend/{establishmentId?}/{placeId?}")]
+        public FacultyStaffTrendModel GetPeopleTrend(int? establishmentId, int? placeId)
         {
             var model = new FacultyStaffTrendModel();
 
             var tenancy = Request.Tenancy();
             Establishment establishment = null;
 
-            if (tenancy.TenantId.HasValue)
+            if (establishmentId.HasValue && (establishmentId.Value != 0))
             {
-                establishment = _queryProcessor.Execute(new EstablishmentById(tenancy.TenantId.Value));
+                establishment = _queryProcessor.Execute(new EstablishmentById(establishmentId.Value));
             }
-            else if (!String.IsNullOrEmpty(tenancy.StyleDomain) && !"default".Equals(tenancy.StyleDomain))
+            else
             {
-                establishment = _queryProcessor.Execute(new EstablishmentByEmail(tenancy.StyleDomain));
+                if (tenancy.TenantId.HasValue)
+                {
+                    establishment = _queryProcessor.Execute(new EstablishmentById(tenancy.TenantId.Value));
+                }
+                else if (!String.IsNullOrEmpty(tenancy.StyleDomain) && !"default".Equals(tenancy.StyleDomain))
+                {
+                    establishment = _queryProcessor.Execute(new EstablishmentByEmail(tenancy.StyleDomain));
+                }
             }
 
             if (establishment != null)

@@ -3,17 +3,17 @@ using System.Linq;
 
 namespace UCosmic.Domain.Activities
 {
-    public class ActivityCountByTypeIdPlaceIdEstablishmentId : BaseEntityQuery<Activity>, IDefineQuery<int>
+    public class ActivityCountByTypeIdPlaceIdsEstablishmentId : BaseEntityQuery<Activity>, IDefineQuery<int>
     {
         public int TypeId { get; private set; }
-        public int PlaceId { get; private set; }
+        public int[] PlaceIds { get; private set; }
         public int EstablishmentId { get; private set; }
         public DateTime? FromDate { get; private set; }
         public DateTime? ToDate { get; private set; }
         public bool NoUndated { get; private set; }
         public bool IncludeFuture { get; private set; }
 
-        public ActivityCountByTypeIdPlaceIdEstablishmentId(int inTypeId,
+        public ActivityCountByTypeIdPlaceIdsEstablishmentId(int inTypeId,
                                                              int inPlaceId,
                                                              int inEstablishmentId,
                                                              DateTime? fromDateUtc = null,
@@ -26,14 +26,33 @@ namespace UCosmic.Domain.Activities
 
 
             TypeId = inTypeId;
-            PlaceId = inPlaceId;
+            PlaceIds = new int[] { inPlaceId };
             EstablishmentId = inEstablishmentId;
             FromDate = fromDateUtc;
             ToDate = toDateUtc;
         }
 
-        public ActivityCountByTypeIdPlaceIdEstablishmentId(int inTypeId,
-                                                             int inPlaceId,
+        public ActivityCountByTypeIdPlaceIdsEstablishmentId(int inTypeId,
+                                                             int[] inPlaceIds,
+                                                             int inEstablishmentId,
+                                                             DateTime? fromDateUtc = null,
+                                                             DateTime? toDateUtc = null)
+        {
+            if ((fromDateUtc.HasValue && !toDateUtc.HasValue) || (!fromDateUtc.HasValue && toDateUtc.HasValue))
+            {
+                throw new ArgumentException("Both fromDateUtc and toDateUtc must be provided.");
+            }
+
+
+            TypeId = inTypeId;
+            PlaceIds = inPlaceIds;
+            EstablishmentId = inEstablishmentId;
+            FromDate = fromDateUtc;
+            ToDate = toDateUtc;
+        }
+
+        public ActivityCountByTypeIdPlaceIdsEstablishmentId(int inTypeId,
+                                                             int[] inPlaceIds,
                                                              int inEstablishmentId,
                                                              DateTime fromDateUtc,
                                                              DateTime toDateUtc,
@@ -41,7 +60,7 @@ namespace UCosmic.Domain.Activities
                                                              bool includeFuture)
         {
             TypeId = inTypeId;
-            PlaceId = inPlaceId;
+            PlaceIds = inPlaceIds;
             EstablishmentId = inEstablishmentId;
             FromDate = fromDateUtc;
             ToDate = toDateUtc;
@@ -50,7 +69,7 @@ namespace UCosmic.Domain.Activities
         }
     }
 
-    public class HandleActivityCountByTypeIdCountryIdEstablishmentIdQuery : IHandleQueries<ActivityCountByTypeIdPlaceIdEstablishmentId, int>
+    public class HandleActivityCountByTypeIdCountryIdEstablishmentIdQuery : IHandleQueries<ActivityCountByTypeIdPlaceIdsEstablishmentId, int>
     {
         private readonly ActivityViewProjector _projector;
 
@@ -59,7 +78,7 @@ namespace UCosmic.Domain.Activities
             _projector = projector;
         }
 
-        public int Handle(ActivityCountByTypeIdPlaceIdEstablishmentId query)
+        public int Handle(ActivityCountByTypeIdPlaceIdsEstablishmentId query)
         {
             if (query == null) throw new ArgumentNullException("query");
             int count = 0;
@@ -79,15 +98,18 @@ namespace UCosmic.Domain.Activities
                                                    query.IncludeFuture);
                     }
 
-                    count = view.Count(a =>
-                                       /* TypeId must be found in typeIds */
-                                       a.TypeIds.Any(t => t == query.TypeId) &&
+                    foreach (var placeId in query.PlaceIds)
+                    {
+                        count += view.Count(a =>
+                                           /* TypeId must be found in typeIds */
+                                           a.TypeIds.Any(t => t == query.TypeId) &&
 
-                                       /* and, PlaceId must be found in placeIds...*/
-                                       a.PlaceIds.Any(e => e == query.PlaceId) &&
+                                           /* and, PlaceId must be found in placeIds...*/
+                                           a.PlaceIds.Any(e => e == placeId) &&
 
-                                       /* and, EstablishmentId must be found in establishmentids*/
-                                       a.EstablishmentIds.Any(e => e == query.EstablishmentId) );
+                                           /* and, EstablishmentId must be found in establishmentids*/
+                                           a.EstablishmentIds.Any(e => e == query.EstablishmentId));
+                    }
                 }
             }
             finally

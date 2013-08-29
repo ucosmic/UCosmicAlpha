@@ -50,7 +50,7 @@ namespace UCosmic.Domain.Activities
             IEnumerable<Place> places = entities.Query<Place>().Where(p => p.IsCountry || p.IsWater || p.IsEarth);
             foreach (var place in places)
             {
-                int activityCount = queryProcessor.Execute(new ActivityCountByPlaceIdEstablishmentId( place.RevisionId,
+                int activityCount = queryProcessor.Execute(new ActivityCountByPlaceIdsEstablishmentId(new int[] { place.RevisionId },
                                                                                                       establishmentId,
                                                                                                       fromDateUtc,
                                                                                                       toDateUtc,
@@ -76,8 +76,8 @@ namespace UCosmic.Domain.Activities
                     foreach (var type in settings.ActivityTypes)
                     {
                         int placeTypeCount = queryProcessor.Execute(
-                            new ActivityCountByTypeIdPlaceIdEstablishmentId(type.Id,
-                                                                            place.RevisionId,
+                            new ActivityCountByTypeIdPlaceIdsEstablishmentId(type.Id,
+                                                                            new int[] { place.RevisionId },
                                                                             establishmentId,
                                                                             fromDateUtc,
                                                                             toDateUtc,

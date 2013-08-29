@@ -88,7 +88,7 @@ namespace UCosmic.Domain.External
         // ----------------------------------------------------------------------
         public void UsfEstablishmentsSetup()
         {
-            _usf = _entities.Get<Establishment>().SingleOrDefault(e => e.OfficialName == "University of South Florida");
+            _usf = _entities.Get<Establishment>().SingleOrDefault(e => e.OfficialName.Contains("University of South Florida"));
             if (_usf == null) { throw new Exception("USF Establishment not found."); }
 
             _campuses = new StringDictionary
@@ -337,7 +337,7 @@ namespace UCosmic.Domain.External
                             {
                                 e => e.Offspring
                             })
-                            .SingleOrDefault(e => e.OfficialName == "University of South Florida");
+                            .SingleOrDefault(e => e.OfficialName.Contains("University of South Florida"));
 
             _hierarchy.Handle(new UpdateEstablishmentHierarchy(_usf));
             _unitOfWork.SaveChanges();

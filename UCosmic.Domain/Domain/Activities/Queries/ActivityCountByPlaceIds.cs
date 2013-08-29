@@ -3,15 +3,15 @@ using System.Linq;
 
 namespace UCosmic.Domain.Activities
 {
-    public class ActivityCountByPlaceId : BaseEntityQuery<Activity>, IDefineQuery<int>
+    public class ActivityCountByPlaceIds : BaseEntityQuery<Activity>, IDefineQuery<int>
     {
-        public int PlaceId { get; private set; }
+        public int[] PlaceIds { get; private set; }
         public DateTime? FromDate { get; private set; }
         public DateTime? ToDate { get; private set; }
         public bool NoUndated { get; private set; }
         public bool IncludeFuture { get; private set; }
 
-        public ActivityCountByPlaceId(int placeId,
+        public ActivityCountByPlaceIds(int placeId,
                                       DateTime? fromDateUtc = null,
                                       DateTime? toDateUtc = null)
         {
@@ -20,18 +20,32 @@ namespace UCosmic.Domain.Activities
                 throw new ArgumentException("Both fromDateUtc and toDateUtc must be provided.");
             }
 
-            PlaceId = placeId;
+            PlaceIds = new int[] { placeId };
             FromDate = fromDateUtc;
             ToDate = toDateUtc;
         }
 
-        public ActivityCountByPlaceId(int placeId,
+        public ActivityCountByPlaceIds(int[] placeIds,
+                                      DateTime? fromDateUtc = null,
+                                      DateTime? toDateUtc = null)
+        {
+            if ((fromDateUtc.HasValue && !toDateUtc.HasValue) || (!fromDateUtc.HasValue && toDateUtc.HasValue))
+            {
+                throw new ArgumentException("Both fromDateUtc and toDateUtc must be provided.");
+            }
+
+            PlaceIds = placeIds;
+            FromDate = fromDateUtc;
+            ToDate = toDateUtc;
+        }
+
+        public ActivityCountByPlaceIds(int[] placeIds,
                                       DateTime fromDateUtc,
                                       DateTime toDateUtc,
                                       bool noUndated,
                                       bool includeFuture )
         {
-            PlaceId = placeId;
+            PlaceIds = placeIds;
             FromDate = fromDateUtc;
             ToDate = toDateUtc;
             NoUndated = noUndated;
@@ -39,7 +53,7 @@ namespace UCosmic.Domain.Activities
         }
     }
 
-    public class HandleActivityCountByLocationQuery : IHandleQueries<ActivityCountByPlaceId, int>
+    public class HandleActivityCountByLocationQuery : IHandleQueries<ActivityCountByPlaceIds, int>
     {
         private readonly ActivityViewProjector _projector;
 
@@ -48,7 +62,7 @@ namespace UCosmic.Domain.Activities
             _projector = projector;
         }
 
-        public int Handle(ActivityCountByPlaceId query)
+        public int Handle(ActivityCountByPlaceIds query)
         {
             if (query == null) throw new ArgumentNullException("query");
             int count = 0;
@@ -68,7 +82,10 @@ namespace UCosmic.Domain.Activities
                                                    query.IncludeFuture);
                     }
 
-                    count = view.Count(a => a.PlaceIds.Any(e => e == query.PlaceId) );
+                    foreach (var placeId in query.PlaceIds)
+                    {
+                        count += view.Count(a => a.PlaceIds.Any(e => e == placeId));
+                    }
                 }
             }
             finally

@@ -256,6 +256,9 @@ module ViewModels.Activities {
                 {
                     formattedDateRange = moment(endsOnStr).format(dateFormat);
                 }
+                else if (onGoing) {
+                    formattedDateRange = "(Ongoing)";
+                }
             }
             else
             {

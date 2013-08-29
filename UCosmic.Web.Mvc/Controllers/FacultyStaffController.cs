@@ -83,7 +83,8 @@ namespace UCosmic.Web.Mvc.Controllers
                 var entities = _queryProcessor.Execute(query);
                 if (entities != null)
                 {
-                    foreach (var childEstablishment in entities)
+                    var orderedEstablishments = entities.OrderBy(e => e.VerticalRank);
+                    foreach (var childEstablishment in orderedEstablishments)
                     {
                         childIds.Add(childEstablishment.RevisionId);
                         childOfficialNames.Add(childEstablishment.OfficialName);

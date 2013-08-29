@@ -1375,19 +1375,19 @@ namespace UCosmic.SeedData
         {
             var university = Seed(new SeedEstablishment
             {
-                OfficialName = "University of South Florida",
+                OfficialName = "University of South Florida System",
                 IsMember = true,
                 TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
                     KnownEstablishmentType.University.AsSentenceFragment())).RevisionId,
                 OfficialWebsiteUrl = "www.usf.edu",
                 EmailDomains = new[]
                                {
-                                   "@usf.edu", "@iac.usf.edu", "@mail.usf.edu",
-                                   //"@usfsp.edu", "@usfsm.edu"
+                                   "@usf.edu", "@iac.usf.edu", "@mail.usf.edu"
                                },
                 FindPlacesByCoordinates = true,
                 CenterLatitude = 28.061680,
                 CenterLongitude = -82.414803,
+                VerticalRank = 0
             });
 
 #if false
@@ -1419,8 +1419,8 @@ namespace UCosmic.SeedData
                     ParentId = university.RevisionId,
                     TypeId = _queryProcessor.Execute(new EstablishmentTypeByEnglishName(
                                                          KnownEstablishmentType.UniversityCampus.AsSentenceFragment()))
-                                            .RevisionId
-                    //VerticalRank = 3
+                                            .RevisionId,
+                    VerticalRank = 3
                 });
 
                 Seed(new SeedEstablishment

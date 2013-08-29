@@ -308,7 +308,7 @@ namespace UCosmic.Domain.External
                 if (serviceSync.LastUpdateResult == "succeeded")
                 {
                     var usf = _entities.Get<Establishment>()
-                                       .SingleOrDefault(e => e.OfficialName == "University of South Florida");
+                                       .SingleOrDefault(e => e.OfficialName.Contains("University of South Florida"));
                     if (usf == null)
                     {
                         Debug.WriteLine(DateTime.Now + " USF: Establishment not found.");
@@ -512,7 +512,7 @@ namespace UCosmic.Domain.External
                 }
 
                 /* Get root USF Establishment. */
-                var usf = _entities.Get<Establishment>().SingleOrDefault(e => e.OfficialName == "University of South Florida");
+                var usf = _entities.Get<Establishment>().SingleOrDefault(e => e.OfficialName.Contains("University of South Florida"));
                 if (usf == null)
                 {
                     throw new Exception("Unable to get establishment University of South Florida");

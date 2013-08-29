@@ -8,14 +8,23 @@
 
     <div class="stats" style="width: 100%">
         <div style="margin-top: 70px; margin-bottom: 16px">
-            <div style="display: none; font-size: medium" data-bind="visible: selectedPlace() == null">
-                <div class="total-count-header">Global</div>
-            </div>        
+            <div style="display: none; font-size: medium; margin-top: 20px; margin-bottom: 16px" data-bind="visible: selectedPlace() == null">
+                <div data-bind="visible: searchType() == 'activities'">
+                    <div class="total-count-header">Global Summary: Activities</div>
+                </div>
+                <div data-bind="visible: searchType() == 'people'">
+                    <div class="total-count-header">Global Summary: People</div>
+                </div>    
+            </div> 
             <div style="display: none; font-size: medium; margin-top: 20px; margin-bottom: 16px" data-bind="visible: selectedPlace() != null">
-                <div class="total-count-header" data-bind="text: selectedPlace()"></div>
-            </div>  
-        </div> 
- 
+                <div data-bind="visible: searchType() == 'activities'">
+                    <div class="total-count-header" data-bind="text: selectedPlace() + ' Summary: Activities'"></div>
+                </div>
+                <div data-bind="visible: searchType() == 'people'">
+                    <div class="total-count-header" data-bind="text: selectedPlace() + ' Summary: People'"></div>
+                </div>  
+            </div>
+        </div>
         <div>
             <select id="establishmentDropList" style="width: 100%; margin-bottom: 20px"></select>
         </div> 

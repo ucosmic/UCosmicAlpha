@@ -258,11 +258,6 @@
                     
                     <div style="position: absolute; background-color: transparent; width: 680px; height: 500px; top: 0; left: 0; z-index: 1">
                         
-                        <!-- Arctic -->
-                        <div style="position: absolute; left: 340px; top: 0;">                   
-                            <img src="../../images/arctic_193x20.png"/>
-                        </div>
-                        
                         <!-- Antarctica -->
                         <div style="position: absolute; left: 340px; bottom: 0;">                   
                             <img src="../../images/antarctica_283x35.png"/>
@@ -327,18 +322,24 @@
                                 <span style="font-size: x-small">Carribean</span>
                             </div>
                         </div>
+
+                        <!-- Arctic Ocean -->
+                        <div style="position: absolute; left: 370px; top: 5px; width: 50px">
+                            <div style="width: 100%; text-align: center">
+                                <img src="../../images/icons/glyphs/glyphicons_261_buoy_blue.png" width="12" height="12"/>
+                            </div>
+                            <div class="customPlaceText" style="line-height: 0.5">
+                                <span style="font-size: x-small">Arctic Ocean</span>
+                            </div>
+                        </div>                       
+
                     </div>
 
                     <!-- GeoChart -->
                     <div id="heatmap" style="position: absolute; top: 0; left: 0; z-index: 2"></div>
-
-                    <!-- Arctic Title Phantom -->
-                    <div id="arctic" style="position: absolute; left: 330px; top: 0; z-index: 4">                   
-                        <img src="../../images/transparent.png" width="200" height="40"/>
-                    </div>
                     
                     <!-- Antarctica Title Phantom -->
-                    <div id="antarctica" style="position: absolute; left: 330px; bottom: 0; z-index: 4">
+                    <div id="antarctica" style="position: absolute; left: 330px; bottom: 0; z-index: 4" data-bind="click: function(event,item) { customPlaceClick(event,item,'antarctica'); }">
                         <img src="../../images/transparent.png" width="300" height="50"/>
                     </div>
                     
@@ -380,7 +381,12 @@
                     <!-- Carribean Title Phantom -->
                     <div id="carribean" style="position: absolute; left: 200px; top: 300px; width: 50px; z-index: 4">
                         <img src="../../images/transparent.png" width="25" height="25"/>
-                    </div>   
+                    </div>
+
+                    <!-- Arctic Ocean Title Phantom -->
+                    <div id="arcticOcean" style="position: absolute; left: 370px; top: 5px; width: 50px; z-index: 4">
+                        <img src="../../images/transparent.png" width="25" height="25"/>
+                    </div>
 
                     <!-- Activities/People Buttons -->
                     <div id="" style="position: absolute; margin: 5px; right: 0; top: 0; z-index: 3">

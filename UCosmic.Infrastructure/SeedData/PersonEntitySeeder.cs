@@ -390,7 +390,7 @@ namespace UCosmic.SeedData
                 //};
                 //_updateProfile.Handle(updateMyProfile);            
 
-                var establishment = _entities.Get<Establishment>().SingleOrDefault(x => x.OfficialName == "University of South Florida");
+                var establishment = _entities.Get<Establishment>().SingleOrDefault(x => x.OfficialName.Contains("University of South Florida"));
                 if (establishment == null) throw new Exception("Establishment is null");
 
                 var campus = _entities.Get<Establishment>().SingleOrDefault(e => e.OfficialName == "USF Tampa");
