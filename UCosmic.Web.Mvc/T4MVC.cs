@@ -2766,6 +2766,14 @@ namespace Links
                 public static readonly string AgreementVM_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/AgreementVM.min.js") ? Url("AgreementVM.min.js") : Url("AgreementVM.js");
                               
                 public static readonly string AgreementVM_min_js = Url("AgreementVM.min.js");
+                public static readonly string contacts_ts = Url("contacts.ts");
+                public static readonly string contacts_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/contacts.min.js") ? Url("contacts.min.js") : Url("contacts.js");
+                              
+                public static readonly string contacts_min_js = Url("contacts.min.js");
+                public static readonly string scrollBody_ts = Url("scrollBody.ts");
+                public static readonly string scrollBody_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/scrollBody.min.js") ? Url("scrollBody.min.js") : Url("scrollBody.js");
+                              
+                public static readonly string scrollBody_min_js = Url("scrollBody.min.js");
             }
         
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -3550,6 +3558,8 @@ namespace Links
         private const string URLPATH = "~/images";
         public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
         public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+        public static readonly string antarctica_283x35_png = Url("antarctica_283x35.png");
+        public static readonly string arctic_193x20_png = Url("arctic_193x20.png");
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public static class bg {
             private const string URLPATH = "~/images/bg";
@@ -3637,6 +3647,7 @@ namespace Links
                 public static readonly string glyphicons_071_book_png = Url("glyphicons_071_book.png");
                 public static readonly string glyphicons_072_bookmark_png = Url("glyphicons_072_bookmark.png");
                 public static readonly string glyphicons_261_buoy_png = Url("glyphicons_261_buoy.png");
+                public static readonly string glyphicons_261_buoy_blue_png = Url("glyphicons_261_buoy_blue.png");
                 public static readonly string glyphicons_300_microphone_png = Url("glyphicons_300_microphone.png");
                 public static readonly string glyphicons_341_briefcase_png = Url("glyphicons_341_briefcase.png");
                 public static readonly string glyphicons_375_classic_hammer_png = Url("glyphicons_375_classic_hammer.png");
