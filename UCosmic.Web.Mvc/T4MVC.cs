@@ -2770,6 +2770,10 @@ namespace Links
                 public static readonly string contacts_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/contacts.min.js") ? Url("contacts.min.js") : Url("contacts.js");
                               
                 public static readonly string contacts_min_js = Url("contacts.min.js");
+                public static readonly string fileAttachments_ts = Url("fileAttachments.ts");
+                public static readonly string fileAttachments_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/fileAttachments.min.js") ? Url("fileAttachments.min.js") : Url("fileAttachments.js");
+                              
+                public static readonly string fileAttachments_min_js = Url("fileAttachments.min.js");
                 public static readonly string scrollBody_ts = Url("scrollBody.ts");
                 public static readonly string scrollBody_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/scrollBody.min.js") ? Url("scrollBody.min.js") : Url("scrollBody.js");
                               
