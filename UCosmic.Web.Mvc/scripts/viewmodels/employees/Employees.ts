@@ -117,7 +117,7 @@ module ViewModels.Employees {
                 name: 'Gulf of Mexico', id: 'gulfOfMexico', activityCount: 0, peopleCount: 0
             },
             {
-                name: 'Carribean', id: 'carribean', activityCount: 0, peopleCount: 0
+                name: 'Caribbean', id: 'caribbean', activityCount: 0, peopleCount: 0
             },
             {
                 name: 'Arctic Ocean', id: 'arcticOcean', activityCount: 0, peopleCount: 0
@@ -681,16 +681,51 @@ module ViewModels.Employees {
 
                 var placeCounts = (<any>this.globalActivityCountData).placeCounts;
                 if ((placeCounts != null) && (placeCounts.length > 0)) {
+
+                    for (var i = 0; i < this.geochartCustomPlaces.length; i += 1) {
+                        this.geochartCustomPlaces[i].activityCount = 0;
+                    }
+
                     for (var i = 0; i < placeCounts.length; i += 1) {
                         var rowData = new Array();
                         rowData.push(placeCounts[i].officialName);
                         rowData.push(placeCounts[i].count);
                         dataTable.addRow(rowData);
 
-                        for (var j = 0; j < this.geochartCustomPlaces.length; j += 1) {
-                            if (placeCounts[i].officialName === this.geochartCustomPlaces[j].name) {
-                                this.geochartCustomPlaces[j].activityCount = placeCounts[i].count;
-                            }
+                        var officialName = placeCounts[i].officialName;
+                        var count = placeCounts[i].count;
+                        var j = -1;
+
+                        if ((officialName === "North Atlantic Ocean") ||
+                            (officialName === "South Atlantic Ocean")) {
+                                j = this.getCustomPlaceIndexByName("Atlantic Ocean");
+                        }
+                        else if ((officialName === "North Pacific Ocean") ||
+                            (officialName === "Pacific Ocean") ||
+                            (officialName === "South Pacific Ocean")) {
+                                j = this.getCustomPlaceIndexByName("Pacific Ocean");
+                        }
+                        else if (officialName === "Arctic Ocean") {
+                            j = this.getCustomPlaceIndexByName("Arctic Ocean");
+                        }
+                        else if (officialName === "Gulf of Mexico") {
+                            j = this.getCustomPlaceIndexByName("Gulf of Mexico");
+                        }
+                        else if (officialName === "Caribbean Ocean") {
+                            j = this.getCustomPlaceIndexByName("Caribbean");
+                        }
+                        else if (officialName === "Indian Ocean") {
+                            j = this.getCustomPlaceIndexByName("Indian Ocean");
+                        }
+                        else if (officialName === "Southern Ocean") {
+                            j = this.getCustomPlaceIndexByName("Indian Ocean");
+                        }
+                        else if (officialName === "Antarctica") {
+                            j = this.getCustomPlaceIndexByName("Antarctica");
+                        }
+
+                        if (j >= 0) {
+                            this.geochartCustomPlaces[j].activityCount += count;
                         }
                     }
                 }
@@ -728,20 +763,55 @@ module ViewModels.Employees {
 
                 var placeCounts = (<any>this.globalPeopleCountData).placeCounts;
                 if ((placeCounts != null) && (placeCounts.length > 0)) {
+
+                    for (var i = 0; i < this.geochartCustomPlaces.length; i += 1) {
+                        this.geochartCustomPlaces[i].peopleCount = 0;
+                    }
+
                     for (var i = 0; i < placeCounts.length; i += 1) {
                         var rowData = new Array();
                         rowData.push(placeCounts[i].officialName);
                         rowData.push(placeCounts[i].count);
                         dataTable.addRow(rowData)
 
-                    for (var j = 0; j < this.geochartCustomPlaces.length; j += 1) {
-                            if (placeCounts[i].officialName === this.geochartCustomPlaces[j].name) {
-                                this.geochartCustomPlaces[j].peopleCount = placeCounts[i].count;
-                            }
+                        var officialName = placeCounts[i].officialName;
+                        var count = placeCounts[i].count;
+                        var j = -1;
+
+                        if ((officialName === "North Atlantic Ocean") ||
+                            (officialName === "South Atlantic Ocean")) {
+                            j = this.getCustomPlaceIndexByName("Atlantic Ocean");
+                        }
+                        else if ((officialName === "North Pacific Ocean") ||
+                            (officialName === "Pacific Ocean") ||
+                            (officialName === "South Pacific Ocean")) {
+                            j = this.getCustomPlaceIndexByName("Pacific Ocean");
+                        }
+                        else if (officialName === "Arctic Ocean") {
+                            j = this.getCustomPlaceIndexByName("Arctic Ocean");
+                        }
+                        else if (officialName === "Gulf of Mexico") {
+                            j = this.getCustomPlaceIndexByName("Gulf of Mexico");
+                        }
+                        else if (officialName === "Caribbean Ocean") {
+                            j = this.getCustomPlaceIndexByName("Caribbean");
+                        }
+                        else if (officialName === "Indian Ocean") {
+                            j = this.getCustomPlaceIndexByName("Indian Ocean");
+                        }
+                        else if (officialName === "Southern Ocean") {
+                            j = this.getCustomPlaceIndexByName("Indian Ocean");
+                        }
+                        else if (officialName === "Antarctica") {
+                            j = this.getCustomPlaceIndexByName("Antarctica");
+                        }
+
+                        if (j >= 0) {
+                            this.geochartCustomPlaces[j].peopleCount += count;
                         }
                     }
                 }
-
+                
                 this.heatmapPeopleDataTable = dataTable;
             }
 
@@ -987,7 +1057,7 @@ module ViewModels.Employees {
                         $.ajax({
                             type: "GET",
                             async: false,
-                            data: { 'establishmentId': this.establishmentId(), 'placeId': null },
+                            data: { 'establishmentId': this.establishmentId(), 'placeId': placeId },
                             dataType: 'json',
                             url: App.Routes.WebApi.FacultyStaff.getActivityTrend(),
                             success: (data: any, textStatus: string, jqXhr: JQueryXHR): void => {
@@ -1137,9 +1207,9 @@ module ViewModels.Employees {
                     name = this.geochartCustomPlaces[i].name;
                     count = this.geochartCustomPlaces[i].activityCount;
                     $("#" + id).tooltip({
-                        position: {
-                            my: "bottom+10 right+10"
-                        },
+                        //position: {
+                        //    my: "bottom+10 right+10"
+                        //},
                         track: true,
                         tooltipClass: "geochartTooltip",
                         items: "#" + id,
@@ -1152,9 +1222,9 @@ module ViewModels.Employees {
                     name = this.geochartCustomPlaces[i].name;
                     count = this.geochartCustomPlaces[i].activityCount;
                     $("#" + id).tooltip({
-                        position: {
-                            my: "bottom+10 right+10"
-                        },
+                        //position: {
+                        //    my: "bottom+10 right+10"
+                        //},
                         track: true,
                         tooltipClass: "geochartTooltip",
                         items: "#" + id,
@@ -1186,14 +1256,26 @@ module ViewModels.Employees {
                 dataType: 'json',
                 url: App.Routes.WebApi.Places.get(),
                 success: (data: any, textStatus: string, jqXhr: JQueryXHR): void =>
-                    { placesPact.resolve(data); },
+                { placesPact.resolve(data); },
                 error: (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void =>
-                    { placesPact.reject(jqXhr, textStatus, errorThrown); },
+                { placesPact.reject(jqXhr, textStatus, errorThrown); },
+            });
+
+            var watersPact = $.Deferred();
+            $.ajax({
+                type: "GET",
+                data: { isWater: true },
+                dataType: 'json',
+                url: App.Routes.WebApi.Places.get(),
+                success: (data: any, textStatus: string, jqXhr: JQueryXHR): void =>
+                { watersPact.resolve(data); },
+                error: (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void =>
+                { watersPact.reject(jqXhr, textStatus, errorThrown); },
             });
 
             // only process after all requests have been resolved
-            $.when(typesPact, placesPact  )
-                .done((types: any, places: any): void => {
+            $.when(typesPact, placesPact, watersPact)
+                .done((types: any, places: any, waters: any): void => {
 
                     this.activityTypes = ko.mapping.fromJS(types);
 
@@ -1215,7 +1297,7 @@ module ViewModels.Employees {
                         //    this.selectedLocationValues.push(this.locations()[i].placeId());
                         //}                  
 
-                    this.places = places;
+                    this.places = places.concat(waters);
 
                     deferred.resolve();
                 })
@@ -1451,6 +1533,15 @@ module ViewModels.Employees {
             return (i < this.places.length) ? this.places[i].id : null;
         }
 
+        getCustomPlaceIndexByName(officialName: string): number {
+            var i = 0;
+            while ((i < this.geochartCustomPlaces.length) &&
+                (officialName !== this.geochartCustomPlaces[i].name)) {
+                i += 1;
+            }
+            return (i < this.geochartCustomPlaces.length) ? i : -1;
+        }
+        
         clearCachedData(): void {
             this.globalActivityCountData = null;
             this.placeActivityCountData = null;

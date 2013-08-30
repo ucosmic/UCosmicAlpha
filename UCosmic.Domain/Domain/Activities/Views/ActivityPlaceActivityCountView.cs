@@ -20,19 +20,20 @@ namespace UCosmic.Domain.Activities
         private readonly IQueryEntities _entities;
 
         public int EstablishmentId { get; private set; }
-        public int PlaceId { get; private set; }
+        public int[] PlaceIds { get; private set; }
         public string OfficialName { get; private set; }
         public int Count { get; private set; }
         public ICollection<TypeCount> TypeCounts { get; private set; }
 
-        public ActivityPlaceActivityCountView( IProcessQueries queryProcessor,
-                                               IQueryEntities entities,
-                                               int establishmentId, int placeId )
+        public ActivityPlaceActivityCountView(IProcessQueries queryProcessor,
+                                              IQueryEntities entities,
+                                              int establishmentId,
+                                              int[] placeIds)
         {
             _queryProcessor = queryProcessor;
             _entities = entities;
             EstablishmentId = establishmentId;
-            PlaceId = placeId;
+            PlaceIds = placeIds;
             TypeCounts = new Collection<TypeCount>();
 
             var settings = _queryProcessor.Execute(new EmployeeModuleSettingsByEstablishmentId(establishmentId));
@@ -42,46 +43,51 @@ namespace UCosmic.Domain.Activities
                                        ? toDateUtc.AddYears(-(settings.ReportsDefaultYearRange.Value + 1))
                                        : new DateTime(DateTime.MinValue.Year, 1, 1);
 
-            Place place = entities.Query<Place>().SingleOrDefault(p => p.RevisionId == placeId);
-            if (place != null)
+            /* Return place official name of 1st item only */
             {
-                OfficialName = place.OfficialName;
-                Count = _queryProcessor.Execute(new ActivityCountByPlaceIdsEstablishmentId(new int[] { placeId },
-                                                                                          establishmentId,
-                                                                                          fromDateUtc,
-                                                                                          toDateUtc,
-                                                                                          false, /* include undated */
-                                                                                          true /* include future */));
-
-                if (settings.ActivityTypes.Any())
+                int placeId = placeIds[0];
+                Place place = entities.Query<Place>().SingleOrDefault(p => p.RevisionId == placeId);
+                if (place != null)
                 {
-                    foreach (var type in settings.ActivityTypes)
+                    OfficialName = place.OfficialName;
+                }
+            }
+
+            Count = _queryProcessor.Execute(new ActivityCountByPlaceIdsEstablishmentId(PlaceIds,
+                                                                                       establishmentId,
+                                                                                       fromDateUtc,
+                                                                                       toDateUtc,
+                                                                                       false, /* include undated */
+                                                                                       true /* include future */));
+
+            if (settings.ActivityTypes.Any())
+            {
+                foreach (var type in settings.ActivityTypes)
+                {
+                    int placeTypeCount = queryProcessor.Execute(
+                        new ActivityCountByTypeIdPlaceIdsEstablishmentId(type.Id,
+                                                                         PlaceIds,
+                                                                         establishmentId,
+                                                                         fromDateUtc,
+                                                                         toDateUtc,
+                                                                         false, /* include undated */
+                                                                         true /* include future */));
+
+                    var typeCount = TypeCounts.SingleOrDefault(c => c.TypeId == type.Id);
+                    if (typeCount != null)
                     {
-                        int placeTypeCount = queryProcessor.Execute(
-                            new ActivityCountByTypeIdPlaceIdsEstablishmentId(type.Id,
-                                                                            new int[] { placeId },
-                                                                            establishmentId,
-                                                                            fromDateUtc,
-                                                                            toDateUtc,
-                                                                            false, /* include undated */
-                                                                            true /* include future */));
-
-                        var typeCount = TypeCounts.SingleOrDefault(c => c.TypeId == type.Id);
-                        if (typeCount != null)
+                        typeCount.Count += placeTypeCount;
+                    }
+                    else
+                    {
+                        typeCount = new TypeCount
                         {
-                            typeCount.Count += placeTypeCount;
-                        }
-                        else
-                        {
-                            typeCount = new TypeCount
-                            {
-                                TypeId = type.Id,
-                                Type = type.Type,
-                                Count = placeTypeCount
-                            };
+                            TypeId = type.Id,
+                            Type = type.Type,
+                            Count = placeTypeCount
+                        };
 
-                            TypeCounts.Add(typeCount);
-                        }
+                        TypeCounts.Add(typeCount);
                     }
                 }
             }

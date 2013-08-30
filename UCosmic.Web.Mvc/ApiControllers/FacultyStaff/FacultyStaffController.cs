@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Web.Http;
 using AttributeRouting;
 using AttributeRouting.Web.Http;
 using UCosmic.Domain.Activities;
 using UCosmic.Domain.Establishments;
+using UCosmic.Domain.Places;
 using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc.ApiControllers
@@ -12,6 +15,9 @@ namespace UCosmic.Web.Mvc.ApiControllers
     [RoutePrefix("api/faculty-staff")]
     public class FacultyStaffController : ApiController
     {
+        private readonly string[] _atlanticPlaceGroup = { "North Atlantic Ocean", "South Atlantic Ocean" };
+        private readonly string[] _pacificPlaceGroup = { "North Pacific Ocean", "Pacific Ocean", "South Pacific Ocean" };
+
         private readonly IProcessQueries _queryProcessor;
         private readonly IQueryEntities _entities;
 
@@ -19,6 +25,47 @@ namespace UCosmic.Web.Mvc.ApiControllers
         {
             _queryProcessor = queryProcessor;
             _entities = entities;
+        }
+
+        private int[] GetPlaceIds(int placeId)
+        {
+            ICollection<int> ids = new Collection<int>();
+
+            Place place = _entities.Query<Place>().SingleOrDefault(p => p.RevisionId == placeId);
+            if (place != null)
+            {
+                var atlanticList = _atlanticPlaceGroup.AsQueryable();
+                var pacificList = _pacificPlaceGroup.AsQueryable();
+
+                if (atlanticList.Any(p => p == place.OfficialName))
+                {
+                    foreach (var officialName in _atlanticPlaceGroup)
+                    {
+                        Place subPlace = _entities.Query<Place>().SingleOrDefault(p => p.OfficialName == officialName);
+                        if (subPlace != null)
+                        {
+                            ids.Add(subPlace.RevisionId);
+                        }
+                    }
+                }
+                else if (pacificList.Any(p => p == place.OfficialName))
+                {
+                    foreach (var officialName in _pacificPlaceGroup)
+                    {
+                        Place subPlace = _entities.Query<Place>().SingleOrDefault(p => p.OfficialName == officialName);
+                        if (subPlace != null)
+                        {
+                            ids.Add(subPlace.RevisionId);
+                        }
+                    }                    
+                }
+                else
+                {
+                    ids.Add(placeId);
+                }
+            }
+
+            return ids.ToArray();
         }
 
         /* Returns activity type counts for given place.*/
@@ -50,11 +97,13 @@ namespace UCosmic.Web.Mvc.ApiControllers
             {
                 if (placeId.HasValue)
                 {
+                    int[] placeIds = GetPlaceIds(placeId.Value);
+
                     var view = new ActivityPlaceActivityCountView(_queryProcessor, _entities, 
                                                                    establishment.RevisionId,
-                                                                   placeId.Value);
+                                                                   placeIds);
 
-                    model.PlaceId = view.PlaceId;
+                    model.PlaceId = view.PlaceIds[0];
                     model.Count = view.Count;
                     model.CountOfPlaces = 1;
 
