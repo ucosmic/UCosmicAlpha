@@ -185,11 +185,13 @@ namespace UCosmic.Web.Mvc.ApiControllers
             {
                 if (placeId.HasValue)
                 {
+                    int[] placeIds = GetPlaceIds(placeId.Value);
+
                     var view = new ActivityPlacePeopleCountView(_queryProcessor, _entities,
                                                                    establishment.RevisionId,
-                                                                   placeId.Value);
+                                                                   placeIds);
 
-                    model.PlaceId = view.PlaceId;
+                    model.PlaceId = placeIds[0];
                     model.Count = view.Count;
                     model.CountOfPlaces = 1;
 
@@ -269,9 +271,11 @@ namespace UCosmic.Web.Mvc.ApiControllers
             {
                 if (placeId.HasValue)
                 {
+                    int[] placeIds = GetPlaceIds(placeId.Value);
+
                     var view = new ActivityPlaceTrendActivityView( _queryProcessor, _entities,
                                                               establishment.RevisionId,
-                                                              placeId.Value);
+                                                              placeIds);
 
                     model.PlaceId = placeId.Value;
 
@@ -332,9 +336,11 @@ namespace UCosmic.Web.Mvc.ApiControllers
             {
                 if (placeId.HasValue)
                 {
+                    int[] placeIds = GetPlaceIds(placeId.Value);
+
                     var view = new ActivityPlaceTrendPeopleView(_queryProcessor, _entities,
                                                               establishment.RevisionId,
-                                                              placeId.Value);
+                                                              placeIds);
 
                     model.PlaceId = placeId.Value;
 

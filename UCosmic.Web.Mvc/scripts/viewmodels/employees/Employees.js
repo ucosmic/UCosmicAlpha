@@ -17,6 +17,8 @@ var ViewModels;
             function FacultyAndStaff(institutionInfo) {
                 /* Initialization errors. */
                 this.inititializationErrors = "";
+                /* If you add or remove from this list, also look at _getHeatmapActivityDataTable()
+                and _getHeatmapPeopleDataTable() to update the custom place tooltips text. */
                 this.geochartCustomPlaces = [
                     {
                         name: 'Antarctica',
@@ -635,7 +637,7 @@ var ViewModels;
                             } else if (officialName === "Indian Ocean") {
                                 j = this.getCustomPlaceIndexByName("Indian Ocean");
                             } else if (officialName === "Southern Ocean") {
-                                j = this.getCustomPlaceIndexByName("Indian Ocean");
+                                j = this.getCustomPlaceIndexByName("Southern Ocean");
                             } else if (officialName === "Antarctica") {
                                 j = this.getCustomPlaceIndexByName("Antarctica");
                             }
@@ -673,7 +675,7 @@ var ViewModels;
 
                     var colNames = new Array();
                     dataTable.addColumn('string', 'Country');
-                    dataTable.addColumn('number', 'Total Activities');
+                    dataTable.addColumn('number', 'Total People');
 
                     var placeCounts = (this.globalPeopleCountData).placeCounts;
                     if ((placeCounts != null) && (placeCounts.length > 0)) {
@@ -704,7 +706,7 @@ var ViewModels;
                             } else if (officialName === "Indian Ocean") {
                                 j = this.getCustomPlaceIndexByName("Indian Ocean");
                             } else if (officialName === "Southern Ocean") {
-                                j = this.getCustomPlaceIndexByName("Indian Ocean");
+                                j = this.getCustomPlaceIndexByName("Southern Ocean");
                             } else if (officialName === "Antarctica") {
                                 j = this.getCustomPlaceIndexByName("Antarctica");
                             }
@@ -1215,6 +1217,11 @@ var ViewModels;
                 }
             };
 
+            // --------------------------------------------------------------------------------
+            /*
+            *
+            */
+            // --------------------------------------------------------------------------------
             FacultyAndStaff.prototype.selectMap = function (type) {
                 var _this = this;
                 this.mapType(type);
@@ -1245,6 +1252,7 @@ var ViewModels;
                                 _this.totalCount(_this.globalActivityCountData.count);
                                 _this.totalPlaceCount(_this.globalActivityCountData.countOfPlaces);
                             }
+                            _this.updateCustomGeochartPlaceTooltips(_this.searchType());
                         });
 
                         this.getActivityDataTable(this.selectedPlace()).done(function (dataTable) {
@@ -1265,22 +1273,21 @@ var ViewModels;
                                 _this.totalCount(_this.globalPeopleCountData.count);
                                 _this.totalPlaceCount(_this.globalPeopleCountData.countOfPlaces);
                             }
+                            _this.updateCustomGeochartPlaceTooltips(_this.searchType());
                         });
 
                         this.getPeopleDataTable(this.selectedPlace()).done(function (dataTable) {
                             _this.barchart.draw(dataTable, _this.barchartPeopleOptions);
                             if (_this.selectedPlace() != null) {
                                 _this.totalCount(_this.placePeopleCountData.count);
-                                _this.totalPlaceCount(_this.placePeopleCountData.countOfPlaces);
                             }
+                            _this.totalPlaceCount(_this.placePeopleCountData.countOfPlaces);
                         });
 
                         dataTable = this.getPeopleTrendDataTable(this.selectedPlace()).done(function (dataTable) {
                             _this.linechart.draw(dataTable, _this.linechartPeopleOptions);
                         });
                     }
-
-                    this.updateCustomGeochartPlaceTooltips(this.searchType());
 
                     $("#bib-faculty-staff-summary").addClass("current");
                 } else if (type === "pointmap") {
@@ -1388,13 +1395,15 @@ var ViewModels;
 
             FacultyAndStaff.prototype.heatmapSelectHandler = function () {
                 var selection = this.heatmap.getSelection();
-                var str = '';
-                if (this.searchType() === 'activities') {
-                    str = this.heatmapActivityDataTable.getFormattedValue(selection[0].row, 0);
-                } else {
-                    str = this.heatmapPeopleDataTable.getFormattedValue(selection[0].row, 0);
+                if ((selection != null) && (selection.length > 0)) {
+                    var str = '';
+                    if (this.searchType() === 'activities') {
+                        str = this.heatmapActivityDataTable.getFormattedValue(selection[0].row, 0);
+                    } else {
+                        str = this.heatmapPeopleDataTable.getFormattedValue(selection[0].row, 0);
+                    }
+                    this.selectedPlace(str);
                 }
-                this.selectedPlace(str);
             };
 
             FacultyAndStaff.prototype.globalViewClickHandler = function (item, event) {

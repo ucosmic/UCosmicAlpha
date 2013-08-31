@@ -20,9 +20,9 @@ namespace UCosmic.Domain.Activities
         public ICollection<YearCount> Data { get; private set; }
 
         public ActivityPlaceTrendActivityView(IProcessQueries queryProcessor,
-                                          IQueryEntities entities,
-                                          int establishmentId,
-                                          int placeId )
+                                              IQueryEntities entities,
+                                              int establishmentId,
+                                              int[] placeIds)
         {
             EstablishmentId = establishmentId;
             Data = new Collection<YearCount>();
@@ -34,26 +34,30 @@ namespace UCosmic.Domain.Activities
                                        ? toDateUtc.AddYears(-(settings.ReportsDefaultYearRange.Value + 1))
                                        : new DateTime(DateTime.MinValue.Year, 1, 1);
 
-            Place place = entities.Query<Place>().SingleOrDefault(p => p.RevisionId == placeId);
-            if (place != null)
             {
-                OfficialName = place.OfficialName;
-
-                for (int year = fromDateUtc.Year; year < toDateUtc.Year; year += 1)
+                int placeId = placeIds[0];
+                Place place = entities.Query<Place>().SingleOrDefault(p => p.RevisionId == placeId);
+                if (place != null)
                 {
-                    var yearCount = new YearCount
-                    {
-                        Year = year,
-                        Count = queryProcessor.Execute(new ActivityCountByPlaceIdsEstablishmentId( new int[] { placeId },
-                                                                                                 establishmentId,
-                                                                                                 new DateTime(fromDateUtc.Year, 1, 1),
-                                                                                                 new DateTime(year + 1, 1, 1),
-                                                                                                 true /* No Undated Activities */,
-                                                                                                 (year == toDateUtc.Year-1) /* Include future in last year */ ))
-                    };
-
-                    Data.Add(yearCount);
+                    OfficialName = place.OfficialName;
                 }
+            }
+
+            for (int year = fromDateUtc.Year; year < toDateUtc.Year; year += 1)
+            {
+                var yearCount = new YearCount
+                {
+                    Year = year,
+                    Count = queryProcessor.Execute(new ActivityCountByPlaceIdsEstablishmentId(
+                                                       placeIds,
+                                                       establishmentId,
+                                                       new DateTime(fromDateUtc.Year, 1, 1),
+                                                       new DateTime(year + 1, 1, 1),
+                                                       true /* No Undated Activities */,
+                                                       (year == toDateUtc.Year - 1) /* Include future in last year */))
+                };
+
+                Data.Add(yearCount);
             }
         }
     }

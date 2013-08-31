@@ -97,6 +97,8 @@ module ViewModels.Employees {
         totalCount: KnockoutObservable<number>;
         totalPlaceCount: KnockoutObservable<number>;
 
+        /* If you add or remove from this list, also look at _getHeatmapActivityDataTable()
+            and _getHeatmapPeopleDataTable() to update the custom place tooltips text. */
         geochartCustomPlaces: any[] = [
             {
                 name: 'Antarctica', id: 'antarctica', activityCount: 0, peopleCount: 0
@@ -718,7 +720,7 @@ module ViewModels.Employees {
                             j = this.getCustomPlaceIndexByName("Indian Ocean");
                         }
                         else if (officialName === "Southern Ocean") {
-                            j = this.getCustomPlaceIndexByName("Indian Ocean");
+                            j = this.getCustomPlaceIndexByName("Southern Ocean");
                         }
                         else if (officialName === "Antarctica") {
                             j = this.getCustomPlaceIndexByName("Antarctica");
@@ -759,7 +761,7 @@ module ViewModels.Employees {
 
                 var colNames = new Array();
                 dataTable.addColumn('string', 'Country');
-                dataTable.addColumn('number', 'Total Activities');
+                dataTable.addColumn('number', 'Total People');
 
                 var placeCounts = (<any>this.globalPeopleCountData).placeCounts;
                 if ((placeCounts != null) && (placeCounts.length > 0)) {
@@ -800,7 +802,7 @@ module ViewModels.Employees {
                             j = this.getCustomPlaceIndexByName("Indian Ocean");
                         }
                         else if (officialName === "Southern Ocean") {
-                            j = this.getCustomPlaceIndexByName("Indian Ocean");
+                            j = this.getCustomPlaceIndexByName("Southern Ocean");
                         }
                         else if (officialName === "Antarctica") {
                             j = this.getCustomPlaceIndexByName("Antarctica");
@@ -1334,6 +1336,11 @@ module ViewModels.Employees {
             }
         }
 
+        // --------------------------------------------------------------------------------
+        /*
+        * 
+        */
+        // --------------------------------------------------------------------------------
         selectMap(type: string): void {
 
             this.mapType(type);
@@ -1365,6 +1372,7 @@ module ViewModels.Employees {
                                 this.totalCount(this.globalActivityCountData.count);
                                 this.totalPlaceCount(this.globalActivityCountData.countOfPlaces);
                             }
+                            this.updateCustomGeochartPlaceTooltips(this.searchType());
                         });
 
                     this.getActivityDataTable(this.selectedPlace())
@@ -1387,8 +1395,9 @@ module ViewModels.Employees {
                             this.heatmap.draw(dataTable, this.heatmapOptions);
                             if (this.selectedPlace() == null) {
                                 this.totalCount(this.globalPeopleCountData.count);
-                                this.totalPlaceCount(this.globalPeopleCountData.countOfPlaces);
+                                this.totalPlaceCount(this.globalPeopleCountData.countOfPlaces); 
                             }
+                            this.updateCustomGeochartPlaceTooltips(this.searchType());
                         });
 
                     this.getPeopleDataTable(this.selectedPlace())
@@ -1396,8 +1405,8 @@ module ViewModels.Employees {
                             this.barchart.draw(dataTable, this.barchartPeopleOptions);
                             if (this.selectedPlace() != null) {
                                 this.totalCount(this.placePeopleCountData.count);
-                                this.totalPlaceCount(this.placePeopleCountData.countOfPlaces);
                             }
+                            this.totalPlaceCount(this.placePeopleCountData.countOfPlaces);
                         });
 
                     dataTable = this.getPeopleTrendDataTable(this.selectedPlace())
@@ -1405,9 +1414,7 @@ module ViewModels.Employees {
                             this.linechart.draw(dataTable, this.linechartPeopleOptions);
                         });
                 }
-
-                this.updateCustomGeochartPlaceTooltips(this.searchType());
-
+              
                 $("#bib-faculty-staff-summary").addClass("current");
             } else if (type === "pointmap") {
                 $('#pointmapText').css("font-weight", "bold");
@@ -1510,13 +1517,15 @@ module ViewModels.Employees {
 
         heatmapSelectHandler(): void {
             var selection = this.heatmap.getSelection();
-            var str: string = '';
-            if (this.searchType() === 'activities') {
-                str = this.heatmapActivityDataTable.getFormattedValue(selection[0].row, 0);
-            } else {
-                str = this.heatmapPeopleDataTable.getFormattedValue(selection[0].row, 0);
+            if ((selection != null) && (selection.length > 0)) {
+                var str: string = '';
+                if (this.searchType() === 'activities') {
+                    str = this.heatmapActivityDataTable.getFormattedValue(selection[0].row, 0);
+                } else {
+                    str = this.heatmapPeopleDataTable.getFormattedValue(selection[0].row, 0);
+                }
+                this.selectedPlace(str);
             }
-            this.selectedPlace(str);
         }
 
         globalViewClickHandler(item: any, event: any): void {
