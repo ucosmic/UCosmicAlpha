@@ -1892,6 +1892,13 @@
       <DependentUpon>contacts.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="scripts\viewmodels\agreements\fileAttachments.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\agreements\datesStatus.ts" />
+    <Content Include="scripts\viewmodels\agreements\datesStatus.js">
+      <DependentUpon>datesStatus.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\agreements\datesStatus.min.js">
+      <DependentUpon>datesStatus.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\viewmodels\agreements\fileAttachments.js">
       <DependentUpon>fileAttachments.ts</DependentUpon>
     </Content>
@@ -1903,6 +1910,13 @@
     </Content>
     <Content Include="scripts\viewmodels\agreements\scrollBody.min.js">
       <DependentUpon>scrollBody.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="scripts\viewmodels\agreements\visibility.ts" />
+    <Content Include="scripts\viewmodels\agreements\visibility.js">
+      <DependentUpon>visibility.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\agreements\visibility.min.js">
+      <DependentUpon>visibility.ts</DependentUpon>
     </Content>
     <Content Include="scripts\viewmodels\degrees\Degree.js">
       <DependentUpon>Degree.ts</DependentUpon>

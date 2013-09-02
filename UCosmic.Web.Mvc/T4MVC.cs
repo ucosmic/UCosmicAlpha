@@ -2770,6 +2770,10 @@ namespace Links
                 public static readonly string contacts_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/contacts.min.js") ? Url("contacts.min.js") : Url("contacts.js");
                               
                 public static readonly string contacts_min_js = Url("contacts.min.js");
+                public static readonly string datesStatus_ts = Url("datesStatus.ts");
+                public static readonly string datesStatus_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/datesStatus.min.js") ? Url("datesStatus.min.js") : Url("datesStatus.js");
+                              
+                public static readonly string datesStatus_min_js = Url("datesStatus.min.js");
                 public static readonly string fileAttachments_ts = Url("fileAttachments.ts");
                 public static readonly string fileAttachments_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/fileAttachments.min.js") ? Url("fileAttachments.min.js") : Url("fileAttachments.js");
                               
@@ -2778,6 +2782,10 @@ namespace Links
                 public static readonly string scrollBody_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/scrollBody.min.js") ? Url("scrollBody.min.js") : Url("scrollBody.js");
                               
                 public static readonly string scrollBody_min_js = Url("scrollBody.min.js");
+                public static readonly string visibility_ts = Url("visibility.ts");
+                public static readonly string visibility_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/visibility.min.js") ? Url("visibility.min.js") : Url("visibility.js");
+                              
+                public static readonly string visibility_min_js = Url("visibility.min.js");
             }
         
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -3563,7 +3571,6 @@ namespace Links
         public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
         public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
         public static readonly string antarctica_283x35_png = Url("antarctica_283x35.png");
-        public static readonly string arctic_193x20_png = Url("arctic_193x20.png");
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public static class bg {
             private const string URLPATH = "~/images/bg";

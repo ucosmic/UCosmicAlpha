@@ -1,7 +1,7 @@
 var agreements;
 (function (agreements) {
     var contacts = (function () {
-        function contacts(isCustomContactTypeAllowed, spinner, establishmentItemViewModel, agreementIsEdit, agreementId, kendoWindowBug) {
+        function contacts(isCustomContactTypeAllowed, spinner, establishmentItemViewModel, agreementIsEdit, agreementId, kendoWindowBug, dfdPopContacts) {
             this.selectConstructor = function (name, id) {
                 this.name = name;
                 this.id = id;
@@ -45,12 +45,14 @@ var agreements;
             this.agreementIsEdit = agreementIsEdit;
             this.agreementId = agreementId;
             this.kendoWindowBug = kendoWindowBug;
+            this.dfdPopContacts = dfdPopContacts;
 
             this._setupValidation = this._setupValidation.bind(this);
             this.editAContact = this.editAContact.bind(this);
             this.removeContact = this.removeContact.bind(this);
             this.removePhone = this.removePhone.bind(this);
             this.addPhone = this.addPhone.bind(this);
+            this.populateContacts = this.populateContacts.bind(this);
 
             this.contactSalutation = ko.mapping.fromJS([
                 new this.selectConstructor("[None]", ""),
@@ -714,6 +716,14 @@ var agreements;
                 contactJobTitle: this.contactJobTitle.extend({
                     maxLength: 50
                 })
+            });
+        };
+
+        contacts.prototype.populateContacts = function () {
+            var _this = this;
+            $.get(App.Routes.WebApi.Agreements.Contacts.get(this.agreementId), { useTestData: false }).done(function (response) {
+                ko.mapping.fromJS(response, _this.contacts);
+                _this.dfdPopContacts.resolve();
             });
         };
         return contacts;

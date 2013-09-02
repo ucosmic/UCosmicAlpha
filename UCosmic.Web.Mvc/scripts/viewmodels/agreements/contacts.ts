@@ -1,19 +1,21 @@
 module agreements {
 
     export class contacts {
-        constructor(isCustomContactTypeAllowed, spinner, establishmentItemViewModel, agreementIsEdit, agreementId, kendoWindowBug) {
+        constructor(isCustomContactTypeAllowed, spinner, establishmentItemViewModel, agreementIsEdit, agreementId, kendoWindowBug, dfdPopContacts) {
             this.isCustomContactTypeAllowed = isCustomContactTypeAllowed;
             this.spinner = spinner;
             this.establishmentItemViewModel = establishmentItemViewModel;
             this.agreementIsEdit = agreementIsEdit;
             this.agreementId = agreementId;
             this.kendoWindowBug = kendoWindowBug;
+            this.dfdPopContacts = dfdPopContacts;
 
             this._setupValidation = <() => void > this._setupValidation.bind(this);
             this.editAContact = <() => boolean> this.editAContact.bind(this);
             this.removeContact = <() => boolean> this.removeContact.bind(this);
             this.removePhone = <() => void > this.removePhone.bind(this);
             this.addPhone = <() => void > this.addPhone.bind(this);
+            this.populateContacts = <() => void > this.populateContacts.bind(this);
 
             this.contactSalutation = ko.mapping.fromJS([
                 new this.selectConstructor("[None]", ""),
@@ -53,6 +55,7 @@ module agreements {
         agreementIsEdit;
         agreementId;
         kendoWindowBug;
+        dfdPopContacts;
 
         //contact vars
         $contactTypeOptions: KnockoutObservable<JQuery> = ko.observable();
@@ -735,6 +738,15 @@ module agreements {
                     maxLength: 50
                 })
             })
+        }
+
+        populateContacts(): void {
+            $.get(App.Routes.WebApi.Agreements.Contacts.get(this.agreementId), { useTestData: false })
+                .done((response: any): void => {
+                    ko.mapping.fromJS(response, this.contacts)
+                    this.dfdPopContacts.resolve();
+                });
+
         }
     }
 }

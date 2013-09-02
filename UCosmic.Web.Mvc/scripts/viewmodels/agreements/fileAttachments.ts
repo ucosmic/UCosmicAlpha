@@ -1,11 +1,13 @@
 module agreements {
 
     export class fileAttachments {
-        constructor(agreementId, agreementIsEdit, spinner, establishmentItemViewModel) {
+        constructor(agreementId, agreementIsEdit, spinner, establishmentItemViewModel, dfdPopFiles) {
             this.agreementId = agreementId;
             this.agreementIsEdit = agreementIsEdit;
             this.spinner = spinner;
             this.establishmentItemViewModel = establishmentItemViewModel;
+            this.dfdPopFiles = dfdPopFiles;
+
             this.updateFile = <() => void > this.updateFile.bind(this);
             this.fileVisibilityClicked = <() => boolean > this.fileVisibilityClicked.bind(this);
             this.removeFile = <() => void > this.removeFile.bind(this);
@@ -15,6 +17,7 @@ module agreements {
         agreementIsEdit;
         spinner;
         establishmentItemViewModel;
+        dfdPopFiles;
 
         //file vars
         $file: KnockoutObservable<JQuery> = ko.observable();
@@ -266,5 +269,24 @@ module agreements {
             }
             return true;
         }
+
+        populateFiles(): void {
+            $.get(App.Routes.WebApi.Agreements.Files.get(this.agreementId), { useTestData: true })
+                .done((response: any): void => {
+                    $.each(response, (i, item) => {
+                        this.files.push(ko.mapping.fromJS({
+                            id: item.id,
+                            originalName: item.originalName,
+                            customName: item.customName,
+                            visibility: item.visibility,
+                            isEdit: false,
+                            customNameFile: item.customName.substring(0, item.customName.lastIndexOf(".")),
+                            customNameExt: item.customName.substring(item.customName.lastIndexOf("."), item.customName.length)
+                        }));
+                    });
+                    this.dfdPopFiles.resolve();
+                });
+        }
+
     }
 }

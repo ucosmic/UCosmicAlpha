@@ -1,7 +1,7 @@
 var agreements;
 (function (agreements) {
     var fileAttachments = (function () {
-        function fileAttachments(agreementId, agreementIsEdit, spinner, establishmentItemViewModel) {
+        function fileAttachments(agreementId, agreementIsEdit, spinner, establishmentItemViewModel, dfdPopFiles) {
             //file vars
             this.$file = ko.observable();
             this.hasFile = ko.observable();
@@ -21,6 +21,8 @@ var agreements;
             this.agreementIsEdit = agreementIsEdit;
             this.spinner = spinner;
             this.establishmentItemViewModel = establishmentItemViewModel;
+            this.dfdPopFiles = dfdPopFiles;
+
             this.updateFile = this.updateFile.bind(this);
             this.fileVisibilityClicked = this.fileVisibilityClicked.bind(this);
             this.removeFile = this.removeFile.bind(this);
@@ -262,6 +264,24 @@ else
                 });
             }
             return true;
+        };
+
+        fileAttachments.prototype.populateFiles = function () {
+            var _this = this;
+            $.get(App.Routes.WebApi.Agreements.Files.get(this.agreementId), { useTestData: true }).done(function (response) {
+                $.each(response, function (i, item) {
+                    _this.files.push(ko.mapping.fromJS({
+                        id: item.id,
+                        originalName: item.originalName,
+                        customName: item.customName,
+                        visibility: item.visibility,
+                        isEdit: false,
+                        customNameFile: item.customName.substring(0, item.customName.lastIndexOf(".")),
+                        customNameExt: item.customName.substring(item.customName.lastIndexOf("."), item.customName.length)
+                    }));
+                });
+                _this.dfdPopFiles.resolve();
+            });
         };
         return fileAttachments;
     })();

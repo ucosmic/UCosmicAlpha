@@ -4,11 +4,11 @@
 /// <reference path="../establishments/Search.ts" />
 /// <reference path="../establishments/Name.ts" />
 /// <reference path="../establishments/Item.ts" />
-/// <reference path="../../typings/globalize/globalize.d.ts" />
 /// <reference path="../../typings/knockout/knockout.d.ts" />
+/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
+/// <reference path="../../typings/globalize/globalize.d.ts" />
 /// <reference path="../../typings/kendo/kendo.all.d.ts" />
 /// <reference path="../../typings/jquery/jquery.d.ts" />
-/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
 /// <reference path="../../typings/requirejs/require.d.ts" />
 /// <reference path="../../app/App.ts" />
 /// <reference path="../../app/Routes.ts" />
@@ -19,6 +19,8 @@
 /// <reference path="./scrollBody.ts" />
 /// <reference path="./contacts.ts" />
 /// <reference path="./fileAttachments.ts" />
+/// <reference path="./datesStatus.ts" />
+/// <reference path="./visibility.ts" />
 
 class InstitutionalAgreementParticipantModel {
     constructor(isOwner: any, establishmentId: number, establishmentOfficialName: string,
@@ -36,17 +38,22 @@ class InstitutionalAgreementParticipantModel {
 
 class InstitutionalAgreementEditModel {
     constructor(public initDefaultPageRoute: boolean = true) {
-        this.contactClass = new agreements.contacts(this.isCustomContactTypeAllowed, this.spinner, this.establishmentItemViewModel, this.agreementIsEdit, this.agreementId, this.kendoWindowBug);
+        this.contactClass = new agreements.contacts(this.isCustomContactTypeAllowed, this.spinner, this.establishmentItemViewModel, this.agreementIsEdit, this.agreementId, this.kendoWindowBug, this.dfdPopContacts);
         ko.applyBindings(this.contactClass, $('#contacts')[0]);
-        this.fileAttachmentClass = new agreements.fileAttachments(this.agreementId, this.agreementIsEdit, this.spinner, this.establishmentItemViewModel);
+        this.fileAttachmentClass = new agreements.fileAttachments(this.agreementId, this.agreementIsEdit, this.spinner, this.establishmentItemViewModel, this.dfdPopFiles);
         ko.applyBindings(this.fileAttachmentClass, $('#fileAttachments')[0]);
+        this.datesStatusClass = new agreements.datesStatus(this.isCustomStatusAllowed);
+        ko.applyBindings(this.datesStatusClass, $('#effectiveDatesCurrentStatus')[0]);
+        this.visibilityClass = new agreements.visibility();
+        ko.applyBindings(this.visibilityClass, $('#overallVisibility')[0]);
+        
 
         var culture = $("meta[name='accept-language']").attr("content");
         if (window.location.href.toLowerCase().indexOf("agreements/new") > 0) {
             Globalize.culture(culture)
             this.editOrNewUrl = "new/";
             this.agreementIsEdit(false);
-            this.visibility("Public");
+            this.visibilityClass.visibility("Public");
             $("#LoadingPage").hide();
             this.populateParticipants();
             $.when(this.dfdPageFadeIn, this.dfdPopParticipants)
@@ -59,10 +66,12 @@ class InstitutionalAgreementEditModel {
             this.editOrNewUrl = window.location.href.toLowerCase().substring(window.location.href.toLowerCase().indexOf("agreements/") + 11);
             this.editOrNewUrl = this.editOrNewUrl.substring(0, this.editOrNewUrl.indexOf("/edit") + 5) + "/";
             this.agreementIsEdit(true);
-            this.agreementId = this.editOrNewUrl.substring(0, this.editOrNewUrl.indexOf("/"))
+            this.agreementId = this.editOrNewUrl.substring(0, this.editOrNewUrl.indexOf("/"));
+            this.fileAttachmentClass.agreementId = this.agreementId;
+            this.contactClass.agreementId = this.agreementId;
             this.populateParticipants();
-            this.populateFiles();
-            this.populateContacts();
+            this.fileAttachmentClass.populateFiles();
+            this.contactClass.populateContacts();
             Globalize.culture(culture)
             this.populateAgreementData();
             $("#LoadingPage").hide();
@@ -107,8 +116,11 @@ class InstitutionalAgreementEditModel {
         this.id = id;
     }
 
+    //module classes
     contactClass;
     fileAttachmentClass;
+    datesStatusClass;
+    visibilityClass;
 
     percentOffBodyHeight = .6;
     //jquery defered for setting body height.
@@ -120,7 +132,6 @@ class InstitutionalAgreementEditModel {
 
     agreementIsEdit = ko.observable();
     agreementId = 0;
-    visibility = ko.observable();
 
     //set the path for editing an agreement or new agreement.
     editOrNewUrl;
@@ -135,7 +146,6 @@ class InstitutionalAgreementEditModel {
 
     //validate vars
     validateBasicInfo;
-    validateEffectiveDatesCurrentStatus;
 
     //basic info vars
     $uAgreements: KnockoutObservable<JQuery> = ko.observable();
@@ -151,15 +161,6 @@ class InstitutionalAgreementEditModel {
     isCustomTypeAllowed = ko.observable();
     isCustomStatusAllowed = ko.observable();
     isCustomContactTypeAllowed = ko.observable();
-
-    //dates vars
-    startDate = ko.observable();
-    expDate = ko.observable();
-    isEstimated = ko.observable();
-    autoRenew = ko.observable(2);
-    $statusOptions: KnockoutObservable<JQuery> = ko.observable();
-    statusOptions = ko.mapping.fromJS([]);
-    statusOptionSelected: KnockoutObservable<string> = ko.observable();
     
     //participant vars
     participantsExport = ko.mapping.fromJS([]);
@@ -210,18 +211,18 @@ class InstitutionalAgreementEditModel {
 
                         editor.value(response.content);
                         this.content(response.content);
-                        this.expDate(Globalize.format(new Date(response.expiresOn.substring(0, response.expiresOn.lastIndexOf("T"))), 'd'));
-                        this.startDate(Globalize.format(new Date(response.startsOn.substring(0, response.startsOn.lastIndexOf("T"))), 'd'));
+                        this.datesStatusClass.expDate(Globalize.format(new Date(response.expiresOn.substring(0, response.expiresOn.lastIndexOf("T"))), 'd'));
+                        this.datesStatusClass.startDate(Globalize.format(new Date(response.startsOn.substring(0, response.startsOn.lastIndexOf("T"))), 'd'));
                         if (response.isAutoRenew == null) {
-                            this.autoRenew(2);
+                            this.datesStatusClass.autoRenew(2);
                         } else {
-                            this.autoRenew(response.isAutoRenew);
+                            this.datesStatusClass.autoRenew(response.isAutoRenew);
                         };
 
                         this.nickname(response.name);
                         this.privateNotes(response.notes);
-                        this.visibility(response.visibility);
-                        this.isEstimated(response.isExpirationEstimated);
+                        this.visibilityClass.visibility(response.visibility);
+                        this.datesStatusClass.isEstimated(response.isExpirationEstimated);
                         ko.mapping.fromJS(response.participants, this.participants);
                         this.dfdPopParticipants.resolve();
                         this.uAgreementSelected(response.umbrellaId);
@@ -231,16 +232,16 @@ class InstitutionalAgreementEditModel {
                             return dataItem.value == this.uAgreementSelected();
                         });
 
-                        this.statusOptionSelected(response.status);
+                        this.datesStatusClass.statusOptionSelected(response.status);
                         if (this.isCustomStatusAllowed()) {
                             dropdownlist = $("#statusOptions").data("kendoComboBox");
                             dropdownlist.select((dataItem) => {
-                                return dataItem.name === this.statusOptionSelected();
+                                return dataItem.name === this.datesStatusClass.statusOptionSelected();
                             });
                         } else {
                             dropdownlist = $("#statusOptions").data("kendoDropDownList");
                             dropdownlist.select((dataItem) => {
-                                return dataItem.text === this.statusOptionSelected();
+                                return dataItem.text === this.datesStatusClass.statusOptionSelected();
                             });
                         }
 
@@ -259,34 +260,7 @@ class InstitutionalAgreementEditModel {
                     });
             });
     }
-
-    populateFiles(): void {
-        $.get(App.Routes.WebApi.Agreements.Files.get(this.agreementId), { useTestData: true })
-            .done((response: any): void => {
-                $.each(response, (i, item) => {
-                    this.fileAttachmentClass.files.push(ko.mapping.fromJS({
-                        id: item.id,
-                        originalName: item.originalName,
-                        customName: item.customName,
-                        visibility: item.visibility,
-                        isEdit: false,
-                        customNameFile: item.customName.substring(0, item.customName.lastIndexOf(".")),
-                        customNameExt: item.customName.substring(item.customName.lastIndexOf("."), item.customName.length)
-                    }));
-                });
-                this.dfdPopFiles.resolve();
-            });
-    }
-
-    populateContacts(): void {
-        $.get(App.Routes.WebApi.Agreements.Contacts.get(this.agreementId), { useTestData: false })
-            .done((response: any): void => {
-                ko.mapping.fromJS(response, this.contactClass.contacts)
-                this.dfdPopContacts.resolve();
-            });
-
-    }
-    
+        
     populateUmbrella(): void {
         $.get(App.Routes.WebApi.Agreements.UmbrellaOptions.get(this.agreementId))
             .done((response: any): void => {
@@ -314,15 +288,15 @@ class InstitutionalAgreementEditModel {
         this.isCustomTypeAllowed(result.isCustomTypeAllowed);
         this.isCustomStatusAllowed(result.isCustomStatusAllowed);
         this.isCustomContactTypeAllowed(result.isCustomContactTypeAllowed);
-        this.statusOptions.push(new this.selectConstructor("", ""));
-        this.typeOptions.push(new this.selectConstructor("", ""));
+        this.datesStatusClass.statusOptions.push(new this.selectConstructor("", ""));
         for (var i = 0; i < result.statusOptions.length; i++) {
-            this.statusOptions.push(new this.selectConstructor(result.statusOptions[i], result.statusOptions[i]));
+            this.datesStatusClass.statusOptions.push(new this.selectConstructor(result.statusOptions[i], result.statusOptions[i]));
         };
         this.contactClass.contactTypeOptions.push(new this.selectConstructor("", undefined));
         for (var i = 0; i < result.contactTypeOptions.length; i++) {
             this.contactClass.contactTypeOptions.push(new this.selectConstructor(result.contactTypeOptions[i], result.contactTypeOptions[i]));
         };
+        this.typeOptions.push(new this.selectConstructor("", ""));
         for (var i = 0; i < result.typeOptions.length; i++) {
             this.typeOptions.push(new this.selectConstructor(result.typeOptions[i], result.typeOptions[i]));
         };
@@ -348,7 +322,7 @@ class InstitutionalAgreementEditModel {
                 dataTextField: "name",
                 dataValueField: "id",
                 dataSource: new kendo.data.DataSource({
-                    data: this.statusOptions()
+                    data: this.datesStatusClass.statusOptions()
                 })
             });
         } else {
@@ -356,7 +330,7 @@ class InstitutionalAgreementEditModel {
                 dataTextField: "name",
                 dataValueField: "id",
                 dataSource: new kendo.data.DataSource({
-                    data: this.statusOptions()
+                    data: this.datesStatusClass.statusOptions()
                 })
             });
         }
@@ -850,49 +824,6 @@ class InstitutionalAgreementEditModel {
     }
            
     private _setupValidation(): void {
-        ko.validation.rules['greaterThan'] = {
-            validator: function (val, otherVal) {
-                if (otherVal() == undefined) {
-                    return true;
-                } else {
-                    return Globalize.parseDate(val) > Globalize.parseDate(otherVal())
-                }
-            },
-            message: 'The field must be greater than start date'
-        }
-        ko.validation.rules.date.validator = function (value, validate) {
-            return !value.length || (validate && Globalize.parseDate(value) != null);
-        }
-
-        ko.validation.registerExtenders();
-        
-        this.validateEffectiveDatesCurrentStatus = ko.validatedObservable({
-            startDate: this.startDate.extend({
-                required: {
-                    message: "Start date is required."
-                },
-                date: { message: "Start date must valid." },
-                maxLength: 50
-            }),
-            expDate: this.expDate.extend({
-                required: {
-                    message: "Expiration date is required."
-                },
-                date: { message: "Expiration date must valid." },
-                maxLength: 50,
-                greaterThan: this.startDate
-            }),
-            autoRenew: this.autoRenew.extend({
-                required: {
-                    message: "Auto renew is required."
-                }
-            }),
-            statusOptionSelected: this.statusOptionSelected.extend({
-                required: {
-                    message: "Current Status is required."
-                }
-            })
-        })
         this.validateBasicInfo = ko.validatedObservable({
             agreementType: this.typeOptionSelected.extend({
                 required: {
@@ -981,9 +912,9 @@ class InstitutionalAgreementEditModel {
     saveUpdateAgreement(): void {
         var offset;
         // validate in this order to put scroll in right place
-        if (!this.validateEffectiveDatesCurrentStatus.isValid()) {
+        if (!this.datesStatusClass.validateEffectiveDatesCurrentStatus.isValid()) {
             offset = $("#effectiveDatesCurrentStatus").offset();
-            this.validateEffectiveDatesCurrentStatus.errors.showAllMessages(true);
+            this.datesStatusClass.validateEffectiveDatesCurrentStatus.errors.showAllMessages(true);
             $("#navEffectiveDatesCurrentStatus").closest("ul").find("li").removeClass("current");
             $("#navEffectiveDatesCurrentStatus").addClass("current");
         }
@@ -1034,9 +965,9 @@ class InstitutionalAgreementEditModel {
                 });
             });
             var myAutoRenew = null;
-            if (this.autoRenew()== 0) {
+            if (this.datesStatusClass.autoRenew()== 0) {
                 myAutoRenew = false;
-            } else if (this.autoRenew() == 1) {
+            } else if (this.datesStatusClass.autoRenew() == 1) {
                 myAutoRenew = true;
             }
 
@@ -1044,14 +975,14 @@ class InstitutionalAgreementEditModel {
 
             var data = ko.mapping.toJS({
                 content: this.content(),
-                expiresOn: this.expDate(),
-                startsOn: this.startDate(),
+                expiresOn: this.datesStatusClass.expDate(),
+                startsOn: this.datesStatusClass.startDate(),
                 isAutoRenew: myAutoRenew,
                 name: this.nickname(),
                 notes: this.privateNotes(),
-                status: this.statusOptionSelected(),
-                visibility: this.visibility(),
-                isExpirationEstimated: this.isEstimated(),
+                status: this.datesStatusClass.statusOptionSelected(),
+                visibility: this.visibilityClass.visibility(),
+                isExpirationEstimated: this.datesStatusClass.isEstimated(),
                 participants: this.participantsExport,
                 umbrellaId: this.uAgreementSelected(),
                 type: this.typeOptionSelected()
@@ -1094,6 +1025,8 @@ class InstitutionalAgreementEditModel {
                     .done((response: any, statusText: string, xhr: JQueryXHR): void => {
                         var myUrl = xhr.getResponseHeader('Location');
                         this.agreementId = parseInt(myUrl.substring(myUrl.lastIndexOf("/") + 1));
+                        this.fileAttachmentClass.agreementId = this.agreementId;
+                        this.contactClass.agreementId = this.agreementId;
                         this.agreementPostFiles(response, statusText, xhr);
                         this.agreementPostContacts(response, statusText, xhr);
                         //change url to edit
