@@ -118,7 +118,7 @@ module ViewModels.Degrees {
             this._initialize( educationId );
         }
 
-        load(): JQueryPromise {
+        load(): JQueryPromise<any> {
             var deferred: JQueryDeferred<void> = $.Deferred();
 
             if ( this.id() == 0 ) {

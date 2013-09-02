@@ -2674,7 +2674,6 @@ namespace Links
                 private const string URLPATH = "~/scripts/typings/knockout";
                 public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
                 public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
-                public static readonly string knockout_amd_d_ts = Url("knockout.amd.d.ts");
                 public static readonly string knockout_d_ts = Url("knockout.d.ts");
             }
         

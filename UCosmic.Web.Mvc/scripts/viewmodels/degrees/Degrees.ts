@@ -27,7 +27,7 @@ module ViewModels.Degrees {
             this.personId = personId;
         }
 
-        load(): JQueryPromise {
+        load(): JQueryPromise<any> {
             var deferred: JQueryDeferred<void> = $.Deferred();
             var expertiseSearchInput: DegreeSearchInput = new DegreeSearchInput();
 

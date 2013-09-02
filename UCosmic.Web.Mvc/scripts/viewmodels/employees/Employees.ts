@@ -655,7 +655,7 @@ module ViewModels.Employees {
             this.linechart = new this.google.visualization.LineChart($('#facultystaff-summary-linechart')[0]);
         }
 
-        getHeatmapActivityDataTable(): JQueryPromise {
+        getHeatmapActivityDataTable(): JQueryPromise<any> {
             var deferred: JQueryDeferred<void> = $.Deferred();
 
             if (this.globalActivityCountData == null) {
@@ -701,7 +701,7 @@ module ViewModels.Employees {
             return this.heatmapActivityDataTable;
         }
 
-        getHeatmapPeopleDataTable(): JQueryPromise {
+        getHeatmapPeopleDataTable(): JQueryPromise<any> {
             var deferred: JQueryDeferred<void> = $.Deferred();
 
             if (this.globalPeopleCountData == null) {
@@ -751,7 +751,7 @@ module ViewModels.Employees {
        /*
         *
         */
-        getActivityDataTable(placeOfficialName: string): JQueryPromise {
+        getActivityDataTable(placeOfficialName: string): JQueryPromise<any> {
             var deferred: JQueryDeferred<void> = $.Deferred();
 
             if (placeOfficialName == null) {
@@ -861,7 +861,7 @@ module ViewModels.Employees {
         /*
         *
         */
-        getPeopleDataTable(placeOfficialName: string): JQueryPromise {
+        getPeopleDataTable(placeOfficialName: string): JQueryPromise<any> {
             var deferred: JQueryDeferred<void> = $.Deferred();
 
             if (placeOfficialName == null) {
@@ -950,7 +950,7 @@ module ViewModels.Employees {
        /*
         *
         */
-        getActivityTrendDataTable(placeOfficialName: string): JQueryPromise {
+        getActivityTrendDataTable(placeOfficialName: string): JQueryPromise<any> {
             var deferred: JQueryDeferred<void> = $.Deferred();
 
             if (placeOfficialName == null) {
@@ -1037,7 +1037,7 @@ module ViewModels.Employees {
             return dt;
         }
 
-        getPeopleTrendDataTable(placeOfficialName: string): JQueryPromise {
+        getPeopleTrendDataTable(placeOfficialName: string): JQueryPromise<any> {
             var deferred: JQueryDeferred<void> = $.Deferred();
 
             if (placeOfficialName == null) {
@@ -1164,7 +1164,7 @@ module ViewModels.Employees {
             }
         }
 
-        load(): JQueryPromise {
+        load(): JQueryPromise<any> {
             var me = this;
             var deferred: JQueryDeferred<void> = $.Deferred();
 

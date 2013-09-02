@@ -254,7 +254,7 @@ module ViewModels.Activities {
             this._initialize( activityId );
         }
 
-        load(): JQueryPromise {
+        load(): JQueryPromise<any> {
             var deferred: JQueryDeferred<void> = $.Deferred();
 
             var locationsPact = $.Deferred();
@@ -407,7 +407,7 @@ module ViewModels.Activities {
             return formatted;
         }
 
-        autoSave(viewModel: any, event: any): JQueryPromise {
+        autoSave(viewModel: any, event: any): JQueryPromise<any> {
             var deferred: JQueryDeferred<void> = $.Deferred();
 
             if (this.saving) {

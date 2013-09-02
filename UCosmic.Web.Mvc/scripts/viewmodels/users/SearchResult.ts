@@ -189,7 +189,7 @@ module ViewModels.Users {
             ko.validation.group(this);
         }
 
-        private _pullRoleOptions(): JQueryDeferred {
+        private _pullRoleOptions(): JQueryDeferred<any[]> {
             this.selectedRoleOption(undefined);
             this.roleSpinner.start();
             var deferred = $.Deferred();
@@ -262,7 +262,7 @@ module ViewModels.Users {
             }
         }
 
-        pullRoleGrants(): JQueryDeferred {
+        pullRoleGrants(): JQueryDeferred<any[]> {
             this.roleSpinner.start();
             var deferred = $.Deferred();
             $.get(App.Routes.WebApi.Identity.Users.Roles.get(this.id()))

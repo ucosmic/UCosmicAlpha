@@ -146,7 +146,7 @@ module ViewModels.InternationalAffiliations {
             this._initialize( affiliationId );
         }
 
-        load(): JQueryPromise {
+        load(): JQueryPromise<any> {
             var me = this;
             var deferred: JQueryDeferred<void> = $.Deferred();
 

@@ -123,7 +123,7 @@ module ViewModels.My {
             //this._sammy.run('#/activities');
         }
 
-        load(startTab: string): JQueryPromise {
+        load(startTab: string): JQueryPromise<any> {
             var deferred: JQueryDeferred<void> = $.Deferred();
 
             // start both requests at the same time

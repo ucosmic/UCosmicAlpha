@@ -27,7 +27,7 @@ module ViewModels.InternationalAffiliations {
             this.personId = personId;
         }
 
-        load(): JQueryPromise {
+        load(): JQueryPromise<any> {
             var deferred: JQueryDeferred<void> = $.Deferred();
             var affiliationSearchInput: InternationalAffiliationSearchInput = new InternationalAffiliationSearchInput();
 

@@ -1849,17 +1849,16 @@
     <None Include="scripts\typings\jquery.plugins\jquery.placeholder.d.ts" />
     <None Include="scripts\typings\jquery.plugins\jquery.tinymce.d.ts" />
     <None Include="scripts\typings\jqueryui\jqueryui.d.ts" />
-    <None Include="scripts\typings\jquery\jquery.d.ts" />
     <None Include="scripts\typings\kendo\kendo.all.d.ts" />
     <None Include="scripts\typings\knockout.mapping\knockout.mapping.d.ts" />
     <None Include="scripts\typings\knockout.validation\knockout.validation.d.ts" />
-    <None Include="scripts\typings\knockout\knockout.amd.d.ts" />
-    <None Include="scripts\typings\knockout\knockout.d.ts" />
     <None Include="scripts\typings\modernizr\modernizr.d.ts" />
     <None Include="scripts\typings\moment\moment.d.ts" />
     <None Include="scripts\typings\requirejs\require.d.ts" />
     <None Include="scripts\typings\sammyjs\sammyjs.d.ts" />
     <None Include="scripts\typings\tinymce\tinymce.d.ts" />
+    <Content Include="scripts\typings\jquery\jquery.d.ts" />
+    <Content Include="scripts\typings\knockout\knockout.d.ts" />
     <Content Include="scripts\viewmodels\agreements\AgreementVM.js">
       <DependentUpon>AgreementVM.ts</DependentUpon>
     </Content>
@@ -2539,7 +2538,7 @@
   <Target Name="BeforeBuild">
     <Message Text="Compiling TypeScript files" />
     <Message Text="Executing tsc$(TypeScriptSourceMap) @(TypeScriptCompile ->'&quot;%(fullpath)&quot;', ' ')" />
-    <Exec Command="tsc$(TypeScriptSourceMap) --module AMD @(TypeScriptCompile ->' &quot;%(fullpath)&quot;', ' ')" />
+    <Exec Command="tsc$(TypeScriptSourceMap) @(TypeScriptCompile ->' &quot;%(fullpath)&quot;', ' ')" />
   </Target>
   <Target Name="AfterBuild">
   </Target>

@@ -155,7 +155,7 @@ module ViewModels.LanguageExpertises {
             this._initialize( expertiseId );
         }
 
-        load(): JQueryPromise {
+        load(): JQueryPromise<any> {
             var deferred: JQueryDeferred<void> = $.Deferred();
 
             var proficienciesPact = $.Deferred();

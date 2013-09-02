@@ -34,7 +34,7 @@ module ViewModels.Activities {
             this.personId = personId;
         }
 
-        load(): JQueryPromise {
+        load(): JQueryPromise<any> {
             var deferred: JQueryDeferred<void> = $.Deferred();
 
             var locationsPact = $.Deferred();

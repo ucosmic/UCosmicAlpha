@@ -26,7 +26,7 @@ module ViewModels.GeographicExpertises {
             this.personId = personId;
         }
 
-        load(): JQueryPromise {
+        load(): JQueryPromise<any> {
             var deferred: JQueryDeferred<void> = $.Deferred();
             var expertiseSearchInput: GeographicExpertiseSearchInput = new GeographicExpertiseSearchInput();
 

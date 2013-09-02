@@ -39,7 +39,7 @@ module ViewModels.Users {
             this._setupSessionStorage();
         }
 
-        private _pullResults(): JQueryDeferred {
+        private _pullResults(): JQueryDeferred<any[]> {
             var deferred = $.Deferred();
             var queryParameters = {
                 pageSize: this.pageSize(),

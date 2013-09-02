@@ -188,7 +188,7 @@ interface KnockoutVirtualElements {
 }
 
 interface KnockoutExtenders {
-    throttle(target: any, timeout: number): KnockoutComputed;
+    throttle(target: any, timeout: number): KnockoutComputed<any>;
     notify(target: any, notifyWhen: string): any;
 }
 
@@ -489,6 +489,10 @@ interface KnockoutStatic {
 
         writeValue(element: any, value: any);
     };
+}
+
+declare module "knockout" {
+	export = ko;
 }
 
 declare var ko: KnockoutStatic;

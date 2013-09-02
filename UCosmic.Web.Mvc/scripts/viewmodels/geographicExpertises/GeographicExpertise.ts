@@ -97,7 +97,7 @@ module ViewModels.GeographicExpertises {
             this._initialize( expertiseId );
         }
 
-        load(): JQueryPromise {
+        load(): JQueryPromise<any> {
             var deferred: JQueryDeferred<void> = $.Deferred();
 
             if ( this.id() == 0 ) {
