@@ -13,6 +13,44 @@
 
 module ViewModels.Employees {
 
+    export class FacultyAndStaffSelect {
+        institutions: KnockoutObservableArray<any>;
+        loadSpinner: App.Spinner = new App.Spinner(new App.SpinnerOptions(200));
+
+        load(): JQueryPromise {
+            var deferred: JQueryDeferred<void> = $.Deferred();
+            this.loadSpinner.start();
+            $.ajax({
+                type: "GET",
+                async: true,
+                dataType: 'json',
+                url: App.Routes.WebApi.Establishments.get(),
+                data: {
+                    pageNumber: 1,
+                    pageSize: App.Constants.int32Max,
+                    typeEnglishNames: ['University', 'University System'],
+                    orderBy: 'name-asc'
+                },
+                success: (data: any, textStatus: string, jqXhr: JQueryXHR): void => {
+                    this.institutions = ko.mapping.fromJS(data);
+                    deferred.resolve();
+                },
+                error: (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
+                    deferred.reject(errorThrown);
+                },
+                complete: (jqXhr: JQueryXHR, textStatus: string): void => {
+                    this.loadSpinner.stop();
+                }
+            });
+
+            return deferred;
+        }
+
+        selectInstitutionUrl(institutionId: number): string {
+            return App.Routes.Mvc.FacultyStaff.Institution.select(institutionId);
+        }
+    }
+
     export class FacultyAndStaff {
 
         google: any;
@@ -60,6 +98,7 @@ module ViewModels.Employees {
 
         isHeatmapVisible: KnockoutObservable<boolean>;
         isPointmapVisible: KnockoutObservable<boolean>;
+        isExpertVisible: KnockoutObservable<boolean>;
         isTableVisible: KnockoutObservable<boolean>;
 
         heatmap: any;
@@ -145,6 +184,7 @@ module ViewModels.Employees {
             this.selectedActivityIds = ko.observableArray();
             this.isHeatmapVisible = ko.observable(true);
             this.isPointmapVisible = ko.observable(false);
+            this.isExpertVisible = ko.observable(false);
             this.isTableVisible = ko.observable(false);
             this.mapType = ko.observable('heatmap');
             this.searchType = ko.observable('activities');
@@ -494,6 +534,7 @@ module ViewModels.Employees {
         setupRouting(): void {
             this.sammy.get('#/summary', ():void => { this.selectMap('heatmap'); });
             this.sammy.get('#/search', (): void => { this.selectMap('pointmap'); });
+            this.sammy.get('#/expert', (): void => { this.selectMap('expert'); });
             this.sammy.get('#/results', (): void => { this.selectMap('resultstable'); });
 
             this.sammy.run('#/summary');
@@ -1351,6 +1392,9 @@ module ViewModels.Employees {
             $('#pointmapText').css("font-weight", "normal");
             this.isPointmapVisible(false);
 
+            $('#expertText').css("font-weight", "normal");
+            this.isExpertVisible(false);
+
             $('#resultstableText').css("font-weight", "normal");
             this.isTableVisible(false);
 
@@ -1423,6 +1467,11 @@ module ViewModels.Employees {
                 //fspointmap.draw(fspointmapData, fspointmapOptions)
                 this.google.maps.event.trigger(this.pointmap, "resize");
                 $("#bib-faculty-staff-search").addClass("current");
+            } else if (type === "expert") {
+                $('#expertText').css("font-weight", "bold");
+                this.isExpertVisible(true);
+                $('#expert').css("display", "inline-block");
+                $("#bib-faculty-staff-expert").addClass("current");
             } else if (type === "resultstable") {
                 $('#resultstableText').css("font-weight", "bold");
                 this.isTableVisible(true);

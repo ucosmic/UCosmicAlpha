@@ -13,6 +13,47 @@ var ViewModels;
     /// <reference path="../../app/Spinner.ts" />
     /// <reference path="../activities/ServiceApiModel.d.ts" />
     (function (Employees) {
+        var FacultyAndStaffSelect = (function () {
+            function FacultyAndStaffSelect() {
+                this.loadSpinner = new App.Spinner(new App.SpinnerOptions(200));
+            }
+            FacultyAndStaffSelect.prototype.load = function () {
+                var _this = this;
+                var deferred = $.Deferred();
+                this.loadSpinner.start();
+                $.ajax({
+                    type: "GET",
+                    async: true,
+                    dataType: 'json',
+                    url: App.Routes.WebApi.Establishments.get(),
+                    data: {
+                        pageNumber: 1,
+                        pageSize: App.Constants.int32Max,
+                        typeEnglishNames: ['University', 'University System'],
+                        orderBy: 'name-asc'
+                    },
+                    success: function (data, textStatus, jqXhr) {
+                        _this.institutions = ko.mapping.fromJS(data);
+                        deferred.resolve();
+                    },
+                    error: function (jqXhr, textStatus, errorThrown) {
+                        deferred.reject(errorThrown);
+                    },
+                    complete: function (jqXhr, textStatus) {
+                        _this.loadSpinner.stop();
+                    }
+                });
+
+                return deferred;
+            };
+
+            FacultyAndStaffSelect.prototype.selectInstitutionUrl = function (institutionId) {
+                return App.Routes.Mvc.FacultyStaff.Institution.select(institutionId);
+            };
+            return FacultyAndStaffSelect;
+        })();
+        Employees.FacultyAndStaffSelect = FacultyAndStaffSelect;
+
         var FacultyAndStaff = (function () {
             function FacultyAndStaff(institutionInfo) {
                 /* Initialization errors. */
@@ -86,6 +127,7 @@ var ViewModels;
                 this.selectedActivityIds = ko.observableArray();
                 this.isHeatmapVisible = ko.observable(true);
                 this.isPointmapVisible = ko.observable(false);
+                this.isExpertVisible = ko.observable(false);
                 this.isTableVisible = ko.observable(false);
                 this.mapType = ko.observable('heatmap');
                 this.searchType = ko.observable('activities');
@@ -424,6 +466,9 @@ var ViewModels;
                 });
                 this.sammy.get('#/search', function () {
                     _this.selectMap('pointmap');
+                });
+                this.sammy.get('#/expert', function () {
+                    _this.selectMap('expert');
                 });
                 this.sammy.get('#/results', function () {
                     _this.selectMap('resultstable');
@@ -1232,6 +1277,9 @@ var ViewModels;
                 $('#pointmapText').css("font-weight", "normal");
                 this.isPointmapVisible(false);
 
+                $('#expertText').css("font-weight", "normal");
+                this.isExpertVisible(false);
+
                 $('#resultstableText').css("font-weight", "normal");
                 this.isTableVisible(false);
 
@@ -1298,6 +1346,11 @@ var ViewModels;
                     //fspointmap.draw(fspointmapData, fspointmapOptions)
                     this.google.maps.event.trigger(this.pointmap, "resize");
                     $("#bib-faculty-staff-search").addClass("current");
+                } else if (type === "expert") {
+                    $('#expertText').css("font-weight", "bold");
+                    this.isExpertVisible(true);
+                    $('#expert').css("display", "inline-block");
+                    $("#bib-faculty-staff-expert").addClass("current");
                 } else if (type === "resultstable") {
                     $('#resultstableText').css("font-weight", "bold");
                     this.isTableVisible(true);

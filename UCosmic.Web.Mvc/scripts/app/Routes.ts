@@ -744,6 +744,14 @@ module App.Routes {
             }
         }
 
+        export module FacultyStaff {
+            export module Institution {
+                export function select(institutionId: number) {
+                    return makeUrl('facultystaff/institution/' + institutionId);
+                }
+            }
+        }
+
         export module My {
             export module Profile {
                 export function get (tab?: string) {

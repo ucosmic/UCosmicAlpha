@@ -160,6 +160,17 @@
             color: black;
         }
 
+        .institutionSelectList {
+            width: 680px;
+            height: 600px;
+            overflow-y: auto; 
+            font-size: large;
+            border-radius: 0 0 0 0;
+            border-color: black;
+            border-style: solid;
+            border-width: 1px;
+        }
+
     </style>
 }
 
@@ -175,13 +186,28 @@
         $(document).ready(function() {
 
             $("#main").css("height", 760);
-            
+
             var institutionInfo = @Html.Raw(Json.Encode(Model));
+
+            if (institutionInfo.InstitutionId == 0) {
+                $("#faculty-staff-select").show();
+
+                var facultyAndStaffSelectViewModel = new ViewModels.Employees.FacultyAndStaffSelect();
+                facultyAndStaffSelectViewModel.load()
+                    .done(function() {
+                        var rootElement = $("#faculty-staff-select")[0];
+                        ko.applyBindings(facultyAndStaffSelectViewModel, rootElement);
+                    });
+
+                return;
+            }
+
+            $("#faculty-staff").show();
 
             var facultyAndStaffViewModel = new ViewModels.Employees.FacultyAndStaff(institutionInfo);
             facultyAndStaffViewModel.load()
                 .done(function() {
-                    
+
                     facultyAndStaffViewModel.loadSpinner.stop();
 
                     facultyAndStaffViewModel.setupWidgets("location", "fromDate", "toDate", "establishmentDropList",
@@ -234,7 +260,27 @@
     </script>    
 }
 
-<div id="faculty-staff" class="content fixed to-top" data-current-module="employees">
+<div id="faculty-staff-select" class="content fixed to-top" style="display: none" data-current-module="employees">
+    <div class="on-left from-top">
+        <header>
+            <h1>select institution</h1>
+        </header>
+               
+        <div class="institutionSelectList">
+            <ul data-bind="template: { name: 'institutions-template', foreach: institutions.items }"></ul>
+        </div>
+    </div>
+</div>
+
+<script type="text/html" id="institutions-template">
+    <li>
+        <a href="#" data-bind="attr: { href: $parent.selectInstitutionUrl(id()) }">
+            <span data-bind="text: officialName()"></span>
+        </a>
+    </li>
+</script>
+
+<div id="faculty-staff" class="content fixed to-top" style="display: none" data-current-module="employees">
     <div class="on-left from-top">
         <header>
             <h1 id="pageTitle">@ViewBag.Title</h1>
@@ -249,8 +295,15 @@
             </div>
 
             <div style="display: none" data-bind="visible: isHeatmapVisible()">
-                <div style="width: 100%; height: 28px; text-align: right" data-bind="click: function(item,event) { globalViewClickHandler(item,event); }">
-                    <span style="margin-right: 4px">Global View</span><img src="../../images/icons/global/global_24_black.png" alt="Global View"/>
+                <div style="width: 100%; height: 30px; text-align: right">
+                    <span style="float: left" data-bind="click: function(item,event) { }">
+                        <span style="margin-right: 2px; margin-top: 2px">Find an Expert</span>
+                        <img src="../../images/icons/nounproject/noun_project_5795_compass.svg" width="28" height="28" alt="Find an Expert"/>
+                    </span>                
+                    <span style="float: right" data-bind="click: function(item,event) { globalViewClickHandler(item,event); }">
+                        <span style="margin-right: 2px; margin-top: 4px;">Global View</span>
+                        <img style="padding-top: 2px" src="../../images/icons/global/global_24_black.png" alt="Global View"/>
+                    </span>
                 </div>
                 <div style="position: relative">
                     
@@ -398,6 +451,11 @@
             </div>
             <div style="display: none" data-bind="visible: isPointmapVisible()">
                 <div id="pointmap" style="width: 680px; height: 500px"></div>
+            </div>
+            <div style="display: none" data-bind="visible: isExpertVisible()">
+                <div id="expert" style="width: 680px; height: 500px">
+                    <span>Coming soon.</span>
+                </div>
             </div>
             <div id="resultstable" style="display: none" data-bind="visible: isTableVisible()">
                     

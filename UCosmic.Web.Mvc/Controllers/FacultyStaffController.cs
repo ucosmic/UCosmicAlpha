@@ -4,8 +4,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Web.Mvc;
 using AttributeRouting.Web.Mvc;
-using AutoMapper;
-using UCosmic.Domain.Employees;
 using UCosmic.Domain.Establishments;
 using UCosmic.Web.Mvc.Models;
 
@@ -95,6 +93,24 @@ namespace UCosmic.Web.Mvc.Controllers
             }
 
             return View(model);
+        }
+
+        [GET("facultystaff/institution/{institutionId}")]
+        public virtual ActionResult Institution(int institutionId)
+        {
+            var establishment = _queryProcessor.Execute(new EstablishmentById(institutionId));
+            if (establishment != null)
+            {
+                var tenancy = new Tenancy
+                {
+                    StyleDomain = establishment.WebsiteUrl.GetUrlDomain(),
+                    TenantId = institutionId
+                };
+
+                Response.Tenancy(tenancy);
+            }
+
+            return RedirectToAction(MVC.FacultyStaff.Index());
         }
     }
 }

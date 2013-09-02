@@ -943,6 +943,17 @@ var App;
             })(Mvc.Identity || (Mvc.Identity = {}));
             var Identity = Mvc.Identity;
 
+            (function (FacultyStaff) {
+                (function (Institution) {
+                    function select(institutionId) {
+                        return makeUrl('facultystaff/institution/' + institutionId);
+                    }
+                    Institution.select = select;
+                })(FacultyStaff.Institution || (FacultyStaff.Institution = {}));
+                var Institution = FacultyStaff.Institution;
+            })(Mvc.FacultyStaff || (Mvc.FacultyStaff = {}));
+            var FacultyStaff = Mvc.FacultyStaff;
+
             (function (My) {
                 (function (Profile) {
                     function get(tab) {
