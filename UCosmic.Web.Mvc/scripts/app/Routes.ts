@@ -497,6 +497,12 @@ module App.Routes {
             export function getPeopleTrend(): string {
                 return makeUrl('faculty-staff/people-trend');
             }
+            export function getDegreeCount(): string {
+                return makeUrl('faculty-staff/degree-count');
+            }
+            export function getDegreePeopleCount(): string {
+                return makeUrl('faculty-staff/degree-people-count');
+            }
         }
 
         export module Activities {

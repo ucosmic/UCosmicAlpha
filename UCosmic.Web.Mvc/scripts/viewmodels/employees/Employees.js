@@ -150,6 +150,8 @@ var ViewModels;
                 this.totalCount = ko.observable(0);
                 this.totalPlaceCount = ko.observable(0);
 
+                this.degreeCount = ko.observable(0);
+
                 this.selectSearchType('activities');
 
                 if (institutionInfo != null) {
@@ -1124,6 +1126,112 @@ var ViewModels;
                 return dt;
             };
 
+            /*
+            *
+            */
+            FacultyAndStaff.prototype.getDegreeCount = function (placeOfficialName) {
+                var _this = this;
+                var deferred = $.Deferred();
+
+                if (placeOfficialName == null) {
+                    this.loadSpinner.start();
+                    $.ajax({
+                        type: "GET",
+                        async: false,
+                        data: { 'establishmentId': this.establishmentId(), 'placeId': null },
+                        dataType: 'json',
+                        url: App.Routes.WebApi.FacultyStaff.getDegreeCount(),
+                        success: function (data, textStatus, jqXhr) {
+                            deferred.resolve(data.count);
+                        },
+                        error: function (jqXhr, textStatus, errorThrown) {
+                            deferred.reject(errorThrown);
+                        },
+                        complete: function (jqXhr, textStatus) {
+                            _this.loadSpinner.stop();
+                        }
+                    });
+                } else {
+                    var placeId = this.getPlaceId(placeOfficialName);
+                    if (placeId != null) {
+                        this.loadSpinner.start();
+                        $.ajax({
+                            type: "GET",
+                            async: false,
+                            data: { 'establishmentId': this.establishmentId(), 'placeId': placeId },
+                            dataType: 'json',
+                            url: App.Routes.WebApi.FacultyStaff.getDegreeCount(),
+                            success: function (data, textStatus, jqXhr) {
+                                deferred.resolve(data.count);
+                            },
+                            error: function (jqXhr, textStatus, errorThrown) {
+                                deferred.reject(errorThrown);
+                            },
+                            complete: function (jqXhr, textStatus) {
+                                _this.loadSpinner.stop();
+                            }
+                        });
+                    } else {
+                        deferred.reject("Unknown PlaceId");
+                    }
+                }
+
+                return deferred;
+            };
+
+            /*
+            *
+            */
+            FacultyAndStaff.prototype.getDegreePeopleCount = function (placeOfficialName) {
+                var _this = this;
+                var deferred = $.Deferred();
+
+                if (placeOfficialName == null) {
+                    this.loadSpinner.start();
+                    $.ajax({
+                        type: "GET",
+                        async: false,
+                        data: { 'establishmentId': this.establishmentId(), 'placeId': null },
+                        dataType: 'json',
+                        url: App.Routes.WebApi.FacultyStaff.getDegreePeopleCount(),
+                        success: function (data, textStatus, jqXhr) {
+                            deferred.resolve(data.count);
+                        },
+                        error: function (jqXhr, textStatus, errorThrown) {
+                            deferred.reject(errorThrown);
+                        },
+                        complete: function (jqXhr, textStatus) {
+                            _this.loadSpinner.stop();
+                        }
+                    });
+                } else {
+                    var placeId = this.getPlaceId(placeOfficialName);
+                    if (placeId != null) {
+                        this.loadSpinner.start();
+                        $.ajax({
+                            type: "GET",
+                            async: false,
+                            data: { 'establishmentId': this.establishmentId(), 'placeId': placeId },
+                            dataType: 'json',
+                            url: App.Routes.WebApi.FacultyStaff.getDegreePeopleCount(),
+                            success: function (data, textStatus, jqXhr) {
+                                deferred.resolve(data.count);
+                            },
+                            error: function (jqXhr, textStatus, errorThrown) {
+                                deferred.reject(errorThrown);
+                            },
+                            complete: function (jqXhr, textStatus) {
+                                _this.loadSpinner.stop();
+                            }
+                        });
+                    } else {
+                        deferred.reject("Unknown PlaceId");
+                    }
+                }
+
+                return deferred;
+            };
+
             FacultyAndStaff.prototype.makeActivityTooltip = function (name, count) {
                 return "<b>" + name + "</b><br/>Total Activities: " + count.toString();
             };
@@ -1314,6 +1422,10 @@ var ViewModels;
                         this.getActivityTrendDataTable(this.selectedPlace()).done(function (dataTable) {
                             _this.linechart.draw(dataTable, _this.linechartActivityOptions);
                         });
+
+                        this.getDegreeCount(this.selectedPlace()).done(function (count) {
+                            _this.degreeCount(count);
+                        });
                     } else {
                         this.getHeatmapPeopleDataTable().done(function (dataTable) {
                             _this.heatmap.draw(dataTable, _this.heatmapOptions);
@@ -1334,6 +1446,10 @@ var ViewModels;
 
                         dataTable = this.getPeopleTrendDataTable(this.selectedPlace()).done(function (dataTable) {
                             _this.linechart.draw(dataTable, _this.linechartPeopleOptions);
+                        });
+
+                        this.getDegreePeopleCount(this.selectedPlace()).done(function (count) {
+                            _this.degreeCount(count);
                         });
                     }
 
@@ -1457,6 +1573,10 @@ var ViewModels;
                     }
                     this.selectedPlace(str);
                 }
+            };
+
+            FacultyAndStaff.prototype.expertClickHandler = function (item, event) {
+                this.selectMap('expert');
             };
 
             FacultyAndStaff.prototype.globalViewClickHandler = function (item, event) {

@@ -6,7 +6,9 @@ using System.Web.Http;
 using AttributeRouting;
 using AttributeRouting.Web.Http;
 using UCosmic.Domain.Activities;
+using UCosmic.Domain.Degrees;
 using UCosmic.Domain.Establishments;
+using UCosmic.Domain.People;
 using UCosmic.Domain.Places;
 using UCosmic.Web.Mvc.Models;
 
@@ -21,7 +23,9 @@ namespace UCosmic.Web.Mvc.ApiControllers
         private readonly IProcessQueries _queryProcessor;
         private readonly IQueryEntities _entities;
 
-        public FacultyStaffController(IProcessQueries queryProcessor, IQueryEntities entities)
+        public FacultyStaffController(IProcessQueries queryProcessor,
+                                      IQueryEntities entities
+                                      )
         {
             _queryProcessor = queryProcessor;
             _entities = entities;
@@ -366,6 +370,103 @@ namespace UCosmic.Web.Mvc.ApiControllers
                             Count = data.Count
                         });
                     }
+                }
+            }
+
+            return model;
+        }
+
+        /* Returns degree counts for given place.*/
+        [GET("degree-count/{establishmentId?}/{placeId?}")]
+        public FacultyStaffSummaryModel GetDegreeCount(int? establishmentId, int? placeId)
+        {
+            var model = new FacultyStaffSummaryModel();
+
+            var tenancy = Request.Tenancy();
+            Establishment establishment = null;
+
+            if (establishmentId.HasValue && (establishmentId.Value != 0))
+            {
+                establishment = _queryProcessor.Execute(new EstablishmentById(establishmentId.Value));
+            }
+            else
+            {
+                if (tenancy.TenantId.HasValue)
+                {
+                    establishment = _queryProcessor.Execute(new EstablishmentById(tenancy.TenantId.Value));
+                }
+                else if (!String.IsNullOrEmpty(tenancy.StyleDomain) && !"default".Equals(tenancy.StyleDomain))
+                {
+                    establishment = _queryProcessor.Execute(new EstablishmentByEmail(tenancy.StyleDomain));
+                }
+            }
+
+            if (establishment != null)
+            {
+                if (placeId.HasValue)
+                {
+                    int[] placeIds = GetPlaceIds(placeId.Value);
+                    model.PlaceId = placeIds[0];
+                    model.Count =
+                        _queryProcessor.Execute(new DegreeCountByPlaceIdsEstablishmentId(placeIds, establishment.RevisionId));
+                    model.CountOfPlaces = 1;
+                    model.PlaceCounts = null;
+                }
+                else
+                {
+                    model.Count =
+                        _queryProcessor.Execute(new DegreeCountByEstablishmentId(establishment.RevisionId));
+                    model.CountOfPlaces = 1;
+                    model.PlaceCounts = null;
+                }
+            }
+
+            return model;
+        }
+
+        /* Returns degree people counts for given place. */
+        [GET("degree-people-count/{establishmentId?}/{placeId?}")]
+        public FacultyStaffSummaryModel GetDegreePeopleCount(int? establishmentId, int? placeId)
+        {
+            var model = new FacultyStaffSummaryModel();
+
+            var tenancy = Request.Tenancy();
+            Establishment establishment = null;
+
+            if (establishmentId.HasValue && (establishmentId.Value != 0))
+            {
+                establishment = _queryProcessor.Execute(new EstablishmentById(establishmentId.Value));
+            }
+            else
+            {
+                if (tenancy.TenantId.HasValue)
+                {
+                    establishment = _queryProcessor.Execute(new EstablishmentById(tenancy.TenantId.Value));
+                }
+                else if (!String.IsNullOrEmpty(tenancy.StyleDomain) && !"default".Equals(tenancy.StyleDomain))
+                {
+                    establishment = _queryProcessor.Execute(new EstablishmentByEmail(tenancy.StyleDomain));
+                }
+            }
+
+            if (establishment != null)
+            {
+                if (placeId.HasValue)
+                {
+                    int[] placeIds = GetPlaceIds(placeId.Value);
+                    model.PlaceId = placeIds[0];
+                    model.Count =
+                        _queryProcessor.Execute(new PeopleWithDegreesCountByPlaceIdsEstablishmentId(placeIds, establishment.RevisionId));
+                    model.CountOfPlaces = 1;
+                    model.PlaceCounts = null;
+                }
+                else
+                {
+                    model.PlaceId = null;
+                    model.Count =
+                        _queryProcessor.Execute(new PeopleWithDegreesCountByEstablishmentId(establishment.RevisionId));
+                    model.CountOfPlaces = 0;
+                    model.PlaceCounts = null;
                 }
             }
 

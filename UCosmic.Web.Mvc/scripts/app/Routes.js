@@ -633,6 +633,14 @@ var App;
                     return makeUrl('faculty-staff/people-trend');
                 }
                 FacultyStaff.getPeopleTrend = getPeopleTrend;
+                function getDegreeCount() {
+                    return makeUrl('faculty-staff/degree-count');
+                }
+                FacultyStaff.getDegreeCount = getDegreeCount;
+                function getDegreePeopleCount() {
+                    return makeUrl('faculty-staff/degree-people-count');
+                }
+                FacultyStaff.getDegreePeopleCount = getDegreePeopleCount;
             })(WebApi.FacultyStaff || (WebApi.FacultyStaff = {}));
             var FacultyStaff = WebApi.FacultyStaff;
 

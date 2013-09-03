@@ -136,6 +136,8 @@ module ViewModels.Employees {
         totalCount: KnockoutObservable<number>;
         totalPlaceCount: KnockoutObservable<number>;
 
+        degreeCount: KnockoutObservable<number>; 
+
         /* If you add or remove from this list, also look at _getHeatmapActivityDataTable()
             and _getHeatmapPeopleDataTable() to update the custom place tooltips text. */
         geochartCustomPlaces: any[] = [
@@ -206,6 +208,8 @@ module ViewModels.Employees {
 
             this.totalCount = ko.observable(0);
             this.totalPlaceCount = ko.observable(0);
+
+            this.degreeCount = ko.observable(0);
 
             this.selectSearchType('activities');
 
@@ -1231,6 +1235,114 @@ module ViewModels.Employees {
             return dt;
         }
 
+        /*
+         *
+         */
+        getDegreeCount(placeOfficialName: string): JQueryPromise<any> {
+            var deferred: JQueryDeferred<void> = $.Deferred();
+
+            if (placeOfficialName == null) {
+                this.loadSpinner.start();
+                $.ajax({
+                    type: "GET",
+                    async: false,
+                    data: { 'establishmentId': this.establishmentId(), 'placeId': null },
+                    dataType: 'json',
+                    url: App.Routes.WebApi.FacultyStaff.getDegreeCount(),
+                    success: (data: any, textStatus: string, jqXhr: JQueryXHR): void => {
+                        deferred.resolve(data.count);
+                    },
+                    error: (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
+                        deferred.reject(errorThrown);
+                    },
+                    complete: (jqXhr: JQueryXHR, textStatus: string): void => {
+                        this.loadSpinner.stop();
+                    }
+                });
+            }
+            else {
+                var placeId = this.getPlaceId(placeOfficialName);
+                if (placeId != null) {
+                    this.loadSpinner.start();
+                    $.ajax({
+                        type: "GET",
+                        async: false,
+                        data: { 'establishmentId': this.establishmentId(), 'placeId': placeId },
+                        dataType: 'json',
+                        url: App.Routes.WebApi.FacultyStaff.getDegreeCount(),
+                        success: (data: any, textStatus: string, jqXhr: JQueryXHR): void => {
+                            deferred.resolve(data.count);
+                        },
+                        error: (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
+                            deferred.reject(errorThrown);
+                        },
+                        complete: (jqXhr: JQueryXHR, textStatus: string): void => {
+                            this.loadSpinner.stop();
+                        }
+                    });
+                }
+                else {
+                    deferred.reject("Unknown PlaceId");
+                }
+            }
+
+            return deferred;
+        }
+
+        /*
+         *
+         */
+        getDegreePeopleCount(placeOfficialName: string): JQueryPromise<any> {
+            var deferred: JQueryDeferred<void> = $.Deferred();
+
+            if (placeOfficialName == null) {
+                this.loadSpinner.start();
+                $.ajax({
+                    type: "GET",
+                    async: false,
+                    data: { 'establishmentId': this.establishmentId(), 'placeId': null },
+                    dataType: 'json',
+                    url: App.Routes.WebApi.FacultyStaff.getDegreePeopleCount(),
+                    success: (data: any, textStatus: string, jqXhr: JQueryXHR): void => {
+                        deferred.resolve(data.count);
+                    },
+                    error: (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
+                        deferred.reject(errorThrown);
+                    },
+                    complete: (jqXhr: JQueryXHR, textStatus: string): void => {
+                        this.loadSpinner.stop();
+                    }
+                });
+            }
+            else {
+                var placeId = this.getPlaceId(placeOfficialName);
+                if (placeId != null) {
+                    this.loadSpinner.start();
+                    $.ajax({
+                        type: "GET",
+                        async: false,
+                        data: { 'establishmentId': this.establishmentId(), 'placeId': placeId },
+                        dataType: 'json',
+                        url: App.Routes.WebApi.FacultyStaff.getDegreePeopleCount(),
+                        success: (data: any, textStatus: string, jqXhr: JQueryXHR): void => {
+                            deferred.resolve(data.count);
+                        },
+                        error: (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
+                            deferred.reject(errorThrown);
+                        },
+                        complete: (jqXhr: JQueryXHR, textStatus: string): void => {
+                            this.loadSpinner.stop();
+                        }
+                    });
+                }
+                else {
+                    deferred.reject("Unknown PlaceId");
+                }
+            }
+
+            return deferred;
+        }
+
         makeActivityTooltip(name: string, count: number): string {
             return "<b>" + name + "</b><br/>Total Activities: " + count.toString();
         }
@@ -1432,7 +1544,11 @@ module ViewModels.Employees {
                         .done((dataTable: any): void => {
                             this.linechart.draw(dataTable, this.linechartActivityOptions);
                         });
-                   
+
+                    this.getDegreeCount(this.selectedPlace())
+                        .done((count: any): void => {
+                            this.degreeCount(count);
+                        });                  
                 } else {
                     this.getHeatmapPeopleDataTable()
                         .done((dataTable: any): void => {
@@ -1456,6 +1572,11 @@ module ViewModels.Employees {
                     dataTable = this.getPeopleTrendDataTable(this.selectedPlace())
                         .done((dataTable: any): void => {
                             this.linechart.draw(dataTable, this.linechartPeopleOptions);
+                        });
+
+                    this.getDegreePeopleCount(this.selectedPlace())
+                        .done((count: any): void => {
+                            this.degreeCount(count);
                         });
                 }
               
@@ -1575,6 +1696,10 @@ module ViewModels.Employees {
                 }
                 this.selectedPlace(str);
             }
+        }
+
+        expertClickHandler(item: any, event: any): void {
+            this.selectMap('expert');
         }
 
         globalViewClickHandler(item: any, event: any): void {
