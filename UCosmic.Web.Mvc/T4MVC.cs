@@ -2765,6 +2765,10 @@ namespace Links
                 public static readonly string AgreementVM_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/AgreementVM.min.js") ? Url("AgreementVM.min.js") : Url("AgreementVM.js");
                               
                 public static readonly string AgreementVM_min_js = Url("AgreementVM.min.js");
+                public static readonly string basicInfo_ts = Url("basicInfo.ts");
+                public static readonly string basicInfo_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/basicInfo.min.js") ? Url("basicInfo.min.js") : Url("basicInfo.js");
+                              
+                public static readonly string basicInfo_min_js = Url("basicInfo.min.js");
                 public static readonly string contacts_ts = Url("contacts.ts");
                 public static readonly string contacts_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/contacts.min.js") ? Url("contacts.min.js") : Url("contacts.js");
                               
@@ -2777,6 +2781,10 @@ namespace Links
                 public static readonly string fileAttachments_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/fileAttachments.min.js") ? Url("fileAttachments.min.js") : Url("fileAttachments.js");
                               
                 public static readonly string fileAttachments_min_js = Url("fileAttachments.min.js");
+                public static readonly string participants_ts = Url("participants.ts");
+                public static readonly string participants_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/participants.min.js") ? Url("participants.min.js") : Url("participants.js");
+                              
+                public static readonly string participants_min_js = Url("participants.min.js");
                 public static readonly string scrollBody_ts = Url("scrollBody.ts");
                 public static readonly string scrollBody_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/scrollBody.min.js") ? Url("scrollBody.min.js") : Url("scrollBody.js");
                               

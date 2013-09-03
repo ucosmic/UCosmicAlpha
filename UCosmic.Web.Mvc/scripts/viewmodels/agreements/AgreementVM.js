@@ -21,6 +21,8 @@
 /// <reference path="./fileAttachments.ts" />
 /// <reference path="./datesStatus.ts" />
 /// <reference path="./visibility.ts" />
+/// <reference path="./participants.ts" />
+/// <reference path="./basicInfo.ts" />
 var InstitutionalAgreementParticipantModel = (function () {
     function InstitutionalAgreementParticipantModel(isOwner, establishmentId, establishmentOfficialName, establishmentTranslatedName) {
         this.isOwner = ko.observable(isOwner);
@@ -57,24 +59,6 @@ var InstitutionalAgreementEditModel = (function () {
         this.$genericAlertDialog = undefined;
         //added this because kendo window after selecting a autocomplte and then clicking the window, the body would scroll to the top.
         this.kendoWindowBug = 0;
-        //basic info vars
-        this.$uAgreements = ko.observable();
-        this.uAgreements = ko.mapping.fromJS([]);
-        this.uAgreementSelected = ko.observable("");
-        this.nickname = ko.observable();
-        this.content = ko.observable();
-        this.privateNotes = ko.observable();
-        this.$typeOptions = ko.observable();
-        this.typeOptions = ko.mapping.fromJS([]);
-        this.typeOptionSelected = ko.observable();
-        this.agreementContent = ko.observable();
-        this.isCustomTypeAllowed = ko.observable();
-        this.isCustomStatusAllowed = ko.observable();
-        this.isCustomContactTypeAllowed = ko.observable();
-        //participant vars
-        this.participantsExport = ko.mapping.fromJS([]);
-        this.participants = ko.mapping.fromJS([]);
-        this.participantsErrorMsg = ko.observable();
         //search vars
         this.establishmentSearchViewModel = new Establishments.ViewModels.Search();
         this.hasBoundSearch = false;
@@ -84,11 +68,17 @@ var InstitutionalAgreementEditModel = (function () {
         this.officialNameDoesNotMatchTranslation = ko.computed(function () {
             return !(this.participants.establishmentOfficialName === this.participants.establishmentTranslatedName);
         });
-        this.contactClass = new agreements.contacts(this.isCustomContactTypeAllowed, this.spinner, this.establishmentItemViewModel, this.agreementIsEdit, this.agreementId, this.kendoWindowBug, this.dfdPopContacts);
+        // last two vars make sure they are updated with the agreementvm updates
+        this.participantsClass = new agreements.participants(this.agreementId, this.dfdPopParticipants, this.agreementIsEdit, this.establishmentSearchViewModel, this.hasBoundSearch);
+        ko.applyBindings(this.participantsClass, $('#participants')[0]);
+
+        this.basicInfoClass = new agreements.basicInfo(this.agreementId, this.dfdUAgreements);
+        ko.applyBindings(this.basicInfoClass, $('#basicInfo')[0]);
+        this.contactClass = new agreements.contacts(this.basicInfoClass.isCustomContactTypeAllowed, this.spinner, this.establishmentItemViewModel, this.agreementIsEdit, this.agreementId, this.kendoWindowBug, this.dfdPopContacts);
         ko.applyBindings(this.contactClass, $('#contacts')[0]);
         this.fileAttachmentClass = new agreements.fileAttachments(this.agreementId, this.agreementIsEdit, this.spinner, this.establishmentItemViewModel, this.dfdPopFiles);
         ko.applyBindings(this.fileAttachmentClass, $('#fileAttachments')[0]);
-        this.datesStatusClass = new agreements.datesStatus(this.isCustomStatusAllowed);
+        this.datesStatusClass = new agreements.datesStatus(this.basicInfoClass.isCustomStatusAllowed);
         ko.applyBindings(this.datesStatusClass, $('#effectiveDatesCurrentStatus')[0]);
         this.visibilityClass = new agreements.visibility();
         ko.applyBindings(this.visibilityClass, $('#overallVisibility')[0]);
@@ -100,7 +90,7 @@ var InstitutionalAgreementEditModel = (function () {
             this.agreementIsEdit(false);
             this.visibilityClass.visibility("Public");
             $("#LoadingPage").hide();
-            this.populateParticipants();
+            this.participantsClass.populateParticipants();
             $.when(this.dfdPageFadeIn, this.dfdPopParticipants).done(function () {
                 _this.updateKendoDialog($(window).width());
                 $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * _this.percentOffBodyHeight)));
@@ -111,9 +101,10 @@ var InstitutionalAgreementEditModel = (function () {
             this.editOrNewUrl = this.editOrNewUrl.substring(0, this.editOrNewUrl.indexOf("/edit") + 5) + "/";
             this.agreementIsEdit(true);
             this.agreementId = this.editOrNewUrl.substring(0, this.editOrNewUrl.indexOf("/"));
+            this.participantsClass.agreementId = this.agreementId;
             this.fileAttachmentClass.agreementId = this.agreementId;
             this.contactClass.agreementId = this.agreementId;
-            this.populateParticipants();
+            this.participantsClass.populateParticipants();
             this.fileAttachmentClass.populateFiles();
             this.contactClass.populateContacts();
             Globalize.culture(culture);
@@ -126,52 +117,17 @@ var InstitutionalAgreementEditModel = (function () {
         }
 
         this.isBound(true);
-        this.removeParticipant = this.removeParticipant.bind(this);
-        this._setupValidation = this._setupValidation.bind(this);
-        this.participantsShowErrorMsg = ko.computed(function () {
-            var validateParticipantsHasOwner = false;
-            $.each(_this.participants(), function (i, item) {
-                if (item.isOwner() == true) {
-                    validateParticipantsHasOwner = true;
-                }
-            });
-            if (validateParticipantsHasOwner == false) {
-                _this.participantsErrorMsg("Home participant is required.");
-                return true;
-            } else {
-                return false;
-            }
-        });
 
-        this.populateUmbrella();
+        this.basicInfoClass.populateUmbrella();
         this.hideOtherGroups();
         this.bindSearch();
         this.getSettings();
-        this._setupValidation();
 
+        //this._setupValidation();
         $(window).resize(function () {
             _this.updateKendoDialog($(window).width());
         });
     }
-    InstitutionalAgreementEditModel.prototype.receiveParticipants = function (js) {
-        if (!js) {
-            ko.mapping.fromJS({
-                items: [],
-                itemTotal: 0
-            }, this.participants);
-        } else {
-            ko.mapping.fromJS(js, this.participants);
-        }
-    };
-
-    InstitutionalAgreementEditModel.prototype.populateParticipants = function () {
-        var _this = this;
-        $.get(App.Routes.WebApi.Agreements.Participants.get(this.agreementId)).done(function (response) {
-            _this.receiveParticipants(response);
-            _this.dfdPopParticipants.resolve();
-        });
-    };
-
     InstitutionalAgreementEditModel.prototype.populateAgreementData = function () {
         var _this = this;
         $.when(this.dfdUAgreements).done(function () {
@@ -180,7 +136,7 @@ var InstitutionalAgreementEditModel = (function () {
                 var editor = $("#agreementContent").data("kendoEditor");
 
                 editor.value(response.content);
-                _this.content(response.content);
+                _this.basicInfoClass.content(response.content);
                 _this.datesStatusClass.expDate(Globalize.format(new Date(response.expiresOn.substring(0, response.expiresOn.lastIndexOf("T"))), 'd'));
                 _this.datesStatusClass.startDate(Globalize.format(new Date(response.startsOn.substring(0, response.startsOn.lastIndexOf("T"))), 'd'));
                 if (response.isAutoRenew == null) {
@@ -190,21 +146,21 @@ var InstitutionalAgreementEditModel = (function () {
                 }
                 ;
 
-                _this.nickname(response.name);
-                _this.privateNotes(response.notes);
+                _this.basicInfoClass.nickname(response.name);
+                _this.basicInfoClass.privateNotes(response.notes);
                 _this.visibilityClass.visibility(response.visibility);
                 _this.datesStatusClass.isEstimated(response.isExpirationEstimated);
-                ko.mapping.fromJS(response.participants, _this.participants);
+                ko.mapping.fromJS(response.participants, _this.participantsClass.participants);
                 _this.dfdPopParticipants.resolve();
-                _this.uAgreementSelected(response.umbrellaId);
+                _this.basicInfoClass.uAgreementSelected(response.umbrellaId);
 
                 dropdownlist = $("#uAgreements").data("kendoDropDownList");
                 dropdownlist.select(function (dataItem) {
-                    return dataItem.value == _this.uAgreementSelected();
+                    return dataItem.value == _this.basicInfoClass.uAgreementSelected();
                 });
 
                 _this.datesStatusClass.statusOptionSelected(response.status);
-                if (_this.isCustomStatusAllowed()) {
+                if (_this.basicInfoClass.isCustomStatusAllowed()) {
                     dropdownlist = $("#statusOptions").data("kendoComboBox");
                     dropdownlist.select(function (dataItem) {
                         return dataItem.name === _this.datesStatusClass.statusOptionSelected();
@@ -216,35 +172,19 @@ var InstitutionalAgreementEditModel = (function () {
                     });
                 }
 
-                _this.typeOptionSelected(response.type);
-                if (_this.isCustomTypeAllowed()) {
+                _this.basicInfoClass.typeOptionSelected(response.type);
+                if (_this.basicInfoClass.isCustomTypeAllowed()) {
                     dropdownlist = $("#typeOptions").data("kendoComboBox");
                     dropdownlist.select(function (dataItem) {
-                        return dataItem.name === _this.typeOptionSelected();
+                        return dataItem.name === _this.basicInfoClass.typeOptionSelected();
                     });
                 } else {
                     dropdownlist = $("#typeOptions").data("kendoDropDownList");
                     dropdownlist.select(function (dataItem) {
-                        return dataItem.text === _this.typeOptionSelected();
+                        return dataItem.text === _this.basicInfoClass.typeOptionSelected();
                     });
                 }
             });
-        });
-    };
-
-    InstitutionalAgreementEditModel.prototype.populateUmbrella = function () {
-        var _this = this;
-        $.get(App.Routes.WebApi.Agreements.UmbrellaOptions.get(this.agreementId)).done(function (response) {
-            _this.uAgreements(response);
-            $("#uAgreements").kendoDropDownList({
-                dataTextField: "text",
-                dataValueField: "value",
-                optionLabel: "[None - this is a top-level or standalone agreement]",
-                dataSource: new kendo.data.DataSource({
-                    data: _this.uAgreements()
-                })
-            });
-            _this.dfdUAgreements.resolve();
         });
     };
 
@@ -257,9 +197,9 @@ var InstitutionalAgreementEditModel = (function () {
     InstitutionalAgreementEditModel.prototype.bindjQueryKendo = function (result) {
         var _this = this;
         var self = this;
-        this.isCustomTypeAllowed(result.isCustomTypeAllowed);
-        this.isCustomStatusAllowed(result.isCustomStatusAllowed);
-        this.isCustomContactTypeAllowed(result.isCustomContactTypeAllowed);
+        this.basicInfoClass.isCustomTypeAllowed(result.isCustomTypeAllowed);
+        this.basicInfoClass.isCustomStatusAllowed(result.isCustomStatusAllowed);
+        this.basicInfoClass.isCustomContactTypeAllowed(result.isCustomContactTypeAllowed);
         this.datesStatusClass.statusOptions.push(new this.selectConstructor("", ""));
         for (var i = 0; i < result.statusOptions.length; i++) {
             this.datesStatusClass.statusOptions.push(new this.selectConstructor(result.statusOptions[i], result.statusOptions[i]));
@@ -270,45 +210,12 @@ var InstitutionalAgreementEditModel = (function () {
             this.contactClass.contactTypeOptions.push(new this.selectConstructor(result.contactTypeOptions[i], result.contactTypeOptions[i]));
         }
         ;
-        this.typeOptions.push(new this.selectConstructor("", ""));
+        this.basicInfoClass.typeOptions.push(new this.selectConstructor("", ""));
         for (var i = 0; i < result.typeOptions.length; i++) {
-            this.typeOptions.push(new this.selectConstructor(result.typeOptions[i], result.typeOptions[i]));
+            this.basicInfoClass.typeOptions.push(new this.selectConstructor(result.typeOptions[i], result.typeOptions[i]));
         }
         ;
-        if (this.isCustomTypeAllowed) {
-            $("#typeOptions").kendoComboBox({
-                dataTextField: "name",
-                dataValueField: "id",
-                dataSource: new kendo.data.DataSource({
-                    data: this.typeOptions()
-                })
-            });
-        } else {
-            $("#typeOptions").kendoDropDownList({
-                dataTextField: "name",
-                dataValueField: "id",
-                dataSource: new kendo.data.DataSource({
-                    data: this.typeOptions()
-                })
-            });
-        }
-        if (this.isCustomStatusAllowed) {
-            $("#statusOptions").kendoComboBox({
-                dataTextField: "name",
-                dataValueField: "id",
-                dataSource: new kendo.data.DataSource({
-                    data: this.datesStatusClass.statusOptions()
-                })
-            });
-        } else {
-            $("#statusOptions").kendoDropDownList({
-                dataTextField: "name",
-                dataValueField: "id",
-                dataSource: new kendo.data.DataSource({
-                    data: this.datesStatusClass.statusOptions()
-                })
-            });
-        }
+
         $(".hasDate").each(function (index, item) {
             $(item).kendoDatePicker({
                 value: new Date($(item).val()),
@@ -425,8 +332,10 @@ var InstitutionalAgreementEditModel = (function () {
             ]
         });
 
+        this.basicInfoClass.bindJquery();
         this.contactClass.bindJquery();
         this.fileAttachmentClass.bindJquery();
+        this.datesStatusClass.bindJquery();
     };
 
     //get settings for agreements.
@@ -449,51 +358,6 @@ var InstitutionalAgreementEditModel = (function () {
         $("#allParticipants").css("visibility", "").hide();
         $("#estSearch").css("visibility", "").hide();
         $("#addEstablishment").css("visibility", "").hide();
-    };
-
-    InstitutionalAgreementEditModel.prototype.removeParticipant = function (establishmentResultViewModel, e) {
-        if (confirm('Are you sure you want to remove "' + establishmentResultViewModel.establishmentTranslatedName() + '" as a participant from this agreement?')) {
-            var self = this;
-            if (this.agreementIsEdit()) {
-                var url = App.Routes.WebApi.Agreements.Participants.del(this.agreementId, ko.dataFor(e.target).establishmentId());
-                $.ajax({
-                    url: url,
-                    type: 'DELETE',
-                    success: function () {
-                        self.participants.remove(function (item) {
-                            if (item.establishmentId() === establishmentResultViewModel.establishmentId()) {
-                                $(item.participantEl).slideUp('fast', function () {
-                                    self.participants.remove(item);
-                                    $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * 1.1)));
-                                });
-                            }
-                            return false;
-                        });
-                    },
-                    error: function (xhr, statusText, errorThrown) {
-                        alert(xhr.responseText);
-                    }
-                });
-            } else {
-                self.participants.remove(function (item) {
-                    if (item.establishmentId() === establishmentResultViewModel.establishmentId()) {
-                        $(item.participantEl).slideUp('fast', function () {
-                            self.participants.remove(item);
-                            $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * 1.1)));
-                        });
-                    }
-                    return false;
-                });
-            }
-        }
-        e.preventDefault();
-        e.stopPropagation();
-        return false;
-    };
-
-    InstitutionalAgreementEditModel.prototype.addParticipant = function (establishmentResultViewModel) {
-        this.establishmentSearchViewModel.sammy.setLocation('#/page/1/');
-        this.hasBoundSearch = true;
     };
 
     InstitutionalAgreementEditModel.prototype.SearchPageBind = function (parentOrParticipant) {
@@ -700,8 +564,8 @@ var InstitutionalAgreementEditModel = (function () {
                             _this.establishmentSearchViewModel.clickAction = function (context) {
                                 var myParticipant = new InstitutionalAgreementParticipantModel(false, context.id(), context.officialName(), context.translatedName());
                                 var alreadyExist = false;
-                                for (var i = 0; i < _this.participants().length; i++) {
-                                    if (_this.participants()[i].establishmentId() === myParticipant.establishmentId()) {
+                                for (var i = 0; i < _this.participantsClass.participants().length; i++) {
+                                    if (_this.participantsClass.participants()[i].establishmentId() === myParticipant.establishmentId()) {
                                         alreadyExist = true;
                                         break;
                                     }
@@ -720,14 +584,14 @@ var InstitutionalAgreementEditModel = (function () {
                                                 url: url,
                                                 data: myParticipant,
                                                 success: function (response, statusText, xhr) {
-                                                    _this.participants.push(myParticipant);
+                                                    _this.participantsClass.participants.push(myParticipant);
                                                 },
                                                 error: function (xhr, statusText, errorThrown) {
                                                     alert(xhr.responseText);
                                                 }
                                             });
                                         } else {
-                                            _this.participants.push(myParticipant);
+                                            _this.participantsClass.participants.push(myParticipant);
                                         }
                                         _this.establishmentSearchViewModel.sammy.setLocation("agreements/" + _this.editOrNewUrl + "");
                                         $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * .85)));
@@ -739,14 +603,14 @@ var InstitutionalAgreementEditModel = (function () {
                                                 url: url,
                                                 data: myParticipant,
                                                 success: function (response, statusText, xhr) {
-                                                    _this.participants.push(myParticipant);
+                                                    _this.participantsClass.participants.push(myParticipant);
                                                 },
                                                 error: function (xhr, statusText, errorThrown) {
                                                     alert(xhr.responseText);
                                                 }
                                             });
                                         } else {
-                                            _this.participants.push(myParticipant);
+                                            _this.participantsClass.participants.push(myParticipant);
                                         }
                                         _this.establishmentSearchViewModel.sammy.setLocation("agreements/" + _this.editOrNewUrl + "");
                                     });
@@ -782,26 +646,6 @@ var InstitutionalAgreementEditModel = (function () {
             });
             this.establishmentSearchViewModel.sammy.run();
         }
-    };
-
-    InstitutionalAgreementEditModel.prototype._setupValidation = function () {
-        this.validateBasicInfo = ko.validatedObservable({
-            agreementType: this.typeOptionSelected.extend({
-                required: {
-                    message: "Agreement type is required."
-                },
-                maxLength: 50
-            }),
-            nickname: this.nickname.extend({
-                maxLength: 50
-            }),
-            content: this.content.extend({
-                maxLength: 5000
-            }),
-            privateNotes: this.privateNotes.extend({
-                maxLength: 250
-            })
-        });
     };
 
     //post files
@@ -882,14 +726,14 @@ var InstitutionalAgreementEditModel = (function () {
             $("#navEffectiveDatesCurrentStatus").closest("ul").find("li").removeClass("current");
             $("#navEffectiveDatesCurrentStatus").addClass("current");
         }
-        if (!this.validateBasicInfo.isValid()) {
+        if (!this.basicInfoClass.validateBasicInfo.isValid()) {
             offset = $("#basicInfo").offset();
-            this.validateBasicInfo.errors.showAllMessages(true);
+            this.basicInfoClass.validateBasicInfo.errors.showAllMessages(true);
             $("#navValidateBasicInfo").closest("ul").find("li").removeClass("current");
             $("#navValidateBasicInfo").addClass("current");
         }
         $("#participantsErrorMsg").show();
-        if (this.participantsShowErrorMsg()) {
+        if (this.participantsClass.participantsShowErrorMsg()) {
             offset = $("#participants").offset();
             $("#navParticipants").closest("ul").find("li").removeClass("current");
             $("#navParticipants").addClass("current");
@@ -917,8 +761,8 @@ var InstitutionalAgreementEditModel = (function () {
                 $("#LoadingPage").hide().fadeIn(500);
             });
 
-            $.each(this.participants(), function (i, item) {
-                _this.participantsExport.push({
+            $.each(this.participantsClass.participants(), function (i, item) {
+                _this.participantsClass.participantsExport.push({
                     agreementId: item.agreementId,
                     establishmentId: item.establishmentId,
                     establishmentOfficialName: item.establishmentOfficialName,
@@ -934,21 +778,21 @@ var InstitutionalAgreementEditModel = (function () {
                 myAutoRenew = true;
             }
 
-            this.content(editor.value());
+            this.basicInfoClass.content(editor.value());
 
             var data = ko.mapping.toJS({
-                content: this.content(),
+                content: this.basicInfoClass.content(),
                 expiresOn: this.datesStatusClass.expDate(),
                 startsOn: this.datesStatusClass.startDate(),
                 isAutoRenew: myAutoRenew,
-                name: this.nickname(),
-                notes: this.privateNotes(),
+                name: this.basicInfoClass.nickname(),
+                notes: this.basicInfoClass.privateNotes(),
                 status: this.datesStatusClass.statusOptionSelected(),
                 visibility: this.visibilityClass.visibility(),
                 isExpirationEstimated: this.datesStatusClass.isEstimated(),
-                participants: this.participantsExport,
-                umbrellaId: this.uAgreementSelected(),
-                type: this.typeOptionSelected()
+                participants: this.participantsClass.participantsExport,
+                umbrellaId: this.basicInfoClass.uAgreementSelected(),
+                type: this.basicInfoClass.typeOptionSelected()
             });
             if (this.agreementIsEdit()) {
                 url = App.Routes.WebApi.Agreements.put(this.agreementId);

@@ -41,6 +41,11 @@ input[type="month"], input[type="time"],     input[type="week"], textarea {
     }
 }
 
+.contactKendoWindow {
+    position: fixed!important;
+    top: 20px!important;
+}
+
 textarea {
     margin: 0;
     vertical-align: bottom;

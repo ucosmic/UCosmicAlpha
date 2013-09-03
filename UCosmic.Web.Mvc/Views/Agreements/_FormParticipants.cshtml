@@ -4,7 +4,7 @@
                         Participants
                     </h2>
                 </header>
-                <div data-bind="visible: isBound" style="display: none;">
+                <div>
                     <ul data-bind="foreach: participants">
                         <li data-bind="element: 'participantEl'">
                             <div class="typed-item">
@@ -24,7 +24,7 @@
                     </ul>
                 </div>
                 <footer>
-                    <a href="" data-bind="click: $root.addParticipant" class="button">
+                    <a href="" data-bind="click: addParticipant" class="button">
                         <i class="green plus"></i>
                         <span class="text">Add a participant</span>
                     </a><br/>

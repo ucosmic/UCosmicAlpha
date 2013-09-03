@@ -3,6 +3,7 @@
 /// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
 /// <reference path="../../typings/globalize/globalize.d.ts" />
 /// <reference path="../../typings/jquery/jquery.d.ts" />
+/// <reference path="../../typings/kendo/kendo.all.d.ts" />
 var agreements;
 (function (agreements) {
     var datesStatus = (function () {
@@ -62,6 +63,26 @@ var agreements;
                     }
                 })
             });
+        };
+
+        datesStatus.prototype.bindJquery = function () {
+            if (this.isCustomStatusAllowed) {
+                $("#statusOptions").kendoComboBox({
+                    dataTextField: "name",
+                    dataValueField: "id",
+                    dataSource: new kendo.data.DataSource({
+                        data: this.statusOptions()
+                    })
+                });
+            } else {
+                $("#statusOptions").kendoDropDownList({
+                    dataTextField: "name",
+                    dataValueField: "id",
+                    dataSource: new kendo.data.DataSource({
+                        data: this.statusOptions()
+                    })
+                });
+            }
         };
         return datesStatus;
     })();

@@ -317,6 +317,7 @@ var agreements;
             this.validateContact.errors.showAllMessages(false);
             this.validateContact.errors.showAllMessages(false);
 
+            this.contactId(undefined);
             this.contactEmail('');
             this.contactDisplayName('');
             this.contactPersonId('');
@@ -382,6 +383,7 @@ var agreements;
 
         contacts.prototype.addPhone = function (me, e) {
             if (this.contactPhoneTextValue().length > 0) {
+                //var context = ko.contextFor($("#contactPhoneTextValue")[0])
                 this.contactPhones.push({ type: '', contactId: '', value: this.contactPhoneTextValue() });
                 this.contactPhoneTextValue("");
                 $(".phoneTypes").kendoDropDownList({
@@ -400,7 +402,7 @@ var agreements;
 
             this.contactPhoneTextValue.subscribe(function (me) {
                 if (_this.contactPhoneTextValue().length > 0) {
-                    if (_this.agreementIsEdit()) {
+                    if (_this.contactId()) {
                         var url = App.Routes.WebApi.Agreements.Contacts.Phones.post(_this.agreementId, _this.contactId());
                         var data = { id: "0", type: '', contactId: _this.contactId(), value: _this.contactPhoneTextValue() };
                         $.post(url, data).done(function (response, statusText, xhr) {
@@ -465,6 +467,7 @@ var agreements;
                 draggable: false,
                 resizable: false
             });
+            this.$addContactDialog.parent().addClass("contactKendoWindow");
 
             //kendo autocomplete select
             var kacSelect = function (me, e) {

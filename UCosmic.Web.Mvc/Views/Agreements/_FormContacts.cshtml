@@ -151,7 +151,7 @@
                                 <label>Phone types</label>
                             </div>
                             <div class="field-input-label-top" style="width: 395px">
-                                <input class="phoneTypes" type="text" placeholder="[None]" 
+                                <input  class="phoneTypes" type="text" placeholder="[None]" 
                                        data-bind="value: type, valueUpdate: 'afterkeydown', attr: { id: 'phoneTypes' + $index }" />
                             </div>
                             <a title="Remove this phone" data-bind="click: $root.removePhone"><i class="red minus on-right"></i></a>
@@ -165,7 +165,7 @@
                         <label>New phone</label>
                     </div>
                     <div class="field-input-label-top"  style="width: 400px">
-                        <input type="text" data-bind="value: contactPhoneTextValue" />
+                        <input id="contactPhoneTextValue" type="text" data-bind="value: contactPhoneTextValue" />
                     </div>
                     <a title="add phone" data-bind="click: addPhone" class="addLink on-right"><i class="green plus"></i></a>
                 </div>

@@ -329,6 +329,7 @@ module agreements {
             this.validateContact.errors.showAllMessages(false);
             this.validateContact.errors.showAllMessages(false);
 
+            this.contactId(undefined);
             this.contactEmail('');
             this.contactDisplayName('');
             this.contactPersonId('');
@@ -394,6 +395,7 @@ module agreements {
 
         addPhone(me, e): void {
             if (this.contactPhoneTextValue().length > 0) {
+                //var context = ko.contextFor($("#contactPhoneTextValue")[0])
                 this.contactPhones.push({ type: '', contactId: '', value: this.contactPhoneTextValue() })
                 this.contactPhoneTextValue("");
                 $(".phoneTypes").kendoDropDownList({
@@ -411,9 +413,7 @@ module agreements {
 
             this.contactPhoneTextValue.subscribe((me: string): void => {
                 if (this.contactPhoneTextValue().length > 0) {
-
-                    if (this.agreementIsEdit()) {
-
+                    if (this.contactId()) {
                         var url = App.Routes.WebApi.Agreements.Contacts.Phones.post(this.agreementId, this.contactId());
                         var data = { id: "0", type: '', contactId: this.contactId(), value: this.contactPhoneTextValue() };
                         $.post(url, data)
@@ -421,7 +421,7 @@ module agreements {
                                 var myUrl = xhr.getResponseHeader('Location');
                                 data.id = myUrl.substring(myUrl.lastIndexOf("/") + 1);
                                 this.contactPhones.push(data)
-                            this.contactPhoneTextValue("");
+                                this.contactPhoneTextValue("");
 
                                 $(".phoneTypes").kendoDropDownList({
                                     dataTextField: "name",
@@ -450,7 +450,7 @@ module agreements {
                             });
                     } else {
                         this.contactPhones.push({ id: '', type: '', contactId: '', value: this.contactPhoneTextValue() })
-                    this.contactPhoneTextValue("");
+                        this.contactPhoneTextValue("");
 
                         $(".phoneTypes").kendoDropDownList({
                             dataTextField: "name",
@@ -481,12 +481,12 @@ module agreements {
                 draggable: false,
                 resizable: false
             });
-
+            this.$addContactDialog.parent().addClass("contactKendoWindow");
             //kendo autocomplete select 
             var kacSelect = (me, e) => {
                 var dataItem = me.dataItem(e.item.index());
                 this.contactDisplayName(dataItem.displayName)
-            this.contactFirstName(dataItem.firstName);
+                this.contactFirstName(dataItem.firstName);
                 this.contactLastName(dataItem.lastName);
                 this.contactEmail(dataItem.defaultEmailAddress);
                 this.contactMiddleName(dataItem.middleName);

@@ -49,9 +49,9 @@
                     @ViewBag.Title
                 </h1>
             </header>
+			<!-- ko stopBinding: true -->
             @Html.Partial(MVC.Agreements.Views._FormParticipants)
             @Html.Partial(MVC.Agreements.Views._FormBasicInfo)
-			<!-- ko stopBinding: true -->
             @Html.Partial(MVC.Agreements.Views._FormEffectiveDatesCurrentStatus)
             @Html.Partial(MVC.Agreements.Views._FormContacts)
             @Html.Partial(MVC.Agreements.Views._FormFileAttachments)

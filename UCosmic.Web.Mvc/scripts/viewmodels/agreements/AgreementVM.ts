@@ -21,6 +21,8 @@
 /// <reference path="./fileAttachments.ts" />
 /// <reference path="./datesStatus.ts" />
 /// <reference path="./visibility.ts" />
+/// <reference path="./participants.ts" />
+/// <reference path="./basicInfo.ts" />
 
 class InstitutionalAgreementParticipantModel {
     constructor(isOwner: any, establishmentId: number, establishmentOfficialName: string,
@@ -38,15 +40,21 @@ class InstitutionalAgreementParticipantModel {
 
 class InstitutionalAgreementEditModel {
     constructor(public initDefaultPageRoute: boolean = true) {
-        this.contactClass = new agreements.contacts(this.isCustomContactTypeAllowed, this.spinner, this.establishmentItemViewModel, this.agreementIsEdit, this.agreementId, this.kendoWindowBug, this.dfdPopContacts);
+
+        // last two vars make sure they are updated with the agreementvm updates 
+        this.participantsClass = new agreements.participants(this.agreementId, this.dfdPopParticipants, this.agreementIsEdit, this.establishmentSearchViewModel, this.hasBoundSearch);
+        ko.applyBindings(this.participantsClass, $('#participants')[0]);
+
+        this.basicInfoClass = new agreements.basicInfo(this.agreementId, this.dfdUAgreements);
+        ko.applyBindings(this.basicInfoClass, $('#basicInfo')[0]);
+        this.contactClass = new agreements.contacts(this.basicInfoClass.isCustomContactTypeAllowed, this.spinner, this.establishmentItemViewModel, this.agreementIsEdit, this.agreementId, this.kendoWindowBug, this.dfdPopContacts);
         ko.applyBindings(this.contactClass, $('#contacts')[0]);
         this.fileAttachmentClass = new agreements.fileAttachments(this.agreementId, this.agreementIsEdit, this.spinner, this.establishmentItemViewModel, this.dfdPopFiles);
         ko.applyBindings(this.fileAttachmentClass, $('#fileAttachments')[0]);
-        this.datesStatusClass = new agreements.datesStatus(this.isCustomStatusAllowed);
+        this.datesStatusClass = new agreements.datesStatus(this.basicInfoClass.isCustomStatusAllowed);
         ko.applyBindings(this.datesStatusClass, $('#effectiveDatesCurrentStatus')[0]);
         this.visibilityClass = new agreements.visibility();
-        ko.applyBindings(this.visibilityClass, $('#overallVisibility')[0]);
-        
+        ko.applyBindings(this.visibilityClass, $('#overallVisibility')[0]);        
 
         var culture = $("meta[name='accept-language']").attr("content");
         if (window.location.href.toLowerCase().indexOf("agreements/new") > 0) {
@@ -55,7 +63,7 @@ class InstitutionalAgreementEditModel {
             this.agreementIsEdit(false);
             this.visibilityClass.visibility("Public");
             $("#LoadingPage").hide();
-            this.populateParticipants();
+            this.participantsClass.populateParticipants();
             $.when(this.dfdPageFadeIn, this.dfdPopParticipants)
                 .done(() => {
                     this.updateKendoDialog($(window).width());
@@ -67,9 +75,10 @@ class InstitutionalAgreementEditModel {
             this.editOrNewUrl = this.editOrNewUrl.substring(0, this.editOrNewUrl.indexOf("/edit") + 5) + "/";
             this.agreementIsEdit(true);
             this.agreementId = this.editOrNewUrl.substring(0, this.editOrNewUrl.indexOf("/"));
+            this.participantsClass.agreementId = this.agreementId;
             this.fileAttachmentClass.agreementId = this.agreementId;
             this.contactClass.agreementId = this.agreementId;
-            this.populateParticipants();
+            this.participantsClass.populateParticipants();
             this.fileAttachmentClass.populateFiles();
             this.contactClass.populateContacts();
             Globalize.culture(culture)
@@ -83,28 +92,12 @@ class InstitutionalAgreementEditModel {
         }
         
         this.isBound(true);
-        this.removeParticipant = <() => boolean> this.removeParticipant.bind(this);
-        this._setupValidation = <() => void > this._setupValidation.bind(this);
-        this.participantsShowErrorMsg = ko.computed(() => {
-            var validateParticipantsHasOwner = false;
-            $.each(this.participants(), function (i, item) {
-                if (item.isOwner() == true) {
-                    validateParticipantsHasOwner = true;
-                }
-            });
-            if (validateParticipantsHasOwner == false) {
-                this.participantsErrorMsg("Home participant is required.");
-                return true;
-            } else {
-                return false;
-            }
-        });
 
-        this.populateUmbrella();
+        this.basicInfoClass.populateUmbrella();
         this.hideOtherGroups();
         this.bindSearch();
         this.getSettings();
-        this._setupValidation();
+        //this._setupValidation();
 
         $(window).resize(() => {
             this.updateKendoDialog($(window).width());
@@ -117,6 +110,8 @@ class InstitutionalAgreementEditModel {
     }
 
     //module classes
+    participantsClass;
+    basicInfoClass;
     contactClass;
     fileAttachmentClass;
     datesStatusClass;
@@ -143,31 +138,7 @@ class InstitutionalAgreementEditModel {
 
     //added this because kendo window after selecting a autocomplte and then clicking the window, the body would scroll to the top.
     kendoWindowBug = 0;
-
-    //validate vars
-    validateBasicInfo;
-
-    //basic info vars
-    $uAgreements: KnockoutObservable<JQuery> = ko.observable();
-    uAgreements = ko.mapping.fromJS([]);
-    uAgreementSelected = ko.observable("");
-    nickname = ko.observable();
-    content = ko.observable();
-    privateNotes = ko.observable();
-    $typeOptions: KnockoutObservable<JQuery> = ko.observable();
-    typeOptions = ko.mapping.fromJS([]);
-    typeOptionSelected: KnockoutObservable<string> = ko.observable();
-    agreementContent = ko.observable();
-    isCustomTypeAllowed = ko.observable();
-    isCustomStatusAllowed = ko.observable();
-    isCustomContactTypeAllowed = ko.observable();
-    
-    //participant vars
-    participantsExport = ko.mapping.fromJS([]);
-    participants = ko.mapping.fromJS([]);
-    participantsErrorMsg = ko.observable();
-    participantsShowErrorMsg;
-
+        
     //search vars
     establishmentSearchViewModel = new Establishments.ViewModels.Search();
     establishmentItemViewModel;
@@ -180,27 +151,7 @@ class InstitutionalAgreementEditModel {
     officialNameDoesNotMatchTranslation = ko.computed(function () {
         return !(this.participants.establishmentOfficialName === this.participants.establishmentTranslatedName);
     });
-
-    receiveParticipants(js: Establishments.ApiModels.FlatEstablishment[]): void {
-        if (!js) {
-            ko.mapping.fromJS({
-                items: [],
-                itemTotal: 0
-            }, this.participants);
-        }
-        else {
-            ko.mapping.fromJS(js, this.participants);
-        }
-    }
     
-    populateParticipants(): void {
-        $.get(App.Routes.WebApi.Agreements.Participants.get(this.agreementId))
-            .done((response: Establishments.ApiModels.FlatEstablishment[]): void => {
-                this.receiveParticipants(response);
-                this.dfdPopParticipants.resolve();
-            });
-    }
-
     populateAgreementData(): void {
         $.when(this.dfdUAgreements)
             .done(() => {
@@ -210,7 +161,7 @@ class InstitutionalAgreementEditModel {
                         var editor = $("#agreementContent").data("kendoEditor");
 
                         editor.value(response.content);
-                        this.content(response.content);
+                        this.basicInfoClass.content(response.content);
                         this.datesStatusClass.expDate(Globalize.format(new Date(response.expiresOn.substring(0, response.expiresOn.lastIndexOf("T"))), 'd'));
                         this.datesStatusClass.startDate(Globalize.format(new Date(response.startsOn.substring(0, response.startsOn.lastIndexOf("T"))), 'd'));
                         if (response.isAutoRenew == null) {
@@ -219,21 +170,21 @@ class InstitutionalAgreementEditModel {
                             this.datesStatusClass.autoRenew(response.isAutoRenew);
                         };
 
-                        this.nickname(response.name);
-                        this.privateNotes(response.notes);
+                        this.basicInfoClass.nickname(response.name);
+                        this.basicInfoClass.privateNotes(response.notes);
                         this.visibilityClass.visibility(response.visibility);
                         this.datesStatusClass.isEstimated(response.isExpirationEstimated);
-                        ko.mapping.fromJS(response.participants, this.participants);
+                        ko.mapping.fromJS(response.participants, this.participantsClass.participants);
                         this.dfdPopParticipants.resolve();
-                        this.uAgreementSelected(response.umbrellaId);
+                        this.basicInfoClass.uAgreementSelected(response.umbrellaId);
 
                         dropdownlist = $("#uAgreements").data("kendoDropDownList");
                         dropdownlist.select((dataItem) => {
-                            return dataItem.value == this.uAgreementSelected();
+                            return dataItem.value == this.basicInfoClass.uAgreementSelected();
                         });
 
                         this.datesStatusClass.statusOptionSelected(response.status);
-                        if (this.isCustomStatusAllowed()) {
+                        if (this.basicInfoClass.isCustomStatusAllowed()) {
                             dropdownlist = $("#statusOptions").data("kendoComboBox");
                             dropdownlist.select((dataItem) => {
                                 return dataItem.name === this.datesStatusClass.statusOptionSelected();
@@ -245,38 +196,22 @@ class InstitutionalAgreementEditModel {
                             });
                         }
 
-                        this.typeOptionSelected(response.type);
-                        if (this.isCustomTypeAllowed()) {
+                        this.basicInfoClass.typeOptionSelected(response.type);
+                        if (this.basicInfoClass.isCustomTypeAllowed()) {
                             dropdownlist = $("#typeOptions").data("kendoComboBox");
                             dropdownlist.select((dataItem) => {
-                                return dataItem.name === this.typeOptionSelected();
+                                return dataItem.name === this.basicInfoClass.typeOptionSelected();
                             });
                         } else {
                             dropdownlist = $("#typeOptions").data("kendoDropDownList");
                             dropdownlist.select((dataItem) => {
-                                return dataItem.text === this.typeOptionSelected();
+                                return dataItem.text === this.basicInfoClass.typeOptionSelected();
                             });
                         }
                     });
             });
     }
-        
-    populateUmbrella(): void {
-        $.get(App.Routes.WebApi.Agreements.UmbrellaOptions.get(this.agreementId))
-            .done((response: any): void => {
-                this.uAgreements(response);
-                $("#uAgreements").kendoDropDownList({
-                    dataTextField: "text",
-                    dataValueField: "value",
-                    optionLabel: "[None - this is a top-level or standalone agreement]",
-                    dataSource: new kendo.data.DataSource({
-                        data: this.uAgreements()
-                    })
-                });
-                this.dfdUAgreements.resolve();
-            });
-    }
-    
+            
     updateKendoDialog(windowWidth): void {
         $(".k-window").css({
             left: (windowWidth / 2 - ($(".k-window").width() / 2) + 10)
@@ -285,9 +220,9 @@ class InstitutionalAgreementEditModel {
 
     bindjQueryKendo(result): void {
         var self = this;
-        this.isCustomTypeAllowed(result.isCustomTypeAllowed);
-        this.isCustomStatusAllowed(result.isCustomStatusAllowed);
-        this.isCustomContactTypeAllowed(result.isCustomContactTypeAllowed);
+        this.basicInfoClass.isCustomTypeAllowed(result.isCustomTypeAllowed);
+        this.basicInfoClass.isCustomStatusAllowed(result.isCustomStatusAllowed);
+        this.basicInfoClass.isCustomContactTypeAllowed(result.isCustomContactTypeAllowed);
         this.datesStatusClass.statusOptions.push(new this.selectConstructor("", ""));
         for (var i = 0; i < result.statusOptions.length; i++) {
             this.datesStatusClass.statusOptions.push(new this.selectConstructor(result.statusOptions[i], result.statusOptions[i]));
@@ -296,44 +231,11 @@ class InstitutionalAgreementEditModel {
         for (var i = 0; i < result.contactTypeOptions.length; i++) {
             this.contactClass.contactTypeOptions.push(new this.selectConstructor(result.contactTypeOptions[i], result.contactTypeOptions[i]));
         };
-        this.typeOptions.push(new this.selectConstructor("", ""));
+        this.basicInfoClass.typeOptions.push(new this.selectConstructor("", ""));
         for (var i = 0; i < result.typeOptions.length; i++) {
-            this.typeOptions.push(new this.selectConstructor(result.typeOptions[i], result.typeOptions[i]));
+            this.basicInfoClass.typeOptions.push(new this.selectConstructor(result.typeOptions[i], result.typeOptions[i]));
         };
-        if (this.isCustomTypeAllowed) {
-            $("#typeOptions").kendoComboBox({
-                dataTextField: "name",
-                dataValueField: "id",
-                dataSource: new kendo.data.DataSource({
-                    data: this.typeOptions()
-                })
-            });
-        } else {
-            $("#typeOptions").kendoDropDownList({
-                dataTextField: "name",
-                dataValueField: "id",
-                dataSource: new kendo.data.DataSource({
-                    data: this.typeOptions()
-                })
-            });
-        }
-        if (this.isCustomStatusAllowed) {
-            $("#statusOptions").kendoComboBox({
-                dataTextField: "name",
-                dataValueField: "id",
-                dataSource: new kendo.data.DataSource({
-                    data: this.datesStatusClass.statusOptions()
-                })
-            });
-        } else {
-            $("#statusOptions").kendoDropDownList({
-                dataTextField: "name",
-                dataValueField: "id",
-                dataSource: new kendo.data.DataSource({
-                    data: this.datesStatusClass.statusOptions()
-                })
-            });
-        }
+        
         $(".hasDate").each(function (index, item) {
             $(item).kendoDatePicker({
                 value: new Date($(item).val()),
@@ -450,8 +352,10 @@ class InstitutionalAgreementEditModel {
             ]
         });
 
+        this.basicInfoClass.bindJquery();
         this.contactClass.bindJquery();
         this.fileAttachmentClass.bindJquery();
+        this.datesStatusClass.bindJquery();
     }
 
     //get settings for agreements.
@@ -476,54 +380,7 @@ class InstitutionalAgreementEditModel {
         $("#estSearch").css("visibility", "").hide();
         $("#addEstablishment").css("visibility", "").hide();
     }
-
-    removeParticipant(establishmentResultViewModel, e): boolean {
-        if (confirm('Are you sure you want to remove "' +
-            establishmentResultViewModel.establishmentTranslatedName() +
-            '" as a participant from this agreement?')) {
-                var self = this;
-                if (this.agreementIsEdit()) {
-                    var url = App.Routes.WebApi.Agreements.Participants.del(this.agreementId, ko.dataFor(e.target).establishmentId());
-                    $.ajax({
-                        url: url,
-                        type: 'DELETE',
-                        success: (): void => {
-                            self.participants.remove(function (item) {
-                                if (item.establishmentId() === establishmentResultViewModel.establishmentId()) {
-                                    $(item.participantEl).slideUp('fast', function () {
-                                        self.participants.remove(item);
-                                        $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * 1.1)));
-                                    });
-                                }
-                                return false;
-                            });
-                        },
-                        error: (xhr: JQueryXHR, statusText: string, errorThrown: string): void => {// validation message will be in xhr response text...
-                            alert(xhr.responseText);
-                        }
-                    })
-                } else {
-                    self.participants.remove(function (item) {
-                        if (item.establishmentId() === establishmentResultViewModel.establishmentId()) {
-                            $(item.participantEl).slideUp('fast', function () {
-                                self.participants.remove(item);
-                                $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * 1.1)));
-                            });
-                        }
-                        return false;
-                    });
-                }
-        }
-        e.preventDefault();
-        e.stopPropagation();
-        return false;
-    }
-
-    addParticipant(establishmentResultViewModel): void {
-        this.establishmentSearchViewModel.sammy.setLocation('#/page/1/');
-        this.hasBoundSearch = true;
-    }
-    
+        
     SearchPageBind(parentOrParticipant: string): void {
         var $cancelAddParticipant = $("#cancelAddParticipant");
         var $searchSideBarAddNew = $("#searchSideBarAddNew");
@@ -736,8 +593,8 @@ class InstitutionalAgreementEditModel {
                                     context.translatedName()
                                 );
                                 var alreadyExist = false;
-                                for (var i = 0; i < this.participants().length; i++) {
-                                    if (this.participants()[i].establishmentId() === myParticipant.establishmentId()) {
+                                for (var i = 0; i < this.participantsClass.participants().length; i++) {
+                                    if (this.participantsClass.participants()[i].establishmentId() === myParticipant.establishmentId()) {
                                         alreadyExist = true;
                                         break;
                                     }
@@ -757,14 +614,14 @@ class InstitutionalAgreementEditModel {
                                                 url: url,
                                                 data: myParticipant,
                                                 success: (response: any, statusText: string, xhr: JQueryXHR): void => {
-                                                    this.participants.push(myParticipant);
+                                                    this.participantsClass.participants.push(myParticipant);
                                                 },
                                                 error: (xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
                                                     alert(xhr.responseText);
                                                 }
                                             });
                                         } else {
-                                            this.participants.push(myParticipant);
+                                            this.participantsClass.participants.push(myParticipant);
                                         }
                                         this.establishmentSearchViewModel.sammy.setLocation("agreements/" + this.editOrNewUrl + "");
                                         $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * .85)));
@@ -777,14 +634,14 @@ class InstitutionalAgreementEditModel {
                                                 url: url,
                                                 data: myParticipant,
                                                 success: (response: any, statusText: string, xhr: JQueryXHR): void => {
-                                                    this.participants.push(myParticipant);
+                                                    this.participantsClass.participants.push(myParticipant);
                                                 },
                                                 error: (xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
                                                     alert(xhr.responseText);
                                                 }
                                             });
                                         } else {
-                                            this.participants.push(myParticipant);
+                                            this.participantsClass.participants.push(myParticipant);
                                         }
                                         this.establishmentSearchViewModel.sammy.setLocation("agreements/" + this.editOrNewUrl + "");
                                     });
@@ -822,27 +679,7 @@ class InstitutionalAgreementEditModel {
             this.establishmentSearchViewModel.sammy.run();
         }
     }
-           
-    private _setupValidation(): void {
-        this.validateBasicInfo = ko.validatedObservable({
-            agreementType: this.typeOptionSelected.extend({
-                required: {
-                    message: "Agreement type is required."
-                },
-                maxLength: 50
-            }),
-            nickname: this.nickname.extend({
-                maxLength: 50
-            }),
-            content: this.content.extend({
-                maxLength: 5000
-            }),
-            privateNotes: this.privateNotes.extend({
-                maxLength: 250
-            })
-        });
-    }
-    
+
     //post files
     postMe(data, url): void {
         $.post(url, data)
@@ -918,14 +755,14 @@ class InstitutionalAgreementEditModel {
             $("#navEffectiveDatesCurrentStatus").closest("ul").find("li").removeClass("current");
             $("#navEffectiveDatesCurrentStatus").addClass("current");
         }
-        if (!this.validateBasicInfo.isValid()) {
+        if (!this.basicInfoClass.validateBasicInfo.isValid()) {
             offset = $("#basicInfo").offset();
-            this.validateBasicInfo.errors.showAllMessages(true);
+            this.basicInfoClass.validateBasicInfo.errors.showAllMessages(true);
             $("#navValidateBasicInfo").closest("ul").find("li").removeClass("current");
             $("#navValidateBasicInfo").addClass("current");
         }
         $("#participantsErrorMsg").show();
-        if (this.participantsShowErrorMsg()) {
+        if (this.participantsClass.participantsShowErrorMsg()) {
             offset = $("#participants").offset();
             $("#navParticipants").closest("ul").find("li").removeClass("current");
             $("#navParticipants").addClass("current");
@@ -954,8 +791,8 @@ class InstitutionalAgreementEditModel {
                 $("#LoadingPage").hide().fadeIn(500);
             });
 
-            $.each(this.participants(), (i, item) => {
-                this.participantsExport.push({
+            $.each(this.participantsClass.participants(), (i, item) => {
+                this.participantsClass.participantsExport.push({
                     agreementId: item.agreementId,
                     establishmentId: item.establishmentId,
                     establishmentOfficialName: item.establishmentOfficialName,
@@ -971,21 +808,21 @@ class InstitutionalAgreementEditModel {
                 myAutoRenew = true;
             }
 
-            this.content(editor.value());
+            this.basicInfoClass.content(editor.value());
 
             var data = ko.mapping.toJS({
-                content: this.content(),
+                content: this.basicInfoClass.content(),
                 expiresOn: this.datesStatusClass.expDate(),
                 startsOn: this.datesStatusClass.startDate(),
                 isAutoRenew: myAutoRenew,
-                name: this.nickname(),
-                notes: this.privateNotes(),
+                name: this.basicInfoClass.nickname(),
+                notes: this.basicInfoClass.privateNotes(),
                 status: this.datesStatusClass.statusOptionSelected(),
                 visibility: this.visibilityClass.visibility(),
                 isExpirationEstimated: this.datesStatusClass.isEstimated(),
-                participants: this.participantsExport,
-                umbrellaId: this.uAgreementSelected(),
-                type: this.typeOptionSelected()
+                participants: this.participantsClass.participantsExport,
+                umbrellaId: this.basicInfoClass.uAgreementSelected(),
+                type: this.basicInfoClass.typeOptionSelected()
             })
             if (this.agreementIsEdit()) {
                 url = App.Routes.WebApi.Agreements.put(this.agreementId);

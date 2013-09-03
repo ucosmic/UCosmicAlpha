@@ -3,6 +3,7 @@
 /// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
 /// <reference path="../../typings/globalize/globalize.d.ts" />
 /// <reference path="../../typings/jquery/jquery.d.ts" />
+/// <reference path="../../typings/kendo/kendo.all.d.ts" />
 module agreements {
 
     export class datesStatus {
@@ -68,6 +69,26 @@ module agreements {
                         }
                     })
                 })
+        }
+        
+        bindJquery(): void {
+            if (this.isCustomStatusAllowed) {
+                $("#statusOptions").kendoComboBox({
+                    dataTextField: "name",
+                    dataValueField: "id",
+                    dataSource: new kendo.data.DataSource({
+                        data: this.statusOptions()
+                    })
+                });
+            } else {
+                $("#statusOptions").kendoDropDownList({
+                    dataTextField: "name",
+                    dataValueField: "id",
+                    dataSource: new kendo.data.DataSource({
+                        data: this.statusOptions()
+                    })
+                });
+            }
         }
     }
 }

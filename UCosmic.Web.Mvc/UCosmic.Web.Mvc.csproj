@@ -1885,6 +1885,13 @@
     <TypeScriptCompile Include="scripts\viewmodels\degrees\Degree.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\agreements\scrollBody.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\agreements\contacts.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\agreements\basicInfo.ts" />
+    <Content Include="scripts\viewmodels\agreements\basicInfo.js">
+      <DependentUpon>basicInfo.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\agreements\basicInfo.min.js">
+      <DependentUpon>basicInfo.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\viewmodels\agreements\contacts.js">
       <DependentUpon>contacts.ts</DependentUpon>
     </Content>
@@ -1904,6 +1911,13 @@
     </Content>
     <Content Include="scripts\viewmodels\agreements\fileAttachments.min.js">
       <DependentUpon>fileAttachments.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="scripts\viewmodels\agreements\participants.ts" />
+    <Content Include="scripts\viewmodels\agreements\participants.js">
+      <DependentUpon>participants.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\agreements\participants.min.js">
+      <DependentUpon>participants.ts</DependentUpon>
     </Content>
     <Content Include="scripts\viewmodels\agreements\scrollBody.js">
       <DependentUpon>scrollBody.ts</DependentUpon>
