@@ -967,10 +967,8 @@ module ViewModels.Employees {
                 }
             }
 
-            if (dt != null) {
-                view = new this.google.visualization.DataView(dt);
-                view.setColumns([0, 1, 1, 2]);
-            }
+            view = new this.google.visualization.DataView(dt);
+            view.setColumns([0, 1, 1, 2]);
 
             return view;
         }
@@ -1512,6 +1510,7 @@ module ViewModels.Employees {
 
             $("#bib-faculty-staff-summary").removeClass("current");
             $("#bib-faculty-staff-search").removeClass("current");
+            $("#bib-faculty-staff-expert").removeClass("current");
 
             if (type === "heatmap") {
                 $('#heatmapText').css("font-weight", "bold");

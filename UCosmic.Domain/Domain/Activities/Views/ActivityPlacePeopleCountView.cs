@@ -41,7 +41,7 @@ namespace UCosmic.Domain.Activities
             var settings = _queryProcessor.Execute(new EmployeeModuleSettingsByEstablishmentId(establishmentId));
 
             DateTime toDateUtc = new DateTime(DateTime.UtcNow.Year + 1, 1, 1);
-            DateTime fromDateUtc = settings.ReportsDefaultYearRange.HasValue
+            DateTime fromDateUtc = (settings != null) && (settings.ReportsDefaultYearRange.HasValue)
                                        ? toDateUtc.AddYears(-(settings.ReportsDefaultYearRange.Value + 1))
                                        : new DateTime(DateTime.MinValue.Year, 1, 1);
             {
@@ -60,7 +60,7 @@ namespace UCosmic.Domain.Activities
                                                                                                    false, /* include undated */
                                                                                                    true /* include future */));
 
-            if (settings.ActivityTypes.Any())
+            if ((settings != null) && settings.ActivityTypes.Any())
             {
                 foreach (var type in settings.ActivityTypes)
                 {

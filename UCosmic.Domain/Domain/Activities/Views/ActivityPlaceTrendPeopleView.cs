@@ -31,7 +31,7 @@ namespace UCosmic.Domain.Activities
             var settings = queryProcessor.Execute(new EmployeeModuleSettingsByEstablishmentId(establishmentId));
 
             DateTime toDateUtc = new DateTime(DateTime.UtcNow.Year + 1, 1, 1);
-            DateTime fromDateUtc = settings.ReportsDefaultYearRange.HasValue
+            DateTime fromDateUtc = (settings != null) && (settings.ReportsDefaultYearRange.HasValue)
                                        ? toDateUtc.AddYears(-(settings.ReportsDefaultYearRange.Value + 1))
                                        : new DateTime(DateTime.MinValue.Year, 1, 1);
 
