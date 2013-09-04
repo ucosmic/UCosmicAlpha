@@ -169,6 +169,8 @@ module ViewModels.Employees {
 
 
         loadSpinner: App.Spinner;
+        loadCountSpinner: App.Spinner;
+        loadTrendSpinner: App.Spinner;
 
         
         _initialize(institutionInfo: any): void {
@@ -193,6 +195,8 @@ module ViewModels.Employees {
             this.selectedPlace = ko.observable(null); // null for global view
             this.isGlobalView = ko.observable(true);
             this.loadSpinner = new App.Spinner(new App.SpinnerOptions(200));
+            this.loadCountSpinner = new App.Spinner(new App.SpinnerOptions(200));
+            this.loadTrendSpinner = new App.Spinner(new App.SpinnerOptions(200));
 
             this.globalActivityCountData = null;
             this.placeActivityCountData = null;
@@ -706,9 +710,11 @@ module ViewModels.Employees {
             var deferred: JQueryDeferred<void> = $.Deferred();
 
             if (this.globalActivityCountData == null) {
+                this.loadSpinner.start();
                 this.getActivityDataTable(null)
                     .done((): void => {
                         deferred.resolve(this._getHeatmapActivityDataTable());
+                        this.loadSpinner.stop();
                     });
             }
             else {
@@ -787,9 +793,11 @@ module ViewModels.Employees {
             var deferred: JQueryDeferred<void> = $.Deferred();
 
             if (this.globalPeopleCountData == null) {
+                this.loadSpinner.start();
                 this.getPeopleDataTable(null)
                     .done((): void => {
                         deferred.resolve(this._getHeatmapPeopleDataTable());
+                        this.loadSpinner.stop();
                     });
             }
             else {
@@ -873,10 +881,10 @@ module ViewModels.Employees {
 
             if (placeOfficialName == null) {
                 if (this.globalActivityCountData == null) {
-                    this.loadSpinner.start();
+                    this.loadCountSpinner.start();
                     $.ajax({
                         type: "GET",
-                        async: false,
+                        async: true,
                         data: { 'establishmentId': this.establishmentId(), 'placeId': null },
                         dataType: 'json',
                         url: App.Routes.WebApi.FacultyStaff.getActivityCount(),
@@ -888,7 +896,7 @@ module ViewModels.Employees {
                             deferred.reject(errorThrown);
                         },
                         complete: (jqXhr: JQueryXHR, textStatus: string): void => {
-                            this.loadSpinner.stop();
+                            this.loadCountSpinner.stop();
                         }
                     });
                 }
@@ -901,10 +909,10 @@ module ViewModels.Employees {
                 if (placeId != null) {
                     if ((this.placeActivityCountData == null) ||
                         ((<any>this.placeActivityCountData).placeId != placeId)) {
-                        this.loadSpinner.start();
+                        this.loadCountSpinner.start();
                         $.ajax({
                             type: "GET",
-                            async: false,
+                            async: true,
                             data: { 'establishmentId': this.establishmentId(), 'placeId': placeId },
                             dataType: 'json',
                             url: App.Routes.WebApi.FacultyStaff.getActivityCount(),
@@ -916,7 +924,7 @@ module ViewModels.Employees {
                                 deferred.reject(errorThrown);
                             },
                             complete: (jqXhr: JQueryXHR, textStatus: string): void => {
-                                this.loadSpinner.stop();
+                                this.loadCountSpinner.stop();
                             }
                         });
                     }
@@ -981,10 +989,10 @@ module ViewModels.Employees {
 
             if (placeOfficialName == null) {
                 if (this.globalPeopleCountData == null) {
-                    this.loadSpinner.start();
+                    this.loadCountSpinner.start();
                     $.ajax({
                         type: "GET",
-                        async: false,
+                        async: true,
                         data: { 'establishmentId': this.establishmentId(), 'placeId': null },
                         dataType: 'json',
                         url: App.Routes.WebApi.FacultyStaff.getPeopleCount(),
@@ -996,9 +1004,12 @@ module ViewModels.Employees {
                             deferred.reject(errorThrown);
                         },
                         complete: (jqXhr: JQueryXHR, textStatus: string): void => {
-                            this.loadSpinner.stop();
+                            this.loadCountSpinner.stop();
                         }
                     });
+                }
+                else {
+                    deferred.resolve(this._getPeopleDataTable(null));
                 }
             }
             else {
@@ -1006,10 +1017,10 @@ module ViewModels.Employees {
                 if (placeId != null) {
                     if ((this.placePeopleCountData == null) ||
                         ((<any>this.placePeopleCountData).placeId != placeId)) {
-                        this.loadSpinner.start();
+                            this.loadCountSpinner.start();
                         $.ajax({
                             type: "GET",
-                            async: false,
+                            async: true,
                             data: { 'establishmentId': this.establishmentId(), 'placeId': placeId },
                             dataType: 'json',
                             url: App.Routes.WebApi.FacultyStaff.getPeopleCount(),
@@ -1021,9 +1032,12 @@ module ViewModels.Employees {
                                 deferred.reject(errorThrown);
                             },
                             complete: (jqXhr: JQueryXHR, textStatus: string): void => {
-                                this.loadSpinner.stop();
+                                this.loadCountSpinner.stop();
                             }
                         });
+                    }
+                    else {
+                        deferred.resolve(this._getPeopleDataTable(placeOfficialName));
                     }
                 }
                 else {
@@ -1070,10 +1084,10 @@ module ViewModels.Employees {
 
             if (placeOfficialName == null) {
                 if (this.globalActivityTrendData == null) {
-                    this.loadSpinner.start();
+                    this.loadTrendSpinner.start();
                     $.ajax({
                         type: "GET",
-                        async: false,
+                        async: true,
                         data: { 'establishmentId': this.establishmentId(), 'placeId': null },
                         dataType: 'json',
                         url: App.Routes.WebApi.FacultyStaff.getActivityTrend(),
@@ -1085,7 +1099,7 @@ module ViewModels.Employees {
                             deferred.reject(errorThrown);
                         },
                         complete: (jqXhr: JQueryXHR, textStatus: string): void => {
-                            this.loadSpinner.stop();
+                            this.loadTrendSpinner.stop();
                         }
                     });
                 }
@@ -1098,10 +1112,10 @@ module ViewModels.Employees {
                 if (placeId != null) {
                     if ((this.placeActivityTrendData == null) ||
                         ((<any>this.placeActivityTrendData).placeId != placeId)) {
-                        this.loadSpinner.start();
+                            this.loadTrendSpinner.start();
                         $.ajax({
                             type: "GET",
-                            async: false,
+                            async: true,
                             data: { 'establishmentId': this.establishmentId(), 'placeId': placeId },
                             dataType: 'json',
                             url: App.Routes.WebApi.FacultyStaff.getActivityTrend(),
@@ -1113,7 +1127,7 @@ module ViewModels.Employees {
                                 deferred.reject(errorThrown);
                             },
                             complete: (jqXhr: JQueryXHR, textStatus: string): void => {
-                                this.loadSpinner.stop();
+                                this.loadTrendSpinner.stop();
                             }
                         });
                     }
@@ -1157,10 +1171,10 @@ module ViewModels.Employees {
 
             if (placeOfficialName == null) {
                 if (this.globalPeopleTrendData == null) {
-                    this.loadSpinner.start();
+                    this.loadTrendSpinner.start();
                     $.ajax({
                         type: "GET",
-                        async: false,
+                        async: true,
                         data: { 'establishmentId': this.establishmentId(), 'placeId': null },
                         dataType: 'json',
                         url: App.Routes.WebApi.FacultyStaff.getPeopleTrend(),
@@ -1172,7 +1186,7 @@ module ViewModels.Employees {
                             deferred.reject(errorThrown);
                         },
                         complete: (jqXhr: JQueryXHR, textStatus: string): void => {
-                            this.loadSpinner.stop();
+                            this.loadTrendSpinner.stop();
                         }
                     });
                 }
@@ -1182,10 +1196,10 @@ module ViewModels.Employees {
                 if (placeId != null) {
                     if ((this.placePeopleTrendData == null) ||
                         ((<any>this.placePeopleTrendData).placeId != placeId)) {
-                        this.loadSpinner.start();
+                            this.loadTrendSpinner.start();
                         $.ajax({
                             type: "GET",
-                            async: false,
+                            async: true,
                             data: { 'establishmentId': this.establishmentId(), 'placeId': placeId },
                             dataType: 'json',
                             url: App.Routes.WebApi.FacultyStaff.getPeopleTrend(),
@@ -1197,7 +1211,7 @@ module ViewModels.Employees {
                                 deferred.reject(errorThrown);
                             },
                             complete: (jqXhr: JQueryXHR, textStatus: string): void => {
-                                this.loadSpinner.stop();
+                                this.loadTrendSpinner.stop();
                             }
                         });
                     }
@@ -1240,10 +1254,10 @@ module ViewModels.Employees {
             var deferred: JQueryDeferred<void> = $.Deferred();
 
             if (placeOfficialName == null) {
-                this.loadSpinner.start();
+                //this.loadSpinner.start();
                 $.ajax({
                     type: "GET",
-                    async: false,
+                    async: true,
                     data: { 'establishmentId': this.establishmentId(), 'placeId': null },
                     dataType: 'json',
                     url: App.Routes.WebApi.FacultyStaff.getDegreeCount(),
@@ -1254,17 +1268,17 @@ module ViewModels.Employees {
                         deferred.reject(errorThrown);
                     },
                     complete: (jqXhr: JQueryXHR, textStatus: string): void => {
-                        this.loadSpinner.stop();
+                        //this.loadSpinner.stop();
                     }
                 });
             }
             else {
                 var placeId = this.getPlaceId(placeOfficialName);
                 if (placeId != null) {
-                    this.loadSpinner.start();
+                   // this.loadSpinner.start();
                     $.ajax({
                         type: "GET",
-                        async: false,
+                        async: true,
                         data: { 'establishmentId': this.establishmentId(), 'placeId': placeId },
                         dataType: 'json',
                         url: App.Routes.WebApi.FacultyStaff.getDegreeCount(),
@@ -1275,7 +1289,7 @@ module ViewModels.Employees {
                             deferred.reject(errorThrown);
                         },
                         complete: (jqXhr: JQueryXHR, textStatus: string): void => {
-                            this.loadSpinner.stop();
+                            //this.loadSpinner.stop();
                         }
                     });
                 }
@@ -1294,10 +1308,10 @@ module ViewModels.Employees {
             var deferred: JQueryDeferred<void> = $.Deferred();
 
             if (placeOfficialName == null) {
-                this.loadSpinner.start();
+                //this.loadSpinner.start();
                 $.ajax({
                     type: "GET",
-                    async: false,
+                    async: true,
                     data: { 'establishmentId': this.establishmentId(), 'placeId': null },
                     dataType: 'json',
                     url: App.Routes.WebApi.FacultyStaff.getDegreePeopleCount(),
@@ -1308,17 +1322,17 @@ module ViewModels.Employees {
                         deferred.reject(errorThrown);
                     },
                     complete: (jqXhr: JQueryXHR, textStatus: string): void => {
-                        this.loadSpinner.stop();
+                        //this.loadSpinner.stop();
                     }
                 });
             }
             else {
                 var placeId = this.getPlaceId(placeOfficialName);
                 if (placeId != null) {
-                    this.loadSpinner.start();
+                    //this.loadSpinner.start();
                     $.ajax({
                         type: "GET",
-                        async: false,
+                        async: true,
                         data: { 'establishmentId': this.establishmentId(), 'placeId': placeId },
                         dataType: 'json',
                         url: App.Routes.WebApi.FacultyStaff.getDegreePeopleCount(),
@@ -1329,7 +1343,7 @@ module ViewModels.Employees {
                             deferred.reject(errorThrown);
                         },
                         complete: (jqXhr: JQueryXHR, textStatus: string): void => {
-                            this.loadSpinner.stop();
+                            //this.loadSpinner.stop();
                         }
                     });
                 }
@@ -1517,19 +1531,7 @@ module ViewModels.Employees {
 
                 this.isHeatmapVisible(true);
 
-                var dataTable = null;
-
                 if (this.searchType() === 'activities') {
-                    this.getHeatmapActivityDataTable()
-                        .done((dataTable: any): void => {
-                            this.heatmap.draw(dataTable, this.heatmapOptions);
-                            if (this.selectedPlace() == null) {
-                                this.totalCount(this.globalActivityCountData.count);
-                                this.totalPlaceCount(this.globalActivityCountData.countOfPlaces);
-                            }
-                            this.updateCustomGeochartPlaceTooltips(this.searchType());
-                        });
-
                     this.getActivityDataTable(this.selectedPlace())
                         .done((dataTable: any): void => {
                             this.barchart.draw(dataTable, this.barchartActivityOptions);
@@ -1537,6 +1539,16 @@ module ViewModels.Employees {
                                 this.totalCount(this.placeActivityCountData.count);
                                 this.totalPlaceCount(this.placeActivityCountData.countOfPlaces);
                             }
+
+                            this.getHeatmapActivityDataTable()
+                                .done((dataTable: any): void => {
+                                    this.heatmap.draw(dataTable, this.heatmapOptions);
+                                    if (this.selectedPlace() == null) {
+                                        this.totalCount(this.globalActivityCountData.count);
+                                        this.totalPlaceCount(this.globalActivityCountData.countOfPlaces);
+                                    }
+                                    this.updateCustomGeochartPlaceTooltips(this.searchType());
+                                });
                         });
 
                     this.getActivityTrendDataTable(this.selectedPlace())
@@ -1549,26 +1561,26 @@ module ViewModels.Employees {
                             this.degreeCount(count);
                         });                  
                 } else {
-                    this.getHeatmapPeopleDataTable()
-                        .done((dataTable: any): void => {
-                            this.heatmap.draw(dataTable, this.heatmapOptions);
-                            if (this.selectedPlace() == null) {
-                                this.totalCount(this.globalPeopleCountData.count);
-                                this.totalPlaceCount(this.globalPeopleCountData.countOfPlaces); 
-                            }
-                            this.updateCustomGeochartPlaceTooltips(this.searchType());
-                        });
-
                     this.getPeopleDataTable(this.selectedPlace())
                         .done((dataTable: any): void => {
                             this.barchart.draw(dataTable, this.barchartPeopleOptions);
                             if (this.selectedPlace() != null) {
                                 this.totalCount(this.placePeopleCountData.count);
+                                this.totalPlaceCount(this.placePeopleCountData.countOfPlaces);
                             }
-                            this.totalPlaceCount(this.placePeopleCountData.countOfPlaces);
+ 
+                            this.getHeatmapPeopleDataTable()
+                                .done((dataTable: any): void => {
+                                    this.heatmap.draw(dataTable, this.heatmapOptions);
+                                    if (this.selectedPlace() == null) {
+                                        this.totalCount(this.globalPeopleCountData.count);
+                                        this.totalPlaceCount(this.globalPeopleCountData.countOfPlaces);
+                                    }
+                                    this.updateCustomGeochartPlaceTooltips(this.searchType());
+                                });                                                                       
                         });
 
-                    dataTable = this.getPeopleTrendDataTable(this.selectedPlace())
+                    this.getPeopleTrendDataTable(this.selectedPlace())
                         .done((dataTable: any): void => {
                             this.linechart.draw(dataTable, this.linechartPeopleOptions);
                         });

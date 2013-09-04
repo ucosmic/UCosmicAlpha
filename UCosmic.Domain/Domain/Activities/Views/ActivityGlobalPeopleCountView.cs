@@ -79,12 +79,12 @@ namespace UCosmic.Domain.Activities
                     {
                         int placeTypeCount = queryProcessor.Execute(
                             new PeopleWithActivitiesCountByTypeIdPlaceIdsEstablishmentId(type.Id,
-                                                                                        new int[] { place.RevisionId },
-                                                                                        establishmentId,
-                                                                                        fromDateUtc,
-                                                                                        toDateUtc,
-                                                                                        false, /* include undated */
-                                                                                        true /* include future */));
+                                                                                         new int[] { place.RevisionId },
+                                                                                         establishmentId,
+                                                                                         fromDateUtc,
+                                                                                         toDateUtc,
+                                                                                         false, /* include undated */
+                                                                                         true /* include future */));
 
                         var typeCount = TypeCounts.SingleOrDefault(c => c.TypeId == type.Id);
                         if (typeCount != null)

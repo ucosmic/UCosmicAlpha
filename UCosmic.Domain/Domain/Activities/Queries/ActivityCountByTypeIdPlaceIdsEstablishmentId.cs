@@ -102,13 +102,13 @@ namespace UCosmic.Domain.Activities
                     {
                         count += view.Count(a =>
                                            /* TypeId must be found in typeIds */
-                                           a.TypeIds.Any(t => t == query.TypeId) &&
+                                           a.TypeIds.Contains(query.TypeId) &&
 
                                            /* and, PlaceId must be found in placeIds...*/
-                                           a.PlaceIds.Any(e => e == placeId) &&
+                                           a.PlaceIds.Contains(placeId) &&
 
                                            /* and, EstablishmentId must be found in establishmentids*/
-                                           a.EstablishmentIds.Any(e => e == query.EstablishmentId));
+                                           a.EstablishmentIds.Contains(query.EstablishmentId));
                     }
                 }
             }

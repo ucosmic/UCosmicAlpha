@@ -7,41 +7,36 @@ namespace UCosmic.Domain.Degrees
     {
         public int EstablishmentId { get; private set; }
         public int[] PlacesIds { get; private set; }
-        //public DateTime? FromDate { get; private set; }
-        //public DateTime? ToDate { get; private set; }
-        //public bool NoUndated { get; private set; }
-        //public bool IncludeFuture { get; private set; }
+        public DateTime FromDate { get; private set; }
+        public DateTime ToDate { get; private set; }
+        public bool NoUndated { get; private set; }
+
 
         public DegreeCountByPlaceIdsEstablishmentId( int[] inPlaceIds
                                                      ,int inEstablishmentId
-                                                    //,DateTime? fromDateUtc = null
-                                                    //,DateTime? toDateUtc = null
+                                                    ,DateTime fromDateUtc
+                                                    ,DateTime toDateUtc
                                             )
         {
-            //if ((fromDateUtc.HasValue && !toDateUtc.HasValue) || (!fromDateUtc.HasValue && toDateUtc.HasValue))
-            //{
-            //    throw new ArgumentException("Both fromDateUtc and toDateUtc must be provided.");
-            //}
-
             PlacesIds = inPlaceIds;
             EstablishmentId = inEstablishmentId;
-            //FromDate = fromDateUtc;
-            //ToDate = toDateUtc;
+            FromDate = fromDateUtc;
+            ToDate = toDateUtc;
         }
 
-        //public DegreeCountByPlaceIdsEstablishmentId(int inEstablishmentId
-        //                                      ,DateTime fromDateUtc
-        //                                      ,DateTime toDateUtc
-        //                                      ,bool noUndated
-        //                                      ,bool includeFuture
-        //                        )
-        //{
-        //    EstablishmentId = inEstablishmentId;
-        //    FromDate = fromDateUtc;
-        //    ToDate = toDateUtc;
-        //    NoUndated = noUndated;
-        //    IncludeFuture = includeFuture;
-        //}
+        public DegreeCountByPlaceIdsEstablishmentId( int[] inPlaceIds
+                                              , int inEstablishmentId
+                                              , DateTime fromDateUtc
+                                              , DateTime toDateUtc
+                                              , bool noUndated
+                                )
+        {
+            PlacesIds = inPlaceIds;
+            EstablishmentId = inEstablishmentId;
+            FromDate = fromDateUtc;
+            ToDate = toDateUtc;
+            NoUndated = noUndated;
+        }
     }
 
     public class HandleDegreeCountByPlaceIdsEstablishmentIdQuery : IHandleQueries<DegreeCountByPlaceIdsEstablishmentId, int>
@@ -59,8 +54,16 @@ namespace UCosmic.Domain.Degrees
 
             return _entities.Query<Degree>()
                             .Count(
-                                d =>
+                                d => 
+                                //(
+                                //    (!d.YearAwarded.HasValue && !query.NoUndated) ||
+                                //    (d.YearAwarded.HasValue &&
+                                //        (d.YearAwarded >= query.FromDate.Year) &&
+                                //        (d.YearAwarded < query.ToDate.Year))
+                                //) &&
+
                                 (d.Institution.Location.Places.Any(e => query.PlacesIds.Contains(e.RevisionId))) &&
+
                                 (
                                     ((d.Person.Affiliations.Count(x => x.IsDefault) == 1) &&
                                         (d.Person.Affiliations.FirstOrDefault(x => x.IsDefault).EstablishmentId == query.EstablishmentId)) ||

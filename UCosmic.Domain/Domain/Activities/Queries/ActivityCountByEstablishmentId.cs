@@ -68,7 +68,7 @@ namespace UCosmic.Domain.Activities
                                                    query.IncludeFuture);
                     }
 
-                    count = view.Count(a =>  a.EstablishmentIds.Any(e => e == query.EstablishmentId) );
+                    count = view.Count(a =>  a.EstablishmentIds.Contains(query.EstablishmentId) );
                 }
 
             }

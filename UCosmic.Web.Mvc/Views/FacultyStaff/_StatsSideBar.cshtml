@@ -1,11 +1,4 @@
 ﻿<div class="stats-sidebar" style="">
-    @*    <div class="keywords-search">
-        <h1>Keyword Search</h1>
-        <input type="text" id="keywords" style="width: 85%"/>
-        <input type="image" src="../../images/icons/search/search-24-black.png" style="width: 24px; height: 24px" alt="Search">
-    </div>*@
-
-
     <div class="stats" style="width: 100%">
         <div style="margin-top: 70px; margin-bottom: 16px">
             <div style="display: none; font-size: medium; margin-top: 20px; margin-bottom: 16px" data-bind="visible: selectedPlace() == null">
@@ -80,53 +73,49 @@
             </div>            
         </div>
         
-        <div id="facultystaff-summary-barchart" style="width: 100%; height: 100px"></div>
+    
+        <div style="width: 270px">
+            <div id="facultystaff-summary-barchart" style="width: 100%; height: 100px"></div>
 
-        <div style="position: relative; top: -12px">
-            <div style="margin-left:16px; width: 40px; float: left">
-                <div style="width: 100%; text-align: center" title="Research or Creative Endeavor">
-                    <img src="../../images/icons/nounproject/noun_project_762_idea.svg" width="32" height="32"/>
+@*            <!-- Spinner -->
+            <div class="spinnerBox" data-bind="visible: loadCountSpinner.isVisible()">
+                <div style="position: absolute; top: 0; left: 0; bottom: 0; right: 0; margin: auto; width: 100px; height: 20px">
+                    <span>
+                        <img src="~/images/icons/spinner/spinner-20-blue.gif" alt=""/>
+                        <strong>Loading...</strong>
+                    </span>
                 </div>
-                @*                <div style="width: 100%; text-align: center; line-height: 0.8">
-                    <span style="font-size: x-small">Research or Creative Endeavor</span>
-                </div>*@
-            </div>   
-            <div style="margin-left:14px; width: 40px; float: left">
-                <div style="width: 100%; text-align: center" title="Teaching or Mentoring">
-                    <img src="../../images/icons/nounproject/noun_project_14888_teacher.svg" width="32" height="32"/>
+            </div>*@
+
+            <div style="position: relative; top: -12px">
+                <div style="margin-left:16px; width: 40px; float: left">
+                    <div style="width: 100%; text-align: center" title="Research or Creative Endeavor">
+                        <img src="../../images/icons/nounproject/noun_project_762_idea.svg" width="32" height="32"/>
+                    </div>
+                </div>   
+                <div style="margin-left:14px; width: 40px; float: left">
+                    <div style="width: 100%; text-align: center" title="Teaching or Mentoring">
+                        <img src="../../images/icons/nounproject/noun_project_14888_teacher.svg" width="32" height="32"/>
+                    </div>
+                </div>  
+                <div style="margin-left:8px; width: 40px; float: left">
+                    <div style="width: 100%; text-align: center" title="Award or Honor">
+                        <img src="../../images/icons/nounproject/noun_project_17372_medal.svg" width="32" height="32"/>
+                    </div>
                 </div>
-                @*                <div style="width: 100%; text-align: center; line-height: 0.8">
-                    <span style="font-size: x-small">Teaching or Mentoring</span>
-                </div>*@
-            </div>  
-            <div style="margin-left:8px; width: 40px; float: left">
-                <div style="width: 100%; text-align: center" title="Award or Honor">
-                    <img src="../../images/icons/nounproject/noun_project_17372_medal.svg" width="32" height="32"/>
-                </div>
-                @*                <div style="width: 100%; text-align: center; line-height: 0.8">
-                    <span style="font-size: x-small">Award or Honor</span>
-                </div>*@
+                <div style="margin-left:12px; width: 40px; float: left">
+                    <div style="width: 100%; text-align: center" title="Conference Presentation or Proceeding">
+                        <img src="../../images/icons/nounproject/noun_project_16986_podium.svg" width="32" height="32"/>
+                    </div>
+                </div>                       
+                <div style="margin-left:12px; width: 40px; float: left" title="Professional Development, Service or Consulting">
+                    <div style="width: 100%; text-align: center">
+                        <img src="../../images/icons/nounproject/noun_project_401_briefcase.svg" width="28" height="28"/>
+                    </div>
+                </div>                        
             </div>
-            <div style="margin-left:12px; width: 40px; float: left">
-                <div style="width: 100%; text-align: center" title="Conference Presentation or Proceeding">
-                    <img src="../../images/icons/nounproject/noun_project_16986_podium.svg" width="32" height="32"/>
-                </div>
-                @*                <div style="width: 100%; text-align: center; line-height: 0.8">
-                    <span style="font-size: x-small">Conference Presentation or Proceeding</span>
-                </div>*@
-            </div>                       
-            <div style="margin-left:12px; width: 40px; float: left" title="Professional Development, Service or Consulting">
-                <div style="width: 100%; text-align: center">
-                    <img src="../../images/icons/nounproject/noun_project_401_briefcase.svg" width="28" height="28"/>
-                </div>
-                @*                <div style="width: 100%; text-align: center; line-height: 0.8">
-                    <span style="font-size: x-small">Professional Development, Service or Consulting</span>
-                </div>*@
-            </div>             
-            
         </div>
-
-        
+      
         <div class="statsSideBarTitle" style="margin-top: 60px" data-bind="visible: selectedPlace() == null">
             <div data-bind="visible: searchType() == 'activities'">
                 <span>Global Activity Trend</span>
@@ -144,21 +133,19 @@
             </div>            
         </div>
 
-        <div id="facultystaff-summary-linechart" style="width: 100%; height: 120px"></div>
+        <div style="width: 270px">
+            <div id="facultystaff-summary-linechart" style="width: 100%; height: 120px"></div>
+
+@*            <!-- Spinner -->
+            <div class="spinnerBox" data-bind="visible: loadTrendSpinner.isVisible()">
+                <div style="position: absolute; top: 0; left: 0; bottom: 0; right: 0; margin: auto; width: 100px; height: 20px">
+                    <span>
+                        <img src="~/images/icons/spinner/spinner-20-blue.gif" alt=""/>
+                        <strong>Loading...</strong>
+                    </span>
+                </div>
+            </div>   *@
+        </div>
 
     </div>
-@*    <div class="type-filters" style="display: none" data-bind="visible: (searchType() === 'activities') && (activityTypes().length > 0)">
-        <div style="font-size: small">
-            <ul class="data-items" data-bind="template: { name: 'activity-counts-template', foreach: activityTypes }" />
-        </div>
-        <div id="typeChart" style="width: 100%"></div>
-    </div>*@
 </div>
-
-<!-- KNOCKOUT TEMPLATES -->
-@*<script type="text/html" id="activity-counts-template">
-    <li>
-        <input type="checkbox" style="margin-right: 4px; margin-left: 4px" data-bind="" />
-        <span style="width: 100%" data-bind="text: $data.type"></span>
-    </li>
-</script>*@

@@ -53,6 +53,10 @@ namespace UCosmic.Domain.Employees
             {
                 employeeModuleSettings.ActivityTypes.OrderBy(a => a.Rank);
             }
+            else /* 9/3/2013 - As per DL */
+            {
+                employeeModuleSettings = new EmployeeModuleSettings();
+            }
 
             return employeeModuleSettings;
         }

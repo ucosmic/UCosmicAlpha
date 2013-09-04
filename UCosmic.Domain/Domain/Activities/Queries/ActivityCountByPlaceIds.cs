@@ -84,7 +84,7 @@ namespace UCosmic.Domain.Activities
 
                     foreach (var placeId in query.PlaceIds)
                     {
-                        count += view.Count(a => a.PlaceIds.Any(e => e == placeId));
+                        count += view.Count(a => a.PlaceIds.Contains(placeId));
                     }
                 }
             }

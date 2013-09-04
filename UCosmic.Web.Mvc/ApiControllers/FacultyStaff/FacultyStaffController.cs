@@ -7,6 +7,7 @@ using AttributeRouting;
 using AttributeRouting.Web.Http;
 using UCosmic.Domain.Activities;
 using UCosmic.Domain.Degrees;
+using UCosmic.Domain.Employees;
 using UCosmic.Domain.Establishments;
 using UCosmic.Domain.People;
 using UCosmic.Domain.Places;
@@ -403,19 +404,33 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
             if (establishment != null)
             {
+                var settings = _queryProcessor.Execute(new EmployeeModuleSettingsByEstablishmentId(establishment.RevisionId));
+
+                DateTime toDateUtc = new DateTime(DateTime.UtcNow.Year + 1, 1, 1);
+                DateTime fromDateUtc = (settings != null) && (settings.ReportsDefaultYearRange.HasValue)
+                                           ? toDateUtc.AddYears(-(settings.ReportsDefaultYearRange.Value + 1))
+                                           : new DateTime(DateTime.MinValue.Year, 1, 1);
+
                 if (placeId.HasValue)
                 {
                     int[] placeIds = GetPlaceIds(placeId.Value);
                     model.PlaceId = placeIds[0];
                     model.Count =
-                        _queryProcessor.Execute(new DegreeCountByPlaceIdsEstablishmentId(placeIds, establishment.RevisionId));
+                        _queryProcessor.Execute(new DegreeCountByPlaceIdsEstablishmentId(placeIds,
+                                                                                         establishment.RevisionId,
+                                                                                         fromDateUtc,
+                                                                                         toDateUtc,
+                                                                                         false /* (noUndated) included undated */));
                     model.CountOfPlaces = 1;
                     model.PlaceCounts = null;
                 }
                 else
                 {
                     model.Count =
-                        _queryProcessor.Execute(new DegreeCountByEstablishmentId(establishment.RevisionId));
+                        _queryProcessor.Execute(new DegreeCountByEstablishmentId(establishment.RevisionId,
+                                                                                 fromDateUtc,
+                                                                                 toDateUtc,
+                                                                                 false /* (noUndated) included undated */));
                     model.CountOfPlaces = 1;
                     model.PlaceCounts = null;
                 }
@@ -451,12 +466,23 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
             if (establishment != null)
             {
+                var settings = _queryProcessor.Execute(new EmployeeModuleSettingsByEstablishmentId(establishment.RevisionId));
+
+                DateTime toDateUtc = new DateTime(DateTime.UtcNow.Year + 1, 1, 1);
+                DateTime fromDateUtc = (settings != null) && (settings.ReportsDefaultYearRange.HasValue)
+                                           ? toDateUtc.AddYears(-(settings.ReportsDefaultYearRange.Value + 1))
+                                           : new DateTime(DateTime.MinValue.Year, 1, 1);
+
                 if (placeId.HasValue)
                 {
                     int[] placeIds = GetPlaceIds(placeId.Value);
                     model.PlaceId = placeIds[0];
                     model.Count =
-                        _queryProcessor.Execute(new PeopleWithDegreesCountByPlaceIdsEstablishmentId(placeIds, establishment.RevisionId));
+                        _queryProcessor.Execute(new PeopleWithDegreesCountByPlaceIdsEstablishmentId(placeIds,
+                                                                                                    establishment.RevisionId,
+                                                                                                    fromDateUtc,
+                                                                                                    toDateUtc,
+                                                                                                    false /* (noUndated) included undated */));
                     model.CountOfPlaces = 1;
                     model.PlaceCounts = null;
                 }
@@ -464,7 +490,10 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 {
                     model.PlaceId = null;
                     model.Count =
-                        _queryProcessor.Execute(new PeopleWithDegreesCountByEstablishmentId(establishment.RevisionId));
+                        _queryProcessor.Execute(new PeopleWithDegreesCountByEstablishmentId(establishment.RevisionId,
+                                                                                            fromDateUtc,
+                                                                                            toDateUtc,
+                                                                                            false /* (noUndated) included undated */));
                     model.CountOfPlaces = 0;
                     model.PlaceCounts = null;
                 }

@@ -78,10 +78,10 @@ namespace UCosmic.Domain.Activities
                     {
                         count += view.Count(a =>
                                            /* PlaceId must be found in list placeIds...*/
-                                           a.PlaceIds.Any(e => e == placeId) &&
+                                           a.PlaceIds.Contains(placeId) &&
 
                                            /* and, EstablishmentId must be found in list of affiliated establishments...*/
-                                           a.EstablishmentIds.Any(e => e == query.EstablishmentId)
+                                           a.EstablishmentIds.Contains(query.EstablishmentId)
                             );
                     }
                 }

@@ -69,7 +69,7 @@ namespace UCosmic.Domain.People
                                                    query.IncludeFuture);
                     }
 
-                    var groups = view.Where(a => a.EstablishmentIds.Any(e => e == query.EstablishmentId))
+                    var groups = view.Where(a => a.EstablishmentIds.Contains(query.EstablishmentId))
                                      .GroupBy(g => g.PersonId);
 
                     count = groups.Count();

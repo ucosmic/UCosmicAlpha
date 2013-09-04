@@ -13,11 +13,11 @@ namespace UCosmic.Domain.Employees
             FacultyRanks = new Collection<EmployeeFacultyRank>();
             ActivityTypes = new Collection<EmployeeActivityType>();
             // ReSharper restore DoNotCallOverridableMethodsInConstructor
-            NotifyAdminOnUpdate = false;
             OfferCountry = true;
             OfferActivityType = true;
             OfferFundingQuestions = true;
             InternationalPedigreeTitle = "International Pedigree";
+            ReportsDefaultYearRange = 10;
         }
 
         public int Id { get; set; }

@@ -33,6 +33,11 @@
     </div>
 </script>
 
+<script type="text/html" id="activities-types-template">
+    <img style="width: 24px; height: 24px; border-width: 1px; border-style: solid"
+         src="@Url.Content("~/images/transparent.png")">
+</script>
+
 <script type="text/html" id="activities-template">
     <tr class="hover-hilite">
         <!-- Description -->
@@ -49,9 +54,12 @@
                     <span style="font-size: small" data-bind="text: $parent.activityDatesFormatted(values.startsOn(), values.endsOn(), values.onGoing(), values.dateFormat())"></span>
                     <span style="font-size: small" data-bind="text: $parent.activityLocationsFormatted(values.locations())"></span>
                 </div>
-                <div class="data-items" data-bind="template: { name: 'activities-documents-template', foreach: values.documents }">
-                </div>
+                <div class="data-items" data-bind="template: { name: 'activities-documents-template', foreach: values.documents }"></div>
             </a>
+        </td>
+        <!-- Activity Types -->
+        <td style="text-align: center; vertical-align: middle">
+            <div class="data-items" data-bind="template: { name: 'activities-types-template', foreach: values.types }"></div>
         </td>
         <!-- Remove Button -->
         <td style="text-align: center; vertical-align: middle">

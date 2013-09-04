@@ -134,6 +134,8 @@ var ViewModels;
                 this.selectedPlace = ko.observable(null);
                 this.isGlobalView = ko.observable(true);
                 this.loadSpinner = new App.Spinner(new App.SpinnerOptions(200));
+                this.loadCountSpinner = new App.Spinner(new App.SpinnerOptions(200));
+                this.loadTrendSpinner = new App.Spinner(new App.SpinnerOptions(200));
 
                 this.globalActivityCountData = null;
                 this.placeActivityCountData = null;
@@ -637,8 +639,10 @@ var ViewModels;
                 var deferred = $.Deferred();
 
                 if (this.globalActivityCountData == null) {
+                    this.loadSpinner.start();
                     this.getActivityDataTable(null).done(function () {
                         deferred.resolve(_this._getHeatmapActivityDataTable());
+                        _this.loadSpinner.stop();
                     });
                 } else {
                     deferred.resolve(this._getHeatmapActivityDataTable());
@@ -706,8 +710,10 @@ var ViewModels;
                 var deferred = $.Deferred();
 
                 if (this.globalPeopleCountData == null) {
+                    this.loadSpinner.start();
                     this.getPeopleDataTable(null).done(function () {
                         deferred.resolve(_this._getHeatmapPeopleDataTable());
+                        _this.loadSpinner.stop();
                     });
                 } else {
                     deferred.resolve(this._getHeatmapPeopleDataTable());
@@ -779,10 +785,10 @@ var ViewModels;
 
                 if (placeOfficialName == null) {
                     if (this.globalActivityCountData == null) {
-                        this.loadSpinner.start();
+                        this.loadCountSpinner.start();
                         $.ajax({
                             type: "GET",
-                            async: false,
+                            async: true,
                             data: { 'establishmentId': this.establishmentId(), 'placeId': null },
                             dataType: 'json',
                             url: App.Routes.WebApi.FacultyStaff.getActivityCount(),
@@ -794,7 +800,7 @@ var ViewModels;
                                 deferred.reject(errorThrown);
                             },
                             complete: function (jqXhr, textStatus) {
-                                _this.loadSpinner.stop();
+                                _this.loadCountSpinner.stop();
                             }
                         });
                     } else {
@@ -804,10 +810,10 @@ var ViewModels;
                     var placeId = this.getPlaceId(placeOfficialName);
                     if (placeId != null) {
                         if ((this.placeActivityCountData == null) || ((this.placeActivityCountData).placeId != placeId)) {
-                            this.loadSpinner.start();
+                            this.loadCountSpinner.start();
                             $.ajax({
                                 type: "GET",
-                                async: false,
+                                async: true,
                                 data: { 'establishmentId': this.establishmentId(), 'placeId': placeId },
                                 dataType: 'json',
                                 url: App.Routes.WebApi.FacultyStaff.getActivityCount(),
@@ -819,7 +825,7 @@ var ViewModels;
                                     deferred.reject(errorThrown);
                                 },
                                 complete: function (jqXhr, textStatus) {
-                                    _this.loadSpinner.stop();
+                                    _this.loadCountSpinner.stop();
                                 }
                             });
                         } else {
@@ -881,10 +887,10 @@ var ViewModels;
 
                 if (placeOfficialName == null) {
                     if (this.globalPeopleCountData == null) {
-                        this.loadSpinner.start();
+                        this.loadCountSpinner.start();
                         $.ajax({
                             type: "GET",
-                            async: false,
+                            async: true,
                             data: { 'establishmentId': this.establishmentId(), 'placeId': null },
                             dataType: 'json',
                             url: App.Routes.WebApi.FacultyStaff.getPeopleCount(),
@@ -896,18 +902,20 @@ var ViewModels;
                                 deferred.reject(errorThrown);
                             },
                             complete: function (jqXhr, textStatus) {
-                                _this.loadSpinner.stop();
+                                _this.loadCountSpinner.stop();
                             }
                         });
+                    } else {
+                        deferred.resolve(this._getPeopleDataTable(null));
                     }
                 } else {
                     var placeId = this.getPlaceId(placeOfficialName);
                     if (placeId != null) {
                         if ((this.placePeopleCountData == null) || ((this.placePeopleCountData).placeId != placeId)) {
-                            this.loadSpinner.start();
+                            this.loadCountSpinner.start();
                             $.ajax({
                                 type: "GET",
-                                async: false,
+                                async: true,
                                 data: { 'establishmentId': this.establishmentId(), 'placeId': placeId },
                                 dataType: 'json',
                                 url: App.Routes.WebApi.FacultyStaff.getPeopleCount(),
@@ -919,9 +927,11 @@ var ViewModels;
                                     deferred.reject(errorThrown);
                                 },
                                 complete: function (jqXhr, textStatus) {
-                                    _this.loadSpinner.stop();
+                                    _this.loadCountSpinner.stop();
                                 }
                             });
+                        } else {
+                            deferred.resolve(this._getPeopleDataTable(placeOfficialName));
                         }
                     } else {
                         deferred.reject("Unknown placeId.");
@@ -968,10 +978,10 @@ var ViewModels;
 
                 if (placeOfficialName == null) {
                     if (this.globalActivityTrendData == null) {
-                        this.loadSpinner.start();
+                        this.loadTrendSpinner.start();
                         $.ajax({
                             type: "GET",
-                            async: false,
+                            async: true,
                             data: { 'establishmentId': this.establishmentId(), 'placeId': null },
                             dataType: 'json',
                             url: App.Routes.WebApi.FacultyStaff.getActivityTrend(),
@@ -983,7 +993,7 @@ var ViewModels;
                                 deferred.reject(errorThrown);
                             },
                             complete: function (jqXhr, textStatus) {
-                                _this.loadSpinner.stop();
+                                _this.loadTrendSpinner.stop();
                             }
                         });
                     } else {
@@ -993,10 +1003,10 @@ var ViewModels;
                     var placeId = this.getPlaceId(placeOfficialName);
                     if (placeId != null) {
                         if ((this.placeActivityTrendData == null) || ((this.placeActivityTrendData).placeId != placeId)) {
-                            this.loadSpinner.start();
+                            this.loadTrendSpinner.start();
                             $.ajax({
                                 type: "GET",
-                                async: false,
+                                async: true,
                                 data: { 'establishmentId': this.establishmentId(), 'placeId': placeId },
                                 dataType: 'json',
                                 url: App.Routes.WebApi.FacultyStaff.getActivityTrend(),
@@ -1008,7 +1018,7 @@ var ViewModels;
                                     deferred.reject(errorThrown);
                                 },
                                 complete: function (jqXhr, textStatus) {
-                                    _this.loadSpinner.stop();
+                                    _this.loadTrendSpinner.stop();
                                 }
                             });
                         } else {
@@ -1051,10 +1061,10 @@ var ViewModels;
 
                 if (placeOfficialName == null) {
                     if (this.globalPeopleTrendData == null) {
-                        this.loadSpinner.start();
+                        this.loadTrendSpinner.start();
                         $.ajax({
                             type: "GET",
-                            async: false,
+                            async: true,
                             data: { 'establishmentId': this.establishmentId(), 'placeId': null },
                             dataType: 'json',
                             url: App.Routes.WebApi.FacultyStaff.getPeopleTrend(),
@@ -1066,7 +1076,7 @@ var ViewModels;
                                 deferred.reject(errorThrown);
                             },
                             complete: function (jqXhr, textStatus) {
-                                _this.loadSpinner.stop();
+                                _this.loadTrendSpinner.stop();
                             }
                         });
                     }
@@ -1074,10 +1084,10 @@ var ViewModels;
                     var placeId = this.getPlaceId(placeOfficialName);
                     if (placeId != null) {
                         if ((this.placePeopleTrendData == null) || ((this.placePeopleTrendData).placeId != placeId)) {
-                            this.loadSpinner.start();
+                            this.loadTrendSpinner.start();
                             $.ajax({
                                 type: "GET",
-                                async: false,
+                                async: true,
                                 data: { 'establishmentId': this.establishmentId(), 'placeId': placeId },
                                 dataType: 'json',
                                 url: App.Routes.WebApi.FacultyStaff.getPeopleTrend(),
@@ -1089,7 +1099,7 @@ var ViewModels;
                                     deferred.reject(errorThrown);
                                 },
                                 complete: function (jqXhr, textStatus) {
-                                    _this.loadSpinner.stop();
+                                    _this.loadTrendSpinner.stop();
                                 }
                             });
                         }
@@ -1128,14 +1138,13 @@ var ViewModels;
             *
             */
             FacultyAndStaff.prototype.getDegreeCount = function (placeOfficialName) {
-                var _this = this;
                 var deferred = $.Deferred();
 
                 if (placeOfficialName == null) {
-                    this.loadSpinner.start();
+                    //this.loadSpinner.start();
                     $.ajax({
                         type: "GET",
-                        async: false,
+                        async: true,
                         data: { 'establishmentId': this.establishmentId(), 'placeId': null },
                         dataType: 'json',
                         url: App.Routes.WebApi.FacultyStaff.getDegreeCount(),
@@ -1146,16 +1155,16 @@ var ViewModels;
                             deferred.reject(errorThrown);
                         },
                         complete: function (jqXhr, textStatus) {
-                            _this.loadSpinner.stop();
+                            //this.loadSpinner.stop();
                         }
                     });
                 } else {
                     var placeId = this.getPlaceId(placeOfficialName);
                     if (placeId != null) {
-                        this.loadSpinner.start();
+                        // this.loadSpinner.start();
                         $.ajax({
                             type: "GET",
-                            async: false,
+                            async: true,
                             data: { 'establishmentId': this.establishmentId(), 'placeId': placeId },
                             dataType: 'json',
                             url: App.Routes.WebApi.FacultyStaff.getDegreeCount(),
@@ -1166,7 +1175,7 @@ var ViewModels;
                                 deferred.reject(errorThrown);
                             },
                             complete: function (jqXhr, textStatus) {
-                                _this.loadSpinner.stop();
+                                //this.loadSpinner.stop();
                             }
                         });
                     } else {
@@ -1181,14 +1190,13 @@ var ViewModels;
             *
             */
             FacultyAndStaff.prototype.getDegreePeopleCount = function (placeOfficialName) {
-                var _this = this;
                 var deferred = $.Deferred();
 
                 if (placeOfficialName == null) {
-                    this.loadSpinner.start();
+                    //this.loadSpinner.start();
                     $.ajax({
                         type: "GET",
-                        async: false,
+                        async: true,
                         data: { 'establishmentId': this.establishmentId(), 'placeId': null },
                         dataType: 'json',
                         url: App.Routes.WebApi.FacultyStaff.getDegreePeopleCount(),
@@ -1199,16 +1207,16 @@ var ViewModels;
                             deferred.reject(errorThrown);
                         },
                         complete: function (jqXhr, textStatus) {
-                            _this.loadSpinner.stop();
+                            //this.loadSpinner.stop();
                         }
                     });
                 } else {
                     var placeId = this.getPlaceId(placeOfficialName);
                     if (placeId != null) {
-                        this.loadSpinner.start();
+                        //this.loadSpinner.start();
                         $.ajax({
                             type: "GET",
-                            async: false,
+                            async: true,
                             data: { 'establishmentId': this.establishmentId(), 'placeId': placeId },
                             dataType: 'json',
                             url: App.Routes.WebApi.FacultyStaff.getDegreePeopleCount(),
@@ -1219,7 +1227,7 @@ var ViewModels;
                                 deferred.reject(errorThrown);
                             },
                             complete: function (jqXhr, textStatus) {
-                                _this.loadSpinner.stop();
+                                //this.loadSpinner.stop();
                             }
                         });
                     } else {
@@ -1398,24 +1406,22 @@ var ViewModels;
 
                     this.isHeatmapVisible(true);
 
-                    var dataTable = null;
-
                     if (this.searchType() === 'activities') {
-                        this.getHeatmapActivityDataTable().done(function (dataTable) {
-                            _this.heatmap.draw(dataTable, _this.heatmapOptions);
-                            if (_this.selectedPlace() == null) {
-                                _this.totalCount(_this.globalActivityCountData.count);
-                                _this.totalPlaceCount(_this.globalActivityCountData.countOfPlaces);
-                            }
-                            _this.updateCustomGeochartPlaceTooltips(_this.searchType());
-                        });
-
                         this.getActivityDataTable(this.selectedPlace()).done(function (dataTable) {
                             _this.barchart.draw(dataTable, _this.barchartActivityOptions);
                             if (_this.selectedPlace() != null) {
                                 _this.totalCount(_this.placeActivityCountData.count);
                                 _this.totalPlaceCount(_this.placeActivityCountData.countOfPlaces);
                             }
+
+                            _this.getHeatmapActivityDataTable().done(function (dataTable) {
+                                _this.heatmap.draw(dataTable, _this.heatmapOptions);
+                                if (_this.selectedPlace() == null) {
+                                    _this.totalCount(_this.globalActivityCountData.count);
+                                    _this.totalPlaceCount(_this.globalActivityCountData.countOfPlaces);
+                                }
+                                _this.updateCustomGeochartPlaceTooltips(_this.searchType());
+                            });
                         });
 
                         this.getActivityTrendDataTable(this.selectedPlace()).done(function (dataTable) {
@@ -1426,24 +1432,24 @@ var ViewModels;
                             _this.degreeCount(count);
                         });
                     } else {
-                        this.getHeatmapPeopleDataTable().done(function (dataTable) {
-                            _this.heatmap.draw(dataTable, _this.heatmapOptions);
-                            if (_this.selectedPlace() == null) {
-                                _this.totalCount(_this.globalPeopleCountData.count);
-                                _this.totalPlaceCount(_this.globalPeopleCountData.countOfPlaces);
-                            }
-                            _this.updateCustomGeochartPlaceTooltips(_this.searchType());
-                        });
-
                         this.getPeopleDataTable(this.selectedPlace()).done(function (dataTable) {
                             _this.barchart.draw(dataTable, _this.barchartPeopleOptions);
                             if (_this.selectedPlace() != null) {
                                 _this.totalCount(_this.placePeopleCountData.count);
+                                _this.totalPlaceCount(_this.placePeopleCountData.countOfPlaces);
                             }
-                            _this.totalPlaceCount(_this.placePeopleCountData.countOfPlaces);
+
+                            _this.getHeatmapPeopleDataTable().done(function (dataTable) {
+                                _this.heatmap.draw(dataTable, _this.heatmapOptions);
+                                if (_this.selectedPlace() == null) {
+                                    _this.totalCount(_this.globalPeopleCountData.count);
+                                    _this.totalPlaceCount(_this.globalPeopleCountData.countOfPlaces);
+                                }
+                                _this.updateCustomGeochartPlaceTooltips(_this.searchType());
+                            });
                         });
 
-                        dataTable = this.getPeopleTrendDataTable(this.selectedPlace()).done(function (dataTable) {
+                        this.getPeopleTrendDataTable(this.selectedPlace()).done(function (dataTable) {
                             _this.linechart.draw(dataTable, _this.linechartPeopleOptions);
                         });
 
