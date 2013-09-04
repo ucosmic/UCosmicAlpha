@@ -30,7 +30,7 @@ var agreements;
         }
         basicInfo.prototype.populateUmbrella = function () {
             var _this = this;
-            $.get(App.Routes.WebApi.Agreements.UmbrellaOptions.get(this.agreementId)).done(function (response) {
+            $.get(App.Routes.WebApi.Agreements.UmbrellaOptions.get(this.agreementId.val)).done(function (response) {
                 _this.uAgreements(response);
                 $("#uAgreements").kendoDropDownList({
                     dataTextField: "text",

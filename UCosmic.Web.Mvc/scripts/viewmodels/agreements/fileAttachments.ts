@@ -38,7 +38,7 @@ module agreements {
         $bindKendoFile(): void {
             var saveUrl = "";
             if (this.agreementIsEdit()) {
-                    saveUrl = App.Routes.WebApi.Agreements.Files.post(this.agreementId)
+                    saveUrl = App.Routes.WebApi.Agreements.Files.post(this.agreementId.val)
             } else {
                     saveUrl = App.Routes.WebApi.Uploads.post()
             }
@@ -81,7 +81,7 @@ module agreements {
                             originalName: e.files[0].name,
                             visibility: 'Private',
                             customName: e.files[0].name,
-                            agreementId: this.agreementId
+                            agreementId: this.agreementId.val
                         }
                 }
                     if (!e.isDefaultPrevented()) {
@@ -151,7 +151,7 @@ module agreements {
                 // so do a check for agreementId - if it is undefined(for now 0)
                 var url = "";
                 if (this.agreementIsEdit()) {
-                    url = App.Routes.WebApi.Agreements.Files.del(this.agreementId, me.id());
+                    url = App.Routes.WebApi.Agreements.Files.del(this.agreementId.val, me.id());
                 } else {
                     url = App.Routes.WebApi.Uploads.del(me.guid());
                 }
@@ -191,7 +191,7 @@ module agreements {
                     customName: me.customName,
                     visibility: me.visibility
                 })
-            var url = App.Routes.WebApi.Agreements.Files.put(this.agreementId, me.id());
+            var url = App.Routes.WebApi.Agreements.Files.put(this.agreementId.val, me.id());
                 $.ajax({
                     type: 'PUT',
                     url: url,
@@ -234,14 +234,14 @@ module agreements {
             //add e.target.textContent for double click firing.
             if (this.agreementIsEdit() && e.target.textContent == "") {
                 var data = ko.mapping.toJS({
-                    agreementId: this.agreementId,
+                    agreementId: this.agreementId.val,
                     uploadGuid: me.guid,
                     originalName: me.guid,
                     extension: me.extension,
                     customName: me.customName,
                     visibility: me.visibility
                 })
-            var url = App.Routes.WebApi.Agreements.Files.put(this.agreementId, me.id());
+            var url = App.Routes.WebApi.Agreements.Files.put(this.agreementId.val, me.id());
                 $.ajax({
                     type: 'PUT',
                     url: url,
@@ -271,7 +271,7 @@ module agreements {
         }
 
         populateFiles(): void {
-            $.get(App.Routes.WebApi.Agreements.Files.get(this.agreementId), { useTestData: true })
+            $.get(App.Routes.WebApi.Agreements.Files.get(this.agreementId.val), { useTestData: true })
                 .done((response: any): void => {
                     $.each(response, (i, item) => {
                         this.files.push(ko.mapping.fromJS({

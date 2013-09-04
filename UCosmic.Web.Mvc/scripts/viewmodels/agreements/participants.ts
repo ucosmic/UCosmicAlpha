@@ -53,7 +53,7 @@ module agreements {
                 '" as a participant from this agreement?')) {
                 var self = this;
                 if (this.agreementIsEdit()) {
-                    var url = App.Routes.WebApi.Agreements.Participants.del(this.agreementId, ko.dataFor(e.target).establishmentId());
+                    var url = App.Routes.WebApi.Agreements.Participants.del(this.agreementId.val, ko.dataFor(e.target).establishmentId());
                     $.ajax({
                         url: url,
                         type: 'DELETE',
@@ -102,7 +102,7 @@ module agreements {
         }
 
         populateParticipants(): void {
-            $.get(App.Routes.WebApi.Agreements.Participants.get(this.agreementId))
+            $.get(App.Routes.WebApi.Agreements.Participants.get(this.agreementId.val))
                 .done((response: Establishments.ApiModels.FlatEstablishment[]): void => {
                     this.receiveParticipants(response);
                     this.dfdPopParticipants.resolve();
@@ -111,7 +111,7 @@ module agreements {
 
         addParticipant(establishmentResultViewModel): void {
             this.establishmentSearchViewModel.sammy.setLocation('#/page/1/');
-            this.hasBoundSearch = true;
+            this.hasBoundSearch.does = true;
         }
 
     }

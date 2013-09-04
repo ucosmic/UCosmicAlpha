@@ -41,7 +41,7 @@ var agreements;
             if (confirm('Are you sure you want to remove "' + establishmentResultViewModel.establishmentTranslatedName() + '" as a participant from this agreement?')) {
                 var self = this;
                 if (this.agreementIsEdit()) {
-                    var url = App.Routes.WebApi.Agreements.Participants.del(this.agreementId, ko.dataFor(e.target).establishmentId());
+                    var url = App.Routes.WebApi.Agreements.Participants.del(this.agreementId.val, ko.dataFor(e.target).establishmentId());
                     $.ajax({
                         url: url,
                         type: 'DELETE',
@@ -90,7 +90,7 @@ var agreements;
 
         participants.prototype.populateParticipants = function () {
             var _this = this;
-            $.get(App.Routes.WebApi.Agreements.Participants.get(this.agreementId)).done(function (response) {
+            $.get(App.Routes.WebApi.Agreements.Participants.get(this.agreementId.val)).done(function (response) {
                 _this.receiveParticipants(response);
                 _this.dfdPopParticipants.resolve();
             });
@@ -98,7 +98,7 @@ var agreements;
 
         participants.prototype.addParticipant = function (establishmentResultViewModel) {
             this.establishmentSearchViewModel.sammy.setLocation('#/page/1/');
-            this.hasBoundSearch = true;
+            this.hasBoundSearch.does = true;
         };
         return participants;
     })();

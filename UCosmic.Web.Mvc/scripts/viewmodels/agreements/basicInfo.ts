@@ -36,7 +36,7 @@ module agreements {
         validateBasicInfo;
 
         populateUmbrella(): void {
-            $.get(App.Routes.WebApi.Agreements.UmbrellaOptions.get(this.agreementId))
+            $.get(App.Routes.WebApi.Agreements.UmbrellaOptions.get(this.agreementId.val))
                 .done((response: any): void => {
                     this.uAgreements(response);
                     $("#uAgreements").kendoDropDownList({

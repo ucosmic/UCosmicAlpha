@@ -41,13 +41,11 @@ class InstitutionalAgreementParticipantModel {
 class InstitutionalAgreementEditModel {
     constructor(public initDefaultPageRoute: boolean = true) {
 
-        // last two vars make sure they are updated with the agreementvm updates 
         this.participantsClass = new agreements.participants(this.agreementId, this.dfdPopParticipants, this.agreementIsEdit, this.establishmentSearchViewModel, this.hasBoundSearch);
         ko.applyBindings(this.participantsClass, $('#participants')[0]);
-
         this.basicInfoClass = new agreements.basicInfo(this.agreementId, this.dfdUAgreements);
         ko.applyBindings(this.basicInfoClass, $('#basicInfo')[0]);
-        this.contactClass = new agreements.contacts(this.basicInfoClass.isCustomContactTypeAllowed, this.spinner, this.establishmentItemViewModel, this.agreementIsEdit, this.agreementId, this.kendoWindowBug, this.dfdPopContacts);
+        this.contactClass = new agreements.contacts(this.basicInfoClass.isCustomContactTypeAllowed, this.establishmentItemViewModel, this.agreementIsEdit, this.agreementId, this.kendoWindowBug, this.dfdPopContacts);
         ko.applyBindings(this.contactClass, $('#contacts')[0]);
         this.fileAttachmentClass = new agreements.fileAttachments(this.agreementId, this.agreementIsEdit, this.spinner, this.establishmentItemViewModel, this.dfdPopFiles);
         ko.applyBindings(this.fileAttachmentClass, $('#fileAttachments')[0]);
@@ -74,10 +72,10 @@ class InstitutionalAgreementEditModel {
             this.editOrNewUrl = window.location.href.toLowerCase().substring(window.location.href.toLowerCase().indexOf("agreements/") + 11);
             this.editOrNewUrl = this.editOrNewUrl.substring(0, this.editOrNewUrl.indexOf("/edit") + 5) + "/";
             this.agreementIsEdit(true);
-            this.agreementId = this.editOrNewUrl.substring(0, this.editOrNewUrl.indexOf("/"));
-            this.participantsClass.agreementId = this.agreementId;
-            this.fileAttachmentClass.agreementId = this.agreementId;
-            this.contactClass.agreementId = this.agreementId;
+            this.agreementId.val = this.editOrNewUrl.substring(0, this.editOrNewUrl.indexOf("/"));
+            //this.participantsClass.agreementId = this.agreementId;
+            //this.fileAttachmentClass.agreementId = this.agreementId;
+            //this.contactClass.agreementId = this.agreementId;
             this.participantsClass.populateParticipants();
             this.fileAttachmentClass.populateFiles();
             this.contactClass.populateContacts();
@@ -126,7 +124,7 @@ class InstitutionalAgreementEditModel {
     dfdPageFadeIn = $.Deferred();
 
     agreementIsEdit = ko.observable();
-    agreementId = 0;
+    agreementId = { val: 0 };
 
     //set the path for editing an agreement or new agreement.
     editOrNewUrl;
@@ -137,16 +135,16 @@ class InstitutionalAgreementEditModel {
     $genericAlertDialog: JQuery = undefined;
 
     //added this because kendo window after selecting a autocomplte and then clicking the window, the body would scroll to the top.
-    kendoWindowBug = 0;
+    kendoWindowBug = { val: 0 };
         
     //search vars
     establishmentSearchViewModel = new Establishments.ViewModels.Search();
     establishmentItemViewModel;
-    hasBoundSearch = false;
+    hasBoundSearch = { does: false };
     hasBoundItem = false;
 
     isBound = ko.observable();
-    spinner: App.Spinner = new App.Spinner(new App.SpinnerOptions(400, true));
+    spinner : App.Spinner = new App.Spinner(new App.SpinnerOptions(400, true));
 
     officialNameDoesNotMatchTranslation = ko.computed(function () {
         return !(this.participants.establishmentOfficialName === this.participants.establishmentTranslatedName);
@@ -155,7 +153,7 @@ class InstitutionalAgreementEditModel {
     populateAgreementData(): void {
         $.when(this.dfdUAgreements)
             .done(() => {
-                $.get(App.Routes.WebApi.Agreements.get(this.agreementId))
+                $.get(App.Routes.WebApi.Agreements.get(this.agreementId.val))
                     .done((response: any): void => {
                         var dropdownlist;
                         var editor = $("#agreementContent").data("kendoEditor");
@@ -261,8 +259,8 @@ class InstitutionalAgreementEditModel {
                 
         //bind scroll to side nav
         $(window).scroll( () => {
-            if (this.kendoWindowBug != 0) {
-                scrollBody.scrollMyBody(this.kendoWindowBug)
+            if (this.kendoWindowBug.val != 0) {
+                scrollBody.scrollMyBody(this.kendoWindowBug.val)
             }
             var $participants = $("#participants");
             var $basicInfo = $("#basicInfo");
@@ -440,7 +438,7 @@ class InstitutionalAgreementEditModel {
     }
         
     bindSearch(): void{
-        if (!this.hasBoundSearch) {
+        if (!this.hasBoundSearch.does) {
             this.establishmentSearchViewModel.sammyBeforeRoute = /\#\/index\/(.*)\//;
             this.establishmentSearchViewModel.sammyGetPageRoute = '#/index';
             this.establishmentSearchViewModel.sammyDefaultPageRoute = '/agreements[\/]?';
@@ -608,7 +606,7 @@ class InstitutionalAgreementEditModel {
                                     .done((response) => {
                                         myParticipant.isOwner(response);
                                         if (this.agreementIsEdit()) {
-                                            var url = App.Routes.WebApi.Agreements.Participants.put(this.agreementId, myParticipant.establishmentId());
+                                            var url = App.Routes.WebApi.Agreements.Participants.put(this.agreementId.val, myParticipant.establishmentId());
                                             $.ajax({
                                                 type: 'PUT',
                                                 url: url,
@@ -628,7 +626,7 @@ class InstitutionalAgreementEditModel {
                                     })
                                     .fail(() => {
                                         if (this.agreementIsEdit()) {
-                                            var url = App.Routes.WebApi.Agreements.Participants.put(this.agreementId, myParticipant.establishmentId());
+                                            var url = App.Routes.WebApi.Agreements.Participants.put(this.agreementId.val, myParticipant.establishmentId());
                                             $.ajax({
                                                 type: 'PUT',
                                                 url: url,
@@ -706,7 +704,7 @@ class InstitutionalAgreementEditModel {
 
     //part of save agreement
     agreementPostFiles(response: any, statusText: string, xhr: JQueryXHR): void {
-        var tempUrl = App.Routes.WebApi.Agreements.Files.post(this.agreementId);
+        var tempUrl = App.Routes.WebApi.Agreements.Files.post(this.agreementId.val);
 
         $.each(this.fileAttachmentClass.files(), (i, item) => {
             var data = ko.mapping.toJS({
@@ -724,11 +722,11 @@ class InstitutionalAgreementEditModel {
 
     //part of save agreement
     agreementPostContacts(response: any, statusText: string, xhr: JQueryXHR): void {
-        var tempUrl = App.Routes.WebApi.Agreements.Contacts.post(this.agreementId);
+        var tempUrl = App.Routes.WebApi.Agreements.Contacts.post(this.agreementId.val);
 
         $.each(this.contactClass.contacts(), (i, item) => {
             var data = {
-                agreementId: this.agreementId,
+                agreementId: this.agreementId.val,
                 title: item.title(),
                 firstName: item.firstName(),
                 lastName: item.lastName(),
@@ -825,7 +823,7 @@ class InstitutionalAgreementEditModel {
                 type: this.basicInfoClass.typeOptionSelected()
             })
             if (this.agreementIsEdit()) {
-                url = App.Routes.WebApi.Agreements.put(this.agreementId);
+                url = App.Routes.WebApi.Agreements.put(this.agreementId.val);
                 $.ajax({
                     type: 'PUT',
                     url: url,
@@ -861,9 +859,9 @@ class InstitutionalAgreementEditModel {
                 $.post(url, data)
                     .done((response: any, statusText: string, xhr: JQueryXHR): void => {
                         var myUrl = xhr.getResponseHeader('Location');
-                        this.agreementId = parseInt(myUrl.substring(myUrl.lastIndexOf("/") + 1));
-                        this.fileAttachmentClass.agreementId = this.agreementId;
-                        this.contactClass.agreementId = this.agreementId;
+                        this.agreementId.val = parseInt(myUrl.substring(myUrl.lastIndexOf("/") + 1));
+                        //this.fileAttachmentClass.agreementId = this.agreementId;
+                        //this.contactClass.agreementId = this.agreementId;
                         this.agreementPostFiles(response, statusText, xhr);
                         this.agreementPostContacts(response, statusText, xhr);
                         //change url to edit

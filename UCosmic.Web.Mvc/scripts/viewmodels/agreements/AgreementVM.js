@@ -51,30 +51,28 @@ var InstitutionalAgreementEditModel = (function () {
         this.dfdPopFiles = $.Deferred();
         this.dfdPageFadeIn = $.Deferred();
         this.agreementIsEdit = ko.observable();
-        this.agreementId = 0;
+        this.agreementId = { val: 0 };
         this.trail = ko.observableArray([]);
         this.nextForceDisabled = ko.observable(false);
         this.prevForceDisabled = ko.observable(false);
         this.pageNumber = ko.observable();
         this.$genericAlertDialog = undefined;
         //added this because kendo window after selecting a autocomplte and then clicking the window, the body would scroll to the top.
-        this.kendoWindowBug = 0;
+        this.kendoWindowBug = { val: 0 };
         //search vars
         this.establishmentSearchViewModel = new Establishments.ViewModels.Search();
-        this.hasBoundSearch = false;
+        this.hasBoundSearch = { does: false };
         this.hasBoundItem = false;
         this.isBound = ko.observable();
         this.spinner = new App.Spinner(new App.SpinnerOptions(400, true));
         this.officialNameDoesNotMatchTranslation = ko.computed(function () {
             return !(this.participants.establishmentOfficialName === this.participants.establishmentTranslatedName);
         });
-        // last two vars make sure they are updated with the agreementvm updates
         this.participantsClass = new agreements.participants(this.agreementId, this.dfdPopParticipants, this.agreementIsEdit, this.establishmentSearchViewModel, this.hasBoundSearch);
         ko.applyBindings(this.participantsClass, $('#participants')[0]);
-
         this.basicInfoClass = new agreements.basicInfo(this.agreementId, this.dfdUAgreements);
         ko.applyBindings(this.basicInfoClass, $('#basicInfo')[0]);
-        this.contactClass = new agreements.contacts(this.basicInfoClass.isCustomContactTypeAllowed, this.spinner, this.establishmentItemViewModel, this.agreementIsEdit, this.agreementId, this.kendoWindowBug, this.dfdPopContacts);
+        this.contactClass = new agreements.contacts(this.basicInfoClass.isCustomContactTypeAllowed, this.establishmentItemViewModel, this.agreementIsEdit, this.agreementId, this.kendoWindowBug, this.dfdPopContacts);
         ko.applyBindings(this.contactClass, $('#contacts')[0]);
         this.fileAttachmentClass = new agreements.fileAttachments(this.agreementId, this.agreementIsEdit, this.spinner, this.establishmentItemViewModel, this.dfdPopFiles);
         ko.applyBindings(this.fileAttachmentClass, $('#fileAttachments')[0]);
@@ -100,10 +98,11 @@ var InstitutionalAgreementEditModel = (function () {
             this.editOrNewUrl = window.location.href.toLowerCase().substring(window.location.href.toLowerCase().indexOf("agreements/") + 11);
             this.editOrNewUrl = this.editOrNewUrl.substring(0, this.editOrNewUrl.indexOf("/edit") + 5) + "/";
             this.agreementIsEdit(true);
-            this.agreementId = this.editOrNewUrl.substring(0, this.editOrNewUrl.indexOf("/"));
-            this.participantsClass.agreementId = this.agreementId;
-            this.fileAttachmentClass.agreementId = this.agreementId;
-            this.contactClass.agreementId = this.agreementId;
+            this.agreementId.val = this.editOrNewUrl.substring(0, this.editOrNewUrl.indexOf("/"));
+
+            //this.participantsClass.agreementId = this.agreementId;
+            //this.fileAttachmentClass.agreementId = this.agreementId;
+            //this.contactClass.agreementId = this.agreementId;
             this.participantsClass.populateParticipants();
             this.fileAttachmentClass.populateFiles();
             this.contactClass.populateContacts();
@@ -131,7 +130,7 @@ var InstitutionalAgreementEditModel = (function () {
     InstitutionalAgreementEditModel.prototype.populateAgreementData = function () {
         var _this = this;
         $.when(this.dfdUAgreements).done(function () {
-            $.get(App.Routes.WebApi.Agreements.get(_this.agreementId)).done(function (response) {
+            $.get(App.Routes.WebApi.Agreements.get(_this.agreementId.val)).done(function (response) {
                 var dropdownlist;
                 var editor = $("#agreementContent").data("kendoEditor");
 
@@ -241,8 +240,8 @@ var InstitutionalAgreementEditModel = (function () {
 
         //bind scroll to side nav
         $(window).scroll(function () {
-            if (_this.kendoWindowBug != 0) {
-                scrollBody.scrollMyBody(_this.kendoWindowBug);
+            if (_this.kendoWindowBug.val != 0) {
+                scrollBody.scrollMyBody(_this.kendoWindowBug.val);
             }
             var $participants = $("#participants");
             var $basicInfo = $("#basicInfo");
@@ -418,7 +417,7 @@ var InstitutionalAgreementEditModel = (function () {
 
     InstitutionalAgreementEditModel.prototype.bindSearch = function () {
         var _this = this;
-        if (!this.hasBoundSearch) {
+        if (!this.hasBoundSearch.does) {
             this.establishmentSearchViewModel.sammyBeforeRoute = /\#\/index\/(.*)\//;
             this.establishmentSearchViewModel.sammyGetPageRoute = '#/index';
             this.establishmentSearchViewModel.sammyDefaultPageRoute = '/agreements[\/]?';
@@ -578,7 +577,7 @@ var InstitutionalAgreementEditModel = (function () {
                                     }).done(function (response) {
                                         myParticipant.isOwner(response);
                                         if (_this.agreementIsEdit()) {
-                                            var url = App.Routes.WebApi.Agreements.Participants.put(_this.agreementId, myParticipant.establishmentId());
+                                            var url = App.Routes.WebApi.Agreements.Participants.put(_this.agreementId.val, myParticipant.establishmentId());
                                             $.ajax({
                                                 type: 'PUT',
                                                 url: url,
@@ -597,7 +596,7 @@ var InstitutionalAgreementEditModel = (function () {
                                         $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * .85)));
                                     }).fail(function () {
                                         if (_this.agreementIsEdit()) {
-                                            var url = App.Routes.WebApi.Agreements.Participants.put(_this.agreementId, myParticipant.establishmentId());
+                                            var url = App.Routes.WebApi.Agreements.Participants.put(_this.agreementId.val, myParticipant.establishmentId());
                                             $.ajax({
                                                 type: 'PUT',
                                                 url: url,
@@ -675,7 +674,7 @@ var InstitutionalAgreementEditModel = (function () {
     //part of save agreement
     InstitutionalAgreementEditModel.prototype.agreementPostFiles = function (response, statusText, xhr) {
         var _this = this;
-        var tempUrl = App.Routes.WebApi.Agreements.Files.post(this.agreementId);
+        var tempUrl = App.Routes.WebApi.Agreements.Files.post(this.agreementId.val);
 
         $.each(this.fileAttachmentClass.files(), function (i, item) {
             var data = ko.mapping.toJS({
@@ -694,11 +693,11 @@ var InstitutionalAgreementEditModel = (function () {
     //part of save agreement
     InstitutionalAgreementEditModel.prototype.agreementPostContacts = function (response, statusText, xhr) {
         var _this = this;
-        var tempUrl = App.Routes.WebApi.Agreements.Contacts.post(this.agreementId);
+        var tempUrl = App.Routes.WebApi.Agreements.Contacts.post(this.agreementId.val);
 
         $.each(this.contactClass.contacts(), function (i, item) {
             var data = {
-                agreementId: _this.agreementId,
+                agreementId: _this.agreementId.val,
                 title: item.title(),
                 firstName: item.firstName(),
                 lastName: item.lastName(),
@@ -795,7 +794,7 @@ var InstitutionalAgreementEditModel = (function () {
                 type: this.basicInfoClass.typeOptionSelected()
             });
             if (this.agreementIsEdit()) {
-                url = App.Routes.WebApi.Agreements.put(this.agreementId);
+                url = App.Routes.WebApi.Agreements.put(this.agreementId.val);
                 $.ajax({
                     type: 'PUT',
                     url: url,
@@ -831,9 +830,10 @@ var InstitutionalAgreementEditModel = (function () {
                 url = App.Routes.WebApi.Agreements.post();
                 $.post(url, data).done(function (response, statusText, xhr) {
                     var myUrl = xhr.getResponseHeader('Location');
-                    _this.agreementId = parseInt(myUrl.substring(myUrl.lastIndexOf("/") + 1));
-                    _this.fileAttachmentClass.agreementId = _this.agreementId;
-                    _this.contactClass.agreementId = _this.agreementId;
+                    _this.agreementId.val = parseInt(myUrl.substring(myUrl.lastIndexOf("/") + 1));
+
+                    //this.fileAttachmentClass.agreementId = this.agreementId;
+                    //this.contactClass.agreementId = this.agreementId;
                     _this.agreementPostFiles(response, statusText, xhr);
                     _this.agreementPostContacts(response, statusText, xhr);
 

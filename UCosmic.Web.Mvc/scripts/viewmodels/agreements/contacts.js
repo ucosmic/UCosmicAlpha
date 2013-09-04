@@ -1,7 +1,7 @@
 var agreements;
 (function (agreements) {
     var contacts = (function () {
-        function contacts(isCustomContactTypeAllowed, spinner, establishmentItemViewModel, agreementIsEdit, agreementId, kendoWindowBug, dfdPopContacts) {
+        function contacts(isCustomContactTypeAllowed, establishmentItemViewModel, agreementIsEdit, agreementId, kendoWindowBug, dfdPopContacts) {
             this.selectConstructor = function (name, id) {
                 this.name = name;
                 this.id = id;
@@ -40,7 +40,6 @@ var agreements;
             this.phoneTypes = ko.mapping.fromJS([]);
             this.$phoneTypes = ko.observable();
             this.isCustomContactTypeAllowed = isCustomContactTypeAllowed;
-            this.spinner = spinner;
             this.establishmentItemViewModel = establishmentItemViewModel;
             this.agreementIsEdit = agreementIsEdit;
             this.agreementId = agreementId;
@@ -186,7 +185,7 @@ var agreements;
                 $("#addAContact").fadeIn(500);
 
                 if (this.agreementIsEdit()) {
-                    this.contacts()[this.contactIndex].agreementId(this.agreementId);
+                    this.contacts()[this.contactIndex].agreementId(this.agreementId.val);
 
                     var data = {
                         agreementId: this.contacts()[this.contactIndex].agreementId(),
@@ -202,7 +201,7 @@ var agreements;
                         Phones: this.contacts()[this.contactIndex].phones(),
                         Title: this.contacts()[this.contactIndex].title()
                     };
-                    var url = App.Routes.WebApi.Agreements.Contacts.put(this.agreementId, this.contacts()[this.contactIndex].id());
+                    var url = App.Routes.WebApi.Agreements.Contacts.put(this.agreementId.val, this.contacts()[this.contactIndex].id());
                     $.ajax({
                         type: 'PUT',
                         url: url,
@@ -210,7 +209,6 @@ var agreements;
                         success: function (response, statusText, xhr) {
                         },
                         error: function (xhr, statusText, errorThrown) {
-                            _this.spinner.stop();
                             if (xhr.status === 400) {
                                 _this.establishmentItemViewModel.$genericAlertDialog.find('p.content').html(xhr.responseText.replace('\n', '<br /><br />'));
                                 _this.establishmentItemViewModel.$genericAlertDialog.dialog({
@@ -242,7 +240,7 @@ var agreements;
                     this.contactDisplayName(this.contactFirstName() + " " + this.contactLastName());
                 }
                 var data = {
-                    agreementId: this.agreementId,
+                    agreementId: this.agreementId.val,
                     title: this.contactJobTitle(),
                     firstName: this.contactFirstName(),
                     lastName: this.contactLastName(),
@@ -264,13 +262,12 @@ var agreements;
                 $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * .85)));
 
                 if (this.agreementIsEdit()) {
-                    var url = App.Routes.WebApi.Agreements.Contacts.post(this.agreementId);
+                    var url = App.Routes.WebApi.Agreements.Contacts.post(this.agreementId.val);
                     $.post(url, data).done(function (response, statusText, xhr) {
                         var myUrl = xhr.getResponseHeader('Location');
                         data.id = parseInt(myUrl.substring(myUrl.lastIndexOf("/") + 1));
                         _this.contacts.push(ko.mapping.fromJS(data));
                     }).fail(function (xhr, statusText, errorThrown) {
-                        _this.spinner.stop();
                         if (xhr.status === 400) {
                             _this.establishmentItemViewModel.$genericAlertDialog.find('p.content').html(xhr.responseText.replace('\n', '<br /><br />'));
                             _this.establishmentItemViewModel.$genericAlertDialog.dialog({
@@ -347,7 +344,7 @@ var agreements;
             if (confirm('Are you sure you want to remove "' + me.firstName() + " " + me.lastName() + '" as a contact from this agreement?')) {
                 var url = "";
                 if (this.agreementIsEdit()) {
-                    url = App.Routes.WebApi.Agreements.Contacts.del(this.agreementId, me.id());
+                    url = App.Routes.WebApi.Agreements.Contacts.del(this.agreementId.val, me.id());
 
                     $.ajax({
                         url: url,
@@ -366,7 +363,7 @@ var agreements;
 
         contacts.prototype.removePhone = function (me, e) {
             var _this = this;
-            var url = App.Routes.WebApi.Agreements.Contacts.Phones.del(this.agreementId, me.contactId, me.id);
+            var url = App.Routes.WebApi.Agreements.Contacts.Phones.del(this.agreementId.val, me.contactId, me.id);
             $.ajax({
                 url: url,
                 type: 'DELETE',
@@ -403,7 +400,7 @@ var agreements;
             this.contactPhoneTextValue.subscribe(function (me) {
                 if (_this.contactPhoneTextValue().length > 0) {
                     if (_this.contactId()) {
-                        var url = App.Routes.WebApi.Agreements.Contacts.Phones.post(_this.agreementId, _this.contactId());
+                        var url = App.Routes.WebApi.Agreements.Contacts.Phones.post(_this.agreementId.val, _this.contactId());
                         var data = { id: "0", type: '', contactId: _this.contactId(), value: _this.contactPhoneTextValue() };
                         $.post(url, data).done(function (response, statusText, xhr) {
                             var myUrl = xhr.getResponseHeader('Location');
@@ -419,7 +416,6 @@ var agreements;
                                 })
                             });
                         }).fail(function (xhr, statusText, errorThrown) {
-                            _this.spinner.stop();
                             if (xhr.status === 400) {
                                 _this.establishmentItemViewModel.$genericAlertDialog.find('p.content').html(xhr.responseText.replace('\n', '<br /><br />'));
                                 _this.establishmentItemViewModel.$genericAlertDialog.dialog({
@@ -454,11 +450,11 @@ var agreements;
             this.$addContactDialog.kendoWindow({
                 width: 950,
                 open: function () {
-                    _this.kendoWindowBug = $("body").scrollTop() - 10;
+                    _this.kendoWindowBug.val = $("body").scrollTop() - 10;
                     $("html, body").css("overflow", "hidden");
                 },
                 close: function () {
-                    _this.kendoWindowBug = 0;
+                    _this.kendoWindowBug.val = 0;
                     $("html, body").css("overflow", "");
                     $("#addAContact").fadeIn(500);
                     _this.clearContact();
@@ -582,8 +578,8 @@ var agreements;
                     context.type = $(this).val();
                     //added for weird bug for when adding more than 1 phone number then editing the type.
                 }
-                if (self.agreementIsEdit()) {
-                    var url = App.Routes.WebApi.Agreements.Contacts.Phones.put(self.agreementId, context.contactId, context.id);
+                if (context.id != "") {
+                    var url = App.Routes.WebApi.Agreements.Contacts.Phones.put(self.agreementId.val, context.contactId, context.id);
                     $.ajax({
                         type: 'PUT',
                         url: url,
@@ -591,7 +587,6 @@ var agreements;
                         success: function (response, statusText, xhr) {
                         },
                         error: function (xhr, statusText, errorThrown) {
-                            _this.spinner.stop();
                             if (xhr.status === 400) {
                                 _this.establishmentItemViewModel.$genericAlertDialog.find('p.content').html(xhr.responseText.replace('\n', '<br /><br />'));
                                 _this.establishmentItemViewModel.$genericAlertDialog.dialog({
@@ -619,7 +614,7 @@ var agreements;
                         $("#phoneNumberValidate" + context.id).css("visibility", "visible");
                     } else {
                         $("#phoneNumberValidate" + context.id).css("visibility", "hidden");
-                        var url = App.Routes.WebApi.Agreements.Contacts.Phones.put(self.agreementId, context.contactId, context.id);
+                        var url = App.Routes.WebApi.Agreements.Contacts.Phones.put(self.agreementId.val, context.contactId, context.id);
                         $.ajax({
                             type: 'PUT',
                             url: url,
@@ -627,7 +622,6 @@ var agreements;
                             success: function (response, statusText, xhr) {
                             },
                             error: function (xhr, statusText, errorThrown) {
-                                _this.spinner.stop();
                                 if (xhr.status === 400) {
                                     _this.establishmentItemViewModel.$genericAlertDialog.find('p.content').html(xhr.responseText.replace('\n', '<br /><br />'));
                                     _this.establishmentItemViewModel.$genericAlertDialog.dialog({
@@ -724,7 +718,7 @@ var agreements;
 
         contacts.prototype.populateContacts = function () {
             var _this = this;
-            $.get(App.Routes.WebApi.Agreements.Contacts.get(this.agreementId), { useTestData: false }).done(function (response) {
+            $.get(App.Routes.WebApi.Agreements.Contacts.get(this.agreementId.val), { useTestData: false }).done(function (response) {
                 ko.mapping.fromJS(response, _this.contacts);
                 _this.dfdPopContacts.resolve();
             });

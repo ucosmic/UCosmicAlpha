@@ -1,9 +1,8 @@
 module agreements {
 
     export class contacts {
-        constructor(isCustomContactTypeAllowed, spinner, establishmentItemViewModel, agreementIsEdit, agreementId, kendoWindowBug, dfdPopContacts) {
+        constructor(isCustomContactTypeAllowed, establishmentItemViewModel, agreementIsEdit, agreementId, kendoWindowBug, dfdPopContacts) {
             this.isCustomContactTypeAllowed = isCustomContactTypeAllowed;
-            this.spinner = spinner;
             this.establishmentItemViewModel = establishmentItemViewModel;
             this.agreementIsEdit = agreementIsEdit;
             this.agreementId = agreementId;
@@ -50,7 +49,6 @@ module agreements {
 
         //imported vars
         isCustomContactTypeAllowed;
-        spinner;
         establishmentItemViewModel;
         agreementIsEdit;
         agreementId;
@@ -197,7 +195,7 @@ module agreements {
                 $("#addAContact").fadeIn(500);
 
                 if (this.agreementIsEdit()) {
-                    this.contacts()[this.contactIndex].agreementId(this.agreementId)
+                    this.contacts()[this.contactIndex].agreementId(this.agreementId.val)
 
                     var data = {
                         agreementId: this.contacts()[this.contactIndex].agreementId(),
@@ -213,7 +211,7 @@ module agreements {
                         Phones: this.contacts()[this.contactIndex].phones(),
                         Title: this.contacts()[this.contactIndex].title()
                     }
-                    var url = App.Routes.WebApi.Agreements.Contacts.put(this.agreementId, this.contacts()[this.contactIndex].id());
+                    var url = App.Routes.WebApi.Agreements.Contacts.put(this.agreementId.val, this.contacts()[this.contactIndex].id());
                     $.ajax({
                         type: 'PUT',
                         url: url,
@@ -221,7 +219,6 @@ module agreements {
                         success: (response: any, statusText: string, xhr: JQueryXHR): void => {
                         },
                         error: (xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
-                            this.spinner.stop();
                             if (xhr.status === 400) { // validation message will be in xhr response text...
                                 this.establishmentItemViewModel.$genericAlertDialog.find('p.content')
                                     .html(xhr.responseText.replace('\n', '<br /><br />'));
@@ -251,7 +248,7 @@ module agreements {
                     this.contactDisplayName(this.contactFirstName() + " " + this.contactLastName());
                 }
                 var data = {
-                    agreementId: this.agreementId,
+                    agreementId: this.agreementId.val,
                     title: this.contactJobTitle(),
                     firstName: this.contactFirstName(),
                     lastName: this.contactLastName(),
@@ -274,7 +271,7 @@ module agreements {
 
                 if (this.agreementIsEdit()) {
 
-                    var url = App.Routes.WebApi.Agreements.Contacts.post(this.agreementId);
+                    var url = App.Routes.WebApi.Agreements.Contacts.post(this.agreementId.val);
                     $.post(url, data)
                         .done((response: any, statusText: string, xhr: JQueryXHR): void => {
                             var myUrl = xhr.getResponseHeader('Location');
@@ -282,7 +279,6 @@ module agreements {
                             this.contacts.push(ko.mapping.fromJS(data));
                         })
                         .fail((xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
-                            this.spinner.stop();
                             if (xhr.status === 400) { // validation message will be in xhr response text...
                                 this.establishmentItemViewModel.$genericAlertDialog.find('p.content')
                                     .html(xhr.responseText.replace('\n', '<br /><br />'));
@@ -360,7 +356,7 @@ module agreements {
                 '" as a contact from this agreement?')) {
                 var url = "";
                 if (this.agreementIsEdit()) {
-                    url = App.Routes.WebApi.Agreements.Contacts.del(this.agreementId, me.id());
+                    url = App.Routes.WebApi.Agreements.Contacts.del(this.agreementId.val, me.id());
 
                     $.ajax({
                         url: url,
@@ -378,7 +374,7 @@ module agreements {
         }
 
         removePhone(me, e): void {
-            var url = App.Routes.WebApi.Agreements.Contacts.Phones.del(this.agreementId, me.contactId, me.id);
+            var url = App.Routes.WebApi.Agreements.Contacts.Phones.del(this.agreementId.val, me.contactId, me.id);
             $.ajax({
                 url: url,
                 type: 'DELETE',
@@ -414,7 +410,7 @@ module agreements {
             this.contactPhoneTextValue.subscribe((me: string): void => {
                 if (this.contactPhoneTextValue().length > 0) {
                     if (this.contactId()) {
-                        var url = App.Routes.WebApi.Agreements.Contacts.Phones.post(this.agreementId, this.contactId());
+                        var url = App.Routes.WebApi.Agreements.Contacts.Phones.post(this.agreementId.val, this.contactId());
                         var data = { id: "0", type: '', contactId: this.contactId(), value: this.contactPhoneTextValue() };
                         $.post(url, data)
                             .done((response: any, statusText: string, xhr: JQueryXHR): void => {
@@ -432,7 +428,6 @@ module agreements {
                                 });
                             })
                             .fail((xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
-                                this.spinner.stop();
                                 if (xhr.status === 400) { // validation message will be in xhr response text...
                                     this.establishmentItemViewModel.$genericAlertDialog.find('p.content')
                                         .html(xhr.responseText.replace('\n', '<br /><br />'));
@@ -468,11 +463,11 @@ module agreements {
             this.$addContactDialog.kendoWindow({
                 width: 950,
                 open: () => {
-                    this.kendoWindowBug = $("body").scrollTop() - 10;
+                    this.kendoWindowBug.val = $("body").scrollTop() - 10;
                     $("html, body").css("overflow", "hidden");
                 },
                 close: () => {
-                    this.kendoWindowBug = 0;
+                    this.kendoWindowBug.val = 0;
                     $("html, body").css("overflow", "");
                     $("#addAContact").fadeIn(500);
                     this.clearContact();
@@ -594,17 +589,15 @@ module agreements {
                     context.type = $(this).val()
                 //added for weird bug for when adding more than 1 phone number then editing the type.
             }
-                if (self.agreementIsEdit()) {
-                    var url = App.Routes.WebApi.Agreements.Contacts.Phones.put(self.agreementId, context.contactId, context.id);
+                if (context.id) {
+                    var url = App.Routes.WebApi.Agreements.Contacts.Phones.put(self.agreementId.val, context.contactId, context.id);
                     $.ajax({
                         type: 'PUT',
                         url: url,
                         data: context,
                         success: (response: any, statusText: string, xhr: JQueryXHR): void => {
                         },
-                        error: (xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
-                            this.spinner.stop();
-                            if (xhr.status === 400) { // validation message will be in xhr response text...
+                        error: (xhr: JQueryXHR, statusText: string, errorThrown: string): void => {                            if (xhr.status === 400) { // validation message will be in xhr response text...
                                 this.establishmentItemViewModel.$genericAlertDialog.find('p.content')
                                     .html(xhr.responseText.replace('\n', '<br /><br />'));
                                 this.establishmentItemViewModel.$genericAlertDialog.dialog({
@@ -630,7 +623,7 @@ module agreements {
                         $("#phoneNumberValidate" + context.id).css("visibility", "visible");
                     } else {
                         $("#phoneNumberValidate" + context.id).css("visibility", "hidden");
-                        var url = App.Routes.WebApi.Agreements.Contacts.Phones.put(self.agreementId, context.contactId, context.id);
+                        var url = App.Routes.WebApi.Agreements.Contacts.Phones.put(self.agreementId.val, context.contactId, context.id);
                         $.ajax({
                             type: 'PUT',
                             url: url,
@@ -638,7 +631,6 @@ module agreements {
                             success: (response: any, statusText: string, xhr: JQueryXHR): void => {
                             },
                             error: (xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
-                                this.spinner.stop();
                                 if (xhr.status === 400) { // validation message will be in xhr response text...
                                     this.establishmentItemViewModel.$genericAlertDialog.find('p.content')
                                         .html(xhr.responseText.replace('\n', '<br /><br />'));
@@ -741,7 +733,7 @@ module agreements {
         }
 
         populateContacts(): void {
-            $.get(App.Routes.WebApi.Agreements.Contacts.get(this.agreementId), { useTestData: false })
+            $.get(App.Routes.WebApi.Agreements.Contacts.get(this.agreementId.val), { useTestData: false })
                 .done((response: any): void => {
                     ko.mapping.fromJS(response, this.contacts)
                     this.dfdPopContacts.resolve();
