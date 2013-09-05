@@ -1,6 +1,6 @@
 /// <reference path="../typings/jquery/jquery.d.ts" />
 /// <reference path="App.ts" />
-
+ 
 module App.Routes {
 
     export var applicationPath: string = '/';

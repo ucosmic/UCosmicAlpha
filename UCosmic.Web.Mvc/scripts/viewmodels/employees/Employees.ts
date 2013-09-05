@@ -677,7 +677,8 @@ module ViewModels.Employees {
                 //    bold: true
                 //},
                 colors: ['green'],
-                legend: { position: 'none' }
+                legend: { position: 'none' },
+                vAxis: { minValue: 0 }
             };
 
             this.linechartPeopleOptions = {
@@ -695,7 +696,8 @@ module ViewModels.Employees {
                 //    bold: true
                 //},
                 colors: ['green'],
-                legend: { position: 'none' }
+                legend: { position: 'none' },
+                vAxis: { minValue: 0 }
             };
 
             this.linechart = new this.google.visualization.LineChart($('#facultystaff-summary-linechart')[0]);
@@ -1185,6 +1187,9 @@ module ViewModels.Employees {
                         }
                     });
                 }
+                else {
+                    deferred.resolve(this._getPeopleTrendDataTable(null));
+                }
             }
             else {
                 var placeId = this.getPlaceId(placeOfficialName);
@@ -1209,6 +1214,9 @@ module ViewModels.Employees {
                                 //this.loadSpinner.stop();
                             }
                         });
+                    }
+                    else {
+                        deferred.resolve(this._getPeopleTrendDataTable(placeOfficialName));
                     }
                 }
                 else {

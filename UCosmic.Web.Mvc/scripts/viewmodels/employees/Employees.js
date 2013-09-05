@@ -609,7 +609,8 @@ var ViewModels;
                     //    bold: true
                     //},
                     colors: ['green'],
-                    legend: { position: 'none' }
+                    legend: { position: 'none' },
+                    vAxis: { minValue: 0 }
                 };
 
                 this.linechartPeopleOptions = {
@@ -627,7 +628,8 @@ var ViewModels;
                     //    bold: true
                     //},
                     colors: ['green'],
-                    legend: { position: 'none' }
+                    legend: { position: 'none' },
+                    vAxis: { minValue: 0 }
                 };
 
                 this.linechart = new this.google.visualization.LineChart($('#facultystaff-summary-linechart')[0]);
@@ -1078,6 +1080,8 @@ var ViewModels;
                                 //this.loadSpinner.stop();
                             }
                         });
+                    } else {
+                        deferred.resolve(this._getPeopleTrendDataTable(null));
                     }
                 } else {
                     var placeId = this.getPlaceId(placeOfficialName);
@@ -1101,6 +1105,8 @@ var ViewModels;
                                     //this.loadSpinner.stop();
                                 }
                             });
+                        } else {
+                            deferred.resolve(this._getPeopleTrendDataTable(placeOfficialName));
                         }
                     } else {
                         deferred.reject("Unkown placeId");
