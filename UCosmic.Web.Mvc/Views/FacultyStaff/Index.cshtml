@@ -321,7 +321,7 @@
                     <div style="background-color: #ACCCFD; width: 680px; height: 500px"></div>
                     
                     <div style="position: absolute; background-color: transparent; width: 680px; height: 500px; top: 0; left: 0; z-index: 1"
-                        data-bind="visible: !loadSpinner.isVisible() && !loadCountSpinner.isVisible()">
+                        data-bind="visible: !loadSpinner.isVisible()">
                         
                         <!-- Antarctica -->
                         <div style="position: absolute; left: 340px; bottom: 0;">                   
@@ -389,12 +389,12 @@
                         </div>
 
                         <!-- Arctic Ocean -->
-                        <div style="position: absolute; left: 370px; top: 5px; width: 50px">
+                        <div style="position: absolute; left: 315px; top: 5px; width: 50px">
                             <div style="width: 100%; text-align: center">
-                                <img src="../../images/icons/glyphs/glyphicons_261_buoy_blue.png" width="12" height="12"/>
+                                <img src="../../images/icons/glyphs/glyphicons_261_buoy_blue.png" width="24" height="24"/>
                             </div>
-                            <div class="customPlaceText" style="line-height: 0.5">
-                                <span style="font-size: x-small">Arctic Ocean</span>
+                            <div class="customPlaceText">
+                                <span>Arctic Ocean</span>
                             </div>
                         </div>                       
 
@@ -430,7 +430,7 @@
 
                     <!-- Gulf of Mexico-->
                     <div style="position: absolute; left: 150px; top: 270px; width: 50px; z-index: 3"
-                        data-bind="visible: !loadSpinner.isVisible() && !loadCountSpinner.isVisible()">
+                        data-bind="visible: !loadSpinner.isVisible()">
                         <div style="width: 100%; text-align: center">
                             <img src="../../images/icons/glyphs/glyphicons_261_buoy_blue.png" width="12" height="12"/>
                         </div>
@@ -450,8 +450,8 @@
                     </div>
 
                     <!-- Arctic Ocean Title Phantom -->
-                    <div id="arcticOcean" style="position: absolute; left: 370px; top: 5px; width: 50px; z-index: 4" data-bind="click: function(event,item) { customPlaceClick(event,item,'Arctic Ocean'); }">
-                        <img src="../../images/transparent.png" width="25" height="25"/>
+                    <div id="arcticOcean" style="position: absolute; left: 315px; top: 5px; width: 50px; z-index: 4" data-bind="click: function(event,item) { customPlaceClick(event,item,'Arctic Ocean'); }">
+                        <img src="../../images/transparent.png" width="50" height="50"/>
                     </div>
 
                     <!-- Activities/People Buttons -->
@@ -461,7 +461,7 @@
                     </div>                     
                     
                     <!-- Spinner -->
-                    <div class="spinnerBox" data-bind="visible: loadSpinner.isVisible() || loadCountSpinner.isVisible()">
+                    <div class="spinnerBox" data-bind="visible: loadSpinner.isVisible()">
                         <div style="position: absolute; top: 0; left: 0; bottom: 0; right: 0; margin: auto; width: 100px; height: 20px">
                             <span>
                                 <img src="~/images/icons/spinner/spinner-20-blue.gif" alt=""/>

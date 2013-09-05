@@ -72,36 +72,35 @@ namespace UCosmic.Domain.Activities
                 {
                     CountOfPlaces += 1;
                 }
+            }
 
-                if ((settings != null) && settings.ActivityTypes.Any())
+            if ((settings != null) && settings.ActivityTypes.Any())
+            {
+                foreach (var type in settings.ActivityTypes)
                 {
-                    foreach (var type in settings.ActivityTypes)
+                    int globalTypeCount = queryProcessor.Execute(
+                        new PeopleWithActivitiesCountByTypeIdEstablishmentId(type.Id,
+                                                                             establishmentId,
+                                                                             fromDateUtc,
+                                                                             toDateUtc,
+                                                                             false, /* include undated */
+                                                                             true /* include future */));
+
+                    var typeCount = TypeCounts.SingleOrDefault(c => c.TypeId == type.Id);
+                    if (typeCount != null)
                     {
-                        int placeTypeCount = queryProcessor.Execute(
-                            new PeopleWithActivitiesCountByTypeIdPlaceIdsEstablishmentId(type.Id,
-                                                                                         new int[] { place.RevisionId },
-                                                                                         establishmentId,
-                                                                                         fromDateUtc,
-                                                                                         toDateUtc,
-                                                                                         false, /* include undated */
-                                                                                         true /* include future */));
-
-                        var typeCount = TypeCounts.SingleOrDefault(c => c.TypeId == type.Id);
-                        if (typeCount != null)
+                        typeCount.Count += globalTypeCount;
+                    }
+                    else
+                    {
+                        typeCount = new TypeCount
                         {
-                            typeCount.Count += placeTypeCount;
-                        }
-                        else
-                        {
-                            typeCount = new TypeCount
-                            {
-                                TypeId = type.Id,
-                                Type = type.Type,
-                                Count = placeTypeCount
-                            };
+                            TypeId = type.Id,
+                            Type = type.Type,
+                            Count = globalTypeCount
+                        };
 
-                            TypeCounts.Add(typeCount);
-                        }
+                        TypeCounts.Add(typeCount);
                     }
                 }
             }

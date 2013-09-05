@@ -20,7 +20,8 @@ var ViewModels;
             FacultyAndStaffSelect.prototype.load = function () {
                 var _this = this;
                 var deferred = $.Deferred();
-                this.loadSpinner.start();
+
+                //this.loadSpinner.start();
                 $.ajax({
                     type: "GET",
                     async: true,
@@ -40,7 +41,7 @@ var ViewModels;
                         deferred.reject(errorThrown);
                     },
                     complete: function (jqXhr, textStatus) {
-                        _this.loadSpinner.stop();
+                        //this.loadSpinner.stop();
                     }
                 });
 
@@ -134,8 +135,6 @@ var ViewModels;
                 this.selectedPlace = ko.observable(null);
                 this.isGlobalView = ko.observable(true);
                 this.loadSpinner = new App.Spinner(new App.SpinnerOptions(200));
-                this.loadCountSpinner = new App.Spinner(new App.SpinnerOptions(200));
-                this.loadTrendSpinner = new App.Spinner(new App.SpinnerOptions(200));
 
                 this.globalActivityCountData = null;
                 this.placeActivityCountData = null;
@@ -639,10 +638,10 @@ var ViewModels;
                 var deferred = $.Deferred();
 
                 if (this.globalActivityCountData == null) {
-                    this.loadSpinner.start();
+                    //this.loadSpinner.start();
                     this.getActivityDataTable(null).done(function () {
                         deferred.resolve(_this._getHeatmapActivityDataTable());
-                        _this.loadSpinner.stop();
+                        //this.loadSpinner.stop();
                     });
                 } else {
                     deferred.resolve(this._getHeatmapActivityDataTable());
@@ -710,10 +709,10 @@ var ViewModels;
                 var deferred = $.Deferred();
 
                 if (this.globalPeopleCountData == null) {
-                    this.loadSpinner.start();
+                    //this.loadSpinner.start();
                     this.getPeopleDataTable(null).done(function () {
                         deferred.resolve(_this._getHeatmapPeopleDataTable());
-                        _this.loadSpinner.stop();
+                        //this.loadSpinner.stop();
                     });
                 } else {
                     deferred.resolve(this._getHeatmapPeopleDataTable());
@@ -785,7 +784,7 @@ var ViewModels;
 
                 if (placeOfficialName == null) {
                     if (this.globalActivityCountData == null) {
-                        this.loadCountSpinner.start();
+                        //this.loadSpinner.start();
                         $.ajax({
                             type: "GET",
                             async: true,
@@ -800,7 +799,7 @@ var ViewModels;
                                 deferred.reject(errorThrown);
                             },
                             complete: function (jqXhr, textStatus) {
-                                _this.loadCountSpinner.stop();
+                                //this.loadSpinner.stop();
                             }
                         });
                     } else {
@@ -810,7 +809,7 @@ var ViewModels;
                     var placeId = this.getPlaceId(placeOfficialName);
                     if (placeId != null) {
                         if ((this.placeActivityCountData == null) || ((this.placeActivityCountData).placeId != placeId)) {
-                            this.loadCountSpinner.start();
+                            //this.loadSpinner.start();
                             $.ajax({
                                 type: "GET",
                                 async: true,
@@ -825,7 +824,7 @@ var ViewModels;
                                     deferred.reject(errorThrown);
                                 },
                                 complete: function (jqXhr, textStatus) {
-                                    _this.loadCountSpinner.stop();
+                                    // this.loadSpinner.stop();
                                 }
                             });
                         } else {
@@ -887,7 +886,7 @@ var ViewModels;
 
                 if (placeOfficialName == null) {
                     if (this.globalPeopleCountData == null) {
-                        this.loadCountSpinner.start();
+                        //this.loadSpinner.start();
                         $.ajax({
                             type: "GET",
                             async: true,
@@ -902,7 +901,7 @@ var ViewModels;
                                 deferred.reject(errorThrown);
                             },
                             complete: function (jqXhr, textStatus) {
-                                _this.loadCountSpinner.stop();
+                                //this.loadSpinner.stop();
                             }
                         });
                     } else {
@@ -912,7 +911,7 @@ var ViewModels;
                     var placeId = this.getPlaceId(placeOfficialName);
                     if (placeId != null) {
                         if ((this.placePeopleCountData == null) || ((this.placePeopleCountData).placeId != placeId)) {
-                            this.loadCountSpinner.start();
+                            //this.loadSpinner.start();
                             $.ajax({
                                 type: "GET",
                                 async: true,
@@ -927,7 +926,7 @@ var ViewModels;
                                     deferred.reject(errorThrown);
                                 },
                                 complete: function (jqXhr, textStatus) {
-                                    _this.loadCountSpinner.stop();
+                                    //this.loadSpinner.stop();
                                 }
                             });
                         } else {
@@ -978,7 +977,7 @@ var ViewModels;
 
                 if (placeOfficialName == null) {
                     if (this.globalActivityTrendData == null) {
-                        this.loadTrendSpinner.start();
+                        //this.loadSpinner.start();
                         $.ajax({
                             type: "GET",
                             async: true,
@@ -993,7 +992,7 @@ var ViewModels;
                                 deferred.reject(errorThrown);
                             },
                             complete: function (jqXhr, textStatus) {
-                                _this.loadTrendSpinner.stop();
+                                //this.loadSpinner.stop();
                             }
                         });
                     } else {
@@ -1003,7 +1002,7 @@ var ViewModels;
                     var placeId = this.getPlaceId(placeOfficialName);
                     if (placeId != null) {
                         if ((this.placeActivityTrendData == null) || ((this.placeActivityTrendData).placeId != placeId)) {
-                            this.loadTrendSpinner.start();
+                            //this.loadSpinner.start();
                             $.ajax({
                                 type: "GET",
                                 async: true,
@@ -1018,7 +1017,7 @@ var ViewModels;
                                     deferred.reject(errorThrown);
                                 },
                                 complete: function (jqXhr, textStatus) {
-                                    _this.loadTrendSpinner.stop();
+                                    //this.loadSpinner.stop();
                                 }
                             });
                         } else {
@@ -1061,7 +1060,7 @@ var ViewModels;
 
                 if (placeOfficialName == null) {
                     if (this.globalPeopleTrendData == null) {
-                        this.loadTrendSpinner.start();
+                        //this.loadSpinner.start();
                         $.ajax({
                             type: "GET",
                             async: true,
@@ -1076,7 +1075,7 @@ var ViewModels;
                                 deferred.reject(errorThrown);
                             },
                             complete: function (jqXhr, textStatus) {
-                                _this.loadTrendSpinner.stop();
+                                //this.loadSpinner.stop();
                             }
                         });
                     }
@@ -1084,7 +1083,7 @@ var ViewModels;
                     var placeId = this.getPlaceId(placeOfficialName);
                     if (placeId != null) {
                         if ((this.placePeopleTrendData == null) || ((this.placePeopleTrendData).placeId != placeId)) {
-                            this.loadTrendSpinner.start();
+                            //this.loadSpinner.start();
                             $.ajax({
                                 type: "GET",
                                 async: true,
@@ -1099,7 +1098,7 @@ var ViewModels;
                                     deferred.reject(errorThrown);
                                 },
                                 complete: function (jqXhr, textStatus) {
-                                    _this.loadTrendSpinner.stop();
+                                    //this.loadSpinner.stop();
                                 }
                             });
                         }
@@ -1347,7 +1346,7 @@ var ViewModels;
                 }).fail(function (xhr, textStatus, errorThrown) {
                     deferred.reject(xhr, textStatus, errorThrown);
                 }).always(function () {
-                    _this.loadSpinner.stop();
+                    //this.loadSpinner.stop();
                 });
 
                 return deferred;
@@ -1405,6 +1404,7 @@ var ViewModels;
                     $('#heatmapText').css("font-weight", "bold");
 
                     this.isHeatmapVisible(true);
+                    this.loadSpinner.start();
 
                     if (this.searchType() === 'activities') {
                         this.getActivityDataTable(this.selectedPlace()).done(function (dataTable) {
@@ -1422,6 +1422,8 @@ var ViewModels;
                                 }
                                 _this.updateCustomGeochartPlaceTooltips(_this.searchType());
                             });
+
+                            _this.loadSpinner.stop();
                         });
 
                         this.getActivityTrendDataTable(this.selectedPlace()).done(function (dataTable) {
@@ -1447,6 +1449,8 @@ var ViewModels;
                                 }
                                 _this.updateCustomGeochartPlaceTooltips(_this.searchType());
                             });
+
+                            _this.loadSpinner.stop();
                         });
 
                         this.getPeopleTrendDataTable(this.selectedPlace()).done(function (dataTable) {

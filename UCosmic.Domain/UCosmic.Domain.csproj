@@ -198,6 +198,7 @@
     <Compile Include="Domain\Agreements\Validation\MustBeOwnedByPrincipal.cs" />
     <Compile Include="Domain\Agreements\_Internal\QueryAgreementParticipants.cs" />
     <Compile Include="Domain\Agreements\_Internal\QueryAgreementContacts.cs" />
+    <Compile Include="Domain\People\Queries\PeopleWithActivitiesCountByTypeIdEstablishmentId.cs" />
     <Compile Include="Domain\People\Queries\PeopleWithDegreesCountByPlaceIdsEstablishmentId.cs" />
     <Compile Include="Domain\People\Queries\PeopleWithDegreesCountByEstablishmentId.cs" />
     <Compile Include="Domain\Degrees\Queries\DegreeCountByPlaceIdsEstablishmentId.cs" />
