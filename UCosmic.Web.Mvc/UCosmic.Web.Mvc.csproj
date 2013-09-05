@@ -1919,6 +1919,13 @@
     <Content Include="scripts\viewmodels\agreements\participants.min.js">
       <DependentUpon>participants.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="scripts\viewmodels\agreements\phones.ts" />
+    <Content Include="scripts\viewmodels\agreements\Phones.js">
+      <DependentUpon>phones.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\agreements\Phones.min.js">
+      <DependentUpon>phones.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\viewmodels\agreements\scrollBody.js">
       <DependentUpon>scrollBody.ts</DependentUpon>
     </Content>

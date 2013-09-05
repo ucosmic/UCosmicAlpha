@@ -90,7 +90,7 @@
                         <i><strong style="color: blue">(searchable)</strong></i>
                     </div>
                     <div class="field-input-label-top">
-                        <input id="contactFirstName" type="text" data-bind="value: contactFirstName" />
+                        <input id="contactFirstName" type="text" data-bind="value: contactFirstName, valueUpdate: 'afterkeydown'" />
                     </div>
                 </div>
             </div>
@@ -109,7 +109,7 @@
                         <i><strong style="color: blue">(searchable)</strong></i>
                     </div>
                     <div class="field-input-label-top">
-                        <input id="contactLastName" type="text" data-bind="value: contactLastName" />
+                        <input id="contactLastName" type="text" data-bind="value: contactLastName, valueUpdate: 'afterkeydown'" />
                     </div>
                 </div>
             </div>
@@ -132,7 +132,7 @@
                     </div>
                 </div>
             </div>
-            <ul data-bind="foreach: contactPhones" style="margin-top: 40px; margin-bottom: 16px">
+            <ul data-bind="foreach: phonesClass.contactPhones" style="margin-top: 40px; margin-bottom: 16px">
                 <li>
                     <div class="field-row" style="margin-bottom: 5px">
                         <div class="field-column-left">
@@ -142,7 +142,7 @@
                             <div class="field-input-label-top">
                                 <input class="phoneNumbers" type="text" data-bind="value: value" />
                             </div>
-                            <div style="color: red; visibility: hidden;" data-bind="attr: { id: 'phoneNumberValidate' + id }" class="field-label-description">
+                            <div style="color: red; visibility: hidden;" data-bind="attr: { id: 'phoneNumberValidate' + $index() }" class="field-label-description">
                                 Phone number is required.
                             </div>
                         </div>
@@ -152,7 +152,7 @@
                             </div>
                             <div class="field-input-label-top" style="width: 395px">
                                 <input  class="phoneTypes" type="text" placeholder="[None]" 
-                                       data-bind="value: type, valueUpdate: 'afterkeydown', attr: { id: 'phoneTypes' + $index }" />
+                                       data-bind="value: type, valueUpdate: 'afterkeydown', attr: { id: 'phoneTypes' + $index() }" />
                             </div>
                             <a title="Remove this phone" data-bind="click: $root.removePhone"><i class="red minus on-right"></i></a>
                         </div>
@@ -165,9 +165,9 @@
                         <label>New phone</label>
                     </div>
                     <div class="field-input-label-top"  style="width: 400px">
-                        <input id="contactPhoneTextValue" type="text" data-bind="value: contactPhoneTextValue" />
+                        <input id="contactPhoneTextValue" type="text" data-bind="value: phonesClass.contactPhoneTextValue" />
                     </div>
-                    <a title="add phone" data-bind="click: addPhone" class="addLink on-right"><i class="green plus"></i></a>
+                    <a title="add phone" data-bind="click: phonesClass.addPhone" class="addLink on-right"><i class="green plus"></i></a>
                 </div>
             </div>
             <footer>

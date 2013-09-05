@@ -104,6 +104,7 @@ namespace UCosmic.Web.Mvc
                 "~/scripts/viewmodels/agreements/visibility.js",
                 "~/scripts/viewmodels/agreements/basicInfo.js",
                 "~/scripts/viewmodels/agreements/participants.js",
+                "~/scripts/viewmodels/agreements/phones.js",
                 "~/scripts/viewmodels/agreements/agreementVM.js"));
 
             // employee personal profile page
