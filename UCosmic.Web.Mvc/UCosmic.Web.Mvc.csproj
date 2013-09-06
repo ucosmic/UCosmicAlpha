@@ -1906,6 +1906,13 @@
     <Content Include="scripts\viewmodels\agreements\datesStatus.min.js">
       <DependentUpon>datesStatus.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="scripts\viewmodels\agreements\establishmentSearchNav.ts" />
+    <Content Include="scripts\viewmodels\agreements\establishmentSearchNav.js">
+      <DependentUpon>establishmentSearchNav.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\agreements\establishmentSearchNav.min.js">
+      <DependentUpon>establishmentSearchNav.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\viewmodels\agreements\fileAttachments.js">
       <DependentUpon>fileAttachments.ts</DependentUpon>
     </Content>

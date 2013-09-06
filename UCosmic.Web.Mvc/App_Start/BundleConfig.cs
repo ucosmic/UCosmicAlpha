@@ -91,6 +91,7 @@ namespace UCosmic.Web.Mvc
                 "~/scripts/jquery/jquery.globalize/globalize.js",
                 "~/scripts/app/Spinner.js",
                 "~/scripts/app/PagedSearch.js",
+                "~/scripts/google/toolsoverlay.js",
                 "~/scripts/viewmodels/establishments/SearchResult.js",
                 "~/scripts/viewmodels/establishments/Search.js",
                 "~/scripts/viewmodels/establishments/Name.js",
@@ -105,6 +106,7 @@ namespace UCosmic.Web.Mvc
                 "~/scripts/viewmodels/agreements/basicInfo.js",
                 "~/scripts/viewmodels/agreements/participants.js",
                 "~/scripts/viewmodels/agreements/phones.js",
+                "~/scripts/viewmodels/agreements/establishmentSearchNav.js",
                 "~/scripts/viewmodels/agreements/agreementVM.js"));
 
             // employee personal profile page
