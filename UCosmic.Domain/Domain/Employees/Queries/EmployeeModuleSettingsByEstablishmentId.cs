@@ -7,12 +7,14 @@ namespace UCosmic.Domain.Employees
     public class EmployeeModuleSettingsByEstablishmentId : BaseEntityQuery<EmployeeModuleSettings>, IDefineQuery<EmployeeModuleSettings>
     {
         public int EstablishmentId { get; private set; }
+        public bool Seeding { get; set; }
 
-        public EmployeeModuleSettingsByEstablishmentId(int establishmentId)
+        public EmployeeModuleSettingsByEstablishmentId(int establishmentId, bool seeding = false)
         {
             if (establishmentId == 0) throw new ArgumentNullException("establishmentId");
 
             EstablishmentId = establishmentId;
+            Seeding = seeding;
         }
     }
 
@@ -53,7 +55,7 @@ namespace UCosmic.Domain.Employees
             {
                 employeeModuleSettings.ActivityTypes.OrderBy(a => a.Rank);
             }
-            else /* 9/3/2013 - As per DL */
+            else if (!query.Seeding)
             {
                 employeeModuleSettings = new EmployeeModuleSettings();
             }

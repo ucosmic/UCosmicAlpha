@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using UCosmic.Domain.Employees;
 using UCosmic.Domain.Establishments;
@@ -37,8 +38,9 @@ namespace UCosmic.SeedData
             , ICommandEntities entities
             , IHandleCommands<CreateEmployeeModuleSettings> createEmployeeModuleSettings
             , IUnitOfWork unitOfWork
+            , IStoreBinaryData binaryStore
             )
-            : base(queryProcessor, createEmployeeModuleSettings, unitOfWork)
+            : base(queryProcessor, createEmployeeModuleSettings, unitOfWork, binaryStore)
         {
             _entities = entities;
         }
@@ -76,16 +78,19 @@ namespace UCosmic.SeedData
     public class UsfEmployeeModuleSettingsSeeder : BaseEmployeeModuleSettingsSeeder
     {
         private readonly ICommandEntities _entities;
+        private readonly IStoreBinaryData _binaryStore;
         public EmployeeModuleSettings CreatedEmployeeModuleSettings { get; private set; }
 
         public UsfEmployeeModuleSettingsSeeder(IProcessQueries queryProcessor
             , ICommandEntities entities
             , IHandleCommands<CreateEmployeeModuleSettings> createEmployeeModuleSettings
             , IUnitOfWork unitOfWork
+            , IStoreBinaryData binaryStore
             )
-            : base(queryProcessor, createEmployeeModuleSettings, unitOfWork)
+            : base(queryProcessor, createEmployeeModuleSettings, unitOfWork, binaryStore)
         {
             _entities = entities;
+            _binaryStore = binaryStore;
         }
 
         public override void Seed()
@@ -127,14 +132,17 @@ namespace UCosmic.SeedData
         private readonly IProcessQueries _queryProcessor;
         private readonly IHandleCommands<CreateEmployeeModuleSettings> _createEmployeeModuleSettings;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IStoreBinaryData _binaryStore;
 
         protected BaseEmployeeModuleSettingsSeeder(IProcessQueries queryProcessor
             , IHandleCommands<CreateEmployeeModuleSettings> createEmployeeModule
-            , IUnitOfWork unitOfWork)
+            , IUnitOfWork unitOfWork
+            , IStoreBinaryData binaryStore)
         {
             _queryProcessor = queryProcessor;
             _createEmployeeModuleSettings = createEmployeeModule;
             _unitOfWork = unitOfWork;
+            _binaryStore = binaryStore;
         }
 
         public abstract void Seed();
@@ -143,9 +151,58 @@ namespace UCosmic.SeedData
         {
             // make sure entity does not already exist
             var employeeModuleSettings = _queryProcessor.Execute(
-                new EmployeeModuleSettingsByEstablishmentId(command.EstablishmentId));
+                new EmployeeModuleSettingsByEstablishmentId(command.EstablishmentId, true));
 
             if (employeeModuleSettings != null) return employeeModuleSettings;
+
+            /* Create default Global View icon */
+            var globalViewIconBinaryPath = string.Format("{0}/{1}", EmployeeConsts.SettingsBinaryStoreBasePath,
+                                                      EmployeeConsts.DefaultGlobalViewIconGuid);
+            if (_binaryStore.Get(globalViewIconBinaryPath) == null)
+            {
+                string filePath = string.Format("{0}{1}{2}", AppDomain.CurrentDomain.BaseDirectory,
+                                                @"..\UCosmic.Infrastructure\SeedData\SeedMediaFiles\",
+                                                "global_24_black.png");
+
+                using (var fileStream = File.OpenRead(filePath))
+                {
+                    var content = fileStream.ReadFully();
+                    _binaryStore.Put(globalViewIconBinaryPath, content);
+                }                
+            }
+
+            /* Create default Find an Expert icon */
+            var findAnExportIconBinaryPath = string.Format("{0}/{1}", EmployeeConsts.SettingsBinaryStoreBasePath,
+                                          EmployeeConsts.DefaultFindAnExpertIconGuid);
+            if (_binaryStore.Get(findAnExportIconBinaryPath) == null)
+            {
+                var filePath = string.Format("{0}{1}{2}", AppDomain.CurrentDomain.BaseDirectory,
+                                             @"..\UCosmic.Infrastructure\SeedData\SeedMediaFiles\",
+                                             "noun_project_5795_compass.svg");
+                using (var fileStream = File.OpenRead(filePath))
+                {
+                    var content = fileStream.ReadFully();
+                    _binaryStore.Put(findAnExportIconBinaryPath, content);
+                }
+            }
+
+            if (String.IsNullOrEmpty(command.GlobalViewIconPath))
+            {
+                command.GlobalViewIconFileName = "global_24_black.png";
+                command.GlobalViewIconLength = _binaryStore.Get(globalViewIconBinaryPath).Length;
+                command.GlobalViewIconMimeType = "image/png";
+                command.GlobalViewIconName = "Global View"; // used for tooltip
+                command.GlobalViewIconPath = globalViewIconBinaryPath;
+            }
+
+            if (String.IsNullOrEmpty(command.FindAnExpertIconPath))
+            {
+                command.FindAnExpertIconFileName = "noun_project_5795_compass.svg";
+                command.FindAnExpertIconLength = _binaryStore.Get(findAnExportIconBinaryPath).Length;
+                command.FindAnExpertIconMimeType = "image/svg+xml";
+                command.FindAnExpertIconName = "Find an Expert"; // used for tooltip
+                command.FindAnExpertIconPath = findAnExportIconBinaryPath;
+            }
 
             _createEmployeeModuleSettings.Handle(command);
 

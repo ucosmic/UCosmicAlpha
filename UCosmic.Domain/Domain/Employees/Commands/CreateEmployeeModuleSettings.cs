@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using FluentValidation;
 using UCosmic.Domain.Establishments;
@@ -28,7 +29,16 @@ namespace UCosmic.Domain.Employees
         public bool OfferFundingQuestions { get; set; }
         public string InternationalPedigreeTitle { get; set; }
         public int? ReportsDefaultYearRange { get; set; }
-
+        public int? GlobalViewIconLength { get; set; }
+        public string GlobalViewIconMimeType { get; set; }
+        public string GlobalViewIconName { get; set; }
+        public string GlobalViewIconPath { get; set; }
+        public string GlobalViewIconFileName { get; set; }
+        public int? FindAnExpertIconLength { get; set; }
+        public string FindAnExpertIconMimeType { get; set; }
+        public string FindAnExpertIconName { get; set; }
+        public string FindAnExpertIconPath { get; set; }
+        public string FindAnExpertIconFileName { get; set; }
 
         public EmployeeModuleSettings CreatedEmployeeModuleSettings { get; internal set; }
     }
@@ -49,10 +59,12 @@ namespace UCosmic.Domain.Employees
     public class HandleCreateEmployeeModuleSettingsCommand : IHandleCommands<CreateEmployeeModuleSettings>
     {
         private readonly ICommandEntities _entities;
+        private readonly IStoreBinaryData _binaryData;
 
-        public HandleCreateEmployeeModuleSettingsCommand(ICommandEntities entities)
+        public HandleCreateEmployeeModuleSettingsCommand(ICommandEntities entities, IStoreBinaryData binaryData)
         {
             _entities = entities;
+            _binaryData = binaryData;
         }
 
         public void Handle(CreateEmployeeModuleSettings command)
@@ -71,7 +83,17 @@ namespace UCosmic.Domain.Employees
                 OfferActivityType = command.OfferActivityType,
                 OfferFundingQuestions = command.OfferFundingQuestions,
                 InternationalPedigreeTitle = command.InternationalPedigreeTitle,
-                ReportsDefaultYearRange = command.ReportsDefaultYearRange
+                ReportsDefaultYearRange = command.ReportsDefaultYearRange,
+                GlobalViewIconLength  = command.GlobalViewIconLength,
+                GlobalViewIconMimeType = command.GlobalViewIconMimeType,
+                GlobalViewIconName = command.GlobalViewIconName,
+                GlobalViewIconPath = command.GlobalViewIconPath,
+                GlobalViewIconFileName = command.GlobalViewIconFileName,
+                FindAnExpertIconLength = command.FindAnExpertIconLength,
+                FindAnExpertIconMimeType = command.FindAnExpertIconMimeType,
+                FindAnExpertIconName = command.FindAnExpertIconName,
+                FindAnExpertIconPath = command.FindAnExpertIconPath,
+                FindAnExpertIconFileName = command.FindAnExpertIconFileName
             };
 
             _entities.Create(employeeModuleSettings);

@@ -50,11 +50,24 @@ namespace UCosmic.EntityFramework
             HasMany(p => p.ActivityTypes)
                 .WithOptional()
                 .Map(m => m.MapKey("EmployeeModuleSettingsId"))
-                .WillCascadeOnDelete(true); 
+                .WillCascadeOnDelete(true);
+
             
             Property(p => p.PersonalInfoAnchorText).HasMaxLength(64);
             Property(p => p.InternationalPedigreeTitle).HasMaxLength(64);
             Property(p => p.ReportsDefaultYearRange).IsOptional();
+
+            Property(x => x.GlobalViewIconLength).IsOptional();
+            Property(x => x.GlobalViewIconMimeType).IsOptional();
+            Property(x => x.GlobalViewIconPath).IsOptional();
+            Property(x => x.GlobalViewIconFileName).HasMaxLength(FileConstraints.FileNameMaxLength).IsOptional();
+            Property(x => x.GlobalViewIconName).HasMaxLength(FileConstraints.NameMaxLength).IsOptional();
+
+            Property(x => x.FindAnExpertIconLength).IsOptional();
+            Property(x => x.FindAnExpertIconMimeType).IsOptional();
+            Property(x => x.FindAnExpertIconPath).IsOptional();
+            Property(x => x.FindAnExpertIconFileName).HasMaxLength(FileConstraints.FileNameMaxLength).IsOptional();
+            Property(x => x.FindAnExpertIconName).HasMaxLength(FileConstraints.NameMaxLength).IsOptional();
         }
     }
 

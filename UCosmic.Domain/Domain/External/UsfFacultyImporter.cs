@@ -512,7 +512,7 @@ namespace UCosmic.Domain.External
                 }
 
                 /* Get root USF Establishment. */
-                var usf = _entities.Get<Establishment>().SingleOrDefault(e => e.OfficialName.Contains("University of South Florida"));
+                var usf = _entities.Get<Establishment>().SingleOrDefault(e => e.WebsiteUrl.Equals("www.usf.edu"));
                 if (usf == null)
                 {
                     throw new Exception("Unable to get establishment University of South Florida");
