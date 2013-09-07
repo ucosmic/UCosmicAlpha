@@ -1,7 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Web.Http;
 using AttributeRouting;
 using AttributeRouting.Web.Http;
@@ -16,10 +21,12 @@ namespace UCosmic.Web.Mvc.ApiControllers
     public class EmployeeModuleSettingsController : ApiController
     {
         private readonly IProcessQueries _queryProcessor;
+        private readonly IStoreBinaryData _binaryStore;
 
-        public EmployeeModuleSettingsController(IProcessQueries queryProcessor)
+        public EmployeeModuleSettingsController(IProcessQueries queryProcessor, IStoreBinaryData binaryStore)
         {
             _queryProcessor = queryProcessor;
+            _binaryStore = binaryStore;
         }
 
         [GET("faculty-ranks")]
@@ -96,6 +103,83 @@ namespace UCosmic.Web.Mvc.ApiControllers
             var models = Mapper.Map<EmployeeActivityTypeApiModel[]>(employeeModuleSettings.ActivityTypes);
             return models;
         }
+
+        [GET("icon/{name}")]
+        public HttpResponseMessage GetIcon(string name)
+        {
+            if (string.IsNullOrEmpty(name) || string.IsNullOrWhiteSpace(name))
+            {
+                return new HttpResponseMessage(HttpStatusCode.BadRequest);
+            }
+
+            Establishment establishment = null;
+            EmployeeModuleSettings employeeModuleSettings = null;
+
+            if (!String.IsNullOrEmpty(User.Identity.Name))
+            {
+                employeeModuleSettings =
+                    _queryProcessor.Execute(new EmployeeModuleSettingsByUserName(User.Identity.Name));
+            }
+            else
+            {
+                var tenancy = Request.Tenancy();
+                
+                if (tenancy.TenantId.HasValue)
+                {
+                    establishment = _queryProcessor.Execute(new EstablishmentById(tenancy.TenantId.Value));
+                }
+                else if (!String.IsNullOrEmpty(tenancy.StyleDomain) && !"default".Equals(tenancy.StyleDomain))
+                {
+                    establishment = _queryProcessor.Execute(new EstablishmentByEmail(tenancy.StyleDomain));
+                }
+
+                if (establishment != null)
+                {
+                    employeeModuleSettings =
+                        _queryProcessor.Execute(new EmployeeModuleSettingsByEstablishmentId(establishment.RevisionId));
+                }
+                else
+                {
+                    return new HttpResponseMessage(HttpStatusCode.Unauthorized);
+                }
+            }
+
+            string path;
+            string mimeType;
+
+            if (String.Compare(name, employeeModuleSettings.GlobalViewIconName, false, CultureInfo.CurrentCulture) == 0)
+            {
+                path = employeeModuleSettings.GlobalViewIconPath;
+                mimeType = employeeModuleSettings.GlobalViewIconMimeType;
+            }
+            else if ( String.Compare(name, employeeModuleSettings.FindAnExpertIconName, false, CultureInfo.CurrentCulture) == 0)
+            {
+                path = employeeModuleSettings.FindAnExpertIconPath;
+                mimeType = employeeModuleSettings.FindAnExpertIconMimeType;
+            }
+            else
+            {
+                return new HttpResponseMessage(HttpStatusCode.NotImplemented);
+            }
+
+
+            byte[] content = _binaryStore.Get(path);
+            if (content == null)
+            {
+                return new HttpResponseMessage(HttpStatusCode.NotFound);
+            }
+
+            var stream = new MemoryStream(content);
+            var response = new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StreamContent(stream)
+            };
+
+            response.Content.Headers.ContentType = new MediaTypeHeaderValue(mimeType);
+
+            return response;
+        }
+
 
 #if false
         [POST("activity-types")]

@@ -191,7 +191,7 @@ namespace UCosmic.SeedData
                 command.GlobalViewIconFileName = "global_24_black.png";
                 command.GlobalViewIconLength = _binaryStore.Get(globalViewIconBinaryPath).Length;
                 command.GlobalViewIconMimeType = "image/png";
-                command.GlobalViewIconName = "Global View"; // used for tooltip
+                command.GlobalViewIconName = "GlobalViewIcon";
                 command.GlobalViewIconPath = globalViewIconBinaryPath;
             }
 
@@ -200,7 +200,7 @@ namespace UCosmic.SeedData
                 command.FindAnExpertIconFileName = "noun_project_5795_compass.svg";
                 command.FindAnExpertIconLength = _binaryStore.Get(findAnExportIconBinaryPath).Length;
                 command.FindAnExpertIconMimeType = "image/svg+xml";
-                command.FindAnExpertIconName = "Find an Expert"; // used for tooltip
+                command.FindAnExpertIconName = "FindAnExpertIcon";
                 command.FindAnExpertIconPath = findAnExportIconBinaryPath;
             }
 
