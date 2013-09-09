@@ -311,5 +311,21 @@ module ViewModels.Activities {
 
             return formattedLocations;
         }
+
+        getActivityTypeIconName(typeId: number): string {
+            var i: number = 0;
+            while ((i < this.activityTypesList.length) && (this.activityTypesList[i].id != typeId)) {
+                i += 1;
+            }
+            return (i < this.activityTypesList.length) ? this.activityTypesList[i].iconName : null;
+        }
+
+        getActivityTypeToolTip(typeId: number): string {
+            var i: number = 0;
+            while ((i < this.activityTypesList.length) && (this.activityTypesList[i].id != typeId)) {
+                i += 1;
+            }
+            return (i < this.activityTypesList.length) ? this.activityTypesList[i].type : null;
+        }
     }
 }

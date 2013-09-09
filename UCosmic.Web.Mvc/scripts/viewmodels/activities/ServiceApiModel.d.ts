@@ -6,6 +6,7 @@ declare module Service.ApiModels {
         id: number;
         type: string;
         rank: number;
+        iconName: string;
     }
 
     export interface IActivityLocation {

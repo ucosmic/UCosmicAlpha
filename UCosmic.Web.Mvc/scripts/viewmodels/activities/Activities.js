@@ -277,6 +277,22 @@ var ViewModels;
 
                 return formattedLocations;
             };
+
+            ActivityList.prototype.getActivityTypeIconName = function (typeId) {
+                var i = 0;
+                while ((i < this.activityTypesList.length) && (this.activityTypesList[i].id != typeId)) {
+                    i += 1;
+                }
+                return (i < this.activityTypesList.length) ? this.activityTypesList[i].iconName : null;
+            };
+
+            ActivityList.prototype.getActivityTypeToolTip = function (typeId) {
+                var i = 0;
+                while ((i < this.activityTypesList.length) && (this.activityTypesList[i].id != typeId)) {
+                    i += 1;
+                }
+                return (i < this.activityTypesList.length) ? this.activityTypesList[i].type : null;
+            };
             ActivityList.iconMaxSide = 64;
             return ActivityList;
         })();

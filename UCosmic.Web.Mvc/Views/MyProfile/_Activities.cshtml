@@ -27,15 +27,15 @@
 <script type="text/html" id="activities-documents-template">
     <div style="width: 150px; font-size: small; text-align: center; float: left">
         <div>
-            <img data-bind="attr: { src: proxyImageSource }" src="@Url.Content("~/images/transparent.png")" alt="">
+            <img data-bind="attr: { src: proxyImageSource }" src="@Url.Content("~/images/transparent.png")" alt=""/>
         </div>
         <div class="ellipsis"><span data-bind="text: title"></span></div>
     </div>
 </script>
 
 <script type="text/html" id="activities-types-template">
-    <img style="width: 24px; height: 24px; border-width: 1px; border-style: solid"
-         src="@Url.Content("~/images/transparent.png")">
+    <img img data-bind="attr: { src: '/api/my/employee-module-settings/icon/' + $root.getActivityTypeIconName( typeId() ), title: $root.getActivityTypeToolTip( typeId() ) }"
+        src="" title="" width="32" height="32"/>
 </script>
 
 <script type="text/html" id="activities-template">
