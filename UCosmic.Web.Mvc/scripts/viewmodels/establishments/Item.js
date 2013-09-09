@@ -143,7 +143,7 @@
         new ParentIdValidator();
 
         var Item = (function () {
-            function Item(id) {
+            function Item(id, doSetupSammy) {
                 var _this = this;
                 // fields
                 this.id = 0;
@@ -188,6 +188,7 @@
                 this.parentIdValidatingSpinner = new App.Spinner(new App.SpinnerOptions(200));
                 // initialize the aggregate id
                 this.id = id || 0;
+                doSetupSammy = (doSetupSammy === false) ? false : true;
 
                 this._initNamesComputeds();
                 this._initUrlsComputeds();
@@ -270,8 +271,9 @@
                 });
 
                 ko.validation.group(this);
-
-                this._setupSammy();
+                if (doSetupSammy) {
+                    this._setupSammy();
+                }
                 this._setupParentComputeds();
             }
             // methods

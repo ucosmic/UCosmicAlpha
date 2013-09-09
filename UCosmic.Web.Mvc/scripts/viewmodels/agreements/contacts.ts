@@ -653,5 +653,52 @@ module agreements {
                 });
 
         }
+
+        //post files
+        postMe(data, url): void {
+            $.post(url, data)
+                .done((response: any, statusText: string, xhr: JQueryXHR): void => {
+                })
+                .fail((xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
+                    if (xhr.status === 400) { // validation message will be in xhr response text...
+                        this.establishmentItemViewModel.$genericAlertDialog.find('p.content')
+                            .html(xhr.responseText.replace('\n', '<br /><br />'));
+                        this.establishmentItemViewModel.$genericAlertDialog.dialog({
+                            title: 'Alert Message',
+                            dialogClass: 'jquery-ui',
+                            width: 'auto',
+                            resizable: false,
+                            modal: true,
+                            buttons: {
+                                'Ok': (): void => { this.establishmentItemViewModel.$genericAlertDialog.dialog('close'); }
+                            }
+                        });
+                    }
+                });
+        }
+
+        //part of save agreement
+        agreementPostContacts(response: any, statusText: string, xhr: JQueryXHR): void {
+            var tempUrl = App.Routes.WebApi.Agreements.Contacts.post(this.agreementId.val);
+
+            $.each(this.contacts(), (i, item) => {
+                var data = {
+                    agreementId: this.agreementId.val,
+                    title: item.title(),
+                    firstName: item.firstName(),
+                    lastName: item.lastName(),
+                    userId: item.id(),
+                    personId: item.personId(),
+                    phones: item.phones(),
+                    emailAddress: item.emailAddress(),
+                    type: item.type(),
+                    suffix: item.suffix(),
+                    salutation: item.salutation(),
+                    displayName: item.displayName(),
+                    middleName: item.middleName
+                }
+            this.postMe(data, tempUrl);
+            });
+        }
     }
 }

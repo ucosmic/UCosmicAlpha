@@ -283,6 +283,48 @@ else
                 _this.dfdPopFiles.resolve();
             });
         };
+
+        //post files
+        fileAttachments.prototype.postMe = function (data, url) {
+            var _this = this;
+            $.post(url, data).done(function (response, statusText, xhr) {
+            }).fail(function (xhr, statusText, errorThrown) {
+                if (xhr.status === 400) {
+                    _this.establishmentItemViewModel.$genericAlertDialog.find('p.content').html(xhr.responseText.replace('\n', '<br /><br />'));
+                    _this.establishmentItemViewModel.$genericAlertDialog.dialog({
+                        title: 'Alert Message',
+                        dialogClass: 'jquery-ui',
+                        width: 'auto',
+                        resizable: false,
+                        modal: true,
+                        buttons: {
+                            'Ok': function () {
+                                _this.establishmentItemViewModel.$genericAlertDialog.dialog('close');
+                            }
+                        }
+                    });
+                }
+            });
+        };
+
+        //part of save agreement
+        fileAttachments.prototype.agreementPostFiles = function (response, statusText, xhr) {
+            var _this = this;
+            var tempUrl = App.Routes.WebApi.Agreements.Files.post(this.agreementId.val);
+
+            $.each(this.files(), function (i, item) {
+                var data = ko.mapping.toJS({
+                    agreementId: item.agreementId,
+                    uploadGuid: item.guid,
+                    originalName: item.guid,
+                    extension: item.extension,
+                    customName: item.customName,
+                    visibility: item.visibility
+                });
+                _this.postMe(data, tempUrl);
+            });
+            this.spinner.stop();
+        };
         return fileAttachments;
     })();
     agreements.fileAttachments = fileAttachments;

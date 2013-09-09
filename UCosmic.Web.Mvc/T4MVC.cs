@@ -2777,6 +2777,10 @@ namespace Links
                 public static readonly string datesStatus_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/datesStatus.min.js") ? Url("datesStatus.min.js") : Url("datesStatus.js");
                               
                 public static readonly string datesStatus_min_js = Url("datesStatus.min.js");
+                public static readonly string establishmentSearchNav_ts = Url("establishmentSearchNav.ts");
+                public static readonly string establishmentSearchNav_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/establishmentSearchNav.min.js") ? Url("establishmentSearchNav.min.js") : Url("establishmentSearchNav.js");
+                              
+                public static readonly string establishmentSearchNav_min_js = Url("establishmentSearchNav.min.js");
                 public static readonly string fileAttachments_ts = Url("fileAttachments.ts");
                 public static readonly string fileAttachments_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/fileAttachments.min.js") ? Url("fileAttachments.min.js") : Url("fileAttachments.js");
                               
@@ -2785,6 +2789,10 @@ namespace Links
                 public static readonly string participants_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/participants.min.js") ? Url("participants.min.js") : Url("participants.js");
                               
                 public static readonly string participants_min_js = Url("participants.min.js");
+                public static readonly string phones_ts = Url("phones.ts");
+                public static readonly string Phones_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Phones.min.js") ? Url("Phones.min.js") : Url("Phones.js");
+                              
+                public static readonly string Phones_min_js = Url("Phones.min.js");
                 public static readonly string scrollBody_ts = Url("scrollBody.ts");
                 public static readonly string scrollBody_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/scrollBody.min.js") ? Url("scrollBody.min.js") : Url("scrollBody.js");
                               
@@ -3720,6 +3728,7 @@ namespace Links
                 public static readonly string noun_project_17372_medal_svg = Url("noun_project_17372_medal.svg");
                 public static readonly string noun_project_401_briefcase_svg = Url("noun_project_401_briefcase.svg");
                 public static readonly string noun_project_401_briefcase_attr_html = Url("noun_project_401_briefcase_attr.html");
+                public static readonly string noun_project_5795_compass_svg = Url("noun_project_5795_compass.svg");
                 public static readonly string noun_project_762_idea_svg = Url("noun_project_762_idea.svg");
                 public static readonly string noun_project_762_idea_attr_html = Url("noun_project_762_idea_attr.html");
                 public static readonly string noun_project_7876_buoy_svg = Url("noun_project_7876_buoy.svg");

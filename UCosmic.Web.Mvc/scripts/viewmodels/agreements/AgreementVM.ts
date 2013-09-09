@@ -24,7 +24,6 @@ class InstitutionalAgreementEditModel {
     constructor(public initDefaultPageRoute: boolean = true) {
 
         this.establishmentSearchNavClass = new agreements.establishmentSearchNav(this.editOrNewUrl, this.participantsClass, this.agreementIsEdit, this.agreementId, scrollBody, this.dfdPageFadeIn);
-        //ko.applyBindings(this.establishmentSearchNavClass, $('#effectiveDatesCurrentStatus')[0]);
 
         this.participantsClass = new agreements.participants(this.agreementId, this.dfdPopParticipants, this.agreementIsEdit, this.establishmentSearchNavClass.establishmentSearchViewModel, this.establishmentSearchNavClass.hasBoundSearch);
         this.establishmentSearchNavClass.participantsClass = this.participantsClass;
@@ -59,9 +58,6 @@ class InstitutionalAgreementEditModel {
             this.editOrNewUrl.val = this.editOrNewUrl.val.substring(0, this.editOrNewUrl.val.indexOf("/edit") + 5) + "/";
             this.agreementIsEdit(true);
             this.agreementId.val = parseInt(this.editOrNewUrl.val.substring(0, this.editOrNewUrl.val.indexOf("/")));
-            //this.participantsClass.agreementId = this.agreementId;
-            //this.fileAttachmentClass.agreementId = this.agreementId;
-            //this.contactClass.agreementId = this.agreementId;
             this.participantsClass.populateParticipants();
             this.fileAttachmentClass.populateFiles();
             this.contactClass.populateContacts();
@@ -81,7 +77,6 @@ class InstitutionalAgreementEditModel {
         this.hideOtherGroups();
         this.establishmentSearchNavClass.bindSearch();
         this.getSettings();
-        //this._setupValidation();
 
         $(window).resize(() => {
             this.updateKendoDialog($(window).width());
@@ -121,13 +116,14 @@ class InstitutionalAgreementEditModel {
     pageNumber: KnockoutObservable<number> = ko.observable();
     $genericAlertDialog: JQuery = undefined;
 
-    //added this because kendo window after selecting a autocomplte and then clicking the window, the body would scroll to the top.
+    //added this because kendo window after selecting a autocomplte and then clicking the window, 
+    //the body would scroll to the top.
     kendoWindowBug = { val: 0 };
         
     isBound = ko.observable();
     spinner: App.Spinner = new App.Spinner(new App.SpinnerOptions(400, true));
 
-    //to correctly bind with ko, I had to set visibility to hidden. this removes that and 
+    //to correctly bind with ko, must set visibility to hidden. this removes the visibility to hidden and 
     //changes it to display none.
     hideOtherGroups(): void {
         $("#allParticipants").css("visibility", "").hide();
@@ -360,73 +356,7 @@ class InstitutionalAgreementEditModel {
             alert('fail: status = ' + xhr.status + ' ' + xhr.statusText + '; message = "' + xhr.responseText + '"');
         });
     }
-    
-    //post files
-    postMe(data, url): void {
-        $.post(url, data)
-            .done((response: any, statusText: string, xhr: JQueryXHR): void => {
-            })
-            .fail((xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
-                this.spinner.stop();
-                if (xhr.status === 400) { // validation message will be in xhr response text...
-                    this.establishmentSearchNavClass.establishmentItemViewModel.$genericAlertDialog.find('p.content')
-                        .html(xhr.responseText.replace('\n', '<br /><br />'));
-                    this.establishmentSearchNavClass.establishmentItemViewModel.$genericAlertDialog.dialog({
-                        title: 'Alert Message',
-                        dialogClass: 'jquery-ui',
-                        width: 'auto',
-                        resizable: false,
-                        modal: true,
-                        buttons: {
-                            'Ok': (): void => { this.establishmentSearchNavClass.establishmentItemViewModel.$genericAlertDialog.dialog('close'); }
-                        }
-                    });
-                }
-            });
-    }
-
-    //part of save agreement
-    agreementPostFiles(response: any, statusText: string, xhr: JQueryXHR): void {
-        var tempUrl = App.Routes.WebApi.Agreements.Files.post(this.agreementId.val);
-
-        $.each(this.fileAttachmentClass.files(), (i, item) => {
-            var data = ko.mapping.toJS({
-                agreementId: item.agreementId,
-                uploadGuid: item.guid,
-                originalName: item.guid,
-                extension: item.extension,
-                customName: item.customName,
-                visibility: item.visibility
-            })
-            this.postMe(data, tempUrl);
-        });
-        this.spinner.stop();
-    }
-
-    //part of save agreement
-    agreementPostContacts(response: any, statusText: string, xhr: JQueryXHR): void {
-        var tempUrl = App.Routes.WebApi.Agreements.Contacts.post(this.agreementId.val);
-
-        $.each(this.contactClass.contacts(), (i, item) => {
-            var data = {
-                agreementId: this.agreementId.val,
-                title: item.title(),
-                firstName: item.firstName(),
-                lastName: item.lastName(),
-                userId: item.id(),
-                personId: item.personId(),
-                phones: item.phones(),
-                emailAddress: item.emailAddress(),
-                type: item.type(),
-                suffix: item.suffix(),
-                salutation: item.salutation(),
-                displayName: item.displayName(),
-                middleName: item.middleName
-            }
-            this.postMe(data, tempUrl);
-        });
-    }
-    
+            
     saveUpdateAgreement(): void {
         var offset;
         // validate in this order to put scroll in right place
@@ -543,10 +473,8 @@ class InstitutionalAgreementEditModel {
                     .done((response: any, statusText: string, xhr: JQueryXHR): void => {
                         var myUrl = xhr.getResponseHeader('Location');
                         this.agreementId.val = parseInt(myUrl.substring(myUrl.lastIndexOf("/") + 1));
-                        //this.fileAttachmentClass.agreementId = this.agreementId;
-                        //this.contactClass.agreementId = this.agreementId;
-                        this.agreementPostFiles(response, statusText, xhr);
-                        this.agreementPostContacts(response, statusText, xhr);
+                        this.fileAttachmentClass.agreementPostFiles(response, statusText, xhr);
+                        this.contactClass.agreementPostContacts(response, statusText, xhr);
                         //change url to edit
                         $LoadingPage.text("Agreement Saved...");
                         setTimeout(function ()  {

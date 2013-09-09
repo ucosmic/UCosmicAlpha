@@ -141,7 +141,7 @@ module agreements {
                             .done(() => {
                                 $addEstablishment.css("visibility", "").hide().fadeIn(500, () => {
                                     if (!this.hasBoundItem) {
-                                        this.establishmentItemViewModel = new Establishments.ViewModels.Item();
+                                        this.establishmentItemViewModel = new Establishments.ViewModels.Item(null, false);
                                         this.establishmentItemViewModel.goToSearch = () => {
                                             sessionStorage.setItem("addest", "yes");
                                             this.establishmentSearchViewModel.sammy.setLocation('#/page/1/');
@@ -232,7 +232,7 @@ module agreements {
                                     }
                                 });
                             })
-                        scrollBody.scrollMyBody(0);
+                        this.scrollBody.scrollMyBody(0);
                         lastURL = "#/new/";
                     } else if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("" + this.editOrNewUrl.val + "#/page/") > 0) {
                         if (sessionStorage.getItem("addest") === "yes") {
@@ -319,7 +319,7 @@ module agreements {
                                 return false;
                             }
                         }
-                        scrollBody.scrollMyBody(0);
+                        this.scrollBody.scrollMyBody(0);
                         lastURL = "#/page/";
                     } else if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("agreements/" + this.editOrNewUrl.val + "") > 0) {
                         sessionStorage.setItem("addest", "no");
@@ -335,7 +335,7 @@ module agreements {
                             .done(() => {
                                 $("#allParticipants").fadeIn(500).promise().done(() => {
                                     $(this).show();
-                                    scrollBody.scrollMyBody(0);
+                                    this.scrollBody.scrollMyBody(0);
                                     this.dfdPageFadeIn.resolve();
                                 });
                             });

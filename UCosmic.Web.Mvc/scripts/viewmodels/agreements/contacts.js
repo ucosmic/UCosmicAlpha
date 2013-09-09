@@ -633,6 +633,54 @@ var agreements;
                 _this.dfdPopContacts.resolve();
             });
         };
+
+        //post files
+        contacts.prototype.postMe = function (data, url) {
+            var _this = this;
+            $.post(url, data).done(function (response, statusText, xhr) {
+            }).fail(function (xhr, statusText, errorThrown) {
+                if (xhr.status === 400) {
+                    _this.establishmentItemViewModel.$genericAlertDialog.find('p.content').html(xhr.responseText.replace('\n', '<br /><br />'));
+                    _this.establishmentItemViewModel.$genericAlertDialog.dialog({
+                        title: 'Alert Message',
+                        dialogClass: 'jquery-ui',
+                        width: 'auto',
+                        resizable: false,
+                        modal: true,
+                        buttons: {
+                            'Ok': function () {
+                                _this.establishmentItemViewModel.$genericAlertDialog.dialog('close');
+                            }
+                        }
+                    });
+                }
+            });
+        };
+
+        //part of save agreement
+        contacts.prototype.agreementPostContacts = function (response, statusText, xhr) {
+            var _this = this;
+            var tempUrl = App.Routes.WebApi.Agreements.Contacts.post(this.agreementId.val);
+
+            $.each(this.contacts(), function (i, item) {
+                var data = {
+                    agreementId: _this.agreementId.val,
+                    title: item.title(),
+                    firstName: item.firstName(),
+                    lastName: item.lastName(),
+                    userId: item.id(),
+                    personId: item.personId(),
+                    phones: item.phones(),
+                    emailAddress: item.emailAddress(),
+                    type: item.type(),
+                    suffix: item.suffix(),
+                    salutation: item.salutation(),
+                    displayName: item.displayName(),
+                    middleName: item.middleName
+                };
+                _this.postMe(data, tempUrl);
+            });
+        };
         return contacts;
     })();
     agreements.contacts = contacts;

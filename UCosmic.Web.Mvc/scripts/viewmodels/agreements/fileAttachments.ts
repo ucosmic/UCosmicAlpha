@@ -288,5 +288,47 @@ module agreements {
                 });
         }
 
+        
+        //post files
+        postMe(data, url): void {
+            $.post(url, data)
+                .done((response: any, statusText: string, xhr: JQueryXHR): void => {
+                })
+                .fail((xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
+                    if (xhr.status === 400) { // validation message will be in xhr response text...
+                        this.establishmentItemViewModel.$genericAlertDialog.find('p.content')
+                            .html(xhr.responseText.replace('\n', '<br /><br />'));
+                        this.establishmentItemViewModel.$genericAlertDialog.dialog({
+                            title: 'Alert Message',
+                            dialogClass: 'jquery-ui',
+                            width: 'auto',
+                            resizable: false,
+                            modal: true,
+                            buttons: {
+                                'Ok': (): void => { this.establishmentItemViewModel.$genericAlertDialog.dialog('close'); }
+                            }
+                        });
+                    }
+                });
+        }
+
+        //part of save agreement
+        agreementPostFiles(response: any, statusText: string, xhr: JQueryXHR): void {
+            var tempUrl = App.Routes.WebApi.Agreements.Files.post(this.agreementId.val);
+
+            $.each(this.files(), (i, item) => {
+                var data = ko.mapping.toJS({
+                    agreementId: item.agreementId,
+                    uploadGuid: item.guid,
+                    originalName: item.guid,
+                    extension: item.extension,
+                    customName: item.customName,
+                    visibility: item.visibility
+                })
+                this.postMe(data, tempUrl);
+            });
+            this.spinner.stop();
+        }
+
     }
 }

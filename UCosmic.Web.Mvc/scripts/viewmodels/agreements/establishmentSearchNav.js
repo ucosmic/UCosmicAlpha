@@ -127,7 +127,7 @@ var agreements;
                             $.when(dfd, dfd2).done(function () {
                                 $addEstablishment.css("visibility", "").hide().fadeIn(500, function () {
                                     if (!_this.hasBoundItem) {
-                                        _this.establishmentItemViewModel = new Establishments.ViewModels.Item();
+                                        _this.establishmentItemViewModel = new Establishments.ViewModels.Item(null, false);
                                         _this.establishmentItemViewModel.goToSearch = function () {
                                             sessionStorage.setItem("addest", "yes");
                                             _this.establishmentSearchViewModel.sammy.setLocation('#/page/1/');
@@ -217,7 +217,7 @@ var agreements;
                                     }
                                 });
                             });
-                            scrollBody.scrollMyBody(0);
+                            _this.scrollBody.scrollMyBody(0);
                             lastURL = "#/new/";
                         } else if (_this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("" + _this.editOrNewUrl.val + "#/page/") > 0) {
                             if (sessionStorage.getItem("addest") === "yes") {
@@ -296,7 +296,7 @@ var agreements;
                                     return false;
                                 };
                             }
-                            scrollBody.scrollMyBody(0);
+                            _this.scrollBody.scrollMyBody(0);
                             lastURL = "#/page/";
                         } else if (_this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("agreements/" + _this.editOrNewUrl.val + "") > 0) {
                             sessionStorage.setItem("addest", "no");
@@ -311,7 +311,7 @@ var agreements;
                             $.when(dfd, dfd2).done(function () {
                                 $("#allParticipants").fadeIn(500).promise().done(function () {
                                     $(_this).show();
-                                    scrollBody.scrollMyBody(0);
+                                    _this.scrollBody.scrollMyBody(0);
                                     _this.dfdPageFadeIn.resolve();
                                 });
                             });

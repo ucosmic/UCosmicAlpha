@@ -182,10 +182,11 @@ module Establishments.ViewModels {
         errors: KnockoutValidationErrors;
         flasherProxy = new App.FlasherProxy();
 
-        constructor(id?: number) {
+        constructor(id?: number, doSetupSammy?: boolean) {
 
             // initialize the aggregate id
             this.id = id || 0;
+            doSetupSammy = (doSetupSammy === false) ? false : true;
 
             this._initNamesComputeds();
             this._initUrlsComputeds();
@@ -282,8 +283,9 @@ module Establishments.ViewModels {
                 });
 
             ko.validation.group(this);
-
-            this._setupSammy();
+            if (doSetupSammy) {
+                this._setupSammy();
+            }
             this._setupParentComputeds();
         }
 
