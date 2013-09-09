@@ -159,9 +159,26 @@ namespace UCosmic.Web.Mvc.ApiControllers
             }
             else
             {
-                return new HttpResponseMessage(HttpStatusCode.NotImplemented);
-            }
+                if ((employeeModuleSettings.ActivityTypes != null) && (employeeModuleSettings.ActivityTypes.Count >= 0))
+                {
+                    EmployeeActivityType activityType =
+                        employeeModuleSettings.ActivityTypes.SingleOrDefault(a => a.IconName == name);
 
+                    if (activityType != null)
+                    {
+                        path = activityType.IconPath;
+                        mimeType = activityType.IconMimeType;
+                    }
+                    else
+                    {
+                        return new HttpResponseMessage(HttpStatusCode.NotImplemented);
+                    }
+                }
+                else
+                {
+                    return new HttpResponseMessage(HttpStatusCode.NotImplemented);
+                }
+            }
 
             byte[] content = _binaryStore.Get(path);
             if (content == null)

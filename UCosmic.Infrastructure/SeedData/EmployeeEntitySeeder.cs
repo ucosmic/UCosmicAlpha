@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
@@ -80,6 +81,8 @@ namespace UCosmic.SeedData
         private readonly ICommandEntities _entities;
         private readonly IStoreBinaryData _binaryStore;
         public EmployeeModuleSettings CreatedEmployeeModuleSettings { get; private set; }
+        private string[] _activityTypeFileNames;
+        private IDictionary<string,string> _activityTypeIconBinaryPaths;
 
         public UsfEmployeeModuleSettingsSeeder(IProcessQueries queryProcessor
             , ICommandEntities entities
@@ -91,12 +94,48 @@ namespace UCosmic.SeedData
         {
             _entities = entities;
             _binaryStore = binaryStore;
+
+            _activityTypeFileNames = new string[]
+            {
+                "noun_project_762_idea.svg",
+                "noun_project_14888_teacher.svg",
+                "noun_project_17372_medal.svg",
+                "noun_project_16986_podium.svg",
+                "noun_project_401_briefcase.svg"
+            };
+
+            _activityTypeIconBinaryPaths = new Dictionary<string, string>();
+            for (var i = 0; i < _activityTypeFileNames.Length; i += 1)
+            {
+                _activityTypeIconBinaryPaths[_activityTypeFileNames[i]] =
+                    string.Format("{0}/{1}/{2}", EmployeeConsts.SettingsBinaryStoreBasePath,
+                                  EmployeeConsts.IconsBinaryStorePath,
+                                  _activityTypeFileNames[i]);
+            }
         }
 
         public override void Seed()
         {
             var establishment = _entities.Get<Establishment>().SingleOrDefault(x => x.OfficialName.Contains("University of South Florida"));
             if (establishment == null) throw new Exception("Establishment is null");
+
+            for (var i = 0; i < _activityTypeFileNames.Length; i += 1)
+            {
+                string iconBinaryPath = _activityTypeIconBinaryPaths[_activityTypeFileNames[i]];
+                if (_binaryStore.Get(iconBinaryPath) == null)
+                {
+                    string filePath = string.Format("{0}{1}{2}", AppDomain.CurrentDomain.BaseDirectory,
+                                                    @"..\UCosmic.Infrastructure\SeedData\SeedMediaFiles\",
+                                                    _activityTypeFileNames[i]);
+
+                    using (var fileStream = File.OpenRead(filePath))
+                    {
+                        var content = fileStream.ReadFully();
+                        _binaryStore.Put(iconBinaryPath, content);
+                    }
+                }
+            }
+
             CreatedEmployeeModuleSettings = Seed(new CreateEmployeeModuleSettings
             {
                 EmployeeFacultyRanks = new Collection<EmployeeFacultyRank>
@@ -112,11 +151,62 @@ namespace UCosmic.SeedData
                 EstablishmentId = establishment.RevisionId,
                 EmployeeActivityTypes = new Collection<EmployeeActivityType>
                 {
-                    new EmployeeActivityType {Type = "Research or Creative Endeavor", Rank = 1, CssColor = "blue"},
-                    new EmployeeActivityType {Type = "Teaching or Mentoring", Rank = 2, CssColor = "green"},
-                    new EmployeeActivityType {Type = "Award or Honor", Rank = 3, CssColor = "yellow"},
-                    new EmployeeActivityType {Type = "Conference Presentation or Proceeding", Rank = 4, CssColor = "orange"},
-                    new EmployeeActivityType {Type = "Professional Development, Service or Consulting", Rank = 5, CssColor = "red"}
+                    new EmployeeActivityType
+                    {
+                        Type = "Research or Creative Endeavor",
+                        Rank = 1,
+                        CssColor = "blue",
+                        IconLength = _binaryStore.Get(_activityTypeIconBinaryPaths["noun_project_762_idea.svg"]).Length,
+                        IconMimeType = "image/svg+xml",
+                        IconName = "Research",
+                        IconPath = string.Format("{0}/{1}/{2}", EmployeeConsts.SettingsBinaryStoreBasePath,
+                                          EmployeeConsts.IconsBinaryStorePath, "noun_project_762_idea.svg")
+
+                    },
+                    new EmployeeActivityType
+                    {
+                        Type = "Teaching or Mentoring",
+                        Rank = 2,
+                        CssColor = "green",
+                        IconLength = _binaryStore.Get(_activityTypeIconBinaryPaths["noun_project_14888_teacher.svg"]).Length,
+                        IconMimeType = "image/svg+xml",
+                        IconName = "Teaching",
+                        IconPath = string.Format("{0}/{1}/{2}", EmployeeConsts.SettingsBinaryStoreBasePath,
+                                          EmployeeConsts.IconsBinaryStorePath, "noun_project_14888_teacher.svg")
+                    },
+                    new EmployeeActivityType
+                    {
+                        Type = "Award or Honor",
+                        Rank = 3,
+                        CssColor = "yellow",
+                        IconLength = _binaryStore.Get(_activityTypeIconBinaryPaths["noun_project_17372_medal.svg"]).Length,
+                        IconMimeType = "image/svg+xml",
+                        IconName = "Award",
+                        IconPath = string.Format("{0}/{1}/{2}", EmployeeConsts.SettingsBinaryStoreBasePath,
+                                          EmployeeConsts.IconsBinaryStorePath, "noun_project_17372_medal.svg")
+                    },
+                    new EmployeeActivityType
+                    {
+                        Type = "Conference Presentation or Proceeding",
+                        Rank = 4,
+                        CssColor = "orange",
+                        IconLength = _binaryStore.Get(_activityTypeIconBinaryPaths["noun_project_16986_podium.svg"]).Length,
+                        IconMimeType = "image/svg+xml",
+                        IconName = "Conference",
+                        IconPath = string.Format("{0}/{1}/{2}", EmployeeConsts.SettingsBinaryStoreBasePath,
+                                          EmployeeConsts.IconsBinaryStorePath, "noun_project_16986_podium.svg")
+                    },
+                    new EmployeeActivityType
+                    {
+                        Type = "Professional Development, Service or Consulting",
+                        Rank = 5,
+                        CssColor = "red",
+                        IconLength = _binaryStore.Get(_activityTypeIconBinaryPaths["noun_project_401_briefcase.svg"]).Length,
+                        IconMimeType = "image/svg+xml",
+                        IconName = "Professional",
+                        IconPath = string.Format("{0}/{1}/{2}", EmployeeConsts.SettingsBinaryStoreBasePath,
+                                          EmployeeConsts.IconsBinaryStorePath, "noun_project_401_briefcase.svg")
+                    }
                 },
                 OfferCountry = true,
                 OfferActivityType = true,
@@ -156,7 +246,8 @@ namespace UCosmic.SeedData
             if (employeeModuleSettings != null) return employeeModuleSettings;
 
             /* Create default Global View icon */
-            var globalViewIconBinaryPath = string.Format("{0}/{1}", EmployeeConsts.SettingsBinaryStoreBasePath,
+            var globalViewIconBinaryPath = string.Format("{0}/{1}/{2}", EmployeeConsts.SettingsBinaryStoreBasePath,
+                                                      EmployeeConsts.IconsBinaryStorePath,
                                                       EmployeeConsts.DefaultGlobalViewIconGuid);
             if (_binaryStore.Get(globalViewIconBinaryPath) == null)
             {
@@ -172,7 +263,8 @@ namespace UCosmic.SeedData
             }
 
             /* Create default Find an Expert icon */
-            var findAnExportIconBinaryPath = string.Format("{0}/{1}", EmployeeConsts.SettingsBinaryStoreBasePath,
+            var findAnExportIconBinaryPath = string.Format("{0}/{1}/{2}", EmployeeConsts.SettingsBinaryStoreBasePath,
+                                          EmployeeConsts.IconsBinaryStorePath,
                                           EmployeeConsts.DefaultFindAnExpertIconGuid);
             if (_binaryStore.Get(findAnExportIconBinaryPath) == null)
             {

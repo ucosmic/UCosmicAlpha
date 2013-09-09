@@ -90,6 +90,11 @@ namespace UCosmic.EntityFramework
 
             Property(p => p.Type).IsRequired().HasMaxLength(EmployeeFacultyRankConstraints.ActivityTypeMaxLength);
             Property(p => p.CssColor).IsOptional();
+            Property(x => x.IconLength).IsOptional();
+            Property(x => x.IconMimeType).IsOptional();
+            Property(x => x.IconPath).IsOptional();
+            Property(x => x.IconFileName).HasMaxLength(FileConstraints.FileNameMaxLength).IsOptional();
+            Property(x => x.IconName).HasMaxLength(FileConstraints.NameMaxLength).IsOptional();
         }
     }
 }

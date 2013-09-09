@@ -319,7 +319,6 @@
     <Compile Include="ApiControllers\Places\CountriesController.cs" />
     <Compile Include="ApiControllers\Places\PlacesController.cs" />
     <Compile Include="ApiControllers\_Etc\GraphicsController.cs" />
-    <Compile Include="ApiControllers\_Etc\ImagesController.cs" />
     <Compile Include="ApiControllers\_Etc\UploadsController.cs" />
     <Compile Include="ApiTestController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
