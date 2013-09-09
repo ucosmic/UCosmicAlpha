@@ -142,6 +142,7 @@
     <Compile Include="Domain\Activities\Entities\ActivityTagDomainType.cs" />
     <Compile Include="Domain\Activities\Entities\ActivityValues.cs" />
     <Compile Include="Domain\Activities\Events\ActivityChanged.cs" />
+    <Compile Include="Domain\Activities\Events\ActivityCreated.cs" />
     <Compile Include="Domain\Activities\Events\ActivityDeleted.cs" />
     <Compile Include="Domain\Activities\Queries\ActivitiesByPersonId.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityByEditSourceEntityId.cs" />

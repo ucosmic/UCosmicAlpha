@@ -91,9 +91,8 @@ namespace UCosmic.Domain.Activities
 
                 if (!command.NoEvents)
                 {
-                    _eventProcessor.Raise(new ActivityChanged
+                    _eventProcessor.Raise(new ActivityCreated
                     {
-                        ActivityMode = command.CreatedActivity.Mode,
                         ActivityId = command.CreatedActivity.RevisionId
                     });                   
                 }

@@ -66,9 +66,8 @@ namespace UCosmic.Domain.Activities
             {
                 _unitOfWork.SaveChanges();
 
-                _eventProcessor.Raise(new ActivityChanged
+                _eventProcessor.Raise(new ActivityCreated
                 {
-                    ActivityMode = command.CreatedActivity.Mode,
                     ActivityId = command.CreatedActivity.RevisionId
                 });
             }

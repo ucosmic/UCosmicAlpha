@@ -441,10 +441,12 @@ module ViewModels.Activities {
 
             this.saveSpinner.start();
 
+            debugger;
+
             $.ajax( {
                 type: 'PUT',
                 url: App.Routes.WebApi.Activities.put( viewModel.id() ),
-                data: ko.toJSON(model),
+                data: model,
                 dataType: 'json',
                 contentType: 'application/json',
                 success: (data: any, textStatus: string, jqXhr: JQueryXHR): void => {

@@ -531,7 +531,7 @@ var ViewModels;
                             textPosition: 'none'
                         },
                         chartArea: {
-                            top: 8,
+                            top: 16,
                             left: 10,
                             width: '100%',
                             height: '75%'
@@ -569,7 +569,7 @@ var ViewModels;
                         textPosition: 'none'
                     },
                     chartArea: {
-                        top: 8,
+                        top: 16,
                         left: 10,
                         width: '100%',
                         height: '75%'

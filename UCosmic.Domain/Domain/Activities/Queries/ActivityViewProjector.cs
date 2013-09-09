@@ -8,6 +8,7 @@ using UCosmic.Domain.People;
 namespace UCosmic.Domain.Activities
 {
     public class ActivityViewProjector : IHandleEvents<ApplicationStarted>,
+                                         IHandleEvents<ActivityCreated>,
                                          IHandleEvents<ActivityChanged>,
                                          IHandleEvents<ActivityDeleted>,
                                          IHandleEvents<EstablishmentChanged>,
@@ -139,6 +140,11 @@ namespace UCosmic.Domain.Activities
         public void Handle(ActivityChanged @event)
         {
             UpdateActivity(@event.ActivityId, @event.ActivityMode);
+        }
+
+        public void Handle(ActivityCreated @event)
+        {
+            BuildView();
         }
 
         public void Handle(ActivityDeleted @event)
