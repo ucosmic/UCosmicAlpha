@@ -412,25 +412,22 @@ var ViewModels;
 
                 this.saveSpinner.start();
 
-//                debugger;
-
                 $.ajax({
                     type: 'PUT',
                     url: App.Routes.WebApi.Activities.put(viewModel.id()),
-                    data: model,
-                    dataType: 'json',
+                    data: ko.toJSON(model),
+                    //dataType: 'json',
                     contentType: 'application/json',
                     success: function (data, textStatus, jqXhr) {
-                        _this.dirtyFlag(false);
-                        _this.saveSpinner.stop();
-                        _this.saving = false;
                         deferred.resolve();
                     },
                     error: function (jqXhr, textStatus, errorThrown) {
+                        deferred.reject(jqXhr, textStatus, errorThrown);
+                    },
+                    complete: function (jqXhr, textStatus) {
                         _this.dirtyFlag(false);
                         _this.saveSpinner.stop();
                         _this.saving = false;
-                        deferred.reject(jqXhr, textStatus, errorThrown);
                     }
                 });
 
@@ -695,7 +692,7 @@ var ViewModels;
                 $.ajax({
                     type: 'DELETE',
                     url: App.Routes.WebApi.Activities.Documents.del(this.id(), item.id()),
-                    dataType: 'json',
+                    //dataType: 'json',
                     success: function (data, textStatus, jqXhr) {
                         _this.values.documents.splice(index, 1);
                     },
@@ -734,7 +731,7 @@ var ViewModels;
                     url: App.Routes.WebApi.Activities.Documents.rename(this.id(), item.id()),
                     data: ko.toJSON(item.title()),
                     contentType: 'application/json',
-                    dataType: 'json',
+                    //dataType: 'json',
                     success: function (data, textStatus, jqXhr) {
                         $(inputElement).hide();
                         $(inputElement).removeAttr("disabled");

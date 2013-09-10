@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using SimpleInjector;
 using SimpleInjector.Extensions;
+using UCosmic.Domain.Activities;
 using UCosmic.FluentValidation;
 #if AZURE
 using System;
@@ -54,6 +55,7 @@ namespace UCosmic.Cqrs
 #else
             container.RegisterMemoryViewManager();
 #endif
+            container.RegisterSingle<IActivityViewProjector>(container.GetInstance<ActivityViewProjector>);
         }
 #if !AZURE
         private static void RegisterMemoryViewManager(this Container container)
@@ -82,6 +84,12 @@ namespace UCosmic.Cqrs
         //    container.Register<IManageViews>(() =>
         //        new HybridMemoryAzureViewManager(container.GetInstance<MemoryViewManager>(),
         //            new AzureCacheViewManager(container.GetInstance<DataCache>(), new TimeSpan(24, 1, 0))));
+        //}
+
+        //public static void RegisterActivityViewManager(this Container container)
+        //{
+        //    container.RegisterSingle<ActivityViewProjector>();
+        //    container.Register<IActivityViewProjector>(container.GetInstance<ActivityViewProjector>);
         //}
     }
 }

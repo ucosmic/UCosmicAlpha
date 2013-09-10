@@ -23,13 +23,16 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
         private readonly IProcessQueries _queryProcessor;
         private readonly IQueryEntities _entities;
+        //private readonly IActivityViewProjector _activityProjector;
 
-        public FacultyStaffController(IProcessQueries queryProcessor,
-                                      IQueryEntities entities
-                                      )
+        public FacultyStaffController(IProcessQueries queryProcessor
+                                      ,IQueryEntities entities
+                                      //,IActivityViewProjector activityProjector
+            )
         {
             _queryProcessor = queryProcessor;
             _entities = entities;
+            //_activityProjector = activityProjector;
         }
 
         private int[] GetPlaceIds(int placeId)
@@ -75,7 +78,9 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
         /* Returns activity type counts for given place.*/
         [GET("activity-count/{establishmentId?}/{placeId?}")]
+#if !DEBUG
         [CacheHttpGet(Duration = 3600)]
+#endif
         public FacultyStaffSummaryModel GetActivityCount(int? establishmentId, int? placeId)
         {
             var model = new FacultyStaffSummaryModel();
@@ -133,28 +138,41 @@ namespace UCosmic.Web.Mvc.ApiControllers
                     var view = new ActivityGlobalActivityCountView(_queryProcessor, _entities,
                                                                     establishment.RevisionId);
 
-                    model.Count = view.Count;
-                    model.CountOfPlaces = view.CountOfPlaces;
+                    //try
+                    //{
+                    //    ActivityGlobalActivityCountView view =
+                    //        _activityProjector.BeginReadActivityCountsView(establishment.RevisionId);
 
-                    foreach (var placeCount in view.PlaceCounts)
-                    {
-                        model.PlaceCounts.Add(new FacultyStaffPlaceCountModel
+                        if (view != null)
                         {
-                            PlaceId = placeCount.PlaceId,
-                            OfficialName = placeCount.OfficialName,
-                            Count = placeCount.Count
-                        });
-                    }
+                            model.Count = view.Count;
+                            model.CountOfPlaces = view.CountOfPlaces;
 
-                    foreach (var type in view.TypeCounts)
-                    {
-                        model.TypeCounts.Add(new FacultyStaffTypeCountModel
-                        {
-                            TypeId = type.TypeId,
-                            Type = type.Type,
-                            Count = type.Count
-                        });
-                    }
+                            foreach (var placeCount in view.PlaceCounts)
+                            {
+                                model.PlaceCounts.Add(new FacultyStaffPlaceCountModel
+                                {
+                                    PlaceId = placeCount.PlaceId,
+                                    OfficialName = placeCount.OfficialName,
+                                    Count = placeCount.Count
+                                });
+                            }
+
+                            foreach (var type in view.TypeCounts)
+                            {
+                                model.TypeCounts.Add(new FacultyStaffTypeCountModel
+                                {
+                                    TypeId = type.TypeId,
+                                    Type = type.Type,
+                                    Count = type.Count
+                                });
+                            }
+                        }
+                    //}
+                    //finally
+                    //{
+                    //    _activityProjector.EndReadActivityCountsView();
+                    //}
                 }
             }
 
@@ -164,7 +182,9 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
         /* Returns people counts for given place. */
         [GET("people-count/{establishmentId?}/{placeId?}")]
+#if !DEBUG
         [CacheHttpGet(Duration = 3600)]
+#endif
         public FacultyStaffSummaryModel GetPeopleCount(int? establishmentId, int? placeId)
         {
             var model = new FacultyStaffSummaryModel();
@@ -219,32 +239,43 @@ namespace UCosmic.Web.Mvc.ApiControllers
                     var view = new ActivityGlobalPeopleCountView(_queryProcessor, _entities,
                                                                     establishment.RevisionId);
 
+                    //try
+                    //{
+                    //    ActivityGlobalPeopleCountView view =
+                    //        _activityProjector.BeginReadPeopleCountsView(establishment.RevisionId);
 
-                    model.Count = view.Count;
-                    model.CountOfPlaces = view.CountOfPlaces;
-
-                    foreach (var placeCount in view.PlaceCounts)
-                    {
-                        model.PlaceCounts.Add(new FacultyStaffPlaceCountModel
+                        if (view != null)
                         {
-                            PlaceId = placeCount.PlaceId,
-                            OfficialName = placeCount.OfficialName,
-                            Count = placeCount.Count
-                        });
-                    }
+                            model.Count = view.Count;
+                            model.CountOfPlaces = view.CountOfPlaces;
 
-                    foreach (var type in view.TypeCounts)
-                    {
-                        model.TypeCounts.Add(new FacultyStaffTypeCountModel
-                        {
-                            TypeId = type.TypeId,
-                            Type = type.Type,
-                            Count = type.Count
-                        });
-                    }
+                            foreach (var placeCount in view.PlaceCounts)
+                            {
+                                model.PlaceCounts.Add(new FacultyStaffPlaceCountModel
+                                {
+                                    PlaceId = placeCount.PlaceId,
+                                    OfficialName = placeCount.OfficialName,
+                                    Count = placeCount.Count
+                                });
+                            }
+
+                            foreach (var type in view.TypeCounts)
+                            {
+                                model.TypeCounts.Add(new FacultyStaffTypeCountModel
+                                {
+                                    TypeId = type.TypeId,
+                                    Type = type.Type,
+                                    Count = type.Count
+                                });
+                            }
+                        }
+                    //}
+                    //finally
+                    //{
+                    //    _activityProjector.EndReadPeopleCountsView();
+                    //}
                 }
             }
-
 
             return model;
         }

@@ -79,6 +79,7 @@ namespace UCosmic.Web.Mvc
             container.TryRegisterAzureCacheProvider();
 #endif
             container.RegisterViewManager();
+            //container.RegisterActivityViewManager();
         }
 
         private static void InitializeData(Container container)

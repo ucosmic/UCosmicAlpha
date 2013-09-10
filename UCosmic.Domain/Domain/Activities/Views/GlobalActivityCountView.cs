@@ -7,33 +7,9 @@ using UCosmic.Domain.Places;
 
 namespace UCosmic.Domain.Activities
 {
-    public class ActivityGlobalActivityCountView
+    public class GlobalActivityCountView : ActivityViewStats
     {
-        public class TypeCount
-        {
-            public int TypeId { get; set; }
-            public string Type { get; set; }
-            public int Count { get; set; }
-        }
-
-        public class PlaceCount
-        {
-            public int PlaceId { get; set; }
-            public string OfficialName { get; set; }
-            public int Count { get; set; }
-        }
-
-        public int EstablishmentId { get; private set; }
-        public int CountOfPlaces { get; private set; }              // Total places with activity/people
-        public int Count { get; private set; }                      // Global count of activities
-        public ICollection<TypeCount> TypeCounts { get; private set; }      // Global count of types
-        public ICollection<PlaceCount> PlaceCounts { get; private set; }    // Count of activities/people per place
-
-        public ActivityGlobalActivityCountView()
-        {
-        }
-
-        public ActivityGlobalActivityCountView(IProcessQueries queryProcessor,
+        public GlobalActivityCountView(IProcessQueries queryProcessor,
                                                IQueryEntities entities,
                                                int establishmentId )
         {

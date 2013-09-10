@@ -441,25 +441,22 @@ module ViewModels.Activities {
 
             this.saveSpinner.start();
 
-            debugger;
-
             $.ajax( {
                 type: 'PUT',
                 url: App.Routes.WebApi.Activities.put( viewModel.id() ),
-                data: model,
-                dataType: 'json',
+                data: ko.toJSON(model),
+                //dataType: 'json',
                 contentType: 'application/json',
                 success: (data: any, textStatus: string, jqXhr: JQueryXHR): void => {
-                    this.dirtyFlag(false);
-                    this.saveSpinner.stop();
-                    this.saving = false;
                     deferred.resolve();
                 },
                 error: (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
+                    deferred.reject(jqXhr, textStatus, errorThrown);
+                },
+                complete: (jqXhr: JQueryXHR, textStatus: string): void => {
                     this.dirtyFlag(false);
                     this.saveSpinner.stop();
                     this.saving = false;
-                    deferred.reject(jqXhr, textStatus, errorThrown);
                 }
             });
 
@@ -727,7 +724,7 @@ module ViewModels.Activities {
             $.ajax( {
                 type: 'DELETE',
                 url: App.Routes.WebApi.Activities.Documents.del( this.id(), item.id() ),
-                dataType: 'json',
+                //dataType: 'json',
                 success: ( data: any, textStatus: string, jqXhr: JQueryXHR ): void => {
                     this.values.documents.splice(index, 1);
                 },
@@ -758,7 +755,7 @@ module ViewModels.Activities {
                 url: App.Routes.WebApi.Activities.Documents.rename( this.id(), item.id() ),
                 data: ko.toJSON( item.title() ),
                 contentType: 'application/json',
-                dataType: 'json',
+                //dataType: 'json',
                 success: ( data: any, textStatus: string, jqXhr: JQueryXHR ): void => {
                     $( inputElement ).hide();
                     $( inputElement ).removeAttr( "disabled" );

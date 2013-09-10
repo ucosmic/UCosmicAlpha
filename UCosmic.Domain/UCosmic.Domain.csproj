@@ -69,6 +69,7 @@
     <Compile Include="Api\Data\IEagerLoad.cs" />
     <Compile Include="Api\Data\IManageViews.cs" />
     <Compile Include="Api\Data\IStoreBinaryData.cs" />
+    <Compile Include="Api\Queries\IActivityViewProjector.cs" />
     <Compile Include="Api\Queries\StringMatchStrategy.cs" />
     <Compile Include="Api\Saml\IParseSaml2Metadata.cs" />
     <Compile Include="Api\Saml\IProvideSaml2Service.cs" />
@@ -168,6 +169,8 @@
     <Compile Include="Domain\Activities\Views\ActivityView.cs" />
     <Compile Include="Domain\Activities\Views\ActivityViewDirtyFlag.cs" />
     <Compile Include="Domain\Activities\Views\ActivityPlaceTrendPeopleView.cs" />
+    <Compile Include="Domain\Activities\Views\ActivityViewStats.cs" />
+    <Compile Include="Domain\Activities\Views\GlobalActivityCountView.cs" />
     <Compile Include="Domain\Agreements\Commands\PurgeParticipant.cs" />
     <Compile Include="Domain\Agreements\Commands\PurgeContactPhone.cs" />
     <Compile Include="Domain\Agreements\Commands\UpdateContactPhone.cs" />
@@ -200,6 +203,7 @@
     <Compile Include="Domain\Agreements\_Internal\QueryAgreementParticipants.cs" />
     <Compile Include="Domain\Agreements\_Internal\QueryAgreementContacts.cs" />
     <Compile Include="Domain\Employees\_Internal\EmployeeConsts.cs" />
+    <Compile Include="Domain\Establishments\Queries\EstablishmentsWithPeopleWithActivities.cs" />
     <Compile Include="Domain\People\Queries\PeopleWithActivitiesCountByTypeIdEstablishmentId.cs" />
     <Compile Include="Domain\People\Queries\PeopleWithDegreesCountByPlaceIdsEstablishmentId.cs" />
     <Compile Include="Domain\People\Queries\PeopleWithDegreesCountByEstablishmentId.cs" />
