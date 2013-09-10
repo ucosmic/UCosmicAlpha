@@ -52,7 +52,9 @@ var InstitutionalAgreementEditModel = (function () {
         this.officialNameDoesNotMatchTranslation = ko.computed(function () {
             return !(this.participants.establishmentOfficialName === this.participants.establishmentTranslatedName);
         });
-        this.scrollBodyClass = new scrollBody.scroll("participants", "basicInfo", "effectiveDatesCurrentStatus", "contacts", "fileAttachments", "overallVisibility", this.kendoWindowBug);
+        var culture = $("meta[name='accept-language']").attr("content");
+
+        this.scrollBodyClass = new scrollBody.scroll("participants", "basicInfo", "effectiveDatesCurrentStatus", "contacts", "fileAttachments", "overallVisibility", null, null, null, null, this.kendoWindowBug);
         this.establishmentSearchNavClass = new agreements.establishmentSearchNav(this.editOrNewUrl, this.participantsClass, this.agreementIsEdit, this.agreementId, this.scrollBodyClass, this.dfdPageFadeIn);
 
         this.participantsClass = new agreements.participants(this.agreementId, this.dfdPopParticipants, this.agreementIsEdit, this.establishmentSearchNavClass.establishmentSearchViewModel, this.establishmentSearchNavClass.hasBoundSearch);
@@ -69,7 +71,6 @@ var InstitutionalAgreementEditModel = (function () {
         this.visibilityClass = new agreements.visibility();
         ko.applyBindings(this.visibilityClass, $('#overallVisibility')[0]);
 
-        var culture = $("meta[name='accept-language']").attr("content");
         if (window.location.href.toLowerCase().indexOf("agreements/new") > 0) {
             Globalize.culture(culture);
             this.editOrNewUrl.val = "new/";
@@ -122,8 +123,7 @@ var InstitutionalAgreementEditModel = (function () {
         var _this = this;
         $.when(this.dfdUAgreements).done(function () {
             $.get(App.Routes.WebApi.Agreements.get(_this.agreementId.val)).done(function (response) {
-                var dropdownlist;
-                var editor = $("#agreementContent").data("kendoEditor");
+                var dropdownlist, editor = $("#agreementContent").data("kendoEditor");
 
                 editor.value(response.content);
                 _this.basicInfoClass.content(response.content);
@@ -190,17 +190,17 @@ var InstitutionalAgreementEditModel = (function () {
         this.basicInfoClass.isCustomStatusAllowed(result.isCustomStatusAllowed);
         this.basicInfoClass.isCustomContactTypeAllowed(result.isCustomContactTypeAllowed);
         this.datesStatusClass.statusOptions.push(new this.selectConstructor("", ""));
-        for (var i = 0; i < result.statusOptions.length; i++) {
+        for (var i = 0, j = result.statusOptions.length; i < j; i++) {
             this.datesStatusClass.statusOptions.push(new this.selectConstructor(result.statusOptions[i], result.statusOptions[i]));
         }
         ;
         this.contactClass.contactTypeOptions.push(new this.selectConstructor("", undefined));
-        for (var i = 0; i < result.contactTypeOptions.length; i++) {
+        for (var i = 0, j = result.contactTypeOptions.length; i < j; i++) {
             this.contactClass.contactTypeOptions.push(new this.selectConstructor(result.contactTypeOptions[i], result.contactTypeOptions[i]));
         }
         ;
         this.basicInfoClass.typeOptions.push(new this.selectConstructor("", ""));
-        for (var i = 0; i < result.typeOptions.length; i++) {
+        for (var i = 0, j = result.typeOptions.length; i < j; i++) {
             this.basicInfoClass.typeOptions.push(new this.selectConstructor(result.typeOptions[i], result.typeOptions[i]));
         }
         ;
@@ -277,8 +277,7 @@ var InstitutionalAgreementEditModel = (function () {
     //get settings for agreements.
     InstitutionalAgreementEditModel.prototype.getSettings = function () {
         var _this = this;
-        var url = 'App.Routes.WebApi.Agreements.Settings.get()';
-        var agreementSettingsGet;
+        var url = 'App.Routes.WebApi.Agreements.Settings.get()', agreementSettingsGet;
         $.ajax({
             url: eval(url),
             type: 'GET'
@@ -318,9 +317,8 @@ var InstitutionalAgreementEditModel = (function () {
                 $("body").scrollTop(offset.top - 20);
             }
         } else {
-            var url;
-            var $LoadingPage = $("#LoadingPage").find("strong");
-            var editor = $("#agreementContent").data("kendoEditor");
+            var url, $LoadingPage = $("#LoadingPage").find("strong"), editor = $("#agreementContent").data("kendoEditor"), $LoadingPage = $("#LoadingPage").find("strong"), myAutoRenew = null, data;
+
             this.spinner.start();
 
             if (!$("body").scrollTop()) {
@@ -328,7 +326,7 @@ var InstitutionalAgreementEditModel = (function () {
             } else {
                 $("body").scrollTop(0);
             }
-            var $LoadingPage = $("#LoadingPage").find("strong");
+
             $LoadingPage.text("Saving agreement...");
             $("#allParticipants").show().fadeOut(500, function () {
                 $("#LoadingPage").hide().fadeIn(500);
@@ -344,7 +342,7 @@ var InstitutionalAgreementEditModel = (function () {
                     center: item.center
                 });
             });
-            var myAutoRenew = null;
+
             if (this.datesStatusClass.autoRenew() == 0) {
                 myAutoRenew = false;
             } else if (this.datesStatusClass.autoRenew() == 1) {
@@ -353,7 +351,7 @@ var InstitutionalAgreementEditModel = (function () {
 
             this.basicInfoClass.content(editor.value());
 
-            var data = ko.mapping.toJS({
+            data = ko.mapping.toJS({
                 content: this.basicInfoClass.content(),
                 expiresOn: this.datesStatusClass.expDate(),
                 startsOn: this.datesStatusClass.startDate(),

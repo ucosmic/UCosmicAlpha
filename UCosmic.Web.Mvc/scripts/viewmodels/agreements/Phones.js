@@ -71,8 +71,7 @@ var agreements;
             this.contactPhoneTextValue.subscribe(function (me) {
                 if (_this.contactPhoneTextValue().length > 0) {
                     if (_this.contactId()) {
-                        var url = App.Routes.WebApi.Agreements.Contacts.Phones.post(_this.agreementId.val, _this.contactId());
-                        var data = { id: "0", type: '', contactId: _this.contactId(), value: _this.contactPhoneTextValue() };
+                        var url = App.Routes.WebApi.Agreements.Contacts.Phones.post(_this.agreementId.val, _this.contactId()), data = { id: "0", type: '', contactId: _this.contactId(), value: _this.contactPhoneTextValue() };
                         $.post(url, data).done(function (response, statusText, xhr) {
                             var myUrl = xhr.getResponseHeader('Location');
                             data.id = myUrl.substring(myUrl.lastIndexOf("/") + 1);

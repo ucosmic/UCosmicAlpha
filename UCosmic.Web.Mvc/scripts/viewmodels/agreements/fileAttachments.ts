@@ -49,13 +49,15 @@ module agreements {
                     select: 'Choose a file to upload...'
                 },
                 select: (e: any): void => {
+                    var url, 
+                        data
                     //when selecting multiple files, this is only called 1 time, so we need to loop through e.files list
-                    for (var i = 0; i < e.files.length; i++) {
-                        var data = ko.mapping.toJS({
+                    for (var i = 0, j = e.files.length; i < j; i++) {
+                        data = ko.mapping.toJS({
                             Name: e.files[i].name,
                             Length: e.files[i].rawFile.size
                         })
-                    var url = App.Routes.WebApi.Agreements.Files.Validate.post();
+                        url = App.Routes.WebApi.Agreements.Files.Validate.post();
                         $.ajax({
                             type: 'POST',
                             url: url,
@@ -95,22 +97,22 @@ module agreements {
                     // this event is triggered by both upload and remove requests
                     // ignore remove operations because they don't actually do anything
                     if (e.operation == 'upload') {
+                        var myId;
                         if (e.response && e.response.message) {
                             App.flasher.flash(e.response.message);
                         }
-                        var myId;
                         if (this.agreementIsEdit()) {
                             var myUrl;
                             if (e.XMLHttpRequest != undefined) {
                                 myUrl = e.XMLHttpRequest.getResponseHeader('Location')
-                        } else {
+                            } else {
                                 myUrl = e.response.location
-                        }
+                            }
                             myId = parseInt(myUrl.substring(myUrl.lastIndexOf("/") + 1));
                         } else {
                             this.tempFileId = this.tempFileId + .01
-                        myId = this.tempFileId
-                    }
+                            myId = this.tempFileId
+                        }
                         this.files.push(ko.mapping.fromJS({
                             id: myId,
                             originalName: e.files[0].name,
@@ -191,7 +193,7 @@ module agreements {
                     customName: me.customName,
                     visibility: me.visibility
                 })
-            var url = App.Routes.WebApi.Agreements.Files.put(this.agreementId.val, me.id());
+                var url = App.Routes.WebApi.Agreements.Files.put(this.agreementId.val, me.id());
                 $.ajax({
                     type: 'PUT',
                     url: url,
@@ -241,7 +243,7 @@ module agreements {
                     customName: me.customName,
                     visibility: me.visibility
                 })
-            var url = App.Routes.WebApi.Agreements.Files.put(this.agreementId.val, me.id());
+                var url = App.Routes.WebApi.Agreements.Files.put(this.agreementId.val, me.id());
                 $.ajax({
                     type: 'PUT',
                     url: url,
@@ -314,10 +316,10 @@ module agreements {
 
         //part of save agreement
         agreementPostFiles(response: any, statusText: string, xhr: JQueryXHR): void {
-            var tempUrl = App.Routes.WebApi.Agreements.Files.post(this.agreementId.val);
-
+            var tempUrl = App.Routes.WebApi.Agreements.Files.post(this.agreementId.val),
+                data;
             $.each(this.files(), (i, item) => {
-                var data = ko.mapping.toJS({
+                data = ko.mapping.toJS({
                     agreementId: item.agreementId,
                     uploadGuid: item.guid,
                     originalName: item.guid,

@@ -79,8 +79,8 @@ module agreements {
             this.contactPhoneTextValue.subscribe((me: string): void => {
                 if (this.contactPhoneTextValue().length > 0) {
                     if (this.contactId()) {
-                        var url = App.Routes.WebApi.Agreements.Contacts.Phones.post(this.agreementId.val, this.contactId());
-                        var data = { id: "0", type: '', contactId: this.contactId(), value: this.contactPhoneTextValue() };
+                        var url = App.Routes.WebApi.Agreements.Contacts.Phones.post(this.agreementId.val, this.contactId()),
+                            data = { id: "0", type: '', contactId: this.contactId(), value: this.contactPhoneTextValue() };
                         $.post(url, data)
                             .done((response: any, statusText: string, xhr: JQueryXHR): void => {
                                 var myUrl = xhr.getResponseHeader('Location');

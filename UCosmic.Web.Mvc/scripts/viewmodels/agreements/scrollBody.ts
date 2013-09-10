@@ -5,8 +5,9 @@ module scrollBody {
 
     export class scroll {
 
-        constructor(section1?: string, section2?: string, section3?: string, section4?: string, section5?: string, section6?: string, kendoWindowBug?) {
-            this.kendoWindowBug = kendoWindowBug;
+        constructor(section1?: string, section2?: string, section3?: string, section4?: string, section5?: string, section6?: string,
+        section7?: string, section8?: string, section9?: string, section10?: string, kendoWindowBug?) {
+            this.kendoWindowBug = ((kendoWindowBug) ? kendoWindowBug : { val: 0 });
 
             this.section1 = ((section1) ? section1 : "");
             this.section2 = ((section2) ? section2 : "");
@@ -14,6 +15,10 @@ module scrollBody {
             this.section4 = ((section4) ? section4 : "");
             this.section5 = ((section5) ? section5 : "");
             this.section6 = ((section6) ? section6 : "");
+            this.section7 = ((section7) ? section7 : "");
+            this.section8 = ((section8) ? section8 : "");
+            this.section9 = ((section9) ? section9 : "");
+            this.section10 = ((section10) ? section10 : "");
 
             this.mySection1 = $("#" + this.section1);
             this.mySection2 = $("#" + this.section2);
@@ -21,6 +26,10 @@ module scrollBody {
             this.mySection4 = $("#" + this.section4);
             this.mySection5 = $("#" + this.section5);
             this.mySection6 = $("#" + this.section6);
+            this.mySection7 = $("#" + this.section7);
+            this.mySection8 = $("#" + this.section8);
+            this.mySection9 = $("#" + this.section9);
+            this.mySection10 = $("#" + this.section10);
 
             this.navSection1 = $("#nav" + this.section1);
             this.navSection2 = $("#nav" + this.section2);
@@ -28,7 +37,10 @@ module scrollBody {
             this.navSection4 = $("#nav" + this.section4);
             this.navSection5 = $("#nav" + this.section5);
             this.navSection6 = $("#nav" + this.section6);
-
+            this.navSection7 = $("#nav" + this.section7);
+            this.navSection8 = $("#nav" + this.section8);
+            this.navSection9 = $("#nav" + this.section9);
+            this.navSection10 = $("#nav" + this.section10);
 
             this.$body;
         }
@@ -39,6 +51,10 @@ module scrollBody {
         section4;
         section5;
         section6;
+        section7;
+        section8;
+        section9;
+        section10;
         kendoWindowBug;
 
         //scrollVars
@@ -49,18 +65,30 @@ module scrollBody {
         mySection4;
         mySection5;
         mySection6;
+        mySection7;
+        mySection8;
+        mySection9;
+        mySection10;
         navSection1;
         navSection2;
         navSection3;
         navSection4;
         navSection5;
         navSection6;
+        navSection7;
+        navSection8;
+        navSection9;
+        navSection10;
         section1Top;
         section2Top;
         section3Top;
         section4Top;
         section5Top;
         section6Top;
+        section7Top;
+        section8Top;
+        section9Top;
+        section10Top;
 
         //scroll based on top position
         scrollMyBody = function (position): void {
@@ -122,9 +150,21 @@ module scrollBody {
                 } else if (this.$body >= this.section5Top.top && (this.$body <= this.section5Top.top + this.mySection5.height() + 40 || this.section6 === "")) {
                     $("aside").find("li").removeClass("current");
                     this.navSection5.addClass("current");
-                } else if (this.$body >= this.section6Top.top) {
+                } else if (this.$body >= this.section6Top.top && (this.$body <= this.section6Top.top + this.mySection6.height() + 40 || this.section7 === "")) {
                     $("aside").find("li").removeClass("current");
-                    this.navSection6.closest("li").addClass("current");
+                    this.navSection6.addClass("current");
+                } else if (this.$body >= this.section7Top.top && (this.$body <= this.section7Top.top + this.mySection7.height() + 40 || this.section8 === "")) {
+                    $("aside").find("li").removeClass("current");
+                    this.navSection7.addClass("current");
+                } else if (this.$body >= this.section8Top.top && (this.$body <= this.section8Top.top + this.mySection8.height() + 40 || this.section9 === "")) {
+                    $("aside").find("li").removeClass("current");
+                    this.navSection8.addClass("current");
+                } else if (this.$body >= this.section9Top.top && (this.$body <= this.section9Top.top + this.mySection8.height() + 40 || this.section10 === "")) {
+                    $("aside").find("li").removeClass("current");
+                    this.navSection9.addClass("current");
+                } else if (this.$body >= this.section10Top.top) {
+                    $("aside").find("li").removeClass("current");
+                    this.navSection10.closest("li").addClass("current");
                 }
             });
         }

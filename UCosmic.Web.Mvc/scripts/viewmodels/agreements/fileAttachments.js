@@ -42,12 +42,14 @@ var agreements;
                     select: 'Choose a file to upload...'
                 },
                 select: function (e) {
-                    for (var i = 0; i < e.files.length; i++) {
-                        var data = ko.mapping.toJS({
+                    var url, data;
+
+                    for (var i = 0, j = e.files.length; i < j; i++) {
+                        data = ko.mapping.toJS({
                             Name: e.files[i].name,
                             Length: e.files[i].rawFile.size
                         });
-                        var url = App.Routes.WebApi.Agreements.Files.Validate.post();
+                        url = App.Routes.WebApi.Agreements.Files.Validate.post();
                         $.ajax({
                             type: 'POST',
                             url: url,
@@ -85,10 +87,10 @@ var agreements;
                 },
                 success: function (e) {
                     if (e.operation == 'upload') {
+                        var myId;
                         if (e.response && e.response.message) {
                             App.flasher.flash(e.response.message);
                         }
-                        var myId;
                         if (_this.agreementIsEdit()) {
                             var myUrl;
                             if (e.XMLHttpRequest != undefined) {
@@ -310,10 +312,9 @@ else
         //part of save agreement
         fileAttachments.prototype.agreementPostFiles = function (response, statusText, xhr) {
             var _this = this;
-            var tempUrl = App.Routes.WebApi.Agreements.Files.post(this.agreementId.val);
-
+            var tempUrl = App.Routes.WebApi.Agreements.Files.post(this.agreementId.val), data;
             $.each(this.files(), function (i, item) {
-                var data = ko.mapping.toJS({
+                data = ko.mapping.toJS({
                     agreementId: item.agreementId,
                     uploadGuid: item.guid,
                     originalName: item.guid,
