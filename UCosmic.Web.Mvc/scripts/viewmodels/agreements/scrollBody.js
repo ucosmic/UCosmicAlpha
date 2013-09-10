@@ -2,29 +2,99 @@
 // Module
 var scrollBody;
 (function (scrollBody) {
-    //scroll based on top position
-    function scrollMyBody(position) {
-        var $body;
+    var scroll = (function () {
+        function scroll(section1, section2, section3, section4, section5, section6, kendoWindowBug) {
+            //scroll based on top position
+            this.scrollMyBody = function (position) {
+                var $body;
 
-        if (!$("body").scrollTop()) {
-            $("html, body").scrollTop(position);
-        } else {
-            $("body").scrollTop(position);
+                if (!$("body").scrollTop()) {
+                    $("html, body").scrollTop(position);
+                } else {
+                    $("body").scrollTop(position);
+                }
+            };
+            //scroll based on side nav
+            this.goToSection = function (location, data, event) {
+                var offset = $("#" + location).offset();
+
+                if (!$("body").scrollTop()) {
+                    $("html, body").scrollTop(offset.top - 20);
+                } else {
+                    $("body").scrollTop(offset.top - 20);
+                }
+                $(event.target).closest("ul").find("li").removeClass("current");
+                $(event.target).closest("li").addClass("current");
+            };
+            this.kendoWindowBug = kendoWindowBug;
+
+            this.section1 = ((section1) ? section1 : "");
+            this.section2 = ((section2) ? section2 : "");
+            this.section3 = ((section3) ? section3 : "");
+            this.section4 = ((section4) ? section4 : "");
+            this.section5 = ((section5) ? section5 : "");
+            this.section6 = ((section6) ? section6 : "");
+
+            this.mySection1 = $("#" + this.section1);
+            this.mySection2 = $("#" + this.section2);
+            this.mySection3 = $("#" + this.section3);
+            this.mySection4 = $("#" + this.section4);
+            this.mySection5 = $("#" + this.section5);
+            this.mySection6 = $("#" + this.section6);
+
+            this.navSection1 = $("#nav" + this.section1);
+            this.navSection2 = $("#nav" + this.section2);
+            this.navSection3 = $("#nav" + this.section3);
+            this.navSection4 = $("#nav" + this.section4);
+            this.navSection5 = $("#nav" + this.section5);
+            this.navSection6 = $("#nav" + this.section6);
+
+            this.$body;
         }
-    }
-    scrollBody.scrollMyBody = scrollMyBody;
+        scroll.prototype.bindJquery = function () {
+            var _this = this;
+            var self = this;
 
-    //scroll based on side nav
-    function goToSection(location, data, event) {
-        var offset = $("#" + location).offset();
+            //bind scroll to side nav
+            $(window).scroll(function () {
+                if (_this.kendoWindowBug.val != 0) {
+                    _this.scrollMyBody(_this.kendoWindowBug.val);
+                }
 
-        if (!$("body").scrollTop()) {
-            $("html, body").scrollTop(offset.top - 20);
-        } else {
-            $("body").scrollTop(offset.top - 20);
-        }
-        $(event.target).closest("ul").find("li").removeClass("current");
-        $(event.target).closest("li").addClass("current");
-    }
-    scrollBody.goToSection = goToSection;
+                _this.section1Top = _this.mySection1.offset();
+                _this.section2Top = _this.mySection2.offset();
+                _this.section3Top = _this.mySection3.offset();
+                _this.section4Top = _this.mySection4.offset();
+                _this.section5Top = _this.mySection5.offset();
+                _this.section6Top = _this.mySection6.offset();
+
+                if (!$("body").scrollTop()) {
+                    _this.$body = $("html, body").scrollTop() + 100;
+                } else {
+                    _this.$body = $("body").scrollTop() + 100;
+                }
+                if (_this.$body <= _this.section1Top.top + _this.mySection1.height() + 40) {
+                    $("aside").find("li").removeClass("current");
+                    _this.navSection1.addClass("current");
+                } else if (_this.$body >= _this.section2Top.top && (_this.$body <= _this.section2Top.top + _this.mySection2.height() + 40 || _this.section3 === "")) {
+                    $("aside").find("li").removeClass("current");
+                    _this.navSection2.addClass("current");
+                } else if (_this.$body >= _this.section3Top.top && (_this.$body <= _this.section3Top.top + _this.mySection3.height() + 40 || _this.section4 === "")) {
+                    $("aside").find("li").removeClass("current");
+                    _this.navSection3.addClass("current");
+                } else if (_this.$body >= _this.section4Top.top && (_this.$body <= _this.section4Top.top + _this.mySection4.height() + 40 || _this.section5 === "")) {
+                    $("aside").find("li").removeClass("current");
+                    _this.navSection4.addClass("current");
+                } else if (_this.$body >= _this.section5Top.top && (_this.$body <= _this.section5Top.top + _this.mySection5.height() + 40 || _this.section6 === "")) {
+                    $("aside").find("li").removeClass("current");
+                    _this.navSection5.addClass("current");
+                } else if (_this.$body >= _this.section6Top.top) {
+                    $("aside").find("li").removeClass("current");
+                    _this.navSection6.closest("li").addClass("current");
+                }
+            });
+        };
+        return scroll;
+    })();
+    scrollBody.scroll = scroll;
 })(scrollBody || (scrollBody = {}));

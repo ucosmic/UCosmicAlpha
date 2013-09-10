@@ -23,7 +23,9 @@
 class InstitutionalAgreementEditModel {
     constructor(public initDefaultPageRoute: boolean = true) {
 
-        this.establishmentSearchNavClass = new agreements.establishmentSearchNav(this.editOrNewUrl, this.participantsClass, this.agreementIsEdit, this.agreementId, scrollBody, this.dfdPageFadeIn);
+        this.scrollBodyClass = new scrollBody.scroll("participants","basicInfo",
+            "effectiveDatesCurrentStatus", "contacts", "fileAttachments", "overallVisibility", this.kendoWindowBug);
+        this.establishmentSearchNavClass = new agreements.establishmentSearchNav(this.editOrNewUrl, this.participantsClass, this.agreementIsEdit, this.agreementId, this.scrollBodyClass, this.dfdPageFadeIn);
 
         this.participantsClass = new agreements.participants(this.agreementId, this.dfdPopParticipants, this.agreementIsEdit, this.establishmentSearchNavClass.establishmentSearchViewModel, this.establishmentSearchNavClass.hasBoundSearch);
         this.establishmentSearchNavClass.participantsClass = this.participantsClass;
@@ -37,7 +39,7 @@ class InstitutionalAgreementEditModel {
         this.datesStatusClass = new agreements.datesStatus(this.basicInfoClass.isCustomStatusAllowed);
         ko.applyBindings(this.datesStatusClass, $('#effectiveDatesCurrentStatus')[0]);
         this.visibilityClass = new agreements.visibility();
-        ko.applyBindings(this.visibilityClass, $('#overallVisibility')[0]);        
+        ko.applyBindings(this.visibilityClass, $('#overallVisibility')[0]);     
 
         var culture = $("meta[name='accept-language']").attr("content");
         if (window.location.href.toLowerCase().indexOf("agreements/new") > 0) {
@@ -96,6 +98,7 @@ class InstitutionalAgreementEditModel {
     datesStatusClass;
     visibilityClass;
     establishmentSearchNavClass;
+    scrollBodyClass;
 
     percentOffBodyHeight = .6;
     //jquery defered for setting body height.
@@ -241,61 +244,7 @@ class InstitutionalAgreementEditModel {
             margin: 'auto',
             top: '20px'
         });
-                
-        //bind scroll to side nav
-        $(window).scroll( () => {
-            if (this.kendoWindowBug.val != 0) {
-                scrollBody.scrollMyBody(this.kendoWindowBug.val)
-            }
-            var $participants = $("#participants");
-            var $basicInfo = $("#basicInfo");
-            var $effectiveDatesCurrentStatus = $("#effectiveDatesCurrentStatus");
-            var $contacts = $("#contacts");
-            var $fileAttachments = $("#fileAttachments");
-            var $overallVisibility = $("#overallVisibility");
-
-            var $navparticipants = $("#navParticipants");
-            var $navbasicInfo = $("#navBasicInfo");
-            var $naveffectiveDatesCurrentStatus = $("#navEffectiveDatesCurrentStatus");
-            var $navcontacts = $("#navContacts");
-            var $navfileAttachments = $("#navFileAttachments");
-            var $navoverallVisibility = $("#navOverallVisibility");
-
-            var $participantsTop = $participants.offset();
-            var $basicInfoTop = $basicInfo.offset();
-            var $effectiveDatesCurrentStatusTop = $effectiveDatesCurrentStatus.offset();
-            var $contactsTop = $contacts.offset();
-            var $fileAttachmentsTop = $fileAttachments.offset();
-            var $overallVisibilityTop = $overallVisibility.offset();
-
-            var $body;
-            //ie sucks!
-            if (!$("body").scrollTop()){
-                $body = $("html, body").scrollTop() + 100;
-            } else {
-                $body = $("body").scrollTop() + 100;
-            }
-            if ($body <= $participantsTop.top + $participants.height() + 40) {
-                $("aside").find("li").removeClass("current");
-                $navparticipants.addClass("current");
-            } else if ($body >= $basicInfoTop.top && $body <= $basicInfoTop.top + $basicInfo.height() + 40) {
-                $("aside").find("li").removeClass("current");
-                $navbasicInfo.addClass("current");
-            } else if ($body >= $effectiveDatesCurrentStatusTop.top && $body <= $effectiveDatesCurrentStatusTop.top + $effectiveDatesCurrentStatus.height() + 40) {
-                $("aside").find("li").removeClass("current");
-                $naveffectiveDatesCurrentStatus.addClass("current");
-            } else if ($body >= $contactsTop.top && $body <= $contactsTop.top + $contacts.height() + 40) {
-                $("aside").find("li").removeClass("current");
-                $navcontacts.addClass("current");
-            } else if ($body >= $fileAttachmentsTop.top && $body <= $fileAttachmentsTop.top + $fileAttachments.height() + 40) {
-                $("aside").find("li").removeClass("current");
-                $navfileAttachments.addClass("current");
-            } else if ($body >= $overallVisibilityTop.top) {
-                $("aside").find("li").removeClass("current");
-                $navoverallVisibility.closest("li").addClass("current");
-            }
-        });
-
+            
         // create Editor from textarea HTML element
         $("#agreementContent").kendoEditor({
             tools: [
@@ -339,6 +288,7 @@ class InstitutionalAgreementEditModel {
         this.contactClass.bindJquery();
         this.fileAttachmentClass.bindJquery();
         this.datesStatusClass.bindJquery();
+        this.scrollBodyClass.bindJquery();
     }
 
     //get settings for agreements.
