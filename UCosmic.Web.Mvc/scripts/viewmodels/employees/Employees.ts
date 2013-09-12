@@ -64,7 +64,8 @@ module ViewModels.Employees {
 
         mapType: KnockoutObservable<string>;
         searchType: KnockoutObservable<string>;
-        selectedPlace: KnockoutObservable<string>;
+        selectedPlace: KnockoutObservable<string>;  // observable to control what stats are shown - world/place
+        mapRegion: KnockoutObservable<string>;      // observable to control the custom place layers
         
         /* Element id of institution autocomplete */
         establishmentDropListId: string;
@@ -190,6 +191,7 @@ module ViewModels.Employees {
             this.mapType = ko.observable('heatmap');
             this.searchType = ko.observable('activities');
             this.selectedPlace = ko.observable(null); // null for global view
+            this.mapRegion = ko.observable('world');
             this.isGlobalView = ko.observable(true);
             this.loadSpinner = new App.Spinner(new App.SpinnerOptions(200));
 
@@ -532,6 +534,7 @@ module ViewModels.Employees {
             //this.institutions.subscribe((newValue: any): void => { this.dirtyFlag(true); });
             //this.position.subscribe((newValue: any): void => { this.dirtyFlag(true); });
             this.selectedPlace.subscribe((newValue: any): void => { this.selectMap('heatmap'); });
+            this.mapRegion.subscribe((newValue: any): void => { this.heatmapOptions["region"] = newValue; });
         }
 
         setupRouting(): void {
@@ -569,7 +572,7 @@ module ViewModels.Employees {
                 region: 'world', //'150',    // 002 Africa, 142 Asia
                 //backgroundColor: 'lightBlue',
                 keepAspectRatio: false,
-                colorAxis: { colors: ['#FFFFFF', 'green'] },
+                colorAxis: { colors: ['#FFFFFF', 'darkgreen'] },
                 backgroundColor: { fill: 'transparent' },
                 datalessRegionColor: 'FFFFFF'
                 //tooltip:{trigger: 'none'}
@@ -1604,8 +1607,13 @@ module ViewModels.Employees {
                 $('#pointmapText').css("font-weight", "bold");
                 this.isPointmapVisible(true);
                 $('#pointmap').css("display", "inline-block");
-                //fspointmap.draw(fspointmapData, fspointmapOptions)
+
+                /* Google maps do not draw correctly in hidden div's.  Here's
+                    a hack to get around this.  */
+                var mapCenter = this.pointmap.getCenter();
                 this.google.maps.event.trigger(this.pointmap, "resize");
+                this.pointmap.setCenter(mapCenter);
+
                 $("#bib-faculty-staff-search").addClass("current");
             } else if (type === "expert") {
                 $('#expertText').css("font-weight", "bold");
@@ -1705,14 +1713,37 @@ module ViewModels.Employees {
 
         heatmapSelectHandler(): void {
             var selection = this.heatmap.getSelection();
+
             if ((selection != null) && (selection.length > 0)) {
-                var str: string = '';
+                var officialName: string = '';
+                var countryCode: string = null;
+
                 if (this.searchType() === 'activities') {
-                    str = this.heatmapActivityDataTable.getFormattedValue(selection[0].row, 0);
+                    officialName = this.heatmapActivityDataTable.getFormattedValue(selection[0].row, 0);
+
+                    var i: number = 0;
+                    while ((i < this.globalActivityCountData.placeCounts.length) && (countryCode == null)) {
+                        if (this.globalActivityCountData.placeCounts[i].officialName === officialName) {
+                            countryCode = this.globalActivityCountData.placeCounts[i].countryCode;
+                        }
+
+                        i += 1;
+                    }
                 } else {
-                    str = this.heatmapPeopleDataTable.getFormattedValue(selection[0].row, 0);
+                    officialName = this.heatmapPeopleDataTable.getFormattedValue(selection[0].row, 0);
+
+                    var i: number = 0;
+                    while ((i < this.globalPeopleCountData.placeCounts.length) && (countryCode == null)) {
+                        if (this.globalPeopleCountData.placeCounts[i].officialName === officialName) {
+                            countryCode = this.globalPeopleCountData.placeCounts[i].countryCode;
+                        }
+
+                        i += 1;
+                    }
                 }
-                this.selectedPlace(str);
+
+                this.selectedPlace(officialName); 
+                this.mapRegion((countryCode != null) ? countryCode : 'world')
             }
         }
 
@@ -1722,6 +1753,7 @@ module ViewModels.Employees {
 
         globalViewClickHandler(item: any, event: any): void {
             this.selectedPlace(null);
+            this.mapRegion('world');
             this.selectMap('heatmap');
         }
 

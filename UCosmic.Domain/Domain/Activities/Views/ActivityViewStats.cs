@@ -14,6 +14,7 @@ namespace UCosmic.Domain.Activities
         public class PlaceCount
         {
             public int PlaceId { get; set; }
+            public string CountryCode { get; set; }
             public string OfficialName { get; set; }
             public int Count { get; set; }
         }

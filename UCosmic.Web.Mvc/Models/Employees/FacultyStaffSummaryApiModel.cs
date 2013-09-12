@@ -14,6 +14,7 @@ namespace UCosmic.Web.Mvc.Models
     public class FacultyStaffPlaceCountModel
     {
         public int PlaceId { get; set; }
+        public string CountryCode { get; set; } // if country, 2-char code, null otherwise
         public string OfficialName { get; set; }
         public int Count { get; set; }
         public ICollection<FacultyStaffTypeCountModel> TypeCounts { get; set; }

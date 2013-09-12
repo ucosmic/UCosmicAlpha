@@ -135,6 +135,7 @@ namespace UCosmic.Domain.Activities
                         stats.PlaceCounts.Add(new ActivityViewStats.PlaceCount
                         {
                             PlaceId = place.RevisionId,
+                            CountryCode = place.IsCountry ? place.GeoPlanetPlace.Country.Code : null,
                             OfficialName = place.OfficialName,
                             Count = activityCount
                         });
@@ -233,6 +234,7 @@ namespace UCosmic.Domain.Activities
                         stats.PlaceCounts.Add(new ActivityViewStats.PlaceCount
                         {
                             PlaceId = place.RevisionId,
+                            CountryCode = place.IsCountry ? place.GeoPlanetPlace.Country.Code : null,
                             OfficialName = place.OfficialName,
                             Count = peopleCount
                         });

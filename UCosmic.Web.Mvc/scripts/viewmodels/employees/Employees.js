@@ -133,6 +133,7 @@ var ViewModels;
                 this.mapType = ko.observable('heatmap');
                 this.searchType = ko.observable('activities');
                 this.selectedPlace = ko.observable(null);
+                this.mapRegion = ko.observable('world');
                 this.isGlobalView = ko.observable(true);
                 this.loadSpinner = new App.Spinner(new App.SpinnerOptions(200));
 
@@ -460,6 +461,9 @@ var ViewModels;
                 this.selectedPlace.subscribe(function (newValue) {
                     _this.selectMap('heatmap');
                 });
+                this.mapRegion.subscribe(function (newValue) {
+                    _this.heatmapOptions["region"] = newValue;
+                });
             };
 
             FacultyAndStaff.prototype.setupRouting = function () {
@@ -509,7 +513,7 @@ var ViewModels;
                     region: 'world',
                     //backgroundColor: 'lightBlue',
                     keepAspectRatio: false,
-                    colorAxis: { colors: ['#FFFFFF', 'green'] },
+                    colorAxis: { colors: ['#FFFFFF', 'darkgreen'] },
                     backgroundColor: { fill: 'transparent' },
                     datalessRegionColor: 'FFFFFF'
                 };
@@ -1478,8 +1482,12 @@ var ViewModels;
                     this.isPointmapVisible(true);
                     $('#pointmap').css("display", "inline-block");
 
-                    //fspointmap.draw(fspointmapData, fspointmapOptions)
+                    /* Google maps do not draw correctly in hidden div's.  Here's
+                    a hack to get around this.  */
+                    var mapCenter = this.pointmap.getCenter();
                     this.google.maps.event.trigger(this.pointmap, "resize");
+                    this.pointmap.setCenter(mapCenter);
+
                     $("#bib-faculty-staff-search").addClass("current");
                 } else if (type === "expert") {
                     $('#expertText').css("font-weight", "bold");
@@ -1582,14 +1590,37 @@ var ViewModels;
 
             FacultyAndStaff.prototype.heatmapSelectHandler = function () {
                 var selection = this.heatmap.getSelection();
+
                 if ((selection != null) && (selection.length > 0)) {
-                    var str = '';
+                    var officialName = '';
+                    var countryCode = null;
+
                     if (this.searchType() === 'activities') {
-                        str = this.heatmapActivityDataTable.getFormattedValue(selection[0].row, 0);
+                        officialName = this.heatmapActivityDataTable.getFormattedValue(selection[0].row, 0);
+
+                        var i = 0;
+                        while ((i < this.globalActivityCountData.placeCounts.length) && (countryCode == null)) {
+                            if (this.globalActivityCountData.placeCounts[i].officialName === officialName) {
+                                countryCode = this.globalActivityCountData.placeCounts[i].countryCode;
+                            }
+
+                            i += 1;
+                        }
                     } else {
-                        str = this.heatmapPeopleDataTable.getFormattedValue(selection[0].row, 0);
+                        officialName = this.heatmapPeopleDataTable.getFormattedValue(selection[0].row, 0);
+
+                        var i = 0;
+                        while ((i < this.globalPeopleCountData.placeCounts.length) && (countryCode == null)) {
+                            if (this.globalPeopleCountData.placeCounts[i].officialName === officialName) {
+                                countryCode = this.globalPeopleCountData.placeCounts[i].countryCode;
+                            }
+
+                            i += 1;
+                        }
                     }
-                    this.selectedPlace(str);
+
+                    this.selectedPlace(officialName);
+                    this.mapRegion((countryCode != null) ? countryCode : 'world');
                 }
             };
 
@@ -1599,6 +1630,7 @@ var ViewModels;
 
             FacultyAndStaff.prototype.globalViewClickHandler = function (item, event) {
                 this.selectedPlace(null);
+                this.mapRegion('world');
                 this.selectMap('heatmap');
             };
 

@@ -153,6 +153,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                                 model.PlaceCounts.Add(new FacultyStaffPlaceCountModel
                                 {
                                     PlaceId = placeCount.PlaceId,
+                                    CountryCode = placeCount.CountryCode,
                                     OfficialName = placeCount.OfficialName,
                                     Count = placeCount.Count
                                 });
@@ -259,6 +260,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                                 model.PlaceCounts.Add(new FacultyStaffPlaceCountModel
                                 {
                                     PlaceId = placeCount.PlaceId,
+                                    CountryCode = placeCount.CountryCode,
                                     OfficialName = placeCount.OfficialName,
                                     Count = placeCount.Count
                                 });

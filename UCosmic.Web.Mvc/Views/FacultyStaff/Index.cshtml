@@ -300,7 +300,8 @@
         </header>
                
         <div style="width: 680px; height: 500px">
-
+            
+            <!-- H E A T M A P -->
             <div style="display: none" data-bind="visible: isHeatmapVisible()">
                 <div style="width: 100%; height: 30px; text-align: right">
                     <span style="float: left" data-bind="click: function(item,event) { expertClickHandler(item,event); }">
@@ -319,7 +320,7 @@
                     <div style="background-color: #ACCCFD; width: 680px; height: 500px"></div>
                     
                     <div style="position: absolute; background-color: transparent; width: 680px; height: 500px; top: 0; left: 0; z-index: 1"
-                        data-bind="visible: !loadSpinner.isVisible()">
+                         data-bind="visible: !loadSpinner.isVisible() && (mapRegion() === 'world')">
                         
                         <!-- Antarctica -->
                         <div style="position: absolute; left: 340px; bottom: 0;">                   
@@ -395,61 +396,62 @@
                                 <span>Arctic Ocean</span>
                             </div>
                         </div>                       
-
                     </div>
 
                     <!-- GeoChart -->
                     <div id="heatmap" style="position: absolute; top: 0; left: 0; z-index: 2"></div>
                     
-                    <!-- Antarctica Title Phantom -->
-                    <div id="antarctica" style="position: absolute; left: 330px; bottom: 0; z-index: 4" data-bind="click: function(event,item) { customPlaceClick(event,item,'Antarctica'); }">
-                        <img src="../../images/transparent.png" width="300" height="50"/>
-                    </div>
+                    <div data-bind="visible: mapRegion() === 'world'">
+                        <!-- Antarctica Title Phantom -->
+                        <div id="antarctica" style="position: absolute; left: 330px; bottom: 0; z-index: 4" data-bind="click: function(event,item) { customPlaceClick(event,item,'Antarctica'); }">
+                            <img src="../../images/transparent.png" width="300" height="50"/>
+                        </div>
                     
-                    <!-- Pacific Ocean Title Phantom -->
-                    <div id="pacificOcean" style="position: absolute; left: 70px; top: 320px; width: 50px; z-index: 4" data-bind="click: function(event,item) { customPlaceClick(event,item,'Pacific Ocean'); }">
-                        <img src="../../images/transparent.png" width="50" height="50"/>
-                    </div>
+                        <!-- Pacific Ocean Title Phantom -->
+                        <div id="pacificOcean" style="position: absolute; left: 70px; top: 320px; width: 50px; z-index: 4" data-bind="click: function(event,item) { customPlaceClick(event,item,'Pacific Ocean'); }">
+                            <img src="../../images/transparent.png" width="50" height="50"/>
+                        </div>
                     
-                    <!-- Atlantic Ocean Title Phantom -->
-                    <div id="atlanticOcean" style="position: absolute; left: 240px; top: 250px; width: 50px; z-index: 4" data-bind="click: function(event,item) { customPlaceClick(event,item,'North Atlantic Ocean'); }">
-                        <img src="../../images/transparent.png" width="50" height="50"/>
-                    </div>
+                        <!-- Atlantic Ocean Title Phantom -->
+                        <div id="atlanticOcean" style="position: absolute; left: 240px; top: 250px; width: 50px; z-index: 4" data-bind="click: function(event,item) { customPlaceClick(event,item,'North Atlantic Ocean'); }">
+                            <img src="../../images/transparent.png" width="50" height="50"/>
+                        </div>
                        
-                    <!-- Indian Ocean Title Phantom -->
-                    <div id="indianOcean" style="position: absolute; left: 460px; top: 360px; width: 50px; z-index: 4" data-bind="click: function(event,item) { customPlaceClick(event,item,'Indian Ocean'); }">
-                        <img src="../../images/transparent.png" width="50" height="50"/>
-                    </div>
+                        <!-- Indian Ocean Title Phantom -->
+                        <div id="indianOcean" style="position: absolute; left: 460px; top: 360px; width: 50px; z-index: 4" data-bind="click: function(event,item) { customPlaceClick(event,item,'Indian Ocean'); }">
+                            <img src="../../images/transparent.png" width="50" height="50"/>
+                        </div>
                   
-                    <!-- Southern Ocean Title Phantom -->
-                    <div id="southernOcean" style="position: absolute; left: 270px; top: 420px; width: 50px; z-index: 4" data-bind="click: function(event,item) { customPlaceClick(event,item,'Southern Ocean'); }">
-                        <img src="../../images/transparent.png" width="50" height="50"/>
-                    </div>
-
-                    <!-- Gulf of Mexico-->
-                    <div style="position: absolute; left: 150px; top: 270px; width: 50px; z-index: 3"
-                        data-bind="visible: !loadSpinner.isVisible()">
-                        <div style="width: 100%; text-align: center">
-                            <img src="../../images/icons/glyphs/glyphicons_261_buoy_blue.png" width="12" height="12"/>
+                        <!-- Southern Ocean Title Phantom -->
+                        <div id="southernOcean" style="position: absolute; left: 270px; top: 420px; width: 50px; z-index: 4" data-bind="click: function(event,item) { customPlaceClick(event,item,'Southern Ocean'); }">
+                            <img src="../../images/transparent.png" width="50" height="50"/>
                         </div>
-                        <div class="customPlaceText" style="line-height: 0.5">
-                            <span style="font-size: x-small">Gulf of Mexico</span>
-                        </div>
-                    </div>
-                    
-                    <!-- Gulf of Mexico Title Phantom  -->
-                    <div id="gulfOfMexico" style="position: absolute; left: 150px; top: 270px; width: 50px; z-index: 4" data-bind="click: function(event,item) { customPlaceClick(event,item,'Gulf of Mexico'); }">
-                        <img src="../../images/transparent.png" width="25" height="25"/>
-                    </div>
-                    
-                    <!-- Caribbean Title Phantom -->
-                    <div id="caribbean" style="position: absolute; left: 200px; top: 300px; width: 50px; z-index: 4" data-bind="click: function(event,item) { customPlaceClick(event,item,'Caribbean Sea'); }">
-                        <img src="../../images/transparent.png" width="25" height="25"/>
-                    </div>
 
-                    <!-- Arctic Ocean Title Phantom -->
-                    <div id="arcticOcean" style="position: absolute; left: 315px; top: 5px; width: 50px; z-index: 4" data-bind="click: function(event,item) { customPlaceClick(event,item,'Arctic Ocean'); }">
-                        <img src="../../images/transparent.png" width="50" height="50"/>
+                        <!-- Gulf of Mexico-->
+                        <div style="position: absolute; left: 150px; top: 270px; width: 50px; z-index: 3"
+                             data-bind="visible: !loadSpinner.isVisible()">
+                            <div style="width: 100%; text-align: center">
+                                <img src="../../images/icons/glyphs/glyphicons_261_buoy_blue.png" width="12" height="12"/>
+                            </div>
+                            <div class="customPlaceText" style="line-height: 0.5">
+                                <span style="font-size: x-small">Gulf of Mexico</span>
+                            </div>
+                        </div>
+                    
+                        <!-- Gulf of Mexico Title Phantom  -->
+                        <div id="gulfOfMexico" style="position: absolute; left: 150px; top: 270px; width: 50px; z-index: 4" data-bind="click: function(event,item) { customPlaceClick(event,item,'Gulf of Mexico'); }">
+                            <img src="../../images/transparent.png" width="25" height="25"/>
+                        </div>
+                    
+                        <!-- Caribbean Title Phantom -->
+                        <div id="caribbean" style="position: absolute; left: 200px; top: 300px; width: 50px; z-index: 4" data-bind="click: function(event,item) { customPlaceClick(event,item,'Caribbean Sea'); }">
+                            <img src="../../images/transparent.png" width="25" height="25"/>
+                        </div>
+
+                        <!-- Arctic Ocean Title Phantom -->
+                        <div id="arcticOcean" style="position: absolute; left: 315px; top: 5px; width: 50px; z-index: 4" data-bind="click: function(event,item) { customPlaceClick(event,item,'Arctic Ocean'); }">
+                            <img src="../../images/transparent.png" width="50" height="50"/>
+                        </div>
                     </div>
 
                     <!-- Activities/People Buttons -->
@@ -470,14 +472,20 @@
                 </div>
 
             </div>
-            <div style="display: none" data-bind="visible: isPointmapVisible()">
+            
+            <!-- P O I N T M A P -->
+            <div id="pointmapDiv" data-bind="visible: isPointmapVisible()">
                 <div id="pointmap" style="width: 680px; height: 500px"></div>
             </div>
+            
+            <!-- E X P E R T -->
             <div style="display: none" data-bind="visible: isExpertVisible()">
                 <div id="expert" style="width: 680px; height: 500px">
                     <img src="~/images/placeholders/ExpertiseMock.png" width="680" height="500" alt=""/>
                 </div>
             </div>
+            
+            <!-- R E S U L T S -->
             <div id="resultstable" style="display: none" data-bind="visible: isTableVisible()">
                     
                 <table class="data">
