@@ -23,16 +23,19 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
         private readonly IProcessQueries _queryProcessor;
         private readonly IQueryEntities _entities;
-        //private readonly IActivityViewProjector _activityProjector;
+        //private readonly IManageViews _viewManager;
+        private readonly IActivityViewProjector _activityProjector;
 
         public FacultyStaffController(IProcessQueries queryProcessor
                                       ,IQueryEntities entities
-                                      //,IActivityViewProjector activityProjector
+                                      //,IManageViews viewManager
+                                      ,IActivityViewProjector activityProjector
             )
         {
             _queryProcessor = queryProcessor;
             _entities = entities;
-            //_activityProjector = activityProjector;
+            //_viewManager = viewManager;
+            _activityProjector = activityProjector;
         }
 
         private int[] GetPlaceIds(int placeId)
@@ -135,13 +138,10 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 }
                 else
                 {
-                    var view = new ActivityGlobalActivityCountView(_queryProcessor, _entities,
-                                                                    establishment.RevisionId);
-
-                    //try
-                    //{
-                    //    ActivityGlobalActivityCountView view =
-                    //        _activityProjector.BeginReadActivityCountsView(establishment.RevisionId);
+                    try
+                    {
+                        GlobalActivityCountView view =
+                            _activityProjector.BeginReadActivityCountsView(establishment.RevisionId);
 
                         if (view != null)
                         {
@@ -168,11 +168,11 @@ namespace UCosmic.Web.Mvc.ApiControllers
                                 });
                             }
                         }
-                    //}
-                    //finally
-                    //{
-                    //    _activityProjector.EndReadActivityCountsView();
-                    //}
+                    }
+                    finally
+                    {
+                        _activityProjector.EndReadActivityCountsView();
+                    }
                 }
             }
 
@@ -236,13 +236,18 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 }
                 else
                 {
-                    var view = new ActivityGlobalPeopleCountView(_queryProcessor, _entities,
-                                                                    establishment.RevisionId);
+                    //var view = new ActivityGlobalPeopleCountView(_queryProcessor, _entities,
+                    //                                                establishment.RevisionId);
 
                     //try
                     //{
                     //    ActivityGlobalPeopleCountView view =
                     //        _activityProjector.BeginReadPeopleCountsView(establishment.RevisionId);
+
+                    try
+                    {
+                        GlobalPeopleCountView view =
+                            _activityProjector.BeginReadPeopleCountsView(establishment.RevisionId);
 
                         if (view != null)
                         {
@@ -269,11 +274,11 @@ namespace UCosmic.Web.Mvc.ApiControllers
                                 });
                             }
                         }
-                    //}
-                    //finally
-                    //{
-                    //    _activityProjector.EndReadPeopleCountsView();
-                    //}
+                    }
+                    finally
+                    {
+                        _activityProjector.EndReadPeopleCountsView();
+                    }
                 }
             }
 

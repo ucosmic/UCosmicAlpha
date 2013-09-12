@@ -535,10 +535,10 @@ module ViewModels.Employees {
         }
 
         setupRouting(): void {
-            this.sammy.get('#/summary', ():void => { this.selectMap('heatmap'); });
-            this.sammy.get('#/search', (): void => { this.selectMap('pointmap'); });
-            this.sammy.get('#/expert', (): void => { this.selectMap('expert'); });
-            this.sammy.get('#/results', (): void => { this.selectMap('resultstable'); });
+            this.sammy.get('#/summary', (): void => { this.selectMap('heatmap'); $('#pageTitle').text("Professional Engagement Summary"); });
+            this.sammy.get('#/search', (): void => { this.selectMap('pointmap'); $('#pageTitle').text("Advanced Search"); });
+            this.sammy.get('#/expert', (): void => { this.selectMap('expert'); $('#pageTitle').text("Find an Expert"); });
+            this.sammy.get('#/results', (): void => { this.selectMap('resultstable'); $('#pageTitle').text("Search Results"); });
 
             this.sammy.run('#/summary');
         }
@@ -1625,7 +1625,6 @@ module ViewModels.Employees {
             else {
                 this.setPeopleSearch();
             }
-
             if (this.heatmap != null) {
                 this.selectMap("heatmap");
             }

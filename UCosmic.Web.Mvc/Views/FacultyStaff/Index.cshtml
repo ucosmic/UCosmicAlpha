@@ -1,9 +1,5 @@
 ﻿ @model UCosmic.Web.Mvc.Models.FacultyStaffInstitutionInfoModel
 
-@{
-    ViewBag.Title = "Professional Engagement Summary";
-}
-
 @section bib
 {
     <nav id="bib-faculty-staff" class="bib hide" data-current-bib="summary">
@@ -300,7 +296,7 @@
 <div id="faculty-staff" class="content fixed to-top" style="display: none" data-current-module="employees">
     <div class="on-left from-top">
         <header>
-            <h1 id="pageTitle">@ViewBag.Title</h1>
+            <h1 id="pageTitle">Professional Engagement Summary</h1>
         </header>
                
         <div style="width: 680px; height: 500px">
@@ -479,7 +475,7 @@
             </div>
             <div style="display: none" data-bind="visible: isExpertVisible()">
                 <div id="expert" style="width: 680px; height: 500px">
-                    <img src="~/images/placeholders/red-96x96.png" width="680" height="500" alt=""/>
+                    <img src="~/images/placeholders/ExpertiseMock.png" width="680" height="500" alt=""/>
                 </div>
             </div>
             <div id="resultstable" style="display: none" data-bind="visible: isTableVisible()">

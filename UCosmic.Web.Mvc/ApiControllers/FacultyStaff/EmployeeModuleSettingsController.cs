@@ -159,10 +159,11 @@ namespace UCosmic.Web.Mvc.ApiControllers
             }
             else
             {
-                if ((employeeModuleSettings.ActivityTypes != null) && (employeeModuleSettings.ActivityTypes.Count >= 0))
+                if ((employeeModuleSettings.ActivityTypes != null) &&
+                    (employeeModuleSettings.ActivityTypes.Count >= 0))
                 {
                     EmployeeActivityType activityType =
-                        employeeModuleSettings.ActivityTypes.SingleOrDefault(a => a.IconName == name);
+                        employeeModuleSettings.ActivityTypes.FirstOrDefault(a => a.IconName == name);
 
                     if (activityType != null)
                     {

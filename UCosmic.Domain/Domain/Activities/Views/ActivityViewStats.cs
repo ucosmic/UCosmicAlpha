@@ -2,7 +2,7 @@
 
 namespace UCosmic.Domain.Activities
 {
-    public abstract class ActivityViewStats
+    public class ActivityViewStats
     {
         public class TypeCount
         {

@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
+using UCosmic.Domain.Employees;
 using UCosmic.Domain.Establishments;
+using UCosmic.Domain.People;
+using UCosmic.Domain.Places;
 
 
 namespace UCosmic.Domain.Activities
@@ -22,6 +26,9 @@ namespace UCosmic.Domain.Activities
         private readonly IProcessQueries _queries;
         private readonly IManageViews _viewManager;
 
+        private Dictionary<int, GlobalActivityCountView> _globalActivityDictionary { get; set; }
+        private Dictionary<int, GlobalPeopleCountView> _globalPeopleDictionary { get; set; }
+
         public ActivityViewProjector(IQueryEntities entities,
                                      IProcessQueries queries,
                                      IManageViews viewManager)
@@ -29,12 +36,18 @@ namespace UCosmic.Domain.Activities
             _entities = entities;
             _queries = queries;
             _viewManager = viewManager;
+            _globalActivityDictionary = new Dictionary<int, GlobalActivityCountView>();
+            _globalPeopleDictionary = new Dictionary<int, GlobalPeopleCountView>();
         }
 
         public void BuildViews()
         {
+#if DEBUG
+            var buildTimer = new Stopwatch();
+            buildTimer.Start();
+#endif
             var entities = _entities.Query<Activity>();
-            
+
             /* ------ Construct the general view. ----- */
 
             var view = new List<ActivityView>();
@@ -42,8 +55,6 @@ namespace UCosmic.Domain.Activities
 
             try
             {
-                
-
                 foreach (var entity in entities)
                 {
                     /* Only public activities. Do not include edit-copy activities */
@@ -56,6 +67,12 @@ namespace UCosmic.Domain.Activities
 
                 _viewManager.Set<ICollection<ActivityView>>(view);
             }
+#if DEBUG
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+            }
+#endif
             finally
             {
                 Rwlock.ExitWriteLock();
@@ -73,28 +90,212 @@ namespace UCosmic.Domain.Activities
                 var establishmentsWithPeopleWithActivities =
                     _queries.Execute(new EstablishmentsWithPeopleWithActivities());
 
-                foreach (var establishment in establishmentsWithPeopleWithActivities)
+                /* ----- Global activity counts per establishment ----- */
+
+                _globalActivityDictionary = _viewManager.Get<Dictionary<int, GlobalActivityCountView>>();
+                if (_globalActivityDictionary == null)
                 {
-                    var globalCounts = new ActivityGlobalActivityCountView(_queries, _entities, establishment.RevisionId);
-                    var dictionary = new Dictionary<int, ActivityGlobalActivityCountView>();
-                    dictionary.Add(establishment.RevisionId, globalCounts);
-                    _viewManager.Set<Dictionary<int, ActivityGlobalActivityCountView>>(dictionary);
+                    _viewManager.Set<Dictionary<int, GlobalActivityCountView>>(
+                        new Dictionary<int, GlobalActivityCountView>());
+                    _globalActivityDictionary = _viewManager.Get<Dictionary<int, GlobalActivityCountView>>();
                 }
+                _globalActivityDictionary.Clear();
 
                 foreach (var establishment in establishmentsWithPeopleWithActivities)
                 {
-                    var globalCounts = new ActivityGlobalPeopleCountView(_queries, _entities, establishment.RevisionId);
-                    var dictionary = new Dictionary<int, ActivityGlobalPeopleCountView>();
-                    dictionary.Add(establishment.RevisionId, globalCounts);
-                    _viewManager.Set<Dictionary<int, ActivityGlobalPeopleCountView>>(dictionary);
+                    int establishmentId = establishment.RevisionId;
+                    var stats = new GlobalActivityCountView {EstablishmentId = establishmentId};
+
+                    stats.TypeCounts = new Collection<ActivityViewStats.TypeCount>();
+                    stats.PlaceCounts = new Collection<ActivityViewStats.PlaceCount>();
+
+                    var settings = _queries.Execute(new EmployeeModuleSettingsByEstablishmentId(establishmentId));
+
+                    DateTime toDateUtc = new DateTime(DateTime.UtcNow.Year + 1, 1, 1);
+                    DateTime fromDateUtc = (settings != null) && (settings.ReportsDefaultYearRange.HasValue)
+                                               ? toDateUtc.AddYears(-(settings.ReportsDefaultYearRange.Value + 1))
+                                               : new DateTime(DateTime.MinValue.Year, 1, 1);
+
+                    stats.CountOfPlaces = 0;
+                    stats.Count = 0;
+
+                    IEnumerable<Place> places = _entities.Query<Place>()
+                                                         .Where(p => p.IsCountry || p.IsWater || p.IsEarth);
+                    foreach (var place in places)
+                    {
+                        int activityCount =
+                            _queries.Execute(
+                                new ActivityCountByPlaceIdsEstablishmentId(new int[] {place.RevisionId},
+                                                                           establishmentId,
+                                                                           fromDateUtc,
+                                                                           toDateUtc,
+                                                                           false, /* include undated */
+                                                                           true /* include future */));
+
+                        stats.PlaceCounts.Add(new ActivityViewStats.PlaceCount
+                        {
+                            PlaceId = place.RevisionId,
+                            OfficialName = place.OfficialName,
+                            Count = activityCount
+                        });
+
+                        stats.Count += activityCount;
+
+                        if (activityCount > 0)
+                        {
+                            stats.CountOfPlaces += 1;
+                        }
+
+                        if ((settings != null) && settings.ActivityTypes.Any())
+                        {
+                            foreach (var type in settings.ActivityTypes)
+                            {
+                                int placeTypeCount = _queries.Execute(
+                                    new ActivityCountByTypeIdPlaceIdsEstablishmentId(type.Id,
+                                                                                     new int[] {place.RevisionId},
+                                                                                     establishmentId,
+                                                                                     fromDateUtc,
+                                                                                     toDateUtc,
+                                                                                     false, /* include undated */
+                                                                                     true /* include future */));
+
+                                var typeCount = stats.TypeCounts.SingleOrDefault(t => t.TypeId == type.Id);
+                                if (typeCount != null)
+                                {
+                                    typeCount.Count += placeTypeCount;
+                                }
+                                else
+                                {
+                                    typeCount = new ActivityViewStats.TypeCount
+                                    {
+                                        TypeId = type.Id,
+                                        Type = type.Type,
+                                        Count = placeTypeCount
+                                    };
+
+                                    stats.TypeCounts.Add(typeCount);
+                                }
+                            }
+                        }
+                    }
+
+                    _globalActivityDictionary.Remove(establishmentId);
+                    _globalActivityDictionary.Add(establishmentId, stats);
                 }
+
+                _viewManager.Set<Dictionary<int, GlobalActivityCountView>>(_globalActivityDictionary);
+
+                /* ----- Global people counts per establishment ----- */
+
+                _globalPeopleDictionary = _viewManager.Get<Dictionary<int, GlobalPeopleCountView>>();
+                if (_globalPeopleDictionary == null)
+                {
+                    _viewManager.Set<Dictionary<int, GlobalPeopleCountView>>(
+                        new Dictionary<int, GlobalPeopleCountView>());
+                    _globalPeopleDictionary = _viewManager.Get<Dictionary<int, GlobalPeopleCountView>>();
+                }
+                _globalPeopleDictionary.Clear();
+
+
+                foreach (var establishment in establishmentsWithPeopleWithActivities)
+                {
+                    int establishmentId = establishment.RevisionId;
+                    var stats = new GlobalPeopleCountView {EstablishmentId = establishmentId};
+
+                    stats.TypeCounts = new Collection<ActivityViewStats.TypeCount>();
+                    stats.PlaceCounts = new Collection<ActivityViewStats.PlaceCount>();
+
+                    var settings = _queries.Execute(new EmployeeModuleSettingsByEstablishmentId(establishmentId));
+
+                    DateTime toDateUtc = new DateTime(DateTime.UtcNow.Year + 1, 1, 1);
+                    DateTime fromDateUtc = (settings != null) && (settings.ReportsDefaultYearRange.HasValue)
+                                               ? toDateUtc.AddYears(-(settings.ReportsDefaultYearRange.Value + 1))
+                                               : new DateTime(DateTime.MinValue.Year, 1, 1);
+
+                    stats.CountOfPlaces = 0;
+                    stats.Count = _queries.Execute(new PeopleWithActivitiesCountByEstablishmentId(establishmentId,
+                                                                                                  fromDateUtc,
+                                                                                                  toDateUtc));
+
+                    IEnumerable<Place> places = _entities.Query<Place>()
+                                                         .Where(p => p.IsCountry || p.IsWater || p.IsEarth);
+                    foreach (var place in places)
+                    {
+                        int peopleCount =
+                            _queries.Execute(
+                                new PeopleWithActivitiesCountByPlaceIdsEstablishmentId(new int[] {place.RevisionId},
+                                                                                       establishmentId,
+                                                                                       fromDateUtc,
+                                                                                       toDateUtc,
+                                                                                       false, /* include undated */
+                                                                                       true /* include future */));
+
+                        stats.PlaceCounts.Add(new ActivityViewStats.PlaceCount
+                        {
+                            PlaceId = place.RevisionId,
+                            OfficialName = place.OfficialName,
+                            Count = peopleCount
+                        });
+
+                        if (peopleCount > 0)
+                        {
+                            stats.CountOfPlaces += 1;
+                        }
+                    }
+
+                    if ((settings != null) && settings.ActivityTypes.Any())
+                    {
+                        foreach (var type in settings.ActivityTypes)
+                        {
+                            int globalTypeCount = _queries.Execute(
+                                new PeopleWithActivitiesCountByTypeIdEstablishmentId(type.Id,
+                                                                                     establishmentId,
+                                                                                     fromDateUtc,
+                                                                                     toDateUtc,
+                                                                                     false, /* include undated */
+                                                                                     true /* include future */));
+
+                            var typeCount = stats.TypeCounts.SingleOrDefault(c => c.TypeId == type.Id);
+                            if (typeCount != null)
+                            {
+                                typeCount.Count += globalTypeCount;
+                            }
+                            else
+                            {
+                                typeCount = new ActivityViewStats.TypeCount
+                                {
+                                    TypeId = type.Id,
+                                    Type = type.Type,
+                                    Count = globalTypeCount
+                                };
+
+                                stats.TypeCounts.Add(typeCount);
+                            }
+                        }
+                    }
+
+                    _globalPeopleDictionary.Remove(establishmentId);
+                    _globalPeopleDictionary.Add(establishmentId, stats);
+                }
+
+                _viewManager.Set<Dictionary<int, GlobalPeopleCountView>>(_globalPeopleDictionary);
             }
+#if DEBUG
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+            }
+#endif
             finally
             {
                 StatsRwlock.ExitWriteLock();
-
-                Debug.WriteLine(DateTime.Now + " ActivityView build complete with " + view.Count + " activities.");
+                Debug.WriteLine(DateTime.Now + " Activity stats done building.");
             }
+
+#if DEBUG
+            buildTimer.Stop();
+            Debug.WriteLine(DateTime.Now + " Activity views build time: " + buildTimer.Elapsed.TotalMinutes + " mins.");
+#endif
         }
 
 #if false
@@ -160,11 +361,12 @@ namespace UCosmic.Domain.Activities
         }
 #endif
 
-        /*
+         /*
          * Each call to BeginReadView() must be matched with EndReadView().
          * This method may return null.
          */
-        public ICollection<ActivityView> BeginReadView()
+            public
+            ICollection<ActivityView> BeginReadView()
         {
             ICollection<ActivityView> view = null;
 
@@ -188,11 +390,14 @@ namespace UCosmic.Domain.Activities
             Rwlock.ExitReadLock();
         }
 
-        public ActivityGlobalActivityCountView BeginReadActivityCountsView(int establishmentId)
+        public GlobalActivityCountView BeginReadActivityCountsView(int establishmentId)
         {
             StatsRwlock.EnterReadLock();
-            var views = _viewManager.Get<Dictionary<int, ActivityGlobalActivityCountView>>();
-            return (views != null) ? views.SingleOrDefault(v => v.Key == establishmentId).Value : null;
+            if (_globalActivityDictionary.Count == 0)
+            {
+                _globalActivityDictionary = _viewManager.Get<Dictionary<int, GlobalActivityCountView>>();
+            }
+            return _globalActivityDictionary.Values.SingleOrDefault(v => v.EstablishmentId == establishmentId);
         }
 
         public void EndReadActivityCountsView()
@@ -200,11 +405,14 @@ namespace UCosmic.Domain.Activities
             StatsRwlock.ExitReadLock();
         }
 
-        public ActivityGlobalPeopleCountView BeginReadPeopleCountsView(int establishmentId)
+        public GlobalPeopleCountView BeginReadPeopleCountsView(int establishmentId)
         {
             StatsRwlock.EnterReadLock();
-            var views = _viewManager.Get<Dictionary<int, ActivityGlobalPeopleCountView>>();
-            return (views != null) ? views.SingleOrDefault(v => v.Key == establishmentId).Value : null;
+            if (_globalPeopleDictionary.Count == 0)
+            {
+                _globalPeopleDictionary = _viewManager.Get<Dictionary<int, GlobalPeopleCountView>>();
+            }
+            return _globalPeopleDictionary.Values.SingleOrDefault(v => v.EstablishmentId == establishmentId);
         }
 
         public void EndReadPeopleCountsView()

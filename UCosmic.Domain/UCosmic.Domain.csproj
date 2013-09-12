@@ -170,6 +170,7 @@
     <Compile Include="Domain\Activities\Views\ActivityViewDirtyFlag.cs" />
     <Compile Include="Domain\Activities\Views\ActivityPlaceTrendPeopleView.cs" />
     <Compile Include="Domain\Activities\Views\ActivityViewStats.cs" />
+    <Compile Include="Domain\Activities\Views\GlobalPeopleCountView.cs" />
     <Compile Include="Domain\Activities\Views\GlobalActivityCountView.cs" />
     <Compile Include="Domain\Agreements\Commands\PurgeParticipant.cs" />
     <Compile Include="Domain\Agreements\Commands\PurgeContactPhone.cs" />

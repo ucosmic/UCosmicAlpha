@@ -55,7 +55,12 @@ namespace UCosmic.Domain.Employees
                 establishment = establishment.Parent; // If this is null, head up the tree until we hit one
             }
 
-            if ((employeeModuleSettings != null) && (employeeModuleSettings.ActivityTypes != null))
+            if (employeeModuleSettings == null)
+            {
+                employeeModuleSettings = new EmployeeModuleSettings();
+            }
+
+            if (employeeModuleSettings.ActivityTypes != null)
             {
                 employeeModuleSettings.ActivityTypes =
                     employeeModuleSettings.ActivityTypes.OrderBy(e => e.Rank).ToArray();

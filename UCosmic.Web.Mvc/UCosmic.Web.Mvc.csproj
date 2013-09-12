@@ -724,6 +724,7 @@
     <Content Include="images\icons\search\search-24-black.png" />
     <Content Include="images\icons\spinner\spinner-24-blue.gif" />
     <None Include="scripts\jquery\jquery-1.9.1.intellisense.js" />
+    <Content Include="images\placeholders\ExpertiseMock.png" />
     <Content Include="images\transparent.png" />
     <TypeScriptCompile Include="scripts\app\Flasher.ts" />
     <TypeScriptCompile Include="scripts\app\PagedSearch.ts" />

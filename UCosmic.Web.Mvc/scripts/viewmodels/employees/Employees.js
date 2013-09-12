@@ -466,15 +466,19 @@ var ViewModels;
                 var _this = this;
                 this.sammy.get('#/summary', function () {
                     _this.selectMap('heatmap');
+                    $('#pageTitle').text("Professional Engagement Summary");
                 });
                 this.sammy.get('#/search', function () {
                     _this.selectMap('pointmap');
+                    $('#pageTitle').text("Advanced Search");
                 });
                 this.sammy.get('#/expert', function () {
                     _this.selectMap('expert');
+                    $('#pageTitle').text("Find an Expert");
                 });
                 this.sammy.get('#/results', function () {
                     _this.selectMap('resultstable');
+                    $('#pageTitle').text("Search Results");
                 });
 
                 this.sammy.run('#/summary');
@@ -1494,7 +1498,6 @@ var ViewModels;
                 } else {
                     this.setPeopleSearch();
                 }
-
                 if (this.heatmap != null) {
                     this.selectMap("heatmap");
                 }

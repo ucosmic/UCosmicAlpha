@@ -51,14 +51,18 @@ namespace UCosmic.Domain.Employees
                 .EagerLoad(_entities, query.EagerLoad)
                 .SingleOrDefault(p => p.Establishment.RevisionId == establishmentId);
 
-            if (employeeModuleSettings != null)
-            {
-                employeeModuleSettings.ActivityTypes.OrderBy(a => a.Rank);
-            }
-            else if (!query.Seeding)
+            if (!query.Seeding && (employeeModuleSettings == null))
             {
                 employeeModuleSettings = new EmployeeModuleSettings();
             }
+
+           if ((employeeModuleSettings != null) &&
+                (employeeModuleSettings.ActivityTypes != null) &&
+                (employeeModuleSettings.ActivityTypes.Count > 0))
+           {
+               employeeModuleSettings.ActivityTypes =
+                   employeeModuleSettings.ActivityTypes.OrderBy(e => e.Rank).ToArray();
+           }
 
             return employeeModuleSettings;
         }

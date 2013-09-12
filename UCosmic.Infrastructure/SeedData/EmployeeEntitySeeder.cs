@@ -12,24 +12,26 @@ namespace UCosmic.SeedData
 {
     public class EmployeeModuleSettingsEntitySeeder : ISeedData
     {
-        private readonly UcEmployeeModuleSettingsSeeder _ucEmployeeModuleSettingsSeeder;
+        //private readonly UcEmployeeModuleSettingsSeeder _ucEmployeeModuleSettingsSeeder;
         private readonly UsfEmployeeModuleSettingsSeeder _usfEmployeeModuleSettingsSeeder;
 
-        public EmployeeModuleSettingsEntitySeeder(UcEmployeeModuleSettingsSeeder ucEmployeeModuleSettingsSeeder
-            , UsfEmployeeModuleSettingsSeeder usfEmployeeModuleSettingsSeeder
+        public EmployeeModuleSettingsEntitySeeder(
+            UsfEmployeeModuleSettingsSeeder usfEmployeeModuleSettingsSeeder
+            //,UcEmployeeModuleSettingsSeeder ucEmployeeModuleSettingsSeeder
         )
         {
-            _ucEmployeeModuleSettingsSeeder = ucEmployeeModuleSettingsSeeder;
+            //_ucEmployeeModuleSettingsSeeder = ucEmployeeModuleSettingsSeeder;
             _usfEmployeeModuleSettingsSeeder = usfEmployeeModuleSettingsSeeder;
         }
 
         public void Seed()
         {
-            _ucEmployeeModuleSettingsSeeder.Seed();
+            //_ucEmployeeModuleSettingsSeeder.Seed();
             _usfEmployeeModuleSettingsSeeder.Seed();
         }
     }
 
+#if false
     public class UcEmployeeModuleSettingsSeeder : BaseEmployeeModuleSettingsSeeder
     {
         private readonly ICommandEntities _entities;
@@ -52,37 +54,37 @@ namespace UCosmic.SeedData
             if (establishment == null) throw new Exception("Establishment is null");
             CreatedEmployeeModuleSettings = Seed(new CreateEmployeeModuleSettings
             {
-                //EmployeeFacultyRanks = new Collection<EmployeeFacultyRank>
-                //{
-                //    new EmployeeFacultyRank {Rank = "Distinguished University Professor", Number = 1},
-                //    new EmployeeFacultyRank {Rank = "Professor", Number = 2},
-                //    new EmployeeFacultyRank {Rank = "Associate Professor", Number = 3},
-                //    new EmployeeFacultyRank {Rank = "Assistant Professor", Number = 4},
-                //    new EmployeeFacultyRank {Rank = "Other", Number = 5}
-                //},
+                EmployeeFacultyRanks = new Collection<EmployeeFacultyRank>
+            {
+                new EmployeeFacultyRank {Rank = "Distinguished University Professor", Number = 1},
+                new EmployeeFacultyRank {Rank = "Professor", Number = 2},
+                new EmployeeFacultyRank {Rank = "Associate Professor", Number = 3},
+                new EmployeeFacultyRank {Rank = "Assistant Professor", Number = 4},
+                new EmployeeFacultyRank {Rank = "Other", Number = 5}
+            },
                 NotifyAdminOnUpdate = false,
                 PersonalInfoAnchorText = null, //"My International",
                 EstablishmentId = establishment.RevisionId,
-                    /* TODO: Need actual UC activity types here. */
                 EmployeeActivityTypes = new Collection<EmployeeActivityType>
-                {
-                    new EmployeeActivityType {Type = "Research or Creative Endeavor", Rank = 1},
-                    new EmployeeActivityType {Type = "Teaching or Mentoring", Rank = 2},
-                    new EmployeeActivityType {Type = "Award or Honor", Rank = 3},
-                    new EmployeeActivityType {Type = "Conference Presentation or Proceeding", Rank = 4},
-                    new EmployeeActivityType {Type = "Professional Development, Service or Consulting", Rank = 5}
-                }
+            {
+                new EmployeeActivityType {Type = "Research or Creative Endeavor", Rank = 1},
+                new EmployeeActivityType {Type = "Teaching or Mentoring", Rank = 2},
+                new EmployeeActivityType {Type = "Award or Honor", Rank = 3},
+                new EmployeeActivityType {Type = "Conference Presentation or Proceeding", Rank = 4},
+                new EmployeeActivityType {Type = "Professional Development, Service or Consulting", Rank = 5}
+            }
             });
         }
     }
+#endif
 
     public class UsfEmployeeModuleSettingsSeeder : BaseEmployeeModuleSettingsSeeder
     {
         private readonly ICommandEntities _entities;
         private readonly IStoreBinaryData _binaryStore;
         public EmployeeModuleSettings CreatedEmployeeModuleSettings { get; private set; }
-        private string[] _activityTypeFileNames;
-        private IDictionary<string,string> _activityTypeIconBinaryPaths;
+        private readonly string[] _activityTypeFileNames;
+        private readonly IDictionary<string, string> _activityTypeIconBinaryPaths;
 
         public UsfEmployeeModuleSettingsSeeder(IProcessQueries queryProcessor
             , ICommandEntities entities
@@ -224,6 +226,7 @@ namespace UCosmic.SeedData
         private readonly IUnitOfWork _unitOfWork;
         private readonly IStoreBinaryData _binaryStore;
 
+
         protected BaseEmployeeModuleSettingsSeeder(IProcessQueries queryProcessor
             , IHandleCommands<CreateEmployeeModuleSettings> createEmployeeModule
             , IUnitOfWork unitOfWork
@@ -341,8 +344,8 @@ namespace UCosmic.SeedData
                 Person person = Entities.Get<Person>().SingleOrDefault(x => x.FirstName == "Dan" && x.LastName == "Ludwig");
                 if (person == null) throw new Exception("UC person not found.");
 
-                EmployeeModuleSettings employeeModuleSettings = QueryProcessor.Execute(new EmployeeModuleSettingsByPersonId(person.RevisionId));
-                if (employeeModuleSettings == null) throw new Exception("No EmployeeModuleSettings for UC.");
+                //EmployeeModuleSettings employeeModuleSettings = QueryProcessor.Execute(new EmployeeModuleSettingsByPersonId(person.RevisionId));
+                //if (employeeModuleSettings == null) throw new Exception("No EmployeeModuleSettings for UC.");
 
                 //EmployeeFacultyRank facultyRank = employeeModuleSettings.FacultyRanks.Single(x => x.Rank == "Professor");
                 //if (facultyRank == null) throw new Exception("UC Professor rank not found.");
@@ -355,6 +358,7 @@ namespace UCosmic.SeedData
                     PersonId = person.RevisionId
                 });
             }
+
             /*
             {
                 Person person = Entities.Get<Person>().SingleOrDefault(x => x.FirstName == "Saibal" && x.LastName == "Ghosh");

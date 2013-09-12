@@ -13,6 +13,7 @@ namespace UCosmic.Domain.Employees
             FacultyRanks = new Collection<EmployeeFacultyRank>();
             ActivityTypes = new Collection<EmployeeActivityType>();
             // ReSharper restore DoNotCallOverridableMethodsInConstructor
+            
             OfferCountry = true;
             OfferActivityType = true;
             OfferFundingQuestions = true;
@@ -20,14 +21,14 @@ namespace UCosmic.Domain.Employees
             ReportsDefaultYearRange = 10;
 
             GlobalViewIconMimeType = "image/png";
-            GlobalViewIconName = "Global View";
+            GlobalViewIconName = "GlobalViewIcon";
             GlobalViewIconPath = string.Format("{0}/{1}", EmployeeConsts.SettingsBinaryStoreBasePath,
                                                EmployeeConsts.DefaultGlobalViewIconGuid);
 
             FindAnExpertIconMimeType = "image/svg+xml";
-            FindAnExpertIconName = "Find an Expert";
+            FindAnExpertIconName = "FindAnExpertIcon";
             FindAnExpertIconPath = string.Format("{0}/{1}", EmployeeConsts.SettingsBinaryStoreBasePath,
-                                               EmployeeConsts.DefaultFindAnExpertIconGuid);
+                                               EmployeeConsts.DefaultFindAnExpertIconGuid); 
         }
 
         public int Id { get; set; }
