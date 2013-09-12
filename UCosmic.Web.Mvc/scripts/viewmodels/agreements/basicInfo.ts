@@ -12,7 +12,6 @@ module agreements {
             this.agreementId = agreementId;
             this.dfdUAgreements = dfdUAgreements;
             this._setupValidation = <() => void > this._setupValidation.bind(this);
-
             this._setupValidation();
         }
         //imported vars

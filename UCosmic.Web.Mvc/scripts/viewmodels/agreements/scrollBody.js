@@ -26,8 +26,6 @@ var scrollBody;
                 $(event.target).closest("ul").find("li").removeClass("current");
                 $(event.target).closest("li").addClass("current");
             };
-            this.kendoWindowBug = ((kendoWindowBug) ? kendoWindowBug : { val: 0 });
-
             this.section1 = ((section1) ? section1 : "");
             this.section2 = ((section2) ? section2 : "");
             this.section3 = ((section3) ? section3 : "");
@@ -38,7 +36,6 @@ var scrollBody;
             this.section8 = ((section8) ? section8 : "");
             this.section9 = ((section9) ? section9 : "");
             this.section10 = ((section10) ? section10 : "");
-
             this.mySection1 = $("#" + this.section1);
             this.mySection2 = $("#" + this.section2);
             this.mySection3 = $("#" + this.section3);
@@ -49,7 +46,6 @@ var scrollBody;
             this.mySection8 = $("#" + this.section8);
             this.mySection9 = $("#" + this.section9);
             this.mySection10 = $("#" + this.section10);
-
             this.navSection1 = $("#nav" + this.section1);
             this.navSection2 = $("#nav" + this.section2);
             this.navSection3 = $("#nav" + this.section3);
@@ -60,7 +56,7 @@ var scrollBody;
             this.navSection8 = $("#nav" + this.section8);
             this.navSection9 = $("#nav" + this.section9);
             this.navSection10 = $("#nav" + this.section10);
-
+            this.kendoWindowBug = ((kendoWindowBug) ? kendoWindowBug : { val: 0 });
             this.$body;
         }
         scroll.prototype.bindJquery = function () {
@@ -72,7 +68,6 @@ var scrollBody;
                 if (_this.kendoWindowBug.val != 0) {
                     _this.scrollMyBody(_this.kendoWindowBug.val);
                 }
-
                 _this.section1Top = _this.mySection1.offset();
                 _this.section2Top = _this.mySection2.offset();
                 _this.section3Top = _this.mySection3.offset();

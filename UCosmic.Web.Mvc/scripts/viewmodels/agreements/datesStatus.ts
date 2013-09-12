@@ -11,6 +11,7 @@ module agreements {
             this.isCustomStatusAllowed = isCustomStatusAllowed
             this._setupValidation();
         }
+
         //imported vars
         isCustomStatusAllowed;
 
@@ -23,7 +24,6 @@ module agreements {
         statusOptions = ko.mapping.fromJS([]);
         statusOptionSelected: KnockoutObservable<string> = ko.observable();
         validateEffectiveDatesCurrentStatus;
-
 
         private _setupValidation(): void {
             ko.validation.rules['greaterThan'] = {
@@ -39,36 +39,34 @@ module agreements {
             ko.validation.rules.date.validator = function (value, validate) {
                     return !value.length || (validate && Globalize.parseDate(value) != null);
                 }
-
             ko.validation.registerExtenders();
-
-                this.validateEffectiveDatesCurrentStatus = ko.validatedObservable({
-                    startDate: this.startDate.extend({
-                        required: {
-                            message: "Start date is required."
-                        },
-                        date: { message: "Start date must valid." },
-                        maxLength: 50
-                    }),
-                    expDate: this.expDate.extend({
-                        required: {
-                            message: "Expiration date is required."
-                        },
-                        date: { message: "Expiration date must valid." },
-                        maxLength: 50,
-                        greaterThan: this.startDate
-                    }),
-                    autoRenew: this.autoRenew.extend({
-                        required: {
-                            message: "Auto renew is required."
-                        }
-                    }),
-                    statusOptionSelected: this.statusOptionSelected.extend({
-                        required: {
-                            message: "Current Status is required."
-                        }
-                    })
+            this.validateEffectiveDatesCurrentStatus = ko.validatedObservable({
+                startDate: this.startDate.extend({
+                    required: {
+                        message: "Start date is required."
+                    },
+                    date: { message: "Start date must valid." },
+                    maxLength: 50
+                }),
+                expDate: this.expDate.extend({
+                    required: {
+                        message: "Expiration date is required."
+                    },
+                    date: { message: "Expiration date must valid." },
+                    maxLength: 50,
+                    greaterThan: this.startDate
+                }),
+                autoRenew: this.autoRenew.extend({
+                    required: {
+                        message: "Auto renew is required."
+                    }
+                }),
+                statusOptionSelected: this.statusOptionSelected.extend({
+                    required: {
+                        message: "Current Status is required."
+                    }
                 })
+            })
         }
         
         bindJquery(): void {

@@ -10,10 +10,8 @@ module agreements {
             this.agreementId = agreementId; 
             this.contactId = contactId;
             this.establishmentItemViewModel = establishmentItemViewModel;
-
             this.removePhone = <() => void > this.removePhone.bind(this);
             this.addPhone = <() => void > this.addPhone.bind(this);
-
             this.phoneTypes = ko.mapping.fromJS([
                 new this.selectConstructor("[None]", ""),
                 new this.selectConstructor("home", "home"),
@@ -21,11 +19,6 @@ module agreements {
                 new this.selectConstructor("mobile", "mobile")
             ]);
             this.bindJquery();
-        }
-
-        selectConstructor = function (name: string, id: string) {
-            this.name = name;
-            this.id = id;
         }
 
         //imported vars
@@ -40,14 +33,18 @@ module agreements {
         phoneTypes = ko.mapping.fromJS([]);
         $phoneTypes: KnockoutObservable<JQuery> = ko.observable();
 
+        selectConstructor = function (name: string, id: string) {
+            this.name = name;
+            this.id = id;
+        }
 
         removePhone(me, e): void {
             var url = App.Routes.WebApi.Agreements.Contacts.Phones.del(this.agreementId.val, me.contactId, me.id);
+
             $.ajax({
                 url: url,
                 type: 'DELETE',
                 success: (): void => {
-                    //this.files.remove(me);
                     this.contactPhones.remove(me);
                     $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * 1.1)));
                 }
@@ -59,7 +56,6 @@ module agreements {
 
         addPhone(me, e): void {
             if (this.contactPhoneTextValue().length > 0) {
-                //var context = ko.contextFor($("#contactPhoneTextValue")[0])
                 this.contactPhones.push({ type: '', contactId: '', value: this.contactPhoneTextValue() })
                 this.contactPhoneTextValue("");
                 $(".phoneTypes").kendoDropDownList({
@@ -72,7 +68,6 @@ module agreements {
             }
         }
 
-
         bindJquery(): void {
             var self = this;
 
@@ -81,13 +76,14 @@ module agreements {
                     if (this.contactId()) {
                         var url = App.Routes.WebApi.Agreements.Contacts.Phones.post(this.agreementId.val, this.contactId()),
                             data = { id: "0", type: '', contactId: this.contactId(), value: this.contactPhoneTextValue() };
+
                         $.post(url, data)
                             .done((response: any, statusText: string, xhr: JQueryXHR): void => {
                                 var myUrl = xhr.getResponseHeader('Location');
+
                                 data.id = myUrl.substring(myUrl.lastIndexOf("/") + 1);
                                 this.contactPhones.push(data)
                                 this.contactPhoneTextValue("");
-
                                 $(".phoneTypes").kendoDropDownList({
                                     dataTextField: "name",
                                     dataValueField: "id",
@@ -115,7 +111,6 @@ module agreements {
                     } else {
                         this.contactPhones.push({ id: '', type: '', contactId: '', value: this.contactPhoneTextValue() })
                         this.contactPhoneTextValue("");
-
                         $(".phoneTypes").kendoDropDownList({
                             dataTextField: "name",
                             dataValueField: "id",
@@ -124,8 +119,6 @@ module agreements {
                             })
                         });
                     }
-
-
                 }
             });
         }

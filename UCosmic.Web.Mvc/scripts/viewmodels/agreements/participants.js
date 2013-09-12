@@ -24,6 +24,7 @@ var agreements;
 
             this.participantsShowErrorMsg = ko.computed(function () {
                 var validateParticipantsHasOwner = false;
+
                 $.each(_this.participants(), function (i, item) {
                     if (item.isOwner() == true) {
                         validateParticipantsHasOwner = true;
@@ -40,8 +41,10 @@ var agreements;
         participants.prototype.removeParticipant = function (establishmentResultViewModel, e) {
             if (confirm('Are you sure you want to remove "' + establishmentResultViewModel.establishmentTranslatedName() + '" as a participant from this agreement?')) {
                 var self = this;
+
                 if (this.agreementIsEdit()) {
                     var url = App.Routes.WebApi.Agreements.Participants.del(this.agreementId.val, ko.dataFor(e.target).establishmentId());
+
                     $.ajax({
                         url: url,
                         type: 'DELETE',

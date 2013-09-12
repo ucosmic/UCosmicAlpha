@@ -38,9 +38,11 @@ var agreements;
         establishmentSearchNav.prototype.SearchPageBind = function (parentOrParticipant) {
             var _this = this;
             var $cancelAddParticipant = $("#cancelAddParticipant"), $searchSideBarAddNew = $("#searchSideBarAddNew"), dfd = $.Deferred(), dfd2 = $.Deferred(), $obj = $("#allParticipants"), $obj2 = $("#addEstablishment"), time = 500;
+
             this.establishmentSearchViewModel.detailTooltip = function () {
                 return 'Choose this establishment as a ' + parentOrParticipant;
             };
+
             $cancelAddParticipant.off();
             $searchSideBarAddNew.off();
             $searchSideBarAddNew.on("click", function (e) {
@@ -62,6 +64,7 @@ var agreements;
                 });
             }
             this.fadeModsOut(dfd, dfd2, $obj, $obj2, time);
+
             $.when(dfd, dfd2).done(function () {
                 $("#estSearch").fadeIn(500);
             });
@@ -90,6 +93,7 @@ var agreements;
             var _this = this;
             if (!this.hasBoundSearch.does) {
                 var lastURL = "asdf";
+
                 this.establishmentSearchViewModel.sammyBeforeRoute = /\#\/index\/(.*)\//;
                 this.establishmentSearchViewModel.sammyGetPageRoute = '#/index';
                 this.establishmentSearchViewModel.sammyDefaultPageRoute = '/agreements[\/]?';
@@ -109,14 +113,17 @@ var agreements;
                 this.establishmentSearchViewModel.sammy.bind("location-changed", function () {
                     if (_this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf(lastURL) < 0) {
                         var $asideRootSearch = $("#asideRootSearch"), $asideParentSearch = $("#asideParentSearch");
+
                         if (_this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("" + _this.editOrNewUrl.val + "#/new/") > 0) {
                             var $addEstablishment = $("#addEstablishment");
                             dfd = $.Deferred(), dfd2 = $.Deferred(), $obj = $("#estSearch"), $obj2 = $("#allParticipants"), time = 500;
+
                             _this.fadeModsOut(dfd, dfd2, $obj, $obj2, time);
                             $.when(dfd, dfd2).done(function () {
                                 $addEstablishment.css("visibility", "").hide().fadeIn(500, function () {
                                     if (!_this.hasBoundItem) {
                                         var $cancelAddEstablishment = $("#cancelAddEstablishment");
+
                                         _this.establishmentItemViewModel = new Establishments.ViewModels.Item(null, false);
                                         _this.establishmentItemViewModel.goToSearch = function () {
                                             sessionStorage.setItem("addest", "yes");
@@ -131,6 +138,7 @@ var agreements;
                                                 if (officialName.text.isValidating() || officialUrl.value.isValidating() || _this.establishmentItemViewModel.ceebCode.isValidating() || _this.establishmentItemViewModel.uCosmicCode.isValidating()) {
                                                     setTimeout(function () {
                                                         var waitResult = _this.establishmentItemViewModel.submitToCreate(formElement);
+
                                                         return false;
                                                     }, 50);
                                                     return false;
@@ -148,9 +156,9 @@ var agreements;
                                                     officialUrl.errors.showAllMessages();
                                                 }
                                                 _this.establishmentItemViewModel.validatingSpinner.stop();
-
                                                 if (officialName.isValid() && officialUrl.isValid() && _this.establishmentItemViewModel.isValid()) {
                                                     var $LoadingPage = $("#LoadingPage").find("strong"), url = App.Routes.WebApi.Establishments.post(), data = _this.establishmentItemViewModel.serializeData();
+
                                                     $LoadingPage.text("Creating Establishment...");
                                                     data.officialName = officialName.serializeData();
                                                     data.officialUrl = officialUrl.serializeData();
@@ -222,6 +230,7 @@ var agreements;
                                 _this.establishmentSearchViewModel.header("Choose a participant");
                                 _this.establishmentSearchViewModel.clickAction = function (context) {
                                     var myParticipant = new InstitutionalAgreementParticipantModel(false, context.id(), context.officialName(), context.translatedName()), alreadyExist = false;
+
                                     for (var i = 0, j = _this.participantsClass.participants().length; i < j; i++) {
                                         if (_this.participantsClass.participants()[i].establishmentId() === myParticipant.establishmentId()) {
                                             alreadyExist = true;
@@ -237,6 +246,7 @@ var agreements;
                                             myParticipant.isOwner(response);
                                             if (_this.agreementIsEdit()) {
                                                 var url = App.Routes.WebApi.Agreements.Participants.put(_this.agreementId.val, myParticipant.establishmentId());
+
                                                 $.ajax({
                                                     type: 'PUT',
                                                     url: url,
@@ -256,6 +266,7 @@ var agreements;
                                         }).fail(function () {
                                             if (_this.agreementIsEdit()) {
                                                 var url = App.Routes.WebApi.Agreements.Participants.put(_this.agreementId.val, myParticipant.establishmentId());
+
                                                 $.ajax({
                                                     type: 'PUT',
                                                     url: url,
@@ -282,6 +293,7 @@ var agreements;
                             lastURL = "#/page/";
                         } else if (_this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("agreements/" + _this.editOrNewUrl.val + "") > 0) {
                             var dfd = $.Deferred(), dfd2 = $.Deferred(), $obj = $("#estSearch"), $obj2 = $("#addEstablishment"), time = 500;
+
                             sessionStorage.setItem("addest", "no");
                             lastURL = "#/index";
                             _this.establishmentSearchViewModel.sammy.setLocation('#/index');

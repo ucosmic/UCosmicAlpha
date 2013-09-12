@@ -23,19 +23,24 @@
 class InstitutionalAgreementEditModel {
     constructor(public initDefaultPageRoute: boolean = true) {
         var culture = $("meta[name='accept-language']").attr("content");
-
         this.scrollBodyClass = new scrollBody.scroll("participants","basicInfo",
-            "effectiveDatesCurrentStatus", "contacts", "fileAttachments", "overallVisibility",null, null, null, null, this.kendoWindowBug);
-        this.establishmentSearchNavClass = new agreements.establishmentSearchNav(this.editOrNewUrl, this.participantsClass, this.agreementIsEdit, this.agreementId, this.scrollBodyClass, this.dfdPageFadeIn);
-
-        this.participantsClass = new agreements.participants(this.agreementId, this.dfdPopParticipants, this.agreementIsEdit, this.establishmentSearchNavClass.establishmentSearchViewModel, this.establishmentSearchNavClass.hasBoundSearch);
+            "effectiveDatesCurrentStatus", "contacts", "fileAttachments", "overallVisibility", null, null, null,
+            null, this.kendoWindowBug);
+        this.establishmentSearchNavClass = new agreements.establishmentSearchNav(this.editOrNewUrl,
+            this.participantsClass, this.agreementIsEdit, this.agreementId, this.scrollBodyClass, this.dfdPageFadeIn);
+        this.participantsClass = new agreements.participants(this.agreementId, this.dfdPopParticipants,
+            this.agreementIsEdit, this.establishmentSearchNavClass.establishmentSearchViewModel,
+            this.establishmentSearchNavClass.hasBoundSearch);
         this.establishmentSearchNavClass.participantsClass = this.participantsClass;
         ko.applyBindings(this.participantsClass, $('#participants')[0]);
         this.basicInfoClass = new agreements.basicInfo(this.agreementId, this.dfdUAgreements);
         ko.applyBindings(this.basicInfoClass, $('#basicInfo')[0]);
-        this.contactClass = new agreements.contacts(this.basicInfoClass.isCustomContactTypeAllowed, this.establishmentSearchNavClass.establishmentItemViewModel, this.agreementIsEdit, this.agreementId, this.kendoWindowBug, this.dfdPopContacts);
+        this.contactClass = new agreements.contacts(this.basicInfoClass.isCustomContactTypeAllowed,
+            this.establishmentSearchNavClass.establishmentItemViewModel, this.agreementIsEdit, this.agreementId,
+            this.kendoWindowBug, this.dfdPopContacts);
         ko.applyBindings(this.contactClass, $('#contacts')[0]);
-        this.fileAttachmentClass = new agreements.fileAttachments(this.agreementId, this.agreementIsEdit, this.spinner, this.establishmentSearchNavClass.establishmentItemViewModel, this.dfdPopFiles);
+        this.fileAttachmentClass = new agreements.fileAttachments(this.agreementId, this.agreementIsEdit,
+            this.spinner, this.establishmentSearchNavClass.establishmentItemViewModel, this.dfdPopFiles);
         ko.applyBindings(this.fileAttachmentClass, $('#fileAttachments')[0]);
         this.datesStatusClass = new agreements.datesStatus(this.basicInfoClass.isCustomStatusAllowed);
         ko.applyBindings(this.datesStatusClass, $('#effectiveDatesCurrentStatus')[0]);
@@ -74,7 +79,6 @@ class InstitutionalAgreementEditModel {
         }
         
         this.isBound(true);
-
         this.basicInfoClass.populateUmbrella();
         this.hideOtherGroups();
         this.establishmentSearchNavClass.bindSearch();
@@ -85,12 +89,7 @@ class InstitutionalAgreementEditModel {
         });
     }
 
-    selectConstructor = function (name: string, id: string) {
-        this.name = name;
-        this.id = id;
-    }
-
-    //module classes
+    //imported classes
     participantsClass;
     basicInfoClass;
     contactClass;
@@ -126,6 +125,11 @@ class InstitutionalAgreementEditModel {
     isBound = ko.observable();
     spinner: App.Spinner = new App.Spinner(new App.SpinnerOptions(400, true));
 
+    selectConstructor = function (name: string, id: string) {
+        this.name = name;
+        this.id = id;
+    }
+
     //to correctly bind with ko, must set visibility to hidden. this removes the visibility to hidden and 
     //changes it to display none.
     hideOtherGroups(): void {
@@ -144,7 +148,7 @@ class InstitutionalAgreementEditModel {
                 $.get(App.Routes.WebApi.Agreements.get(this.agreementId.val))
                     .done((response: any): void => {
                         var dropdownlist,
-                        editor = $("#agreementContent").data("kendoEditor");
+                            editor = $("#agreementContent").data("kendoEditor");
 
                         editor.value(response.content);
                         this.basicInfoClass.content(response.content);
@@ -155,7 +159,6 @@ class InstitutionalAgreementEditModel {
                         } else {
                             this.datesStatusClass.autoRenew(response.isAutoRenew);
                         };
-
                         this.basicInfoClass.nickname(response.name);
                         this.basicInfoClass.privateNotes(response.notes);
                         this.visibilityClass.visibility(response.visibility);
@@ -163,12 +166,10 @@ class InstitutionalAgreementEditModel {
                         ko.mapping.fromJS(response.participants, this.participantsClass.participants);
                         this.dfdPopParticipants.resolve();
                         this.basicInfoClass.uAgreementSelected(response.umbrellaId);
-
                         dropdownlist = $("#uAgreements").data("kendoDropDownList");
                         dropdownlist.select((dataItem) => {
                             return dataItem.value == this.basicInfoClass.uAgreementSelected();
                         });
-
                         this.datesStatusClass.statusOptionSelected(response.status);
                         if (this.basicInfoClass.isCustomStatusAllowed()) {
                             dropdownlist = $("#statusOptions").data("kendoComboBox");
@@ -181,7 +182,6 @@ class InstitutionalAgreementEditModel {
                                 return dataItem.text === this.datesStatusClass.statusOptionSelected();
                             });
                         }
-
                         this.basicInfoClass.typeOptionSelected(response.type);
                         if (this.basicInfoClass.isCustomTypeAllowed()) {
                             dropdownlist = $("#typeOptions").data("kendoComboBox");
@@ -206,6 +206,7 @@ class InstitutionalAgreementEditModel {
 
     bindjQueryKendo(result): void {
         var self = this;
+
         this.basicInfoClass.isCustomTypeAllowed(result.isCustomTypeAllowed);
         this.basicInfoClass.isCustomStatusAllowed(result.isCustomStatusAllowed);
         this.basicInfoClass.isCustomContactTypeAllowed(result.isCustomContactTypeAllowed);
@@ -221,7 +222,6 @@ class InstitutionalAgreementEditModel {
         for (var i = 0, j = result.typeOptions.length; i < j; i++) {
             this.basicInfoClass.typeOptions.push(new this.selectConstructor(result.typeOptions[i], result.typeOptions[i]));
         };
-        
         $(".hasDate").each(function (index, item) {
             $(item).kendoDatePicker({
                 value: new Date($(item).val()),
@@ -238,13 +238,11 @@ class InstitutionalAgreementEditModel {
                 }
             });
         });
-        
         $(".k-window").css({
             position: 'fixed',
             margin: 'auto',
             top: '20px'
         });
-            
         // create Editor from textarea HTML element
         $("#agreementContent").kendoEditor({
             tools: [
@@ -283,7 +281,6 @@ class InstitutionalAgreementEditModel {
             }
             ]
         });
-
         this.basicInfoClass.bindJquery();
         this.contactClass.bindJquery();
         this.fileAttachmentClass.bindJquery();
@@ -295,6 +292,7 @@ class InstitutionalAgreementEditModel {
     getSettings(): void {
         var url = 'App.Routes.WebApi.Agreements.Settings.get()',
             agreementSettingsGet;
+
         $.ajax({
             url: eval(url),
             type: 'GET'
@@ -309,6 +307,7 @@ class InstitutionalAgreementEditModel {
             
     saveUpdateAgreement(): void {
         var offset;
+
         // validate in this order to put scroll in right place
         if (!this.datesStatusClass.validateEffectiveDatesCurrentStatus.isValid()) {
             offset = $("#effectiveDatesCurrentStatus").offset();
@@ -344,15 +343,14 @@ class InstitutionalAgreementEditModel {
                 data;
 
             this.spinner.start();
-
             //ie sucks!
             if (!$("body").scrollTop()) {
                 $("html, body").scrollTop(0);
             } else {
                 $("body").scrollTop(0);
             }
-
             $LoadingPage.text("Saving agreement...");
+
             $("#allParticipants").show().fadeOut(500, function ()  {
                 $("#LoadingPage").hide().fadeIn(500);
             });
@@ -367,15 +365,12 @@ class InstitutionalAgreementEditModel {
                     center: item.center
                 });
             });
-
             if (this.datesStatusClass.autoRenew()== 0) {
                 myAutoRenew = false;
             } else if (this.datesStatusClass.autoRenew() == 1) {
                 myAutoRenew = true;
             }
-
             this.basicInfoClass.content(editor.value());
-
             data = ko.mapping.toJS({
                 content: this.basicInfoClass.content(),
                 expiresOn: this.datesStatusClass.expDate(),
@@ -427,6 +422,7 @@ class InstitutionalAgreementEditModel {
                 $.post(url, data)
                     .done((response: any, statusText: string, xhr: JQueryXHR): void => {
                         var myUrl = xhr.getResponseHeader('Location');
+
                         this.agreementId.val = parseInt(myUrl.substring(myUrl.lastIndexOf("/") + 1));
                         this.fileAttachmentClass.agreementPostFiles(response, statusText, xhr);
                         this.contactClass.agreementPostContacts(response, statusText, xhr);

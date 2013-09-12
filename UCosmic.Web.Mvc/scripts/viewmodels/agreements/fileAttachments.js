@@ -30,6 +30,7 @@ var agreements;
         fileAttachments.prototype.$bindKendoFile = function () {
             var _this = this;
             var saveUrl = "";
+
             if (this.agreementIsEdit()) {
                 saveUrl = App.Routes.WebApi.Agreements.Files.post(this.agreementId.val);
             } else {
@@ -88,11 +89,13 @@ var agreements;
                 success: function (e) {
                     if (e.operation == 'upload') {
                         var myId;
+
                         if (e.response && e.response.message) {
                             App.flasher.flash(e.response.message);
                         }
                         if (_this.agreementIsEdit()) {
                             var myUrl;
+
                             if (e.XMLHttpRequest != undefined) {
                                 myUrl = e.XMLHttpRequest.getResponseHeader('Location');
                             } else {
@@ -145,6 +148,7 @@ else
                 // all files will have a guid in create, none will have a guid in edit agreement
                 // so do a check for agreementId - if it is undefined(for now 0)
                 var url = "";
+
                 if (this.agreementIsEdit()) {
                     url = App.Routes.WebApi.Agreements.Files.del(this.agreementId.val, me.id());
                 } else {
@@ -186,8 +190,8 @@ else
                     extension: me.extension,
                     customName: me.customName,
                     visibility: me.visibility
-                });
-                var url = App.Routes.WebApi.Agreements.Files.put(this.agreementId.val, me.id());
+                }), url = App.Routes.WebApi.Agreements.Files.put(this.agreementId.val, me.id());
+
                 $.ajax({
                     type: 'PUT',
                     url: url,
@@ -237,8 +241,8 @@ else
                     extension: me.extension,
                     customName: me.customName,
                     visibility: me.visibility
-                });
-                var url = App.Routes.WebApi.Agreements.Files.put(this.agreementId.val, me.id());
+                }), url = App.Routes.WebApi.Agreements.Files.put(this.agreementId.val, me.id());
+
                 $.ajax({
                     type: 'PUT',
                     url: url,
@@ -313,6 +317,7 @@ else
         fileAttachments.prototype.agreementPostFiles = function (response, statusText, xhr) {
             var _this = this;
             var tempUrl = App.Routes.WebApi.Agreements.Files.post(this.agreementId.val), data;
+
             $.each(this.files(), function (i, item) {
                 data = ko.mapping.toJS({
                     agreementId: item.agreementId,

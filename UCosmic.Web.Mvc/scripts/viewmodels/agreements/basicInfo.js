@@ -25,7 +25,6 @@ var agreements;
             this.agreementId = agreementId;
             this.dfdUAgreements = dfdUAgreements;
             this._setupValidation = this._setupValidation.bind(this);
-
             this._setupValidation();
         }
         basicInfo.prototype.populateUmbrella = function () {

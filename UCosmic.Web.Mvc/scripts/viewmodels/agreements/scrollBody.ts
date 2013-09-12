@@ -7,8 +7,6 @@ module scrollBody {
 
         constructor(section1?: string, section2?: string, section3?: string, section4?: string, section5?: string, section6?: string,
         section7?: string, section8?: string, section9?: string, section10?: string, kendoWindowBug?) {
-            this.kendoWindowBug = ((kendoWindowBug) ? kendoWindowBug : { val: 0 });
-
             this.section1 = ((section1) ? section1 : "");
             this.section2 = ((section2) ? section2 : "");
             this.section3 = ((section3) ? section3 : "");
@@ -19,7 +17,6 @@ module scrollBody {
             this.section8 = ((section8) ? section8 : "");
             this.section9 = ((section9) ? section9 : "");
             this.section10 = ((section10) ? section10 : "");
-
             this.mySection1 = $("#" + this.section1);
             this.mySection2 = $("#" + this.section2);
             this.mySection3 = $("#" + this.section3);
@@ -30,7 +27,6 @@ module scrollBody {
             this.mySection8 = $("#" + this.section8);
             this.mySection9 = $("#" + this.section9);
             this.mySection10 = $("#" + this.section10);
-
             this.navSection1 = $("#nav" + this.section1);
             this.navSection2 = $("#nav" + this.section2);
             this.navSection3 = $("#nav" + this.section3);
@@ -41,9 +37,10 @@ module scrollBody {
             this.navSection8 = $("#nav" + this.section8);
             this.navSection9 = $("#nav" + this.section9);
             this.navSection10 = $("#nav" + this.section10);
-
+            this.kendoWindowBug = ((kendoWindowBug) ? kendoWindowBug : { val: 0 });
             this.$body;
         }
+
         //imported vars
         section1;
         section2;
@@ -93,6 +90,7 @@ module scrollBody {
         //scroll based on top position
         scrollMyBody = function (position): void {
             var $body;
+
             //ie sucks!
             if (!$("body").scrollTop()) {
                 $("html, body").scrollTop(position);
@@ -101,7 +99,7 @@ module scrollBody {
             }
         }
 
-//scroll based on side nav
+        //scroll based on side nav
         goToSection = function (location, data, event): void {
             var offset = $("#" + location).offset();
             //ie sucks!
@@ -122,7 +120,6 @@ module scrollBody {
                 if (this.kendoWindowBug.val != 0) {
                     this.scrollMyBody(this.kendoWindowBug.val)
                 }
-
                 this.section1Top = this.mySection1.offset();
                 this.section2Top = this.mySection2.offset();
                 this.section3Top = this.mySection3.offset();

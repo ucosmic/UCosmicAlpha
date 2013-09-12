@@ -33,9 +33,7 @@ var agreements;
             ko.validation.rules.date.validator = function (value, validate) {
                 return !value.length || (validate && Globalize.parseDate(value) != null);
             };
-
             ko.validation.registerExtenders();
-
             this.validateEffectiveDatesCurrentStatus = ko.validatedObservable({
                 startDate: this.startDate.extend({
                     required: {
