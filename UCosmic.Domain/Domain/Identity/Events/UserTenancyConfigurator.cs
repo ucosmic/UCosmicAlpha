@@ -1,63 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Linq.Expressions;
-using UCosmic.Domain.Employees;
+﻿using UCosmic.Domain.Employees;
 
 namespace UCosmic.Domain.Identity
 {
     public class UserTenancyConfigurator : IHandleEvents<ApplicationStarted>
     {
         private readonly ICommandEntities _entities;
-        private readonly IUnitOfWork _unitOfWork;
         private readonly IStoreBinaryData _binaryStore;
+        private readonly IHandleCommands<UpdateEmployeeModuleSettings> _updateEmployeeModuleSettings;
 
         public UserTenancyConfigurator(ICommandEntities entities
-            , IUnitOfWork unitOfWork
             , IStoreBinaryData binaryStore
+            , IHandleCommands<UpdateEmployeeModuleSettings> updateEmployeeModuleSettings
         )
         {
             _entities = entities;
-            _unitOfWork = unitOfWork;
             _binaryStore = binaryStore;
+            _updateEmployeeModuleSettings = updateEmployeeModuleSettings;
         }
 
         public void Handle(ApplicationStarted @event)
         {
-
-            /* 9/13/2013 - Dan, was this already run on production? */
-#if false
-            if (@event == null) throw new ArgumentNullException("event");
-
-            var users = _entities.Get<User>()
-                .EagerLoad(_entities, new Expression<Func<User, object>>[]
-                {
-                    x => x.Person.Affiliations,
-                })
-                .Where(x => !x.TenantId.HasValue && x.Person.Affiliations.Any(y => y.IsDefault)).ToArray();
-            if (!users.Any()) return;
-
-            foreach (var user in users)
-            {
-                var defaultAffiliation = user.Person.Affiliations.SingleOrDefault(x => x.IsDefault);
-                if (defaultAffiliation != null)
-                {
-                    user.TenantId = defaultAffiliation.EstablishmentId;
-                }
-            }
-            _unitOfWork.SaveChanges();
-#endif
-
             /* One time to get icons in blob storage */
 #if false
             {
-                /* ----- Global View and Find an Expert Icons */
+                /* ----- Global View and Find an Expert Icons ----- */
 
                 var iconsBinaryPath = string.Format("{0}/{1}/", EmployeeConsts.SettingsBinaryStoreBasePath,
                                                           EmployeeConsts.IconsBinaryStorePath);
 
-                /* Create default Global View icon */
+                //* Create default Global View icon */
                 if (_binaryStore.Get(iconsBinaryPath + EmployeeConsts.DefaultGlobalViewIconGuid) == null)
                 {
                     string filePath = string.Format("{0}{1}{2}", AppDomain.CurrentDomain.BaseDirectory,
@@ -71,7 +42,7 @@ namespace UCosmic.Domain.Identity
                     }
                 }
 
-                /* Create default Find an Expert icon */
+                //* Create default Find an Expert icon */
                 if (_binaryStore.Get(iconsBinaryPath + EmployeeConsts.DefaultFindAnExpertIconGuid) == null)
                 {
                     var filePath = string.Format("{0}{1}{2}", AppDomain.CurrentDomain.BaseDirectory,
@@ -104,7 +75,7 @@ namespace UCosmic.Domain.Identity
                 };
 
                 var activityTypeIconBinaryPath = string.Format("{0}/{1}/{2}/", EmployeeConsts.SettingsBinaryStoreBasePath,
-                                                            3306,   // USF
+                                                            1,   // USF
                                                             EmployeeConsts.IconsBinaryStorePath);
 
 
@@ -127,6 +98,124 @@ namespace UCosmic.Domain.Identity
                         }
                     }
                 }
+            }
+#endif
+
+#if false
+                /* ----- Update the EmployeeModuleSettings rows ----- */
+            {
+                var iconsBinaryPath = string.Format("{0}/{1}/", EmployeeConsts.SettingsBinaryStoreBasePath,
+                                                          EmployeeConsts.IconsBinaryStorePath);
+
+                /* ----- Activity Type icons for USF ----- */
+                //var activityTypeFilenames = new string[]
+                //{
+                //    "noun_project_762_idea.svg",
+                //    "noun_project_14888_teacher.svg",
+                //    "noun_project_17372_medal.svg",
+                //    "noun_project_16986_podium.svg",
+                //    "noun_project_401_briefcase.svg"
+                //};
+
+                var activityTypeFilenameMap = new Dictionary<string, string>
+                {
+                    {"noun_project_762_idea.svg", "5117FFC4-C3CD-42F8-9C68-6B4362930A99"},
+                    {"noun_project_14888_teacher.svg", "0033E48C-95CD-487B-8B0D-571E71EFF844"},
+                    {"noun_project_17372_medal.svg", "8C746B8A-6B24-4881-9D4D-D830FBCD723A"},
+                    {"noun_project_16986_podium.svg", "E44978F8-3664-4F7A-A2AF-6A0446D38099"},
+                    {"noun_project_401_briefcase.svg", "586DDDBB-DE01-429B-8428-57A9D03189CB"}
+                };
+
+                var activityTypeIconBinaryPath = string.Format("{0}/{1}/{2}/", EmployeeConsts.SettingsBinaryStoreBasePath,
+                                                            1,   // USF
+                                                            EmployeeConsts.IconsBinaryStorePath);
+
+
+                var settings = _entities.Get<EmployeeModuleSettings>().SingleOrDefault(x => x.Establishment.RevisionId == 3306 /* USF */);
+                if (settings == null) { return; }
+
+                EmployeeActivityType activityType;
+
+                activityType =
+                    settings.ActivityTypes.Single(a => a.Type == "Research or Creative Endeavor");
+                activityType.IconLength =
+                    _binaryStore.Get(activityTypeIconBinaryPath + activityTypeFilenameMap["noun_project_762_idea.svg"])
+                                .Length;
+                activityType.IconMimeType = "image/svg+xml";
+                activityType.IconName = "Research.svg";
+                activityType.IconPath = activityTypeIconBinaryPath;
+                activityType.IconFileName = activityTypeFilenameMap["noun_project_762_idea.svg"];
+
+                activityType =
+                    settings.ActivityTypes.Single(a => a.Type == "Teaching or Mentoring");
+                activityType.IconLength =
+                    _binaryStore.Get(activityTypeIconBinaryPath +
+                                     activityTypeFilenameMap["noun_project_14888_teacher.svg"]).Length;
+                activityType.IconMimeType = "image/svg+xml";
+                activityType.IconName = "Teaching.svg";
+                activityType.IconPath = activityTypeIconBinaryPath;
+                activityType.IconFileName = activityTypeFilenameMap["noun_project_14888_teacher.svg"];
+
+                activityType =
+                    settings.ActivityTypes.Single(a => a.Type == "Award or Honor");
+                activityType.IconLength =
+                    _binaryStore.Get(activityTypeIconBinaryPath +
+                                     activityTypeFilenameMap["noun_project_17372_medal.svg"]).Length;
+                activityType.IconMimeType = "image/svg+xml";
+                activityType.IconName = "Award.svg";
+                activityType.IconPath = activityTypeIconBinaryPath;
+                activityType.IconFileName = activityTypeFilenameMap["noun_project_17372_medal.svg"];
+
+                activityType =
+                    settings.ActivityTypes.Single(
+                        a => a.Type == "Conference Presentation or Proceeding");
+                activityType.IconLength =
+                    _binaryStore.Get(activityTypeIconBinaryPath +
+                                     activityTypeFilenameMap["noun_project_16986_podium.svg"]).Length;
+                activityType.IconMimeType = "image/svg+xml";
+                activityType.IconName = "Conference.svg";
+                activityType.IconPath = activityTypeIconBinaryPath;
+                activityType.IconFileName = activityTypeFilenameMap["noun_project_16986_podium.svg"];
+
+                activityType =
+                    settings.ActivityTypes.Single(
+                        a => a.Type == "Professional Development, Service or Consulting");
+                activityType.IconLength =
+                    _binaryStore.Get(activityTypeIconBinaryPath +
+                                     activityTypeFilenameMap["noun_project_401_briefcase.svg"]).Length;
+                activityType.IconMimeType = "image/svg+xml";
+                activityType.IconName = "Professional.svg";
+                activityType.IconPath = activityTypeIconBinaryPath;
+                activityType.IconFileName = activityTypeFilenameMap["noun_project_401_briefcase.svg"];
+
+
+                var updateCommand = new UpdateEmployeeModuleSettings(settings.Id)
+                {
+                    EmployeeFacultyRanks = settings.FacultyRanks,
+                    NotifyAdminOnUpdate = settings.NotifyAdminOnUpdate,
+                    NotifyAdmins = settings.NotifyAdmins,
+                    PersonalInfoAnchorText = settings.PersonalInfoAnchorText,
+                    Establishment = settings.Establishment,
+                    EmployeeActivityTypes = settings.ActivityTypes,
+                    OfferCountry = settings.OfferCountry,
+                    OfferActivityType = settings.OfferActivityType,
+                    OfferFundingQuestions = settings.OfferFundingQuestions,
+                    InternationalPedigreeTitle = settings.InternationalPedigreeTitle,
+
+                    GlobalViewIconLength = _binaryStore.Get(iconsBinaryPath + EmployeeConsts.DefaultGlobalViewIconGuid).Length,
+                    GlobalViewIconMimeType = "image/png",
+                    GlobalViewIconName = "GlobalViewIcon.png",
+                    GlobalViewIconPath = iconsBinaryPath,
+                    GlobalViewIconFileName = EmployeeConsts.DefaultGlobalViewIconGuid,
+
+                    FindAnExpertIconLength = _binaryStore.Get(iconsBinaryPath + EmployeeConsts.DefaultFindAnExpertIconGuid).Length,
+                    FindAnExpertIconMimeType = "image/svg+xml",
+                    FindAnExpertIconName = "FindAnExpertIcon.svg",
+                    FindAnExpertIconPath = iconsBinaryPath,
+                    FindAnExpertIconFileName = EmployeeConsts.DefaultFindAnExpertIconGuid,
+                };
+
+                _updateEmployeeModuleSettings.Handle(updateCommand);
             }
 #endif
         }

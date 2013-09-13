@@ -20,7 +20,16 @@ namespace UCosmic.Domain.Employees
         public bool? OfferActivityType { get; set; }
         public bool? OfferFundingQuestions { get; set; }
         public string InternationalPedigreeTitle { get; set; }
-
+        public int? GlobalViewIconLength { get; set; }
+        public string GlobalViewIconMimeType { get; set; }
+        public string GlobalViewIconName { get; set; }
+        public string GlobalViewIconPath { get; set; }
+        public string GlobalViewIconFileName { get; set; }
+        public int? FindAnExpertIconLength { get; set; }
+        public string FindAnExpertIconMimeType { get; set; }
+        public string FindAnExpertIconName { get; set; }
+        public string FindAnExpertIconPath { get; set; }
+        public string FindAnExpertIconFileName { get; set; }
 
         internal bool NoCommit { get; set; }
 
@@ -35,11 +44,6 @@ namespace UCosmic.Domain.Employees
         public ValidateUpdateEmployeeModuleSettingsCommand(IQueryEntities entities)
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
-
-            //RuleFor(x => x.Id)
-            //    .MustFindEmployeeById(entities)
-            //        .WithMessage(MustFindEmployeeById.FailMessageFormat, x => x.Id)
-            //;
         }
     }
 
@@ -107,7 +111,46 @@ namespace UCosmic.Domain.Employees
             {
                 settings.InternationalPedigreeTitle = command.InternationalPedigreeTitle;
             }
-
+            if (command.GlobalViewIconLength.HasValue)
+            {
+                settings.GlobalViewIconLength = command.GlobalViewIconLength; 
+            }
+            if (!String.IsNullOrEmpty(command.GlobalViewIconMimeType))
+            {
+                settings.GlobalViewIconMimeType = command.GlobalViewIconMimeType;
+            }
+            if (!String.IsNullOrEmpty(command.GlobalViewIconName))
+            {
+                settings.GlobalViewIconName = command.GlobalViewIconName;
+            }
+            if (!String.IsNullOrEmpty(command.GlobalViewIconPath))
+            {
+                settings.GlobalViewIconPath = command.GlobalViewIconPath;
+            }
+            if (!String.IsNullOrEmpty(command.GlobalViewIconFileName))
+            {
+                settings.GlobalViewIconFileName = command.GlobalViewIconFileName;
+            }
+            if (command.FindAnExpertIconLength.HasValue)
+            {
+                settings.FindAnExpertIconLength = command.FindAnExpertIconLength; 
+            }
+            if (!String.IsNullOrEmpty(command.FindAnExpertIconMimeType))
+            {
+                settings.FindAnExpertIconMimeType = command.FindAnExpertIconMimeType;
+            }
+            if (!String.IsNullOrEmpty(command.FindAnExpertIconName))
+            {
+                settings.FindAnExpertIconName = command.FindAnExpertIconName;
+            }
+            if (!String.IsNullOrEmpty(command.FindAnExpertIconPath))
+            {
+                settings.FindAnExpertIconPath = command.FindAnExpertIconPath;
+            }
+            if (!String.IsNullOrEmpty(command.FindAnExpertIconFileName))
+            {
+                settings.FindAnExpertIconFileName = command.FindAnExpertIconFileName;
+            }
 
             _entities.Update(settings);
 
