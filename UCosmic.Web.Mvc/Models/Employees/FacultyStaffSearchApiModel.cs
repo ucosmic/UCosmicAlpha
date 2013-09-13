@@ -31,5 +31,6 @@ namespace UCosmic.Web.Mvc.Models
         public int? CampusId { get; set; }
         public int? CollegeId { get; set; }
         public int? DepartmentId { get; set; }
+        public string Degrees { get; set; }
     }
 }
