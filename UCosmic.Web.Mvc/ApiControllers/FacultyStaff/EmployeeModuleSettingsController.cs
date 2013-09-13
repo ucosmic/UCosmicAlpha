@@ -144,17 +144,17 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 }
             }
 
-            string path;
+            string filePath;
             string mimeType;
 
             if (String.Compare(name, employeeModuleSettings.GlobalViewIconName, false, CultureInfo.CurrentCulture) == 0)
             {
-                path = employeeModuleSettings.GlobalViewIconPath;
+                filePath = employeeModuleSettings.GlobalViewIconPath + employeeModuleSettings.GlobalViewIconFileName;
                 mimeType = employeeModuleSettings.GlobalViewIconMimeType;
             }
             else if ( String.Compare(name, employeeModuleSettings.FindAnExpertIconName, false, CultureInfo.CurrentCulture) == 0)
             {
-                path = employeeModuleSettings.FindAnExpertIconPath;
+                filePath = employeeModuleSettings.FindAnExpertIconPath + employeeModuleSettings.FindAnExpertIconFileName;
                 mimeType = employeeModuleSettings.FindAnExpertIconMimeType;
             }
             else
@@ -167,7 +167,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
                     if (activityType != null)
                     {
-                        path = activityType.IconPath;
+                        filePath = activityType.IconPath + activityType.IconFileName;
                         mimeType = activityType.IconMimeType;
                     }
                     else
@@ -181,7 +181,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 }
             }
 
-            byte[] content = _binaryStore.Get(path);
+            byte[] content = _binaryStore.Get(filePath);
             if (content == null)
             {
                 return new HttpResponseMessage(HttpStatusCode.NotFound);

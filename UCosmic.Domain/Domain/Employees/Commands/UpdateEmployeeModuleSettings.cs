@@ -36,10 +36,10 @@ namespace UCosmic.Domain.Employees
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
-            RuleFor(x => x.Id)
-                .MustFindEmployeeById(entities)
-                    .WithMessage(MustFindEmployeeById.FailMessageFormat, x => x.Id)
-            ;
+            //RuleFor(x => x.Id)
+            //    .MustFindEmployeeById(entities)
+            //        .WithMessage(MustFindEmployeeById.FailMessageFormat, x => x.Id)
+            //;
         }
     }
 

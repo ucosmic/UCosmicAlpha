@@ -20,15 +20,17 @@ namespace UCosmic.Domain.Employees
             InternationalPedigreeTitle = "International Pedigree";
             ReportsDefaultYearRange = 10;
 
+            GlobalViewIconFileName = EmployeeConsts.DefaultGlobalViewIconGuid;
             GlobalViewIconMimeType = "image/png";
             GlobalViewIconName = "GlobalViewIcon";
-            GlobalViewIconPath = string.Format("{0}/{1}", EmployeeConsts.SettingsBinaryStoreBasePath,
-                                               EmployeeConsts.DefaultGlobalViewIconGuid);
+            GlobalViewIconPath = string.Format("{0}/{1}/", EmployeeConsts.SettingsBinaryStoreBasePath,
+                                                      EmployeeConsts.IconsBinaryStorePath);
 
+            FindAnExpertIconFileName = EmployeeConsts.DefaultFindAnExpertIconGuid;
             FindAnExpertIconMimeType = "image/svg+xml";
             FindAnExpertIconName = "FindAnExpertIcon";
-            FindAnExpertIconPath = string.Format("{0}/{1}", EmployeeConsts.SettingsBinaryStoreBasePath,
-                                               EmployeeConsts.DefaultFindAnExpertIconGuid); 
+            FindAnExpertIconPath = string.Format("{0}/{1}/", EmployeeConsts.SettingsBinaryStoreBasePath,
+                                                      EmployeeConsts.IconsBinaryStorePath);
         }
 
         public int Id { get; set; }

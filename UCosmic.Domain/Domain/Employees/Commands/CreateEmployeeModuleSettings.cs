@@ -60,11 +60,15 @@ namespace UCosmic.Domain.Employees
     {
         private readonly ICommandEntities _entities;
         private readonly IStoreBinaryData _binaryData;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public HandleCreateEmployeeModuleSettingsCommand(ICommandEntities entities, IStoreBinaryData binaryData)
+        public HandleCreateEmployeeModuleSettingsCommand(ICommandEntities entities,
+                                                         IStoreBinaryData binaryData,
+                                                         IUnitOfWork unitOfWork)
         {
             _entities = entities;
             _binaryData = binaryData;
+            _unitOfWork = unitOfWork;
         }
 
         public void Handle(CreateEmployeeModuleSettings command)
@@ -97,6 +101,7 @@ namespace UCosmic.Domain.Employees
             };
 
             _entities.Create(employeeModuleSettings);
+            _unitOfWork.SaveChanges();
 
             command.CreatedEmployeeModuleSettings = employeeModuleSettings;
         }
