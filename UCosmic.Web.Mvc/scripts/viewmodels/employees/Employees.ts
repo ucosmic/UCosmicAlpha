@@ -17,7 +17,7 @@ module ViewModels.Employees {
         institutions: KnockoutObservableArray<any>;
         loadSpinner: App.Spinner = new App.Spinner(new App.SpinnerOptions(200));
 
-        load(): JQueryPromise {
+        load(): JQueryPromise<any> {
             var deferred: JQueryDeferred<void> = $.Deferred();
             //this.loadSpinner.start();
             $.ajax({

@@ -20,14 +20,14 @@ namespace UCosmic.Domain.Places
             // ReSharper restore DoNotCallOverridableMethodsInConstructor
         }
 
+        public int? ParentId { get; protected internal set; }
+        public virtual Place Parent { get; protected internal set; }
+
         public Coordinates Center { get; protected internal set; }
         public BoundingBox BoundingBox { get; protected internal set; }
 
         public string OfficialName { get; protected internal set; }
         public virtual ICollection<PlaceName> Names { get; protected internal set; }
-
-        public int? ParentId { get; protected internal set; }
-        public virtual Place Parent { get; protected internal set; }
         public virtual ICollection<Place> Children { get; protected internal set; }
         public virtual ICollection<PlaceNode> Ancestors { get; protected set; }
         public virtual ICollection<PlaceNode> Offspring { get; protected set; }

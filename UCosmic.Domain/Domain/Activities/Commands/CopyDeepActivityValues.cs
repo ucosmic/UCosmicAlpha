@@ -6,7 +6,7 @@ namespace UCosmic.Domain.Activities
 {
     public class CopyDeepActivityValues
     {
-        public CopyDeepActivityValues(IPrincipal principal)
+        internal CopyDeepActivityValues(IPrincipal principal)
         {
             Principal = principal;
         }

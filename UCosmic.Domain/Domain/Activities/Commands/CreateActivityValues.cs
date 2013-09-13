@@ -44,6 +44,11 @@ namespace UCosmic.Domain.Activities
                 .MustFindActivityById(entities)
                     .WithMessage(MustFindActivityById.FailMessageFormat, x => x.ActivityId)
             ;
+
+            RuleFor(x => x.Title)
+                .Length(0, ActivityValuesConstraints.TitleMaxLength)
+                    .WithMessage(MustNotExceedStringLength.FailMessageFormat, x => "Title", x => ActivityValuesConstraints.TitleMaxLength, x => x.Title.Length)
+            ;
         }
     }
 

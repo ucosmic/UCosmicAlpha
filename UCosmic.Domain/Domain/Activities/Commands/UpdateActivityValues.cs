@@ -8,7 +8,7 @@ namespace UCosmic.Domain.Activities
 {
     public class UpdateActivityValues
     {
-        public UpdateActivityValues(IPrincipal principal, int id)
+        internal UpdateActivityValues(IPrincipal principal, int id)
         {
             if (principal == null) { throw new ArgumentNullException("principal"); }
 

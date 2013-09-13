@@ -46,6 +46,13 @@ namespace UCosmic.Domain.Activities
             RuleFor(x => x.ModeText)
                 .MustHaveActivityMode()
                     .WithMessage(MustHaveActivityMode.FailMessage);
+
+            When(x => x.Values != null, () =>
+                RuleFor(x => x.Values.Title)
+                    .Length(0, ActivityValuesConstraints.TitleMaxLength)
+                        .WithMessage(MustNotExceedStringLength.FailMessageFormat,
+                            x => "Title", x => ActivityValuesConstraints.TitleMaxLength, x => x.Values.Title.Length)
+            );
         }
     }
 
