@@ -163,7 +163,7 @@ module scrollBody {
                     $("aside").find("li").removeClass("current");
                     this.navSection10.closest("li").addClass("current");
                 }
-            });
+            })
         }
     }
 

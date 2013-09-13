@@ -132,6 +132,7 @@ namespace UCosmic.Web.Mvc.Controllers
                 public readonly string _SearchSideBar = "_SearchSideBar";
                 public readonly string Form = "Form";
                 public readonly string Index = "Index";
+                public readonly string Index_old = "Index_old";
                 public readonly string Owners = "Owners";
                 public readonly string Settings = "Settings";
                 public readonly string Show = "Show";
@@ -147,6 +148,7 @@ namespace UCosmic.Web.Mvc.Controllers
             public readonly string _SearchSideBar = "~/Views/Agreements/_SearchSideBar.cshtml";
             public readonly string Form = "~/Views/Agreements/Form.cshtml";
             public readonly string Index = "~/Views/Agreements/Index.cshtml";
+            public readonly string Index_old = "~/Views/Agreements/Index_old.cshtml";
             public readonly string Owners = "~/Views/Agreements/Owners.cshtml";
             public readonly string Settings = "~/Views/Agreements/Settings.cshtml";
             public readonly string Show = "~/Views/Agreements/Show.cshtml";

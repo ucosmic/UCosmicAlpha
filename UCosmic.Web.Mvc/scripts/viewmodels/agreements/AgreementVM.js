@@ -20,10 +20,8 @@
 /// <reference path="./basicInfo.ts" />
 /// <reference path="./establishmentSearchNav.ts" />
 var InstitutionalAgreementEditModel = (function () {
-    function InstitutionalAgreementEditModel(initDefaultPageRoute) {
-        if (typeof initDefaultPageRoute === "undefined") { initDefaultPageRoute = true; }
+    function InstitutionalAgreementEditModel() {
         var _this = this;
-        this.initDefaultPageRoute = initDefaultPageRoute;
         this.percentOffBodyHeight = .6;
         //jquery defered for setting body height.
         this.dfdUAgreements = $.Deferred();

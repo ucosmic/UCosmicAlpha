@@ -2785,6 +2785,10 @@ namespace Links
                 public static readonly string fileAttachments_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/fileAttachments.min.js") ? Url("fileAttachments.min.js") : Url("fileAttachments.js");
                               
                 public static readonly string fileAttachments_min_js = Url("fileAttachments.min.js");
+                public static readonly string index_ts = Url("index.ts");
+                public static readonly string index_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/index.min.js") ? Url("index.min.js") : Url("index.js");
+                              
+                public static readonly string index_min_js = Url("index.min.js");
                 public static readonly string participants_ts = Url("participants.ts");
                 public static readonly string participants_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/participants.min.js") ? Url("participants.min.js") : Url("participants.js");
                               

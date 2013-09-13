@@ -21,7 +21,7 @@
 /// <reference path="./establishmentSearchNav.ts" />
 
 class InstitutionalAgreementEditModel {
-    constructor(public initDefaultPageRoute: boolean = true) {
+    constructor() {
         var culture = $("meta[name='accept-language']").attr("content");
         this.scrollBodyClass = new scrollBody.scroll("participants","basicInfo",
             "effectiveDatesCurrentStatus", "contacts", "fileAttachments", "overallVisibility", null, null, null,

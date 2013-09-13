@@ -33,16 +33,12 @@
                         <option value="50">Show 50 results per page</option>
                         <option value="100">Show 100 results per page</option>
                         <option value="250">Show 250 results per page</option>
-                        @*<option value="@int.MaxValue">Show all results</option>*@
                     </select>
                 </div>
                 <div class="field" style="display: none;">
                     <select class="side" data-xbind="value: lens">
                         <option value="table">Table</option>
                         <option value="list">List</option>
-                        @*<option value="grid">Grid</option>
-                        <option value="map">Map</option>
-                        <option value="tree">Tree</option>*@
                     </select>
                 </div>
                 <div class="field">
@@ -54,25 +50,17 @@
             </div>
         </li>
     </ul>
-    @*<ul class="bottom" data-xbind="foreach: lenses">
-        <li data-xbind="css: { current: $parent.lens() === value }">
-            <a href="#" class="group" data-xbind="click: $parent.changeLens">
-                <div class="arrow"></div>
-                <span class="text" data-xbind="text: text"></span>
-            </a>
-        </li>
-    </ul>*@
     <ul class="bottom">
         <li class="current">
             <a href="#" class="group">
                 <div class="arrow"></div>
-                <span class="text">Map</span>
+                <span class="text">Table</span>
             </a>
         </li>
         <li class="">
             <a href="#" class="group">
                 <div class="arrow"></div>
-                <span class="text">Table</span>
+                <span class="text">Map</span>
             </a>
         </li>
         <li class="">

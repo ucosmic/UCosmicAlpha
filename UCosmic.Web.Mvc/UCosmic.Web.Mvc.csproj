@@ -361,6 +361,7 @@
     <Compile Include="Models\Agreements\AgreementContactApiModel.cs" />
     <Compile Include="Models\Agreements\AgreementFileApiModel.cs" />
     <Compile Include="Models\Agreements\AgreementUmbrellaOptionApiProfiler.cs" />
+    <Compile Include="Models\Agreements\AgreementPageApiModel.cs" />
     <Compile Include="Models\Degrees\DegreeApiModel.cs" />
     <Compile Include="Models\Degrees\DegreeSearchInputModel.cs" />
     <Compile Include="Models\Employees\FacultyStaffSearchApiModel.cs" />
@@ -1921,6 +1922,13 @@
       <DependentUpon>fileAttachments.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="scripts\viewmodels\agreements\participants.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\agreements\index.ts" />
+    <Content Include="scripts\viewmodels\agreements\index.js">
+      <DependentUpon>index.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\agreements\index.min.js">
+      <DependentUpon>index.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\viewmodels\agreements\participants.js">
       <DependentUpon>participants.ts</DependentUpon>
     </Content>
@@ -2351,6 +2359,7 @@
     <Content Include="Views\Agreements\_FormFileAttachments.cshtml" />
     <Content Include="Views\Agreements\_FormOverallVisibility.cshtml" />
     <Content Include="Views\Agreements\_FormSidebarNav.cshtml" />
+    <Content Include="Views\Agreements\Index_old.cshtml" />
     <None Include="Views\ApiTest\Index.cshtml" />
     <Content Include="Views\Agreements\Settings.cshtml" />
     <Content Include="Views\Agreements\_SearchSideBar.cshtml" />

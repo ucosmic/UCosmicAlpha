@@ -70,6 +70,28 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return models;
         }
 
+        //[GET("{domain}")]
+        //public IEnumerable<AgreementPageApiModel> Get(string domain)
+        //{
+        //    // use domain parameter, but fall back to style cookie if not passed.
+        //    var tenancy = Request.Tenancy() ?? new Tenancy { StyleDomain = "default" };
+        //    domain = string.IsNullOrWhiteSpace(domain)
+        //        ? tenancy.StyleDomain : domain;
+
+        //    if ("default".Equals(domain) || string.IsNullOrWhiteSpace(domain))
+        //    {
+        //        // fall back again to user default affiliation
+        //        var defaultAffliation = _queryProcessor.Execute(new MyDefaultAffiliation(User));
+        //        if (defaultAffliation != null)
+        //            domain = defaultAffliation.WebsiteUrl;
+        //    }
+
+        //    var entities = _queryProcessor.Execute(new AgreementsByOwnerDomain(User, domain));
+        //    if (entities == null || !entities.Any()) throw new HttpResponseException(HttpStatusCode.NotFound);
+        //    var models = Mapper.Map<AgreementApiModel[]>(entities);
+        //    return models;
+        //}
+
         [GET("{agreementId:int}/umbrellas")]
         [Authorize(Roles = RoleName.AgreementManagers)]
         public IEnumerable<TextValuePair> GetUmbrellaOptions(int agreementId)

@@ -7,86 +7,51 @@
         @Html.Partial(MVC.Agreements.Views._Bib)
     </nav>
 }
-
 @section scripts
 {
 
-    <script>
-        function ViewModel() {
-            var self = this;
-            var google = window.google;
-            this.isWorking = ko.observable('Hello, knockout.');
-            google.maps.visualRefresh = true;
+         @Scripts.Render("~/bundles/agreementSearch")
+    <script type="text/javascript">
+        //ko.bindingHandlers.stopBinding = {
+        //    init: function () {
+        //        return { controlsDescendantBindings: true };
+        //    }
+        //};
 
-            this.googleMap = new google.maps.Map($('#google_map_canvas')[0], {
-                mapTypeId: google.maps.MapTypeId.ROADMAP,
-                center: new google.maps.LatLng(0, 0), // americas on left, australia on right
-                zoom: 1, // zoom out
-                draggable: true, // allow map panning
-                scrollwheel: false // prevent mouse wheel zooming
-            });
-            this.isGoogleMapIdle = false;
+        //ko.virtualElements.allowedBindings.stopBinding = true;
 
-            google.maps.event.addListenerOnce(self.googleMap, 'idle', function () {
-                self.isGoogleMapIdle = true;
-                if (self.heatMap)
-                    self.heatMap.setMap(self.googleMap);
-
-                google.maps.event.addListener(self.googleMap, 'zoom_changed', function () {
-                    //alert('zoom changed');
-                    self.heatMap.setMap(null);
-                    setTimeout(function () {
-                        self.heatMap.setMap(self.googleMap);
-                    }, 10);
-                });
-            });
-
-            this.pointData = [];
-            this.heatMap = undefined;
-
-            $.get('/api/agreements/@ViewBag.Domain/partners/')
-                .done(function (results) {
-                    for (var i = 0; i < results.length; i++) {
-                        var result = results[i];
-                        if (result.center && result.center.latitude && result.center.longitude) {
-                            self.pointData.push(new google.maps.LatLng(result.center.latitude, result.center.longitude));
-                        } else {
-                            alert('no point data for establishment ' + result.establishmentId);
-                        }
-                    }
-                    var pointArray = new google.maps.MVCArray(self.pointData);
-                    var gradient = [
-                        'rgba(0, 255, 0, 0)',
-                        'rgba(0, 255, 0, 1)',
-                        'rgba(255, 255, 0, 1)'
-                    ];
-                    self.heatMap = new google.maps.visualization.HeatmapLayer({
-                        data: pointArray,
-                        gradient: gradient,
-                        //dissipating: false,
-                        radius: 15,
-                        opactiy: 0.8
-                    });
-                    if (self.isGoogleMapIdle)
-                        self.heatMap.setMap(self.googleMap);
-                })
-                .fail(function (xhr) {
-                    alert('fail: ' + xhr.status + '; ' + xhr.responseText);
-                });
-
-
-            //$.get('/api/agreements/@ViewBag.Domain/partners/')
-            //    .done(function (results) {
-            //        //alert('got result');
-            //    })
-            //    .fail(function (xhr) {
-            //        alert('fail: ' + xhr.status + '; ' + xhr.responseText);
-            //    });
-        };
-        ko.applyBindings(new ViewModel(), $('[data-current-module=agreements]')[0]);
+        var agreementSearcdhViewModel = new InstitutionalAgreementSearchModel();
+        ko.applyBindings(agreementSearcdhViewModel, $('#search')[0]);
     </script>
-
 }
+
+<div class="content fixed to-top" data-current-module="agreements" id="LoadingPage">
+    <div class="on-left from-top">
+        <header>
+            <h1>
+                <p data-bind="visible: spinner.isVisible">
+                    <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
+                    <strong>Loading page...</strong>
+                </p>
+            </h1>
+        </header>
+    </div>
+</div>
+
+
+<div class="content fixed to-top" data-current-module="agreements" id="search" style="visibility: hidden">
+    <form class="group">
+        <div class="on-left from-top">
+            <header>
+                <h1>
+                    @ViewBag.Title
+                </h1>
+            </header>
+            //@Html.Partial(MVC.Agreements.Views._SearchAgreements)
+        </div>
+    </form>
+</div>
+
 
 <div class="content fixed to-top" data-current-module="agreements">
     <form class="group">

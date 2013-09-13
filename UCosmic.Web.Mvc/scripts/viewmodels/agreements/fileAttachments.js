@@ -22,7 +22,6 @@ var agreements;
             this.spinner = spinner;
             this.establishmentItemViewModel = establishmentItemViewModel;
             this.dfdPopFiles = dfdPopFiles;
-
             this.updateFile = this.updateFile.bind(this);
             this.fileVisibilityClicked = this.fileVisibilityClicked.bind(this);
             this.removeFile = this.removeFile.bind(this);
