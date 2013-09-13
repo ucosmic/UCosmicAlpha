@@ -22,13 +22,13 @@ namespace UCosmic.Domain.Employees
 
             GlobalViewIconFileName = EmployeeConsts.DefaultGlobalViewIconGuid;
             GlobalViewIconMimeType = "image/png";
-            GlobalViewIconName = "GlobalViewIcon";
+            GlobalViewIconName = "GlobalViewIcon.png";
             GlobalViewIconPath = string.Format("{0}/{1}/", EmployeeConsts.SettingsBinaryStoreBasePath,
                                                       EmployeeConsts.IconsBinaryStorePath);
 
             FindAnExpertIconFileName = EmployeeConsts.DefaultFindAnExpertIconGuid;
             FindAnExpertIconMimeType = "image/svg+xml";
-            FindAnExpertIconName = "FindAnExpertIcon";
+            FindAnExpertIconName = "FindAnExpertIcon.svg";
             FindAnExpertIconPath = string.Format("{0}/{1}/", EmployeeConsts.SettingsBinaryStoreBasePath,
                                                       EmployeeConsts.IconsBinaryStorePath);
         }

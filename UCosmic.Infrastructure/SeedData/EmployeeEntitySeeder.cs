@@ -221,7 +221,7 @@ namespace UCosmic.SeedData
                 CreatedEmployeeModuleSettings.ActivityTypes.Single(a => a.Type == "Research or Creative Endeavor");
             activityType.IconLength = _binaryStore.Get(_activityTypeIconBinaryPath + _activityTypeFilenameMap["noun_project_762_idea.svg"]).Length;
             activityType.IconMimeType = "image/svg+xml";
-            activityType.IconName = "Research";
+            activityType.IconName = "Research.svg";
             activityType.IconPath = _activityTypeIconBinaryPath;
             activityType.IconFileName = _activityTypeFilenameMap["noun_project_762_idea.svg"];
 
@@ -229,7 +229,7 @@ namespace UCosmic.SeedData
                 CreatedEmployeeModuleSettings.ActivityTypes.Single(a => a.Type == "Teaching or Mentoring");
             activityType.IconLength = _binaryStore.Get(_activityTypeIconBinaryPath + _activityTypeFilenameMap["noun_project_14888_teacher.svg"]).Length;
             activityType.IconMimeType = "image/svg+xml";
-            activityType.IconName = "Teaching";
+            activityType.IconName = "Teaching.svg";
             activityType.IconPath = _activityTypeIconBinaryPath;
             activityType.IconFileName = _activityTypeFilenameMap["noun_project_14888_teacher.svg"];
 
@@ -237,7 +237,7 @@ namespace UCosmic.SeedData
                 CreatedEmployeeModuleSettings.ActivityTypes.Single(a => a.Type == "Award or Honor");
             activityType.IconLength = _binaryStore.Get(_activityTypeIconBinaryPath + _activityTypeFilenameMap["noun_project_17372_medal.svg"]).Length;
             activityType.IconMimeType = "image/svg+xml";
-            activityType.IconName = "Award";
+            activityType.IconName = "Award.svg";
             activityType.IconPath = _activityTypeIconBinaryPath;
             activityType.IconFileName = _activityTypeFilenameMap["noun_project_17372_medal.svg"];
 
@@ -246,7 +246,7 @@ namespace UCosmic.SeedData
             activityType.IconLength =
                 _binaryStore.Get(_activityTypeIconBinaryPath + _activityTypeFilenameMap["noun_project_16986_podium.svg"]).Length;
             activityType.IconMimeType = "image/svg+xml";
-            activityType.IconName = "Conference";
+            activityType.IconName = "Conference.svg";
             activityType.IconPath = _activityTypeIconBinaryPath;
             activityType.IconFileName = _activityTypeFilenameMap["noun_project_16986_podium.svg"];
 
@@ -255,7 +255,7 @@ namespace UCosmic.SeedData
             activityType.IconLength =
                 _binaryStore.Get(_activityTypeIconBinaryPath + _activityTypeFilenameMap["noun_project_401_briefcase.svg"]).Length;
             activityType.IconMimeType = "image/svg+xml";
-            activityType.IconName = "Professional";
+            activityType.IconName = "Professional.svg";
             activityType.IconPath = _activityTypeIconBinaryPath;
             activityType.IconFileName = _activityTypeFilenameMap["noun_project_401_briefcase.svg"];
 
@@ -341,7 +341,7 @@ namespace UCosmic.SeedData
                 command.GlobalViewIconFileName = EmployeeConsts.DefaultGlobalViewIconGuid;
                 command.GlobalViewIconLength = _binaryStore.Get(iconsBinaryPath + EmployeeConsts.DefaultGlobalViewIconGuid).Length;
                 command.GlobalViewIconMimeType = "image/png";
-                command.GlobalViewIconName = "GlobalViewIcon";
+                command.GlobalViewIconName = "GlobalViewIcon.png";
                 command.GlobalViewIconPath = iconsBinaryPath;
             }
 
@@ -350,7 +350,7 @@ namespace UCosmic.SeedData
                 command.FindAnExpertIconFileName = EmployeeConsts.DefaultFindAnExpertIconGuid;
                 command.FindAnExpertIconLength = _binaryStore.Get(iconsBinaryPath + EmployeeConsts.DefaultFindAnExpertIconGuid).Length;
                 command.FindAnExpertIconMimeType = "image/svg+xml";
-                command.FindAnExpertIconName = "FindAnExpertIcon";
+                command.FindAnExpertIconName = "FindAnExpertIcon.svg";
                 command.FindAnExpertIconPath = iconsBinaryPath;
             }
 
