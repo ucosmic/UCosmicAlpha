@@ -132,6 +132,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
                                 Count = type.Count
                             });
                         }
+
+                        model.TypeCounts = model.TypeCounts.OrderBy(t => t.Rank).ToList();
                     }
                 }
                 else
@@ -166,6 +168,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
                                     Count = type.Count
                                 });
                             }
+
+                            model.TypeCounts = model.TypeCounts.OrderBy(t => t.Rank).ToList();
                         }
                     }
                     finally
@@ -230,6 +234,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
                             Count = type.Count
                         });
                     }
+
+                    model.TypeCounts = model.TypeCounts.OrderBy(t => t.Rank).ToList();
                 }
                 else
                 {
@@ -271,6 +277,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
                                     Count = type.Count
                                 });
                             }
+
+                            model.TypeCounts = model.TypeCounts.OrderBy(t => t.Rank).ToList();
                         }
                     }
                     finally

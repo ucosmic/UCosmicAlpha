@@ -8,6 +8,7 @@ namespace UCosmic.Web.Mvc.Models
         public int TypeId { get; set; }
         public string Type { get; set; }
         public int Count { get; set; }
+        public int Rank { get; set; }
     }
 
     public class FacultyStaffPlaceCountModel

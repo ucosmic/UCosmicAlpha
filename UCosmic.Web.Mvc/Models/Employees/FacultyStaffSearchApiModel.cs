@@ -22,15 +22,23 @@ namespace UCosmic.Web.Mvc.Models
     public class FacultyStaffFilterModel
     {
         public string FilterType { get; set; } // activities or people
+
+        public int[] LocationIds { get; set; }
+
+        public int[] ActivityTypes { get; set; }
+
+        public string Degrees { get; set; } // people only
+
+        public string[] Tags { get; set; }
+
         public DateTime? FromDate { get; set; }
         public DateTime? ToDate { get; set; }
         public bool UndatedActivities { get; set; }
-        public int[] LocationIds { get; set; }
-        public int[] ActivityTypes { get; set; }
-        public int? InstitutionId { get; set; }
+
+        public int InstitutionId { get; set; }
         public int? CampusId { get; set; }
         public int? CollegeId { get; set; }
         public int? DepartmentId { get; set; }
-        public string Degrees { get; set; }
+        
     }
 }

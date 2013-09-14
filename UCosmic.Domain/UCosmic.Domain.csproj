@@ -178,6 +178,8 @@
     <Compile Include="Domain\Activities\Queries\ActivityCountByPlaceIds.cs" />
     <Compile Include="Domain\Activities\_Internal\QueryActivityValues.cs" />
     <Compile Include="Domain\Activities\_Internal\QueryActivityViews.cs" />
+    <Compile Include="Domain\Activities\Queries\ActivitySearch.cs" />
+    <Compile Include="Domain\Activities\Queries\ActivityExtensions.cs" />
     <Compile Include="Domain\Activities\Validation\MustHaveActivityMode.cs" />
     <Compile Include="Domain\Activities\Views\ActivityGlobalActivityCountView.cs" />
     <Compile Include="Domain\Activities\Views\ActivityGlobalPeopleCountView.cs" />
@@ -231,6 +233,7 @@
     <Compile Include="Domain\Agreements\_Internal\QueryAgreementContacts.cs" />
     <Compile Include="Domain\Employees\_Internal\EmployeeConsts.cs" />
     <Compile Include="Domain\Establishments\Queries\EstablishmentsWithPeopleWithActivities.cs" />
+    <Compile Include="Domain\People\Queries\PeopleSearch.cs" />
     <Compile Include="Domain\People\Queries\PeopleWithActivitiesCountByTypeIdEstablishmentId.cs" />
     <Compile Include="Domain\People\Queries\PeopleWithDegreesCountByPlaceIdsEstablishmentId.cs" />
     <Compile Include="Domain\People\Queries\PeopleWithDegreesCountByEstablishmentId.cs" />
