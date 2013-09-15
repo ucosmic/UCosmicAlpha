@@ -38,6 +38,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Profiles" />
+    <Folder Include="UCosmic.WorkContent\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\UCosmic.Web.Mvc\UCosmic.Web.Mvc.csproj">
@@ -48,6 +49,19 @@
       <RoleName>UCosmic.Web.Mvc</RoleName>
       <UpdateDiagnosticsConnectionStringOnPublish>True</UpdateDiagnosticsConnectionStringOnPublish>
     </ProjectReference>
+    <ProjectReference Include="..\UCosmic.Work\UCosmic.Work.csproj">
+      <Name>UCosmic.Work</Name>
+      <Project>{9fea0633-ed91-4345-8b5b-0a28e216324c}</Project>
+      <Private>True</Private>
+      <RoleType>Worker</RoleType>
+      <RoleName>UCosmic.Work</RoleName>
+      <UpdateDiagnosticsConnectionStringOnPublish>True</UpdateDiagnosticsConnectionStringOnPublish>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="UCosmic.WorkContent\diagnostics.wadcfg">
+      <SubType>Content</SubType>
+    </Content>
   </ItemGroup>
   <!-- Import the target files for this project template -->
   <PropertyGroup>

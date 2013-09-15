@@ -33,4 +33,10 @@
       <Certificate name="saml.ucosmic.dev" storeLocation="LocalMachine" storeName="My" />
     </Certificates>
   </WebRole>
+  <WorkerRole name="UCosmic.Work" vmsize="ExtraSmall">
+    <Imports>
+      <Import moduleName="Diagnostics" />
+      <Import moduleName="RemoteAccess" />
+    </Imports>
+  </WorkerRole>
 </ServiceDefinition>

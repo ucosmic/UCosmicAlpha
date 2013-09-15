@@ -86,6 +86,9 @@
     <Compile Include="Api\Validation\MustNotExceedStringLength.cs" />
     <Compile Include="Api\Validation\MustNotBeEmpty.cs" />
     <Compile Include="Api\Validation\MustBePositivePrimaryKey.cs" />
+    <Compile Include="Api\Work\IDefineWork.cs" />
+    <Compile Include="Api\Work\IPerformWork.cs" />
+    <Compile Include="Api\Work\IScheduleWork.cs" />
     <Compile Include="Api\_Etc\IConsumeHttp.cs" />
     <Compile Include="Api\_Etc\ISendMail.cs" />
     <Compile Include="Api\_Extensions\ByteExtensions.cs" />
