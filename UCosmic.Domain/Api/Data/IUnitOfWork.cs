@@ -5,5 +5,6 @@ namespace UCosmic
     public interface IUnitOfWork : IDisposable
     {
         int SaveChanges();
+        void DiscardChanges();
     }
 }

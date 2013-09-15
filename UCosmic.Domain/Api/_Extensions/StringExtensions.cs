@@ -125,5 +125,23 @@ namespace UCosmic
 
             return null;
         }
+
+        public static byte[] AsByteArray(this string text)
+        {
+            if (text == null) return null;
+
+            var bytes = new byte[text.Length * sizeof(char)];
+            Buffer.BlockCopy(text.ToCharArray(), 0, bytes, 0, bytes.Length);
+            return bytes;
+        }
+
+        public static string AsString(this byte[] bytes)
+        {
+            if (bytes == null) return null;
+
+            var chars = new char[bytes.Length / sizeof(char)];
+            Buffer.BlockCopy(bytes, 0, chars, 0, bytes.Length);
+            return new string(chars);
+        }
     }
 }

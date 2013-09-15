@@ -139,5 +139,24 @@ namespace UCosmic.EntityFramework
                 throw;
             }
         }
+
+        public void DiscardChanges()
+        {
+            foreach (var entry in ChangeTracker.Entries().Where(x => x != null))
+            {
+                switch (entry.State)
+                {
+                    case EntityState.Added:
+                        entry.State = EntityState.Detached;
+                        break;
+                    case EntityState.Modified:
+                        entry.State = EntityState.Unchanged;
+                        break;
+                    case EntityState.Deleted:
+                        entry.Reload();
+                        break;
+                }
+            }
+        }
     }
 }
