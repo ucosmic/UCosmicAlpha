@@ -3801,6 +3801,7 @@ namespace Links
             public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
             public static readonly string aqua_96x96_png = Url("aqua-96x96.png");
             public static readonly string blue_96x96_png = Url("blue-96x96.png");
+            public static readonly string ExpertiseMock_png = Url("ExpertiseMock.png");
             public static readonly string green_96x96_png = Url("green-96x96.png");
             public static readonly string purple_96x96_png = Url("purple-96x96.png");
             public static readonly string red_96x96_png = Url("red-96x96.png");

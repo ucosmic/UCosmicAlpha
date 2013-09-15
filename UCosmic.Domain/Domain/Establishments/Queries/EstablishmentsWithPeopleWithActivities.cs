@@ -1,19 +1,20 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Linq.Expressions;
 using UCosmic.Domain.Activities;
+using UCosmic.Domain.People;
 
 namespace UCosmic.Domain.Establishments
 {
-    public class EstablishmentsWithPeopleWithActivities : BaseEntitiesQuery<EstablishmentCategory>,
-                                                          IDefineQuery<IQueryable<Establishment>>
+    public class EstablishmentsWithPeopleWithActivities : BaseEntitiesQuery<Establishment>, IDefineQuery<Establishment[]>
     {
+        internal EstablishmentsWithPeopleWithActivities() { }
     }
 
     public class HandleEstablishmentsWithPeopleWithActivitiesQuery :
-        IHandleQueries<EstablishmentsWithPeopleWithActivities, IQueryable<Establishment>>
+        IHandleQueries<EstablishmentsWithPeopleWithActivities, Establishment[]>
     {
         private readonly IQueryEntities _entities;
 
@@ -22,60 +23,53 @@ namespace UCosmic.Domain.Establishments
             _entities = entities;
         }
 
-        public IQueryable<Establishment> Handle(EstablishmentsWithPeopleWithActivities query)
+        public Establishment[] Handle(EstablishmentsWithPeopleWithActivities query)
         {
             if (query == null) throw new ArgumentNullException("query");
 
             ICollection<Establishment> establishmentsWithPeopleWithActivities = new Collection<Establishment>();
 
             var peopleWithActivities = _entities.Query<Activity>()
-                                                .Select(a => a.Person)
-                                                .Distinct();
+                .Select(a => a.Person)
+                .EagerLoad(_entities, new Expression<Func<Person, object>>[]
+                {
+                    x => x.Affiliations.Select(y => y.Establishment),
+                    x => x.Affiliations.Select(y => y.Campus.Ancestors),
+                    x => x.Affiliations.Select(y => y.College.Ancestors),
+                })
+                .Where(x => x.Affiliations.Any(y => y.IsDefault))
+                .Distinct();
 
             /* Return people with activities default establishment and children of default */
             foreach (var person in peopleWithActivities)
             {
-                var defaultAffiliation = person.Affiliations.SingleOrDefault(a => a.IsDefault);
-                if (defaultAffiliation != null)
+                var defaultAffiliation = person.Affiliations.Single(a => a.IsDefault);
+                var defaultEstablishment = defaultAffiliation.Establishment;
+                establishmentsWithPeopleWithActivities.Add(defaultEstablishment);
+
+                foreach (var affiliation in person.Affiliations)
                 {
-                    var defaultEstablishment = defaultAffiliation.Establishment; 
-                    establishmentsWithPeopleWithActivities.Add(defaultEstablishment);
+                    if (affiliation.IsDefault) continue;
 
-                    foreach (var affiliation in person.Affiliations)
-                    {
-                        if (!affiliation.IsDefault)
-                        {
-                            int? defaultChildId = null;
-                            
-                            if (affiliation.CampusId.HasValue)
-                            {
-                                defaultChildId = affiliation.CampusId.Value;
-                            }
-                            else if (affiliation.CollegeId.HasValue)
-                            {
-                                defaultChildId = affiliation.CollegeId.Value; 
-                            }
+                    Establishment defaultChild = null;
 
-                            if (defaultChildId.HasValue)
-                            {
-                                var defaultChild = _entities.Query<Establishment>().SingleOrDefault(e => e.RevisionId == defaultChildId);
+                    if (affiliation.CampusId.HasValue)
+                        defaultChild = affiliation.Campus;
 
-                                if ((defaultChild != null) &&
-                                    (defaultChild.Parent != null) &&
-                                    (defaultChild.Parent.RevisionId == defaultEstablishment.RevisionId))
-                                {
-                                    if (!establishmentsWithPeopleWithActivities.Contains(defaultChild))
-                                    {
-                                        establishmentsWithPeopleWithActivities.Add(defaultChild);
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    else if (affiliation.CollegeId.HasValue)
+                        defaultChild = affiliation.College;
+
+                    if (defaultChild == null ||
+                        defaultChild.Ancestors.All(x => x.AncestorId != defaultEstablishment.RevisionId) ||
+                        establishmentsWithPeopleWithActivities.Contains(defaultChild))
+                        continue;
+
+                    if (!establishmentsWithPeopleWithActivities.Contains(defaultChild))
+                        establishmentsWithPeopleWithActivities.Add(defaultChild);
                 }
             }
 
-            return new EnumerableQuery<Establishment>(establishmentsWithPeopleWithActivities);
+            return establishmentsWithPeopleWithActivities.Distinct().ToArray();
         }
     }
 }

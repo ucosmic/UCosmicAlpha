@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace UCosmic.Domain.Activities
@@ -13,15 +12,10 @@ namespace UCosmic.Domain.Activities
         public bool NoUndated { get; private set; }
         public bool IncludeFuture { get; private set; }
 
-        public ActivityCountByPlaceIdsEstablishmentId(int[] inPlaceIds,
-                                                      int inEstablishmentId,
-                                                      DateTime? fromDateUtc = null,
-                                                      DateTime? toDateUtc = null)
+        internal ActivityCountByPlaceIdsEstablishmentId(int[] inPlaceIds, int inEstablishmentId, DateTime? fromDateUtc = null, DateTime? toDateUtc = null)
         {
             if ((fromDateUtc.HasValue && !toDateUtc.HasValue) || (!fromDateUtc.HasValue && toDateUtc.HasValue))
-            {
                 throw new ArgumentException("Both fromDateUtc and toDateUtc must be provided.");
-            }
 
             PlaceIds = inPlaceIds;
             EstablishmentId = inEstablishmentId;
@@ -29,12 +23,7 @@ namespace UCosmic.Domain.Activities
             ToDate = toDateUtc;
         }
 
-        public ActivityCountByPlaceIdsEstablishmentId(int[] inPlaceIds,
-                                                      int inEstablishmentId,
-                                                      DateTime fromDateUtc,
-                                                      DateTime toDateUtc,
-                                                      bool noUndated,
-                                                      bool includeFuture)
+        internal ActivityCountByPlaceIdsEstablishmentId(int[] inPlaceIds, int inEstablishmentId, DateTime fromDateUtc, DateTime toDateUtc, bool noUndated, bool includeFuture)
         {
             PlaceIds = inPlaceIds;
             EstablishmentId = inEstablishmentId;
@@ -77,12 +66,12 @@ namespace UCosmic.Domain.Activities
                     foreach (var placeId in query.PlaceIds)
                     {
                         count += view.Count(a =>
-                                           /* PlaceId must be found in list placeIds...*/
-                                           a.PlaceIds.Contains(placeId) &&
+                            /* PlaceId must be found in list placeIds...*/
+                            a.PlaceIds.Contains(placeId) &&
 
-                                           /* and, EstablishmentId must be found in list of affiliated establishments...*/
-                                           a.EstablishmentIds.Contains(query.EstablishmentId)
-                            );
+                            /* and, EstablishmentId must be found in list of affiliated establishments...*/
+                            a.EstablishmentIds.Contains(query.EstablishmentId)
+                        );
                     }
                 }
             }

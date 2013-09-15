@@ -78,8 +78,13 @@ namespace UCosmic.Domain.People
         public bool IsClaimingStaff { get; protected internal set; }
 
         public int? CampusId { get; protected internal set; }
+        public virtual Establishment Campus { get; protected internal set; }
+
         public int? CollegeId { get; protected internal set; }
+        public virtual Establishment College { get; protected internal set; }
+
         public int? DepartmentId { get; protected internal set; }
+        public virtual Establishment Department { get; protected internal set; }
 
         public int? FacultyRankId { get; protected internal set; }
 

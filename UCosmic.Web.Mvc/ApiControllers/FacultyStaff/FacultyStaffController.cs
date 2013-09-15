@@ -81,9 +81,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
         /* Returns activity type counts for given place.*/
         [GET("activity-count/{establishmentId?}/{placeId?}")]
-#if !DEBUG
-        [CacheHttpGet(Duration = 3600)]
-#endif
+        //[CacheHttpGet(Duration = 3600)]
         public FacultyStaffSummaryModel GetActivityCount(int? establishmentId, int? placeId)
         {
             var model = new FacultyStaffSummaryModel();
@@ -183,9 +181,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
         /* Returns people counts for given place. */
         [GET("people-count/{establishmentId?}/{placeId?}")]
-#if !DEBUG
-        [CacheHttpGet(Duration = 3600)]
-#endif
+        //[CacheHttpGet(Duration = 3600)]
         public FacultyStaffSummaryModel GetPeopleCount(int? establishmentId, int? placeId)
         {
             var model = new FacultyStaffSummaryModel();

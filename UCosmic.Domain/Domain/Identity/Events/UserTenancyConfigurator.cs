@@ -1,4 +1,8 @@
-﻿using UCosmic.Domain.Employees;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using UCosmic.Domain.Employees;
 
 namespace UCosmic.Domain.Identity
 {
@@ -21,7 +25,7 @@ namespace UCosmic.Domain.Identity
         public void Handle(ApplicationStarted @event)
         {
             /* One time to get icons in blob storage */
-#if false
+#if true
             {
                 /* ----- Global View and Find an Expert Icons ----- */
 
@@ -56,7 +60,7 @@ namespace UCosmic.Domain.Identity
                 }
 
                 /* ----- Activity Type icons for USF ----- */
-                var activityTypeFilenames = new string[]
+                var activityTypeFilenames = new[]
                 {
                     "noun_project_762_idea.svg",
                     "noun_project_14888_teacher.svg",
@@ -101,7 +105,7 @@ namespace UCosmic.Domain.Identity
             }
 #endif
 
-#if false
+#if true
                 /* ----- Update the EmployeeModuleSettings rows ----- */
             {
                 var iconsBinaryPath = string.Format("{0}/{1}/", EmployeeConsts.SettingsBinaryStoreBasePath,
@@ -131,7 +135,7 @@ namespace UCosmic.Domain.Identity
                                                             EmployeeConsts.IconsBinaryStorePath);
 
 
-                var settings = _entities.Get<EmployeeModuleSettings>().SingleOrDefault(x => x.Establishment.RevisionId == 3306 /* USF */);
+                var settings = _entities.Get<EmployeeModuleSettings>().SingleOrDefault(x => x.Establishment.WebsiteUrl == "www.usf.edu" /* USF */);
                 if (settings == null) { return; }
 
                 EmployeeActivityType activityType;

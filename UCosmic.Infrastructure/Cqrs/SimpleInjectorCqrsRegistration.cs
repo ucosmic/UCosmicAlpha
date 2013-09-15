@@ -29,15 +29,11 @@ namespace UCosmic.Cqrs
             //container.Register<IProcessEvents>(container.GetInstance<SimpleInjectorSynchronousEventProcessor>);
             container.RegisterSingle<SimpleInjectorAsynchronousEventProcessor>();
             container.Register<IProcessEvents>(container.GetInstance<SimpleInjectorAsynchronousEventProcessor>);
-            container.RegisterManyForOpenGeneric(typeof(IHandleEvents<>),
-                (type, implementations) =>
-                {
-                    if (implementations.Length == 1)
-                        container.Register(type, implementations[0]);
-                    else if (implementations.Length > 1)
-                        container.RegisterAll(type, implementations);
-                },
-                assemblies);
+            container.RegisterManyForOpenGeneric(typeof(IHandleEvents<>), container.RegisterAll, assemblies);
+            container.RegisterDecorator(
+                typeof(IHandleEvents<>),
+                typeof(HandleEventAsynchronouslyDecorator<>)
+            );
         }
 
         public static void RegisterCommandHandlers(this Container container, params Assembly[] assemblies)

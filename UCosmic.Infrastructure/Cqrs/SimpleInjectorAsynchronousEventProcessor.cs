@@ -5,20 +5,14 @@ namespace UCosmic.Cqrs
 {
     public class SimpleInjectorAsynchronousEventProcessor : SimpleInjectorSynchronousEventProcessor
     {
-        public SimpleInjectorAsynchronousEventProcessor(Container container, ILogExceptions exceptionLogger)
-            :base(container, exceptionLogger)
+        public SimpleInjectorAsynchronousEventProcessor(Container container)
+            :base(container)
         {
         }
 
         public override void Raise(IDefineEvent @event)
         {
-            Task.Factory.StartNew(() =>
-            {
-                using (Container.BeginLifetimeScope())
-                {
-                    base.Raise(@event);
-                }
-            });
+            Task.Factory.StartNew(() => base.Raise(@event));
         }
     }
 }

@@ -152,6 +152,7 @@
     <Compile Include="Cqrs\BaseViewManager.cs" />
     <Compile Include="Cqrs\AzureCacheViewManager.cs" />
     <Compile Include="Cache\IProvideCache.cs" />
+    <Compile Include="Cqrs\HandleEventAsynchronouslyDecorator.cs" />
     <Compile Include="Cqrs\MemoryViewManager.cs" />
     <Compile Include="Cache\SimpleInjectorCacheProviderRegistration.cs" />
     <Compile Include="Cqrs\SimpleInjectorAsynchronousEventProcessor.cs" />

@@ -133,6 +133,18 @@ namespace UCosmic.EntityFramework
                 .WithMany(p => p.Affiliations)
                 .HasForeignKey(d => d.PersonId);
 
+            HasOptional(d => d.Campus)
+                .WithMany()
+                .HasForeignKey(d => d.CampusId);
+
+            HasOptional(d => d.College)
+                .WithMany()
+                .HasForeignKey(d => d.CollegeId);
+
+            HasOptional(d => d.Department)
+                .WithMany()
+                .HasForeignKey(d => d.DepartmentId);
+
             Property(p => p.JobTitles).HasMaxLength(500);
 
             Property(p => p.CampusId).IsOptional();

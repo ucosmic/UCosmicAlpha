@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading;
 using UCosmic.Domain.Employees;
 using UCosmic.Domain.Establishments;
@@ -12,226 +13,192 @@ using UCosmic.Domain.Places;
 
 namespace UCosmic.Domain.Activities
 {
-    public class ActivityViewProjector : IActivityViewProjector
-                                         ,IHandleEvents<ApplicationStarted>
-                                         //,IHandleEvents<ActivityCreated>
-                                         //,IHandleEvents<ActivityChanged>
-                                         //,IHandleEvents<ActivityDeleted>
-                                         //,IHandleEvents<EstablishmentChanged>
-                                         //,IHandleEvents<AffiliationChanged>
+    public class ActivityViewProjector : IActivityViewProjector , IHandleEvents<ApplicationStarted>
+    //,IHandleEvents<ActivityCreated>
+    //,IHandleEvents<ActivityChanged>
+    //,IHandleEvents<ActivityDeleted>
+    //,IHandleEvents<EstablishmentChanged>
+    //,IHandleEvents<AffiliationChanged>
     {
         private static readonly ReaderWriterLockSlim Rwlock = new ReaderWriterLockSlim();
         private static readonly ReaderWriterLockSlim StatsRwlock = new ReaderWriterLockSlim();
         private readonly IQueryEntities _entities;
         private readonly IProcessQueries _queries;
         private readonly IManageViews _viewManager;
+        private readonly ILogExceptions _exceptionLogger;
 
-        private Dictionary<int, GlobalActivityCountView> _globalActivityDictionary { get; set; }
-        private Dictionary<int, GlobalPeopleCountView> _globalPeopleDictionary { get; set; }
+        private Dictionary<int, GlobalActivityCountView> _globalActivityDictionary = new Dictionary<int, GlobalActivityCountView>();
+        private Dictionary<int, GlobalPeopleCountView> _globalPeopleDictionary = new Dictionary<int, GlobalPeopleCountView>();
 
-        public ActivityViewProjector(IQueryEntities entities,
-                                     IProcessQueries queries,
-                                     IManageViews viewManager)
+        public ActivityViewProjector(IQueryEntities entities, IProcessQueries queries, IManageViews viewManager, ILogExceptions exceptionLogger)
         {
             _entities = entities;
             _queries = queries;
             _viewManager = viewManager;
-            _globalActivityDictionary = new Dictionary<int, GlobalActivityCountView>();
-            _globalPeopleDictionary = new Dictionary<int, GlobalPeopleCountView>();
+            _exceptionLogger = exceptionLogger;
         }
 
         public void BuildViews()
         {
-#if DEBUG
             var buildTimer = new Stopwatch();
             buildTimer.Start();
-#endif
-            var entities = _entities.Query<Activity>();
 
-            /* ------ Construct the general view. ----- */
+            #region Build ActivityViews
 
             var view = new List<ActivityView>();
             Rwlock.EnterWriteLock();
 
             try
             {
-                foreach (var entity in entities)
-                {
-                    /* Only public activities. Do not include edit-copy activities */
-                    if ((entity.Mode == ActivityMode.Public) &&
-                        (entity.EditSourceId == null))
+                var publicText = ActivityMode.Public.AsSentenceFragment();
+                var activityViewEntities = _entities.Query<Activity>()
+                    .EagerLoad(_entities, new Expression<Func<Activity, object>>[]
                     {
-                        view.Add(new ActivityView(entity));
-                    }
-                }
-
+                        // load everything needed by the activityview constructor
+                        x => x.Values.Select(y => y.Locations),
+                        x => x.Values.Select(y => y.Types),
+                        x => x.Person.Affiliations.Select(y => y.Establishment.Ancestors),
+                    })
+                    // filter out non-public & edit-sourced activities before executing query
+                    .Where(x => x.ModeText == publicText && !x.EditSourceId.HasValue)
+                    .ToArray() // execute query
+                ;
+                view.AddRange(activityViewEntities.Select(x => new ActivityView(x)));
                 _viewManager.Set<ICollection<ActivityView>>(view);
             }
-#if DEBUG
             catch (Exception ex)
             {
-                Debug.WriteLine(ex);
+                _exceptionLogger.Log(ex);
+                WriteOutput("A '{0}' exception was thrown while trying to build activity views.", ex.GetType().Name);
             }
-#endif
             finally
             {
                 Rwlock.ExitWriteLock();
-
-                Debug.WriteLine(DateTime.Now + " ActivityView build complete with " + view.Count + " activities.");
+                WriteOutput("ActivityView build completed in {0} milliseconds with {1} activities.", MillisecondsSinceLast(buildTimer), view.Count);
             }
 
-
-            /* ----- Construct the stats views ----- */
+            #endregion
+            #region Build GlobalActivityCountViews & GlobalPeopleCountViews
 
             StatsRwlock.EnterWriteLock();
 
             try
             {
-                var establishmentsWithPeopleWithActivities =
-                    _queries.Execute(new EstablishmentsWithPeopleWithActivities());
-
-                /* ----- Global activity counts per establishment ----- */
+                #region Initialize GlobalActivityCountView dictionary
 
                 _globalActivityDictionary = _viewManager.Get<Dictionary<int, GlobalActivityCountView>>();
                 if (_globalActivityDictionary == null)
                 {
-                    _viewManager.Set<Dictionary<int, GlobalActivityCountView>>(
-                        new Dictionary<int, GlobalActivityCountView>());
+                    _viewManager.Set<Dictionary<int, GlobalActivityCountView>>(new Dictionary<int, GlobalActivityCountView>());
                     _globalActivityDictionary = _viewManager.Get<Dictionary<int, GlobalActivityCountView>>();
                 }
                 _globalActivityDictionary.Clear();
 
-                foreach (var establishment in establishmentsWithPeopleWithActivities)
-                {
-                    int establishmentId = establishment.RevisionId;
-                    var stats = new GlobalActivityCountView {EstablishmentId = establishmentId};
-
-                    stats.TypeCounts = new Collection<ActivityViewStats.TypeCount>();
-                    stats.PlaceCounts = new Collection<ActivityViewStats.PlaceCount>();
-
-                    var settings = _queries.Execute(new EmployeeModuleSettingsByEstablishmentId(establishmentId));
-
-                    DateTime toDateUtc = new DateTime(DateTime.UtcNow.Year + 1, 1, 1);
-                    DateTime fromDateUtc = (settings != null) && (settings.ReportsDefaultYearRange.HasValue)
-                                               ? toDateUtc.AddYears(-(settings.ReportsDefaultYearRange.Value + 1))
-                                               : new DateTime(DateTime.MinValue.Year, 1, 1);
-
-                    stats.CountOfPlaces = 0;
-                    stats.Count = 0;
-
-                    IEnumerable<Place> places = _entities.Query<Place>()
-                                                         .Where(p => p.IsCountry || p.IsWater || p.IsEarth);
-                    foreach (var place in places)
-                    {
-                        int activityCount =
-                            _queries.Execute(
-                                new ActivityCountByPlaceIdsEstablishmentId(new int[] {place.RevisionId},
-                                                                           establishmentId,
-                                                                           fromDateUtc,
-                                                                           toDateUtc,
-                                                                           false, /* include undated */
-                                                                           true /* include future */));
-
-                        stats.PlaceCounts.Add(new ActivityViewStats.PlaceCount
-                        {
-                            PlaceId = place.RevisionId,
-                            CountryCode = place.IsCountry ? place.GeoPlanetPlace.Country.Code : null,
-                            OfficialName = place.OfficialName,
-                            Count = activityCount
-                        });
-
-                        stats.Count += activityCount;
-
-                        if (activityCount > 0)
-                        {
-                            stats.CountOfPlaces += 1;
-                        }
-
-                        if ((settings != null) && settings.ActivityTypes.Any())
-                        {
-                            foreach (var type in settings.ActivityTypes)
-                            {
-                                int placeTypeCount = _queries.Execute(
-                                    new ActivityCountByTypeIdPlaceIdsEstablishmentId(type.Id,
-                                                                                     new int[] {place.RevisionId},
-                                                                                     establishmentId,
-                                                                                     fromDateUtc,
-                                                                                     toDateUtc,
-                                                                                     false, /* include undated */
-                                                                                     true /* include future */));
-
-                                var typeCount = stats.TypeCounts.SingleOrDefault(t => t.TypeId == type.Id);
-                                if (typeCount != null)
-                                {
-                                    typeCount.Count += placeTypeCount;
-                                }
-                                else
-                                {
-                                    typeCount = new ActivityViewStats.TypeCount
-                                    {
-                                        TypeId = type.Id,
-                                        Type = type.Type,
-                                        Count = placeTypeCount
-                                    };
-
-                                    stats.TypeCounts.Add(typeCount);
-                                }
-                            }
-                        }
-                    }
-
-                    _globalActivityDictionary.Remove(establishmentId);
-                    _globalActivityDictionary.Add(establishmentId, stats);
-                }
-
-                _viewManager.Set<Dictionary<int, GlobalActivityCountView>>(_globalActivityDictionary);
-
-                /* ----- Global people counts per establishment ----- */
+                #endregion
+                #region Initialize GlobalPeopleCountView dictionary
 
                 _globalPeopleDictionary = _viewManager.Get<Dictionary<int, GlobalPeopleCountView>>();
                 if (_globalPeopleDictionary == null)
                 {
-                    _viewManager.Set<Dictionary<int, GlobalPeopleCountView>>(
-                        new Dictionary<int, GlobalPeopleCountView>());
+                    _viewManager.Set<Dictionary<int, GlobalPeopleCountView>>(new Dictionary<int, GlobalPeopleCountView>());
                     _globalPeopleDictionary = _viewManager.Get<Dictionary<int, GlobalPeopleCountView>>();
                 }
                 _globalPeopleDictionary.Clear();
 
+                #endregion
+                #region Load Establishments & Places to loop through
 
-                foreach (var establishment in establishmentsWithPeopleWithActivities)
+                var establishmentsWithPeopleWithActivities = _queries.Execute(new EstablishmentsWithPeopleWithActivities());
+                var places = _entities.Query<Place>()
+                    .EagerLoad(_entities, new Expression<Func<Place, object>>[]
+                        {
+                            x => x.GeoPlanetPlace,
+                        })
+                    .Where(p => p.IsCountry || p.IsEarth
+                        //|| p.IsWater
+                        || (p.GeoPlanetPlace != null && p.GeoPlanetPlace.WoeId == 28289409) // Antarctica
+                        || (p.GeoPlanetPlace != null && p.GeoPlanetPlace.WoeId == 55959675) // Indian Ocean
+                        || (p.GeoPlanetPlace != null && p.GeoPlanetPlace.WoeId == 55959676) // Southern Ocean
+                        || (p.GeoPlanetPlace != null && p.GeoPlanetPlace.WoeId == 55959686) // Gulf of Mexico
+                        || (p.GeoPlanetPlace != null && p.GeoPlanetPlace.WoeId == 55959687) // Caribbean Sea
+                        || (p.GeoPlanetPlace != null && p.GeoPlanetPlace.WoeId == 55959707) // Arctic Ocean
+                        || (p.GeoPlanetPlace != null && p.GeoPlanetPlace.WoeId == 55959709) // Atlantic Ocean
+                        || (p.GeoPlanetPlace != null && p.GeoPlanetPlace.WoeId == 55959717) // Pacific Ocean
+                        || p.OfficialName == "South Pacific Ocean"
+                    ).ToArray(); // only hit the db once for these
+
+                #endregion
+                #region Loop through Establishments
+
+                foreach (var establishmentId in establishmentsWithPeopleWithActivities.Select(x => x.RevisionId))
                 {
-                    int establishmentId = establishment.RevisionId;
-                    var stats = new GlobalPeopleCountView {EstablishmentId = establishmentId};
+                    #region Load EmployeeModuleSettings & create date range comparison values
 
-                    stats.TypeCounts = new Collection<ActivityViewStats.TypeCount>();
-                    stats.PlaceCounts = new Collection<ActivityViewStats.PlaceCount>();
+                    var settings = GetEmployeeModuleSettings(establishmentId);
 
-                    var settings = _queries.Execute(new EmployeeModuleSettingsByEstablishmentId(establishmentId));
+                    var toDateUtc = new DateTime(DateTime.UtcNow.Year + 1, 1, 1);
+                    var fromDateUtc = settings != null && settings.ReportsDefaultYearRange.HasValue
+                        ? toDateUtc.AddYears(0 - settings.ReportsDefaultYearRange.Value - 1)
+                        : new DateTime(DateTime.MinValue.Year, 1, 1);
 
-                    DateTime toDateUtc = new DateTime(DateTime.UtcNow.Year + 1, 1, 1);
-                    DateTime fromDateUtc = (settings != null) && (settings.ReportsDefaultYearRange.HasValue)
-                                               ? toDateUtc.AddYears(-(settings.ReportsDefaultYearRange.Value + 1))
-                                               : new DateTime(DateTime.MinValue.Year, 1, 1);
+                    #endregion
+                    #region Initialize new GlobalActivityCountView
 
-                    stats.CountOfPlaces = 0;
-                    stats.Count = _queries.Execute(new PeopleWithActivitiesCountByEstablishmentId(establishmentId,
-                                                                                                  fromDateUtc,
-                                                                                                  toDateUtc));
+                    var activityStats = new GlobalActivityCountView
+                    {
+                        EstablishmentId = establishmentId,
+                        TypeCounts = new Collection<ActivityViewStats.TypeCount>(),
+                        PlaceCounts = new Collection<ActivityViewStats.PlaceCount>(),
+                    };
 
-                    IEnumerable<Place> places = _entities.Query<Place>()
-                                                         .Where(p => p.IsCountry || p.IsWater || p.IsEarth);
+                    #endregion
+                    #region Initialize new GlobalPeopleCountView
+
+                    var peopleStats = new GlobalPeopleCountView
+                    {
+                        EstablishmentId = establishmentId,
+                        TypeCounts = new Collection<ActivityViewStats.TypeCount>(),
+                        PlaceCounts = new Collection<ActivityViewStats.PlaceCount>(),
+                        Count = _queries.Execute(new PeopleWithActivitiesCountByEstablishmentId(
+                            establishmentId, fromDateUtc, toDateUtc))
+                    };
+
+                    #endregion
+                    #region Loop through Places
+
                     foreach (var place in places)
                     {
-                        int peopleCount =
-                            _queries.Execute(
-                                new PeopleWithActivitiesCountByPlaceIdsEstablishmentId(new int[] {place.RevisionId},
-                                                                                       establishmentId,
-                                                                                       fromDateUtc,
-                                                                                       toDateUtc,
-                                                                                       false, /* include undated */
-                                                                                       true /* include future */));
+                        #region Count Activities in this Place for this Establishment
 
-                        stats.PlaceCounts.Add(new ActivityViewStats.PlaceCount
+                        var activityCount = _queries.Execute(new ActivityCountByPlaceIdsEstablishmentId(
+                            new[] { place.RevisionId }, establishmentId, fromDateUtc, toDateUtc,
+                            noUndated: false, /* include undated */ includeFuture: true /* include future */
+                        ));
+
+                        // add a placecount item to the view
+                        activityStats.PlaceCounts.Add(new ActivityViewStats.PlaceCount
+                        {
+                            PlaceId = place.RevisionId,
+                            CountryCode = place.IsCountry ? place.GeoPlanetPlace.Country.Code : null,
+                            OfficialName = place.OfficialName,
+                            Count = activityCount,
+                        });
+
+                        // update the total activity count for the view
+                        activityStats.Count += activityCount;
+
+                        // update the place count in the view
+                        if (activityCount > 0) ++activityStats.CountOfPlaces;
+
+                        #endregion
+                        #region Count People in this Place for this Establishment
+
+                        var peopleCount = _queries.Execute(new PeopleWithActivitiesCountByPlaceIdsEstablishmentId(
+                            new[] { place.RevisionId }, establishmentId, fromDateUtc, toDateUtc,
+                            noUndated: false, /* include undated */ includeFuture: true /* include future */
+                        ));
+
+                        peopleStats.PlaceCounts.Add(new ActivityViewStats.PlaceCount
                         {
                             PlaceId = place.RevisionId,
                             CountryCode = place.IsCountry ? place.GeoPlanetPlace.Country.Code : null,
@@ -239,148 +206,103 @@ namespace UCosmic.Domain.Activities
                             Count = peopleCount
                         });
 
-                        if (peopleCount > 0)
+                        if (peopleCount > 0) ++peopleStats.CountOfPlaces;
+
+                        #endregion
+                        #region Loop through EmployeeModuleSettings.ActivityTypes
+
+                        if (settings == null || !settings.ActivityTypes.Any()) continue;
+
+                        foreach (var type in settings.ActivityTypes)
                         {
-                            stats.CountOfPlaces += 1;
+                            var placeTypeCount = _queries.Execute(new ActivityCountByTypeIdPlaceIdsEstablishmentId(
+                                type.Id, new[] { place.RevisionId }, establishmentId, fromDateUtc, toDateUtc,
+                                noUndated: false, /* include undated */ includeFuture: true /* include future */
+                            ));
+
+                            var typeCount = activityStats.TypeCounts.SingleOrDefault(t => t.TypeId == type.Id);
+
+                            if (typeCount != null) typeCount.Count += placeTypeCount;
+
+                            else activityStats.TypeCounts.Add(new ActivityViewStats.TypeCount
+                            {
+                                TypeId = type.Id,
+                                Type = type.Type,
+                                Count = placeTypeCount
+                            });
                         }
+
+                        #endregion
                     }
 
-                    if ((settings != null) && settings.ActivityTypes.Any())
+                    #endregion
+                    #region Loop through EmployeeModuleSettings.ActivityTypes
+
+                    if (settings != null && settings.ActivityTypes.Any())
                     {
                         foreach (var type in settings.ActivityTypes)
                         {
-                            int globalTypeCount = _queries.Execute(
-                                new PeopleWithActivitiesCountByTypeIdEstablishmentId(type.Id,
-                                                                                     establishmentId,
-                                                                                     fromDateUtc,
-                                                                                     toDateUtc,
-                                                                                     false, /* include undated */
-                                                                                     true /* include future */));
+                            var globalTypeCount = _queries.Execute(new PeopleWithActivitiesCountByTypeIdEstablishmentId(
+                                type.Id, establishmentId, fromDateUtc, toDateUtc,
+                                noUndated: false, /* include undated */ includeFuture: true /* include future */
+                            ));
 
-                            var typeCount = stats.TypeCounts.SingleOrDefault(c => c.TypeId == type.Id);
-                            if (typeCount != null)
-                            {
-                                typeCount.Count += globalTypeCount;
-                            }
-                            else
-                            {
-                                typeCount = new ActivityViewStats.TypeCount
-                                {
-                                    TypeId = type.Id,
-                                    Type = type.Type,
-                                    Count = globalTypeCount
-                                };
+                            var typeCount = peopleStats.TypeCounts.SingleOrDefault(c => c.TypeId == type.Id);
 
-                                stats.TypeCounts.Add(typeCount);
-                            }
+                            if (typeCount != null) typeCount.Count += globalTypeCount;
+
+                            else peopleStats.TypeCounts.Add(new ActivityViewStats.TypeCount
+                            {
+                                TypeId = type.Id,
+                                Type = type.Type,
+                                Count = globalTypeCount
+                            });
                         }
                     }
 
-                    _globalPeopleDictionary.Remove(establishmentId);
-                    _globalPeopleDictionary.Add(establishmentId, stats);
+                    #endregion
+
+                    _globalActivityDictionary[establishmentId] = activityStats;
+                    _globalPeopleDictionary[establishmentId] = peopleStats;
                 }
 
+                #endregion
+
+                _viewManager.Set<Dictionary<int, GlobalActivityCountView>>(_globalActivityDictionary);
                 _viewManager.Set<Dictionary<int, GlobalPeopleCountView>>(_globalPeopleDictionary);
             }
-#if DEBUG
             catch (Exception ex)
             {
-                Debug.WriteLine(ex);
+                _exceptionLogger.Log(ex);
+                WriteOutput("A '{0}' exception was thrown while trying to build activity & people statistical / summary views.", ex.GetType().Name);
             }
-#endif
             finally
             {
                 StatsRwlock.ExitWriteLock();
-                Debug.WriteLine(DateTime.Now + " Activity stats done building.");
+                WriteOutput("Activity & people statistical / summary build views completed on {0} (UTC).", DateTime.UtcNow);
             }
 
-#if DEBUG
+            #endregion
+
             buildTimer.Stop();
-            Debug.WriteLine(DateTime.Now + " Activity views build time: " + buildTimer.Elapsed.TotalMinutes + " mins.");
-#endif
+            WriteOutput("ActivityViewProjector.BuildViews completed in {0} minutes.", buildTimer.Elapsed.TotalMinutes);
         }
 
-#if false
-        private void UpdateActivity(int activityId, ActivityMode activityMode)
-        {
-            if (activityMode == ActivityMode.Public)
-            {
-                var view = _viewManager.Get<ICollection<ActivityView>>();
-                if (view != null) // if null, could signify that ApplicationStarted build is not yet complete.
-                {
-                    Rwlock.EnterWriteLock();
-
-                    try
-                    {
-                        var entity = _entities.Query<Activity>().SingleOrDefault(a => a.RevisionId == activityId);
-                        if ((entity != null) &&
-                            (entity.Mode == ActivityMode.Public) &&
-                            (entity.EditSourceId == null))
-                        {
-                            var existingActivityView = view.SingleOrDefault(a => a.Id == entity.RevisionId);
-                            if (existingActivityView != null)
-                            {
-                                view.Remove(existingActivityView);                               
-                            }
-
-                            view.Add(new ActivityView(entity));
-
-                            _viewManager.Set<ICollection<ActivityView>>(view);
-                        }
-                    }
-                    finally
-                    {
-                        Rwlock.ExitWriteLock();
-                        Debug.WriteLine(DateTime.Now + " ActivityView update activity complete with " + view.Count + " activities.");
-                    }
-                }
-            }
-        }
-
-        private void DeleteActivity(int activityId)
-        {
-            var view = _viewManager.Get<ICollection<ActivityView>>();
-            if (view != null) // if null, could signify that ApplicationStarted build is not yet complete.
-            {
-                Rwlock.EnterWriteLock();
-
-                try
-                {
-                    var activityView = view.SingleOrDefault(a => a.Id == activityId);
-                    if (activityView != null)
-                    {
-                        view.Remove(activityView);
-
-                        _viewManager.Set<ICollection<ActivityView>>(view);
-                    }
-                }
-                finally
-                {
-                    Rwlock.ExitWriteLock();
-                    Debug.WriteLine(DateTime.Now + " ActivityView delete activity complete with " + view.Count + " activities.");
-                }
-            }
-        }
-#endif
-
-         /*
+        /*
          * Each call to BeginReadView() must be matched with EndReadView().
          * This method may return null.
          */
-            public
-            ICollection<ActivityView> BeginReadView()
+        public ICollection<ActivityView> BeginReadView()
         {
-            ICollection<ActivityView> view = null;
-
             Rwlock.EnterReadLock();
 
             /* This may return null if the ApplicationStarted view has not completed building. */
-            view = _viewManager.Get<ICollection<ActivityView>>();
+            var view = _viewManager.Get<ICollection<ActivityView>>();
 
 #if DEBUG
             if (view == null)
             {
-                Debug.WriteLine(DateTime.Now + " >>> ActivityView is NULL <<<");
+                WriteOutput(DateTime.Now + " >>> ActivityView is NULL <<<");
             }
 #endif
 
@@ -427,6 +349,100 @@ namespace UCosmic.Domain.Activities
             BuildViews();
         }
 
+        private readonly IDictionary<int, EmployeeModuleSettings> _emsByEstablishmentId = new Dictionary<int, EmployeeModuleSettings>();
+        private EmployeeModuleSettings GetEmployeeModuleSettings(int establishmentId)
+        {
+            if (!_emsByEstablishmentId.ContainsKey(establishmentId))
+            {
+                var ems = _queries.Execute(new EmployeeModuleSettingsByEstablishmentId(establishmentId));
+                _emsByEstablishmentId.Add(establishmentId, ems);
+            }
+            return _emsByEstablishmentId[establishmentId];
+        }
+
+        private static void WriteOutput(string format, params object[] args)
+        {
+#if !DEBUG
+            Trace.TraceInformation(format, args);
+#else
+            Debug.WriteLine(format, args);
+#endif
+        }
+
+        private long _millisecondsSinceLast;
+        private long MillisecondsSinceLast(Stopwatch timer)
+        {
+            var elapsed = timer.ElapsedMilliseconds;
+            var value = elapsed - _millisecondsSinceLast;
+            _millisecondsSinceLast = elapsed;
+            return value;
+        }
+
+        #region Deprecated code
+
+#if false
+        private void UpdateActivity(int activityId, ActivityMode activityMode)
+        {
+            if (activityMode == ActivityMode.Public)
+            {
+                var view = _viewManager.Get<ICollection<ActivityView>>();
+                if (view != null) // if null, could signify that ApplicationStarted build is not yet complete.
+                {
+                    Rwlock.EnterWriteLock();
+
+                    try
+                    {
+                        var entity = _entities.Query<Activity>().SingleOrDefault(a => a.RevisionId == activityId);
+                        if ((entity != null) &&
+                            (entity.Mode == ActivityMode.Public) &&
+                            (entity.EditSourceId == null))
+                        {
+                            var existingActivityView = view.SingleOrDefault(a => a.Id == entity.RevisionId);
+                            if (existingActivityView != null)
+                            {
+                                view.Remove(existingActivityView);                               
+                            }
+
+                            view.Add(new ActivityView(entity));
+
+                            _viewManager.Set<ICollection<ActivityView>>(view);
+                        }
+                    }
+                    finally
+                    {
+                        Rwlock.ExitWriteLock();
+                        CreateOutput(DateTime.Now + " ActivityView update activity complete with " + view.Count + " activities.");
+                    }
+                }
+            }
+        }
+
+        private void DeleteActivity(int activityId)
+        {
+            var view = _viewManager.Get<ICollection<ActivityView>>();
+            if (view != null) // if null, could signify that ApplicationStarted build is not yet complete.
+            {
+                Rwlock.EnterWriteLock();
+
+                try
+                {
+                    var activityView = view.SingleOrDefault(a => a.Id == activityId);
+                    if (activityView != null)
+                    {
+                        view.Remove(activityView);
+
+                        _viewManager.Set<ICollection<ActivityView>>(view);
+                    }
+                }
+                finally
+                {
+                    Rwlock.ExitWriteLock();
+                    CreateOutput(DateTime.Now + " ActivityView delete activity complete with " + view.Count + " activities.");
+                }
+            }
+        }
+#endif
+
 #if false
         public void Handle(ActivityChanged @event)
         {
@@ -453,5 +469,7 @@ namespace UCosmic.Domain.Activities
             BuildViews();
         }
 #endif
+
+        #endregion
     }
 }
