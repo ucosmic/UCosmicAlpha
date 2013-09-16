@@ -2765,6 +2765,7 @@ namespace Links
                 public static readonly string AgreementVM_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/AgreementVM.min.js") ? Url("AgreementVM.min.js") : Url("AgreementVM.js");
                               
                 public static readonly string AgreementVM_min_js = Url("AgreementVM.min.js");
+                public static readonly string apiModels_d_ts = Url("apiModels.d.ts");
                 public static readonly string basicInfo_ts = Url("basicInfo.ts");
                 public static readonly string basicInfo_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/basicInfo.min.js") ? Url("basicInfo.min.js") : Url("basicInfo.js");
                               
@@ -2785,10 +2786,6 @@ namespace Links
                 public static readonly string fileAttachments_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/fileAttachments.min.js") ? Url("fileAttachments.min.js") : Url("fileAttachments.js");
                               
                 public static readonly string fileAttachments_min_js = Url("fileAttachments.min.js");
-                public static readonly string index_ts = Url("index.ts");
-                public static readonly string index_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/index.min.js") ? Url("index.min.js") : Url("index.js");
-                              
-                public static readonly string index_min_js = Url("index.min.js");
                 public static readonly string participants_ts = Url("participants.ts");
                 public static readonly string participants_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/participants.min.js") ? Url("participants.min.js") : Url("participants.js");
                               
@@ -2801,6 +2798,17 @@ namespace Links
                 public static readonly string scrollBody_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/scrollBody.min.js") ? Url("scrollBody.min.js") : Url("scrollBody.js");
                               
                 public static readonly string scrollBody_min_js = Url("scrollBody.min.js");
+                public static readonly string search_ts = Url("search.ts");
+                public static readonly string search_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/search.min.js") ? Url("search.min.js") : Url("search.js");
+                              
+                public static readonly string search_min_js = Url("search.min.js");
+                public static readonly string searchResult_ts = Url("searchResult.ts");
+                public static readonly string searchResult_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/searchResult.min.js") ? Url("searchResult.min.js") : Url("searchResult.js");
+                              
+                public static readonly string searchResult_min_js = Url("searchResult.min.js");
+                public static readonly string searchResults_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/searchResults.min.js") ? Url("searchResults.min.js") : Url("searchResults.js");
+                              
+                public static readonly string searchResults_min_js = Url("searchResults.min.js");
                 public static readonly string visibility_ts = Url("visibility.ts");
                 public static readonly string visibility_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/visibility.min.js") ? Url("visibility.min.js") : Url("visibility.js");
                               

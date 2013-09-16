@@ -17,7 +17,23 @@ namespace UCosmic.Web.Mvc.Models
         public DateTime ExpiresOn { get; set; }
         public bool IsExpirationEstimated { get; set; }
         public string Visibility { get; set; }
+        public AgreementParticipantApiModel[] Participants { get; set; }
     }
 
-    
+    public static class AgreementPageApiProfiler
+    {
+        public class EntityToModelProfile : Profile
+        {
+            protected override void Configure()
+            {
+                CreateMap<Agreement, AgreementApiModel>()
+                    //.ForMember(d => d.Content, o => o.MapFrom(s => s.Description))
+                    .AfterMap((s, d) => d.Participants = d.Participants
+                                                          .OrderByDescending(x => x.IsOwner)
+                                                          .ThenBy(x => x.EstablishmentTranslatedName).ToArray())
+                    ;
+            }
+        }
+    }
+
 }

@@ -20,12 +20,12 @@
 
         //ko.virtualElements.allowedBindings.stopBinding = true;
 
-        var agreementSearcdhViewModel = new InstitutionalAgreementSearchModel();
+        var agreementSearcdhViewModel = new Agreements.ViewModels.Search();
         ko.applyBindings(agreementSearcdhViewModel, $('#search')[0]);
     </script>
 }
 
-<div class="content fixed to-top" data-current-module="agreements" id="LoadingPage">
+@*<div class="content fixed to-top" data-current-module="agreements" id="LoadingPage">
     <div class="on-left from-top">
         <header>
             <h1>
@@ -36,7 +36,7 @@
             </h1>
         </header>
     </div>
-</div>
+</div>*@
 
 
 <div class="content fixed to-top" data-current-module="agreements" id="search" style="visibility: hidden">
@@ -47,7 +47,7 @@
                     @ViewBag.Title
                 </h1>
             </header>
-            @*@Html.Partial(MVC.Agreements.Views._SearchAgreements)*@
+           @Html.Partial(MVC.Agreements.Views._SearchAndResults)
         </div>
     </form>
 </div>

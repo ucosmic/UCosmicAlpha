@@ -1888,6 +1888,7 @@
     <TypeScriptCompile Include="scripts\viewmodels\agreements\scrollBody.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\agreements\contacts.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\agreements\basicInfo.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\agreements\apiModels.d.ts" />
     <Content Include="scripts\viewmodels\agreements\basicInfo.js">
       <DependentUpon>basicInfo.ts</DependentUpon>
     </Content>
@@ -1922,13 +1923,6 @@
       <DependentUpon>fileAttachments.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="scripts\viewmodels\agreements\participants.ts" />
-    <TypeScriptCompile Include="scripts\viewmodels\agreements\index.ts" />
-    <Content Include="scripts\viewmodels\agreements\index.js">
-      <DependentUpon>index.ts</DependentUpon>
-    </Content>
-    <Content Include="scripts\viewmodels\agreements\index.min.js">
-      <DependentUpon>index.ts</DependentUpon>
-    </Content>
     <Content Include="scripts\viewmodels\agreements\participants.js">
       <DependentUpon>participants.ts</DependentUpon>
     </Content>
@@ -1949,6 +1943,26 @@
       <DependentUpon>scrollBody.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="scripts\viewmodels\agreements\visibility.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\agreements\search.ts" />
+    <Content Include="scripts\viewmodels\agreements\search.js">
+      <DependentUpon>search.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\agreements\search.min.js">
+      <DependentUpon>search.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="scripts\viewmodels\agreements\searchResult.ts" />
+    <Content Include="scripts\viewmodels\agreements\searchResult.js">
+      <DependentUpon>searchResult.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\agreements\searchResult.min.js">
+      <DependentUpon>searchResult.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\agreements\searchResults.js">
+      <DependentUpon>searchResult.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\agreements\searchResults.min.js">
+      <DependentUpon>searchResult.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\viewmodels\agreements\visibility.js">
       <DependentUpon>visibility.ts</DependentUpon>
     </Content>
@@ -2360,6 +2374,7 @@
     <Content Include="Views\Agreements\_FormOverallVisibility.cshtml" />
     <Content Include="Views\Agreements\_FormSidebarNav.cshtml" />
     <Content Include="Views\Agreements\Index_old.cshtml" />
+    <Content Include="Views\Agreements\_SearchAndResults.cshtml" />
     <None Include="Views\ApiTest\Index.cshtml" />
     <Content Include="Views\Agreements\Settings.cshtml" />
     <Content Include="Views\Agreements\_SearchSideBar.cshtml" />

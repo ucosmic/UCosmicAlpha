@@ -108,9 +108,12 @@ namespace UCosmic.Web.Mvc
                 "~/scripts/viewmodels/agreements/phones.js",
                 "~/scripts/viewmodels/agreements/establishmentSearchNav.js",
                 "~/scripts/viewmodels/agreements/agreementVM.js"));
-            
-            bundles.Add(new ScriptBundle("~/bundles/agreements").Include(
-                "~/scripts/viewmodels/agreements/index.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/agreementSearch").Include(
+                "~/scripts/app/Spinner.js",
+                "~/scripts/app/PagedSearch.js",
+                "~/scripts/viewmodels/agreements/searchResult.js",
+                "~/scripts/viewmodels/agreements/search.js"));
 
             // employee personal profile page
             bundles.Add(new ScriptBundle("~/bundles/people").Include(
