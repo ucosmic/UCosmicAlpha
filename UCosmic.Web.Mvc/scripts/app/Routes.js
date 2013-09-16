@@ -652,6 +652,10 @@ var App;
                     return makeUrl('faculty-staff/degree-people-count');
                 }
                 FacultyStaff.getDegreePeopleCount = getDegreePeopleCount;
+                function postSearch() {
+                    return makeUrl('faculty-staff/search');
+                }
+                FacultyStaff.postSearch = postSearch;
             })(WebApi.FacultyStaff || (WebApi.FacultyStaff = {}));
             var FacultyStaff = WebApi.FacultyStaff;
 

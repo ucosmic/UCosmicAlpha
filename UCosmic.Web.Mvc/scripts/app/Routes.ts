@@ -511,6 +511,9 @@ module App.Routes {
             export function getDegreePeopleCount(): string {
                 return makeUrl('faculty-staff/degree-people-count');
             }
+            export function postSearch(): string {
+                return makeUrl('faculty-staff/search');
+            }
         }
 
         export module Activities {

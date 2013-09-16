@@ -206,87 +206,84 @@
  
     <script type="text/javascript">
 
-        $(document).ready(function() {
+        /* ----- Google API needs to be called outside of JQuery ready(). ----- */
+        google.load('visualization', '1', { 'packages': ['corechart', 'geochart'] });
+        google.setOnLoadCallback(function() {
+            $(document).ready(function() {
 
-            $("#main").css("height", 760);
+                $("#main").css("height", 760);
 
-            var institutionInfo = @Html.Raw(Json.Encode(Model));
+                var institutionInfo = @Html.Raw(Json.Encode(Model));
 
-            if (institutionInfo.InstitutionId == 0) {
-                $("#faculty-staff-select").show();
+                if (institutionInfo.InstitutionId == 0) {
+                    $("#faculty-staff-select").show();
 
-                var facultyAndStaffSelectViewModel = new ViewModels.Employees.FacultyAndStaffSelect();
-                facultyAndStaffSelectViewModel.load()
+                    var facultyAndStaffSelectViewModel = new ViewModels.Employees.FacultyAndStaffSelect();
+                    facultyAndStaffSelectViewModel.load()
+                        .done(function() {
+                            var rootElement = $("#faculty-staff-select")[0];
+                            ko.applyBindings(facultyAndStaffSelectViewModel, rootElement);
+                        });
+
+                    return;
+                }
+
+                $("#faculty-staff").show();
+
+                var facultyAndStaffViewModel = new ViewModels.Employees.FacultyAndStaff(institutionInfo);
+                facultyAndStaffViewModel.load()
                     .done(function() {
-                        var rootElement = $("#faculty-staff-select")[0];
-                        ko.applyBindings(facultyAndStaffSelectViewModel, rootElement);
-                    });
+                        facultyAndStaffViewModel.google = google; //window["google"];
 
-                return;
-            }
+                        facultyAndStaffViewModel.loadSpinner.stop();
 
-            $("#faculty-staff").show();
-            
-            var facultyAndStaffViewModel = new ViewModels.Employees.FacultyAndStaff(institutionInfo);
-            facultyAndStaffViewModel.load()
-                .done(function() {
+                        facultyAndStaffViewModel.setupWidgets("location", "fromDate", "toDate", "establishmentDropList",
+                            "campusDropList", "collegeDropList", "departmentDropList");
 
-                    facultyAndStaffViewModel.loadSpinner.stop();
+                        var rootElement = $("#faculty-staff")[0];
+                        ko.applyBindings(facultyAndStaffViewModel, rootElement);
 
-                    facultyAndStaffViewModel.setupWidgets("location", "fromDate", "toDate", "establishmentDropList",
-                        "campusDropList", "collegeDropList", "departmentDropList");
+                        var locationSelector = $("#location").data("kendoMultiSelect");
+                        locationSelector.setDataSource(new kendo.data.DataSource({
+                            serverFiltering: true,
+                            transport: {
+                                read: function(options) {
+                                    $.ajax({
+                                        url: App.Routes.WebApi.Places.get(),
 
-                    var rootElement = $("#faculty-staff")[0];
-                    ko.applyBindings(facultyAndStaffViewModel, rootElement);
-
-                    var locationSelector = $("#location").data("kendoMultiSelect");
-                    locationSelector.setDataSource(new kendo.data.DataSource({
-                        serverFiltering: true,
-                        transport: {
-                            read: function(options) {
-                                $.ajax({
-                                    url: App.Routes.WebApi.Places.get(),
-
-                                    /*
-                                            Bug - There's a bug in KendoUI Multiselect whereby the datasource.read()
-                                            gets called as soon as the widget gets focus.  This is bad as the Place
-                                            service will respond with all the Places in the DB since there is no 
-                                            filter being provided.  Our workaround is to trap the empty filter
-                                            and send a special character for the service to ignore.  Also,
-                                            If options.success() is not actually call, the widget stops functioning
-                                            altogether.
-                                    */
-                                    data: {
-                                        keyword: ((options.data.filter != null) &&
-                                            (options.data.filter.filters != null) &&
-                                            (options.data.filter.filters.length > 0) &&
-                                            (options.data.filter.filters[0].value != null)) ?
-                                            options.data.filter.filters[0].value : "~"
-                                    },
-                                    success: function(results) {
-                                        options.success(results);
-                                    }
-                                });
+                                        /*
+                                                Bug - There's a bug in KendoUI Multiselect whereby the datasource.read()
+                                                gets called as soon as the widget gets focus.  This is bad as the Place
+                                                service will respond with all the Places in the DB since there is no 
+                                                filter being provided.  Our workaround is to trap the empty filter
+                                                and send a special character for the service to ignore.  Also,
+                                                If options.success() is not actually call, the widget stops functioning
+                                                altogether.
+                                        */
+                                        data: {
+                                            keyword: ((options.data.filter != null) &&
+                                                (options.data.filter.filters != null) &&
+                                                (options.data.filter.filters.length > 0) &&
+                                                (options.data.filter.filters[0].value != null)) ?
+                                                options.data.filter.filters[0].value : "~"
+                                        },
+                                        success: function(results) {
+                                            options.success(results);
+                                        }
+                                    });
+                                }
                             }
-                        }
-                    }));
+                        }));
 
-                    facultyAndStaffViewModel.setupValidation();
-                    facultyAndStaffViewModel.setupSubscriptions();
-
-                    debugger;
-
-                    facultyAndStaffViewModel.google = google;//window["google"];
-                    google.load('visualization', '1.0', { 'packages': ['corechart', 'geochart'] });
-                    google.setOnLoadCallback(function () {
-                        debugger;
+                        facultyAndStaffViewModel.setupValidation();
+                        facultyAndStaffViewModel.setupSubscriptions();
                         facultyAndStaffViewModel.setupMaps();
                         facultyAndStaffViewModel.setupRouting();
+                    })
+                    .fail(function(jqXhr, textStatus, errorThrown) {
+                        alert(textStatus + "|" + errorThrown);
                     });
-                })
-                .fail(function(jqXhr, textStatus, errorThrown) {
-                    alert(textStatus + "|" + errorThrown);
-                });
+            });
         });
     </script>    
 }

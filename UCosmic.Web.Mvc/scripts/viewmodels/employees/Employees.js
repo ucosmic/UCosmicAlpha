@@ -123,11 +123,13 @@ var ViewModels;
                 this.selectedLocationValues = [];
                 this.fromDate = ko.observable();
                 this.toDate = ko.observable();
+                this.undatedActivities = ko.observable(false);
                 this.establishmentId = ko.observable(null);
                 this.establishmentOfficialName = ko.observable(null);
                 this.establishmentCountryOfficialName = ko.observable(null);
                 this.institutionHasCampuses = ko.observable(false);
                 this.institutionDropListData = [];
+                this.locations = ko.observableArray();
                 this.activityTypes = ko.observableArray();
                 this.selectedActivityIds = ko.observableArray();
                 this.isHeatmapVisible = ko.observable(true);
@@ -139,6 +141,10 @@ var ViewModels;
                 this.selectedPlace = ko.observable(null);
                 this.mapRegion = ko.observable('world');
                 this.isGlobalView = ko.observable(true);
+
+                this.degrees = ko.observableArray();
+                this.tags = ko.observableArray();
+
                 this.loadSpinner = new App.Spinner(new App.SpinnerOptions(200));
 
                 this.globalActivityCountData = null;
@@ -253,6 +259,9 @@ var ViewModels;
                 });
 
                 this.establishmentDropListId = establishmentDropListId;
+                this.campusDropListId = campusDropListId;
+                this.collegeDropListId = collegeDropListId;
+                this.departmentDropListId = departmentDropListId;
 
                 //$("#" + establishmentDropListId).kendoAutoComplete({
                 //    minLength: 3,
@@ -477,6 +486,11 @@ var ViewModels;
                 });
                 this.mapRegion.subscribe(function (newValue) {
                     _this.heatmapOptions["region"] = newValue;
+                });
+                this.searchType.subscribe(function (newValue) {
+                    if (_this.mapType() === 'pointmap') {
+                        //this.advancedSearch();
+                    }
                 });
             };
 
@@ -1288,50 +1302,48 @@ var ViewModels;
                 var _this = this;
                 var deferred = $.Deferred();
                 if (this.pointmapActivityMarkers == null) {
-                    this.getGlobalActivityCounts().done(function (counts) {
-                        deferred.resolve(_this._getPointmapActivityMarkers());
+                    this.activitySearch().done(function (results) {
+                        deferred.resolve(_this._getPointmapActivityMarkers(results));
                     }).fail(function (jqXHR, textStatus, errorThrown) {
                         deferred.reject(jqXHR, textStatus, errorThrown);
                     });
                 } else {
-                    deferred.resolve(this._getPointmapActivityMarkers());
+                    deferred.resolve(this.pointmapActivityMarkers);
                 }
                 return deferred;
             };
 
-            FacultyAndStaff.prototype._getPointmapActivityMarkers = function () {
-                if (this.pointmapActivityMarkers == null) {
-                    var markers = new Array();
-                    var placeCounts = (this.globalActivityCountData).placeCounts;
-                    if ((placeCounts != null) && (placeCounts.length > 0)) {
-                        debugger;
-                        for (var i = 0; i < placeCounts.length; i += 1) {
-                            if (placeCounts[i].count > 0) {
-                                var marker = new MarkerWithLabel({
-                                    position: new google.maps.LatLng(placeCounts[i].lat, placeCounts[i].lng),
-                                    map: null,
-                                    title: placeCounts[i].officialName,
-                                    icon: {
-                                        path: google.maps.SymbolPath.CIRCLE,
-                                        fillOpacity: 1.0,
-                                        fillColor: '000000',
-                                        strokeOpacity: 1.0,
-                                        strokeColor: 'FFFFFF',
-                                        strokeWeight: 1.0,
-                                        scale: 12
-                                    },
-                                    labelContent: placeCounts[i].count.toString(),
-                                    labelAnchor: new google.maps.Point(5, 5),
-                                    labelClass: "googleMarkerLabel",
-                                    labelInBackground: false
-                                });
+            FacultyAndStaff.prototype._getPointmapActivityMarkers = function (activityResults) {
+                var markers = new Array();
+                var placeResults = activityResults.placeResults;
+                if ((placeResults != null) && (placeResults.length > 0)) {
+                    for (var i = 0; i < placeResults.length; i += 1) {
+                        if (placeResults[i].results.length > 0) {
+                            var marker = new MarkerWithLabel({
+                                position: new google.maps.LatLng(placeResults[i].lat, placeResults[i].lng),
+                                map: null,
+                                title: placeResults[i].officialName,
+                                icon: {
+                                    path: google.maps.SymbolPath.CIRCLE,
+                                    fillOpacity: 1.0,
+                                    fillColor: 'green',
+                                    strokeOpacity: 1.0,
+                                    strokeColor: 'green',
+                                    strokeWeight: 1.0,
+                                    scale: 9
+                                },
+                                labelContent: placeResults[i].results.length.toString(),
+                                labelAnchor: new google.maps.Point(5, 5),
+                                labelClass: "googleMarkerLabel",
+                                labelInBackground: false
+                            });
 
-                                markers.push(marker);
-                            }
+                            markers.push(marker);
                         }
                     }
-                    this.pointmapActivityMarkers = markers;
                 }
+                this.pointmapActivityMarkers = markers;
+
                 return this.pointmapActivityMarkers;
             };
 
@@ -1586,10 +1598,18 @@ var ViewModels;
                     $('#heatmapText').css("font-weight", "bold");
                     this.isHeatmapVisible(true);
 
+                    if (this.searchType() === 'activities') {
+                        $('#activitiesButton').css("font-weight", "bold");
+                        $('#peopleButton').css("font-weight", "normal");
+                    } else {
+                        $('#activitiesButton').css("font-weight", "normal");
+                        $('#peopleButton').css("font-weight", "bold");
+                    }
+
                     if (this.heatmap == null) {
                         this.heatmap = new this.google.visualization.GeoChart($('#heatmap')[0]);
                         this.google.visualization.events.addListener(this.heatmap, 'select', function () {
-                            this.heatmapSelectHandler();
+                            _this.heatmapSelectHandler();
                         });
                     }
 
@@ -1863,6 +1883,62 @@ var ViewModels;
 
             FacultyAndStaff.prototype.customPlaceClick = function (event, item, officialName) {
                 this.selectedPlace(officialName);
+            };
+
+            // --------------------------------------------------------------------------------
+            /*
+            */
+            // --------------------------------------------------------------------------------
+            FacultyAndStaff.prototype.activitySearch = function () {
+                var deferred = $.Deferred();
+
+                debugger;
+
+                var locationIds = new Array();
+                for (var i = 0; i < this.locations().length; i += 1) {
+                    locationIds.push(this.locations()[i].id);
+                }
+
+                var activityTypeIds = new Array();
+                for (var i = 0; i < this.selectedActivityIds().length; i += 1) {
+                    activityTypeIds.push(this.selectedActivityIds()[i].id);
+                }
+
+                var dataItem = $("#" + this.campusDropListId).data("kendoDropDownList").dataItem();
+                var campusId = ((dataItem != null) && (dataItem.id != 0)) ? dataItem.id : null;
+                dataItem = $("#" + this.collegeDropListId).data("kendoDropDownList").dataItem();
+                var collegeId = (dataItem != null) ? dataItem.id : null;
+                dataItem = $("#" + this.departmentDropListId).data("kendoDropDownList").dataItem();
+                var departmentId = (dataItem != null) ? dataItem.id : null;
+
+                var filterOptions = {
+                    establishmentId: this.establishmentId(),
+                    filterType: this.searchType(),
+                    locationIds: locationIds,
+                    activityTypes: activityTypeIds,
+                    degrees: ko.toJS(this.degrees()),
+                    tags: ko.toJS(this.tags()),
+                    fromDate: this.fromDate(),
+                    toDate: this.toDate(),
+                    noUndated: !this.undatedActivities(),
+                    campusId: campusId,
+                    collegeId: collegeId,
+                    departmentId: departmentId
+                };
+
+                $.ajax({
+                    type: "POST",
+                    data: filterOptions,
+                    url: App.Routes.WebApi.FacultyStaff.postSearch(),
+                    success: function (data, textStatus, jqXhr) {
+                        deferred.resolve(data);
+                    },
+                    error: function (jqXhr, textStatus, errorThrown) {
+                        deferred.reject(errorThrown);
+                    }
+                });
+
+                return deferred;
             };
             return FacultyAndStaff;
         })();

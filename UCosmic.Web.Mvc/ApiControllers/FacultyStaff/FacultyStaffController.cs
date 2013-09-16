@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Net;
 using System.Web.Http;
 using AttributeRouting;
 using AttributeRouting.Web.Http;
@@ -548,6 +549,118 @@ namespace UCosmic.Web.Mvc.ApiControllers
             }
 
             return model;
+        }
+
+        /* Advanced Search */
+        [POST("search")]
+        public FacultyStaffSearchResults PostSearch(FacultyStaffFilterModel filter)
+        {
+            var results = new FacultyStaffSearchResults();
+
+            if (filter.FilterType == "activities")
+            {
+                var activities = _queryProcessor.Execute(new ActivitySearch(filter.EstablishmentId)
+                {
+                    EstablishmentId = filter.EstablishmentId,
+                    PlaceIds = filter.LocationIds,
+                    ActivityTypes = filter.ActivityTypes,
+                    Tags = filter.Tags,
+                    FromDate = filter.FromDate,
+                    ToDate = filter.ToDate,
+                    NoUndated = filter.NoUndated,
+                    CampusId = filter.CampusId,
+                    CollegeId = filter.CollegeId,
+                    DepartmentId = filter.DepartmentId                         
+                });
+
+                foreach (var activity in activities)
+                {
+                    var activityValues =
+                        activity.Values.Single(v => (v.ModeText == ActivityMode.Public.AsSentenceFragment()));
+
+                    foreach (var location in activityValues.Locations)
+                    {
+                        var placeResult = results.PlaceResults.SingleOrDefault(cr => cr.PlaceId == location.PlaceId);
+                        if (placeResult == null)
+                        {
+                            placeResult = new FacultyStaffPlaceResult
+                            {
+                                PlaceId = location.PlaceId,
+                                OfficialName = location.Place.OfficialName,
+                                Lat = location.Place.Center.Latitude.HasValue ? location.Place.Center.Latitude.Value : 0,
+                                Lng = location.Place.Center.Longitude.HasValue ? location.Place.Center.Longitude.Value : 0
+                            };
+
+                            results.PlaceResults.Add(placeResult);
+                        }
+
+                        var result = new FacultyStaffResult
+                        {
+                            PersonId = activity.PersonId,
+                            PersonName = activity.Person.DisplayName,
+                            ActivityId = activity.RevisionId,
+                            ActivityTitle = activityValues.Title,
+                            ActivityTypeIds = MakeActivityTypeIds(activityValues.Types),
+                            ActivityDate  = MakeDateString(activityValues.StartsOn, activityValues.EndsOn, activityValues.OnGoing)
+                        };
+
+                        placeResult.Results.Add(result);
+                    }
+                }
+            }
+            else if (filter.FilterType == "people")
+            {
+                throw new HttpResponseException(HttpStatusCode.NotImplemented);
+            }
+            else
+            {
+                throw new HttpResponseException(HttpStatusCode.NotImplemented);
+            }
+
+            return results;
+        }
+
+        private static int[] MakeActivityTypeIds(IEnumerable<ActivityType> activityTypes)
+        {
+            ICollection<int> ids = new Collection<int>();
+
+            foreach (var activityType in activityTypes)
+            {
+                ids.Add(activityType.TypeId);
+            }
+
+            return ids.ToArray();
+        }
+
+        private static string MakeDateString(DateTime? startsOn, DateTime? endsOn, bool? onGoing)
+        {
+            string formattedDateRange = "";
+
+            if (!startsOn.HasValue)
+            {
+                if (endsOn.HasValue)
+                {
+                    formattedDateRange = endsOn.Value.ToShortDateString();
+                }
+                else if (onGoing.HasValue)
+                {
+                    formattedDateRange = "(Ongoing)";
+                }
+            }
+            else
+            {
+                formattedDateRange = startsOn.Value.ToShortDateString();
+                if (onGoing.HasValue)
+                {
+                    formattedDateRange += " Present";
+                }
+                else if (endsOn.HasValue)
+                {
+                    formattedDateRange += " - " + endsOn.Value.ToShortDateString();
+                }
+            }
+
+            return formattedDateRange;
         }
     }
 }

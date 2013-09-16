@@ -172,6 +172,10 @@ namespace Links
             public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
             public static readonly string jsapi_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/jsapi.min.js") ? Url("jsapi.min.js") : Url("jsapi.js");
                           
+            public static readonly string markerwithlabel_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/markerwithlabel.min.js") ? Url("markerwithlabel.min.js") : Url("markerwithlabel.js");
+                          
+            public static readonly string markerwithlabel_packed_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/markerwithlabel_packed.min.js") ? Url("markerwithlabel_packed.min.js") : Url("markerwithlabel_packed.js");
+                          
             public static readonly string ToolsOverlay_ts = Url("ToolsOverlay.ts");
             public static readonly string ToolsOverlay_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/ToolsOverlay.min.js") ? Url("ToolsOverlay.min.js") : Url("ToolsOverlay.js");
                           

@@ -51,6 +51,7 @@ namespace UCosmic.Domain.People
 
     public class HandlePeopleSearchQuery : IHandleQueries<PeopleSearch, IEnumerable<Person>>
     {
+        private readonly string _publicActivityModeText = ActivityMode.Public.AsSentenceFragment();
         private readonly IQueryEntities _entities;
 
         public HandlePeopleSearchQuery(IQueryEntities entities)
@@ -66,29 +67,29 @@ namespace UCosmic.Domain.People
             var activities = _entities.Query<Activity>()
                                       .Where(
                                           a => /* only public activities */
-                                          (a.ModeText == ActivityMode.Public.AsSentenceFragment()) &&
+                                          (a.ModeText == _publicActivityModeText)
 
                                           /* not activity edit copies */
-                                          (a.EditSourceId == 0) &&
+                                          && !a.EditSourceId.HasValue
 
-                                          a.Person.Affiliations.Any(
+                                          && a.Person.Affiliations.Any(
                                               /* must be associated with establishment */
-                                              pa => (pa.EstablishmentId == query.EstablishmentId) &&
+                                              pa => (pa.EstablishmentId == query.EstablishmentId)
                                                     /* check for campus association */
-                                                    (!query.CampusId.HasValue ||
-                                                     (pa.CampusId.HasValue &&
-                                                      (pa.CampusId.Value == query.CampusId.Value)) &&
-                                                     /* check for college association */
-                                                     (!query.CollegeId.HasValue ||
-                                                      (pa.CollegeId.HasValue &&
-                                                       (pa.CollegeId.Value == query.CollegeId.Value)) &&
-                                                      /* check for department association */
-                                                      (!query.DepartmentId.HasValue ||
-                                                       (pa.DepartmentId.HasValue &&
-                                                        (pa.DepartmentId.Value == query.DepartmentId.Value))
-                                                      )
-                                                     ))
-                                              ));
+                                                    && (!query.CampusId.HasValue ||
+                                                        (pa.CampusId.HasValue &&
+                                                         (pa.CampusId.Value == query.CampusId.Value)))
+                                                    /* check for college association */
+                                                    && (!query.CollegeId.HasValue ||
+                                                        (pa.CollegeId.HasValue &&
+                                                         (pa.CollegeId.Value == query.CollegeId.Value)))
+                                                    /* check for department association */
+                                                    && (!query.DepartmentId.HasValue ||
+                                                        (pa.DepartmentId.HasValue &&
+                                                         (pa.DepartmentId.Value == query.DepartmentId.Value)))
+
+                                                 )
+                );
 
             /* If tags provided, restrict:
              * 
@@ -99,7 +100,7 @@ namespace UCosmic.Domain.People
             if ((query.Tags != null) && (query.Tags.Length > 0))
             {
                 activities =
-                    activities.Where(a => (a.Values.Any(v => v.ModeText == ActivityMode.Public.AsSentenceFragment())) &&
+                    activities.Where(a => (a.Values.Any(v => v.ModeText == _publicActivityModeText)) &&
                                           (a.Values.Any(
                                               v =>
                                               query.Tags.Any(
@@ -118,7 +119,7 @@ namespace UCosmic.Domain.People
             if ((query.PlaceIds != null) && (query.PlaceIds.Length > 0))
             {
                 activities =
-                    activities.Where(a => (a.Values.Any(v => v.ModeText == ActivityMode.Public.AsSentenceFragment())) &&
+                    activities.Where(a => (a.Values.Any(v => v.ModeText == _publicActivityModeText)) &&
                                           (a.Values.Any(v => v.Locations.Any(l => query.PlaceIds.Contains(l.PlaceId))))
                         );
             }
@@ -127,7 +128,7 @@ namespace UCosmic.Domain.People
             if ((query.ActivityTypes != null) && (query.ActivityTypes.Length > 0))
             {
                 activities =
-                    activities.Where(a => (a.Values.Any(v => v.ModeText == ActivityMode.Public.AsSentenceFragment())) &&
+                    activities.Where(a => (a.Values.Any(v => v.ModeText == _publicActivityModeText)) &&
                                           (a.Values.Any(v => v.Types.Any(t => query.ActivityTypes.Contains(t.TypeId))))
                         );
             }
@@ -160,24 +161,24 @@ namespace UCosmic.Domain.People
                                                                       d.Person.Affiliations.Any(
                                                                           /* must be associated with establishment */
                                                                           pa =>
-                                                                          (pa.EstablishmentId == query.EstablishmentId) &&
+                                                                          (pa.EstablishmentId == query.EstablishmentId)
                                                                           /* check for campus association */
-                                                                          (!query.CampusId.HasValue ||
-                                                                           (pa.CampusId.HasValue &&
-                                                                            (pa.CampusId.Value == query.CampusId.Value)) &&
-                                                                           /* check for college association */
-                                                                           (!query.CollegeId.HasValue ||
-                                                                            (pa.CollegeId.HasValue &&
-                                                                             (pa.CollegeId.Value ==
-                                                                              query.CollegeId.Value)) &&
-                                                                            /* check for department association */
-                                                                            (!query.DepartmentId.HasValue ||
-                                                                             (pa.DepartmentId.HasValue &&
-                                                                              (pa.DepartmentId.Value ==
-                                                                               query.DepartmentId.Value))
-                                                                            )
-                                                                           ))
-                                                                          ));
+                                                                          && (!query.CampusId.HasValue ||
+                                                                              (pa.CampusId.HasValue &&
+                                                                               (pa.CampusId.Value ==
+                                                                                query.CampusId.Value)))
+                                                                          /* check for college association */
+                                                                          && (!query.CollegeId.HasValue ||
+                                                                              (pa.CollegeId.HasValue &&
+                                                                               (pa.CollegeId.Value ==
+                                                                                query.CollegeId.Value)))
+                                                                          /* check for department association */
+                                                                          && (!query.DepartmentId.HasValue ||
+                                                                              (pa.DepartmentId.HasValue &&
+                                                                               (pa.DepartmentId.Value ==
+                                                                                query.DepartmentId.Value)))
+                                                                          )
+                    );
 
                 degrees = degrees.Where(d => query.Degrees.Contains(d.Title, StringComparer.InvariantCultureIgnoreCase));
 
@@ -205,21 +206,19 @@ namespace UCosmic.Domain.People
                                             .Where(ge =>
                                                    ge.Person.Affiliations.Any(
                                                        /* must be associated with establishment */
-                                                       pa => (pa.EstablishmentId == query.EstablishmentId) &&
+                                                       pa => (pa.EstablishmentId == query.EstablishmentId)
                                                              /* check for campus association */
-                                                             (!query.CampusId.HasValue ||
-                                                              (pa.CampusId.HasValue &&
-                                                               (pa.CampusId.Value == query.CampusId.Value)) &&
-                                                              /* check for college association */
-                                                              (!query.CollegeId.HasValue ||
-                                                               (pa.CollegeId.HasValue &&
-                                                                (pa.CollegeId.Value == query.CollegeId.Value)) &&
-                                                               /* check for department association */
-                                                               (!query.DepartmentId.HasValue ||
-                                                                (pa.DepartmentId.HasValue &&
-                                                                 (pa.DepartmentId.Value == query.DepartmentId.Value))
-                                                               )
-                                                              ))
+                                                             && (!query.CampusId.HasValue ||
+                                                                 (pa.CampusId.HasValue &&
+                                                                  (pa.CampusId.Value == query.CampusId.Value)))
+                                                             /* check for college association */
+                                                             && (!query.CollegeId.HasValue ||
+                                                                 (pa.CollegeId.HasValue &&
+                                                                  (pa.CollegeId.Value == query.CollegeId.Value)))
+                                                             /* check for department association */
+                                                             && (!query.DepartmentId.HasValue ||
+                                                                 (pa.DepartmentId.HasValue &&
+                                                                  (pa.DepartmentId.Value == query.DepartmentId.Value)))
                                                        )
                     );
 
@@ -244,21 +243,19 @@ namespace UCosmic.Domain.People
                                              .Where(le =>
                                                     le.Person.Affiliations.Any(
                                                         /* must be associated with establishment */
-                                                        pa => (pa.EstablishmentId == query.EstablishmentId) &&
+                                                        pa => (pa.EstablishmentId == query.EstablishmentId)
                                                               /* check for campus association */
-                                                              (!query.CampusId.HasValue ||
-                                                               (pa.CampusId.HasValue &&
-                                                                (pa.CampusId.Value == query.CampusId.Value)) &&
-                                                               /* check for college association */
-                                                               (!query.CollegeId.HasValue ||
-                                                                (pa.CollegeId.HasValue &&
-                                                                 (pa.CollegeId.Value == query.CollegeId.Value)) &&
-                                                                /* check for department association */
-                                                                (!query.DepartmentId.HasValue ||
-                                                                 (pa.DepartmentId.HasValue &&
-                                                                  (pa.DepartmentId.Value == query.DepartmentId.Value))
-                                                                )
-                                                               ))
+                                                              && (!query.CampusId.HasValue ||
+                                                                  (pa.CampusId.HasValue &&
+                                                                   (pa.CampusId.Value == query.CampusId.Value)))
+                                                              /* check for college association */
+                                                              && (!query.CollegeId.HasValue ||
+                                                                  (pa.CollegeId.HasValue &&
+                                                                   (pa.CollegeId.Value == query.CollegeId.Value)))
+                                                              /* check for department association */
+                                                              && (!query.DepartmentId.HasValue ||
+                                                                  (pa.DepartmentId.HasValue &&
+                                                                   (pa.DepartmentId.Value == query.DepartmentId.Value)))
                                                         )
                     );
 
@@ -291,27 +288,27 @@ namespace UCosmic.Domain.People
                                                  /* affiliated with establishment */
                                                  p.Affiliations.Any(
                                                      /* must be associated with establishment */
-                                                     pa => (pa.EstablishmentId == query.EstablishmentId) &&
+                                                     pa => (pa.EstablishmentId == query.EstablishmentId)
                                                            /* check for campus association */
-                                                           (!query.CampusId.HasValue ||
-                                                            (pa.CampusId.HasValue &&
-                                                             (pa.CampusId.Value == query.CampusId.Value)) &&
-                                                            /* check for college association */
-                                                            (!query.CollegeId.HasValue ||
-                                                             (pa.CollegeId.HasValue &&
-                                                              (pa.CollegeId.Value == query.CollegeId.Value)) &&
-                                                             /* check for department association */
-                                                             (!query.DepartmentId.HasValue ||
-                                                              (pa.DepartmentId.HasValue &&
-                                                               (pa.DepartmentId.Value == query.DepartmentId.Value))
-                                                             )
-                                                            ))
-                                                     ) &&
+                                                           && (!query.CampusId.HasValue ||
+                                                               (pa.CampusId.HasValue &&
+                                                                (pa.CampusId.Value == query.CampusId.Value)))
+                                                           /* check for college association */
+                                                           && (!query.CollegeId.HasValue ||
+                                                               (pa.CollegeId.HasValue &&
+                                                                (pa.CollegeId.Value == query.CollegeId.Value)))
+                                                           /* check for department association */
+                                                           && (!query.DepartmentId.HasValue ||
+                                                               (pa.DepartmentId.HasValue &&
+                                                                (pa.DepartmentId.Value == query.DepartmentId.Value)))
+
+                                                     )
 
                                                  /* tag matches on display name */
-                                                 query.Tags.Any(
+                                                 && query.Tags.Any(
                                                      t =>
-                                                     p.DisplayName.Contains(t, StringComparison.InvariantCultureIgnoreCase))
+                                                     p.DisplayName.Contains(t,
+                                                                            StringComparison.InvariantCultureIgnoreCase))
                     );
 
 

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace UCosmic.Web.Mvc.Models
 {
@@ -21,6 +23,8 @@ namespace UCosmic.Web.Mvc.Models
 
     public class FacultyStaffFilterModel
     {
+        public int EstablishmentId { get; set; }
+
         public string FilterType { get; set; } // activities or people
 
         public int[] LocationIds { get; set; }
@@ -33,12 +37,45 @@ namespace UCosmic.Web.Mvc.Models
 
         public DateTime? FromDate { get; set; }
         public DateTime? ToDate { get; set; }
-        public bool UndatedActivities { get; set; }
+        public bool NoUndated { get; set; }
 
-        public int InstitutionId { get; set; }
         public int? CampusId { get; set; }
         public int? CollegeId { get; set; }
         public int? DepartmentId { get; set; }
-        
     }
+
+    public class FacultyStaffResult
+    {
+        public int PersonId { get; set; }
+        public string PersonName { get; set; }
+        public int? ActivityId { get; set; }
+        public string ActivityTitle { get; set; }
+        public int[] ActivityTypeIds { get; set; }
+        public string ActivityDate { get; set; }
+    }
+
+    public class FacultyStaffPlaceResult
+    {
+        public int PlaceId { get; set; }
+        public string OfficialName { get; set; }
+        public double Lat { get; set; }
+        public double Lng { get; set; }
+        public ICollection<FacultyStaffResult> Results { get; set; }
+
+        public FacultyStaffPlaceResult()
+        {
+            Results = new Collection<FacultyStaffResult>();
+        }
+    }
+
+    public class FacultyStaffSearchResults
+    {
+        public ICollection<FacultyStaffPlaceResult> PlaceResults { get; set; }
+
+        public FacultyStaffSearchResults()
+        {
+            PlaceResults = new Collection<FacultyStaffPlaceResult>();
+        }
+    }
+
 }

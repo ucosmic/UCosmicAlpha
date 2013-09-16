@@ -18,7 +18,7 @@ namespace UCosmic.Domain.Activities
 
             return queryable.Where(a =>
                                    (
-                                       (a.EditSourceId == 0) &&
+                                       !a.EditSourceId.HasValue &&
 
                                        /* include undated activities? */
 
