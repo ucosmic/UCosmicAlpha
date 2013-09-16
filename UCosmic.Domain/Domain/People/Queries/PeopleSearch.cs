@@ -311,8 +311,7 @@ namespace UCosmic.Domain.People
                                                  /* tag matches on display name */
                                                  query.Tags.Any(
                                                      t =>
-                                                     p.DisplayName.Contains(t,
-                                                                            StringComparison.InvariantCultureIgnoreCase))
+                                                     p.DisplayName.Contains(t, StringComparison.InvariantCultureIgnoreCase))
                     );
 
 

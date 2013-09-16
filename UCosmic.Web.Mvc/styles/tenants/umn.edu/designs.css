@@ -272,8 +272,13 @@ ul.selectableListItems li:hover {
     text-transform: uppercase; }
   .filter-sidebar .section {
     background-color: #dddddd;
-    padding-bottom: 16px;
+    padding-bottom: 8px;
     white-space: nowrap; }
+  .filter-sidebar .lens-selector {
+    color: #dddddd;
+    background-color: #7a0019;
+    text-align: center;
+    font-size: large; }
 
 .maptype-hover:hover {
   text-decoration: underline; }

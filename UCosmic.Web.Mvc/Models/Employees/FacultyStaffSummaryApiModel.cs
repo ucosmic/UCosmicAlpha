@@ -18,6 +18,8 @@ namespace UCosmic.Web.Mvc.Models
         public string OfficialName { get; set; }
         public int Count { get; set; }
         public ICollection<FacultyStaffTypeCountModel> TypeCounts { get; set; }
+        public double Lat { get; set; }
+        public double Lng { get; set; }
 
         public FacultyStaffPlaceCountModel()
         {

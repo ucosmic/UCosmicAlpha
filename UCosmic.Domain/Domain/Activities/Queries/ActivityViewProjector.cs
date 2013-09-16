@@ -137,7 +137,9 @@ namespace UCosmic.Domain.Activities
                             PlaceId = place.RevisionId,
                             CountryCode = place.IsCountry ? place.GeoPlanetPlace.Country.Code : null,
                             OfficialName = place.OfficialName,
-                            Count = activityCount
+                            Count = activityCount,
+                            Lat = place.Center.Latitude.HasValue ? place.Center.Latitude.Value : 0,
+                            Lng = place.Center.Longitude.HasValue ? place.Center.Longitude.Value : 0
                         });
 
                         stats.Count += activityCount;

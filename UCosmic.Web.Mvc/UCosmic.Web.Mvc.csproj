@@ -761,6 +761,8 @@
       <DependentUpon>Spinner.ts</DependentUpon>
     </Content>
     <Content Include="scripts\app\Spinner.ts" />
+    <Content Include="scripts\google\markerwithlabel.js" />
+    <Content Include="scripts\google\markerwithlabel_packed.js" />
     <Content Include="scripts\jquery\jquery-1.9.1.js" />
     <Content Include="scripts\jquery\jquery-1.9.1.min.js" />
     <Content Include="images\icons\files\doc.png" />

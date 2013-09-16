@@ -3,8 +3,8 @@
         <div class="section">
             <div class="section-header">Search For</div>
             <div style="text-align: center; font-size: large; padding-bottom: 4px">
-                <input type="radio" id="activitiesRadioButton" name="activityType" value="activities" data-bind="checked: searchType()"/><span>Activities&emsp;</span>
-                <input type="radio" id="peopleRadioButton" name="activityType" value="people" data-bind="checked: searchType()"/><span>People</span>
+                <input type="radio" id="activitiesRadioButton" name="searchTypeGroup" value="activities" data-bind="checked: searchType"/><span>Activities&emsp;</span>
+                <input type="radio" id="peopleRadioButton" name="searchTypeGroup" value="people" data-bind="checked: searchType"/><span>People</span>
             </div>
         </div>
 
@@ -66,6 +66,12 @@
             </div>
         </div>
 
+    </div>
+    <div class="lens-selector" data-bind="">
+        <span>Map</span>
+    </div>
+    <div class="lens-selector" data-bind="">
+        <span>Table</span>
     </div>
 </div>
 

@@ -408,8 +408,15 @@ ul.selectableListItems li:hover {
 
     .section {
         background-color: $sidebar-default-bg-color;
-        padding-bottom: 16px;
+        padding-bottom: 8px;
         white-space: nowrap;
+    }
+
+    .lens-selector {
+        color: $sidebar-default-bg-color;
+        background-color: $sidebar-default-text-color;
+        text-align: center;
+        font-size: large;
     }
 }
 

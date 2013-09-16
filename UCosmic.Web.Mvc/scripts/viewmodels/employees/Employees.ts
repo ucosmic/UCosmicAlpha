@@ -13,6 +13,36 @@
 
 module ViewModels.Employees {
 
+    declare class MarkerWithLabelOptions extends MarkerWithLabel {
+        constructor();
+        crossImage: string;
+        handCursor: string;
+        labelAnchor: any;
+        labelClass: string;
+        labelContent: any;
+        labelInBackground: boolean;
+        labelStyle: any;
+        labelVisible: boolean;
+        optimized: boolean;
+        raiseOnDrag: boolean;
+        position: any;
+
+    }
+
+    declare class MarkerWithLabel extends google.maps.Marker {
+        constructor(opts?: any);
+        crossImage: string;
+        handCursor: string;
+        labelAnchor: any;
+        labelClass: string;
+        labelContent: any;
+        labelInBackground: boolean;
+        labelStyle: any;
+        labelVisible: boolean;
+        optimized: boolean;
+        raiseOnDrag: boolean;
+    }
+
     export class FacultyAndStaffSelect {
         institutions: KnockoutObservableArray<any>;
         loadSpinner: App.Spinner = new App.Spinner(new App.SpinnerOptions(200));
@@ -58,6 +88,10 @@ module ViewModels.Employees {
 
         /* True if any field changes. */
         ///dirtyFlag: KnockoutObservable<boolean> = ko.observable(false);
+
+        lenses: KnockoutObservableArray<any>;
+        lens: KnockoutObservable<string>;
+        changeLens: any;
 
         mapType: KnockoutObservable<string>;
         searchType: KnockoutObservable<string>;
@@ -113,7 +147,6 @@ module ViewModels.Employees {
 
         pointmap: google.maps.Map;
         pointmapOptions: any;
-        pointmapData: any;
 
         //resultsTable: any;
         //resultsTableOptions: any;
@@ -130,6 +163,8 @@ module ViewModels.Employees {
         placePeopleTrendData: any;
         heatmapActivityDataTable: any;
         heatmapPeopleDataTable: any;
+        pointmapActivityMarkers: any;
+        pointmapPeopleMarkers: any;
 
         totalCount: KnockoutObservable<number>;
         totalPlaceCount: KnockoutObservable<number>;
@@ -200,9 +235,10 @@ module ViewModels.Employees {
             this.placeActivityTrendData = null;
             this.globalPeopleTrendData = null;
             this.placePeopleTrendData = null;
-
             this.heatmapActivityDataTable = null;
             this.heatmapPeopleDataTable = null;
+            this.pointmapActivityMarkers = null;
+            this.pointmapPeopleMarkers = null;
 
             this.totalCount = ko.observable(0);
             this.totalPlaceCount = ko.observable(0);
@@ -211,6 +247,13 @@ module ViewModels.Employees {
 
             this.selectSearchType('activities');
 
+            this.lenses = ko.observableArray([
+                { text: 'Map', value: 'map' },
+                { text: 'Table', value: 'table' }
+            ]);
+            this.lens = ko.observable('map');
+            this.changeLens = (lens: any) => void {
+            }
 
             if (institutionInfo != null) {
 
@@ -544,23 +587,19 @@ module ViewModels.Employees {
         }
 
         setupMaps(): void {
-            var me = this;
 
-            /* ----- Setup Pointmap ----- */
-
-            this.google = window["google"];
             this.google.maps.visualRefresh = true;
 
-            this.pointmap = new this.google.maps.Map($('#pointmap')[0], {
-                width: 680,
-                height: 500,
+            /* ----- Setup Pointmap ----- */
+            this.pointmapOptions = {
                 mapTypeId: google.maps.MapTypeId.ROADMAP,
                 center: new google.maps.LatLng(0, 0), // americas on left, australia on right
                 zoom: 1, // zoom out
                 draggable: true, // allow map panning
                 scrollwheel: false // prevent mouse wheel zooming
-            });
+            };
 
+            /* ----- Setup Heatmap ----- */
             this.heatmapOptions = {
                 //is3D: true,
                 width: 680,
@@ -576,12 +615,7 @@ module ViewModels.Employees {
                 //displayMode: 'markers'
             };
 
-            this.heatmap = new this.google.visualization.GeoChart($('#heatmap')[0]);
-            this.google.visualization.events.addListener(this.heatmap, 'select', function () { me.heatmapSelectHandler(); });
-
-
             /* ----- Setup ColumnChart ----- */
-
             if (this.activityTypes() != null) {
                 this.barchartActivityOptions = {
                     //title: 'Global Activities',
@@ -701,6 +735,7 @@ module ViewModels.Employees {
             };
 
             this.linechart = new this.google.visualization.LineChart($('#facultystaff-summary-linechart')[0]);
+
         }
 
         getHeatmapActivityDataTable(): JQueryPromise<any> {
@@ -712,6 +747,9 @@ module ViewModels.Employees {
                     .done((): void => {
                         deferred.resolve(this._getHeatmapActivityDataTable());
                         //this.loadSpinner.stop();
+                    })
+                    .fail((jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void => {
+                        deferred.reject(jqXHR, textStatus, errorThrown);
                     });
             }
             else {
@@ -721,7 +759,7 @@ module ViewModels.Employees {
             return deferred;
         }
 
-        _getHeatmapActivityDataTable(): any {
+        private _getHeatmapActivityDataTable(): any {
             if (this.heatmapActivityDataTable == null) {
                 var dataTable = new this.google.visualization.DataTable();
 
@@ -804,7 +842,7 @@ module ViewModels.Employees {
             return deferred;
         }
 
-        _getHeatmapPeopleDataTable(): any {
+        private _getHeatmapPeopleDataTable(): any {
 
             if (this.heatmapPeopleDataTable == null) {
                 var dataTable = new this.google.visualization.DataTable();
@@ -870,6 +908,37 @@ module ViewModels.Employees {
             return this.heatmapPeopleDataTable;
         }
 
+        /*
+         *
+         */
+        getGlobalActivityCounts(): JQueryPromise<any> {
+            var deferred: JQueryDeferred<void> = $.Deferred();
+
+            if (this.globalActivityCountData == null) {
+                $.ajax({
+                    type: "GET",
+                    async: true,
+                    data: { 'establishmentId': this.establishmentId(), 'placeId': null },
+                    dataType: 'json',
+                    url: App.Routes.WebApi.FacultyStaff.getActivityCount(),
+                    success: (data: any, textStatus: string, jqXhr: JQueryXHR): void => {
+                        this.globalActivityCountData = data;
+                        deferred.resolve(this.globalActivityCountData);
+                    },
+                    error: (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
+                        deferred.reject(errorThrown);
+                    },
+                    complete: (jqXhr: JQueryXHR, textStatus: string): void => {
+                    }
+                });
+            }
+            else {
+                deferred.resolve(this.globalActivityCountData);
+            }
+
+            return deferred;
+        }
+
        /*
         *
         */
@@ -877,29 +946,13 @@ module ViewModels.Employees {
             var deferred: JQueryDeferred<void> = $.Deferred();
 
             if (placeOfficialName == null) {
-                if (this.globalActivityCountData == null) {
-                    //this.loadSpinner.start();
-                    $.ajax({
-                        type: "GET",
-                        async: true,
-                        data: { 'establishmentId': this.establishmentId(), 'placeId': null },
-                        dataType: 'json',
-                        url: App.Routes.WebApi.FacultyStaff.getActivityCount(),
-                        success: (data: any, textStatus: string, jqXhr: JQueryXHR): void => {
-                            this.globalActivityCountData = data;
-                            deferred.resolve(this._getActivityDataTable(null));
-                        },
-                        error: (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
-                            deferred.reject(errorThrown);
-                        },
-                        complete: (jqXhr: JQueryXHR, textStatus: string): void => {
-                            //this.loadSpinner.stop();
-                        }
+                this.getGlobalActivityCounts()
+                    .done((counts: any): void => {
+                        deferred.resolve(this._getActivityDataTable(null));
+                    })
+                    .fail((jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void => {
+                        deferred.reject(jqXHR, textStatus, errorThrown);
                     });
-                }
-                else {
-                    deferred.resolve(this._getActivityDataTable(null));
-                }
             }
             else {
                 var placeId = this.getPlaceId(placeOfficialName);
@@ -978,6 +1031,32 @@ module ViewModels.Employees {
             return view;
         }
 
+        getGlobalPeopleCounts(): JQueryPromise<any> {
+            var deferred: JQueryDeferred<void> = $.Deferred();
+            if (this.globalPeopleCountData == null) {
+                $.ajax({
+                    type: "GET",
+                    async: true,
+                    data: { 'establishmentId': this.establishmentId(), 'placeId': null },
+                    dataType: 'json',
+                    url: App.Routes.WebApi.FacultyStaff.getPeopleCount(),
+                    success: (data: any, textStatus: string, jqXhr: JQueryXHR): void => {
+                        this.globalPeopleCountData = data;
+                        deferred.resolve(this._getPeopleDataTable(null));
+                    },
+                    error: (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
+                        deferred.reject(errorThrown);
+                    },
+                    complete: (jqXhr: JQueryXHR, textStatus: string): void => {
+                    }
+                });
+            }
+            else {
+                deferred.resolve(this._getPeopleDataTable(null));
+            }
+            return deferred;
+        }
+
         /*
         *
         */
@@ -985,29 +1064,13 @@ module ViewModels.Employees {
             var deferred: JQueryDeferred<void> = $.Deferred();
 
             if (placeOfficialName == null) {
-                if (this.globalPeopleCountData == null) {
-                    //this.loadSpinner.start();
-                    $.ajax({
-                        type: "GET",
-                        async: true,
-                        data: { 'establishmentId': this.establishmentId(), 'placeId': null },
-                        dataType: 'json',
-                        url: App.Routes.WebApi.FacultyStaff.getPeopleCount(),
-                        success: (data: any, textStatus: string, jqXhr: JQueryXHR): void => {
-                            this.globalPeopleCountData = data;
-                            deferred.resolve(this._getPeopleDataTable(null));
-                        },
-                        error: (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
-                            deferred.reject(errorThrown);
-                        },
-                        complete: (jqXhr: JQueryXHR, textStatus: string): void => {
-                            //this.loadSpinner.stop();
-                        }
+                this.getGlobalPeopleCounts()
+                    .done((counts: any): void => {
+                        deferred.resolve(this._getPeopleDataTable(null));
+                    })
+                    .fail((jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void => {
+                        deferred.reject(jqXHR, textStatus, errorThrown);
                     });
-                }
-                else {
-                    deferred.resolve(this._getPeopleDataTable(null));
-                }
             }
             else {
                 var placeId = this.getPlaceId(placeOfficialName);
@@ -1358,6 +1421,149 @@ module ViewModels.Employees {
             return deferred;
         }
 
+
+        /*
+         *
+         */
+        getPointmapActivityMarkers(): JQueryPromise<any> {
+            var deferred: JQueryDeferred<void> = $.Deferred();
+            if (this.pointmapActivityMarkers == null) {
+                this.getGlobalActivityCounts()
+                    .done((counts: any): void => {
+                        deferred.resolve(this._getPointmapActivityMarkers());
+                    })
+                    .fail((jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void => {
+                        deferred.reject(jqXHR, textStatus, errorThrown);
+                    });
+            }
+            else {
+                deferred.resolve(this._getPointmapActivityMarkers());
+            }
+            return deferred;
+        }
+
+        private _getPointmapActivityMarkers(): any {
+            if (this.pointmapActivityMarkers == null) {
+                var markers = new Array();
+                var placeCounts = (<any>this.globalActivityCountData).placeCounts;
+                if ((placeCounts != null) && (placeCounts.length > 0)) {
+                    debugger;
+                    for (var i = 0; i < placeCounts.length; i += 1) {
+                        if (placeCounts[i].count > 0) {
+                            var marker = new MarkerWithLabel({
+                                position: new google.maps.LatLng(placeCounts[i].lat, placeCounts[i].lng),
+                                map: null,
+                                title: placeCounts[i].officialName,
+                                icon: {
+                                    path: google.maps.SymbolPath.CIRCLE,
+                                    fillOpacity: 1.0,
+                                    fillColor: '000000',
+                                    strokeOpacity: 1.0,
+                                    strokeColor: 'FFFFFF',
+                                    strokeWeight: 1.0,
+                                    scale: 12 //pixels
+                                },
+                                labelContent: placeCounts[i].count.toString(),
+                                labelAnchor: new google.maps.Point(5, 5),
+                                labelClass: "googleMarkerLabel",
+                                labelInBackground: false
+                            });
+
+                            markers.push(marker);
+                        }
+                    }
+                }
+                this.pointmapActivityMarkers = markers;
+            }
+            return this.pointmapActivityMarkers;
+        }
+
+        showPointmapActivityMarkers(): void {
+            if (this.pointmapActivityMarkers != null) {
+                for (var i = 0; i < this.pointmapActivityMarkers.length; i += 1) {
+                    this.pointmapActivityMarkers[i].setMap(this.pointmap);
+                }
+            }
+        }
+
+        hidePointmapActivityMarkers(): void {
+            if (this.pointmapActivityMarkers != null) {
+                for (var i = 0; i < this.pointmapActivityMarkers.length; i += 1) {
+                    this.pointmapActivityMarkers[i].setMap(null);
+                }
+            }
+        }
+
+        /*
+         *
+         */
+        getPointmapPeopleMarkers(): JQueryPromise<any> {
+            var deferred: JQueryDeferred<void> = $.Deferred();
+            if (this.pointmapPeopleMarkers == null) {
+                this.getGlobalPeopleCounts()
+                    .done((counts: any): void => {
+                        deferred.resolve(this._getPointmapPeopleMarkers());
+                    })
+                    .fail((jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void => {
+                        deferred.reject(jqXHR, textStatus, errorThrown);
+                    });
+            }
+            else {
+                deferred.resolve(this._getPointmapPeopleMarkers());
+            }
+            return deferred;
+        }
+
+        private _getPointmapPeopleMarkers(): any {
+            if (this.pointmapPeopleMarkers == null) {
+                var markers = new Array();
+                var placeCounts = (<any>this.globalPeopleCountData).placeCounts;
+                if ((placeCounts != null) && (placeCounts.length > 0)) {
+                    for (var i = 0; i < placeCounts.length; i += 1) {
+                        if (placeCounts[i].count > 0) {
+                            var marker = new MarkerWithLabel({
+                                position: new google.maps.LatLng(placeCounts[i].lat, placeCounts[i].lng),
+                                map: null,
+                                title: placeCounts[i].officialName,
+                                icon: {
+                                    path: google.maps.SymbolPath.CIRCLE,
+                                    fillOpacity: 0.75,
+                                    fillColor: 'ff0000',
+                                    strokeOpacity: 1.0,
+                                    strokeColor: 'fff000',
+                                    strokeWeight: 1.0,
+                                    scale: 12 //pixels
+                                },
+                                labelContent: placeCounts[i].count.toString(),
+                                labelAnchor: new google.maps.Point(3, 30),
+                                labelClass: "googleMarkerLabel",
+                                labelInBackground: false
+                            });
+                            markers.push(marker);
+                        }
+                    }
+                }
+                this.pointmapPeopleMarkers = markers;
+            }
+            return this.pointmapPeopleMarkers;
+        }
+
+        showPointmapPeopleMarkers(): void {
+            if (this.pointmapPeopleMarkers != null) {
+                for (var i = 0; i < this.pointmapPeopleMarkers.length; i += 1) {
+                    this.pointmapPeopleMarkers[i].setMap(this.pointmap);
+                }
+            }
+        }
+
+        hidePointmapPeopleMarkers(): void {
+            if (this.pointmapPeopleMarkers != null) {
+                for (var i = 0; i < this.pointmapPeopleMarkers.length; i += 1) {
+                    this.pointmapPeopleMarkers[i].setMap(null);
+                }
+            }
+        }
+
         makeActivityTooltip(name: string, count: number): string {
             return "<b>" + name + "</b><br/>Total Activities: " + count.toString();
         }
@@ -1531,8 +1737,13 @@ module ViewModels.Employees {
 
             if (type === "heatmap") {
                 $('#heatmapText').css("font-weight", "bold");
-
                 this.isHeatmapVisible(true);
+
+                if (this.heatmap == null) {
+                    this.heatmap = new this.google.visualization.GeoChart($('#heatmap')[0]);
+                    this.google.visualization.events.addListener(this.heatmap, 'select', function () { this.heatmapSelectHandler(); });
+                }
+
                 this.loadSpinner.start();
 
                 if (this.searchType() === 'activities') {
@@ -1605,21 +1816,49 @@ module ViewModels.Employees {
                 this.isPointmapVisible(true);
                 $('#pointmap').css("display", "inline-block");
 
+                if (this.pointmap == null) {
+                    var pointmapElement = $('#pointmap')[0];
+                    this.pointmap = new this.google.maps.Map(pointmapElement, this.pointmapOptions);
+                }
+
                 /* Google maps do not draw correctly in hidden div's.  Here's
                     a hack to get around this.  */
-                var mapCenter = this.pointmap.getCenter();
-                this.google.maps.event.trigger(this.pointmap, "resize");
-                this.pointmap.setCenter(mapCenter);
+                //var mapCenter = this.pointmap.getCenter();
+                //this.google.maps.event.trigger(this.pointmap, "resize");
+                //this.pointmap.setCenter(mapCenter);
 
+                this.loadSpinner.start();
+
+                if (this.searchType() === 'activities') {
+                    this.getPointmapActivityMarkers()
+                        .done((): void => {
+                            this.hidePointmapPeopleMarkers();
+                            this.showPointmapActivityMarkers();
+                        })
+                        .always((): void => {
+                            this.loadSpinner.stop();
+                        });
+                } else {
+                    this.getPointmapPeopleMarkers()
+                        .done((): void => {
+                            this.hidePointmapActivityMarkers();
+                            this.showPointmapPeopleMarkers();
+                        })
+                        .always((): void => {
+                            this.loadSpinner.stop();
+                        });
+                }
+
+                $("#bib-faculty-staff-search").addClass("current");
+            } else if (type === "resultstable") {
+                $('#resultstableText').css("font-weight", "bold");
+                this.isTableVisible(true);
                 $("#bib-faculty-staff-search").addClass("current");
             } else if (type === "expert") {
                 $('#expertText').css("font-weight", "bold");
                 this.isExpertVisible(true);
                 $('#expert').css("display", "inline-block");
                 $("#bib-faculty-staff-expert").addClass("current");
-            } else if (type === "resultstable") {
-                $('#resultstableText').css("font-weight", "bold");
-                this.isTableVisible(true);
             }
         }
 

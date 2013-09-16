@@ -18,6 +18,8 @@ namespace UCosmic.Domain.Activities
             public string CountryCode { get; set; }
             public string OfficialName { get; set; }
             public int Count { get; set; }
+            public double Lat { get; set; }
+            public double Lng { get; set; }
         }
 
         public int EstablishmentId { get; set; }

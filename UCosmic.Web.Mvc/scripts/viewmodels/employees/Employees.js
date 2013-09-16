@@ -1,3 +1,9 @@
+var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
 var ViewModels;
 (function (ViewModels) {
     /// <reference path="../../typings/jquery/jquery.d.ts" />
@@ -143,9 +149,10 @@ var ViewModels;
                 this.placeActivityTrendData = null;
                 this.globalPeopleTrendData = null;
                 this.placePeopleTrendData = null;
-
                 this.heatmapActivityDataTable = null;
                 this.heatmapPeopleDataTable = null;
+                this.pointmapActivityMarkers = null;
+                this.pointmapPeopleMarkers = null;
 
                 this.totalCount = ko.observable(0);
                 this.totalPlaceCount = ko.observable(0);
@@ -153,6 +160,15 @@ var ViewModels;
                 this.degreeCount = ko.observable(0);
 
                 this.selectSearchType('activities');
+
+                this.lenses = ko.observableArray([
+                    { text: 'Map', value: 'map' },
+                    { text: 'Table', value: 'table' }
+                ]);
+                this.lens = ko.observable('map');
+                this.changeLens = function (lens) {
+                    return void {};
+                };
 
                 if (institutionInfo != null) {
                     if (institutionInfo.InstitutionId != null) {
@@ -487,22 +503,18 @@ var ViewModels;
             };
 
             FacultyAndStaff.prototype.setupMaps = function () {
-                var me = this;
-
-                /* ----- Setup Pointmap ----- */
-                this.google = window["google"];
                 this.google.maps.visualRefresh = true;
 
-                this.pointmap = new this.google.maps.Map($('#pointmap')[0], {
-                    width: 680,
-                    height: 500,
+                /* ----- Setup Pointmap ----- */
+                this.pointmapOptions = {
                     mapTypeId: google.maps.MapTypeId.ROADMAP,
                     center: new google.maps.LatLng(0, 0),
                     zoom: 1,
                     draggable: true,
                     scrollwheel: false
-                });
+                };
 
+                /* ----- Setup Heatmap ----- */
                 this.heatmapOptions = {
                     //is3D: true,
                     width: 680,
@@ -515,11 +527,6 @@ var ViewModels;
                     backgroundColor: { fill: 'transparent' },
                     datalessRegionColor: 'FFFFFF'
                 };
-
-                this.heatmap = new this.google.visualization.GeoChart($('#heatmap')[0]);
-                this.google.visualization.events.addListener(this.heatmap, 'select', function () {
-                    me.heatmapSelectHandler();
-                });
 
                 if (this.activityTypes() != null) {
                     this.barchartActivityOptions = {
@@ -650,6 +657,8 @@ var ViewModels;
                     this.getActivityDataTable(null).done(function () {
                         deferred.resolve(_this._getHeatmapActivityDataTable());
                         //this.loadSpinner.stop();
+                    }).fail(function (jqXHR, textStatus, errorThrown) {
+                        deferred.reject(jqXHR, textStatus, errorThrown);
                     });
                 } else {
                     deferred.resolve(this._getHeatmapActivityDataTable());
@@ -786,33 +795,47 @@ var ViewModels;
             /*
             *
             */
+            FacultyAndStaff.prototype.getGlobalActivityCounts = function () {
+                var _this = this;
+                var deferred = $.Deferred();
+
+                if (this.globalActivityCountData == null) {
+                    $.ajax({
+                        type: "GET",
+                        async: true,
+                        data: { 'establishmentId': this.establishmentId(), 'placeId': null },
+                        dataType: 'json',
+                        url: App.Routes.WebApi.FacultyStaff.getActivityCount(),
+                        success: function (data, textStatus, jqXhr) {
+                            _this.globalActivityCountData = data;
+                            deferred.resolve(_this.globalActivityCountData);
+                        },
+                        error: function (jqXhr, textStatus, errorThrown) {
+                            deferred.reject(errorThrown);
+                        },
+                        complete: function (jqXhr, textStatus) {
+                        }
+                    });
+                } else {
+                    deferred.resolve(this.globalActivityCountData);
+                }
+
+                return deferred;
+            };
+
+            /*
+            *
+            */
             FacultyAndStaff.prototype.getActivityDataTable = function (placeOfficialName) {
                 var _this = this;
                 var deferred = $.Deferred();
 
                 if (placeOfficialName == null) {
-                    if (this.globalActivityCountData == null) {
-                        //this.loadSpinner.start();
-                        $.ajax({
-                            type: "GET",
-                            async: true,
-                            data: { 'establishmentId': this.establishmentId(), 'placeId': null },
-                            dataType: 'json',
-                            url: App.Routes.WebApi.FacultyStaff.getActivityCount(),
-                            success: function (data, textStatus, jqXhr) {
-                                _this.globalActivityCountData = data;
-                                deferred.resolve(_this._getActivityDataTable(null));
-                            },
-                            error: function (jqXhr, textStatus, errorThrown) {
-                                deferred.reject(errorThrown);
-                            },
-                            complete: function (jqXhr, textStatus) {
-                                //this.loadSpinner.stop();
-                            }
-                        });
-                    } else {
-                        deferred.resolve(this._getActivityDataTable(null));
-                    }
+                    this.getGlobalActivityCounts().done(function (counts) {
+                        deferred.resolve(_this._getActivityDataTable(null));
+                    }).fail(function (jqXHR, textStatus, errorThrown) {
+                        deferred.reject(jqXHR, textStatus, errorThrown);
+                    });
                 } else {
                     var placeId = this.getPlaceId(placeOfficialName);
                     if (placeId != null) {
@@ -885,6 +908,32 @@ var ViewModels;
                 return view;
             };
 
+            FacultyAndStaff.prototype.getGlobalPeopleCounts = function () {
+                var _this = this;
+                var deferred = $.Deferred();
+                if (this.globalPeopleCountData == null) {
+                    $.ajax({
+                        type: "GET",
+                        async: true,
+                        data: { 'establishmentId': this.establishmentId(), 'placeId': null },
+                        dataType: 'json',
+                        url: App.Routes.WebApi.FacultyStaff.getPeopleCount(),
+                        success: function (data, textStatus, jqXhr) {
+                            _this.globalPeopleCountData = data;
+                            deferred.resolve(_this._getPeopleDataTable(null));
+                        },
+                        error: function (jqXhr, textStatus, errorThrown) {
+                            deferred.reject(errorThrown);
+                        },
+                        complete: function (jqXhr, textStatus) {
+                        }
+                    });
+                } else {
+                    deferred.resolve(this._getPeopleDataTable(null));
+                }
+                return deferred;
+            };
+
             /*
             *
             */
@@ -893,28 +942,11 @@ var ViewModels;
                 var deferred = $.Deferred();
 
                 if (placeOfficialName == null) {
-                    if (this.globalPeopleCountData == null) {
-                        //this.loadSpinner.start();
-                        $.ajax({
-                            type: "GET",
-                            async: true,
-                            data: { 'establishmentId': this.establishmentId(), 'placeId': null },
-                            dataType: 'json',
-                            url: App.Routes.WebApi.FacultyStaff.getPeopleCount(),
-                            success: function (data, textStatus, jqXhr) {
-                                _this.globalPeopleCountData = data;
-                                deferred.resolve(_this._getPeopleDataTable(null));
-                            },
-                            error: function (jqXhr, textStatus, errorThrown) {
-                                deferred.reject(errorThrown);
-                            },
-                            complete: function (jqXhr, textStatus) {
-                                //this.loadSpinner.stop();
-                            }
-                        });
-                    } else {
-                        deferred.resolve(this._getPeopleDataTable(null));
-                    }
+                    this.getGlobalPeopleCounts().done(function (counts) {
+                        deferred.resolve(_this._getPeopleDataTable(null));
+                    }).fail(function (jqXHR, textStatus, errorThrown) {
+                        deferred.reject(jqXHR, textStatus, errorThrown);
+                    });
                 } else {
                     var placeId = this.getPlaceId(placeOfficialName);
                     if (placeId != null) {
@@ -1249,6 +1281,144 @@ var ViewModels;
                 return deferred;
             };
 
+            /*
+            *
+            */
+            FacultyAndStaff.prototype.getPointmapActivityMarkers = function () {
+                var _this = this;
+                var deferred = $.Deferred();
+                if (this.pointmapActivityMarkers == null) {
+                    this.getGlobalActivityCounts().done(function (counts) {
+                        deferred.resolve(_this._getPointmapActivityMarkers());
+                    }).fail(function (jqXHR, textStatus, errorThrown) {
+                        deferred.reject(jqXHR, textStatus, errorThrown);
+                    });
+                } else {
+                    deferred.resolve(this._getPointmapActivityMarkers());
+                }
+                return deferred;
+            };
+
+            FacultyAndStaff.prototype._getPointmapActivityMarkers = function () {
+                if (this.pointmapActivityMarkers == null) {
+                    var markers = new Array();
+                    var placeCounts = (this.globalActivityCountData).placeCounts;
+                    if ((placeCounts != null) && (placeCounts.length > 0)) {
+                        debugger;
+                        for (var i = 0; i < placeCounts.length; i += 1) {
+                            if (placeCounts[i].count > 0) {
+                                var marker = new MarkerWithLabel({
+                                    position: new google.maps.LatLng(placeCounts[i].lat, placeCounts[i].lng),
+                                    map: null,
+                                    title: placeCounts[i].officialName,
+                                    icon: {
+                                        path: google.maps.SymbolPath.CIRCLE,
+                                        fillOpacity: 1.0,
+                                        fillColor: '000000',
+                                        strokeOpacity: 1.0,
+                                        strokeColor: 'FFFFFF',
+                                        strokeWeight: 1.0,
+                                        scale: 12
+                                    },
+                                    labelContent: placeCounts[i].count.toString(),
+                                    labelAnchor: new google.maps.Point(5, 5),
+                                    labelClass: "googleMarkerLabel",
+                                    labelInBackground: false
+                                });
+
+                                markers.push(marker);
+                            }
+                        }
+                    }
+                    this.pointmapActivityMarkers = markers;
+                }
+                return this.pointmapActivityMarkers;
+            };
+
+            FacultyAndStaff.prototype.showPointmapActivityMarkers = function () {
+                if (this.pointmapActivityMarkers != null) {
+                    for (var i = 0; i < this.pointmapActivityMarkers.length; i += 1) {
+                        this.pointmapActivityMarkers[i].setMap(this.pointmap);
+                    }
+                }
+            };
+
+            FacultyAndStaff.prototype.hidePointmapActivityMarkers = function () {
+                if (this.pointmapActivityMarkers != null) {
+                    for (var i = 0; i < this.pointmapActivityMarkers.length; i += 1) {
+                        this.pointmapActivityMarkers[i].setMap(null);
+                    }
+                }
+            };
+
+            /*
+            *
+            */
+            FacultyAndStaff.prototype.getPointmapPeopleMarkers = function () {
+                var _this = this;
+                var deferred = $.Deferred();
+                if (this.pointmapPeopleMarkers == null) {
+                    this.getGlobalPeopleCounts().done(function (counts) {
+                        deferred.resolve(_this._getPointmapPeopleMarkers());
+                    }).fail(function (jqXHR, textStatus, errorThrown) {
+                        deferred.reject(jqXHR, textStatus, errorThrown);
+                    });
+                } else {
+                    deferred.resolve(this._getPointmapPeopleMarkers());
+                }
+                return deferred;
+            };
+
+            FacultyAndStaff.prototype._getPointmapPeopleMarkers = function () {
+                if (this.pointmapPeopleMarkers == null) {
+                    var markers = new Array();
+                    var placeCounts = (this.globalPeopleCountData).placeCounts;
+                    if ((placeCounts != null) && (placeCounts.length > 0)) {
+                        for (var i = 0; i < placeCounts.length; i += 1) {
+                            if (placeCounts[i].count > 0) {
+                                var marker = new MarkerWithLabel({
+                                    position: new google.maps.LatLng(placeCounts[i].lat, placeCounts[i].lng),
+                                    map: null,
+                                    title: placeCounts[i].officialName,
+                                    icon: {
+                                        path: google.maps.SymbolPath.CIRCLE,
+                                        fillOpacity: 0.75,
+                                        fillColor: 'ff0000',
+                                        strokeOpacity: 1.0,
+                                        strokeColor: 'fff000',
+                                        strokeWeight: 1.0,
+                                        scale: 12
+                                    },
+                                    labelContent: placeCounts[i].count.toString(),
+                                    labelAnchor: new google.maps.Point(3, 30),
+                                    labelClass: "googleMarkerLabel",
+                                    labelInBackground: false
+                                });
+                                markers.push(marker);
+                            }
+                        }
+                    }
+                    this.pointmapPeopleMarkers = markers;
+                }
+                return this.pointmapPeopleMarkers;
+            };
+
+            FacultyAndStaff.prototype.showPointmapPeopleMarkers = function () {
+                if (this.pointmapPeopleMarkers != null) {
+                    for (var i = 0; i < this.pointmapPeopleMarkers.length; i += 1) {
+                        this.pointmapPeopleMarkers[i].setMap(this.pointmap);
+                    }
+                }
+            };
+
+            FacultyAndStaff.prototype.hidePointmapPeopleMarkers = function () {
+                if (this.pointmapPeopleMarkers != null) {
+                    for (var i = 0; i < this.pointmapPeopleMarkers.length; i += 1) {
+                        this.pointmapPeopleMarkers[i].setMap(null);
+                    }
+                }
+            };
+
             FacultyAndStaff.prototype.makeActivityTooltip = function (name, count) {
                 return "<b>" + name + "</b><br/>Total Activities: " + count.toString();
             };
@@ -1414,8 +1584,15 @@ var ViewModels;
 
                 if (type === "heatmap") {
                     $('#heatmapText').css("font-weight", "bold");
-
                     this.isHeatmapVisible(true);
+
+                    if (this.heatmap == null) {
+                        this.heatmap = new this.google.visualization.GeoChart($('#heatmap')[0]);
+                        this.google.visualization.events.addListener(this.heatmap, 'select', function () {
+                            this.heatmapSelectHandler();
+                        });
+                    }
+
                     this.loadSpinner.start();
 
                     if (this.searchType() === 'activities') {
@@ -1480,21 +1657,44 @@ var ViewModels;
                     this.isPointmapVisible(true);
                     $('#pointmap').css("display", "inline-block");
 
+                    if (this.pointmap == null) {
+                        var pointmapElement = $('#pointmap')[0];
+                        this.pointmap = new this.google.maps.Map(pointmapElement, this.pointmapOptions);
+                    }
+
                     /* Google maps do not draw correctly in hidden div's.  Here's
                     a hack to get around this.  */
-                    var mapCenter = this.pointmap.getCenter();
-                    this.google.maps.event.trigger(this.pointmap, "resize");
-                    this.pointmap.setCenter(mapCenter);
+                    //var mapCenter = this.pointmap.getCenter();
+                    //this.google.maps.event.trigger(this.pointmap, "resize");
+                    //this.pointmap.setCenter(mapCenter);
+                    this.loadSpinner.start();
 
+                    if (this.searchType() === 'activities') {
+                        this.getPointmapActivityMarkers().done(function () {
+                            _this.hidePointmapPeopleMarkers();
+                            _this.showPointmapActivityMarkers();
+                        }).always(function () {
+                            _this.loadSpinner.stop();
+                        });
+                    } else {
+                        this.getPointmapPeopleMarkers().done(function () {
+                            _this.hidePointmapActivityMarkers();
+                            _this.showPointmapPeopleMarkers();
+                        }).always(function () {
+                            _this.loadSpinner.stop();
+                        });
+                    }
+
+                    $("#bib-faculty-staff-search").addClass("current");
+                } else if (type === "resultstable") {
+                    $('#resultstableText').css("font-weight", "bold");
+                    this.isTableVisible(true);
                     $("#bib-faculty-staff-search").addClass("current");
                 } else if (type === "expert") {
                     $('#expertText').css("font-weight", "bold");
                     this.isExpertVisible(true);
                     $('#expert').css("display", "inline-block");
                     $("#bib-faculty-staff-expert").addClass("current");
-                } else if (type === "resultstable") {
-                    $('#resultstableText').css("font-weight", "bold");
-                    this.isTableVisible(true);
                 }
             };
 

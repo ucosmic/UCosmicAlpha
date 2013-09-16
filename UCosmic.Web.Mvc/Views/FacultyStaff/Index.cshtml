@@ -184,6 +184,16 @@
             z-index: 10            
         }
 
+        .googleMarkerLabel {
+            color: white;
+            background-color: transparent;
+            font-family: "Lucida Grande", "Arial", sans-serif;
+            font-size: 10px;
+            text-align: center;
+            width: 10px;
+            white-space: nowrap;
+        }
+
     </style>
 }
 
@@ -191,8 +201,8 @@
 {
     @Scripts.Render("~/bundles/employees")
 
-    <script type='text/javascript' src='https://www.google.com/jsapi'></script>
-    <script type="text/javascript" src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','version':'1.0','packages':['corechart','geochart'],'language':'en'}]}"></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type='text/javascript' src="../../scripts/google/markerwithlabel.js"></script>
  
     <script type="text/javascript">
 
@@ -216,7 +226,7 @@
             }
 
             $("#faculty-staff").show();
-
+            
             var facultyAndStaffViewModel = new ViewModels.Employees.FacultyAndStaff(institutionInfo);
             facultyAndStaffViewModel.load()
                 .done(function() {
@@ -263,8 +273,16 @@
 
                     facultyAndStaffViewModel.setupValidation();
                     facultyAndStaffViewModel.setupSubscriptions();
-                    facultyAndStaffViewModel.setupMaps();
-                    facultyAndStaffViewModel.setupRouting();
+
+                    debugger;
+
+                    facultyAndStaffViewModel.google = google;//window["google"];
+                    google.load('visualization', '1.0', { 'packages': ['corechart', 'geochart'] });
+                    google.setOnLoadCallback(function () {
+                        debugger;
+                        facultyAndStaffViewModel.setupMaps();
+                        facultyAndStaffViewModel.setupRouting();
+                    });
                 })
                 .fail(function(jqXhr, textStatus, errorThrown) {
                     alert(textStatus + "|" + errorThrown);
@@ -510,8 +528,6 @@
             </div>
         </div>
     </div>
-
-
 
     <div class="on-right from-top" style="display: none" data-bind="visible: isPointmapVisible() || isTableVisible()">
         @Html.Partial(MVC.FacultyStaff.Views._SearchSideBar)

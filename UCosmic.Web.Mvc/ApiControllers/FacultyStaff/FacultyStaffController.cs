@@ -155,7 +155,9 @@ namespace UCosmic.Web.Mvc.ApiControllers
                                     PlaceId = placeCount.PlaceId,
                                     CountryCode = placeCount.CountryCode,
                                     OfficialName = placeCount.OfficialName,
-                                    Count = placeCount.Count
+                                    Count = placeCount.Count,
+                                    Lat = placeCount.Lat,
+                                    Lng = placeCount.Lng
                                 });
                             }
 
@@ -264,7 +266,9 @@ namespace UCosmic.Web.Mvc.ApiControllers
                                     PlaceId = placeCount.PlaceId,
                                     CountryCode = placeCount.CountryCode,
                                     OfficialName = placeCount.OfficialName,
-                                    Count = placeCount.Count
+                                    Count = placeCount.Count,
+                                    Lat = placeCount.Lat,
+                                    Lng = placeCount.Lng
                                 });
                             }
 
