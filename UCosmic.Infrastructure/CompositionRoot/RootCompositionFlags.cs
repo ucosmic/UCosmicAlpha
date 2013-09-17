@@ -10,6 +10,5 @@ namespace UCosmic.CompositionRoot
         Work = 2,
         Debug = 4,
         Azure = 8,
-        Verify = 16,
     }
 }

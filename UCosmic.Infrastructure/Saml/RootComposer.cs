@@ -1,5 +1,4 @@
 ﻿using SimpleInjector;
-using UCosmic.CompositionRoot;
 
 namespace UCosmic.Saml
 {

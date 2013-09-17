@@ -32,10 +32,10 @@ namespace UCosmic.Work
 
             var rootCompositionSettings = new RootCompositionSettings
             {
-                Flags = RootCompositionFlags.Work |
-                        RootCompositionFlags.Verify,
+                Flags = RootCompositionFlags.Work,
             };
             _container.ComposeRoot(rootCompositionSettings);
+            _container.Verify();
 
             var scheduler = _container.GetInstance<IScheduleWork>();
             var workforceAcquisition = _container.GetInstance<WorkforceAcquisition>();

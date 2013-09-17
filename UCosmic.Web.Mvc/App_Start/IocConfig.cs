@@ -28,11 +28,15 @@ namespace UCosmic.Web.Mvc
             var rootCompositionSettings = new RootCompositionSettings
             {
                 Flags = RootCompositionFlags.Web |
-                        RootCompositionFlags.Work |
-                        RootCompositionFlags.Verify,
-                MvcAssemblies = new[] { Assembly.GetExecutingAssembly() },
+                        RootCompositionFlags.Work,
             };
             container.ComposeRoot(rootCompositionSettings);
+
+            container.RegisterMvcControllers(Assembly.GetExecutingAssembly());
+            container.RegisterMvcAttributeFilterProvider();
+            container.RegisterHttpFilterProvider();
+
+            container.Verify();
 
             DependencyResolver.SetResolver(new SimpleInjectorDependencyResolver(container));
             GlobalConfiguration.Configuration.DependencyResolver = new SimpleInjectorHttpDependencyResolver(container);

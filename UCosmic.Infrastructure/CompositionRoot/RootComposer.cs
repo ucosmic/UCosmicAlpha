@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using System.Web.Http;
+using System.Web.Http.Filters;
 using SimpleInjector;
 using UCosmic.BinaryData;
 using UCosmic.Cache;
@@ -54,17 +56,16 @@ namespace UCosmic.CompositionRoot
             container.RegisterViewManagement();
 
             container.RegisterWorkScheduling(settings);
+        }
 
-            if (settings.Flags.HasFlag(RootCompositionFlags.Web))
-            {
-                if (settings.MvcAssemblies != null && settings.MvcAssemblies.Any())
-                    container.RegisterMvcControllers(settings.MvcAssemblies.ToArray());
-                container.RegisterMvcAttributeFilterProvider();
-                container.RegisterHttpFilterProvider();
-            }
-
-            if (settings.Flags.HasFlag(RootCompositionFlags.Verify))
-                container.Verify();
+        public static void RegisterHttpFilterProvider(this Container container)
+        {
+            var httpFilterProvider = new SimpleInjectorHttpFilterProvider(container);
+            container.RegisterSingle<IFilterProvider>(httpFilterProvider);
+            var configServices = GlobalConfiguration.Configuration.Services;
+            configServices.GetFilterProviders().ToList().ForEach(filterProvider =>
+                configServices.Remove(typeof(IFilterProvider), filterProvider));
+            configServices.Add(typeof(IFilterProvider), httpFilterProvider);
         }
     }
 }
