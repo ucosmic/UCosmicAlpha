@@ -30,7 +30,7 @@ var Agreements;
                 this.sammy = Sammy();
                 this.sammyBeforeRoute = /\#\/page\/(.*)\//;
                 this.sammyGetPageRoute = '#/page/:pageNumber/';
-                this.sammyDefaultPageRoute = '/establishments[\/]?';
+                this.sammyDefaultPageRoute = '/agreements[\/]?';
                 // filtering
                 this.countries = ko.observableArray();
                 this.countryCode = ko.observable();
@@ -61,11 +61,14 @@ var Agreements;
                     ignore: ['pageSize', 'pageNumber']
                 };
 
+                this.requestResults = this.requestResults.bind(this);
+
                 this._setupCountryDropDown();
                 this._setupPagingSubscriptions();
                 this._setupLensing();
                 this._setupSammy();
-
+                this._setupPagingDefaults();
+                this.changeLens(this.lenses()[0]);
                 ko.computed(function () {
                     _this.requestResults();
                 }).extend({ throttle: 1 });
@@ -252,7 +255,12 @@ var Agreements;
             };
 
             Search.prototype.detailTooltip = function () {
-                return 'View & edit this establishment\'s details';
+                return 'View & edit this agreement\'s details';
+            };
+
+            Search.prototype._setupPagingDefaults = function () {
+                this.orderBy('country');
+                this.pageSize(10);
             };
             return Search;
         })(App.PagedSearch);

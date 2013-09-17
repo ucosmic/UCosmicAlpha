@@ -23,11 +23,14 @@ module Agreements.ViewModels {
         constructor (public initDefaultPageRoute: boolean = true) {
             super();
 
+            this.requestResults = <() => void > this.requestResults.bind(this);
+
             this._setupCountryDropDown();
             this._setupPagingSubscriptions();
             this._setupLensing();
             this._setupSammy();
-
+            this._setupPagingDefaults();
+            this.changeLens(this.lenses()[0]);
             ko.computed((): void => {
                 this.requestResults();
             }).extend({ throttle: 1 });
@@ -79,7 +82,7 @@ module Agreements.ViewModels {
         sammy: Sammy.Application = Sammy();
         sammyBeforeRoute: any = /\#\/page\/(.*)\//;
         sammyGetPageRoute: any = '#/page/:pageNumber/';
-        sammyDefaultPageRoute: any = '/establishments[\/]?';
+        sammyDefaultPageRoute: any = '/agreements[\/]?';
 
         private _setupSammy(): void {
             var self = this;
@@ -261,7 +264,13 @@ module Agreements.ViewModels {
         }
 
         detailTooltip(): string {
-            return 'View & edit this establishment\'s details';
+            return 'View & edit this agreement\'s details';
+        }
+
+
+        private _setupPagingDefaults(): void {
+            this.orderBy('country');
+            this.pageSize(10);
         }
     }
 }

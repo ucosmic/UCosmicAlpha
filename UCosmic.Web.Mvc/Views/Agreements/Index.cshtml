@@ -22,6 +22,7 @@
 
         var agreementSearcdhViewModel = new Agreements.ViewModels.Search();
         ko.applyBindings(agreementSearcdhViewModel, $('#search')[0]);
+        agreementSearcdhViewModel.sammy.run();
     </script>
 }
 
@@ -39,7 +40,7 @@
 </div>*@
 
 
-<div class="content fixed to-top" data-current-module="agreements" id="search" style="visibility: hidden">
+<div class="content fixed to-top" data-current-module="agreements" id="search">
     <form class="group">
         <div class="on-left from-top">
             <header>
@@ -49,11 +50,17 @@
             </header>
            @Html.Partial(MVC.Agreements.Views._SearchAndResults)
         </div>
+        <aside class="on-right from-top" data-fixed-scroll="root">
+            <div data-fixed-scroll="anchor"></div>
+            <div data-fixed-scroll="content">
+                @Html.Partial(MVC.Agreements.Views._SearchSideBar)
+            </div>
+        </aside>
     </form>
 </div>
 
 
-<div class="content fixed to-top" data-current-module="agreements">
+@*<div class="content fixed to-top" data-current-module="agreements">
     <form class="group">
         <div class="on-left from-top">
             <header>
@@ -69,11 +76,5 @@
             <div id="google_map_canvas" style="height: 500px;">
             </div>
         </div>
-        <aside class="on-right from-top" data-fixed-scroll="root">
-            <div data-fixed-scroll="anchor"></div>
-            <div data-fixed-scroll="content">
-                @Html.Partial(MVC.Agreements.Views._SearchSideBar)
-            </div>
-        </aside>
     </form>
-</div>
+</div>*@
