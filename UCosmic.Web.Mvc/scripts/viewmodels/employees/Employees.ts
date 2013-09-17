@@ -115,7 +115,7 @@ module ViewModels.Employees {
 
         /* Array of activity types displayed as list of checkboxes */
         activityTypes: KnockoutObservableArray<any>;
-        selectedActivityIds: KnockoutObservableArray<any>;
+        //selectedActivityIds: KnockoutObservableArray<any>;
 
         /* List of place ids and official names. */
         places: any;
@@ -169,6 +169,8 @@ module ViewModels.Employees {
         placePeopleTrendData: any;
         heatmapActivityDataTable: any;
         heatmapPeopleDataTable: any;
+        activityResults: any;
+        peopleResults: any;
         pointmapActivityMarkers: any;
         pointmapPeopleMarkers: any;
 
@@ -223,7 +225,7 @@ module ViewModels.Employees {
             this.institutionDropListData = [];
             this.locations = ko.observableArray();
             this.activityTypes = ko.observableArray();
-            this.selectedActivityIds = ko.observableArray();
+            //this.selectedActivityIds = ko.observableArray();
             this.isHeatmapVisible = ko.observable(true);
             this.isPointmapVisible = ko.observable(false);
             this.isExpertVisible = ko.observable(false);
@@ -249,6 +251,18 @@ module ViewModels.Employees {
             this.placePeopleTrendData = null;
             this.heatmapActivityDataTable = null;
             this.heatmapPeopleDataTable = null;
+            this.activityResults = ko.mapping.fromJS({
+                placeResults: [{
+                    officialName: '',
+                    results: []
+                }]
+            });
+            this.peopleResults = ko.mapping.fromJS({
+                placeResults: [{
+                    officialName: '',
+                    results: []
+                }]
+            });
             this.pointmapActivityMarkers = null;
             this.pointmapPeopleMarkers = null;
 
@@ -278,15 +292,17 @@ module ViewModels.Employees {
                     });
                 }
 
-                if (institutionInfo.ActivityTypes != null) {
-                    for (var i = 0; i < institutionInfo.ActivityTypes.length; i += 1) {
-                        this.activityTypes.push(ko.observable({
-                            id: institutionInfo.ActivityTypes[i].Id,
-                            type: institutionInfo.ActivityTypes[i].Name,
-                            filter: ko.observable(true)
-                        }));
-                    }
-                }
+                //if (institutionInfo.ActivityTypes != null) {
+                //    for (var i = 0; i < institutionInfo.ActivityTypes.length; i += 1) {
+                //        this.activityTypes.push(ko.observable({
+                //            id: institutionInfo.ActivityTypes[i].Id,
+                //            type: institutionInfo.ActivityTypes[i].Name,
+                //            filter: true
+                //        }));
+
+                //        this.selectedActivityIds.push(institutionInfo.ActivityTypes[i].Id);
+                //    }
+                //}
 
                 if (institutionInfo.InstitutionHasCampuses != null) {
                     this.institutionHasCampuses(Boolean(institutionInfo.InstitutionHasCampuses));
@@ -587,16 +603,30 @@ module ViewModels.Employees {
             //this.to.subscribe((newValue: any): void => { this.dirtyFlag(true); });
             //this.onGoing.subscribe((newValue: any): void => { this.dirtyFlag(true); });
             //this.institutions.subscribe((newValue: any): void => { this.dirtyFlag(true); });
-            //this.position.subscribe((newValue: any): void => { this.dirtyFlag(true); });
             this.selectedPlace.subscribe((newValue: any): void => { this.selectMap('heatmap'); });
             this.mapRegion.subscribe((newValue: any): void => { this.heatmapOptions["region"] = newValue; });
             this.searchType.subscribe((newValue: any): void => {
                 if (this.mapType() === 'pointmap') {
-                    //this.advancedSearch();
+                    //this.activitySearch();
                 }
             });
-        }
+            //this.selectedActivityIds.subscribe((newValue: any): void => {
+            //    if (this.mapType() === 'pointmap') {
+            //        this.drawPointmap();
+            //    }
+            //});
 
+            if (this.activityTypes != null) {
+                for (var i = 0; i < this.activityTypes().length; i += 1) {
+                    this.activityTypes()[i].checked.subscribe((newValue: any): void => {
+                        if (this.mapType() === 'pointmap') {
+                            this.drawPointmap(true);
+                        }
+                    });
+                }
+            }
+        }
+        
         setupRouting(): void {
             this.sammy.get('#/summary', (): void => { this.selectMap('heatmap'); $('#pageTitle').text("Professional Engagement Summary"); });
             this.sammy.get('#/search', (): void => { this.selectMap('pointmap'); $('#pageTitle').text("Advanced Search"); });
@@ -1445,8 +1475,12 @@ module ViewModels.Employees {
         /*
          *
          */
-        getPointmapActivityMarkers(): JQueryPromise<any> {
+        getPointmapActivityMarkers(refresh: boolean): JQueryPromise<any> {
             var deferred: JQueryDeferred<void> = $.Deferred();
+            if (refresh) {
+                this.hidePointmapActivityMarkers();
+                this.pointmapActivityMarkers = null;
+            }
             if (this.pointmapActivityMarkers == null) {
                 this.activitySearch()
                     .done((results: any): void => {
@@ -1515,8 +1549,12 @@ module ViewModels.Employees {
         /*
          *
          */
-        getPointmapPeopleMarkers(): JQueryPromise<any> {
+        getPointmapPeopleMarkers(refresh: boolean): JQueryPromise<any> {
             var deferred: JQueryDeferred<void> = $.Deferred();
+            if (refresh) {
+                this.hidePointmapPeopleMarkers();
+                this.pointmapPeopleMarkers = null;
+            }
             if (this.pointmapPeopleMarkers == null) {
                 this.getGlobalPeopleCounts()
                     .done((counts: any): void => {
@@ -1674,7 +1712,9 @@ module ViewModels.Employees {
 
                     /* Check the activity types checkboxes if the activity type exists in values. */
                     for (var i = 0; i < this.activityTypes().length; i += 1) {
-                        this.activityTypes()[i].checked = ko.computed(this.defHasActivityTypeCallback(i));
+                        //this.activityTypes()[i].checked = ko.computed(this.defHasActivityTypeCallback(i));
+                        //this.activityTypes()[i].checked(true);
+                        this.activityTypes()[i].checked = ko.observable(true);
                     }
 
                     //ko.mapping.fromJS(data, {}, this);
@@ -1724,6 +1764,7 @@ module ViewModels.Employees {
                     var location = ko.mapping.fromJS({ id: 0, placeId: items[i].id, version: "" });
                     this.locations.push(location);
                 }
+                this.drawPointmap(true);
             }
         }
 
@@ -1847,39 +1888,13 @@ module ViewModels.Employees {
                     this.pointmap = new this.google.maps.Map(pointmapElement, this.pointmapOptions);
                 }
 
-                /* Google maps do not draw correctly in hidden div's.  Here's
-                    a hack to get around this.  */
-                //var mapCenter = this.pointmap.getCenter();
-                //this.google.maps.event.trigger(this.pointmap, "resize");
-                //this.pointmap.setCenter(mapCenter);
-
-                this.loadSpinner.start();
-
-                if (this.searchType() === 'activities') {
-                    this.getPointmapActivityMarkers()
-                        .done((): void => {
-                            this.hidePointmapPeopleMarkers();
-                            this.showPointmapActivityMarkers();
-                        })
-                        .always((): void => {
-                            this.loadSpinner.stop();
-                        });
-                } else {
-                    this.getPointmapPeopleMarkers()
-                        .done((): void => {
-                            this.hidePointmapActivityMarkers();
-                            this.showPointmapPeopleMarkers();
-                        })
-                        .always((): void => {
-                            this.loadSpinner.stop();
-                        });
-                }
+                this.drawPointmap(false);
 
                 $("#bib-faculty-staff-search").addClass("current");
-            } else if (type === "resultstable") {
-                $('#resultstableText').css("font-weight", "bold");
-                this.isTableVisible(true);
-                $("#bib-faculty-staff-search").addClass("current");
+            //} else if (type === "resultstable") {
+            //    $('#resultstableText').css("font-weight", "bold");
+            //    this.isTableVisible(true);
+            //    $("#bib-faculty-staff-search").addClass("current");
             } else if (type === "expert") {
                 $('#expertText').css("font-weight", "bold");
                 this.isExpertVisible(true);
@@ -1912,66 +1927,66 @@ module ViewModels.Employees {
             this.searchType('people');
         }
 
-        addActivityType(activityTypeId: number): void {
-            var existingIndex: number = this.getActivityTypeIndexById(activityTypeId);
-            if (existingIndex == -1) {
-                var newActivityType: KnockoutObservable<any> = ko.mapping.fromJS({ id: 0, typeId: activityTypeId, version: "" });
-                this.selectedActivityIds.push(newActivityType);
-            }
-        }
+        //addActivityType(activityTypeId: number): void {
+        //    var existingIndex: number = this.getActivityTypeIndexById(activityTypeId);
+        //    if (existingIndex == -1) {
+        //        var newActivityType: KnockoutObservable<any> = ko.mapping.fromJS({ id: 0, typeId: activityTypeId, version: "" });
+        //        this.selectedActivityIds.push(newActivityType);
+        //    }
+        //}
 
-        removeActivityType(activityTypeId: number): void {
-            var existingIndex: number = this.getActivityTypeIndexById(activityTypeId);
-            if (existingIndex != -1) {
-                var activityType = this.selectedActivityIds()[existingIndex];
-                this.selectedActivityIds.remove(activityType);
-            }
-        }
+        //removeActivityType(activityTypeId: number): void {
+        //    var existingIndex: number = this.getActivityTypeIndexById(activityTypeId);
+        //    if (existingIndex != -1) {
+        //        var activityType = this.selectedActivityIds()[existingIndex];
+        //        this.selectedActivityIds.remove(activityType);
+        //    }
+        //}
 
-        getTypeName(id: number): string {
-            var name: string = "";
-            var index: number = this.getActivityTypeIndexById(id);
-            if (index != -1) { name = this.activityTypes[index].type; }
-            return name;
-        }
+        //getTypeName(id: number): string {
+        //    var name: string = "";
+        //    var index: number = this.getActivityTypeIndexById(id);
+        //    if (index != -1) { name = this.activityTypes[index].type; }
+        //    return name;
+        //}
 
-        getActivityTypeIndexById(activityTypeId: number): number {
-            var index: number = -1;
+        //getActivityTypeIndexById(activityTypeId: number): number {
+        //    var index: number = -1;
 
-            if ((this.selectedActivityIds != null) && (this.selectedActivityIds().length > 0)) {
-                var i = 0;
-                while ((i < this.selectedActivityIds().length) &&
-                    (activityTypeId != this.selectedActivityIds()[i].typeId())) { i += 1 }
+        //    if ((this.selectedActivityIds != null) && (this.selectedActivityIds().length > 0)) {
+        //        var i = 0;
+        //        while ((i < this.selectedActivityIds().length) &&
+        //            (activityTypeId != this.selectedActivityIds()[i].typeId())) { i += 1 }
 
-                if (i < this.selectedActivityIds().length) {
-                    index = i;
-                }
-            }
+        //        if (i < this.selectedActivityIds().length) {
+        //            index = i;
+        //        }
+        //    }
 
-            return index;
-        }
+        //    return index;
+        //}
 
-        hasActivityType(activityTypeId: number): boolean {
-            return this.getActivityTypeIndexById(activityTypeId) != -1;
-        }
+        //hasActivityType(activityTypeId: number): boolean {
+        //    return this.getActivityTypeIndexById(activityTypeId) != -1;
+        //}
 
-        defHasActivityTypeCallback(activityTypeIndex: number): KnockoutComputedDefine<boolean> {
-            var def: KnockoutComputedDefine<boolean> = {
-                read: (): boolean => {
-                    return this.hasActivityType(this.activityTypes()[activityTypeIndex].id());
-                },
-                write: (checked: boolean) => {
-                    if (checked) {
-                        this.addActivityType(this.activityTypes()[activityTypeIndex].id());
-                    } else {
-                        this.removeActivityType(this.activityTypes()[activityTypeIndex].id());
-                    }
-                },
-                owner: this
-            };
+        //defHasActivityTypeCallback(activityTypeIndex: number): KnockoutComputedDefine<boolean> {
+        //    var def: KnockoutComputedDefine<boolean> = {
+        //        read: (): boolean => {
+        //            return this.hasActivityType(this.activityTypes()[activityTypeIndex].id());
+        //        },
+        //        write: (checked: boolean) => {
+        //            if (checked) {
+        //                this.addActivityType(this.activityTypes()[activityTypeIndex].id());
+        //            } else {
+        //                this.removeActivityType(this.activityTypes()[activityTypeIndex].id());
+        //            }
+        //        },
+        //        owner: this
+        //    };
 
-            return def;
-        }
+        //    return def;
+        //}
 
         heatmapSelectHandler(): void {
             var selection = this.heatmap.getSelection();
@@ -2061,16 +2076,31 @@ module ViewModels.Employees {
         activitySearch(): JQueryPromise {
             var deferred: JQueryDeferred<void> = $.Deferred();
 
-            debugger;
-
             var locationIds = new Array();
             for (var i = 0; i < this.locations().length; i += 1) {
-                locationIds.push(this.locations()[i].id);
+                locationIds.push(this.locations()[i].placeId());
             }
 
+            //var activityTypeIds = new Array();
+            //for (var i = 0; i < this.selectedActivityIds().length; i += 1) {
+            //    activityTypeIds.push(this.selectedActivityIds()[i].typeId());
+            //}
+
             var activityTypeIds = new Array();
-            for (var i = 0; i < this.selectedActivityIds().length; i += 1) {
-                activityTypeIds.push(this.selectedActivityIds()[i].id);
+            if (this.activityTypes != null) {
+                if (this.activityTypes().length > 0) {
+                    for (var i = 0; i < this.activityTypes().length; i += 1) {
+                        if (this.activityTypes()[i].checked()) {
+                            activityTypeIds.push(this.activityTypes()[i].id());
+                        }
+                    }
+                } else {
+                    activityTypeIds.push(0); // see note in controller.
+                }
+            }
+
+            if (activityTypeIds.length == 0) {
+                activityTypeIds.push(0); // see note in controller.
             }
 
             var dataItem = $("#" + this.campusDropListId).data("kendoDropDownList").dataItem();
@@ -2101,15 +2131,64 @@ module ViewModels.Employees {
                 url: App.Routes.WebApi.FacultyStaff.postSearch(),
                 success: (data: any, textStatus: string, jqXhr: JQueryXHR): void =>
                 {
+                    ko.mapping.fromJS(data, {}, this.activityResults);
                     deferred.resolve(data);
                 },
                 error: (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void =>
                 {
                     deferred.reject(errorThrown);
-                },
+                }
             });
 
             return deferred;
         }
+
+        selectLens(lens: string): void {
+            if (lens === 'map') {
+                this.lens('map');
+            } else {
+                this.lens('table');
+            }
+        }
+
+        getActivityTypeIconName(typeId: number): string {
+            var i: number = 0;
+            while ((i < this.activityTypes().length) && (this.activityTypes()[i].id() != typeId)) {
+                i += 1;
+            }
+            return (i < this.activityTypes().length) ? this.activityTypes()[i].iconName() : null;
+        }
+
+        getActivityTypeToolTip(typeId: number): string {
+            var i: number = 0;
+            while ((i < this.activityTypes().length) && (this.activityTypes()[i].id() != typeId)) {
+                i += 1;
+            }
+            return (i < this.activityTypes().length) ? this.activityTypes()[i].type() : null;
+        }
+
+        drawPointmap(updateMarkers: boolean): void {
+            this.loadSpinner.start();
+            if (this.searchType() === 'activities') {
+                this.getPointmapActivityMarkers(updateMarkers)
+                    .done((): void => {
+                        this.hidePointmapPeopleMarkers();
+                        this.showPointmapActivityMarkers();
+                    })
+                    .always((): void => {
+                        this.loadSpinner.stop();
+                    });
+            } else {
+                this.getPointmapPeopleMarkers(updateMarkers)
+                    .done((): void => {
+                        this.hidePointmapActivityMarkers();
+                        this.showPointmapPeopleMarkers();
+                    })
+                    .always((): void => {
+                        this.loadSpinner.stop();
+                    });
+            }
+        }
+        
     }
 }

@@ -52,6 +52,7 @@ namespace UCosmic.Web.Mvc.Models
         public string ActivityTitle { get; set; }
         public int[] ActivityTypeIds { get; set; }
         public string ActivityDate { get; set; }
+        public DateTime SortDate { get; set; }
     }
 
     public class FacultyStaffPlaceResult

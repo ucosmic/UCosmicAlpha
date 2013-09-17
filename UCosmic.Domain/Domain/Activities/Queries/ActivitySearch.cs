@@ -85,8 +85,6 @@ namespace UCosmic.Domain.Activities
                                                  )
                 );
 
-
-
             /* If places provided, restrict */
             if ((query.PlaceIds != null) && (query.PlaceIds.Length > 0))
             {
@@ -96,8 +94,8 @@ namespace UCosmic.Domain.Activities
                         );
             }
 
-            /* If activity types provided, restrict */
-            if ((query.ActivityTypes != null) && (query.ActivityTypes.Length > 0))
+            /* If activity types provided, restrict.  Note: Pass NULL if establishment does not have activity types. */
+            if (query.ActivityTypes != null)
             {
                 activities =
                     activities.Where(a => (a.Values.Any(v => v.ModeText == _publicActivityModeText)) &&

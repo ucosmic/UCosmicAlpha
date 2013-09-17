@@ -159,7 +159,7 @@
         .institutionSelectList {
             width: 680px;
             height: 600px;
-            overflow-y: auto; 
+            overflow-y: auto;
             font-size: large;
             border-radius: 0 0 0 0;
             border-color: black;
@@ -181,7 +181,7 @@
             border-color: black;
             color: black;
             background-color: white;
-            z-index: 10            
+            z-index: 10
         }
 
         .googleMarkerLabel {
@@ -192,6 +192,27 @@
             text-align: center;
             width: 10px;
             white-space: nowrap;
+        }
+
+        .activitySearchResultsColumnHeader {
+            display: inline-block;
+            text-align: center;
+            margin: 0px;
+            padding: 0px;
+            text-transform: capitalize;
+            font-weight: bold;
+            background-color: green;
+            color: white;
+            height: 26px;
+            padding-top: 8px
+        }
+
+        .activitySearchResultsRow {
+            display: inline-block;
+            text-align: left;
+            font-size: small;
+            white-space: normal;
+            vertical-align: middle;
         }
 
     </style>
@@ -485,43 +506,65 @@
                 </div>
 
             </div>
-             
+                       
+            <!-- P O I N T M A P -->
+            <div id="pointmapDiv" style="position: relative; display: none" data-bind="visible: isPointmapVisible() && (lens() == 'map')">
+                <div id="pointmap" style="position: absolute; top: 0; left: 0; width: 680px; height: 500px"></div>
+                
+                <!-- Spinner -->
+                <div class="spinnerBox" data-bind="visible: loadSpinner.isVisible()">
+                    <div style="position: absolute; top: 0; left: 0; bottom: 0; right: 0; margin: auto; width: 100px; height: 20px">
+                        <span>
+                            <img src="~/images/icons/spinner/spinner-20-blue.gif" alt=""/>
+                            <strong>Loading...</strong>
+                        </span>
+                    </div>
+                </div>
+            </div>
+          
+            <!-- T A B L E -->
+            <div id="resultstable" style="display: none" data-bind="visible: isPointmapVisible() && (lens() == 'table')">                   
+                <div style="width: 665px">
+                    <div class="activitySearchResultsColumnHeader" style="width: 11%">Location</div>
+                    <div class="activitySearchResultsColumnHeader" style="width: 20%">Last, First Name</div>
+                    <div class="activitySearchResultsColumnHeader" style="width: 48%">Activity Title</div>
+                    <div class="activitySearchResultsColumnHeader" style="width: 7%">Type</div>
+                    <div class="activitySearchResultsColumnHeader" style="width: 11%">Date</div>
+                </div>
+                <div style="height: 600px; overflow-y: scroll">
+                    <ul data-bind="foreach: activityResults.placeResults">
+                        <li>
+                            <ul data-bind="foreach: results">
+                                <li>
+                                    <div style="width: 100%; padding-top: 4px; padding-bottom: 4px; border-bottom-style: solid; border-bottom-color: black; border-bottom-width: 1px;">
+                                        <div class="activitySearchResultsRow" style="width: 11%" data-bind="text: $parent.officialName"></div>
+                                        <div class="activitySearchResultsRow" style="width: 20%" data-bind="text: personName()"></div>
+                                        <div class="activitySearchResultsRow" style="width: 48%" data-bind="text: activityTitle()"></div>
+                                        <div class="activitySearchResultsRow" style="width: 7%; text-align: center;" data-bind="template: { name: 'activities-types-template', foreach: activityTypeIds }"></div>
+                                        <div class="activitySearchResultsRow" style="width: 11%" data-bind="text: activityDate()"></div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Spinner -->
+                <div class="spinnerBox" data-bind="visible: loadSpinner.isVisible()">
+                    <div style="position: absolute; top: 0; left: 0; bottom: 0; right: 0; margin: auto; width: 100px; height: 20px">
+                        <span>
+                            <img src="~/images/icons/spinner/spinner-20-blue.gif" alt=""/>
+                            <strong>Loading...</strong>
+                        </span>
+                    </div>
+                </div>
+            </div>
+                      
             <!-- E X P E R T -->
             <div style="display: none" data-bind="visible: isExpertVisible()">
                 <div id="expert" style="width: 680px; height: 500px">
                     <img src="~/images/placeholders/ExpertiseMock.png" width="680" height="500" alt=""/>
                 </div>
-            </div>
-                       
-            <!-- P O I N T M A P -->
-            <div id="pointmapDiv" data-bind="visible: isPointmapVisible()">
-                <div id="pointmap" style="width: 680px; height: 500px"></div>
-            </div>
-          
-            <!-- R E S U L T S -->
-            <div id="resultstable" style="display: none" data-bind="visible: isTableVisible()">
-                    
-                <table class="data">
-                    <colgroup>
-                        <col style="width: 40%;" />
-                        <col style="width: 30%;" />
-                        <col style="width: 30%;" />
-                    </colgroup>
-                    <thead>
-                        <tr>
-                            <th>Faculty</th>
-                            <th>Activity</th>
-                            <th>Locations</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td> </td>
-                            <td> </td>
-                            <td> </td>
-                        </tr>
-                    </tbody>
-                </table>                  
             </div>
         </div>
     </div>
@@ -535,3 +578,10 @@
 </div>
 
 <div id="tooltipWindow" style="width: 100px; height: 40px"></div>
+
+<!-- Knockout Templates -->
+
+<script type="text/html" id="activities-types-template">
+    <img img data-bind="attr: { src: '/api/my/employee-module-settings/icon/' + $root.getActivityTypeIconName( $data ), title: $root.getActivityTypeToolTip( $data ) }"
+        src="" title="" width="24" height="24"/>
+</script>

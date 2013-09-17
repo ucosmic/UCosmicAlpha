@@ -131,7 +131,8 @@ var ViewModels;
                 this.institutionDropListData = [];
                 this.locations = ko.observableArray();
                 this.activityTypes = ko.observableArray();
-                this.selectedActivityIds = ko.observableArray();
+
+                //this.selectedActivityIds = ko.observableArray();
                 this.isHeatmapVisible = ko.observable(true);
                 this.isPointmapVisible = ko.observable(false);
                 this.isExpertVisible = ko.observable(false);
@@ -157,6 +158,22 @@ var ViewModels;
                 this.placePeopleTrendData = null;
                 this.heatmapActivityDataTable = null;
                 this.heatmapPeopleDataTable = null;
+                this.activityResults = ko.mapping.fromJS({
+                    placeResults: [
+                        {
+                            officialName: '',
+                            results: []
+                        }
+                    ]
+                });
+                this.peopleResults = ko.mapping.fromJS({
+                    placeResults: [
+                        {
+                            officialName: '',
+                            results: []
+                        }
+                    ]
+                });
                 this.pointmapActivityMarkers = null;
                 this.pointmapPeopleMarkers = null;
 
@@ -184,16 +201,6 @@ var ViewModels;
                             "officialName": institutionInfo.InstitutionOfficialName,
                             "id": institutionInfo.InstitutionId
                         });
-                    }
-
-                    if (institutionInfo.ActivityTypes != null) {
-                        for (var i = 0; i < institutionInfo.ActivityTypes.length; i += 1) {
-                            this.activityTypes.push(ko.observable({
-                                id: institutionInfo.ActivityTypes[i].Id,
-                                type: institutionInfo.ActivityTypes[i].Name,
-                                filter: ko.observable(true)
-                            }));
-                        }
                     }
 
                     if (institutionInfo.InstitutionHasCampuses != null) {
@@ -480,7 +487,6 @@ var ViewModels;
                 //this.to.subscribe((newValue: any): void => { this.dirtyFlag(true); });
                 //this.onGoing.subscribe((newValue: any): void => { this.dirtyFlag(true); });
                 //this.institutions.subscribe((newValue: any): void => { this.dirtyFlag(true); });
-                //this.position.subscribe((newValue: any): void => { this.dirtyFlag(true); });
                 this.selectedPlace.subscribe(function (newValue) {
                     _this.selectMap('heatmap');
                 });
@@ -489,9 +495,19 @@ var ViewModels;
                 });
                 this.searchType.subscribe(function (newValue) {
                     if (_this.mapType() === 'pointmap') {
-                        //this.advancedSearch();
+                        //this.activitySearch();
                     }
                 });
+
+                if (this.activityTypes != null) {
+                    for (var i = 0; i < this.activityTypes().length; i += 1) {
+                        this.activityTypes()[i].checked.subscribe(function (newValue) {
+                            if (_this.mapType() === 'pointmap') {
+                                _this.drawPointmap(true);
+                            }
+                        });
+                    }
+                }
             };
 
             FacultyAndStaff.prototype.setupRouting = function () {
@@ -1298,9 +1314,13 @@ var ViewModels;
             /*
             *
             */
-            FacultyAndStaff.prototype.getPointmapActivityMarkers = function () {
+            FacultyAndStaff.prototype.getPointmapActivityMarkers = function (refresh) {
                 var _this = this;
                 var deferred = $.Deferred();
+                if (refresh) {
+                    this.hidePointmapActivityMarkers();
+                    this.pointmapActivityMarkers = null;
+                }
                 if (this.pointmapActivityMarkers == null) {
                     this.activitySearch().done(function (results) {
                         deferred.resolve(_this._getPointmapActivityMarkers(results));
@@ -1366,9 +1386,13 @@ var ViewModels;
             /*
             *
             */
-            FacultyAndStaff.prototype.getPointmapPeopleMarkers = function () {
+            FacultyAndStaff.prototype.getPointmapPeopleMarkers = function (refresh) {
                 var _this = this;
                 var deferred = $.Deferred();
+                if (refresh) {
+                    this.hidePointmapPeopleMarkers();
+                    this.pointmapPeopleMarkers = null;
+                }
                 if (this.pointmapPeopleMarkers == null) {
                     this.getGlobalPeopleCounts().done(function (counts) {
                         deferred.resolve(_this._getPointmapPeopleMarkers());
@@ -1522,7 +1546,9 @@ var ViewModels;
                     _this.activityTypes = ko.mapping.fromJS(types);
 
                     for (var i = 0; i < _this.activityTypes().length; i += 1) {
-                        _this.activityTypes()[i].checked = ko.computed(_this.defHasActivityTypeCallback(i));
+                        //this.activityTypes()[i].checked = ko.computed(this.defHasActivityTypeCallback(i));
+                        //this.activityTypes()[i].checked(true);
+                        _this.activityTypes()[i].checked = ko.observable(true);
                     }
 
                     //ko.mapping.fromJS(data, {}, this);
@@ -1566,6 +1592,7 @@ var ViewModels;
                         var location = ko.mapping.fromJS({ id: 0, placeId: items[i].id, version: "" });
                         this.locations.push(location);
                     }
+                    this.drawPointmap(true);
                 }
             };
 
@@ -1682,34 +1709,13 @@ var ViewModels;
                         this.pointmap = new this.google.maps.Map(pointmapElement, this.pointmapOptions);
                     }
 
-                    /* Google maps do not draw correctly in hidden div's.  Here's
-                    a hack to get around this.  */
-                    //var mapCenter = this.pointmap.getCenter();
-                    //this.google.maps.event.trigger(this.pointmap, "resize");
-                    //this.pointmap.setCenter(mapCenter);
-                    this.loadSpinner.start();
-
-                    if (this.searchType() === 'activities') {
-                        this.getPointmapActivityMarkers().done(function () {
-                            _this.hidePointmapPeopleMarkers();
-                            _this.showPointmapActivityMarkers();
-                        }).always(function () {
-                            _this.loadSpinner.stop();
-                        });
-                    } else {
-                        this.getPointmapPeopleMarkers().done(function () {
-                            _this.hidePointmapActivityMarkers();
-                            _this.showPointmapPeopleMarkers();
-                        }).always(function () {
-                            _this.loadSpinner.stop();
-                        });
-                    }
+                    this.drawPointmap(false);
 
                     $("#bib-faculty-staff-search").addClass("current");
-                } else if (type === "resultstable") {
-                    $('#resultstableText').css("font-weight", "bold");
-                    this.isTableVisible(true);
-                    $("#bib-faculty-staff-search").addClass("current");
+                    //} else if (type === "resultstable") {
+                    //    $('#resultstableText').css("font-weight", "bold");
+                    //    this.isTableVisible(true);
+                    //    $("#bib-faculty-staff-search").addClass("current");
                 } else if (type === "expert") {
                     $('#expertText').css("font-weight", "bold");
                     this.isExpertVisible(true);
@@ -1741,71 +1747,57 @@ var ViewModels;
                 this.searchType('people');
             };
 
-            FacultyAndStaff.prototype.addActivityType = function (activityTypeId) {
-                var existingIndex = this.getActivityTypeIndexById(activityTypeId);
-                if (existingIndex == -1) {
-                    var newActivityType = ko.mapping.fromJS({ id: 0, typeId: activityTypeId, version: "" });
-                    this.selectedActivityIds.push(newActivityType);
-                }
-            };
-
-            FacultyAndStaff.prototype.removeActivityType = function (activityTypeId) {
-                var existingIndex = this.getActivityTypeIndexById(activityTypeId);
-                if (existingIndex != -1) {
-                    var activityType = this.selectedActivityIds()[existingIndex];
-                    this.selectedActivityIds.remove(activityType);
-                }
-            };
-
-            FacultyAndStaff.prototype.getTypeName = function (id) {
-                var name = "";
-                var index = this.getActivityTypeIndexById(id);
-                if (index != -1) {
-                    name = this.activityTypes[index].type;
-                }
-                return name;
-            };
-
-            FacultyAndStaff.prototype.getActivityTypeIndexById = function (activityTypeId) {
-                var index = -1;
-
-                if ((this.selectedActivityIds != null) && (this.selectedActivityIds().length > 0)) {
-                    var i = 0;
-                    while ((i < this.selectedActivityIds().length) && (activityTypeId != this.selectedActivityIds()[i].typeId())) {
-                        i += 1;
-                    }
-
-                    if (i < this.selectedActivityIds().length) {
-                        index = i;
-                    }
-                }
-
-                return index;
-            };
-
-            FacultyAndStaff.prototype.hasActivityType = function (activityTypeId) {
-                return this.getActivityTypeIndexById(activityTypeId) != -1;
-            };
-
-            FacultyAndStaff.prototype.defHasActivityTypeCallback = function (activityTypeIndex) {
-                var _this = this;
-                var def = {
-                    read: function () {
-                        return _this.hasActivityType(_this.activityTypes()[activityTypeIndex].id());
-                    },
-                    write: function (checked) {
-                        if (checked) {
-                            _this.addActivityType(_this.activityTypes()[activityTypeIndex].id());
-                        } else {
-                            _this.removeActivityType(_this.activityTypes()[activityTypeIndex].id());
-                        }
-                    },
-                    owner: this
-                };
-
-                return def;
-            };
-
+            //addActivityType(activityTypeId: number): void {
+            //    var existingIndex: number = this.getActivityTypeIndexById(activityTypeId);
+            //    if (existingIndex == -1) {
+            //        var newActivityType: KnockoutObservable<any> = ko.mapping.fromJS({ id: 0, typeId: activityTypeId, version: "" });
+            //        this.selectedActivityIds.push(newActivityType);
+            //    }
+            //}
+            //removeActivityType(activityTypeId: number): void {
+            //    var existingIndex: number = this.getActivityTypeIndexById(activityTypeId);
+            //    if (existingIndex != -1) {
+            //        var activityType = this.selectedActivityIds()[existingIndex];
+            //        this.selectedActivityIds.remove(activityType);
+            //    }
+            //}
+            //getTypeName(id: number): string {
+            //    var name: string = "";
+            //    var index: number = this.getActivityTypeIndexById(id);
+            //    if (index != -1) { name = this.activityTypes[index].type; }
+            //    return name;
+            //}
+            //getActivityTypeIndexById(activityTypeId: number): number {
+            //    var index: number = -1;
+            //    if ((this.selectedActivityIds != null) && (this.selectedActivityIds().length > 0)) {
+            //        var i = 0;
+            //        while ((i < this.selectedActivityIds().length) &&
+            //            (activityTypeId != this.selectedActivityIds()[i].typeId())) { i += 1 }
+            //        if (i < this.selectedActivityIds().length) {
+            //            index = i;
+            //        }
+            //    }
+            //    return index;
+            //}
+            //hasActivityType(activityTypeId: number): boolean {
+            //    return this.getActivityTypeIndexById(activityTypeId) != -1;
+            //}
+            //defHasActivityTypeCallback(activityTypeIndex: number): KnockoutComputedDefine<boolean> {
+            //    var def: KnockoutComputedDefine<boolean> = {
+            //        read: (): boolean => {
+            //            return this.hasActivityType(this.activityTypes()[activityTypeIndex].id());
+            //        },
+            //        write: (checked: boolean) => {
+            //            if (checked) {
+            //                this.addActivityType(this.activityTypes()[activityTypeIndex].id());
+            //            } else {
+            //                this.removeActivityType(this.activityTypes()[activityTypeIndex].id());
+            //            }
+            //        },
+            //        owner: this
+            //    };
+            //    return def;
+            //}
             FacultyAndStaff.prototype.heatmapSelectHandler = function () {
                 var selection = this.heatmap.getSelection();
 
@@ -1890,18 +1882,33 @@ var ViewModels;
             */
             // --------------------------------------------------------------------------------
             FacultyAndStaff.prototype.activitySearch = function () {
+                var _this = this;
                 var deferred = $.Deferred();
-
-                debugger;
 
                 var locationIds = new Array();
                 for (var i = 0; i < this.locations().length; i += 1) {
-                    locationIds.push(this.locations()[i].id);
+                    locationIds.push(this.locations()[i].placeId());
                 }
 
+                //var activityTypeIds = new Array();
+                //for (var i = 0; i < this.selectedActivityIds().length; i += 1) {
+                //    activityTypeIds.push(this.selectedActivityIds()[i].typeId());
+                //}
                 var activityTypeIds = new Array();
-                for (var i = 0; i < this.selectedActivityIds().length; i += 1) {
-                    activityTypeIds.push(this.selectedActivityIds()[i].id);
+                if (this.activityTypes != null) {
+                    if (this.activityTypes().length > 0) {
+                        for (var i = 0; i < this.activityTypes().length; i += 1) {
+                            if (this.activityTypes()[i].checked()) {
+                                activityTypeIds.push(this.activityTypes()[i].id());
+                            }
+                        }
+                    } else {
+                        activityTypeIds.push(0);
+                    }
+                }
+
+                if (activityTypeIds.length == 0) {
+                    activityTypeIds.push(0);
                 }
 
                 var dataItem = $("#" + this.campusDropListId).data("kendoDropDownList").dataItem();
@@ -1931,6 +1938,7 @@ var ViewModels;
                     data: filterOptions,
                     url: App.Routes.WebApi.FacultyStaff.postSearch(),
                     success: function (data, textStatus, jqXhr) {
+                        ko.mapping.fromJS(data, {}, _this.activityResults);
                         deferred.resolve(data);
                     },
                     error: function (jqXhr, textStatus, errorThrown) {
@@ -1939,6 +1947,50 @@ var ViewModels;
                 });
 
                 return deferred;
+            };
+
+            FacultyAndStaff.prototype.selectLens = function (lens) {
+                if (lens === 'map') {
+                    this.lens('map');
+                } else {
+                    this.lens('table');
+                }
+            };
+
+            FacultyAndStaff.prototype.getActivityTypeIconName = function (typeId) {
+                var i = 0;
+                while ((i < this.activityTypes().length) && (this.activityTypes()[i].id() != typeId)) {
+                    i += 1;
+                }
+                return (i < this.activityTypes().length) ? this.activityTypes()[i].iconName() : null;
+            };
+
+            FacultyAndStaff.prototype.getActivityTypeToolTip = function (typeId) {
+                var i = 0;
+                while ((i < this.activityTypes().length) && (this.activityTypes()[i].id() != typeId)) {
+                    i += 1;
+                }
+                return (i < this.activityTypes().length) ? this.activityTypes()[i].type() : null;
+            };
+
+            FacultyAndStaff.prototype.drawPointmap = function (updateMarkers) {
+                var _this = this;
+                this.loadSpinner.start();
+                if (this.searchType() === 'activities') {
+                    this.getPointmapActivityMarkers(updateMarkers).done(function () {
+                        _this.hidePointmapPeopleMarkers();
+                        _this.showPointmapActivityMarkers();
+                    }).always(function () {
+                        _this.loadSpinner.stop();
+                    });
+                } else {
+                    this.getPointmapPeopleMarkers(updateMarkers).done(function () {
+                        _this.hidePointmapActivityMarkers();
+                        _this.showPointmapPeopleMarkers();
+                    }).always(function () {
+                        _this.loadSpinner.stop();
+                    });
+                }
             };
             return FacultyAndStaff;
         })();

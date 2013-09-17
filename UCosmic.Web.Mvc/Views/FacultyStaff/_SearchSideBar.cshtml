@@ -1,5 +1,10 @@
 ﻿<div class="filter-sidebar">
     <div>
+        <div style="width: 100%; text-align: center; margin-bottom: 4px">
+            <input type="button" style="width:48%" value="Map" data-bind="click: function ( item, event ) { selectLens( 'map' ) }"/>
+            <input type="button" style="width:48%" value="Table" data-bind="click: function ( item, event ) { selectLens( 'table' ) }" />
+        </div>
+
         <div class="section">
             <div class="section-header">Search For</div>
             <div style="text-align: center; font-size: large; padding-bottom: 4px">
@@ -45,7 +50,7 @@
         </div>
 
         <div class="section" style="margin-bottom: 16px">
-@*            <div style="display: none" data-bind="visible: institutionId() == null">
+            @*            <div style="display: none" data-bind="visible: institutionId() == null">
                 <div class="section-header">Institution</div>
                 <input type="text" id="institutionTextbox" style="width: 100%" />
             </div>*@
@@ -67,19 +72,13 @@
         </div>
 
     </div>
-    <div class="lens-selector" data-bind="">
-        <span>Map</span>
-    </div>
-    <div class="lens-selector" data-bind="">
-        <span>Table</span>
-    </div>
 </div>
 
 <!-- KNOCKOUT TEMPLATES -->
 <script type="text/html" id="activity-types-template">
     <li style="margin-left: 8px">
         <div class="ellipsis">
-            <input type="checkbox" value="true" checked/><span data-bind="text: $data.type"></span>
+            <input type="checkbox" data-bind="checked: $data.checked"/><span data-bind="text: $data.type()"></span>
         </div>
     </li>
 </script>

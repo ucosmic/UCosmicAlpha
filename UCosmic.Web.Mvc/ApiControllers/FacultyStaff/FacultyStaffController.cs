@@ -557,6 +557,14 @@ namespace UCosmic.Web.Mvc.ApiControllers
         {
             var results = new FacultyStaffSearchResults();
 
+            /* FINDME: We're passing an empty array, but its translated to null.  Maybe ajax JSON config error? */
+            if ((filter.ActivityTypes != null)
+                && (filter.ActivityTypes.Length == 1)
+                && (filter.ActivityTypes[0] == 0))
+            {
+               filter.ActivityTypes = new int[0];
+            }
+
             if (filter.FilterType == "activities")
             {
                 var activities = _queryProcessor.Execute(new ActivitySearch(filter.EstablishmentId)
@@ -580,33 +588,60 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
                     foreach (var location in activityValues.Locations)
                     {
-                        var placeResult = results.PlaceResults.SingleOrDefault(cr => cr.PlaceId == location.PlaceId);
-                        if (placeResult == null)
+                        if ((filter.LocationIds == null)
+                            || (filter.LocationIds.Length == 0)
+                            || filter.LocationIds.Contains(location.PlaceId))
                         {
-                            placeResult = new FacultyStaffPlaceResult
+                            var placeResult = results.PlaceResults.SingleOrDefault(cr => cr.PlaceId == location.PlaceId);
+                            if (placeResult == null)
                             {
-                                PlaceId = location.PlaceId,
-                                OfficialName = location.Place.OfficialName,
-                                Lat = location.Place.Center.Latitude.HasValue ? location.Place.Center.Latitude.Value : 0,
-                                Lng = location.Place.Center.Longitude.HasValue ? location.Place.Center.Longitude.Value : 0
+                                placeResult = new FacultyStaffPlaceResult
+                                {
+                                    PlaceId = location.PlaceId,
+                                    OfficialName = location.Place.OfficialName,
+                                    Lat =
+                                        location.Place.Center.Latitude.HasValue
+                                            ? location.Place.Center.Latitude.Value
+                                            : 0,
+                                    Lng =
+                                        location.Place.Center.Longitude.HasValue
+                                            ? location.Place.Center.Longitude.Value
+                                            : 0
+                                };
+
+                                results.PlaceResults.Add(placeResult);
+                            }
+
+                            var result = new FacultyStaffResult
+                            {
+                                PersonId = activity.PersonId,
+                                PersonName =
+                                    String.Format("{0}, {1}", activity.Person.LastName, activity.Person.FirstName),
+                                ActivityId = activity.RevisionId,
+                                ActivityTitle = activityValues.Title,
+                                ActivityTypeIds = MakeActivityTypeIds(activityValues.Types),
+                                ActivityDate =
+                                    MakeDateString(activityValues.StartsOn, activityValues.EndsOn,
+                                                   activityValues.OnGoing),
+                                SortDate =
+                                    GetSortDate(activityValues.StartsOn, activityValues.EndsOn, activityValues.OnGoing)
+                                // local use only
                             };
 
-                            results.PlaceResults.Add(placeResult);
+                            placeResult.Results.Add(result);
                         }
+                    }
 
-                        var result = new FacultyStaffResult
-                        {
-                            PersonId = activity.PersonId,
-                            PersonName = activity.Person.DisplayName,
-                            ActivityId = activity.RevisionId,
-                            ActivityTitle = activityValues.Title,
-                            ActivityTypeIds = MakeActivityTypeIds(activityValues.Types),
-                            ActivityDate  = MakeDateString(activityValues.StartsOn, activityValues.EndsOn, activityValues.OnGoing)
-                        };
-
-                        placeResult.Results.Add(result);
+                    foreach (var placeResult in results.PlaceResults)
+                    {
+                        placeResult.Results = placeResult.Results.OrderByDescending(r => r.SortDate)
+                                                         .ThenBy(r => r.PersonName)
+                                                         .ThenBy(r => r.ActivityTitle)
+                                                         .ToList();
                     }
                 }
+
+                results.PlaceResults = results.PlaceResults.OrderBy(r => r.OfficialName).ToList();
             }
             else if (filter.FilterType == "people")
             {
@@ -640,7 +675,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             {
                 if (endsOn.HasValue)
                 {
-                    formattedDateRange = endsOn.Value.ToShortDateString();
+                    formattedDateRange = endsOn.Value.Year.ToString();
                 }
                 else if (onGoing.HasValue)
                 {
@@ -649,18 +684,34 @@ namespace UCosmic.Web.Mvc.ApiControllers
             }
             else
             {
-                formattedDateRange = startsOn.Value.ToShortDateString();
+                formattedDateRange = startsOn.Value.Year.ToString();
                 if (onGoing.HasValue)
                 {
-                    formattedDateRange += " Present";
+                    formattedDateRange += "-Present";
                 }
                 else if (endsOn.HasValue)
                 {
-                    formattedDateRange += " - " + endsOn.Value.ToShortDateString();
+                    formattedDateRange += "-" + endsOn.Value.Year.ToString();
                 }
             }
 
             return formattedDateRange;
+        }
+
+        private static DateTime GetSortDate(DateTime? startsOn, DateTime? endsOn, bool? onGoing)
+        {
+            DateTime sortDate = DateTime.MaxValue;
+
+            if (startsOn.HasValue)
+            {
+                sortDate = startsOn.Value;
+            }
+            else if (endsOn.HasValue)
+            {
+                sortDate = endsOn.Value;
+            }
+
+            return sortDate;
         }
     }
 }
