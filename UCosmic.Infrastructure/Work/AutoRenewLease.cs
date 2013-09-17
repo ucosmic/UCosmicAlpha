@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net;
 using System.Threading;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
@@ -28,13 +27,13 @@ namespace UCosmic.Work
                 var accessCondition = AccessCondition.GenerateIfNoneMatchCondition("*");
                 blob.UploadFromByteArray(new byte[0], 0, 0, accessCondition);
             }
-            catch (StorageException ex)
+            catch (StorageException)
             {
-                var webException = ex.InnerException as WebException;
-                if (webException == null || webException.Response == null
-                    || ((HttpWebResponse)webException.Response).StatusCode != HttpStatusCode.Conflict
-                    || ((HttpWebResponse)webException.Response).StatusDescription != "The specified blob already exists.")
-                    throw;
+                //var webException = ex.InnerException as WebException;
+                //if (webException == null || webException.Response == null
+                //    || ((HttpWebResponse)webException.Response).StatusCode != HttpStatusCode.Conflict
+                //    || ((HttpWebResponse)webException.Response).StatusCode != HttpStatusCode.PreconditionFailed)
+                //    throw;
             }
 
             // acquire lease
@@ -48,7 +47,13 @@ namespace UCosmic.Work
                 while (true)
                 {
                     Thread.Sleep(TimeSpan.FromSeconds(40.0));
-                    blob.RenewLease(AccessCondition.GenerateLeaseCondition(LeaseId));
+                    try
+                    {
+                        blob.RenewLease(AccessCondition.GenerateLeaseCondition(LeaseId));
+                    }
+                    catch (StorageException)
+                    {
+                    }
                 }
             });
             // ReSharper restore FunctionNeverReturns

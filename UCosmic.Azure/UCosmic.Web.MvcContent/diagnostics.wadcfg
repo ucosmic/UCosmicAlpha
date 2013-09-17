@@ -16,16 +16,16 @@
     <PerformanceCounterConfiguration counterSpecifier="\ASP.NET Applications(__Total__)\Errors Total/Sec" sampleRate="PT1S" />
     <PerformanceCounterConfiguration counterSpecifier="\ASP.NET\Requests Queued" sampleRate="PT1S" />
     <PerformanceCounterConfiguration counterSpecifier="\ASP.NET\Requests Rejected" sampleRate="PT1S" />
+    <PerformanceCounterConfiguration counterSpecifier="\ASP.NET\Applications Running" sampleRate="PT1S" />
     <PerformanceCounterConfiguration counterSpecifier="\Process(WaWorkerHost)\% Processor Time" sampleRate="PT1S" />
     <PerformanceCounterConfiguration counterSpecifier="\Process(WaWebHost)\% Processor Time" sampleRate="PT1S" />
-    <PerformanceCounterConfiguration counterSpecifier="\Process(WaWebHost)\Thread Count" sampleRate="PT1S" />
     <PerformanceCounterConfiguration counterSpecifier="\Process(IISExpress)\% Processor Time" sampleRate="PT1S" />
     <PerformanceCounterConfiguration counterSpecifier="\Process(w3wp)\% Processor Time" sampleRate="PT1S" />
     <PerformanceCounterConfiguration counterSpecifier="\.NET CLR Jit(_Global_)\% Time in Jit" sampleRate="PT1S" />
     <PerformanceCounterConfiguration counterSpecifier="\.NET CLR Loading(_Global_)\% Time Loading" sampleRate="PT1S" />
+    <PerformanceCounterConfiguration counterSpecifier="\.NET CLR LocksAndThreads(_Global_)\Contention Rate / sec" sampleRate="PT1S" />
     <PerformanceCounterConfiguration counterSpecifier="\.NET CLR Memory(_Global_)\# Bytes in all Heaps" sampleRate="PT1S" />
     <PerformanceCounterConfiguration counterSpecifier="\.NET CLR Networking(_Global_)\Connections Established" sampleRate="PT1S" />
-    <PerformanceCounterConfiguration counterSpecifier="\.NET CLR LocksAndThreads(_Global_)\Contention Rate / sec" sampleRate="PT1S" />
   </PerformanceCounters>
   <WindowsEventLog bufferQuotaInMB="1024" scheduledTransferPeriod="PT1M" scheduledTransferLogLevelFilter="Error">
     <DataSource name="Application!*" />

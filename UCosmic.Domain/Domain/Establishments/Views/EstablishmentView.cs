@@ -1,10 +1,15 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using UCosmic.Domain.Places;
 
 namespace UCosmic.Domain.Establishments
 {
+    public class EstablishmentViews : Collection<EstablishmentView>
+    {
+    }
+
     public class EstablishmentView
     {
         public int Id { get; set; }
@@ -62,7 +67,7 @@ namespace UCosmic.Domain.Establishments
             Urls = urls;
         }
 
-        private Place GetCountry(Establishment establishment)
+        private static Place GetCountry(Establishment establishment)
         {
             var country = establishment.Location.Places.FirstOrDefault(e => e.IsCountry);
             if (country == null)

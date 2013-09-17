@@ -29,6 +29,7 @@
     </ConfigurationSettings>
     <Certificates>
       <Certificate name="Microsoft.WindowsAzure.Plugins.RemoteAccess.PasswordEncryption" thumbprint="50AE3C46359607209787B18517829EA8DF67FF74" thumbprintAlgorithm="sha1" />
+      <Certificate name="azureconfig" thumbprint="9975FCFAF342D1FB73631EB5A1CD9BCEF1F102F6" thumbprintAlgorithm="sha1" />
     </Certificates>
   </Role>
 </ServiceConfiguration>

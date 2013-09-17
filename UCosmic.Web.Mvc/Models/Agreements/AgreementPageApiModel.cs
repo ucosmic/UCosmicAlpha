@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Linq;
-using AutoMapper;
 using System.Runtime.Serialization;
-using UCosmic.Domain.Agreements;
 
 namespace UCosmic.Web.Mvc.Models
 {

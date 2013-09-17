@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Threading;
 using UCosmic.Domain.Employees;
 using UCosmic.Domain.Establishments;
 using UCosmic.Domain.People;
@@ -13,22 +12,22 @@ using UCosmic.Domain.Places;
 
 namespace UCosmic.Domain.Activities
 {
-    public class ActivityViewProjector : IActivityViewProjector , IHandleEvents<ApplicationStarted>
+    public class ActivityViewProjector //: IHandleEvents<ApplicationStarted>
     //,IHandleEvents<ActivityCreated>
     //,IHandleEvents<ActivityChanged>
     //,IHandleEvents<ActivityDeleted>
     //,IHandleEvents<EstablishmentChanged>
     //,IHandleEvents<AffiliationChanged>
     {
-        private static readonly ReaderWriterLockSlim Rwlock = new ReaderWriterLockSlim();
-        private static readonly ReaderWriterLockSlim StatsRwlock = new ReaderWriterLockSlim();
+        //private static readonly ReaderWriterLockSlim Rwlock = new ReaderWriterLockSlim();
+        //private static readonly ReaderWriterLockSlim StatsRwlock = new ReaderWriterLockSlim();
         private readonly IQueryEntities _entities;
         private readonly IProcessQueries _queries;
         private readonly IManageViews _viewManager;
         private readonly ILogExceptions _exceptionLogger;
 
-        private Dictionary<int, GlobalActivityCountView> _globalActivityDictionary = new Dictionary<int, GlobalActivityCountView>();
-        private Dictionary<int, GlobalPeopleCountView> _globalPeopleDictionary = new Dictionary<int, GlobalPeopleCountView>();
+        private GlobalActivityCountViews _globalActivityDictionary = new GlobalActivityCountViews();
+        private GlobalPeopleCountViews _globalPeopleDictionary = new GlobalPeopleCountViews();
 
         public ActivityViewProjector(IQueryEntities entities, IProcessQueries queries, IManageViews viewManager, ILogExceptions exceptionLogger)
         {
@@ -38,7 +37,7 @@ namespace UCosmic.Domain.Activities
             _exceptionLogger = exceptionLogger;
         }
 
-        public void BuildViews()
+        internal void BuildViews()
         {
             var buildTimer = new Stopwatch();
             buildTimer.Start();
@@ -46,7 +45,7 @@ namespace UCosmic.Domain.Activities
             #region Build ActivityViews
 
             var view = new List<ActivityView>();
-            Rwlock.EnterWriteLock();
+            //Rwlock.EnterWriteLock();
 
             try
             {
@@ -64,7 +63,7 @@ namespace UCosmic.Domain.Activities
                     .ToArray() // execute query
                 ;
                 view.AddRange(activityViewEntities.Select(x => new ActivityView(x)));
-                _viewManager.Set<ICollection<ActivityView>>(view);
+                _viewManager.Set<ActivityViews>(view);
             }
             catch (Exception ex)
             {
@@ -73,35 +72,35 @@ namespace UCosmic.Domain.Activities
             }
             finally
             {
-                Rwlock.ExitWriteLock();
+                //Rwlock.ExitWriteLock();
                 WriteOutput("ActivityView build completed in {0} milliseconds with {1} activities.", MillisecondsSinceLast(buildTimer), view.Count);
             }
 
             #endregion
             #region Build GlobalActivityCountViews & GlobalPeopleCountViews
 
-            StatsRwlock.EnterWriteLock();
+            //StatsRwlock.EnterWriteLock();
 
             try
             {
                 #region Initialize GlobalActivityCountView dictionary
 
-                _globalActivityDictionary = _viewManager.Get<Dictionary<int, GlobalActivityCountView>>();
+                _globalActivityDictionary = _viewManager.Get<GlobalActivityCountViews>();
                 if (_globalActivityDictionary == null)
                 {
-                    _viewManager.Set<Dictionary<int, GlobalActivityCountView>>(new Dictionary<int, GlobalActivityCountView>());
-                    _globalActivityDictionary = _viewManager.Get<Dictionary<int, GlobalActivityCountView>>();
+                    _viewManager.Set<GlobalActivityCountViews>(new GlobalActivityCountViews());
+                    _globalActivityDictionary = _viewManager.Get<GlobalActivityCountViews>();
                 }
                 _globalActivityDictionary.Clear();
 
                 #endregion
                 #region Initialize GlobalPeopleCountView dictionary
 
-                _globalPeopleDictionary = _viewManager.Get<Dictionary<int, GlobalPeopleCountView>>();
+                _globalPeopleDictionary = _viewManager.Get<GlobalPeopleCountViews>();
                 if (_globalPeopleDictionary == null)
                 {
-                    _viewManager.Set<Dictionary<int, GlobalPeopleCountView>>(new Dictionary<int, GlobalPeopleCountView>());
-                    _globalPeopleDictionary = _viewManager.Get<Dictionary<int, GlobalPeopleCountView>>();
+                    _viewManager.Set<GlobalPeopleCountViews>(new GlobalPeopleCountViews());
+                    _globalPeopleDictionary = _viewManager.Get<GlobalPeopleCountViews>();
                 }
                 _globalPeopleDictionary.Clear();
 
@@ -228,7 +227,8 @@ namespace UCosmic.Domain.Activities
                             {
                                 TypeId = type.Id,
                                 Type = type.Type,
-                                Count = placeTypeCount
+                                Count = placeTypeCount,
+                                Rank = type.Rank,
                             });
                         }
 
@@ -255,10 +255,14 @@ namespace UCosmic.Domain.Activities
                             {
                                 TypeId = type.Id,
                                 Type = type.Type,
-                                Count = globalTypeCount
+                                Count = globalTypeCount,
+                                Rank = type.Rank,
                             });
                         }
                     }
+
+                    activityStats.TypeCounts = activityStats.TypeCounts.OrderBy(x => x.Rank).ToArray();
+                    peopleStats.TypeCounts = peopleStats.TypeCounts.OrderBy(x => x.Rank).ToArray();
 
                     #endregion
 
@@ -268,8 +272,8 @@ namespace UCosmic.Domain.Activities
 
                 #endregion
 
-                _viewManager.Set<Dictionary<int, GlobalActivityCountView>>(_globalActivityDictionary);
-                _viewManager.Set<Dictionary<int, GlobalPeopleCountView>>(_globalPeopleDictionary);
+                _viewManager.Set<GlobalActivityCountViews>(_globalActivityDictionary);
+                _viewManager.Set<GlobalPeopleCountViews>(_globalPeopleDictionary);
             }
             catch (Exception ex)
             {
@@ -278,7 +282,7 @@ namespace UCosmic.Domain.Activities
             }
             finally
             {
-                StatsRwlock.ExitWriteLock();
+                //StatsRwlock.ExitWriteLock();
                 WriteOutput("Activity & people statistical / summary build views completed on {0} (UTC).", DateTime.UtcNow);
             }
 
@@ -292,12 +296,12 @@ namespace UCosmic.Domain.Activities
          * Each call to BeginReadView() must be matched with EndReadView().
          * This method may return null.
          */
-        public ICollection<ActivityView> BeginReadView()
+        public ActivityViews BeginReadView()
         {
-            Rwlock.EnterReadLock();
+            //Rwlock.EnterReadLock();
 
             /* This may return null if the ApplicationStarted view has not completed building. */
-            var view = _viewManager.Get<ICollection<ActivityView>>();
+            var view = _viewManager.Get<ActivityViews>();
 
 #if DEBUG
             if (view == null)
@@ -311,37 +315,37 @@ namespace UCosmic.Domain.Activities
 
         public void EndReadView()
         {
-            Rwlock.ExitReadLock();
+            //Rwlock.ExitReadLock();
         }
 
         public GlobalActivityCountView BeginReadActivityCountsView(int establishmentId)
         {
-            StatsRwlock.EnterReadLock();
+            //StatsRwlock.EnterReadLock();
             if (_globalActivityDictionary.Count == 0)
             {
-                _globalActivityDictionary = _viewManager.Get<Dictionary<int, GlobalActivityCountView>>();
+                _globalActivityDictionary = _viewManager.Get<GlobalActivityCountViews>() ?? new GlobalActivityCountViews();
             }
             return _globalActivityDictionary.Values.SingleOrDefault(v => v.EstablishmentId == establishmentId);
         }
 
         public void EndReadActivityCountsView()
         {
-            StatsRwlock.ExitReadLock();
+            //StatsRwlock.ExitReadLock();
         }
 
         public GlobalPeopleCountView BeginReadPeopleCountsView(int establishmentId)
         {
-            StatsRwlock.EnterReadLock();
+            //StatsRwlock.EnterReadLock();
             if (_globalPeopleDictionary.Count == 0)
             {
-                _globalPeopleDictionary = _viewManager.Get<Dictionary<int, GlobalPeopleCountView>>();
+                _globalPeopleDictionary = _viewManager.Get<GlobalPeopleCountViews>() ?? new GlobalPeopleCountViews();
             }
             return _globalPeopleDictionary.Values.SingleOrDefault(v => v.EstablishmentId == establishmentId);
         }
 
         public void EndReadPeopleCountsView()
         {
-            StatsRwlock.ExitReadLock();
+            //StatsRwlock.ExitReadLock();
         }
 
         public void Handle(ApplicationStarted @event)
@@ -385,7 +389,7 @@ namespace UCosmic.Domain.Activities
         {
             if (activityMode == ActivityMode.Public)
             {
-                var view = _viewManager.Get<ICollection<ActivityView>>();
+                var view = _viewManager.Get<ActivityViews>();
                 if (view != null) // if null, could signify that ApplicationStarted build is not yet complete.
                 {
                     Rwlock.EnterWriteLock();
@@ -400,12 +404,12 @@ namespace UCosmic.Domain.Activities
                             var existingActivityView = view.SingleOrDefault(a => a.Id == entity.RevisionId);
                             if (existingActivityView != null)
                             {
-                                view.Remove(existingActivityView);                               
+                                view.Remove(existingActivityView);
                             }
 
                             view.Add(new ActivityView(entity));
 
-                            _viewManager.Set<ICollection<ActivityView>>(view);
+                            _viewManager.Set<ActivityViews>(view);
                         }
                     }
                     finally
@@ -419,7 +423,7 @@ namespace UCosmic.Domain.Activities
 
         private void DeleteActivity(int activityId)
         {
-            var view = _viewManager.Get<ICollection<ActivityView>>();
+            var view = _viewManager.Get<ActivityViews>();
             if (view != null) // if null, could signify that ApplicationStarted build is not yet complete.
             {
                 Rwlock.EnterWriteLock();
@@ -431,7 +435,7 @@ namespace UCosmic.Domain.Activities
                     {
                         view.Remove(activityView);
 
-                        _viewManager.Set<ICollection<ActivityView>>(view);
+                        _viewManager.Set<ActivityViews>(view);
                     }
                 }
                 finally

@@ -25,12 +25,21 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
+    <DebugType>none</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE;AZURE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Emulate|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Emulate\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;AZURE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AutoMapper, Version=2.2.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
@@ -45,7 +54,7 @@
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.5.0.6\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NGeo, Version=1.9.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -69,7 +78,6 @@
     <Compile Include="Api\Data\IEagerLoad.cs" />
     <Compile Include="Api\Data\IManageViews.cs" />
     <Compile Include="Api\Data\IStoreBinaryData.cs" />
-    <Compile Include="Api\Queries\IActivityViewProjector.cs" />
     <Compile Include="Api\Queries\StringMatchStrategy.cs" />
     <Compile Include="Api\Saml\IParseSaml2Metadata.cs" />
     <Compile Include="Api\Saml\IProvideSaml2Service.cs" />
@@ -157,10 +165,10 @@
     <Compile Include="Domain\Activities\Queries\ActivityDocumentById.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityDocumentsByActivityIdAndMode.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityDocumentsByValuesId.cs" />
-    <Compile Include="Domain\Activities\Queries\ActivityViewProjector.cs" />
+    <Compile Include="Domain\Activities\Views\ActivityViewProjector.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityValuesByActivityIdAndMode.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityCountByPlaceIds.cs" />
-    <Compile Include="Domain\Activities\Queries\ActivityViewExtensions.cs" />
+    <Compile Include="Domain\Activities\_Internal\QueryActivityViews.cs" />
     <Compile Include="Domain\Activities\Validation\MustHaveActivityMode.cs" />
     <Compile Include="Domain\Activities\Views\ActivityGlobalActivityCountView.cs" />
     <Compile Include="Domain\Activities\Views\ActivityGlobalPeopleCountView.cs" />
@@ -175,6 +183,7 @@
     <Compile Include="Domain\Activities\Views\ActivityViewStats.cs" />
     <Compile Include="Domain\Activities\Views\GlobalPeopleCountView.cs" />
     <Compile Include="Domain\Activities\Views\GlobalActivityCountView.cs" />
+    <Compile Include="Domain\Activities\Views\ProjectActivityViews.cs" />
     <Compile Include="Domain\Agreements\Commands\PurgeParticipant.cs" />
     <Compile Include="Domain\Agreements\Commands\PurgeContactPhone.cs" />
     <Compile Include="Domain\Agreements\Commands\UpdateContactPhone.cs" />
@@ -241,7 +250,6 @@
     <Compile Include="Domain\Files\Validation\MustHaveAllowedFileExtension.cs" />
     <Compile Include="Domain\Files\_Etc\FileSizeUnitAbbreviation.cs" />
     <Compile Include="Domain\Files\_Etc\FileSizeUnitName.cs" />
-    <Compile Include="Domain\Identity\Events\UserTenancyConfigurator.cs" />
     <Compile Include="Domain\Identity\Validation\MustBeTenantOfEstablishment.cs" />
     <Compile Include="Domain\Identity\Validation\MustNotHaveEmptyIdentityName.cs" />
     <Compile Include="Domain\Activities\Validation\ActivityConstraints.cs" />
@@ -624,7 +632,7 @@
     <Compile Include="Domain\Establishments\Queries\EstablishmentNameById.cs" />
     <Compile Include="Domain\Establishments\Queries\EstablishmentNames.cs" />
     <Compile Include="Domain\Establishments\Queries\EstablishmentViewsByKeyword.cs" />
-    <Compile Include="Domain\Establishments\Queries\EstablishmentViewProjector.cs" />
+    <Compile Include="Domain\Establishments\Views\EstablishmentViewProjector.cs" />
     <Compile Include="Domain\Establishments\Validation\MustBeUniqueEstablishmentUrlValue.cs" />
     <Compile Include="Domain\Establishments\Validation\MustFindEstablishmentUrlById.cs" />
     <Compile Include="Domain\Establishments\Validation\MustFindEstablishmentNameById.cs" />

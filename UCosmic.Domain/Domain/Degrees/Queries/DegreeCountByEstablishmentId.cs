@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using UCosmic.Domain.People;
 
 namespace UCosmic.Domain.Degrees
 {

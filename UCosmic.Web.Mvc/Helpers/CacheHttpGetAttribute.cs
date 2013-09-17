@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Runtime.Caching;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using Newtonsoft.Json;
@@ -18,13 +17,6 @@ namespace UCosmic.Web.Mvc
 
         public ILogExceptions ExceptionLogger { get; set; }
         public IProvideCache CacheProvider { get; set; }
-
-        private IProvideCache GetCache()
-        {
-            return _cache ?? (_cache = CacheProvider ?? new ObjectCacheProvider(MemoryCache.Default));
-        }
-
-        private IProvideCache _cache;
 
         private bool IsCacheable(HttpRequestMessage request)
         {
@@ -78,11 +70,10 @@ namespace UCosmic.Web.Mvc
                 var serverCacheKey = GetServerCacheKey(request);
                 var clientCacheKey = GetClientCacheKey(serverCacheKey);
 
-                var cache = GetCache();
-                if (cache.Contains(serverCacheKey))
+                if (CacheProvider.Contains(serverCacheKey))
                 {
-                    var serverValue = cache.Get(serverCacheKey);
-                    var clientValue = cache.Get(clientCacheKey);
+                    var serverValue = CacheProvider.Get(serverCacheKey);
+                    var clientValue = CacheProvider.Get(clientCacheKey);
                     if (serverValue == null) return;
 
                     var contentType = clientValue != null
@@ -116,8 +107,7 @@ namespace UCosmic.Web.Mvc
                 // can be reused for multiple requests
                 var serverCacheKey = GetServerCacheKey(request);
                 var clientCacheKey = GetClientCacheKey(serverCacheKey);
-                var cache = GetCache();
-                if (!cache.Contains(serverCacheKey))
+                if (!CacheProvider.Contains(serverCacheKey))
                 {
                     var contentType = actionExecutedContext.Response.Content.Headers.ContentType;
                     object serverValue;
@@ -131,8 +121,8 @@ namespace UCosmic.Web.Mvc
                             contentType.MediaType,
                             contentType.CharSet,
                         });
-                    cache.Add(serverCacheKey, serverValue, new TimeSpan(0, 0, Duration));
-                    cache.Add(clientCacheKey, clientValue, new TimeSpan(0, 0, Duration));
+                    CacheProvider.Add(serverCacheKey, serverValue, new TimeSpan(0, 0, Duration));
+                    CacheProvider.Add(clientCacheKey, clientValue, new TimeSpan(0, 0, Duration));
                 }
 
                 if (IsCacheable(actionExecutedContext.Request))

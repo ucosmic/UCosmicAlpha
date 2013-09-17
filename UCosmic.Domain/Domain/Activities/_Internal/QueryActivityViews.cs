@@ -4,12 +4,12 @@ using System.Linq;
 namespace UCosmic.Domain.Activities
 {
     /*
-     * NOTE: These extensions must be called within an 
+     * NOTE: These extensions must be called within an
      * ActivityViewProjector.BeginReadView() ... ActivityViewProjector.EndReadView() context.
-     * 
+     *
      * See ActivityCountByEstablishmentId for an example.
      */
-    internal static class ActivityViewExtensions
+    internal static class QueryActivityViews
     {
         internal static IQueryable<ActivityView> ApplyDateRange(this IQueryable<ActivityView> queryable,
                                                                 DateTime fromDate,
@@ -32,7 +32,7 @@ namespace UCosmic.Domain.Activities
                                     *  -------------------------------
                                     *  noUndated   0 |1 1
                                     *  flag        1 |1 0
-                                    *  
+                                    *
                                     *  NAND
                                     */
 
@@ -46,7 +46,7 @@ namespace UCosmic.Domain.Activities
                                         * user may have checked, then uncheck Ongoing and EndsOn is not necessarily null'd
                                         * when OnGoing is set to false (unchecked).
                                         */
-                                       (!a.StartsOn.HasValue && 
+                                       (!a.StartsOn.HasValue &&
                                         (a.OnGoing.HasValue && a.OnGoing.Value)) ||
 
                                        /* End date only (with future flag) */

@@ -38,6 +38,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Profiles" />
+    <Folder Include="UCosmic.Web.MvcContent\" />
     <Folder Include="UCosmic.WorkContent\" />
   </ItemGroup>
   <ItemGroup>
@@ -59,6 +60,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="UCosmic.Web.MvcContent\diagnostics.wadcfg">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="UCosmic.WorkContent\diagnostics.wadcfg">
       <SubType>Content</SubType>
     </Content>
@@ -68,5 +72,14 @@
     <VisualStudioVersion Condition=" '$(VisualStudioVersion)' == '' ">10.0</VisualStudioVersion>
     <CloudExtensionsDir Condition=" '$(CloudExtensionsDir)' == '' ">$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Windows Azure Tools\2.0\</CloudExtensionsDir>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Emulate' ">
+    <OutputPath>bin\Emulate\</OutputPath>
+  </PropertyGroup>
   <Import Project="$(CloudExtensionsDir)Microsoft.WindowsAzure.targets" />
+  <Target Name="CopyWorkerRoleConfigurations" AfterTargets="CopyWorkerRoleFiles">
+    <PropertyGroup>
+      <RootFolder>$([System.IO.Path]::GetDirectoryName($(MSBuildProjectDirectory)))</RootFolder>
+    </PropertyGroup>
+    <Copy SourceFiles="$(RootFolder)\%(ProjectName)\bin\$(Configuration)\%(EntryPoint).config" DestinationFolder="%(WorkerRoleReferences.OutputDir)" OverwriteReadOnlyFiles="true" />
+  </Target>
 </Project>

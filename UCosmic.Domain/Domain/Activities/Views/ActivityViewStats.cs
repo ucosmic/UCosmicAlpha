@@ -9,6 +9,7 @@ namespace UCosmic.Domain.Activities
             public int TypeId { get; set; }
             public string Type { get; set; }
             public int Count { get; set; }
+            public int Rank { get; set; }
         }
 
         public class PlaceCount

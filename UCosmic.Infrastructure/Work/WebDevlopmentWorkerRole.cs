@@ -3,20 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using SimpleInjector;
+using UCosmic.Domain.Activities;
 
 namespace UCosmic.Work
 {
-    public class PoorMansWorkerRole
+    public class WebDevlopmentWorkerRole
     {
         private readonly Container _container;
 
-        public PoorMansWorkerRole(Container container)
+        public WebDevlopmentWorkerRole(Container container)
         {
             _container = container;
         }
 
         private readonly IDictionary<IDefineWork, IEnumerable<dynamic>> _workforce =
-            new Dictionary<IDefineWork, IEnumerable<dynamic>>();
+            new Dictionary<IDefineWork, IEnumerable<dynamic>>
+            {
+                { new ProjectActivityViews(), null },
+            };
 
         public void OnStart()
         {
@@ -30,10 +34,12 @@ namespace UCosmic.Work
         }
 
         // ReSharper disable FunctionNeverReturns
-        public void Run()
+        public void Run(CancellationToken cancellationToken)
         {
             while (true)
             {
+                if (cancellationToken.IsCancellationRequested) break;
+
                 foreach (var task in _workforce)
                 {
                     var job = task.Key;

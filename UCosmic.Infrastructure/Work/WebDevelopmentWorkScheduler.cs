@@ -4,9 +4,9 @@ using System.Linq;
 
 namespace UCosmic.Work
 {
-    public class PoorMansWorkScheduler : IScheduleWork
+    public class WebDevelopmentWorkScheduler : IScheduleWork
     {
-        private static IDictionary<IDefineWork, DateTime> _schedule = new Dictionary<IDefineWork, DateTime>();
+        private static readonly IDictionary<IDefineWork, DateTime> WorkSchedule = new Dictionary<IDefineWork, DateTime>();
 
         public void Schedule(IDefineWork job, DateTime onUtc)
         {
@@ -20,38 +20,38 @@ namespace UCosmic.Work
 
         private static void ScheduleInternal(IDefineWork job, DateTime onUtc, Exception exception = null)
         {
-            lock (_schedule)
+            lock (WorkSchedule)
             {
-                var scheduledJob = _schedule.Keys.SingleOrDefault(x => x.GetType() == job.GetType());
-                var scheduledOn = scheduledJob != null ?  _schedule[scheduledJob] : (DateTime?)null;
+                var scheduledJob = WorkSchedule.Keys.SingleOrDefault(x => x.GetType() == job.GetType());
+                var scheduledOn = scheduledJob != null ?  WorkSchedule[scheduledJob] : (DateTime?)null;
 
                 // only schedule if the job is not already scheduled
                 if (scheduledJob == null)
                 {
-                    _schedule.Add(job, onUtc);
+                    WorkSchedule.Add(job, onUtc);
                 }
 
-                    // or the job should be scheduled sooner than it is scheduled
+                // or the job should be scheduled sooner than it is scheduled
                 else if (exception != null && scheduledOn > onUtc)
                 {
-                    _schedule[scheduledJob] = onUtc;
+                    WorkSchedule[scheduledJob] = onUtc;
                 }
             }
         }
 
         public DateTime? GetSchedule(IDefineWork job)
         {
-            lock (_schedule)
+            lock (WorkSchedule)
             {
-                var scheduledJob = _schedule.Keys.SingleOrDefault(x => x.GetType() == job.GetType());
-                var scheduledOn = scheduledJob != null ? _schedule[scheduledJob] : (DateTime?)null;
+                var scheduledJob = WorkSchedule.Keys.SingleOrDefault(x => x.GetType() == job.GetType());
+                var scheduledOn = scheduledJob != null ? WorkSchedule[scheduledJob] : (DateTime?)null;
 
                 // only return if job is scheduled to run in the past
                 if (scheduledJob != null && scheduledOn < DateTime.UtcNow)
                 {
                     // schedule the next run
                     var performOn = scheduledOn;
-                    _schedule[scheduledJob] = DateTime.UtcNow.Add(job.Interval);
+                    WorkSchedule[scheduledJob] = DateTime.UtcNow.Add(job.Interval);
                     return performOn;
                 }
 

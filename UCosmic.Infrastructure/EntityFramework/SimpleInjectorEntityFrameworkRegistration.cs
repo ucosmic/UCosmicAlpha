@@ -1,4 +1,4 @@
-﻿#if AZURE
+﻿#if !DEBUG
 #define BROWNFIELD
 #undef GREENFIELD_CHANGES
 #undef GREENFIELD_INIT
@@ -6,7 +6,7 @@
 #undef SEED_ENTITIES
 // DO NOT MODIFY THE LINES ABOVE
 
-#elif DEBUG
+#else
 #define GREENFIELD_CHANGES // uncomment this line to drop & create db only when the schema changes
 //#define GREENFIELD_ALWAYS // uncomment this line to drop & create db on every build
 //#define BROWNFIELD // uncomment this line to prevent db from being dropped & recreated
@@ -22,9 +22,9 @@ using UCosmic.SeedData;
 
 namespace UCosmic.EntityFramework
 {
-    public static class SimpleInjectorEntityFrameworkRegistration
+    internal static class RootComposer
     {
-        public static void RegisterEntityFramework(this Container container)
+        internal static void RegisterEntityFramework(this Container container)
         {
             container.RegisterDbInitializer();
             container.RegisterDbSeeder();

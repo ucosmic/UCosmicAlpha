@@ -34,7 +34,7 @@
     <PublishDatabases>false</PublishDatabases>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
+    <DebugType>none</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\</OutputPath>
     <DefineConstants>TRACE;AZURE</DefineConstants>
@@ -141,7 +141,7 @@
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.5.0.6\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NGeo, Version=1.9.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -487,7 +487,23 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\Etc\AzureStartup\gacutil.exe">
+      <Link>startup\gacutil.exe</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <Content Include="app_offline.html" />
+    <None Include="..\Etc\AzureStartup\disableTimeout.cmd">
+      <Link>startup\disableTimeout.cmd</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="..\Etc\AzureStartup\gacutil.exe.config">
+      <Link>startup\gacutil.exe.config</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="..\Etc\AzureStartup\setupGac.cmd">
+      <Link>startup\setupGac.cmd</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="content\kendo\2013.2.716\Black\editor.png" />
     <None Include="content\kendo\2013.2.716\Black\imagebrowser.png" />
     <None Include="content\kendo\2013.2.716\Black\loading-image.gif" />
@@ -720,7 +736,6 @@
     <Content Include="images\icons\nounproject\noun_project_5795_compass.svg" />
     <Content Include="images\icons\nounproject\noun_project_762_idea.svg" />
     <Content Include="images\icons\nounproject\noun_project_762_idea_attr.html" />
-    <Content Include="images\icons\nounproject\noun_project_7876_buoy.svg" />
     <Content Include="images\icons\print\print-24-black.png" />
     <Content Include="images\icons\save\Save-24.png" />
     <Content Include="images\icons\save\Save-256.png" />
@@ -2137,15 +2152,6 @@
     <Content Include="scripts\viewmodels\users\User.min.js">
       <DependentUpon>User.ts</DependentUpon>
     </Content>
-    <None Include="startup\disableTimeout.cmd">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <Content Include="startup\gacutil.exe.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="startup\setupGac.cmd">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <None Include="startup\sql\ElmahSqlSetup.sql" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
@@ -2184,9 +2190,6 @@
     <Content Include="images\icons\plus\plus-24-green.png" />
     <Content Include="images\icons\spinner\spinner-20-blue.gif" />
     <Content Include="images\icons\logo\user-voice-24-filled.png" />
-    <Content Include="startup\gacutil.exe">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="styles\reset.css" />
     <Content Include="styles\sass\sheets\maps.css">
       <DependentUpon>maps.scss</DependentUpon>
@@ -2559,6 +2562,15 @@
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Emulate|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;AZURE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />

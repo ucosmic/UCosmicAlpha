@@ -1,9 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace UCosmic.Domain.Activities
 {
+    public class ActivityViews : Collection<ActivityView>
+    {
+    }
+
     public class ActivityView
     {
         public int Id { get; set; }

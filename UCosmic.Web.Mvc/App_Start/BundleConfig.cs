@@ -13,7 +13,7 @@ namespace UCosmic.Web.Mvc
             // uncomment the following line to enable bundle optimization at debug time.
             //BundleTable.EnableOptimizations = true;
 
-#if AZURE
+#if !DEBUG
             // uncomment the following line to disable bundle optimization at deployment time.
             //BundleTable.EnableOptimizations = false;
 #endif
@@ -194,9 +194,7 @@ namespace UCosmic.Web.Mvc
                 "usf.edu",
             };
 #if DEBUG
-            var testTenants = tenants.ToList();
-            testTenants.Add("testshib.org");
-            tenants = testTenants.ToArray();
+            tenants = tenants.Concat(new[] { "testshib.org" }).ToArray();
 #endif
             foreach (var tenant in tenants)
             {

@@ -3743,7 +3743,6 @@ namespace Links
                 public static readonly string noun_project_5795_compass_svg = Url("noun_project_5795_compass.svg");
                 public static readonly string noun_project_762_idea_svg = Url("noun_project_762_idea.svg");
                 public static readonly string noun_project_762_idea_attr_html = Url("noun_project_762_idea_attr.html");
-                public static readonly string noun_project_7876_buoy_svg = Url("noun_project_7876_buoy.svg");
             }
         
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]

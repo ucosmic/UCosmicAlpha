@@ -2,9 +2,9 @@
 
 namespace UCosmic.Mail
 {
-    public static class SimpleInjectorMailSenderRegistration
+    internal static class RootComposer
     {
-         public static void RegisterMailSender(this Container container)
+        internal static void RegisterMailDelivery(this Container container)
          {
              container.Register<ISendMail, SmtpMailSender>();
          }

@@ -1,10 +1,11 @@
 ﻿using SimpleInjector;
+using UCosmic.CompositionRoot;
 
 namespace UCosmic.Security
 {
-    public static class SimpleInjectorSecurityRegistration
+    internal static class RootComposer
     {
-        public static void RegisterMemberAuthentication(this Container container)
+        internal static void RegisterMemberAuthentication(this Container container)
         {
             container.Register<IStorePasswords, DotNetMembershipProvider>();
             container.Register<ISignUsers, DotNetFormsAuthentication>();

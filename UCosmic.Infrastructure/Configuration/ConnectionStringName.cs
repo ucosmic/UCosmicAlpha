@@ -1,6 +1,6 @@
 ﻿namespace UCosmic.Configuration
 {
-    public enum ConnectionStringKey
+    public enum ConnectionStringName
     {
         UCosmicCloudData,
     }

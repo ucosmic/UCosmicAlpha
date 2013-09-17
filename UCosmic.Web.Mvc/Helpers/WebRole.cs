@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Configuration;
 using System.Diagnostics;
@@ -12,7 +11,6 @@ using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using Microsoft.Web.Administration;
-using Microsoft.WindowsAzure.Diagnostics;
 using Microsoft.WindowsAzure.ServiceRuntime;
 
 namespace UCosmic.Web.Mvc
@@ -143,62 +141,62 @@ namespace UCosmic.Web.Mvc
                 _logger.Dispose();
 
                 #endregion
-                #region Diagnostics Trace Logging
+                //#region Diagnostics Trace Logging
 
-                var config = DiagnosticMonitor.GetDefaultInitialConfiguration();
+                //var config = DiagnosticMonitor.GetDefaultInitialConfiguration();
 
-                // Change the polling interval for all logs.
-                config.ConfigurationChangePollInterval = TimeSpan.FromSeconds(30.0);
+                //// Change the polling interval for all logs.
+                //config.ConfigurationChangePollInterval = TimeSpan.FromSeconds(30.0);
 
-                // Set the transfer interval for all logs.
-                config.Logs.ScheduledTransferPeriod = TimeSpan.FromMinutes(1.0);
+                //// Set the transfer interval for all logs.
+                //config.Logs.ScheduledTransferPeriod = TimeSpan.FromMinutes(1.0);
 
-                // Add performance counter monitoring for configured counters
-                var counters = new List<string>
-                {
-                    @"\Processor(_Total)\% Processor Time",
-                    @"\Memory\Available Mbytes",
-                    @"\TCPv4\Connections Established",
-                    @"\ASP.NET Applications(__Total__)\Requests/Sec",
-                    @"\Network Interface(*)\Bytes Received/sec",
-                    @"\Network Interface(*)\Bytes Sent/sec"
-                };
-                foreach (var counterConfig in counters.Select(counter =>
-                    new PerformanceCounterConfiguration
-                    {
-                        CounterSpecifier = counter,
-                        SampleRate = TimeSpan.FromMinutes(1)
-                    })
-                )
-                {
-                    config.PerformanceCounters.DataSources.Add(counterConfig);
-                }
-                config.PerformanceCounters.ScheduledTransferPeriod = TimeSpan.FromMinutes(1);
+                //// Add performance counter monitoring for configured counters
+                //var counters = new List<string>
+                //{
+                //    @"\Processor(_Total)\% Processor Time",
+                //    @"\Memory\Available Mbytes",
+                //    @"\TCPv4\Connections Established",
+                //    @"\ASP.NET Applications(__Total__)\Requests/Sec",
+                //    @"\Network Interface(*)\Bytes Received/sec",
+                //    @"\Network Interface(*)\Bytes Sent/sec"
+                //};
+                //foreach (var counterConfig in counters.Select(counter =>
+                //    new PerformanceCounterConfiguration
+                //    {
+                //        CounterSpecifier = counter,
+                //        SampleRate = TimeSpan.FromMinutes(1)
+                //    })
+                //)
+                //{
+                //    config.PerformanceCounters.DataSources.Add(counterConfig);
+                //}
+                //config.PerformanceCounters.ScheduledTransferPeriod = TimeSpan.FromMinutes(1);
 
-                //Diagnostics Infrastructure logs
-                config.DiagnosticInfrastructureLogs.ScheduledTransferPeriod = TimeSpan.FromMinutes(1);
-                config.DiagnosticInfrastructureLogs.ScheduledTransferLogLevelFilter = LogLevel.Verbose;//.error
+                ////Diagnostics Infrastructure logs
+                //config.DiagnosticInfrastructureLogs.ScheduledTransferPeriod = TimeSpan.FromMinutes(1);
+                //config.DiagnosticInfrastructureLogs.ScheduledTransferLogLevelFilter = LogLevel.Verbose;//.error
 
-                //Windows Event Logs
-                config.WindowsEventLog.DataSources.Add("System!*");
-                config.WindowsEventLog.DataSources.Add("Application!*");
-                config.WindowsEventLog.ScheduledTransferPeriod = TimeSpan.FromMinutes(1);
-                config.WindowsEventLog.ScheduledTransferLogLevelFilter = LogLevel.Warning;
+                ////Windows Event Logs
+                //config.WindowsEventLog.DataSources.Add("System!*");
+                //config.WindowsEventLog.DataSources.Add("Application!*");
+                //config.WindowsEventLog.ScheduledTransferPeriod = TimeSpan.FromMinutes(1);
+                //config.WindowsEventLog.ScheduledTransferLogLevelFilter = LogLevel.Warning;
 
-                //Azure Trace Logs
-                config.Logs.ScheduledTransferPeriod = TimeSpan.FromMinutes(1);
-                config.Logs.ScheduledTransferLogLevelFilter = LogLevel.Verbose;
+                ////Azure Trace Logs
+                //config.Logs.ScheduledTransferPeriod = TimeSpan.FromMinutes(1);
+                //config.Logs.ScheduledTransferLogLevelFilter = LogLevel.Verbose;
 
-                //Crash Dumps
-                CrashDumps.EnableCollection(true);
+                ////Crash Dumps
+                //CrashDumps.EnableCollection(true);
 
-                //IIS Logs
-                config.Directories.ScheduledTransferPeriod = TimeSpan.FromMinutes(1);
+                ////IIS Logs
+                //config.Directories.ScheduledTransferPeriod = TimeSpan.FromMinutes(1);
 
-                // start the diagnostics monitor
-                DiagnosticMonitor.Start("Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString", config);
+                //// start the diagnostics monitor
+                //DiagnosticMonitor.Start("Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString", config);
 
-                #endregion
+                //#endregion
                 #region IIS Domain Binding
 
                 // NOTE: This is here to prevent random errors where requests for another domain's resource
@@ -251,7 +249,7 @@ namespace UCosmic.Web.Mvc
             }
             if (RoleEnvironment.IsEmulated)
             {
-                webConfigPath = _logger.GetSiteRoot();
+                webConfigPath = WebRoleLogger.GetSiteRoot();
             }
             webConfigPath = Path.Combine(webConfigPath, "web.config");
             return webConfigPath;
@@ -330,7 +328,7 @@ namespace UCosmic.Web.Mvc
                 }
             }
 
-            internal string GetSiteRoot()
+            internal static string GetSiteRoot()
             {
                 var roleRootDir = Environment.GetEnvironmentVariable("RdRoleRoot") ?? Environment.GetEnvironmentVariable("RoleRoot");
                 var appRootDir = Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory);

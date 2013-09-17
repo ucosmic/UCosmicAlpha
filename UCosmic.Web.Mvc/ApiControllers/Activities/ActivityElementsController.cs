@@ -83,7 +83,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 PageNumber = 1
             });
 
-            var model = Mapper.Map<IEnumerable<EstablishmentView>, IEnumerable<ActivityEstablishmentApiModel>>(pagedEstablishments.Items);
+            var model = Mapper.Map<IEnumerable<ActivityEstablishmentApiModel>>(pagedEstablishments.Items);
             return model;
         }
 

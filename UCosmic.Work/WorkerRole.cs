@@ -4,26 +4,16 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Threading;
-using Microsoft.WindowsAzure;
-using Microsoft.WindowsAzure.Diagnostics;
 using Microsoft.WindowsAzure.ServiceRuntime;
-using Microsoft.WindowsAzure.Storage;
+using SimpleInjector;
+using UCosmic.CompositionRoot;
+using UCosmic.Domain.Activities;
 
 namespace UCosmic.Work
 {
     public class WorkerRole : RoleEntryPoint
     {
-        public override void Run()
-        {
-            // This is a sample worker implementation. Replace with your logic.
-            Trace.TraceInformation("UCosmic.Work entry point called", "Information");
-
-            while (true)
-            {
-                Thread.Sleep(10000);
-                Trace.TraceInformation("Working", "Information");
-            }
-        }
+        private Container _container;
 
         public override bool OnStart()
         {
@@ -33,7 +23,57 @@ namespace UCosmic.Work
             // For information on handling configuration changes
             // see the MSDN topic at http://go.microsoft.com/fwlink/?LinkId=166357.
 
+            _container = new Container(
+                new ContainerOptions
+                {
+                    AllowOverridingRegistrations = true,
+                }
+            );
+
+            var rootCompositionSettings = new RootCompositionSettings
+            {
+                Flags = RootCompositionFlags.Work |
+                        RootCompositionFlags.Verify,
+            };
+            _container.ComposeRoot(rootCompositionSettings);
+
+            var scheduler = _container.GetInstance<IScheduleWork>();
+            var workforceAcquisition = _container.GetInstance<WorkforceAcquisition>();
+            foreach (var job in _workforce.Keys.ToArray())
+            {
+                _workforce[job] = workforceAcquisition.AcquireWorkers(job);
+                scheduler.Schedule(job, DateTime.UtcNow);
+            }
+
             return base.OnStart();
         }
+
+        private readonly IDictionary<IDefineWork, IEnumerable<dynamic>> _workforce =
+            new Dictionary<IDefineWork, IEnumerable<dynamic>>
+            {
+                { new ProjectActivityViews(), null },
+            };
+
+        // ReSharper disable FunctionNeverReturns
+        public override void Run()
+        {
+            // This is a sample worker implementation. Replace with your logic.
+            Trace.TraceInformation("UCosmic.Work entry point called", "Information");
+
+            while (true)
+            {
+                foreach (var task in _workforce)
+                {
+                    var job = task.Key;
+                    var workers = task.Value;
+                    foreach (var worker in workers)
+                        worker.Perform((dynamic)job);
+                }
+
+                Thread.Sleep(1000);
+                Trace.TraceInformation("Working", "Information");
+            }
+        }
+        // ReSharper restore FunctionNeverReturns
     }
 }

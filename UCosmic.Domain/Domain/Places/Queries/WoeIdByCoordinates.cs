@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using NGeo.GeoNames;
 using NGeo.Yahoo.GeoPlanet;
-#if AZURE
+#if !DEBUG
 using NGeo.Yahoo.PlaceFinder;
 #endif
 
@@ -20,7 +20,30 @@ namespace UCosmic.Domain.Places
         public Coordinates Coordinates { get; private set; }
     }
 
-#if AZURE
+#if DEBUG
+
+    public class HandleFakeWoeIdByCoordinatesQuery : IHandleQueries<WoeIdByCoordinates, int>
+    {
+        private readonly IContainGeoNames _geoNames;
+        private readonly IContainGeoPlanet _geoPlanet;
+
+        public HandleFakeWoeIdByCoordinatesQuery(IContainGeoNames geoNames
+            , IContainGeoPlanet geoPlanet
+        )
+        {
+            _geoNames = geoNames;
+            _geoPlanet = geoPlanet;
+        }
+
+        public int Handle(WoeIdByCoordinates query)
+        {
+            if (query == null) throw new ArgumentNullException("query");
+
+            return HandleFakeWoeIdByCoordinatesInternal.Handle(query, _geoNames, _geoPlanet);
+        }
+    }
+
+#else
 
     public class HandlePaidWoeIdByCoordinatesQuery : IHandleQueries<WoeIdByCoordinates, int>
     {
@@ -85,28 +108,6 @@ namespace UCosmic.Domain.Places
         }
     }
 
-#else
-
-    public class HandleFakeWoeIdByCoordinatesQuery : IHandleQueries<WoeIdByCoordinates, int>
-    {
-        private readonly IContainGeoNames _geoNames;
-        private readonly IContainGeoPlanet _geoPlanet;
-
-        public HandleFakeWoeIdByCoordinatesQuery(IContainGeoNames geoNames
-            , IContainGeoPlanet geoPlanet
-        )
-        {
-            _geoNames = geoNames;
-            _geoPlanet = geoPlanet;
-        }
-
-        public int Handle(WoeIdByCoordinates query)
-        {
-            if (query == null) throw new ArgumentNullException("query");
-
-            return HandleFakeWoeIdByCoordinatesInternal.Handle(query, _geoNames, _geoPlanet);
-        }
-    }
 
 #endif
 

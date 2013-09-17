@@ -1,25 +1,15 @@
-using System.Configuration;
+using System;
 using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Mvc;
 using SimpleInjector;
 using SimpleInjector.Integration.Web.Mvc;
-using UCosmic.BinaryData;
-#if AZURE
-using UCosmic.Cache;
-#endif
-using UCosmic.Configuration;
-using UCosmic.Cqrs;
-using UCosmic.EntityFramework;
-using UCosmic.FluentValidation;
-using UCosmic.Logging;
-using UCosmic.Mail;
-using UCosmic.Saml;
-using UCosmic.Security;
-#if DEBUG && !AZURE
+using UCosmic.CompositionRoot;
 using UCosmic.SeedData;
-#endif
 using UCosmic.WebApi;
+using UCosmic.Work;
 
 namespace UCosmic.Web.Mvc
 {
@@ -28,66 +18,48 @@ namespace UCosmic.Web.Mvc
         /// <summary>Initialize the container and register it as MVC3 Dependency Resolver.</summary>
         public static void RegisterDependencies()
         {
+            // compose the root
             var container = new Container(
                 new ContainerOptions
                 {
                     AllowOverridingRegistrations = true,
                 });
 
-            InitializeContainer(container);
-
-            container.RegisterMvcControllers(Assembly.GetExecutingAssembly());
-
-            container.RegisterMvcAttributeFilterProvider();
-            container.RegisterHttpFilterProvider();
-
-            // Using Entity Framework? Please read this: http://simpleinjector.codeplex.com/discussions/363935
-            container.Verify();
+            var rootCompositionSettings = new RootCompositionSettings
+            {
+                Flags = RootCompositionFlags.Web |
+                        RootCompositionFlags.Work |
+                        RootCompositionFlags.Verify,
+                MvcAssemblies = new[] { Assembly.GetExecutingAssembly() },
+            };
+            container.ComposeRoot(rootCompositionSettings);
 
             DependencyResolver.SetResolver(new SimpleInjectorDependencyResolver(container));
             GlobalConfiguration.Configuration.DependencyResolver = new SimpleInjectorHttpDependencyResolver(container);
 
-            InitializeData(container);
-        }
+            // seed data
+            if (rootCompositionSettings.Flags.HasFlag(RootCompositionFlags.Debug))
+            {
+                var seeder = container.GetInstance<ISeedData>();
+                if (seeder != null) seeder.Seed();
+            }
 
-        private static void InitializeContainer(Container container)
-        {
-            container.RegisterMemberAuthentication();
-            container.RegisterSaml();
-            container.RegisterConfigurationManager();
-            container.RegisterMailSender();
-            container.RegisterHttpConsumer();
-#if AZURE
-            container.RegisterNGeo(
-                ConfigurationManager.AppSettings[AppSettingsKey.GeoNamesUserName.ToString()],
-                ConfigurationManager.AppSettings[AppSettingsKey.GeoPlanetAppId.ToString()],
-                ConfigurationManager.AppSettings[AppSettingsKey.PlaceFinderConsumerKey.ToString()],
-                ConfigurationManager.AppSettings[AppSettingsKey.PlaceFinderConsumerSecret.ToString()]);
-#else
-            container.RegisterNGeo(
-                ConfigurationManager.AppSettings[AppSettingsKey.GeoNamesUserName.ToString()],
-                ConfigurationManager.AppSettings[AppSettingsKey.GeoPlanetAppId.ToString()]);
-#endif
-            container.RegisterElmahExceptionLogger();
-            container.RegisterBinaryDataStorage();
-            container.RegisterEntityFramework();
-            container.RegisterFluentValidation(Assembly.GetAssembly(typeof (IHandleCommands<>)));
-            container.RegisterQueryProcessor(Assembly.GetAssembly(typeof(IHandleQueries<,>)));
-            container.RegisterEventProcessor(Assembly.GetAssembly(typeof(IHandleEvents<>)));
-            container.RegisterCommandHandlers(Assembly.GetAssembly(typeof(IHandleCommands<>)));
-#if AZURE
-            container.TryRegisterAzureCacheProvider();
-#endif
-            container.RegisterViewManager();
-            //container.RegisterActivityViewManager();
-        }
+            // fire up poor man's worker role
+            if (rootCompositionSettings.Flags.HasFlag(RootCompositionFlags.Work) &&
+                rootCompositionSettings.Flags.HasFlag(RootCompositionFlags.Debug) &&
+                !rootCompositionSettings.Flags.HasFlag(RootCompositionFlags.Azure))
+            {
+                var cancellationTokenSource = new CancellationTokenSource();
+                var cancellationToken = cancellationTokenSource.Token;
+                Task.Factory.StartNew(() =>
+                {
+                    var workerRole = DependencyResolver.Current.GetService<WebDevlopmentWorkerRole>();
+                    workerRole.OnStart();
+                    workerRole.Run(cancellationToken);
+                });
 
-        private static void InitializeData(Container container)
-        {
-#if DEBUG && !AZURE
-            var seeder = container.GetInstance<ISeedData>();
-            if (seeder != null) seeder.Seed();
-#endif
+                AppDomain.CurrentDomain.DomainUnload += (sender, args) => cancellationTokenSource.Cancel();
+            }
         }
     }
 }

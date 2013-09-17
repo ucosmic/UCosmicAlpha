@@ -20,12 +20,6 @@ namespace UCosmic.Work
         {
             var workerType = typeof(IPerformWork<>).MakeGenericType(job.GetType());
             IEnumerable<dynamic> workers = _container.GetAllInstances(workerType).ToArray();
-            if (!workers.Any())
-            {
-                var singleWorker = _container.GetInstance(workerType);
-                if (singleWorker != null)
-                    workers = new[] { singleWorker };
-            }
 
             if (!workers.Any())
                 _exceptionLogger.Log(new InvalidOperationException(string.Format(

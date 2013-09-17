@@ -2,9 +2,9 @@
 
 namespace UCosmic.Configuration
 {
-    public static class SimpleInjectorConfigurationManagerRegistration
+    internal static class RootComposer
     {
-         public static void RegisterConfigurationManager(this Container container)
+         internal static void RegisterConfigurationManager(this Container container)
          {
              container.Register<IManageConfigurations, DotNetConfigurationManager>();
          }

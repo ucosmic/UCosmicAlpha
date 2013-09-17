@@ -18,12 +18,12 @@ namespace UCosmic.Domain.Establishments
             _viewManager = viewManager;
         }
 
-        private IEnumerable<EstablishmentView> UpdateView(bool force = false)
+        private EstablishmentViews UpdateView(bool force = false)
         {
             lock (UpdateLock)
             {
                 _isUpdating = true;
-                var existing = _viewManager.Get<IEnumerable<EstablishmentView>>();
+                var existing = _viewManager.Get<EstablishmentViews>();
                 if (existing != null && !force)
                     return existing;
 
@@ -42,16 +42,16 @@ namespace UCosmic.Domain.Establishments
                 var view = new List<EstablishmentView>();
                 foreach (var entity in entities)
                     view.Add(new EstablishmentView(entity));
-                _viewManager.Set<IEnumerable<EstablishmentView>>(view.ToArray());
+                _viewManager.Set<EstablishmentViews>(view.ToArray());
                 _isUpdating = false;
-                return _viewManager.Get<IEnumerable<EstablishmentView>>();
+                return _viewManager.Get<EstablishmentViews>();
             }
         }
 
-        internal IEnumerable<EstablishmentView> GetView()
+        internal EstablishmentViews GetView()
         {
             return _isUpdating
-                ? _viewManager.Get<IEnumerable<EstablishmentView>>()
+                ? _viewManager.Get<EstablishmentViews>()
                 : UpdateView();
         }
 

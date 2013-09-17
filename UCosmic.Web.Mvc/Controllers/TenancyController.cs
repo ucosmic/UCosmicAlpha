@@ -40,6 +40,7 @@ namespace UCosmic.Web.Mvc.Controllers
                     x => x.Ancestors.Select(y => y.Ancestor),
                 }
             });
+            tenancy.TenantId = establishment != null ? establishment.RevisionId : (int?)null;
 
             // skin may be on a parent/ancestor establishment (SUNY constituents for example)
             var tenantEstablishment = establishment;

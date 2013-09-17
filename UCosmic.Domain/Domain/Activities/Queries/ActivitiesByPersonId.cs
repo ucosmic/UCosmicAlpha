@@ -36,27 +36,41 @@ namespace UCosmic.Domain.Activities
                                                            .Where(
                                                                a =>
                                                                a.Values.Any(v => (v.ModeText == a.ModeText) &&
-                                                               !v.StartsOn.HasValue && !v.EndsOn.HasValue) &&
-                                                               (a.EditSourceId == null)
-                                                            )
+                                                                                 !v.StartsOn.HasValue &&
+                                                                                 !v.EndsOn.HasValue &&
+                                                                                 (!v.OnGoing.HasValue ||
+                                                                                  !v.OnGoing.Value)) &&
+                                                               (a.EditSourceId == null))
                                                            .WithPersonId(query.PersonId)
-                                                           .OrderBy(a => a.Values.FirstOrDefault(v => v.ModeText == a.ModeText).Title)
+                                                           .OrderBy(
+                                                               a =>
+                                                               a.Values.FirstOrDefault(v => v.ModeText == a.ModeText)
+                                                                .Title)
                                                            .ToArray().AsQueryable();
 
             IQueryable<Activity> datedResults = _entities.Query<Activity>()
                                                          .Where(
                                                              a =>
-                                                             a.Values.Any(v => (!v.OnGoing.HasValue || !v.OnGoing.Value) &&
-                                                                               (v.ModeText == a.ModeText) &&
-                                                                               (v.StartsOn.HasValue || v.EndsOn.HasValue)) &&
-                                                                               (a.EditSourceId == null)
-                                                          )
+                                                             a.Values.Any(
+                                                                 v => (v.ModeText == a.ModeText) &&
+                                                                      (!v.OnGoing.HasValue || !v.OnGoing.Value) &&
+                                                                      (v.StartsOn.HasValue || v.EndsOn.HasValue)) &&
+                                                             (a.EditSourceId == null))
                                                          .WithPersonId(query.PersonId)
                                                          .OrderByDescending(a =>
-                                                             a.Values.FirstOrDefault(v => v.ModeText == a.ModeText).EndsOn.HasValue
-                                                                 ? a.Values.FirstOrDefault(v => v.ModeText == a.ModeText).EndsOn.Value
-                                                                 : a.Values.FirstOrDefault(v => v.ModeText == a.ModeText).StartsOn.Value)
-                                                         .ThenBy(a => a.Values.FirstOrDefault(v => v.ModeText == a.ModeText).Title)
+                                                                            a.Values.FirstOrDefault(
+                                                                                v => v.ModeText == a.ModeText)
+                                                                             .EndsOn.HasValue
+                                                                                ? a.Values.FirstOrDefault(
+                                                                                    v => v.ModeText == a.ModeText)
+                                                                                   .EndsOn.Value
+                                                                                : a.Values.FirstOrDefault(
+                                                                                    v => v.ModeText == a.ModeText)
+                                                                                   .StartsOn.Value)
+                                                         .ThenBy(
+                                                             a =>
+                                                             a.Values.FirstOrDefault(v => v.ModeText == a.ModeText)
+                                                              .Title)
                                                          .ToArray().AsQueryable();
 
             IQueryable<Activity> results = _entities.Query<Activity>()

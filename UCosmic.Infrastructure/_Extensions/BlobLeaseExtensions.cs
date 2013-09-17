@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 
@@ -13,14 +12,14 @@ namespace UCosmic
             {
                 return blob.AcquireLease(leaseTime);
             }
-            catch (StorageException storageException)
+            catch (StorageException)
             {
-                var webException = storageException.InnerException as WebException;
-                if (webException == null || webException.Response == null
-                    || ((HttpWebResponse)webException.Response).StatusCode != HttpStatusCode.Conflict)
-                    throw;
-
-                webException.Response.Close();
+                //var webException = storageException.InnerException as WebException;
+                //if (webException == null || webException.Response == null
+                //    || ((HttpWebResponse)webException.Response).StatusCode != HttpStatusCode.Conflict)
+                //    throw;
+                //
+                //webException.Response.Close();
                 return null;
             }
         }

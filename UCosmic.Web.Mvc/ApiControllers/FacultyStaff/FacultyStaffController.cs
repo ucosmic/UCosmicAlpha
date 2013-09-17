@@ -24,12 +24,12 @@ namespace UCosmic.Web.Mvc.ApiControllers
         private readonly IProcessQueries _queryProcessor;
         private readonly IQueryEntities _entities;
         //private readonly IManageViews _viewManager;
-        private readonly IActivityViewProjector _activityProjector;
+        private readonly ActivityViewProjector _activityProjector;
 
         public FacultyStaffController(IProcessQueries queryProcessor
                                       ,IQueryEntities entities
                                       //,IManageViews viewManager
-                                      ,IActivityViewProjector activityProjector
+                                      ,ActivityViewProjector activityProjector
             )
         {
             _queryProcessor = queryProcessor;

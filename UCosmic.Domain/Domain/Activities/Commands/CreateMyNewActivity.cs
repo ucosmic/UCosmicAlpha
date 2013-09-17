@@ -91,10 +91,10 @@ namespace UCosmic.Domain.Activities
 
                 if (!command.NoEvents)
                 {
-                    _eventProcessor.Raise(new ActivityCreated
-                    {
-                        ActivityId = command.CreatedActivity.RevisionId
-                    });                   
+                    //_eventProcessor.Raise(new ActivityCreated
+                    //{
+                    //    ActivityId = command.CreatedActivity.RevisionId
+                    //});
                 }
             }
         }

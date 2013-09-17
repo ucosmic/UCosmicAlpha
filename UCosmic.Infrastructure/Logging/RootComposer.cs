@@ -2,9 +2,9 @@
 
 namespace UCosmic.Logging
 {
-    public static class SimpleInjectorElmahExceptionLoggerRegistration
+    internal static class RootComposer
     {
-        public static void RegisterElmahExceptionLogger(this Container container)
+        internal static void RegisterExceptionLogger(this Container container)
         {
             container.Register<ILogExceptions>(() =>
             {
