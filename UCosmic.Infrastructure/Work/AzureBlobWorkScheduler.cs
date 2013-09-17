@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
@@ -33,6 +34,20 @@ namespace UCosmic.Work
             var container = client.GetContainerReference(BlobKey);
             container.CreateIfNotExists(BlobContainerPublicAccessType.Off);
             _blob = container.GetBlockBlobReference(BlobKey);
+
+            if (_blob.Exists()) return;
+
+            try
+            {
+                var accessCondition = AccessCondition.GenerateIfNoneMatchCondition("*");
+                _blob.UploadFromByteArray(new byte[0], 0, 0, accessCondition);
+            }
+            catch (StorageException storageException)
+            {
+                if (!storageException.HasResponse(HttpStatusCode.Conflict, "The specified blob already exists.") &&
+                    !storageException.HasResponse(HttpStatusCode.PreconditionFailed, "There is currently a lease on the blob and no lease ID was specified in the request."))
+                    throw;
+            }
         }
 
         public void Schedule(IDefineWork job, DateTime onUtc)

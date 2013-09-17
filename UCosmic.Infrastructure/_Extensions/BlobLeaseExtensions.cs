@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 
@@ -12,22 +13,25 @@ namespace UCosmic
             {
                 return blob.AcquireLease(leaseTime);
             }
-            catch (StorageException)
+            catch (StorageException storageException)
             {
-                //var webException = storageException.InnerException as WebException;
-                //if (webException == null || webException.Response == null
-                //    || ((HttpWebResponse)webException.Response).StatusCode != HttpStatusCode.Conflict)
-                //    throw;
-                //
-                //webException.Response.Close();
-                return null;
+                if (storageException.HasResponse(HttpStatusCode.Conflict, "There is already a lease present."))
+                    return null;
+                throw;
             }
         }
 
-        internal static string AcquireLease(this CloudBlockBlob blob, TimeSpan? leaseTime = null)
+        private static string AcquireLease(this CloudBlockBlob blob, TimeSpan? leaseTime = null)
         {
             leaseTime = leaseTime ?? TimeSpan.FromSeconds(60);
             return blob.AcquireLease(leaseTime.Value, null);
+        }
+
+        internal static bool HasResponse(this StorageException storageException, HttpStatusCode httpStatusCode, string httpStatusMessage)
+        {
+            var hasResponse = storageException.RequestInformation.HttpStatusCode == (int)httpStatusCode;
+            hasResponse &= storageException.RequestInformation.HttpStatusMessage == httpStatusMessage;
+            return hasResponse;
         }
     }
 }

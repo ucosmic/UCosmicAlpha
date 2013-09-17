@@ -18,24 +18,6 @@ namespace UCosmic.Work
         {
             _blob = blob;
 
-            // create the container if it doesn't exist
-            blob.Container.CreateIfNotExists();
-
-            // create the blob if it doesn't exist
-            try
-            {
-                var accessCondition = AccessCondition.GenerateIfNoneMatchCondition("*");
-                blob.UploadFromByteArray(new byte[0], 0, 0, accessCondition);
-            }
-            catch (StorageException)
-            {
-                //var webException = ex.InnerException as WebException;
-                //if (webException == null || webException.Response == null
-                //    || ((HttpWebResponse)webException.Response).StatusCode != HttpStatusCode.Conflict
-                //    || ((HttpWebResponse)webException.Response).StatusCode != HttpStatusCode.PreconditionFailed)
-                //    throw;
-            }
-
             // acquire lease
             LeaseId = blob.TryAcquireLease(TimeSpan.FromSeconds(60));
             if (!HasLease) return;
@@ -47,13 +29,7 @@ namespace UCosmic.Work
                 while (true)
                 {
                     Thread.Sleep(TimeSpan.FromSeconds(40.0));
-                    try
-                    {
-                        blob.RenewLease(AccessCondition.GenerateLeaseCondition(LeaseId));
-                    }
-                    catch (StorageException)
-                    {
-                    }
+                    blob.RenewLease(AccessCondition.GenerateLeaseCondition(LeaseId));
                 }
             });
             // ReSharper restore FunctionNeverReturns
