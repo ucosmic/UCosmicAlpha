@@ -82,7 +82,7 @@ module Agreements.ViewModels {
         sammy: Sammy.Application = Sammy();
         sammyBeforeRoute: any = /\#\/page\/(.*)\//;
         sammyGetPageRoute: any = '#/page/:pageNumber/';
-        sammyDefaultPageRoute: any = '/agreements[\/]?';
+        sammyDefaultPageRoute: any = '/agreements/(.*)[\/]?';
 
         private _setupSammy(): void {
             var self = this;
@@ -228,7 +228,7 @@ module Agreements.ViewModels {
                 return;
             this.spinner.start();
 
-            $.get(App.Routes.WebApi.Establishments.get(), {
+            $.get(App.Routes.WebApi.Agreements.Search.get(), {
                 pageSize: this.pageSize(),
                 pageNumber: this.pageNumber(),
                 countryCode: this.countryCode(),

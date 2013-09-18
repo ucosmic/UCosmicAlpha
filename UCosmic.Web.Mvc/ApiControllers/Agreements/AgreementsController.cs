@@ -70,6 +70,21 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return models;
         }
 
+
+        //[GET("")]
+        //public AgreementPageApiModel Get([FromUri] AgreementSearchInputModel input)
+        //{
+        //    System.Threading.Thread.Sleep(2000); // test api latency
+
+        //    if (input.PageSize < 1)
+        //        throw new HttpResponseException(HttpStatusCode.BadRequest);
+
+        //    var query = Mapper.Map<EstablishmentViewsByKeyword>(input);
+        //    var views = _queryProcessor.Execute(query);
+        //    var model = Mapper.Map<AgreementPageApiModel>(views);
+        //    return model;
+        //}
+
         //[GET("{domain}")]
         //public IEnumerable<AgreementPageApiModel> Get(string domain)
         //{
@@ -88,7 +103,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
         //    var entities = _queryProcessor.Execute(new AgreementsByOwnerDomain(User, domain));
         //    if (entities == null || !entities.Any()) throw new HttpResponseException(HttpStatusCode.NotFound);
-        //    var models = Mapper.Map<AgreementApiModel[]>(entities);
+        //    var models = Mapper.Map<AgreementPageApiModel[]>(entities);
         //    return models;
         //}
 

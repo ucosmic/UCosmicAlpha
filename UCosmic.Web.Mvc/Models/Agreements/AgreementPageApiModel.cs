@@ -15,8 +15,6 @@ namespace UCosmic.Web.Mvc.Models
         public string Status { get; set; }
         public DateTime StartsOn { get; set; }
         public DateTime ExpiresOn { get; set; }
-        public bool IsExpirationEstimated { get; set; }
-        public string Visibility { get; set; }
         public AgreementParticipantApiModel[] Participants { get; set; }
     }
 

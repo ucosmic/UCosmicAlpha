@@ -359,6 +359,14 @@ module App.Routes {
                     return makeUrl(url);
                 }
             }
+
+            export module Search {
+                export function get(agreementId?: number): string {
+                    var url = 'establishments';
+                    if (agreementId) url += '/' + agreementId;
+                    return makeUrl(url);
+                }
+            }
         }
 
         export module My {

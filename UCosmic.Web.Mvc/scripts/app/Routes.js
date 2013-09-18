@@ -439,6 +439,17 @@ var App;
                     UmbrellaOptions.get = get;
                 })(Agreements.UmbrellaOptions || (Agreements.UmbrellaOptions = {}));
                 var UmbrellaOptions = Agreements.UmbrellaOptions;
+
+                (function (Search) {
+                    function get(agreementId) {
+                        var url = 'establishments';
+                        if (agreementId)
+                            url += '/' + agreementId;
+                        return makeUrl(url);
+                    }
+                    Search.get = get;
+                })(Agreements.Search || (Agreements.Search = {}));
+                var Search = Agreements.Search;
             })(WebApi.Agreements || (WebApi.Agreements = {}));
             var Agreements = WebApi.Agreements;
 

@@ -30,7 +30,7 @@ var Agreements;
                 this.sammy = Sammy();
                 this.sammyBeforeRoute = /\#\/page\/(.*)\//;
                 this.sammyGetPageRoute = '#/page/:pageNumber/';
-                this.sammyDefaultPageRoute = '/agreements[\/]?';
+                this.sammyDefaultPageRoute = '/agreements/(.*)[\/]?';
                 // filtering
                 this.countries = ko.observableArray();
                 this.countryCode = ko.observable();
@@ -220,7 +220,7 @@ var Agreements;
                     return;
                 this.spinner.start();
 
-                $.get(App.Routes.WebApi.Establishments.get(), {
+                $.get(App.Routes.WebApi.Agreements.Search.get(), {
                     pageSize: this.pageSize(),
                     pageNumber: this.pageNumber(),
                     countryCode: this.countryCode(),
