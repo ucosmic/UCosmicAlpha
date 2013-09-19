@@ -117,8 +117,8 @@ namespace UCosmic.Domain.Activities
                                               v =>
                                               query.Tags.Any(
                                                   t =>
-                                                  v.Title.Contains(t, StringComparison.InvariantCultureIgnoreCase) ||
-                                                  v.Content.Contains(t, StringComparison.InvariantCultureIgnoreCase) ||
+                                                  v.Title.Contains(t) ||
+                                                  v.Content.Contains(t) ||
                                                   (v.Tags.Any(
                                                       vt =>
                                                       String.Compare(vt.Text, t, true, CultureInfo.InvariantCulture) ==
@@ -194,7 +194,7 @@ namespace UCosmic.Domain.Activities
                         .Where(
                             rge =>
                             query.Tags.Any(
-                                t => rge.GeoExpertise.Description.Contains(t, StringComparison.InvariantCultureIgnoreCase)))
+                                t => rge.GeoExpertise.Description.Contains(t)))
                         .Select(j => j.Activity);
 
                     if (moreActivities.Any())
@@ -236,7 +236,7 @@ namespace UCosmic.Domain.Activities
                                                  /* tag matches on display name */
                                                  && query.Tags.Any(
                                                       t =>
-                                                      a.Person.DisplayName.Contains(t,StringComparison.InvariantCultureIgnoreCase))
+                                                      a.Person.DisplayName.Contains(t))
                     );
 
                 if (moreActivities.Any())
@@ -246,7 +246,7 @@ namespace UCosmic.Domain.Activities
             } /* ADD Person.DisplayName Tag matches */
 
             /* RESTRICT From/To Dates */
-            if (query.FromDate.HasValue || query.ToDate.HasValue)
+            if (query.FromDate.HasValue || query.ToDate.HasValue || query.NoUndated)
             {
                 DateTime toDateUtc = query.ToDate.HasValue ? query.ToDate.Value : new DateTime(DateTime.UtcNow.Year + 1, 1, 1);
                 DateTime fromDateUtc = query.FromDate.HasValue ? query.FromDate.Value : new DateTime(DateTime.MinValue.Year, 1, 1);

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Web.Http;
@@ -556,13 +557,41 @@ namespace UCosmic.Web.Mvc.ApiControllers
         public FacultyStaffSearchResults PostSearch(FacultyStaffFilterModel filter)
         {
             var results = new FacultyStaffSearchResults();
+            DateTime? fromDate = null;
+            DateTime? toDate = null;
 
-            /* FINDME: We're passing an empty array, but its translated to null.  Maybe ajax JSON config error? */
-            if ((filter.ActivityTypes != null)
-                && (filter.ActivityTypes.Length == 1)
-                && (filter.ActivityTypes[0] == 0))
+
+            if (!String.IsNullOrEmpty(filter.FromDate))
             {
-               filter.ActivityTypes = new int[0];
+                DateTime date;
+                if (DateTime.TryParseExact(filter.FromDate, "yyyy", CultureInfo.CurrentCulture, DateTimeStyles.AllowWhiteSpaces, out date))
+                {
+                    fromDate = date;
+                }
+                else if (DateTime.TryParse(filter.FromDate, out date ))
+                {
+                    fromDate = date;
+                }
+            }
+
+            if (!String.IsNullOrEmpty(filter.ToDate))
+            {
+                DateTime date;
+                if (DateTime.TryParseExact(filter.ToDate, "yyyy", CultureInfo.CurrentCulture, DateTimeStyles.AllowWhiteSpaces, out date))
+                {
+                    toDate = date;
+
+                    if (!String.IsNullOrEmpty(filter.FromDate)
+                        && (filter.FromDate.Length == 4)
+                        && (filter.FromDate == filter.ToDate))
+                    {
+                        toDate = toDate.Value.AddYears(1);
+                    }
+                }
+                else if (DateTime.TryParse(filter.FromDate, out date))
+                {
+                    toDate = date;
+                }
             }
 
             if (filter.FilterType == "activities")
@@ -573,8 +602,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
                     PlaceIds = filter.LocationIds,
                     ActivityTypes = filter.ActivityTypes,
                     Tags = filter.Tags,
-                    FromDate = filter.FromDate,
-                    ToDate = filter.ToDate,
+                    FromDate = fromDate,
+                    ToDate = toDate,
                     NoUndated = filter.NoUndated,
                     CampusId = filter.CampusId,
                     CollegeId = filter.CollegeId,

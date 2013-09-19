@@ -194,27 +194,6 @@
             white-space: nowrap;
         }
 
-        .activitySearchResultsColumnHeader {
-            display: inline-block;
-            text-align: center;
-            margin: 0px;
-            padding: 0px;
-            text-transform: capitalize;
-            font-weight: bold;
-            background-color: green;
-            color: white;
-            height: 26px;
-            padding-top: 8px
-        }
-
-        .activitySearchResultsRow {
-            display: inline-block;
-            text-align: left;
-            font-size: small;
-            white-space: normal;
-            vertical-align: middle;
-        }
-
     </style>
 }
 
@@ -504,7 +483,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
                        
             <!-- P O I N T M A P -->
@@ -512,13 +490,11 @@
                 <div id="pointmap" style="position: absolute; top: 0; left: 0; width: 680px; height: 500px"></div>
                 
                 <!-- Spinner -->
-                <div class="spinnerBox" data-bind="visible: loadSpinner.isVisible()">
-                    <div style="position: absolute; top: 0; left: 0; bottom: 0; right: 0; margin: auto; width: 100px; height: 20px">
-                        <span>
-                            <img src="~/images/icons/spinner/spinner-20-blue.gif" alt=""/>
-                            <strong>Loading...</strong>
-                        </span>
-                    </div>
+                <div class="spinnerBox" style="position: absolute; top:400px; left: 0; width: 100px; height: 20px" data-bind="visible: loadSpinner.isVisible()">
+                    <span>
+                        <img src="~/images/icons/spinner/spinner-20-blue.gif" alt=""/>
+                        <strong>Loading...</strong>
+                    </span>
                 </div>
             </div>
           

@@ -45,7 +45,6 @@ module ViewModels.Employees {
 
     export class FacultyAndStaffSelect {
         institutions: KnockoutObservableArray<any>;
-        loadSpinner: App.Spinner = new App.Spinner(new App.SpinnerOptions(200));
 
         load(): JQueryPromise<any> {
             var deferred: JQueryDeferred<void> = $.Deferred();
@@ -127,12 +126,12 @@ module ViewModels.Employees {
 
         fromDate: KnockoutObservable<Date>;
         toDate: KnockoutObservable<Date>;
-        undatedActivities: KnockoutObservable<boolean>;
+        includeUndated: KnockoutObservable<boolean>;
         institutions: KnockoutObservable<string>;
         locations: KnockoutObservableArray<any>;
 
-        degrees: KnockoutObservableArray<string>;
-        tags: KnockoutObservableArray<string>;
+        degrees: KnockoutObservable<string>;
+        tags: KnockoutObservable<string>;
 
         errors: KnockoutValidationErrors;
         isValid: () => boolean;
@@ -217,7 +216,7 @@ module ViewModels.Employees {
             this.selectedLocationValues = [];
             this.fromDate = ko.observable();
             this.toDate = ko.observable();
-            this.undatedActivities = ko.observable(false);
+            this.includeUndated = ko.observable(true);
             this.establishmentId = ko.observable(null);
             this.establishmentOfficialName = ko.observable(null);
             this.establishmentCountryOfficialName = ko.observable(null);
@@ -236,8 +235,8 @@ module ViewModels.Employees {
             this.mapRegion = ko.observable('world');
             this.isGlobalView = ko.observable(true);
 
-            this.degrees = ko.observableArray();
-            this.tags = ko.observableArray();
+            this.degrees = ko.observable();
+            this.tags = ko.observable();
             
             this.loadSpinner = new App.Spinner(new App.SpinnerOptions(200));
 
@@ -291,18 +290,6 @@ module ViewModels.Employees {
                         "id": institutionInfo.InstitutionId
                     });
                 }
-
-                //if (institutionInfo.ActivityTypes != null) {
-                //    for (var i = 0; i < institutionInfo.ActivityTypes.length; i += 1) {
-                //        this.activityTypes.push(ko.observable({
-                //            id: institutionInfo.ActivityTypes[i].Id,
-                //            type: institutionInfo.ActivityTypes[i].Name,
-                //            filter: true
-                //        }));
-
-                //        this.selectedActivityIds.push(institutionInfo.ActivityTypes[i].Id);
-                //    }
-                //}
 
                 if (institutionInfo.InstitutionHasCampuses != null) {
                     this.institutionHasCampuses(Boolean(institutionInfo.InstitutionHasCampuses));
@@ -427,6 +414,8 @@ module ViewModels.Employees {
                     me.establishmentId(item.id);
                     me.establishmentOfficialName(item.officialName);
                     me.selectMap(me.mapType());
+
+                    me.drawPointmap(true);
                 }
             });
 
@@ -435,7 +424,7 @@ module ViewModels.Employees {
                 dataValueField: "id",
                 optionLabel: { officialName: "ALL", id: 0 },
                 change: function (e) {
-                    //var item = this.dataItem(e.sender.selectedIndex);
+                    me.drawPointmap(true);
                 },
                 dataBound: function (e) {
                     if ((this.selectedIndex != null) && (this.selectedIndex != -1)) {
@@ -488,6 +477,7 @@ module ViewModels.Employees {
 
                             $("#" + departmentDropListId).data("kendoDropDownList").setDataSource(dataSource);
                         }
+                        me.drawPointmap(true);
                     }
                 },
                 dataBound: function (e) {
@@ -541,6 +531,7 @@ module ViewModels.Employees {
 
                                 $("#" + collegeDropListId).data("kendoDropDownList").setDataSource(dataSource);
                             }
+                            me.drawPointmap(true);
                         }
                     },
                     dataBound: function (e) {
@@ -568,11 +559,6 @@ module ViewModels.Employees {
                     }
                 });
             }
-
-            //var activities = new Array();
-            //for (var i = 0; i < this.activityTypes().length; i += 1) {
-            //    activities.push({ type: this.activityTypes()[i].type(), selected: false });
-            //}
 
             //$("#heatmapActivityDropList").kendoDropDownList({
             //    dataTextField: "type",
@@ -605,26 +591,50 @@ module ViewModels.Employees {
             //this.institutions.subscribe((newValue: any): void => { this.dirtyFlag(true); });
             this.selectedPlace.subscribe((newValue: any): void => { this.selectMap('heatmap'); });
             this.mapRegion.subscribe((newValue: any): void => { this.heatmapOptions["region"] = newValue; });
+
             this.searchType.subscribe((newValue: any): void => {
                 if (this.mapType() === 'pointmap') {
                     //this.activitySearch();
                 }
             });
-            //this.selectedActivityIds.subscribe((newValue: any): void => {
-            //    if (this.mapType() === 'pointmap') {
-            //        this.drawPointmap();
-            //    }
-            //});
 
-            if (this.activityTypes != null) {
-                for (var i = 0; i < this.activityTypes().length; i += 1) {
-                    this.activityTypes()[i].checked.subscribe((newValue: any): void => {
-                        if (this.mapType() === 'pointmap') {
-                            this.drawPointmap(true);
-                        }
-                    });
-                }
+            for (var i = 0; i < this.activityTypes().length; i += 1) {
+                this.activityTypes()[i].checked.subscribe((newValue: any): void => {
+                    if (this.mapType() === 'pointmap') {
+                        this.drawPointmap(true);
+                    }
+                });
             }
+
+            this.degrees.subscribe((newValue: any): void => {
+                if (this.mapType() === 'pointmap') {
+                    this.drawPointmap(true);
+                }
+            });
+
+            this.tags.subscribe((newValue: any): void => {
+                if (this.mapType() === 'pointmap') {
+                    this.drawPointmap(true);
+                }
+            });
+
+            this.fromDate.subscribe((newValue: any): void => {
+                if (this.mapType() === 'pointmap') {
+                    this.drawPointmap(true);
+                }
+            });
+
+            this.toDate.subscribe((newValue: any): void => {
+                if (this.mapType() === 'pointmap') {
+                    this.drawPointmap(true);
+                }
+            });
+
+            this.includeUndated.subscribe((newValue: any): void => {
+                if (this.mapType() === 'pointmap') {
+                    this.drawPointmap(true);
+                }
+            });
         }
         
         setupRouting(): void {
@@ -1927,67 +1937,6 @@ module ViewModels.Employees {
             this.searchType('people');
         }
 
-        //addActivityType(activityTypeId: number): void {
-        //    var existingIndex: number = this.getActivityTypeIndexById(activityTypeId);
-        //    if (existingIndex == -1) {
-        //        var newActivityType: KnockoutObservable<any> = ko.mapping.fromJS({ id: 0, typeId: activityTypeId, version: "" });
-        //        this.selectedActivityIds.push(newActivityType);
-        //    }
-        //}
-
-        //removeActivityType(activityTypeId: number): void {
-        //    var existingIndex: number = this.getActivityTypeIndexById(activityTypeId);
-        //    if (existingIndex != -1) {
-        //        var activityType = this.selectedActivityIds()[existingIndex];
-        //        this.selectedActivityIds.remove(activityType);
-        //    }
-        //}
-
-        //getTypeName(id: number): string {
-        //    var name: string = "";
-        //    var index: number = this.getActivityTypeIndexById(id);
-        //    if (index != -1) { name = this.activityTypes[index].type; }
-        //    return name;
-        //}
-
-        //getActivityTypeIndexById(activityTypeId: number): number {
-        //    var index: number = -1;
-
-        //    if ((this.selectedActivityIds != null) && (this.selectedActivityIds().length > 0)) {
-        //        var i = 0;
-        //        while ((i < this.selectedActivityIds().length) &&
-        //            (activityTypeId != this.selectedActivityIds()[i].typeId())) { i += 1 }
-
-        //        if (i < this.selectedActivityIds().length) {
-        //            index = i;
-        //        }
-        //    }
-
-        //    return index;
-        //}
-
-        //hasActivityType(activityTypeId: number): boolean {
-        //    return this.getActivityTypeIndexById(activityTypeId) != -1;
-        //}
-
-        //defHasActivityTypeCallback(activityTypeIndex: number): KnockoutComputedDefine<boolean> {
-        //    var def: KnockoutComputedDefine<boolean> = {
-        //        read: (): boolean => {
-        //            return this.hasActivityType(this.activityTypes()[activityTypeIndex].id());
-        //        },
-        //        write: (checked: boolean) => {
-        //            if (checked) {
-        //                this.addActivityType(this.activityTypes()[activityTypeIndex].id());
-        //            } else {
-        //                this.removeActivityType(this.activityTypes()[activityTypeIndex].id());
-        //            }
-        //        },
-        //        owner: this
-        //    };
-
-        //    return def;
-        //}
-
         heatmapSelectHandler(): void {
             var selection = this.heatmap.getSelection();
 
@@ -2081,45 +2030,52 @@ module ViewModels.Employees {
                 locationIds.push(this.locations()[i].placeId());
             }
 
-            //var activityTypeIds = new Array();
-            //for (var i = 0; i < this.selectedActivityIds().length; i += 1) {
-            //    activityTypeIds.push(this.selectedActivityIds()[i].typeId());
-            //}
-
             var activityTypeIds = new Array();
-            if (this.activityTypes != null) {
-                if (this.activityTypes().length > 0) {
-                    for (var i = 0; i < this.activityTypes().length; i += 1) {
-                        if (this.activityTypes()[i].checked()) {
-                            activityTypeIds.push(this.activityTypes()[i].id());
-                        }
-                    }
-                } else {
-                    activityTypeIds.push(0); // see note in controller.
+            for (var i = 0; i < this.activityTypes().length; i += 1) {
+                if (this.activityTypes()[i].checked()) {
+                    activityTypeIds.push(this.activityTypes()[i].id());
                 }
             }
 
-            if (activityTypeIds.length == 0) {
-                activityTypeIds.push(0); // see note in controller.
+            var degrees: string[] = null;
+            if ((this.degrees() != null)
+                && (this.degrees().length > 0)) {
+                degrees = this.degrees().split(',');
+            }
+
+            var tags: string[] = null;
+            if ((this.tags() != null)
+                && (this.tags().length > 0)) {
+                tags = this.tags().split(',');
+            }
+
+            var fromDate = null;
+            if (this.fromDate() != null) {
+                fromDate = this.fromDate().toString();
+            }
+            
+            var toDate = null;
+            if (this.toDate() != null) {
+                toDate = this.toDate().toString();
             }
 
             var dataItem = $("#" + this.campusDropListId).data("kendoDropDownList").dataItem();
             var campusId = ((dataItem != null) && (dataItem.id != 0)) ? dataItem.id : null;
             dataItem = $("#" + this.collegeDropListId).data("kendoDropDownList").dataItem();
-            var collegeId = (dataItem != null) ? dataItem.id : null;
+            var collegeId = ((dataItem != null) && (dataItem.id != 0)) ? dataItem.id : null;
             dataItem = $("#" + this.departmentDropListId).data("kendoDropDownList").dataItem();
-            var departmentId = (dataItem != null) ? dataItem.id : null;
+            var departmentId = ((dataItem != null) && (dataItem.id != 0)) ? dataItem.id : null;
 
             var filterOptions = {
-                establishmentId: this.establishmentId(),        //public int EstablishmentId
-                filterType: this.searchType(),                  //public string FilterType
-                locationIds: locationIds,                       //public int[]LocationIds
-                activityTypes: activityTypeIds,                 //public int[]ActivityTypes
-                degrees: ko.toJS(this.degrees()),               //public string Degrees ( people only )
-                tags: ko.toJS(this.tags()),                     //public string[] Tags
-                fromDate: this.fromDate(),                      //public DateTime? FromDate
-                toDate: this.toDate(),                          //public DateTime? ToDate
-                noUndated: !this.undatedActivities(),       //public bool UndatedActivities
+                establishmentId: this.establishmentId(),    //public int EstablishmentId
+                filterType: this.searchType(),              //public string FilterType
+                locationIds: locationIds,                   //public int[]LocationIds
+                activityTypes: activityTypeIds,             //public int[]ActivityTypes
+                degrees: degrees,                           //public string Degrees ( people only )
+                tags: tags,                                 //public string[] Tags
+                fromDate: fromDate,                         //public DateTime? FromDate
+                toDate: toDate,                             //public DateTime? ToDate
+                noUndated: !this.includeUndated(),         //public bool noUndated
                 campusId: campusId,                         //public int? CampusId
                 collegeId: collegeId,                       //public int? CollegeId
                 departmentId: departmentId                  //public int? DepartmentId
@@ -2127,7 +2083,9 @@ module ViewModels.Employees {
 
             $.ajax({
                 type: "POST",
-                data: filterOptions,
+                data: ko.toJSON(filterOptions),
+                contentType: 'application/json',
+                dataType: 'json',
                 url: App.Routes.WebApi.FacultyStaff.postSearch(),
                 success: (data: any, textStatus: string, jqXhr: JQueryXHR): void =>
                 {

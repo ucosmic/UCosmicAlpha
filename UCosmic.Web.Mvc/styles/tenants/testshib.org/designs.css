@@ -400,3 +400,22 @@ ul.selectableListItems li:hover {
         font-weight: bold;
         cursor: default; }
 
+.activitySearchResultsColumnHeader {
+  display: inline-block;
+  text-align: center;
+  margin: 0px;
+  padding: 0px;
+  text-transform: capitalize;
+  font-weight: bold;
+  background-color: #ff0302;
+  color: #eeeeee;
+  height: 26px;
+  padding-top: 8px; }
+
+.activitySearchResultsRow {
+  display: inline-block;
+  text-align: left;
+  font-size: small;
+  white-space: normal;
+  vertical-align: middle; }
+

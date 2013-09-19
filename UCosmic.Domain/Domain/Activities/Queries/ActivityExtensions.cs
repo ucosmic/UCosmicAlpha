@@ -5,6 +5,8 @@ namespace UCosmic.Domain.Activities
 {
     internal static class ActivityExtensions
     {
+        internal static string PublicActivityModeText = ActivityMode.Public.AsSentenceFragment();
+
         internal static IQueryable<Activity> ApplyDateRange(this IQueryable<Activity> queryable,
                                                                 DateTime fromDate,
                                                                 DateTime toDate,
@@ -32,7 +34,7 @@ namespace UCosmic.Domain.Activities
                                     *  NAND
                                     */
 
-                                       a.Values.Any(v => (v.ModeText == ActivityMode.Public.AsSentenceFragment()) &&
+                                       a.Values.Any(v => (v.ModeText == PublicActivityModeText) &&
 
                                                          !(noUndated && (!v.StartsOn.HasValue &&
                                                                          (!v.OnGoing.HasValue || !v.OnGoing.Value) &&

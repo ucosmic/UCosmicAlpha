@@ -35,8 +35,8 @@ namespace UCosmic.Web.Mvc.Models
 
         public string[] Tags { get; set; }
 
-        public DateTime? FromDate { get; set; }
-        public DateTime? ToDate { get; set; }
+        public string FromDate { get; set; }
+        public string ToDate { get; set; }
         public bool NoUndated { get; set; }
 
         public int? CampusId { get; set; }

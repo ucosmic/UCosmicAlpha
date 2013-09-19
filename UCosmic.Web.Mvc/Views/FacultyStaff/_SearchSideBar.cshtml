@@ -27,24 +27,24 @@
         
         <div class="section" data-bind="visible: searchType() == 'people'">
             <div class="section-header">Degrees</div>
-            <input type="text" id="degreesTextbox" style="height: 28px;"/>
+            <input type="text" id="degreesTextbox" style="height: 28px"  data-bind="value: degrees"/>
         </div>
 
         <div class="section">
             <div class="section-header">Tags / Keywords</div>
-            <input type="text" id="tagsTextbox" style="height: 28px;"/>
+            <input type="text" id="tagsTextbox" style="height: 28px" data-bind="value: tags"/>
         </div>
 
         <div class="section">
             <div class="section-header">Date Range</div>
             <div style="margin-left: 4px">
                 <label for="fromDate">From</label>
-                <input id="fromDate" style="width: 100px"/>
+                <input id="fromDate" style="width: 100px" data-bind="value: fromDate"/>
                 <label for="toDate">To</label>
-                <input id="toDate" style="width: 100px"/>
+                <input id="toDate" style="width: 100px" data-bind="value: toDate"/>
             </div>
             <div style="margin-top: 4px; margin-left: 4px">
-                <input id="undatedActivities" type="checkbox"/>
+                <input id="undatedActivities" type="checkbox" data-bind="checked: includeUndated"/>
                 <span>Include undated activities</span>
             </div>
         </div>

@@ -105,8 +105,8 @@ namespace UCosmic.Domain.People
                                               v =>
                                               query.Tags.Any(
                                                   t =>
-                                                  v.Title.Contains(t, StringComparison.InvariantCultureIgnoreCase) ||
-                                                  v.Content.Contains(t, StringComparison.InvariantCultureIgnoreCase) ||
+                                                  v.Title.Contains(t) ||
+                                                  v.Content.Contains(t) ||
                                                   (v.Tags.Any(
                                                       vt =>
                                                       String.Compare(vt.Text, t, true, CultureInfo.InvariantCulture) ==
@@ -180,7 +180,7 @@ namespace UCosmic.Domain.People
                                                                           )
                     );
 
-                degrees = degrees.Where(d => query.Degrees.Contains(d.Title, StringComparer.InvariantCultureIgnoreCase));
+                degrees = degrees.Where(d => query.Degrees.Contains(d.Title));
 
                 if (query.FromDate.HasValue || query.ToDate.HasValue)
                 {
@@ -226,7 +226,7 @@ namespace UCosmic.Domain.People
                 if (geoExpertise.Any())
                 {
                     var morePeople = geoExpertise
-                        .Where(ge => query.Tags.Any(t => ge.Description.Contains(t, StringComparison.InvariantCultureIgnoreCase)))
+                        .Where(ge => query.Tags.Any(t => ge.Description.Contains(t)))
                         .Select(ge => ge.Person);
 
                     if (morePeople.Any())
@@ -268,7 +268,7 @@ namespace UCosmic.Domain.People
                             query.Tags.Any(
                                 t =>
                                 (le.Language.Names.Any(
-                                    ln => ln.Text.Contains(t, StringComparison.InvariantCultureIgnoreCase))) ||
+                                    ln => ln.Text.Contains(t))) ||
                                 (String.Compare(le.Dialect, t, true, CultureInfo.InvariantCulture) == 0))
                         )
                         .Select(le => le.Person);
@@ -307,8 +307,7 @@ namespace UCosmic.Domain.People
                                                  /* tag matches on display name */
                                                  && query.Tags.Any(
                                                      t =>
-                                                     p.DisplayName.Contains(t,
-                                                                            StringComparison.InvariantCultureIgnoreCase))
+                                                     p.DisplayName.Contains(t))
                     );
 
 
