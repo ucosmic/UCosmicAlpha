@@ -184,8 +184,10 @@
     <Compile Include="Domain\Agreements\Commands\UpdateFile.cs" />
     <Compile Include="Domain\Agreements\Commands\CreateParticipant.cs" />
     <Compile Include="Domain\Agreements\Commands\CreateFile.cs" />
+    <Compile Include="Domain\Agreements\Events\AgreementChanged.cs" />
     <Compile Include="Domain\Agreements\Queries\ContactById.cs" />
     <Compile Include="Domain\Agreements\Queries\AgreementViewsByKeyword.cs" />
+    <Compile Include="Domain\Agreements\Queries\AgreementViewProjector.cs" />
     <Compile Include="Domain\Agreements\Queries\OwnershipByEstablishmentId.cs" />
     <Compile Include="Domain\Agreements\Queries\UmbrellaOptions.cs" />
     <Compile Include="Domain\Agreements\Queries\FileById.cs" />
@@ -202,9 +204,7 @@
     <Compile Include="Domain\Agreements\Validation\MustOwnFileWithId.cs" />
     <Compile Include="Domain\Agreements\Validation\MustHaveParticipants.cs" />
     <Compile Include="Domain\Agreements\Validation\MustBeOwnedByPrincipal.cs" />
-    <Compile Include="Domain\Agreements\Views\AgreementNameView.cs" />
-    <Compile Include="Domain\Agreements\Views\AgreementTypeView.cs" />
-    <Compile Include="Domain\Agreements\Views\AgreementUrlView.cs" />
+    <Compile Include="Domain\Agreements\Views\AgreementParticipantView.cs" />
     <Compile Include="Domain\Agreements\Views\AgreementView.cs" />
     <Compile Include="Domain\Agreements\_Internal\QueryAgreementParticipants.cs" />
     <Compile Include="Domain\Agreements\_Internal\QueryAgreementContacts.cs" />
@@ -435,6 +435,7 @@
     <Compile Include="Domain\People\Validation\MustNotBeSamePerson.cs" />
     <Compile Include="Domain\Places\Commands\UpdatePlace.cs" />
     <Compile Include="Domain\Places\Queries\CountryCountWithActivitiesByEstablishmentId.cs" />
+    <Compile Include="Domain\Places\Views\MapPointView.cs" />
     <Compile Include="Domain\Places\_Etc\PlaceGroup.cs" />
     <Compile Include="Domain\Representatives\Commands\CreateApplicationRecipientEmailTemplate.cs" />
     <Compile Include="Domain\Representatives\Commands\CreateRepModuleSettings.cs" />
