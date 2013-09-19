@@ -79,7 +79,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         //    if (input.PageSize < 1)
         //        throw new HttpResponseException(HttpStatusCode.BadRequest);
 
-        //    var query = Mapper.Map<EstablishmentViewsByKeyword>(input);
+        //    var query = Mapper.Map<AgreementViewsByKeyword>(input);
         //    var views = _queryProcessor.Execute(query);
         //    var model = Mapper.Map<AgreementPageApiModel>(views);
         //    return model;
