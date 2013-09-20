@@ -131,7 +131,6 @@ namespace UCosmic.Web.Mvc.Models
                 CreateMap<LanguageExpertiseApiModel, UpdateLanguageExpertise>()
                     .ForMember(d => d.Principal, o => o.Ignore())
                     .ForMember(d => d.UpdatedOn, o => o.Ignore())
-                    .ForMember(d => d.NoCommit, o => o.Ignore())
                     .ForMember(d => d.Id, o => o.MapFrom(s => s.Id))
                     .ForMember(d => d.LanguageId, o => o.MapFrom(s => s.LanguageId))
                     .ForMember(d => d.Dialect, o => o.MapFrom(s => s.Dialect))

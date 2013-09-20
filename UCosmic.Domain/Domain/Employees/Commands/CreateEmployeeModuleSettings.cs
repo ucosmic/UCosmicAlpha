@@ -58,15 +58,12 @@ namespace UCosmic.Domain.Employees
     public class HandleCreateEmployeeModuleSettingsCommand : IHandleCommands<CreateEmployeeModuleSettings>
     {
         private readonly ICommandEntities _entities;
-        private readonly IStoreBinaryData _binaryData;
         private readonly IUnitOfWork _unitOfWork;
 
         public HandleCreateEmployeeModuleSettingsCommand(ICommandEntities entities,
-                                                         IStoreBinaryData binaryData,
                                                          IUnitOfWork unitOfWork)
         {
             _entities = entities;
-            _binaryData = binaryData;
             _unitOfWork = unitOfWork;
         }
 

@@ -13,7 +13,7 @@ namespace UCosmic.Domain.Activities
         public string ModeText { get; protected set; }
         public int Number { get; set; }
         public ActivityValues Values { get; set; }
-        public bool NoCommit { get; set; }
+        internal bool NoCommit { get; set; }
 
         public UpdateActivity(IPrincipal principal, int id, string modeText)
         {

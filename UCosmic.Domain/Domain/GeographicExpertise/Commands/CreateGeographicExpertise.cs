@@ -11,7 +11,7 @@ namespace UCosmic.Domain.GeographicExpertise
         public Guid? EntityId { get; set; }
         public IPrincipal Principal { get; protected set; }
         public string Description { get; set; }
-        public bool NoCommit { get; set; }
+        internal bool NoCommit { get; set; }
         public GeographicExpertise CreatedGeographicExpertise { get; protected internal set; }
 
         public CreateGeographicExpertise(IPrincipal principal)

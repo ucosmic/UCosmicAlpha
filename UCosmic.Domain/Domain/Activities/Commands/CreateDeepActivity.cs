@@ -10,7 +10,7 @@ namespace UCosmic.Domain.Activities
         public Guid? EntityId { get; set; }
         public int? EditSourceId { get; set; }
         public Activity CreatedActivity { get; internal set; }
-        public bool NoCommit { get; set; }
+        internal bool NoCommit { get; set; }
 
         public CreateDeepActivity(IPrincipal principal, string modeText)
         {

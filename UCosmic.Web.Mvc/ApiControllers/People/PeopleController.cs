@@ -70,7 +70,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             var mimeType = "image/png";
             var settings = Mapper.Map<ResizeSettings>(model);
 
-            if (person.Photo != null)
+            if (person != null && person.Photo != null)
             {
                 // resize the user's photo image
                 mimeType = person.Photo.MimeType;

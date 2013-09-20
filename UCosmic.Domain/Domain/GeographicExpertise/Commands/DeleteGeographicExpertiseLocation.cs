@@ -9,7 +9,7 @@ namespace UCosmic.Domain.GeographicExpertise
     {
         public IPrincipal Principal { get; private set; }
         public int Id { get; private set; }
-        public bool NoCommit { get; set; }
+        internal bool NoCommit { get; set; }
 
         public DeleteGeographicExpertiseLocation(IPrincipal principal, int id)
         {

@@ -12,7 +12,7 @@ namespace UCosmic.Domain.Activities
         public DateTime UpdatedOn { get; protected set; }
         public int TypeId { get; protected set; }
         public string CssRgbColor { get; protected set; }
-        public bool NoCommit { get; set; }
+        internal bool NoCommit { get; set; }
 
         public UpdateActivityType(IPrincipal principal,
                                   int id,

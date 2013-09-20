@@ -11,7 +11,7 @@ namespace UCosmic.Domain.Activities
         public int Id { get; set; }
         public ActivityMode Mode { get; set; }
         public int? EditSourceId { get; set; }
-        public bool NoCommit { get; set; }
+        internal bool NoCommit { get; set; }
         public Activity CreatedActivity { get; set; }
 
         public CopyActivity(IPrincipal principal)

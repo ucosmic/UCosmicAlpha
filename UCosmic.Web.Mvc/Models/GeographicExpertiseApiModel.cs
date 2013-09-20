@@ -93,7 +93,6 @@ namespace UCosmic.Web.Mvc.Models
             {
                 CreateMap<GeographicExpertiseApiModel, CreateGeographicExpertise>()
                     .ForMember(d => d.Principal, o => o.Ignore())
-                    .ForMember(d => d.NoCommit, o => o.Ignore())
                     .ForMember(d => d.CreatedGeographicExpertise, o => o.Ignore())
                     .ForMember(d => d.Description, o => o.MapFrom(s => s.Description))
                     .ForMember(d => d.EntityId, o => o.Ignore())
@@ -102,7 +101,6 @@ namespace UCosmic.Web.Mvc.Models
                 CreateMap<GeographicExpertiseApiModel, UpdateGeographicExpertise>()
                     .ForMember(d => d.Principal, o => o.Ignore())
                     .ForMember(d => d.UpdatedOn, o => o.Ignore())
-                    .ForMember(d => d.NoCommit, o => o.Ignore())
                     .ForMember(d => d.Id, o => o.MapFrom(s => s.Id))
                     .ForMember(d => d.Description, o => o.MapFrom(s => s.Description))
                     ;

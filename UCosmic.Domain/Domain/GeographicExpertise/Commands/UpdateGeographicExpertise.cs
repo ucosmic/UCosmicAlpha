@@ -13,7 +13,7 @@ namespace UCosmic.Domain.GeographicExpertise
         public ICollection<GeographicExpertiseLocation> Locations { get; set; }
         public string Description { get; set; }
         public DateTime UpdatedOn { get; set; }
-        public bool NoCommit { get; set; }
+        internal bool NoCommit { get; set; }
 
         public UpdateGeographicExpertise()
         {

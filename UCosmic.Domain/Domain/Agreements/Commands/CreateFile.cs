@@ -201,7 +201,7 @@ namespace UCosmic.Domain.Agreements
                 entity.Length = command.FileData.Content.Length;
                 entity.MimeType = command.FileData.MimeType;
                 entity.Name = GetExtensionedCustomName(command.CustomName, command.FileData.FileName);
-                _binaryData.Put(entity.Path, command.FileData.Content);
+                _binaryData.Put(entity.Path, command.FileData.Content, true);
             }
 
             // log audit

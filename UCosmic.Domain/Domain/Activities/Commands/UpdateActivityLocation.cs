@@ -11,7 +11,7 @@ namespace UCosmic.Domain.Activities
         public int Id { get; protected set; }
         public DateTime UpdatedOn { get; protected set; }
         public int PlaceId { get; protected set; }
-        public bool NoCommit { get; set; }
+        internal bool NoCommit { get; set; }
 
         public UpdateActivityLocation(IPrincipal principal, int id, DateTime updatedOn, int placeId)
         {

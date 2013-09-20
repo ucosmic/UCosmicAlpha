@@ -17,7 +17,7 @@ namespace UCosmic.Domain.LanguageExpertise
         public int ReadingProficiency { get; protected set; }
         public int WritingProficiency { get; protected set; }
         public DateTime UpdatedOn { get; set; }
-        public bool NoCommit { get; set; }
+        internal bool NoCommit { get; set; }
 
         public UpdateLanguageExpertise()
         {

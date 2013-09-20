@@ -33,7 +33,7 @@ namespace UCosmic.Domain.Activities
         public virtual ICollection<ActivityType> Types { get; set; }
         public virtual ICollection<ActivityTag> Tags { get; set; }
         public virtual ICollection<ActivityDocument> Documents { get; set; }
-        public bool NoCommit { get; set; }
+        internal bool NoCommit { get; set; }
     }
 
     public class HandleUpdateActivityValuesCommand : IHandleCommands<UpdateActivityValues>

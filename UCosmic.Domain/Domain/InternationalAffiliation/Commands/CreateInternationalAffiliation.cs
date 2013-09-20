@@ -17,7 +17,7 @@ namespace UCosmic.Domain.InternationalAffiliation
         public string Institution { get; set; }
         public string Position { get; set; }
 
-        public bool NoCommit { get; set; }
+        internal bool NoCommit { get; set; }
         public InternationalAffiliation CreatedInternationalAffiliation { get; set; }
 
         public CreateInternationalAffiliation(IPrincipal principal)

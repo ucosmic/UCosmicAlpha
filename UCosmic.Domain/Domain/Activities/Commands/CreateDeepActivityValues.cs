@@ -15,7 +15,7 @@ namespace UCosmic.Domain.Activities
         public bool? WasExternallyFunded { get; set; }
         public bool? WasInternallyFunded { get; set; }
         public ActivityValues CreatedActivityValues { get; protected internal set; }
-        public bool NoCommit { get; set; }
+        internal bool NoCommit { get; set; }
 
         public CreateDeepActivityValues(IPrincipal principal, int activityId, ActivityMode mode)
         {

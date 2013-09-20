@@ -98,7 +98,6 @@ namespace UCosmic.Web.Mvc.Models
             {
                 CreateMap<InternationalAffiliationApiModel, CreateInternationalAffiliation>()
                     .ForMember(d => d.Principal, o => o.Ignore())
-                    .ForMember(d => d.NoCommit, o => o.Ignore())
                     .ForMember(d => d.CreatedInternationalAffiliation, o => o.Ignore())
                     .ForMember(d => d.EntityId, o => o.Ignore())
                     .ForMember(d => d.From, o => o.MapFrom(s => new DateTime(s.From, 1, 1)))
@@ -111,7 +110,6 @@ namespace UCosmic.Web.Mvc.Models
                 CreateMap<InternationalAffiliationApiModel, UpdateInternationalAffiliation>()
                     .ForMember(d => d.Principal, o => o.Ignore())
                     .ForMember(d => d.UpdatedOn, o => o.Ignore())
-                    .ForMember(d => d.NoCommit, o => o.Ignore())
                     .ForMember(d => d.Id, o => o.MapFrom(s => s.Id))
                     .ForMember(d => d.From, o => o.MapFrom(s => new DateTime(s.From, 1, 1)))
                     .ForMember(d => d.To, o => o.MapFrom(s => s.To.HasValue ? new DateTime(s.To.Value, 1, 1) : (DateTime?)null))

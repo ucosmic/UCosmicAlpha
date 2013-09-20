@@ -97,7 +97,7 @@ namespace UCosmic.Domain.Activities
             if (string.IsNullOrWhiteSpace(path))
             {
                 path = string.Format(ActivityDocument.PathFormat, activityValues.ActivityId, Guid.NewGuid());
-                _binaryData.Put(path, command.Content);
+                _binaryData.Put(path, command.Content, true);
             }
 
             var activityDocument = new ActivityDocument

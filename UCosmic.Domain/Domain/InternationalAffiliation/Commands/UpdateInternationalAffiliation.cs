@@ -19,7 +19,7 @@ namespace UCosmic.Domain.InternationalAffiliation
         public ICollection<InternationalAffiliationLocation> Locations { get; set; }
 
         public DateTime UpdatedOn { get; set; }
-        public bool NoCommit { get; set; }
+        internal bool NoCommit { get; set; }
 
         public UpdateInternationalAffiliation()
         {

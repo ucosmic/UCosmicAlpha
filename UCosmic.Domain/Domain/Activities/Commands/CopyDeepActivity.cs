@@ -12,7 +12,7 @@ namespace UCosmic.Domain.Activities
         public int Id { get; protected set; }
         public ActivityMode Mode { get; protected set; }
         public int? EditSourceId { get; protected set; }
-        public bool NoCommit { get; set; }
+        internal bool NoCommit { get; set; }
         public Activity CreatedActivity { get; set; }
 
         public CopyDeepActivity(IPrincipal principal, int id, ActivityMode mode, int? editSourceId = null)

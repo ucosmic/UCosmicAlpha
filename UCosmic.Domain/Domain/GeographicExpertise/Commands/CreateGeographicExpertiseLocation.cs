@@ -10,7 +10,7 @@ namespace UCosmic.Domain.GeographicExpertise
         public IPrincipal Principal { get; protected set; }
         public int ExpertiseId { get; protected set; }
         public int PlaceId { get; protected set; }
-        public bool NoCommit { get; set; }
+        internal bool NoCommit { get; set; }
         public GeographicExpertiseLocation CreatedGeographicExpertiseLocation { get; protected internal set; }
 
         public CreateGeographicExpertiseLocation(IPrincipal principal, int expertiseId, int placeId)

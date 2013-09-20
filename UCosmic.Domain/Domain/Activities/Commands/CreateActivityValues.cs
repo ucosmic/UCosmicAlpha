@@ -17,7 +17,7 @@ namespace UCosmic.Domain.Activities
         public string DateFormat { get; set; }
         public bool? WasExternallyFunded { get; set; }
         public bool? WasInternallyFunded { get; set; }
-        public bool NoCommit { get; set; }
+        internal bool NoCommit { get; set; }
         public ActivityValues CreatedActivityValues { get; protected internal set; }
 
         public CreateActivityValues(IPrincipal principal, int activityId, ActivityMode mode)

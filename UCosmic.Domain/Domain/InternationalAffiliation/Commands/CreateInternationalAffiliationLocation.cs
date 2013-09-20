@@ -10,7 +10,7 @@ namespace UCosmic.Domain.InternationalAffiliation
         public IPrincipal Principal { get; protected set; }
         public int AffiliationId { get; protected set; }
         public int PlaceId { get; protected set; }
-        public bool NoCommit { get; set; }
+        internal bool NoCommit { get; set; }
         public InternationalAffiliationLocation CreatedInternationalAffiliationLocation { get; protected internal set; }
 
         public CreateInternationalAffiliationLocation(IPrincipal principal, int affiliationId, int placeId)

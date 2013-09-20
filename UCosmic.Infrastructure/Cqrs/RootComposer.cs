@@ -18,6 +18,14 @@ namespace UCosmic.Cqrs
             container.RegisterSingle<SimpleInjectorQueryProcessor>();
             container.Register<IProcessQueries>(container.GetInstance<SimpleInjectorQueryProcessor>);
             container.RegisterManyForOpenGeneric(typeof(IHandleQueries<,>), assemblies);
+
+            // retry all queries (after validation)
+            container.RegisterDecorator(
+                typeof(IHandleQueries<,>),
+                typeof(RetryQueryDecorator<,>)
+            );
+
+            // validate certain queries (before retry)
             container.RegisterDecorator(
                 typeof(IHandleQueries<,>),
                 typeof(FluentValidationQueryDecorator<,>)
@@ -44,9 +52,15 @@ namespace UCosmic.Cqrs
         {
             // commands are in the domain project
             var assemblies = new[] { Assembly.GetAssembly(typeof(IHandleCommands<>)) };
-
             container.RegisterManyForOpenGeneric(typeof(IHandleCommands<>), assemblies);
 
+            // retry all commands (after validation)
+            container.RegisterDecorator(
+                typeof(IHandleCommands<>),
+                typeof(RetryCommandDecorator<>)
+            );
+
+            // validate commands (before retry)
             container.RegisterDecorator(
                 typeof(IHandleCommands<>),
                 typeof(FluentValidationCommandDecorator<>)

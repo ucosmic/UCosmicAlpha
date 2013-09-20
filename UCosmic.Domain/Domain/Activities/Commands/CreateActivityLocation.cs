@@ -11,7 +11,7 @@ namespace UCosmic.Domain.Activities
         public IPrincipal Principal { get; protected set; }
         public int ActivityValuesId { get; set; }
         public int PlaceId { get; set; }
-        public bool NoCommit { get; set; }
+        internal bool NoCommit { get; set; }
         public ActivityLocation CreatedActivityLocation { get; set; }
 
         public CreateActivityLocation(IPrincipal principal)

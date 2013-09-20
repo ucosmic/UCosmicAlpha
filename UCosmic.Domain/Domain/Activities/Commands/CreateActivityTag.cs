@@ -14,7 +14,7 @@ namespace UCosmic.Domain.Activities
         public ActivityTagDomainType DomainType { get; set; }
         public int? DomainKey { get; set; }
         public ActivityMode Mode { get; set; }
-        public bool NoCommit { get; set; }
+        internal bool NoCommit { get; set; }
 
         public CreateActivityTag(IPrincipal principal)
         {

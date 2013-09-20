@@ -47,7 +47,7 @@ namespace UCosmic.Domain.Files
             };
 
             entity.Path = string.Format(Upload.PathFormat, entity.Guid);
-            _binaryData.Put(entity.Path, command.Content);
+            _binaryData.Put(entity.Path, command.Content, true);
 
             _entities.Create(entity);
             _unitOfWork.SaveChanges();

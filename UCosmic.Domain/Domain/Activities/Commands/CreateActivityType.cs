@@ -12,7 +12,7 @@ namespace UCosmic.Domain.Activities
         public int ActivityValuesId { get; protected set; }
         public int EmployeeActivityTypeId { get; protected set; }
         public string CssRgbColor { get; protected set; }
-        public bool NoCommit { get; set; }
+        internal bool NoCommit { get; set; }
         public ActivityType CreatedActivityType { get; protected internal set; }
 
         public CreateActivityType(IPrincipal principal,
