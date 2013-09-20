@@ -53,7 +53,7 @@ namespace UCosmic.CompositionRoot
             container.RegisterCommandHandling();
 
             container.RegisterCacheProvider(settings);
-            container.RegisterViewManagement();
+            container.RegisterViewManagement(settings);
 
             container.RegisterWorkScheduling(settings);
         }

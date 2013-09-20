@@ -1,6 +1,9 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
+using Microsoft.ApplicationServer.Caching;
 using SimpleInjector;
 using SimpleInjector.Extensions;
+using UCosmic.CompositionRoot;
 using UCosmic.FluentValidation;
 
 namespace UCosmic.Cqrs
@@ -50,9 +53,16 @@ namespace UCosmic.Cqrs
             );
         }
 
-        internal static void RegisterViewManagement(this Container container)
+        internal static void RegisterViewManagement(this Container container, RootCompositionSettings settings)
         {
-            container.Register<IManageViews, UCosmicServices>();
+            if (!settings.Flags.HasFlag(RootCompositionFlags.Debug))
+            {
+                container.Register<IManageViews>(() => new AzureCacheViewManager(container.GetInstance<DataCache>(), TimeSpan.FromDays(14)));
+            }
+            else
+            {
+                container.Register<IManageViews, UCosmicServices>();
+            }
         }
     }
 }

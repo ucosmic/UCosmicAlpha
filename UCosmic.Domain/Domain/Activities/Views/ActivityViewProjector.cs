@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Linq.Expressions;
 using UCosmic.Domain.Employees;
 using UCosmic.Domain.Establishments;
 
@@ -123,12 +122,12 @@ namespace UCosmic.Domain.Activities
                         .Published()
                         .AffiliatedWith(establishmentId)
                         .InDateRange(fromDateUtc, toDateUtc)
-                        .EagerLoad(_entities, new Expression<Func<Activity, object>>[]
-                        {
-                            x => x.Person.Affiliations.Select(y => y.Establishment.Ancestors),
-                            x => x.Values.Select(y => y.Locations.Select(z => z.Place.Ancestors)),
-                            x => x.Values.Select(y => y.Locations.Select(z => z.Place.Ancestors)),
-                        })
+                        //.EagerLoad(_entities, new Expression<Func<Activity, object>>[]
+                        //{
+                        //    x => x.Person.Affiliations.Select(y => y.Establishment.Ancestors),
+                        //    x => x.Values.Select(y => y.Locations.Select(z => z.Place.Ancestors)),
+                        //    x => x.Values.Select(y => y.Locations.Select(z => z.Place.Ancestors)),
+                        //})
                         .ToArray()
                         .AsQueryable()
                     ;
