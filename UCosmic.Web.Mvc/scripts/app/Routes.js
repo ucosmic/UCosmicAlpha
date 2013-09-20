@@ -442,7 +442,7 @@ var App;
 
                 (function (Search) {
                     function get(agreementId) {
-                        var url = 'establishments';
+                        var url = 'agreements';
                         if (agreementId)
                             url += '/' + agreementId;
                         return makeUrl(url);

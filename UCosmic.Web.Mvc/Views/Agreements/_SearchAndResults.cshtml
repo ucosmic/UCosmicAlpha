@@ -45,16 +45,12 @@
                                     <div>
                                         <a href="#/" style="color: inherit;"
                                            data-bind="attr: { href: detailHref, title: detailTooltip }">
-                                            <strong data-bind="text: translatedName"></strong>
-                                            <span data-bind="visible: officialNameDoesNotMatchTranslation">
-                                                @*<br/>*@
-                                                (<span data-bind="text: officialName"></span>)
-                                            </span>
+                                            <strong data-bind="text: name"></strong>
                                         </a>
-                                    </div>
-                                    <div data-bind="visible: officialUrl">
-                                        <a href="#" target="_blank"
-                                            data-bind="text: fitOfficialUrl, click: openOfficialUrl, attr: { href: 'http://' + officialUrl(), title: officialUrlTooltip }"></a>
+                                        <span data-bind="text: 'type: ' + type()"></span>
+                                        <span data-bind="text: 'status: ' + status()"></span>
+                                        <span data-bind="text: 'startsOn: ' + startsOn()"></span>
+                                        <span data-bind="text: 'expiresOn: ' + expiresOn()"></span>
                                     </div>
                                 </td>
                                 <td>
@@ -65,7 +61,7 @@
                     </table>
                 </div>
                 <div data-bind="visible: lens() === 'list'">
-                    <ol class="data" data-bind="foreach: items" data-href="@Url.Action(MVC.Establishments.Show(0))">
+                    <ol class="data" data-bind="foreach: items" data-href="@Url.Action(MVC.Agreements.Show(0))">
                         <li class="hover-hilite" data-bind="click: clickAction">
                             <div>
                                 <div class="on-right" style="text-align: right;">

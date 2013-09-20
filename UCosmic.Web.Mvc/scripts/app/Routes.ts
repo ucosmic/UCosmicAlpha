@@ -362,7 +362,7 @@ module App.Routes {
 
             export module Search {
                 export function get(agreementId?: number): string {
-                    var url = 'establishments';
+                    var url = 'agreements';
                     if (agreementId) url += '/' + agreementId;
                     return makeUrl(url);
                 }

@@ -21,40 +21,40 @@ namespace UCosmic.Web.Mvc.Models
         {
             protected override void Configure()
             {
-            //    CreateMap<AgreementSearchInputModel, AgreementViewsByKeyword>()
+                CreateMap<AgreementSearchInputModel, AgreementViewsByKeyword>()
 
-            //        // map the country code
-            //        .ForMember(d => d.CountryCode, o => o.ResolveUsing(s =>
-            //        {
-            //            // a country code value of null implies finding results without a country code
-            //            if (s.CountryCode == "-1") return null;
+                    // map the country code
+                    .ForMember(d => d.CountryCode, o => o.ResolveUsing(s =>
+                    {
+                        // a country code value of null implies finding results without a country code
+                        if (s.CountryCode == "-1") return null;
 
-            //            // a country code value of "" implies finding all results regardless of country code
-            //            if (string.IsNullOrWhiteSpace(s.CountryCode)) return string.Empty;
+                        // a country code value of "" implies finding all results regardless of country code
+                        if (string.IsNullOrWhiteSpace(s.CountryCode)) return string.Empty;
 
-            //            return s.CountryCode;
-            //        }))
+                        return s.CountryCode;
+                    }))
 
-            //        // map the order by
-            //        .ForMember(d => d.OrderBy, o => o.ResolveUsing(s =>
-            //            {
-            //                var orderBy = new Dictionary<Expression<Func<AgreementView, object>>, OrderByDirection>();
-            //                if (string.IsNullOrWhiteSpace(s.OrderBy))
-            //                    orderBy.Add(e => e.Id, OrderByDirection.Ascending);
+                    // map the order by
+                    .ForMember(d => d.OrderBy, o => o.ResolveUsing(s =>
+                        {
+                            var orderBy = new Dictionary<Expression<Func<AgreementView, object>>, OrderByDirection>();
+                            if (string.IsNullOrWhiteSpace(s.OrderBy))
+                                orderBy.Add(e => e.Id, OrderByDirection.Ascending);
 
-            //                else if (s.OrderBy.Equals("country-asc", StringComparison.OrdinalIgnoreCase))
-            //                    orderBy.Add(e => e.CountryName, OrderByDirection.Ascending);
-            //                else if (s.OrderBy.Equals("country-desc", StringComparison.OrdinalIgnoreCase))
-            //                    orderBy.Add(e => e.CountryName, OrderByDirection.Descending);
+                            //else if (s.OrderBy.Equals("country-asc", StringComparison.OrdinalIgnoreCase))
+                            //    orderBy.Add(e => e.CountryName, OrderByDirection.Ascending);
+                            //else if (s.OrderBy.Equals("country-desc", StringComparison.OrdinalIgnoreCase))
+                            //    orderBy.Add(e => e.CountryName, OrderByDirection.Descending);
 
-            //                else if (s.OrderBy.Equals("name-asc", StringComparison.OrdinalIgnoreCase))
-            //                    orderBy.Add(e => e.TranslatedName, OrderByDirection.Ascending);
-            //                else if (s.OrderBy.Equals("name-desc", StringComparison.OrdinalIgnoreCase))
-            //                    orderBy.Add(e => e.TranslatedName, OrderByDirection.Descending);
+                            //else if (s.OrderBy.Equals("name-asc", StringComparison.OrdinalIgnoreCase))
+                            //    orderBy.Add(e => e.TranslatedName, OrderByDirection.Ascending);
+                            //else if (s.OrderBy.Equals("name-desc", StringComparison.OrdinalIgnoreCase))
+                            //    orderBy.Add(e => e.TranslatedName, OrderByDirection.Descending);
 
-            //                return orderBy;
-            //            }))
-            //    ;
+                            return orderBy;
+                        }))
+                ;
             }
         }
     }

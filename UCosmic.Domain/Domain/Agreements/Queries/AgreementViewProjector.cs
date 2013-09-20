@@ -27,16 +27,25 @@ namespace UCosmic.Domain.Agreements
                 if (existing != null && !force)
                     return existing;
 
+                //var entities = _entities.Query<Agreement>()
+                //    .EagerLoad(_entities, new Expression<Func<Agreement, object>>[]
+                //        {
+                //            x => x.Id,
+                //            x => x.Status,
+                //            x => x.StartsOn,
+                //            x => x.ExpiresOn,
+                //            x => x.Type,
+                //        })
+                //    .OrderBy(x => x.Id)
+                //;
                 var entities = _entities.Query<Agreement>()
                     .EagerLoad(_entities, new Expression<Func<Agreement, object>>[]
                         {
-                            x => x.Id,
-                            x => x.Status,
-                            x => x.StartsOn,
-                            x => x.ExpiresOn,
-                            x => x.Type,
+                            x => x.Umbrella,
+                            x => x.Participants,
+                            x => x.Contacts,
+                            x => x.Files,
                         })
-                    .OrderBy(x => x.Id)
                 ;
 
                 var view = new List<AgreementView>();

@@ -49,7 +49,8 @@ module Agreements.ViewModels {
         private _setupCountryComputeds(): void {
             // show alternate text when country is undefined
             this.nullDisplayCountryName = ko.computed((): string => {
-                return this.countryName() || '[Undefined]';
+                return '[undefined]';
+                //return this.countryName() || '[Undefined]';
             });
         }
 

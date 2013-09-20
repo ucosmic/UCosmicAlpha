@@ -35,7 +35,6 @@ module Agreements.ViewModels {
                 this.requestResults();
             }).extend({ throttle: 1 });
         }
-
         header = ko.observable();
         // countries dropdown
         private _setupCountryDropDown(): void {

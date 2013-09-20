@@ -71,19 +71,19 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
 
-        //[GET("")]
-        //public AgreementPageApiModel Get([FromUri] AgreementSearchInputModel input)
-        //{
-        //    System.Threading.Thread.Sleep(2000); // test api latency
+        [GET("")]
+        public PageOfAgreementApiFlatModel Get([FromUri] AgreementSearchInputModel input)
+        {
+            System.Threading.Thread.Sleep(2000); // test api latency
 
-        //    if (input.PageSize < 1)
-        //        throw new HttpResponseException(HttpStatusCode.BadRequest);
+            if (input.PageSize < 1)
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
 
-        //    var query = Mapper.Map<AgreementViewsByKeyword>(input);
-        //    var views = _queryProcessor.Execute(query);
-        //    var model = Mapper.Map<AgreementPageApiModel>(views);
-        //    return model;
-        //}
+            var query = Mapper.Map<AgreementViewsByKeyword>(input);
+            var views = _queryProcessor.Execute(query);
+            var model = Mapper.Map<PageOfAgreementApiFlatModel>(views);
+            return model;
+        }
 
         //[GET("{domain}")]
         //public IEnumerable<AgreementPageApiModel> Get(string domain)
