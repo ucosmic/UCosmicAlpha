@@ -6,9 +6,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using UCosmic.Domain.Employees;
 using UCosmic.Domain.Establishments;
-using UCosmic.Domain.People;
-using UCosmic.Domain.Places;
-
 
 namespace UCosmic.Domain.Activities
 {
@@ -49,17 +46,16 @@ namespace UCosmic.Domain.Activities
 
             try
             {
-                var publicText = ActivityMode.Public.AsSentenceFragment();
                 var activityViewEntities = _entities.Query<Activity>()
-                    .EagerLoad(_entities, new Expression<Func<Activity, object>>[]
-                    {
-                        // load everything needed by the activityview constructor
-                        x => x.Values.Select(y => y.Locations),
-                        x => x.Values.Select(y => y.Types),
-                        x => x.Person.Affiliations.Select(y => y.Establishment.Ancestors),
-                    })
+                    //.EagerLoad(_entities, new Expression<Func<Activity, object>>[]
+                    //{
+                    //    // load everything needed by the activityview constructor
+                    //    x => x.Values.Select(y => y.Locations),
+                    //    x => x.Values.Select(y => y.Types),
+                    //    x => x.Person.Affiliations.Select(y => y.Establishment.Ancestors),
+                    //})
                     // filter out non-public & edit-sourced activities before executing query
-                    .Where(x => x.ModeText == publicText && !x.EditSourceId.HasValue)
+                    .Published()
                     .ToArray() // execute query
                 ;
                 view.AddRange(activityViewEntities.Select(x => new ActivityView(x)));
@@ -105,30 +101,9 @@ namespace UCosmic.Domain.Activities
                 _globalPeopleDictionary.Clear();
 
                 #endregion
-                #region Load Establishments & Places to loop through
-
-                var establishmentsWithPeopleWithActivities = _queries.Execute(new EstablishmentsWithPeopleWithActivities());
-                var places = _entities.Query<Place>()
-                    .EagerLoad(_entities, new Expression<Func<Place, object>>[]
-                        {
-                            x => x.GeoPlanetPlace,
-                        })
-                    .Where(p => p.IsCountry || p.IsEarth
-                        //|| p.IsWater
-                        || (p.GeoPlanetPlace != null && p.GeoPlanetPlace.WoeId == 28289409) // Antarctica
-                        || (p.GeoPlanetPlace != null && p.GeoPlanetPlace.WoeId == 55959675) // Indian Ocean
-                        || (p.GeoPlanetPlace != null && p.GeoPlanetPlace.WoeId == 55959676) // Southern Ocean
-                        || (p.GeoPlanetPlace != null && p.GeoPlanetPlace.WoeId == 55959686) // Gulf of Mexico
-                        || (p.GeoPlanetPlace != null && p.GeoPlanetPlace.WoeId == 55959687) // Caribbean Sea
-                        || (p.GeoPlanetPlace != null && p.GeoPlanetPlace.WoeId == 55959707) // Arctic Ocean
-                        || (p.GeoPlanetPlace != null && p.GeoPlanetPlace.WoeId == 55959709) // Atlantic Ocean
-                        || (p.GeoPlanetPlace != null && p.GeoPlanetPlace.WoeId == 55959717) // Pacific Ocean
-                        || p.OfficialName == "South Pacific Ocean"
-                    ).ToArray(); // only hit the db once for these
-
-                #endregion
                 #region Loop through Establishments
 
+                var establishmentsWithPeopleWithActivities = _queries.Execute(new EstablishmentsWithPeopleWithActivities { IsPublished = true });
                 foreach (var establishmentId in establishmentsWithPeopleWithActivities.Select(x => x.RevisionId))
                 {
                     #region Load EmployeeModuleSettings & create date range comparison values
@@ -143,11 +118,26 @@ namespace UCosmic.Domain.Activities
                     #endregion
                     #region Initialize new GlobalActivityCountView
 
+                    // count total activities
+                    var allActivities = _entities.Query<Activity>()
+                        .Published()
+                        .AffiliatedWith(establishmentId)
+                        .InDateRange(fromDateUtc, toDateUtc)
+                        .EagerLoad(_entities, new Expression<Func<Activity, object>>[]
+                        {
+                            x => x.Person.Affiliations.Select(y => y.Establishment.Ancestors),
+                            x => x.Values.Select(y => y.Locations.Select(z => z.Place.Ancestors)),
+                            x => x.Values.Select(y => y.Locations.Select(z => z.Place.Ancestors)),
+                        })
+                        .ToArray()
+                        .AsQueryable()
+                    ;
                     var activityStats = new GlobalActivityCountView
                     {
                         EstablishmentId = establishmentId,
                         TypeCounts = new Collection<ActivityViewStats.TypeCount>(),
                         PlaceCounts = new Collection<ActivityViewStats.PlaceCount>(),
+                        Count = allActivities.Distinct().Count(),
                     };
 
                     #endregion
@@ -158,21 +148,32 @@ namespace UCosmic.Domain.Activities
                         EstablishmentId = establishmentId,
                         TypeCounts = new Collection<ActivityViewStats.TypeCount>(),
                         PlaceCounts = new Collection<ActivityViewStats.PlaceCount>(),
-                        Count = _queries.Execute(new PeopleWithActivitiesCountByEstablishmentId(
-                            establishmentId, fromDateUtc, toDateUtc))
+                        Count = allActivities.Select(x => x.Person).Distinct().Count(),
                     };
 
                     #endregion
                     #region Loop through Places
 
-                    foreach (var place in places)
+                    //foreach (var place in places)
+                    var allActivityPlaces = allActivities.Places()
+                        .Where(p => p.IsCountry
+                            //|| p.IsEarth // skews the google chart (aka heatmap) gradient scale
+                            //|| p.IsWater
+                            || (p.GeoPlanetPlace != null && p.GeoPlanetPlace.WoeId == 28289409) // Antarctica
+                            || (p.GeoPlanetPlace != null && p.GeoPlanetPlace.WoeId == 55959675) // Indian Ocean
+                            || (p.GeoPlanetPlace != null && p.GeoPlanetPlace.WoeId == 55959676) // Southern Ocean
+                            || (p.GeoPlanetPlace != null && p.GeoPlanetPlace.WoeId == 55959686) // Gulf of Mexico
+                            || (p.GeoPlanetPlace != null && p.GeoPlanetPlace.WoeId == 55959687) // Caribbean Sea
+                            || (p.GeoPlanetPlace != null && p.GeoPlanetPlace.WoeId == 55959707) // Arctic Ocean
+                            || (p.GeoPlanetPlace != null && p.GeoPlanetPlace.WoeId == 55959709) // Atlantic Ocean
+                            || (p.GeoPlanetPlace != null && p.GeoPlanetPlace.WoeId == 55959717) // Pacific Ocean
+                            || p.OfficialName == "South Pacific Ocean"
+                        ).ToArray();
+                    foreach (var place in allActivityPlaces)
                     {
                         #region Count Activities in this Place for this Establishment
 
-                        var activityCount = _queries.Execute(new ActivityCountByPlaceIdsEstablishmentId(
-                            new[] { place.RevisionId }, establishmentId, fromDateUtc, toDateUtc,
-                            noUndated: false, /* include undated */ includeFuture: true /* include future */
-                        ));
+                        var activityCount = allActivities.WithPlace(place.RevisionId).Count();
 
                         // add a placecount item to the view
                         activityStats.PlaceCounts.Add(new ActivityViewStats.PlaceCount
@@ -183,19 +184,13 @@ namespace UCosmic.Domain.Activities
                             Count = activityCount,
                         });
 
-                        // update the total activity count for the view
-                        activityStats.Count += activityCount;
-
                         // update the place count in the view
                         if (activityCount > 0) ++activityStats.CountOfPlaces;
 
                         #endregion
                         #region Count People in this Place for this Establishment
 
-                        var peopleCount = _queries.Execute(new PeopleWithActivitiesCountByPlaceIdsEstablishmentId(
-                            new[] { place.RevisionId }, establishmentId, fromDateUtc, toDateUtc,
-                            noUndated: false, /* include undated */ includeFuture: true /* include future */
-                        ));
+                        var peopleCount = allActivities.WithPlace(place.RevisionId).Select(x => x.Person).Distinct().Count();
 
                         peopleStats.PlaceCounts.Add(new ActivityViewStats.PlaceCount
                         {
@@ -208,31 +203,6 @@ namespace UCosmic.Domain.Activities
                         if (peopleCount > 0) ++peopleStats.CountOfPlaces;
 
                         #endregion
-                        #region Loop through EmployeeModuleSettings.ActivityTypes
-
-                        if (settings == null || !settings.ActivityTypes.Any()) continue;
-
-                        foreach (var type in settings.ActivityTypes)
-                        {
-                            var placeTypeCount = _queries.Execute(new ActivityCountByTypeIdPlaceIdsEstablishmentId(
-                                type.Id, new[] { place.RevisionId }, establishmentId, fromDateUtc, toDateUtc,
-                                noUndated: false, /* include undated */ includeFuture: true /* include future */
-                            ));
-
-                            var typeCount = activityStats.TypeCounts.SingleOrDefault(t => t.TypeId == type.Id);
-
-                            if (typeCount != null) typeCount.Count += placeTypeCount;
-
-                            else activityStats.TypeCounts.Add(new ActivityViewStats.TypeCount
-                            {
-                                TypeId = type.Id,
-                                Type = type.Type,
-                                Count = placeTypeCount,
-                                Rank = type.Rank,
-                            });
-                        }
-
-                        #endregion
                     }
 
                     #endregion
@@ -242,20 +212,27 @@ namespace UCosmic.Domain.Activities
                     {
                         foreach (var type in settings.ActivityTypes)
                         {
-                            var globalTypeCount = _queries.Execute(new PeopleWithActivitiesCountByTypeIdEstablishmentId(
-                                type.Id, establishmentId, fromDateUtc, toDateUtc,
-                                noUndated: false, /* include undated */ includeFuture: true /* include future */
-                            ));
+                            var globalActivityTypeCount = allActivities.WithActivityType(type.Id).Count();
+                            var activitiesTypeCount = activityStats.TypeCounts.SingleOrDefault(c => c.TypeId == type.Id);
 
-                            var typeCount = peopleStats.TypeCounts.SingleOrDefault(c => c.TypeId == type.Id);
+                            if (activitiesTypeCount != null) activitiesTypeCount.Count += globalActivityTypeCount;
+                            else activityStats.TypeCounts.Add(new ActivityViewStats.TypeCount
+                            {
+                                TypeId = type.Id,
+                                Type = type.Type,
+                                Count = globalActivityTypeCount,
+                                Rank = type.Rank,
+                            });
 
-                            if (typeCount != null) typeCount.Count += globalTypeCount;
+                            var globalPeopleTypeCount = allActivities.WithActivityType(type.Id).Select(x => x.Person).Distinct().Count();
+                            var peopleTypeCount = peopleStats.TypeCounts.SingleOrDefault(c => c.TypeId == type.Id);
 
+                            if (peopleTypeCount != null) peopleTypeCount.Count += globalPeopleTypeCount;
                             else peopleStats.TypeCounts.Add(new ActivityViewStats.TypeCount
                             {
                                 TypeId = type.Id,
                                 Type = type.Type,
-                                Count = globalTypeCount,
+                                Count = globalPeopleTypeCount,
                                 Rank = type.Rank,
                             });
                         }

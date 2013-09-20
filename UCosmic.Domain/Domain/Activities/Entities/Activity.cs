@@ -48,29 +48,17 @@ namespace UCosmic.Domain.Activities
 
         public bool Equals(Activity other)
         {
-            return other != null &&
-                PersonId == other.PersonId &&
-                Number == other.Number &&
-                string.Equals(ModeText, other.ModeText) &&
-                Equals(Values, other.Values);
+            return other != null && other.RevisionId.Equals(RevisionId);
         }
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
             return ReferenceEquals(this, obj) || Equals(obj as Activity);
         }
 
         public override int GetHashCode()
         {
-            unchecked
-            {
-                int hashCode = PersonId;
-                hashCode = (hashCode * 397) ^ Number;
-                hashCode = (hashCode * 397) ^ (ModeText != null ? ModeText.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (Values != null ? Values.GetHashCode() : 0);
-                return hashCode;
-            }
+            return RevisionId.GetHashCode();
         }
     }
 }

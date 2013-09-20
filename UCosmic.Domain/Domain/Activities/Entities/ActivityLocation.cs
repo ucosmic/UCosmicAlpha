@@ -17,25 +17,17 @@ namespace UCosmic.Domain.Activities
 
         public bool Equals(ActivityLocation other)
         {
-            return other != null &&
-                PlaceId == other.PlaceId &&
-                ActivityValuesId == other.ActivityValuesId;
+            return other != null && other.RevisionId.Equals(RevisionId);
         }
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
             return ReferenceEquals(this, obj) || Equals(obj as ActivityLocation);
         }
 
         public override int GetHashCode()
         {
-            unchecked
-            {
-                var hashCode = PlaceId.GetHashCode();
-                hashCode = (hashCode * 397) ^ ActivityValuesId.GetHashCode();
-                return hashCode;
-            }
+            return RevisionId.GetHashCode();
         }
     }
 }

@@ -39,31 +39,17 @@ namespace UCosmic.Domain.Activities
 
         public bool Equals(ActivityTag other)
         {
-            return other != null &&
-                string.Equals(Text, other.Text) &&
-                string.Equals(DomainTypeText, other.DomainTypeText) &&
-                DomainKey == other.DomainKey &&
-                string.Equals(ModeText, other.ModeText);
+            return other != null && other.RevisionId.Equals(RevisionId);
         }
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            return Equals(obj as ActivityTag);
+            return ReferenceEquals(this, obj) || Equals(obj as ActivityTag);
         }
 
         public override int GetHashCode()
         {
-            unchecked
-            {
-                int hashCode = Number;
-                hashCode = (hashCode * 397) ^ (Text != null ? Text.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (DomainTypeText != null ? DomainTypeText.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (DomainKey != null ? DomainKey.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (ModeText != null ? ModeText.GetHashCode() : 0);
-                return hashCode;
-            }
+            return RevisionId.GetHashCode();
         }
     }
 }

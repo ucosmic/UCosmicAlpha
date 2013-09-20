@@ -17,25 +17,17 @@ namespace UCosmic.Domain.Activities
 
         public bool Equals(ActivityType other)
         {
-            return other != null &&
-                   TypeId == other.TypeId &&
-                   ActivityValuesId == other.ActivityValuesId;
+            return other != null && other.RevisionId.Equals(RevisionId);
         }
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
             return ReferenceEquals(this, obj) || Equals(obj as ActivityType);
         }
 
         public override int GetHashCode()
         {
-            unchecked
-            {
-                var hashCode = TypeId.GetHashCode();
-                hashCode = (hashCode * 397) ^ ActivityValuesId.GetHashCode();
-                return hashCode;
-            }
+            return RevisionId.GetHashCode();
         }
     }
 }

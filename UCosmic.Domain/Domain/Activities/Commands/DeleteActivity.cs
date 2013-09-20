@@ -66,10 +66,10 @@ namespace UCosmic.Domain.Activities
             {
                 _unitOfWork.SaveChanges();
 
-                _eventProcessor.Raise(new ActivityDeleted
-                {
-                    ActivityId = activity.RevisionId
-                });
+                //_eventProcessor.Raise(new ActivityDeleted
+                //{
+                //    ActivityId = activity.RevisionId
+                //});
             }
 
             // TBD

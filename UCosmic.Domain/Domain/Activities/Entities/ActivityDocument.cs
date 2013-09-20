@@ -30,33 +30,17 @@ namespace UCosmic.Domain.Activities
 
         public bool Equals(ActivityDocument other)
         {
-            return other != null &&
-                string.Equals(MimeType, other.MimeType) &&
-                string.Equals(FileName, other.FileName) &&
-                string.Equals(Length, other.Length) &&
-                string.Equals(Path, other.Path) &&
-                string.Equals(ModeText, other.ModeText) &&
-                string.Equals(Title, other.Title);
+            return other != null && other.RevisionId.Equals(RevisionId);
         }
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
             return ReferenceEquals(this, obj) || Equals(obj as ActivityDocument);
         }
 
         public override int GetHashCode()
         {
-            unchecked
-            {
-                var hashCode = Length.GetHashCode();
-                hashCode = (hashCode * 397) ^ (FileName != null ? FileName.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (MimeType != null ? MimeType.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (Path != null ? Path.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (ModeText != null ? ModeText.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (Title != null ? Title.GetHashCode() : 0);
-                return hashCode;
-            }
+            return RevisionId.GetHashCode();
         }
     }
 }

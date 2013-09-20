@@ -46,16 +46,17 @@ namespace UCosmic.Domain.Places
 
         public bool Equals(Place other)
         {
-            if (other == null) return false;
-            return other.RevisionId.Equals(RevisionId) && other.EntityId.Equals(EntityId);
+            return other != null && other.RevisionId.Equals(RevisionId);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return ReferenceEquals(this, obj) || Equals(obj as Place);
         }
 
         public override int GetHashCode()
         {
-            unchecked
-            {
-                return RevisionId.GetHashCode() ^ EntityId.GetHashCode();
-            }
+            return RevisionId.GetHashCode();
         }
 
         public override string ToString()

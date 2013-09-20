@@ -101,9 +101,6 @@ namespace UCosmic.Domain.Activities
                 targetActivityValues = copyDeepActivityValues.CreatedActivityValues;
             }
 
-            // If target fields equal new field values, we do not proceed.
-            if (targetActivityValues.Equals(command.Values)) return;
-
             // Update fields
             target.Mode = command.ModeText.AsEnum<ActivityMode>();
             target.Number = command.Number;
@@ -137,11 +134,11 @@ namespace UCosmic.Domain.Activities
             {
                 _unitOfWork.SaveChanges();
 
-                _eventProcessor.Raise(new ActivityChanged
-                {
-                    ActivityId = target.RevisionId,
-                    ActivityMode = target.Mode
-                });
+                //_eventProcessor.Raise(new ActivityChanged
+                //{
+                //    ActivityId = target.RevisionId,
+                //    ActivityMode = target.Mode
+                //});
             }
         }
     }

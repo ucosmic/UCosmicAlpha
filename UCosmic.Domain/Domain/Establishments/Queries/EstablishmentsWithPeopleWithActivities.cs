@@ -11,6 +11,8 @@ namespace UCosmic.Domain.Establishments
     public class EstablishmentsWithPeopleWithActivities : BaseEntitiesQuery<Establishment>, IDefineQuery<Establishment[]>
     {
         internal EstablishmentsWithPeopleWithActivities() { }
+
+        internal bool? IsPublished { get; set; }
     }
 
     public class HandleEstablishmentsWithPeopleWithActivitiesQuery :
@@ -29,7 +31,18 @@ namespace UCosmic.Domain.Establishments
 
             ICollection<Establishment> establishmentsWithPeopleWithActivities = new Collection<Establishment>();
 
-            var peopleWithActivities = _entities.Query<Activity>()
+            var activities = _entities.Query<Activity>();
+            switch (query.IsPublished)
+            {
+                case true:
+                    activities = activities.Published();
+                    break;
+                case false:
+                    var publicText = ActivityMode.Public.AsSentenceFragment();
+                    activities = activities.Where(x => x.ModeText != publicText && x.EditSourceId.HasValue);
+                    break;
+            }
+            var peopleWithActivities = activities
                 .Select(a => a.Person)
                 .EagerLoad(_entities, new Expression<Func<Person, object>>[]
                 {

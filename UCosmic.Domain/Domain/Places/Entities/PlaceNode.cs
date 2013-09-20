@@ -18,15 +18,19 @@ namespace UCosmic.Domain.Places
 
         public bool Equals(PlaceNode other)
         {
-            if (other == null) return false;
-            return other.AncestorId.Equals(AncestorId) && other.OffspringId.Equals(OffspringId);
+            return other != null && other.AncestorId.Equals(AncestorId) && other.OffspringId.Equals(OffspringId);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return ReferenceEquals(this, obj) || Equals(obj as PlaceNode);
         }
 
         public override int GetHashCode()
         {
             unchecked
             {
-                return AncestorId ^ OffspringId;
+                return AncestorId.GetHashCode() ^ OffspringId.GetHashCode();
             }
         }
 

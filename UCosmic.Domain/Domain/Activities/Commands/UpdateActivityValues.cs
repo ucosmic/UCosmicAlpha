@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Security.Principal;
 using FluentValidation;
@@ -115,17 +116,11 @@ namespace UCosmic.Domain.Activities
                 Mode = command.Mode,
                 WasExternallyFunded = command.WasExternallyFunded,
                 WasInternallyFunded = command.WasInternallyFunded,
-                Locations = command.Locations,
-                Types = command.Types,
-                Tags =  command.Tags,
-                Documents = command.Documents
+                Locations = command.Locations ?? new Collection<ActivityLocation>(),
+                Types = command.Types ?? new Collection<ActivityType>(),
+                Tags =  command.Tags ?? new Collection<ActivityTag>(),
+                Documents = command.Documents ?? new Collection<ActivityDocument>(),
             };
-
-            /* If the new values are same as current, leave. */
-            if (target.Equals(update))
-            {
-                return;
-            }
 
             /* Update static fields */
             target.Title = command.Title;

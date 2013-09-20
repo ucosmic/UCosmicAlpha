@@ -84,16 +84,17 @@ namespace UCosmic.Domain.Establishments
 
         public bool Equals(Establishment other)
         {
-            if (other == null) return false;
-            return other.RevisionId.Equals(RevisionId) && other.EntityId.Equals(EntityId);
+            return other != null && other.RevisionId.Equals(RevisionId);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return ReferenceEquals(this, obj) || Equals(obj as Establishment);
         }
 
         public override int GetHashCode()
         {
-            unchecked
-            {
-                return RevisionId.GetHashCode() ^ EntityId.GetHashCode();
-            }
+            return RevisionId.GetHashCode();
         }
 
         public override string ToString()
