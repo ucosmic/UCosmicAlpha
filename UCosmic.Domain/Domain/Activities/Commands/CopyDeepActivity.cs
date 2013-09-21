@@ -55,42 +55,39 @@ namespace UCosmic.Domain.Activities
         {
             if (command == null) throw new ArgumentNullException("command");
 
-            var sourceActivity = _entities.Get<Activity>().ById(command.ActivityId, false);
+            var originalActivity = _entities.Get<Activity>().ById(command.ActivityId, false);
 
             /* ----- Copy Activity ----- */
             var copyActivityCommand = new CopyActivity(command.Principal)
             {
-                ActivityId = sourceActivity.RevisionId,
+                ActivityId = command.ActivityId,
                 Mode = command.Mode,
-                EditSourceId = command.ActivityId,
                 NoCommit = true,
             };
-
             _copyActivity.Handle(copyActivityCommand);
-
-            var activityCopy = copyActivityCommand.CreatedActivity;
+            var copiedActivity = copyActivityCommand.CreatedActivity;
 
             /* ----- Copy Activity Values ----- */
             var modeText = command.Mode.AsSentenceFragment();
-            var activityValues = sourceActivity.Values.FirstOrDefault(x => x.ModeText == modeText);
+            var activityValues = originalActivity.Values.FirstOrDefault(x => x.ModeText == modeText);
             if (activityValues == null)
             {
                 var message = string.Format("Cannot find ActivityValues Mode {0} for Activity Id {1}", modeText,
-                                               sourceActivity.RevisionId);
+                                               originalActivity.RevisionId);
                 throw new Exception(message);
             }
 
             var copyDeepActivityValuesCommand = new CopyDeepActivityValues(command.Principal)
             {
-                ActivityId = activityCopy.RevisionId,
+                ActivityId = copiedActivity.RevisionId,
                 Id = activityValues.RevisionId,
-                Mode = activityCopy.Mode,
+                Mode = copiedActivity.Mode,
                 NoCommit = true
             };
 
             _copyDeepActivityValues.Handle(copyDeepActivityValuesCommand);
 
-            command.CreatedActivity = activityCopy;
+            command.CreatedActivity = copiedActivity;
 
             //if (!command.NoCommit)
             //{

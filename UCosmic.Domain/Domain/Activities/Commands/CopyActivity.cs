@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Linq;
 using System.Security.Principal;
+using FluentValidation;
 
 namespace UCosmic.Domain.Activities
 {
@@ -14,9 +14,21 @@ namespace UCosmic.Domain.Activities
         internal IPrincipal Principal { get; private set; }
         internal int ActivityId { get; set; }
         internal ActivityMode Mode { get; set; }
-        internal int? EditSourceId { get; set; }
         internal bool NoCommit { get; set; }
         internal Activity CreatedActivity { get; set; }
+    }
+
+    public class ValidateCopyActivityCommand : AbstractValidator<CopyActivity>
+    {
+        public ValidateCopyActivityCommand(IProcessQueries queryProcessor)
+        {
+            CascadeMode = CascadeMode.StopOnFirstFailure;
+
+            RuleFor(x => x.ActivityId)
+                // id must exist in the database
+                .MustFindActivityById(queryProcessor)
+            ;
+        }
     }
 
     public class HandleCopyActivityCommand : IHandleCommands<CopyActivity>
@@ -34,32 +46,19 @@ namespace UCosmic.Domain.Activities
         {
             if (command == null) throw new ArgumentNullException("command");
 
-            var sourceActivity = _entities.Get<Activity>().Single(x => x.RevisionId == command.ActivityId);
-            if (sourceActivity == null)
+            var createActivityCommand = new CreateMyNewActivity(command.Principal)
             {
-                var message = string.Format("Activity Id {0} not found.", command.ActivityId);
-                throw new Exception(message);
-            }
-
-            var createActivityCommand = new CreateMyNewActivity( command.Principal,  
-                                                                 command.Mode.AsSentenceFragment())
-            {
-                EditSourceId = command.EditSourceId
+                Mode = command.Mode,
             };
 
             _createActivity.Handle(createActivityCommand);
-
             command.CreatedActivity = createActivityCommand.CreatedActivity;
 
-            if (!command.NoCommit)
-            {
-                _entities.SaveChanges();
+            var originalActivity = _entities.Get<Activity>().ById(command.ActivityId, false);
+            command.CreatedActivity.Original = originalActivity;
+            originalActivity.WorkCopy = command.CreatedActivity;
 
-                //_eventProcessor.Raise(new ActivityCreated
-                //{
-                //    ActivityId = command.CreatedActivity.RevisionId,
-                //});
-            }
+            if (!command.NoCommit) _entities.SaveChanges();
         }
     }
 }

@@ -21,23 +21,22 @@ namespace UCosmic.Domain.Activities
         }
     }
 
+    // TODO: needs validator, and use mode instead of modetext
+
     public class HandleCreateDeepActivityCommand : IHandleCommands<CreateDeepActivity>
     {
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IHandleCommands<CreateMyNewActivity> _createMyNewActivity;
         private readonly IHandleCommands<CreateDeepActivityValues> _createActivityValuesDeep;
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IProcessEvents _eventProcessor;
 
-        public HandleCreateDeepActivityCommand(IUnitOfWork unitOfWork,
-                                               IHandleCommands<CreateMyNewActivity> createMyNewActivity,
-                                               IHandleCommands<CreateDeepActivityValues> createActivityValuesDeep,
-                                               IProcessEvents eventProcessor
-            )
+        public HandleCreateDeepActivityCommand(IUnitOfWork unitOfWork
+            , IHandleCommands<CreateMyNewActivity> createMyNewActivity
+            , IHandleCommands<CreateDeepActivityValues> createActivityValuesDeep
+        )
         {
             _unitOfWork = unitOfWork;
             _createMyNewActivity = createMyNewActivity;
             _createActivityValuesDeep = createActivityValuesDeep;
-            _eventProcessor = eventProcessor;
         }
 
         public void Handle(CreateDeepActivity command)
@@ -45,10 +44,10 @@ namespace UCosmic.Domain.Activities
             if (command == null) throw new ArgumentNullException("command");
 
             /* Need this to commit in order to have RevisionId. */
-            var createMyNewActivityCommand = new CreateMyNewActivity(command.Principal,
-                                                                     command.ModeText)
+            var createMyNewActivityCommand = new CreateMyNewActivity(command.Principal)
             {
-                //NoEvents = true
+                //NoEvents = true,
+                Mode = command.ModeText.AsEnum<ActivityMode>(),
             };
 
             _createMyNewActivity.Handle(createMyNewActivityCommand);

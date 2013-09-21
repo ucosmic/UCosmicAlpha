@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Security.Principal;
 using FluentValidation;
 using UCosmic.Domain.Identity;
@@ -9,20 +8,16 @@ namespace UCosmic.Domain.Activities
 {
     public class CreateMyNewActivity
     {
-        public CreateMyNewActivity(IPrincipal principal, string modeText)
+        public CreateMyNewActivity(IPrincipal principal)
         {
             if (principal == null) throw new ArgumentNullException("principal");
-            if (modeText == null) throw new ArgumentNullException("modeText");
             Principal = principal;
-            ModeText = modeText;
         }
 
         public IPrincipal Principal { get; private set; }
-        public string ModeText { get; private set; }
-        public Guid? EntityId { get; set; }
-        public int? EditSourceId { get; set; }
+        public ActivityMode Mode { get; set; }
         public Activity CreatedActivity { get; internal set; }
-        //internal bool NoCommit { get; set; }
+        internal bool NoCommit { get; set; }
     }
 
     public class ValidateCreateMyNewActivityCommand : AbstractValidator<CreateMyNewActivity>
@@ -31,6 +26,7 @@ namespace UCosmic.Domain.Activities
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
+            // principal is one creating own activity, so must exist
             RuleFor(x => x.Principal)
                 .MustFindUserByPrincipal(queryProcessor)
             ;
@@ -54,35 +50,18 @@ namespace UCosmic.Domain.Activities
 
             var activity = new Activity
             {
+                Person = person,
                 PersonId = person.RevisionId,
-                Mode = command.ModeText.AsEnum<ActivityMode>(),
+                Mode = command.Mode,
                 CreatedByPrincipal = command.Principal.Identity.Name,
                 CreatedOnUtc = DateTime.UtcNow
             };
-            if (command.EditSourceId.HasValue)
-                activity.Original = _entities.Get<Activity>().Single(x => x.RevisionId == command.EditSourceId);
-
-            if (command.EntityId.HasValue)
-            {
-                activity.EntityId = command.EntityId.Value;
-            }
 
             _entities.Create(activity);
 
             command.CreatedActivity = activity;
 
-            //if (!command.NoCommit)
-            //{
-                _entities.SaveChanges();
-
-                //if (!command.NoEvents)
-                //{
-                    //_eventProcessor.Raise(new ActivityCreated
-                    //{
-                    //    ActivityId = command.CreatedActivity.RevisionId
-                    //});
-                //}
-            //}
+            if (!command.NoCommit) _entities.SaveChanges();
         }
     }
 }

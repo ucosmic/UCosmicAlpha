@@ -30,7 +30,7 @@ namespace UCosmic.Domain.Activities
 
         //public int? EditSourceId { get; protected internal set; }
         public virtual Activity Original { get; protected internal set; }
-        public virtual Activity WorkCopy { get; protected set; }
+        public virtual Activity WorkCopy { get; protected internal set; }
 
         public bool IsEmpty()
         {

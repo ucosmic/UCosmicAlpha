@@ -4,7 +4,6 @@ using System.Linq;
 using System.Security.Principal;
 using UCosmic.Domain.Activities;
 using UCosmic.Domain.Employees;
-using UCosmic.Domain.Identity;
 using UCosmic.Domain.People;
 using UCosmic.Domain.Places;
 
@@ -46,29 +45,36 @@ namespace UCosmic.SeedData
         {
             /* ----- USF People Activities ----- */
 
-            { // Douglas Corarito
-                Person person = _entities.Get<Person>().Single(x => x.FirstName == "Douglas" && x.LastName == "Corarito");
-                User user = person.User;
+            {   // Douglas Corarito
+                var person = _entities.Get<Person>().Single(x => x.FirstName == "Douglas" && x.LastName == "Corarito");
+                var user = person.User;
 
                 var identity = new GenericIdentity(user.Name);
                 var principal = new GenericPrincipal(identity, null);
 
-                var employeeModuleSettings =
-                    _queryProcessor.Execute(new EmployeeModuleSettingsByPersonId(person.RevisionId));
+                var employeeModuleSettings = _queryProcessor.Execute(new EmployeeModuleSettingsByPersonId(person.RevisionId));
                 if (employeeModuleSettings == null) throw new Exception("No EmployeeModuleSettings for USF.");
 
                 CreateMyNewActivity createMyNewActivityCommand;
 
-
                 #region Activity 1
 
-                var entityId = new Guid("95F98FB4-EFB2-4F8E-AE79-E2B23F04D4FE");
-                bool activityExists = _entities.Get<Activity>().Count(x => x.EntityId == entityId) > 0;
+                var createActivityValuesCommand = new CreateActivityValues(principal, 1, ActivityMode.Draft)
+                {
+                    Title =
+                        "Understanding Causation of the Permian/Triassic Boundary, Largest Mass Extinction in Earth History",
+                    Content =
+                        "Permian/Triassic (P/Tr) Boundary Global Events—The P/Tr boundary represents the largest mass extinction in Earth history, yet its causes remain uncertain. I am investigating critical questions related to the extent and intensity of Permo-Triassic deep-ocean anoxia, patterns of upwelling of toxic sulfidic waters onto shallow-marine shelves and platforms, and the relationship of such events to global C-isotopic excursions and the delayed recovery of marine biotas during the Early Triassic. I am working on the P/Tr boundary globally.",
+                    StartsOn = new DateTime(2003, 3, 1),
+                };
+
+                var activityExists = _entities.Get<Activity>().Any(x => x.PersonId == person.RevisionId && x.Values.Any(y =>
+                    createActivityValuesCommand.Title.Equals(y.Title)));
                 if (!activityExists)
                 {
-                    createMyNewActivityCommand = new CreateMyNewActivity(principal, ActivityMode.Draft.AsSentenceFragment())
+                    createMyNewActivityCommand = new CreateMyNewActivity(principal)
                     {
-                        EntityId = entityId
+                        Mode = ActivityMode.Draft,
                     };
 
                     _createActivity.Handle(createMyNewActivityCommand);
@@ -76,13 +82,11 @@ namespace UCosmic.SeedData
 
                     Activity activity = createMyNewActivityCommand.CreatedActivity;
 
-                    var createActivityValuesCommand = new CreateActivityValues(principal, activity.RevisionId, activity.Mode)
+                    createActivityValuesCommand = new CreateActivityValues(principal, activity.RevisionId, activity.Mode)
                     {
-                        Title =
-                            "Understanding Causation of the Permian/Triassic Boundary, Largest Mass Extinction in Earth History",
-                        Content =
-                            "Permian/Triassic (P/Tr) Boundary Global Events—The P/Tr boundary represents the largest mass extinction in Earth history, yet its causes remain uncertain. I am investigating critical questions related to the extent and intensity of Permo-Triassic deep-ocean anoxia, patterns of upwelling of toxic sulfidic waters onto shallow-marine shelves and platforms, and the relationship of such events to global C-isotopic excursions and the delayed recovery of marine biotas during the Early Triassic. I am working on the P/Tr boundary globally.",
-                        StartsOn = new DateTime(2003, 3, 1),
+                        Title = createActivityValuesCommand.Title,
+                        Content = createActivityValuesCommand.Content,
+                        StartsOn = createActivityValuesCommand.StartsOn,
                     };
 
                     _createActivityValues.Handle(createActivityValuesCommand);
@@ -172,13 +176,20 @@ namespace UCosmic.SeedData
                 #endregion
                 #region Activity 2
 
-                entityId = new Guid("894A9E42-F693-4268-826A-C78618D8D6D0");
-                activityExists = _entities.Get<Activity>().Count(x => x.EntityId == entityId) > 0;
+                createActivityValuesCommand = new CreateActivityValues(principal, 1, ActivityMode.Draft)
+                {
+                    Title = "Professional Development Program for Teachers of English at Shandong University",
+                    Content = "In Summer 2008, the Teaching English as a Second Language (TESL) Program delivered a professional development program for teachers of English at Shandong University in Jinan, China. Program instructors included two TESL doctoral students and one colleague living in the Czech Republic. Three courses were offered: Theory to Practice; Research in Second Language Acquisition; and Instructional Technology in English Language Teaching. 48 Chinese teachers completed the program. ",
+                    StartsOn = new DateTime(2003, 6, 1)
+                };
+
+                activityExists = _entities.Get<Activity>().Any(x => x.PersonId == person.RevisionId && x.Values.Any(y =>
+                    createActivityValuesCommand.Title.Equals(y.Title)));
                 if (!activityExists)
                 {
-                    createMyNewActivityCommand = new CreateMyNewActivity(principal, ActivityMode.Draft.AsSentenceFragment())
+                    createMyNewActivityCommand = new CreateMyNewActivity(principal)
                     {
-                        EntityId = entityId
+                        Mode = ActivityMode.Draft,
                     };
 
                     _createActivity.Handle(createMyNewActivityCommand);
@@ -186,11 +197,11 @@ namespace UCosmic.SeedData
 
                     Activity activity = createMyNewActivityCommand.CreatedActivity;
 
-                    var createActivityValuesCommand = new CreateActivityValues(principal, activity.RevisionId, activity.Mode)
+                    createActivityValuesCommand = new CreateActivityValues(principal, activity.RevisionId, activity.Mode)
                     {
-                        Title = "Professional Development Program for Teachers of English at Shandong University",
-                        Content = "In Summer 2008, the Teaching English as a Second Language (TESL) Program delivered a professional development program for teachers of English at Shandong University in Jinan, China. Program instructors included two TESL doctoral students and one colleague living in the Czech Republic. Three courses were offered: Theory to Practice; Research in Second Language Acquisition; and Instructional Technology in English Language Teaching. 48 Chinese teachers completed the program. ",
-                        StartsOn = new DateTime(2003, 6, 1)
+                        Title = createActivityValuesCommand.Title,
+                        Content = createActivityValuesCommand.Content,
+                        StartsOn = createActivityValuesCommand.StartsOn,
                     };
 
                     _createActivityValues.Handle(createActivityValuesCommand);
@@ -213,13 +224,21 @@ namespace UCosmic.SeedData
                 #endregion
                 #region Activity 3
 
-                entityId = new Guid("6C03F4D0-FBB6-41CB-8E98-D9B129EFF0F8");
-                activityExists = _entities.Get<Activity>().Count(x => x.EntityId == entityId) > 0;
+                createActivityValuesCommand = new CreateActivityValues(principal, 1, ActivityMode.Draft)
+                {
+                    Title = "Workshop Preparation: Air pollution and Chinese Historic Site",
+                    Content = "Drs. Tim Keener and Mingming Lu went to China in Oct. of 2006 to plan for an air quality workshop on the impact of air pollution and the Chinese historic sites, to be held in Xi’an, China in the fall of 2008. They have visited Tsinghua Univ., the XISU and discussed the details of the workshop plan with Prof. Wu, Associate Dean in the School of Tourism. they have visted Shanxi Archeology Research Institute, and Chinese Acedemy of Science in Xian, to meet potentail workshop participants. Drs. Lu and Keener is developing a proposal to NSF for the workshop.",
+                    StartsOn = new DateTime(2006, 10, 9),
+                    EndsOn = new DateTime(2006, 10, 10)
+                };
+
+                activityExists = _entities.Get<Activity>().Any(x => x.PersonId == person.RevisionId && x.Values.Any(y =>
+                    createActivityValuesCommand.Title.Equals(y.Title)));
                 if (!activityExists)
                 {
-                    createMyNewActivityCommand = new CreateMyNewActivity(principal, ActivityMode.Draft.AsSentenceFragment())
+                    createMyNewActivityCommand = new CreateMyNewActivity(principal)
                     {
-                        EntityId = entityId
+                        Mode = ActivityMode.Draft,
                     };
 
                     _createActivity.Handle(createMyNewActivityCommand);
@@ -227,12 +246,12 @@ namespace UCosmic.SeedData
 
                     Activity activity = createMyNewActivityCommand.CreatedActivity;
 
-                    var createActivityValuesCommand = new CreateActivityValues(principal, activity.RevisionId, activity.Mode)
+                    createActivityValuesCommand = new CreateActivityValues(principal, activity.RevisionId, activity.Mode)
                     {
-                        Title = "Workshop Preparation: Air pollution and Chinese Historic Site",
-                        Content = "Drs. Tim Keener and Mingming Lu went to China in Oct. of 2006 to plan for an air quality workshop on the impact of air pollution and the Chinese historic sites, to be held in Xi’an, China in the fall of 2008. They have visited Tsinghua Univ., the XISU and discussed the details of the workshop plan with Prof. Wu, Associate Dean in the School of Tourism. they have visted Shanxi Archeology Research Institute, and Chinese Acedemy of Science in Xian, to meet potentail workshop participants. Drs. Lu and Keener is developing a proposal to NSF for the workshop.",
-                        StartsOn = new DateTime(2006, 10, 9),
-                        EndsOn = new DateTime(2006, 10, 10)
+                        Title = createActivityValuesCommand.Title,
+                        Content = createActivityValuesCommand.Content,
+                        StartsOn = createActivityValuesCommand.StartsOn,
+                        EndsOn = createActivityValuesCommand.EndsOn,
                     };
 
                     _createActivityValues.Handle(createActivityValuesCommand);
@@ -270,13 +289,19 @@ namespace UCosmic.SeedData
                 #endregion
                 #region Activity 4
 
-                entityId = new Guid("8ABCB82E-7ACA-41D6-93CD-637C2006804E");
-                activityExists = _entities.Get<Activity>().Count(x => x.EntityId == entityId) > 0;
+                createActivityValuesCommand = new CreateActivityValues(principal, 1, ActivityMode.Draft)
+                {
+                    Title = "Guest performer and teacher, China Saxophone Festival, Dalian, China",
+                    Content = "Adj Professor, Professor EmeritusJazz Studies, Saxophone Studies, Ensembles & Conducting College Conservatory of Music"
+                };
+
+                activityExists = _entities.Get<Activity>().Any(x => x.PersonId == person.RevisionId && x.Values.Any(y =>
+                    createActivityValuesCommand.Title.Equals(y.Title)));
                 if (!activityExists)
                 {
-                    createMyNewActivityCommand = new CreateMyNewActivity(principal, ActivityMode.Draft.AsSentenceFragment())
+                    createMyNewActivityCommand = new CreateMyNewActivity(principal)
                     {
-                        EntityId = entityId
+                        Mode = ActivityMode.Draft,
                     };
 
                     _createActivity.Handle(createMyNewActivityCommand);
@@ -284,10 +309,10 @@ namespace UCosmic.SeedData
 
                     Activity activity = createMyNewActivityCommand.CreatedActivity;
 
-                    var createActivityValuesCommand = new CreateActivityValues(principal, activity.RevisionId, activity.Mode)
+                    createActivityValuesCommand = new CreateActivityValues(principal, activity.RevisionId, activity.Mode)
                     {
-                        Title = "Guest performer and teacher, China Saxophone Festival, Dalian, China",
-                        Content = "Adj Professor, Professor EmeritusJazz Studies, Saxophone Studies, Ensembles & Conducting College Conservatory of Music"
+                        Title = createActivityValuesCommand.Title,
+                        Content = createActivityValuesCommand.Content,
                     };
 
                     _createActivityValues.Handle(createActivityValuesCommand);
@@ -355,13 +380,19 @@ namespace UCosmic.SeedData
                 #endregion
                 #region Activity 5
 
-                entityId = new Guid("F0754F12-8E4E-4557-B9E0-32A173CB36DA");
-                activityExists = _entities.Get<Activity>().Count(x => x.EntityId == entityId) > 0;
+                createActivityValuesCommand = new CreateActivityValues(principal, 1, ActivityMode.Draft)
+                {
+                    Title = "Fulbright Scholar Award to Research and Teach at Zhejiang University",
+                    Content = "I will be conducting research and teaching two courses to medical and public health students at Zhejiang University in Hangzhou China. I will also be working closely with Dr. Tingzhong Yang who directs an institute that studies tobacco related problems in China. Further I wish to explore differences in health knowledge, attitudes and behaviors between Chinese and US college students."
+                };
+
+                activityExists = _entities.Get<Activity>().Any(x => x.PersonId == person.RevisionId && x.Values.Any(y =>
+                    createActivityValuesCommand.Title.Equals(y.Title)));
                 if (!activityExists)
                 {
-                    createMyNewActivityCommand = new CreateMyNewActivity(principal, ActivityMode.Draft.AsSentenceFragment())
+                    createMyNewActivityCommand = new CreateMyNewActivity(principal)
                     {
-                        EntityId = entityId
+                        Mode = ActivityMode.Draft,
                     };
 
                     _createActivity.Handle(createMyNewActivityCommand);
@@ -369,10 +400,10 @@ namespace UCosmic.SeedData
 
                     Activity activity = createMyNewActivityCommand.CreatedActivity;
 
-                    var createActivityValuesCommand = new CreateActivityValues(principal, activity.RevisionId, activity.Mode)
+                    createActivityValuesCommand = new CreateActivityValues(principal, activity.RevisionId, activity.Mode)
                     {
-                        Title = "Fulbright Scholar Award to Research and Teach at Zhejiang University",
-                        Content = "I will be conducting research and teaching two courses to medical and public health students at Zhejiang University in Hangzhou China. I will also be working closely with Dr. Tingzhong Yang who directs an institute that studies tobacco related problems in China. Further I wish to explore differences in health knowledge, attitudes and behaviors between Chinese and US college students."
+                        Title = createActivityValuesCommand.Title,
+                        Content = createActivityValuesCommand.Content,
                     };
 
                     _createActivityValues.Handle(createActivityValuesCommand);
