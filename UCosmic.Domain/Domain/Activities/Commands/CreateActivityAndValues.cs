@@ -5,9 +5,9 @@ using UCosmic.Domain.Identity;
 
 namespace UCosmic.Domain.Activities
 {
-    public class CreateDeepActivity
+    public class CreateActivityAndValues
     {
-        public CreateDeepActivity(IPrincipal principal, ActivityMode mode)
+        public CreateActivityAndValues(IPrincipal principal, ActivityMode mode)
         {
             if (principal == null) throw new ArgumentNullException("principal");
             Principal = principal;
@@ -19,9 +19,9 @@ namespace UCosmic.Domain.Activities
         public Activity CreatedActivity { get; internal set; }
     }
 
-    public class ValidateCreateDeepActivityCommand : AbstractValidator<CreateDeepActivity>
+    public class ValidateCreateActivityAndValuesCommand : AbstractValidator<CreateActivityAndValues>
     {
-        public ValidateCreateDeepActivityCommand(IProcessQueries queryProcessor)
+        public ValidateCreateActivityAndValuesCommand(IProcessQueries queryProcessor)
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
@@ -31,14 +31,14 @@ namespace UCosmic.Domain.Activities
         }
     }
 
-    public class HandleCreateDeepActivityCommand : IHandleCommands<CreateDeepActivity>
+    public class HandleCreateActivityAndValuesCommand : IHandleCommands<CreateActivityAndValues>
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IHandleCommands<CreateMyNewActivity> _createActivity;
+        private readonly IHandleCommands<CreateActivity> _createActivity;
         private readonly IHandleCommands<CreateActivityValues> _createValues;
 
-        public HandleCreateDeepActivityCommand(IUnitOfWork unitOfWork
-            , IHandleCommands<CreateMyNewActivity> createActivity
+        public HandleCreateActivityAndValuesCommand(IUnitOfWork unitOfWork
+            , IHandleCommands<CreateActivity> createActivity
             , IHandleCommands<CreateActivityValues> createValues
         )
         {
@@ -47,12 +47,12 @@ namespace UCosmic.Domain.Activities
             _createValues = createValues;
         }
 
-        public void Handle(CreateDeepActivity command)
+        public void Handle(CreateActivityAndValues command)
         {
             if (command == null) throw new ArgumentNullException("command");
 
             // create activity entity
-            var createActivity = new CreateMyNewActivity(command.Principal)
+            var createActivity = new CreateActivity(command.Principal)
             {
                 Mode = command.Mode,
                 NoCommit = true,

@@ -34,9 +34,9 @@ namespace UCosmic.Domain.Activities
     public class HandleCopyActivityCommand : IHandleCommands<CopyActivity>
     {
         private readonly ICommandEntities _entities;
-        private readonly IHandleCommands<CreateMyNewActivity> _createActivity;
+        private readonly IHandleCommands<CreateActivity> _createActivity;
 
-        public HandleCopyActivityCommand(ICommandEntities entities, IHandleCommands<CreateMyNewActivity> createActivity)
+        public HandleCopyActivityCommand(ICommandEntities entities, IHandleCommands<CreateActivity> createActivity)
         {
             _entities = entities;
             _createActivity = createActivity;
@@ -46,7 +46,7 @@ namespace UCosmic.Domain.Activities
         {
             if (command == null) throw new ArgumentNullException("command");
 
-            var createActivityCommand = new CreateMyNewActivity(command.Principal)
+            var createActivityCommand = new CreateActivity(command.Principal)
             {
                 Mode = command.Mode,
             };

@@ -125,13 +125,13 @@
     <Compile Include="Domain\Activities\Commands\CopyActivity.cs" />
     <Compile Include="Domain\Activities\Commands\CopyDeepActivity.cs" />
     <Compile Include="Domain\Activities\Commands\CopyDeepActivityValues.cs" />
-    <Compile Include="Domain\Activities\Commands\CreateDeepActivity.cs" />
+    <Compile Include="Domain\Activities\Commands\CreateActivityAndValues.cs" />
     <Compile Include="Domain\Activities\Commands\CreateActivityDocument.cs" />
     <Compile Include="Domain\Activities\Commands\CreateActivityLocation.cs" />
     <Compile Include="Domain\Activities\Commands\CreateActivityTag.cs" />
     <Compile Include="Domain\Activities\Commands\CreateActivityType.cs" />
     <Compile Include="Domain\Activities\Commands\CreateActivityValues.cs" />
-    <Compile Include="Domain\Activities\Commands\CreateMyNewActivity.cs" />
+    <Compile Include="Domain\Activities\Commands\CreateActivity.cs" />
     <Compile Include="Domain\Activities\Commands\DeleteActivity.cs" />
     <Compile Include="Domain\Activities\Commands\DeleteActivityDocument.cs" />
     <Compile Include="Domain\Activities\Commands\DeleteActivityLocation.cs" />

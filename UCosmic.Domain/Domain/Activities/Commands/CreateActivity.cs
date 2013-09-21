@@ -7,9 +7,9 @@ using UCosmic.Domain.People;
 
 namespace UCosmic.Domain.Activities
 {
-    public class CreateMyNewActivity
+    public class CreateActivity
     {
-        public CreateMyNewActivity(IPrincipal principal)
+        public CreateActivity(IPrincipal principal)
         {
             if (principal == null) throw new ArgumentNullException("principal");
             Principal = principal;
@@ -21,9 +21,9 @@ namespace UCosmic.Domain.Activities
         internal bool NoCommit { get; set; }
     }
 
-    public class ValidateCreateMyNewActivityCommand : AbstractValidator<CreateMyNewActivity>
+    public class ValidateCreateActivityCommand : AbstractValidator<CreateActivity>
     {
-        public ValidateCreateMyNewActivityCommand(IProcessQueries queryProcessor)
+        public ValidateCreateActivityCommand(IProcessQueries queryProcessor)
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
@@ -33,16 +33,16 @@ namespace UCosmic.Domain.Activities
         }
     }
 
-    public class HandleCreateMyNewActivityCommand : IHandleCommands<CreateMyNewActivity>
+    public class HandleCreateActivityCommand : IHandleCommands<CreateActivity>
     {
         private readonly ICommandEntities _entities;
 
-        public HandleCreateMyNewActivityCommand(ICommandEntities entities)
+        public HandleCreateActivityCommand(ICommandEntities entities)
         {
             _entities = entities;
         }
 
-        public void Handle(CreateMyNewActivity command)
+        public void Handle(CreateActivity command)
         {
             if (command == null) throw new ArgumentNullException("command");
 

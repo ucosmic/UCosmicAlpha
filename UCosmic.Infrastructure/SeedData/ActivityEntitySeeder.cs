@@ -13,7 +13,7 @@ namespace UCosmic.SeedData
     {
         private readonly IProcessQueries _queryProcessor;
         private readonly ICommandEntities _entities;
-        private readonly IHandleCommands<CreateMyNewActivity> _createActivity;
+        private readonly IHandleCommands<CreateActivity> _createActivity;
         private readonly IHandleCommands<CreateActivityLocation> _createActivityLocation;
         private readonly IHandleCommands<CreateActivityValues> _createActivityValues;
         private readonly IHandleCommands<CreateActivityTag> _createActivityTag;
@@ -22,7 +22,7 @@ namespace UCosmic.SeedData
 
         public ActivityEntitySeeder(IProcessQueries queryProcessor
                                     , ICommandEntities entities
-                                    , IHandleCommands<CreateMyNewActivity> createActivity
+                                    , IHandleCommands<CreateActivity> createActivity
                                     , IHandleCommands<CreateActivityLocation> createActivityLocation
                                     , IHandleCommands<CreateActivityValues> createActivityValues
                                     , IHandleCommands<CreateActivityTag> createActivityTag
@@ -55,7 +55,7 @@ namespace UCosmic.SeedData
                 var employeeModuleSettings = _queryProcessor.Execute(new EmployeeModuleSettingsByPersonId(person.RevisionId));
                 if (employeeModuleSettings == null) throw new Exception("No EmployeeModuleSettings for USF.");
 
-                CreateMyNewActivity createMyNewActivityCommand;
+                CreateActivity createActivity;
 
                 #region Activity 1
 
@@ -72,15 +72,15 @@ namespace UCosmic.SeedData
                     createActivityValuesCommand.Title.Equals(y.Title)));
                 if (!activityExists)
                 {
-                    createMyNewActivityCommand = new CreateMyNewActivity(principal)
+                    createActivity = new CreateActivity(principal)
                     {
                         Mode = ActivityMode.Draft,
                     };
 
-                    _createActivity.Handle(createMyNewActivityCommand);
+                    _createActivity.Handle(createActivity);
                     _unitOfWork.SaveChanges();
 
-                    Activity activity = createMyNewActivityCommand.CreatedActivity;
+                    Activity activity = createActivity.CreatedActivity;
 
                     createActivityValuesCommand = new CreateActivityValues(principal)
                     {
@@ -189,15 +189,15 @@ namespace UCosmic.SeedData
                     createActivityValuesCommand.Title.Equals(y.Title)));
                 if (!activityExists)
                 {
-                    createMyNewActivityCommand = new CreateMyNewActivity(principal)
+                    createActivity = new CreateActivity(principal)
                     {
                         Mode = ActivityMode.Draft,
                     };
 
-                    _createActivity.Handle(createMyNewActivityCommand);
+                    _createActivity.Handle(createActivity);
                     _unitOfWork.SaveChanges();
 
-                    Activity activity = createMyNewActivityCommand.CreatedActivity;
+                    Activity activity = createActivity.CreatedActivity;
 
                     createActivityValuesCommand = new CreateActivityValues(principal)
                     {
@@ -240,15 +240,15 @@ namespace UCosmic.SeedData
                     createActivityValuesCommand.Title.Equals(y.Title)));
                 if (!activityExists)
                 {
-                    createMyNewActivityCommand = new CreateMyNewActivity(principal)
+                    createActivity = new CreateActivity(principal)
                     {
                         Mode = ActivityMode.Draft,
                     };
 
-                    _createActivity.Handle(createMyNewActivityCommand);
+                    _createActivity.Handle(createActivity);
                     _unitOfWork.SaveChanges();
 
-                    Activity activity = createMyNewActivityCommand.CreatedActivity;
+                    Activity activity = createActivity.CreatedActivity;
 
                     createActivityValuesCommand = new CreateActivityValues(principal)
                     {
@@ -305,15 +305,15 @@ namespace UCosmic.SeedData
                     createActivityValuesCommand.Title.Equals(y.Title)));
                 if (!activityExists)
                 {
-                    createMyNewActivityCommand = new CreateMyNewActivity(principal)
+                    createActivity = new CreateActivity(principal)
                     {
                         Mode = ActivityMode.Draft,
                     };
 
-                    _createActivity.Handle(createMyNewActivityCommand);
+                    _createActivity.Handle(createActivity);
                     _unitOfWork.SaveChanges();
 
-                    Activity activity = createMyNewActivityCommand.CreatedActivity;
+                    Activity activity = createActivity.CreatedActivity;
 
                     createActivityValuesCommand = new CreateActivityValues(principal)
                     {
@@ -398,15 +398,15 @@ namespace UCosmic.SeedData
                     createActivityValuesCommand.Title.Equals(y.Title)));
                 if (!activityExists)
                 {
-                    createMyNewActivityCommand = new CreateMyNewActivity(principal)
+                    createActivity = new CreateActivity(principal)
                     {
                         Mode = ActivityMode.Draft,
                     };
 
-                    _createActivity.Handle(createMyNewActivityCommand);
+                    _createActivity.Handle(createActivity);
                     _unitOfWork.SaveChanges();
 
-                    Activity activity = createMyNewActivityCommand.CreatedActivity;
+                    Activity activity = createActivity.CreatedActivity;
 
                     createActivityValuesCommand = new CreateActivityValues(principal)
                     {

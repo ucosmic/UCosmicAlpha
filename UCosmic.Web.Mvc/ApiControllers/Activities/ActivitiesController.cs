@@ -17,20 +17,20 @@ namespace UCosmic.Web.Mvc.ApiControllers
     {
         private readonly IProcessQueries _queryProcessor;
         private readonly IHandleCommands<CopyDeepActivity> _copyDeepActivity;
-        private readonly IHandleCommands<CreateDeepActivity> _createDeepActivity;
+        private readonly IHandleCommands<CreateActivityAndValues> _createActivityAndValues;
         private readonly IHandleCommands<DeleteActivity> _deleteActivity;
         private readonly IHandleCommands<UpdateActivity> _updateActivity;
 
         public ActivitiesController(IProcessQueries queryProcessor
                                   , IHandleCommands<CopyDeepActivity> copyDeepActivity
-                                  , IHandleCommands<CreateDeepActivity> createDeepActivity
+                                  , IHandleCommands<CreateActivityAndValues> createActivityAndValues
                                   , IHandleCommands<DeleteActivity> deleteActivity
                                   , IHandleCommands<UpdateActivity> updateActivity
                             )
         {
             _queryProcessor = queryProcessor;
             _copyDeepActivity = copyDeepActivity;
-            _createDeepActivity = createDeepActivity;
+            _createActivityAndValues = createActivityAndValues;
             _deleteActivity = deleteActivity;
             _updateActivity = updateActivity;
         }
@@ -163,10 +163,10 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [POST("")]
         public HttpResponseMessage Post()
         {
-            var createDeepActivityCommand = new CreateDeepActivity(User, ActivityMode.Draft);
-            _createDeepActivity.Handle(createDeepActivityCommand);
+            var command = new CreateActivityAndValues(User, ActivityMode.Draft);
+            _createActivityAndValues.Handle(command);
 
-            var model = createDeepActivityCommand.CreatedActivity.RevisionId;
+            var model = command.CreatedActivity.RevisionId;
             return Request.CreateResponse(HttpStatusCode.OK, model);
         }
 
