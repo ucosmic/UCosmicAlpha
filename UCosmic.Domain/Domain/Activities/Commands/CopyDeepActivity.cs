@@ -31,6 +31,9 @@ namespace UCosmic.Domain.Activities
             RuleFor(x => x.ActivityId)
                 // id must exist in the database
                 .MustFindActivityById(queryProcessor)
+
+                // must have activity values for given mode
+                .MustHaveValuesForMode(queryProcessor, x => x.Mode)
             ;
         }
     }
@@ -69,36 +72,18 @@ namespace UCosmic.Domain.Activities
 
             /* ----- Copy Activity Values ----- */
             var modeText = command.Mode.AsSentenceFragment();
-            var activityValues = originalActivity.Values.FirstOrDefault(x => x.ModeText == modeText);
-            if (activityValues == null)
-            {
-                var message = string.Format("Cannot find ActivityValues Mode {0} for Activity Id {1}", modeText,
-                                               originalActivity.RevisionId);
-                throw new Exception(message);
-            }
-
+            var originalValues = originalActivity.Values.First(x => x.ModeText == modeText);
             var copyDeepActivityValuesCommand = new CopyDeepActivityValues(command.Principal)
             {
                 ActivityId = copiedActivity.RevisionId,
-                Id = activityValues.RevisionId,
+                Id = originalValues.RevisionId,
                 Mode = copiedActivity.Mode,
-                NoCommit = true
+                NoCommit = true,
             };
-
             _copyDeepActivityValues.Handle(copyDeepActivityValuesCommand);
-
             command.CreatedActivity = copiedActivity;
 
-            //if (!command.NoCommit)
-            //{
-                _entities.SaveChanges();
-
-                //_eventProcessor.Raise(new ActivityCreated
-                //{
-                //    ActivityId = command.CreatedActivity.RevisionId
-                //});
-
-            //}
+            _entities.SaveChanges();
         }
     }
 }

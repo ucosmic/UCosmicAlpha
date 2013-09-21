@@ -9,7 +9,6 @@ namespace UCosmic.Domain.Activities
     {
         public IPrincipal Principal { get; private set; }
         public int Id { get; private set; }
-        internal bool NoCommit { get; set; }
 
         public DeleteActivity(IPrincipal principal, int id)
         {
@@ -21,12 +20,12 @@ namespace UCosmic.Domain.Activities
 
     public class ValidateDeleteActivityCommand : AbstractValidator<DeleteActivity>
     {
-        public ValidateDeleteActivityCommand(IQueryEntities entities)
+        public ValidateDeleteActivityCommand(IProcessQueries queryProcessor)
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
             RuleFor(x => x.Principal)
-                .MustOwnActivity(entities, x => x.Id)
+                .MustOwnActivity(queryProcessor, x => x.Id)
                     .WithMessage(MustOwnActivity<object>.FailMessageFormat, x => x.Principal.Identity.Name, x => x.Id);
 
             RuleFor(x => x.Id)
@@ -40,17 +39,10 @@ namespace UCosmic.Domain.Activities
     public class HandleDeleteActivityCommand : IHandleCommands<DeleteActivity>
     {
         private readonly ICommandEntities _entities;
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IProcessEvents _eventProcessor;
 
-        public HandleDeleteActivityCommand(ICommandEntities entities
-            , IUnitOfWork unitOfWork
-            , IProcessEvents eventProcessor
-        )
+        public HandleDeleteActivityCommand(ICommandEntities entities)
         {
             _entities = entities;
-            _unitOfWork = unitOfWork;
-            _eventProcessor = eventProcessor;
         }
 
         public void Handle(DeleteActivity command)
@@ -62,15 +54,7 @@ namespace UCosmic.Domain.Activities
 
             _entities.Purge(activity);
 
-            if (!command.NoCommit)
-            {
-                _unitOfWork.SaveChanges();
-
-                //_eventProcessor.Raise(new ActivityDeleted
-                //{
-                //    ActivityId = activity.RevisionId
-                //});
-            }
+            _entities.SaveChanges();
 
             // TBD
             // log audit

@@ -131,7 +131,6 @@
     <Compile Include="Domain\Activities\Commands\CreateActivityTag.cs" />
     <Compile Include="Domain\Activities\Commands\CreateActivityType.cs" />
     <Compile Include="Domain\Activities\Commands\CreateActivityValues.cs" />
-    <Compile Include="Domain\Activities\Commands\CreateDeepActivityValues.cs" />
     <Compile Include="Domain\Activities\Commands\CreateMyNewActivity.cs" />
     <Compile Include="Domain\Activities\Commands\DeleteActivity.cs" />
     <Compile Include="Domain\Activities\Commands\DeleteActivityDocument.cs" />
@@ -165,6 +164,7 @@
     <Compile Include="Domain\Activities\Queries\ActivityDocumentById.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityDocumentsByActivityIdAndMode.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityDocumentsByValuesId.cs" />
+    <Compile Include="Domain\Activities\Validation\MustHaveValuesForMode.cs" />
     <Compile Include="Domain\Activities\Views\ActivityViewProjector.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityValuesByActivityIdAndMode.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityCountByPlaceIds.cs" />

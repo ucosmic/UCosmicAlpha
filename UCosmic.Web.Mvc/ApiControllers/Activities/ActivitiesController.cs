@@ -259,41 +259,30 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [DELETE("{activityId}")]
         public HttpResponseMessage Delete(int activityId)
         {
-            //try
-            //{
-            var editActivity = _queryProcessor.Execute(new ActivityById(activityId));
-            if (editActivity == null)
+            var activityToDelete = _queryProcessor.Execute(new ActivityById(activityId)
             {
-                var message = string.Format("Activity Id {0} not found.", activityId);
-                throw new Exception(message);
-            }
-
-            if (editActivity.Original != null)
-            {
-                var activity = _queryProcessor.Execute(new ActivityById(editActivity.Original.RevisionId));
-                if (activity != null)
+                EagerLoad = new Expression<Func<Activity, object>>[]
                 {
-                    if (activity.IsEmpty())
-                    {
-                        var deleteActivityCommand = new DeleteActivity(User, activity.RevisionId);
-                        _deleteActivity.Handle(deleteActivityCommand);
-                    }
-                }
-            }
+                    x => x.Original,
+                    x => x.WorkCopy,
+                },
+            });
+            if (activityToDelete == null)
+                throw new HttpResponseException(HttpStatusCode.NotFound);
 
-            var deleteEditActivityCommand = new DeleteActivity(User, editActivity.RevisionId);
-            _deleteActivity.Handle(deleteEditActivityCommand);
-            //}
-            //catch (Exception ex)
-            //{
-            //    var responseMessage = new HttpResponseMessage
-            //    {
-            //        StatusCode = HttpStatusCode.NotModified,
-            //        Content = new StringContent(ex.Message),
-            //        ReasonPhrase = "Activity delete error"
-            //    };
-            //    throw new HttpResponseException(responseMessage);
-            //}
+            var deleteActivity = new DeleteActivity(User, activityToDelete.RevisionId);
+            _deleteActivity.Handle(deleteActivity);
+
+            if (activityToDelete.Original != null && activityToDelete.Original.IsEmpty())
+            {
+                deleteActivity = new DeleteActivity(User, activityToDelete.Original.RevisionId);
+                _deleteActivity.Handle(deleteActivity);
+            }
+            else if (activityToDelete.WorkCopy != null)
+            {
+                deleteActivity = new DeleteActivity(User, activityToDelete.WorkCopy.RevisionId);
+                _deleteActivity.Handle(deleteActivity);
+            }
 
             return Request.CreateResponse(HttpStatusCode.OK);
         }

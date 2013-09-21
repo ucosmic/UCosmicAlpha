@@ -7,8 +7,6 @@ namespace UCosmic.Domain.Activities
     {
         public IPrincipal Principal { get; protected set; }
         public string ModeText { get; protected set; }
-        public Guid? EntityId { get; set; }
-        public int? EditSourceId { get; set; }
         public Activity CreatedActivity { get; internal set; }
         internal bool NoCommit { get; set; }
 
@@ -27,11 +25,11 @@ namespace UCosmic.Domain.Activities
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IHandleCommands<CreateMyNewActivity> _createMyNewActivity;
-        private readonly IHandleCommands<CreateDeepActivityValues> _createActivityValuesDeep;
+        private readonly IHandleCommands<CreateActivityValues> _createActivityValuesDeep;
 
         public HandleCreateDeepActivityCommand(IUnitOfWork unitOfWork
             , IHandleCommands<CreateMyNewActivity> createMyNewActivity
-            , IHandleCommands<CreateDeepActivityValues> createActivityValuesDeep
+            , IHandleCommands<CreateActivityValues> createActivityValuesDeep
         )
         {
             _unitOfWork = unitOfWork;
@@ -54,9 +52,8 @@ namespace UCosmic.Domain.Activities
 
             var activity = createMyNewActivityCommand.CreatedActivity;
 
-            var createActivityValuesDeepCommand = new CreateDeepActivityValues(command.Principal,
-                                                                               activity.RevisionId,
-                                                                               activity.Mode);
+            var createActivityValuesDeepCommand = new CreateActivityValues(
+                command.Principal, activity.RevisionId, activity.Mode);
             _createActivityValuesDeep.Handle(createActivityValuesDeepCommand);
 
             command.CreatedActivity = activity;

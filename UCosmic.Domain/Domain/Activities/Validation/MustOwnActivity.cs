@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Linq;
+using System.Linq.Expressions;
 using System.Security.Principal;
 using FluentValidation;
 using FluentValidation.Validators;
-using UCosmic.Domain.People;
 
 namespace UCosmic.Domain.Activities
 {
@@ -12,45 +11,49 @@ namespace UCosmic.Domain.Activities
         public const string FailMessageFormat =
             "User '{0}' is not authorized to perform this action on activity with id '{1}'.";
 
-        private readonly IQueryEntities _entities;
+        private readonly IProcessQueries _queryProcessor;
         private readonly Func<T, int> _activityId;
 
-        internal MustOwnActivity(IQueryEntities entities, Func<T, int> activityId)
-            : base(FailMessageFormat.Replace("{0}", "{PropertyValue}"))
+        internal MustOwnActivity(IProcessQueries queryProcessor, Func<T, int> activityId)
+            : base("User '{UserName}' is not authorized to perform the '{CommandName}' action on activity with id '{PropertyValue}'.")
         {
-            if (entities == null) throw new ArgumentNullException("entities");
+            if (queryProcessor == null) throw new ArgumentNullException("queryProcessor");
 
-            _entities = entities;
+            _queryProcessor = queryProcessor;
             _activityId = activityId;
         }
 
         protected override bool IsValid(PropertyValidatorContext context)
         {
-            if (!(context.PropertyValue is IPrincipal))
-                throw new NotSupportedException(string.Format(
-                    "The {0} PropertyValidator can only operate on IPrincipal properties", GetType().Name));
-
-            context.MessageFormatter.AppendArgument("PropertyValue", context.PropertyValue);
             var principal = (IPrincipal)context.PropertyValue;
-            var activityId = _activityId != null ? _activityId((T)context.Instance) : (int?)null;
+            var userName = principal.Identity.Name;
+            var activityId = _activityId((T)context.Instance);
 
-            Person person = null;
-            var activity = _entities.Query<Activity>().SingleOrDefault(x => x.RevisionId == activityId);
-            if (activity != null)
+            var activity = _queryProcessor.Execute(new ActivityById(activityId)
             {
-                person = _entities.Query<Person>().SingleOrDefault(x => x.RevisionId == activity.PersonId);
-            }
+                EagerLoad = new Expression<Func<Activity, object>>[]
+                {
+                    x => x.Person.User,
+                },
+            });
 
-            return (person != null) && person.User.Name.Equals(principal.Identity.Name, StringComparison.OrdinalIgnoreCase);
+            if (activity == null || (activity.Person.User != null &&
+                activity.Person.User.Name.Equals(userName, StringComparison.OrdinalIgnoreCase)))
+                return true;
+
+            context.MessageFormatter.AppendArgument("UserName", userName);
+            context.MessageFormatter.AppendArgument("CommandName", typeof(T).Name);
+            context.MessageFormatter.AppendArgument("PropertyValue", context.PropertyValue);
+            return false;
         }
     }
 
     public static class MustOwnActivityExtensions
     {
         public static IRuleBuilderOptions<T, IPrincipal> MustOwnActivity<T>
-            (this IRuleBuilder<T, IPrincipal> ruleBuilder, IQueryEntities entities, Func<T, int> activityId)
+            (this IRuleBuilder<T, IPrincipal> ruleBuilder, IProcessQueries queryProcessor, Func<T, int> activityId)
         {
-            return ruleBuilder.SetValidator(new MustOwnActivity<T>(entities, activityId));
+            return ruleBuilder.SetValidator(new MustOwnActivity<T>(queryProcessor, activityId));
         }
     }
 }

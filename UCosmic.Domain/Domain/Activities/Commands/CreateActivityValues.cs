@@ -6,9 +6,17 @@ namespace UCosmic.Domain.Activities
 {
     public class CreateActivityValues
     {
-        public IPrincipal  Principal { get; protected set;  }
-        public int ActivityId { get; protected set; }
-        public ActivityMode Mode { get; protected set; }
+        public CreateActivityValues(IPrincipal principal, int activityId, ActivityMode mode)
+        {
+            Principal = principal;
+            ActivityId = activityId;
+            Mode = mode;
+            DateFormat = ActivityValues.DefaultDateFormat;
+        }
+
+        public IPrincipal Principal { get; private set; }
+        public int ActivityId { get; private set; }
+        public ActivityMode Mode { get; private set; }
         public string Title { get; set; }
         public string Content { get; set; }
         public DateTime? StartsOn { get; set; }
@@ -18,15 +26,7 @@ namespace UCosmic.Domain.Activities
         public bool? WasExternallyFunded { get; set; }
         public bool? WasInternallyFunded { get; set; }
         internal bool NoCommit { get; set; }
-        public ActivityValues CreatedActivityValues { get; protected internal set; }
-
-        public CreateActivityValues(IPrincipal principal, int activityId, ActivityMode mode)
-        {
-            Principal = principal;
-            ActivityId = activityId;
-            Mode = mode;
-            DateFormat = "MM/dd/yyyy";
-        }
+        public ActivityValues CreatedActivityValues { get; internal set; }
     }
 
     public class ValidateCreateActivityValuesCommand : AbstractValidator<CreateActivityValues>
@@ -34,6 +34,11 @@ namespace UCosmic.Domain.Activities
         public ValidateCreateActivityValuesCommand(IProcessQueries queryProcessor)
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
+
+            RuleFor(x => x.Principal)
+                // commanding principal must own the activity
+                .MustOwnActivity(queryProcessor, x => x.ActivityId)
+            ;
 
             RuleFor(x => x.ActivityId)
                 // activity id must exist in the database
@@ -50,13 +55,10 @@ namespace UCosmic.Domain.Activities
     public class HandleCreateActivityValuesCommand : IHandleCommands<CreateActivityValues>
     {
         private readonly ICommandEntities _entities;
-        private readonly IUnitOfWork _unitOfWork;
 
-        public HandleCreateActivityValuesCommand(ICommandEntities entities,
-                                                 IUnitOfWork unitOfWork)
+        public HandleCreateActivityValuesCommand(ICommandEntities entities)
         {
             _entities = entities;
-            _unitOfWork = unitOfWork;
         }
 
         public void Handle(CreateActivityValues command)
@@ -71,20 +73,19 @@ namespace UCosmic.Domain.Activities
                 StartsOn = command.StartsOn,
                 EndsOn = command.EndsOn,
                 OnGoing = command.OnGoing,
-                DateFormat = command.DateFormat ?? "MM/dd/yyyy",
+                DateFormat = command.DateFormat ?? ActivityValues.DefaultDateFormat,
                 Mode = command.Mode,
                 WasExternallyFunded = command.WasExternallyFunded,
                 WasInternallyFunded = command.WasInternallyFunded,
 
                 CreatedByPrincipal = command.Principal.Identity.Name,
-                CreatedOnUtc = DateTime.UtcNow
             };
 
             _entities.Create(activityValues);
 
             if (!command.NoCommit)
             {
-                _unitOfWork.SaveChanges();
+                _entities.SaveChanges();
             }
 
             command.CreatedActivityValues = activityValues;

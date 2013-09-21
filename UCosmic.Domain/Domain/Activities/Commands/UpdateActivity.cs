@@ -26,12 +26,12 @@ namespace UCosmic.Domain.Activities
 
     public class ValidateUpdateActivityCommand : AbstractValidator<UpdateActivity>
     {
-        public ValidateUpdateActivityCommand(IQueryEntities entities, IProcessQueries queryProcessor)
+        public ValidateUpdateActivityCommand(IProcessQueries queryProcessor)
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
             RuleFor(x => x.Principal)
-                .MustOwnActivity(entities, x => x.Id)
+                .MustOwnActivity(queryProcessor, x => x.Id)
                     .WithMessage(MustOwnActivity<object>.FailMessageFormat, x => x.Principal.Identity.Name, x => x.Id);
 
             RuleFor(x => x.Id)

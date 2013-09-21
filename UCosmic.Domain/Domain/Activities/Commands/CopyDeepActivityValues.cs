@@ -11,18 +11,17 @@ namespace UCosmic.Domain.Activities
             Principal = principal;
         }
 
-        public IPrincipal Principal { get; private set; }
-        public int Id { get; set; }
-        public int ActivityId { get; set; }
-        public ActivityMode Mode { get; set; }
-        public ActivityValues CreatedActivityValues { get; set; }
+        internal IPrincipal Principal { get; private set; }
+        internal int Id { get; set; }
+        internal int ActivityId { get; set; }
+        internal ActivityMode Mode { get; set; }
+        internal ActivityValues CreatedActivityValues { get; set; }
         internal bool NoCommit { get; set; }
     }
 
     public class HandleCopyDeepActivityValuesCommand : IHandleCommands<CopyDeepActivityValues>
     {
         private readonly ICommandEntities _entities;
-        private readonly IUnitOfWork _unitOfWork;
         private readonly IHandleCommands<CreateActivityValues> _createActivityValues;
         private readonly IHandleCommands<CreateActivityType> _createActivityType;
         private readonly IHandleCommands<CreateActivityTag> _createActivityTag;
@@ -30,7 +29,6 @@ namespace UCosmic.Domain.Activities
         private readonly IHandleCommands<CreateActivityDocument> _createActivityDocument;
 
         public HandleCopyDeepActivityValuesCommand(ICommandEntities entities
-            , IUnitOfWork unitOfWork
             , IHandleCommands<CreateActivityValues> createActivityValues
             , IHandleCommands<CreateActivityType> createActivityType
             , IHandleCommands<CreateActivityTag> createActivityTag
@@ -39,7 +37,6 @@ namespace UCosmic.Domain.Activities
         )
         {
             _entities = entities;
-            _unitOfWork = unitOfWork;
             _createActivityValues = createActivityValues;
             _createActivityType = createActivityType;
             _createActivityTag = createActivityTag;
@@ -67,7 +64,7 @@ namespace UCosmic.Domain.Activities
                 OnGoing = sourceActivityValues.OnGoing,
                 DateFormat = sourceActivityValues.DateFormat,
                 WasExternallyFunded = sourceActivityValues.WasExternallyFunded,
-                WasInternallyFunded = sourceActivityValues.WasInternallyFunded
+                WasInternallyFunded = sourceActivityValues.WasInternallyFunded,
             };
 
             _createActivityValues.Handle(createActivityValuesCommand);
@@ -119,10 +116,7 @@ namespace UCosmic.Domain.Activities
 
             command.CreatedActivityValues = activityValuesCopy;
 
-            if (!command.NoCommit)
-            {
-                _unitOfWork.SaveChanges();
-            }
+            if (!command.NoCommit) _entities.SaveChanges();
         }
     }
 }

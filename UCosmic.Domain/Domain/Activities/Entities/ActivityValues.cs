@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -7,6 +6,8 @@ namespace UCosmic.Domain.Activities
 {
     public class ActivityValues : RevisableEntity, IEquatable<ActivityValues>
     {
+        public const string DefaultDateFormat = "MM/dd/yyyy";
+
         protected internal ActivityValues()
         {
             Mode = ActivityMode.Draft;
@@ -15,7 +16,7 @@ namespace UCosmic.Domain.Activities
             Types = new Collection<ActivityType>();
             Tags = new Collection<ActivityTag>();
             Documents = new Collection<ActivityDocument>();
-            DateFormat = "MM/dd/yyyy"; // "Custom Date and Time Format Strings" http://msdn.microsoft.com/en-us/library/8kb3ddd4.aspx
+            DateFormat = DefaultDateFormat; // "Custom Date and Time Format Strings" http://msdn.microsoft.com/en-us/library/8kb3ddd4.aspx
             // ReSharper restore DoNotCallOverridableMethodsInConstructor
         }
 
