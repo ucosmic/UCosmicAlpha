@@ -48,7 +48,7 @@ namespace UCosmic.Domain.Activities
             var createMyNewActivityCommand = new CreateMyNewActivity(command.Principal,
                                                                      command.ModeText)
             {
-                NoEvents = true
+                //NoEvents = true
             };
 
             _createMyNewActivity.Handle(createMyNewActivityCommand);

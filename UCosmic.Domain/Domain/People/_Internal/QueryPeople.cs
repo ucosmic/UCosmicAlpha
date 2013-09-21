@@ -48,9 +48,16 @@ namespace UCosmic.Domain.People
                 : null;
         }
 
-        internal static Person ByUserName(this IQueryable<Person> queryable, string userName)
+        internal static Person ByUserName(this IQueryable<Person> queryable, string userName, bool allowNull = true)
         {
-            return queryable.SingleOrDefault(p => p.User != null && p.User.Name.Equals(userName, StringComparison.OrdinalIgnoreCase));
+            return allowNull
+                ? queryable.SingleOrDefault(ByUserName(userName))
+                : queryable.Single(ByUserName(userName));
+        }
+
+        private static Expression<Func<Person, bool>> ByUserName(string userName)
+        {
+            return x => x.User != null && x.User.Name.Equals(userName, StringComparison.OrdinalIgnoreCase);
         }
 
         internal static Affiliation GetAffiliation(this Person owner, int establishmentId)

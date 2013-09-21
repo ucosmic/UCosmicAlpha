@@ -4,12 +4,12 @@ namespace UCosmic.Domain.Activities
 {
     public class ActivityById : BaseEntityQuery<Activity>, IDefineQuery<Activity>
     {
-        public int Id { get; private set; }
-
         public ActivityById(int id)
         {
             Id = id;
         }
+
+        public int Id { get; private set; }
     }
 
     public class HandleActivityByIdQuery : IHandleQueries<ActivityById, Activity>
@@ -26,8 +26,8 @@ namespace UCosmic.Domain.Activities
             if (query == null) throw new ArgumentNullException("query");
 
             var result = _entities.Query<Activity>()
-                                  .EagerLoad(_entities, query.EagerLoad)
-                                  .ById(query.Id);
+                .EagerLoad(_entities, query.EagerLoad)
+                .ById(query.Id);
 
             return result;
         }

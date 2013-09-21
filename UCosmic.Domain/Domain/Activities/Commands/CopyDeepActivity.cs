@@ -3,84 +3,67 @@ using System.Linq;
 using System.Security.Principal;
 using FluentValidation;
 
-
 namespace UCosmic.Domain.Activities
 {
     public class CopyDeepActivity
     {
-        public IPrincipal Principal { get; protected set; }
-        public int Id { get; protected set; }
-        public ActivityMode Mode { get; protected set; }
-        public int? EditSourceId { get; protected set; }
-        internal bool NoCommit { get; set; }
-        public Activity CreatedActivity { get; set; }
-
-        public CopyDeepActivity(IPrincipal principal, int id, ActivityMode mode, int? editSourceId = null)
+        public CopyDeepActivity(IPrincipal principal, int activityId, ActivityMode mode)
         {
+            if (principal == null) throw new ArgumentNullException("principal");
             Principal = principal;
-            Id = id;
+            ActivityId = activityId;
             Mode = mode;
-            EditSourceId = editSourceId;
         }
+
+        public IPrincipal Principal { get; private set; }
+        public int ActivityId { get; private set; }
+        public ActivityMode Mode { get; private set; }
+
+        public Activity CreatedActivity { get; internal set; }
     }
 
     public class ValidateCopyDeepActivityCommand : AbstractValidator<CopyDeepActivity>
     {
-        public ValidateCopyDeepActivityCommand(IQueryEntities entities)
+        public ValidateCopyDeepActivityCommand(IProcessQueries queryProcessor)
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
-            RuleFor(x => x.Id)
-                // id must be within valid range
-                .GreaterThanOrEqualTo(1)
-                .WithMessage(MustBePositivePrimaryKey.FailMessageFormat, x => "Activity id", x => x.Id)
-
+            RuleFor(x => x.ActivityId)
                 // id must exist in the database
-                .MustFindActivityById(entities)
-                .WithMessage(MustFindActivityById.FailMessageFormat, x => x.Id);
+                .MustFindActivityById(queryProcessor)
+            ;
         }
     }
 
     public class HandleCopyDeepActivityCommand : IHandleCommands<CopyDeepActivity>
     {
         private readonly ICommandEntities _entities;
-        private readonly IUnitOfWork _unitOfWork;
         private readonly IHandleCommands<CopyActivity> _copyActivity;
         private readonly IHandleCommands<CopyDeepActivityValues> _copyDeepActivityValues;
-        private readonly IProcessEvents _eventProcessor;
 
-        public HandleCopyDeepActivityCommand( ICommandEntities entities,
-                                              IUnitOfWork unitOfWork,
-                                              IHandleCommands<CopyActivity> copyActivity,
-                                              IHandleCommands<CopyDeepActivityValues> copyDeepActivityValues,
-                                              IProcessEvents eventProcessor
-            )
+        public HandleCopyDeepActivityCommand(ICommandEntities entities
+            , IHandleCommands<CopyActivity> copyActivity
+            , IHandleCommands<CopyDeepActivityValues> copyDeepActivityValues
+        )
         {
             _entities = entities;
-            _unitOfWork = unitOfWork;
             _copyActivity = copyActivity;
             _copyDeepActivityValues = copyDeepActivityValues;
-            _eventProcessor = eventProcessor;
         }
 
         public void Handle(CopyDeepActivity command)
         {
             if (command == null) throw new ArgumentNullException("command");
 
-            var sourceActivity = _entities.Get<Activity>().SingleOrDefault(x => x.RevisionId == command.Id);
-            if (sourceActivity == null)
-            {
-                var message = string.Format("Activity Id {0} not found.", command.Id);
-                throw new Exception(message);
-            }
+            var sourceActivity = _entities.Get<Activity>().ById(command.ActivityId, false);
 
             /* ----- Copy Activity ----- */
             var copyActivityCommand = new CopyActivity(command.Principal)
             {
-                Id = sourceActivity.RevisionId,
+                ActivityId = sourceActivity.RevisionId,
                 Mode = command.Mode,
-                EditSourceId = command.EditSourceId,
-                NoCommit = true
+                EditSourceId = command.ActivityId,
+                NoCommit = true,
             };
 
             _copyActivity.Handle(copyActivityCommand);
@@ -109,16 +92,16 @@ namespace UCosmic.Domain.Activities
 
             command.CreatedActivity = activityCopy;
 
-            if (!command.NoCommit)
-            {
-                _unitOfWork.SaveChanges();
+            //if (!command.NoCommit)
+            //{
+                _entities.SaveChanges();
 
                 //_eventProcessor.Raise(new ActivityCreated
                 //{
                 //    ActivityId = command.CreatedActivity.RevisionId
                 //});
 
-            }
+            //}
         }
     }
 }

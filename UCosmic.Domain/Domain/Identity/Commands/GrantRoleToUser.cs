@@ -39,7 +39,6 @@ namespace UCosmic.Domain.Identity
 
                 // principal.identity.name must match User.Name entity property
                 .MustFindUserByPrincipal(entities)
-                    .WithMessage(MustFindUserByName.FailMessageFormat, x => x.Principal.Identity.Name)
 
                 // principal must be authorized to grant roles
                 .MustBeInAnyRole(RoleName.RoleGrantors)

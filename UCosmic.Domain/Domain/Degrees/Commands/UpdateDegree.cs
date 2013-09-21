@@ -40,7 +40,6 @@ namespace UCosmic.Domain.Degrees
                 .MustNotHaveEmptyIdentityName()
                     .WithMessage(MustNotHaveEmptyIdentityName.FailMessage)
                 .MustFindUserByPrincipal(queryProcessor)
-                    .WithMessage(MustFindUserByName.FailMessageFormat, x => x.Principal.Identity.Name)
             ;
 
             RuleFor(x => x.DegreeId)

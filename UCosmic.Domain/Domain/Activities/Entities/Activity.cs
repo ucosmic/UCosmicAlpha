@@ -5,7 +5,7 @@ using UCosmic.Domain.People;
 
 namespace UCosmic.Domain.Activities
 {
-    public class Activity : RevisableEntity, IAmNumbered, IEquatable<Activity>
+    public class Activity : RevisableEntity, IEquatable<Activity>
     {
         protected internal Activity()
         {
@@ -16,9 +16,8 @@ namespace UCosmic.Domain.Activities
             // ReSharper restore DoNotCallOverridableMethodsInConstructor
         }
 
-        public virtual Person Person { get; protected internal set; }
         public int PersonId { get; protected internal set; }
-        public int Number { get; protected internal set; }
+        public virtual Person Person { get; protected internal set; }
 
         public string ModeText { get; protected set; }
         public ActivityMode Mode
@@ -27,9 +26,11 @@ namespace UCosmic.Domain.Activities
             protected internal set { ModeText = value.AsSentenceFragment(); }
         }
 
-        public virtual ICollection<ActivityValues> Values { get; protected internal set; }
+        public virtual ICollection<ActivityValues> Values { get; protected set; }
 
-        public int? EditSourceId { get; protected internal set; }
+        //public int? EditSourceId { get; protected internal set; }
+        public virtual Activity Original { get; protected internal set; }
+        public virtual Activity WorkCopy { get; protected set; }
 
         public bool IsEmpty()
         {

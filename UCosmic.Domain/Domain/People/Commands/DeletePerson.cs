@@ -30,7 +30,6 @@ namespace UCosmic.Domain.People
                 .MustNotHaveEmptyIdentityName()
                     .WithMessage(MustNotHaveEmptyIdentityName.FailMessage)
                 .MustFindUserByPrincipal(entities)
-                    .WithMessage(MustFindUserByName.FailMessageFormat, x => x.Principal.Identity.Name)
                 .MustNotBeSamePerson(entities, x => x.Id)
                     .WithMessage(MustNotBeSamePerson<object>.FailMessageFormat, x => x.Principal.Identity.Name)
                 .MustBeInAnyRole(RoleName.EmployeeProfileManager)

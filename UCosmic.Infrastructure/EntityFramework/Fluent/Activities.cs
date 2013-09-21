@@ -18,8 +18,12 @@ namespace UCosmic.EntityFramework
                 .HasForeignKey(d => d.ActivityId)
                 .WillCascadeOnDelete(true);
 
-            Property(p => p.ModeText).HasColumnName("Mode").IsRequired().HasMaxLength(20);
-            Property(p => p.EditSourceId).IsOptional();
+            HasOptional(d => d.Original)
+                .WithOptionalDependent(p => p.WorkCopy)
+                .Map(x => x.MapKey("EditSourceId"));
+
+            Property(p => p.ModeText).HasColumnName("Mode").HasColumnType("varchar").IsRequired().HasMaxLength(20);
+            //Property(p => p.EditSourceId).IsOptional();
 
             Ignore(p => p.Mode);
         }

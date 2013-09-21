@@ -157,7 +157,7 @@
     <Compile Include="Domain\Activities\Events\ActivityCreated.cs" />
     <Compile Include="Domain\Activities\Events\ActivityDeleted.cs" />
     <Compile Include="Domain\Activities\Queries\ActivitiesByPersonId.cs" />
-    <Compile Include="Domain\Activities\Queries\ActivityByEditSourceEntityId.cs" />
+    <Compile Include="Domain\Activities\Queries\ActivityByEditSourceId.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityById.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityCountByPlaceIdsEstablishmentId.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityCountByEstablishmentId.cs" />
@@ -536,7 +536,7 @@
     <Compile Include="Domain\Identity\Commands\RevokeRoleFromUser.cs" />
     <Compile Include="Domain\Identity\Commands\UpdateRole.cs" />
     <Compile Include="Domain\Identity\Validation\MustNotFindUserByName.cs" />
-    <Compile Include="Domain\Identity\Validation\MustFindUserByName.cs" />
+    <Compile Include="Domain\Identity\Validation\MustFindUserByPrincipal.cs" />
     <Compile Include="Domain\Identity\Validation\MustNotHaveNullPrincipal.cs" />
     <Compile Include="Domain\People\Validation\MustNotHaveEmptyConfirmationToken.cs" />
     <Compile Include="Domain\People\Commands\UpdateMyEmailValue.cs" />

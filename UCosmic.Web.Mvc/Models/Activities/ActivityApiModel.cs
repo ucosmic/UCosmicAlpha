@@ -11,7 +11,6 @@ namespace UCosmic.Web.Mvc.Models
         public int Id { get; set; }
         public string Version { get; set; }
         public int PersonId { get; set; }
-        public int Number { get; set; }
         public Guid EntityId { get; set; }
         public string ModeText { get; set; }
         public ActivityValuesApiModel Values { get; set; } // only Values with same mode as Activity
@@ -61,12 +60,13 @@ namespace UCosmic.Web.Mvc.Models
                     .ForMember(d => d.UpdatedOnUtc, o => o.MapFrom(s => s.WhenLastUpdated))
                     .ForMember(d => d.UpdatedByPrincipal, o => o.MapFrom(s => s.WhoLastUpdated))
                     .ForMember(d => d.Version, o => o.MapFrom(s => String.IsNullOrEmpty(s.Version) ? null : Convert.FromBase64String(s.Version)))
-                    .ForMember(d => d.EditSourceId, o => o.Ignore())
                     .ForMember(d => d.CreatedOnUtc, o => o.Ignore())
                     .ForMember(d => d.CreatedByPrincipal, o => o.Ignore())
                     .ForMember(d => d.IsCurrent, o => o.Ignore())
                     .ForMember(d => d.IsArchived, o => o.Ignore())
                     .ForMember(d => d.IsDeleted, o => o.Ignore())
+                    .ForMember(d => d.Original, o => o.Ignore())
+                    .ForMember(d => d.WorkCopy, o => o.Ignore())
                 ;
             }
         }

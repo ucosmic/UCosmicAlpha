@@ -28,7 +28,7 @@ namespace UCosmic.Domain.Activities
 
             var result = _entities.Query<Activity>()
                 .EagerLoad(_entities, query.EagerLoad)
-                .SingleOrDefault( x => x.EditSourceId == query.Id)
+                .SingleOrDefault( x => x.Original.RevisionId == query.Id)
             ;
 
             return result;

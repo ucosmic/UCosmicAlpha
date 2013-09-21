@@ -29,7 +29,6 @@ namespace UCosmic.Domain.Identity
                 .MustNotHaveEmptyIdentityName()
                     .WithMessage(MustNotHaveEmptyIdentityName.FailMessage)
                 .MustFindUserByPrincipal(entities)
-                    .WithMessage(MustFindUserByName.FailMessageFormat, x => x.Principal.Identity.Name)
                 .MustNotBeSameUser(entities, x => x.Id)
                     .WithMessage(MustNotBeSameUser<object>.FailMessageFormat, x => x.Principal.Identity.Name)
             ;

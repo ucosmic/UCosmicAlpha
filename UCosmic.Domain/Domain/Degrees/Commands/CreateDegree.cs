@@ -42,7 +42,6 @@ namespace UCosmic.Domain.Degrees
                 .MustNotHaveEmptyIdentityName()
                     .WithMessage(MustNotHaveEmptyIdentityName.FailMessage)
                 .MustFindUserByPrincipal(queryProcessor)
-                    .WithMessage(MustFindUserByName.FailMessageFormat, x => x.Principal.Identity.Name)
             ;
 
             // only admins can create degrees for other people (PersonId.HasValue)

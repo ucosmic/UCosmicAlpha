@@ -30,7 +30,6 @@ namespace UCosmic.Domain.People
 
                 // principal identity name must match User.Name entity property
                 .MustFindUserByPrincipal(entities)
-                    .WithMessage(MustFindUserByName.FailMessageFormat, x => x.Principal.Identity.Name)
             ;
 
             RuleFor(x => x.Number)

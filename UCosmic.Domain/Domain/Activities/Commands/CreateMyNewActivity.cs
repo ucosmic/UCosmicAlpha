@@ -2,20 +2,13 @@
 using System.Linq;
 using System.Security.Principal;
 using FluentValidation;
+using UCosmic.Domain.Identity;
 using UCosmic.Domain.People;
 
 namespace UCosmic.Domain.Activities
 {
     public class CreateMyNewActivity
     {
-        public IPrincipal Principal { get; protected set; }
-        public string ModeText { get; protected set; }
-        public Guid? EntityId { get; set; }
-        public int? EditSourceId { get; set; }
-        public Activity CreatedActivity { get; internal set; }
-        internal bool NoCommit { get; set; }
-        public bool NoEvents { get; set; }
-
         public CreateMyNewActivity(IPrincipal principal, string modeText)
         {
             if (principal == null) throw new ArgumentNullException("principal");
@@ -23,58 +16,51 @@ namespace UCosmic.Domain.Activities
             Principal = principal;
             ModeText = modeText;
         }
+
+        public IPrincipal Principal { get; private set; }
+        public string ModeText { get; private set; }
+        public Guid? EntityId { get; set; }
+        public int? EditSourceId { get; set; }
+        public Activity CreatedActivity { get; internal set; }
+        //internal bool NoCommit { get; set; }
     }
 
     public class ValidateCreateMyNewActivityCommand : AbstractValidator<CreateMyNewActivity>
     {
-        public ValidateCreateMyNewActivityCommand()
+        public ValidateCreateMyNewActivityCommand(IProcessQueries queryProcessor)
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
+
+            RuleFor(x => x.Principal)
+                .MustFindUserByPrincipal(queryProcessor)
+            ;
         }
     }
 
     public class HandleCreateMyNewActivityCommand : IHandleCommands<CreateMyNewActivity>
     {
         private readonly ICommandEntities _entities;
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IProcessEvents _eventProcessor;
 
-        public HandleCreateMyNewActivityCommand(ICommandEntities entities,
-                                                IUnitOfWork unitOfWork,
-                                                IProcessEvents eventProcessor)
+        public HandleCreateMyNewActivityCommand(ICommandEntities entities)
         {
             _entities = entities;
-            _unitOfWork = unitOfWork;
-            _eventProcessor = eventProcessor;
         }
 
         public void Handle(CreateMyNewActivity command)
         {
             if (command == null) throw new ArgumentNullException("command");
 
-            var person = _entities.Get<Person>().SingleOrDefault(p => p.User.Name == command.Principal.Identity.Name);
-            if (person == null)
-            {
-                string message = string.Format("Person {0} not found.", command.Principal.Identity.Name);
-                throw new Exception(message);
-            }
-
-            //var otherActivities = _entities.Get<Activity>()
-            //                                   .SingleOrDefault(x => (x.PersonId == person.RevisionId)
-            //                                   && (x.ModeText == command.ModeText));
-            //Activity otherActivities = null;
+            var person = _entities.Get<Person>().ByUserName(command.Principal.Identity.Name, false);
 
             var activity = new Activity
             {
                 PersonId = person.RevisionId,
-                //Number = (otherActivities != null) ? otherActivities.Number : 0,
-                Number = 0,
                 Mode = command.ModeText.AsEnum<ActivityMode>(),
-                EditSourceId = command.EditSourceId,
-
                 CreatedByPrincipal = command.Principal.Identity.Name,
                 CreatedOnUtc = DateTime.UtcNow
             };
+            if (command.EditSourceId.HasValue)
+                activity.Original = _entities.Get<Activity>().Single(x => x.RevisionId == command.EditSourceId);
 
             if (command.EntityId.HasValue)
             {
@@ -85,18 +71,18 @@ namespace UCosmic.Domain.Activities
 
             command.CreatedActivity = activity;
 
-            if (!command.NoCommit)
-            {
-                _unitOfWork.SaveChanges();
+            //if (!command.NoCommit)
+            //{
+                _entities.SaveChanges();
 
-                if (!command.NoEvents)
-                {
+                //if (!command.NoEvents)
+                //{
                     //_eventProcessor.Raise(new ActivityCreated
                     //{
                     //    ActivityId = command.CreatedActivity.RevisionId
                     //});
-                }
-            }
+                //}
+            //}
         }
     }
 }

@@ -31,18 +31,13 @@ namespace UCosmic.Domain.Activities
 
     public class ValidateCreateActivityValuesCommand : AbstractValidator<CreateActivityValues>
     {
-        public ValidateCreateActivityValuesCommand(IQueryEntities entities)
+        public ValidateCreateActivityValuesCommand(IProcessQueries queryProcessor)
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
             RuleFor(x => x.ActivityId)
-                // activity id must be within valid range
-                .GreaterThanOrEqualTo(1)
-                    .WithMessage(MustBePositivePrimaryKey.FailMessageFormat, x => "Activity id", x => x.ActivityId)
-
                 // activity id must exist in the database
-                .MustFindActivityById(entities)
-                    .WithMessage(MustFindActivityById.FailMessageFormat, x => x.ActivityId)
+                .MustFindActivityById(queryProcessor)
             ;
 
             RuleFor(x => x.Title)

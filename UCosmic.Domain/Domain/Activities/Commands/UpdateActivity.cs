@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Security.Principal;
 using FluentValidation;
 
@@ -11,7 +12,6 @@ namespace UCosmic.Domain.Activities
         public IPrincipal Principal { get; protected set; }
         public int Id { get; protected set; }
         public string ModeText { get; protected set; }
-        public int Number { get; set; }
         public ActivityValues Values { get; set; }
         internal bool NoCommit { get; set; }
 
@@ -26,7 +26,7 @@ namespace UCosmic.Domain.Activities
 
     public class ValidateUpdateActivityCommand : AbstractValidator<UpdateActivity>
     {
-        public ValidateUpdateActivityCommand(IQueryEntities entities)
+        public ValidateUpdateActivityCommand(IQueryEntities entities, IProcessQueries queryProcessor)
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
@@ -35,17 +35,13 @@ namespace UCosmic.Domain.Activities
                     .WithMessage(MustOwnActivity<object>.FailMessageFormat, x => x.Principal.Identity.Name, x => x.Id);
 
             RuleFor(x => x.Id)
-                // id must be within valid range
-                .GreaterThanOrEqualTo(1)
-                    .WithMessage(MustBePositivePrimaryKey.FailMessageFormat, x => "Activity id", x => x.Id)
-
                 // id must exist in the database
-                .MustFindActivityById(entities)
-                    .WithMessage(MustFindActivityById.FailMessageFormat, x => x.Id);
+                .MustFindActivityById(queryProcessor)
+            ;
 
             RuleFor(x => x.ModeText)
-                .MustHaveActivityMode()
-                    .WithMessage(MustHaveActivityMode.FailMessage);
+                .NotEmpty().WithName("Activity mode")
+                .MustHaveActivityMode();
 
             When(x => x.Values != null, () =>
                 RuleFor(x => x.Values.Title)
@@ -59,23 +55,17 @@ namespace UCosmic.Domain.Activities
     public class HandleUpdateMyActivityCommand : IHandleCommands<UpdateActivity>
     {
         private readonly ICommandEntities _entities;
-        private readonly IUnitOfWork _unitOfWork;
         private readonly IHandleCommands<UpdateActivityValues> _updateActivityValues;
         private readonly IHandleCommands<CopyDeepActivityValues> _copyDeepActivityValues;
-        private readonly IProcessEvents _eventProcessor;
 
         public HandleUpdateMyActivityCommand(ICommandEntities entities
-            , IUnitOfWork unitOfWork
             , IHandleCommands<UpdateActivityValues> updateActivityValues
             , IHandleCommands<CopyDeepActivityValues> copyDeepActivityValues
-            , IProcessEvents eventProcessor
         )
         {
             _entities = entities;
-            _unitOfWork = unitOfWork;
             _updateActivityValues = updateActivityValues;
             _copyDeepActivityValues = copyDeepActivityValues;
-            _eventProcessor = eventProcessor;
         }
 
         public void Handle(UpdateActivity command)
@@ -83,11 +73,17 @@ namespace UCosmic.Domain.Activities
             if (command == null) throw new ArgumentNullException("command");
 
             // Retrieve the activity to update.
-            var target = _entities.Get<Activity>().Single(a => a.RevisionId == command.Id);
+            var target = _entities.Get<Activity>()
+                .EagerLoad(_entities, new Expression<Func<Activity, object>>[]
+                {
+                    x => x.Values,
+                })
+                .Single(a => a.RevisionId == command.Id);
 
             // Attempt to get the ActivityValues of the command'ed type.
-            var targetActivityValues = _entities.Get<ActivityValues>()
-                .SingleOrDefault(v => v.ActivityId == target.RevisionId && v.ModeText == command.ModeText);
+            //var targetActivityValues = _entities.Get<ActivityValues>()
+            //    .SingleOrDefault(v => v.ActivityId == target.RevisionId && v.ModeText == command.ModeText);
+            var targetActivityValues = target.Values.SingleOrDefault(x => x.ModeText == command.ModeText);
 
             if (targetActivityValues == null)
             {
@@ -103,7 +99,6 @@ namespace UCosmic.Domain.Activities
 
             // Update fields
             target.Mode = command.ModeText.AsEnum<ActivityMode>();
-            target.Number = command.Number;
             target.UpdatedOnUtc = DateTime.UtcNow;
             target.UpdatedByPrincipal = command.Principal.Identity.Name;
 
@@ -132,7 +127,7 @@ namespace UCosmic.Domain.Activities
 
             if (!command.NoCommit)
             {
-                _unitOfWork.SaveChanges();
+                _entities.SaveChanges();
 
                 //_eventProcessor.Raise(new ActivityChanged
                 //{

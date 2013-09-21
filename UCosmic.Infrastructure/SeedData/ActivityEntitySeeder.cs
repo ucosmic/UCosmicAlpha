@@ -48,9 +48,7 @@ namespace UCosmic.SeedData
 
             { // Douglas Corarito
                 Person person = _entities.Get<Person>().Single(x => x.FirstName == "Douglas" && x.LastName == "Corarito");
-
-                User user = _entities.Get<User>().SingleOrDefault(x => x.Person.RevisionId == person.RevisionId);
-                if (user == null) throw new Exception("USF person Douglas Corarito has no User.");
+                User user = person.User;
 
                 var identity = new GenericIdentity(user.Name);
                 var principal = new GenericPrincipal(identity, null);

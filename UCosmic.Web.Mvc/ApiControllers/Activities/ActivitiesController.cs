@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
@@ -83,15 +84,19 @@ namespace UCosmic.Web.Mvc.ApiControllers
         public ActivityApiModel GetEdit(int activityId)
         {
             /* Get the activity we want to edit */
-            var activity = _queryProcessor.Execute(new ActivityById(activityId));
-            if (activity == null)
+            var activity = _queryProcessor.Execute(new ActivityById(activityId)
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
+                EagerLoad = new Expression<Func<Activity, object>>[]
+                {
+                    x => x.WorkCopy,
+                },
+            });
+            if (activity == null) throw new HttpResponseException(HttpStatusCode.NotFound);
 
             /* Search for an "in progress edit" activity.  This can happen if the user
              * navigates away from Activity Edit page before saving. */
-            var editActivity = _queryProcessor.Execute(new ActivityByEditSourceId(activity.RevisionId));
+            //var editActivity = _queryProcessor.Execute(new ActivityByEditSourceId(activity.RevisionId));
+            var editActivity = activity.WorkCopy;
 
             /* Not sure how this scenario arises, but I've seen it once. It might have been
              * the result of debugging.  If we have an edit activity with no values, delete it.
@@ -105,31 +110,16 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
             if (editActivity == null)
             {
-                //try
-                //{
                 /* There's no "in progress edit" record, so we make a copy of the
                      * activity and set it to edit mode. */
                 var copyDeepActivityCommand = new CopyDeepActivity(User,
                                                                    activity.RevisionId,
-                                                                   activity.Mode,
-                                                                   activity.RevisionId);
+                                                                   activity.Mode);
 
                 _copyDeepActivity.Handle(copyDeepActivityCommand);
 
                 editActivity = copyDeepActivityCommand.CreatedActivity;
-                //}
-                //catch (Exception ex)
-                //{
-                //    var responseMessage = new HttpResponseMessage
-                //    {
-                //        StatusCode = HttpStatusCode.InternalServerError,
-                //        Content = new StringContent(ex.Message),
-                //        ReasonPhrase = "Error preparing activity for edit"
-                //    };
-                //    throw new HttpResponseException(responseMessage);
-                //}
             }
-
 
             var model = Mapper.Map<ActivityApiModel>(editActivity);
             return model;
@@ -153,7 +143,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
             var editState = new ActivityEditState
             {
-                IsInEdit = activity.EditSourceId.HasValue,
+                IsInEdit = activity.Original != null,
                 EditingUserName = "",
                 EditingUserEmail = ""
             };
@@ -234,10 +224,10 @@ namespace UCosmic.Web.Mvc.ApiControllers
             if (editActivity == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
-            if (!editActivity.EditSourceId.HasValue)
+            if (editActivity.Original == null)
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
 
-            var updateActivityCommand = new UpdateActivity(User, editActivity.EditSourceId.Value, model.Mode)
+            var updateActivityCommand = new UpdateActivity(User, editActivity.Original.RevisionId, model.Mode)
             {
                 Values = editActivity.Values.SingleOrDefault(x => x.ModeText == editActivity.ModeText)
             };
@@ -278,9 +268,9 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 throw new Exception(message);
             }
 
-            if (editActivity.EditSourceId.HasValue)
+            if (editActivity.Original != null)
             {
-                var activity = _queryProcessor.Execute(new ActivityById(editActivity.EditSourceId.Value));
+                var activity = _queryProcessor.Execute(new ActivityById(editActivity.Original.RevisionId));
                 if (activity != null)
                 {
                     if (activity.IsEmpty())

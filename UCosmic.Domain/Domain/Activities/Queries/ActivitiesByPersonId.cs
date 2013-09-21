@@ -40,7 +40,7 @@ namespace UCosmic.Domain.Activities
                                                                                  !v.EndsOn.HasValue &&
                                                                                  (!v.OnGoing.HasValue ||
                                                                                   !v.OnGoing.Value)) &&
-                                                               (a.EditSourceId == null))
+                                                               (a.Original == null))
                                                            .WithPersonId(query.PersonId)
                                                            .OrderBy(
                                                                a =>
@@ -55,7 +55,7 @@ namespace UCosmic.Domain.Activities
                                                                  v => (v.ModeText == a.ModeText) &&
                                                                       (!v.OnGoing.HasValue || !v.OnGoing.Value) &&
                                                                       (v.StartsOn.HasValue || v.EndsOn.HasValue)) &&
-                                                             (a.EditSourceId == null))
+                                                             (a.Original == null))
                                                          .WithPersonId(query.PersonId)
                                                          .OrderByDescending(a =>
                                                                             a.Values.FirstOrDefault(
@@ -77,7 +77,7 @@ namespace UCosmic.Domain.Activities
                                                            .Where(
                                                                a =>
                                                                a.Values.Any(v => v.OnGoing.HasValue && v.OnGoing.Value) &&
-                                                               (a.EditSourceId == null)
+                                                               (a.Original == null)
                                                             )
                                                            .WithPersonId(query.PersonId)
                                                            .OrderByDescending(a => a.Values.FirstOrDefault(v => v.ModeText == a.ModeText).StartsOn.Value)

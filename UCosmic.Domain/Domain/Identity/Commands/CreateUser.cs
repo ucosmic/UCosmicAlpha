@@ -48,7 +48,6 @@ namespace UCosmic.Domain.Identity
                 // principal.identity.name must exist as a user
                 .MustFindUserByPrincipal(entities)
                 .When(x => !x.Principal.IsInRole(RoleName.AuthenticationAgent), ApplyConditionTo.CurrentValidator)
-                    .WithMessage(MustFindUserByName.FailMessageFormat, x => x.Principal.Identity.Name)
 
                 // principal must be authorized to create user
                 .MustBeInAnyRole(RoleName.UserManagers)

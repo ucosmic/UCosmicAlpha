@@ -3,7 +3,7 @@ using UCosmic.Domain;
 
 namespace UCosmic
 {
-    public interface ICommandEntities : IEagerLoad
+    public interface ICommandEntities : IEagerLoad, IUnitOfWork
     {
         TEntity FindByPrimaryKey<TEntity>(params object[] primaryKeyValues)
             where TEntity : Entity;

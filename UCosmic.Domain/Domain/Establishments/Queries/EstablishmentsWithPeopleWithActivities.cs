@@ -39,7 +39,7 @@ namespace UCosmic.Domain.Establishments
                     break;
                 case false:
                     var publicText = ActivityMode.Public.AsSentenceFragment();
-                    activities = activities.Where(x => x.ModeText != publicText && x.EditSourceId.HasValue);
+                    activities = activities.Where(x => x.ModeText != publicText && x.Original != null);
                     break;
             }
             var peopleWithActivities = activities

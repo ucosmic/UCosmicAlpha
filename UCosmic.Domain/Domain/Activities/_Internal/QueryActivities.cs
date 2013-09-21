@@ -23,15 +23,13 @@ namespace UCosmic.Domain.Activities
 
         internal static Activity ByUserNameAndNumber(this IQueryable<Activity> queryable,
                                                      string modeText,
-                                                     string userName,
-                                                     int number)
+                                                     string userName)
         {
             return queryable.SingleOrDefault(
                 a =>
                 a.ModeText == modeText &&
                 a.Person.User != null &&
-                a.Person.User.Name.Equals(userName, StringComparison.OrdinalIgnoreCase) &&
-                a.Number == number
+                a.Person.User.Name.Equals(userName, StringComparison.OrdinalIgnoreCase)
             );
         }
 
@@ -43,12 +41,9 @@ namespace UCosmic.Domain.Activities
             );
         }
 
-        internal static Activity ById(this IQueryable<Activity> queryable, int id)
+        internal static Activity ById(this IQueryable<Activity> queryable, int id, bool allowNull = true)
         {
-            return queryable.SingleOrDefault(
-                a =>
-                a.RevisionId == id
-            );
+            return allowNull ? queryable.SingleOrDefault(a => a.RevisionId == id) : queryable.Single(a => a.RevisionId == id);
         }
 
         internal static IQueryable<Activity> WithTenant(this IQueryable<Activity> queryable, object tenant)
@@ -130,7 +125,7 @@ namespace UCosmic.Domain.Activities
         internal static IQueryable<Activity> Published(this IQueryable<Activity> queryable)
         {
             var publicText = ActivityMode.Public.AsSentenceFragment();
-            queryable = queryable.Where(x => publicText.Equals(x.ModeText) && !x.EditSourceId.HasValue);
+            queryable = queryable.Where(x => publicText.Equals(x.ModeText) && x.Original == null);
             return queryable;
         }
 
