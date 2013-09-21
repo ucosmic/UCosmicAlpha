@@ -6,17 +6,15 @@ namespace UCosmic.Domain.Activities
 {
     public class CreateActivityValues
     {
-        public CreateActivityValues(IPrincipal principal, int activityId, ActivityMode mode)
+        public CreateActivityValues(IPrincipal principal)
         {
             Principal = principal;
-            ActivityId = activityId;
-            Mode = mode;
             DateFormat = ActivityValues.DefaultDateFormat;
         }
 
         public IPrincipal Principal { get; private set; }
-        public int ActivityId { get; private set; }
-        public ActivityMode Mode { get; private set; }
+        public int ActivityId { get; set; }
+        public ActivityMode Mode { get; set; }
         public string Title { get; set; }
         public string Content { get; set; }
         public DateTime? StartsOn { get; set; }
@@ -26,6 +24,7 @@ namespace UCosmic.Domain.Activities
         public bool? WasExternallyFunded { get; set; }
         public bool? WasInternallyFunded { get; set; }
         internal bool NoCommit { get; set; }
+        internal Activity Activity { get; set; }
         public ActivityValues CreatedActivityValues { get; internal set; }
     }
 
@@ -35,15 +34,26 @@ namespace UCosmic.Domain.Activities
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
-            RuleFor(x => x.Principal)
-                // commanding principal must own the activity
-                .MustOwnActivity(queryProcessor, x => x.ActivityId)
-            ;
+            // when an activityId is used instead of an activity
+            When(x => x.Activity == null, () =>
+            {
+                RuleFor(x => x.ActivityId)
+                    // activity id must exist in the database
+                    .MustFindActivityById(queryProcessor)
+                ;
 
-            RuleFor(x => x.ActivityId)
-                // activity id must exist in the database
-                .MustFindActivityById(queryProcessor)
-            ;
+                RuleFor(x => x.Principal)
+                    // commanding principal must own the activity
+                    .MustOwnActivity(queryProcessor, x => x.ActivityId)
+                ;
+            });
+
+            // when an activity is used instead of an activityId
+            When(x => x.Activity != null, () =>
+                RuleFor(x => x.Principal)
+                    // commanding principal must own the activity
+                    .MustOwnActivity(queryProcessor, x => x.Activity)
+            );
 
             RuleFor(x => x.Title)
                 .Length(0, ActivityValuesConstraints.TitleMaxLength)
@@ -83,12 +93,9 @@ namespace UCosmic.Domain.Activities
 
             _entities.Create(activityValues);
 
-            if (!command.NoCommit)
-            {
-                _entities.SaveChanges();
-            }
-
             command.CreatedActivityValues = activityValues;
+
+            if (!command.NoCommit) _entities.SaveChanges();
         }
     }
 }

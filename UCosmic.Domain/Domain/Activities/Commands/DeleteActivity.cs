@@ -25,8 +25,7 @@ namespace UCosmic.Domain.Activities
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
             RuleFor(x => x.Principal)
-                .MustOwnActivity(queryProcessor, x => x.Id)
-                    .WithMessage(MustOwnActivity<object>.FailMessageFormat, x => x.Principal.Identity.Name, x => x.Id);
+                .MustOwnActivity(queryProcessor, x => x.Id);
 
             RuleFor(x => x.Id)
                 // id must be within valid range

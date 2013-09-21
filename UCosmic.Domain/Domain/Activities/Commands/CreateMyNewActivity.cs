@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq.Expressions;
 using System.Security.Principal;
 using FluentValidation;
 using UCosmic.Domain.Identity;
@@ -26,7 +27,6 @@ namespace UCosmic.Domain.Activities
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
-            // principal is one creating own activity, so must exist
             RuleFor(x => x.Principal)
                 .MustFindUserByPrincipal(queryProcessor)
             ;
@@ -46,7 +46,12 @@ namespace UCosmic.Domain.Activities
         {
             if (command == null) throw new ArgumentNullException("command");
 
-            var person = _entities.Get<Person>().ByUserName(command.Principal.Identity.Name, false);
+            var person = _entities.Get<Person>()
+                .EagerLoad(_entities, new Expression<Func<Person, object>>[]
+                {
+                    x => x.User,
+                })
+                .ByUserName(command.Principal.Identity.Name, false);
 
             var activity = new Activity
             {

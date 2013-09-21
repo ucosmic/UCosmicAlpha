@@ -55,8 +55,10 @@ namespace UCosmic.Domain.Activities
                 throw new Exception(message);
             }
 
-            var createActivityValuesCommand = new CreateActivityValues(command.Principal, command.ActivityId, command.Mode)
+            var createActivityValuesCommand = new CreateActivityValues(command.Principal)
             {
+                ActivityId = command.ActivityId,
+                Mode = command.Mode,
                 Title = sourceActivityValues.Title,
                 Content = sourceActivityValues.Content,
                 StartsOn = sourceActivityValues.StartsOn,

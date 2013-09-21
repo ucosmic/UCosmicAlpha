@@ -163,7 +163,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [POST("")]
         public HttpResponseMessage Post()
         {
-            var createDeepActivityCommand = new CreateDeepActivity(User, ActivityMode.Draft.AsSentenceFragment());
+            var createDeepActivityCommand = new CreateDeepActivity(User, ActivityMode.Draft);
             _createDeepActivity.Handle(createDeepActivityCommand);
 
             var model = createDeepActivityCommand.CreatedActivity.RevisionId;

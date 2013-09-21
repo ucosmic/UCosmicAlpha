@@ -59,7 +59,7 @@ namespace UCosmic.SeedData
 
                 #region Activity 1
 
-                var createActivityValuesCommand = new CreateActivityValues(principal, 1, ActivityMode.Draft)
+                var createActivityValuesCommand = new CreateActivityValues(principal)
                 {
                     Title =
                         "Understanding Causation of the Permian/Triassic Boundary, Largest Mass Extinction in Earth History",
@@ -82,8 +82,10 @@ namespace UCosmic.SeedData
 
                     Activity activity = createMyNewActivityCommand.CreatedActivity;
 
-                    createActivityValuesCommand = new CreateActivityValues(principal, activity.RevisionId, activity.Mode)
+                    createActivityValuesCommand = new CreateActivityValues(principal)
                     {
+                        ActivityId = activity.RevisionId,
+                        Mode = activity.Mode,
                         Title = createActivityValuesCommand.Title,
                         Content = createActivityValuesCommand.Content,
                         StartsOn = createActivityValuesCommand.StartsOn,
@@ -176,7 +178,7 @@ namespace UCosmic.SeedData
                 #endregion
                 #region Activity 2
 
-                createActivityValuesCommand = new CreateActivityValues(principal, 1, ActivityMode.Draft)
+                createActivityValuesCommand = new CreateActivityValues(principal)
                 {
                     Title = "Professional Development Program for Teachers of English at Shandong University",
                     Content = "In Summer 2008, the Teaching English as a Second Language (TESL) Program delivered a professional development program for teachers of English at Shandong University in Jinan, China. Program instructors included two TESL doctoral students and one colleague living in the Czech Republic. Three courses were offered: Theory to Practice; Research in Second Language Acquisition; and Instructional Technology in English Language Teaching. 48 Chinese teachers completed the program. ",
@@ -197,8 +199,10 @@ namespace UCosmic.SeedData
 
                     Activity activity = createMyNewActivityCommand.CreatedActivity;
 
-                    createActivityValuesCommand = new CreateActivityValues(principal, activity.RevisionId, activity.Mode)
+                    createActivityValuesCommand = new CreateActivityValues(principal)
                     {
+                        ActivityId = activity.RevisionId,
+                        Mode = activity.Mode,
                         Title = createActivityValuesCommand.Title,
                         Content = createActivityValuesCommand.Content,
                         StartsOn = createActivityValuesCommand.StartsOn,
@@ -224,7 +228,7 @@ namespace UCosmic.SeedData
                 #endregion
                 #region Activity 3
 
-                createActivityValuesCommand = new CreateActivityValues(principal, 1, ActivityMode.Draft)
+                createActivityValuesCommand = new CreateActivityValues(principal)
                 {
                     Title = "Workshop Preparation: Air pollution and Chinese Historic Site",
                     Content = "Drs. Tim Keener and Mingming Lu went to China in Oct. of 2006 to plan for an air quality workshop on the impact of air pollution and the Chinese historic sites, to be held in Xi’an, China in the fall of 2008. They have visited Tsinghua Univ., the XISU and discussed the details of the workshop plan with Prof. Wu, Associate Dean in the School of Tourism. they have visted Shanxi Archeology Research Institute, and Chinese Acedemy of Science in Xian, to meet potentail workshop participants. Drs. Lu and Keener is developing a proposal to NSF for the workshop.",
@@ -246,8 +250,10 @@ namespace UCosmic.SeedData
 
                     Activity activity = createMyNewActivityCommand.CreatedActivity;
 
-                    createActivityValuesCommand = new CreateActivityValues(principal, activity.RevisionId, activity.Mode)
+                    createActivityValuesCommand = new CreateActivityValues(principal)
                     {
+                        ActivityId = activity.RevisionId,
+                        Mode = activity.Mode,
                         Title = createActivityValuesCommand.Title,
                         Content = createActivityValuesCommand.Content,
                         StartsOn = createActivityValuesCommand.StartsOn,
@@ -289,7 +295,7 @@ namespace UCosmic.SeedData
                 #endregion
                 #region Activity 4
 
-                createActivityValuesCommand = new CreateActivityValues(principal, 1, ActivityMode.Draft)
+                createActivityValuesCommand = new CreateActivityValues(principal)
                 {
                     Title = "Guest performer and teacher, China Saxophone Festival, Dalian, China",
                     Content = "Adj Professor, Professor EmeritusJazz Studies, Saxophone Studies, Ensembles & Conducting College Conservatory of Music"
@@ -309,8 +315,10 @@ namespace UCosmic.SeedData
 
                     Activity activity = createMyNewActivityCommand.CreatedActivity;
 
-                    createActivityValuesCommand = new CreateActivityValues(principal, activity.RevisionId, activity.Mode)
+                    createActivityValuesCommand = new CreateActivityValues(principal)
                     {
+                        ActivityId = activity.RevisionId,
+                        Mode = activity.Mode,
                         Title = createActivityValuesCommand.Title,
                         Content = createActivityValuesCommand.Content,
                     };
@@ -380,7 +388,7 @@ namespace UCosmic.SeedData
                 #endregion
                 #region Activity 5
 
-                createActivityValuesCommand = new CreateActivityValues(principal, 1, ActivityMode.Draft)
+                createActivityValuesCommand = new CreateActivityValues(principal)
                 {
                     Title = "Fulbright Scholar Award to Research and Teach at Zhejiang University",
                     Content = "I will be conducting research and teaching two courses to medical and public health students at Zhejiang University in Hangzhou China. I will also be working closely with Dr. Tingzhong Yang who directs an institute that studies tobacco related problems in China. Further I wish to explore differences in health knowledge, attitudes and behaviors between Chinese and US college students."
@@ -400,8 +408,10 @@ namespace UCosmic.SeedData
 
                     Activity activity = createMyNewActivityCommand.CreatedActivity;
 
-                    createActivityValuesCommand = new CreateActivityValues(principal, activity.RevisionId, activity.Mode)
+                    createActivityValuesCommand = new CreateActivityValues(principal)
                     {
+                        ActivityId = activity.RevisionId,
+                        Mode = activity.Mode,
                         Title = createActivityValuesCommand.Title,
                         Content = createActivityValuesCommand.Content,
                     };
