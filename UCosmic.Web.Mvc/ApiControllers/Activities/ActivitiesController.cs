@@ -112,9 +112,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             {
                 /* There's no "in progress edit" record, so we make a copy of the
                      * activity and set it to edit mode. */
-                var copyDeepActivityCommand = new CopyDeepActivity(User,
-                                                                   activity.RevisionId,
-                                                                   activity.Mode);
+                var copyDeepActivityCommand = new CopyDeepActivity(User, activityId);
 
                 _copyDeepActivity.Handle(copyDeepActivityCommand);
 

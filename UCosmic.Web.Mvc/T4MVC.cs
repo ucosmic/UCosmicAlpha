@@ -3670,14 +3670,6 @@ namespace Links
             }
         
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-            public static class global {
-                private const string URLPATH = "~/images/icons/global";
-                public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
-                public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
-                public static readonly string global_24_black_png = Url("global_24_black.png");
-            }
-        
-            [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
             public static class glyphs {
                 private const string URLPATH = "~/images/icons/glyphs";
                 public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
@@ -3725,24 +3717,6 @@ namespace Links
                 public static readonly string minus_16_red_on_white_png = Url("minus-16-red-on-white.png");
                 public static readonly string minus_20_red_png = Url("minus-20-red.png");
                 public static readonly string minus_24_red_png = Url("minus-24-red.png");
-            }
-        
-            [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-            public static class nounproject {
-                private const string URLPATH = "~/images/icons/nounproject";
-                public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
-                public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
-                public static readonly string noun_project_14888_teacher_svg = Url("noun_project_14888_teacher.svg");
-                public static readonly string noun_project_14888_teacher_attr_html = Url("noun_project_14888_teacher_attr.html");
-                public static readonly string noun_project_16986_podium_svg = Url("noun_project_16986_podium.svg");
-                public static readonly string noun_project_16986_podium_attr_html = Url("noun_project_16986_podium_attr.html");
-                public static readonly string noun_project_17372_meda_attr_html = Url("noun_project_17372_meda_attr.html");
-                public static readonly string noun_project_17372_medal_svg = Url("noun_project_17372_medal.svg");
-                public static readonly string noun_project_401_briefcase_svg = Url("noun_project_401_briefcase.svg");
-                public static readonly string noun_project_401_briefcase_attr_html = Url("noun_project_401_briefcase_attr.html");
-                public static readonly string noun_project_5795_compass_svg = Url("noun_project_5795_compass.svg");
-                public static readonly string noun_project_762_idea_svg = Url("noun_project_762_idea.svg");
-                public static readonly string noun_project_762_idea_attr_html = Url("noun_project_762_idea_attr.html");
             }
         
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]

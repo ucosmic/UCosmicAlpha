@@ -717,7 +717,6 @@
     <Content Include="images\icons\download\green-down-128.png" />
     <Content Include="images\icons\download\green-down-24.png" />
     <Content Include="images\icons\download\Navigation Green Up.png" />
-    <Content Include="images\icons\global\global_24_black.png" />
     <Content Include="images\icons\glyphs\glyphicons_071_book.png" />
     <Content Include="images\icons\glyphs\glyphicons_072_bookmark.png" />
     <Content Include="images\icons\glyphs\glyphicons_261_buoy.png" />
@@ -725,17 +724,6 @@
     <Content Include="images\icons\glyphs\glyphicons_300_microphone.png" />
     <Content Include="images\icons\glyphs\glyphicons_341_briefcase.png" />
     <Content Include="images\icons\glyphs\glyphicons_375_classic_hammer.png" />
-    <Content Include="images\icons\nounproject\noun_project_14888_teacher.svg" />
-    <Content Include="images\icons\nounproject\noun_project_14888_teacher_attr.html" />
-    <Content Include="images\icons\nounproject\noun_project_16986_podium.svg" />
-    <Content Include="images\icons\nounproject\noun_project_16986_podium_attr.html" />
-    <Content Include="images\icons\nounproject\noun_project_17372_medal.svg" />
-    <Content Include="images\icons\nounproject\noun_project_17372_meda_attr.html" />
-    <Content Include="images\icons\nounproject\noun_project_401_briefcase.svg" />
-    <Content Include="images\icons\nounproject\noun_project_401_briefcase_attr.html" />
-    <Content Include="images\icons\nounproject\noun_project_5795_compass.svg" />
-    <Content Include="images\icons\nounproject\noun_project_762_idea.svg" />
-    <Content Include="images\icons\nounproject\noun_project_762_idea_attr.html" />
     <Content Include="images\icons\print\print-24-black.png" />
     <Content Include="images\icons\save\Save-24.png" />
     <Content Include="images\icons\save\Save-256.png" />

@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Linq;
+using System.Collections.ObjectModel;
+using System.Linq.Expressions;
 using System.Security.Principal;
 
 namespace UCosmic.Domain.Activities
@@ -12,8 +13,9 @@ namespace UCosmic.Domain.Activities
         }
 
         internal IPrincipal Principal { get; private set; }
-        internal int Id { get; set; }
-        internal int ActivityId { get; set; }
+        internal int ActivityValuesId { get; set; }
+        internal int CopyToActivityId { get; set; }
+        internal Activity CopyToActivity { get; set; }
         internal ActivityMode Mode { get; set; }
         internal ActivityValues CreatedActivityValues { get; set; }
         internal bool NoCommit { get; set; }
@@ -22,25 +24,19 @@ namespace UCosmic.Domain.Activities
     public class HandleCopyDeepActivityValuesCommand : IHandleCommands<CopyDeepActivityValues>
     {
         private readonly ICommandEntities _entities;
-        private readonly IHandleCommands<CreateActivityValues> _createActivityValues;
-        private readonly IHandleCommands<CreateActivityType> _createActivityType;
-        private readonly IHandleCommands<CreateActivityTag> _createActivityTag;
-        private readonly IHandleCommands<CreateActivityLocation> _createActivityLocation;
+        private readonly IQueryEntities _detachedEntities;
+        private readonly IStoreBinaryData _binaryData;
         private readonly IHandleCommands<CreateActivityDocument> _createActivityDocument;
 
         public HandleCopyDeepActivityValuesCommand(ICommandEntities entities
-            , IHandleCommands<CreateActivityValues> createActivityValues
-            , IHandleCommands<CreateActivityType> createActivityType
-            , IHandleCommands<CreateActivityTag> createActivityTag
-            , IHandleCommands<CreateActivityLocation> createActivityLocation
+            , IQueryEntities detachedEntities
+            , IStoreBinaryData binaryData
             , IHandleCommands<CreateActivityDocument> createActivityDocument
         )
         {
             _entities = entities;
-            _createActivityValues = createActivityValues;
-            _createActivityType = createActivityType;
-            _createActivityTag = createActivityTag;
-            _createActivityLocation = createActivityLocation;
+            _detachedEntities = detachedEntities;
+            _binaryData = binaryData;
             _createActivityDocument = createActivityDocument;
         }
 
@@ -48,77 +44,57 @@ namespace UCosmic.Domain.Activities
         {
             if (command == null) throw new ArgumentNullException("command");
 
-            var sourceActivityValues = _entities.Get<ActivityValues>().Single(x => x.RevisionId == command.Id);
-            if (sourceActivityValues == null)
-            {
-                var message = string.Format("ActivityValues Id {0} not found.", command.Id);
-                throw new Exception(message);
-            }
+            var copyToActivity = command.CopyToActivity
+                ?? _entities.Get<Activity>().ById(command.CopyToActivityId);
 
-            var createActivityValuesCommand = new CreateActivityValues(command.Principal)
-            {
-                ActivityId = command.ActivityId,
-                Mode = command.Mode,
-                Title = sourceActivityValues.Title,
-                Content = sourceActivityValues.Content,
-                StartsOn = sourceActivityValues.StartsOn,
-                EndsOn = sourceActivityValues.EndsOn,
-                OnGoing = sourceActivityValues.OnGoing,
-                DateFormat = sourceActivityValues.DateFormat,
-                WasExternallyFunded = sourceActivityValues.WasExternallyFunded,
-                WasInternallyFunded = sourceActivityValues.WasInternallyFunded,
-            };
-
-            _createActivityValues.Handle(createActivityValuesCommand);
-
-            ActivityValues activityValuesCopy = createActivityValuesCommand.CreatedActivityValues;
-
-            foreach (var location in sourceActivityValues.Locations)
-            {
-                _createActivityLocation.Handle(new CreateActivityLocation(command.Principal)
+            var copiedActivityValues = _detachedEntities.Query<ActivityValues>()
+                .EagerLoad(_entities, new Expression<Func<ActivityValues, object>>[]
                 {
-                    ActivityValuesId = activityValuesCopy.RevisionId,
-                    PlaceId = location.PlaceId,
-                });
-            }
+                    x => x.Locations,
+                    x => x.Types,
+                    x => x.Tags,
+                    x => x.Documents,
+                })
+                .ById(command.ActivityValuesId);
 
-            foreach (var type in sourceActivityValues.Types)
-            {
-                _createActivityType.Handle(new CreateActivityType(command.Principal,
-                                                                  activityValuesCopy.RevisionId,
-                                                                  type.TypeId));
-            }
+            copiedActivityValues.Activity = copyToActivity;
+            copiedActivityValues.ActivityId = copyToActivity.RevisionId;
+            copiedActivityValues.Mode = command.Mode;
+            copiedActivityValues.RevisionId = 0;
+            EnableForCopy(copiedActivityValues, command);
 
-            foreach (var tag in sourceActivityValues.Tags)
-            {
-                _createActivityTag.Handle(new CreateActivityTag(command.Principal)
-                {
-                    ActivityValuesId = activityValuesCopy.RevisionId,
-                    Text = tag.Text,
-                    DomainType = tag.DomainType,
-                    DomainKey = tag.DomainKey,
-                    Mode = command.Mode
-                });
-            }
+            foreach (var location in copiedActivityValues.Locations) EnableForCopy(location, command);
 
-            foreach (var document in sourceActivityValues.Documents)
+            foreach (var type in copiedActivityValues.Types) EnableForCopy(type, command);
+
+            foreach (var tag in copiedActivityValues.Tags) EnableForCopy(tag, command);
+
+            var documentsToCopy = copiedActivityValues.Documents;
+            copiedActivityValues.Documents = new Collection<ActivityDocument>();
+            foreach (var document in documentsToCopy)
             {
                 _createActivityDocument.Handle(new CreateActivityDocument(command.Principal)
                 {
-                    ActivityValuesId = activityValuesCopy.RevisionId,
+                    ActivityValues = copiedActivityValues,
                     FileName = document.FileName,
                     MimeType = document.MimeType,
-                    Path = document.Path,
-                    Length = document.Length,
+                    Content = _binaryData.Get(document.Path),
                     Mode = command.Mode,
                     Title = document.Title,
                     NoCommit = true,
                 });
             }
 
-            command.CreatedActivityValues = activityValuesCopy;
-
+            command.CreatedActivityValues = copiedActivityValues;
+            _entities.Create(copiedActivityValues);
             if (!command.NoCommit) _entities.SaveChanges();
+        }
+
+        private static void EnableForCopy(RevisableEntity entity, CopyDeepActivityValues command)
+        {
+            entity.EntityId = Guid.NewGuid();
+            entity.CreatedOnUtc = DateTime.UtcNow;
+            entity.CreatedByPrincipal = command.Principal.Identity.Name;
         }
     }
 }

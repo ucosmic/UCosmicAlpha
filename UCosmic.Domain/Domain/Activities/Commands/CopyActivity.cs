@@ -46,13 +46,14 @@ namespace UCosmic.Domain.Activities
         {
             if (command == null) throw new ArgumentNullException("command");
 
-            var createActivityCommand = new CreateActivity(command.Principal)
+            var createActivity = new CreateActivity(command.Principal)
             {
                 Mode = command.Mode,
+                NoCommit = true,
             };
 
-            _createActivity.Handle(createActivityCommand);
-            command.CreatedActivity = createActivityCommand.CreatedActivity;
+            _createActivity.Handle(createActivity);
+            command.CreatedActivity = createActivity.CreatedActivity;
 
             var originalActivity = _entities.Get<Activity>().ById(command.ActivityId, false);
             command.CreatedActivity.Original = originalActivity;

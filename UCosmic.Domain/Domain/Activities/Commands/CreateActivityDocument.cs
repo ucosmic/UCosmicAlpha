@@ -20,6 +20,7 @@ namespace UCosmic.Domain.Activities
         public byte[] Content { get; set; }
         public string MimeType { get; set; }
         public string FileName { get; set; }
+        internal ActivityValues ActivityValues { get; set; }
         internal bool NoCommit { get; set; }
         internal int? Length { get; set; }
         internal string Path { get; set; }
@@ -33,15 +34,12 @@ namespace UCosmic.Domain.Activities
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
-            RuleFor(x => x.ActivityValuesId)
-                // activity id must be within valid range
-                .GreaterThanOrEqualTo(1)
-                    .WithMessage(MustBePositivePrimaryKey.FailMessageFormat, x => "ActivityValues id", x => x.ActivityValuesId)
-
-                // activity id must exist in the database
-                .MustFindActivityValuesById(entities)
-                    .WithMessage(MustFindActivityValuesById.FailMessageFormat, x => x.ActivityValuesId)
-            ;
+            When(x => x.ActivityValues == null, () =>
+                RuleFor(x => x.ActivityValuesId)
+                    // activity id must exist in the database
+                    .MustFindActivityValuesById(entities)
+                        .WithMessage(MustFindActivityValuesById.FailMessageFormat, x => x.ActivityValuesId)
+            );
 
             var validFileExtensions = new[]
             {
@@ -90,8 +88,8 @@ namespace UCosmic.Domain.Activities
         {
             if (command == null) throw new ArgumentNullException("command");
 
-            var activityValues = _entities.Get<ActivityValues>()
-                .Single(x => x.RevisionId == command.ActivityValuesId);
+            var activityValues = command.ActivityValues
+                ?? _entities.Get<ActivityValues>().ById(command.ActivityValuesId);
 
             var path = command.Path;
             if (string.IsNullOrWhiteSpace(path))
@@ -102,7 +100,7 @@ namespace UCosmic.Domain.Activities
 
             var activityDocument = new ActivityDocument
             {
-                ActivityValuesId = activityValues.RevisionId,
+                ActivityValues = activityValues,
                 Mode = command.Mode,
                 Title = command.Title,
                 FileName = command.FileName,
@@ -111,6 +109,7 @@ namespace UCosmic.Domain.Activities
                 Length = command.Length.HasValue ? command.Length.Value : command.Content.Length,
                 CreatedByPrincipal = command.Principal.Identity.Name,
             };
+            activityValues.Documents.Add(activityDocument);
 
             _entities.Create(activityDocument);
 

@@ -40,17 +40,12 @@ namespace UCosmic.Domain.Activities
     public class HandleDeleteActivityDocumentCommand : IHandleCommands<DeleteActivityDocument>
     {
         private readonly ICommandEntities _entities;
-        private readonly IUnitOfWork _unitOfWork;
-        //private readonly IProcessEvents _eventProcessor;
+        private readonly IStoreBinaryData _binaryData;
 
-        public HandleDeleteActivityDocumentCommand(ICommandEntities entities
-            , IUnitOfWork unitOfWork
-            //, IProcessEvents eventProcessor
-        )
+        public HandleDeleteActivityDocumentCommand(ICommandEntities entities, IStoreBinaryData binaryData)
         {
             _entities = entities;
-            _unitOfWork = unitOfWork;
-            //_eventProcessor = eventProcessor;
+            _binaryData = binaryData;
         }
 
         public void Handle(DeleteActivityDocument command)
@@ -62,21 +57,6 @@ namespace UCosmic.Domain.Activities
                 .SingleOrDefault(x => x.RevisionId == command.Id)
             ;
             if (activityDocument == null) return; // delete idempotently
-
-            /* TBD - Delete these when Activity is deleted. */
-            //if (activityDocument.ImageId.HasValue && (activityDocument.ImageId.Value != 0))
-            //{
-            //    var image = _entities.Get<Image>()
-            //                         .SingleOrDefault(x => x.Id == activityDocument.ImageId.Value);
-            //    _entities.Purge(image);
-            //}
-
-            //if (activityDocument.FileId.HasValue && (activityDocument.FileId.Value != 0))
-            //{
-            //    var loadableFile = _entities.Get<LoadableFile>()
-            //                         .SingleOrDefault(x => x.Id == activityDocument.FileId.Value);
-            //    _entities.Purge(loadableFile);                
-            //}
 
             // TBD
             // log audit
@@ -90,10 +70,11 @@ namespace UCosmic.Domain.Activities
 
             //_entities.Create(audit);
             _entities.Purge(activityDocument);
+            _binaryData.Delete(activityDocument.Path);
 
             if (!command.NoCommit)
             {
-                _unitOfWork.SaveChanges();
+                _entities.SaveChanges();
             }
             //_eventProcessor.Raise(new EstablishmentChanged());
         }

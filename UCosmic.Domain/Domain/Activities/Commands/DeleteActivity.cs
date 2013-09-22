@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Security.Principal;
 using FluentValidation;
 
@@ -38,22 +40,46 @@ namespace UCosmic.Domain.Activities
     public class HandleDeleteActivityCommand : IHandleCommands<DeleteActivity>
     {
         private readonly ICommandEntities _entities;
+        private readonly IStoreBinaryData _binaryData;
 
-        public HandleDeleteActivityCommand(ICommandEntities entities)
+        public HandleDeleteActivityCommand(ICommandEntities entities, IStoreBinaryData binaryData)
         {
             _entities = entities;
+            _binaryData = binaryData;
         }
 
         public void Handle(DeleteActivity command)
         {
             if (command == null) throw new ArgumentNullException("command");
 
-            var activity = _entities.Get<Activity>().SingleOrDefault(x => x.RevisionId == command.Id);
+            var activity = _entities.Get<Activity>()
+                .EagerLoad(_entities, new Expression<Func<Activity, object>>[]
+                {
+                    x => x.Values.Select(y => y.Documents),
+                })
+                .SingleOrDefault(x => x.RevisionId == command.Id);
             if (activity == null) return;
 
-            _entities.Purge(activity);
+            var deletedPaths = new Dictionary<string, byte[]>();
+            foreach (var path in activity.Values.SelectMany(x => x.Documents.Select(y => y.Path)))
+            {
+                if (_binaryData.Exists(path))
+                {
+                    deletedPaths.Add(path, _binaryData.Get(path));
+                    _binaryData.Delete(path);
+                }
+            }
 
-            _entities.SaveChanges();
+            try
+            {
+                _entities.Purge(activity);
+                _entities.SaveChanges();
+            }
+            catch
+            {
+                foreach (var path in deletedPaths)
+                    _binaryData.Put(path.Key, path.Value, true);
+            }
 
             // TBD
             // log audit

@@ -56,15 +56,18 @@ namespace UCosmic.Domain.Activities
         private readonly ICommandEntities _entities;
         private readonly IHandleCommands<UpdateActivityValues> _updateActivityValues;
         private readonly IHandleCommands<CopyDeepActivityValues> _copyDeepActivityValues;
+        private readonly IHandleCommands<MoveActivityDocuments> _moveActivityDocuments;
 
         public HandleUpdateMyActivityCommand(ICommandEntities entities
             , IHandleCommands<UpdateActivityValues> updateActivityValues
             , IHandleCommands<CopyDeepActivityValues> copyDeepActivityValues
+            , IHandleCommands<MoveActivityDocuments> moveActivityDocuments
         )
         {
             _entities = entities;
             _updateActivityValues = updateActivityValues;
             _copyDeepActivityValues = copyDeepActivityValues;
+            _moveActivityDocuments = moveActivityDocuments;
         }
 
         public void Handle(UpdateActivity command)
@@ -88,8 +91,8 @@ namespace UCosmic.Domain.Activities
             {
                 var copyDeepActivityValues = new CopyDeepActivityValues(command.Principal)
                 {
-                    Id = command.Values.RevisionId,
-                    ActivityId = target.RevisionId,
+                    ActivityValuesId = command.Values.RevisionId,
+                    CopyToActivityId = target.RevisionId,
                     Mode = command.ModeText.AsEnum<ActivityMode>()
                 };
                 _copyDeepActivityValues.Handle(copyDeepActivityValues);
@@ -127,7 +130,7 @@ namespace UCosmic.Domain.Activities
             if (!command.NoCommit)
             {
                 _entities.SaveChanges();
-
+                _moveActivityDocuments.Handle(new MoveActivityDocuments(target.RevisionId));
                 //_eventProcessor.Raise(new ActivityChanged
                 //{
                 //    ActivityId = target.RevisionId,

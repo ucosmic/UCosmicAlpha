@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Linq.Expressions;
 using FluentValidation;
 using FluentValidation.Validators;
 
@@ -7,26 +9,30 @@ namespace UCosmic.Domain.Activities
     public class MustHaveValuesForMode<T> : PropertyValidator
     {
         private readonly IProcessQueries _queryProcessor;
-        private readonly Func<T, ActivityMode> _mode;
 
-        internal MustHaveValuesForMode(IProcessQueries queryProcessor, Func<T, ActivityMode> mode)
+        internal MustHaveValuesForMode(IProcessQueries queryProcessor)
             : base("There are no values for activity with id '{PropertyValue}' and mode '{ActivityMode}'.")
         {
             if (queryProcessor == null) throw new ArgumentNullException("queryProcessor");
-            if (mode == null) throw new ArgumentNullException("mode");
             _queryProcessor = queryProcessor;
-            _mode = mode;
         }
 
         protected override bool IsValid(PropertyValidatorContext context)
         {
             var activityId = (int)context.PropertyValue;
-            var mode = _mode((T) context.Instance);
-            var entity = _queryProcessor.Execute(new ActivityValuesByActivityIdAndMode(activityId, mode));
-
-            if (entity == null)
+            var activity = _queryProcessor.Execute(new ActivityById(activityId)
             {
-                context.MessageFormatter.AppendArgument("ActivityMode", mode.AsSentenceFragment());
+                EagerLoad = new Expression<Func<Activity, object>>[]
+                {
+                    x => x.Values,
+                },
+            });
+            var values = activity.Values.FirstOrDefault(x => x.Mode == activity.Mode);
+
+            if (values == null)
+            {
+                context.MessageFormatter.AppendArgument("PropertyValue", context.PropertyValue);
+                context.MessageFormatter.AppendArgument("ActivityMode", activity.Mode);
                 return false;
             }
 
@@ -37,9 +43,9 @@ namespace UCosmic.Domain.Activities
     public static class MustHaveValuesForModeExtensions
     {
         public static IRuleBuilderOptions<T, int> MustHaveValuesForMode<T>
-            (this IRuleBuilder<T, int> ruleBuilder, IProcessQueries queryProcessor, Func<T, ActivityMode> mode)
+            (this IRuleBuilder<T, int> ruleBuilder, IProcessQueries queryProcessor)
         {
-            return ruleBuilder.SetValidator(new MustHaveValuesForMode<T>(queryProcessor, mode));
+            return ruleBuilder.SetValidator(new MustHaveValuesForMode<T>(queryProcessor));
         }
     }
 }

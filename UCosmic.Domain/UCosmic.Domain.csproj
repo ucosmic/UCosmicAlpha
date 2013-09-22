@@ -122,6 +122,7 @@
     <Compile Include="Api\_Extensions\StringExtensions.cs" />
     <Compile Include="Api\Validation\MustBeWellFormedUrl.cs" />
     <Compile Include="Api\Validation\MustNotContainUrlProtocol.cs" />
+    <Compile Include="Domain\Activities\Commands\MoveActivityDocuments.cs" />
     <Compile Include="Domain\Activities\Commands\CopyActivity.cs" />
     <Compile Include="Domain\Activities\Commands\CopyDeepActivity.cs" />
     <Compile Include="Domain\Activities\Commands\CopyDeepActivityValues.cs" />

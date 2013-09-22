@@ -4,6 +4,16 @@ using UCosmic.Domain.Places;
 
 namespace UCosmic.Domain.Activities
 {
+    internal static class QueryActivityValues
+    {
+        internal static ActivityValues ById(this IQueryable<ActivityValues> queryable, int id, bool allowNull = true)
+        {
+            return allowNull
+                ? queryable.SingleOrDefault(x => x.RevisionId == id)
+                : queryable.Single(x => x.RevisionId == id);
+        }
+    }
+
     internal static class QueryActivities
     {
         internal static IQueryable<Activity> WithPersonId(this IQueryable<Activity> queryable, int personId)

@@ -20,17 +20,17 @@ namespace UCosmic.Domain.Employees
             InternationalPedigreeTitle = "International Pedigree";
             ReportsDefaultYearRange = 10;
 
-            GlobalViewIconFileName = EmployeeConsts.DefaultGlobalViewIconGuid;
-            GlobalViewIconMimeType = "image/png";
-            GlobalViewIconName = "GlobalViewIcon.png";
-            GlobalViewIconPath = string.Format("{0}/{1}/", EmployeeConsts.SettingsBinaryStoreBasePath,
-                                                      EmployeeConsts.IconsBinaryStorePath);
+            //GlobalViewIconFileName = EmployeeConsts.DefaultGlobalViewIconGuid;
+            //GlobalViewIconMimeType = "image/png";
+            //GlobalViewIconName = "GlobalViewIcon.png";
+            //GlobalViewIconPath = string.Format("{0}/{1}/", EmployeeConsts.SettingsBinaryStoreBasePath,
+            //                                          EmployeeConsts.IconsBinaryStorePath);
 
-            FindAnExpertIconFileName = EmployeeConsts.DefaultFindAnExpertIconGuid;
-            FindAnExpertIconMimeType = "image/svg+xml";
-            FindAnExpertIconName = "FindAnExpertIcon.svg";
-            FindAnExpertIconPath = string.Format("{0}/{1}/", EmployeeConsts.SettingsBinaryStoreBasePath,
-                                                      EmployeeConsts.IconsBinaryStorePath);
+            //FindAnExpertIconFileName = EmployeeConsts.DefaultFindAnExpertIconGuid;
+            //FindAnExpertIconMimeType = "image/svg+xml";
+            //FindAnExpertIconName = "FindAnExpertIcon.svg";
+            //FindAnExpertIconPath = string.Format("{0}/{1}/", EmployeeConsts.SettingsBinaryStoreBasePath,
+            //                                          EmployeeConsts.IconsBinaryStorePath);
         }
 
         public int Id { get; set; }

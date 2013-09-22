@@ -19,7 +19,11 @@ namespace UCosmic.Domain.Activities
         {
             var activityId = (int)context.PropertyValue;
             var entity = _queryProcessor.Execute(new ActivityById(activityId));
-            return entity != null;
+
+            if (entity != null) return true;
+
+            context.MessageFormatter.AppendArgument("PropertyValue", context.PropertyValue);
+            return false;
         }
     }
 

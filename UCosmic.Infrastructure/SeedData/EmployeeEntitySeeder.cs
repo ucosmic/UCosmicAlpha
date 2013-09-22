@@ -7,7 +7,6 @@ using UCosmic.Domain.Employees;
 using UCosmic.Domain.Establishments;
 using UCosmic.Domain.People;
 
-
 namespace UCosmic.SeedData
 {
     public class EmployeeModuleSettingsEntitySeeder : ISeedData
@@ -82,19 +81,16 @@ namespace UCosmic.SeedData
     {
         private readonly ICommandEntities _entities;
         private readonly IStoreBinaryData _binaryStore;
-        public EmployeeModuleSettings CreatedEmployeeModuleSettings { get; private set; }
+        private EmployeeModuleSettings CreatedEmployeeModuleSettings { get; set; }
         private readonly IHandleCommands<UpdateEmployeeModuleSettings> _updateEmployeeModuleSettings;
-        private string[] _activityTypeFilenames;
-        private IDictionary<string, string> _activityTypeFilenameMap;
-        private string _activityTypeIconBinaryPath;
 
         public UsfEmployeeModuleSettingsSeeder(IProcessQueries queryProcessor
-                                               , ICommandEntities entities
-                                               , IHandleCommands<CreateEmployeeModuleSettings> createEmployeeModuleSettings
-                                               , IHandleCommands<UpdateEmployeeModuleSettings> updateEmployeeModuleSettings
-                                               , IUnitOfWork unitOfWork
-                                               , IStoreBinaryData binaryStore
-            )
+            , ICommandEntities entities
+            , IHandleCommands<CreateEmployeeModuleSettings> createEmployeeModuleSettings
+            , IHandleCommands<UpdateEmployeeModuleSettings> updateEmployeeModuleSettings
+            , IUnitOfWork unitOfWork
+            , IStoreBinaryData binaryStore
+        )
             : base(queryProcessor, createEmployeeModuleSettings, unitOfWork, binaryStore)
         {
             _entities = entities;
@@ -102,41 +98,42 @@ namespace UCosmic.SeedData
             _updateEmployeeModuleSettings = updateEmployeeModuleSettings;
         }
 
-        private void MakeIconBinaryStorePaths(int employeeModuleSettingsId)
+        internal static readonly IDictionary<string, Triple<string, string, Guid>> UsfActivityTypeIcons = new Dictionary<string, Triple<string, string, Guid>>
         {
-            _activityTypeFilenames = new string[]
-            {
-                "noun_project_762_idea.svg",
-                "noun_project_14888_teacher.svg",
-                "noun_project_17372_medal.svg",
-                "noun_project_16986_podium.svg",
-                "noun_project_401_briefcase.svg"
-            };
+            { "noun_project_762_idea.svg",      new Triple<string, string, Guid>("Research or Creative Endeavor",                    "Research.svg",     Guid.NewGuid()) },
+            { "noun_project_14888_teacher.svg", new Triple<string, string, Guid>("Teaching or Mentoring",                            "Teaching.svg",     Guid.NewGuid()) },
+            { "noun_project_17372_medal.svg",   new Triple<string, string, Guid>("Award or Honor",                                   "Award.svg",        Guid.NewGuid()) },
+            { "noun_project_16986_podium.svg",  new Triple<string, string, Guid>("Conference Presentation or Proceeding",            "Conference.svg",   Guid.NewGuid()) },
+            { "noun_project_401_briefcase.svg", new Triple<string, string, Guid>("Professional Development, Service or Consulting",  "Professional.svg", Guid.NewGuid()) },
+        };
 
-            _activityTypeFilenameMap = new Dictionary<string, string>
-            {
-                { "noun_project_762_idea.svg", "5117FFC4-C3CD-42F8-9C68-6B4362930A99" },
-                { "noun_project_14888_teacher.svg", "0033E48C-95CD-487B-8B0D-571E71EFF844" },
-                { "noun_project_17372_medal.svg", "8C746B8A-6B24-4881-9D4D-D830FBCD723A" },
-                { "noun_project_16986_podium.svg", "E44978F8-3664-4F7A-A2AF-6A0446D38099" },
-                { "noun_project_401_briefcase.svg", "586DDDBB-DE01-429B-8428-57A9D03189CB" }
-            };
+        internal static readonly IDictionary<string, Triple<string, string, Guid>> UsfEmployeeModuleSettingIcons = new Dictionary<string, Triple<string, string, Guid>>
+        {
+            { "global_24_black.png",            new Triple<string, string, Guid>("Global",    "GlobalViewIcon.png",   Guid.NewGuid()) },
+            { "noun_project_5795_compass.svg",  new Triple<string, string, Guid>("Expert",    "FindAnExpertIcon.svg", Guid.NewGuid()) },
+        };
 
-            _activityTypeIconBinaryPath = string.Format("{0}/{1}/{2}/", EmployeeConsts.SettingsBinaryStoreBasePath,
-                                  employeeModuleSettingsId,
-                                  EmployeeConsts.IconsBinaryStorePath);       
+        internal class Triple<TFirst, TSecond, TThird>
+        {
+            internal Triple(TFirst first, TSecond second, TThird third)
+            {
+                First = first;
+                Second = second;
+                Third = third;
+            }
+
+            internal TFirst First { get; private set; }
+            internal TSecond Second { get; private set; }
+            internal TThird Third { get; private set; }
         }
 
         public override void Seed()
         {
-            var establishment = _entities.Get<Establishment>().SingleOrDefault(x => x.OfficialName.Contains("University of South Florida"));
-            if (establishment == null) throw new Exception("Establishment is null");
-
+            var establishment = _entities.Get<Establishment>().Single(x => x.WebsiteUrl == "www.usf.edu");
             var settings = _entities.Get<EmployeeModuleSettings>().SingleOrDefault(x => x.Establishment.RevisionId == establishment.RevisionId);
-            if (settings != null)
-            {
-                return; 
-            }
+            if (settings != null) return;
+
+            #region CreateEmployeeModuleSettings
 
             CreatedEmployeeModuleSettings = Seed(new CreateEmployeeModuleSettings
             {
@@ -191,73 +188,37 @@ namespace UCosmic.SeedData
                 ReportsDefaultYearRange = 10
             });
 
+            #endregion
+            #region ActivityType Icons
 
+            var activityTypeIconBinaryPath = string.Format("{0}/{1}/{2}/", EmployeeConsts.SettingsBinaryStoreBasePath,
+                      CreatedEmployeeModuleSettings.Id,
+                      EmployeeConsts.IconsBinaryStorePath);
 
-            MakeIconBinaryStorePaths(CreatedEmployeeModuleSettings.Id);
-
-            for (var i = 0; i < _activityTypeFilenames.Length; i += 1)
+            foreach (var fileName in UsfActivityTypeIcons.Keys)
             {
-                string iconBinaryFilePath =
-                    String.Format("{0}{1}", _activityTypeIconBinaryPath,
-                                  _activityTypeFilenameMap[_activityTypeFilenames[i]]);
+                var binaryFilePath = string.Format("{0}{1}",
+                    activityTypeIconBinaryPath, UsfActivityTypeIcons[fileName].Third);
 
-                if (_binaryStore.Get(iconBinaryFilePath) == null)
+                if (_binaryStore.Get(binaryFilePath) == null)
                 {
-                    string filePath = string.Format("{0}{1}{2}", AppDomain.CurrentDomain.BaseDirectory,
-                                                    @"..\UCosmic.Web.MVC\images\icons\nounproject\",
-                                                    _activityTypeFilenames[i]);
+                    var localFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
+                        @"..\UCosmic.Infrastructure\SeedData\SeedMediaFiles\", fileName);
 
-                    using (var fileStream = File.OpenRead(filePath))
-                    {
-                        var content = fileStream.ReadFully();
-                        _binaryStore.Put(iconBinaryFilePath, content);
-                    }
+                    using (var fileStream = File.OpenRead(localFilePath))
+                        _binaryStore.Put(binaryFilePath, fileStream.ReadFully());
                 }
+
+                var activityType = CreatedEmployeeModuleSettings.ActivityTypes.Single(a => a.Type == UsfActivityTypeIcons[fileName].First);
+                activityType.IconLength = _binaryStore.Get(binaryFilePath).Length;
+                activityType.IconMimeType = "image/svg+xml";
+                activityType.IconName = UsfActivityTypeIcons[fileName].Second;
+                activityType.IconPath = activityTypeIconBinaryPath;
+                activityType.IconFileName = UsfActivityTypeIcons[fileName].Third.ToString();
             }
 
-            EmployeeActivityType activityType;
-
-            activityType =
-                CreatedEmployeeModuleSettings.ActivityTypes.Single(a => a.Type == "Research or Creative Endeavor");
-            activityType.IconLength = _binaryStore.Get(_activityTypeIconBinaryPath + _activityTypeFilenameMap["noun_project_762_idea.svg"]).Length;
-            activityType.IconMimeType = "image/svg+xml";
-            activityType.IconName = "Research.svg";
-            activityType.IconPath = _activityTypeIconBinaryPath;
-            activityType.IconFileName = _activityTypeFilenameMap["noun_project_762_idea.svg"];
-
-            activityType = 
-                CreatedEmployeeModuleSettings.ActivityTypes.Single(a => a.Type == "Teaching or Mentoring");
-            activityType.IconLength = _binaryStore.Get(_activityTypeIconBinaryPath + _activityTypeFilenameMap["noun_project_14888_teacher.svg"]).Length;
-            activityType.IconMimeType = "image/svg+xml";
-            activityType.IconName = "Teaching.svg";
-            activityType.IconPath = _activityTypeIconBinaryPath;
-            activityType.IconFileName = _activityTypeFilenameMap["noun_project_14888_teacher.svg"];
-
-            activityType =
-                CreatedEmployeeModuleSettings.ActivityTypes.Single(a => a.Type == "Award or Honor");
-            activityType.IconLength = _binaryStore.Get(_activityTypeIconBinaryPath + _activityTypeFilenameMap["noun_project_17372_medal.svg"]).Length;
-            activityType.IconMimeType = "image/svg+xml";
-            activityType.IconName = "Award.svg";
-            activityType.IconPath = _activityTypeIconBinaryPath;
-            activityType.IconFileName = _activityTypeFilenameMap["noun_project_17372_medal.svg"];
-
-            activityType =
-                CreatedEmployeeModuleSettings.ActivityTypes.Single(a => a.Type == "Conference Presentation or Proceeding");
-            activityType.IconLength =
-                _binaryStore.Get(_activityTypeIconBinaryPath + _activityTypeFilenameMap["noun_project_16986_podium.svg"]).Length;
-            activityType.IconMimeType = "image/svg+xml";
-            activityType.IconName = "Conference.svg";
-            activityType.IconPath = _activityTypeIconBinaryPath;
-            activityType.IconFileName = _activityTypeFilenameMap["noun_project_16986_podium.svg"];
-
-            activityType =
-                CreatedEmployeeModuleSettings.ActivityTypes.Single(a => a.Type == "Professional Development, Service or Consulting");
-            activityType.IconLength =
-                _binaryStore.Get(_activityTypeIconBinaryPath + _activityTypeFilenameMap["noun_project_401_briefcase.svg"]).Length;
-            activityType.IconMimeType = "image/svg+xml";
-            activityType.IconName = "Professional.svg";
-            activityType.IconPath = _activityTypeIconBinaryPath;
-            activityType.IconFileName = _activityTypeFilenameMap["noun_project_401_briefcase.svg"];
+            #endregion
+            #region UpdateEmployeeModuleSettings
 
             var updateCommand = new UpdateEmployeeModuleSettings(CreatedEmployeeModuleSettings.Id)
             {
@@ -272,6 +233,8 @@ namespace UCosmic.SeedData
                 OfferFundingQuestions = CreatedEmployeeModuleSettings.OfferFundingQuestions,
                 InternationalPedigreeTitle = CreatedEmployeeModuleSettings.InternationalPedigreeTitle
             };
+
+            #endregion
 
             _updateEmployeeModuleSettings.Handle(updateCommand);
         }
@@ -303,55 +266,41 @@ namespace UCosmic.SeedData
             // make sure entity does not already exist
             var employeeModuleSettings = _queryProcessor.Execute(
                 new EmployeeModuleSettingsByEstablishmentId(command.EstablishmentId, true));
-
             if (employeeModuleSettings != null) return employeeModuleSettings;
 
             var iconsBinaryPath = string.Format("{0}/{1}/", EmployeeConsts.SettingsBinaryStoreBasePath,
                                                       EmployeeConsts.IconsBinaryStorePath);
 
-            /* Create default Global View icon */
-            if (_binaryStore.Get(iconsBinaryPath + EmployeeConsts.DefaultGlobalViewIconGuid) == null)
+            foreach (var icon in UsfEmployeeModuleSettingsSeeder.UsfEmployeeModuleSettingIcons)
             {
-                string filePath = string.Format("{0}{1}{2}", AppDomain.CurrentDomain.BaseDirectory,
-                                                @"..\UCosmic.Web.Mvc\images\icons\global\",
-                                                "global_24_black.png");
-
-                using (var fileStream = File.OpenRead(filePath))
+                var iconPath = Path.Combine(iconsBinaryPath, icon.Value.Third.ToString());
+                if (!_binaryStore.Exists(iconPath))
                 {
-                    var content = fileStream.ReadFully();
-                    _binaryStore.Put(iconsBinaryPath + EmployeeConsts.DefaultGlobalViewIconGuid, content);
-                }                
-            }
+                    var filePath = string.Format("{0}{1}{2}", AppDomain.CurrentDomain.BaseDirectory,
+                                                    @"..\UCosmic.Infrastructure\SeedData\SeedMediaFiles\",
+                                                    icon.Key);
 
-            /* Create default Find an Expert icon */
-            if (_binaryStore.Get(iconsBinaryPath + EmployeeConsts.DefaultFindAnExpertIconGuid) == null)
-            {
-                var filePath = string.Format("{0}{1}{2}", AppDomain.CurrentDomain.BaseDirectory,
-                                             @"..\UCosmic.Web.Mvc\images\icons\nounproject\",
-                                             "noun_project_5795_compass.svg");
-                using (var fileStream = File.OpenRead(filePath))
-                {
-                    var content = fileStream.ReadFully();
-                    _binaryStore.Put(iconsBinaryPath + EmployeeConsts.DefaultFindAnExpertIconGuid, content);
+                    using (var fileStream = File.OpenRead(filePath))
+                        _binaryStore.Put(iconPath, fileStream.ReadFully());
                 }
-            }
 
-            if (String.IsNullOrEmpty(command.GlobalViewIconPath))
-            {
-                command.GlobalViewIconFileName = EmployeeConsts.DefaultGlobalViewIconGuid;
-                command.GlobalViewIconLength = _binaryStore.Get(iconsBinaryPath + EmployeeConsts.DefaultGlobalViewIconGuid).Length;
-                command.GlobalViewIconMimeType = "image/png";
-                command.GlobalViewIconName = "GlobalViewIcon.png";
-                command.GlobalViewIconPath = iconsBinaryPath;
-            }
+                if (string.IsNullOrEmpty(command.GlobalViewIconPath) && icon.Value.First == "Global")
+                {
+                    command.GlobalViewIconFileName = icon.Value.Third.ToString();
+                    command.GlobalViewIconLength = _binaryStore.Get(iconPath).Length;
+                    command.GlobalViewIconMimeType = "image/png";
+                    command.GlobalViewIconName = icon.Value.Second;
+                    command.GlobalViewIconPath = iconsBinaryPath;
+                }
 
-            if (String.IsNullOrEmpty(command.FindAnExpertIconPath))
-            {
-                command.FindAnExpertIconFileName = EmployeeConsts.DefaultFindAnExpertIconGuid;
-                command.FindAnExpertIconLength = _binaryStore.Get(iconsBinaryPath + EmployeeConsts.DefaultFindAnExpertIconGuid).Length;
-                command.FindAnExpertIconMimeType = "image/svg+xml";
-                command.FindAnExpertIconName = "FindAnExpertIcon.svg";
-                command.FindAnExpertIconPath = iconsBinaryPath;
+                if (string.IsNullOrEmpty(command.FindAnExpertIconPath) && icon.Value.First == "Expert")
+                {
+                    command.FindAnExpertIconFileName = icon.Value.Third.ToString();
+                    command.FindAnExpertIconLength = _binaryStore.Get(iconPath).Length;
+                    command.FindAnExpertIconMimeType = "image/svg+xml";
+                    command.FindAnExpertIconName = icon.Value.Second;
+                    command.FindAnExpertIconPath = iconsBinaryPath;
+                }
             }
 
             _createEmployeeModuleSettings.Handle(command);
@@ -407,7 +356,7 @@ namespace UCosmic.SeedData
 
                 Seed(new CreateEmployee
                 {
-//                    FacultyRankId = facultyRank.Id,
+                    //                    FacultyRankId = facultyRank.Id,
                     AdministrativeAppointments = "UCosmic CTO",
                     JobTitles = "Software Architect",
                     PersonId = person.RevisionId
