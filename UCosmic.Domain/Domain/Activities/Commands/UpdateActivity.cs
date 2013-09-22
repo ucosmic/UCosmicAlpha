@@ -55,18 +55,18 @@ namespace UCosmic.Domain.Activities
     {
         private readonly ICommandEntities _entities;
         private readonly IHandleCommands<UpdateActivityValues> _updateActivityValues;
-        private readonly IHandleCommands<CopyDeepActivityValues> _copyDeepActivityValues;
+        private readonly IHandleCommands<CopyActivityValues> _copyActivityValues;
         private readonly IHandleCommands<MoveActivityDocuments> _moveActivityDocuments;
 
         public HandleUpdateMyActivityCommand(ICommandEntities entities
             , IHandleCommands<UpdateActivityValues> updateActivityValues
-            , IHandleCommands<CopyDeepActivityValues> copyDeepActivityValues
+            , IHandleCommands<CopyActivityValues> copyActivityValues
             , IHandleCommands<MoveActivityDocuments> moveActivityDocuments
         )
         {
             _entities = entities;
             _updateActivityValues = updateActivityValues;
-            _copyDeepActivityValues = copyDeepActivityValues;
+            _copyActivityValues = copyActivityValues;
             _moveActivityDocuments = moveActivityDocuments;
         }
 
@@ -89,14 +89,14 @@ namespace UCosmic.Domain.Activities
 
             if (targetActivityValues == null)
             {
-                var copyDeepActivityValues = new CopyDeepActivityValues(command.Principal)
+                var copyActivityValues = new CopyActivityValues(command.Principal)
                 {
                     ActivityValuesId = command.Values.RevisionId,
                     CopyToActivityId = target.RevisionId,
                     Mode = command.ModeText.AsEnum<ActivityMode>()
                 };
-                _copyDeepActivityValues.Handle(copyDeepActivityValues);
-                targetActivityValues = copyDeepActivityValues.CreatedActivityValues;
+                _copyActivityValues.Handle(copyActivityValues);
+                targetActivityValues = copyActivityValues.CreatedActivityValues;
             }
 
             // Update fields

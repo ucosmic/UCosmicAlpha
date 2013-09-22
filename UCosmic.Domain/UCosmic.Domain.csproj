@@ -124,8 +124,8 @@
     <Compile Include="Api\Validation\MustNotContainUrlProtocol.cs" />
     <Compile Include="Domain\Activities\Commands\MoveActivityDocuments.cs" />
     <Compile Include="Domain\Activities\Commands\CopyActivity.cs" />
-    <Compile Include="Domain\Activities\Commands\CopyDeepActivity.cs" />
-    <Compile Include="Domain\Activities\Commands\CopyDeepActivityValues.cs" />
+    <Compile Include="Domain\Activities\Commands\CopyActivityAndValues.cs" />
+    <Compile Include="Domain\Activities\Commands\CopyActivityValues.cs" />
     <Compile Include="Domain\Activities\Commands\CreateActivityAndValues.cs" />
     <Compile Include="Domain\Activities\Commands\CreateActivityDocument.cs" />
     <Compile Include="Domain\Activities\Commands\CreateActivityLocation.cs" />

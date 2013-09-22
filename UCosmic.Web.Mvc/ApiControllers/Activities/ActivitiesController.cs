@@ -16,20 +16,20 @@ namespace UCosmic.Web.Mvc.ApiControllers
     public class ActivitiesController : ApiController
     {
         private readonly IProcessQueries _queryProcessor;
-        private readonly IHandleCommands<CopyDeepActivity> _copyDeepActivity;
+        private readonly IHandleCommands<CopyActivityAndValues> _copyActivityAndValues;
         private readonly IHandleCommands<CreateActivityAndValues> _createActivityAndValues;
         private readonly IHandleCommands<DeleteActivity> _deleteActivity;
         private readonly IHandleCommands<UpdateActivity> _updateActivity;
 
         public ActivitiesController(IProcessQueries queryProcessor
-                                  , IHandleCommands<CopyDeepActivity> copyDeepActivity
+                                  , IHandleCommands<CopyActivityAndValues> copyActivityAndValues
                                   , IHandleCommands<CreateActivityAndValues> createActivityAndValues
                                   , IHandleCommands<DeleteActivity> deleteActivity
                                   , IHandleCommands<UpdateActivity> updateActivity
                             )
         {
             _queryProcessor = queryProcessor;
-            _copyDeepActivity = copyDeepActivity;
+            _copyActivityAndValues = copyActivityAndValues;
             _createActivityAndValues = createActivityAndValues;
             _deleteActivity = deleteActivity;
             _updateActivity = updateActivity;
@@ -112,11 +112,11 @@ namespace UCosmic.Web.Mvc.ApiControllers
             {
                 /* There's no "in progress edit" record, so we make a copy of the
                      * activity and set it to edit mode. */
-                var copyDeepActivityCommand = new CopyDeepActivity(User, activityId);
+                var copyActivityAndValues = new CopyActivityAndValues(User, activityId);
 
-                _copyDeepActivity.Handle(copyDeepActivityCommand);
+                _copyActivityAndValues.Handle(copyActivityAndValues);
 
-                editActivity = copyDeepActivityCommand.CreatedActivity;
+                editActivity = copyActivityAndValues.CreatedActivity;
             }
 
             var model = Mapper.Map<ActivityApiModel>(editActivity);

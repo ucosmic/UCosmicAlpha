@@ -5,9 +5,9 @@ using System.Security.Principal;
 
 namespace UCosmic.Domain.Activities
 {
-    public class CopyDeepActivityValues
+    public class CopyActivityValues
     {
-        internal CopyDeepActivityValues(IPrincipal principal)
+        internal CopyActivityValues(IPrincipal principal)
         {
             Principal = principal;
         }
@@ -21,14 +21,14 @@ namespace UCosmic.Domain.Activities
         internal bool NoCommit { get; set; }
     }
 
-    public class HandleCopyDeepActivityValuesCommand : IHandleCommands<CopyDeepActivityValues>
+    public class HandleCopyActivityValuesCommand : IHandleCommands<CopyActivityValues>
     {
         private readonly ICommandEntities _entities;
         private readonly IQueryEntities _detachedEntities;
         private readonly IStoreBinaryData _binaryData;
         private readonly IHandleCommands<CreateActivityDocument> _createActivityDocument;
 
-        public HandleCopyDeepActivityValuesCommand(ICommandEntities entities
+        public HandleCopyActivityValuesCommand(ICommandEntities entities
             , IQueryEntities detachedEntities
             , IStoreBinaryData binaryData
             , IHandleCommands<CreateActivityDocument> createActivityDocument
@@ -40,7 +40,7 @@ namespace UCosmic.Domain.Activities
             _createActivityDocument = createActivityDocument;
         }
 
-        public void Handle(CopyDeepActivityValues command)
+        public void Handle(CopyActivityValues command)
         {
             if (command == null) throw new ArgumentNullException("command");
 
@@ -90,7 +90,7 @@ namespace UCosmic.Domain.Activities
             if (!command.NoCommit) _entities.SaveChanges();
         }
 
-        private static void EnableForCopy(RevisableEntity entity, CopyDeepActivityValues command)
+        private static void EnableForCopy(RevisableEntity entity, CopyActivityValues command)
         {
             entity.EntityId = Guid.NewGuid();
             entity.CreatedOnUtc = DateTime.UtcNow;

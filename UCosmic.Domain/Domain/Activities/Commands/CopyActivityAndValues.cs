@@ -6,9 +6,9 @@ using UCosmic.Domain.Identity;
 
 namespace UCosmic.Domain.Activities
 {
-    public class CopyDeepActivity
+    public class CopyActivityAndValues
     {
-        public CopyDeepActivity(IPrincipal principal, int activityId)
+        public CopyActivityAndValues(IPrincipal principal, int activityId)
         {
             if (principal == null) throw new ArgumentNullException("principal");
             Principal = principal;
@@ -20,9 +20,9 @@ namespace UCosmic.Domain.Activities
         public Activity CreatedActivity { get; internal set; }
     }
 
-    public class ValidateCopyDeepActivityCommand : AbstractValidator<CopyDeepActivity>
+    public class ValidateCopyActivityAndValuesCommand : AbstractValidator<CopyActivityAndValues>
     {
-        public ValidateCopyDeepActivityCommand(IProcessQueries queryProcessor)
+        public ValidateCopyActivityAndValuesCommand(IProcessQueries queryProcessor)
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
@@ -41,26 +41,26 @@ namespace UCosmic.Domain.Activities
         }
     }
 
-    public class HandleCopyDeepActivityCommand : IHandleCommands<CopyDeepActivity>
+    public class HandleCopyActivityAndValuesCommand : IHandleCommands<CopyActivityAndValues>
     {
         private readonly ICommandEntities _entities;
         private readonly IHandleCommands<CopyActivity> _copyActivity;
-        private readonly IHandleCommands<CopyDeepActivityValues> _copyDeepActivityValues;
+        private readonly IHandleCommands<CopyActivityValues> _copyActivityValues;
         private readonly IHandleCommands<MoveActivityDocuments> _moveActivityDocuments;
 
-        public HandleCopyDeepActivityCommand(ICommandEntities entities
+        public HandleCopyActivityAndValuesCommand(ICommandEntities entities
             , IHandleCommands<CopyActivity> copyActivity
-            , IHandleCommands<CopyDeepActivityValues> copyDeepActivityValues
+            , IHandleCommands<CopyActivityValues> copyActivityValues
             , IHandleCommands<MoveActivityDocuments> moveActivityDocuments
         )
         {
             _entities = entities;
             _copyActivity = copyActivity;
-            _copyDeepActivityValues = copyDeepActivityValues;
+            _copyActivityValues = copyActivityValues;
             _moveActivityDocuments = moveActivityDocuments;
         }
 
-        public void Handle(CopyDeepActivity command)
+        public void Handle(CopyActivityAndValues command)
         {
             if (command == null) throw new ArgumentNullException("command");
 
@@ -79,14 +79,14 @@ namespace UCosmic.Domain.Activities
             /* ----- Copy Activity Values ----- */
             var modeText = originalActivity.Mode.AsSentenceFragment();
             var originalValues = originalActivity.Values.First(x => x.ModeText == modeText);
-            var copyDeepActivityValuesCommand = new CopyDeepActivityValues(command.Principal)
+            var copyActivityValues = new CopyActivityValues(command.Principal)
             {
                 CopyToActivity = copiedActivity,
                 ActivityValuesId = originalValues.RevisionId,
                 Mode = copiedActivity.Mode,
                 NoCommit = true,
             };
-            _copyDeepActivityValues.Handle(copyDeepActivityValuesCommand);
+            _copyActivityValues.Handle(copyActivityValues);
             command.CreatedActivity = copiedActivity;
 
             _entities.SaveChanges();
