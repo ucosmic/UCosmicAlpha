@@ -49,12 +49,6 @@ namespace UCosmic.Web.Mvc.Controllers
         }
         [NonAction]
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public System.Web.Mvc.ActionResult ActivityEdit()
-        {
-            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.ActivityEdit);
-        }
-        [NonAction]
-        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public System.Web.Mvc.ActionResult EditDegree()
         {
             return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.EditDegree);
@@ -94,7 +88,6 @@ namespace UCosmic.Web.Mvc.Controllers
         public class ActionNamesClass
         {
             public readonly string Index = "Index";
-            public readonly string ActivityEdit = "ActivityEdit";
             public readonly string NewDegree = "NewDegree";
             public readonly string EditDegree = "EditDegree";
             public readonly string NewGeographicExpertise = "NewGeographicExpertise";
@@ -109,7 +102,6 @@ namespace UCosmic.Web.Mvc.Controllers
         public class ActionNameConstants
         {
             public const string Index = "Index";
-            public const string ActivityEdit = "ActivityEdit";
             public const string NewDegree = "NewDegree";
             public const string EditDegree = "EditDegree";
             public const string NewGeographicExpertise = "NewGeographicExpertise";
@@ -128,14 +120,6 @@ namespace UCosmic.Web.Mvc.Controllers
         public class ActionParamsClass_Index
         {
             public readonly string tab = "tab";
-        }
-        static readonly ActionParamsClass_ActivityEdit s_params_ActivityEdit = new ActionParamsClass_ActivityEdit();
-        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public ActionParamsClass_ActivityEdit ActivityEditParams { get { return s_params_ActivityEdit; } }
-        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public class ActionParamsClass_ActivityEdit
-        {
-            public readonly string activityId = "activityId";
         }
         static readonly ActionParamsClass_EditDegree s_params_EditDegree = new ActionParamsClass_EditDegree();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -186,7 +170,6 @@ namespace UCosmic.Web.Mvc.Controllers
                 public readonly string _InternationalAffiliations = "_InternationalAffiliations";
                 public readonly string _LanguageExpertises = "_LanguageExpertises";
                 public readonly string _PersonalInfo = "_PersonalInfo";
-                public readonly string ActivityEdit = "ActivityEdit";
                 public readonly string DegreeForm = "DegreeForm";
                 public readonly string GeographicExpertiseForm = "GeographicExpertiseForm";
                 public readonly string Index = "Index";
@@ -200,7 +183,6 @@ namespace UCosmic.Web.Mvc.Controllers
             public readonly string _InternationalAffiliations = "~/Views/MyProfile/_InternationalAffiliations.cshtml";
             public readonly string _LanguageExpertises = "~/Views/MyProfile/_LanguageExpertises.cshtml";
             public readonly string _PersonalInfo = "~/Views/MyProfile/_PersonalInfo.cshtml";
-            public readonly string ActivityEdit = "~/Views/MyProfile/ActivityEdit.cshtml";
             public readonly string DegreeForm = "~/Views/MyProfile/DegreeForm.cshtml";
             public readonly string GeographicExpertiseForm = "~/Views/MyProfile/GeographicExpertiseForm.cshtml";
             public readonly string Index = "~/Views/MyProfile/Index.cshtml";
@@ -218,13 +200,6 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Index);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "tab", tab);
-            return callInfo;
-        }
-
-        public override System.Web.Mvc.ActionResult ActivityEdit(int activityId)
-        {
-            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.ActivityEdit);
-            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "activityId", activityId);
             return callInfo;
         }
 

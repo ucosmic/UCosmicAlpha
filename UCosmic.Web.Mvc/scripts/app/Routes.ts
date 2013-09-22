@@ -522,9 +522,9 @@ module App.Routes {
                 return url;
             }
 
-            export function post(): string {
-                return makeUrl('activities');
-            }
+            //export function post(): string {
+            //    return makeUrl('activities');
+            //}
 
             export function getEdit(activityId: number): string {
                 return makeUrl('activities/' + activityId + "/edit");
@@ -781,7 +781,7 @@ module App.Routes {
                     return url;
                 }
                 export function activityEdit(activityId: number) {
-                    return makeUrl('my/activities/{0}'.format(activityId));
+                    return makeUrl('my/activities/{0}/edit'.format(activityId));
                 }
             }
 

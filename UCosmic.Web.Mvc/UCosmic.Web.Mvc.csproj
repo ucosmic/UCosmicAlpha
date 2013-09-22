@@ -278,6 +278,9 @@
     <Compile Include="..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="ActivitiesController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
     <Compile Include="AdminController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
@@ -324,6 +327,7 @@
     <Compile Include="ApiTestController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
+    <Compile Include="Controllers\ActivitiesController.cs" />
     <Compile Include="Controllers\FacultyStaffController.cs" />
     <Compile Include="Controllers\RepsController.cs" />
     <Compile Include="Controllers\SamlMetadataController.cs" />
@@ -2344,7 +2348,7 @@
     <None Include="styles\tenants\testshib.org\forms.scss" />
     <None Include="styles\tenants\testshib.org\ie8.scss" />
     <None Include="styles\tenants\testshib.org\layout.scss" />
-    <Content Include="Views\MyProfile\ActivityEdit.cshtml" />
+    <Content Include="Views\Activities\Edit.cshtml" />
     <Content Include="Views\Users\_SearchSideBar.cshtml" />
     <Content Include="Views\Reps\_SettingsSideBar.cshtml" />
     <Content Include="Views\Errors\BadRequest.cshtml" />

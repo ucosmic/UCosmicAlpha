@@ -193,20 +193,21 @@ module ViewModels.Activities {
             return App.Routes.Mvc.My.Profile.activityEdit(id);
         }
 
-        newActivity(data: any, event: any): void {
-            $.ajax({
-                type: "POST",
-                url: App.Routes.WebApi.Activities.post(),
-                success: (newActivityId: number, textStatus: string, jqXHR: JQueryXHR): void =>
-                {
-                    location.href = App.Routes.Mvc.My.Profile.activityEdit(newActivityId);
-                },
-                error: (jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void =>
-                {
-                    alert(textStatus + "|" + errorThrown);
-                }
-            });
-        }
+        //newActivity(data: any, event: any): void {
+        //    $.ajax({
+        //        type: "POST",
+        //        //url: App.Routes.WebApi.Activities.post(),
+        //        url: '/api/activities/',
+        //        success: (newActivityId: number, textStatus: string, jqXHR: JQueryXHR): void =>
+        //        {
+        //            location.href = App.Routes.Mvc.My.Profile.activityEdit(newActivityId);
+        //        },
+        //        error: (jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void =>
+        //        {
+        //            alert(textStatus + "|" + errorThrown);
+        //        }
+        //    });
+        //}
 
         getTypeName(id: number): string {
             var typeName: string = "";

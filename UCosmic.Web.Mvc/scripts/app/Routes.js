@@ -665,11 +665,9 @@ var App;
                 }
                 Activities.get = get;
 
-                function post() {
-                    return makeUrl('activities');
-                }
-                Activities.post = post;
-
+                //export function post(): string {
+                //    return makeUrl('activities');
+                //}
                 function getEdit(activityId) {
                     return makeUrl('activities/' + activityId + "/edit");
                 }
@@ -991,7 +989,7 @@ var App;
                     }
                     Profile.post = post;
                     function activityEdit(activityId) {
-                        return makeUrl('my/activities/{0}'.format(activityId));
+                        return makeUrl('my/activities/{0}/edit'.format(activityId));
                     }
                     Profile.activityEdit = activityEdit;
                 })(My.Profile || (My.Profile = {}));

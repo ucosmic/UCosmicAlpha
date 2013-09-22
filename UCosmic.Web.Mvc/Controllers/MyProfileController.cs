@@ -1,8 +1,5 @@
-﻿using System;
-using System.Linq.Expressions;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using AttributeRouting.Web.Mvc;
-using UCosmic.Domain.Activities;
 
 namespace UCosmic.Web.Mvc.Controllers
 {
@@ -21,26 +18,6 @@ namespace UCosmic.Web.Mvc.Controllers
         public virtual ActionResult Index(string tab)
         {
             ViewBag.Tab = tab;
-            return View();
-        }
-
-        [Authorize]
-        [GET("my/activities/{activityId:int}")]
-        [GET("my/activities/{activityId:int}/edit", ActionPrecedence = 1)]
-        public virtual ActionResult ActivityEdit(int activityId)
-        {
-            var activity = _queryProcessor.Execute(new ActivityById(activityId)
-            {
-                EagerLoad = new Expression<Func<Activity, object>>[]
-                {
-                    x => x.Person.User,
-                }
-            });
-            if (activity == null ||
-                !User.Identity.Name.Equals(activity.Person.User.Name, StringComparison.OrdinalIgnoreCase))
-                return HttpNotFound();
-
-            ViewBag.ActivityId = activityId;
             return View();
         }
 

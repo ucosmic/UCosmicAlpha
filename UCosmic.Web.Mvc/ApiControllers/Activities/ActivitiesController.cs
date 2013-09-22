@@ -157,16 +157,16 @@ namespace UCosmic.Web.Mvc.ApiControllers
          * Create an activity
         */
         // --------------------------------------------------------------------------------
-        [Authorize]
-        [POST("")]
-        public HttpResponseMessage Post()
-        {
-            var command = new CreateActivityAndValues(User, ActivityMode.Draft);
-            _createActivityAndValues.Handle(command);
+        //[Authorize]
+        //[POST("")]
+        //public HttpResponseMessage Post()
+        //{
+        //    var command = new CreateActivityAndValues(User, ActivityMode.Draft);
+        //    _createActivityAndValues.Handle(command);
 
-            var model = command.CreatedActivity.RevisionId;
-            return Request.CreateResponse(HttpStatusCode.OK, model);
-        }
+        //    var model = command.CreatedActivity.RevisionId;
+        //    return Request.CreateResponse(HttpStatusCode.OK, model);
+        //}
 
         // --------------------------------------------------------------------------------
         /*

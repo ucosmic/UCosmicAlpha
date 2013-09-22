@@ -1,11 +1,11 @@
 ﻿<section id="activities">
     <header>
-        <h2>
-            <span>Activities</span>
-            <a href="#" title="Add a new activity" data-bind="click: function (data, event) { newActivity(data, event); }">
-                <img src="~/images/icons/plus/plus-24-green.png" alt="Add a new activity" />
-            </a>
-        </h2>
+        <form action="@Url.Action(MVC.Activities.Create())" method="POST" style="display: inline-block;">
+            <h2>
+                <span>Activities</span>
+                <input type="image" src="~/images/icons/plus/plus-24-green.png" alt="Add a new activity" title="Add a new activity" style="cursor: pointer; vertical-align: text-bottom;" />
+            </h2>
+        </form>
     </header>
     <table class="data">
         <tbody data-bind="template: { name: 'activities-template', foreach: items }">
@@ -34,8 +34,8 @@
 </script>
 
 <script type="text/html" id="activities-types-template">
-    <img img data-bind="attr: { src: '/api/my/employee-module-settings/icon/' + $root.getActivityTypeIconName( typeId() ), title: $root.getActivityTypeToolTip( typeId() ) }"
-        src="" title="" width="32" height="32"/>
+    <img img data-bind="attr: { src: '/api/my/employee-module-settings/icon/' + $root.getActivityTypeIconName(typeId()), title: $root.getActivityTypeToolTip(typeId()) }"
+        src="" title="" width="32" height="32" />
 </script>
 
 <script type="text/html" id="activities-template">
@@ -43,7 +43,7 @@
         <!-- Description -->
         <td>
             <a href="#" data-bind="attr: { href: $parent.editActivityUrl(id()) }, click: function () { return $parent.editActivity(id()) }"
-               style="display: inline-block; text-decoration: inherit; color: inherit;">                
+                style="display: inline-block; text-decoration: inherit; color: inherit;">
                 <div class="ellipsis" style="width: 850px; height: 30px">
                     <span style="font-size: large; font-weight: bold; vertical-align: middle" data-bind="text: values.title()"></span>
                     <span class="red badge" style="display: inline; vertical-align: middle" data-bind="visible: modeText().toLowerCase() == 'draft'">Draft</span>

@@ -24,6 +24,7 @@ using T4MVC;
 [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
 public static class MVC
 {
+    public static UCosmic.Web.Mvc.Controllers.ActivitiesController Activities = new UCosmic.Web.Mvc.Controllers.T4MVC_ActivitiesController();
     public static UCosmic.Web.Mvc.Controllers.AdminController Admin = new UCosmic.Web.Mvc.Controllers.T4MVC_AdminController();
     public static UCosmic.Web.Mvc.Controllers.AgreementsController Agreements = new UCosmic.Web.Mvc.Controllers.T4MVC_AgreementsController();
     public static UCosmic.Web.Mvc.Controllers.ApiTestController ApiTest = new UCosmic.Web.Mvc.Controllers.T4MVC_ApiTestController();
@@ -54,6 +55,19 @@ namespace T4MVC
     }
 }
 
+[GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+public class T4MVC_System_Web_Mvc_RedirectToRouteResult : System.Web.Mvc.RedirectToRouteResult, IT4MVCActionResult
+{
+    public T4MVC_System_Web_Mvc_RedirectToRouteResult(string area, string controller, string action, string protocol = null): base(" ", default(System.Web.Routing.RouteValueDictionary), default(bool))
+    {
+        this.InitMVCT4Result(area, controller, action, protocol);
+    }
+    
+    public string Controller { get; set; }
+    public string Action { get; set; }
+    public string Protocol { get; set; }
+    public RouteValueDictionary RouteValueDictionary { get; set; }
+}
 [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
 public class T4MVC_System_Web_Mvc_ActionResult : System.Web.Mvc.ActionResult, IT4MVCActionResult
 {
