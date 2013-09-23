@@ -220,40 +220,12 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return Request.CreateResponse(HttpStatusCode.OK);
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-         * Delete an activity
-        */
-        // --------------------------------------------------------------------------------
         [Authorize]
         [DELETE("{activityId}")]
         public HttpResponseMessage Delete(int activityId)
         {
-            var activityToDelete = _queryProcessor.Execute(new ActivityById(activityId)
-            {
-                EagerLoad = new Expression<Func<Activity, object>>[]
-                {
-                    x => x.Original,
-                    x => x.WorkCopy,
-                },
-            });
-            if (activityToDelete != null)
-            {
-                var deleteActivity = new DeleteActivity(User, activityToDelete.RevisionId);
-                _deleteActivity.Handle(deleteActivity);
-
-                if (activityToDelete.Original != null && activityToDelete.Original.IsEmpty())
-                {
-                    deleteActivity = new DeleteActivity(User, activityToDelete.Original.RevisionId);
-                    _deleteActivity.Handle(deleteActivity);
-                }
-                else if (activityToDelete.WorkCopy != null)
-                {
-                    deleteActivity = new DeleteActivity(User, activityToDelete.WorkCopy.RevisionId);
-                    _deleteActivity.Handle(deleteActivity);
-                }
-            }
-
+            var deleteActivity = new DeleteActivity(User, activityId);
+            _deleteActivity.Handle(deleteActivity);
             return Request.CreateResponse(HttpStatusCode.OK);
         }
     }

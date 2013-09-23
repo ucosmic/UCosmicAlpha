@@ -169,6 +169,7 @@
     <Compile Include="Domain\Activities\Views\ActivityViewProjector.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityValuesByActivityIdAndMode.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityCountByPlaceIds.cs" />
+    <Compile Include="Domain\Activities\_Internal\QueryActivityValues.cs" />
     <Compile Include="Domain\Activities\_Internal\QueryActivityViews.cs" />
     <Compile Include="Domain\Activities\Validation\MustHaveActivityMode.cs" />
     <Compile Include="Domain\Activities\Views\ActivityGlobalActivityCountView.cs" />

@@ -91,24 +91,6 @@ namespace UCosmic.Domain.Activities
             }
         }
 
-
-        public bool IsEmpty()
-        {
-            bool empty = true;
-            empty &= String.IsNullOrEmpty(Title);
-            empty &= String.IsNullOrEmpty(Content);
-            empty &= !StartsOn.HasValue;
-            empty &= !EndsOn.HasValue;
-            empty &= !OnGoing.HasValue;
-            empty &= Locations == null || Locations.Count == 0;
-            empty &= Types == null || Types.Count == 0;
-            empty &= Tags == null || Tags.Count == 0;
-            empty &= Documents == null || Documents.Count == 0;
-            empty &= !WasExternallyFunded.HasValue;
-            empty &= !WasInternallyFunded.HasValue;
-            return empty;
-        }
-
         protected bool EqualsNullableBool(bool? a, bool? b)
         {
             if (!a.HasValue && !b.HasValue) return true;
