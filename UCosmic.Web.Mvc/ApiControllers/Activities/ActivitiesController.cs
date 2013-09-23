@@ -237,21 +237,21 @@ namespace UCosmic.Web.Mvc.ApiControllers
                     x => x.WorkCopy,
                 },
             });
-            if (activityToDelete == null)
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-
-            var deleteActivity = new DeleteActivity(User, activityToDelete.RevisionId);
-            _deleteActivity.Handle(deleteActivity);
-
-            if (activityToDelete.Original != null && activityToDelete.Original.IsEmpty())
+            if (activityToDelete != null)
             {
-                deleteActivity = new DeleteActivity(User, activityToDelete.Original.RevisionId);
+                var deleteActivity = new DeleteActivity(User, activityToDelete.RevisionId);
                 _deleteActivity.Handle(deleteActivity);
-            }
-            else if (activityToDelete.WorkCopy != null)
-            {
-                deleteActivity = new DeleteActivity(User, activityToDelete.WorkCopy.RevisionId);
-                _deleteActivity.Handle(deleteActivity);
+
+                if (activityToDelete.Original != null && activityToDelete.Original.IsEmpty())
+                {
+                    deleteActivity = new DeleteActivity(User, activityToDelete.Original.RevisionId);
+                    _deleteActivity.Handle(deleteActivity);
+                }
+                else if (activityToDelete.WorkCopy != null)
+                {
+                    deleteActivity = new DeleteActivity(User, activityToDelete.WorkCopy.RevisionId);
+                    _deleteActivity.Handle(deleteActivity);
+                }
             }
 
             return Request.CreateResponse(HttpStatusCode.OK);

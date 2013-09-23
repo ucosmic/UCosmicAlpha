@@ -138,13 +138,13 @@
     <Compile Include="Domain\Activities\Commands\DeleteActivityLocation.cs" />
     <Compile Include="Domain\Activities\Commands\DeleteActivityTag.cs" />
     <Compile Include="Domain\Activities\Commands\DeleteActivityType.cs" />
-    <Compile Include="Domain\Activities\Commands\DraftMyActivity.cs" />
-    <Compile Include="Domain\Activities\Commands\PurgeMyActivity.cs" />
+    <Compile Include="Domain\Activities\Commands\_Deprecated\_DraftMyActivity.cs" />
+    <Compile Include="Domain\Activities\Commands\_Deprecated\_PurgeMyActivity.cs" />
     <Compile Include="Domain\Activities\Commands\RenameActivityDocument.cs" />
     <Compile Include="Domain\Activities\Commands\UpdateActivity.cs" />
-    <Compile Include="Domain\Activities\Commands\UpdateActivityLocation.cs" />
+    <Compile Include="Domain\Activities\Commands\_Deprecated\_UpdateActivityLocation.cs" />
     <Compile Include="Domain\Activities\Commands\UpdateActivityDocument.cs" />
-    <Compile Include="Domain\Activities\Commands\UpdateActivityType.cs" />
+    <Compile Include="Domain\Activities\Commands\_Deprecated\_UpdateActivityType.cs" />
     <Compile Include="Domain\Activities\Commands\UpdateActivityValues.cs" />
     <Compile Include="Domain\Activities\Entities\Activity.cs" />
     <Compile Include="Domain\Activities\Entities\ActivityDocument.cs" />
