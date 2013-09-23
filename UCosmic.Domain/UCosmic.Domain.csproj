@@ -240,7 +240,6 @@
     <Compile Include="Domain\Establishments\Views\EstablishmentTypeView.cs" />
     <Compile Include="Domain\Files\Commands\PurgeUpload.cs" />
     <Compile Include="Domain\Files\Commands\CreateUpload.cs" />
-    <Compile Include="Domain\Files\Commands\CreateLoadableActivityFile.cs" />
     <Compile Include="Domain\Files\Entities\Upload.cs" />
     <Compile Include="Domain\Files\Validation\MustNotExceedFileNameLength.cs" />
     <Compile Include="Domain\Files\Validation\MustHaveFileMimeType.cs" />
@@ -279,7 +278,6 @@
     <Compile Include="Domain\External\SmtpTraceListener.cs" />
     <Compile Include="Domain\External\UsfUpdateEstablishment.cs" />
     <Compile Include="Domain\InternationalAffiliation\Commands\CreateDeepInternationalAffiliation.cs" />
-    <Compile Include="Domain\Files\Commands\PurgeLooseFile.cs" />
     <Compile Include="Domain\Identity\Queries\MyOwnedTenantIds.cs" />
     <Compile Include="Domain\InternationalAffiliation\Commands\CreateInternationalAffiliation.cs" />
     <Compile Include="Domain\InternationalAffiliation\Commands\CreateInternationalAffiliationLocation.cs" />
@@ -481,9 +479,6 @@
     <Compile Include="Domain\Establishments\Validation\MustNotBeFormerEstablishmentUrlWhenIsOfficial.cs" />
     <Compile Include="Domain\Establishments\Validation\EstablishmentConstraints.cs" />
     <Compile Include="Domain\Establishments\Validation\MustNotBeFormerEstablishmentNameWhenIsOfficial.cs" />
-    <Compile Include="Domain\Files\Commands\CreateLooseFile.cs" />
-    <Compile Include="Domain\Files\Entities\LoadableFileBinary.cs" />
-    <Compile Include="Domain\Files\Entities\LoadableFile.cs" />
     <Compile Include="Domain\Identity\Commands\CreatePassword.cs" />
     <Compile Include="Domain\Identity\Commands\CreateRole.cs" />
     <Compile Include="Api\Validation\EntityWrapper.cs" />
@@ -500,10 +495,6 @@
     <Compile Include="Domain\Identity\Queries\GenerateRandomSecret.cs" />
     <Compile Include="Domain\Identity\Queries\MyPreferencesByCategory.cs" />
     <Compile Include="Domain\Identity\_Internal\QueryPreferences.cs" />
-    <Compile Include="Domain\Files\Commands\CreateImage.cs" />
-    <Compile Include="Domain\Files\Entities\Image.cs" />
-    <Compile Include="Domain\Files\Queries\ImageById.cs" />
-    <Compile Include="Domain\Files\Queries\ImageByName.cs" />
     <Compile Include="Domain\People\Commands\DeleteMyPhoto.cs" />
     <Compile Include="Domain\People\Commands\UpdateMyPhoto.cs" />
     <Compile Include="Domain\People\Commands\UpdateMyProfile.cs" />
@@ -642,7 +633,6 @@
     <Compile Include="Domain\Establishments\Views\EstablishmentNameView.cs" />
     <Compile Include="Domain\Establishments\Views\EstablishmentUrlView.cs" />
     <Compile Include="Domain\Establishments\Views\EstablishmentView.cs" />
-    <Compile Include="Domain\Files\Entities\LooseFile.cs" />
     <Compile Include="Domain\Identity\Entities\EduPersonScopedAffiliation.cs" />
     <Compile Include="Domain\Identity\Entities\Role.cs" />
     <Compile Include="Domain\Identity\Entities\RoleGrant.cs" />
