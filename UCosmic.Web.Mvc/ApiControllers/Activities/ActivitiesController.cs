@@ -17,20 +17,17 @@ namespace UCosmic.Web.Mvc.ApiControllers
     {
         private readonly IProcessQueries _queryProcessor;
         private readonly IHandleCommands<CopyActivityAndValues> _copyActivityAndValues;
-        private readonly IHandleCommands<CreateActivityAndValues> _createActivityAndValues;
         private readonly IHandleCommands<DeleteActivity> _deleteActivity;
         private readonly IHandleCommands<UpdateActivity> _updateActivity;
 
         public ActivitiesController(IProcessQueries queryProcessor
                                   , IHandleCommands<CopyActivityAndValues> copyActivityAndValues
-                                  , IHandleCommands<CreateActivityAndValues> createActivityAndValues
                                   , IHandleCommands<DeleteActivity> deleteActivity
                                   , IHandleCommands<UpdateActivity> updateActivity
                             )
         {
             _queryProcessor = queryProcessor;
             _copyActivityAndValues = copyActivityAndValues;
-            _createActivityAndValues = createActivityAndValues;
             _deleteActivity = deleteActivity;
             _updateActivity = updateActivity;
         }
@@ -128,28 +125,28 @@ namespace UCosmic.Web.Mvc.ApiControllers
          * Get an activity's edit state.
         */
         // --------------------------------------------------------------------------------
-        [Authorize]
-        [GET("{activityId}/edit-state")]
-        public ActivityEditState GetEditState(int activityId)
-        {
-            /* Get the activity we want to edit */
-            var activity = _queryProcessor.Execute(new ActivityById(activityId));
-            if (activity == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
+        //[Authorize]
+        //[GET("{activityId}/edit-state")]
+        //public ActivityEditState GetEditState(int activityId)
+        //{
+        //    /* Get the activity we want to edit */
+        //    var activity = _queryProcessor.Execute(new ActivityById(activityId));
+        //    if (activity == null)
+        //    {
+        //        throw new HttpResponseException(HttpStatusCode.NotFound);
+        //    }
 
-            var editState = new ActivityEditState
-            {
-                IsInEdit = activity.Original != null,
-                EditingUserName = "",
-                EditingUserEmail = ""
-            };
+        //    var editState = new ActivityEditState
+        //    {
+        //        IsInEdit = activity.Original != null,
+        //        EditingUserName = "",
+        //        EditingUserEmail = ""
+        //    };
 
-            // TBD
+        //    // TBD
 
-            return editState;
-        }
+        //    return editState;
+        //}
 
 
         // --------------------------------------------------------------------------------
@@ -169,6 +166,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         //}
 
         // --------------------------------------------------------------------------------
+
         /*
          * Update an activity
         */
@@ -184,24 +182,11 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
             var activity = Mapper.Map<Activity>(model);
 
-            //try
-            //{
             var updateActivityCommand = new UpdateActivity(User, activity.RevisionId, activity.ModeText)
             {
                 Values = activity.Values.SingleOrDefault(x => x.ModeText == activity.ModeText),
             };
             _updateActivity.Handle(updateActivityCommand);
-            //}
-            //catch (Exception ex)
-            //{
-            //    var responseMessage = new HttpResponseMessage
-            //    {
-            //        StatusCode = HttpStatusCode.NotModified,
-            //        Content = new StringContent(ex.Message),
-            //        ReasonPhrase = "Activity update error"
-            //    };
-            //    throw new HttpResponseException(responseMessage);
-            //}
 
             return Request.CreateResponse(HttpStatusCode.OK);
         }
@@ -216,8 +201,6 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [PUT("{activityId}/edit")]
         public HttpResponseMessage PutEdit(int activityId, [FromBody] ActivityPutEditApiModel model)
         {
-            //try
-            //{
             var editActivity = _queryProcessor.Execute(new ActivityById(activityId));
             if (editActivity == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
@@ -233,17 +216,6 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
             var deleteActivityCommand = new DeleteActivity(User, editActivity.RevisionId);
             _deleteActivity.Handle(deleteActivityCommand);
-            //}
-            //catch (Exception ex)
-            //{
-            //    var responseMessage = new HttpResponseMessage
-            //    {
-            //        StatusCode = HttpStatusCode.NotModified,
-            //        Content = new StringContent(ex.Message),
-            //        ReasonPhrase = "Activity update error"
-            //    };
-            //    throw new HttpResponseException(responseMessage);
-            //}
 
             return Request.CreateResponse(HttpStatusCode.OK);
         }

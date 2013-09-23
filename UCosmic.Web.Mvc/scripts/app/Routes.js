@@ -673,11 +673,9 @@ var App;
                 }
                 Activities.getEdit = getEdit;
 
-                function getEditState(activityId) {
-                    return makeUrl('activities/' + activityId + "/edit-state");
-                }
-                Activities.getEditState = getEditState;
-
+                //export function getEditState(activityId: number): string {
+                //    return makeUrl('activities/' + activityId + "/edit-state");
+                //}
                 function put(activityId) {
                     return makeUrl('activities/' + activityId);
                 }

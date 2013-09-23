@@ -138,35 +138,37 @@ var ViewModels;
                 });
             };
 
-            ActivityList.prototype.editActivity = function (activityId) {
-                var returnValue = false;
-                $.ajax({
-                    type: 'GET',
-                    async: false,
-                    url: App.Routes.WebApi.Activities.getEditState(activityId)
-                }).done(function (editState, textStatus, jqXHR) {
-                    if (editState.isInEdit) {
-                        var $dialog = $("#activityBeingEditedDialog");
-                        $dialog.dialog({
-                            dialogClass: 'jquery-ui',
-                            width: 'auto',
-                            resizable: false,
-                            modal: true,
-                            buttons: {
-                                Ok: function () {
-                                    $dialog.dialog("close");
-                                }
-                            }
-                        });
-                    } else {
-                        returnValue = true;
-                    }
-                }).fail(function (xhr) {
-                    App.Failures.message(xhr, 'while trying to edit your activity', true);
-                });
-                return returnValue;
-            };
-
+            //editActivity(activityId: number): boolean {
+            //    var returnValue = false;
+            //    $.ajax({
+            //        type: 'GET',
+            //        async: false,
+            //        url: App.Routes.WebApi.Activities.getEditState(activityId)
+            //    })
+            //    .done((editState: any, textStatus: string, jqXHR: JQueryXHR): void => {
+            //        if (editState.isInEdit) {
+            //            var $dialog = $("#activityBeingEditedDialog");
+            //            $dialog.dialog({
+            //                dialogClass: 'jquery-ui',
+            //                width: 'auto',
+            //                resizable: false,
+            //                modal: true,
+            //                buttons: {
+            //                    Ok: (): void => {
+            //                        $dialog.dialog("close");
+            //                    }
+            //                }
+            //            });
+            //        }
+            //        else {
+            //            returnValue = true;
+            //        }
+            //    })
+            //    .fail((xhr: JQueryXHR): void => {
+            //        App.Failures.message(xhr, 'while trying to edit your activity', true)
+            //    });
+            //    return returnValue;
+            //}
             ActivityList.prototype.editActivityUrl = function (id) {
                 return App.Routes.Mvc.My.Profile.activityEdit(id);
             };
