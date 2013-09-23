@@ -36,7 +36,7 @@ namespace UCosmic.Web.Mvc.Controllers
         [GET("my/activities/{activityId:int}/edit", ActionPrecedence = 1)]
         public virtual ActionResult Edit(int activityId)
         {
-            var activity = _queryProcessor.Execute(new ActivityById(activityId)
+            var activity = _queryProcessor.Execute(new ActivityById(User, activityId)
             {
                 EagerLoad = new Expression<Func<Activity, object>>[]
                 {

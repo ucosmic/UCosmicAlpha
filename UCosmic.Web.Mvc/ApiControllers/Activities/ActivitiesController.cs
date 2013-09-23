@@ -56,7 +56,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [GET("{activityId}")]
         public ActivityApiModel Get(int activityId)
         {
-            var activity = _queryProcessor.Execute(new ActivityById(activityId));
+            var activity = _queryProcessor.Execute(new ActivityById(User, activityId));
             if (activity == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
@@ -165,8 +165,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
          * Update an activity
         */
         // --------------------------------------------------------------------------------
-        [PUT("{activityId}")]
         [Authorize]
+        [PUT("{activityId}")]
         public HttpResponseMessage Put(int activityId, ActivityApiModel model)
         {
             if ((activityId == 0) || (model == null))
@@ -195,7 +195,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [PUT("{activityId}/edit")]
         public HttpResponseMessage PutEdit(int activityId, [FromBody] ActivityPutEditApiModel model)
         {
-            var editActivity = _queryProcessor.Execute(new ActivityById(activityId));
+            var editActivity = _queryProcessor.Execute(new ActivityById(User, activityId));
             if (editActivity == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
