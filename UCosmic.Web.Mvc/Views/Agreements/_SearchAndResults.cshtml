@@ -40,17 +40,16 @@
                             </tr>
                         </thead>
                         <tbody data-bind="foreach: items">
-                            <tr data-bind="click: clickAction">
+                            <tr data-bind="click: $root.clickAction">
                                 <td>
-                                    <div>
-                                        <a href="#/" style="color: inherit;"
-                                           data-bind="attr: { href: detailHref, title: detailTooltip }">
-                                            <strong data-bind="text: name"></strong>
-                                        </a>
-                                        <span data-bind="text: 'type: ' + type()"></span>
-                                        <span data-bind="text: 'status: ' + status()"></span>
-                                        <span data-bind="text: 'startsOn: ' + startsOn()"></span>
-                                        <span data-bind="text: 'expiresOn: ' + expiresOn()"></span>
+                                    <div data-bind="attr: { title: $root.detailTooltip() }">
+                                        <span>
+                                            <strong data-bind="text: name() + ', ', visible: name"></strong>
+                                        </span>
+                                        <span data-bind="text: type() + ', ' "></span>
+                                        <span data-bind="text: status() + ', ' "></span><br/>
+                                        <span data-bind="text: 'Starts on: ' + startsOnDate() + ', ', visible: startsOnDateVisible"></span>
+                                        <span data-bind="text: 'Expires on: ' + expiresOnDate() + ', '"></span>
                                     </div>
                                 </td>
                                 <td>
@@ -60,7 +59,7 @@
                         </tbody>
                     </table>
                 </div>
-                <div data-bind="visible: lens() === 'list'">
+              @*  <div data-bind="visible: lens() === 'list'">
                     <ol class="data" data-bind="foreach: items" data-href="@Url.Action(MVC.Agreements.Show(0))">
                         <li class="hover-hilite" data-bind="click: clickAction">
                             <div>
@@ -76,7 +75,6 @@
                                         data-bind="attr: { href: detailHref, title: detailTooltip }">
                                         <strong data-bind="text: translatedName"></strong>
                                         <span data-bind="visible: officialNameDoesNotMatchTranslation">
-                                            @*<br/>*@
                                             (<span data-bind="text: officialName"></span>)
                                         </span>
                                     </a>
@@ -85,7 +83,7 @@
                             </div>
                         </li>
                     </ol>
-                </div>
+                </div>*@
                 <div data-bind="visible: lens() === 'grid'">
                     <p>
                         This is a placeholder for the Grid data lens. Grid data will go here.

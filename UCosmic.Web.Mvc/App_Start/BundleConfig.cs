@@ -113,7 +113,8 @@ namespace UCosmic.Web.Mvc
                 "~/scripts/app/Spinner.js",
                 "~/scripts/app/PagedSearch.js",
                 "~/scripts/viewmodels/agreements/searchResult.js",
-                "~/scripts/viewmodels/agreements/search.js"));
+                "~/scripts/viewmodels/agreements/search.js",
+                "~/scripts/oss/moment.js"));
 
             // employee personal profile page
             bundles.Add(new ScriptBundle("~/bundles/people").Include(

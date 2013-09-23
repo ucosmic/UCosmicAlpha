@@ -24,6 +24,7 @@ module Agreements.ViewModels {
             super();
 
             this.requestResults = <() => void > this.requestResults.bind(this);
+            this.clickAction = <() => boolean > this.clickAction.bind(this);
 
             this._setupCountryDropDown();
             this._setupPagingSubscriptions();
@@ -247,14 +248,13 @@ module Agreements.ViewModels {
         // click item
         // TODO: is this still needed?
         clickAction(viewModel: SearchResult, e: JQueryEventObject): boolean {
-            //var href, $target = $(e.target);
-            //while ($target.length && !$target.attr('href') && !$target.attr('data-href')) {
-            //    $target = $target.parent();
-            //}
-            //if ($target.length) {
-            //    href = $target.attr('href') || $target.attr('data-href');
-            //    location.href = href.replace('/0/', '/' + viewModel.id() + '/');
-            //}
+
+            ///4/edit/#/index
+            //location.hash = "";
+            this.sammy.unload();
+            location.hash = "";
+            location.pathname = "agreements/" + viewModel.id() + "/edit/"
+            //alert(viewModel.id());
             return true;
         }
 

@@ -62,6 +62,7 @@ var Agreements;
                 };
 
                 this.requestResults = this.requestResults.bind(this);
+                this.clickAction = this.clickAction.bind(this);
 
                 this._setupCountryDropDown();
                 this._setupPagingSubscriptions();
@@ -239,14 +240,13 @@ var Agreements;
             // click item
             // TODO: is this still needed?
             Search.prototype.clickAction = function (viewModel, e) {
-                //var href, $target = $(e.target);
-                //while ($target.length && !$target.attr('href') && !$target.attr('data-href')) {
-                //    $target = $target.parent();
-                //}
-                //if ($target.length) {
-                //    href = $target.attr('href') || $target.attr('data-href');
-                //    location.href = href.replace('/0/', '/' + viewModel.id() + '/');
-                //}
+                ///4/edit/#/index
+                //location.hash = "";
+                this.sammy.unload();
+                location.hash = "";
+                location.pathname = "agreements/" + viewModel.id() + "/edit/";
+
+                //alert(viewModel.id());
                 return true;
             };
 
