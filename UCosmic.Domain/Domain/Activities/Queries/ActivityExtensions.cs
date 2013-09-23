@@ -20,7 +20,8 @@ namespace UCosmic.Domain.Activities
 
             return queryable.Where(a =>
                                    (
-                                       !a.EditSourceId.HasValue &&
+                                       //!a.EditSourceId.HasValue
+                                       (a.Original == null)
 
                                        /* include undated activities? */
 
@@ -34,7 +35,7 @@ namespace UCosmic.Domain.Activities
                                     *  NAND
                                     */
 
-                                       a.Values.Any(v => (v.ModeText == PublicActivityModeText) &&
+                                    && a.Values.Any(v => (v.ModeText == PublicActivityModeText) &&
 
                                                          !(noUndated && (!v.StartsOn.HasValue &&
                                                                          (!v.OnGoing.HasValue || !v.OnGoing.Value) &&

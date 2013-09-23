@@ -82,7 +82,7 @@ namespace UCosmic.Domain.Establishments
                 }
             }
 
-            return new EnumerableQuery<Establishment>(establishmentsWithPeopleWithActivities.Distinct());
+            return establishmentsWithPeopleWithActivities.Distinct().ToArray();
         }
     }
 }

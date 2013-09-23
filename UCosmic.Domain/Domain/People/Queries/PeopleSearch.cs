@@ -70,7 +70,8 @@ namespace UCosmic.Domain.People
                                           (a.ModeText == _publicActivityModeText)
 
                                           /* not activity edit copies */
-                                          && !a.EditSourceId.HasValue
+                                          //&& !a.EditSourceId.HasValue
+                                          && (a.Original == null)
 
                                           && a.Person.Affiliations.Any(
                                               /* must be associated with establishment */
