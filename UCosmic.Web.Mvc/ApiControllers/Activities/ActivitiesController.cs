@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
@@ -46,6 +48,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             }
 
             var model = Mapper.Map<PageOfActivityApiModel>(activities);
+
             return model;
         }
 
@@ -196,7 +199,13 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [PUT("{activityId}/edit")]
         public HttpResponseMessage PutEdit(int activityId, [FromBody] ActivityPutEditApiModel model)
         {
-            var editActivity = _queryProcessor.Execute(new ActivityById(User, activityId));
+            var editActivity = _queryProcessor.Execute(new ActivityById(User, activityId)
+            {
+                EagerLoad = new Expression<Func<Activity, object>>[]
+                {
+                    x => x.Original,
+                }
+            });
             if (editActivity == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 

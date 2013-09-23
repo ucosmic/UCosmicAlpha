@@ -205,9 +205,9 @@ body .user-item .menu-box .k-link {
 body .ellipsis {
   white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis;
   -o-text-overflow: ellipsis;
-  -ms-text-overflow: ellipsis; }
+  -ms-text-overflow: ellipsis;
+  text-overflow: ellipsis; }
 body .help-icon {
   width: 16px;
   height: 16px; }

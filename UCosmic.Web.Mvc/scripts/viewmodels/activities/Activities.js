@@ -97,18 +97,6 @@ var ViewModels;
                 return deferred;
             };
 
-            //deleteActivityById(activityId: number): void {
-            //    $.ajax({
-            //        async: false,
-            //        type: "DELETE",
-            //        url: App.Routes.WebApi.Activities.del(activityId),
-            //        success: (data: any, textStatus: string, jqXHR: JQueryXHR): void =>
-            //        { },
-            //        error: (xhr: JQueryXHR): void => {
-            //            App.Failures.message(xhr, 'while trying to delete your activity', true)
-            //        }
-            //    });
-            //}
             ActivityList.prototype.deleteActivity = function (item, e, viewModel) {
                 var _this = this;
                 var $dialog = $("#confirmActivityDeleteDialog");
@@ -135,13 +123,7 @@ var ViewModels;
                                     $dialog.dialog("close");
 
                                     // get the index of the deleted activity
-                                    var deletedIndex = -1, itemsArray = _this.items();
-                                    for (var i = 0; i < itemsArray.length; i++) {
-                                        if (itemsArray[i].id() == item.id()) {
-                                            deletedIndex = i;
-                                            break;
-                                        }
-                                    }
+                                    var deletedIndex = $.inArray(item, _this.items());
                                     if (deletedIndex >= 0)
                                         _this.items.splice(deletedIndex, 1);
                                 }).fail(function (xhr) {
@@ -167,56 +149,10 @@ var ViewModels;
                 });
             };
 
-            //editActivity(activityId: number): boolean {
-            //    var returnValue = false;
-            //    $.ajax({
-            //        type: 'GET',
-            //        async: false,
-            //        url: App.Routes.WebApi.Activities.getEditState(activityId)
-            //    })
-            //    .done((editState: any, textStatus: string, jqXHR: JQueryXHR): void => {
-            //        if (editState.isInEdit) {
-            //            var $dialog = $("#activityBeingEditedDialog");
-            //            $dialog.dialog({
-            //                dialogClass: 'jquery-ui',
-            //                width: 'auto',
-            //                resizable: false,
-            //                modal: true,
-            //                buttons: {
-            //                    Ok: (): void => {
-            //                        $dialog.dialog("close");
-            //                    }
-            //                }
-            //            });
-            //        }
-            //        else {
-            //            returnValue = true;
-            //        }
-            //    })
-            //    .fail((xhr: JQueryXHR): void => {
-            //        App.Failures.message(xhr, 'while trying to edit your activity', true)
-            //    });
-            //    return returnValue;
-            //}
             ActivityList.prototype.editActivityUrl = function (id) {
                 return App.Routes.Mvc.My.Profile.activityEdit(id);
             };
 
-            //newActivity(data: any, event: any): void {
-            //    $.ajax({
-            //        type: "POST",
-            //        //url: App.Routes.WebApi.Activities.post(),
-            //        url: '/api/activities/',
-            //        success: (newActivityId: number, textStatus: string, jqXHR: JQueryXHR): void =>
-            //        {
-            //            location.href = App.Routes.Mvc.My.Profile.activityEdit(newActivityId);
-            //        },
-            //        error: (jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void =>
-            //        {
-            //            alert(textStatus + "|" + errorThrown);
-            //        }
-            //    });
-            //}
             ActivityList.prototype.getTypeName = function (id) {
                 var typeName = "";
 

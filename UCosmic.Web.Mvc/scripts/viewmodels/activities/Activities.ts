@@ -116,19 +116,6 @@ module ViewModels.Activities {
             return deferred;
         }
 
-        //deleteActivityById(activityId: number): void {
-        //    $.ajax({
-        //        async: false,
-        //        type: "DELETE",
-        //        url: App.Routes.WebApi.Activities.del(activityId),
-        //        success: (data: any, textStatus: string, jqXHR: JQueryXHR): void =>
-        //        { },
-        //        error: (xhr: JQueryXHR): void => {
-        //            App.Failures.message(xhr, 'while trying to delete your activity', true)
-        //        }
-        //    });
-        //}
-
         deleteActivity(item: any, e: JQueryEventObject, viewModel: ActivityList): void {
             var $dialog = $("#confirmActivityDeleteDialog");
             $dialog.dialog({ // open a dialog to confirm deletion of activity
@@ -155,12 +142,7 @@ module ViewModels.Activities {
                                     $dialog.dialog("close");
 
                                     // get the index of the deleted activity
-                                    var deletedIndex = -1, itemsArray = this.items();
-                                    for (var i = 0; i < itemsArray.length; i++){
-                                        if (itemsArray[i].id() == item.id()) {
-                                            deletedIndex = i; break;
-                                        }
-                                    }
+                                    var deletedIndex = $.inArray(item, this.items());
                                     if (deletedIndex >= 0)
                                         this.items.splice(deletedIndex, 1);
                                 })
@@ -187,57 +169,9 @@ module ViewModels.Activities {
             });
         }
 
-        //editActivity(activityId: number): boolean {
-        //    var returnValue = false;
-        //    $.ajax({
-        //        type: 'GET',
-        //        async: false,
-        //        url: App.Routes.WebApi.Activities.getEditState(activityId)
-        //    })
-        //    .done((editState: any, textStatus: string, jqXHR: JQueryXHR): void => {
-        //        if (editState.isInEdit) {
-        //            var $dialog = $("#activityBeingEditedDialog");
-        //            $dialog.dialog({
-        //                dialogClass: 'jquery-ui',
-        //                width: 'auto',
-        //                resizable: false,
-        //                modal: true,
-        //                buttons: {
-        //                    Ok: (): void => {
-        //                        $dialog.dialog("close");
-        //                    }
-        //                }
-        //            });
-        //        }
-        //        else {
-        //            returnValue = true;
-        //        }
-        //    })
-        //    .fail((xhr: JQueryXHR): void => {
-        //        App.Failures.message(xhr, 'while trying to edit your activity', true)
-        //    });
-        //    return returnValue;
-        //}
-
         editActivityUrl(id: number): string {
             return App.Routes.Mvc.My.Profile.activityEdit(id);
         }
-
-        //newActivity(data: any, event: any): void {
-        //    $.ajax({
-        //        type: "POST",
-        //        //url: App.Routes.WebApi.Activities.post(),
-        //        url: '/api/activities/',
-        //        success: (newActivityId: number, textStatus: string, jqXHR: JQueryXHR): void =>
-        //        {
-        //            location.href = App.Routes.Mvc.My.Profile.activityEdit(newActivityId);
-        //        },
-        //        error: (jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void =>
-        //        {
-        //            alert(textStatus + "|" + errorThrown);
-        //        }
-        //    });
-        //}
 
         getTypeName(id: number): string {
             var typeName: string = "";
