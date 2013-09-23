@@ -97,40 +97,69 @@ var ViewModels;
                 return deferred;
             };
 
-            ActivityList.prototype.deleteActivityById = function (activityId) {
-                $.ajax({
-                    async: false,
-                    type: "DELETE",
-                    url: App.Routes.WebApi.Activities.del(activityId),
-                    success: function (data, textStatus, jqXHR) {
-                    },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        alert(textStatus);
-                    }
-                });
-            };
-
-            ActivityList.prototype.deleteActivity = function (data, e, viewModel) {
-                $("#confirmActivityDeleteDialog").dialog({
-                    dialogClass: 'jquery-ui',
+            //deleteActivityById(activityId: number): void {
+            //    $.ajax({
+            //        async: false,
+            //        type: "DELETE",
+            //        url: App.Routes.WebApi.Activities.del(activityId),
+            //        success: (data: any, textStatus: string, jqXHR: JQueryXHR): void =>
+            //        { },
+            //        error: (xhr: JQueryXHR): void => {
+            //            App.Failures.message(xhr, 'while trying to delete your activity', true)
+            //        }
+            //    });
+            //}
+            ActivityList.prototype.deleteActivity = function (item, e, viewModel) {
+                var _this = this;
+                var $dialog = $("#confirmActivityDeleteDialog");
+                $dialog.dialog({
+                    dialogClass: 'jquery-ui no-close',
                     width: 'auto',
                     resizable: false,
                     modal: true,
+                    closeOnEscape: false,
                     buttons: [
                         {
                             text: "Yes, confirm delete",
                             click: function () {
-                                viewModel.deleteActivityById(data.id());
-                                $(this).dialog("close");
+                                var $buttons = $dialog.parents('.ui-dialog').find('button');
+                                $.each($buttons, function () {
+                                    $(this).attr('disabled', 'disabled');
+                                });
+                                $dialog.find('.spinner').css('visibility', '');
 
-                                /* TBD - Don't reload page. */
-                                location.href = App.Routes.Mvc.My.Profile.get();
+                                $.ajax({
+                                    type: 'DELETE',
+                                    url: App.Routes.WebApi.Activities.del(item.id())
+                                }).done(function () {
+                                    $dialog.dialog("close");
+
+                                    // get the index of the deleted activity
+                                    var deletedIndex = -1, itemsArray = _this.items();
+                                    for (var i = 0; i < itemsArray.length; i++) {
+                                        if (itemsArray[i].id() == item.id()) {
+                                            deletedIndex = i;
+                                            break;
+                                        }
+                                    }
+                                    if (deletedIndex >= 0)
+                                        _this.items.splice(deletedIndex, 1);
+                                }).fail(function (xhr) {
+                                    App.Failures.message(xhr, 'while trying to delete your activity', true);
+                                }).always(function () {
+                                    $.each($buttons, function () {
+                                        $(this).removeAttr('disabled');
+                                    });
+                                    $dialog.find('.spinner').css('visibility', 'hidden');
+                                });
                             }
                         },
                         {
                             text: "No, cancel delete",
                             click: function () {
-                                $(this).dialog("close");
+                                var test = _this;
+                                test = viewModel;
+                                $dialog.dialog("close");
                             },
                             'data-css-link': true
                         }

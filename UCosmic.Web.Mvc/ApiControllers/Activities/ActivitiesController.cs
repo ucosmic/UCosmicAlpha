@@ -5,6 +5,7 @@ using System.Web.Http;
 using AttributeRouting;
 using AttributeRouting.Web.Http;
 using AutoMapper;
+using FluentValidation;
 using UCosmic.Domain.Activities;
 using UCosmic.Web.Mvc.Models;
 
@@ -218,9 +219,19 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [DELETE("{activityId}")]
         public HttpResponseMessage Delete(int activityId)
         {
-            var deleteActivity = new DeleteActivity(User, activityId);
-            _deleteActivity.Handle(deleteActivity);
-            return Request.CreateResponse(HttpStatusCode.OK);
+            try
+            {
+                var deleteActivity = new DeleteActivity(User, activityId);
+                _deleteActivity.Handle(deleteActivity);
+                return Request.CreateResponse(HttpStatusCode.OK, "Activity was successfully deleted.");
+            }
+            catch (ValidationException ex)
+            {
+                var error = ex.Errors.First();
+                return 403.Equals(error.CustomState)
+                    ? Request.CreateResponse(HttpStatusCode.Forbidden, error.ErrorMessage)
+                    : Request.CreateResponse(HttpStatusCode.BadRequest, error.ErrorMessage);
+            }
         }
     }
 }

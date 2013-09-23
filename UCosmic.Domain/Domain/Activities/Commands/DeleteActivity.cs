@@ -33,7 +33,8 @@ namespace UCosmic.Domain.Activities
 
             // make sure user owns this activity
             RuleFor(x => x.Principal)
-                .MustOwnActivity(queryProcessor, x => x.ActivityId);
+                .MustOwnActivity(queryProcessor, x => x.ActivityId).WithState(x => 403)
+            ;
         }
     }
 

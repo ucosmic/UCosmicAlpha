@@ -237,9 +237,12 @@ button, input[type=submit], input[type=reset], input[type=button], a.button, a.b
         cursor: pointer;
         @include opacity(1);
     }
-    &[disabled], &[disabled=true] {
+    &[disabled], &[disabled=true], &[disabled=disabled] {
         cursor: not-allowed !important;
         @include opacity(.5);
+        * {
+            cursor: not-allowed;
+        }
     }
 }
 
@@ -259,10 +262,14 @@ button.link, input[type=submit].link, input[type=reset].link, input[type=button]
     &:hover {
         text-decoration: none !important;
     }
-    &[disabled], &[disabled=true] {
-        color: #555;
+    &[disabled], &[disabled=true], &[disabled=disabled] {
+        color: #555 !important;
         text-decoration: none !important;
-        cursor: not-allowed;
+        cursor: not-allowed !important;
+        @include opacity(0.7);
+        * {
+            cursor: not-allowed;
+        }
     }
 }
 

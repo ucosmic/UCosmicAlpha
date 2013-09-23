@@ -8,7 +8,7 @@ namespace UCosmic.Domain.Activities
 {
     public class MustOwnActivity<T> : PropertyValidator
     {
-        private const string FailMessageFormat = "User '{UserName}' is not authorized to perform the '{CommandName}' action on activity with id '{PropertyValue}'.";
+        private const string FailMessageFormat = "User '{UserName}' is not authorized to perform the '{CommandName}' action on activity with id '{ActivityId}'.";
 
         private readonly IProcessQueries _queryProcessor;
         private readonly Func<T, int> _activityId;
@@ -59,7 +59,7 @@ namespace UCosmic.Domain.Activities
 
             context.MessageFormatter.AppendArgument("UserName", userName);
             context.MessageFormatter.AppendArgument("CommandName", typeof(T).Name);
-            context.MessageFormatter.AppendArgument("PropertyValue", context.PropertyValue);
+            context.MessageFormatter.AppendArgument("ActivityId", activity.RevisionId);
             return false;
         }
     }

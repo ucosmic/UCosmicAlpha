@@ -81,25 +81,25 @@ module ViewModels.Activities {
                     this.activityLocationsList = locations;
 
                     {
-                        var augmentedDocumentModel = function ( data ) {
-                            ko.mapping.fromJS( data, {}, this );
+                        var augmentedDocumentModel = function (data) {
+                            ko.mapping.fromJS(data, {}, this);
                             this.proxyImageSource = App.Routes.WebApi.Activities.Documents.Thumbnail.get(data.activityId, data.id, { maxSide: ActivityList.iconMaxSide });
                         };
 
                         var mapping = {
                             'documents': {
-                                create: function ( options ) {
-                                    return new augmentedDocumentModel( options.data );
+                                create: function (options) {
+                                    return new augmentedDocumentModel(options.data);
                                 },
                             },
                             'startsOn': {
-                                create: ( options: any ): KnockoutObservable<Date> => {
-                                    return ( options.data != null ) ? ko.observable( moment( options.data ).toDate() ) : ko.observable();
+                                create: (options: any): KnockoutObservable<Date> => {
+                                    return (options.data != null) ? ko.observable(moment(options.data).toDate()) : ko.observable();
                                 }
                             },
                             'endsOn': {
-                                create: ( options: any ): KnockoutObservable<Date> => {
-                                    return ( options.data != null ) ? ko.observable( moment( options.data ).toDate() ) : ko.observable();
+                                create: (options: any): KnockoutObservable<Date> => {
+                                    return (options.data != null) ? ko.observable(moment(options.data).toDate()) : ko.observable();
                                 }
                             }
                         };
@@ -116,44 +116,74 @@ module ViewModels.Activities {
             return deferred;
         }
 
-        deleteActivityById(activityId: number): void {
-            $.ajax({
-                async: false,
-                type: "DELETE",
-                url: App.Routes.WebApi.Activities.del(activityId),
-                success: (data: any, textStatus: string, jqXHR: JQueryXHR): void =>
-                { },
-                error: (jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void =>
-                {
-                    alert(textStatus);
-                }
-            });
-        }
+        //deleteActivityById(activityId: number): void {
+        //    $.ajax({
+        //        async: false,
+        //        type: "DELETE",
+        //        url: App.Routes.WebApi.Activities.del(activityId),
+        //        success: (data: any, textStatus: string, jqXHR: JQueryXHR): void =>
+        //        { },
+        //        error: (xhr: JQueryXHR): void => {
+        //            App.Failures.message(xhr, 'while trying to delete your activity', true)
+        //        }
+        //    });
+        //}
 
-        deleteActivity(data: any, e: any, viewModel: any): void {
-            $("#confirmActivityDeleteDialog").dialog({
-                dialogClass: 'jquery-ui',
+        deleteActivity(item: any, e: JQueryEventObject, viewModel: ActivityList): void {
+            var $dialog = $("#confirmActivityDeleteDialog");
+            $dialog.dialog({ // open a dialog to confirm deletion of activity
+                dialogClass: 'jquery-ui no-close',
                 width: 'auto',
                 resizable: false,
                 modal: true,
+                closeOnEscape: false,
                 buttons: [
-                {
-                    text: "Yes, confirm delete",
-                    click: function (): void {
-                        viewModel.deleteActivityById(data.id());
-                        $(this).dialog("close");
+                    {
+                        text: "Yes, confirm delete",
+                        click: (): void => {
+                            var $buttons = $dialog.parents('.ui-dialog').find('button');
+                            $.each($buttons, function (): void { // disable buttons
+                                $(this).attr('disabled', 'disabled');
+                            });
+                            $dialog.find('.spinner').css('visibility', '');
 
-                        /* TBD - Don't reload page. */
-                        location.href = App.Routes.Mvc.My.Profile.get();
-                    }
-                },
-                {
-                    text: "No, cancel delete",
-                    click: function (): void {
-                        $(this).dialog("close");
+                            $.ajax({ // submit delete api request
+                                type: 'DELETE',
+                                url: App.Routes.WebApi.Activities.del(item.id())
+                            })
+                                .done((): void => {
+                                    $dialog.dialog("close");
+
+                                    // get the index of the deleted activity
+                                    var deletedIndex = -1, itemsArray = this.items();
+                                    for (var i = 0; i < itemsArray.length; i++){
+                                        if (itemsArray[i].id() == item.id()) {
+                                            deletedIndex = i; break;
+                                        }
+                                    }
+                                    if (deletedIndex >= 0)
+                                        this.items.splice(deletedIndex, 1);
+                                })
+                                .fail((xhr: JQueryXHR): void => { // display failure message
+                                    App.Failures.message(xhr, 'while trying to delete your activity', true)
+                                })
+                                .always((): void => { // re-enable buttons
+                                    $.each($buttons, function (): void {
+                                        $(this).removeAttr('disabled');
+                                    });
+                                    $dialog.find('.spinner').css('visibility', 'hidden');
+                                });
+                        }
                     },
-                    'data-css-link': true
-                }]
+                    {
+                        text: "No, cancel delete",
+                        click: (): void => {
+                            var test = this;
+                            test = viewModel;
+                            $dialog.dialog("close");
+                        },
+                        'data-css-link': true
+                    }]
             });
         }
 
@@ -212,14 +242,12 @@ module ViewModels.Activities {
         getTypeName(id: number): string {
             var typeName: string = "";
 
-            if (this.activityTypesList != null)
-            {
+            if (this.activityTypesList != null) {
                 var i = 0;
                 while ((i < this.activityTypesList.length) &&
-                       (id != this.activityTypesList[i].id)) { i += 1 }
+                    (id != this.activityTypesList[i].id)) { i += 1 }
 
-                if (i < this.activityTypesList.length)
-                {
+                if (i < this.activityTypesList.length) {
                     typeName = this.activityTypesList[i].type;
                 }
             }
@@ -230,14 +258,12 @@ module ViewModels.Activities {
         getLocationName(id: number): string {
             var locationName: string = "";
 
-            if (this.activityLocationsList != null)
-            {
+            if (this.activityLocationsList != null) {
                 var i = 0;
                 while ((i < this.activityLocationsList.length) &&
-                       (id != this.activityLocationsList[i].id)) { i += 1 }
+                    (id != this.activityLocationsList[i].id)) { i += 1 }
 
-                if (i < this.activityLocationsList.length)
-                {
+                if (i < this.activityLocationsList.length) {
                     locationName = this.activityLocationsList[i].officialName;
                 }
             }
@@ -251,29 +277,24 @@ module ViewModels.Activities {
             /* May need a separate function to convert from CLR custom date formats to moment formats */
             dateFormat = (dateFormat != null) ? dateFormat.toUpperCase() : "MM/DD/YYYY";
 
-            if (startsOnStr == null)
-            {
-                if (endsOnStr != null)
-                {
+            if (startsOnStr == null) {
+                if (endsOnStr != null) {
                     formattedDateRange = moment(endsOnStr).format(dateFormat);
                 }
                 else if (onGoing) {
                     formattedDateRange = "(Ongoing)";
                 }
             }
-            else
-            {
+            else {
                 formattedDateRange = moment(startsOnStr).format(dateFormat);
                 if (onGoing) {
                     formattedDateRange += " (Ongoing)";
-                } else if (endsOnStr != null)
-                {
+                } else if (endsOnStr != null) {
                     formattedDateRange += " - " + moment(endsOnStr).format(dateFormat);
                 }
             }
 
-            if (formattedDateRange.length > 0)
-            {
+            if (formattedDateRange.length > 0) {
                 formattedDateRange += "\xa0\xa0";
             }
 
@@ -285,12 +306,9 @@ module ViewModels.Activities {
             var location: Service.ApiModels.IActivityLocation;
 
             /* ----- Assemble in sorted order ----- */
-            for (var i = 0; i < this.activityTypesList.length; i += 1)
-            {
-                for (var j = 0; j < types.length; j += 1)
-                {
-                    if (types[j].typeId() == this.activityTypesList[i].id)
-                    {
+            for (var i = 0; i < this.activityTypesList.length; i += 1) {
+                for (var j = 0; j < types.length; j += 1) {
+                    if (types[j].typeId() == this.activityTypesList[i].id) {
                         if (formattedTypes.length > 0) { formattedTypes += "; "; }
                         formattedTypes += this.activityTypesList[i].type;
                     }
@@ -304,8 +322,7 @@ module ViewModels.Activities {
             var formattedLocations: string = "";
             var location: Service.ApiModels.IActivityLocation;
 
-            for (var i = 0; i < locations.length; i += 1)
-            {
+            for (var i = 0; i < locations.length; i += 1) {
                 if (i > 0) { formattedLocations += ", "; }
                 formattedLocations += this.getLocationName(locations[i].placeId());
             }
