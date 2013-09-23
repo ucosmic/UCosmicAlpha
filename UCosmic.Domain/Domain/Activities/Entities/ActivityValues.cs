@@ -91,14 +91,6 @@ namespace UCosmic.Domain.Activities
             }
         }
 
-        protected bool EqualsNullableBool(bool? a, bool? b)
-        {
-            if (!a.HasValue && !b.HasValue) return true;
-            if (!a.HasValue && !b.Value) return true;
-            if (!b.HasValue && !a.Value) return true;
-            return a == b;
-        }
-
         public bool Equals(ActivityValues other)
         {
             return other != null && other.RevisionId.Equals(RevisionId);

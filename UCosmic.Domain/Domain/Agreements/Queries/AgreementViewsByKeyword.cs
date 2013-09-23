@@ -33,7 +33,7 @@ namespace UCosmic.Domain.Agreements
                 return Handle(query);
             }
             var view = possibleNullView.AsQueryable();
-            const StringComparison ordinalIgnoreCase = StringComparison.OrdinalIgnoreCase;
+            //const StringComparison ordinalIgnoreCase = StringComparison.OrdinalIgnoreCase;
 
             //// when the query's country code is empty string, match all establishments regardless of country.
             //// when the query's country code is null, match establishments without country

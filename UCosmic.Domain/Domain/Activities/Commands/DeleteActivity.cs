@@ -131,19 +131,6 @@ namespace UCosmic.Domain.Activities
                     foreach (var path in deleteWorkCopy.DeletedDocuments)
                         _binaryData.Put(path.Key, path.Value, true);
             }
-
-            // TBD
-            // log audit
-            //var audit = new CommandEvent
-            //{
-            //    RaisedBy = User.Name,
-            //    Name = command.GetType().FullName,
-            //    Value = JsonConvert.SerializeObject(new { command.Id }),
-            //    PreviousState = activityDocument.ToJsonAudit(),
-            //};
-            //_entities.Create(audit);
-
-            //_eventProcessor.Raise(new EstablishmentChanged());
         }
     }
 }

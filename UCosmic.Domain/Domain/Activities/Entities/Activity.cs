@@ -29,7 +29,6 @@ namespace UCosmic.Domain.Activities
 
         public virtual ICollection<ActivityValues> Values { get; protected set; }
 
-        //public int? EditSourceId { get; protected internal set; }
         public virtual Activity Original { get; protected internal set; }
         public virtual Activity WorkCopy { get; protected internal set; }
 

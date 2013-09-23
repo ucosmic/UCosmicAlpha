@@ -526,9 +526,9 @@ module App.Routes {
             //    return makeUrl('activities');
             //}
 
-            export function getEdit(activityId: number): string {
-                return makeUrl('activities/' + activityId + "/edit");
-            }
+            //export function getEdit(activityId: number): string {
+            //    return makeUrl('activities/' + activityId + "/edit");
+            //}
 
             //export function getEditState(activityId: number): string {
             //    return makeUrl('activities/' + activityId + "/edit-state");

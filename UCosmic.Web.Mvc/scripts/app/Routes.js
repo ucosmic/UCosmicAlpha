@@ -668,11 +668,9 @@ var App;
                 //export function post(): string {
                 //    return makeUrl('activities');
                 //}
-                function getEdit(activityId) {
-                    return makeUrl('activities/' + activityId + "/edit");
-                }
-                Activities.getEdit = getEdit;
-
+                //export function getEdit(activityId: number): string {
+                //    return makeUrl('activities/' + activityId + "/edit");
+                //}
                 //export function getEditState(activityId: number): string {
                 //    return makeUrl('activities/' + activityId + "/edit-state");
                 //}

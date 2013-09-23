@@ -10,13 +10,16 @@ namespace UCosmic.Web.Mvc.Controllers
     {
         private readonly IProcessQueries _queryProcessor;
         private readonly IHandleCommands<CreateActivityAndValues> _createActivityAndValues;
+        private readonly IHandleCommands<CopyActivityAndValues> _copyActivityAndValues;
 
         public ActivitiesController(IProcessQueries queryProcessor
             , IHandleCommands<CreateActivityAndValues> createActivityAndValues
+            , IHandleCommands<CopyActivityAndValues> copyActivityAndValues
         )
         {
             _queryProcessor = queryProcessor;
             _createActivityAndValues = createActivityAndValues;
+            _copyActivityAndValues = copyActivityAndValues;
         }
 
         [Authorize]
@@ -44,7 +47,12 @@ namespace UCosmic.Web.Mvc.Controllers
                 !User.Identity.Name.Equals(activity.Person.User.Name, StringComparison.OrdinalIgnoreCase))
                 return HttpNotFound();
 
+            // make sure there is a copy of the activity for editing
+            var copyActivityAndValues = new CopyActivityAndValues(User, activityId);
+            _copyActivityAndValues.Handle(copyActivityAndValues);
+
             ViewBag.ActivityId = activityId;
+            ViewBag.ActivityWorkCopyId = copyActivityAndValues.CreatedActivity.RevisionId;
             return View();
         }
     }

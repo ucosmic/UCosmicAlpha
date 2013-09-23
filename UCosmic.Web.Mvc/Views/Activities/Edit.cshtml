@@ -210,8 +210,8 @@
 
     <script type="text/javascript">
         (function($, window) {
-            var activityId = @ViewBag.ActivityId;
-            var activityViewModel = new ViewModels.Activities.Activity(activityId);
+            var activityId = @ViewBag.ActivityId, activityWorkCopyId = @ViewBag.ActivityWorkCopyId;
+            var activityViewModel = new ViewModels.Activities.Activity(activityId, activityWorkCopyId);
             activityViewModel.load()
                 .done(function() {
                     activityViewModel.setupWidgets("fromDatePicker", "toDatePicker", "countrySelector", "uploadFile", "newTag");

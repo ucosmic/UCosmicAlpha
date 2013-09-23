@@ -13,7 +13,7 @@ var ViewModels;
     /// <reference path="../activities/ServiceApiModel.d.ts" />
     (function (Activities) {
         var Activity = (function () {
-            function Activity(activityId) {
+            function Activity(activityId, activityWorkCopyId) {
                 this.ready = ko.observable(false);
                 /* Array of all locations offered in Country/Location multiselect. */
                 this.locations = ko.observableArray();
@@ -35,11 +35,12 @@ var ViewModels;
                 /* In the process of saving */
                 this.saving = false;
                 this.saveSpinner = new App.Spinner(new App.SpinnerOptions(200));
-                this._initialize(activityId);
+                this._initialize(activityId, activityWorkCopyId);
             }
-            Activity.prototype._initialize = function (activityId) {
+            Activity.prototype._initialize = function (activityId, activityWorkCopyId) {
                 var _this = this;
                 this.id = ko.observable(activityId);
+                this.workCopyId = ko.observable(activityWorkCopyId);
 
                 this.dirty = ko.computed(function () {
                     if (_this.dirtyFlag()) {
@@ -248,30 +249,24 @@ var ViewModels;
                 var deferred = $.Deferred();
 
                 var locationsPact = $.Deferred();
-                $.get(App.Routes.WebApi.Activities.Locations.get()).done(function (data, textStatus, jqXHR) {
+                $.get(App.Routes.WebApi.Activities.Locations.get()).done(function (data) {
                     locationsPact.resolve(data);
                 }).fail(function (jqXHR, textStatus, errorThrown) {
                     locationsPact.reject(jqXHR, textStatus, errorThrown);
                 });
 
                 var typesPact = $.Deferred();
-                $.get(App.Routes.WebApi.Employees.ModuleSettings.ActivityTypes.get()).done(function (data, textStatus, jqXHR) {
+                $.get(App.Routes.WebApi.Employees.ModuleSettings.ActivityTypes.get()).done(function (data) {
                     typesPact.resolve(data);
                 }).fail(function (jqXHR, textStatus, errorThrown) {
                     typesPact.reject(jqXHR, textStatus, errorThrown);
                 });
 
                 var dataPact = $.Deferred();
-
-                $.ajax({
-                    type: "GET",
-                    url: App.Routes.WebApi.Activities.getEdit(this.id()),
-                    success: function (data, textStatus, jqXhr) {
-                        dataPact.resolve(data);
-                    },
-                    error: function (jqXhr, textStatus, errorThrown) {
-                        dataPact.reject(jqXhr, textStatus, errorThrown);
-                    }
+                $.get(App.Routes.WebApi.Activities.get(this.workCopyId())).done(function (data) {
+                    dataPact.resolve(data);
+                }).fail(function (jqXhr, textStatus, errorThrown) {
+                    dataPact.reject(jqXhr, textStatus, errorThrown);
                 });
 
                 // only process after all requests have been resolved

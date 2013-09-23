@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Security.Principal;
 using FluentValidation;
 using UCosmic.Domain.Identity;
@@ -64,9 +65,21 @@ namespace UCosmic.Domain.Activities
         {
             if (command == null) throw new ArgumentNullException("command");
 
-            var originalActivity = _entities.Get<Activity>().ById(command.ActivityId, false);
+            var originalActivity = _entities.Get<Activity>()
+                .EagerLoad(_entities, new Expression<Func<Activity, object>>[]
+                {
+                    x => x.WorkCopy,
+                })
+                .ById(command.ActivityId, false);
 
-            /* ----- Copy Activity ----- */
+            // do not do anything if the activity already has a copy
+            if (originalActivity.WorkCopy != null)
+            {
+                command.CreatedActivity = originalActivity.WorkCopy;
+                return;
+            }
+
+            // copy activity entity
             var copyActivity = new CopyActivity(command.Principal)
             {
                 ActivityId = command.ActivityId,
@@ -76,7 +89,7 @@ namespace UCosmic.Domain.Activities
             _copyActivity.Handle(copyActivity);
             var copiedActivity = copyActivity.CreatedActivity;
 
-            /* ----- Copy Activity Values ----- */
+            // copy activityvalues entity
             var modeText = originalActivity.Mode.AsSentenceFragment();
             var originalValues = originalActivity.Values.First(x => x.ModeText == modeText);
             var copyActivityValues = new CopyActivityValues(command.Principal)

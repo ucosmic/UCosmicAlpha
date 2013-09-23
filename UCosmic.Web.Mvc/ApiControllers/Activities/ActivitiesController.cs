@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Linq.Expressions;
+﻿using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
@@ -16,18 +14,15 @@ namespace UCosmic.Web.Mvc.ApiControllers
     public class ActivitiesController : ApiController
     {
         private readonly IProcessQueries _queryProcessor;
-        private readonly IHandleCommands<CopyActivityAndValues> _copyActivityAndValues;
         private readonly IHandleCommands<DeleteActivity> _deleteActivity;
         private readonly IHandleCommands<UpdateActivity> _updateActivity;
 
         public ActivitiesController(IProcessQueries queryProcessor
-                                  , IHandleCommands<CopyActivityAndValues> copyActivityAndValues
                                   , IHandleCommands<DeleteActivity> deleteActivity
                                   , IHandleCommands<UpdateActivity> updateActivity
                             )
         {
             _queryProcessor = queryProcessor;
-            _copyActivityAndValues = copyActivityAndValues;
             _deleteActivity = deleteActivity;
             _updateActivity = updateActivity;
         }
@@ -61,11 +56,9 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [GET("{activityId}")]
         public ActivityApiModel Get(int activityId)
         {
-            var activity = _queryProcessor.Execute(new ActivityByEntityId(activityId));
+            var activity = _queryProcessor.Execute(new ActivityById(activityId));
             if (activity == null)
-            {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
 
             var model = Mapper.Map<ActivityApiModel>(activity);
             return model;
@@ -76,49 +69,50 @@ namespace UCosmic.Web.Mvc.ApiControllers
          * Get an activity copy for editing (or recover edit copy)
         */
         // --------------------------------------------------------------------------------
-        [Authorize]
-        [GET("{activityId}/edit")]
-        public ActivityApiModel GetEdit(int activityId)
-        {
-            /* Get the activity we want to edit */
-            var activity = _queryProcessor.Execute(new ActivityById(activityId)
-            {
-                EagerLoad = new Expression<Func<Activity, object>>[]
-                {
-                    x => x.WorkCopy,
-                },
-            });
-            if (activity == null) throw new HttpResponseException(HttpStatusCode.NotFound);
+        //[Authorize]
+        //[GET("{activityId}/edit")]
+        //public ActivityApiModel GetEdit(int activityId)
+        //{
+        //    /* Get the activity we want to edit */
+        //    var activity = _queryProcessor.Execute(new ActivityById(activityId)
+        //    {
+        //        EagerLoad = new Expression<Func<Activity, object>>[]
+        //        {
+        //            x => x.WorkCopy,
+        //        },
+        //    });
+        //    if (activity == null || activity.WorkCopy == null)
+        //        throw new HttpResponseException(HttpStatusCode.NotFound);
 
-            /* Search for an "in progress edit" activity.  This can happen if the user
-             * navigates away from Activity Edit page before saving. */
-            //var editActivity = _queryProcessor.Execute(new ActivityByEditSourceId(activity.RevisionId));
-            var editActivity = activity.WorkCopy;
+        //    /* Search for an "in progress edit" activity.  This can happen if the user
+        //     * navigates away from Activity Edit page before saving. */
+        //    //var editActivity = _queryProcessor.Execute(new ActivityByEditSourceId(activity.RevisionId));
+        //    //var editActivity = activity.WorkCopy;
 
-            /* Not sure how this scenario arises, but I've seen it once. It might have been
-             * the result of debugging.  If we have an edit activity with no values, delete it.
-             */
-            if ((editActivity != null) && (editActivity.Values.Count == 0))
-            {
-                var deleteActivityCommand = new DeleteActivity(User, editActivity.RevisionId);
-                _deleteActivity.Handle(deleteActivityCommand);
-                editActivity = null;
-            }
+        //    /* Not sure how this scenario arises, but I've seen it once. It might have been
+        //     * the result of debugging.  If we have an edit activity with no values, delete it.
+        //     */
+        //    //if (activity.WorkCopy != null && activity.WorkCopy.Values.Count == 0)
+        //    //{
+        //    //    var deleteActivityCommand = new DeleteActivity(User, activity.WorkCopy.RevisionId);
+        //    //    _deleteActivity.Handle(deleteActivityCommand);
+        //    //    activity.WorkCopy = null;
+        //    //}
 
-            if (editActivity == null)
-            {
-                /* There's no "in progress edit" record, so we make a copy of the
-                     * activity and set it to edit mode. */
-                var copyActivityAndValues = new CopyActivityAndValues(User, activityId);
+        //    //if (editActivity == null)
+        //    //{
+        //        /* There's no "in progress edit" record, so we make a copy of the
+        //             * activity and set it to edit mode. */
+        //        //var copyActivityAndValues = new CopyActivityAndValues(User, activityId);
 
-                _copyActivityAndValues.Handle(copyActivityAndValues);
+        //        //_copyActivityAndValues.Handle(copyActivityAndValues);
 
-                editActivity = copyActivityAndValues.CreatedActivity;
-            }
+        //        //editActivity = copyActivityAndValues.CreatedActivity;
+        //    //}
 
-            var model = Mapper.Map<ActivityApiModel>(editActivity);
-            return model;
-        }
+        //    var model = Mapper.Map<ActivityApiModel>(activity.WorkCopy);
+        //    return model;
+        //}
 
         // --------------------------------------------------------------------------------
         /*

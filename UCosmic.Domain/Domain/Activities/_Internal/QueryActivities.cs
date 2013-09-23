@@ -33,14 +33,6 @@ namespace UCosmic.Domain.Activities
             );
         }
 
-        internal static Activity ByEntityId(this IQueryable<Activity> queryable, int id)
-        {
-            return queryable.SingleOrDefault(
-                a =>
-                a.RevisionId == id
-            );
-        }
-
         internal static Activity ById(this IQueryable<Activity> queryable, int id, bool allowNull = true)
         {
             return allowNull ? queryable.SingleOrDefault(a => a.RevisionId == id) : queryable.Single(a => a.RevisionId == id);
