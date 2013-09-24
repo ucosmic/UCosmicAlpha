@@ -234,14 +234,14 @@
 
                     /* NOTE: Using TinyMCE autosave plugin will disable window.onbeforeunload. */
                     window.onbeforeunload = function() {
-                        activityViewModel.autoSave(activityViewModel, null);
+                        activityViewModel.autoSave();
                     };
 
                     activityViewModel.setupSubscriptions();
                     activityViewModel.ready(true);
                 })
-                .fail(function(jqXhr, textStatus, errorThrown) {
-                    alert(textStatus + "|" + errorThrown);
+                .fail(function(xhr) {
+                    App.Failures.message(xhr, 'while trying to load the activity editor', true);
                 });
         } (jQuery, window));
 
@@ -476,8 +476,24 @@
     <span id="message" style="float: left"></span>
 </div>
 
-<div id="cancelConfirmDialog" class="dialog" title="Confirm Cancel">
-    <span style="font-weight: bold">Are you sure you want to Cancel editing this Activity?</span>
+<div id="cancelConfirmDialog" class="dialog" title="Please confirm your intent">
+    <div>
+        Are you sure you want to cancel editing this Activity? You will lose all of your changes since your last save or publish.
+    </div>
+    <div class="spinner" style="visibility: hidden; margin-top: 8px;">
+        <img src="@Url.Content("~/images/icons/spinner/spinner-20-blue.gif")" alt="" />
+        <strong>Canceling...</strong>
+    </div>
+</div>
+
+<div id="deleteDocumentConfirmDialog" class="dialog" title="Please confirm your intent">
+    <div>
+        Are you sure you want to delete this document?
+    </div>
+    <div class="spinner" style="visibility: hidden; margin-top: 8px;">
+        <img src="@Url.Content("~/images/icons/spinner/spinner-20-blue.gif")" alt="" />
+        <strong>Deleting document...</strong>
+    </div>
 </div>
 
 <div id="activityBeingEditedDialog" class="dialog" title="Error Renaming Document">
@@ -539,8 +555,8 @@
             </td>-->
         <!-- Remove Button -->
         <td style="text-align: center; vertical-align: middle">
-            <a href="#" title="Remove document" data-bind="click: function (item, index, event) { $parent.deleteDocument(item, $index(), event, 0); }, clickBubble: false">
-                <img src="@Links.images.icons.minus.minus_24_red_png" alt="Remove document" />
+            <a href="#" title="Delete this document" data-bind="click: function (item, index) { $parent.deleteDocument(item, $index()); }, clickBubble: false">
+                <img src="@Links.images.icons.minus.minus_24_red_png" alt="Delete this document" />
             </a>
         </td>
     </tr>
@@ -548,14 +564,14 @@
 
 <script type="text/html" id="buttons-template">
     <span>
-        <input type="button" value="Save as Draft" data-bind="click: function (item, event) { save(item, event, 'Draft'); }, clickBubble: false" />
-        <input type="button" value="Publish" data-bind="click: function (item, event) { save(item, event, 'Public'); }, clickBubble: false" />
+        <input type="button" value="Save as Draft" data-bind="click: saveDraft" />
+        <input type="button" value="Publish" data-bind="click: publish" />
         <input type="button" value="Guide Me" style="margin-left: 50px" />
         <span style="margin-left: 50px" data-bind="visible: saveSpinner.isVisible()">
             <img src="@Url.Content("~/images/icons/spinner/spinner-20-blue.gif")" alt="" />
             <strong>Saving...</strong>
         </span>
-        <input type="button" value="Cancel" style="float: right" data-bind="click: function (item, event) { cancel(item, event); }, clickBubble: false" />
+        <input type="button" value="Cancel" style="float: right" data-bind="click: cancel" />
     </span>
 </script>
 

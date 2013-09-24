@@ -59,7 +59,7 @@ module ViewModels.Activities {
             var activitiesSearchInput: ActivitySearchInput = new ActivitySearchInput();
 
             activitiesSearchInput.personId = this.personId;
-            activitiesSearchInput.orderBy = "";
+            activitiesSearchInput.orderBy = '';
             activitiesSearchInput.pageNumber = 1;
             activitiesSearchInput.pageSize = App.Constants.int32Max;
 
@@ -116,17 +116,17 @@ module ViewModels.Activities {
             return deferred;
         }
 
-        deleteActivity(item: any, e: JQueryEventObject, viewModel: ActivityList): void {
-            var $dialog = $("#confirmActivityDeleteDialog");
+        deleteActivity(item: any, index: number): void {
+            var $dialog = $('#confirmActivityDeleteDialog');
             $dialog.dialog({ // open a dialog to confirm deletion of activity
                 dialogClass: 'jquery-ui no-close',
+                closeOnEscape: false,
                 width: 'auto',
                 resizable: false,
                 modal: true,
-                closeOnEscape: false,
                 buttons: [
                     {
-                        text: "Yes, confirm delete",
+                        text: 'Yes, confirm delete',
                         click: (): void => {
                             var $buttons = $dialog.parents('.ui-dialog').find('button');
                             $.each($buttons, function (): void { // disable buttons
@@ -139,15 +139,11 @@ module ViewModels.Activities {
                                 url: App.Routes.WebApi.Activities.del(item.id())
                             })
                                 .done((): void => {
-                                    $dialog.dialog("close");
-
-                                    // get the index of the deleted activity
-                                    var deletedIndex = $.inArray(item, this.items());
-                                    if (deletedIndex >= 0)
-                                        this.items.splice(deletedIndex, 1);
+                                    $dialog.dialog('close');
+                                    this.items.splice(index, 1);
                                 })
                                 .fail((xhr: JQueryXHR): void => { // display failure message
-                                    App.Failures.message(xhr, 'while trying to delete your activity', true)
+                                    App.Failures.message(xhr, 'while trying to delete your activity', true);
                                 })
                                 .always((): void => { // re-enable buttons
                                     $.each($buttons, function (): void {
@@ -158,11 +154,9 @@ module ViewModels.Activities {
                         }
                     },
                     {
-                        text: "No, cancel delete",
+                        text: 'No, cancel delete',
                         click: (): void => {
-                            var test = this;
-                            test = viewModel;
-                            $dialog.dialog("close");
+                            $dialog.dialog('close');
                         },
                         'data-css-link': true
                     }]
@@ -174,7 +168,7 @@ module ViewModels.Activities {
         }
 
         getTypeName(id: number): string {
-            var typeName: string = "";
+            var typeName: string = '';
 
             if (this.activityTypesList != null) {
                 var i = 0;
@@ -190,7 +184,7 @@ module ViewModels.Activities {
         }
 
         getLocationName(id: number): string {
-            var locationName: string = "";
+            var locationName: string = '';
 
             if (this.activityLocationsList != null) {
                 var i = 0;
@@ -206,44 +200,44 @@ module ViewModels.Activities {
         }
 
         activityDatesFormatted(startsOnStr: Date, endsOnStr: Date, onGoing: boolean, dateFormat: string): string {
-            var formattedDateRange: string = "";
+            var formattedDateRange: string = '';
 
             /* May need a separate function to convert from CLR custom date formats to moment formats */
-            dateFormat = (dateFormat != null) ? dateFormat.toUpperCase() : "MM/DD/YYYY";
+            dateFormat = (dateFormat != null) ? dateFormat.toUpperCase() : 'MM/DD/YYYY';
 
             if (startsOnStr == null) {
                 if (endsOnStr != null) {
                     formattedDateRange = moment(endsOnStr).format(dateFormat);
                 }
                 else if (onGoing) {
-                    formattedDateRange = "(Ongoing)";
+                    formattedDateRange = '(Ongoing)';
                 }
             }
             else {
                 formattedDateRange = moment(startsOnStr).format(dateFormat);
                 if (onGoing) {
-                    formattedDateRange += " (Ongoing)";
+                    formattedDateRange += ' (Ongoing)';
                 } else if (endsOnStr != null) {
-                    formattedDateRange += " - " + moment(endsOnStr).format(dateFormat);
+                    formattedDateRange += ' - ' + moment(endsOnStr).format(dateFormat);
                 }
             }
 
             if (formattedDateRange.length > 0) {
-                formattedDateRange += "\xa0\xa0";
+                formattedDateRange += '\xa0\xa0';
             }
 
             return formattedDateRange;
         }
 
         activityTypesFormatted(types: Service.ApiModels.IObservableValuesActivityType[]): string {
-            var formattedTypes: string = "";
+            var formattedTypes: string = '';
             var location: Service.ApiModels.IActivityLocation;
 
             /* ----- Assemble in sorted order ----- */
             for (var i = 0; i < this.activityTypesList.length; i += 1) {
                 for (var j = 0; j < types.length; j += 1) {
                     if (types[j].typeId() == this.activityTypesList[i].id) {
-                        if (formattedTypes.length > 0) { formattedTypes += "; "; }
+                        if (formattedTypes.length > 0) { formattedTypes += '; '; }
                         formattedTypes += this.activityTypesList[i].type;
                     }
                 }
@@ -253,11 +247,11 @@ module ViewModels.Activities {
         }
 
         activityLocationsFormatted(locations: Service.ApiModels.IObservableValuesActivityLocation[]): string {
-            var formattedLocations: string = "";
+            var formattedLocations: string = '';
             var location: Service.ApiModels.IActivityLocation;
 
             for (var i = 0; i < locations.length; i += 1) {
-                if (i > 0) { formattedLocations += ", "; }
+                if (i > 0) { formattedLocations += ', '; }
                 formattedLocations += this.getLocationName(locations[i].placeId());
             }
 

@@ -14,10 +14,6 @@
 @section styles
 {
     <style>
-        /*ul.selectableListItems li:hover {
-            background-color: #ffff00;
-        }*/
-
         .no-close .ui-dialog-titlebar-close {
             display: none;
         }
@@ -46,23 +42,12 @@
 
     <script type="text/javascript">
 
-        $( function () {
-            //debugger;
+        $(function () {
             var profileViewModel = new ViewModels.My.Profile();
-            //$( profileViewModel ).on( 'ready', function () {
             profileViewModel.load('@ViewBag.Tab')
-                .done( function () {
-                    
-                    //$( '#tabstrip' ).kendoTabStrip( {
-                    //    select: function ( e ) { profileViewModel.tabClickHandler( e ); },
-                    //    animation: false
-                    //} ).show();
-                    
-                    ko.applyBindings( profileViewModel, $( '#my_profile' )[0] );
-                    //profileViewModel.$facultyRanks().kendoDropDownList(); // kendoui dropdown for faculty ranks
-                    
-                    //debugger;
-                
+                .done(function () {
+                    ko.applyBindings(profileViewModel, $('#my_profile')[0]);
+
                     /* KendoUI TabStrip Bug? - .select(0) does not produce a select event */
                     //if ( '@ViewBag.Tab' === '' ) {
                     //    //profileViewModel.startTab("activities");
@@ -74,8 +59,8 @@
                     //    location.href = url;
                     //}
                 })
-                .fail(function(jqXhr, textStatus, errorThrown) {
-                    alert(textStatus + "|" + errorThrown);
+                .fail(function (xhr) {
+                    App.Failures.message(xhr, 'while trying to load your profile', true);
                 });
         });
 
@@ -127,10 +112,10 @@
                                                     <br />
                                                 </div>-->
                                         </div>
-                                        <div class="on-right"  style="display: none" data-bind="visible: !isActive()">
+                                        <div class="on-right" style="display: none" data-bind="visible: !isActive()">
                                             <span style="color: #cc0000">Your profile is currently inactive and is excluded from public view. </span>
-                                            <br/>
-                                            <br/>
+                                            <br />
+                                            <br />
                                             <a href="#">Contact an administrator to re-activate your profile.</a>
                                         </div>
                                     </div>

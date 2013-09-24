@@ -43,7 +43,7 @@ var ViewModels;
                 var activitiesSearchInput = new ActivitySearchInput();
 
                 activitiesSearchInput.personId = this.personId;
-                activitiesSearchInput.orderBy = "";
+                activitiesSearchInput.orderBy = '';
                 activitiesSearchInput.pageNumber = 1;
                 activitiesSearchInput.pageSize = App.Constants.int32Max;
 
@@ -97,18 +97,18 @@ var ViewModels;
                 return deferred;
             };
 
-            ActivityList.prototype.deleteActivity = function (item, e, viewModel) {
+            ActivityList.prototype.deleteActivity = function (item, index) {
                 var _this = this;
-                var $dialog = $("#confirmActivityDeleteDialog");
+                var $dialog = $('#confirmActivityDeleteDialog');
                 $dialog.dialog({
                     dialogClass: 'jquery-ui no-close',
+                    closeOnEscape: false,
                     width: 'auto',
                     resizable: false,
                     modal: true,
-                    closeOnEscape: false,
                     buttons: [
                         {
-                            text: "Yes, confirm delete",
+                            text: 'Yes, confirm delete',
                             click: function () {
                                 var $buttons = $dialog.parents('.ui-dialog').find('button');
                                 $.each($buttons, function () {
@@ -120,12 +120,8 @@ var ViewModels;
                                     type: 'DELETE',
                                     url: App.Routes.WebApi.Activities.del(item.id())
                                 }).done(function () {
-                                    $dialog.dialog("close");
-
-                                    // get the index of the deleted activity
-                                    var deletedIndex = $.inArray(item, _this.items());
-                                    if (deletedIndex >= 0)
-                                        _this.items.splice(deletedIndex, 1);
+                                    $dialog.dialog('close');
+                                    _this.items.splice(index, 1);
                                 }).fail(function (xhr) {
                                     App.Failures.message(xhr, 'while trying to delete your activity', true);
                                 }).always(function () {
@@ -137,11 +133,9 @@ var ViewModels;
                             }
                         },
                         {
-                            text: "No, cancel delete",
+                            text: 'No, cancel delete',
                             click: function () {
-                                var test = _this;
-                                test = viewModel;
-                                $dialog.dialog("close");
+                                $dialog.dialog('close');
                             },
                             'data-css-link': true
                         }
@@ -154,7 +148,7 @@ var ViewModels;
             };
 
             ActivityList.prototype.getTypeName = function (id) {
-                var typeName = "";
+                var typeName = '';
 
                 if (this.activityTypesList != null) {
                     var i = 0;
@@ -171,7 +165,7 @@ var ViewModels;
             };
 
             ActivityList.prototype.getLocationName = function (id) {
-                var locationName = "";
+                var locationName = '';
 
                 if (this.activityLocationsList != null) {
                     var i = 0;
@@ -188,42 +182,42 @@ var ViewModels;
             };
 
             ActivityList.prototype.activityDatesFormatted = function (startsOnStr, endsOnStr, onGoing, dateFormat) {
-                var formattedDateRange = "";
+                var formattedDateRange = '';
 
                 /* May need a separate function to convert from CLR custom date formats to moment formats */
-                dateFormat = (dateFormat != null) ? dateFormat.toUpperCase() : "MM/DD/YYYY";
+                dateFormat = (dateFormat != null) ? dateFormat.toUpperCase() : 'MM/DD/YYYY';
 
                 if (startsOnStr == null) {
                     if (endsOnStr != null) {
                         formattedDateRange = moment(endsOnStr).format(dateFormat);
                     } else if (onGoing) {
-                        formattedDateRange = "(Ongoing)";
+                        formattedDateRange = '(Ongoing)';
                     }
                 } else {
                     formattedDateRange = moment(startsOnStr).format(dateFormat);
                     if (onGoing) {
-                        formattedDateRange += " (Ongoing)";
+                        formattedDateRange += ' (Ongoing)';
                     } else if (endsOnStr != null) {
-                        formattedDateRange += " - " + moment(endsOnStr).format(dateFormat);
+                        formattedDateRange += ' - ' + moment(endsOnStr).format(dateFormat);
                     }
                 }
 
                 if (formattedDateRange.length > 0) {
-                    formattedDateRange += "\xa0\xa0";
+                    formattedDateRange += '\xa0\xa0';
                 }
 
                 return formattedDateRange;
             };
 
             ActivityList.prototype.activityTypesFormatted = function (types) {
-                var formattedTypes = "";
+                var formattedTypes = '';
                 var location;
 
                 for (var i = 0; i < this.activityTypesList.length; i += 1) {
                     for (var j = 0; j < types.length; j += 1) {
                         if (types[j].typeId() == this.activityTypesList[i].id) {
                             if (formattedTypes.length > 0) {
-                                formattedTypes += "; ";
+                                formattedTypes += '; ';
                             }
                             formattedTypes += this.activityTypesList[i].type;
                         }
@@ -234,12 +228,12 @@ var ViewModels;
             };
 
             ActivityList.prototype.activityLocationsFormatted = function (locations) {
-                var formattedLocations = "";
+                var formattedLocations = '';
                 var location;
 
                 for (var i = 0; i < locations.length; i += 1) {
                     if (i > 0) {
-                        formattedLocations += ", ";
+                        formattedLocations += ', ';
                     }
                     formattedLocations += this.getLocationName(locations[i].placeId());
                 }

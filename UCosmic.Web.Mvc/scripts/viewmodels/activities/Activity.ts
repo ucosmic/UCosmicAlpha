@@ -37,7 +37,7 @@ module ViewModels.Activities {
         previousDocumentTitle: string;
 
         /* Initialization errors. */
-        inititializationErrors: string = "";
+        inititializationErrors: string = '';
 
         /* Autosave after so many keydowns. */
         AUTOSAVE_KEYCOUNT: number = 10;
@@ -67,7 +67,7 @@ module ViewModels.Activities {
 
             this.dirty = ko.computed((): void => {
                 if (this.dirtyFlag()) {
-                    this.autoSave(this, null);
+                    this.autoSave();
                 }
             });
         }
@@ -82,28 +82,28 @@ module ViewModels.Activities {
             uploadFileId: string,
             newTagId: string): void {
 
-            $("#" + fromDatePickerId).kendoDatePicker({
+            $('#' + fromDatePickerId).kendoDatePicker({
                 /* If user clicks date picker button, reset format */
-                open: function (e) { this.options.format = "MM/dd/yyyy"; }
+                open: function (e) { this.options.format = 'MM/dd/yyyy'; }
             });
 
-            $("#" + toDatePickerId).kendoDatePicker({
-                open: function (e) { this.options.format = "MM/dd/yyyy"; }
+            $('#' + toDatePickerId).kendoDatePicker({
+                open: function (e) { this.options.format = 'MM/dd/yyyy'; }
             });
 
-            $("#" + countrySelectorId).kendoMultiSelect({
+            $('#' + countrySelectorId).kendoMultiSelect({
                 filter: 'contains',
                 ignoreCase: 'true',
-                dataTextField: "officialName()",
-                dataValueField: "id()",
+                dataTextField: 'officialName()',
+                dataValueField: 'id()',
                 dataSource: this.locations(),
                 //values: activityViewModel.selectedLocations(), // This doesn't work.  See below.
                 change: (event: any) => { this.updateLocations(event.sender.value()); },
-                placeholder: "[Select Country/Location, Body of Water or Global]"
+                placeholder: '[Select Country/Location, Body of Water or Global]'
             });
 
             var invalidFileNames: string[] = [];
-            $("#" + uploadFileId).kendoUpload({
+            $('#' + uploadFileId).kendoUpload({
                 multiple: true,
                 showFileList: false,
                 localization: {
@@ -145,7 +145,7 @@ module ViewModels.Activities {
                     }
                 },
                 success: (e: kendo.ui.UploadSuccessEvent): void => {
-                    this.loadDocuments();
+                    this._loadDocuments();
                 },
                 error: (e: kendo.ui.UploadErrorEvent): void => {
                     if (e.XMLHttpRequest.responseText &&
@@ -162,10 +162,10 @@ module ViewModels.Activities {
                 }
             });
 
-            $("#" + newTagId).kendoAutoComplete({
+            $('#' + newTagId).kendoAutoComplete({
                 minLength: 3,
-                placeholder: "[Enter tag or keyword]",
-                dataTextField: "officialName",
+                placeholder: '[Enter tag or keyword]',
+                dataTextField: 'officialName',
                 dataSource: new kendo.data.DataSource({
                     serverFiltering: true,
                     transport: {
@@ -185,7 +185,7 @@ module ViewModels.Activities {
                     }
                 }),
                 select: (e: any): void => {
-                    var me = $("#" + newTagId).data("kendoAutoComplete");
+                    var me = $('#' + newTagId).data('kendoAutoComplete');
                     var dataItem = me.dataItem(e.item.index());
                     this.newEstablishment = { officialName: dataItem.officialName, id: dataItem.id };
                 }
@@ -204,22 +204,22 @@ module ViewModels.Activities {
                 validator: (val: any, otherVal: any): boolean => {
                     var valid: boolean = true;
                     var format: string = null;
-                    var YYYYPattern = new RegExp("^\\d{4}$");
-                    var MMYYYYPattern = new RegExp("^\\d{1,}/\\d{4}$");
-                    var MMDDYYYYPattern = new RegExp("^\\d{1,}/\\d{1,}/\\d{4}$");
+                    var YYYYPattern = new RegExp('^\\d{4}$');
+                    var MMYYYYPattern = new RegExp('^\\d{1,}/\\d{4}$');
+                    var MMDDYYYYPattern = new RegExp('^\\d{1,}/\\d{1,}/\\d{4}$');
 
                     if ((val != null) && (val.length > 0)) {
                         val = $.trim(val);
 
                         if (YYYYPattern.test(val)) {
-                            val = "01/01/" + val;
-                            format = "YYYY";
+                            val = '01/01/' + val;
+                            format = 'YYYY';
                         }
                         else if (MMYYYYPattern.test(val)) {
-                            format = "MM/YYYY";
+                            format = 'MM/YYYY';
                         }
                         else if (MMDDYYYYPattern.test(val)) {
-                            format = "MM/DD/YYYY";
+                            format = 'MM/DD/YYYY';
                         }
 
                         valid = (format != null) ? moment(val, format).isValid() : false;
@@ -227,7 +227,7 @@ module ViewModels.Activities {
 
                     return valid;
                 },
-                message: "Date must be valid."
+                message: 'Date must be valid.'
             };
 
             ko.validation.registerExtenders();
@@ -237,8 +237,8 @@ module ViewModels.Activities {
             this.values.title.extend({ required: true, minLength: 1, maxLength: 500 });
             this.values.locations.extend({ atLeast: 1 });
             this.values.types.extend({ atLeast: 1 });
-            this.values.startsOn.extend({ nullSafeDate: { message: "Start date must valid." } });
-            this.values.endsOn.extend({ nullSafeDate: { message: "End date must valid." } });
+            this.values.startsOn.extend({ nullSafeDate: { message: 'Start date must valid.' } });
+            this.values.endsOn.extend({ nullSafeDate: { message: 'End date must valid.' } });
         }
 
         setupSubscriptions(): void {
@@ -360,21 +360,21 @@ module ViewModels.Activities {
 
         getDateFormat(dateStr: string): string {
             var format: string = null;
-            var YYYYPattern = new RegExp("^\\d{4}$");
-            var MMYYYYPattern = new RegExp("^\\d{1,}/\\d{4}$");
-            var MMDDYYYYPattern = new RegExp("^\\d{1,}/\\d{1,}/\\d{4}$");
+            var YYYYPattern = new RegExp('^\\d{4}$');
+            var MMYYYYPattern = new RegExp('^\\d{1,}/\\d{4}$');
+            var MMDDYYYYPattern = new RegExp('^\\d{1,}/\\d{1,}/\\d{4}$');
 
             if ((dateStr != null) && (dateStr.length > 0)) {
                 dateStr = $.trim(dateStr);
 
                 if (YYYYPattern.test(dateStr)) {
-                    format = "yyyy";
+                    format = 'yyyy';
                 }
                 else if (MMYYYYPattern.test(dateStr)) {
-                    format = "MM/yyyy";
+                    format = 'MM/yyyy';
                 }
                 else {
-                    format = "MM/dd/yyyy";
+                    format = 'MM/dd/yyyy';
                 }
             }
 
@@ -383,11 +383,11 @@ module ViewModels.Activities {
 
         convertDate(date: any): string {
             var formatted = null;
-            var YYYYPattern = new RegExp("^\\d{4}$");
-            var MMYYYYPattern = new RegExp("^\\d{1,}/\\d{4}$");
-            var MMDDYYYYPattern = new RegExp("^\\d{1,}/\\d{1,}/\\d{4}$");
+            var YYYYPattern = new RegExp('^\\d{4}$');
+            var MMYYYYPattern = new RegExp('^\\d{1,}/\\d{4}$');
+            var MMDDYYYYPattern = new RegExp('^\\d{1,}/\\d{1,}/\\d{4}$');
 
-            if (typeof (date) === "object") {
+            if (typeof (date) === 'object') {
                 formatted = moment(date).format();
             }
             else {
@@ -396,14 +396,14 @@ module ViewModels.Activities {
                     dateStr = $.trim(dateStr);
 
                     if (YYYYPattern.test(dateStr)) {
-                        dateStr = "01/01/" + dateStr; // fixes Moment rounding error
-                        formatted = moment(dateStr, ["MM/DD/YYYY"]).format();
+                        dateStr = '01/01/' + dateStr; // fixes Moment rounding error
+                        formatted = moment(dateStr, ['MM/DD/YYYY']).format();
                     }
                     else if (MMYYYYPattern.test(dateStr)) {
-                        formatted = moment(dateStr, ["MM/YYYY"]).format();
+                        formatted = moment(dateStr, ['MM/YYYY']).format();
                     }
                     else if (MMDDYYYYPattern.test(dateStr)) {
-                        formatted = moment(dateStr, ["MM/DD/YYYY"]).format();
+                        formatted = moment(dateStr, ['MM/DD/YYYY']).format();
                     }
                 }
             }
@@ -411,7 +411,7 @@ module ViewModels.Activities {
             return formatted;
         }
 
-        autoSave(viewModel: any, event: any): JQueryPromise<any> {
+        autoSave(): JQueryDeferred<void> {
             var deferred: JQueryDeferred<void> = $.Deferred();
 
             if (this.saving) {
@@ -429,7 +429,7 @@ module ViewModels.Activities {
             var model = ko.mapping.toJS(this);
 
             if (model.values.startsOn != null) {
-                var dateStr = $("#fromDatePicker").get(0).value;
+                var dateStr = $('#fromDatePicker').get(0).value;
                 model.values.dateFormat = this.getDateFormat(dateStr);
                 model.values.startsOn = this.convertDate(model.values.startsOn);
             }
@@ -447,30 +447,27 @@ module ViewModels.Activities {
 
             $.ajax({
                 type: 'PUT',
-                url: App.Routes.WebApi.Activities.put(viewModel.id()),
-                data: ko.toJSON(model),
-                //dataType: 'json',
-                contentType: 'application/json',
-                success: (data: any, textStatus: string, jqXhr: JQueryXHR): void => {
+                url: App.Routes.WebApi.Activities.put(this.id()),
+                data: model
+            })
+                .done((): void => {
                     deferred.resolve();
-                },
-                error: (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
+                })
+                .fail((jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
                     deferred.reject(jqXhr, textStatus, errorThrown);
-                },
-                complete: (jqXhr: JQueryXHR, textStatus: string): void => {
+                })
+                .always((): void => {
                     this.dirtyFlag(false);
                     this.saveSpinner.stop();
                     this.saving = false;
-                }
-            });
+                });
 
             return deferred;
         }
 
-        save(viewModel: any, event: any, mode: string): void {
-
-            this.autoSave(viewModel, event)
-                .done((data: any, textStatus: string, jqXHR: JQueryXHR): void => {
+        private _save(mode: string): void {
+            this.autoSave() // play through the autosave function first
+                .done((data: any): void => {
 
                     if (!this.values.isValid()) {
                         this.values.errors.showAllMessages();
@@ -480,62 +477,86 @@ module ViewModels.Activities {
                     this.saveSpinner.start();
 
                     $.ajax({
-                        async: false,
                         type: 'PUT',
-                        url: App.Routes.WebApi.Activities.putEdit(viewModel.id()),
-                        data: {
-                            mode: mode
-                        },
-                        success: (data: any, textStatus: string, jqXhr: JQueryXHR): void => {
-                        },
-                        error: (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
-                            alert(textStatus + "; " + errorThrown);
-                        },
-                        complete: (jqXhr: JQueryXHR, textStatus: string): void => {
+                        url: App.Routes.WebApi.Activities.putEdit(this.id()),
+                        data: { mode: mode }
+                    })
+                        .done(() => {
+                            location.href = App.Routes.Mvc.My.Profile.get();
+                        })
+                        .fail((xhr: JQueryXHR): void => {
+                            App.Failures.message(xhr, 'while trying to save your activity', true);
+                        })
+                        .always((): void => {
                             this.dirtyFlag(false);
                             this.saveSpinner.stop();
-                            location.href = App.Routes.Mvc.My.Profile.get();
-                        }
-                    });
+                        });
                 })
                 .fail((xhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
-                    this.saveSpinner.stop();
-                    location.href = App.Routes.Mvc.My.Profile.get();
+                    App.Failures.message(xhr, 'while trying to save your activity', true);
                 });
         }
 
-        cancel(item: any, event: any, mode: string): void {
-            $("#cancelConfirmDialog").dialog({
+        saveDraft(): void {
+            this._save('Draft');
+        }
+
+        publish(): void {
+            this._save('Public');
+        }
+
+        cancel(): void {
+            var $dialog = $('#cancelConfirmDialog');
+            $dialog.dialog({
+                dialogClass: 'jquery-ui no-close',
+                closeOnEscape: false,
                 modal: true,
                 resizable: false,
                 width: 450,
-                buttons: {
-                    "Do not cancel": function () {
-                        $(this).dialog("close");
-                    },
-                    "Cancel and lose changes": function () {
-                        $.ajax({
-                            async: false,
-                            type: 'DELETE',
-                            url: App.Routes.WebApi.Activities.del(item.id()),
-                            success: (data: any, textStatus: string, jqXhr: JQueryXHR): void => {
-                            },
-                            error: (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
-                                alert(textStatus + "; " + errorThrown);
-                            }
-                        });
+                buttons: [
+                    {
+                        text: 'Cancel and lose changes',
+                        click: (): void => {
+                            var $buttons = $dialog.parents('.ui-dialog').find('button');
+                            $.each($buttons, function (): void { // disable buttons
+                                $(this).attr('disabled', 'disabled');
+                            });
+                            $dialog.find('.spinner').css('visibility', '');
 
-                        $(this).dialog("close");
-                        location.href = App.Routes.Mvc.My.Profile.get();
-                    }
-                }
+                            $.ajax({
+                                type: 'DELETE',
+                                url: App.Routes.WebApi.Activities.del(this.id())
+                            })
+                                .done((): void => {
+                                    $dialog.dialog('close');
+                                    location.href = App.Routes.Mvc.My.Profile.get();
+                                })
+                                .fail((xhr: JQueryXHR): void => {
+                                    App.Failures.message(xhr, 'while trying to discard your activity edits', true);
+                                })
+                                .always((): void => { // re-enable buttons
+                                    $.each($buttons, function (): void {
+                                        $(this).removeAttr('disabled');
+                                    });
+                                    $dialog.find('.spinner').css('visibility', 'hidden');
+                                });
+
+                        }
+                    },
+                    {
+                        text: 'Do not cancel',
+                        click: (): void => {
+                            $dialog.dialog('close');
+                        },
+                        'data-css-link': true
+                    }]
             });
         }
 
         addActivityType(activityTypeId: number): void {
             var existingIndex: number = this.getActivityTypeIndexById(activityTypeId);
             if (existingIndex == -1) {
-                var newActivityType: KnockoutObservable<any> = ko.mapping.fromJS({ id: 0, typeId: activityTypeId, version: "" });
+                var newActivityType: KnockoutObservable<any> = ko.mapping.fromJS({ id: 0, typeId: activityTypeId, version: '' });
                 this.values.types.push(newActivityType);
             }
         }
@@ -549,7 +570,7 @@ module ViewModels.Activities {
         }
 
         getTypeName(id: number): string {
-            var name: string = "";
+            var name: string = '';
             var index: number = this.getActivityTypeIndexById(id);
             if (index != -1) { name = this.activityTypes[index].type; }
             return name;
@@ -588,14 +609,14 @@ module ViewModels.Activities {
             in vm.values.types.
     
             In order to support data binding, the ActivityType is augmented with
-            a "checked" property.
+            a 'checked' property.
     
-            The desired behavior is to make use of the "checked" data binding
+            The desired behavior is to make use of the 'checked' data binding
             attribute as follows:
     
-            <input type="checkbox" data-bind="checked: checked"/>
+            <input type='checkbox' data-bind='checked: checked'/>
     
-            See the "activity-types-template" for exact usage.
+            See the 'activity-types-template' for exact usage.
     
             However, checking/unchecking needes to result in an ActivityType
             being added/removed from the Activity.values.types array.
@@ -631,7 +652,7 @@ module ViewModels.Activities {
         updateLocations(locations: Array): void {
             this.values.locations.removeAll();
             for (var i = 0; i < locations.length; i += 1) {
-                var location = ko.mapping.fromJS({ id: 0, placeId: locations[i], version: "" });
+                var location = ko.mapping.fromJS({ id: 0, placeId: locations[i], version: '' });
                 this.values.locations.push(location);
             }
             this.dirtyFlag(true);
@@ -639,7 +660,7 @@ module ViewModels.Activities {
 
         addTag(item: any, event: Event): void {
             var newText: string = null;
-            var domainTypeText: string = "Custom";
+            var domainTypeText: string = 'Custom';
             var domainKey: number = null;
             var isInstitution: boolean = false;
             if (this.newEstablishment == null) {
@@ -647,7 +668,7 @@ module ViewModels.Activities {
             }
             else {
                 newText = this.newEstablishment.officialName;
-                domainTypeText = "Establishment";
+                domainTypeText = 'Establishment';
                 domainKey = this.newEstablishment.id;
                 isInstitution = true;
                 this.newEstablishment = null;
@@ -691,14 +712,14 @@ module ViewModels.Activities {
             return ((this.values.tags().length > 0) && (i < this.values.tags().length)) ? i : -1;
         }
 
-        loadDocuments(): void {
+        private _loadDocuments(): void {
             $.ajax({
                 type: 'GET',
-                url: App.Routes.WebApi.Activities.Documents.get(this.id(), null, this.modeText()),
-                dataType: 'json',
-                success: (documents: any, textStatus: string, jqXhr: JQueryXHR): void => {
+                url: App.Routes.WebApi.Activities.Documents.get(this.id(), null, this.modeText())
+            })
+                .done((documents: any, textStatus: string, jqXhr: JQueryXHR): void => {
 
-                    /* TBD - This needs to be combined with the initial load mapping. */
+                    /* TODO - This needs to be combined with the initial load mapping. */
                     var augmentedDocumentModel = function (data) {
                         ko.mapping.fromJS(data, {}, this);
                         this.proxyImageSource = ko.observable(App.Routes.WebApi.Activities.Documents.Thumbnail.get(data.activityId, data.id, { maxSide: Activity.iconMaxSide }));
@@ -716,25 +737,56 @@ module ViewModels.Activities {
                     for (var i = 0; i < observableDocs().length; i += 1) {
                         this.values.documents.push(observableDocs()[i]);
                     }
-
-                },
-                error: (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
-                    alert("Unable to update documents list. " + textStatus + "|" + errorThrown);
-                }
-            });
+                })
+                .fail((xhr: JQueryXHR): void => {
+                    App.Failures.message(xhr, 'while trying to load your activity documents', true);
+                });
         }
 
-        deleteDocument(item: Service.ApiModels.IObservableActivityDocument, index: number, event: any): void {
-            $.ajax({
-                type: 'DELETE',
-                url: App.Routes.WebApi.Activities.Documents.del(this.id(), item.id()),
-                //dataType: 'json',
-                success: (data: any, textStatus: string, jqXhr: JQueryXHR): void => {
-                    this.values.documents.splice(index, 1);
-                },
-                error: (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
-                    alert("Unable to delete document. " + textStatus + "|" + errorThrown);
-                }
+        deleteDocument(item: any, index: number): void {
+            var $dialog = $('#deleteDocumentConfirmDialog');
+            $dialog.dialog({ // open a dialog to confirm deletion of document
+                dialogClass: 'jquery-ui no-close',
+                closeOnEscape: false,
+                width: 'auto',
+                resizable: false,
+                modal: true,
+                buttons: [
+                    {
+                        text: 'Yes, confirm delete',
+                        click: (): void => {
+                            var $buttons = $dialog.parents('.ui-dialog').find('button');
+                            $.each($buttons, function (): void { // disable buttons
+                                $(this).attr('disabled', 'disabled');
+                            });
+                            $dialog.find('.spinner').css('visibility', '');
+
+                            $.ajax({ // submit delete api request
+                                type: 'DELETE',
+                                url: App.Routes.WebApi.Activities.Documents.del(this.id(), item.id())
+                            })
+                                .done((): void => {
+                                    $dialog.dialog('close');
+                                    this.values.documents.splice(index, 1);
+                                })
+                                .fail((xhr: JQueryXHR): void => { // display failure message
+                                    App.Failures.message(xhr, 'while trying to delete your activity document', true);
+                                })
+                                .always((): void => { // re-enable buttons
+                                    $.each($buttons, function (): void {
+                                        $(this).removeAttr('disabled');
+                                    });
+                                    $dialog.find('.spinner').css('visibility', 'hidden');
+                                });
+                        }
+                    },
+                    {
+                        text: 'No, cancel delete',
+                        click: (): void => {
+                            $dialog.dialog('close');
+                        },
+                        'data-css-link': true
+                    }]
             });
         }
 
@@ -742,7 +794,7 @@ module ViewModels.Activities {
             var textElement = event.target;
             $(textElement).hide();
             this.previousDocumentTitle = item.title();
-            var inputElement = $(textElement).siblings("#documentTitleInput")[0];
+            var inputElement = $(textElement).siblings('#documentTitleInput')[0];
             $(inputElement).show();
             $(inputElement).focusout(event, (event: any): void => { this.endDocumentTitleEdit(item, event); });
             $(inputElement).keypress(event, (event: any): void => { if (event.which == 13) { inputElement.blur(); } });
@@ -750,9 +802,9 @@ module ViewModels.Activities {
 
         endDocumentTitleEdit(item: Service.ApiModels.IObservableActivityDocument, event: any): void {
             var inputElement = event.target;
-            $(inputElement).unbind("focusout");
-            $(inputElement).unbind("keypress");
-            $(inputElement).attr("disabled", "disabled");
+            $(inputElement).unbind('focusout');
+            $(inputElement).unbind('keypress');
+            $(inputElement).attr('disabled', 'disabled');
 
             $.ajax({
                 type: 'PUT',
@@ -762,22 +814,22 @@ module ViewModels.Activities {
                 //dataType: 'json',
                 success: (data: any, textStatus: string, jqXhr: JQueryXHR): void => {
                     $(inputElement).hide();
-                    $(inputElement).removeAttr("disabled");
-                    var textElement = $(inputElement).siblings("#documentTitle")[0];
+                    $(inputElement).removeAttr('disabled');
+                    var textElement = $(inputElement).siblings('#documentTitle')[0];
                     $(textElement).show();
                 },
                 error: (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
                     item.title(this.previousDocumentTitle);
                     $(inputElement).hide();
-                    $(inputElement).removeAttr("disabled");
-                    var textElement = $(inputElement).siblings("#documentTitle")[0];
+                    $(inputElement).removeAttr('disabled');
+                    var textElement = $(inputElement).siblings('#documentTitle')[0];
                     $(textElement).show();
-                    $("#documentRenameErrorDialog > #message")[0].innerText = jqXhr.responseText;
-                    $("#documentRenameErrorDialog").dialog({
+                    $('#documentRenameErrorDialog > #message')[0].innerText = jqXhr.responseText;
+                    $('#documentRenameErrorDialog').dialog({
                         modal: true,
                         resizable: false,
                         width: 400,
-                        buttons: { Ok: function () { $(this).dialog("close"); } }
+                        buttons: { Ok: function () { $(this).dialog('close'); } }
                     });
                 }
             });

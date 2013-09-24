@@ -230,8 +230,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
         {
             try
             {
-                var deleteActivity = new DeleteActivity(User, activityId);
-                _deleteActivity.Handle(deleteActivity);
+                var command = new DeleteActivity(User, activityId);
+                _deleteActivity.Handle(command);
                 return Request.CreateResponse(HttpStatusCode.OK, "Activity was successfully deleted.");
             }
             catch (ValidationException ex)
