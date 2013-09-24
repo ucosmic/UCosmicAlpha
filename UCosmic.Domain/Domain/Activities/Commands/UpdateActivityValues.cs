@@ -212,7 +212,6 @@ namespace UCosmic.Domain.Activities
                     var createActivityTag = new CreateActivityTag(command.Principal)
                     {
                         ActivityValuesId = target.RevisionId,
-                        Number = tag.Number,
                         Text = tag.Text,
                         DomainType = tag.DomainType,
                         DomainKey = tag.DomainKey,

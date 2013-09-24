@@ -80,7 +80,6 @@ namespace UCosmic.Domain.Activities
                 Text = command.Text,
                 DomainType = command.DomainType,
                 DomainKey = command.DomainKey,
-                Mode = command.Mode,
 
                 CreatedByPrincipal = command.Principal.Identity.Name,
                 CreatedOnUtc = DateTime.UtcNow

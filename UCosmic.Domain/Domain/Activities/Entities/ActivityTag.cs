@@ -2,18 +2,16 @@
 
 namespace UCosmic.Domain.Activities
 {
-    public class ActivityTag : RevisableEntity, IAmNumbered, IEquatable<ActivityTag>
+    public class ActivityTag : RevisableEntity, IEquatable<ActivityTag>
     {
         protected internal ActivityTag()
         {
             _domainType = ActivityTagDomainType.Place;
-            Mode = ActivityMode.Draft;
         }
 
         public virtual ActivityValues ActivityValues { get; protected internal set; }
         public int ActivityValuesId { get; protected internal set; }
 
-        public int Number { get; protected internal set; }
         public string Text { get; protected internal set; }
 
         private ActivityTagDomainType _domainType;
@@ -29,13 +27,6 @@ namespace UCosmic.Domain.Activities
         }
 
         public int? DomainKey { get; protected internal set; }
-
-        public string ModeText { get; protected set; }
-        public ActivityMode Mode
-        {
-            get { return ModeText.AsEnum<ActivityMode>(); }
-            protected internal set { ModeText = value.AsSentenceFragment(); }
-        }
 
         public bool Equals(ActivityTag other)
         {

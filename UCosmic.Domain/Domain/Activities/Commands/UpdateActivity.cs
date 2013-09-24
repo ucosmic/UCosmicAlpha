@@ -74,6 +74,8 @@ namespace UCosmic.Domain.Activities
         {
             if (command == null) throw new ArgumentNullException("command");
 
+            // are we updating the original or the work copy?
+
             // Retrieve the activity to update.
             var target = _entities.Get<Activity>()
                 .EagerLoad(_entities, new Expression<Func<Activity, object>>[]

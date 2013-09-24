@@ -173,7 +173,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [PUT("{activityId}")]
         public HttpResponseMessage Put(int activityId, ActivityApiModel model)
         {
-            if (activityId == 0 || model == null)
+            // autosave invokes this method for everything except documents
+            if (activityId == 0 || model == null || model.Id != activityId)
                 return Request.CreateResponse(HttpStatusCode.BadRequest);
 
             // map the api model to an activity entity

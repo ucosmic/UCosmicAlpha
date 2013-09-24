@@ -339,6 +339,7 @@
     <Compile Include="Helpers\DevelopmentOnlyAttribute.cs" />
     <Compile Include="Helpers\LocalizationHelpers.cs" />
     <Compile Include="Models\Activities\ActivityApiModel.cs" />
+    <Compile Include="Models\Activities\ActivityApiPutModel.cs" />
     <Compile Include="Models\Activities\ActivityDocumentApiModel.cs" />
     <Compile Include="Models\Activities\ActivityEditState.cs" />
     <Compile Include="Models\Activities\ActivityEstablishmentApiModel.cs" />
@@ -347,6 +348,7 @@
     <Compile Include="Models\Activities\ActivityPlaceCount.cs" />
     <Compile Include="Models\Activities\ActivitySearchInputModel.cs" />
     <Compile Include="Models\Activities\ActivityTagApiModel.cs" />
+    <Compile Include="Models\Activities\ActivityTagApiPutModel.cs" />
     <Compile Include="Models\Activities\ActivityTypeApiModel.cs" />
     <Compile Include="Models\Activities\ActivityTypeNameApiModel.cs" />
     <Compile Include="Models\Activities\ActivityValuesApiModel.cs" />

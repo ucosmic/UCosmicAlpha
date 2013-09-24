@@ -90,11 +90,9 @@ namespace UCosmic.EntityFramework
         {
             ToTable(typeof(ActivityTag).Name, DbSchemaName.ActivitiesV2);
 
-            Property(p => p.ModeText).HasColumnName("Mode").IsRequired().HasMaxLength(20);
             Property(p => p.DomainTypeText).HasColumnName("DomainType").IsRequired().HasMaxLength(20);
             Property(p => p.Text).IsRequired().HasMaxLength(500);
 
-            Ignore(p => p.Mode);
             Ignore(p => p.DomainType);
         }
     }

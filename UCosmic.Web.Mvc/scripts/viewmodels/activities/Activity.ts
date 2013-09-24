@@ -54,6 +54,7 @@ module ViewModels.Activities {
         /* IObservableActivity implemented */
         id: KnockoutObservable<number>;
         workCopyId: KnockoutObservable<number>;
+        originalId: KnockoutObservable<number>;
         version: KnockoutObservable<string>;                    // byte[] converted to base64
         personId: KnockoutObservable<number>;
         number: KnockoutObservable<number>;
@@ -63,6 +64,7 @@ module ViewModels.Activities {
 
         _initialize(activityId: number, activityWorkCopyId: number): void {
             this.id = ko.observable(activityId);
+            this.originalId = ko.observable(activityId);
             this.workCopyId = ko.observable(activityWorkCopyId);
 
             this.dirty = ko.computed((): void => {

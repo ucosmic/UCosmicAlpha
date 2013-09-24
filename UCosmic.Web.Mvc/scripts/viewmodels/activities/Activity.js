@@ -40,6 +40,7 @@ var ViewModels;
             Activity.prototype._initialize = function (activityId, activityWorkCopyId) {
                 var _this = this;
                 this.id = ko.observable(activityId);
+                this.originalId = ko.observable(activityId);
                 this.workCopyId = ko.observable(activityWorkCopyId);
 
                 this.dirty = ko.computed(function () {
