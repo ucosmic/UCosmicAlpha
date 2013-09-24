@@ -26,8 +26,11 @@ namespace UCosmic.Web.Mvc.Models
         [DataMember]
         public DateTime ExpiresOn { get; set; }
 
-        //[DataMember]
-        //public AgreementParticipantApiModel[] Participants { get; set; }
+        [DataMember]
+        public string CountryName { get; set; }
+
+        [DataMember]
+        public string CountryCode { get; set; }
     }
     [DataContract(Name = "PageOfAgreements", Namespace = "")]
     public class PageOfAgreementApiFlatModel : PageOf<AgreementPageApiModel> { }

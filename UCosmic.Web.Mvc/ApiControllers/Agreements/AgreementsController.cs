@@ -74,7 +74,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [GET("")]
         public PageOfAgreementApiFlatModel Get([FromUri] AgreementSearchInputModel input)
         {
-            System.Threading.Thread.Sleep(2000); // test api latency
+            //System.Threading.Thread.Sleep(2000); // test api latency
 
             if (input.PageSize < 1)
                 throw new HttpResponseException(HttpStatusCode.BadRequest);

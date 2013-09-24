@@ -29,7 +29,6 @@ module Agreements.ViewModels {
         ceebCode: KnockoutObservable<string>;
         startsOn: KnockoutObservable<string>;
         expiresOn: KnockoutObservable<string>;
-        startsOnDateVisible = ko.observable(true);
         name: KnockoutObservable<string>;
 
         private _pullData(values: ApiModels.FlatEstablishment): void {
@@ -69,7 +68,7 @@ module Agreements.ViewModels {
                 var value = this.startsOn();
                 var myDate = new Date(value);
                 if (myDate.getFullYear() < 1500) {
-                    this.startsOnDateVisible(false)
+                    return "unknown";
                 }
                 return (moment(value)).format('MMMM Do YYYY');
             });
@@ -77,7 +76,7 @@ module Agreements.ViewModels {
                 var value = this.expiresOn();
                 var myDate = new Date(value);
                 if (myDate.getFullYear() < 1500) {
-                    return "Open Ended";
+                    return "unknown";
                 } else {
                     return (moment(value)).format('MMMM Do YYYY');
                 }

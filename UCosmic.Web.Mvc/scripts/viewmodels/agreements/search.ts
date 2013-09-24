@@ -23,18 +23,19 @@ module Agreements.ViewModels {
         constructor (public initDefaultPageRoute: boolean = true) {
             super();
 
-            this.requestResults = <() => void > this.requestResults.bind(this);
             this.clickAction = <() => boolean > this.clickAction.bind(this);
 
             this._setupCountryDropDown();
             this._setupPagingSubscriptions();
             this._setupLensing();
+
             this._setupSammy();
             this._setupPagingDefaults();
             this.changeLens(this.lenses()[0]);
-            ko.computed((): void => {
-                this.requestResults();
-            }).extend({ throttle: 1 });
+            this.requestResults = <() => void > this.requestResults.bind(this);
+            //ko.computed((): void => {
+            //    this.requestResults();
+            //}).extend({ throttle: 1 });
         }
         header = ko.observable();
         // countries dropdown
@@ -100,6 +101,10 @@ module Agreements.ViewModels {
                     self.initPageHash(this);
                 });
             }
+
+            ko.computed((): void => {
+                self.requestResults();
+            }).extend({ throttle: 1 });
         }
 
         getPage(sammyContext: Sammy.EventContext): void {

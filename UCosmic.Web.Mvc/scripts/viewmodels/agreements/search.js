@@ -22,7 +22,6 @@ var Agreements;
             __extends(Search, _super);
             function Search(initDefaultPageRoute) {
                 if (typeof initDefaultPageRoute === "undefined") { initDefaultPageRoute = true; }
-                var _this = this;
                 _super.call(this);
                 this.initDefaultPageRoute = initDefaultPageRoute;
                 this.header = ko.observable();
@@ -61,18 +60,19 @@ var Agreements;
                     ignore: ['pageSize', 'pageNumber']
                 };
 
-                this.requestResults = this.requestResults.bind(this);
                 this.clickAction = this.clickAction.bind(this);
 
                 this._setupCountryDropDown();
                 this._setupPagingSubscriptions();
                 this._setupLensing();
+
                 this._setupSammy();
                 this._setupPagingDefaults();
                 this.changeLens(this.lenses()[0]);
-                ko.computed(function () {
-                    _this.requestResults();
-                }).extend({ throttle: 1 });
+                this.requestResults = this.requestResults.bind(this);
+                //ko.computed((): void => {
+                //    this.requestResults();
+                //}).extend({ throttle: 1 });
             }
             // countries dropdown
             Search.prototype._setupCountryDropDown = function () {
@@ -130,6 +130,10 @@ var Agreements;
                         self.initPageHash(this);
                     });
                 }
+
+                ko.computed(function () {
+                    self.requestResults();
+                }).extend({ throttle: 1 });
             };
 
             Search.prototype.getPage = function (sammyContext) {

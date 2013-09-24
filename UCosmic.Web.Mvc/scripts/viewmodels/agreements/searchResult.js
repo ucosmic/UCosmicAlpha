@@ -9,7 +9,6 @@ var Agreements;
     (function (ViewModels) {
         var SearchResult = (function () {
             function SearchResult(values, owner) {
-                this.startsOnDateVisible = ko.observable(true);
                 this._owner = owner;
                 this._pullData(values);
                 this._setupComputeds();
@@ -40,7 +39,7 @@ var Agreements;
                     var value = _this.startsOn();
                     var myDate = new Date(value);
                     if (myDate.getFullYear() < 1500) {
-                        _this.startsOnDateVisible(false);
+                        return "unknown";
                     }
                     return (moment(value)).format('MMMM Do YYYY');
                 });
@@ -48,7 +47,7 @@ var Agreements;
                     var value = _this.expiresOn();
                     var myDate = new Date(value);
                     if (myDate.getFullYear() < 1500) {
-                        return "Open Ended";
+                        return "unknown";
                     } else {
                         return (moment(value)).format('MMMM Do YYYY');
                     }
