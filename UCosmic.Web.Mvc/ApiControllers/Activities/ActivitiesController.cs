@@ -173,15 +173,16 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [PUT("{activityId}")]
         public HttpResponseMessage Put(int activityId, ActivityApiModel model)
         {
-            if ((activityId == 0) || (model == null))
-            {
+            if (activityId == 0 || model == null)
                 return Request.CreateResponse(HttpStatusCode.BadRequest);
-            }
 
+            // map the api model to an activity entity
             var activity = Mapper.Map<Activity>(model);
 
+            // invoke update command using the model's id and mode
             var updateActivityCommand = new UpdateActivity(User, activity.RevisionId, activity.ModeText)
             {
+                // pass the values from the mapped activity
                 Values = activity.Values.SingleOrDefault(x => x.ModeText == activity.ModeText),
             };
             _updateActivity.Handle(updateActivityCommand);
@@ -199,6 +200,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [PUT("{activityId}/edit")]
         public HttpResponseMessage PutEdit(int activityId, [FromBody] ActivityPutEditApiModel model)
         {
+            // load the activity requested from the url
             var editActivity = _queryProcessor.Execute(new ActivityById(User, activityId)
             {
                 EagerLoad = new Expression<Func<Activity, object>>[]
@@ -209,15 +211,19 @@ namespace UCosmic.Web.Mvc.ApiControllers
             if (editActivity == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
+            // this put must always be called for the non-original activity in the pair
             if (editActivity.Original == null)
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
 
+            // invoke update using the original activity's id and the requested mode (only time model is used)
             var updateActivityCommand = new UpdateActivity(User, editActivity.Original.RevisionId, model.Mode)
             {
+                // use the values from the non-original activity for the non-original activity's mode
                 Values = editActivity.Values.SingleOrDefault(x => x.ModeText == editActivity.ModeText)
             };
             _updateActivity.Handle(updateActivityCommand);
 
+            // delete the non-original activity
             var deleteActivityCommand = new DeleteActivity(User, editActivity.RevisionId);
             _deleteActivity.Handle(deleteActivityCommand);
 

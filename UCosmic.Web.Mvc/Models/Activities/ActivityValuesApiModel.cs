@@ -48,7 +48,7 @@ namespace UCosmic.Web.Mvc.Models
                     .ForMember(d => d.RevisionId, o => o.MapFrom(s => s.Id))
                     .ForMember(d => d.ModeText, o => o.MapFrom(s => s.ModeText))
                     .ForMember(d => d.Mode, o => o.Ignore())
-                    .ForMember(d => d.Version, o => o.MapFrom(s => String.IsNullOrEmpty(s.Version) ? null : Convert.FromBase64String(s.Version)))
+                    .ForMember(d => d.Version, o => o.MapFrom(s => string.IsNullOrEmpty(s.Version) ? null : Convert.FromBase64String(s.Version)))
                     .ForMember(d => d.Activity, o => o.Ignore())
                     .ForMember(d => d.ActivityId, o => o.Ignore())
                     .ForMember(d => d.EntityId, o => o.Ignore())

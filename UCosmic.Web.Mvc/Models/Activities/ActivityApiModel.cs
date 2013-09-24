@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using System.Linq;
 using AutoMapper;
 using UCosmic.Domain.Activities;
@@ -54,10 +53,10 @@ namespace UCosmic.Web.Mvc.Models
                     .ForMember(d => d.Mode, o => o.Ignore())
                     .ForMember(d => d.Person, o => o.Ignore())
                     .ForMember(d => d.PersonId, o => o.MapFrom(s => s.PersonId))
-                    .ForMember(d => d.Values, o => o.MapFrom(s => new Collection<ActivityValues> { Mapper.Map<ActivityValues>(s.Values) }))
+                    .ForMember(d => d.Values, o => o.MapFrom(s => new[] { Mapper.Map<ActivityValues>(s.Values) }))
                     .ForMember(d => d.UpdatedOnUtc, o => o.MapFrom(s => s.WhenLastUpdated))
                     .ForMember(d => d.UpdatedByPrincipal, o => o.MapFrom(s => s.WhoLastUpdated))
-                    .ForMember(d => d.Version, o => o.MapFrom(s => String.IsNullOrEmpty(s.Version) ? null : Convert.FromBase64String(s.Version)))
+                    .ForMember(d => d.Version, o => o.MapFrom(s => string.IsNullOrWhiteSpace(s.Version) ? null : Convert.FromBase64String(s.Version)))
                     .ForMember(d => d.CreatedOnUtc, o => o.Ignore())
                     .ForMember(d => d.CreatedByPrincipal, o => o.Ignore())
                     .ForMember(d => d.IsCurrent, o => o.Ignore())

@@ -26,7 +26,7 @@ namespace UCosmic.Web.Mvc.Controllers
         [POST("my/activities")]
         public virtual RedirectToRouteResult Create()
         {
-            var command = new CreateActivityAndValues(User, ActivityMode.Draft);
+            var command = new CreateActivityAndValues(User);
             _createActivityAndValues.Handle(command);
             return RedirectToAction(MVC.Activities.Edit(command.CreatedActivity.RevisionId));
         }

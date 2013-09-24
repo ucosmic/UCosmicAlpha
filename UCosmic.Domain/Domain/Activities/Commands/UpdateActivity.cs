@@ -30,13 +30,13 @@ namespace UCosmic.Domain.Activities
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
-            RuleFor(x => x.Principal)
-                .MustOwnActivity(queryProcessor, x => x.Id);
-
             RuleFor(x => x.Id)
                 // id must exist in the database
                 .MustFindActivityById(queryProcessor)
             ;
+
+            RuleFor(x => x.Principal)
+                .MustOwnActivity(queryProcessor, x => x.Id);
 
             RuleFor(x => x.ModeText)
                 .NotEmpty().WithName("Activity mode")
@@ -87,13 +87,13 @@ namespace UCosmic.Domain.Activities
             //    .SingleOrDefault(v => v.ActivityId == target.RevisionId && v.ModeText == command.ModeText);
             var targetActivityValues = target.Values.SingleOrDefault(x => x.ModeText == command.ModeText);
 
-            if (targetActivityValues == null)
+            if (targetActivityValues == null) // happens when publishing for the first time, and commits
             {
                 var copyActivityValues = new CopyActivityValues(command.Principal)
                 {
                     ActivityValuesId = command.Values.RevisionId,
                     CopyToActivityId = target.RevisionId,
-                    Mode = command.ModeText.AsEnum<ActivityMode>()
+                    Mode = command.ModeText.AsEnum<ActivityMode>(),
                 };
                 _copyActivityValues.Handle(copyActivityValues);
                 targetActivityValues = copyActivityValues.CreatedActivityValues;

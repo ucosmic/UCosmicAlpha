@@ -7,15 +7,13 @@ namespace UCosmic.Domain.Activities
 {
     public class CreateActivityAndValues
     {
-        public CreateActivityAndValues(IPrincipal principal, ActivityMode mode)
+        public CreateActivityAndValues(IPrincipal principal)
         {
             if (principal == null) throw new ArgumentNullException("principal");
             Principal = principal;
-            Mode = mode;
         }
 
         public IPrincipal Principal { get; private set; }
-        public ActivityMode Mode { get; private set; }
         public Activity CreatedActivity { get; internal set; }
     }
 
@@ -54,7 +52,7 @@ namespace UCosmic.Domain.Activities
             // create activity entity
             var createActivity = new CreateActivity(command.Principal)
             {
-                Mode = command.Mode,
+                Mode = ActivityMode.Draft,
                 NoCommit = true,
             };
             _createActivity.Handle(createActivity);
