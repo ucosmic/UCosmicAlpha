@@ -40,7 +40,7 @@ namespace UCosmic.Domain.GeographicExpertise
 
         public virtual Person Person { get; protected internal set; }
         public int PersonId { get; protected internal set; }
-        public virtual ICollection<GeographicExpertiseLocation> Locations { get; protected internal set; }
+        public virtual ICollection<GeographicExpertiseLocation> Locations { get; protected set; }
         public string Description { get; protected internal set; }
     }
 }

@@ -17,7 +17,7 @@ using UCosmic.Mail;
 
 namespace UCosmic.EntityFramework
 {
-    public class UCosmicContext : DbContext, IQueryEntities, ICommandEntities, IUnitOfWork
+    public class UCosmicContext : DbContext, IQueryEntities, ICommandEntities
     {
         private IDatabaseInitializer<UCosmicContext> _initializer;
 

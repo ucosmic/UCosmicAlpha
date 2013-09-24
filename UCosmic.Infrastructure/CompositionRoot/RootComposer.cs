@@ -47,7 +47,7 @@ namespace UCosmic.CompositionRoot
             container.RegisterBinaryDataStorage(settings);
             container.RegisterEntityFramework();
 
-            container.RegisterFluentValidation(settings);
+            container.RegisterFluentValidation();
             container.RegisterQueryProcessing();
             container.RegisterEventProcessing();
             container.RegisterCommandHandling();

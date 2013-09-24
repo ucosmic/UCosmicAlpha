@@ -1,9 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
-using System.Linq;
-using UCosmic.Domain.Places;
+﻿using System.Collections.ObjectModel;
 using System;
+using System.Collections.Generic;
 
 namespace UCosmic.Domain.Agreements
 {

@@ -8,7 +8,7 @@ namespace UCosmic.Cqrs
     {
         private readonly IHandleQueries<TQuery, TResult> _decorated;
 
-        public RetryQueryDecorator(IHandleQueries<TQuery, TResult> decorated, IUnitOfWork unitOfWork)
+        public RetryQueryDecorator(IHandleQueries<TQuery, TResult> decorated)
         {
             _decorated = decorated;
         }

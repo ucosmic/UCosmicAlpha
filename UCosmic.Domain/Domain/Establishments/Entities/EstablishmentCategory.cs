@@ -12,7 +12,7 @@ namespace UCosmic.Domain.Establishments
         }
 
         public string Code { get; protected internal set; }
-        public virtual Collection<EstablishmentType> Types { get; protected internal set; }
+        public virtual Collection<EstablishmentType> Types { get; protected set; }
         public string EnglishName { get; protected internal set; }
         public string EnglishPluralName { get; protected internal set; }
     }

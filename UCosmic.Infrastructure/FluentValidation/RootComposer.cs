@@ -2,13 +2,12 @@
 using FluentValidation;
 using SimpleInjector;
 using SimpleInjector.Extensions;
-using UCosmic.CompositionRoot;
 
 namespace UCosmic.FluentValidation
 {
     internal static class RootComposer
     {
-        internal static void RegisterFluentValidation(this Container container, RootCompositionSettings settings)
+        internal static void RegisterFluentValidation(this Container container)
         {
             // by default, stop validation after first failure
             ValidatorOptions.CascadeMode = CascadeMode.StopOnFirstFailure;

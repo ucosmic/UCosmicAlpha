@@ -26,7 +26,7 @@ namespace UCosmic.Domain.Establishments
         }
 
         public string OfficialName { get; protected internal set; }
-        public virtual ICollection<EstablishmentName> Names { get; protected internal set; }
+        public virtual ICollection<EstablishmentName> Names { get; protected set; }
         public int? VerticalRank { get; protected internal set; } // Used for ordering Establishments in lists.
 
         public EstablishmentName TranslateNameTo(string languageIsoCode)
@@ -63,7 +63,7 @@ namespace UCosmic.Domain.Establishments
 
         public bool IsMember { get; protected internal set; }
 
-        public virtual ICollection<EstablishmentEmailDomain> EmailDomains { get; protected internal set; }
+        public virtual ICollection<EstablishmentEmailDomain> EmailDomains { get; protected set; }
         //public virtual ICollection<Affiliation> Affiliates { get; protected internal set; }
 
         public virtual EstablishmentType Type { get; protected internal set; }

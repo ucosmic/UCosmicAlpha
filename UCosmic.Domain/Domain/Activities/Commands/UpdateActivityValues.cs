@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Security.Principal;
 using FluentValidation;
@@ -105,22 +104,22 @@ namespace UCosmic.Domain.Activities
             var target = _entities.Get<ActivityValues>().Single(x => x.RevisionId == command.Id);
 
             /* Populate an activity with new values. */
-            var update = new ActivityValues
-            {
-                Title = command.Title,
-                Content = command.Content,
-                StartsOn = command.StartsOn,
-                EndsOn = command.EndsOn,
-                OnGoing = command.OnGoing,
-                DateFormat = command.DateFormat,
-                Mode = command.Mode,
-                WasExternallyFunded = command.WasExternallyFunded,
-                WasInternallyFunded = command.WasInternallyFunded,
-                Locations = command.Locations ?? new Collection<ActivityLocation>(),
-                Types = command.Types ?? new Collection<ActivityType>(),
-                Tags =  command.Tags ?? new Collection<ActivityTag>(),
-                Documents = command.Documents ?? new Collection<ActivityDocument>(),
-            };
+            //var update = new ActivityValues
+            //{
+            //    Title = command.Title,
+            //    Content = command.Content,
+            //    StartsOn = command.StartsOn,
+            //    EndsOn = command.EndsOn,
+            //    OnGoing = command.OnGoing,
+            //    DateFormat = command.DateFormat,
+            //    Mode = command.Mode,
+            //    WasExternallyFunded = command.WasExternallyFunded,
+            //    WasInternallyFunded = command.WasInternallyFunded,
+            //    Locations = command.Locations ?? new Collection<ActivityLocation>(),
+            //    Types = command.Types ?? new Collection<ActivityType>(),
+            //    Tags =  command.Tags ?? new Collection<ActivityTag>(),
+            //    Documents = command.Documents ?? new Collection<ActivityDocument>(),
+            //};
 
             /* Update static fields */
             target.Title = command.Title;

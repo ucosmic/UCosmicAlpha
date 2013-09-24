@@ -65,9 +65,9 @@ namespace UCosmic.Domain.Activities
 
         public bool? OnGoing { get; protected internal set; }
         public string DateFormat { get; protected internal set; }
-        public virtual ICollection<ActivityLocation> Locations { get; protected internal set; }
-        public virtual ICollection<ActivityType> Types { get; protected internal set; }
-        public virtual ICollection<ActivityTag> Tags { get; protected internal set; }
+        public virtual ICollection<ActivityLocation> Locations { get; protected set; }
+        public virtual ICollection<ActivityType> Types { get; protected set; }
+        public virtual ICollection<ActivityTag> Tags { get; protected set; }
         public virtual ICollection<ActivityDocument> Documents { get; protected internal set; }
         public string ModeText { get; protected set; }
         public ActivityMode Mode

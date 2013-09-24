@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace UCosmic.BinaryData
+namespace UCosmic
 {
     internal static class BinaryDataStorageExtensions
     {

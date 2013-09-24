@@ -41,7 +41,7 @@ namespace UCosmic.Domain.Employees
 
     public class ValidateUpdateEmployeeModuleSettingsCommand : AbstractValidator<UpdateEmployeeModuleSettings>
     {
-        public ValidateUpdateEmployeeModuleSettingsCommand(IQueryEntities entities)
+        public ValidateUpdateEmployeeModuleSettingsCommand()
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
         }

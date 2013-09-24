@@ -66,7 +66,7 @@ namespace UCosmic.SeedData
             _unitOfWork.SaveChanges();
         }
 
-        private IPrincipal GetPrincipal(string domain)
+        private static IPrincipal GetPrincipal(string domain)
         {
             var identity = new GenericIdentity(string.Format("supervisor1{0}", domain));
             var principal = new GenericPrincipal(identity, new[]

@@ -56,7 +56,7 @@ namespace UCosmic.Domain.Agreements
             protected internal set { VisibilityText = value.AsSentenceFragment(); }
         }
 
-        public virtual ICollection<AgreementParticipant> Participants { get; protected internal set; }
+        public virtual ICollection<AgreementParticipant> Participants { get; protected set; }
         public virtual ICollection<AgreementContact> Contacts { get; protected internal set; }
         public virtual ICollection<AgreementFile> Files { get; protected internal set; }
 
