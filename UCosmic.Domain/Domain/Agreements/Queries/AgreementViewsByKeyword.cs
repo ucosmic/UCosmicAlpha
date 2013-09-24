@@ -51,7 +51,7 @@ namespace UCosmic.Domain.Agreements
             // when the country code is specified, match establishments with country
             else if (!string.IsNullOrWhiteSpace(query.CountryCode))
             {
-                view = view.Where(x => x.CountryCode.Equals(query.CountryCode, ordinalIgnoreCase));
+                //view = view.Where(x => x.CountryCode.Equals(query.CountryCode, ordinalIgnoreCase));
             }
 
             ////search names & URL's for keyword
