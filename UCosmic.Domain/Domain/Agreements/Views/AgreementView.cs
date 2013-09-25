@@ -15,8 +15,6 @@ namespace UCosmic.Domain.Agreements
         public string Status { get; set; }
         public DateTime StartsOn { get; set; }
         public DateTime ExpiresOn { get; set; }
-        public string CountryCode { get; set; }
-        public string CountryName { get; set; }
         public IEnumerable<AgreementParticipantView> Participants { get; set; }
 
 
@@ -29,8 +27,8 @@ namespace UCosmic.Domain.Agreements
             Name = entity.Name;
             Type = entity.Type;
             Status = entity.Status;
-            //StartsOn = new DateTime(entity.StartsOn);
-            //ExpiresOn = new DateTime(entity.ExpiresOn); 
+            StartsOn = entity.StartsOn;
+            ExpiresOn = entity.ExpiresOn; 
 
             var participants = new List<AgreementParticipantView>();
             foreach (var participant in entity.Participants)

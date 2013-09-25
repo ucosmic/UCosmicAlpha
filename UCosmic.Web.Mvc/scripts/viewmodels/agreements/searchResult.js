@@ -26,10 +26,11 @@ var Agreements;
             };
 
             SearchResult.prototype._setupCountryComputeds = function () {
+                var _this = this;
                 // show alternate text when country is undefined
                 this.nullDisplayCountryName = ko.computed(function () {
-                    return '[undefined]';
-                    //return this.countryName() || '[Undefined]';
+                    //return '[undefined]';
+                    return _this.countryNames() || '[Undefined]';
                 });
             };
 

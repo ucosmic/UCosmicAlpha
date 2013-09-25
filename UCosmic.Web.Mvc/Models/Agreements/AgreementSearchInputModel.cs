@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Linq;
 using AutoMapper;
 using UCosmic.Domain.Agreements;
 
@@ -42,15 +43,30 @@ namespace UCosmic.Web.Mvc.Models
                             if (string.IsNullOrWhiteSpace(s.OrderBy))
                                 orderBy.Add(e => e.Id, OrderByDirection.Ascending);
 
-                            //else if (s.OrderBy.Equals("country-asc", StringComparison.OrdinalIgnoreCase))
-                            //    orderBy.Add(e => e.CountryName, OrderByDirection.Ascending);
-                            //else if (s.OrderBy.Equals("country-desc", StringComparison.OrdinalIgnoreCase))
-                            //    orderBy.Add(e => e.CountryName, OrderByDirection.Descending);
+                            else if (s.OrderBy.Equals("country-asc", StringComparison.OrdinalIgnoreCase))
+                                orderBy.Add(e => (e.Participants.Any(x => !x.IsOwner && x.CountryName != null) ? e.Participants.FirstOrDefault(x => !x.IsOwner).CountryName : null), OrderByDirection.Ascending);
+                            else if (s.OrderBy.Equals("country-desc", StringComparison.OrdinalIgnoreCase))
+                                orderBy.Add(e => (e.Participants.Any(x => !x.IsOwner && x.CountryName != null) ? e.Participants.FirstOrDefault(x => !x.IsOwner).CountryName : null), OrderByDirection.Descending);
 
-                            //else if (s.OrderBy.Equals("name-asc", StringComparison.OrdinalIgnoreCase))
-                            //    orderBy.Add(e => e.TranslatedName, OrderByDirection.Ascending);
-                            //else if (s.OrderBy.Equals("name-desc", StringComparison.OrdinalIgnoreCase))
-                            //    orderBy.Add(e => e.TranslatedName, OrderByDirection.Descending);
+                            else if (s.OrderBy.Equals("start-asc", StringComparison.OrdinalIgnoreCase))
+                                orderBy.Add(e => e.StartsOn, OrderByDirection.Ascending);
+                            else if (s.OrderBy.Equals("start-desc", StringComparison.OrdinalIgnoreCase))
+                                orderBy.Add(e => e.StartsOn, OrderByDirection.Descending);
+
+                            else if (s.OrderBy.Equals("expires-asc", StringComparison.OrdinalIgnoreCase))
+                                orderBy.Add(e => e.ExpiresOn, OrderByDirection.Ascending);
+                            else if (s.OrderBy.Equals("expires-desc", StringComparison.OrdinalIgnoreCase))
+                                orderBy.Add(e => e.ExpiresOn, OrderByDirection.Descending);
+
+                            else if (s.OrderBy.Equals("type-asc", StringComparison.OrdinalIgnoreCase))
+                                orderBy.Add(e => e.Type, OrderByDirection.Ascending);
+                            else if (s.OrderBy.Equals("type-desc", StringComparison.OrdinalIgnoreCase))
+                                orderBy.Add(e => e.Type, OrderByDirection.Descending);
+
+                            else if (s.OrderBy.Equals("status-asc", StringComparison.OrdinalIgnoreCase))
+                                orderBy.Add(e => e.Status, OrderByDirection.Ascending);
+                            else if (s.OrderBy.Equals("status-desc", StringComparison.OrdinalIgnoreCase))
+                                orderBy.Add(e => e.Status, OrderByDirection.Descending);
 
                             return orderBy;
                         }))

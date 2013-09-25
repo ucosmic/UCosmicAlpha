@@ -1,38 +1,29 @@
 ﻿using System;
 using System.Runtime.Serialization;
 using AutoMapper;
+using System.Linq;
 using UCosmic.Domain.Agreements;
 
 namespace UCosmic.Web.Mvc.Models
 {
-    [DataContract(Name = "Agreement", Namespace = "")]
     public class AgreementPageApiModel
     {
-        [DataMember]
+
         public int Id { get; set; }
 
-        [DataMember]
         public string Name { get; set; }
 
-        [DataMember]
         public string Type { get; set; }
 
-        [DataMember]
         public string Status { get; set; }
 
-        [DataMember]
         public DateTime StartsOn { get; set; }
 
-        [DataMember]
         public DateTime ExpiresOn { get; set; }
 
-        [DataMember]
-        public string CountryName { get; set; }
+        public string CountryNames { get; set; }
 
-        [DataMember]
-        public string CountryCode { get; set; }
     }
-    [DataContract(Name = "PageOfAgreements", Namespace = "")]
     public class PageOfAgreementApiFlatModel : PageOf<AgreementPageApiModel> { }
 
     public static class AgreementPageApiProfiler
@@ -42,6 +33,12 @@ namespace UCosmic.Web.Mvc.Models
             protected override void Configure()
             {
                 CreateMap<AgreementView, AgreementPageApiModel>()
+                    .ForMember(d => d.CountryNames, o => o.ResolveUsing(s =>
+                    {
+                        var countryNames = s.Participants.Where(x => !x.IsOwner).Select(x => x.CountryName).Distinct();
+
+                        return countryNames.Implode(", ");
+                    }))
                     //.ForMember(d => d.OfficialUrl, o => o.ResolveUsing(s => s.WebsiteUrl))
                     //.AfterMap((s, d) => d.Participants = d.Participants
                     //    .OrderByDescending(x => x.IsOwner)
