@@ -13,46 +13,45 @@
 module ViewModels.Activities {
     export class Activity implements Service.ApiModels.IObservableActivity {
 
+        //#region Class Properties
+
         private static iconMaxSide: number = 64;
 
         ready: KnockoutObservable<boolean> = ko.observable(false);
 
-        /* Array of all locations offered in Country/Location multiselect. */
+        // Array of all locations offered in Country/Location multiselect
         locations: KnockoutObservableArray<any> = ko.observableArray();
 
         // Array of placeIds of selected locations, kendo multiselect stores these as strings
         kendoPlaceIds: KnockoutObservableArray<number> = ko.observableArray();
         private _currentPlaceIds: number[];
 
-        /* Array of activity types displayed as list of checkboxes */
+        // Array of activity types displayed as list of checkboxes
         activityTypes: KnockoutObservableArray<any> = ko.observableArray();
 
-        /* Data bound to new tag textArea */
+        // Data bound to new tag textArea
         newTag: KnockoutObservable<string> = ko.observable();
         newEstablishment: any; // Because KendoUI autocomplete does not offer dataValueField.
 
         // array to hold file upload errors
         fileUploadErrors: KnockoutObservableArray<any> = ko.observableArray();
 
-        /* Old document name - used during document rename. */
+        // Old document name - used during document rename.
         previousDocumentTitle: string;
 
-        /* Initialization errors. */
-        inititializationErrors: string = '';
-
-        /* Autosave after so many keydowns. */
+        // Autosave after so many keydowns
         AUTOSAVE_KEYCOUNT: number = 10;
         keyCounter: number = 0;
 
-        /* Dirty */
+        // Dirty
         dirtyFlag: KnockoutObservable<boolean> = ko.observable(false);
         dirty: KnockoutComputed<void>;
 
-        /* In the process of saving */
+        // In the process of saving
         saving: boolean = false;
         saveSpinner = new App.Spinner(new App.SpinnerOptions(200));
 
-        /* IObservableActivity implemented */
+        // IObservableActivity implemented
         id: KnockoutObservable<number>;
         workCopyId: KnockoutObservable<number>;
         originalId: KnockoutObservable<number>;
@@ -63,7 +62,14 @@ module ViewModels.Activities {
         modeText: KnockoutObservable<string>;
         values: Service.ApiModels.IObservableActivityValues;    // only values for modeText
 
-        _initialize(activityId: number, activityWorkCopyId: number): void {
+        //#endregion
+        //#region Construction & Initialization
+
+        constructor(activityId: number, activityWorkCopyId: number) {
+            this._initialize(activityId, activityWorkCopyId);
+        }
+
+        private _initialize(activityId: number, activityWorkCopyId: number): void {
             this.id = ko.observable(activityId);
             this.originalId = ko.observable(activityId);
             this.workCopyId = ko.observable(activityWorkCopyId);
@@ -75,15 +81,120 @@ module ViewModels.Activities {
             });
         }
 
-        dismissFileUploadError(index: number): void {
-            this.fileUploadErrors.splice(index, 1);
+        //#endregion
+        //#region Initial data load
+
+        load(): JQueryDeferred<void> {
+            var deferred: JQueryDeferred<void> = $.Deferred();
+
+            //#region load places dropdown, module settings, and activity work copy
+
+            var locationsPact = $.Deferred();
+            $.get(App.Routes.WebApi.Activities.Locations.get())
+                .done((data: Service.ApiModels.IActivityLocation[]): void => {
+                    locationsPact.resolve(data);
+                })
+                .fail((jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void => {
+                    locationsPact.reject(jqXHR, textStatus, errorThrown);
+                })
+            ;
+
+            var typesPact = $.Deferred();
+            $.get(App.Routes.WebApi.Employees.ModuleSettings.ActivityTypes.get())
+                .done((data: Service.ApiModels.IEmployeeActivityType[]): void => {
+                    typesPact.resolve(data);
+                })
+                .fail((jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void => {
+                    typesPact.reject(jqXHR, textStatus, errorThrown);
+                })
+            ;
+
+            var dataPact = $.Deferred();
+            $.get(App.Routes.WebApi.Activities.get(this.workCopyId()))
+                .done((data: Service.ApiModels.IActivityPage): void => {
+                    dataPact.resolve(data);
+                })
+                .fail((jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
+                    dataPact.reject(jqXhr, textStatus, errorThrown);
+                })
+            ;
+
+            //#endregion
+
+            // only process after all requests have been resolved
+            $.when(typesPact, locationsPact, dataPact)
+                .done((types: Service.ApiModels.IEmployeeActivityType[],
+                    locations: Service.ApiModels.IActivityLocation[],
+                    data: Service.ApiModels.IObservableActivity): void => {
+
+                    //#region populate lookup lists
+
+                    this.activityTypes = ko.mapping.fromJS(types);
+                    this.locations = ko.mapping.fromJS(locations);
+
+                    //#endregion
+                    //#region populate activity data
+
+                    // Although the MVC DateTime to JSON serializer will output an ISO compatible
+                    // string, we are not guarenteed that a browser's Date(string) or Date.parse(string)
+                    // functions will accurately convert to Date.  So, we are using
+                    // moment.js to handle the parsing and conversion.
+                    var augmentedDocumentModel = function (data) {
+                        ko.mapping.fromJS(data, {}, this);
+                        this.proxyImageSource = ko.observable(App.Routes.WebApi.Activities.Documents.Thumbnail.get(data.activityId, data.id, { maxSide: Activity.iconMaxSide }));
+                    };
+
+                    var mapping = {
+                        documents: {
+                            create: (options: any): KnockoutObservable<any> => {
+                                return new augmentedDocumentModel(options.data);
+                            }
+                        },
+                        startsOn: {
+                            create: (options: any): KnockoutObservable<Date> => {
+                                return (options.data != null) ? ko.observable(moment(options.data).toDate()) : ko.observable();
+                            }
+                        },
+                        endsOn: {
+                            create: (options: any): KnockoutObservable<Date> => {
+                                return (options.data != null) ? ko.observable(moment(options.data).toDate()) : ko.observable();
+                            }
+                        }
+                    };
+
+                    ko.mapping.fromJS(data, mapping, this);
+
+                    //#endregion
+                    //#region initialize selected place id's and checked activity types
+
+                    /* Initialize the list of selected locations with current locations in values. */
+                    for (var i = 0; i < this.values.locations().length; i += 1) {
+                        this.kendoPlaceIds.push(this.values.locations()[i].placeId());
+                    }
+
+                    /* Check the activity types checkboxes if the activity type exists in values. */
+                    for (var i = 0; i < this.activityTypes().length; i += 1) {
+                        this.activityTypes()[i].checked = ko.computed(this.defHasActivityTypeCallback(i));
+                    }
+
+                    //#endregion
+
+                    deferred.resolve();
+                })
+                .fail((xhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
+                    deferred.reject(xhr, textStatus, errorThrown);
+                });
+
+            return deferred;
         }
 
-        setupWidgets(fromDatePickerId: string,
-            toDatePickerId: string,
-            countrySelectorId: string,
-            uploadFileId: string,
-            newTagId: string): void {
+        //#endregion
+        //#region Kendo widget setup
+
+        setupWidgets(fromDatePickerId: string, toDatePickerId: string, countrySelectorId: string,
+            uploadFileId: string, newTagId: string): void {
+
+            //#region Kendo DatePickers
 
             $('#' + fromDatePickerId).kendoDatePicker({
                 /* If user clicks date picker button, reset format */
@@ -94,7 +205,8 @@ module ViewModels.Activities {
                 open: function (e) { this.options.format = 'MM/dd/yyyy'; }
             });
 
-            //#region Places kendo multiselect
+            //#endregion
+            //#region Kendo MultiSelect for Places
 
             $('#' + countrySelectorId).kendoMultiSelect({
                 filter: 'contains',
@@ -162,6 +274,7 @@ module ViewModels.Activities {
             });
 
             //#endregion
+            //#region Kendo Upload
 
             var invalidFileNames: string[] = [];
             $('#' + uploadFileId).kendoUpload({
@@ -223,6 +336,9 @@ module ViewModels.Activities {
                 }
             });
 
+            //#endregion
+            //#region Kendo AutoComplete for Tags
+
             $('#' + newTagId).kendoAutoComplete({
                 minLength: 3,
                 placeholder: '[Enter tag or keyword]',
@@ -251,7 +367,12 @@ module ViewModels.Activities {
                     this.newEstablishment = { officialName: dataItem.officialName, id: dataItem.id };
                 }
             });
+
+            //#endregion
         }
+
+        //#endregion
+        //#region Knockout Validation setup
 
         setupValidation(): void {
             ko.validation.rules['atLeast'] = {
@@ -302,6 +423,9 @@ module ViewModels.Activities {
             this.values.endsOn.extend({ nullSafeDate: { message: 'End date must valid.' } });
         }
 
+        //#endregion
+        //#region Value subscriptions setup
+
         setupSubscriptions(): void {
             /* Autosave when fields change. */
             this.values.title.subscribe((newValue: any): void => { this.dirtyFlag(true); });
@@ -314,110 +438,8 @@ module ViewModels.Activities {
             this.values.types.subscribe((newValue: any): void => { this.dirtyFlag(true); });
         }
 
-        constructor(activityId: number, activityWorkCopyId: number) {
-            this._initialize(activityId, activityWorkCopyId);
-        }
-
-        load(): JQueryDeferred<void> {
-            var deferred: JQueryDeferred<void> = $.Deferred();
-
-            var locationsPact = $.Deferred();
-            $.get(App.Routes.WebApi.Activities.Locations.get())
-                .done((data: Service.ApiModels.IActivityLocation[]): void => {
-                    locationsPact.resolve(data);
-                })
-                .fail((jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void => {
-                    locationsPact.reject(jqXHR, textStatus, errorThrown);
-                })
-            ;
-
-            var typesPact = $.Deferred();
-            $.get(App.Routes.WebApi.Employees.ModuleSettings.ActivityTypes.get())
-                .done((data: Service.ApiModels.IEmployeeActivityType[]): void => {
-                    typesPact.resolve(data);
-                })
-                .fail((jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void => {
-                    typesPact.reject(jqXHR, textStatus, errorThrown);
-                })
-            ;
-
-            var dataPact = $.Deferred();
-            $.get(App.Routes.WebApi.Activities.get(this.workCopyId()))
-                .done((data: Service.ApiModels.IActivityPage): void => {
-                    dataPact.resolve(data);
-                })
-                .fail((jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
-                    dataPact.reject(jqXhr, textStatus, errorThrown);
-                })
-            ;
-
-            // only process after all requests have been resolved
-            $.when(typesPact, locationsPact, dataPact)
-                .done((types: Service.ApiModels.IEmployeeActivityType[],
-                    locations: Service.ApiModels.IActivityLocation[],
-                    data: Service.ApiModels.IObservableActivity): void => {
-
-                    this.activityTypes = ko.mapping.fromJS(types);
-                    this.locations = ko.mapping.fromJS(locations);
-
-                    /* Although the MVC DateTime to JSON serializer will output an ISO compatible
-                              string, we are not guarenteed that a browser's Date(string) or Date.parse(string)
-                              functions will accurately convert to Date.  So, we are using
-                              moment.js to handle the parsing and conversion.
-                      */
-                    {
-                        var augmentedDocumentModel = function (data) {
-                            ko.mapping.fromJS(data, {}, this);
-                            this.proxyImageSource = ko.observable(App.Routes.WebApi.Activities.Documents.Thumbnail.get(data.activityId, data.id, { maxSide: Activity.iconMaxSide }));
-                        };
-
-                        var mapping = {
-                            'documents': {
-                                create: (options: any): KnockoutObservable<any> => {
-                                    return new augmentedDocumentModel(options.data);
-                                }
-                            }
-                            , 'startsOn': {
-                                create: (options: any): KnockoutObservable<Date> => {
-                                    return (options.data != null) ? ko.observable(moment(options.data).toDate()) : ko.observable();
-                                }
-                            }
-                            , 'endsOn': {
-                                create: (options: any): KnockoutObservable<Date> => {
-                                    return (options.data != null) ? ko.observable(moment(options.data).toDate()) : ko.observable();
-                                }
-                            }
-                        };
-
-                        ko.mapping.fromJS(data, mapping, this);
-                    }
-
-                    /* Initialize the list of selected locations with current locations in values. */
-                    for (var i = 0; i < this.values.locations().length; i += 1) {
-                        this.kendoPlaceIds.push(this.values.locations()[i].placeId());
-                    }
-
-                    /* Check the activity types checkboxes if the activity type exists in values. */
-                    for (var i = 0; i < this.activityTypes().length; i += 1) {
-                        this.activityTypes()[i].checked = ko.computed(this.defHasActivityTypeCallback(i));
-                    }
-
-                    deferred.resolve();
-                })
-                .fail((xhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
-                    deferred.reject(xhr, textStatus, errorThrown);
-                });
-
-            return deferred;
-        }
-
-        keyCountAutoSave(newValue: any): void {
-            this.keyCounter += 1;
-            if (this.keyCounter >= this.AUTOSAVE_KEYCOUNT) {
-                this.dirtyFlag(true);
-                this.keyCounter = 0;
-            }
-        }
+        //#endregion
+        //#region Date formatting & conversion
 
         getDateFormat(dateStr: string): string {
             var format: string = null;
@@ -470,6 +492,17 @@ module ViewModels.Activities {
             }
 
             return formatted;
+        }
+
+        //#endregion
+        //#region Saving
+
+        keyCountAutoSave(newValue: any): void {
+            this.keyCounter += 1;
+            if (this.keyCounter >= this.AUTOSAVE_KEYCOUNT) {
+                this.dirtyFlag(true);
+                this.keyCounter = 0;
+            }
         }
 
         autoSave(): JQueryDeferred<void> {
@@ -566,6 +599,9 @@ module ViewModels.Activities {
             this._save('Public');
         }
 
+        //#endregion
+        //#region Canceling
+
         cancel(): void {
             var $dialog = $('#cancelConfirmDialog');
             $dialog.dialog({
@@ -614,6 +650,61 @@ module ViewModels.Activities {
             });
         }
 
+        //#endregion
+        //#region Types
+
+        /*
+            ActivityTypes Theory of Operation:
+    
+            Challenge: Present user with a checkbox for each ActivityType as defined
+                                    by EmployeeActivityTypes.  User must select at least one
+                                    ActivityType.  The ViewModel will maintain a list of
+                                    ActivityTypes as selected by the user.
+    
+            The ViewModel contains both a list of possible ActivityTypes (in the
+            activityTypes field) and the array of actually selected ActivityTypes
+            in vm.values.types.
+    
+            In order to support data binding, the ActivityType is augmented with
+            a 'checked' property.
+    
+            The desired behavior is to make use of the 'checked' data binding
+            attribute as follows:
+    
+            <input type="checkbox" data-bind="checked: checked" />
+    
+            See the 'activity-types-template' for exact usage.
+    
+            However, checking/unchecking needes to result in an ActivityType
+            being added/removed from the Activity.values.types array.
+    
+            To accomplish this, we use a computed observable that has split
+            read and write behavior.  A Read results in interrogating the
+            Activity.values.types array for the existence of a typeId. A
+            write will either add or remove a typeId depending upon checked
+            state.
+    
+            Due to the use of computed observable array (activityTypes) we need to
+            create a closure in order to capture state of array index/element.
+        */
+        defHasActivityTypeCallback(activityTypeIndex: number): KnockoutComputedDefine<boolean> {
+            var def: KnockoutComputedDefine<boolean> = {
+                read: (): boolean => {
+                    return this.hasActivityType(this.activityTypes()[activityTypeIndex].id());
+                },
+                write: (checked: boolean) => {
+                    if (checked) {
+                        this.addActivityType(this.activityTypes()[activityTypeIndex].id());
+                    } else {
+                        this.removeActivityType(this.activityTypes()[activityTypeIndex].id());
+                    }
+                },
+                owner: this
+            };
+
+            return def;
+        }
+
         addActivityType(activityTypeId: number): void {
             var existingIndex: number = this.getActivityTypeIndexById(activityTypeId);
             if (existingIndex == -1) {
@@ -657,57 +748,8 @@ module ViewModels.Activities {
             return this.getActivityTypeIndexById(activityTypeId) != -1;
         }
 
-        /*
-            ActivityTypes Theory of Operation:
-    
-            Challenge: Present user with a checkbox for each ActivityType as defined
-                                    by EmployeeActivityTypes.  User must select at least one
-                                    ActivityType.  The ViewModel will maintain a list of
-                                    ActivityTypes as selected by the user.
-    
-            The ViewModel contains both a list of possible ActivityTypes (in the
-            activityTypes field) and the array of actually selected ActivityTypes
-            in vm.values.types.
-    
-            In order to support data binding, the ActivityType is augmented with
-            a 'checked' property.
-    
-            The desired behavior is to make use of the 'checked' data binding
-            attribute as follows:
-    
-            <input type='checkbox' data-bind='checked: checked'/>
-    
-            See the 'activity-types-template' for exact usage.
-    
-            However, checking/unchecking needes to result in an ActivityType
-            being added/removed from the Activity.values.types array.
-    
-            To accomplish this, we use a computed observable that has split
-            read and write behavior.  A Read results in interrogating the
-            Activity.values.types array for the existence of a typeId. A
-            write will either add or remove a typeId depending upon checked
-            state.
-    
-            Due to the use of computed observable array (activityTypes) we need to
-            create a closure in order to capture state of array index/element.
-        */
-        defHasActivityTypeCallback(activityTypeIndex: number): KnockoutComputedDefine<boolean> {
-            var def: KnockoutComputedDefine<boolean> = {
-                read: (): boolean => {
-                    return this.hasActivityType(this.activityTypes()[activityTypeIndex].id());
-                },
-                write: (checked: boolean) => {
-                    if (checked) {
-                        this.addActivityType(this.activityTypes()[activityTypeIndex].id());
-                    } else {
-                        this.removeActivityType(this.activityTypes()[activityTypeIndex].id());
-                    }
-                },
-                owner: this
-            };
-
-            return def;
-        }
+        //#endregion
+        //#region Tags
 
         addTag(item: any, event: Event): void {
             var newText: string = null;
@@ -762,6 +804,9 @@ module ViewModels.Activities {
             }
             return ((this.values.tags().length > 0) && (i < this.values.tags().length)) ? i : -1;
         }
+
+        //#endregion
+        //#region Documents
 
         private _loadDocuments(): void {
             $.ajax({
@@ -885,5 +930,11 @@ module ViewModels.Activities {
                 }
             });
         }
+
+        dismissFileUploadError(index: number): void {
+            this.fileUploadErrors.splice(index, 1);
+        }
+
+        //#endregion
     }
 }

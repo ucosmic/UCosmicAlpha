@@ -12,8 +12,6 @@ var ViewModels;
     (function (LanguageExpertises) {
         var LanguageExpertise = (function () {
             function LanguageExpertise(expertiseId) {
-                /* Initialization errors. */
-                this.inititializationErrors = "";
                 /* True if any field changes. */
                 this.dirtyFlag = ko.observable(false);
                 this.isOther = ko.observable(false);

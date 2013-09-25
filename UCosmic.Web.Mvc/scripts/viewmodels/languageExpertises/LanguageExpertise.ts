@@ -11,9 +11,6 @@
 module ViewModels.LanguageExpertises {
 
     export class LanguageExpertise {
-        /* Initialization errors. */
-        inititializationErrors: string = "";
-
         /* True if any field changes. */
         dirtyFlag: KnockoutObservable<boolean> = ko.observable( false );
 

@@ -13,26 +13,26 @@ var ViewModels;
     /// <reference path="../activities/ServiceApiModel.d.ts" />
     (function (Activities) {
         var Activity = (function () {
+            //#endregion
+            //#region Construction & Initialization
             function Activity(activityId, activityWorkCopyId) {
                 this.ready = ko.observable(false);
-                /* Array of all locations offered in Country/Location multiselect. */
+                // Array of all locations offered in Country/Location multiselect
                 this.locations = ko.observableArray();
                 // Array of placeIds of selected locations, kendo multiselect stores these as strings
                 this.kendoPlaceIds = ko.observableArray();
-                /* Array of activity types displayed as list of checkboxes */
+                // Array of activity types displayed as list of checkboxes
                 this.activityTypes = ko.observableArray();
-                /* Data bound to new tag textArea */
+                // Data bound to new tag textArea
                 this.newTag = ko.observable();
                 // array to hold file upload errors
                 this.fileUploadErrors = ko.observableArray();
-                /* Initialization errors. */
-                this.inititializationErrors = '';
-                /* Autosave after so many keydowns. */
+                // Autosave after so many keydowns
                 this.AUTOSAVE_KEYCOUNT = 10;
                 this.keyCounter = 0;
-                /* Dirty */
+                // Dirty
                 this.dirtyFlag = ko.observable(false);
-                /* In the process of saving */
+                // In the process of saving
                 this.saving = false;
                 this.saveSpinner = new App.Spinner(new App.SpinnerOptions(200));
                 this._initialize(activityId, activityWorkCopyId);
@@ -50,12 +50,94 @@ var ViewModels;
                 });
             };
 
-            Activity.prototype.dismissFileUploadError = function (index) {
-                this.fileUploadErrors.splice(index, 1);
+            //#endregion
+            //#region Initial data load
+            Activity.prototype.load = function () {
+                var _this = this;
+                var deferred = $.Deferred();
+
+                //#region load places dropdown, module settings, and activity work copy
+                var locationsPact = $.Deferred();
+                $.get(App.Routes.WebApi.Activities.Locations.get()).done(function (data) {
+                    locationsPact.resolve(data);
+                }).fail(function (jqXHR, textStatus, errorThrown) {
+                    locationsPact.reject(jqXHR, textStatus, errorThrown);
+                });
+
+                var typesPact = $.Deferred();
+                $.get(App.Routes.WebApi.Employees.ModuleSettings.ActivityTypes.get()).done(function (data) {
+                    typesPact.resolve(data);
+                }).fail(function (jqXHR, textStatus, errorThrown) {
+                    typesPact.reject(jqXHR, textStatus, errorThrown);
+                });
+
+                var dataPact = $.Deferred();
+                $.get(App.Routes.WebApi.Activities.get(this.workCopyId())).done(function (data) {
+                    dataPact.resolve(data);
+                }).fail(function (jqXhr, textStatus, errorThrown) {
+                    dataPact.reject(jqXhr, textStatus, errorThrown);
+                });
+
+                //#endregion
+                // only process after all requests have been resolved
+                $.when(typesPact, locationsPact, dataPact).done(function (types, locations, data) {
+                    //#region populate lookup lists
+                    _this.activityTypes = ko.mapping.fromJS(types);
+                    _this.locations = ko.mapping.fromJS(locations);
+
+                    //#endregion
+                    //#region populate activity data
+                    // Although the MVC DateTime to JSON serializer will output an ISO compatible
+                    // string, we are not guarenteed that a browser's Date(string) or Date.parse(string)
+                    // functions will accurately convert to Date.  So, we are using
+                    // moment.js to handle the parsing and conversion.
+                    var augmentedDocumentModel = function (data) {
+                        ko.mapping.fromJS(data, {}, this);
+                        this.proxyImageSource = ko.observable(App.Routes.WebApi.Activities.Documents.Thumbnail.get(data.activityId, data.id, { maxSide: Activity.iconMaxSide }));
+                    };
+
+                    var mapping = {
+                        documents: {
+                            create: function (options) {
+                                return new augmentedDocumentModel(options.data);
+                            }
+                        },
+                        startsOn: {
+                            create: function (options) {
+                                return (options.data != null) ? ko.observable(moment(options.data).toDate()) : ko.observable();
+                            }
+                        },
+                        endsOn: {
+                            create: function (options) {
+                                return (options.data != null) ? ko.observable(moment(options.data).toDate()) : ko.observable();
+                            }
+                        }
+                    };
+
+                    ko.mapping.fromJS(data, mapping, _this);
+
+                    for (var i = 0; i < _this.values.locations().length; i += 1) {
+                        _this.kendoPlaceIds.push(_this.values.locations()[i].placeId());
+                    }
+
+                    for (var i = 0; i < _this.activityTypes().length; i += 1) {
+                        _this.activityTypes()[i].checked = ko.computed(_this.defHasActivityTypeCallback(i));
+                    }
+
+                    //#endregion
+                    deferred.resolve();
+                }).fail(function (xhr, textStatus, errorThrown) {
+                    deferred.reject(xhr, textStatus, errorThrown);
+                });
+
+                return deferred;
             };
 
+            //#endregion
+            //#region Kendo widget setup
             Activity.prototype.setupWidgets = function (fromDatePickerId, toDatePickerId, countrySelectorId, uploadFileId, newTagId) {
                 var _this = this;
+                //#region Kendo DatePickers
                 $('#' + fromDatePickerId).kendoDatePicker({
                     /* If user clicks date picker button, reset format */
                     open: function (e) {
@@ -69,7 +151,8 @@ var ViewModels;
                     }
                 });
 
-                //#region Places kendo multiselect
+                //#endregion
+                //#region Kendo MultiSelect for Places
                 $('#' + countrySelectorId).kendoMultiSelect({
                     filter: 'contains',
                     ignoreCase: 'true',
@@ -128,6 +211,7 @@ var ViewModels;
                 });
 
                 //#endregion
+                //#region Kendo Upload
                 var invalidFileNames = [];
                 $('#' + uploadFileId).kendoUpload({
                     multiple: true,
@@ -185,6 +269,8 @@ var ViewModels;
                     }
                 });
 
+                //#endregion
+                //#region Kendo AutoComplete for Tags
                 $('#' + newTagId).kendoAutoComplete({
                     minLength: 3,
                     placeholder: '[Enter tag or keyword]',
@@ -213,8 +299,11 @@ var ViewModels;
                         _this.newEstablishment = { officialName: dataItem.officialName, id: dataItem.id };
                     }
                 });
+                //#endregion
             };
 
+            //#endregion
+            //#region Knockout Validation setup
             Activity.prototype.setupValidation = function () {
                 ko.validation.rules['atLeast'] = {
                     validator: function (val, otherVal) {
@@ -262,6 +351,8 @@ var ViewModels;
                 this.values.endsOn.extend({ nullSafeDate: { message: 'End date must valid.' } });
             };
 
+            //#endregion
+            //#region Value subscriptions setup
             Activity.prototype.setupSubscriptions = function () {
                 var _this = this;
                 /* Autosave when fields change. */
@@ -291,87 +382,8 @@ var ViewModels;
                 });
             };
 
-            Activity.prototype.load = function () {
-                var _this = this;
-                var deferred = $.Deferred();
-
-                var locationsPact = $.Deferred();
-                $.get(App.Routes.WebApi.Activities.Locations.get()).done(function (data) {
-                    locationsPact.resolve(data);
-                }).fail(function (jqXHR, textStatus, errorThrown) {
-                    locationsPact.reject(jqXHR, textStatus, errorThrown);
-                });
-
-                var typesPact = $.Deferred();
-                $.get(App.Routes.WebApi.Employees.ModuleSettings.ActivityTypes.get()).done(function (data) {
-                    typesPact.resolve(data);
-                }).fail(function (jqXHR, textStatus, errorThrown) {
-                    typesPact.reject(jqXHR, textStatus, errorThrown);
-                });
-
-                var dataPact = $.Deferred();
-                $.get(App.Routes.WebApi.Activities.get(this.workCopyId())).done(function (data) {
-                    dataPact.resolve(data);
-                }).fail(function (jqXhr, textStatus, errorThrown) {
-                    dataPact.reject(jqXhr, textStatus, errorThrown);
-                });
-
-                // only process after all requests have been resolved
-                $.when(typesPact, locationsPact, dataPact).done(function (types, locations, data) {
-                    _this.activityTypes = ko.mapping.fromJS(types);
-                    _this.locations = ko.mapping.fromJS(locations);
-
-                     {
-                        var augmentedDocumentModel = function (data) {
-                            ko.mapping.fromJS(data, {}, this);
-                            this.proxyImageSource = ko.observable(App.Routes.WebApi.Activities.Documents.Thumbnail.get(data.activityId, data.id, { maxSide: Activity.iconMaxSide }));
-                        };
-
-                        var mapping = {
-                            'documents': {
-                                create: function (options) {
-                                    return new augmentedDocumentModel(options.data);
-                                }
-                            },
-                            'startsOn': {
-                                create: function (options) {
-                                    return (options.data != null) ? ko.observable(moment(options.data).toDate()) : ko.observable();
-                                }
-                            },
-                            'endsOn': {
-                                create: function (options) {
-                                    return (options.data != null) ? ko.observable(moment(options.data).toDate()) : ko.observable();
-                                }
-                            }
-                        };
-
-                        ko.mapping.fromJS(data, mapping, _this);
-                    }
-
-                    for (var i = 0; i < _this.values.locations().length; i += 1) {
-                        _this.kendoPlaceIds.push(_this.values.locations()[i].placeId());
-                    }
-
-                    for (var i = 0; i < _this.activityTypes().length; i += 1) {
-                        _this.activityTypes()[i].checked = ko.computed(_this.defHasActivityTypeCallback(i));
-                    }
-
-                    deferred.resolve();
-                }).fail(function (xhr, textStatus, errorThrown) {
-                    deferred.reject(xhr, textStatus, errorThrown);
-                });
-
-                return deferred;
-            };
-
-            Activity.prototype.keyCountAutoSave = function (newValue) {
-                this.keyCounter += 1;
-                if (this.keyCounter >= this.AUTOSAVE_KEYCOUNT) {
-                    this.dirtyFlag(true);
-                    this.keyCounter = 0;
-                }
-            };
-
+            //#endregion
+            //#region Date formatting & conversion
             Activity.prototype.getDateFormat = function (dateStr) {
                 var format = null;
                 var YYYYPattern = new RegExp('^\\d{4}$');
@@ -418,6 +430,16 @@ var ViewModels;
                 }
 
                 return formatted;
+            };
+
+            //#endregion
+            //#region Saving
+            Activity.prototype.keyCountAutoSave = function (newValue) {
+                this.keyCounter += 1;
+                if (this.keyCounter >= this.AUTOSAVE_KEYCOUNT) {
+                    this.dirtyFlag(true);
+                    this.keyCounter = 0;
+                }
             };
 
             Activity.prototype.autoSave = function () {
@@ -506,6 +528,8 @@ var ViewModels;
                 this._save('Public');
             };
 
+            //#endregion
+            //#region Canceling
             Activity.prototype.cancel = function () {
                 var _this = this;
                 var $dialog = $('#cancelConfirmDialog');
@@ -550,6 +574,61 @@ var ViewModels;
                         }
                     ]
                 });
+            };
+
+            //#endregion
+            //#region Types
+            /*
+            ActivityTypes Theory of Operation:
+            
+            Challenge: Present user with a checkbox for each ActivityType as defined
+            by EmployeeActivityTypes.  User must select at least one
+            ActivityType.  The ViewModel will maintain a list of
+            ActivityTypes as selected by the user.
+            
+            The ViewModel contains both a list of possible ActivityTypes (in the
+            activityTypes field) and the array of actually selected ActivityTypes
+            in vm.values.types.
+            
+            In order to support data binding, the ActivityType is augmented with
+            a 'checked' property.
+            
+            The desired behavior is to make use of the 'checked' data binding
+            attribute as follows:
+            
+            <input type="checkbox" data-bind="checked: checked" />
+            
+            See the 'activity-types-template' for exact usage.
+            
+            However, checking/unchecking needes to result in an ActivityType
+            being added/removed from the Activity.values.types array.
+            
+            To accomplish this, we use a computed observable that has split
+            read and write behavior.  A Read results in interrogating the
+            Activity.values.types array for the existence of a typeId. A
+            write will either add or remove a typeId depending upon checked
+            state.
+            
+            Due to the use of computed observable array (activityTypes) we need to
+            create a closure in order to capture state of array index/element.
+            */
+            Activity.prototype.defHasActivityTypeCallback = function (activityTypeIndex) {
+                var _this = this;
+                var def = {
+                    read: function () {
+                        return _this.hasActivityType(_this.activityTypes()[activityTypeIndex].id());
+                    },
+                    write: function (checked) {
+                        if (checked) {
+                            _this.addActivityType(_this.activityTypes()[activityTypeIndex].id());
+                        } else {
+                            _this.removeActivityType(_this.activityTypes()[activityTypeIndex].id());
+                        }
+                    },
+                    owner: this
+                };
+
+                return def;
             };
 
             Activity.prototype.addActivityType = function (activityTypeId) {
@@ -598,59 +677,8 @@ var ViewModels;
                 return this.getActivityTypeIndexById(activityTypeId) != -1;
             };
 
-            /*
-            ActivityTypes Theory of Operation:
-            
-            Challenge: Present user with a checkbox for each ActivityType as defined
-            by EmployeeActivityTypes.  User must select at least one
-            ActivityType.  The ViewModel will maintain a list of
-            ActivityTypes as selected by the user.
-            
-            The ViewModel contains both a list of possible ActivityTypes (in the
-            activityTypes field) and the array of actually selected ActivityTypes
-            in vm.values.types.
-            
-            In order to support data binding, the ActivityType is augmented with
-            a 'checked' property.
-            
-            The desired behavior is to make use of the 'checked' data binding
-            attribute as follows:
-            
-            <input type='checkbox' data-bind='checked: checked'/>
-            
-            See the 'activity-types-template' for exact usage.
-            
-            However, checking/unchecking needes to result in an ActivityType
-            being added/removed from the Activity.values.types array.
-            
-            To accomplish this, we use a computed observable that has split
-            read and write behavior.  A Read results in interrogating the
-            Activity.values.types array for the existence of a typeId. A
-            write will either add or remove a typeId depending upon checked
-            state.
-            
-            Due to the use of computed observable array (activityTypes) we need to
-            create a closure in order to capture state of array index/element.
-            */
-            Activity.prototype.defHasActivityTypeCallback = function (activityTypeIndex) {
-                var _this = this;
-                var def = {
-                    read: function () {
-                        return _this.hasActivityType(_this.activityTypes()[activityTypeIndex].id());
-                    },
-                    write: function (checked) {
-                        if (checked) {
-                            _this.addActivityType(_this.activityTypes()[activityTypeIndex].id());
-                        } else {
-                            _this.removeActivityType(_this.activityTypes()[activityTypeIndex].id());
-                        }
-                    },
-                    owner: this
-                };
-
-                return def;
-            };
-
+            //#endregion
+            //#region Tags
             Activity.prototype.addTag = function (item, event) {
                 var newText = null;
                 var domainTypeText = 'Custom';
@@ -701,6 +729,8 @@ var ViewModels;
                 return ((this.values.tags().length > 0) && (i < this.values.tags().length)) ? i : -1;
             };
 
+            //#endregion
+            //#region Documents
             Activity.prototype._loadDocuments = function () {
                 var _this = this;
                 $.ajax({
@@ -829,6 +859,10 @@ var ViewModels;
                         });
                     }
                 });
+            };
+
+            Activity.prototype.dismissFileUploadError = function (index) {
+                this.fileUploadErrors.splice(index, 1);
             };
             Activity.iconMaxSide = 64;
             return Activity;

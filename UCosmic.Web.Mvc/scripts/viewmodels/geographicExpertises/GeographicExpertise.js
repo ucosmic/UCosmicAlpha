@@ -12,8 +12,6 @@ var ViewModels;
     (function (GeographicExpertises) {
         var GeographicExpertise = (function () {
             function GeographicExpertise(expertiseId) {
-                /* Initialization errors. */
-                this.inititializationErrors = "";
                 /* True if any field changes. */
                 this.dirtyFlag = ko.observable(false);
                 this.initialLocations = [];

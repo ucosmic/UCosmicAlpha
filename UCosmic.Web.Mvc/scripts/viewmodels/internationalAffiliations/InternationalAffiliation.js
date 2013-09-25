@@ -12,8 +12,6 @@ var ViewModels;
     (function (InternationalAffiliations) {
         var InternationalAffiliation = (function () {
             function InternationalAffiliation(affiliationId) {
-                /* Initialization errors. */
-                this.inititializationErrors = "";
                 /* True if any field changes. */
                 this.dirtyFlag = ko.observable(false);
                 this.initialLocations = [];

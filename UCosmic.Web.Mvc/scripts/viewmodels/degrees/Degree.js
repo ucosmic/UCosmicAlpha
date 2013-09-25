@@ -13,8 +13,6 @@ var ViewModels;
     (function (Degrees) {
         var Degree = (function () {
             function Degree(educationId) {
-                /* Initialization errors. */
-                this.inititializationErrors = "";
                 /* True if any field changes. */
                 this.dirtyFlag = ko.observable(false);
                 this._initialize(educationId);

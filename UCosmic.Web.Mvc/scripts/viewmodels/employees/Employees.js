@@ -57,8 +57,6 @@ var ViewModels;
 
         var FacultyAndStaff = (function () {
             function FacultyAndStaff(institutionInfo) {
-                /* Initialization errors. */
-                this.inititializationErrors = "";
                 /* If you add or remove from this list, also look at _getHeatmapActivityDataTable()
                 and _getHeatmapPeopleDataTable() to update the custom place tooltips text. */
                 this.geochartCustomPlaces = [

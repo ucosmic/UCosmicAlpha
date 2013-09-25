@@ -56,9 +56,6 @@ module ViewModels.Employees {
         google: any;
         sammy: Sammy.Application;
 
-        /* Initialization errors. */
-        inititializationErrors: string = "";
-
         /* True if any field changes. */
         ///dirtyFlag: KnockoutObservable<boolean> = ko.observable(false);
 

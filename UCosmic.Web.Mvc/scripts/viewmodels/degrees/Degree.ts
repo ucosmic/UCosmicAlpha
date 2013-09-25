@@ -12,9 +12,6 @@
 module ViewModels.Degrees {
 
     export class Degree implements Service.ApiModels.Degree.IObservableDegree {
-        /* Initialization errors. */
-        inititializationErrors: string = "";
-
         /* True if any field changes. */
         dirtyFlag: KnockoutObservable<boolean> = ko.observable( false );
 

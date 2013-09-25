@@ -11,9 +11,6 @@
 module ViewModels.GeographicExpertises {
 
     export class GeographicExpertise {
-        /* Initialization errors. */
-        inititializationErrors: string = "";
-
         /* True if any field changes. */
         dirtyFlag: KnockoutObservable<boolean> = ko.observable( false );
 
