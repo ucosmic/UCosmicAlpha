@@ -20,8 +20,9 @@ module ViewModels.Activities {
         /* Array of all locations offered in Country/Location multiselect. */
         locations: KnockoutObservableArray<any> = ko.observableArray();
 
-        /* Array of placeIds of selected locations. */
-        selectedLocations: KnockoutObservableArray<any> = ko.observableArray();
+        // Array of placeIds of selected locations, kendo multiselect stores these as strings
+        kendoPlaceIds: KnockoutObservableArray<number> = ko.observableArray();
+        private _currentPlaceIds: number[];
 
         /* Array of activity types displayed as list of checkboxes */
         activityTypes: KnockoutObservableArray<any> = ko.observableArray();
@@ -93,16 +94,74 @@ module ViewModels.Activities {
                 open: function (e) { this.options.format = 'MM/dd/yyyy'; }
             });
 
+            //#region Places kendo multiselect
+
             $('#' + countrySelectorId).kendoMultiSelect({
                 filter: 'contains',
                 ignoreCase: 'true',
                 dataTextField: 'officialName()',
                 dataValueField: 'id()',
                 dataSource: this.locations(),
-                //values: activityViewModel.selectedLocations(), // This doesn't work.  See below.
-                change: (event: any) => { this.updateLocations(event.sender.value()); },
+                value: this.kendoPlaceIds(),
+                dataBound: (e: kendo.ui.MultiSelectEvent): void => {
+                    this._currentPlaceIds = e.sender.value().slice(0);
+                },
+                change: (e: kendo.ui.MultiSelectEvent): void => {
+                    // find out if a place was added or deleted
+                    var newPlaceIds = e.sender.value();
+                    var addedPlaceIds: number[] = $(newPlaceIds).not(this._currentPlaceIds).get();
+                    var removedPlaceIds: number[] = $(this._currentPlaceIds).not(newPlaceIds).get();
+
+                    if (addedPlaceIds.length === 1) {
+                        var addedPlaceId = addedPlaceIds[0];
+                        var url = $('#place_put_url_format').text()
+                            .format(this.id(), addedPlaceId);
+                        $.ajax({
+                            type: 'PUT',
+                            url: url,
+                            async: false
+                        })
+                            .done((): void => {
+                                this._currentPlaceIds.push(addedPlaceId);
+                            })
+                            .fail((xhr: JQueryXHR): void => { // remove from ui
+                                App.Failures.message(xhr, 'while trying to add this location, please try again', true);
+                                var restored = this._currentPlaceIds.slice(0);
+                                e.sender.dataSource.filter({});
+                                e.sender.value(restored);
+                                this._currentPlaceIds = restored;
+                            });
+                    }
+
+                    else if (removedPlaceIds.length === 1) {
+                        var removedPlaceId = removedPlaceIds[0];
+                        var url = $('#place_delete_url_format').text()
+                            .format(this.id(), removedPlaceId);
+                        $.ajax({
+                            type: 'DELETE',
+                            url: url,
+                            async: false
+                        })
+                            .done((): void => {
+                                var index = $.inArray(removedPlaceId, this._currentPlaceIds);
+                                this._currentPlaceIds.splice(index, 1);
+                            })
+                            .fail((xhr: JQueryXHR): void => { // add back to ui
+                                App.Failures.message(xhr, 'while trying to remove this location, please try again', true);
+                                e.sender.value(this._currentPlaceIds);
+                            });
+                    }
+
+                    this.values.locations.removeAll();
+                    for (var i = 0; i < this._currentPlaceIds.length; i++) {
+                        var location = ko.mapping.fromJS({ id: 0, placeId: this._currentPlaceIds[i], version: '' });
+                        this.values.locations.push(location);
+                    }
+                },
                 placeholder: '[Select Country/Location, Body of Water or Global]'
             });
+
+            //#endregion
 
             var invalidFileNames: string[] = [];
             $('#' + uploadFileId).kendoUpload({
@@ -335,7 +394,7 @@ module ViewModels.Activities {
 
                     /* Initialize the list of selected locations with current locations in values. */
                     for (var i = 0; i < this.values.locations().length; i += 1) {
-                        this.selectedLocations.push(this.values.locations()[i].placeId());
+                        this.kendoPlaceIds.push(this.values.locations()[i].placeId());
                     }
 
                     /* Check the activity types checkboxes if the activity type exists in values. */
@@ -648,16 +707,6 @@ module ViewModels.Activities {
             };
 
             return def;
-        }
-
-        // Rebuild values.location with supplied (non-observable) array.
-        updateLocations(locations: Array): void {
-            this.values.locations.removeAll();
-            for (var i = 0; i < locations.length; i += 1) {
-                var location = ko.mapping.fromJS({ id: 0, placeId: locations[i], version: '' });
-                this.values.locations.push(location);
-            }
-            this.dirtyFlag(true);
         }
 
         addTag(item: any, event: Event): void {

@@ -17,8 +17,8 @@ var ViewModels;
                 this.ready = ko.observable(false);
                 /* Array of all locations offered in Country/Location multiselect. */
                 this.locations = ko.observableArray();
-                /* Array of placeIds of selected locations. */
-                this.selectedLocations = ko.observableArray();
+                // Array of placeIds of selected locations, kendo multiselect stores these as strings
+                this.kendoPlaceIds = ko.observableArray();
                 /* Array of activity types displayed as list of checkboxes */
                 this.activityTypes = ko.observableArray();
                 /* Data bound to new tag textArea */
@@ -69,19 +69,65 @@ var ViewModels;
                     }
                 });
 
+                //#region Places kendo multiselect
                 $('#' + countrySelectorId).kendoMultiSelect({
                     filter: 'contains',
                     ignoreCase: 'true',
                     dataTextField: 'officialName()',
                     dataValueField: 'id()',
                     dataSource: this.locations(),
-                    //values: activityViewModel.selectedLocations(), // This doesn't work.  See below.
-                    change: function (event) {
-                        _this.updateLocations(event.sender.value());
+                    value: this.kendoPlaceIds(),
+                    dataBound: function (e) {
+                        _this._currentPlaceIds = e.sender.value().slice(0);
+                    },
+                    change: function (e) {
+                        // find out if a place was added or deleted
+                        var newPlaceIds = e.sender.value();
+                        var addedPlaceIds = $(newPlaceIds).not(_this._currentPlaceIds).get();
+                        var removedPlaceIds = $(_this._currentPlaceIds).not(newPlaceIds).get();
+
+                        if (addedPlaceIds.length === 1) {
+                            var addedPlaceId = addedPlaceIds[0];
+                            var url = $('#place_put_url_format').text().format(_this.id(), addedPlaceId);
+                            $.ajax({
+                                type: 'PUT',
+                                url: url,
+                                async: false
+                            }).done(function () {
+                                _this._currentPlaceIds.push(addedPlaceId);
+                            }).fail(function (xhr) {
+                                App.Failures.message(xhr, 'while trying to add this location, please try again', true);
+                                var restored = _this._currentPlaceIds.slice(0);
+                                e.sender.dataSource.filter({});
+                                e.sender.value(restored);
+                                _this._currentPlaceIds = restored;
+                            });
+                        } else if (removedPlaceIds.length === 1) {
+                            var removedPlaceId = removedPlaceIds[0];
+                            var url = $('#place_delete_url_format').text().format(_this.id(), removedPlaceId);
+                            $.ajax({
+                                type: 'DELETE',
+                                url: url,
+                                async: false
+                            }).done(function () {
+                                var index = $.inArray(removedPlaceId, _this._currentPlaceIds);
+                                _this._currentPlaceIds.splice(index, 1);
+                            }).fail(function (xhr) {
+                                App.Failures.message(xhr, 'while trying to remove this location, please try again', true);
+                                e.sender.value(_this._currentPlaceIds);
+                            });
+                        }
+
+                        _this.values.locations.removeAll();
+                        for (var i = 0; i < _this._currentPlaceIds.length; i++) {
+                            var location = ko.mapping.fromJS({ id: 0, placeId: _this._currentPlaceIds[i], version: '' });
+                            _this.values.locations.push(location);
+                        }
                     },
                     placeholder: '[Select Country/Location, Body of Water or Global]'
                 });
 
+                //#endregion
                 var invalidFileNames = [];
                 $('#' + uploadFileId).kendoUpload({
                     multiple: true,
@@ -303,7 +349,7 @@ var ViewModels;
                     }
 
                     for (var i = 0; i < _this.values.locations().length; i += 1) {
-                        _this.selectedLocations.push(_this.values.locations()[i].placeId());
+                        _this.kendoPlaceIds.push(_this.values.locations()[i].placeId());
                     }
 
                     for (var i = 0; i < _this.activityTypes().length; i += 1) {
@@ -603,16 +649,6 @@ var ViewModels;
                 };
 
                 return def;
-            };
-
-            // Rebuild values.location with supplied (non-observable) array.
-            Activity.prototype.updateLocations = function (locations) {
-                this.values.locations.removeAll();
-                for (var i = 0; i < locations.length; i += 1) {
-                    var location = ko.mapping.fromJS({ id: 0, placeId: locations[i], version: '' });
-                    this.values.locations.push(location);
-                }
-                this.dirtyFlag(true);
             };
 
             Activity.prototype.addTag = function (item, event) {

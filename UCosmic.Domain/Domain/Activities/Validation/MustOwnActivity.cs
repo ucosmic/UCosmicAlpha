@@ -38,7 +38,7 @@ namespace UCosmic.Domain.Activities
         {
             var principal = (IPrincipal)context.PropertyValue;
             var userName = principal.Identity.Name;
-            var activity = _activity != null ? _activity((T) context.Instance) : null;
+            var activity = _activity != null ? _activity((T)context.Instance) : null;
             if (activity == null)
             {
                 var activityId = _activityId((T)context.Instance);
@@ -73,7 +73,7 @@ namespace UCosmic.Domain.Activities
         }
 
         public static IRuleBuilderOptions<T, IPrincipal> MustOwnActivity<T>
-        (this IRuleBuilder<T, IPrincipal> ruleBuilder, IProcessQueries queryProcessor, Func<T, Activity> activity)
+            (this IRuleBuilder<T, IPrincipal> ruleBuilder, IProcessQueries queryProcessor, Func<T, Activity> activity)
         {
             return ruleBuilder.SetValidator(new MustOwnActivity<T>(queryProcessor, activity));
         }

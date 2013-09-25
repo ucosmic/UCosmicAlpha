@@ -290,6 +290,7 @@
     <Compile Include="ApiControllers\Activities\ActivitiesController.cs" />
     <Compile Include="ApiControllers\Activities\ActivityElementsController.cs" />
     <Compile Include="ApiControllers\Activities\ActivityDocumentsController.cs" />
+    <Compile Include="ApiControllers\Activities\ActivityPlacesController.cs" />
     <Compile Include="ApiControllers\Agreements\AgreementsController.cs" />
     <Compile Include="ApiControllers\Agreements\AgreementSettingsController.cs" />
     <Compile Include="ApiControllers\Agreements\AgreementContactsController.cs" />
@@ -1545,6 +1546,9 @@
     <Content Include="scripts\ko\knockout-2.3.0.js" />
     <Content Include="scripts\ko\knockout.mapping-latest.debug.js" />
     <Content Include="scripts\ko\knockout.mapping-latest.js" />
+    <None Include="scripts\oss\linq-vsdoc.js" />
+    <Content Include="scripts\oss\linq.js" />
+    <Content Include="scripts\oss\linq.min.js" />
     <Content Include="scripts\require\requireConfig_debug.js" />
     <Content Include="scripts\require\requireConfig.js" />
     <TypeScriptCompile Include="scripts\app\App.ts" />
@@ -1873,6 +1877,9 @@
     <None Include="scripts\typings\tinymce\tinymce.d.ts" />
     <Content Include="scripts\typings\jquery\jquery.d.ts" />
     <Content Include="scripts\typings\knockout\knockout.d.ts" />
+    <Content Include="scripts\typings\linq\linq.3.0.3-Beta4.d.ts" />
+    <Content Include="scripts\typings\linq\linq.d.ts" />
+    <Content Include="scripts\typings\linq\linq.jquery.d.ts" />
     <Content Include="scripts\viewmodels\agreements\AgreementVM.js">
       <DependentUpon>AgreementVM.ts</DependentUpon>
     </Content>
