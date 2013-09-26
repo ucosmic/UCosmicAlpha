@@ -6,6 +6,7 @@
 /// <reference path="../../typings/kendo/kendo.all.d.ts" />
 /// <reference path="../../typings/tinymce/tinymce.d.ts" />
 /// <reference path="../../typings/moment/moment.d.ts" />
+/// <reference path="../../typings/linq/linq.d.ts" />
 /// <reference path="../../app/Routes.ts" />
 /// <reference path="../../app/Spinner.ts" />
 /// <reference path="../activities/ServiceApiModel.d.ts" />
@@ -27,6 +28,7 @@ module ViewModels.Activities {
         private _currentPlaceIds: number[];
 
         // Array of activity types displayed as list of checkboxes
+        //activityTypes: KnockoutObservableArray<any> = ko.observableArray();
         activityTypes: KnockoutObservableArray<any> = ko.observableArray();
 
         // Data bound to new tag textArea
@@ -87,7 +89,7 @@ module ViewModels.Activities {
         load(): JQueryDeferred<void> {
             var deferred: JQueryDeferred<void> = $.Deferred();
 
-            //#region load places dropdown, module settings, and activity work copy
+            //#region load places dropdown, module types, and activity work copy
 
             var locationsPact = $.Deferred();
             $.get(App.Routes.WebApi.Activities.Locations.get())
@@ -120,19 +122,13 @@ module ViewModels.Activities {
             ;
 
             //#endregion
+            //#region process after all have been loaded
 
-            // only process after all requests have been resolved
             $.when(typesPact, locationsPact, dataPact)
                 .done((types: Service.ApiModels.IEmployeeActivityType[],
                     locations: Service.ApiModels.IActivityLocation[],
                     data: Service.ApiModels.IObservableActivity): void => {
 
-                    //#region populate lookup lists
-
-                    this.activityTypes = ko.mapping.fromJS(types);
-                    this.locations = ko.mapping.fromJS(locations);
-
-                    //#endregion
                     //#region populate activity data
 
                     // Although the MVC DateTime to JSON serializer will output an ISO compatible
@@ -165,17 +161,22 @@ module ViewModels.Activities {
                     ko.mapping.fromJS(data, mapping, this);
 
                     //#endregion
-                    //#region initialize selected place id's and checked activity types
+                    //#region populate places multiselect
 
-                    /* Initialize the list of selected locations with current locations in values. */
-                    for (var i = 0; i < this.values.locations().length; i += 1) {
-                        this.kendoPlaceIds.push(this.values.locations()[i].placeId());
-                    }
+                    // map places multiselect datasource to locations
+                    this.locations = ko.mapping.fromJS(locations);
 
-                    /* Check the activity types checkboxes if the activity type exists in values. */
-                    for (var i = 0; i < this.activityTypes().length; i += 1) {
-                        this.activityTypes()[i].checked = ko.computed(this.defHasActivityTypeCallback(i));
-                    }
+                    // Initialize the list of selected locations with current locations in values
+                    var currentPlaceIds = Enumerable.From(this.values.locations())
+                        .Select(function (x): any {
+                            return x.placeId();
+                        }).ToArray();
+                    this.kendoPlaceIds(currentPlaceIds.slice(0));
+
+                    //#endregion
+                    //#region populate type checkboxes
+
+                    this._populateTypes(types);
 
                     //#endregion
 
@@ -184,6 +185,8 @@ module ViewModels.Activities {
                 .fail((xhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
                     deferred.reject(xhr, textStatus, errorThrown);
                 });
+
+            //#endregion
 
             return deferred;
         }
@@ -418,7 +421,8 @@ module ViewModels.Activities {
 
             this.values.title.extend({ required: true, minLength: 1, maxLength: 500 });
             this.values.locations.extend({ atLeast: 1 });
-            this.values.types.extend({ atLeast: 1 });
+            if (this.activityTypes().length)
+                this.values.types.extend({ atLeast: 1 });
             this.values.startsOn.extend({ nullSafeDate: { message: 'Start date must valid.' } });
             this.values.endsOn.extend({ nullSafeDate: { message: 'End date must valid.' } });
         }
@@ -435,7 +439,7 @@ module ViewModels.Activities {
             this.values.onGoing.subscribe((newValue: any): void => { this.dirtyFlag(true); });
             this.values.wasExternallyFunded.subscribe((newValue: any): void => { this.dirtyFlag(true); });
             this.values.wasInternallyFunded.subscribe((newValue: any): void => { this.dirtyFlag(true); });
-            this.values.types.subscribe((newValue: any): void => { this.dirtyFlag(true); });
+            //this.values.types.subscribe((newValue: any): void => { this.dirtyFlag(true); });
         }
 
         //#endregion
@@ -653,99 +657,80 @@ module ViewModels.Activities {
         //#endregion
         //#region Types
 
-        /*
-            ActivityTypes Theory of Operation:
-    
-            Challenge: Present user with a checkbox for each ActivityType as defined
-                                    by EmployeeActivityTypes.  User must select at least one
-                                    ActivityType.  The ViewModel will maintain a list of
-                                    ActivityTypes as selected by the user.
-    
-            The ViewModel contains both a list of possible ActivityTypes (in the
-            activityTypes field) and the array of actually selected ActivityTypes
-            in vm.values.types.
-    
-            In order to support data binding, the ActivityType is augmented with
-            a 'checked' property.
-    
-            The desired behavior is to make use of the 'checked' data binding
-            attribute as follows:
-    
-            <input type="checkbox" data-bind="checked: checked" />
-    
-            See the 'activity-types-template' for exact usage.
-    
-            However, checking/unchecking needes to result in an ActivityType
-            being added/removed from the Activity.values.types array.
-    
-            To accomplish this, we use a computed observable that has split
-            read and write behavior.  A Read results in interrogating the
-            Activity.values.types array for the existence of a typeId. A
-            write will either add or remove a typeId depending upon checked
-            state.
-    
-            Due to the use of computed observable array (activityTypes) we need to
-            create a closure in order to capture state of array index/element.
-        */
-        defHasActivityTypeCallback(activityTypeIndex: number): KnockoutComputedDefine<boolean> {
-            var def: KnockoutComputedDefine<boolean> = {
-                read: (): boolean => {
-                    return this.hasActivityType(this.activityTypes()[activityTypeIndex].id());
-                },
-                write: (checked: boolean) => {
-                    if (checked) {
-                        this.addActivityType(this.activityTypes()[activityTypeIndex].id());
-                    } else {
-                        this.removeActivityType(this.activityTypes()[activityTypeIndex].id());
-                    }
-                },
-                owner: this
-            };
-
-            return def;
-        }
-
-        addActivityType(activityTypeId: number): void {
-            var existingIndex: number = this.getActivityTypeIndexById(activityTypeId);
-            if (existingIndex == -1) {
-                var newActivityType: KnockoutObservable<any> = ko.mapping.fromJS({ id: 0, typeId: activityTypeId, version: '' });
-                this.values.types.push(newActivityType);
-            }
-        }
-
-        removeActivityType(activityTypeId: number): void {
-            var existingIndex: number = this.getActivityTypeIndexById(activityTypeId);
-            if (existingIndex != -1) {
-                var activityType = this.values.types()[existingIndex];
-                this.values.types.remove(activityType);
-            }
-        }
-
-        getTypeName(id: number): string {
-            var name: string = '';
-            var index: number = this.getActivityTypeIndexById(id);
-            if (index != -1) { name = this.activityTypes[index].type; }
-            return name;
-        }
-
-        getActivityTypeIndexById(activityTypeId: number): number {
-            var index: number = -1;
-
-            if ((this.values.types != null) && (this.values.types().length > 0)) {
-                var i = 0;
-                while ((i < this.values.types().length) &&
-                    (activityTypeId != this.values.types()[i].typeId())) { i += 1 }
-
-                if (i < this.values.types().length) {
-                    index = i;
+        private _populateTypes(types: Service.ApiModels.IEmployeeActivityType[]): void {
+            var typesMapping = {
+                create: (options: any): any => {
+                    var checkBox = new ActivityTypeCheckBox(options);
+                    var isChecked = Enumerable.From(this.values.types())
+                        .Any(function (x: any): boolean {
+                            return x.typeId() == checkBox.id;
+                        });
+                    checkBox.checked(isChecked);
+                    checkBox.checked.subscribe((newValue: boolean): void => {
+                        if (newValue) this._addType(checkBox);
+                        else this._removeType(checkBox);
+                    });
+                    return checkBox;
                 }
-            }
-
-            return index;
+            };
+            ko.mapping.fromJS(types, typesMapping, this.activityTypes);
         }
 
-        hasActivityType(activityTypeId: number): boolean {
-            return this.getActivityTypeIndexById(activityTypeId) != -1;
+        private _addType(checkBox: ActivityTypeCheckBox): void {
+            var needsAdded = Enumerable.From(this.values.types())
+                .All(function (x): boolean {
+                    return x.typeId() != checkBox.id;
+                });
+            if (needsAdded) {
+                var url = $('#type_put_url_format').text().format(this.id(), checkBox.id);
+                $.ajax({
+                    url: url,
+                    type: 'PUT',
+                    async: false
+                })
+                    .done((): void => {
+                        this.values.types.push({
+                            id: ko.observable(0),
+                            typeId: ko.observable(checkBox.id),
+                            version: ko.observable('')
+                        });
+                    })
+                    .fail((xhr: JQueryXHR): void => {
+                        App.Failures.message(xhr, 'while trying to add this activity type, please try again', true);
+                        setTimeout(function () {
+                            checkBox.checked(!checkBox.checked());
+                        }, 0);
+                    });
+            }
+        }
+
+        private _removeType(checkBox: ActivityTypeCheckBox): void {
+            var needsRemoved = Enumerable.From(this.values.types())
+                .Any(function (x): boolean {
+                    return x.typeId() == checkBox.id;
+                });
+            if (needsRemoved) {
+                var url = $('#type_delete_url_format').text()
+                    .format(this.id(), checkBox.id);
+                $.ajax({
+                    url: url,
+                    type: 'DELETE',
+                    async: false
+                })
+                    .done((): void => {
+                        var type = Enumerable.From(this.values.types())
+                            .Single(function (x: any): boolean {
+                                return x.typeId() == checkBox.id;
+                            });
+                        this.values.types.remove(type);
+                    })
+                    .fail((xhr: JQueryXHR): void => {
+                        App.Failures.message(xhr, 'while trying to remove this activity type, please try again', true);
+                        setTimeout(function () {
+                            checkBox.checked(!checkBox.checked());
+                        }, 0);
+                    });
+            }
         }
 
         //#endregion
@@ -936,5 +921,17 @@ module ViewModels.Activities {
         }
 
         //#endregion
+    }
+
+    export class ActivityTypeCheckBox {
+
+        checked: KnockoutObservable<boolean> = ko.observable(false);
+        text: string;
+        id: number;
+
+        constructor(mappingOptions: any) {
+            this.text = mappingOptions.data.type;
+            this.id = mappingOptions.data.id;
+        }
     }
 }

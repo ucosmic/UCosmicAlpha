@@ -291,7 +291,7 @@
                                     <td>
                                         <!-- Need this div for the validation message to display. -->
                                         <div>
-                                            <ul class="data-items" data-bind="template: { name: 'activity-types-template', foreach: activityTypes() }" />
+                                            <ul class="data-items" data-bind="template: { name: 'activity-types-template', foreach: activityTypes }" />
                                         </div>
                                         <span data-bind="validationMessage: values.types" class="validationMessage"></span>
                                     </td>
@@ -471,9 +471,21 @@
                                 {
                                     placeDeleteUrlFormat = placeDeleteUrlFormat.Replace("0", "{0}").Replace("1", "{1}");
                                 }
+                                var typePutUrlFormat = Url.HttpRouteUrl(null, new { controller = "ActivityTypes", action = "Put", activityId = 0, activityTypeId = 1 });
+                                if (typePutUrlFormat != null)
+                                {
+                                    typePutUrlFormat = typePutUrlFormat.Replace("0", "{0}").Replace("1", "{1}");
+                                }
+                                var typeDeleteUrlFormat = Url.HttpRouteUrl(null, new { controller = "ActivityTypes", action = "Delete", activityId = 0, activityTypeId = 1 });
+                                if (typeDeleteUrlFormat != null)
+                                {
+                                    typeDeleteUrlFormat = typeDeleteUrlFormat.Replace("0", "{0}").Replace("1", "{1}");
+                                }
                             }
                             <span id="place_put_url_format">@placePutUrlFormat</span>
                             <span id="place_delete_url_format">@placeDeleteUrlFormat</span>
+                            <span id="type_put_url_format">@typePutUrlFormat</span>
+                            <span id="type_delete_url_format">@typeDeleteUrlFormat</span>
                         </div>
                     </div>
                 </div>
@@ -520,7 +532,7 @@
 <script type="text/html" id="activity-types-template">
     <li>
         <label>
-            <input type="checkbox" style="margin-right: 4px; margin-left: 4px" data-bind="checked: checked" /><span data-bind="    text: type()"></span>
+            <input type="checkbox" style="margin-right: 4px; margin-left: 4px" data-bind="checked: checked" /><span data-bind="    text: text"></span>
         </label>
     </li>
 </script>

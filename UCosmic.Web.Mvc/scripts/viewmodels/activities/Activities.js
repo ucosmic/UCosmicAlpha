@@ -147,23 +147,6 @@ var ViewModels;
                 return App.Routes.Mvc.My.Profile.activityEdit(id);
             };
 
-            ActivityList.prototype.getTypeName = function (id) {
-                var typeName = '';
-
-                if (this.activityTypesList != null) {
-                    var i = 0;
-                    while ((i < this.activityTypesList.length) && (id != this.activityTypesList[i].id)) {
-                        i += 1;
-                    }
-
-                    if (i < this.activityTypesList.length) {
-                        typeName = this.activityTypesList[i].type;
-                    }
-                }
-
-                return typeName;
-            };
-
             ActivityList.prototype.getLocationName = function (id) {
                 var locationName = '';
 

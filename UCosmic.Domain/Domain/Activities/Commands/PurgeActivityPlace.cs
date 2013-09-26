@@ -19,12 +19,11 @@ namespace UCosmic.Domain.Activities
         public IPrincipal Principal { get; private set; }
         public int ActivityId { get; private set; }
         public int PlaceId { get; set; }
-        public ActivityLocation Created { get; internal set; }
     }
 
     public class ValidatePurgeActivityPlaceCommand : AbstractValidator<PurgeActivityPlace>
     {
-        public ValidatePurgeActivityPlaceCommand(IProcessQueries queryProcessor, IQueryEntities entities)
+        public ValidatePurgeActivityPlaceCommand(IProcessQueries queryProcessor)
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
 

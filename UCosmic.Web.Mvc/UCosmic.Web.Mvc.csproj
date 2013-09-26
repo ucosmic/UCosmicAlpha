@@ -291,6 +291,7 @@
     <Compile Include="ApiControllers\Activities\ActivityElementsController.cs" />
     <Compile Include="ApiControllers\Activities\ActivityDocumentsController.cs" />
     <Compile Include="ApiControllers\Activities\ActivityPlacesController.cs" />
+    <Compile Include="ApiControllers\Activities\ActivityTypesController.cs" />
     <Compile Include="ApiControllers\Agreements\AgreementsController.cs" />
     <Compile Include="ApiControllers\Agreements\AgreementSettingsController.cs" />
     <Compile Include="ApiControllers\Agreements\AgreementContactsController.cs" />

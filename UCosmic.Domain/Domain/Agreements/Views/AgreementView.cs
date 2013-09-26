@@ -1,5 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace UCosmic.Domain.Agreements

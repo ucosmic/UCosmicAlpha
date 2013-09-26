@@ -122,6 +122,8 @@
     <Compile Include="Api\_Extensions\StringExtensions.cs" />
     <Compile Include="Api\Validation\MustBeWellFormedUrl.cs" />
     <Compile Include="Api\Validation\MustNotContainUrlProtocol.cs" />
+    <Compile Include="Domain\Activities\Commands\AddActivityType.cs" />
+    <Compile Include="Domain\Activities\Commands\RemoveActivityType.cs" />
     <Compile Include="Domain\Activities\Commands\PurgeActivityPlace.cs" />
     <Compile Include="Domain\Activities\Commands\CreateActivityPlace.cs" />
     <Compile Include="Domain\Activities\Commands\MoveActivityDocuments.cs" />
@@ -167,6 +169,8 @@
     <Compile Include="Domain\Activities\Queries\ActivityDocumentById.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityDocumentsByActivityIdAndMode.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityDocumentsByValuesId.cs" />
+    <Compile Include="Domain\Activities\Validation\MustBeActivityTypeForPrincipal.cs" />
+    <Compile Include="Domain\Activities\Validation\MustNotBeDuplicateActivityType.cs" />
     <Compile Include="Domain\Activities\Validation\MustNotBeDuplicateActivityPlace.cs" />
     <Compile Include="Domain\Activities\Validation\MustHaveValuesForMode.cs" />
     <Compile Include="Domain\Activities\Views\ActivityViewProjector.cs" />

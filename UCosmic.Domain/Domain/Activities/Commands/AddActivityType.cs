@@ -4,13 +4,12 @@ using System.Linq.Expressions;
 using System.Security.Principal;
 using FluentValidation;
 using UCosmic.Domain.Identity;
-using UCosmic.Domain.Places;
 
 namespace UCosmic.Domain.Activities
 {
-    public class CreateActivityPlace
+    public class AddActivityType
     {
-        public CreateActivityPlace(IPrincipal principal, int activityId)
+        public AddActivityType(IPrincipal principal, int activityId)
         {
             if (principal == null) throw new ArgumentNullException("principal");
             Principal = principal;
@@ -19,12 +18,12 @@ namespace UCosmic.Domain.Activities
 
         public IPrincipal Principal { get; private set; }
         public int ActivityId { get; private set; }
-        public int PlaceId { get; set; }
+        public int ActivityTypeId { get; set; }
     }
 
-    public class ValidateCreateActivityPlaceCommand : AbstractValidator<CreateActivityPlace>
+    public class ValidateAddActivityTypeCommand : AbstractValidator<AddActivityType>
     {
-        public ValidateCreateActivityPlaceCommand(IProcessQueries queryProcessor, IQueryEntities entities)
+        public ValidateAddActivityTypeCommand(IProcessQueries queryProcessor, IQueryEntities entities)
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
@@ -37,36 +36,37 @@ namespace UCosmic.Domain.Activities
                 .MustOwnActivity(queryProcessor, x => x.ActivityId)
             ;
 
-            RuleFor(x => x.PlaceId)
-                .MustFindPlaceById(entities)
-                .MustNotBeDuplicateActivityPlace(queryProcessor, x => x.ActivityId)
+            RuleFor(x => x.ActivityTypeId)
+                .MustFindActivityTypeById(entities)
+                .MustBeActivityTypeForPrincipal(queryProcessor, x => x.Principal)
+                .MustNotBeDuplicateActivityType(queryProcessor, x => x.ActivityId)
             ;
         }
     }
 
-    public class HandleCreateActivityPlaceCommand : IHandleCommands<CreateActivityPlace>
+    public class HandleAddActivityTypeCommand : IHandleCommands<AddActivityType>
     {
         private readonly ICommandEntities _entities;
 
-        public HandleCreateActivityPlaceCommand(ICommandEntities entities)
+        public HandleAddActivityTypeCommand(ICommandEntities entities)
         {
             _entities = entities;
         }
 
-        public void Handle(CreateActivityPlace command)
+        public void Handle(AddActivityType command)
         {
             if (command == null) throw new ArgumentNullException("command");
 
             var activity = _entities.Get<Activity>()
                 .EagerLoad(_entities, new Expression<Func<Activity, object>>[]
                 {
-                    x => x.Values.Select(y => y.Locations),
+                    x => x.Values.Select(y => y.Types),
                 })
                 .ById(command.ActivityId, false);
             var values = activity.Values.Single(x => x.Mode == activity.Mode);
-            values.Locations.Add(new ActivityLocation
+            values.Types.Add(new ActivityType
             {
-                PlaceId = command.PlaceId,
+                TypeId = command.ActivityTypeId,
             });
 
             _entities.SaveChanges();

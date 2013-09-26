@@ -8,6 +8,7 @@ var ViewModels;
     /// <reference path="../../typings/kendo/kendo.all.d.ts" />
     /// <reference path="../../typings/tinymce/tinymce.d.ts" />
     /// <reference path="../../typings/moment/moment.d.ts" />
+    /// <reference path="../../typings/linq/linq.d.ts" />
     /// <reference path="../../app/Routes.ts" />
     /// <reference path="../../app/Spinner.ts" />
     /// <reference path="../activities/ServiceApiModel.d.ts" />
@@ -22,6 +23,7 @@ var ViewModels;
                 // Array of placeIds of selected locations, kendo multiselect stores these as strings
                 this.kendoPlaceIds = ko.observableArray();
                 // Array of activity types displayed as list of checkboxes
+                //activityTypes: KnockoutObservableArray<any> = ko.observableArray();
                 this.activityTypes = ko.observableArray();
                 // Data bound to new tag textArea
                 this.newTag = ko.observable();
@@ -56,7 +58,7 @@ var ViewModels;
                 var _this = this;
                 var deferred = $.Deferred();
 
-                //#region load places dropdown, module settings, and activity work copy
+                //#region load places dropdown, module types, and activity work copy
                 var locationsPact = $.Deferred();
                 $.get(App.Routes.WebApi.Activities.Locations.get()).done(function (data) {
                     locationsPact.resolve(data);
@@ -79,13 +81,8 @@ var ViewModels;
                 });
 
                 //#endregion
-                // only process after all requests have been resolved
+                //#region process after all have been loaded
                 $.when(typesPact, locationsPact, dataPact).done(function (types, locations, data) {
-                    //#region populate lookup lists
-                    _this.activityTypes = ko.mapping.fromJS(types);
-                    _this.locations = ko.mapping.fromJS(locations);
-
-                    //#endregion
                     //#region populate activity data
                     // Although the MVC DateTime to JSON serializer will output an ISO compatible
                     // string, we are not guarenteed that a browser's Date(string) or Date.parse(string)
@@ -116,13 +113,20 @@ var ViewModels;
 
                     ko.mapping.fromJS(data, mapping, _this);
 
-                    for (var i = 0; i < _this.values.locations().length; i += 1) {
-                        _this.kendoPlaceIds.push(_this.values.locations()[i].placeId());
-                    }
+                    //#endregion
+                    //#region populate places multiselect
+                    // map places multiselect datasource to locations
+                    _this.locations = ko.mapping.fromJS(locations);
 
-                    for (var i = 0; i < _this.activityTypes().length; i += 1) {
-                        _this.activityTypes()[i].checked = ko.computed(_this.defHasActivityTypeCallback(i));
-                    }
+                    // Initialize the list of selected locations with current locations in values
+                    var currentPlaceIds = Enumerable.From(_this.values.locations()).Select(function (x) {
+                        return x.placeId();
+                    }).ToArray();
+                    _this.kendoPlaceIds(currentPlaceIds.slice(0));
+
+                    //#endregion
+                    //#region populate type checkboxes
+                    _this._populateTypes(types);
 
                     //#endregion
                     deferred.resolve();
@@ -130,6 +134,7 @@ var ViewModels;
                     deferred.reject(xhr, textStatus, errorThrown);
                 });
 
+                //#endregion
                 return deferred;
             };
 
@@ -346,7 +351,8 @@ var ViewModels;
 
                 this.values.title.extend({ required: true, minLength: 1, maxLength: 500 });
                 this.values.locations.extend({ atLeast: 1 });
-                this.values.types.extend({ atLeast: 1 });
+                if (this.activityTypes().length)
+                    this.values.types.extend({ atLeast: 1 });
                 this.values.startsOn.extend({ nullSafeDate: { message: 'Start date must valid.' } });
                 this.values.endsOn.extend({ nullSafeDate: { message: 'End date must valid.' } });
             };
@@ -377,9 +383,7 @@ var ViewModels;
                 this.values.wasInternallyFunded.subscribe(function (newValue) {
                     _this.dirtyFlag(true);
                 });
-                this.values.types.subscribe(function (newValue) {
-                    _this.dirtyFlag(true);
-                });
+                //this.values.types.subscribe((newValue: any): void => { this.dirtyFlag(true); });
             };
 
             //#endregion
@@ -578,103 +582,76 @@ var ViewModels;
 
             //#endregion
             //#region Types
-            /*
-            ActivityTypes Theory of Operation:
-            
-            Challenge: Present user with a checkbox for each ActivityType as defined
-            by EmployeeActivityTypes.  User must select at least one
-            ActivityType.  The ViewModel will maintain a list of
-            ActivityTypes as selected by the user.
-            
-            The ViewModel contains both a list of possible ActivityTypes (in the
-            activityTypes field) and the array of actually selected ActivityTypes
-            in vm.values.types.
-            
-            In order to support data binding, the ActivityType is augmented with
-            a 'checked' property.
-            
-            The desired behavior is to make use of the 'checked' data binding
-            attribute as follows:
-            
-            <input type="checkbox" data-bind="checked: checked" />
-            
-            See the 'activity-types-template' for exact usage.
-            
-            However, checking/unchecking needes to result in an ActivityType
-            being added/removed from the Activity.values.types array.
-            
-            To accomplish this, we use a computed observable that has split
-            read and write behavior.  A Read results in interrogating the
-            Activity.values.types array for the existence of a typeId. A
-            write will either add or remove a typeId depending upon checked
-            state.
-            
-            Due to the use of computed observable array (activityTypes) we need to
-            create a closure in order to capture state of array index/element.
-            */
-            Activity.prototype.defHasActivityTypeCallback = function (activityTypeIndex) {
+            Activity.prototype._populateTypes = function (types) {
                 var _this = this;
-                var def = {
-                    read: function () {
-                        return _this.hasActivityType(_this.activityTypes()[activityTypeIndex].id());
-                    },
-                    write: function (checked) {
-                        if (checked) {
-                            _this.addActivityType(_this.activityTypes()[activityTypeIndex].id());
-                        } else {
-                            _this.removeActivityType(_this.activityTypes()[activityTypeIndex].id());
-                        }
-                    },
-                    owner: this
+                var typesMapping = {
+                    create: function (options) {
+                        var checkBox = new ActivityTypeCheckBox(options);
+                        var isChecked = Enumerable.From(_this.values.types()).Any(function (x) {
+                            return x.typeId() == checkBox.id;
+                        });
+                        checkBox.checked(isChecked);
+                        checkBox.checked.subscribe(function (newValue) {
+                            if (newValue)
+                                _this._addType(checkBox);
+else
+                                _this._removeType(checkBox);
+                        });
+                        return checkBox;
+                    }
                 };
-
-                return def;
+                ko.mapping.fromJS(types, typesMapping, this.activityTypes);
             };
 
-            Activity.prototype.addActivityType = function (activityTypeId) {
-                var existingIndex = this.getActivityTypeIndexById(activityTypeId);
-                if (existingIndex == -1) {
-                    var newActivityType = ko.mapping.fromJS({ id: 0, typeId: activityTypeId, version: '' });
-                    this.values.types.push(newActivityType);
+            Activity.prototype._addType = function (checkBox) {
+                var _this = this;
+                var needsAdded = Enumerable.From(this.values.types()).All(function (x) {
+                    return x.typeId() != checkBox.id;
+                });
+                if (needsAdded) {
+                    var url = $('#type_put_url_format').text().format(this.id(), checkBox.id);
+                    $.ajax({
+                        url: url,
+                        type: 'PUT',
+                        async: false
+                    }).done(function () {
+                        _this.values.types.push({
+                            id: ko.observable(0),
+                            typeId: ko.observable(checkBox.id),
+                            version: ko.observable('')
+                        });
+                    }).fail(function (xhr) {
+                        App.Failures.message(xhr, 'while trying to add this activity type, please try again', true);
+                        setTimeout(function () {
+                            checkBox.checked(!checkBox.checked());
+                        }, 0);
+                    });
                 }
             };
 
-            Activity.prototype.removeActivityType = function (activityTypeId) {
-                var existingIndex = this.getActivityTypeIndexById(activityTypeId);
-                if (existingIndex != -1) {
-                    var activityType = this.values.types()[existingIndex];
-                    this.values.types.remove(activityType);
+            Activity.prototype._removeType = function (checkBox) {
+                var _this = this;
+                var needsRemoved = Enumerable.From(this.values.types()).Any(function (x) {
+                    return x.typeId() == checkBox.id;
+                });
+                if (needsRemoved) {
+                    var url = $('#type_delete_url_format').text().format(this.id(), checkBox.id);
+                    $.ajax({
+                        url: url,
+                        type: 'DELETE',
+                        async: false
+                    }).done(function () {
+                        var type = Enumerable.From(_this.values.types()).Single(function (x) {
+                            return x.typeId() == checkBox.id;
+                        });
+                        _this.values.types.remove(type);
+                    }).fail(function (xhr) {
+                        App.Failures.message(xhr, 'while trying to remove this activity type, please try again', true);
+                        setTimeout(function () {
+                            checkBox.checked(!checkBox.checked());
+                        }, 0);
+                    });
                 }
-            };
-
-            Activity.prototype.getTypeName = function (id) {
-                var name = '';
-                var index = this.getActivityTypeIndexById(id);
-                if (index != -1) {
-                    name = this.activityTypes[index].type;
-                }
-                return name;
-            };
-
-            Activity.prototype.getActivityTypeIndexById = function (activityTypeId) {
-                var index = -1;
-
-                if ((this.values.types != null) && (this.values.types().length > 0)) {
-                    var i = 0;
-                    while ((i < this.values.types().length) && (activityTypeId != this.values.types()[i].typeId())) {
-                        i += 1;
-                    }
-
-                    if (i < this.values.types().length) {
-                        index = i;
-                    }
-                }
-
-                return index;
-            };
-
-            Activity.prototype.hasActivityType = function (activityTypeId) {
-                return this.getActivityTypeIndexById(activityTypeId) != -1;
             };
 
             //#endregion
@@ -868,6 +845,16 @@ var ViewModels;
             return Activity;
         })();
         Activities.Activity = Activity;
+
+        var ActivityTypeCheckBox = (function () {
+            function ActivityTypeCheckBox(mappingOptions) {
+                this.checked = ko.observable(false);
+                this.text = mappingOptions.data.type;
+                this.id = mappingOptions.data.id;
+            }
+            return ActivityTypeCheckBox;
+        })();
+        Activities.ActivityTypeCheckBox = ActivityTypeCheckBox;
     })(ViewModels.Activities || (ViewModels.Activities = {}));
     var Activities = ViewModels.Activities;
 })(ViewModels || (ViewModels = {}));
