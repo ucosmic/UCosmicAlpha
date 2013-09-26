@@ -17,8 +17,6 @@
                     <span data-bind="visible: hasManyItems">- <span data-bind="text: lastNumber"></span></span>
                     of <span data-bind="text: itemTotal"></span></strong>
                 <span data-bind="visible: hasManyPages">(page
-                    @*<select class="inline" data-bind="options: pageNumberOptions, value: selectedPageNumber">
-                    </select>*@
                     <span data-bind="text: transitionedPageNumber"></span>
                     of <span data-bind="text: pageCount"></span>)</span>
             </p>
@@ -39,17 +37,30 @@
                                 </th>
                             </tr>
                         </thead>
-                        <tbody data-bind="foreach: items">
+                        <tbody class="searchResults" data-bind="foreach: items">
                             <tr data-bind="click: $root.clickAction">
                                 <td>
                                     <div data-bind="attr: { title: $root.detailTooltip() }">
                                         <span>
-                                            <strong data-bind="text: name() + ', ', visible: name"></strong>
+                                            <em data-bind="text: name, visible: name"></em>
+                                            <span data-bind="visible: name"><br/></span>
                                         </span>
-                                        <span data-bind="text: type() + ', ' "></span>
-                                        <span data-bind="text: status() + ', ' "></span><br/>
-                                        <span data-bind="text: 'Starts on: ' + startsOnDate() + ', '"></span>
-                                        <span data-bind="text: 'Expires on: ' + expiresOnDate()"></span>
+                                        <span>
+                                            <strong >Type: </strong> 
+                                            <span data-bind="text: type() + ', ' "></span>
+                                        </span>
+                                        <span>
+                                            <strong>Status: </strong> 
+                                            <span data-bind="text: status"></span><br/>
+                                        </span>
+                                        <span>
+                                            <strong>Starts on: </strong> 
+                                            <span data-bind="text: startsOnDate() + ', '"></span>
+                                        </span>
+                                        <span>
+                                            <strong>Expires on: </strong> 
+                                            <span data-bind="text: expiresOnDate"></span>
+                                        </span>
                                     </div>
                                 </td>
                                 <td>

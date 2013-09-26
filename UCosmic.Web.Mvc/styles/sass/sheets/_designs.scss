@@ -38,6 +38,15 @@ body {
                 }
             }
         }
+        .searchResults{
+            tr * {
+                cursor: pointer!important;
+            }
+            tr:hover td{
+                background-color: $row-hilite-bg-color;
+            }
+        }
+
     }
 
     table.activity {

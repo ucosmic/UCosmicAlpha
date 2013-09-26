@@ -11,11 +11,6 @@ namespace UCosmic.Domain.Agreements
         public int PageSize { get; set; }
         public int PageNumber { get; set; }
         public string[] TypeEnglishNames { get; set; }
-        //public string orderBy { get; set; }
-        //public string Expires { get; set; }
-        //public string Starts { get; set; }
-        //public string Type { get; set; }
-        //public string Status { get; set; }
     }
 
     public class HandleAgreementViewsByKeywordQuery : IHandleQueries<AgreementViewsByKeyword, PagedQueryResult<AgreementView>>
@@ -29,8 +24,6 @@ namespace UCosmic.Domain.Agreements
 
         public PagedQueryResult<AgreementView> Handle(AgreementViewsByKeyword query)
         {
-            //var asc_dsc = query.orderBy.Substring(query.orderBy.IndexOf("-") + 1);
-            //query.orderBy = query.orderBy.Substring(0, query.orderBy.IndexOf("-"));
             if (query == null) throw new ArgumentNullException("query");
 
             var possibleNullView = _projector.GetView();
@@ -44,15 +37,6 @@ namespace UCosmic.Domain.Agreements
 
             //// when the query's country code is empty string, match all establishments regardless of country.
             //// when the query's country code is null, match establishments without country
-            //if (query.CountryCode == null)
-            //{
-            //    view = view.Where(x => string.IsNullOrWhiteSpace(x..CountryCode));
-            //}
-            ////when the country code is specified, match establishments with country
-            //else if (!string.IsNullOrWhiteSpace(query.CountryCode))
-            //{
-            //    view = view.Where(x => x.CountryCode.Equals(query.CountryCode, ordinalIgnoreCase));
-            //}
             if (query.CountryCode == null)
             {
                 view = view.Where(x => (x.Participants.Any((y => string.IsNullOrWhiteSpace(y.CountryCode)))));
@@ -60,9 +44,10 @@ namespace UCosmic.Domain.Agreements
             //when the country code is specified, match establishments with country
             else if (!string.IsNullOrWhiteSpace(query.CountryCode))
             {
-                view = view.Where(x => (x.Participants.Any(y => y.CountryCode.Equals(query.CountryCode, ordinalIgnoreCase))));
+                //view = view.Where(x => (x.Participants.All(y => y.CountryCode.Equals(query.CountryCode, ordinalIgnoreCase))));
+                view = view.Where(x => x.Participants.Any(p => query.CountryCode.Equals(p.CountryCode, ordinalIgnoreCase)));
             }
-//            orderBy.Add(e => (e.Participants.Any(x => !x.IsOwner && x.CountryName != null) ? e.Participants.FirstOrDefault(x => !x.IsOwner).CountryName : null), OrderByDirection.Descending);
+
 
 
             //search names & URL's for keyword
@@ -72,10 +57,7 @@ namespace UCosmic.Domain.Agreements
                     
                 );
             }
-
-            //if (query.TypeEnglishNames != null && query.TypeEnglishNames.Any())
-            //    view = view.Where(x => query.TypeEnglishNames.Contains(x.Type.EnglishName));
-
+            
             if (query.Id.HasValue)
                 view = view.Where(x => x.Id == query.Id.Value);
 

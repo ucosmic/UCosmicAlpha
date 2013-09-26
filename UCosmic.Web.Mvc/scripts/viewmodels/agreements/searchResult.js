@@ -29,7 +29,6 @@ var Agreements;
                 var _this = this;
                 // show alternate text when country is undefined
                 this.nullDisplayCountryName = ko.computed(function () {
-                    //return '[undefined]';
                     return _this.countryNames() || '[Undefined]';
                 });
             };

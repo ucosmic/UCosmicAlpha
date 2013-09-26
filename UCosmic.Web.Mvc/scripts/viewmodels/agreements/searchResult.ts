@@ -51,7 +51,6 @@ module Agreements.ViewModels {
         private _setupCountryComputeds(): void {
             // show alternate text when country is undefined
             this.nullDisplayCountryName = ko.computed((): string => {
-                //return '[undefined]';
                 return this.countryNames() || '[Undefined]';
             });
         }
@@ -91,12 +90,6 @@ module Agreements.ViewModels {
         clickAction(viewModel: SearchResult, e: JQueryEventObject): boolean {
             return this._owner.clickAction(viewModel, e);
         }
-         
-        // open official URL page
-        //openOfficialUrl(viewModel: SearchResult, e: JQueryEventObject): boolean {
-        //    e.stopPropagation();
-        //    return true;
-        //}
 
         //#endregion
     }

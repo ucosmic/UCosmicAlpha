@@ -33,9 +33,6 @@ module Agreements.ViewModels {
             this._setupPagingDefaults();
             this.changeLens(this.lenses()[0]);
             this.requestResults = <() => void > this.requestResults.bind(this);
-            //ko.computed((): void => {
-            //    this.requestResults();
-            //}).extend({ throttle: 1 });
         }
         header = ko.observable();
         // countries dropdown
