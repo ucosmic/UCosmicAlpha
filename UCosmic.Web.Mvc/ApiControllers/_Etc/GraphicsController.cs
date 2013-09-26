@@ -7,6 +7,7 @@ using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text.RegularExpressions;
 using System.Web.Http;
 using AttributeRouting;
 using AttributeRouting.Web.Http;
@@ -21,6 +22,20 @@ namespace UCosmic.Web.Mvc.ApiControllers
         public HttpResponseMessage GetDefault()
         {
             throw new HttpResponseException(HttpStatusCode.Forbidden);
+        }
+
+        private int[] ParseRGB(string rgb)
+        {
+            int[] comps = new int[3];
+            int i = 0;
+            Match match = Regex.Match(rgb, "[0-9]+");
+            while (match.Success)
+            {
+                comps[i++] = Int32.Parse(match.Value);
+                match = match.NextMatch();
+            }
+
+            return (comps.Length == 3) ? comps : new int[0];
         }
 
         [GET("circle")]
@@ -38,6 +53,44 @@ namespace UCosmic.Web.Mvc.ApiControllers
             var strokeColor = Color.FromArgb(alpha, 255, 255, 255);
             var fillColor = Color.FromArgb(alpha, 204, 0, 0);
             var textColor = Color.FromArgb(alpha, 255, 255, 255);
+
+            if (!String.IsNullOrEmpty(model.StrokeColor))
+            {
+                int[] comps = ParseRGB(model.StrokeColor);
+                if (comps.Length == 3)
+                {
+                    strokeColor = Color.FromArgb(alpha, comps[0], comps[1], comps[2]);
+                }
+            }
+
+            if (!String.IsNullOrEmpty(model.FillColor))
+            {
+                int[] comps = ParseRGB(model.FillColor);
+                if (comps.Length == 3)
+                {
+                    fillColor = Color.FromArgb(alpha, comps[0], comps[1], comps[2]);
+                }
+            }
+
+            if (!String.IsNullOrEmpty(model.TextColor))
+            {
+                int[] comps = ParseRGB(model.TextColor);
+                if (comps.Length == 3)
+                {
+                    textColor = Color.FromArgb(alpha, comps[0], comps[1], comps[2]);
+                }
+            }
+
+            if (!String.IsNullOrEmpty(model.Color))
+            {
+                int[] comps = ParseRGB(model.Color);
+                if (comps.Length == 3)
+                {
+                    strokeColor = Color.FromArgb(alpha, comps[0], comps[1], comps[2]);
+                    fillColor = Color.FromArgb(alpha, comps[0], comps[1], comps[2]);
+                    textColor = Color.FromArgb(alpha, comps[0], comps[1], comps[2]);
+                }
+            }
 
             // compute text
             var text = string.IsNullOrWhiteSpace(model.Text) ? "" : model.Text.Trim();

@@ -418,3 +418,7 @@ ul.selectableListItems li:hover {
   white-space: normal;
   vertical-align: middle; }
 
+.mapMarkerColor {
+  background-color: #01529a;
+  color: #eeeeee; }
+

@@ -90,7 +90,6 @@ module ViewModels.Employees {
 
         lenses: KnockoutObservableArray<any>;
         lens: KnockoutObservable<string>;
-        changeLens: any;
 
         mapType: KnockoutObservable<string>;
         searchType: KnockoutObservable<string>;
@@ -140,7 +139,7 @@ module ViewModels.Employees {
         isHeatmapVisible: KnockoutObservable<boolean>;
         isPointmapVisible: KnockoutObservable<boolean>;
         isExpertVisible: KnockoutObservable<boolean>;
-        isTableVisible: KnockoutObservable<boolean>;
+        //isTableVisible: KnockoutObservable<boolean>;
 
         heatmap: any;
         heatmapOptions: any;
@@ -228,7 +227,7 @@ module ViewModels.Employees {
             this.isHeatmapVisible = ko.observable(true);
             this.isPointmapVisible = ko.observable(false);
             this.isExpertVisible = ko.observable(false);
-            this.isTableVisible = ko.observable(false);
+            //this.isTableVisible = ko.observable(false);
             this.mapType = ko.observable('heatmap');
             this.searchType = ko.observable('activities');
             this.selectedPlace = ko.observable(null); // null for global view
@@ -277,8 +276,7 @@ module ViewModels.Employees {
                 { text: 'Table', value: 'table' }
             ]);
             this.lens = ko.observable('map');
-            this.changeLens = (lens: any) => void {
-            }
+
 
             if (institutionInfo != null) {
 
@@ -422,7 +420,7 @@ module ViewModels.Employees {
             $("#" + departmentDropListId).kendoDropDownList({
                 dataTextField: "officialName",
                 dataValueField: "id",
-                optionLabel: { officialName: "ALL", id: 0 },
+                optionLabel: { officialName: "[All Departments]", id: 0 },
                 change: function (e) {
                     me.drawPointmap(true);
                 },
@@ -459,7 +457,7 @@ module ViewModels.Employees {
             $("#" + collegeDropListId).kendoDropDownList({
                 dataTextField: "officialName",
                 dataValueField: "id",
-                optionLabel: { officialName: "ALL", id: 0 },
+                optionLabel: { officialName: "[All Colleges]", id: 0 },
                 dataSource: collegeDropListDataSource,
                 change: function (e) {
                     var selectedIndex = e.sender.selectedIndex;
@@ -477,6 +475,11 @@ module ViewModels.Employees {
 
                             $("#" + departmentDropListId).data("kendoDropDownList").setDataSource(dataSource);
                         }
+
+                        if (selectedIndex == 0) {
+                            $("#" + departmentDropListId).data("kendoDropDownList").setDataSource(new kendo.data.DataSource());
+                        }
+
                         me.drawPointmap(true);
                     }
                 },
@@ -506,7 +509,7 @@ module ViewModels.Employees {
                 $("#" + campusDropListId).kendoDropDownList({
                     dataTextField: "officialName",
                     dataValueField: "id",
-                    optionLabel: { officialName: "ALL", id: 0 },
+                    optionLabel: { officialName: "[All Institutions]", id: 0 },
                     dataSource: new kendo.data.DataSource({
                         transport: {
                             read: {
@@ -531,6 +534,14 @@ module ViewModels.Employees {
 
                                 $("#" + collegeDropListId).data("kendoDropDownList").setDataSource(dataSource);
                             }
+
+                            if (selectedIndex == 0) {
+                                $("#" + departmentDropListId).data("kendoDropDownList").setDataSource(new kendo.data.DataSource());
+                                $("#" + collegeDropListId).data("kendoDropDownList").setDataSource(new kendo.data.DataSource()); 
+
+                                $("#" + collegeDropListId).data("kendoDropDownList").text("");                  
+                            }
+
                             me.drawPointmap(true);
                         }
                     },
@@ -553,7 +564,7 @@ module ViewModels.Employees {
                                 }
                             }
                             else {
-                                $("#" + collegeDropListId).data("kendoDropDownList").setDataSource(null);
+                                $("#" + collegeDropListId).data("kendoDropDownList").setDataSource(new kendo.data.DataSource());
                             }
                         }
                     }
@@ -638,10 +649,20 @@ module ViewModels.Employees {
         }
         
         setupRouting(): void {
-            this.sammy.get('#/summary', (): void => { this.selectMap('heatmap'); $('#pageTitle').text("Professional Engagement Summary"); });
-            this.sammy.get('#/search', (): void => { this.selectMap('pointmap'); $('#pageTitle').text("Advanced Search"); });
-            this.sammy.get('#/expert', (): void => { this.selectMap('expert'); $('#pageTitle').text("Find an Expert"); });
-            this.sammy.get('#/results', (): void => { this.selectMap('resultstable'); $('#pageTitle').text("Search Results"); });
+            this.sammy.get('#/summary', (): void => {
+                this.selectMap('heatmap');
+                $('#pageTitle').text("Professional Engagement Summary");
+            });
+
+            this.sammy.get('#/search', (): void => {
+                this.selectMap('pointmap');
+                $('#pageTitle').text("Advanced Search");
+            });
+
+            this.sammy.get('#/expert', (): void => {
+                this.selectMap('expert');
+                $('#pageTitle').text("Find an Expert");
+            });
 
             this.sammy.run('#/summary');
         }
@@ -1512,23 +1533,33 @@ module ViewModels.Employees {
             if ((placeResults != null) && (placeResults.length > 0)) {
                 for (var i = 0; i < placeResults.length; i += 1) {
                     if (placeResults[i].results.length > 0) {
-                        var marker = new MarkerWithLabel({
+                        var iconURL = "/api/graphics/circle" +
+                            "?side=18&opacity=" +
+                            "&strokeColor=" + $("#mapMarkerColor").css("background-color") +
+                            "&fillColor=" + $("#mapMarkerColor").css("background-color") +
+                            "&textColor=" + $("#mapMarkerColor").css("color") +
+                            "&text=" + placeResults[i].results.length.toString();
+                        //var marker = new MarkerWithLabel({
+                        var marker = new google.maps.Marker({
                             position: new google.maps.LatLng(placeResults[i].lat, placeResults[i].lng),
                             map: null,
                             title: placeResults[i].officialName,
-                            icon: {
-                                path: google.maps.SymbolPath.CIRCLE,
-                                fillOpacity: 1.0,
-                                fillColor: 'green',
-                                strokeOpacity: 1.0,
-                                strokeColor: 'green',
-                                strokeWeight: 1.0,
-                                scale: 9 //pixels
-                            },
-                            labelContent: placeResults[i].results.length.toString(),
-                            labelAnchor: new google.maps.Point(5, 5),
-                            labelClass: "googleMarkerLabel",
-                            labelInBackground: false
+                            icon: iconURL
+                            //icon: {
+                            //    path: google.maps.SymbolPath.CIRCLE,
+                            //    fillOpacity: 1.0,
+                            //    fillColor: 'green',
+                            //    strokeOpacity: 1.0,
+                            //    strokeColor: 'green',
+                            //    strokeWeight: 1.0,
+                            //    scale: 9 //pixels
+                            //},
+                            //icon: "/api/graphics/circle?side=18&opacity=&color=" + $("#mapMarkerColor").css("background-color"),
+                            //labelContent: placeResults[i].results.length.toString(),
+                            //labelAnchor: new google.maps.Point(5, 5),
+                            //labelAnchor: new google.maps.Point(18, 12),
+                            //labelClass: "googleMarkerLabel",
+                            //labelInBackground: false
                         });
 
                         markers.push(marker);
@@ -1587,23 +1618,33 @@ module ViewModels.Employees {
                 if ((placeCounts != null) && (placeCounts.length > 0)) {
                     for (var i = 0; i < placeCounts.length; i += 1) {
                         if (placeCounts[i].count > 0) {
-                            var marker = new MarkerWithLabel({
+                            var iconURL = "/api/graphics/circle" +
+                                "?side=18&opacity=" +
+                                "&strokeColor=" + $("#mapMarkerColor").css("background-color") +
+                                "&fillColor=" + $("#mapMarkerColor").css("background-color") +
+                                "&textColor=" + $("#mapMarkerColor").css("color") +
+                                "&text=" + placeCounts[i].results.length.toString();
+                            //var marker = new MarkerWithLabel({
+                            var marker = new google.maps.Marker({
                                 position: new google.maps.LatLng(placeCounts[i].lat, placeCounts[i].lng),
                                 map: null,
                                 title: placeCounts[i].officialName,
-                                icon: {
-                                    path: google.maps.SymbolPath.CIRCLE,
-                                    fillOpacity: 0.75,
-                                    fillColor: 'ff0000',
-                                    strokeOpacity: 1.0,
-                                    strokeColor: 'fff000',
-                                    strokeWeight: 1.0,
-                                    scale: 12 //pixels
-                                },
-                                labelContent: placeCounts[i].count.toString(),
-                                labelAnchor: new google.maps.Point(3, 30),
-                                labelClass: "googleMarkerLabel",
-                                labelInBackground: false
+                                icon: iconURL
+                                //icon: {
+                                //    path: google.maps.SymbolPath.CIRCLE,
+                                //    fillOpacity: 0.75,
+                                //    fillColor: 'ff0000',
+                                //    strokeOpacity: 1.0,
+                                //    strokeColor: 'fff000',
+                                //    strokeWeight: 1.0,
+                                //    scale: 9 //pixels
+                                //},
+                                //icon: "/api/graphics/circle?side=18&opacity=&color=" + $("mapMarkerColor").css("background-color"),
+                                //labelContent: placeCounts[i].count.toString(),
+                                //labelAnchor: new google.maps.Point(5, 5),
+                                //labelAnchor: new google.maps.Point(9, 9),
+                                //labelClass: "googleMarkerLabel",
+                                //labelInBackground: false
                             });
                             markers.push(marker);
                         }
@@ -1796,8 +1837,8 @@ module ViewModels.Employees {
             $('#expertText').css("font-weight", "normal");
             this.isExpertVisible(false);
 
-            $('#resultstableText').css("font-weight", "normal");
-            this.isTableVisible(false);
+            //$('#resultstableText').css("font-weight", "normal");
+            //this.isTableVisible(false);
 
             $("#bib-faculty-staff-summary").removeClass("current");
             $("#bib-faculty-staff-search").removeClass("current");

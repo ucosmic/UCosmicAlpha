@@ -70,7 +70,6 @@ namespace UCosmic.Domain.People
                                           (a.ModeText == _publicActivityModeText)
 
                                           /* not activity edit copies */
-                                          //&& !a.EditSourceId.HasValue
                                           && (a.Original == null)
 
                                           && a.Person.Affiliations.Any(
@@ -101,17 +100,16 @@ namespace UCosmic.Domain.People
             if ((query.Tags != null) && (query.Tags.Length > 0))
             {
                 activities =
-                    activities.Where(a => (a.Values.Any(v => v.ModeText == _publicActivityModeText)) &&
-                                          (a.Values.Any(
-                                              v =>
-                                              query.Tags.Any(
-                                                  t =>
-                                                  v.Title.Contains(t) ||
-                                                  v.Content.Contains(t) ||
-                                                  (v.Tags.Any(
-                                                      vt =>
-                                                      String.Compare(vt.Text, t, true, CultureInfo.InvariantCulture) ==
-                                                      0)))
+                    activities.Where(a => (a.Values.Any(v => (v.ModeText == _publicActivityModeText)
+                                                             && query.Tags.Any(
+                                                                 t =>
+                                                                 v.Title.Contains(t) ||
+                                                                 v.Content.Contains(t) ||
+                                                                 (v.Tags.Any(
+                                                                     vt =>
+                                                                     String.Compare(vt.Text, t, true,
+                                                                                    CultureInfo.InvariantCulture) ==
+                                                                     0)))
                                               ))
                         );
             }
@@ -120,8 +118,10 @@ namespace UCosmic.Domain.People
             if ((query.PlaceIds != null) && (query.PlaceIds.Length > 0))
             {
                 activities =
-                    activities.Where(a => (a.Values.Any(v => v.ModeText == _publicActivityModeText)) &&
-                                          (a.Values.Any(v => v.Locations.Any(l => query.PlaceIds.Contains(l.PlaceId))))
+                    activities.Where(a => (a.Values.Any(v => (v.ModeText == _publicActivityModeText) &&
+                                                             v.Locations.Any(l => query.PlaceIds.Contains(l.PlaceId))
+                                              )
+                                          )
                         );
             }
 
@@ -129,8 +129,9 @@ namespace UCosmic.Domain.People
             if ((query.ActivityTypes != null) && (query.ActivityTypes.Length > 0))
             {
                 activities =
-                    activities.Where(a => (a.Values.Any(v => v.ModeText == _publicActivityModeText)) &&
-                                          (a.Values.Any(v => v.Types.Any(t => query.ActivityTypes.Contains(t.TypeId))))
+                    activities.Where(a => (a.Values.Any(v => (v.ModeText == _publicActivityModeText)
+                                                             && v.Types.Any(t => query.ActivityTypes.Contains(t.TypeId)))
+                                          )
                         );
             }
 

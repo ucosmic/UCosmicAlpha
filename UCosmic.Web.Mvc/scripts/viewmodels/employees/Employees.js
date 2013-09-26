@@ -135,7 +135,8 @@ var ViewModels;
                 this.isHeatmapVisible = ko.observable(true);
                 this.isPointmapVisible = ko.observable(false);
                 this.isExpertVisible = ko.observable(false);
-                this.isTableVisible = ko.observable(false);
+
+                //this.isTableVisible = ko.observable(false);
                 this.mapType = ko.observable('heatmap');
                 this.searchType = ko.observable('activities');
                 this.selectedPlace = ko.observable(null);
@@ -188,9 +189,6 @@ var ViewModels;
                     { text: 'Table', value: 'table' }
                 ]);
                 this.lens = ko.observable('map');
-                this.changeLens = function (lens) {
-                    return void {};
-                };
 
                 if (institutionInfo != null) {
                     if (institutionInfo.InstitutionId != null) {
@@ -325,7 +323,7 @@ var ViewModels;
                 $("#" + departmentDropListId).kendoDropDownList({
                     dataTextField: "officialName",
                     dataValueField: "id",
-                    optionLabel: { officialName: "ALL", id: 0 },
+                    optionLabel: { officialName: "[All Departments]", id: 0 },
                     change: function (e) {
                         me.drawPointmap(true);
                     },
@@ -360,7 +358,7 @@ var ViewModels;
                 $("#" + collegeDropListId).kendoDropDownList({
                     dataTextField: "officialName",
                     dataValueField: "id",
-                    optionLabel: { officialName: "ALL", id: 0 },
+                    optionLabel: { officialName: "[All Colleges]", id: 0 },
                     dataSource: collegeDropListDataSource,
                     change: function (e) {
                         var selectedIndex = e.sender.selectedIndex;
@@ -378,6 +376,11 @@ var ViewModels;
 
                                 $("#" + departmentDropListId).data("kendoDropDownList").setDataSource(dataSource);
                             }
+
+                            if (selectedIndex == 0) {
+                                $("#" + departmentDropListId).data("kendoDropDownList").setDataSource(new kendo.data.DataSource());
+                            }
+
                             me.drawPointmap(true);
                         }
                     },
@@ -407,7 +410,7 @@ var ViewModels;
                     $("#" + campusDropListId).kendoDropDownList({
                         dataTextField: "officialName",
                         dataValueField: "id",
-                        optionLabel: { officialName: "ALL", id: 0 },
+                        optionLabel: { officialName: "[All Institutions]", id: 0 },
                         dataSource: new kendo.data.DataSource({
                             transport: {
                                 read: {
@@ -432,6 +435,14 @@ var ViewModels;
 
                                     $("#" + collegeDropListId).data("kendoDropDownList").setDataSource(dataSource);
                                 }
+
+                                if (selectedIndex == 0) {
+                                    $("#" + departmentDropListId).data("kendoDropDownList").setDataSource(new kendo.data.DataSource());
+                                    $("#" + collegeDropListId).data("kendoDropDownList").setDataSource(new kendo.data.DataSource());
+
+                                    $("#" + collegeDropListId).data("kendoDropDownList").text("");
+                                }
+
                                 me.drawPointmap(true);
                             }
                         },
@@ -453,7 +464,7 @@ var ViewModels;
                                         $("#" + collegeDropListId).data("kendoDropDownList").setDataSource(dataSource);
                                     }
                                 } else {
-                                    $("#" + collegeDropListId).data("kendoDropDownList").setDataSource(null);
+                                    $("#" + collegeDropListId).data("kendoDropDownList").setDataSource(new kendo.data.DataSource());
                                 }
                             }
                         }
@@ -544,17 +555,15 @@ var ViewModels;
                     _this.selectMap('heatmap');
                     $('#pageTitle').text("Professional Engagement Summary");
                 });
+
                 this.sammy.get('#/search', function () {
                     _this.selectMap('pointmap');
                     $('#pageTitle').text("Advanced Search");
                 });
+
                 this.sammy.get('#/expert', function () {
                     _this.selectMap('expert');
                     $('#pageTitle').text("Find an Expert");
-                });
-                this.sammy.get('#/results', function () {
-                    _this.selectMap('resultstable');
-                    $('#pageTitle').text("Search Results");
                 });
 
                 this.sammy.run('#/summary');
@@ -1367,23 +1376,14 @@ var ViewModels;
                 if ((placeResults != null) && (placeResults.length > 0)) {
                     for (var i = 0; i < placeResults.length; i += 1) {
                         if (placeResults[i].results.length > 0) {
-                            var marker = new MarkerWithLabel({
+                            var iconURL = "/api/graphics/circle" + "?side=18&opacity=" + "&strokeColor=" + $("#mapMarkerColor").css("background-color") + "&fillColor=" + $("#mapMarkerColor").css("background-color") + "&textColor=" + $("#mapMarkerColor").css("color") + "&text=" + placeResults[i].results.length.toString();
+
+                            //var marker = new MarkerWithLabel({
+                            var marker = new google.maps.Marker({
                                 position: new google.maps.LatLng(placeResults[i].lat, placeResults[i].lng),
                                 map: null,
                                 title: placeResults[i].officialName,
-                                icon: {
-                                    path: google.maps.SymbolPath.CIRCLE,
-                                    fillOpacity: 1.0,
-                                    fillColor: 'green',
-                                    strokeOpacity: 1.0,
-                                    strokeColor: 'green',
-                                    strokeWeight: 1.0,
-                                    scale: 9
-                                },
-                                labelContent: placeResults[i].results.length.toString(),
-                                labelAnchor: new google.maps.Point(5, 5),
-                                labelClass: "googleMarkerLabel",
-                                labelInBackground: false
+                                icon: iconURL
                             });
 
                             markers.push(marker);
@@ -1440,23 +1440,14 @@ var ViewModels;
                     if ((placeCounts != null) && (placeCounts.length > 0)) {
                         for (var i = 0; i < placeCounts.length; i += 1) {
                             if (placeCounts[i].count > 0) {
-                                var marker = new MarkerWithLabel({
+                                var iconURL = "/api/graphics/circle" + "?side=18&opacity=" + "&strokeColor=" + $("#mapMarkerColor").css("background-color") + "&fillColor=" + $("#mapMarkerColor").css("background-color") + "&textColor=" + $("#mapMarkerColor").css("color") + "&text=" + placeCounts[i].results.length.toString();
+
+                                //var marker = new MarkerWithLabel({
+                                var marker = new google.maps.Marker({
                                     position: new google.maps.LatLng(placeCounts[i].lat, placeCounts[i].lng),
                                     map: null,
                                     title: placeCounts[i].officialName,
-                                    icon: {
-                                        path: google.maps.SymbolPath.CIRCLE,
-                                        fillOpacity: 0.75,
-                                        fillColor: 'ff0000',
-                                        strokeOpacity: 1.0,
-                                        strokeColor: 'fff000',
-                                        strokeWeight: 1.0,
-                                        scale: 12
-                                    },
-                                    labelContent: placeCounts[i].count.toString(),
-                                    labelAnchor: new google.maps.Point(3, 30),
-                                    labelClass: "googleMarkerLabel",
-                                    labelInBackground: false
+                                    icon: iconURL
                                 });
                                 markers.push(marker);
                             }
@@ -1642,9 +1633,8 @@ var ViewModels;
                 $('#expertText').css("font-weight", "normal");
                 this.isExpertVisible(false);
 
-                $('#resultstableText').css("font-weight", "normal");
-                this.isTableVisible(false);
-
+                //$('#resultstableText').css("font-weight", "normal");
+                //this.isTableVisible(false);
                 $("#bib-faculty-staff-summary").removeClass("current");
                 $("#bib-faculty-staff-search").removeClass("current");
                 $("#bib-faculty-staff-expert").removeClass("current");

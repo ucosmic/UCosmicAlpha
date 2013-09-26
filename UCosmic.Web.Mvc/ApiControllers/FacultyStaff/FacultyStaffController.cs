@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Net;
+using System.Text.RegularExpressions;
 using System.Web.Http;
 using AttributeRouting;
 using AttributeRouting.Web.Http;
@@ -610,6 +611,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                     DepartmentId = filter.DepartmentId                         
                 });
 
+                /* Flatten activity search results with respect to location. */
                 foreach (var activity in activities)
                 {
                     var activityValues =
@@ -652,6 +654,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                                 ActivityDate =
                                     MakeDateString(activityValues.StartsOn, activityValues.EndsOn,
                                                    activityValues.OnGoing),
+                                ActivityDescription = (activityValues.Content == null) ? null : Regex.Replace(activityValues.Content, "<.*?>", string.Empty, RegexOptions.Singleline),
                                 SortDate =
                                     GetSortDate(activityValues.StartsOn, activityValues.EndsOn, activityValues.OnGoing)
                                 // local use only

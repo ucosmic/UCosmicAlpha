@@ -48,10 +48,13 @@ namespace UCosmic.Web.Mvc.Models
     {
         public int PersonId { get; set; }
         public string PersonName { get; set; }
+        public string PersonDepartment { get; set; }
+        public string PersonEmail { get; set; }
         public int? ActivityId { get; set; }
         public string ActivityTitle { get; set; }
         public int[] ActivityTypeIds { get; set; }
         public string ActivityDate { get; set; }
+        public string ActivityDescription { get; set; }
         public DateTime SortDate { get; set; }
     }
 

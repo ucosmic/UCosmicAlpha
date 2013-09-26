@@ -22,7 +22,6 @@ using System.Linq;
     4. Restrict Activity list to only those Activities that fall between From/To Dates
 */
 
-
 namespace UCosmic.Domain.Activities
 {
     public class ActivitySearch : BaseEntityQuery<Activity>, IDefineQuery<IEnumerable<Activity>>
@@ -65,7 +64,6 @@ namespace UCosmic.Domain.Activities
                                           (a.ModeText == _publicActivityModeText)
 
                                           /* not activity edit copies */
-                                          //&& !a.EditSourceId.HasValue
                                           && (a.Original == null)
 
                                           && a.Person.Affiliations.Any(
@@ -86,12 +84,15 @@ namespace UCosmic.Domain.Activities
                                                  )
                 );
 
-            /* If places provided, restrict */
-            if ((query.PlaceIds != null) && (query.PlaceIds.Length > 0))
+            /* If places provided, restrict. */
+            if ((query.PlaceIds != null) && query.PlaceIds.Any())
             {
                 activities =
-                    activities.Where(a => (a.Values.Any(v => v.ModeText == _publicActivityModeText)) &&
-                                          (a.Values.Any(v => v.Locations.Any(l => query.PlaceIds.Contains(l.PlaceId))))
+                    activities.Where(a => (a.Values.Any(v => (v.ModeText == _publicActivityModeText)
+                                                             && v.Locations.Any(l => query.PlaceIds.Contains(l.PlaceId))
+                                              )
+                                          )
+
                         );
             }
 
@@ -99,8 +100,10 @@ namespace UCosmic.Domain.Activities
             if (query.ActivityTypes != null)
             {
                 activities =
-                    activities.Where(a => (a.Values.Any(v => v.ModeText == _publicActivityModeText)) &&
-                                          (a.Values.Any(v => v.Types.Any(t => query.ActivityTypes.Contains(t.TypeId))))
+                    activities.Where(a => (a.Values.Any(v => (v.ModeText == _publicActivityModeText)
+                                                             && v.Types.Any(t => query.ActivityTypes.Contains(t.TypeId))
+                                              )
+                                          )
                         );
             }
 
@@ -113,97 +116,19 @@ namespace UCosmic.Domain.Activities
             if ((query.Tags != null) && (query.Tags.Length > 0))
             {
                 activities =
-                    activities.Where(a => (a.Values.Any(v => v.ModeText == _publicActivityModeText)) &&
-                                          (a.Values.Any(
-                                              v =>
-                                              query.Tags.Any(
-                                                  t =>
-                                                  v.Title.Contains(t) ||
-                                                  v.Content.Contains(t) ||
-                                                  (v.Tags.Any(
-                                                      vt =>
-                                                      String.Compare(vt.Text, t, true, CultureInfo.InvariantCulture) ==
-                                                      0)))
-                                              ))
+                    activities.Where(a => (a.Values.Any(v => (v.ModeText == _publicActivityModeText)
+                                                             && (query.Tags.Any(
+                                                                 t =>
+                                                                 v.Title.Contains(t) ||
+                                                                 v.Content.Contains(t) ||
+                                                                 (v.Tags.Any(
+                                                                     vt =>
+                                                                     String.Compare(vt.Text, t, true,
+                                                                                    CultureInfo.InvariantCulture) ==
+                                                                     0)))
+                                                                ))
+                                          )
                         );
-            }
-
-
-            /* ADD GeographiceExpertise.Description Tag matches */
-            if ((query.Tags != null) && (query.Tags.Length > 0))
-            {
-                var geoExpertise = _entities.Query<GeographicExpertise.GeographicExpertise>()
-                                            .Where(ge =>
-                                                   ge.Person.Affiliations.Any(
-                                                       /* must be associated with establishment */
-                                                       pa => (pa.EstablishmentId == query.EstablishmentId)
-                                                             /* check for campus association */
-                                                             && (!query.CampusId.HasValue ||
-                                                                 (pa.CampusId.HasValue &&
-                                                                  (pa.CampusId.Value == query.CampusId.Value)))
-                                                             /* check for college association */
-                                                             && (!query.CollegeId.HasValue ||
-                                                                 (pa.CollegeId.HasValue &&
-                                                                  (pa.CollegeId.Value == query.CollegeId.Value)))
-                                                             /* check for department association */
-                                                             && (!query.DepartmentId.HasValue ||
-                                                                 (pa.DepartmentId.HasValue &&
-                                                                  (pa.DepartmentId.Value == query.DepartmentId.Value)))
-                                                       )
-                    );
-
-                /* GeographicExpertise Description */
-                if (geoExpertise.Any())
-                {
-                    var establishmentActivities = _entities.Query<Activity>()
-                                                           .Where(
-                                                               a => /* only public activities */
-                                                               (a.ModeText == _publicActivityModeText)
-
-                                                               /* not activity edit copies */
-                                                               //&& !a.EditSourceId.HasValue
-                                                               && (a.Original == null)
-
-                                                               && a.Person.Affiliations.Any(
-                                                                   /* must be associated with establishment */
-                                                                   pa => (pa.EstablishmentId == query.EstablishmentId)
-                                                                   /* check for campus association */
-                                                                   && (!query.CampusId.HasValue ||
-                                                                       (pa.CampusId.HasValue &&
-                                                                        (pa.CampusId.Value == query.CampusId.Value)))
-                                                                   /* check for college association */
-                                                                   && (!query.CollegeId.HasValue ||
-                                                                       (pa.CollegeId.HasValue &&
-                                                                        (pa.CollegeId.Value == query.CollegeId.Value)))
-                                                                   /* check for department association */
-                                                                   && (!query.DepartmentId.HasValue ||
-                                                                       (pa.DepartmentId.HasValue &&
-                                                                        (pa.DepartmentId.Value ==
-                                                                         query.DepartmentId.Value)))
-                                                                   )
-                        );
-
-                    var relatedGeoExpertise = establishmentActivities.Join(geoExpertise,
-                                                                           a => a.PersonId,
-                                                                           ge => ge.PersonId,
-                                                                           (a, ge) => new
-                                                                           {
-                                                                               Activity = a,
-                                                                               GeoExpertise = ge
-                                                                           });
-
-                    var moreActivities = relatedGeoExpertise
-                        .Where(
-                            rge =>
-                            query.Tags.Any(
-                                t => rge.GeoExpertise.Description.Contains(t)))
-                        .Select(j => j.Activity);
-
-                    if (moreActivities.Any())
-                    {
-                        activities = activities.Concat(moreActivities).Distinct();
-                    }
-                }
             }
 
             /* ADD Person.DisplayName Tag matches */
@@ -215,7 +140,6 @@ namespace UCosmic.Domain.Activities
                                                   (a.ModeText == _publicActivityModeText)
 
                                                   /* not activity edit copies */
-                                                  //&& !a.EditSourceId.HasValue
                                                   && (a.Original == null)
 
                                                   /* affiliated with establishment */

@@ -474,7 +474,7 @@
                     </div>                     
                     
                     <!-- Spinner -->
-                    <div class="spinnerBox" data-bind="visible: loadSpinner.isVisible()">
+                    <div class="spinnerBox" data-bind="visible: loadSpinner.isVisible() && isHeatmapVisible()">
                         <div style="position: absolute; top: 0; left: 0; bottom: 0; right: 0; margin: auto; width: 100px; height: 20px">
                             <span>
                                 <img src="~/images/icons/spinner/spinner-20-blue.gif" alt=""/>
@@ -490,43 +490,77 @@
                 <div id="pointmap" style="position: absolute; top: 0; left: 0; width: 680px; height: 500px"></div>
                 
                 <!-- Spinner -->
-                <div class="spinnerBox" style="position: absolute; top:400px; left: 0; width: 100px; height: 20px" data-bind="visible: loadSpinner.isVisible()">
+                <div class="spinnerBox" style="position: absolute; top:400px; left: 0; width: 100px; height: 20px" data-bind="visible: loadSpinner.isVisible() && isPointmapVisible() && (lens() == 'map')">
                     <span>
                         <img src="~/images/icons/spinner/spinner-20-blue.gif" alt=""/>
                         <strong>Loading...</strong>
                     </span>
                 </div>
+                
+                <!-- Hidden element to get map marker color from css -->
+                <div id="mapMarkerColor" class="mapMarkerColor" style="display: none"></div>
             </div>
           
-            <!-- T A B L E -->
-            <div id="resultstable" style="display: none" data-bind="visible: isPointmapVisible() && (lens() == 'table')">                   
-                <div style="width: 665px">
-                    <div class="activitySearchResultsColumnHeader" style="width: 11%">Location</div>
-                    <div class="activitySearchResultsColumnHeader" style="width: 20%">Last, First Name</div>
-                    <div class="activitySearchResultsColumnHeader" style="width: 48%">Activity Title</div>
-                    <div class="activitySearchResultsColumnHeader" style="width: 7%">Type</div>
-                    <div class="activitySearchResultsColumnHeader" style="width: 11%">Date</div>
+            <!-- T A B L E S -->
+            <div>
+                <!-- Activities Results -->
+                <div id="resultstable" style="display: none" data-bind="visible: isPointmapVisible() && (lens() == 'table') && (searchType() == 'activities')">                   
+                    <div style="width: 665px">
+                        <div class="activitySearchResultsColumnHeader" style="width: 11%">Location</div>
+                        <div class="activitySearchResultsColumnHeader" style="width: 20%">Last, First Name</div>
+                        <div class="activitySearchResultsColumnHeader" style="width: 48%">Activity Title</div>
+                        <div class="activitySearchResultsColumnHeader" style="width: 7%">Type</div>
+                        <div class="activitySearchResultsColumnHeader" style="width: 11%">Date</div>
+                    </div>
+                    <div style="height: 600px; overflow-y: scroll">
+                        <ul data-bind="foreach: activityResults.placeResults">
+                            <li>
+                                <ul data-bind="foreach: results">
+                                    <li>
+                                        <div style="width: 100%; padding-top: 4px; padding-bottom: 4px; border-bottom-style: solid; border-bottom-color: black; border-bottom-width: 1px;">
+                                            <div class="activitySearchResultsRow" style="width: 11%" data-bind="text: $parent.officialName"></div>
+                                            <div class="activitySearchResultsRow" style="width: 20%" data-bind="text: personName()"></div>
+                                            <div class="activitySearchResultsRow" style="width: 48%" data-bind="text: activityTitle(), attr: { title: activityDescription() }"></div>
+                                            <div class="activitySearchResultsRow" style="width: 7.6%; text-align: center;" data-bind="template: { name: 'activities-types-template', foreach: activityTypeIds }"></div>
+                                            <div class="activitySearchResultsRow" style="width: 10.4%" data-bind="text: activityDate()"></div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-                <div style="height: 600px; overflow-y: scroll">
-                    <ul data-bind="foreach: activityResults.placeResults">
-                        <li>
-                            <ul data-bind="foreach: results">
-                                <li>
-                                    <div style="width: 100%; padding-top: 4px; padding-bottom: 4px; border-bottom-style: solid; border-bottom-color: black; border-bottom-width: 1px;">
-                                        <div class="activitySearchResultsRow" style="width: 11%" data-bind="text: $parent.officialName"></div>
-                                        <div class="activitySearchResultsRow" style="width: 20%" data-bind="text: personName()"></div>
-                                        <div class="activitySearchResultsRow" style="width: 48%" data-bind="text: activityTitle()"></div>
-                                        <div class="activitySearchResultsRow" style="width: 7%; text-align: center;" data-bind="template: { name: 'activities-types-template', foreach: activityTypeIds }"></div>
-                                        <div class="activitySearchResultsRow" style="width: 11%" data-bind="text: activityDate()"></div>
-                                    </div>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
+            
+                <!-- People Results -->
+                <div id="people_resultstable" style="display: none" data-bind="visible: isPointmapVisible() && (lens() == 'table') && (searchType() == 'people')">                   
+                    <div style="width: 665px">
+                        <div class="activitySearchResultsColumnHeader" style="width: 20%">Name/Email</div>
+                        <div class="activitySearchResultsColumnHeader" style="width: 15%">Department</div>                   
+                        <div class="activitySearchResultsColumnHeader" style="width: 11%">Location</div>
+                        <div class="activitySearchResultsColumnHeader" style="width: 40%">Activity</div>
+                        <div class="activitySearchResultsColumnHeader" style="width: 11%">Type</div>
+                    </div>
+                    <div style="height: 600px; overflow-y: scroll">
+                        <ul data-bind="foreach: activityResults.placeResults">
+                            <li>
+                                <ul data-bind="foreach: results">
+                                    <li>
+                                        <div style="width: 100%; padding-top: 4px; padding-bottom: 4px; border-bottom-style: solid; border-bottom-color: black; border-bottom-width: 1px;">
+                                            <div class="activitySearchResultsRow" style="width: 20%" data-bind=""></div>
+                                            <div class="activitySearchResultsRow" style="width: 15%" data-bind=""></div>
+                                            <div class="activitySearchResultsRow" style="width: 11%" data-bind=""></div>
+                                            <div class="activitySearchResultsRow" style="width: 40%" data-bind=""></div>
+                                            <div class="activitySearchResultsRow" style="width: 11%" data-bind=""></div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-                
+                      
                 <!-- Spinner -->
-                <div class="spinnerBox" data-bind="visible: loadSpinner.isVisible()">
+                <div class="spinnerBox" data-bind="visible: loadSpinner.isVisible() && isPointmapVisible() && (lens() == 'table')">
                     <div style="position: absolute; top: 0; left: 0; bottom: 0; right: 0; margin: auto; width: 100px; height: 20px">
                         <span>
                             <img src="~/images/icons/spinner/spinner-20-blue.gif" alt=""/>
@@ -541,11 +575,71 @@
                 <div id="expert" style="width: 680px; height: 500px">
                     <img src="~/images/placeholders/ExpertiseMock.png" width="680" height="500" alt=""/>
                 </div>
+                
+                <!-- Language Expert Results -->
+                <div id="languageexpert_resultstable" style="display: none" data-bind="">                   
+                    <div style="width: 665px">
+                        <div class="activitySearchResultsColumnHeader" style="width: 20%">Language</div>
+                        <div class="activitySearchResultsColumnHeader" style="width: 10%">Last, First Name, Email</div>                   
+                        <div class="activitySearchResultsColumnHeader" style="width: 20%">Department</div>
+                        <div class="activitySearchResultsColumnHeader" style="width: 30%">Proficiencies</div>
+                        <div class="activitySearchResultsColumnHeader" style="width: 5%">Speaking</div>
+                        <div class="activitySearchResultsColumnHeader" style="width: 5%">Listening</div>
+                        <div class="activitySearchResultsColumnHeader" style="width: 5%">Reading</div>
+                        <div class="activitySearchResultsColumnHeader" style="width: 5%">Writing</div>
+                    </div>
+                    <div style="height: 600px; overflow-y: scroll">
+                        <ul data-bind="foreach: activityResults.placeResults">
+                            <li>
+                                <ul data-bind="foreach: results">
+                                    <li>
+                                        <div style="width: 100%; padding-top: 4px; padding-bottom: 4px; border-bottom-style: solid; border-bottom-color: black; border-bottom-width: 1px;">
+                                            <div class="activitySearchResultsRow" style="width: 20%" data-bind=""></div>
+                                            <div class="activitySearchResultsRow" style="width: 10%" data-bind=""></div>
+                                            <div class="activitySearchResultsRow" style="width: 20%" data-bind=""></div>
+                                            <div class="activitySearchResultsRow" style="width: 30%" data-bind=""></div>
+                                            <div class="activitySearchResultsRow" style="width: 5%" data-bind=""></div>
+                                            <div class="activitySearchResultsRow" style="width: 5%" data-bind=""></div>
+                                            <div class="activitySearchResultsRow" style="width: 5%" data-bind=""></div>
+                                            <div class="activitySearchResultsRow" style="width: 5%" data-bind=""></div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Geographic Expert Results -->
+                <div id="geographicexpert_resultstable" style="display: none" data-bind="">                   
+                    <div style="width: 665px">
+                        <div class="activitySearchResultsColumnHeader" style="width: 20%">Country/Location</div>
+                        <div class="activitySearchResultsColumnHeader" style="width: 20%">Last, First Name, Email</div>                   
+                        <div class="activitySearchResultsColumnHeader" style="width: 20%">Department</div>
+                        <div class="activitySearchResultsColumnHeader" style="width: 40%">Expertise Summary</div>
+                    </div>
+                    <div style="height: 600px; overflow-y: scroll">
+                        <ul data-bind="foreach: activityResults.placeResults">
+                            <li>
+                                <ul data-bind="foreach: results">
+                                    <li>
+                                        <div style="width: 100%; padding-top: 4px; padding-bottom: 4px; border-bottom-style: solid; border-bottom-color: black; border-bottom-width: 1px;">
+                                            <div class="activitySearchResultsRow" style="width: 20%" data-bind=""></div>
+                                            <div class="activitySearchResultsRow" style="width: 20%" data-bind=""></div>
+                                            <div class="activitySearchResultsRow" style="width: 20%" data-bind=""></div>
+                                            <div class="activitySearchResultsRow" style="width: 40%" data-bind=""></div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="on-right from-top" style="display: none" data-bind="visible: isPointmapVisible() || isTableVisible()">
+    <div class="on-right from-top" style="display: none" data-bind="visible: isPointmapVisible()">
         @Html.Partial(MVC.FacultyStaff.Views._SearchSideBar)
     </div>
     <div class="on-right from-top" style="display: none" data-bind="visible: isHeatmapVisible">
