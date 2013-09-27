@@ -135,6 +135,12 @@ var Agreements;
 
             Search.prototype.getPage = function (sammyContext) {
                 var _this = this;
+                if (window.location.href.indexOf("agreements/new") != -1) {
+                    this.sammy.destroy();
+                    window.location.hash = "";
+                    window.location.reload();
+                    return;
+                }
                 var trail = this.trail(), clone;
                 if (trail.length > 0 && trail[trail.length - 1] === sammyContext.path)
                     return;
@@ -170,10 +176,11 @@ var Agreements;
             };
 
             Search.prototype.beforePage = function (sammyContext) {
+                var pageNumber;
                 if (this.nextForceDisabled() || this.prevForceDisabled())
                     return false;
 
-                var pageNumber = sammyContext.params['pageNumber'];
+                pageNumber = sammyContext.params['pageNumber'];
 
                 if (pageNumber && parseInt(pageNumber) !== Number(this.pageNumber()))
                     this.pageNumber(parseInt(pageNumber));

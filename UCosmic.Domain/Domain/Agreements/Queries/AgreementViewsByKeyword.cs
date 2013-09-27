@@ -44,17 +44,15 @@ namespace UCosmic.Domain.Agreements
             //when the country code is specified, match establishments with country
             else if (!string.IsNullOrWhiteSpace(query.CountryCode))
             {
-                //view = view.Where(x => (x.Participants.All(y => y.CountryCode.Equals(query.CountryCode, ordinalIgnoreCase))));
                 view = view.Where(x => x.Participants.Any(p => query.CountryCode.Equals(p.CountryCode, ordinalIgnoreCase)));
             }
-
-
-
             //search names & URL's for keyword
             if (!string.IsNullOrWhiteSpace(query.Keyword))
             {
                 view = view.Where(x =>  x.Name != null && x.Name.Contains(query.Keyword, ordinalIgnoreCase)
-                    
+                    || x.Participants.Any(p => p.CountryName.Contains(query.Keyword, ordinalIgnoreCase) && p.IsOwner != true)
+                    || x.Participants.Any(p => p.EstablishmentOfficialName.Contains(query.Keyword, ordinalIgnoreCase) && p.IsOwner != true)
+                    || x.Participants.Any(p => p.EstablishmentTranslatedName.Contains(query.Keyword, ordinalIgnoreCase) && p.IsOwner != true)
                 );
             }
             

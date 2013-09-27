@@ -50,6 +50,7 @@ var InstitutionalAgreementEditModel = (function () {
         this.officialNameDoesNotMatchTranslation = ko.computed(function () {
             return !(this.participants.establishmentOfficialName === this.participants.establishmentTranslatedName);
         });
+        $("table.data").children("tbody").addClass("searchResults");
         var culture = $("meta[name='accept-language']").attr("content");
         this.scrollBodyClass = new scrollBody.scroll("participants", "basicInfo", "effectiveDatesCurrentStatus", "contacts", "fileAttachments", "overallVisibility", null, null, null, null, this.kendoWindowBug);
         this.establishmentSearchNavClass = new agreements.establishmentSearchNav(this.editOrNewUrl, this.participantsClass, this.agreementIsEdit, this.agreementId, this.scrollBodyClass, this.dfdPageFadeIn);

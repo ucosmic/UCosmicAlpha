@@ -105,6 +105,12 @@ module Agreements.ViewModels {
         }
 
         getPage(sammyContext: Sammy.EventContext): void {
+            if (window.location.href.indexOf("agreements/new") != -1) {
+                this.sammy.destroy();
+                window.location.hash = "";
+                window.location.reload();
+                return ;
+            }
             var trail = this.trail(),
                 clone;
             if (trail.length > 0 && trail[trail.length - 1] === sammyContext.path) return;
@@ -142,10 +148,11 @@ module Agreements.ViewModels {
         }
 
         beforePage(sammyContext: Sammy.EventContext): boolean {
+            var pageNumber;
             if (this.nextForceDisabled() || this.prevForceDisabled())
                 return false;
 
-            var pageNumber = sammyContext.params['pageNumber'];
+            pageNumber = sammyContext.params['pageNumber'];
 
             // make sure the viewmodel pagenumber is in sync with the route
             if (pageNumber && parseInt(pageNumber) !== Number(this.pageNumber()))
@@ -267,7 +274,6 @@ module Agreements.ViewModels {
         detailTooltip(): string {
             return 'View & edit this agreement\'s details';
         }
-
 
         private _setupPagingDefaults(): void {
             this.orderBy('country');

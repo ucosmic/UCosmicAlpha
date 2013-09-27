@@ -32,8 +32,7 @@ namespace UCosmic.Domain.Agreements
                 CountryName = country.OfficialName;
             }
 
-            //Center = new MapPointView(entity.Center);
-
+            Center = new MapPointView(entity.Establishment.Location.Center);
         }
     }
 }
