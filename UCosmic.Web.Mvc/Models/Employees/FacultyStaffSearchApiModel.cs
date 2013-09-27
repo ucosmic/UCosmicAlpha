@@ -31,7 +31,7 @@ namespace UCosmic.Web.Mvc.Models
 
         public int[] ActivityTypes { get; set; }
 
-        public string Degrees { get; set; } // people only
+        public string[] Degrees { get; set; } // people only
 
         public string[] Tags { get; set; }
 

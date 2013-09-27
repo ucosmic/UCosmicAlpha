@@ -239,6 +239,7 @@
     <Compile Include="Domain\_Etc\EntityRanker.cs" />
     <Compile Include="Domain\Establishments\Queries\EstablishmentNamesByKeyword.cs" />
     <Compile Include="Domain\Establishments\Queries\EstablishmentsWithPeopleWithActivities.cs" />
+    <Compile Include="Domain\People\Entities\PersonExtensions.cs" />
     <Compile Include="Domain\People\Queries\PeopleSearch.cs" />
     <Compile Include="Domain\People\Queries\PeopleWithActivitiesCountByTypeIdEstablishmentId.cs" />
     <Compile Include="Domain\People\Queries\PeopleWithDegreesCountByPlaceIdsEstablishmentId.cs" />

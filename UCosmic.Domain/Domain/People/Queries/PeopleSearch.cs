@@ -28,7 +28,7 @@ using UCosmic.Domain.Activities;
 
 namespace UCosmic.Domain.People
 {
-    public class PeopleSearch : BaseEntityQuery<Person>, IDefineQuery<IEnumerable<Person>>
+    public class PeopleSearch : BaseEntityQuery<Person>, IDefineQuery<PersonSearchResult>
     {
         public int EstablishmentId { get; set; }
         public int[] PlaceIds { get; set; }
@@ -49,7 +49,25 @@ namespace UCosmic.Domain.People
         }
     }
 
-    public class HandlePeopleSearchQuery : IHandleQueries<PeopleSearch, IEnumerable<Person>>
+    public class PersonSearchResult
+    {
+            /* People matched by Activity criteria */
+        public IEnumerable<Activity> Activities { get; set; }
+
+            /* People matched by Geographic Expertise criteria */
+        public IEnumerable<GeographicExpertise.GeographicExpertise> GeographicExpertise { get; set; }
+
+            /* People matched by Language Expertise criteria */
+        public IEnumerable<LanguageExpertise.LanguageExpertise> LanguageExpertise { get; set; }
+
+            /* People matched by Degree criteria */
+        public IEnumerable<Degrees.Degree> Degrees { get; set; }
+
+            /* People matched by Display Name */
+        public IEnumerable<Person> Names { get; set; }
+    }
+
+    public class HandlePeopleSearchQuery : IHandleQueries<PeopleSearch, PersonSearchResult>
     {
         private readonly string _publicActivityModeText = ActivityMode.Public.AsSentenceFragment();
         private readonly IQueryEntities _entities;
@@ -59,9 +77,11 @@ namespace UCosmic.Domain.People
             _entities = entities;
         }
 
-        public IEnumerable<Person> Handle(PeopleSearch query)
+        public PersonSearchResult Handle(PeopleSearch query)
         {
             if (query == null) throw new ArgumentNullException("query");
+
+            var results = new PersonSearchResult();
 
             /* Select all activites where people are affiliated with establishment, campus/college/department */
             var activities = _entities.Query<Activity>()
@@ -152,7 +172,7 @@ namespace UCosmic.Domain.People
             }
 
             /* Set of unique people filtered by establishment, place and activity types */
-            var people = activities.Select(a => a.Person).Distinct();
+            results.Activities = activities.Distinct();
 
 
             /* ADD People that Degree.Title contains supplied degrees
@@ -198,7 +218,7 @@ namespace UCosmic.Domain.People
                                            (d.YearAwarded.HasValue && (d.YearAwarded < toDateUtc.Year)));
                 }
 
-                people = people.Concat(degrees.Select(d => d.Person)).Distinct();
+                results.Degrees = degrees.Distinct();
             }
 
             /* ADD GeographiceExpertise.Description Tag matches */
@@ -227,14 +247,9 @@ namespace UCosmic.Domain.People
                 /* GeographicExpertise Description */
                 if (geoExpertise.Any())
                 {
-                    var morePeople = geoExpertise
+                    results.GeographicExpertise = geoExpertise
                         .Where(ge => query.Tags.Any(t => ge.Description.Contains(t)))
-                        .Select(ge => ge.Person);
-
-                    if (morePeople.Any())
-                    {
-                        people = people.Concat(morePeople).Distinct();
-                    }
+                        .Distinct();
                 }
             } /* ADD GeographiceExpertise.Description Tag matches */
 
@@ -264,7 +279,7 @@ namespace UCosmic.Domain.People
                 /* languageExpertise Language or Dialect */
                 if (langExpertise.Any())
                 {
-                    var morePeople = langExpertise
+                    results.LanguageExpertise = langExpertise
                         .Where(
                             le =>
                             query.Tags.Any(
@@ -273,12 +288,7 @@ namespace UCosmic.Domain.People
                                     ln => ln.Text.Contains(t))) ||
                                 (String.Compare(le.Dialect, t, true, CultureInfo.InvariantCulture) == 0))
                         )
-                        .Select(le => le.Person);
-
-                    if (morePeople.Any())
-                    {
-                        people = people.Concat(morePeople).Distinct();
-                    }
+                        .Distinct();
                 }
             } /* ADD LanguageExpertise.Language and Dialect Tag matches */
 
@@ -315,11 +325,11 @@ namespace UCosmic.Domain.People
 
                 if (morePeople.Any())
                 {
-                    people = people.Concat(morePeople).Distinct();
+                    results.Names = morePeople.Distinct();
                 }
             } /* ADD Person.DisplayName Tag matches */
 
-            return people;
+            return results;
         }
     }
 }
