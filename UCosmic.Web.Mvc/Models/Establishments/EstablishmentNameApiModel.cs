@@ -14,6 +14,8 @@ namespace UCosmic.Web.Mvc.Models
         public string LanguageCode { get; set; }
     }
 
+    public class PageOfEstablishmentNameModel : PageOf<EstablishmentNameApiModel> { }
+
     public static class EstablishmentNameApiProfiler
     {
         public class EntityToModelProfile : Profile
@@ -25,9 +27,17 @@ namespace UCosmic.Web.Mvc.Models
                     .ForMember(d => d.OwnerId, o => o.MapFrom(s => s.ForEstablishment.RevisionId))
                     .ForMember(d => d.LanguageName, o => o.ResolveUsing(s =>
                         s.TranslationToLanguage == null ? null : s.TranslationToLanguage.GetTranslatedName()))
-                    .ForMember(d => d.LanguageCode, o => o.ResolveUsing(s => 
+                    .ForMember(d => d.LanguageCode, o => o.ResolveUsing(s =>
                         s.TranslationToLanguage == null ? null : s.TranslationToLanguage.TwoLetterIsoCode))
                 ;
+            }
+        }
+
+        public class PagedQueryResultToPageOfItemsProfile : Profile
+        {
+            protected override void Configure()
+            {
+                CreateMap<PagedQueryResult<EstablishmentName>, PageOfEstablishmentNameModel>();
             }
         }
 

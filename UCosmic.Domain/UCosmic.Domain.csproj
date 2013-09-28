@@ -123,6 +123,8 @@
     <Compile Include="Api\Validation\MustBeWellFormedUrl.cs" />
     <Compile Include="Api\Validation\MustNotContainUrlProtocol.cs" />
     <Compile Include="Domain\Activities\Commands\AddActivityType.cs" />
+    <Compile Include="Domain\Activities\Commands\AddActivityTag.cs" />
+    <Compile Include="Domain\Activities\Commands\RemoveActivityTag.cs" />
     <Compile Include="Domain\Activities\Commands\RemoveActivityType.cs" />
     <Compile Include="Domain\Activities\Commands\PurgeActivityPlace.cs" />
     <Compile Include="Domain\Activities\Commands\CreateActivityPlace.cs" />
@@ -169,6 +171,7 @@
     <Compile Include="Domain\Activities\Queries\ActivityDocumentById.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityDocumentsByActivityIdAndMode.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityDocumentsByValuesId.cs" />
+    <Compile Include="Domain\Activities\Validation\MustNotBeDuplicateActivityTag.cs" />
     <Compile Include="Domain\Activities\Validation\MustBeActivityTypeForPrincipal.cs" />
     <Compile Include="Domain\Activities\Validation\MustNotBeDuplicateActivityType.cs" />
     <Compile Include="Domain\Activities\Validation\MustNotBeDuplicateActivityPlace.cs" />
@@ -232,6 +235,9 @@
     <Compile Include="Domain\Agreements\_Internal\QueryAgreementParticipants.cs" />
     <Compile Include="Domain\Agreements\_Internal\QueryAgreementContacts.cs" />
     <Compile Include="Domain\Employees\_Internal\EmployeeConsts.cs" />
+    <Compile Include="Domain\_Etc\LinqPropertyChain.cs" />
+    <Compile Include="Domain\_Etc\EntityRanker.cs" />
+    <Compile Include="Domain\Establishments\Queries\EstablishmentNamesByKeyword.cs" />
     <Compile Include="Domain\Establishments\Queries\EstablishmentsWithPeopleWithActivities.cs" />
     <Compile Include="Domain\People\Queries\PeopleSearch.cs" />
     <Compile Include="Domain\People\Queries\PeopleWithActivitiesCountByTypeIdEstablishmentId.cs" />

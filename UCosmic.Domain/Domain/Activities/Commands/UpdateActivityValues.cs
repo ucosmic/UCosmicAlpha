@@ -215,7 +215,6 @@ namespace UCosmic.Domain.Activities
                         Text = tag.Text,
                         DomainType = tag.DomainType,
                         DomainKey = tag.DomainKey,
-                        Mode = command.Mode,
                         NoCommit = true
                     };
                     _createActivityTag.Handle(createActivityTag);

@@ -292,6 +292,7 @@
     <Compile Include="ApiControllers\Activities\ActivityDocumentsController.cs" />
     <Compile Include="ApiControllers\Activities\ActivityPlacesController.cs" />
     <Compile Include="ApiControllers\Activities\ActivityTypesController.cs" />
+    <Compile Include="ApiControllers\Activities\ActivityTagsController.cs" />
     <Compile Include="ApiControllers\Agreements\AgreementsController.cs" />
     <Compile Include="ApiControllers\Agreements\AgreementSettingsController.cs" />
     <Compile Include="ApiControllers\Agreements\AgreementContactsController.cs" />
@@ -349,6 +350,7 @@
     <Compile Include="Models\Activities\ActivityLocationNameApiModel.cs" />
     <Compile Include="Models\Activities\ActivityPlaceCount.cs" />
     <Compile Include="Models\Activities\ActivitySearchInputModel.cs" />
+    <Compile Include="Models\Activities\ActivityTagApiDeleteModel.cs" />
     <Compile Include="Models\Activities\ActivityTagApiModel.cs" />
     <Compile Include="Models\Activities\ActivityTagApiPutModel.cs" />
     <Compile Include="Models\Activities\ActivityTypeApiModel.cs" />
@@ -377,6 +379,7 @@
     <Compile Include="Models\Employees\FacultyStaffSearchApiModel.cs" />
     <Compile Include="Models\Employees\FacultyStaffSummaryApiModel.cs" />
     <Compile Include="Models\Establishments\EstablishmentChildrenSearchInputModel.cs" />
+    <Compile Include="Models\Establishments\EstablishmentNameSearchInputModel.cs" />
     <Compile Include="Models\InternationalAffiliationApiModel.cs" />
     <Compile Include="Models\Agreements\AgreementContactPhoneApiModel.cs" />
     <Compile Include="Models\Graphics\CircleGraphicRequestModel.cs" />

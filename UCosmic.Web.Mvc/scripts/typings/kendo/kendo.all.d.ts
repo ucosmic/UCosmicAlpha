@@ -667,6 +667,7 @@ declare module kendo.ui {
 
     interface AutoCompleteSelectEvent extends AutoCompleteEvent {
         item?: JQuery;
+        preventDefault: Function;
     }
 
 

@@ -2063,7 +2063,7 @@ module ViewModels.Employees {
         /*
         */
         // --------------------------------------------------------------------------------
-        activitySearch(): JQueryPromise {
+        activitySearch(): JQueryDeferred<void> {
             var deferred: JQueryDeferred<void> = $.Deferred();
 
             var locationIds = new Array();

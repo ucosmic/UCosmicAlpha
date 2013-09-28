@@ -1,10 +1,11 @@
-﻿namespace UCosmic.Web.Mvc.Models
+﻿using UCosmic.Domain.Activities;
+
+namespace UCosmic.Web.Mvc.Models
 {
     public class ActivityTagApiPutModel
     {
-        public int Id { get; set; }
         public string Text { get; set; }
-        public string DomainTypeText { get; set; }
+        public ActivityTagDomainType DomainType { get; set; }
         public int? DomainKey { get; set; }
     }
 }

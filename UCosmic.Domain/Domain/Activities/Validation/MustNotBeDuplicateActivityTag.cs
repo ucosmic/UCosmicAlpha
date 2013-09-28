@@ -6,14 +6,14 @@ using FluentValidation.Validators;
 
 namespace UCosmic.Domain.Activities
 {
-    public class MustNotBeDuplicateActivityType<T> : PropertyValidator
+    public class MustNotBeDuplicateActivityTag<T> : PropertyValidator
     {
-        private const string FailMessageFormat = "Activity with id '{ActivityId}' is already associated with activity type id '{PropertyValue}'.";
+        private const string FailMessageFormat = "Activity with id '{ActivityId}' is already tagged with '{PropertyValue}'.";
 
         private readonly IProcessQueries _queryProcessor;
         private readonly Func<T, int> _activityId;
 
-        internal MustNotBeDuplicateActivityType(IProcessQueries queryProcessor, Func<T, int> activityId)
+        internal MustNotBeDuplicateActivityTag(IProcessQueries queryProcessor, Func<T, int> activityId)
             : base(FailMessageFormat)
         {
             if (queryProcessor == null) throw new ArgumentNullException("queryProcessor");
@@ -25,17 +25,17 @@ namespace UCosmic.Domain.Activities
 
         protected override bool IsValid(PropertyValidatorContext context)
         {
-            var typeId = (int)context.PropertyValue;
+            var tagText = (string)context.PropertyValue;
             var activityId = _activityId((T)context.Instance);
             var activity = _queryProcessor.Execute(new ActivityById(activityId)
             {
                 EagerLoad = new Expression<Func<Activity, object>>[]
                 {
-                    x => x.Values.Select(y => y.Types),
+                    x => x.Values.Select(y => y.Tags),
                 },
             });
 
-            if (activity.Values.Single(x => x.Mode == activity.Mode).Types.All(x => x.TypeId != typeId))
+            if (activity.Values.Single(x => x.Mode == activity.Mode).Tags.All(x => !tagText.Equals(x.Text)))
                 return true;
 
             context.MessageFormatter.AppendArgument("ActivityId", activity.RevisionId);
@@ -44,12 +44,12 @@ namespace UCosmic.Domain.Activities
         }
     }
 
-    public static class MustNotBeDuplicateActivityTypeExtensions
+    public static class MustNotBeDuplicateActivityTagExtensions
     {
-        public static IRuleBuilderOptions<T, int> MustNotBeDuplicateActivityType<T>
-            (this IRuleBuilder<T, int> ruleBuilder, IProcessQueries queryProcessor, Func<T, int> activityId)
+        public static IRuleBuilderOptions<T, string> MustNotBeDuplicateActivityTag<T>
+            (this IRuleBuilder<T, string> ruleBuilder, IProcessQueries queryProcessor, Func<T, int> activityId)
         {
-            return ruleBuilder.SetValidator(new MustNotBeDuplicateActivityType<T>(queryProcessor, activityId));
+            return ruleBuilder.SetValidator(new MustNotBeDuplicateActivityTag<T>(queryProcessor, activityId));
         }
     }
 }

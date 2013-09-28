@@ -7,7 +7,7 @@ using UCosmic.Domain.Activities;
 
 namespace UCosmic.Web.Mvc.ApiControllers
 {
-    [RoutePrefix("activities/{activityId:int}/types")]
+    [RoutePrefix("api/activities/{activityId:int}/types")]
     public class ActivityTypesController : ApiController
     {
         private readonly IHandleCommands<AddActivityType> _createHandler;

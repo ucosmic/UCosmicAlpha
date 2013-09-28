@@ -258,7 +258,7 @@
             <div data-side-swiper="on">
                 <div id="activity-edit" data-bind="visible: ready" style="display: none;">
 
-                    <!-- BUTTONS -->
+                    @* BUTTONS *@
                     <div style="margin-bottom: 32px" data-bind="template: { name: 'buttons-template'}"></div>
 
                     <header>
@@ -270,13 +270,13 @@
                         <table class="activity">
                             <tbody>
                                 <tr>
-                                    <!-- TITLE -->
+                                    @* TITLE *@
                                     <td class="label"><span class="container required"><span class="text">Title</span></span></td>
                                     <td>
                                         <textarea rows="1" placeholder="[Enter Title]" maxlength="500" data-bind="value: values.title"></textarea>
                                     </td>
                                 </tr>
-                                <!-- COUNTRY -->
+                                @* COUNTRY *@
                                 <tr>
                                     <td class="label"><span class="container required"><span class="text">Countries / Locations</span></span></td>
                                     <td>
@@ -284,19 +284,19 @@
                                         <span data-bind="validationMessage: values.locations" class="validationMessage"></span>
                                     </td>
                                 </tr>
-                                <!-- TYPE -->
+                                @* TYPE *@
                                 <tr>
-                                    <!-- TODO: activity types / categories are not always required -->
+                                    @* TODO: activity types / categories are not always required *@
                                     <td class="label" style="padding-top: 0;"><span class="container required"><span class="text">Type(s)</span></span></td>
                                     <td>
-                                        <!-- Need this div for the validation message to display. -->
+                                        @* Need this div for the validation message to display. *@
                                         <div>
                                             <ul class="data-items" data-bind="template: { name: 'activity-types-template', foreach: activityTypes }" />
                                         </div>
                                         <span data-bind="validationMessage: values.types" class="validationMessage"></span>
                                     </td>
                                 </tr>
-                                <!-- FROM and TO DATES -->
+                                @* FROM and TO DATES *@
                                 <tr>
                                     <td class="label"><span class="container required"><span class="text">On / From</span></span></td>
                                     <td>
@@ -316,7 +316,7 @@
                                                 <input id="toDatePicker" data-bind="value: values.endsOn" />
                                             </span>
                                         </div>
-                                        <!--<span data-bind="validationMessage: values.endsOn" class="validationMessage"></span>-->
+                                        @*<span data-bind="validationMessage: values.endsOn" class="validationMessage"></span>*@
                                         <div class="example" style="margin-top: 8px">
                                             <span>Enter dates as yyyy, mm/yyyy or use date picker.</span>
                                             <div>
@@ -326,7 +326,7 @@
                                         </div>
                                     </td>
                                 </tr>
-                                <!-- FUNDING -->
+                                @* FUNDING *@
                                 <tr>
                                     <td class="label" style="padding-top: 0;"><span class="container"><span class="text">Funding</span></span></td>
                                     <td>
@@ -346,11 +346,11 @@
                                 </tr>
                             </tbody>
                         </table>
-                        <!-- DESCRIPTION -->
+                        @* DESCRIPTION *@
                         <div style="margin-bottom: inherit">
                             <header style="margin-bottom: 4px">
                                 <h2 style="font-weight: normal">Description</h2>
-                                <!-- <img src="~/images/icons/help/question-mark-24-blue.png" alt="Help" style="width: 16px; height: 16px; float: right; margin-bottom: 3px"/> -->
+                                 @*<img src="~/images/icons/help/question-mark-24-blue.png" alt="Help" style="width: 16px; height: 16px; float: right; margin-bottom: 3px"/>*@ 
                             </header>
                             <textarea data-bind="tinymce: values.content, valueUpdate: ['afterkeydown','keyup'], tinymceOptions:
                                 {
@@ -379,9 +379,9 @@
                                     theme_advanced_path : false
                                 }">
                             </textarea>
-                            <!--<textarea id="description" rows="8" data-bind="value: values.content"></textarea>-->
+                            @*<textarea id="description" rows="8" data-bind="value: values.content"></textarea>*@
                         </div>
-                        <!-- TAGS -->
+                        @* TAGS *@
                         <div style="margin-bottom: 32px">
                             <header style="margin-bottom: 10px">
                                 <h2 style="font-weight: normal">
@@ -391,7 +391,7 @@
                             <div style="width: 100%; margin-bottom: 16px">
                                 <input id="newTag" style="width: 600px; white-space: nowrap; overflow: hidden" data-bind="value: newTag" />
                                 &nbsp;
-                                <a href="/#" data-bind="click: function (item, event) { this.addTag(item, event); }" title="Add tag">
+                                <a href="/#" data-bind="click: addTag" title="Add tag">
                                     <img src="~/images/icons/plus/plus-24-green.png" alt="Add new tag" />
                                 </a>
                             </div>
@@ -404,7 +404,7 @@
                             <div style="clear: left;"></div>
                         </div>
 
-                        <!-- DOCUMENTS -->
+                        @* DOCUMENTS *@
                         <div style="width: 100%; margin-bottom: inherit">
                             <header>
                                 <h2>
@@ -438,7 +438,7 @@
                                             <th style="width: 65%">Title</th>
                                             <th style="width: 10%; text-align: center">Type</th>
                                             <th style="width: 10%; text-align: center">Size</th>
-                                            <!--<th style="width: 5%; text-align: center">Hide</th>-->
+                                            @*<th style="width: 5%; text-align: center">Hide</th>*@
                                             <th style="width: 5%"></th>
                                         </tr>
                                     </thead>
@@ -447,10 +447,10 @@
                             </div>
                         </div>
 
-                        <!-- BUTTONS -->
+                        @* BUTTONS *@
                         <div style="margin-bottom: 32px" data-bind="template: { name: 'buttons-template'}"></div>
 
-                        <!-- LAST UPDATED -->
+                        @* LAST UPDATED *@
                         <div style="width: 50%; height: 1.5em; border-top: 1px; border-style: solid">
                             <span style="font-size: smaller; color: slategray">
                                 <span>Last updated</span>
@@ -459,6 +459,8 @@
                                 <label id="last-updated-name" data-bind="text: whoLastUpdated()"></label>
                             </span>
                         </div>
+
+                        @* API URL's *@
                         <div style="display: none">
                             @{
                                 var placePutUrlFormat = Url.HttpRouteUrl(null, new { controller = "ActivityPlaces", action = "Put", activityId = 0, placeId = 1 });
@@ -481,11 +483,25 @@
                                 {
                                     typeDeleteUrlFormat = typeDeleteUrlFormat.Replace("0", "{0}").Replace("1", "{1}");
                                 }
+                                var establishmentNameGetUrlFormat = Url.HttpRouteUrl(null, new { controller = "EstablishmentNames", action = "GetByKeyword" });
+                                var tagPostUrlFormat = Url.HttpRouteUrl(null, new { controller = "ActivityTags", action = "Post", activityId = 0 });
+                                if (tagPostUrlFormat != null)
+                                {
+                                    tagPostUrlFormat = tagPostUrlFormat.Replace("0", "{0}");
+                                }
+                                var tagDeleteUrlFormat = Url.HttpRouteUrl(null, new { controller = "ActivityTags", action = "Delete", activityId = 0 });
+                                if (tagDeleteUrlFormat != null)
+                                {
+                                    tagDeleteUrlFormat = tagDeleteUrlFormat.Replace("0", "{0}");
+                                }
                             }
                             <span id="place_put_url_format">@placePutUrlFormat</span>
                             <span id="place_delete_url_format">@placeDeleteUrlFormat</span>
                             <span id="type_put_url_format">@typePutUrlFormat</span>
                             <span id="type_delete_url_format">@typeDeleteUrlFormat</span>
+                            <span id="establishment_names_get_url_format">@establishmentNameGetUrlFormat</span>
+                            <span id="tag_post_url_format">@tagPostUrlFormat</span>
+                            <span id="tag_delete_url_format">@tagDeleteUrlFormat</span>
                         </div>
                     </div>
                 </div>
@@ -495,7 +511,7 @@
 </div>
 
 
-<!-- JQUERY DIALOGS -->
+@* JQUERY DIALOGS *@
 <div id="documentRenameErrorDialog" class="dialog" title="Error Renaming Document">
     <span id="message" style="float: left"></span>
 </div>
@@ -527,7 +543,7 @@
 </div>
 
 
-<!-- KNOCKOUT TEMPLATES -->
+@* KNOCKOUT TEMPLATES *@
 
 <script type="text/html" id="activity-types-template">
     <li>
@@ -541,8 +557,8 @@
     <li style="float: left; margin: 0 2px 2px 0;">
         <div style="display: inline-block; padding: 5px 6px 5px 8px; background-color: #eee; border: solid 1px #ddd;">
             <span>
-                <span data-bind="text: text()"></span>
-                <a href="/#" data-bind="click: function (item, event) { $parent.removeTag(item, event, null); }" title="Remove tag" style="margin-left: 8px;">
+                <span data-bind="text: text"></span>
+                <a href="/#" data-bind="click: function (item) { $parent.deleteTag(item); }" title="Remove tag" style="margin-left: 8px;">
                     <img src="@Links.images.icons.minus.minus_20_red_png" alt="Remove tag" style="vertical-align: middle;" /></a>
             </span>
         </div>
@@ -573,10 +589,6 @@
         <td style="text-align: center">
             <span data-bind="text: size"></span>
         </td>
-        <!-- Visible -->
-        <!--<td style="text-align: center">
-                <input type="checkbox" data-bind="checked: !visible"/>
-            </td>-->
         <!-- Remove Button -->
         <td style="text-align: center; vertical-align: middle">
             <a href="#" title="Delete this document" data-bind="click: function (item, index) { $parent.deleteDocument(item, $index()); }, clickBubble: false">

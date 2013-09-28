@@ -33,7 +33,7 @@ module ViewModels.Activities {
 
         // Data bound to new tag textArea
         newTag: KnockoutObservable<string> = ko.observable();
-        newEstablishment: any; // Because KendoUI autocomplete does not offer dataValueField.
+        //newEstablishment: any; // Because KendoUI autocomplete does not offer dataValueField.
 
         // array to hold file upload errors
         fileUploadErrors: KnockoutObservableArray<any> = ko.observableArray();
@@ -219,59 +219,10 @@ module ViewModels.Activities {
                 dataSource: this.locations(),
                 value: this.kendoPlaceIds(),
                 dataBound: (e: kendo.ui.MultiSelectEvent): void => {
-                    this._currentPlaceIds = e.sender.value().slice(0);
+                    this._onPlaceMultiSelectDataBound(e);
                 },
                 change: (e: kendo.ui.MultiSelectEvent): void => {
-                    // find out if a place was added or deleted
-                    var newPlaceIds = e.sender.value();
-                    var addedPlaceIds: number[] = $(newPlaceIds).not(this._currentPlaceIds).get();
-                    var removedPlaceIds: number[] = $(this._currentPlaceIds).not(newPlaceIds).get();
-
-                    if (addedPlaceIds.length === 1) {
-                        var addedPlaceId = addedPlaceIds[0];
-                        var url = $('#place_put_url_format').text()
-                            .format(this.id(), addedPlaceId);
-                        $.ajax({
-                            type: 'PUT',
-                            url: url,
-                            async: false
-                        })
-                            .done((): void => {
-                                this._currentPlaceIds.push(addedPlaceId);
-                            })
-                            .fail((xhr: JQueryXHR): void => { // remove from ui
-                                App.Failures.message(xhr, 'while trying to add this location, please try again', true);
-                                var restored = this._currentPlaceIds.slice(0);
-                                e.sender.dataSource.filter({});
-                                e.sender.value(restored);
-                                this._currentPlaceIds = restored;
-                            });
-                    }
-
-                    else if (removedPlaceIds.length === 1) {
-                        var removedPlaceId = removedPlaceIds[0];
-                        var url = $('#place_delete_url_format').text()
-                            .format(this.id(), removedPlaceId);
-                        $.ajax({
-                            type: 'DELETE',
-                            url: url,
-                            async: false
-                        })
-                            .done((): void => {
-                                var index = $.inArray(removedPlaceId, this._currentPlaceIds);
-                                this._currentPlaceIds.splice(index, 1);
-                            })
-                            .fail((xhr: JQueryXHR): void => { // add back to ui
-                                App.Failures.message(xhr, 'while trying to remove this location, please try again', true);
-                                e.sender.value(this._currentPlaceIds);
-                            });
-                    }
-
-                    this.values.locations.removeAll();
-                    for (var i = 0; i < this._currentPlaceIds.length; i++) {
-                        var location = ko.mapping.fromJS({ id: 0, placeId: this._currentPlaceIds[i], version: '' });
-                        this.values.locations.push(location);
-                    }
+                    this._onPlaceMultiSelectChange(e);
                 },
                 placeholder: '[Select Country/Location, Body of Water or Global]'
             });
@@ -345,29 +296,10 @@ module ViewModels.Activities {
             $('#' + newTagId).kendoAutoComplete({
                 minLength: 3,
                 placeholder: '[Enter tag or keyword]',
-                dataTextField: 'officialName',
-                dataSource: new kendo.data.DataSource({
-                    serverFiltering: true,
-                    transport: {
-                        read: (options: any): void => {
-                            $.ajax({
-                                url: App.Routes.WebApi.Establishments.get(),
-                                data: {
-                                    keyword: options.data.filter.filters[0].value,
-                                    pageNumber: 1,
-                                    pageSize: App.Constants.int32Max
-                                },
-                                success: (results: any): void => {
-                                    options.success(results.items);
-                                }
-                            });
-                        }
-                    }
-                }),
-                select: (e: any): void => {
-                    var me = $('#' + newTagId).data('kendoAutoComplete');
-                    var dataItem = me.dataItem(e.item.index());
-                    this.newEstablishment = { officialName: dataItem.officialName, id: dataItem.id };
+                dataTextField: 'text',
+                dataSource: this._getTagAutoCompleteDataSource(),
+                select: (e: kendo.ui.AutoCompleteSelectEvent): void => {
+                    this._onTagAutoCompleteSelect(e);
                 }
             });
 
@@ -655,11 +587,75 @@ module ViewModels.Activities {
         }
 
         //#endregion
+        //#region Places
+
+        private _onPlaceMultiSelectDataBound(e: kendo.ui.MultiSelectEvent): void {
+            this._currentPlaceIds = e.sender.value().slice(0);
+        }
+
+        private _onPlaceMultiSelectChange(e: kendo.ui.MultiSelectEvent): void {
+            // find out if a place was added or deleted
+            var newPlaceIds = e.sender.value();
+            var addedPlaceIds: number[] = $(newPlaceIds).not(this._currentPlaceIds).get();
+            var removedPlaceIds: number[] = $(this._currentPlaceIds).not(newPlaceIds).get();
+
+            if (addedPlaceIds.length === 1)
+                this._addPlaceId(addedPlaceIds[0], e);
+
+            else if (removedPlaceIds.length === 1)
+                this._removePlaceId(removedPlaceIds[0], e);
+
+            this.values.locations.removeAll();
+            for (var i = 0; i < this._currentPlaceIds.length; i++) {
+                var location = ko.mapping.fromJS({ id: 0, placeId: this._currentPlaceIds[i], version: '' });
+                this.values.locations.push(location);
+            }
+        }
+
+        private _addPlaceId(addedPlaceId: number, e: kendo.ui.MultiSelectEvent): void {
+            var url = $('#place_put_url_format').text()
+                .format(this.id(), addedPlaceId);
+            $.ajax({
+                type: 'PUT',
+                url: url,
+                async: false
+            })
+                .done((): void => {
+                    this._currentPlaceIds.push(addedPlaceId);
+                })
+                .fail((xhr: JQueryXHR): void => { // remove from ui
+                    App.Failures.message(xhr, 'while trying to add this location, please try again', true);
+                    var restored = this._currentPlaceIds.slice(0);
+                    e.sender.dataSource.filter({});
+                    e.sender.value(restored);
+                    this._currentPlaceIds = restored;
+                });
+        }
+
+        private _removePlaceId(removedPlaceId: number, e: kendo.ui.MultiSelectEvent): void {
+            var url = $('#place_delete_url_format').text()
+                .format(this.id(), removedPlaceId);
+            $.ajax({
+                type: 'DELETE',
+                url: url,
+                async: false
+            })
+                .done((): void => {
+                    var index = $.inArray(removedPlaceId, this._currentPlaceIds);
+                    this._currentPlaceIds.splice(index, 1);
+                })
+                .fail((xhr: JQueryXHR): void => { // add back to ui
+                    App.Failures.message(xhr, 'while trying to remove this location, please try again', true);
+                    e.sender.value(this._currentPlaceIds);
+                });
+        }
+
+        //#endregion
         //#region Types
 
         private _populateTypes(types: Service.ApiModels.IEmployeeActivityType[]): void {
-            var typesMapping = {
-                create: (options: any): any => {
+            var typesMapping: KnockoutMappingOptions = {
+                create: (options: KnockoutMappingCreateOptions): any => {
                     var checkBox = new ActivityTypeCheckBox(options);
                     var isChecked = Enumerable.From(this.values.types())
                         .Any(function (x: any): boolean {
@@ -736,58 +732,168 @@ module ViewModels.Activities {
         //#endregion
         //#region Tags
 
-        addTag(item: any, event: Event): void {
-            var newText: string = null;
-            var domainTypeText: string = 'Custom';
-            var domainKey: number = null;
-            var isInstitution: boolean = false;
-            if (this.newEstablishment == null) {
-                newText = this.newTag();
+        private _getTagAutoCompleteDataSource(): kendo.data.DataSource {
+            var dataSource = new kendo.data.DataSource({
+                serverFiltering: true,
+                transport: {
+                    read: (options: any): void => {
+                        $.ajax({
+                            url: $('#establishment_names_get_url_format').text(),
+                            data: {
+                                keyword: options.data.filter.filters[0].value,
+                                pageNumber: 1,
+                                pageSize: 250
+                            },
+                        })
+                            .done((results: any): void => {
+                                options.success(results.items);
+                            })
+                            .fail((xhr: JQueryXHR): void => {
+                                App.Failures.message(xhr, 'while trying to search for tags', true);
+                            });
+                    }
+                }
+            });
+            return dataSource;
+        }
+
+        private _getTagEstablishmentId(text: string): number {
+            var establishmentId: number;
+            var url = $('#establishment_names_get_url_format').text();
+            $.ajax({
+                type: 'GET',
+                url: url,
+                data: {
+                    keyword: text,
+                    keywordMatchStrategy: 'Equals',
+                    pageNumber: 1,
+                    pageSize: 250,
+                },
+                async: false,
+            })
+                .done((results: any): void => {
+                    // only treat as establishment if there is exactly 1 establishment id
+                    var establishmentIds: number[] = Enumerable.From(results.items)
+                        .Select(function (x: any): number {
+                            return x.ownerId;
+                        }).Distinct().ToArray();
+                    if (establishmentIds.length == 1) establishmentId = establishmentIds[0];
+                });
+            return establishmentId;
+        }
+
+        private _onTagAutoCompleteSelect(e: kendo.ui.AutoCompleteSelectEvent): void {
+            // the autocomplete filter will search establishment names, not establishments
+            // name.ownerId corresponds to the establishment.id
+            var dataItem = e.sender.dataItem(e.item.index());
+            this._addOrReplaceTag(dataItem.text, dataItem.ownerId)
+                .done((): void => {
+                    this.newTag('');
+                    e.preventDefault();
+                    e.sender.value('');
+                    e.sender.element.focus(); // this resets the value of e.sender._prev
+                })
+                .fail((xhr: JQueryXHR): void => {
+                    App.Failures.message(xhr, 'while trying to add this activity tag, please try again', true);
+                });
+        }
+
+        addTag(): void {
+            var text = this.newTag();
+            if (text) text = $.trim(text);
+            var establishmentId = this._getTagEstablishmentId(text);
+            this._addOrReplaceTag(text, establishmentId)
+                .done((): void => {
+                    this.newTag('');
+                })
+                .fail((xhr: JQueryXHR): void => {
+                    App.Failures.message(xhr, 'while trying to add this activity tag, please try again', true);
+                });
+        }
+
+        deleteTag(item: any): void {
+            this._deleteTag(item.text())
+                .fail((xhr: JQueryXHR): void => {
+                    App.Failures.message(xhr, 'while trying to delete this activity tag, please try again', true);
+                });
+        }
+
+        private _addOrReplaceTag(text: string, establishmentId: number): JQueryDeferred<any> {
+            var deferred = $.Deferred();
+            if (!text) {
+                deferred.resolve();
             }
             else {
-                newText = this.newEstablishment.officialName;
-                domainTypeText = 'Establishment';
-                domainKey = this.newEstablishment.id;
-                isInstitution = true;
-                this.newEstablishment = null;
+                text = $.trim(text);
+                var tagToReplace = Enumerable.From(this.values.tags())
+                    .SingleOrDefault(undefined, function (x: any): boolean {
+                        return x.text().toUpperCase() === text.toUpperCase();
+                    });
+                if (tagToReplace) {
+                    this._deleteTag(text)
+                        .done((): void => {
+                            this._postTag(text, establishmentId)
+                                .done((): void => { deferred.resolve(); })
+                                .fail((xhr: JQueryXHR): void => { deferred.reject(xhr); });
+                        })
+                        .fail((xhr: JQueryXHR): void => { deferred.reject(xhr); });
+                }
+                else {
+                    this._postTag(text, establishmentId)
+                        .done((): void => { deferred.resolve(); })
+                        .fail((xhr: JQueryXHR): void => { deferred.reject(xhr); });
+                }
             }
-            newText = (newText != null) ? $.trim(newText) : null;
-            if ((newText != null) &&
-                (newText.length != 0) &&
-                (!this.haveTag(newText))) {
-                var tag = {
-                    id: 0,
-                    number: 0,
-                    text: newText,
-                    domainTypeText: domainTypeText,
-                    domainKey: domainKey,
-                    modeText: this.modeText(),
-                    isInstitution: isInstitution
-                };
-                var observableTag = ko.mapping.fromJS(tag);
-                this.values.tags.push(observableTag);
-            }
-
-            this.newTag(null);
-            this.dirtyFlag(true);
+            return deferred;
         }
 
-        removeTag(item: any, event: Event): void {
-            this.values.tags.remove(item);
-            this.dirtyFlag(true);
+        private _postTag(text: string, establishmentId: number): JQueryDeferred<any> {
+            var deferred = $.Deferred();
+            var url = $('#tag_post_url_format').text().format(this.id());
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: {
+                    text: text,
+                    domainType: establishmentId ? 'Establishment' : 'Custom',
+                    domainKey: establishmentId,
+                },
+            })
+                .done((): void => { // push observable tag into view's array
+                    var tag = {
+                        text: text,
+                        domainTypeText: establishmentId ? 'Establishment' : 'Custom',
+                        domainKey: establishmentId,
+                    };
+                    var observableTag = ko.mapping.fromJS(tag);
+                    this.values.tags.push(observableTag);
+                    deferred.resolve();
+                })
+                .fail((xhr: JQueryXHR): void => { deferred.reject(xhr); });
+            return deferred;
         }
 
-        haveTag(text: string): boolean {
-            return this.tagIndex(text) != -1;
-        }
-
-        tagIndex(text: string): number {
-            var i = 0;
-            while ((i < this.values.tags().length) &&
-                (text != this.values.tags()[i].text())) {
-                i += 1;
-            }
-            return ((this.values.tags().length > 0) && (i < this.values.tags().length)) ? i : -1;
+        private _deleteTag(text: string): JQueryDeferred<any> {
+            var deferred = $.Deferred();
+            var url = $('#tag_delete_url_format').text().format(this.id());
+            $.ajax({
+                url: url,
+                type: 'DELETE',
+                data: { // api expects text in the body, not url (because of encoding)
+                    text: text,
+                },
+            })
+                .done((): void => {
+                    // there should always be matching tag, but check to be safe
+                    var tagToRemove = Enumerable.From(this.values.tags())
+                        .SingleOrDefault(undefined, function (x: any): boolean {
+                            return text && x.text().toUpperCase() === text.toUpperCase();
+                        });
+                    if (tagToRemove) this.values.tags.remove(tagToRemove);
+                    deferred.resolve();
+                })
+                .fail((xhr: JQueryXHR): void => { deferred.reject(xhr); });
+            return deferred;
         }
 
         //#endregion
@@ -929,7 +1035,7 @@ module ViewModels.Activities {
         text: string;
         id: number;
 
-        constructor(mappingOptions: any) {
+        constructor(mappingOptions: KnockoutMappingCreateOptions) {
             this.text = mappingOptions.data.type;
             this.id = mappingOptions.data.id;
         }

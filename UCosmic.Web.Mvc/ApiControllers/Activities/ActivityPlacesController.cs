@@ -7,7 +7,7 @@ using UCosmic.Domain.Activities;
 
 namespace UCosmic.Web.Mvc.ApiControllers
 {
-    [RoutePrefix("activities/{activityId:int}/places")]
+    [RoutePrefix("api/activities/{activityId:int}/places")]
     public class ActivityPlacesController : ApiController
     {
         private readonly IHandleCommands<CreateActivityPlace> _createHandler;

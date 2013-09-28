@@ -43,7 +43,34 @@ namespace UCosmic.Web.Mvc.ApiControllers
             _deleteHandler = deleteHandler;
         }
 
-        [GET("{establishmentId}/names")]
+        [GET("names", SitePrecedence = 1)]
+        public PageOfEstablishmentNameModel GetByKeyword([FromUri] EstablishmentNameSearchInputModel input)
+        {
+            if (input.PageSize < 1)
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
+
+            var query = new EstablishmentNamesByKeyword
+            {
+                Keyword = input.Keyword,
+                KeywordMatchStrategy = input.KeywordMatchStrategy,
+                PageNumber = input.PageNumber,
+                PageSize = input.PageSize,
+                EagerLoad = new Expression<Func<EstablishmentName, object>>[]
+                {
+                    x => x.ForEstablishment,
+                    x => x.TranslationToLanguage.Names.Select(y => y.TranslationToLanguage),
+                },
+                OrderBy = new Dictionary<Expression<Func<EstablishmentName, object>>, OrderByDirection>
+                {
+                    { x => x.Text, OrderByDirection.Ascending },
+                },
+            };
+            var entities = _queryProcessor.Execute(query);
+            var model = Mapper.Map<PageOfEstablishmentNameModel>(entities);
+            return model;
+        }
+
+        [GET("{establishmentId:int}/names")]
         public IEnumerable<EstablishmentNameApiModel> GetAll(int establishmentId)
         {
             //System.Threading.Thread.Sleep(2000); // test api latency
@@ -72,7 +99,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return models;
         }
 
-        [GET("{establishmentId}/names/{establishmentNameId}")]
+        [GET("{establishmentId:int}/names/{establishmentNameId:int}")]
         public EstablishmentNameApiModel Get(int establishmentId, int establishmentNameId)
         {
             //System.Threading.Thread.Sleep(2000); // test api latency
@@ -93,7 +120,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return model;
         }
 
-        [POST("{establishmentId}/names")]
+        [POST("{establishmentId:int}/names")]
         [Authorize(Roles = RoleName.EstablishmentAdministrator)]
         public HttpResponseMessage Post(int establishmentId, EstablishmentNameApiModel model)
         {
@@ -131,7 +158,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return response;
         }
 
-        [PUT("{establishmentId}/names/{establishmentNameId}")]
+        [PUT("{establishmentId:int}/names/{establishmentNameId:int}")]
         [Authorize(Roles = RoleName.EstablishmentAdministrator)]
         public HttpResponseMessage Put(int establishmentId, int establishmentNameId, EstablishmentNameApiModel model)
         {
@@ -159,7 +186,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return response;
         }
 
-        [DELETE("{establishmentId}/names/{establishmentNameId}")]
+        [DELETE("{establishmentId:int}/names/{establishmentNameId:int}")]
         [Authorize(Roles = RoleName.EstablishmentAdministrator)]
         public HttpResponseMessage Delete(int establishmentId, int establishmentNameId)
         {
@@ -186,7 +213,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return response;
         }
 
-        [POST("{establishmentId}/names/{establishmentNameId}/validate-text")]
+        [POST("{establishmentId:int}/names/{establishmentNameId:int}/validate-text")]
         public HttpResponseMessage Validate(int establishmentId, int establishmentNameId, EstablishmentNameApiModel model)
         {
             //System.Threading.Thread.Sleep(2000); // test api latency

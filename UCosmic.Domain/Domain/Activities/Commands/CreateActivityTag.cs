@@ -9,11 +9,9 @@ namespace UCosmic.Domain.Activities
     {
         public IPrincipal Principal { get; protected set; }
         public int ActivityValuesId { get; set; }
-        public int Number { get; set; }
         public string Text { get; set; }
         public ActivityTagDomainType DomainType { get; set; }
         public int? DomainKey { get; set; }
-        public ActivityMode Mode { get; set; }
         internal bool NoCommit { get; set; }
 
         public CreateActivityTag(IPrincipal principal)

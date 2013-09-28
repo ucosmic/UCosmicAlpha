@@ -1,9 +1,10 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
 using UCosmic.Domain.Languages;
 
 namespace UCosmic.Domain.Establishments
 {
-    public class EstablishmentName : RevisableEntity
+    public class EstablishmentName : RevisableEntity, IEquatable<EstablishmentName>
     {
         protected internal EstablishmentName()
         {
@@ -37,6 +38,21 @@ namespace UCosmic.Domain.Establishments
         private string _text;
 
         public string AsciiEquivalent { get; private set; }
+
+        public bool Equals(EstablishmentName other)
+        {
+            return other != null && other.RevisionId.Equals(RevisionId);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return ReferenceEquals(this, obj) || Equals(obj as EstablishmentName);
+        }
+
+        public override int GetHashCode()
+        {
+            return RevisionId.GetHashCode();
+        }
 
         public override string ToString()
         {

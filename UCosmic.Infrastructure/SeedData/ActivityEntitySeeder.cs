@@ -122,7 +122,6 @@ namespace UCosmic.SeedData
                         Text = "Vietnam",
                         DomainType = ActivityTagDomainType.Place,
                         DomainKey = _entities.Get<Place>().Single(x => x.OfficialName == "Vietnam").RevisionId,
-                        Mode = activity.Mode
                     });
 
                     _createActivityTag.Handle(new CreateActivityTag(principal)
@@ -131,7 +130,6 @@ namespace UCosmic.SeedData
                         Text = "India",
                         DomainType = ActivityTagDomainType.Place,
                         DomainKey = _entities.Get<Place>().Single(x => x.OfficialName == "India").RevisionId,
-                        Mode = activity.Mode
                     });
 
                     _createActivityTag.Handle(new CreateActivityTag(principal)
@@ -140,7 +138,6 @@ namespace UCosmic.SeedData
                         Text = "Japan",
                         DomainType = ActivityTagDomainType.Place,
                         DomainKey = _entities.Get<Place>().Single(x => x.OfficialName == "Japan").RevisionId,
-                        Mode = activity.Mode
                     });
 
                     /* ----- Add Documents ----- */

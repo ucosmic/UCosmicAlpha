@@ -27,6 +27,7 @@ var ViewModels;
                 this.activityTypes = ko.observableArray();
                 // Data bound to new tag textArea
                 this.newTag = ko.observable();
+                //newEstablishment: any; // Because KendoUI autocomplete does not offer dataValueField.
                 // array to hold file upload errors
                 this.fileUploadErrors = ko.observableArray();
                 // Autosave after so many keydowns
@@ -166,51 +167,10 @@ var ViewModels;
                     dataSource: this.locations(),
                     value: this.kendoPlaceIds(),
                     dataBound: function (e) {
-                        _this._currentPlaceIds = e.sender.value().slice(0);
+                        _this._onPlaceMultiSelectDataBound(e);
                     },
                     change: function (e) {
-                        // find out if a place was added or deleted
-                        var newPlaceIds = e.sender.value();
-                        var addedPlaceIds = $(newPlaceIds).not(_this._currentPlaceIds).get();
-                        var removedPlaceIds = $(_this._currentPlaceIds).not(newPlaceIds).get();
-
-                        if (addedPlaceIds.length === 1) {
-                            var addedPlaceId = addedPlaceIds[0];
-                            var url = $('#place_put_url_format').text().format(_this.id(), addedPlaceId);
-                            $.ajax({
-                                type: 'PUT',
-                                url: url,
-                                async: false
-                            }).done(function () {
-                                _this._currentPlaceIds.push(addedPlaceId);
-                            }).fail(function (xhr) {
-                                App.Failures.message(xhr, 'while trying to add this location, please try again', true);
-                                var restored = _this._currentPlaceIds.slice(0);
-                                e.sender.dataSource.filter({});
-                                e.sender.value(restored);
-                                _this._currentPlaceIds = restored;
-                            });
-                        } else if (removedPlaceIds.length === 1) {
-                            var removedPlaceId = removedPlaceIds[0];
-                            var url = $('#place_delete_url_format').text().format(_this.id(), removedPlaceId);
-                            $.ajax({
-                                type: 'DELETE',
-                                url: url,
-                                async: false
-                            }).done(function () {
-                                var index = $.inArray(removedPlaceId, _this._currentPlaceIds);
-                                _this._currentPlaceIds.splice(index, 1);
-                            }).fail(function (xhr) {
-                                App.Failures.message(xhr, 'while trying to remove this location, please try again', true);
-                                e.sender.value(_this._currentPlaceIds);
-                            });
-                        }
-
-                        _this.values.locations.removeAll();
-                        for (var i = 0; i < _this._currentPlaceIds.length; i++) {
-                            var location = ko.mapping.fromJS({ id: 0, placeId: _this._currentPlaceIds[i], version: '' });
-                            _this.values.locations.push(location);
-                        }
+                        _this._onPlaceMultiSelectChange(e);
                     },
                     placeholder: '[Select Country/Location, Body of Water or Global]'
                 });
@@ -279,29 +239,10 @@ var ViewModels;
                 $('#' + newTagId).kendoAutoComplete({
                     minLength: 3,
                     placeholder: '[Enter tag or keyword]',
-                    dataTextField: 'officialName',
-                    dataSource: new kendo.data.DataSource({
-                        serverFiltering: true,
-                        transport: {
-                            read: function (options) {
-                                $.ajax({
-                                    url: App.Routes.WebApi.Establishments.get(),
-                                    data: {
-                                        keyword: options.data.filter.filters[0].value,
-                                        pageNumber: 1,
-                                        pageSize: App.Constants.int32Max
-                                    },
-                                    success: function (results) {
-                                        options.success(results.items);
-                                    }
-                                });
-                            }
-                        }
-                    }),
+                    dataTextField: 'text',
+                    dataSource: this._getTagAutoCompleteDataSource(),
                     select: function (e) {
-                        var me = $('#' + newTagId).data('kendoAutoComplete');
-                        var dataItem = me.dataItem(e.item.index());
-                        _this.newEstablishment = { officialName: dataItem.officialName, id: dataItem.id };
+                        _this._onTagAutoCompleteSelect(e);
                     }
                 });
                 //#endregion
@@ -581,6 +522,64 @@ var ViewModels;
             };
 
             //#endregion
+            //#region Places
+            Activity.prototype._onPlaceMultiSelectDataBound = function (e) {
+                this._currentPlaceIds = e.sender.value().slice(0);
+            };
+
+            Activity.prototype._onPlaceMultiSelectChange = function (e) {
+                // find out if a place was added or deleted
+                var newPlaceIds = e.sender.value();
+                var addedPlaceIds = $(newPlaceIds).not(this._currentPlaceIds).get();
+                var removedPlaceIds = $(this._currentPlaceIds).not(newPlaceIds).get();
+
+                if (addedPlaceIds.length === 1)
+                    this._addPlaceId(addedPlaceIds[0], e);
+else if (removedPlaceIds.length === 1)
+                    this._removePlaceId(removedPlaceIds[0], e);
+
+                this.values.locations.removeAll();
+                for (var i = 0; i < this._currentPlaceIds.length; i++) {
+                    var location = ko.mapping.fromJS({ id: 0, placeId: this._currentPlaceIds[i], version: '' });
+                    this.values.locations.push(location);
+                }
+            };
+
+            Activity.prototype._addPlaceId = function (addedPlaceId, e) {
+                var _this = this;
+                var url = $('#place_put_url_format').text().format(this.id(), addedPlaceId);
+                $.ajax({
+                    type: 'PUT',
+                    url: url,
+                    async: false
+                }).done(function () {
+                    _this._currentPlaceIds.push(addedPlaceId);
+                }).fail(function (xhr) {
+                    App.Failures.message(xhr, 'while trying to add this location, please try again', true);
+                    var restored = _this._currentPlaceIds.slice(0);
+                    e.sender.dataSource.filter({});
+                    e.sender.value(restored);
+                    _this._currentPlaceIds = restored;
+                });
+            };
+
+            Activity.prototype._removePlaceId = function (removedPlaceId, e) {
+                var _this = this;
+                var url = $('#place_delete_url_format').text().format(this.id(), removedPlaceId);
+                $.ajax({
+                    type: 'DELETE',
+                    url: url,
+                    async: false
+                }).done(function () {
+                    var index = $.inArray(removedPlaceId, _this._currentPlaceIds);
+                    _this._currentPlaceIds.splice(index, 1);
+                }).fail(function (xhr) {
+                    App.Failures.message(xhr, 'while trying to remove this location, please try again', true);
+                    e.sender.value(_this._currentPlaceIds);
+                });
+            };
+
+            //#endregion
             //#region Types
             Activity.prototype._populateTypes = function (types) {
                 var _this = this;
@@ -656,54 +655,167 @@ else
 
             //#endregion
             //#region Tags
-            Activity.prototype.addTag = function (item, event) {
-                var newText = null;
-                var domainTypeText = 'Custom';
-                var domainKey = null;
-                var isInstitution = false;
-                if (this.newEstablishment == null) {
-                    newText = this.newTag();
+            Activity.prototype._getTagAutoCompleteDataSource = function () {
+                var dataSource = new kendo.data.DataSource({
+                    serverFiltering: true,
+                    transport: {
+                        read: function (options) {
+                            $.ajax({
+                                url: $('#establishment_names_get_url_format').text(),
+                                data: {
+                                    keyword: options.data.filter.filters[0].value,
+                                    pageNumber: 1,
+                                    pageSize: 250
+                                }
+                            }).done(function (results) {
+                                options.success(results.items);
+                            }).fail(function (xhr) {
+                                App.Failures.message(xhr, 'while trying to search for tags', true);
+                            });
+                        }
+                    }
+                });
+                return dataSource;
+            };
+
+            Activity.prototype._getTagEstablishmentId = function (text) {
+                var establishmentId;
+                var url = $('#establishment_names_get_url_format').text();
+                $.ajax({
+                    type: 'GET',
+                    url: url,
+                    data: {
+                        keyword: text,
+                        keywordMatchStrategy: 'Equals',
+                        pageNumber: 1,
+                        pageSize: 250
+                    },
+                    async: false
+                }).done(function (results) {
+                    // only treat as establishment if there is exactly 1 establishment id
+                    var establishmentIds = Enumerable.From(results.items).Select(function (x) {
+                        return x.ownerId;
+                    }).Distinct().ToArray();
+                    if (establishmentIds.length == 1)
+                        establishmentId = establishmentIds[0];
+                });
+                return establishmentId;
+            };
+
+            Activity.prototype._onTagAutoCompleteSelect = function (e) {
+                var _this = this;
+                // the autocomplete filter will search establishment names, not establishments
+                // name.ownerId corresponds to the establishment.id
+                var dataItem = e.sender.dataItem(e.item.index());
+                this._addOrReplaceTag(dataItem.text, dataItem.ownerId).done(function () {
+                    _this.newTag('');
+                    e.preventDefault();
+                    e.sender.value('');
+                    e.sender.element.focus();
+                }).fail(function (xhr) {
+                    App.Failures.message(xhr, 'while trying to add this activity tag, please try again', true);
+                });
+            };
+
+            Activity.prototype.addTag = function () {
+                var _this = this;
+                var text = this.newTag();
+                if (text)
+                    text = $.trim(text);
+                var establishmentId = this._getTagEstablishmentId(text);
+                this._addOrReplaceTag(text, establishmentId).done(function () {
+                    _this.newTag('');
+                }).fail(function (xhr) {
+                    App.Failures.message(xhr, 'while trying to add this activity tag, please try again', true);
+                });
+            };
+
+            Activity.prototype.deleteTag = function (item) {
+                this._deleteTag(item.text()).fail(function (xhr) {
+                    App.Failures.message(xhr, 'while trying to delete this activity tag, please try again', true);
+                });
+            };
+
+            Activity.prototype._addOrReplaceTag = function (text, establishmentId) {
+                var _this = this;
+                var deferred = $.Deferred();
+                if (!text) {
+                    deferred.resolve();
                 } else {
-                    newText = this.newEstablishment.officialName;
-                    domainTypeText = 'Establishment';
-                    domainKey = this.newEstablishment.id;
-                    isInstitution = true;
-                    this.newEstablishment = null;
+                    text = $.trim(text);
+                    var tagToReplace = Enumerable.From(this.values.tags()).SingleOrDefault(undefined, function (x) {
+                        return x.text().toUpperCase() === text.toUpperCase();
+                    });
+                    if (tagToReplace) {
+                        this._deleteTag(text).done(function () {
+                            _this._postTag(text, establishmentId).done(function () {
+                                deferred.resolve();
+                            }).fail(function (xhr) {
+                                deferred.reject(xhr);
+                            });
+                        }).fail(function (xhr) {
+                            deferred.reject(xhr);
+                        });
+                    } else {
+                        this._postTag(text, establishmentId).done(function () {
+                            deferred.resolve();
+                        }).fail(function (xhr) {
+                            deferred.reject(xhr);
+                        });
+                    }
                 }
-                newText = (newText != null) ? $.trim(newText) : null;
-                if ((newText != null) && (newText.length != 0) && (!this.haveTag(newText))) {
+                return deferred;
+            };
+
+            Activity.prototype._postTag = function (text, establishmentId) {
+                var _this = this;
+                var deferred = $.Deferred();
+                var url = $('#tag_post_url_format').text().format(this.id());
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: {
+                        text: text,
+                        domainType: establishmentId ? 'Establishment' : 'Custom',
+                        domainKey: establishmentId
+                    }
+                }).done(function () {
                     var tag = {
-                        id: 0,
-                        number: 0,
-                        text: newText,
-                        domainTypeText: domainTypeText,
-                        domainKey: domainKey,
-                        modeText: this.modeText(),
-                        isInstitution: isInstitution
+                        text: text,
+                        domainTypeText: establishmentId ? 'Establishment' : 'Custom',
+                        domainKey: establishmentId
                     };
                     var observableTag = ko.mapping.fromJS(tag);
-                    this.values.tags.push(observableTag);
-                }
-
-                this.newTag(null);
-                this.dirtyFlag(true);
+                    _this.values.tags.push(observableTag);
+                    deferred.resolve();
+                }).fail(function (xhr) {
+                    deferred.reject(xhr);
+                });
+                return deferred;
             };
 
-            Activity.prototype.removeTag = function (item, event) {
-                this.values.tags.remove(item);
-                this.dirtyFlag(true);
-            };
-
-            Activity.prototype.haveTag = function (text) {
-                return this.tagIndex(text) != -1;
-            };
-
-            Activity.prototype.tagIndex = function (text) {
-                var i = 0;
-                while ((i < this.values.tags().length) && (text != this.values.tags()[i].text())) {
-                    i += 1;
-                }
-                return ((this.values.tags().length > 0) && (i < this.values.tags().length)) ? i : -1;
+            Activity.prototype._deleteTag = function (text) {
+                var _this = this;
+                var deferred = $.Deferred();
+                var url = $('#tag_delete_url_format').text().format(this.id());
+                $.ajax({
+                    url: url,
+                    type: 'DELETE',
+                    data: {
+                        text: text
+                    }
+                }).done(function () {
+                    // there should always be matching tag, but check to be safe
+                    var tagToRemove = Enumerable.From(_this.values.tags()).SingleOrDefault(undefined, function (x) {
+                        return text && x.text().toUpperCase() === text.toUpperCase();
+                    });
+                    if (tagToRemove)
+                        _this.values.tags.remove(tagToRemove);
+                    deferred.resolve();
+                }).fail(function (xhr) {
+                    deferred.reject(xhr);
+                });
+                return deferred;
             };
 
             //#endregion
