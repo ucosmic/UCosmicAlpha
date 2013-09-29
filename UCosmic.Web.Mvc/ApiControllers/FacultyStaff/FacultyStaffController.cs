@@ -618,6 +618,16 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 });
 
                 AddActivitiesToResults(filter, activities, ref results);
+
+                foreach (var placeResult in results.PlaceResults)
+                {
+                    placeResult.Results = placeResult.Results.OrderByDescending(r => r.SortDate)
+                                                        .ThenBy(r => r.PersonName)
+                                                        .ThenBy(r => r.ActivityTitle)
+                                                        .ToList();
+                }
+
+                results.PlaceResults = results.PlaceResults.OrderBy(r => r.OfficialName).ToList();
             }
             else if (filter.FilterType == "people")
             {
@@ -639,187 +649,224 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 /* Add people found by Activities */
                 AddActivitiesToResults(filter, peopleSearchResult.Activities, ref results);
 
-                /* Add people found by Geographic Expertise criteria */
-                foreach (var geographicExpertise in peopleSearchResult.GeographicExpertise)
+                /* Compute PeopleCounts for places */
+                if (results.PlaceResults != null)
                 {
-                    foreach (var location in geographicExpertise.Locations)
+                    foreach (var placeResult in results.PlaceResults)
                     {
-                        if ((filter.LocationIds == null)
-                            || (filter.LocationIds.Length == 0)
-                            || filter.LocationIds.Contains(location.PlaceId))
+                        var groupedResults = placeResult.Results.GroupBy(r => r.PersonId);
+                        placeResult.PeopleCount = groupedResults.Count();
+                    }
+                }
+
+                /* Add people found by Geographic Expertise criteria */
+                if (peopleSearchResult.GeographicExpertise != null)
+                {
+                    foreach (var geographicExpertise in peopleSearchResult.GeographicExpertise)
+                    {
+                        foreach (var location in geographicExpertise.Locations)
                         {
-                            var placeResult = results.PlaceResults.SingleOrDefault(cr => cr.PlaceId == location.PlaceId);
-                            if (placeResult == null)
+                            if ((filter.LocationIds == null)
+                                || (filter.LocationIds.Length == 0)
+                                || filter.LocationIds.Contains(location.PlaceId))
                             {
-                                placeResult = new FacultyStaffPlaceResult
+                                var placeResult =
+                                    results.PlaceResults.SingleOrDefault(cr => cr.PlaceId == location.PlaceId);
+                                if (placeResult == null)
                                 {
-                                    PlaceId = location.PlaceId,
-                                    OfficialName = location.Place.OfficialName,
-                                    Lat =
-                                        location.Place.Center.Latitude.HasValue
-                                            ? location.Place.Center.Latitude.Value
-                                            : 0,
-                                    Lng =
-                                        location.Place.Center.Longitude.HasValue
-                                            ? location.Place.Center.Longitude.Value
-                                            : 0
+                                    placeResult = new FacultyStaffPlaceResult
+                                    {
+                                        PlaceId = location.PlaceId,
+                                        OfficialName = location.Place.OfficialName,
+                                        Lat =
+                                            location.Place.Center.Latitude.HasValue
+                                                ? location.Place.Center.Latitude.Value
+                                                : 0,
+                                        Lng =
+                                            location.Place.Center.Longitude.HasValue
+                                                ? location.Place.Center.Longitude.Value
+                                                : 0
+                                    };
+
+                                    results.PlaceResults.Add(placeResult);
+                                }
+
+                                var result = new FacultyStaffResult
+                                {
+                                    PersonId = geographicExpertise.PersonId,
+                                    PersonName =
+                                        String.Format("{0}, {1}", geographicExpertise.Person.LastName,
+                                                      geographicExpertise.Person.FirstName),
+                                    PersonEmail =
+                                        (geographicExpertise.Person.DefaultEmail != null)
+                                            ? geographicExpertise.Person.DefaultEmail.Value
+                                            : "",
+                                    PersonDepartment = geographicExpertise.Person.GetDepartment(),
+                                    ActivityId = null,
+                                    ActivityTitle = "Geographic Expertise",
+                                    ActivityTypeIds = null,
+                                    ActivityDate = null,
+                                    ActivityDescription = null,
+                                    SortDate = DateTime.MaxValue // local use only
                                 };
 
-                                results.PlaceResults.Add(placeResult);
+                                placeResult.Results.Add(result);
                             }
-
-                            var result = new FacultyStaffResult
-                            {
-                                PersonId = geographicExpertise.PersonId,
-                                PersonName =
-                                    String.Format("{0}, {1}", geographicExpertise.Person.LastName,
-                                                  geographicExpertise.Person.FirstName),
-                                PersonEmail = geographicExpertise.Person.DefaultEmail.Value,
-                                PersonDepartment = geographicExpertise.Person.GetDepartment(),
-                                ActivityId = null,
-                                ActivityTitle = "Geographic Expertise",
-                                ActivityTypeIds = null,
-                                ActivityDate = null,
-                                ActivityDescription = null,
-                                SortDate = DateTime.MaxValue // local use only
-                            };
-
-                            placeResult.Results.Add(result);
                         }
                     }
                 }
 
                 /* Add people found by Language Expertise criteria */
-                foreach (var languageExpertise in peopleSearchResult.LanguageExpertise)
+                if (peopleSearchResult.LanguageExpertise != null)
                 {
-                    var global = _entities.Query<Place>().SingleOrDefault(p => p.IsEarth);
-                    if (global == null)
+                    foreach (var languageExpertise in peopleSearchResult.LanguageExpertise)
                     {
-                        throw new Exception("Can't find earth");
+                        var global = _entities.Query<Place>().SingleOrDefault(p => p.IsEarth);
+                        if (global == null)
+                        {
+                            throw new Exception("Can't find earth");
+                        }
+
+                        var placeResult = new FacultyStaffPlaceResult
+                        {
+                            PlaceId = global.RevisionId,
+                            OfficialName = global.OfficialName,
+                            Lat =
+                                global.Center.Latitude.HasValue
+                                    ? global.Center.Latitude.Value
+                                    : 0,
+                            Lng =
+                                global.Center.Longitude.HasValue
+                                    ? global.Center.Longitude.Value
+                                    : 0
+                        };
+
+                        var result = new FacultyStaffResult
+                        {
+                            PersonId = languageExpertise.PersonId,
+                            PersonName =
+                                String.Format("{0}, {1}", languageExpertise.Person.LastName,
+                                              languageExpertise.Person.FirstName),
+                            PersonEmail =
+                                (languageExpertise.Person.DefaultEmail != null)
+                                    ? languageExpertise.Person.DefaultEmail.Value
+                                    : "",
+                            PersonDepartment = languageExpertise.Person.GetDepartment(),
+                            ActivityId = null,
+                            ActivityTitle =
+                                String.Format("Language Expertise: {0}", languageExpertise.Language.NativeName.Text),
+                            ActivityTypeIds = null,
+                            ActivityDate = null,
+                            ActivityDescription = null,
+                            SortDate = DateTime.MaxValue // local use only
+                        };
+
+                        placeResult.Results.Add(result);
+
+                        results.PlaceResults.Add(placeResult);
                     }
-
-                    var placeResult = new FacultyStaffPlaceResult
-                    {
-                        PlaceId = global.RevisionId,
-                        OfficialName = global.OfficialName,
-                        Lat =
-                            global.Center.Latitude.HasValue
-                                ? global.Center.Latitude.Value
-                                : 0,
-                        Lng =
-                            global.Center.Longitude.HasValue
-                                ? global.Center.Longitude.Value
-                                : 0
-                    };
-
-                    var result = new FacultyStaffResult
-                    {
-                        PersonId = languageExpertise.PersonId,
-                        PersonName =
-                            String.Format("{0}, {1}", languageExpertise.Person.LastName,
-                                          languageExpertise.Person.FirstName),
-                        PersonEmail = languageExpertise.Person.DefaultEmail.Value,
-                        PersonDepartment = languageExpertise.Person.GetDepartment(),
-                        ActivityId = null,
-                        ActivityTitle = String.Format("Language Expertise: {0}", languageExpertise.Language.NativeName.Text),
-                        ActivityTypeIds = null,
-                        ActivityDate = null,
-                        ActivityDescription = null,
-                        SortDate = DateTime.MaxValue // local use only
-                    };
-
-                    placeResult.Results.Add(result);
-
-                    results.PlaceResults.Add(placeResult);
                 }
 
                 /* Add people found by Degree criteria */
-                foreach (var degree in peopleSearchResult.Degrees)
+                if (peopleSearchResult.Degrees != null)
                 {
-                    var country = degree.Institution.Location.Places.FirstOrDefault(x => x.IsCountry);
-                    if (country == null)
+                    foreach (var degree in peopleSearchResult.Degrees)
                     {
-                        throw new Exception("Can't find location for establishment " + degree.Institution.OfficialName);
+                        var country = degree.Institution.Location.Places.FirstOrDefault(x => x.IsCountry);
+                        if (country == null)
+                        {
+                            throw new Exception("Can't find location for establishment " +
+                                                degree.Institution.OfficialName);
+                        }
+
+                        var placeResult = new FacultyStaffPlaceResult
+                        {
+                            PlaceId = country.RevisionId,
+                            OfficialName = country.OfficialName,
+                            Lat =
+                                country.Center.Latitude.HasValue
+                                    ? country.Center.Latitude.Value
+                                    : 0,
+                            Lng =
+                                country.Center.Longitude.HasValue
+                                    ? country.Center.Longitude.Value
+                                    : 0
+                        };
+
+                        var result = new FacultyStaffResult
+                        {
+                            PersonId = degree.PersonId,
+                            PersonName = String.Format("{0}, {1}", degree.Person.LastName, degree.Person.FirstName),
+                            PersonEmail = (degree.Person.DefaultEmail != null) ? degree.Person.DefaultEmail.Value : "",
+                            PersonDepartment = degree.Person.GetDepartment(),
+                            ActivityId = null,
+                            ActivityTitle =
+                                String.Format("Degree: {0}, {1}", degree.Title, degree.Institution.OfficialName),
+                            ActivityTypeIds = null,
+                            ActivityDate = null,
+                            ActivityDescription = null,
+                            SortDate = DateTime.MaxValue // local use only
+                        };
+
+                        placeResult.Results.Add(result);
+
+                        results.PlaceResults.Add(placeResult);
                     }
-
-                    var placeResult = new FacultyStaffPlaceResult
-                    {
-                        PlaceId = country.RevisionId,
-                        OfficialName = country.OfficialName,
-                        Lat =
-                            country.Center.Latitude.HasValue
-                                ? country.Center.Latitude.Value
-                                : 0,
-                        Lng =
-                            country.Center.Longitude.HasValue
-                                ? country.Center.Longitude.Value
-                                : 0
-                    };
-
-                    var result = new FacultyStaffResult
-                    {
-                        PersonId = degree.PersonId,
-                        PersonName = String.Format("{0}, {1}", degree.Person.LastName, degree.Person.FirstName),
-                        PersonEmail = degree.Person.DefaultEmail.Value,
-                        PersonDepartment = degree.Person.GetDepartment(),
-                        ActivityId = null,
-                        ActivityTitle = String.Format("Degree: {0}, {1}", degree.Title, degree.Institution.OfficialName),
-                        ActivityTypeIds = null,
-                        ActivityDate = null,
-                        ActivityDescription = null,
-                        SortDate = DateTime.MaxValue // local use only
-                    };
-
-                    placeResult.Results.Add(result);
-
-                    results.PlaceResults.Add(placeResult);
                 }
 
-
-                    /* Add people found by Display Name */
-                foreach (var person in peopleSearchResult.Names)
+                /* Add people found by Display Name */
+                if (peopleSearchResult.Names != null)
                 {
-                    var global = _entities.Query<Place>().SingleOrDefault(p => p.IsEarth);
-                    if (global == null)
+                    foreach (var person in peopleSearchResult.Names)
                     {
-                        throw new Exception("Can't find earth");
+                        var global = _entities.Query<Place>().SingleOrDefault(p => p.IsEarth);
+                        if (global == null)
+                        {
+                            throw new Exception("Can't find earth");
+                        }
+
+                        var placeResult = new FacultyStaffPlaceResult
+                        {
+                            PlaceId = global.RevisionId,
+                            OfficialName = global.OfficialName,
+                            Lat =
+                                global.Center.Latitude.HasValue
+                                    ? global.Center.Latitude.Value
+                                    : 0,
+                            Lng =
+                                global.Center.Longitude.HasValue
+                                    ? global.Center.Longitude.Value
+                                    : 0
+                        };
+
+                        var result = new FacultyStaffResult
+                        {
+                            PersonId = person.RevisionId,
+                            PersonName = String.Format("{0}, {1}", person.LastName, person.FirstName),
+                            PersonEmail = (person.DefaultEmail != null) ? person.DefaultEmail.Value : "",
+                            PersonDepartment = person.GetDepartment(),
+                            ActivityId = null,
+                            ActivityTitle = null,
+                            ActivityTypeIds = null,
+                            ActivityDate = null,
+                            ActivityDescription = null,
+                            SortDate = DateTime.MaxValue // local use only
+                        };
+
+                        placeResult.Results.Add(result);
+
+                        results.PlaceResults.Add(placeResult);
                     }
-
-                    var placeResult = new FacultyStaffPlaceResult
-                    {
-                        PlaceId = global.RevisionId,
-                        OfficialName = global.OfficialName,
-                        Lat =
-                            global.Center.Latitude.HasValue
-                                ? global.Center.Latitude.Value
-                                : 0,
-                        Lng =
-                            global.Center.Longitude.HasValue
-                                ? global.Center.Longitude.Value
-                                : 0
-                    };
-
-                    var result = new FacultyStaffResult
-                    {
-                        PersonId = person.RevisionId,
-                        PersonName = String.Format("{0}, {1}", person.LastName, person.FirstName),
-                        PersonEmail = person.DefaultEmail.Value,
-                        PersonDepartment = person.GetDepartment(),
-                        ActivityId = null,
-                        ActivityTitle = null,
-                        ActivityTypeIds = null,
-                        ActivityDate = null,
-                        ActivityDescription = null,
-                        SortDate = DateTime.MaxValue // local use only
-                    };
-
-                    placeResult.Results.Add(result);
-
-                    results.PlaceResults.Add(placeResult);
                 }
 
-                /* Do some ordering here */
+                foreach (var placeResult in results.PlaceResults)
+                {
+                    placeResult.Results = placeResult.Results.OrderBy(r => r.PersonName)
+                                                        .ThenBy(r => r.ActivityTitle)
+                                                        .ToList();
+                }
 
+                results.PlaceResults = results.PlaceResults.OrderBy(r => r.OfficialName).ToList();
             }
             else
             {
@@ -870,7 +917,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                             PersonId = activity.PersonId,
                             PersonName =
                                 String.Format("{0}, {1}", activity.Person.LastName, activity.Person.FirstName),
-                            PersonEmail = activity.Person.DefaultEmail.Value,
+                            PersonEmail = (activity.Person.DefaultEmail != null) ? activity.Person.DefaultEmail.Value : "",
                             PersonDepartment = activity.Person.GetDepartment(),
                             ActivityId = activity.RevisionId,
                             ActivityTitle = activityValues.Title,
@@ -891,17 +938,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                         placeResult.Results.Add(result);
                     }
                 }
-
-                foreach (var placeResult in results.PlaceResults)
-                {
-                    placeResult.Results = placeResult.Results.OrderByDescending(r => r.SortDate)
-                                                     .ThenBy(r => r.PersonName)
-                                                     .ThenBy(r => r.ActivityTitle)
-                                                     .ToList();
-                }
             }
-
-            results.PlaceResults = results.PlaceResults.OrderBy(r => r.OfficialName).ToList();
         }
 
         private static int[] MakeActivityTypeIds(IEnumerable<ActivityType> activityTypes)

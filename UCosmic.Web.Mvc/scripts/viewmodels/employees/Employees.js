@@ -505,8 +505,9 @@ var ViewModels;
                 });
 
                 this.searchType.subscribe(function (newValue) {
+                    _this.selectSearchType(newValue);
                     if (_this.mapType() === 'pointmap') {
-                        //this.activitySearch();
+                        _this.drawPointmap(true);
                     }
                 });
 
@@ -1359,7 +1360,7 @@ var ViewModels;
                     this.pointmapActivityMarkers = null;
                 }
                 if (this.pointmapActivityMarkers == null) {
-                    this.activitySearch().done(function (results) {
+                    this.advancedSearch().done(function (results) {
                         deferred.resolve(_this._getPointmapActivityMarkers(results));
                     }).fail(function (jqXHR, textStatus, errorThrown) {
                         deferred.reject(jqXHR, textStatus, errorThrown);
@@ -1422,31 +1423,29 @@ var ViewModels;
                     this.pointmapPeopleMarkers = null;
                 }
                 if (this.pointmapPeopleMarkers == null) {
-                    this.getGlobalPeopleCounts().done(function (counts) {
-                        deferred.resolve(_this._getPointmapPeopleMarkers());
+                    this.advancedSearch().done(function (results) {
+                        deferred.resolve(_this._getPointmapPeopleMarkers(results));
                     }).fail(function (jqXHR, textStatus, errorThrown) {
                         deferred.reject(jqXHR, textStatus, errorThrown);
                     });
                 } else {
-                    deferred.resolve(this._getPointmapPeopleMarkers());
+                    deferred.resolve(this._getPointmapPeopleMarkers(this.pointmapPeopleMarkers));
                 }
                 return deferred;
             };
 
-            FacultyAndStaff.prototype._getPointmapPeopleMarkers = function () {
+            FacultyAndStaff.prototype._getPointmapPeopleMarkers = function (peopleResults) {
                 if (this.pointmapPeopleMarkers == null) {
                     var markers = new Array();
-                    var placeCounts = (this.globalPeopleCountData).placeCounts;
-                    if ((placeCounts != null) && (placeCounts.length > 0)) {
-                        for (var i = 0; i < placeCounts.length; i += 1) {
-                            if (placeCounts[i].count > 0) {
-                                var iconURL = "/api/graphics/circle" + "?side=18&opacity=" + "&strokeColor=" + $("#mapMarkerColor").css("background-color") + "&fillColor=" + $("#mapMarkerColor").css("background-color") + "&textColor=" + $("#mapMarkerColor").css("color") + "&text=" + placeCounts[i].results.length.toString();
-
-                                //var marker = new MarkerWithLabel({
+                    var placeResults = peopleResults.placeResults;
+                    if ((placeResults != null) && (placeResults.length > 0)) {
+                        for (var i = 0; i < placeResults.length; i += 1) {
+                            if (placeResults[i].peopleCount > 0) {
+                                var iconURL = "/api/graphics/circle" + "?side=18&opacity=" + "&strokeColor=" + $("#mapMarkerColor").css("background-color") + "&fillColor=" + $("#mapMarkerColor").css("background-color") + "&textColor=" + $("#mapMarkerColor").css("color") + "&text=" + placeResults[i].peopleCount.toString();
                                 var marker = new google.maps.Marker({
-                                    position: new google.maps.LatLng(placeCounts[i].lat, placeCounts[i].lng),
+                                    position: new google.maps.LatLng(placeResults[i].lat, placeResults[i].lng),
                                     map: null,
-                                    title: placeCounts[i].officialName,
+                                    title: placeResults[i].officialName,
                                     icon: iconURL
                                 });
                                 markers.push(marker);
@@ -1748,8 +1747,15 @@ var ViewModels;
                 } else {
                     this.setPeopleSearch();
                 }
-                if (this.heatmap != null) {
-                    this.selectMap("heatmap");
+
+                if (this.mapType() === 'heatmap') {
+                    if (this.heatmap != null) {
+                        this.selectMap("heatmap");
+                    }
+                } else {
+                    if (this.pointmap != null) {
+                        this.selectMap("pointmap");
+                    }
                 }
             };
 
@@ -1848,7 +1854,7 @@ var ViewModels;
             /*
             */
             // --------------------------------------------------------------------------------
-            FacultyAndStaff.prototype.activitySearch = function () {
+            FacultyAndStaff.prototype.advancedSearch = function () {
                 var _this = this;
                 var deferred = $.Deferred();
 

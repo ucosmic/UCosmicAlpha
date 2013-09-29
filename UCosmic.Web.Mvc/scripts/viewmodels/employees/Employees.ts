@@ -604,8 +604,9 @@ module ViewModels.Employees {
             this.mapRegion.subscribe((newValue: any): void => { this.heatmapOptions["region"] = newValue; });
 
             this.searchType.subscribe((newValue: any): void => {
+                this.selectSearchType(newValue);
                 if (this.mapType() === 'pointmap') {
-                    //this.activitySearch();
+                    this.drawPointmap(true);
                 }
             });
 
@@ -1513,7 +1514,7 @@ module ViewModels.Employees {
                 this.pointmapActivityMarkers = null;
             }
             if (this.pointmapActivityMarkers == null) {
-                this.activitySearch()
+                this.advancedSearch()
                     .done((results: any): void => {
                         deferred.resolve(this._getPointmapActivityMarkers(results));
                     })
@@ -1597,54 +1598,38 @@ module ViewModels.Employees {
                 this.pointmapPeopleMarkers = null;
             }
             if (this.pointmapPeopleMarkers == null) {
-                this.getGlobalPeopleCounts()
-                    .done((counts: any): void => {
-                        deferred.resolve(this._getPointmapPeopleMarkers());
+                this.advancedSearch()
+                    .done((results: any): void => {
+                        deferred.resolve(this._getPointmapPeopleMarkers(results));
                     })
                     .fail((jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void => {
                         deferred.reject(jqXHR, textStatus, errorThrown);
                     });
             }
             else {
-                deferred.resolve(this._getPointmapPeopleMarkers());
+                deferred.resolve(this._getPointmapPeopleMarkers(this.pointmapPeopleMarkers));
             }
             return deferred;
         }
 
-        private _getPointmapPeopleMarkers(): any {
+        private _getPointmapPeopleMarkers(peopleResults: any): any {
             if (this.pointmapPeopleMarkers == null) {
                 var markers = new Array();
-                var placeCounts = (<any>this.globalPeopleCountData).placeCounts;
-                if ((placeCounts != null) && (placeCounts.length > 0)) {
-                    for (var i = 0; i < placeCounts.length; i += 1) {
-                        if (placeCounts[i].count > 0) {
+                var placeResults = peopleResults.placeResults;
+                if ((placeResults != null) && (placeResults.length > 0)) {
+                    for (var i = 0; i < placeResults.length; i += 1) {
+                        if (placeResults[i].peopleCount > 0) {
                             var iconURL = "/api/graphics/circle" +
                                 "?side=18&opacity=" +
                                 "&strokeColor=" + $("#mapMarkerColor").css("background-color") +
                                 "&fillColor=" + $("#mapMarkerColor").css("background-color") +
                                 "&textColor=" + $("#mapMarkerColor").css("color") +
-                                "&text=" + placeCounts[i].results.length.toString();
-                            //var marker = new MarkerWithLabel({
+                                "&text=" + placeResults[i].peopleCount.toString();
                             var marker = new google.maps.Marker({
-                                position: new google.maps.LatLng(placeCounts[i].lat, placeCounts[i].lng),
+                                position: new google.maps.LatLng(placeResults[i].lat, placeResults[i].lng),
                                 map: null,
-                                title: placeCounts[i].officialName,
+                                title: placeResults[i].officialName,
                                 icon: iconURL
-                                //icon: {
-                                //    path: google.maps.SymbolPath.CIRCLE,
-                                //    fillOpacity: 0.75,
-                                //    fillColor: 'ff0000',
-                                //    strokeOpacity: 1.0,
-                                //    strokeColor: 'fff000',
-                                //    strokeWeight: 1.0,
-                                //    scale: 9 //pixels
-                                //},
-                                //icon: "/api/graphics/circle?side=18&opacity=&color=" + $("mapMarkerColor").css("background-color"),
-                                //labelContent: placeCounts[i].count.toString(),
-                                //labelAnchor: new google.maps.Point(5, 5),
-                                //labelAnchor: new google.maps.Point(9, 9),
-                                //labelClass: "googleMarkerLabel",
-                                //labelInBackground: false
                             });
                             markers.push(marker);
                         }
@@ -1961,8 +1946,15 @@ module ViewModels.Employees {
             else {
                 this.setPeopleSearch();
             }
-            if (this.heatmap != null) {
-                this.selectMap("heatmap");
+
+            if (this.mapType() === 'heatmap') {
+                if (this.heatmap != null) {
+                    this.selectMap("heatmap");
+                }
+            } else {
+                if (this.pointmap != null) {
+                    this.selectMap("pointmap");
+                }
             }
         }
 
@@ -2116,7 +2108,7 @@ module ViewModels.Employees {
                 tags: tags,                                 //public string[] Tags
                 fromDate: fromDate,                         //public DateTime? FromDate
                 toDate: toDate,                             //public DateTime? ToDate
-                noUndated: !this.includeUndated(),         //public bool noUndated
+                noUndated: !this.includeUndated(),          //public bool noUndated
                 campusId: campusId,                         //public int? CampusId
                 collegeId: collegeId,                       //public int? CollegeId
                 departmentId: departmentId                  //public int? DepartmentId

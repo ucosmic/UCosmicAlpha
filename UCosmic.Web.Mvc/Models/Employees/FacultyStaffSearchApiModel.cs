@@ -65,6 +65,7 @@ namespace UCosmic.Web.Mvc.Models
         public double Lat { get; set; }
         public double Lng { get; set; }
         public ICollection<FacultyStaffResult> Results { get; set; }
+        public int PeopleCount { get; set; }
 
         public FacultyStaffPlaceResult()
         {

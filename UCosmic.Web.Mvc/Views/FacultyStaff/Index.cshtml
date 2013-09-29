@@ -546,11 +546,11 @@
                                 <ul data-bind="foreach: results">
                                     <li>
                                         <div style="width: 100%; padding-top: 4px; padding-bottom: 4px; border-bottom-style: solid; border-bottom-color: black; border-bottom-width: 1px;">
-                                            <div class="activitySearchResultsRow" style="width: 20%" data-bind=""></div>
-                                            <div class="activitySearchResultsRow" style="width: 15%" data-bind=""></div>
-                                            <div class="activitySearchResultsRow" style="width: 11%" data-bind=""></div>
-                                            <div class="activitySearchResultsRow" style="width: 40%" data-bind=""></div>
-                                            <div class="activitySearchResultsRow" style="width: 11%" data-bind=""></div>
+                                            <div class="activitySearchResultsRow" style="width: 20%" data-bind="text: personName() + ' ' + personEmail()"></div>
+                                            <div class="activitySearchResultsRow" style="width: 15%" data-bind="text: personDepartment()"></div>
+                                            <div class="activitySearchResultsRow" style="width: 11%" data-bind="text: $parent.officialName"></div>
+                                            <div class="activitySearchResultsRow" style="width: 40%" data-bind="text: activityTitle(), attr: { title: activityDescription() }"></div>
+                                            <div class="activitySearchResultsRow" style="width: 11%" data-bind="template: { name: 'activities-types-template', foreach: activityTypeIds }"></div>
                                         </div>
                                     </li>
                                 </ul>
