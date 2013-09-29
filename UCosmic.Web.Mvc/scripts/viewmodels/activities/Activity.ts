@@ -441,8 +441,14 @@ module ViewModels.Activities {
             }
         }
 
+        _isSaved: boolean = false;
+
         autoSave(): JQueryDeferred<void> {
             var deferred: JQueryDeferred<void> = $.Deferred();
+            if (this._isSaved) {
+                deferred.resolve();
+                return deferred;
+            }
 
             if (this.saving) {
                 deferred.resolve();
@@ -506,12 +512,15 @@ module ViewModels.Activities {
 
                     this.saveSpinner.start();
 
+                    var url = $('#activity_replace_url_format').text().format(this.workCopyId(), this.originalId(), mode);
                     $.ajax({
                         type: 'PUT',
-                        url: App.Routes.WebApi.Activities.putEdit(this.id()),
-                        data: { mode: mode }
+                        //url: App.Routes.WebApi.Activities.putEdit(this.id()),
+                        url: url,
+                        //data: { mode: mode }
                     })
                         .done(() => {
+                            this._isSaved = true; // prevent tinymce onbeforeunload from updating again
                             location.href = App.Routes.Mvc.My.Profile.get();
                         })
                         .fail((xhr: JQueryXHR): void => {

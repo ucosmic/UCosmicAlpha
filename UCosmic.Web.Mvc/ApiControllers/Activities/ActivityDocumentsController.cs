@@ -94,7 +94,6 @@ namespace UCosmic.Web.Mvc.ApiControllers
             {
                 ActivityValuesId = activityValues.RevisionId,
                 Title = Path.GetFileNameWithoutExtension(fileMedium.FileName),
-                Mode = activityMode.AsEnum<ActivityMode>(),
                 Content = fileMedium.Content,
                 MimeType = fileMedium.ContentType,
                 FileName = fileMedium.FileName,

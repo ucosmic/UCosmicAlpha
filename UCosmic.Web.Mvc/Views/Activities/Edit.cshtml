@@ -1,4 +1,5 @@
-﻿@{
+﻿@using UCosmic.Domain.Activities
+@{
     ViewBag.Title = "My International Activity";
 }
 
@@ -494,6 +495,11 @@
                                 {
                                     tagDeleteUrlFormat = tagDeleteUrlFormat.Replace("0", "{0}");
                                 }
+                                var activityReplaceUrlFormat = Url.HttpRouteUrl(null, new { controller = "Activities", action = "PutMove", workCopyActivityId = 0, originalActivityId = 1, mode = ActivityMode.Draft });
+                                if (activityReplaceUrlFormat != null)
+                                {
+                                    activityReplaceUrlFormat = activityReplaceUrlFormat.Replace("0", "{0}").Replace("1", "{1}").Replace(ActivityMode.Draft.ToString(), "{2}");
+                                }
                             }
                             <span id="place_put_url_format">@placePutUrlFormat</span>
                             <span id="place_delete_url_format">@placeDeleteUrlFormat</span>
@@ -502,6 +508,7 @@
                             <span id="establishment_names_get_url_format">@establishmentNameGetUrlFormat</span>
                             <span id="tag_post_url_format">@tagPostUrlFormat</span>
                             <span id="tag_delete_url_format">@tagDeleteUrlFormat</span>
+                            <span id="activity_replace_url_format">@activityReplaceUrlFormat</span>
                         </div>
                     </div>
                 </div>

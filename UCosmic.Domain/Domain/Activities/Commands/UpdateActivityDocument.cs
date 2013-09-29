@@ -18,7 +18,6 @@ namespace UCosmic.Domain.Activities
         public IPrincipal Principal { get; protected set; }
         public int Id { get; private set; }
         //public DateTime UpdatedOn { get; private set; }
-        public ActivityMode Mode { get; set; }
         public string Title { get; set; }
         internal bool NoCommit { get; set; }
     }
@@ -65,7 +64,6 @@ namespace UCosmic.Domain.Activities
             /* Get the activity values we are updating. */
             var target = _entities.Get<ActivityDocument>().Single(x => x.RevisionId == command.Id);
 
-            target.Mode = command.Mode;
             target.Title = command.Title;
             target.UpdatedOnUtc = DateTime.UtcNow;
             target.UpdatedByPrincipal = command.Principal.Identity.Name;

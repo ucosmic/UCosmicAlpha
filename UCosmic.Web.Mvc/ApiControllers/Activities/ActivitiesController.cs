@@ -18,16 +18,19 @@ namespace UCosmic.Web.Mvc.ApiControllers
     {
         private readonly IProcessQueries _queryProcessor;
         private readonly IHandleCommands<DeleteActivity> _deleteActivity;
-        private readonly IHandleCommands<UpdateActivity> _updateActivity;
+        private readonly IHandleCommands<UpdateActivity2> _updateActivity2;
+        private readonly IHandleCommands<ReplaceActivity> _replaceActivity;
 
         public ActivitiesController(IProcessQueries queryProcessor
-                                  , IHandleCommands<DeleteActivity> deleteActivity
-                                  , IHandleCommands<UpdateActivity> updateActivity
-                            )
+            , IHandleCommands<DeleteActivity> deleteActivity
+            , IHandleCommands<UpdateActivity2> updateActivity2
+            , IHandleCommands<ReplaceActivity> replaceActivity
+        )
         {
             _queryProcessor = queryProcessor;
             _deleteActivity = deleteActivity;
-            _updateActivity = updateActivity;
+            _updateActivity2 = updateActivity2;
+            _replaceActivity = replaceActivity;
         }
 
         // --------------------------------------------------------------------------------
@@ -174,19 +177,48 @@ namespace UCosmic.Web.Mvc.ApiControllers
         public HttpResponseMessage Put(int activityId, ActivityApiModel model)
         {
             // autosave invokes this method for everything except documents
-            if (activityId == 0 || model == null || model.Id != activityId)
+            if (activityId == 0 || model == null)
                 return Request.CreateResponse(HttpStatusCode.BadRequest);
 
             // map the api model to an activity entity
-            var activity = Mapper.Map<Activity>(model);
+            //var activity = Mapper.Map<Activity>(model);
 
             // invoke update command using the model's id and mode
-            var updateActivityCommand = new UpdateActivity(User, activity.RevisionId, activity.ModeText)
+            var command = new UpdateActivity2(User, activityId)
             {
-                // pass the values from the mapped activity
-                Values = activity.Values.SingleOrDefault(x => x.ModeText == activity.ModeText),
+                Title = model.Values.Title,
+                Content = model.Values.Content,
+                Mode = model.ModeText.AsEnum<ActivityMode>(),
+                DateFormat = model.Values.DateFormat,
+                StartsOn = model.Values.StartsOn,
+                EndsOn = model.Values.EndsOn,
+                OnGoing = model.Values.OnGoing,
+                WasExternallyFunded = model.Values.WasExternallyFunded,
+                WasInternallyFunded = model.Values.WasInternallyFunded,
             };
-            _updateActivity.Handle(updateActivityCommand);
+            //var updateActivityCommand = new UpdateActivity(User, activity.RevisionId, activity.ModeText)
+            //{
+            //    // pass the values from the mapped activity
+            //    Values = activity.Values.SingleOrDefault(x => x.ModeText == activity.ModeText),
+            //};
+            _updateActivity2.Handle(command);
+            //_updateActivity.Handle(updateActivityCommand);
+
+            return Request.CreateResponse(HttpStatusCode.OK);
+        }
+
+        [Authorize]
+        [PUT("{workCopyActivityId:int}/{originalActivityId:int}/{mode}")]
+        public HttpResponseMessage PutMove(int workCopyActivityId, int originalActivityId, ActivityMode mode)
+        {
+            if (workCopyActivityId == 0 || originalActivityId == 0)
+                return Request.CreateResponse(HttpStatusCode.BadRequest);
+
+            var command = new ReplaceActivity(User, workCopyActivityId, originalActivityId)
+            {
+                Mode = mode,
+            };
+            _replaceActivity.Handle(command);
 
             return Request.CreateResponse(HttpStatusCode.OK);
         }
@@ -197,39 +229,39 @@ namespace UCosmic.Web.Mvc.ApiControllers
          * mode Activity.  The activityId must be of that of an Activity in "edit mode".
         */
         // --------------------------------------------------------------------------------
-        [Authorize]
-        [PUT("{activityId}/edit")]
-        public HttpResponseMessage PutEdit(int activityId, [FromBody] ActivityPutEditApiModel model)
-        {
-            // load the activity requested from the url
-            var editActivity = _queryProcessor.Execute(new ActivityById(User, activityId)
-            {
-                EagerLoad = new Expression<Func<Activity, object>>[]
-                {
-                    x => x.Original,
-                }
-            });
-            if (editActivity == null)
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+        //[Authorize]
+        //[PUT("{activityId}/edit")]
+        //public HttpResponseMessage PutEdit(int activityId, [FromBody] ActivityPutEditApiModel model)
+        //{
+        //    // load the activity requested from the url
+        //    var editActivity = _queryProcessor.Execute(new ActivityById(User, activityId)
+        //    {
+        //        EagerLoad = new Expression<Func<Activity, object>>[]
+        //        {
+        //            x => x.Original,
+        //        }
+        //    });
+        //    if (editActivity == null)
+        //        throw new HttpResponseException(HttpStatusCode.NotFound);
 
-            // this put must always be called for the non-original activity in the pair
-            if (editActivity.Original == null)
-                throw new HttpResponseException(HttpStatusCode.BadRequest);
+        //    // this put must always be called for the non-original activity in the pair
+        //    if (editActivity.Original == null)
+        //        throw new HttpResponseException(HttpStatusCode.BadRequest);
 
-            // invoke update using the original activity's id and the requested mode (only time model is used)
-            var updateActivityCommand = new UpdateActivity(User, editActivity.Original.RevisionId, model.Mode)
-            {
-                // use the values from the non-original activity for the non-original activity's mode
-                Values = editActivity.Values.SingleOrDefault(x => x.ModeText == editActivity.ModeText)
-            };
-            _updateActivity.Handle(updateActivityCommand);
+        //    // invoke update using the original activity's id and the requested mode (only time model is used)
+        //    var updateActivityCommand = new UpdateActivity(User, editActivity.Original.RevisionId, model.Mode)
+        //    {
+        //        // use the values from the non-original activity for the non-original activity's mode
+        //        Values = editActivity.Values.SingleOrDefault(x => x.ModeText == editActivity.ModeText)
+        //    };
+        //    _updateActivity.Handle(updateActivityCommand);
 
-            // delete the non-original activity
-            var deleteActivityCommand = new DeleteActivity(User, editActivity.RevisionId);
-            _deleteActivity.Handle(deleteActivityCommand);
+        //    // delete the non-original activity
+        //    var deleteActivityCommand = new DeleteActivity(User, editActivity.RevisionId);
+        //    _deleteActivity.Handle(deleteActivityCommand);
 
-            return Request.CreateResponse(HttpStatusCode.OK);
-        }
+        //    return Request.CreateResponse(HttpStatusCode.OK);
+        //}
 
         [Authorize]
         [DELETE("{activityId}")]

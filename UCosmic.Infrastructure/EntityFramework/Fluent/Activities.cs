@@ -116,10 +116,7 @@ namespace UCosmic.EntityFramework
         {
             ToTable(typeof(ActivityDocument).Name, DbSchemaName.ActivitiesV2);
 
-            Property(p => p.ModeText).HasColumnName("Mode").IsRequired().HasMaxLength(ActivityDocumentConstraints.ModeTextMaxLength);
             Property(p => p.Title).IsRequired().HasMaxLength(ActivityDocumentConstraints.MaxTitleLength);
-
-            Ignore(p => p.Mode);
         }
     }
 }

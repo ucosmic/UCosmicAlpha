@@ -79,8 +79,8 @@ namespace UCosmic.Domain.Activities
                     FileName = document.FileName,
                     MimeType = document.MimeType,
                     Content = _binaryData.Get(document.Path),
-                    Mode = command.Mode,
                     Title = document.Title,
+                    EntityId = document.EntityId,
                     NoCommit = true,
                 });
             }

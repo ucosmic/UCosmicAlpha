@@ -15,7 +15,6 @@ namespace UCosmic.Domain.Activities
 
         public IPrincipal Principal { get; private set; }
         public int ActivityValuesId { get; set; }
-        public ActivityMode Mode { get; set; }
         public string Title { get; set; }
         public byte[] Content { get; set; }
         public string MimeType { get; set; }
@@ -24,6 +23,7 @@ namespace UCosmic.Domain.Activities
         internal bool NoCommit { get; set; }
         internal int? Length { get; set; }
         internal string Path { get; set; }
+        internal Guid? EntityId { get; set; }
 
         public ActivityDocument CreatedActivityDocument { get; internal set; }
     }
@@ -101,7 +101,6 @@ namespace UCosmic.Domain.Activities
             var activityDocument = new ActivityDocument
             {
                 ActivityValues = activityValues,
-                Mode = command.Mode,
                 Title = command.Title,
                 FileName = command.FileName,
                 MimeType = command.MimeType,
@@ -109,6 +108,8 @@ namespace UCosmic.Domain.Activities
                 Length = command.Length.HasValue ? command.Length.Value : command.Content.Length,
                 CreatedByPrincipal = command.Principal.Identity.Name,
             };
+            if (command.EntityId.HasValue && command.EntityId != Guid.Empty)
+                activityDocument.EntityId = command.EntityId.Value;
             activityValues.Documents.Add(activityDocument);
 
             _entities.Create(activityDocument);

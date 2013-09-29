@@ -18,6 +18,7 @@ namespace UCosmic.Domain.Places
 
         public bool Equals(PlaceNode other)
         {
+            if (ReferenceEquals(this, other)) return true;
             return other != null && other.AncestorId.Equals(AncestorId) && other.OffspringId.Equals(OffspringId);
         }
 

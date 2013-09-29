@@ -147,7 +147,6 @@ namespace UCosmic.SeedData
                         ActivityValuesId = activityValues.RevisionId,
                         FileName = "02E6D488-B3FA-4D79-848F-303779A53ABE.docx",
                         MimeType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                        Mode = activity.Mode,
                         Title = "Dissertation Excerpt"
                     });
 
@@ -156,7 +155,6 @@ namespace UCosmic.SeedData
                         ActivityValuesId = activityValues.RevisionId,
                         FileName = "10EC87BD-3A95-439D-807A-0F57C3F89C8A.xls",
                         MimeType = "application/vnd.ms-excel",
-                        Mode = activity.Mode,
                         Title = "Research Funding Breakdown"
                     });
 
@@ -165,7 +163,6 @@ namespace UCosmic.SeedData
                         ActivityValuesId = activityValues.RevisionId,
                         FileName = "1322FF22-E863-435E-929E-765EB95FB460.ppt",
                         MimeType = "application/vnd.ms-powerpoint",
-                        Mode = activity.Mode,
                         Title = "Conference Presentation"
                     });
 
@@ -282,7 +279,6 @@ namespace UCosmic.SeedData
                         ActivityValuesId = activityValues.RevisionId,
                         FileName = "817DB81E-53FC-47E1-A1DE-B8C108C7ACD6.pdf",
                         MimeType = "application/pdf",
-                        Mode = activity.Mode,
                         Title = "Make a contribution form"
                     });
 
@@ -339,7 +335,6 @@ namespace UCosmic.SeedData
                         ActivityValuesId = activityValues.RevisionId,
                         FileName = "5C62D74E-E8EE-4B9A-95F3-B2ABB1F6F912.gif",
                         MimeType = "image/gif",
-                        Mode = activity.Mode,
                         Title = "Photo of the site"
                     });
 
@@ -348,7 +343,6 @@ namespace UCosmic.SeedData
                         ActivityValuesId = activityValues.RevisionId,
                         FileName = "A44FAB3B-DEBA-4F14-8965-E379569066A9.png",
                         MimeType = "image/png",
-                        Mode = activity.Mode,
                         Title = "Grads working hard"
                     });
 
@@ -357,7 +351,6 @@ namespace UCosmic.SeedData
                         ActivityValuesId = activityValues.RevisionId,
                         FileName = "C0DA4900-762B-4B26-AE03-843CBB7C0E7B.bmp",
                         MimeType = "image/bmp",
-                        Mode = activity.Mode,
                         Title = "Map of the incident"
                     });
 
@@ -366,7 +359,6 @@ namespace UCosmic.SeedData
                         ActivityValuesId = activityValues.RevisionId,
                         FileName = "E4E53300-08D3-47C0-954C-BF15EF54F0A3.tif",
                         MimeType = "image/tiff",
-                        Mode = activity.Mode,
                         Title = "Sunrise over the delta"
                     });
 
@@ -375,7 +367,6 @@ namespace UCosmic.SeedData
                         ActivityValuesId = activityValues.RevisionId,
                         FileName = "EE23D741-C50D-40D5-8214-C18DF68CC6D3.jpg",
                         MimeType = "image/jpg",
-                        Mode = activity.Mode,
                         Title = "Me"
                     });
 

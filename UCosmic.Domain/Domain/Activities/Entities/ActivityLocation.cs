@@ -17,7 +17,8 @@ namespace UCosmic.Domain.Activities
 
         public bool Equals(ActivityLocation other)
         {
-            return other != null && other.RevisionId.Equals(RevisionId);
+            if (ReferenceEquals(this, other)) return true;
+            return RevisionId != 0 && other != null && other.RevisionId.Equals(RevisionId);
         }
 
         public override bool Equals(object obj)

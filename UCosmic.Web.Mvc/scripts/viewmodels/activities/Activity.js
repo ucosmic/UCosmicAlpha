@@ -38,6 +38,7 @@ var ViewModels;
                 // In the process of saving
                 this.saving = false;
                 this.saveSpinner = new App.Spinner(new App.SpinnerOptions(200));
+                this._isSaved = false;
                 this._initialize(activityId, activityWorkCopyId);
             }
             Activity.prototype._initialize = function (activityId, activityWorkCopyId) {
@@ -390,6 +391,10 @@ var ViewModels;
             Activity.prototype.autoSave = function () {
                 var _this = this;
                 var deferred = $.Deferred();
+                if (this._isSaved) {
+                    deferred.resolve();
+                    return deferred;
+                }
 
                 if (this.saving) {
                     deferred.resolve();
@@ -448,11 +453,13 @@ var ViewModels;
 
                     _this.saveSpinner.start();
 
+                    var url = $('#activity_replace_url_format').text().format(_this.workCopyId(), _this.originalId(), mode);
                     $.ajax({
                         type: 'PUT',
-                        url: App.Routes.WebApi.Activities.putEdit(_this.id()),
-                        data: { mode: mode }
+                        //url: App.Routes.WebApi.Activities.putEdit(this.id()),
+                        url: url
                     }).done(function () {
+                        _this._isSaved = true;
                         location.href = App.Routes.Mvc.My.Profile.get();
                     }).fail(function (xhr) {
                         App.Failures.message(xhr, 'while trying to save your activity', true);

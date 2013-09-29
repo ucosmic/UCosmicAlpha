@@ -7,16 +7,16 @@ namespace UCosmic.Domain.Activities
 {
     public class DeleteActivityDocument
     {
-        public IPrincipal Principal { get; private set; }
-        public int Id { get; private set; }
-        internal bool NoCommit { get; set; }
-
         public DeleteActivityDocument(IPrincipal principal, int id)
         {
             if (principal == null) { throw new ArgumentNullException("principal"); }
             Principal = principal;
             Id = id;
         }
+
+        public IPrincipal Principal { get; private set; }
+        public int Id { get; private set; }
+        internal bool NoCommit { get; set; }
     }
 
     public class ValidateDeleteActivityDocumentCommand : AbstractValidator<DeleteActivityDocument>
