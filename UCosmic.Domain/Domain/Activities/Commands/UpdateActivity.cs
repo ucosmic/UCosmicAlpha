@@ -7,9 +7,9 @@ using UCosmic.Domain.Identity;
 
 namespace UCosmic.Domain.Activities
 {
-    public class UpdateActivity2
+    public class UpdateActivity
     {
-        public UpdateActivity2(IPrincipal principal, int activityId)
+        public UpdateActivity(IPrincipal principal, int activityId)
         {
             if (principal == null) { throw new ArgumentNullException("principal"); }
             Principal = principal;
@@ -29,9 +29,9 @@ namespace UCosmic.Domain.Activities
         public bool? WasInternallyFunded { get; set; }
     }
 
-    public class ValidateUpdateActivity2Command : AbstractValidator<UpdateActivity2>
+    public class ValidateUpdateActivityCommand : AbstractValidator<UpdateActivity>
     {
-        public ValidateUpdateActivity2Command(IProcessQueries queryProcessor)
+        public ValidateUpdateActivityCommand(IProcessQueries queryProcessor)
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
@@ -56,18 +56,18 @@ namespace UCosmic.Domain.Activities
         }
     }
 
-    public class HandleUpdateMyActivity2Command : IHandleCommands<UpdateActivity2>
+    public class HandleUpdateActivityCommand : IHandleCommands<UpdateActivity>
     {
         private readonly ICommandEntities _entities;
         private readonly IHandleCommands<CopyActivityValues> _copyActivityValues;
 
-        public HandleUpdateMyActivity2Command(ICommandEntities entities, IHandleCommands<CopyActivityValues> copyActivityValues)
+        public HandleUpdateActivityCommand(ICommandEntities entities, IHandleCommands<CopyActivityValues> copyActivityValues)
         {
             _entities = entities;
             _copyActivityValues = copyActivityValues;
         }
 
-        public void Handle(UpdateActivity2 command)
+        public void Handle(UpdateActivity command)
         {
             if (command == null) throw new ArgumentNullException("command");
 

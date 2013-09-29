@@ -11,10 +11,10 @@ namespace UCosmic.Web.Mvc.ApiControllers
     [RoutePrefix("api/activities/{activityId:int}/tags")]
     public class ActivityTagsController : ApiController
     {
-        private readonly IHandleCommands<AddActivityTag> _createHandler;
-        private readonly IHandleCommands<RemoveActivityTag> _purgeHandler;
+        private readonly IHandleCommands<CreateActivityTag> _createHandler;
+        private readonly IHandleCommands<PurgeActivityTag> _purgeHandler;
 
-        public ActivityTagsController(IHandleCommands<AddActivityTag> createHandler, IHandleCommands<RemoveActivityTag> purgeHandler)
+        public ActivityTagsController(IHandleCommands<CreateActivityTag> createHandler, IHandleCommands<PurgeActivityTag> purgeHandler)
         {
             _createHandler = createHandler;
             _purgeHandler = purgeHandler;
@@ -27,7 +27,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             if (activityId < 1 || model == null)
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
 
-            var command = new AddActivityTag(User, activityId)
+            var command = new CreateActivityTag(User, activityId)
             {
                 Text = model.Text,
                 DomainKey = model.DomainKey,
@@ -44,7 +44,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             if (activityId < 1 || model == null)
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
 
-            var command = new RemoveActivityTag(User, activityId)
+            var command = new PurgeActivityTag(User, activityId)
             {
                 ActivityTagText = model.Text
             };

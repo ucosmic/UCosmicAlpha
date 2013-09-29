@@ -7,9 +7,9 @@ using UCosmic.Domain.Identity;
 
 namespace UCosmic.Domain.Activities
 {
-    public class RemoveActivityType
+    public class PurgeActivityTag
     {
-        public RemoveActivityType(IPrincipal principal, int activityId)
+        public PurgeActivityTag(IPrincipal principal, int activityId)
         {
             if (principal == null) throw new ArgumentNullException("principal");
             Principal = principal;
@@ -18,12 +18,12 @@ namespace UCosmic.Domain.Activities
 
         public IPrincipal Principal { get; private set; }
         public int ActivityId { get; private set; }
-        public int ActivityTypeId { get; set; }
+        public string ActivityTagText { get; set; }
     }
 
-    public class ValidateRemoveActivityTypeCommand : AbstractValidator<RemoveActivityType>
+    public class ValidatePurgeActivityTagCommand : AbstractValidator<PurgeActivityTag>
     {
-        public ValidateRemoveActivityTypeCommand(IProcessQueries queryProcessor)
+        public ValidatePurgeActivityTagCommand(IProcessQueries queryProcessor)
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
@@ -35,33 +35,37 @@ namespace UCosmic.Domain.Activities
                 .MustFindUserByPrincipal(queryProcessor)
                 .MustOwnActivity(queryProcessor, x => x.ActivityId)
             ;
+
+            RuleFor(x => x.ActivityTagText)
+                .NotEmpty().WithName("Activity tag text")
+            ;
         }
     }
 
-    public class HandleRemoveActivityTypeCommand : IHandleCommands<RemoveActivityType>
+    public class HandlePurgeActivityTagCommand : IHandleCommands<PurgeActivityTag>
     {
         private readonly ICommandEntities _entities;
 
-        public HandleRemoveActivityTypeCommand(ICommandEntities entities)
+        public HandlePurgeActivityTagCommand(ICommandEntities entities)
         {
             _entities = entities;
         }
 
-        public void Handle(RemoveActivityType command)
+        public void Handle(PurgeActivityTag command)
         {
             if (command == null) throw new ArgumentNullException("command");
 
             var activity = _entities.Get<Activity>()
                 .EagerLoad(_entities, new Expression<Func<Activity, object>>[]
                 {
-                    x => x.Values.Select(y => y.Types),
+                    x => x.Values.Select(y => y.Tags),
                 })
                 .ById(command.ActivityId, false);
             var values = activity.Values.Single(x => x.Mode == activity.Mode);
-            if (values.Types.All(x => x.TypeId != command.ActivityTypeId)) return;
+            if (values.Tags.All(x => !x.Text.Equals(command.ActivityTagText, StringComparison.OrdinalIgnoreCase))) return;
 
-            var types = values.Types.Where(x => x.TypeId == command.ActivityTypeId).ToArray();
-            foreach (var type in types) _entities.Purge(type);
+            var tags = values.Tags.Where(x => x.Text.Equals(command.ActivityTagText, StringComparison.OrdinalIgnoreCase)).ToArray();
+            foreach (var tag in tags) _entities.Purge(tag);
 
             _entities.SaveChanges();
         }

@@ -49,20 +49,20 @@ namespace UCosmic.Domain.Activities
     public class HandleReplaceActivityCommand : IHandleCommands<ReplaceActivity>
     {
         private readonly ICommandEntities _entities;
-        private readonly IHandleCommands<MoveActivityDocuments> _moveActivityDocuments;
         private readonly IHandleCommands<CopyActivityValues> _copyActivityValues;
-        private readonly IHandleCommands<DeleteActivityDocument> _deleteDocument;
+        private readonly IHandleCommands<PurgeActivityDocument> _purgeDocument;
+        private readonly IHandleCommands<MoveActivityDocuments> _moveDocuments;
 
         public HandleReplaceActivityCommand(ICommandEntities entities
-            , IHandleCommands<MoveActivityDocuments> moveActivityDocuments
             , IHandleCommands<CopyActivityValues> copyActivityValues
-            , IHandleCommands<DeleteActivityDocument> deleteDocument
+            , IHandleCommands<PurgeActivityDocument> purgeDocument
+            , IHandleCommands<MoveActivityDocuments> moveDocuments
         )
         {
             _entities = entities;
-            _moveActivityDocuments = moveActivityDocuments;
             _copyActivityValues = copyActivityValues;
-            _deleteDocument = deleteDocument;
+            _purgeDocument = purgeDocument;
+            _moveDocuments = moveDocuments;
         }
 
         public void Handle(ReplaceActivity command)
@@ -155,7 +155,7 @@ namespace UCosmic.Domain.Activities
             var documentsToDelete = originalValues.Documents
                 .Where(x => !workCopyValues.Documents.Select(y => y.EntityId).Contains(x.EntityId)).ToArray();
             foreach (var documentToDelete in documentsToDelete)
-                _deleteDocument.Handle(new DeleteActivityDocument(command.Principal, documentToDelete.RevisionId)
+                _purgeDocument.Handle(new PurgeActivityDocument(command.Principal, documentToDelete.RevisionId)
                 {
                     NoCommit = true,
                 });
@@ -178,7 +178,7 @@ namespace UCosmic.Domain.Activities
                     documentToUpdate.UpdatedByPrincipal = command.Principal.Identity.Name;
                     documentToUpdate.UpdatedOnUtc = DateTime.UtcNow;
                 }
-                _deleteDocument.Handle(new DeleteActivityDocument(command.Principal, documentToSource.RevisionId)
+                _purgeDocument.Handle(new PurgeActivityDocument(command.Principal, documentToSource.RevisionId)
                 {
                     NoCommit = true,
                 });
@@ -186,7 +186,7 @@ namespace UCosmic.Domain.Activities
 
             _entities.Purge(workCopyActivity);
             _entities.SaveChanges();
-            _moveActivityDocuments.Handle(new MoveActivityDocuments(originalActivity.RevisionId));
+            _moveDocuments.Handle(new MoveActivityDocuments(originalActivity.RevisionId));
         }
     }
 }

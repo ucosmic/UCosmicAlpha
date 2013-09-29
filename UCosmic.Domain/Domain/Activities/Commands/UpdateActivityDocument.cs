@@ -17,7 +17,6 @@ namespace UCosmic.Domain.Activities
 
         public IPrincipal Principal { get; protected set; }
         public int Id { get; private set; }
-        //public DateTime UpdatedOn { get; private set; }
         public string Title { get; set; }
         internal bool NoCommit { get; set; }
     }

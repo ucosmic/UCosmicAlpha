@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Linq.Expressions;
+﻿using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
@@ -17,19 +15,19 @@ namespace UCosmic.Web.Mvc.ApiControllers
     public class ActivitiesController : ApiController
     {
         private readonly IProcessQueries _queryProcessor;
-        private readonly IHandleCommands<DeleteActivity> _deleteActivity;
-        private readonly IHandleCommands<UpdateActivity2> _updateActivity2;
+        private readonly IHandleCommands<PurgeActivity> _purgeActivity;
+        private readonly IHandleCommands<UpdateActivity> _updateActivity;
         private readonly IHandleCommands<ReplaceActivity> _replaceActivity;
 
         public ActivitiesController(IProcessQueries queryProcessor
-            , IHandleCommands<DeleteActivity> deleteActivity
-            , IHandleCommands<UpdateActivity2> updateActivity2
+            , IHandleCommands<PurgeActivity> purgeActivity
+            , IHandleCommands<UpdateActivity> updateActivity
             , IHandleCommands<ReplaceActivity> replaceActivity
         )
         {
             _queryProcessor = queryProcessor;
-            _deleteActivity = deleteActivity;
-            _updateActivity2 = updateActivity2;
+            _purgeActivity = purgeActivity;
+            _updateActivity = updateActivity;
             _replaceActivity = replaceActivity;
         }
 
@@ -184,7 +182,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             //var activity = Mapper.Map<Activity>(model);
 
             // invoke update command using the model's id and mode
-            var command = new UpdateActivity2(User, activityId)
+            var command = new UpdateActivity(User, activityId)
             {
                 Title = model.Values.Title,
                 Content = model.Values.Content,
@@ -201,7 +199,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             //    // pass the values from the mapped activity
             //    Values = activity.Values.SingleOrDefault(x => x.ModeText == activity.ModeText),
             //};
-            _updateActivity2.Handle(command);
+            _updateActivity.Handle(command);
             //_updateActivity.Handle(updateActivityCommand);
 
             return Request.CreateResponse(HttpStatusCode.OK);
@@ -269,8 +267,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
         {
             try
             {
-                var command = new DeleteActivity(User, activityId);
-                _deleteActivity.Handle(command);
+                var command = new PurgeActivity(User, activityId);
+                _purgeActivity.Handle(command);
                 return Request.CreateResponse(HttpStatusCode.OK, "Activity was successfully deleted.");
             }
             catch (ValidationException ex)

@@ -7,9 +7,9 @@ using UCosmic.Domain.Identity;
 
 namespace UCosmic.Domain.Activities
 {
-    public class AddActivityTag
+    public class CreateActivityTag
     {
-        public AddActivityTag(IPrincipal principal, int activityId)
+        public CreateActivityTag(IPrincipal principal, int activityId)
         {
             if (principal == null) throw new ArgumentNullException("principal");
             Principal = principal;
@@ -23,9 +23,9 @@ namespace UCosmic.Domain.Activities
         public int? DomainKey { get; set; }
     }
 
-    public class ValidateAddActivityTagCommand : AbstractValidator<AddActivityTag>
+    public class ValidateCreateActivityTagCommand : AbstractValidator<CreateActivityTag>
     {
-        public ValidateAddActivityTagCommand(IProcessQueries queryProcessor)
+        public ValidateCreateActivityTagCommand(IProcessQueries queryProcessor)
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
@@ -45,16 +45,16 @@ namespace UCosmic.Domain.Activities
         }
     }
 
-    public class HandleAddActivityTagCommand : IHandleCommands<AddActivityTag>
+    public class HandleCreateActivityTagCommand : IHandleCommands<CreateActivityTag>
     {
         private readonly ICommandEntities _entities;
 
-        public HandleAddActivityTagCommand(ICommandEntities entities)
+        public HandleCreateActivityTagCommand(ICommandEntities entities)
         {
             _entities = entities;
         }
 
-        public void Handle(AddActivityTag command)
+        public void Handle(CreateActivityTag command)
         {
             if (command == null) throw new ArgumentNullException("command");
 

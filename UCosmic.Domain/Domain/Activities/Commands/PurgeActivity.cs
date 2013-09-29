@@ -9,9 +9,9 @@ using UCosmic.Domain.Audit;
 
 namespace UCosmic.Domain.Activities
 {
-    public class DeleteActivity
+    public class PurgeActivity
     {
-        public DeleteActivity(IPrincipal principal, int activityId)
+        public PurgeActivity(IPrincipal principal, int activityId)
         {
             if (principal == null) { throw new ArgumentNullException("principal"); }
             Principal = principal;
@@ -25,9 +25,9 @@ namespace UCosmic.Domain.Activities
         internal int OuterActivityId { get; set; }
     }
 
-    public class ValidateDeleteActivityCommand : AbstractValidator<DeleteActivity>
+    public class ValidatePurgeActivityCommand : AbstractValidator<PurgeActivity>
     {
-        public ValidateDeleteActivityCommand(IProcessQueries queryProcessor)
+        public ValidatePurgeActivityCommand(IProcessQueries queryProcessor)
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
@@ -38,18 +38,18 @@ namespace UCosmic.Domain.Activities
         }
     }
 
-    public class HandleDeleteActivityCommand : IHandleCommands<DeleteActivity>
+    public class HandlePurgeActivityCommand : IHandleCommands<PurgeActivity>
     {
         private readonly ICommandEntities _entities;
         private readonly IStoreBinaryData _binaryData;
 
-        public HandleDeleteActivityCommand(ICommandEntities entities, IStoreBinaryData binaryData)
+        public HandlePurgeActivityCommand(ICommandEntities entities, IStoreBinaryData binaryData)
         {
             _entities = entities;
             _binaryData = binaryData;
         }
 
-        public void Handle(DeleteActivity command)
+        public void Handle(PurgeActivity command)
         {
             if (command == null) throw new ArgumentNullException("command");
 
@@ -77,14 +77,14 @@ namespace UCosmic.Domain.Activities
             }
 
             // if this activity is a work copy, also delete the original if it is empty
-            DeleteActivity deleteOriginal = null;
+            PurgeActivity deleteOriginal = null;
 
             // if a work copy exists, delete it too
-            DeleteActivity deleteWorkCopy = null;
+            PurgeActivity deleteWorkCopy = null;
             
             if (activity.Original != null && activity.Original.RevisionId != command.OuterActivityId && activity.Original.IsEmpty())
             {
-                deleteOriginal = new DeleteActivity(command.Principal, activity.Original.RevisionId)
+                deleteOriginal = new PurgeActivity(command.Principal, activity.Original.RevisionId)
                 {
                     NoCommit = true,
                     OuterActivityId = command.ActivityId,
@@ -93,7 +93,7 @@ namespace UCosmic.Domain.Activities
             }
             else if (activity.WorkCopy != null && activity.WorkCopy.RevisionId != command.OuterActivityId)
             {
-                deleteWorkCopy = new DeleteActivity(command.Principal, activity.WorkCopy.RevisionId)
+                deleteWorkCopy = new PurgeActivity(command.Principal, activity.WorkCopy.RevisionId)
                 {
                     NoCommit = true,
                     OuterActivityId = command.ActivityId,

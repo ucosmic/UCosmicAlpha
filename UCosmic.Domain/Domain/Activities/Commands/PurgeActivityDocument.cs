@@ -5,9 +5,9 @@ using FluentValidation;
 
 namespace UCosmic.Domain.Activities
 {
-    public class DeleteActivityDocument
+    public class PurgeActivityDocument
     {
-        public DeleteActivityDocument(IPrincipal principal, int id)
+        public PurgeActivityDocument(IPrincipal principal, int id)
         {
             if (principal == null) { throw new ArgumentNullException("principal"); }
             Principal = principal;
@@ -19,9 +19,9 @@ namespace UCosmic.Domain.Activities
         internal bool NoCommit { get; set; }
     }
 
-    public class ValidateDeleteActivityDocumentCommand : AbstractValidator<DeleteActivityDocument>
+    public class ValidatePurgeActivityDocumentCommand : AbstractValidator<PurgeActivityDocument>
     {
-        public ValidateDeleteActivityDocumentCommand(IQueryEntities entities)
+        public ValidatePurgeActivityDocumentCommand(IQueryEntities entities)
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
@@ -37,18 +37,18 @@ namespace UCosmic.Domain.Activities
         }
     }
 
-    public class HandleDeleteActivityDocumentCommand : IHandleCommands<DeleteActivityDocument>
+    public class HandlePurgeActivityDocumentCommand : IHandleCommands<PurgeActivityDocument>
     {
         private readonly ICommandEntities _entities;
         private readonly IStoreBinaryData _binaryData;
 
-        public HandleDeleteActivityDocumentCommand(ICommandEntities entities, IStoreBinaryData binaryData)
+        public HandlePurgeActivityDocumentCommand(ICommandEntities entities, IStoreBinaryData binaryData)
         {
             _entities = entities;
             _binaryData = binaryData;
         }
 
-        public void Handle(DeleteActivityDocument command)
+        public void Handle(PurgeActivityDocument command)
         {
             if (command == null) throw new ArgumentNullException("command");
 

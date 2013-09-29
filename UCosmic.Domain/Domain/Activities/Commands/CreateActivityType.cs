@@ -7,9 +7,9 @@ using UCosmic.Domain.Identity;
 
 namespace UCosmic.Domain.Activities
 {
-    public class AddActivityType
+    public class CreateActivityType
     {
-        public AddActivityType(IPrincipal principal, int activityId)
+        public CreateActivityType(IPrincipal principal, int activityId)
         {
             if (principal == null) throw new ArgumentNullException("principal");
             Principal = principal;
@@ -21,9 +21,9 @@ namespace UCosmic.Domain.Activities
         public int ActivityTypeId { get; set; }
     }
 
-    public class ValidateAddActivityTypeCommand : AbstractValidator<AddActivityType>
+    public class ValidateCreateActivityTypeCommand : AbstractValidator<CreateActivityType>
     {
-        public ValidateAddActivityTypeCommand(IProcessQueries queryProcessor, IQueryEntities entities)
+        public ValidateCreateActivityTypeCommand(IProcessQueries queryProcessor, IQueryEntities entities)
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
@@ -44,16 +44,16 @@ namespace UCosmic.Domain.Activities
         }
     }
 
-    public class HandleAddActivityTypeCommand : IHandleCommands<AddActivityType>
+    public class HandleCreateActivityTypeCommand : IHandleCommands<CreateActivityType>
     {
         private readonly ICommandEntities _entities;
 
-        public HandleAddActivityTypeCommand(ICommandEntities entities)
+        public HandleCreateActivityTypeCommand(ICommandEntities entities)
         {
             _entities = entities;
         }
 
-        public void Handle(AddActivityType command)
+        public void Handle(CreateActivityType command)
         {
             if (command == null) throw new ArgumentNullException("command");
 

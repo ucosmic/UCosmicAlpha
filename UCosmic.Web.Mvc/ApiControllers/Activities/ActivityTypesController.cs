@@ -10,10 +10,10 @@ namespace UCosmic.Web.Mvc.ApiControllers
     [RoutePrefix("api/activities/{activityId:int}/types")]
     public class ActivityTypesController : ApiController
     {
-        private readonly IHandleCommands<AddActivityType> _createHandler;
-        private readonly IHandleCommands<RemoveActivityType> _purgeHandler;
+        private readonly IHandleCommands<CreateActivityType> _createHandler;
+        private readonly IHandleCommands<PurgeActivityType> _purgeHandler;
 
-        public ActivityTypesController(IHandleCommands<AddActivityType> createHandler, IHandleCommands<RemoveActivityType> purgeHandler)
+        public ActivityTypesController(IHandleCommands<CreateActivityType> createHandler, IHandleCommands<PurgeActivityType> purgeHandler)
         {
             _createHandler = createHandler;
             _purgeHandler = purgeHandler;
@@ -23,7 +23,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         public HttpResponseMessage Put(int activityId, int activityTypeId)
         {
             //throw new HttpResponseException(HttpStatusCode.GatewayTimeout); // test api failures
-            var command = new AddActivityType(User, activityId)
+            var command = new CreateActivityType(User, activityId)
             {
                 ActivityTypeId = activityTypeId,
             };
@@ -35,7 +35,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         public HttpResponseMessage Delete(int activityId, int activityTypeId)
         {
             //throw new HttpResponseException(HttpStatusCode.GatewayTimeout); // test api failures
-            var command = new RemoveActivityType(User, activityId)
+            var command = new PurgeActivityType(User, activityId)
             {
                 ActivityTypeId = activityTypeId,
             };

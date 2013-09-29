@@ -25,24 +25,24 @@ namespace UCosmic.Web.Mvc.ApiControllers
     {
         private readonly IProcessQueries _queryProcessor;
         private readonly IStoreBinaryData _binaryData;
-        private readonly IValidator<CreateActivityDocument> _validateActivityDocument;
-        private readonly IHandleCommands<CreateActivityDocument> _createActivityDocument;
-        private readonly IHandleCommands<DeleteActivityDocument> _deleteActivityDocument;
+        private readonly IValidator<CreateActivityDocument> _createValidator;
+        private readonly IHandleCommands<CreateActivityDocument> _createHandler;
+        private readonly IHandleCommands<PurgeActivityDocument> _purgeHandler;
         private readonly IHandleCommands<RenameActivityDocument> _renameActivityDocument;
 
         public ActivityDocumentsController(IProcessQueries queryProcessor
             , IStoreBinaryData binaryData
-            , IValidator<CreateActivityDocument> validateActivityDocument
-            , IHandleCommands<CreateActivityDocument> createActivityDocument
-            , IHandleCommands<DeleteActivityDocument> deleteActivityDocument
+            , IValidator<CreateActivityDocument> createValidator
+            , IHandleCommands<CreateActivityDocument> createHandler
+            , IHandleCommands<PurgeActivityDocument> purgeHandler
             , IHandleCommands<RenameActivityDocument> renameActivityDocument
         )
         {
             _queryProcessor = queryProcessor;
             _binaryData = binaryData;
-            _validateActivityDocument = validateActivityDocument;
-            _createActivityDocument = createActivityDocument;
-            _deleteActivityDocument = deleteActivityDocument;
+            _createValidator = createValidator;
+            _createHandler = createHandler;
+            _purgeHandler = purgeHandler;
             _renameActivityDocument = renameActivityDocument;
         }
 
@@ -100,7 +100,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             };
             try
             {
-                _createActivityDocument.Handle(command);
+                _createHandler.Handle(command);
             }
             catch (ValidationException ex)
             {
@@ -140,11 +140,11 @@ namespace UCosmic.Web.Mvc.ApiControllers
         {
             //ActivityDocument activityDocument = this._queryProcessor.Execute(new ActivityDocumentById(documentId));
 
-            var command = new DeleteActivityDocument(User, documentId);
+            var command = new PurgeActivityDocument(User, documentId);
 
             try
             {
-                _deleteActivityDocument.Handle(command);
+                _purgeHandler.Handle(command);
             }
             catch (ValidationException ex)
             {
@@ -193,7 +193,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 FileName = model.Name,
                 Content = model.Length.HasValue ? new byte[model.Length.Value] : new byte[0],
             };
-            var validationResult = _validateActivityDocument.Validate(command);
+            var validationResult = _createValidator.Validate(command);
             var forProperties = new List<Func<ValidationFailure, bool>>
             {
                 x => x.PropertyName == command.PropertyName(y => y.FileName),
