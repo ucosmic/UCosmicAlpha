@@ -309,79 +309,80 @@
 </script>
 
 <div id="faculty-staff" class="content fixed to-top" style="display: none" data-current-module="employees">
-    <div class="on-left from-top">
-        <header>
-            <h1 id="pageTitle">Professional Engagement Summary</h1>
-        </header>
+    <form class="group">
+        <div class="on-left from-top">
+            <header>
+                <h1 id="pageTitle">Professional Engagement Summary</h1>
+            </header>
                
-        <div style="width: 680px; height: 500px">
+            <div style="width: 680px; height: 500px">
             
-            <!-- H E A T M A P -->
-            <div style="display: none" data-bind="visible: isHeatmapVisible()">
-                <div style="width: 100%; height: 30px; text-align: right">
-                    <span style="float: left" data-bind="click: function(item,event) { expertClickHandler(item,event); }">
-                        <span style="margin-right: 2px; margin-top: 2px">Find an Expert</span>
-                        <img src='@Url.Content("~/api/my/employee-module-settings/icon/FindAnExpertIcon.svg")' width="28" height="28" alt="Find an Expert"/>
-                    </span>                
-                    <span style="float: right" data-bind="click: function(item,event) { globalViewClickHandler(item,event); }">
-                        <span style="margin-right: 2px; margin-top: 4px;">Global View</span>
-                        <img style="padding-top: 2px" src='@Url.Content("~/api/my/employee-module-settings/icon/GlobalViewIcon.png")' alt="Global View"/>
-                    </span>
-                </div>
-                <div style="position: relative">
+                <!-- H E A T M A P -->
+                <div style="display: none" data-bind="visible: isHeatmapVisible()">
+                    <div style="width: 100%; height: 30px; text-align: right">
+                        <span style="float: left" data-bind="click: function(item,event) { expertClickHandler(item,event); }">
+                            <span style="margin-right: 2px; margin-top: 2px">Find an Expert</span>
+                            <img src='@Url.Content("~/api/my/employee-module-settings/icon/FindAnExpertIcon.svg")' width="28" height="28" alt="Find an Expert"/>
+                        </span>                
+                        <span style="float: right" data-bind="click: function(item,event) { globalViewClickHandler(item,event); }">
+                            <span style="margin-right: 2px; margin-top: 4px;">Global View</span>
+                            <img style="padding-top: 2px" src='@Url.Content("~/api/my/employee-module-settings/icon/GlobalViewIcon.png")' alt="Global View"/>
+                        </span>
+                    </div>
+                    <div style="position: relative">
                     
-                    <div style="background-color: #ACCCFD; width: 680px; height: 500px"></div>
+                        <div style="background-color: #ACCCFD; width: 680px; height: 500px"></div>
                     
-                    <div style="position: absolute; background-color: transparent; width: 680px; height: 500px; top: 0; left: 0; z-index: 1"
-                         data-bind="visible: !loadSpinner.isVisible() && (mapRegion() === 'world')">
+                        <div style="position: absolute; background-color: transparent; width: 680px; height: 500px; top: 0; left: 0; z-index: 1"
+                             data-bind="visible: !loadSpinner.isVisible() && (mapRegion() === 'world')">
                         
-                        <!-- Antarctica -->
-                        <div style="position: absolute; left: 340px; bottom: 0;">                   
-                            <img src="../../images/antarctica_283x35.png"/>
-                        </div>
+                            <!-- Antarctica -->
+                            <div style="position: absolute; left: 340px; bottom: 0;">                   
+                                <img src="../../images/antarctica_283x35.png"/>
+                            </div>
                         
-                        <!-- Pacific Ocean -->
-                        <div style="position: absolute; left: 70px; top: 320px; width: 50px">
-                            <div style="width: 100%; text-align: center">
-                                <img src="../../images/icons/glyphs/glyphicons_261_buoy_blue.png" width="24" height="24"/>
+                            <!-- Pacific Ocean -->
+                            <div style="position: absolute; left: 70px; top: 320px; width: 50px">
+                                <div style="width: 100%; text-align: center">
+                                    <img src="../../images/icons/glyphs/glyphicons_261_buoy_blue.png" width="24" height="24"/>
+                                </div>
+                                <div class="customPlaceText">
+                                    <span>Pacific Ocean</span>
+                                </div>
                             </div>
-                            <div class="customPlaceText">
-                                <span>Pacific Ocean</span>
-                            </div>
-                        </div>
                         
-                        <!-- Atlantic Ocean -->
-                        <div style="position: absolute; left: 240px; top: 250px; width: 50px">
-                            <div style="width: 100%; text-align: center">
-                                <img src="../../images/icons/glyphs/glyphicons_261_buoy_blue.png" width="24" height="24"/>
+                            <!-- Atlantic Ocean -->
+                            <div style="position: absolute; left: 240px; top: 250px; width: 50px">
+                                <div style="width: 100%; text-align: center">
+                                    <img src="../../images/icons/glyphs/glyphicons_261_buoy_blue.png" width="24" height="24"/>
+                                </div>
+                                <div class="customPlaceText">
+                                    <span>Atlantic Ocean</span>
+                                </div>
                             </div>
-                            <div class="customPlaceText">
-                                <span>Atlantic Ocean</span>
-                            </div>
-                        </div>
                         
-                        <!-- Indian Ocean -->
-                        <div style="position: absolute; left: 460px; top: 360px; width: 50px">
-                            <div style="width: 100%; text-align: center">
-                                <img src="../../images/icons/glyphs/glyphicons_261_buoy_blue.png" width="24" height="24"/>
+                            <!-- Indian Ocean -->
+                            <div style="position: absolute; left: 460px; top: 360px; width: 50px">
+                                <div style="width: 100%; text-align: center">
+                                    <img src="../../images/icons/glyphs/glyphicons_261_buoy_blue.png" width="24" height="24"/>
+                                </div>
+                                <div class="customPlaceText">
+                                    <span>Indian Ocean</span>
+                                </div>
                             </div>
-                            <div class="customPlaceText">
-                                <span>Indian Ocean</span>
-                            </div>
-                        </div>
                          
-                        <!-- Southern Ocean -->
-                        <div style="position: absolute; left: 270px; top: 420px; width: 50px">
-                            <div style="width: 100%; text-align: center">
-                                <img src="../../images/icons/glyphs/glyphicons_261_buoy_blue.png" width="24" height="24"/>
+                            <!-- Southern Ocean -->
+                            <div style="position: absolute; left: 270px; top: 420px; width: 50px">
+                                <div style="width: 100%; text-align: center">
+                                    <img src="../../images/icons/glyphs/glyphicons_261_buoy_blue.png" width="24" height="24"/>
+                                </div>
+                                <div class="customPlaceText">
+                                    <span>Southern Ocean</span>
+                                </div>
                             </div>
-                            <div class="customPlaceText">
-                                <span>Southern Ocean</span>
-                            </div>
-                        </div>
                           
-                        <!-- Gulf of Mexico -->
-                        @*                        <div style="position: absolute; left: 150px; top: 270px; width: 50px; z-index: 3">
+                            <!-- Gulf of Mexico -->
+                            @*                        <div style="position: absolute; left: 150px; top: 270px; width: 50px; z-index: 3">
                             <div style="width: 100%; text-align: center">
                                 <img src="../../images/icons/glyphs/glyphicons_261_buoy_blue.png" width="12" height="12"/>
                             </div>
@@ -390,91 +391,177 @@
                             </div>
                         </div>  *@                     
                            
-                        <!-- Caribbean -->
-                        <div style="position: absolute; left: 200px; top: 300px; width: 50px">
-                            <div style="width: 100%; text-align: center">
-                                <img src="../../images/icons/glyphs/glyphicons_261_buoy_blue.png" width="12" height="12"/>
+                            <!-- Caribbean -->
+                            <div style="position: absolute; left: 200px; top: 300px; width: 50px">
+                                <div style="width: 100%; text-align: center">
+                                    <img src="../../images/icons/glyphs/glyphicons_261_buoy_blue.png" width="12" height="12"/>
+                                </div>
+                                <div class="customPlaceText" style="line-height: 0.5">
+                                    <span style="font-size: x-small">Caribbean</span>
+                                </div>
                             </div>
-                            <div class="customPlaceText" style="line-height: 0.5">
-                                <span style="font-size: x-small">Caribbean</span>
-                            </div>
+
+                            <!-- Arctic Ocean -->
+                            <div style="position: absolute; left: 315px; top: 5px; width: 50px">
+                                <div style="width: 100%; text-align: center">
+                                    <img src="../../images/icons/glyphs/glyphicons_261_buoy_blue.png" width="24" height="24"/>
+                                </div>
+                                <div class="customPlaceText">
+                                    <span>Arctic Ocean</span>
+                                </div>
+                            </div>                       
                         </div>
 
-                        <!-- Arctic Ocean -->
-                        <div style="position: absolute; left: 315px; top: 5px; width: 50px">
-                            <div style="width: 100%; text-align: center">
-                                <img src="../../images/icons/glyphs/glyphicons_261_buoy_blue.png" width="24" height="24"/>
+                        <!-- GeoChart -->
+                        <div id="heatmap" style="position: absolute; top: 0; left: 0; z-index: 2"></div>
+                    
+                        <div data-bind="visible: mapRegion() === 'world'">
+                            <!-- Antarctica Title Phantom -->
+                            <div id="antarctica" style="position: absolute; left: 330px; bottom: 0; z-index: 4" data-bind="click: function(event,item) { customPlaceClick(event,item,'Antarctica'); }">
+                                <img src="../../images/transparent.png" width="300" height="50"/>
                             </div>
-                            <div class="customPlaceText">
-                                <span>Arctic Ocean</span>
+                    
+                            <!-- Pacific Ocean Title Phantom -->
+                            <div id="pacificOcean" style="position: absolute; left: 70px; top: 320px; width: 50px; z-index: 4" data-bind="click: function(event,item) { customPlaceClick(event,item,'Pacific Ocean'); }">
+                                <img src="../../images/transparent.png" width="50" height="50"/>
                             </div>
-                        </div>                       
-                    </div>
-
-                    <!-- GeoChart -->
-                    <div id="heatmap" style="position: absolute; top: 0; left: 0; z-index: 2"></div>
                     
-                    <div data-bind="visible: mapRegion() === 'world'">
-                        <!-- Antarctica Title Phantom -->
-                        <div id="antarctica" style="position: absolute; left: 330px; bottom: 0; z-index: 4" data-bind="click: function(event,item) { customPlaceClick(event,item,'Antarctica'); }">
-                            <img src="../../images/transparent.png" width="300" height="50"/>
-                        </div>
-                    
-                        <!-- Pacific Ocean Title Phantom -->
-                        <div id="pacificOcean" style="position: absolute; left: 70px; top: 320px; width: 50px; z-index: 4" data-bind="click: function(event,item) { customPlaceClick(event,item,'Pacific Ocean'); }">
-                            <img src="../../images/transparent.png" width="50" height="50"/>
-                        </div>
-                    
-                        <!-- Atlantic Ocean Title Phantom -->
-                        <div id="atlanticOcean" style="position: absolute; left: 240px; top: 250px; width: 50px; z-index: 4" data-bind="click: function(event,item) { customPlaceClick(event,item,'North Atlantic Ocean'); }">
-                            <img src="../../images/transparent.png" width="50" height="50"/>
-                        </div>
+                            <!-- Atlantic Ocean Title Phantom -->
+                            <div id="atlanticOcean" style="position: absolute; left: 240px; top: 250px; width: 50px; z-index: 4" data-bind="click: function(event,item) { customPlaceClick(event,item,'North Atlantic Ocean'); }">
+                                <img src="../../images/transparent.png" width="50" height="50"/>
+                            </div>
                        
-                        <!-- Indian Ocean Title Phantom -->
-                        <div id="indianOcean" style="position: absolute; left: 460px; top: 360px; width: 50px; z-index: 4" data-bind="click: function(event,item) { customPlaceClick(event,item,'Indian Ocean'); }">
-                            <img src="../../images/transparent.png" width="50" height="50"/>
-                        </div>
+                            <!-- Indian Ocean Title Phantom -->
+                            <div id="indianOcean" style="position: absolute; left: 460px; top: 360px; width: 50px; z-index: 4" data-bind="click: function(event,item) { customPlaceClick(event,item,'Indian Ocean'); }">
+                                <img src="../../images/transparent.png" width="50" height="50"/>
+                            </div>
                   
-                        <!-- Southern Ocean Title Phantom -->
-                        <div id="southernOcean" style="position: absolute; left: 270px; top: 420px; width: 50px; z-index: 4" data-bind="click: function(event,item) { customPlaceClick(event,item,'Southern Ocean'); }">
-                            <img src="../../images/transparent.png" width="50" height="50"/>
+                            <!-- Southern Ocean Title Phantom -->
+                            <div id="southernOcean" style="position: absolute; left: 270px; top: 420px; width: 50px; z-index: 4" data-bind="click: function(event,item) { customPlaceClick(event,item,'Southern Ocean'); }">
+                                <img src="../../images/transparent.png" width="50" height="50"/>
+                            </div>
+
+                            <!-- Gulf of Mexico-->
+                            <div style="position: absolute; left: 150px; top: 270px; width: 50px; z-index: 3"
+                                 data-bind="visible: !loadSpinner.isVisible()">
+                                <div style="width: 100%; text-align: center">
+                                    <img src="../../images/icons/glyphs/glyphicons_261_buoy_blue.png" width="12" height="12"/>
+                                </div>
+                                <div class="customPlaceText" style="line-height: 0.5">
+                                    <span style="font-size: x-small">Gulf of Mexico</span>
+                                </div>
+                            </div>
+                    
+                            <!-- Gulf of Mexico Title Phantom  -->
+                            <div id="gulfOfMexico" style="position: absolute; left: 150px; top: 270px; width: 50px; z-index: 4" data-bind="click: function(event,item) { customPlaceClick(event,item,'Gulf of Mexico'); }">
+                                <img src="../../images/transparent.png" width="25" height="25"/>
+                            </div>
+                    
+                            <!-- Caribbean Title Phantom -->
+                            <div id="caribbean" style="position: absolute; left: 200px; top: 300px; width: 50px; z-index: 4" data-bind="click: function(event,item) { customPlaceClick(event,item,'Caribbean Sea'); }">
+                                <img src="../../images/transparent.png" width="25" height="25"/>
+                            </div>
+
+                            <!-- Arctic Ocean Title Phantom -->
+                            <div id="arcticOcean" style="position: absolute; left: 315px; top: 5px; width: 50px; z-index: 4" data-bind="click: function(event,item) { customPlaceClick(event,item,'Arctic Ocean'); }">
+                                <img src="../../images/transparent.png" width="50" height="50"/>
+                            </div>
                         </div>
 
-                        <!-- Gulf of Mexico-->
-                        <div style="position: absolute; left: 150px; top: 270px; width: 50px; z-index: 3"
-                             data-bind="visible: !loadSpinner.isVisible()">
-                            <div style="width: 100%; text-align: center">
-                                <img src="../../images/icons/glyphs/glyphicons_261_buoy_blue.png" width="12" height="12"/>
-                            </div>
-                            <div class="customPlaceText" style="line-height: 0.5">
-                                <span style="font-size: x-small">Gulf of Mexico</span>
-                            </div>
-                        </div>
+                        <!-- Activities/People Buttons -->
+                        <div id="" style="position: absolute; margin: 5px; right: 0; top: 0; z-index: 3">
+                            <input type="button" id="activitiesButton" value="Activites" style="float: left" data-bind="click: function(data, event) { selectSearchType('activities'); }"/>
+                            <input type="button" id="peopleButton" value="People" style="float: left; border-left-style: none" data-bind="click: function(data, event) { selectSearchType('people'); }"/>
+                        </div>                     
                     
-                        <!-- Gulf of Mexico Title Phantom  -->
-                        <div id="gulfOfMexico" style="position: absolute; left: 150px; top: 270px; width: 50px; z-index: 4" data-bind="click: function(event,item) { customPlaceClick(event,item,'Gulf of Mexico'); }">
-                            <img src="../../images/transparent.png" width="25" height="25"/>
-                        </div>
-                    
-                        <!-- Caribbean Title Phantom -->
-                        <div id="caribbean" style="position: absolute; left: 200px; top: 300px; width: 50px; z-index: 4" data-bind="click: function(event,item) { customPlaceClick(event,item,'Caribbean Sea'); }">
-                            <img src="../../images/transparent.png" width="25" height="25"/>
-                        </div>
-
-                        <!-- Arctic Ocean Title Phantom -->
-                        <div id="arcticOcean" style="position: absolute; left: 315px; top: 5px; width: 50px; z-index: 4" data-bind="click: function(event,item) { customPlaceClick(event,item,'Arctic Ocean'); }">
-                            <img src="../../images/transparent.png" width="50" height="50"/>
+                        <!-- Spinner -->
+                        <div class="spinnerBox" data-bind="visible: loadSpinner.isVisible() && isHeatmapVisible()">
+                            <div style="position: absolute; top: 0; left: 0; bottom: 0; right: 0; margin: auto; width: 100px; height: 20px">
+                                <span>
+                                    <img src="~/images/icons/spinner/spinner-20-blue.gif" alt=""/>
+                                    <strong>Loading...</strong>
+                                </span>
+                            </div>
                         </div>
                     </div>
-
-                    <!-- Activities/People Buttons -->
-                    <div id="" style="position: absolute; margin: 5px; right: 0; top: 0; z-index: 3">
-                        <input type="button" id="activitiesButton" value="Activites" style="float: left" data-bind="click: function(data, event) { selectSearchType('activities'); }"/>
-                        <input type="button" id="peopleButton" value="People" style="float: left; border-left-style: none" data-bind="click: function(data, event) { selectSearchType('people'); }"/>
-                    </div>                     
-                    
+                </div>
+                       
+                <!-- P O I N T M A P -->
+                <div id="pointmapDiv" style="position: relative; display: none" data-bind="visible: isPointmapVisible() && (lens() == 'map')">
+                    <div id="pointmap" style="position: absolute; top: 0; left: 0; width: 680px; height: 500px"></div>
+                
                     <!-- Spinner -->
-                    <div class="spinnerBox" data-bind="visible: loadSpinner.isVisible() && isHeatmapVisible()">
+                    <div class="spinnerBox" style="position: absolute; top:400px; left: 0; width: 100px; height: 20px" data-bind="visible: loadSpinner.isVisible() && isPointmapVisible() && (lens() == 'map')">
+                        <span>
+                            <img src="~/images/icons/spinner/spinner-20-blue.gif" alt=""/>
+                            <strong>Loading...</strong>
+                        </span>
+                    </div>
+                
+                    <!-- Hidden element to get map marker color from css -->
+                    <div id="mapMarkerColor" class="mapMarkerColor" style="display: none"></div>
+                </div>
+          
+                <!-- T A B L E S -->
+                <div>
+                    <!-- Activities Results -->
+                    <div id="resultstable" style="display: none" data-bind="visible: isPointmapVisible() && (lens() == 'table') && (searchType() == 'activities')">                   
+                        <div style="width: 665px">
+                            <div class="activitySearchResultsColumnHeader" style="width: 11%">Location</div>
+                            <div class="activitySearchResultsColumnHeader" style="width: 20%">Last, First Name</div>
+                            <div class="activitySearchResultsColumnHeader" style="width: 48%">Activity Title</div>
+                            <div class="activitySearchResultsColumnHeader" style="width: 7%">Type</div>
+                            <div class="activitySearchResultsColumnHeader" style="width: 11%">Date</div>
+                        </div>
+                        <div style="height: 600px; overflow-y: scroll">
+                            <ul data-bind="foreach: activityResults.placeResults">
+                                <li>
+                                    <ul data-bind="foreach: results">
+                                        <li>
+                                            <div style="width: 100%; padding-top: 4px; padding-bottom: 4px; border-bottom-style: solid; border-bottom-color: black; border-bottom-width: 1px;">
+                                                <div class="activitySearchResultsRow" style="width: 11%" data-bind="text: $parent.officialName"></div>
+                                                <div class="activitySearchResultsRow" style="width: 20%" data-bind="text: personName()"></div>
+                                                <div class="activitySearchResultsRow" style="width: 48%" data-bind="text: activityTitle(), attr: { title: activityDescription() }"></div>
+                                                <div class="activitySearchResultsRow" style="width: 7.6%; text-align: center;" data-bind="template: { name: 'activities-types-template', foreach: activityTypeIds }"></div>
+                                                <div class="activitySearchResultsRow" style="width: 10.4%" data-bind="text: activityDate()"></div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+            
+                    <!-- People Results -->
+                    <div id="people_resultstable" style="display: none" data-bind="visible: isPointmapVisible() && (lens() == 'table') && (searchType() == 'people')">                   
+                        <div style="width: 665px">
+                            <div class="activitySearchResultsColumnHeader" style="width: 20%">Name/Email</div>
+                            <div class="activitySearchResultsColumnHeader" style="width: 15%">Department</div>                   
+                            <div class="activitySearchResultsColumnHeader" style="width: 11%">Location</div>
+                            <div class="activitySearchResultsColumnHeader" style="width: 40%">Activity</div>
+                            <div class="activitySearchResultsColumnHeader" style="width: 11%">Type</div>
+                        </div>
+                        <div style="height: 600px; overflow-y: scroll">
+                            <ul data-bind="foreach: activityResults.placeResults">
+                                <li>
+                                    <ul data-bind="foreach: results">
+                                        <li>
+                                            <div style="width: 100%; padding-top: 4px; padding-bottom: 4px; border-bottom-style: solid; border-bottom-color: black; border-bottom-width: 1px;">
+                                                <div class="activitySearchResultsRow" style="width: 20%" data-bind="text: personName() + ' ' + personEmail()"></div>
+                                                <div class="activitySearchResultsRow" style="width: 15%" data-bind="text: personDepartment()"></div>
+                                                <div class="activitySearchResultsRow" style="width: 11%" data-bind="text: $parent.officialName"></div>
+                                                <div class="activitySearchResultsRow" style="width: 40%" data-bind="text: activityTitle(), attr: { title: activityDescription() }"></div>
+                                                <div class="activitySearchResultsRow" style="width: 11%" data-bind="template: { name: 'activities-types-template', foreach: activityTypeIds }"></div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                      
+                    <!-- Spinner -->
+                    <div class="spinnerBox" data-bind="visible: loadSpinner.isVisible() && isPointmapVisible() && (lens() == 'table')">
                         <div style="position: absolute; top: 0; left: 0; bottom: 0; right: 0; margin: auto; width: 100px; height: 20px">
                             <span>
                                 <img src="~/images/icons/spinner/spinner-20-blue.gif" alt=""/>
@@ -483,168 +570,83 @@
                         </div>
                     </div>
                 </div>
-            </div>
-                       
-            <!-- P O I N T M A P -->
-            <div id="pointmapDiv" style="position: relative; display: none" data-bind="visible: isPointmapVisible() && (lens() == 'map')">
-                <div id="pointmap" style="position: absolute; top: 0; left: 0; width: 680px; height: 500px"></div>
-                
-                <!-- Spinner -->
-                <div class="spinnerBox" style="position: absolute; top:400px; left: 0; width: 100px; height: 20px" data-bind="visible: loadSpinner.isVisible() && isPointmapVisible() && (lens() == 'map')">
-                    <span>
-                        <img src="~/images/icons/spinner/spinner-20-blue.gif" alt=""/>
-                        <strong>Loading...</strong>
-                    </span>
-                </div>
-                
-                <!-- Hidden element to get map marker color from css -->
-                <div id="mapMarkerColor" class="mapMarkerColor" style="display: none"></div>
-            </div>
-          
-            <!-- T A B L E S -->
-            <div>
-                <!-- Activities Results -->
-                <div id="resultstable" style="display: none" data-bind="visible: isPointmapVisible() && (lens() == 'table') && (searchType() == 'activities')">                   
-                    <div style="width: 665px">
-                        <div class="activitySearchResultsColumnHeader" style="width: 11%">Location</div>
-                        <div class="activitySearchResultsColumnHeader" style="width: 20%">Last, First Name</div>
-                        <div class="activitySearchResultsColumnHeader" style="width: 48%">Activity Title</div>
-                        <div class="activitySearchResultsColumnHeader" style="width: 7%">Type</div>
-                        <div class="activitySearchResultsColumnHeader" style="width: 11%">Date</div>
-                    </div>
-                    <div style="height: 600px; overflow-y: scroll">
-                        <ul data-bind="foreach: activityResults.placeResults">
-                            <li>
-                                <ul data-bind="foreach: results">
-                                    <li>
-                                        <div style="width: 100%; padding-top: 4px; padding-bottom: 4px; border-bottom-style: solid; border-bottom-color: black; border-bottom-width: 1px;">
-                                            <div class="activitySearchResultsRow" style="width: 11%" data-bind="text: $parent.officialName"></div>
-                                            <div class="activitySearchResultsRow" style="width: 20%" data-bind="text: personName()"></div>
-                                            <div class="activitySearchResultsRow" style="width: 48%" data-bind="text: activityTitle(), attr: { title: activityDescription() }"></div>
-                                            <div class="activitySearchResultsRow" style="width: 7.6%; text-align: center;" data-bind="template: { name: 'activities-types-template', foreach: activityTypeIds }"></div>
-                                            <div class="activitySearchResultsRow" style="width: 10.4%" data-bind="text: activityDate()"></div>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            
-                <!-- People Results -->
-                <div id="people_resultstable" style="display: none" data-bind="visible: isPointmapVisible() && (lens() == 'table') && (searchType() == 'people')">                   
-                    <div style="width: 665px">
-                        <div class="activitySearchResultsColumnHeader" style="width: 20%">Name/Email</div>
-                        <div class="activitySearchResultsColumnHeader" style="width: 15%">Department</div>                   
-                        <div class="activitySearchResultsColumnHeader" style="width: 11%">Location</div>
-                        <div class="activitySearchResultsColumnHeader" style="width: 40%">Activity</div>
-                        <div class="activitySearchResultsColumnHeader" style="width: 11%">Type</div>
-                    </div>
-                    <div style="height: 600px; overflow-y: scroll">
-                        <ul data-bind="foreach: activityResults.placeResults">
-                            <li>
-                                <ul data-bind="foreach: results">
-                                    <li>
-                                        <div style="width: 100%; padding-top: 4px; padding-bottom: 4px; border-bottom-style: solid; border-bottom-color: black; border-bottom-width: 1px;">
-                                            <div class="activitySearchResultsRow" style="width: 20%" data-bind="text: personName() + ' ' + personEmail()"></div>
-                                            <div class="activitySearchResultsRow" style="width: 15%" data-bind="text: personDepartment()"></div>
-                                            <div class="activitySearchResultsRow" style="width: 11%" data-bind="text: $parent.officialName"></div>
-                                            <div class="activitySearchResultsRow" style="width: 40%" data-bind="text: activityTitle(), attr: { title: activityDescription() }"></div>
-                                            <div class="activitySearchResultsRow" style="width: 11%" data-bind="template: { name: 'activities-types-template', foreach: activityTypeIds }"></div>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
                       
-                <!-- Spinner -->
-                <div class="spinnerBox" data-bind="visible: loadSpinner.isVisible() && isPointmapVisible() && (lens() == 'table')">
-                    <div style="position: absolute; top: 0; left: 0; bottom: 0; right: 0; margin: auto; width: 100px; height: 20px">
-                        <span>
-                            <img src="~/images/icons/spinner/spinner-20-blue.gif" alt=""/>
-                            <strong>Loading...</strong>
-                        </span>
+                <!-- E X P E R T -->
+                <div style="display: none" data-bind="visible: isExpertVisible()">
+                    <div id="expert" style="width: 680px; height: 500px">
+                        <img src="~/images/placeholders/ExpertiseMock.png" width="680" height="500" alt=""/>
                     </div>
-                </div>
-            </div>
-                      
-            <!-- E X P E R T -->
-            <div style="display: none" data-bind="visible: isExpertVisible()">
-                <div id="expert" style="width: 680px; height: 500px">
-                    <img src="~/images/placeholders/ExpertiseMock.png" width="680" height="500" alt=""/>
-                </div>
                 
-                <!-- Language Expert Results -->
-                <div id="languageexpert_resultstable" style="display: none" data-bind="">                   
-                    <div style="width: 665px">
-                        <div class="activitySearchResultsColumnHeader" style="width: 20%">Language</div>
-                        <div class="activitySearchResultsColumnHeader" style="width: 10%">Last, First Name, Email</div>                   
-                        <div class="activitySearchResultsColumnHeader" style="width: 20%">Department</div>
-                        <div class="activitySearchResultsColumnHeader" style="width: 30%">Proficiencies</div>
-                        <div class="activitySearchResultsColumnHeader" style="width: 5%">Speaking</div>
-                        <div class="activitySearchResultsColumnHeader" style="width: 5%">Listening</div>
-                        <div class="activitySearchResultsColumnHeader" style="width: 5%">Reading</div>
-                        <div class="activitySearchResultsColumnHeader" style="width: 5%">Writing</div>
+                    <!-- Language Expert Results -->
+                    <div id="languageexpert_resultstable" style="display: none" data-bind="">                   
+                        <div style="width: 665px">
+                            <div class="activitySearchResultsColumnHeader" style="width: 20%">Language</div>
+                            <div class="activitySearchResultsColumnHeader" style="width: 10%">Last, First Name, Email</div>                   
+                            <div class="activitySearchResultsColumnHeader" style="width: 20%">Department</div>
+                            <div class="activitySearchResultsColumnHeader" style="width: 30%">Proficiencies</div>
+                            <div class="activitySearchResultsColumnHeader" style="width: 5%">Speaking</div>
+                            <div class="activitySearchResultsColumnHeader" style="width: 5%">Listening</div>
+                            <div class="activitySearchResultsColumnHeader" style="width: 5%">Reading</div>
+                            <div class="activitySearchResultsColumnHeader" style="width: 5%">Writing</div>
+                        </div>
+                        <div style="height: 600px; overflow-y: scroll">
+                            <ul data-bind="foreach: activityResults.placeResults">
+                                <li>
+                                    <ul data-bind="foreach: results">
+                                        <li>
+                                            <div style="width: 100%; padding-top: 4px; padding-bottom: 4px; border-bottom-style: solid; border-bottom-color: black; border-bottom-width: 1px;">
+                                                <div class="activitySearchResultsRow" style="width: 20%" data-bind=""></div>
+                                                <div class="activitySearchResultsRow" style="width: 10%" data-bind=""></div>
+                                                <div class="activitySearchResultsRow" style="width: 20%" data-bind=""></div>
+                                                <div class="activitySearchResultsRow" style="width: 30%" data-bind=""></div>
+                                                <div class="activitySearchResultsRow" style="width: 5%" data-bind=""></div>
+                                                <div class="activitySearchResultsRow" style="width: 5%" data-bind=""></div>
+                                                <div class="activitySearchResultsRow" style="width: 5%" data-bind=""></div>
+                                                <div class="activitySearchResultsRow" style="width: 5%" data-bind=""></div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
-                    <div style="height: 600px; overflow-y: scroll">
-                        <ul data-bind="foreach: activityResults.placeResults">
-                            <li>
-                                <ul data-bind="foreach: results">
-                                    <li>
-                                        <div style="width: 100%; padding-top: 4px; padding-bottom: 4px; border-bottom-style: solid; border-bottom-color: black; border-bottom-width: 1px;">
-                                            <div class="activitySearchResultsRow" style="width: 20%" data-bind=""></div>
-                                            <div class="activitySearchResultsRow" style="width: 10%" data-bind=""></div>
-                                            <div class="activitySearchResultsRow" style="width: 20%" data-bind=""></div>
-                                            <div class="activitySearchResultsRow" style="width: 30%" data-bind=""></div>
-                                            <div class="activitySearchResultsRow" style="width: 5%" data-bind=""></div>
-                                            <div class="activitySearchResultsRow" style="width: 5%" data-bind=""></div>
-                                            <div class="activitySearchResultsRow" style="width: 5%" data-bind=""></div>
-                                            <div class="activitySearchResultsRow" style="width: 5%" data-bind=""></div>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
                 
-                <!-- Geographic Expert Results -->
-                <div id="geographicexpert_resultstable" style="display: none" data-bind="">                   
-                    <div style="width: 665px">
-                        <div class="activitySearchResultsColumnHeader" style="width: 20%">Country/Location</div>
-                        <div class="activitySearchResultsColumnHeader" style="width: 20%">Last, First Name, Email</div>                   
-                        <div class="activitySearchResultsColumnHeader" style="width: 20%">Department</div>
-                        <div class="activitySearchResultsColumnHeader" style="width: 40%">Expertise Summary</div>
-                    </div>
-                    <div style="height: 600px; overflow-y: scroll">
-                        <ul data-bind="foreach: activityResults.placeResults">
-                            <li>
-                                <ul data-bind="foreach: results">
-                                    <li>
-                                        <div style="width: 100%; padding-top: 4px; padding-bottom: 4px; border-bottom-style: solid; border-bottom-color: black; border-bottom-width: 1px;">
-                                            <div class="activitySearchResultsRow" style="width: 20%" data-bind=""></div>
-                                            <div class="activitySearchResultsRow" style="width: 20%" data-bind=""></div>
-                                            <div class="activitySearchResultsRow" style="width: 20%" data-bind=""></div>
-                                            <div class="activitySearchResultsRow" style="width: 40%" data-bind=""></div>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
+                    <!-- Geographic Expert Results -->
+                    <div id="geographicexpert_resultstable" style="display: none" data-bind="">                   
+                        <div style="width: 665px">
+                            <div class="activitySearchResultsColumnHeader" style="width: 20%">Country/Location</div>
+                            <div class="activitySearchResultsColumnHeader" style="width: 20%">Last, First Name, Email</div>                   
+                            <div class="activitySearchResultsColumnHeader" style="width: 20%">Department</div>
+                            <div class="activitySearchResultsColumnHeader" style="width: 40%">Expertise Summary</div>
+                        </div>
+                        <div style="height: 600px; overflow-y: scroll">
+                            <ul data-bind="foreach: activityResults.placeResults">
+                                <li>
+                                    <ul data-bind="foreach: results">
+                                        <li>
+                                            <div style="width: 100%; padding-top: 4px; padding-bottom: 4px; border-bottom-style: solid; border-bottom-color: black; border-bottom-width: 1px;">
+                                                <div class="activitySearchResultsRow" style="width: 20%" data-bind=""></div>
+                                                <div class="activitySearchResultsRow" style="width: 20%" data-bind=""></div>
+                                                <div class="activitySearchResultsRow" style="width: 20%" data-bind=""></div>
+                                                <div class="activitySearchResultsRow" style="width: 40%" data-bind=""></div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="on-right from-top" style="display: none" data-bind="visible: isPointmapVisible()">
-        @Html.Partial(MVC.FacultyStaff.Views._SearchSideBar)
-    </div>
-    <div class="on-right from-top" style="display: none" data-bind="visible: isHeatmapVisible">
-        @Html.Partial(MVC.FacultyStaff.Views._StatsSideBar)
-    </div>
+        <div class="on-right from-top" style="display: none" data-bind="visible: isPointmapVisible()">
+            @Html.Partial(MVC.FacultyStaff.Views._SearchSideBar)
+        </div>
+        <div class="on-right from-top" style="display: none" data-bind="visible: isHeatmapVisible">
+            @Html.Partial(MVC.FacultyStaff.Views._StatsSideBar)
+        </div>
+    </form>
 </div>
 
 <div id="tooltipWindow" style="width: 100px; height: 40px"></div>
