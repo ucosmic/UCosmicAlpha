@@ -136,24 +136,24 @@
     <Compile Include="Domain\Activities\Commands\CopyActivityValues.cs" />
     <Compile Include="Domain\Activities\Commands\CreateActivityAndValues.cs" />
     <Compile Include="Domain\Activities\Commands\CreateActivityDocument.cs" />
-    <Compile Include="Domain\Activities\Commands\CreateActivityLocation.cs" />
-    <Compile Include="Domain\Activities\Commands\CreateActivityTag.cs" />
-    <Compile Include="Domain\Activities\Commands\CreateActivityType.cs" />
+    <Compile Include="Domain\Activities\Commands\_Deprecated\_CreateActivityLocation.cs" />
+    <Compile Include="Domain\Activities\Commands\_Deprecated\_CreateActivityTag.cs" />
+    <Compile Include="Domain\Activities\Commands\_Deprecated\_CreateActivityType.cs" />
     <Compile Include="Domain\Activities\Commands\CreateActivityValues.cs" />
     <Compile Include="Domain\Activities\Commands\CreateActivity.cs" />
     <Compile Include="Domain\Activities\Commands\DeleteActivity.cs" />
     <Compile Include="Domain\Activities\Commands\DeleteActivityDocument.cs" />
-    <Compile Include="Domain\Activities\Commands\DeleteActivityLocation.cs" />
-    <Compile Include="Domain\Activities\Commands\DeleteActivityTag.cs" />
-    <Compile Include="Domain\Activities\Commands\DeleteActivityType.cs" />
+    <Compile Include="Domain\Activities\Commands\_Deprecated\_DeleteActivityLocation.cs" />
+    <Compile Include="Domain\Activities\Commands\_Deprecated\_DeleteActivityTag.cs" />
+    <Compile Include="Domain\Activities\Commands\_Deprecated\_DeleteActivityType.cs" />
     <Compile Include="Domain\Activities\Commands\_Deprecated\_DraftMyActivity.cs" />
     <Compile Include="Domain\Activities\Commands\_Deprecated\_PurgeMyActivity.cs" />
     <Compile Include="Domain\Activities\Commands\RenameActivityDocument.cs" />
-    <Compile Include="Domain\Activities\Commands\UpdateActivity.cs" />
+    <Compile Include="Domain\Activities\Commands\_Deprecated\_UpdateActivity.cs" />
     <Compile Include="Domain\Activities\Commands\_Deprecated\_UpdateActivityLocation.cs" />
     <Compile Include="Domain\Activities\Commands\UpdateActivityDocument.cs" />
     <Compile Include="Domain\Activities\Commands\_Deprecated\_UpdateActivityType.cs" />
-    <Compile Include="Domain\Activities\Commands\UpdateActivityValues.cs" />
+    <Compile Include="Domain\Activities\Commands\_Deprecated\_UpdateActivityValues.cs" />
     <Compile Include="Domain\Activities\Entities\Activity.cs" />
     <Compile Include="Domain\Activities\Entities\ActivityDocument.cs" />
     <Compile Include="Domain\Activities\Entities\ActivityLocation.cs" />
@@ -187,7 +187,7 @@
     <Compile Include="Domain\Activities\_Internal\QueryActivityViews.cs" />
     <Compile Include="Domain\Activities\Queries\ActivitySearch.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityExtensions.cs" />
-    <Compile Include="Domain\Activities\Validation\MustHaveActivityMode.cs" />
+    <Compile Include="Domain\Activities\Commands\_Deprecated\_MustHaveActivityMode.cs" />
     <Compile Include="Domain\Activities\Views\ActivityGlobalActivityCountView.cs" />
     <Compile Include="Domain\Activities\Views\ActivityGlobalPeopleCountView.cs" />
     <Compile Include="Domain\Activities\Views\ActivityPlaceActivityCountView.cs" />
@@ -277,8 +277,8 @@
     <Compile Include="Domain\Activities\Validation\ActivityConstraints.cs" />
     <Compile Include="Domain\Activities\Validation\MustFindActivityById.cs" />
     <Compile Include="Domain\Activities\Validation\MustFindActivityDocumentById.cs" />
-    <Compile Include="Domain\Activities\Validation\MustFindActivityLocationById.cs" />
-    <Compile Include="Domain\Activities\Validation\MustFindActivityTagById.cs" />
+    <Compile Include="Domain\Activities\Commands\_Deprecated\_MustFindActivityLocationById.cs" />
+    <Compile Include="Domain\Activities\Commands\_Deprecated\_MustFindActivityTagById.cs" />
     <Compile Include="Domain\Activities\Validation\MustFindActivityTypeById.cs" />
     <Compile Include="Domain\Activities\Validation\MustFindActivityValuesById.cs" />
     <Compile Include="Domain\Agreements\Commands\CreateAgreement.cs" />
@@ -350,10 +350,10 @@
     <Compile Include="Domain\Activities\Validation\MustOwnActivityDocument.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Domain\Activities\Validation\MustOwnActivityLocation.cs" />
-    <Compile Include="Domain\Activities\Validation\MustOwnActivityTag.cs" />
-    <Compile Include="Domain\Activities\Validation\MustOwnActivityType.cs" />
-    <Compile Include="Domain\Activities\Validation\MustOwnActivityValues.cs" />
+    <Compile Include="Domain\Activities\Commands\_Deprecated\_MustOwnActivityLocation.cs" />
+    <Compile Include="Domain\Activities\Commands\_Deprecated\_MustOwnActivityTag.cs" />
+    <Compile Include="Domain\Activities\Commands\_Deprecated\_MustOwnActivityType.cs" />
+    <Compile Include="Domain\Activities\Commands\_Deprecated\_MustOwnActivityValues.cs" />
     <Compile Include="Domain\Employees\Commands\CreateEmployee.cs" />
     <Compile Include="Domain\Activities\Queries\TenantActivitiesByKeyword.cs" />
     <Compile Include="Domain\Activities\_Internal\QueryActivities.cs" />

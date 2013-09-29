@@ -37,7 +37,6 @@ namespace UCosmic.Domain.Activities
 
                 // id must exist in the database
                 .MustFindActivityDocumentById(entities)
-                    .WithMessage(MustFindActivityDocumentById.FailMessageFormat, x => x.Id)
             ;
 
             RuleFor(x => x.Title)

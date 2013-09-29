@@ -38,7 +38,6 @@ namespace UCosmic.Domain.Activities
                 RuleFor(x => x.ActivityValuesId)
                     // activity id must exist in the database
                     .MustFindActivityValuesById(entities)
-                        .WithMessage(MustFindActivityValuesById.FailMessageFormat, x => x.ActivityValuesId)
             );
 
             var validFileExtensions = new[]

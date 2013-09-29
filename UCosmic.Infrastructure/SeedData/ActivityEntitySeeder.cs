@@ -14,28 +14,28 @@ namespace UCosmic.SeedData
         private readonly IProcessQueries _queryProcessor;
         private readonly ICommandEntities _entities;
         private readonly IHandleCommands<CreateActivity> _createActivity;
-        private readonly IHandleCommands<CreateActivityLocation> _createActivityLocation;
+        private readonly IHandleCommands<CreateActivityPlace> _createActivityPlace;
         private readonly IHandleCommands<CreateActivityValues> _createActivityValues;
-        private readonly IHandleCommands<CreateActivityTag> _createActivityTag;
-        private readonly IHandleCommands<CreateActivityType> _createActivityType;
+        private readonly IHandleCommands<AddActivityTag> _addActivityTag;
+        private readonly IHandleCommands<AddActivityType> _addActivityType;
         private readonly IUnitOfWork _unitOfWork;
 
         public ActivityEntitySeeder(IProcessQueries queryProcessor
                                     , ICommandEntities entities
                                     , IHandleCommands<CreateActivity> createActivity
-                                    , IHandleCommands<CreateActivityLocation> createActivityLocation
+                                    , IHandleCommands<CreateActivityPlace> createActivityPlace
                                     , IHandleCommands<CreateActivityValues> createActivityValues
-                                    , IHandleCommands<CreateActivityTag> createActivityTag
-                                    , IHandleCommands<CreateActivityType> createActivityType
+                                    , IHandleCommands<AddActivityTag> addActivityTag
+                                    , IHandleCommands<AddActivityType> addActivityType
                                     , IHandleCommands<CreateActivityDocument> createActivityDocument
                                     , IUnitOfWork unitOfWork
         ) : base(entities, createActivityDocument)
         {
             _createActivity = createActivity;
-            _createActivityLocation = createActivityLocation;
+            _createActivityPlace = createActivityPlace;
             _createActivityValues = createActivityValues;
-            _createActivityTag = createActivityTag;
-            _createActivityType = createActivityType;
+            _addActivityTag = addActivityTag;
+            _addActivityType = addActivityType;
             _unitOfWork = unitOfWork;
             _queryProcessor = queryProcessor;
             _entities = entities;
@@ -92,49 +92,47 @@ namespace UCosmic.SeedData
                     };
 
                     _createActivityValues.Handle(createActivityValuesCommand);
-                    _unitOfWork.SaveChanges();
 
                     ActivityValues activityValues = createActivityValuesCommand.CreatedActivityValues;
 
-                    _createActivityType.Handle(new CreateActivityType(principal, activityValues.RevisionId,
-                        employeeModuleSettings.ActivityTypes.Single(x => x.Type.Contains("Research")).Id));
-
-                    _createActivityType.Handle(new CreateActivityType(principal, activityValues.RevisionId,
-                        employeeModuleSettings.ActivityTypes.Single(x => x.Type.Contains("Teaching")).Id));
-
-                    _createActivityLocation.Handle(new CreateActivityLocation(principal)
+                    _addActivityType.Handle(new AddActivityType(principal, activity.RevisionId)
                     {
-                        ActivityValuesId = activityValues.RevisionId,
+                        ActivityTypeId = employeeModuleSettings.ActivityTypes.Single(x => x.Type.Contains("Research")).Id,
+                    });
+
+                    _addActivityType.Handle(new AddActivityType(principal, activity.RevisionId)
+                    {
+                        ActivityTypeId = employeeModuleSettings.ActivityTypes.Single(x => x.Type.Contains("Teaching")).Id,
+                    });
+
+                    _createActivityPlace.Handle(new CreateActivityPlace(principal, activity.RevisionId)
+                    {
                         PlaceId = _entities.Get<Place>().Single(x => x.OfficialName == "China").RevisionId,
                     });
 
-                    _createActivityLocation.Handle(new CreateActivityLocation(principal)
+                    _createActivityPlace.Handle(new CreateActivityPlace(principal, activity.RevisionId)
                     {
-                        ActivityValuesId = activityValues.RevisionId,
                         PlaceId = _entities.Get<Place>().Single(x => x.OfficialName == "Canada").RevisionId,
                     });
 
                     /* ----- Add Tags ----- */
 
-                    _createActivityTag.Handle(new CreateActivityTag(principal)
+                    _addActivityTag.Handle(new AddActivityTag(principal, activity.RevisionId)
                     {
-                        ActivityValuesId = activityValues.RevisionId,
                         Text = "Vietnam",
                         DomainType = ActivityTagDomainType.Place,
                         DomainKey = _entities.Get<Place>().Single(x => x.OfficialName == "Vietnam").RevisionId,
                     });
 
-                    _createActivityTag.Handle(new CreateActivityTag(principal)
+                    _addActivityTag.Handle(new AddActivityTag(principal, activity.RevisionId)
                     {
-                        ActivityValuesId = activityValues.RevisionId,
                         Text = "India",
                         DomainType = ActivityTagDomainType.Place,
                         DomainKey = _entities.Get<Place>().Single(x => x.OfficialName == "India").RevisionId,
                     });
 
-                    _createActivityTag.Handle(new CreateActivityTag(principal)
+                    _addActivityTag.Handle(new AddActivityTag(principal, activity.RevisionId)
                     {
-                        ActivityValuesId = activityValues.RevisionId,
                         Text = "Japan",
                         DomainType = ActivityTagDomainType.Place,
                         DomainKey = _entities.Get<Place>().Single(x => x.OfficialName == "Japan").RevisionId,
@@ -205,14 +203,13 @@ namespace UCosmic.SeedData
                     _createActivityValues.Handle(createActivityValuesCommand);
                     _unitOfWork.SaveChanges();
 
-                    ActivityValues activityValues = createActivityValuesCommand.CreatedActivityValues;
-
-                    _createActivityType.Handle(new CreateActivityType(principal, activityValues.RevisionId,
-                        employeeModuleSettings.ActivityTypes.Single(x => x.Type.Contains("Service")).Id ));
-
-                    _createActivityLocation.Handle(new CreateActivityLocation(principal)
+                    _addActivityType.Handle(new AddActivityType(principal, activity.RevisionId)
                     {
-                        ActivityValuesId = activityValues.RevisionId,
+                        ActivityTypeId = employeeModuleSettings.ActivityTypes.Single(x => x.Type.Contains("Service")).Id,
+                    });
+
+                    _createActivityPlace.Handle(new CreateActivityPlace(principal, activity.RevisionId)
+                    {
                         PlaceId = _entities.Get<Place>().Single(x => x.OfficialName == "China").RevisionId,
                     });
 
@@ -259,18 +256,23 @@ namespace UCosmic.SeedData
 
                     ActivityValues activityValues = createActivityValuesCommand.CreatedActivityValues;
 
-                    _createActivityType.Handle(new CreateActivityType(principal, activityValues.RevisionId,
-                        employeeModuleSettings.ActivityTypes.Single(x => x.Type.Contains("Conference")).Id ));
-
-                    _createActivityType.Handle(new CreateActivityType(principal, activityValues.RevisionId,
-                        employeeModuleSettings.ActivityTypes.Single(x => x.Type.Contains("Teaching")).Id ));
-
-                    _createActivityType.Handle(new CreateActivityType(principal, activityValues.RevisionId,
-                        employeeModuleSettings.ActivityTypes.Single(x => x.Type.Contains("Honor")).Id ));
-
-                    _createActivityLocation.Handle(new CreateActivityLocation(principal)
+                    _addActivityType.Handle(new AddActivityType(principal, activity.RevisionId)
                     {
-                        ActivityValuesId = activityValues.RevisionId,
+                        ActivityTypeId = employeeModuleSettings.ActivityTypes.Single(x => x.Type.Contains("Conference")).Id,
+                    });
+
+                    _addActivityType.Handle(new AddActivityType(principal, activity.RevisionId)
+                    {
+                        ActivityTypeId = employeeModuleSettings.ActivityTypes.Single(x => x.Type.Contains("Teaching")).Id,
+                    });
+
+                    _addActivityType.Handle(new AddActivityType(principal, activity.RevisionId)
+                    {
+                        ActivityTypeId = employeeModuleSettings.ActivityTypes.Single(x => x.Type.Contains("Honor")).Id,
+                    });
+
+                    _createActivityPlace.Handle(new CreateActivityPlace(principal, activity.RevisionId)
+                    {
                         PlaceId = _entities.Get<Place>().Single(x => x.OfficialName == "China").RevisionId,
                     });
 
@@ -321,12 +323,13 @@ namespace UCosmic.SeedData
 
                     ActivityValues activityValues = createActivityValuesCommand.CreatedActivityValues;
 
-                    _createActivityType.Handle(new CreateActivityType(principal, activityValues.RevisionId,
-                        employeeModuleSettings.ActivityTypes.Single(x => x.Type.Contains("Creative")).Id ));
-
-                    _createActivityLocation.Handle(new CreateActivityLocation(principal)
+                    _addActivityType.Handle(new AddActivityType(principal, activity.RevisionId)
                     {
-                        ActivityValuesId = activityValues.RevisionId,
+                        ActivityTypeId = employeeModuleSettings.ActivityTypes.Single(x => x.Type.Contains("Creative")).Id,
+                    });
+
+                    _createActivityPlace.Handle(new CreateActivityPlace(principal, activity.RevisionId)
+                    {
                         PlaceId = _entities.Get<Place>().Single(x => x.OfficialName == "China").RevisionId,
                     });
 
@@ -407,14 +410,13 @@ namespace UCosmic.SeedData
                     _createActivityValues.Handle(createActivityValuesCommand);
                     _unitOfWork.SaveChanges();
 
-                    ActivityValues activityValues = createActivityValuesCommand.CreatedActivityValues;
-
-                    _createActivityType.Handle(new CreateActivityType(principal, activityValues.RevisionId,
-                        employeeModuleSettings.ActivityTypes.Single(x => x.Type.Contains("Award")).Id ));
-
-                    _createActivityLocation.Handle(new CreateActivityLocation(principal)
+                    _addActivityType.Handle(new AddActivityType(principal, activity.RevisionId)
                     {
-                        ActivityValuesId = activityValues.RevisionId,
+                        ActivityTypeId = employeeModuleSettings.ActivityTypes.Single(x => x.Type.Contains("Award")).Id,
+                    });
+
+                    _createActivityPlace.Handle(new CreateActivityPlace(principal, activity.RevisionId)
+                    {
                         PlaceId = _entities.Get<Place>().Single(x => x.OfficialName == "China").RevisionId,
                     });
 

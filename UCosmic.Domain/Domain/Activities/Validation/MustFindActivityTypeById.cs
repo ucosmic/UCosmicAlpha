@@ -2,17 +2,16 @@
 using System.Linq;
 using FluentValidation;
 using FluentValidation.Validators;
+using UCosmic.Domain.Employees;
 
 namespace UCosmic.Domain.Activities
 {
     public class MustFindActivityTypeById : PropertyValidator
     {
-        public const string FailMessageFormat = "ActivityType with id '{0}' does not exist.";
-
         private readonly IQueryEntities _entities;
 
         internal MustFindActivityTypeById(IQueryEntities entities)
-            : base(FailMessageFormat.Replace("{0}", "{PropertyValue}"))
+            : base("ActivityType with id '{PropertyValue}' does not exist.")
         {
             if (entities == null) throw new ArgumentNullException("entities");
             _entities = entities;
@@ -27,8 +26,8 @@ namespace UCosmic.Domain.Activities
             context.MessageFormatter.AppendArgument("PropertyValue", context.PropertyValue);
             var value = (int)context.PropertyValue;
 
-            var entity = _entities.Query<ActivityType>()
-                .SingleOrDefault(x => x.RevisionId == value);
+            var entity = _entities.Query<EmployeeActivityType>()
+                .SingleOrDefault(x => x.Id == value);
 
             return entity != null;
         }

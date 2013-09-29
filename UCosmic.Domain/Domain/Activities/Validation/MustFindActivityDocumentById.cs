@@ -7,12 +7,10 @@ namespace UCosmic.Domain.Activities
 {
     public class MustFindActivityDocumentById : PropertyValidator
     {
-        public const string FailMessageFormat = "ActivityDocument with id '{0}' does not exist.";
-
         private readonly IQueryEntities _entities;
 
         internal MustFindActivityDocumentById(IQueryEntities entities)
-            : base(FailMessageFormat.Replace("{0}", "{PropertyValue}"))
+            : base("Activity document with id '{PropertyValue}' does not exist.")
         {
             if (entities == null) throw new ArgumentNullException("entities");
             _entities = entities;
@@ -20,17 +18,18 @@ namespace UCosmic.Domain.Activities
 
         protected override bool IsValid(PropertyValidatorContext context)
         {
-            if (!(context.PropertyValue is int))
-                throw new NotSupportedException(string.Format(
-                    "The {0} PropertyValidator can only operate on integer properties", GetType().Name));
-
-            context.MessageFormatter.AppendArgument("PropertyValue", context.PropertyValue);
-            var value = (int)context.PropertyValue;
+            var activityDocumentId = (int)context.PropertyValue;
 
             var entity = _entities.Query<ActivityDocument>()
-                .SingleOrDefault(x => x.RevisionId == value);
+                .SingleOrDefault(x => x.RevisionId == activityDocumentId);
 
-            return entity != null;
+            if (entity == null)
+            {
+                context.MessageFormatter.AppendArgument("PropertyValue", context.PropertyValue);
+                return false;
+            }
+
+            return true;
         }
     }
 

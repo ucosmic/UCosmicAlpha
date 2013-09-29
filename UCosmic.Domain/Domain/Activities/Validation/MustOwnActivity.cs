@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq.Expressions;
 using System.Security.Principal;
 using FluentValidation;
@@ -59,7 +60,9 @@ namespace UCosmic.Domain.Activities
 
             context.MessageFormatter.AppendArgument("UserName", userName);
             context.MessageFormatter.AppendArgument("CommandName", typeof(T).Name);
-            context.MessageFormatter.AppendArgument("ActivityId", activity.RevisionId);
+            context.MessageFormatter.AppendArgument("ActivityId", activity.RevisionId != 0
+                ? activity.RevisionId.ToString(CultureInfo.InvariantCulture)
+                : activity.EntityId.ToString());
             return false;
         }
     }

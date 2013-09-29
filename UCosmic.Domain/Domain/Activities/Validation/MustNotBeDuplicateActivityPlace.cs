@@ -8,13 +8,11 @@ namespace UCosmic.Domain.Activities
 {
     public class MustNotBeDuplicateActivityPlace<T> : PropertyValidator
     {
-        private const string FailMessageFormat = "Activity with id '{ActivityId}' is already associated with place id '{PlaceId}'.";
-
         private readonly IProcessQueries _queryProcessor;
         private readonly Func<T, int> _activityId;
 
         internal MustNotBeDuplicateActivityPlace(IProcessQueries queryProcessor, Func<T, int> activityId)
-            : base(FailMessageFormat)
+            : base("Activity with id '{ActivityId}' is already associated with place id '{PlaceId}'.")
         {
             if (queryProcessor == null) throw new ArgumentNullException("queryProcessor");
             if (activityId == null) throw new ArgumentNullException("activityId");
