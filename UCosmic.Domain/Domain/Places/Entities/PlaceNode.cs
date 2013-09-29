@@ -1,40 +1,29 @@
-﻿using System;
-
-namespace UCosmic.Domain.Places
+﻿namespace UCosmic.Domain.Places
 {
-    public class PlaceNode : Entity, IEquatable<PlaceNode>
+    public class PlaceNode : EntityWithId<PlaceNodeId>
     {
         protected internal PlaceNode()
         {
+            Id = new PlaceNodeId();
         }
 
-        public int AncestorId { get; protected internal set; }
+        public int AncestorId
+        {
+            get { return Id.AncestorId; }
+            protected internal set { Id.AncestorId = value; }
+        }
+
         public virtual Place Ancestor { get; protected internal set; }
 
-        public int OffspringId { get; protected internal set; }
+        public int OffspringId
+        {
+            get { return Id.OffspringId; }
+            protected internal set { Id.OffspringId = value; }
+        }
+
         public virtual Place Offspring { get; protected internal set; }
 
         public int Separation { get; protected internal set; }
-
-        public bool Equals(PlaceNode other)
-        {
-            if (other == null) return false;
-            if (ReferenceEquals(this, other)) return true;
-            return other.AncestorId.Equals(AncestorId) && other.OffspringId.Equals(OffspringId);
-        }
-
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as PlaceNode);
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                return AncestorId.GetHashCode() ^ OffspringId.GetHashCode();
-            }
-        }
 
         public override string ToString()
         {

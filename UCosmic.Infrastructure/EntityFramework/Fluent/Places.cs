@@ -40,6 +40,7 @@ namespace UCosmic.EntityFramework
         {
             ToTable(typeof(PlaceNode).Name, DbSchemaName.Places);
 
+            Ignore(x => x.Id);
             HasKey(p => new { p.AncestorId, p.OffspringId });
 
             // AncestorToponym * <---> * OffspringToponym

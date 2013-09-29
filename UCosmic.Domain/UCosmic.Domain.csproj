@@ -239,6 +239,9 @@
     <Compile Include="Domain\Agreements\_Internal\QueryAgreementParticipants.cs" />
     <Compile Include="Domain\Agreements\_Internal\QueryAgreementContacts.cs" />
     <Compile Include="Domain\Employees\_Internal\EmployeeConsts.cs" />
+    <Compile Include="Domain\_Etc\CompositeId.cs" />
+    <Compile Include="Domain\Places\Entities\PlaceNodeId.cs" />
+    <Compile Include="Domain\_Etc\EntityWithId.cs" />
     <Compile Include="Domain\_Etc\LinqPropertyChain.cs" />
     <Compile Include="Domain\_Etc\EntityRanker.cs" />
     <Compile Include="Domain\Establishments\Queries\EstablishmentNamesByKeyword.cs" />
