@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 
 namespace UCosmic.Domain.Activities
 {
-    public class ActivityValues : RevisableEntity, IEquatable<ActivityValues>
+    public class ActivityValues : RevisableEntity
     {
         public const string DefaultDateFormat = "MM/dd/yyyy";
 
@@ -89,22 +89,6 @@ namespace UCosmic.Domain.Activities
                     _startsOn = temp;
                 }
             }
-        }
-
-        public bool Equals(ActivityValues other)
-        {
-            if (ReferenceEquals(this, other)) return true;
-            return RevisionId != 0 && other != null && other.RevisionId.Equals(RevisionId);
-        }
-
-        public override bool Equals(object obj)
-        {
-            return ReferenceEquals(this, obj) || Equals(obj as ActivityValues);
-        }
-
-        public override int GetHashCode()
-        {
-            return RevisionId.GetHashCode();
         }
     }
 }

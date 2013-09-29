@@ -1,9 +1,8 @@
-﻿using System;
-using UCosmic.Domain.Places;
+﻿using UCosmic.Domain.Places;
 
 namespace UCosmic.Domain.Activities
 {
-    public class ActivityLocation : RevisableEntity, IEquatable<ActivityLocation>
+    public class ActivityLocation : RevisableEntity
     {
         protected internal ActivityLocation()
         {
@@ -14,21 +13,5 @@ namespace UCosmic.Domain.Activities
 
         public virtual Place Place { get; set; }
         public int PlaceId { get; set; }
-
-        public bool Equals(ActivityLocation other)
-        {
-            if (ReferenceEquals(this, other)) return true;
-            return RevisionId != 0 && other != null && other.RevisionId.Equals(RevisionId);
-        }
-
-        public override bool Equals(object obj)
-        {
-            return ReferenceEquals(this, obj) || Equals(obj as ActivityLocation);
-        }
-
-        public override int GetHashCode()
-        {
-            return RevisionId.GetHashCode();
-        }
     }
 }

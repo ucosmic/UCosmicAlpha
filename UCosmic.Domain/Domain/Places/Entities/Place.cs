@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Newtonsoft.Json;
 
 namespace UCosmic.Domain.Places
 {
-    public class Place : RevisableEntity, IEquatable<Place>
+    public class Place : RevisableEntity
     {
         protected internal Place()
         {
@@ -43,22 +42,6 @@ namespace UCosmic.Domain.Places
         public bool IsAdmin1 { get; protected internal set; }
         public bool IsAdmin2 { get; protected internal set; }
         public bool IsAdmin3 { get; protected internal set; }
-
-        public bool Equals(Place other)
-        {
-            if (ReferenceEquals(this, other)) return true;
-            return RevisionId != 0 && other != null && other.RevisionId.Equals(RevisionId);
-        }
-
-        public override bool Equals(object obj)
-        {
-            return ReferenceEquals(this, obj) || Equals(obj as Place);
-        }
-
-        public override int GetHashCode()
-        {
-            return RevisionId.GetHashCode();
-        }
 
         public override string ToString()
         {

@@ -1,9 +1,8 @@
-﻿using System;
-using UCosmic.Domain.Employees;
+﻿using UCosmic.Domain.Employees;
 
 namespace UCosmic.Domain.Activities
 {
-    public class ActivityType : RevisableEntity, IEquatable<ActivityType>
+    public class ActivityType : RevisableEntity
     {
         protected internal ActivityType()
         {
@@ -14,21 +13,5 @@ namespace UCosmic.Domain.Activities
 
         public virtual EmployeeActivityType Type { get; set; }
         public int TypeId { get; set; }
-
-        public bool Equals(ActivityType other)
-        {
-            if (ReferenceEquals(this, other)) return true;
-            return RevisionId != 0 && other != null && other.RevisionId.Equals(RevisionId);
-        }
-
-        public override bool Equals(object obj)
-        {
-            return ReferenceEquals(this, obj) || Equals(obj as ActivityType);
-        }
-
-        public override int GetHashCode()
-        {
-            return RevisionId.GetHashCode();
-        }
     }
 }

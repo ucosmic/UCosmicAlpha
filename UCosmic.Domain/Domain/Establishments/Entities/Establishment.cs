@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 
 namespace UCosmic.Domain.Establishments
 {
-    public class Establishment : RevisableEntity, IEquatable<Establishment>
+    public class Establishment : RevisableEntity
     {
         protected internal Establishment()
         {
@@ -81,22 +81,6 @@ namespace UCosmic.Domain.Establishments
 
         // TODO: // remove this property to make EmployeeModuleSettings uni-directional
         //public virtual EmployeeModuleSettings EmployeeModuleSettings { get; set; }
-
-        public bool Equals(Establishment other)
-        {
-            if (ReferenceEquals(this, other)) return true;
-            return RevisionId != 0 && other != null && other.RevisionId.Equals(RevisionId);
-        }
-
-        public override bool Equals(object obj)
-        {
-            return ReferenceEquals(this, obj) || Equals(obj as Establishment);
-        }
-
-        public override int GetHashCode()
-        {
-            return RevisionId.GetHashCode();
-        }
 
         public override string ToString()
         {

@@ -1,8 +1,6 @@
-﻿using System;
-
-namespace UCosmic.Domain.Activities
+﻿namespace UCosmic.Domain.Activities
 {
-    public class ActivityTag : RevisableEntity, IEquatable<ActivityTag>
+    public class ActivityTag : RevisableEntity
     {
         protected internal ActivityTag()
         {
@@ -27,21 +25,5 @@ namespace UCosmic.Domain.Activities
         }
 
         public int? DomainKey { get; protected internal set; }
-
-        public bool Equals(ActivityTag other)
-        {
-            if (ReferenceEquals(this, other)) return true;
-            return RevisionId != 0 && other != null && other.RevisionId.Equals(RevisionId);
-        }
-
-        public override bool Equals(object obj)
-        {
-            return ReferenceEquals(this, obj) || Equals(obj as ActivityTag);
-        }
-
-        public override int GetHashCode()
-        {
-            return RevisionId.GetHashCode();
-        }
     }
 }

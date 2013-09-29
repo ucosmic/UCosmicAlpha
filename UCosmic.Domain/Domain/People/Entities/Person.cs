@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Newtonsoft.Json;
@@ -10,7 +9,7 @@ using UCosmic.Domain.Identity;
 
 namespace UCosmic.Domain.People
 {
-    public class Person : RevisableEntity, IEquatable<Person>
+    public class Person : RevisableEntity
     {
         internal const string PhotoPathFormat = "/person-photos/{0}/{1}";
 
@@ -136,22 +135,6 @@ namespace UCosmic.Domain.People
                 }
             }
             return false;
-        }
-
-        public bool Equals(Person other)
-        {
-            if (ReferenceEquals(this, other)) return true;
-            return RevisionId != 0 && other != null && other.RevisionId.Equals(RevisionId);
-        }
-
-        public override bool Equals(object obj)
-        {
-            return ReferenceEquals(this, obj) || Equals(obj as Person);
-        }
-
-        public override int GetHashCode()
-        {
-            return RevisionId.GetHashCode();
         }
 
         public override string ToString()

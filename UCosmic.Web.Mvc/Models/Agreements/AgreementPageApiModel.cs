@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.Serialization;
 using AutoMapper;
 using System.Linq;
 using UCosmic.Domain.Agreements;
