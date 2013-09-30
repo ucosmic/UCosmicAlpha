@@ -19,6 +19,7 @@ namespace UCosmic.Domain.Activities
         public IPrincipal Principal { get; private set; }
         public int ActivityId { get; private set; }
         public string ActivityTagText { get; set; }
+        public IPrincipal Impersonator { get; set; }
     }
 
     public class ValidatePurgeActivityTagCommand : AbstractValidator<PurgeActivityTag>
@@ -67,6 +68,10 @@ namespace UCosmic.Domain.Activities
             var tags = values.Tags.Where(x => x.Text.Equals(command.ActivityTagText, StringComparison.OrdinalIgnoreCase)).ToArray();
             foreach (var tag in tags) _entities.Purge(tag);
 
+            activity.UpdatedOnUtc = DateTime.UtcNow;
+            activity.UpdatedByPrincipal = command.Impersonator == null
+                ? command.Principal.Identity.Name
+                : command.Impersonator.Identity.Name;
             _entities.SaveChanges();
         }
     }

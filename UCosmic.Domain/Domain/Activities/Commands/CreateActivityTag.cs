@@ -21,6 +21,7 @@ namespace UCosmic.Domain.Activities
         public string Text { get; set; }
         public ActivityTagDomainType DomainType { get; set; }
         public int? DomainKey { get; set; }
+        public IPrincipal Impersonator { get; set; }
     }
 
     public class ValidateCreateActivityTagCommand : AbstractValidator<CreateActivityTag>
@@ -71,6 +72,10 @@ namespace UCosmic.Domain.Activities
                 DomainType = command.DomainType,
                 DomainKey = command.DomainKey,
             });
+            activity.UpdatedOnUtc = DateTime.UtcNow;
+            activity.UpdatedByPrincipal = command.Impersonator == null
+                ? command.Principal.Identity.Name
+                : command.Impersonator.Identity.Name;
 
             _entities.SaveChanges();
         }

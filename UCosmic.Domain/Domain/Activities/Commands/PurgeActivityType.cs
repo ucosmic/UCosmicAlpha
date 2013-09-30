@@ -19,6 +19,7 @@ namespace UCosmic.Domain.Activities
         public IPrincipal Principal { get; private set; }
         public int ActivityId { get; private set; }
         public int ActivityTypeId { get; set; }
+        public IPrincipal Impersonator { get; set; }
     }
 
     public class ValidatePurgeActivityTypeCommand : AbstractValidator<PurgeActivityType>
@@ -63,6 +64,10 @@ namespace UCosmic.Domain.Activities
             var types = values.Types.Where(x => x.TypeId == command.ActivityTypeId).ToArray();
             foreach (var type in types) _entities.Purge(type);
 
+            activity.UpdatedOnUtc = DateTime.UtcNow;
+            activity.UpdatedByPrincipal = command.Impersonator == null
+                ? command.Principal.Identity.Name
+                : command.Impersonator.Identity.Name;
             _entities.SaveChanges();
         }
     }

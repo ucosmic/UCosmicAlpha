@@ -32,6 +32,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 Text = model.Text,
                 DomainKey = model.DomainKey,
                 DomainType = model.DomainType,
+                Impersonator = Request.GetHttpContext().Session.UserImpersonating(),
             };
             _createHandler.Handle(command);
             return Request.CreateResponse(HttpStatusCode.OK);
@@ -46,7 +47,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
             var command = new PurgeActivityTag(User, activityId)
             {
-                ActivityTagText = model.Text
+                ActivityTagText = model.Text,
+                Impersonator = Request.GetHttpContext().Session.UserImpersonating(),
             };
             _purgeHandler.Handle(command);
             return Request.CreateResponse(HttpStatusCode.OK);

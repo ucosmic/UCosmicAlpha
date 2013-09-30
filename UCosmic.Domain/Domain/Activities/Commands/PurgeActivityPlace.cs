@@ -19,6 +19,7 @@ namespace UCosmic.Domain.Activities
         public IPrincipal Principal { get; private set; }
         public int ActivityId { get; private set; }
         public int PlaceId { get; set; }
+        public IPrincipal Impersonator { get; set; }
     }
 
     public class ValidatePurgeActivityPlaceCommand : AbstractValidator<PurgeActivityPlace>
@@ -63,6 +64,10 @@ namespace UCosmic.Domain.Activities
             var locations = values.Locations.Where(x => x.PlaceId == command.PlaceId).ToArray();
             foreach (var location in locations) _entities.Purge(location);
 
+            activity.UpdatedOnUtc = DateTime.UtcNow;
+            activity.UpdatedByPrincipal = command.Impersonator == null
+                ? command.Principal.Identity.Name
+                : command.Impersonator.Identity.Name;
             _entities.SaveChanges();
         }
     }

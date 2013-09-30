@@ -4,6 +4,7 @@ using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using System.Web.SessionState;
 using UCosmic.Domain;
 
 namespace UCosmic.Web.Mvc
@@ -28,6 +29,15 @@ namespace UCosmic.Web.Mvc
             MvcHandler.DisableMvcResponseHeader = true;
 
             DependencyResolver.Current.GetService<IProcessEvents>().Raise(new ApplicationStarted());
+        }
+
+        protected void Application_PostAuthorizeRequest()
+        {
+            if (HttpContext.Current.Request.AppRelativeCurrentExecutionFilePath != null &&
+                HttpContext.Current.Request.AppRelativeCurrentExecutionFilePath.StartsWith("~/api"))
+            {
+                HttpContext.Current.SetSessionStateBehavior(SessionStateBehavior.Required);
+            }
         }
 
         protected void Application_PreSendRequestHeaders(object sender, EventArgs e)

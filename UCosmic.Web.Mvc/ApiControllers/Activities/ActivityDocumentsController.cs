@@ -115,6 +115,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 Content = fileMedium.Content,
                 MimeType = fileMedium.ContentType,
                 FileName = fileMedium.FileName,
+                Impersonator = Request.GetHttpContext().Session.UserImpersonating(),
             };
             try
             {
@@ -165,6 +166,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             var command = new UpdateActivityDocument(User, activityId, documentId)
             {
                 Title = model.Title,
+                Impersonator = Request.GetHttpContext().Session.UserImpersonating(),
             };
 
             try
@@ -183,7 +185,10 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [DELETE(SingleUrl)]
         public HttpResponseMessage Delete(int activityId, int documentId)
         {
-            var command = new PurgeActivityDocument(User, activityId, documentId);
+            var command = new PurgeActivityDocument(User, activityId, documentId)
+            {
+                Impersonator = Request.GetHttpContext().Session.UserImpersonating(),
+            };
 
             try
             {

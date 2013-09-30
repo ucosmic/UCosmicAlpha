@@ -456,9 +456,9 @@
                         <div style="width: 50%; height: 1.5em; border-top: 1px; border-style: solid">
                             <span style="font-size: smaller; color: slategray">
                                 <span>Last updated</span>
-                                <label id="last-updated-date" data-bind="text: (whenLastUpdated() != null) ? moment(whenLastUpdated()).format('MM/DD/YYYY') : ''"></label>
+                                <label id="last-updated-date" data-bind="text: whenLastUpdated() ? moment(whenLastUpdated()).format('MM/DD/YYYY') : ''"></label>
                                 <span>by </span>
-                                <label id="last-updated-name" data-bind="text: whoLastUpdated()"></label>
+                                <label id="last-updated-name" data-bind="text: whoLastUpdated"></label>
                             </span>
                         </div>
 

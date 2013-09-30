@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Security.Principal;
 using FluentValidation;
 using UCosmic.Domain.Identity;
@@ -25,6 +26,7 @@ namespace UCosmic.Domain.Activities
         public int ActivityId { get; private set; }
         public int DocumentId { get; private set; }
         internal bool NoCommit { get; set; }
+        public IPrincipal Impersonator { get; set; }
     }
 
     public class ValidatePurgeActivityDocumentCommand : AbstractValidator<PurgeActivityDocument>
@@ -67,9 +69,18 @@ namespace UCosmic.Domain.Activities
             if (command == null) throw new ArgumentNullException("command");
 
             var entity = _entities.Get<ActivityDocument>()
+                .EagerLoad(_entities, new Expression<Func<ActivityDocument, object>>[]
+                {
+                    x => x.ActivityValues.Activity,
+                })
                 .SingleOrDefault(x => x.RevisionId == command.DocumentId)
             ;
             if (entity == null) return; // delete idempotently
+
+            entity.ActivityValues.Activity.UpdatedOnUtc = DateTime.UtcNow;
+            entity.ActivityValues.Activity.UpdatedByPrincipal = command.Impersonator == null
+                    ? command.Principal.Identity.Name
+                    : command.Impersonator.Identity.Name;
 
             _entities.Purge(entity);
             _binaryData.Delete(entity.Path);

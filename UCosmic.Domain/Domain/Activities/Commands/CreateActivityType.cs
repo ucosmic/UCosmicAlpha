@@ -19,6 +19,7 @@ namespace UCosmic.Domain.Activities
         public IPrincipal Principal { get; private set; }
         public int ActivityId { get; private set; }
         public int ActivityTypeId { get; set; }
+        public IPrincipal Impersonator { get; set; }
     }
 
     public class ValidateCreateActivityTypeCommand : AbstractValidator<CreateActivityType>
@@ -68,6 +69,10 @@ namespace UCosmic.Domain.Activities
             {
                 TypeId = command.ActivityTypeId,
             });
+            activity.UpdatedOnUtc = DateTime.UtcNow;
+            activity.UpdatedByPrincipal = command.Impersonator == null
+                ? command.Principal.Identity.Name
+                : command.Impersonator.Identity.Name;
 
             _entities.SaveChanges();
         }

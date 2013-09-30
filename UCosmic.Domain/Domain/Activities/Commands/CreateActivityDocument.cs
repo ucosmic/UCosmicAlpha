@@ -36,7 +36,7 @@ namespace UCosmic.Domain.Activities
         internal string Path { get; set; }
         internal Guid? EntityId { get; set; }
         internal ActivityValues ActivityValues { get; private set; }
-
+        public IPrincipal Impersonator { get; set; }
         public ActivityDocument CreatedActivityDocument { get; internal set; }
     }
 
@@ -129,11 +129,16 @@ namespace UCosmic.Domain.Activities
                 MimeType = command.MimeType,
                 Path = path,
                 Length = command.Length.HasValue ? command.Length.Value : command.Content.Length,
-                CreatedByPrincipal = command.Principal.Identity.Name,
+                CreatedByPrincipal = command.Impersonator == null
+                    ? command.Principal.Identity.Name
+                    : command.Impersonator.Identity.Name,
             };
             if (command.EntityId.HasValue && command.EntityId != Guid.Empty)
                 activityDocument.EntityId = command.EntityId.Value;
             values.Documents.Add(activityDocument);
+
+            values.Activity.UpdatedOnUtc = DateTime.UtcNow;
+            values.Activity.UpdatedByPrincipal = activityDocument.CreatedByPrincipal;
 
             _entities.Create(activityDocument);
 

@@ -69,7 +69,10 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 return Request.CreateResponse(HttpStatusCode.BadRequest);
 
             // invoke update command using the model's id and mode
-            var command = new UpdateActivity(User, activityId);
+            var command = new UpdateActivity(User, activityId)
+            {
+                Impersonator = Request.GetHttpContext().Session.UserImpersonating(),
+            };
             Mapper.Map(model, command);
             _updateActivity.Handle(command);
 

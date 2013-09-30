@@ -20,6 +20,7 @@ namespace UCosmic.Domain.Activities
         public IPrincipal Principal { get; private set; }
         public int ActivityId { get; private set; }
         public int PlaceId { get; set; }
+        public IPrincipal Impersonator { get; set; }
     }
 
     public class ValidateCreateActivityPlaceCommand : AbstractValidator<CreateActivityPlace>
@@ -68,6 +69,10 @@ namespace UCosmic.Domain.Activities
             {
                 PlaceId = command.PlaceId,
             });
+            activity.UpdatedOnUtc = DateTime.UtcNow;
+            activity.UpdatedByPrincipal = command.Impersonator == null
+                ? command.Principal.Identity.Name
+                : command.Impersonator.Identity.Name;
 
             _entities.SaveChanges();
         }

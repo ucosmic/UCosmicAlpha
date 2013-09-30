@@ -26,6 +26,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             var command = new CreateActivityType(User, activityId)
             {
                 ActivityTypeId = activityTypeId,
+                Impersonator = Request.GetHttpContext().Session.UserImpersonating(),
             };
             _createHandler.Handle(command);
             return Request.CreateResponse(HttpStatusCode.OK);
@@ -38,6 +39,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             var command = new PurgeActivityType(User, activityId)
             {
                 ActivityTypeId = activityTypeId,
+                Impersonator = Request.GetHttpContext().Session.UserImpersonating(),
             };
             _purgeHandler.Handle(command);
             return Request.CreateResponse(HttpStatusCode.OK);

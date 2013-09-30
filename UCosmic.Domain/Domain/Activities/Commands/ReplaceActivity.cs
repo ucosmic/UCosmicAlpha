@@ -104,7 +104,7 @@ namespace UCosmic.Domain.Activities
             }
 
             originalActivity.Mode = command.Mode;
-            originalActivity.UpdatedByPrincipal = command.Principal.Identity.Name;
+            originalActivity.UpdatedByPrincipal = workCopyActivity.UpdatedByPrincipal;
             originalActivity.UpdatedOnUtc = DateTime.UtcNow;
             originalValues.Title = workCopyValues.Title;
             originalValues.Content = workCopyValues.Content;

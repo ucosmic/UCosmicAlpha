@@ -26,6 +26,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             var command = new CreateActivityPlace(User, activityId)
             {
                 PlaceId = placeId,
+                Impersonator = Request.GetHttpContext().Session.UserImpersonating(),
             };
             _createHandler.Handle(command);
             return Request.CreateResponse(HttpStatusCode.OK);
@@ -38,6 +39,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             var command = new PurgeActivityPlace(User, activityId)
             {
                 PlaceId = placeId,
+                Impersonator = Request.GetHttpContext().Session.UserImpersonating(),
             };
             _purgeHandler.Handle(command);
             return Request.CreateResponse(HttpStatusCode.OK);

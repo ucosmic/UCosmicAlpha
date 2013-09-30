@@ -27,6 +27,7 @@ namespace UCosmic.Domain.Activities
         public string DateFormat { get; set; }
         public bool? WasExternallyFunded { get; set; }
         public bool? WasInternallyFunded { get; set; }
+        public IPrincipal Impersonator { get; set; }
     }
 
     public class ValidateUpdateActivityCommand : AbstractValidator<UpdateActivity>
@@ -77,7 +78,9 @@ namespace UCosmic.Domain.Activities
                 })
                 .ById(command.ActivityId, false);
             activity.Mode = command.Mode;
-            activity.UpdatedByPrincipal = command.Principal.Identity.Name;
+            activity.UpdatedByPrincipal = command.Impersonator == null
+                ? command.Principal.Identity.Name
+                : command.Impersonator.Identity.Name;
             activity.UpdatedOnUtc = DateTime.UtcNow;
 
             var values = activity.Values.SingleOrDefault(x => x.Mode == activity.Mode);

@@ -26,6 +26,7 @@ namespace UCosmic.Web.Mvc.Models
                 CreateMap<ActivityApiPutModel, UpdateActivity>()
                     .ForMember(d => d.Principal, o => o.Ignore())
                     .ForMember(d => d.ActivityId, o => o.Ignore())
+                    .ForMember(d => d.Impersonator, o => o.Ignore())
                 ;
             }
         }
