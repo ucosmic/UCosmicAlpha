@@ -537,29 +537,29 @@ module App.Routes {
             //    return makeUrl('activities/' + activityId + "/edit-state");
             //}
 
-            export function put(activityId: number): string {
-                return makeUrl('activities/' + activityId);
-            }
+            //export function put(activityId: number): string {
+            //    return makeUrl('activities/' + activityId);
+            //}
 
-            export function putEdit(activityId: number): string {
-                return makeUrl('activities/' + activityId + "/edit");
-            }
+            //export function putEdit(activityId: number): string {
+            //    return makeUrl('activities/' + activityId + "/edit");
+            //}
 
             export function del(activityId: number): string {
                 return makeUrl('activities/' + activityId);
             }
 
             export module Documents {
-                export function get (activityId: number, documentId?: number, activityMode?: string): string {
-                    var url = makeUrl('activities/' + activityId + '/documents');
-                    if (documentId) {
-                        url += '/' + documentId;
-                    }
-                    else if (activityId) {
-                        url += '/?activityMode=' + activityMode;
-                    }
-                    return url;
-                }
+                //export function get (activityId: number, documentId?: number, activityMode?: string): string {
+                //    var url = makeUrl('activities/' + activityId + '/documents');
+                //    if (documentId) {
+                //        url += '/' + documentId;
+                //    }
+                //    else if (activityId) {
+                //        url += '/?activityMode=' + activityMode;
+                //    }
+                //    return url;
+                //}
 
                 export function post(activityId: number, activityMode: string): string {
                     var url = makeUrl('activities/' + activityId + '/documents/');
@@ -575,9 +575,9 @@ module App.Routes {
                     return makeUrl('activities/' + activityId + '/documents/' + documentId);
                 }
 
-                export function rename(activityId: number, documentId: number): string {
-                    return makeUrl('activities/' + activityId + '/documents/' + documentId + "/title");
-                }
+                //export function rename(activityId: number, documentId: number): string {
+                //    return makeUrl('activities/' + activityId + '/documents/' + documentId + "/title");
+                //}
 
                 export function validateUpload(): string {
                     return makeUrl('activities/documents/validate-upload');

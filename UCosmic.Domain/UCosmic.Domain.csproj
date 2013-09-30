@@ -122,6 +122,7 @@
     <Compile Include="Api\_Extensions\StringExtensions.cs" />
     <Compile Include="Api\Validation\MustBeWellFormedUrl.cs" />
     <Compile Include="Api\Validation\MustNotContainUrlProtocol.cs" />
+    <Compile Include="Domain\Activities\Commands\CreateActivityDocument.cs" />
     <Compile Include="Domain\Activities\Commands\CreateActivityType.cs" />
     <Compile Include="Domain\Activities\Commands\CreateActivityTag.cs" />
     <Compile Include="Domain\Activities\Commands\ReplaceActivity.cs" />
@@ -135,7 +136,7 @@
     <Compile Include="Domain\Activities\Commands\CopyActivityAndValues.cs" />
     <Compile Include="Domain\Activities\Commands\CopyActivityValues.cs" />
     <Compile Include="Domain\Activities\Commands\CreateActivityAndValues.cs" />
-    <Compile Include="Domain\Activities\Commands\CreateActivityDocument.cs" />
+    <Compile Include="Domain\Activities\Commands\_Deprecated\_CreateActivityDocument.cs" />
     <Compile Include="Domain\Activities\Commands\_Deprecated\_CreateActivityLocation.cs" />
     <Compile Include="Domain\Activities\Commands\_Deprecated\_CreateActivityTag.cs" />
     <Compile Include="Domain\Activities\Commands\_Deprecated\_CreateActivityType.cs" />
@@ -148,7 +149,7 @@
     <Compile Include="Domain\Activities\Commands\_Deprecated\_DeleteActivityType.cs" />
     <Compile Include="Domain\Activities\Commands\_Deprecated\_DraftMyActivity.cs" />
     <Compile Include="Domain\Activities\Commands\_Deprecated\_PurgeMyActivity.cs" />
-    <Compile Include="Domain\Activities\Commands\RenameActivityDocument.cs" />
+    <Compile Include="Domain\Activities\Commands\_Deprecated\_RenameActivityDocument.cs" />
     <Compile Include="Domain\Activities\Commands\_Deprecated\_UpdateActivity.cs" />
     <Compile Include="Domain\Activities\Commands\_Deprecated\_UpdateActivityLocation.cs" />
     <Compile Include="Domain\Activities\Commands\UpdateActivityDocument.cs" />
@@ -171,8 +172,9 @@
     <Compile Include="Domain\Activities\Queries\ActivityCountByEstablishmentId.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityCountByTypeIdPlaceIdsEstablishmentId.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityDocumentById.cs" />
-    <Compile Include="Domain\Activities\Queries\ActivityDocumentsByActivityIdAndMode.cs" />
+    <Compile Include="Domain\Activities\Queries\ActivityDocumentsByActivityId.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityDocumentsByValuesId.cs" />
+    <Compile Include="Domain\Activities\Validation\MustBeDocumentForActivity.cs" />
     <Compile Include="Domain\Activities\Validation\MustBeActivityWorkCopy.cs" />
     <Compile Include="Domain\Activities\Validation\MustNotBeDuplicateActivityTag.cs" />
     <Compile Include="Domain\Activities\Validation\MustBeActivityTypeForPrincipal.cs" />
@@ -283,7 +285,7 @@
     <Compile Include="Domain\Activities\Commands\_Deprecated\_MustFindActivityLocationById.cs" />
     <Compile Include="Domain\Activities\Commands\_Deprecated\_MustFindActivityTagById.cs" />
     <Compile Include="Domain\Activities\Validation\MustFindActivityTypeById.cs" />
-    <Compile Include="Domain\Activities\Validation\MustFindActivityValuesById.cs" />
+    <Compile Include="Domain\Activities\Commands\_Deprecated\_MustFindActivityValuesById.cs" />
     <Compile Include="Domain\Agreements\Commands\CreateAgreement.cs" />
     <Compile Include="Domain\Agreements\Queries\ContactsByAgreementId.cs" />
     <Compile Include="Domain\Agreements\Queries\FilesByAgreementId.cs" />
@@ -350,7 +352,7 @@
     <Compile Include="Domain\Employees\Commands\UpdateEmployeeModuleSettings.cs" />
     <Compile Include="Domain\Employees\Validation\MustFindEmployeeActivityTypeById.cs" />
     <Compile Include="Domain\Activities\Validation\MustOwnActivity.cs" />
-    <Compile Include="Domain\Activities\Validation\MustOwnActivityDocument.cs">
+    <Compile Include="Domain\Activities\Commands\_Deprecated\_MustOwnActivityDocument.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Domain\Activities\Commands\_Deprecated\_MustOwnActivityLocation.cs" />

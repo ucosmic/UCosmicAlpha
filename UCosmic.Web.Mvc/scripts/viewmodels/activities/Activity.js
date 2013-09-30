@@ -426,9 +426,11 @@ var ViewModels;
 
                 this.saveSpinner.start();
 
+                var url = $('#activity_put_url_format').text().format(this.id());
                 $.ajax({
                     type: 'PUT',
-                    url: App.Routes.WebApi.Activities.put(this.id()),
+                    //url: App.Routes.WebApi.Activities.put(this.id()),
+                    url: url,
                     data: model
                 }).done(function () {
                     deferred.resolve();
@@ -501,9 +503,11 @@ var ViewModels;
                                 });
                                 $dialog.find('.spinner').css('visibility', '');
 
+                                var url = $('#activity_delete_url_format').text().format(_this.id());
                                 $.ajax({
                                     type: 'DELETE',
-                                    url: App.Routes.WebApi.Activities.del(_this.id())
+                                    //url: App.Routes.WebApi.Activities.del(this.id())
+                                    url: url
                                 }).done(function () {
                                     $dialog.dialog('close');
                                     location.href = App.Routes.Mvc.My.Profile.get();
@@ -829,11 +833,16 @@ else
             //#region Documents
             Activity.prototype._loadDocuments = function () {
                 var _this = this;
+                var url = $('#documents_get_url_format').text().format(this.id());
                 $.ajax({
                     type: 'GET',
-                    url: App.Routes.WebApi.Activities.Documents.get(this.id(), null, this.modeText())
+                    //url: App.Routes.WebApi.Activities.Documents.get(this.id(), null, this.modeText()),
+                    url: url,
+                    data: {
+                        mode: this.modeText()
+                    }
                 }).done(function (documents, textStatus, jqXhr) {
-                    /* TODO - This needs to be combined with the initial load mapping. */
+                    // TODO - This needs to be combined with the initial load mapping.
                     var augmentedDocumentModel = function (data) {
                         ko.mapping.fromJS(data, {}, this);
                         this.proxyImageSource = ko.observable(App.Routes.WebApi.Activities.Documents.Thumbnail.get(data.activityId, data.id, { maxSide: Activity.iconMaxSide }));
@@ -913,9 +922,8 @@ else
                     _this.endDocumentTitleEdit(item, event);
                 });
                 $(inputElement).keypress(event, function (event) {
-                    if (event.which == 13) {
+                    if (event.which == 13)
                         inputElement.blur();
-                    }
                 });
             };
 
@@ -926,12 +934,13 @@ else
                 $(inputElement).unbind('keypress');
                 $(inputElement).attr('disabled', 'disabled');
 
+                var url = $('#document_put_url_format').text().format(this.id(), item.id());
                 $.ajax({
                     type: 'PUT',
-                    url: App.Routes.WebApi.Activities.Documents.rename(this.id(), item.id()),
-                    data: ko.toJSON(item.title()),
-                    contentType: 'application/json',
-                    //dataType: 'json',
+                    url: url,
+                    data: {
+                        title: item.title()
+                    },
                     success: function (data, textStatus, jqXhr) {
                         $(inputElement).hide();
                         $(inputElement).removeAttr('disabled');

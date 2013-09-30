@@ -2,38 +2,52 @@
 using System.Linq;
 using System.Security.Principal;
 using FluentValidation;
+using UCosmic.Domain.Identity;
 
 namespace UCosmic.Domain.Activities
 {
     public class PurgeActivityDocument
     {
-        public PurgeActivityDocument(IPrincipal principal, int id)
+        public PurgeActivityDocument(IPrincipal principal, int activityId, int documentId)
+            : this(principal, documentId)
+        {
+            ActivityId = activityId;
+        }
+
+        internal PurgeActivityDocument(IPrincipal principal, int documentId)
         {
             if (principal == null) { throw new ArgumentNullException("principal"); }
             Principal = principal;
-            Id = id;
+            DocumentId = documentId;
         }
 
         public IPrincipal Principal { get; private set; }
-        public int Id { get; private set; }
+        public int ActivityId { get; private set; }
+        public int DocumentId { get; private set; }
         internal bool NoCommit { get; set; }
     }
 
     public class ValidatePurgeActivityDocumentCommand : AbstractValidator<PurgeActivityDocument>
     {
-        public ValidatePurgeActivityDocumentCommand(IQueryEntities entities)
+        public ValidatePurgeActivityDocumentCommand(IProcessQueries queryProcessor)
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
-            RuleFor(x => x.Principal)
-                .MustOwnActivityDocument(entities, x => x.Id)
-                .WithMessage(MustOwnActivityDocument<object>.FailMessageFormat, x => x.Principal.Identity.Name, x => x.Id);
+            When(x => x.ActivityId != 0, () =>
+            {
+                RuleFor(x => x.ActivityId)
+                    .MustFindActivityById(queryProcessor)
+                ;
 
-            RuleFor(x => x.Id)
-                // id must be within valid range
-                .GreaterThanOrEqualTo(1)
-                    .WithMessage(MustBePositivePrimaryKey.FailMessageFormat, x => "ActivityDocument id", x => x.Id)
-            ;
+                RuleFor(x => x.Principal)
+                    .MustFindUserByPrincipal(queryProcessor)
+                    .MustOwnActivity(queryProcessor, x => x.ActivityId)
+                ;
+
+                RuleFor(x => x.DocumentId)
+                    .MustBeDocumentForActivity(queryProcessor, x => x.ActivityId)
+                ;
+            });
         }
     }
 
@@ -52,31 +66,18 @@ namespace UCosmic.Domain.Activities
         {
             if (command == null) throw new ArgumentNullException("command");
 
-            // load target
-            var activityDocument = _entities.Get<ActivityDocument>()
-                .SingleOrDefault(x => x.RevisionId == command.Id)
+            var entity = _entities.Get<ActivityDocument>()
+                .SingleOrDefault(x => x.RevisionId == command.DocumentId)
             ;
-            if (activityDocument == null) return; // delete idempotently
+            if (entity == null) return; // delete idempotently
 
-            // TBD
-            // log audit
-            //var audit = new CommandEvent
-            //{
-            //    RaisedBy = User.Name,
-            //    Name = command.GetType().FullName,
-            //    Value = JsonConvert.SerializeObject(new { command.Id }),
-            //    PreviousState = activityDocument.ToJsonAudit(),
-            //};
-
-            //_entities.Create(audit);
-            _entities.Purge(activityDocument);
-            _binaryData.Delete(activityDocument.Path);
+            _entities.Purge(entity);
+            _binaryData.Delete(entity.Path);
 
             if (!command.NoCommit)
             {
                 _entities.SaveChanges();
             }
-            //_eventProcessor.Raise(new EstablishmentChanged());
         }
     }
 }

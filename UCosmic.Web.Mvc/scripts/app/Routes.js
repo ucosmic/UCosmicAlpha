@@ -678,33 +678,28 @@ var App;
                 //export function getEditState(activityId: number): string {
                 //    return makeUrl('activities/' + activityId + "/edit-state");
                 //}
-                function put(activityId) {
-                    return makeUrl('activities/' + activityId);
-                }
-                Activities.put = put;
-
-                function putEdit(activityId) {
-                    return makeUrl('activities/' + activityId + "/edit");
-                }
-                Activities.putEdit = putEdit;
-
+                //export function put(activityId: number): string {
+                //    return makeUrl('activities/' + activityId);
+                //}
+                //export function putEdit(activityId: number): string {
+                //    return makeUrl('activities/' + activityId + "/edit");
+                //}
                 function del(activityId) {
                     return makeUrl('activities/' + activityId);
                 }
                 Activities.del = del;
 
                 (function (Documents) {
-                    function get(activityId, documentId, activityMode) {
-                        var url = makeUrl('activities/' + activityId + '/documents');
-                        if (documentId) {
-                            url += '/' + documentId;
-                        } else if (activityId) {
-                            url += '/?activityMode=' + activityMode;
-                        }
-                        return url;
-                    }
-                    Documents.get = get;
-
+                    //export function get (activityId: number, documentId?: number, activityMode?: string): string {
+                    //    var url = makeUrl('activities/' + activityId + '/documents');
+                    //    if (documentId) {
+                    //        url += '/' + documentId;
+                    //    }
+                    //    else if (activityId) {
+                    //        url += '/?activityMode=' + activityMode;
+                    //    }
+                    //    return url;
+                    //}
                     function post(activityId, activityMode) {
                         var url = makeUrl('activities/' + activityId + '/documents/');
                         url += '?activityMode=' + activityMode;
@@ -722,11 +717,9 @@ var App;
                     }
                     Documents.del = del;
 
-                    function rename(activityId, documentId) {
-                        return makeUrl('activities/' + activityId + '/documents/' + documentId + "/title");
-                    }
-                    Documents.rename = rename;
-
+                    //export function rename(activityId: number, documentId: number): string {
+                    //    return makeUrl('activities/' + activityId + '/documents/' + documentId + "/title");
+                    //}
                     function validateUpload() {
                         return makeUrl('activities/documents/validate-upload');
                     }

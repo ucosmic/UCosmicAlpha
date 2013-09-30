@@ -55,7 +55,7 @@ namespace UCosmic.Domain.Activities
                     x => x.Tags,
                     x => x.Documents,
                 })
-                .ById(command.ActivityValuesId);
+                .ById(command.ActivityValuesId, false);
 
             copiedActivityValues.Activity = copyToActivity;
             copiedActivityValues.ActivityId = copyToActivity.RevisionId;
@@ -73,9 +73,8 @@ namespace UCosmic.Domain.Activities
             copiedActivityValues.Documents = new Collection<ActivityDocument>();
             foreach (var document in documentsToCopy)
             {
-                _createActivityDocument.Handle(new CreateActivityDocument(command.Principal)
+                _createActivityDocument.Handle(new CreateActivityDocument(command.Principal, copiedActivityValues)
                 {
-                    ActivityValues = copiedActivityValues,
                     FileName = document.FileName,
                     MimeType = document.MimeType,
                     Content = _binaryData.Get(document.Path),

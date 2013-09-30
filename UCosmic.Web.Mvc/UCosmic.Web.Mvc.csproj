@@ -344,6 +344,7 @@
     <Compile Include="Models\Activities\ActivityApiModel.cs" />
     <Compile Include="Models\Activities\ActivityApiPutModel.cs" />
     <Compile Include="Models\Activities\ActivityDocumentApiModel.cs" />
+    <Compile Include="Models\Activities\ActivityDocumentApiPutModel.cs" />
     <Compile Include="Models\Activities\ActivityEditState.cs" />
     <Compile Include="Models\Activities\ActivityEstablishmentApiModel.cs" />
     <Compile Include="Models\Activities\ActivityLocationApiModel.cs" />

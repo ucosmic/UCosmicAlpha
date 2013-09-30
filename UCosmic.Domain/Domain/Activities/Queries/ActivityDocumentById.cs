@@ -5,13 +5,19 @@ namespace UCosmic.Domain.Activities
 {
     public class ActivityDocumentById : BaseEntityQuery<ActivityDocument>, IDefineQuery<ActivityDocument>
     {
-        public int Id { get; private set; }
-
-        public ActivityDocumentById(int inId)
+        public ActivityDocumentById(int activityId, int documentId)
+            : this(documentId)
         {
-            if (inId == 0) throw new ArgumentNullException("inId");
-            Id = inId;
+            ActivityId = activityId;
         }
+
+        internal ActivityDocumentById(int documentId)
+        {
+            DocumentId = documentId;
+        }
+
+        public int ActivityId { get; private set; }
+        public int DocumentId { get; private set; }
     }
 
     public class HandleActivityDocumentByEntityIdQuery : IHandleQueries<ActivityDocumentById, ActivityDocument>
@@ -27,10 +33,13 @@ namespace UCosmic.Domain.Activities
         {
             if (query == null) throw new ArgumentNullException("query");
 
-            var result = _entities.Query<ActivityDocument>()
+            var queryable = _entities.Query<ActivityDocument>()
                 .EagerLoad(_entities, query.EagerLoad)
-                .SingleOrDefault(x => x.RevisionId == query.Id)
             ;
+            if (query.ActivityId != 0)
+                queryable = queryable.Where(x => x.ActivityValues.ActivityId == query.ActivityId);
+
+            var result = queryable.SingleOrDefault(x => x.RevisionId == query.DocumentId);
 
             return result;
         }

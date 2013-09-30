@@ -3,41 +3,66 @@ using System.Linq;
 using System.Security.Principal;
 using FluentValidation;
 using UCosmic.Domain.Files;
+using UCosmic.Domain.Identity;
 
 namespace UCosmic.Domain.Activities
 {
     public class CreateActivityDocument
     {
-        public CreateActivityDocument(IPrincipal principal)
+        public CreateActivityDocument(IPrincipal principal, int activityId, ActivityMode? mode = null)
         {
+            if (principal == null) throw new ArgumentNullException("principal");
             Principal = principal;
+            ActivityId = activityId;
+            Mode = mode ?? ActivityMode.Public;
+        }
+
+        internal CreateActivityDocument(IPrincipal principal, ActivityValues activityValues)
+            :this(principal, 0)
+        {
+            ActivityValues = activityValues;
+            Mode = activityValues.Mode;
         }
 
         public IPrincipal Principal { get; private set; }
-        public int ActivityValuesId { get; set; }
+        public int ActivityId { get; private set; }
+        public ActivityMode Mode { get; private set; }
         public string Title { get; set; }
         public byte[] Content { get; set; }
         public string MimeType { get; set; }
         public string FileName { get; set; }
-        internal ActivityValues ActivityValues { get; set; }
         internal bool NoCommit { get; set; }
         internal int? Length { get; set; }
         internal string Path { get; set; }
         internal Guid? EntityId { get; set; }
+        internal ActivityValues ActivityValues { get; private set; }
 
         public ActivityDocument CreatedActivityDocument { get; internal set; }
     }
 
     public class ValidateCreateActivityDocumentCommand : AbstractValidator<CreateActivityDocument>
     {
-        public ValidateCreateActivityDocumentCommand(IQueryEntities entities)
+        public ValidateCreateActivityDocumentCommand(IProcessQueries queryProcessor)
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
             When(x => x.ActivityValues == null, () =>
-                RuleFor(x => x.ActivityValuesId)
-                    // activity id must exist in the database
-                    .MustFindActivityValuesById(entities)
+            {
+                RuleFor(x => x.ActivityId)
+                    .MustFindActivityById(queryProcessor)
+                    .MustHaveValuesForMode(queryProcessor, x => x.Mode)
+                ;
+
+                RuleFor(x => x.Principal)
+                    .MustFindUserByPrincipal(queryProcessor)
+                    .MustOwnActivity(queryProcessor, x => x.ActivityId)
+                ;
+            });
+
+            When(x => x.ActivityValues != null, () =>
+                RuleFor(x => x.Principal)
+                    .MustFindUserByPrincipal(queryProcessor)
+                    .MustOwnActivity(queryProcessor, x => x.ActivityValues.ActivityId)
             );
 
             var validFileExtensions = new[]
@@ -69,37 +94,36 @@ namespace UCosmic.Domain.Activities
         private readonly ICommandEntities _entities;
         private readonly IQueryEntities _detachedEntities;
         private readonly IStoreBinaryData _binaryData;
-        private readonly IUnitOfWork _unitOfWork;
 
         public HandleCreateActivityDocumentCommand(ICommandEntities entities
             , IQueryEntities detachedEntities
             , IStoreBinaryData binaryData
-            , IUnitOfWork unitOfWork
         )
         {
             _entities = entities;
             _detachedEntities = detachedEntities;
             _binaryData = binaryData;
-            _unitOfWork = unitOfWork;
         }
 
         public void Handle(CreateActivityDocument command)
         {
             if (command == null) throw new ArgumentNullException("command");
 
-            var activityValues = command.ActivityValues
-                ?? _entities.Get<ActivityValues>().ById(command.ActivityValuesId);
+            var modeText = command.Mode.AsSentenceFragment();
+            var values = command.ActivityValues
+                ?? _entities.Get<ActivityValues>()
+                    .Single(x => x.ActivityId == command.ActivityId && x.ModeText == modeText);
 
             var path = command.Path;
             if (string.IsNullOrWhiteSpace(path))
             {
-                path = string.Format(ActivityDocument.PathFormat, activityValues.ActivityId, Guid.NewGuid());
+                path = string.Format(ActivityDocument.PathFormat, values.ActivityId, Guid.NewGuid());
                 _binaryData.Put(path, command.Content, true);
             }
 
             var activityDocument = new ActivityDocument
             {
-                ActivityValues = activityValues,
+                ActivityValues = values,
                 Title = command.Title,
                 FileName = command.FileName,
                 MimeType = command.MimeType,
@@ -109,13 +133,13 @@ namespace UCosmic.Domain.Activities
             };
             if (command.EntityId.HasValue && command.EntityId != Guid.Empty)
                 activityDocument.EntityId = command.EntityId.Value;
-            activityValues.Documents.Add(activityDocument);
+            values.Documents.Add(activityDocument);
 
             _entities.Create(activityDocument);
 
             if (!command.NoCommit)
             {
-                _unitOfWork.SaveChanges();
+                _entities.SaveChanges();
                 command.CreatedActivityDocument = _detachedEntities.Query<ActivityDocument>()
                     .Single(x => x.RevisionId == activityDocument.RevisionId);
             }

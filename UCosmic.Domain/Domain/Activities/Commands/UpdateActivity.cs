@@ -36,7 +36,6 @@ namespace UCosmic.Domain.Activities
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
             RuleFor(x => x.ActivityId)
-                // id must exist in the database
                 .MustFindActivityById(queryProcessor)
             ;
 

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using FluentValidation;
 using FluentValidation.Validators;
 
@@ -7,38 +6,34 @@ namespace UCosmic.Domain.Activities
 {
     public class MustFindActivityDocumentById : PropertyValidator
     {
-        private readonly IQueryEntities _entities;
+        private readonly IProcessQueries _queryProcessor;
 
-        internal MustFindActivityDocumentById(IQueryEntities entities)
+        internal MustFindActivityDocumentById(IProcessQueries queryProcessor)
             : base("Activity document with id '{PropertyValue}' does not exist.")
         {
-            if (entities == null) throw new ArgumentNullException("entities");
-            _entities = entities;
+            if (queryProcessor == null) throw new ArgumentNullException("queryProcessor");
+            _queryProcessor = queryProcessor;
         }
 
         protected override bool IsValid(PropertyValidatorContext context)
         {
-            var activityDocumentId = (int)context.PropertyValue;
+            var documentId = (int)context.PropertyValue;
 
-            var entity = _entities.Query<ActivityDocument>()
-                .SingleOrDefault(x => x.RevisionId == activityDocumentId);
+            var entity = _queryProcessor.Execute(new ActivityDocumentById(documentId));
 
-            if (entity == null)
-            {
-                context.MessageFormatter.AppendArgument("PropertyValue", context.PropertyValue);
-                return false;
-            }
+            if (entity != null) return true;
 
-            return true;
+            context.MessageFormatter.AppendArgument("PropertyValue", context.PropertyValue);
+            return false;
         }
     }
 
     public static class MustFindActivityDocumentByIdExtensions
     {
         public static IRuleBuilderOptions<T, int> MustFindActivityDocumentById<T>
-            (this IRuleBuilder<T, int> ruleBuilder, IQueryEntities entities)
+            (this IRuleBuilder<T, int> ruleBuilder, IProcessQueries queryProcessor)
         {
-            return ruleBuilder.SetValidator(new MustFindActivityDocumentById(entities));
+            return ruleBuilder.SetValidator(new MustFindActivityDocumentById(queryProcessor));
         }
     }
 }

@@ -93,8 +93,6 @@ namespace UCosmic.SeedData
 
                     _createActivityValues.Handle(createActivityValuesCommand);
 
-                    ActivityValues activityValues = createActivityValuesCommand.CreatedActivityValues;
-
                     _createActivityType.Handle(new CreateActivityType(principal, activity.RevisionId)
                     {
                         ActivityTypeId = employeeModuleSettings.ActivityTypes.Single(x => x.Type.Contains("Research")).Id,
@@ -140,25 +138,22 @@ namespace UCosmic.SeedData
 
                     /* ----- Add Documents ----- */
 
-                    Seed(new CreateActivityDocument(principal)
+                    Seed(new CreateActivityDocument(principal, activity.RevisionId, activity.Mode)
                     {
-                        ActivityValuesId = activityValues.RevisionId,
                         FileName = "02E6D488-B3FA-4D79-848F-303779A53ABE.docx",
                         MimeType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
                         Title = "Dissertation Excerpt"
                     });
 
-                    Seed(new CreateActivityDocument(principal)
+                    Seed(new CreateActivityDocument(principal, activity.RevisionId, activity.Mode)
                     {
-                        ActivityValuesId = activityValues.RevisionId,
                         FileName = "10EC87BD-3A95-439D-807A-0F57C3F89C8A.xls",
                         MimeType = "application/vnd.ms-excel",
                         Title = "Research Funding Breakdown"
                     });
 
-                    Seed(new CreateActivityDocument(principal)
+                    Seed(new CreateActivityDocument(principal, activity.RevisionId, activity.Mode)
                     {
-                        ActivityValuesId = activityValues.RevisionId,
                         FileName = "1322FF22-E863-435E-929E-765EB95FB460.ppt",
                         MimeType = "application/vnd.ms-powerpoint",
                         Title = "Conference Presentation"
@@ -254,8 +249,6 @@ namespace UCosmic.SeedData
                     _createActivityValues.Handle(createActivityValuesCommand);
                     _unitOfWork.SaveChanges();
 
-                    ActivityValues activityValues = createActivityValuesCommand.CreatedActivityValues;
-
                     _createActivityType.Handle(new CreateActivityType(principal, activity.RevisionId)
                     {
                         ActivityTypeId = employeeModuleSettings.ActivityTypes.Single(x => x.Type.Contains("Conference")).Id,
@@ -276,9 +269,8 @@ namespace UCosmic.SeedData
                         PlaceId = _entities.Get<Place>().Single(x => x.OfficialName == "China").RevisionId,
                     });
 
-                    Seed(new CreateActivityDocument(principal)
+                    Seed(new CreateActivityDocument(principal, activity.RevisionId, activity.Mode)
                     {
-                        ActivityValuesId = activityValues.RevisionId,
                         FileName = "817DB81E-53FC-47E1-A1DE-B8C108C7ACD6.pdf",
                         MimeType = "application/pdf",
                         Title = "Make a contribution form"
@@ -321,8 +313,6 @@ namespace UCosmic.SeedData
                     _createActivityValues.Handle(createActivityValuesCommand);
                     _unitOfWork.SaveChanges();
 
-                    ActivityValues activityValues = createActivityValuesCommand.CreatedActivityValues;
-
                     _createActivityType.Handle(new CreateActivityType(principal, activity.RevisionId)
                     {
                         ActivityTypeId = employeeModuleSettings.ActivityTypes.Single(x => x.Type.Contains("Creative")).Id,
@@ -333,41 +323,36 @@ namespace UCosmic.SeedData
                         PlaceId = _entities.Get<Place>().Single(x => x.OfficialName == "China").RevisionId,
                     });
 
-                    Seed(new CreateActivityDocument(principal)
+                    Seed(new CreateActivityDocument(principal, activity.RevisionId, activity.Mode)
                     {
-                        ActivityValuesId = activityValues.RevisionId,
                         FileName = "5C62D74E-E8EE-4B9A-95F3-B2ABB1F6F912.gif",
                         MimeType = "image/gif",
                         Title = "Photo of the site"
                     });
 
-                    Seed(new CreateActivityDocument(principal)
+                    Seed(new CreateActivityDocument(principal, activity.RevisionId, activity.Mode)
                     {
-                        ActivityValuesId = activityValues.RevisionId,
                         FileName = "A44FAB3B-DEBA-4F14-8965-E379569066A9.png",
                         MimeType = "image/png",
                         Title = "Grads working hard"
                     });
 
-                    Seed(new CreateActivityDocument(principal)
+                    Seed(new CreateActivityDocument(principal, activity.RevisionId, activity.Mode)
                     {
-                        ActivityValuesId = activityValues.RevisionId,
                         FileName = "C0DA4900-762B-4B26-AE03-843CBB7C0E7B.bmp",
                         MimeType = "image/bmp",
                         Title = "Map of the incident"
                     });
 
-                    Seed(new CreateActivityDocument(principal)
+                    Seed(new CreateActivityDocument(principal, activity.RevisionId, activity.Mode)
                     {
-                        ActivityValuesId = activityValues.RevisionId,
                         FileName = "E4E53300-08D3-47C0-954C-BF15EF54F0A3.tif",
                         MimeType = "image/tiff",
                         Title = "Sunrise over the delta"
                     });
 
-                    Seed(new CreateActivityDocument(principal)
+                    Seed(new CreateActivityDocument(principal, activity.RevisionId, activity.Mode)
                     {
-                        ActivityValuesId = activityValues.RevisionId,
                         FileName = "EE23D741-C50D-40D5-8214-C18DF68CC6D3.jpg",
                         MimeType = "image/jpg",
                         Title = "Me"
@@ -449,7 +434,7 @@ namespace UCosmic.SeedData
         protected ActivityDocument Seed(CreateActivityDocument command)
         {
             var existingEntity = _entities.Get<ActivityDocument>()
-                .SingleOrDefault(x => x.ActivityValuesId == command.ActivityValuesId && x.FileName == command.FileName);
+                .SingleOrDefault(x => x.ActivityValues.ActivityId == command.ActivityId && x.FileName == command.FileName);
             if (existingEntity == null)
             {
                 using (var fileStream = File.OpenRead(string.Format("{0}{1}", BasePath, command.FileName)))

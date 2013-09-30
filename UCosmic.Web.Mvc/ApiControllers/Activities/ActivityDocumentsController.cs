@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
@@ -23,201 +22,50 @@ namespace UCosmic.Web.Mvc.ApiControllers
     [RoutePrefix("api/activities")]
     public class ActivityDocumentsController : ApiController
     {
+        private const string PluralUrl =        "{activityId:int}/documents";
+        private const string SingleUrl =        "{activityId:int}/documents/{documentId:int}";
+        private const string ThumbnailUrl =     "{activityId:int}/documents/{documentId:int}/thumbnail";
+        private const string ValidateUrl =      "documents/validate-upload";
+
         private readonly IProcessQueries _queryProcessor;
         private readonly IStoreBinaryData _binaryData;
         private readonly IValidator<CreateActivityDocument> _createValidator;
         private readonly IHandleCommands<CreateActivityDocument> _createHandler;
+        private readonly IHandleCommands<UpdateActivityDocument> _updateHandler;
         private readonly IHandleCommands<PurgeActivityDocument> _purgeHandler;
-        private readonly IHandleCommands<RenameActivityDocument> _renameActivityDocument;
 
         public ActivityDocumentsController(IProcessQueries queryProcessor
             , IStoreBinaryData binaryData
             , IValidator<CreateActivityDocument> createValidator
             , IHandleCommands<CreateActivityDocument> createHandler
+            , IHandleCommands<UpdateActivityDocument> updateHandler
             , IHandleCommands<PurgeActivityDocument> purgeHandler
-            , IHandleCommands<RenameActivityDocument> renameActivityDocument
         )
         {
             _queryProcessor = queryProcessor;
             _binaryData = binaryData;
             _createValidator = createValidator;
             _createHandler = createHandler;
+            _updateHandler = updateHandler;
             _purgeHandler = purgeHandler;
-            _renameActivityDocument = renameActivityDocument;
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-         * Get all activity documents
-        */
-        // --------------------------------------------------------------------------------
-        [GET("{activityId:int}/documents")]
-        public IEnumerable<ActivityDocumentApiModel> GetDocuments(int activityId, string activityMode)
+        [GET(PluralUrl)]
+        public IEnumerable<ActivityDocumentApiModel> Get(int activityId, ActivityMode? mode = null)
         {
-            ActivityDocument[] documents = _queryProcessor.Execute(new ActivityDocumentsByActivityIdAndMode(activityId, activityMode));
-            if (documents == null)
+            var entities = _queryProcessor.Execute(new ActivityDocumentsByActivityId(activityId)
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
-
-            var model = Mapper.Map<ActivityDocumentApiModel[]>(documents);
-            return model;
+                Mode = mode,
+            });
+            var models = Mapper.Map<ActivityDocumentApiModel[]>(entities);
+            return models;
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-         * Get activity document
-        */
-        // --------------------------------------------------------------------------------
-        [GET("{activityId:int}/documents/{documentId:int}")]
-        public ActivityDocumentApiModel GetDocuments(int activityId, int documentId)
-        {
-            throw new HttpResponseException(HttpStatusCode.NotImplemented);
-        }
-
-        // --------------------------------------------------------------------------------
-        /*
-         * Create activity document
-        */
-        // --------------------------------------------------------------------------------
-        [Authorize]
-        [POST("{activityId:int}/documents")]
-        public HttpResponseMessage Post(int activityId, string activityMode, FileMedium fileMedium)
-        {
-            var activityValues = _queryProcessor.Execute(
-                new ActivityValuesByActivityIdAndMode(activityId, activityMode));
-
-            if (activityValues == null)
-                throw new HttpResponseException(HttpStatusCode.BadRequest);
-
-            var command = new CreateActivityDocument(User)
-            {
-                ActivityValuesId = activityValues.RevisionId,
-                Title = Path.GetFileNameWithoutExtension(fileMedium.FileName),
-                Content = fileMedium.Content,
-                MimeType = fileMedium.ContentType,
-                FileName = fileMedium.FileName,
-            };
-            try
-            {
-                _createHandler.Handle(command);
-            }
-            catch (ValidationException ex)
-            {
-                Func<ValidationFailure, bool> forName = x => x.PropertyName == command.PropertyName(y => y.FileName);
-                Func<ValidationFailure, bool> forContent = x => x.PropertyName == command.PropertyName(y => y.Content);
-                if (ex.Errors.Any(forName))
-                    return Request.CreateResponse(HttpStatusCode.UnsupportedMediaType,
-                        ex.Errors.First(forName).ErrorMessage, "text/plain");
-                if (ex.Errors.Any(forContent))
-                    return Request.CreateResponse(HttpStatusCode.RequestEntityTooLarge,
-                        ex.Errors.First(forContent).ErrorMessage, "text/plain");
-            }
-            return Request.CreateResponse(HttpStatusCode.Created);
-        }
-
-        // --------------------------------------------------------------------------------
-        /*
-         * Update activity document
-         * (Might need to use POST here)
-        */
-        // --------------------------------------------------------------------------------
-        [Authorize]
-        [PUT("{activityId:int}/documents/{documentId:int}")]
-        public HttpResponseMessage PutDocument(int activityId, int documentId)
-        {
-            return Request.CreateResponse(HttpStatusCode.NotImplemented);
-        }
-
-        // --------------------------------------------------------------------------------
-        /*
-         * Delete activity document
-        */
-        // --------------------------------------------------------------------------------
-        [Authorize]
-        [DELETE("{activityId:int}/documents/{documentId:int}")]
-        public HttpResponseMessage DeleteDocument(int activityId, int documentId)
-        {
-            //ActivityDocument activityDocument = this._queryProcessor.Execute(new ActivityDocumentById(documentId));
-
-            var command = new PurgeActivityDocument(User, documentId);
-
-            try
-            {
-                _purgeHandler.Handle(command);
-            }
-            catch (ValidationException ex)
-            {
-                return Request.CreateResponse(HttpStatusCode.BadRequest, ex.Message, "text/plain");
-            }
-
-            return Request.CreateResponse(HttpStatusCode.OK,
-                string.Format("Activity document id '{0}' was successfully deleted.", documentId.ToString(CultureInfo.InvariantCulture)));
-        }
-
-        // --------------------------------------------------------------------------------
-        /*
-         * Rename activity document
-        */
-        // --------------------------------------------------------------------------------
-        [Authorize]
-        [PUT("{activityId:int}/documents/{documentId:int}/title")]
-        public HttpResponseMessage PutDocumentsTitle(int activityId, int documentId, [FromBody] string newTitle)
-        {
-            var command = new RenameActivityDocument(User, documentId, newTitle);
-
-            try
-            {
-                _renameActivityDocument.Handle(command);
-            }
-            catch (ValidationException ex)
-            {
-                return Request.CreateResponse(HttpStatusCode.BadRequest, ex.Message, "text/plain");
-            }
-
-            return Request.CreateResponse(HttpStatusCode.OK,
-                string.Format("Activity document id '{0}' was successfully renamed.", documentId.ToString(CultureInfo.InvariantCulture)));
-        }
-
-        // --------------------------------------------------------------------------------
-        /*
-         * Validate activity document type
-        */
-        // --------------------------------------------------------------------------------
-        [Authorize]
-        [POST("documents/validate-upload")]
-        public HttpResponseMessage PostDocumentsValidateUploadFiletype([FromBody] FileUploadValidationModel model)
-        {
-            var command = new CreateActivityDocument(User)
-            {
-                FileName = model.Name,
-                Content = model.Length.HasValue ? new byte[model.Length.Value] : new byte[0],
-            };
-            var validationResult = _createValidator.Validate(command);
-            var forProperties = new List<Func<ValidationFailure, bool>>
-            {
-                x => x.PropertyName == command.PropertyName(y => y.FileName),
-            };
-            if (model.Length.HasValue)
-                forProperties.Add(x => x.PropertyName == command.PropertyName(y => y.Content));
-            foreach (var forProperty in forProperties)
-                if (validationResult.Errors.Any(forProperty))
-                    return Request.CreateResponse(HttpStatusCode.BadRequest,
-                        validationResult.Errors.First(forProperty).ErrorMessage, "text/plain");
-
-            return Request.CreateResponse(HttpStatusCode.OK);
-        }
-
-        // --------------------------------------------------------------------------------
-        /*
-         * Get activity document proxy image
-        */
-        // --------------------------------------------------------------------------------
         [CacheHttpGet(Duration = 3600)]
-        [GET("{activityId:int}/documents/{documentId:int}/thumbnail")]
-        public HttpResponseMessage GetDocumentsThumbnail(int activityId, int documentId, [FromUri] ImageResizeRequestModel model)
+        [GET(ThumbnailUrl)]
+        public HttpResponseMessage GetThumbnail(int activityId, int documentId, [FromUri] ImageResizeRequestModel model)
         {
-            var document = _queryProcessor.Execute(new ActivityDocumentById(documentId)
+            var document = _queryProcessor.Execute(new ActivityDocumentById(activityId, documentId)
             {
                 EagerLoad = new Expression<Func<ActivityDocument, object>>[]
                 {
@@ -255,6 +103,98 @@ namespace UCosmic.Web.Mvc.ApiControllers
             };
             response.Content.Headers.ContentType = new MediaTypeHeaderValue(mimeType);
             return response;
+        }
+
+        [Authorize]
+        [POST(PluralUrl)]
+        public HttpResponseMessage Post(int activityId, ActivityMode activityMode, FileMedium fileMedium)
+        {
+            var command = new CreateActivityDocument(User, activityId, activityMode)
+            {
+                Title = Path.GetFileNameWithoutExtension(fileMedium.FileName),
+                Content = fileMedium.Content,
+                MimeType = fileMedium.ContentType,
+                FileName = fileMedium.FileName,
+            };
+            try
+            {
+                _createHandler.Handle(command);
+            }
+            catch (ValidationException ex)
+            {
+                Func<ValidationFailure, bool> forName = x => x.PropertyName == command.PropertyName(y => y.FileName);
+                Func<ValidationFailure, bool> forContent = x => x.PropertyName == command.PropertyName(y => y.Content);
+                if (ex.Errors.Any(forName))
+                    return Request.CreateResponse(HttpStatusCode.UnsupportedMediaType,
+                        ex.Errors.First(forName).ErrorMessage, "text/plain");
+                if (ex.Errors.Any(forContent))
+                    return Request.CreateResponse(HttpStatusCode.RequestEntityTooLarge,
+                        ex.Errors.First(forContent).ErrorMessage, "text/plain");
+            }
+            return Request.CreateResponse(HttpStatusCode.Created);
+        }
+
+        [Authorize]
+        [POST(ValidateUrl)]
+        public HttpResponseMessage PostValidate([FromBody] FileUploadValidationModel model)
+        {
+            var command = new CreateActivityDocument(User, 0)
+            {
+                FileName = model.Name,
+                Content = model.Length.HasValue ? new byte[model.Length.Value] : new byte[0],
+            };
+            var validationResult = _createValidator.Validate(command);
+            var forProperties = new List<Func<ValidationFailure, bool>>
+            {
+                x => x.PropertyName == command.PropertyName(y => y.FileName),
+            };
+            if (model.Length.HasValue)
+                forProperties.Add(x => x.PropertyName == command.PropertyName(y => y.Content));
+            foreach (var forProperty in forProperties)
+                if (validationResult.Errors.Any(forProperty))
+                    return Request.CreateResponse(HttpStatusCode.BadRequest,
+                        validationResult.Errors.First(forProperty).ErrorMessage, "text/plain");
+
+            return Request.CreateResponse(HttpStatusCode.OK);
+        }
+
+        [Authorize]
+        [PUT(SingleUrl)]
+        public HttpResponseMessage Put(int activityId, int documentId, ActivityDocumentApiPutModel model)
+        {
+            var command = new UpdateActivityDocument(User, activityId, documentId)
+            {
+                Title = model.Title,
+            };
+
+            try
+            {
+                _updateHandler.Handle(command);
+            }
+            catch (ValidationException ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, ex.Message, "text/plain");
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK, "Activity document was successfully renamed.");
+        }
+
+        [Authorize]
+        [DELETE(SingleUrl)]
+        public HttpResponseMessage Delete(int activityId, int documentId)
+        {
+            var command = new PurgeActivityDocument(User, activityId, documentId);
+
+            try
+            {
+                _purgeHandler.Handle(command);
+            }
+            catch (ValidationException ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, ex.Message, "text/plain");
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK, "Activity document was successfully deleted.");
         }
     }
 }

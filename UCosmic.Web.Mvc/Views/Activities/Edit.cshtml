@@ -495,10 +495,30 @@
                                 {
                                     tagDeleteUrlFormat = tagDeleteUrlFormat.Replace("0", "{0}");
                                 }
+                                var activityPutUrlFormat = Url.HttpRouteUrl(null, new { controller = "Activities", action = "Put", activityId = 0 });
+                                if (activityPutUrlFormat != null)
+                                {
+                                    activityPutUrlFormat = activityPutUrlFormat.Replace("0", "{0}");
+                                }
                                 var activityReplaceUrlFormat = Url.HttpRouteUrl(null, new { controller = "Activities", action = "PutMove", workCopyActivityId = 0, originalActivityId = 1, mode = ActivityMode.Draft });
                                 if (activityReplaceUrlFormat != null)
                                 {
                                     activityReplaceUrlFormat = activityReplaceUrlFormat.Replace("0", "{0}").Replace("1", "{1}").Replace(ActivityMode.Draft.ToString(), "{2}");
+                                }
+                                var activityDeleteUrlFormat = Url.HttpRouteUrl(null, new { controller = "Activities", action = "Delete", activityId = 0 });
+                                if (activityDeleteUrlFormat != null)
+                                {
+                                    activityDeleteUrlFormat = activityDeleteUrlFormat.Replace("0", "{0}");
+                                }
+                                var documentPutUrlFormat = Url.HttpRouteUrl(null, new { controller = "ActivityDocuments", action = "Put", activityId = 0, documentId = 1 });
+                                if (documentPutUrlFormat != null)
+                                {
+                                    documentPutUrlFormat = documentPutUrlFormat.Replace("0", "{0}").Replace("1", "{1}");
+                                }
+                                var documentsGetUrlFormat = Url.HttpRouteUrl(null, new { controller = "ActivityDocuments", action = "Get", activityId = 0 });
+                                if (documentsGetUrlFormat != null)
+                                {
+                                    documentsGetUrlFormat = documentsGetUrlFormat.Replace("0", "{0}");
                                 }
                             }
                             <span id="place_put_url_format">@placePutUrlFormat</span>
@@ -508,7 +528,11 @@
                             <span id="establishment_names_get_url_format">@establishmentNameGetUrlFormat</span>
                             <span id="tag_post_url_format">@tagPostUrlFormat</span>
                             <span id="tag_delete_url_format">@tagDeleteUrlFormat</span>
+                            <span id="activity_put_url_format">@activityPutUrlFormat</span>
                             <span id="activity_replace_url_format">@activityReplaceUrlFormat</span>
+                            <span id="activity_delete_url_format">@activityDeleteUrlFormat</span>
+                            <span id="document_put_url_format">@documentPutUrlFormat</span>
+                            <span id="documents_get_url_format">@documentsGetUrlFormat</span>
                         </div>
                     </div>
                 </div>

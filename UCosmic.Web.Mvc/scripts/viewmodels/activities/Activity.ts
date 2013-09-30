@@ -481,9 +481,11 @@ module ViewModels.Activities {
 
             this.saveSpinner.start();
 
+            var url = $('#activity_put_url_format').text().format(this.id());
             $.ajax({
                 type: 'PUT',
-                url: App.Routes.WebApi.Activities.put(this.id()),
+                //url: App.Routes.WebApi.Activities.put(this.id()),
+                url: url,
                 data: model
             })
                 .done((): void => {
@@ -565,9 +567,11 @@ module ViewModels.Activities {
                             });
                             $dialog.find('.spinner').css('visibility', '');
 
+                            var url = $('#activity_delete_url_format').text().format(this.id());
                             $.ajax({
                                 type: 'DELETE',
-                                url: App.Routes.WebApi.Activities.del(this.id())
+                                //url: App.Routes.WebApi.Activities.del(this.id())
+                                url: url,
                             })
                                 .done((): void => {
                                     $dialog.dialog('close');
@@ -909,13 +913,18 @@ module ViewModels.Activities {
         //#region Documents
 
         private _loadDocuments(): void {
+            var url = $('#documents_get_url_format').text().format(this.id());
             $.ajax({
                 type: 'GET',
-                url: App.Routes.WebApi.Activities.Documents.get(this.id(), null, this.modeText())
+                //url: App.Routes.WebApi.Activities.Documents.get(this.id(), null, this.modeText()),
+                url: url,
+                data: {
+                    mode: this.modeText(),
+                },
             })
                 .done((documents: any, textStatus: string, jqXhr: JQueryXHR): void => {
 
-                    /* TODO - This needs to be combined with the initial load mapping. */
+                    // TODO - This needs to be combined with the initial load mapping.
                     var augmentedDocumentModel = function (data) {
                         ko.mapping.fromJS(data, {}, this);
                         this.proxyImageSource = ko.observable(App.Routes.WebApi.Activities.Documents.Thumbnail.get(data.activityId, data.id, { maxSide: Activity.iconMaxSide }));
@@ -992,8 +1001,12 @@ module ViewModels.Activities {
             this.previousDocumentTitle = item.title();
             var inputElement = $(textElement).siblings('#documentTitleInput')[0];
             $(inputElement).show();
-            $(inputElement).focusout(event, (event: any): void => { this.endDocumentTitleEdit(item, event); });
-            $(inputElement).keypress(event, (event: any): void => { if (event.which == 13) { inputElement.blur(); } });
+            $(inputElement).focusout(event, (event: any): void => {
+                this.endDocumentTitleEdit(item, event);
+            });
+            $(inputElement).keypress(event, (event: any): void => {
+                if (event.which == 13) inputElement.blur();
+            });
         }
 
         endDocumentTitleEdit(item: Service.ApiModels.IObservableActivityDocument, event: any): void {
@@ -1002,12 +1015,13 @@ module ViewModels.Activities {
             $(inputElement).unbind('keypress');
             $(inputElement).attr('disabled', 'disabled');
 
+            var url = $('#document_put_url_format').text().format(this.id(), item.id());
             $.ajax({
                 type: 'PUT',
-                url: App.Routes.WebApi.Activities.Documents.rename(this.id(), item.id()),
-                data: ko.toJSON(item.title()),
-                contentType: 'application/json',
-                //dataType: 'json',
+                url: url,
+                data: {
+                    title: item.title()
+                },
                 success: (data: any, textStatus: string, jqXhr: JQueryXHR): void => {
                     $(inputElement).hide();
                     $(inputElement).removeAttr('disabled');
