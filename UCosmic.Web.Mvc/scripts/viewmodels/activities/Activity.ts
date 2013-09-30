@@ -442,24 +442,16 @@ module ViewModels.Activities {
         }
 
         _isSaved: boolean = false;
+        _isDeleted: boolean = false;
 
         autoSave(): JQueryDeferred<void> {
             var deferred: JQueryDeferred<void> = $.Deferred();
-            if (this._isSaved) {
+            if (this._isSaved || this._isDeleted || this.saving || (!this.dirtyFlag() && this.keyCounter == 0)) {
                 deferred.resolve();
                 return deferred;
             }
 
-            if (this.saving) {
-                deferred.resolve();
-                return deferred;
-            }
-
-            if (!this.dirtyFlag() && (this.keyCounter == 0)) {
-                deferred.resolve();
-                return deferred;
-            }
-
+            this.saveSpinner.start();
             this.saving = true;
 
             var model = ko.mapping.toJS(this);
@@ -470,23 +462,29 @@ module ViewModels.Activities {
                 model.values.startsOn = this.convertDate(model.values.startsOn);
             }
 
-            if ((this.values.onGoing != null) && (this.values.onGoing())) {
+            if (model.values.onGoing) {
                 model.values.endsOn = null;
             }
-            else {
-                if (model.values.endsOn != null) {
-                    model.values.endsOn = this.convertDate(model.values.endsOn);
-                }
+            else if (model.values.endsOn != null) {
+                model.values.endsOn = this.convertDate(model.values.endsOn);
             }
-
-            this.saveSpinner.start();
 
             var url = $('#activity_put_url_format').text().format(this.id());
             $.ajax({
                 type: 'PUT',
                 //url: App.Routes.WebApi.Activities.put(this.id()),
                 url: url,
-                data: model
+                data: {
+                    mode: model.modeText,
+                    title: model.values.title,
+                    content: model.values.content,
+                    startsOn: model.values.startsOn,
+                    endsOn: model.values.endsOn,
+                    dateFormat: model.values.dateFormat,
+                    onGoing: model.values.onGoing,
+                    wasExternallyFunded: model.values.wasExternallyFunded,
+                    wasInternallyFunded: model.values.wasInternallyFunded,
+                },
             })
                 .done((): void => {
                     deferred.resolve();
@@ -575,6 +573,7 @@ module ViewModels.Activities {
                             })
                                 .done((): void => {
                                     $dialog.dialog('close');
+                                    this._isDeleted = true; // prevent tinymce onbeforeunload from updating again
                                     location.href = App.Routes.Mvc.My.Profile.get();
                                 })
                                 .fail((xhr: JQueryXHR): void => {

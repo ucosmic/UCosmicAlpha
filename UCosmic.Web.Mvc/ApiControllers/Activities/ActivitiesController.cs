@@ -62,25 +62,15 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
         [Authorize]
         [PUT("{activityId:int}")]
-        public HttpResponseMessage Put(int activityId, ActivityApiModel model)
+        public HttpResponseMessage Put(int activityId, ActivityApiPutModel model)
         {
             // autosave invokes this method for everything except documents
             if (activityId == 0 || model == null)
                 return Request.CreateResponse(HttpStatusCode.BadRequest);
 
             // invoke update command using the model's id and mode
-            var command = new UpdateActivity(User, activityId)
-            {
-                Title = model.Values.Title,
-                Content = model.Values.Content,
-                Mode = model.ModeText.AsEnum<ActivityMode>(),
-                DateFormat = model.Values.DateFormat,
-                StartsOn = model.Values.StartsOn,
-                EndsOn = model.Values.EndsOn,
-                OnGoing = model.Values.OnGoing,
-                WasExternallyFunded = model.Values.WasExternallyFunded,
-                WasInternallyFunded = model.Values.WasInternallyFunded,
-            };
+            var command = new UpdateActivity(User, activityId);
+            Mapper.Map(model, command);
             _updateActivity.Handle(command);
 
             return Request.CreateResponse(HttpStatusCode.OK);
