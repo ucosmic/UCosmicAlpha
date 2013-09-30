@@ -211,7 +211,8 @@
 
     <script type="text/javascript">
         (function($, window) {
-            var activityId = @ViewBag.ActivityId, activityWorkCopyId = @ViewBag.ActivityWorkCopyId;
+            var activityId = parseInt('@ViewBag.ActivityId');
+            var activityWorkCopyId = parseInt('@ViewBag.ActivityWorkCopyId');
             var activityViewModel = new ViewModels.Activities.Activity(activityId, activityWorkCopyId);
             activityViewModel.load()
                 .done(function() {
@@ -600,7 +601,7 @@
     <tr class="hover-hilite" style="white-space: normal">
         <!-- Preview -->
         <td style="text-align: center">
-            <img alt="thumbnail" data-bind="attr: { src: proxyImageSource }">
+            <img alt="thumbnail" data-bind="attr: { src: proxyImageSource }" src="@Url.Content("~/images/icons/spinner/spinner-24-blue.gif")">
         </td>
         <!-- Title -->
         <td>

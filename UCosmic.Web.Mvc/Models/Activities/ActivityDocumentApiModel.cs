@@ -35,27 +35,5 @@ namespace UCosmic.Web.Mvc.Models
                 ;
             }
         }
-
-        public class ModelToEntity : Profile
-        {
-            protected override void Configure()
-            {
-                CreateMap<ActivityDocumentApiModel, ActivityDocument>()
-                    .ForMember(d => d.RevisionId, o => o.MapFrom(s => s.Id))
-                    .ForMember(d => d.MimeType, o => o.Ignore())
-                    .ForMember(d => d.Version, o => o.MapFrom(s => String.IsNullOrEmpty(s.Version) ? null : Convert.FromBase64String(s.Version)))
-                    .ForMember(d => d.EntityId, o => o.Ignore())
-                    .ForMember(d => d.ActivityValues, o => o.Ignore())
-                    .ForMember(d => d.ActivityValuesId, o => o.Ignore())
-                    .ForMember(d => d.CreatedOnUtc, o => o.Ignore())
-                    .ForMember(d => d.CreatedByPrincipal, o => o.Ignore())
-                    .ForMember(d => d.UpdatedOnUtc, o => o.Ignore())
-                    .ForMember(d => d.UpdatedByPrincipal, o => o.Ignore())
-                    .ForMember(d => d.IsCurrent, o => o.Ignore())
-                    .ForMember(d => d.IsArchived, o => o.Ignore())
-                    .ForMember(d => d.IsDeleted, o => o.Ignore())
-                ;
-            }
-        }
     }
 }

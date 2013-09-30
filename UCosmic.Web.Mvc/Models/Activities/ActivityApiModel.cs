@@ -42,30 +42,5 @@ namespace UCosmic.Web.Mvc.Models
                 ;
             }
         }
-
-        public class ModelToEntity : Profile
-        {
-            protected override void Configure()
-            {
-                CreateMap<ActivityApiModel, Activity>()
-                    .ForMember(d => d.RevisionId, o => o.MapFrom(s => s.Id))
-                    .ForMember(d => d.ModeText, o => o.MapFrom(s => s.ModeText))
-                    .ForMember(d => d.Mode, o => o.Ignore())
-                    .ForMember(d => d.Person, o => o.Ignore())
-                    .ForMember(d => d.PersonId, o => o.MapFrom(s => s.PersonId))
-                    .ForMember(d => d.Values, o => o.MapFrom(s => new[] { Mapper.Map<ActivityValues>(s.Values) }))
-                    .ForMember(d => d.UpdatedOnUtc, o => o.MapFrom(s => s.WhenLastUpdated))
-                    .ForMember(d => d.UpdatedByPrincipal, o => o.MapFrom(s => s.WhoLastUpdated))
-                    .ForMember(d => d.Version, o => o.MapFrom(s => string.IsNullOrWhiteSpace(s.Version) ? null : Convert.FromBase64String(s.Version)))
-                    .ForMember(d => d.CreatedOnUtc, o => o.Ignore())
-                    .ForMember(d => d.CreatedByPrincipal, o => o.Ignore())
-                    .ForMember(d => d.IsCurrent, o => o.Ignore())
-                    .ForMember(d => d.IsArchived, o => o.Ignore())
-                    .ForMember(d => d.IsDeleted, o => o.Ignore())
-                    .ForMember(d => d.Original, o => o.Ignore())
-                    .ForMember(d => d.WorkCopy, o => o.Ignore())
-                ;
-            }
-        }
     }
 }

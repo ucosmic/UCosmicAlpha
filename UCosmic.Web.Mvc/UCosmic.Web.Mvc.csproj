@@ -345,7 +345,7 @@
     <Compile Include="Models\Activities\ActivityApiPutModel.cs" />
     <Compile Include="Models\Activities\ActivityDocumentApiModel.cs" />
     <Compile Include="Models\Activities\ActivityDocumentApiPutModel.cs" />
-    <Compile Include="Models\Activities\ActivityEditState.cs" />
+    <Compile Include="Models\Activities\_Deprecated\_ActivityEditState.cs" />
     <Compile Include="Models\Activities\ActivityEstablishmentApiModel.cs" />
     <Compile Include="Models\Activities\ActivityLocationApiModel.cs" />
     <Compile Include="Models\Activities\ActivityLocationNameApiModel.cs" />
@@ -355,7 +355,7 @@
     <Compile Include="Models\Activities\ActivityTagApiModel.cs" />
     <Compile Include="Models\Activities\ActivityTagApiPutModel.cs" />
     <Compile Include="Models\Activities\ActivityTypeApiModel.cs" />
-    <Compile Include="Models\Activities\ActivityTypeNameApiModel.cs" />
+    <Compile Include="Models\Activities\_Deprecated\_ActivityTypeNameApiModel.cs" />
     <Compile Include="Models\Activities\ActivityValuesApiModel.cs" />
     <Compile Include="Helpers\VersionAttribute.cs" />
     <Compile Include="Helpers\ElmahHandleApiErrorAttribute.cs" />
@@ -366,7 +366,7 @@
     <Compile Include="Helpers\NonHtmlOutputCacheAttribute.cs" />
     <Compile Include="Helpers\OfflineDevelopmentExtensions.cs" />
     <Compile Include="Helpers\WebApiExtensions.cs" />
-    <Compile Include="Models\Activities\ActivityPutEditApiModel.cs" />
+    <Compile Include="Models\Activities\_Deprecated\_ActivityPutEditApiModel.cs" />
     <Compile Include="Models\Agreements\AgreementApiModel.cs" />
     <Compile Include="Models\Agreements\AgreementSettingsApiModel.cs" />
     <Compile Include="Models\Agreements\AgreementPlaceApiModel.cs" />
