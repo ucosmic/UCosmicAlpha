@@ -12,34 +12,11 @@
 /// <reference path="../activities/ServiceApiModel.d.ts" />
 
 module ViewModels.Activities {
-    export class Activity implements Service.ApiModels.IObservableActivity {
+    export class Activity implements Service.ApiModels.IObservableActivity, KnockoutValidationGroup {
 
         //#region Class Properties
 
-        private static iconMaxSide: number = 64;
-
         ready: KnockoutObservable<boolean> = ko.observable(false);
-
-        // Array of all locations offered in Country/Location multiselect
-        locations: KnockoutObservableArray<any> = ko.observableArray();
-
-        // Array of placeIds of selected locations, kendo multiselect stores these as strings
-        kendoPlaceIds: KnockoutObservableArray<number> = ko.observableArray();
-        private _currentPlaceIds: number[];
-
-        // Array of activity types displayed as list of checkboxes
-        //activityTypes: KnockoutObservableArray<any> = ko.observableArray();
-        activityTypes: KnockoutObservableArray<any> = ko.observableArray();
-
-        // Data bound to new tag textArea
-        newTag: KnockoutObservable<string> = ko.observable();
-        //newEstablishment: any; // Because KendoUI autocomplete does not offer dataValueField.
-
-        // array to hold file upload errors
-        fileUploadErrors: KnockoutObservableArray<any> = ko.observableArray();
-
-        // Old document name - used during document rename.
-        previousDocumentTitle: string;
 
         // Autosave after so many keydowns
         AUTOSAVE_KEYCOUNT: number = 10;
@@ -112,7 +89,8 @@ module ViewModels.Activities {
             ;
 
             var dataPact = $.Deferred();
-            $.get(App.Routes.WebApi.Activities.get(this.workCopyId()))
+            var dataUrl = $('#activity_get_url_format').text().format(this.workCopyId());
+            $.get(dataUrl)
                 .done((data: Service.ApiModels.IActivityPage): void => {
                     dataPact.resolve(data);
                 })
@@ -121,13 +99,25 @@ module ViewModels.Activities {
                 })
             ;
 
+            var placesPact = $.Deferred();
+            var placesUrl = $('#places_get_url_format').text().format(this.workCopyId());
+            $.get(placesUrl)
+                .done((data: Service.ApiModels.IActivityPage): void => {
+                    placesPact.resolve(data);
+                })
+                .fail((jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
+                    placesPact.reject(jqXhr, textStatus, errorThrown);
+                })
+            ;
+
             //#endregion
             //#region process after all have been loaded
 
-            $.when(typesPact, locationsPact, dataPact)
+            $.when(typesPact, locationsPact, dataPact, placesPact)
                 .done((types: Service.ApiModels.IEmployeeActivityType[],
                     locations: Service.ApiModels.IActivityLocation[],
-                    data: Service.ApiModels.IObservableActivity): void => {
+                    data: Service.ApiModels.IObservableActivity,
+                    places: any[]): void => {
 
                     //#region populate activity data
 
@@ -167,9 +157,10 @@ module ViewModels.Activities {
                     this.locations = ko.mapping.fromJS(locations);
 
                     // Initialize the list of selected locations with current locations in values
-                    var currentPlaceIds = Enumerable.From(this.values.locations())
+                    this.places(places);
+                    var currentPlaceIds = Enumerable.From(places)
                         .Select(function (x): any {
-                            return x.placeId();
+                            return x.placeId;
                         }).ToArray();
                     this.kendoPlaceIds(currentPlaceIds.slice(0));
 
@@ -276,7 +267,8 @@ module ViewModels.Activities {
                     this._loadDocuments();
                 },
                 error: (e: kendo.ui.UploadErrorEvent): void => {
-                    if (e.XMLHttpRequest.responseText &&
+                    if (e.XMLHttpRequest.status != 500 &&
+                        e.XMLHttpRequest.responseText &&
                         e.XMLHttpRequest.responseText.length < 1000) {
                         this.fileUploadErrors.push({
                             message: e.XMLHttpRequest.responseText
@@ -308,6 +300,9 @@ module ViewModels.Activities {
 
         //#endregion
         //#region Knockout Validation setup
+
+        errors: KnockoutValidationErrors;
+        isValid: () => boolean;
 
         setupValidation(): void {
             ko.validation.rules['atLeast'] = {
@@ -350,9 +345,10 @@ module ViewModels.Activities {
             ko.validation.registerExtenders();
 
             ko.validation.group(this.values);
+            ko.validation.group(this);
 
             this.values.title.extend({ required: true, minLength: 1, maxLength: 500 });
-            this.values.locations.extend({ atLeast: 1 });
+            this.places.extend({ atLeast: 1 });
             if (this.activityTypes().length)
                 this.values.types.extend({ atLeast: 1 });
             this.values.startsOn.extend({ nullSafeDate: { message: 'Start date must valid.' } });
@@ -505,8 +501,9 @@ module ViewModels.Activities {
             this.autoSave() // play through the autosave function first
                 .done((data: any): void => {
 
-                    if (!this.values.isValid()) {
+                    if (!this.values.isValid() || !this.isValid()) {
                         this.values.errors.showAllMessages();
+                        this.errors.showAllMessages();
                         return;
                     }
 
@@ -601,6 +598,16 @@ module ViewModels.Activities {
         //#endregion
         //#region Places
 
+        // array of places for this activity
+        places: KnockoutObservableArray<any> = ko.observableArray();
+
+        // Array of all locations offered in Country/Location multiselect
+        locations: KnockoutObservableArray<any> = ko.observableArray();
+
+        // Array of placeIds of selected locations, kendo multiselect stores these as strings
+        kendoPlaceIds: KnockoutObservableArray<number> = ko.observableArray();
+        private _currentPlaceIds: number[];
+
         private _onPlaceMultiSelectDataBound(e: kendo.ui.MultiSelectEvent): void {
             this._currentPlaceIds = e.sender.value().slice(0);
         }
@@ -616,12 +623,6 @@ module ViewModels.Activities {
 
             else if (removedPlaceIds.length === 1)
                 this._removePlaceId(removedPlaceIds[0], e);
-
-            this.values.locations.removeAll();
-            for (var i = 0; i < this._currentPlaceIds.length; i++) {
-                var location = ko.mapping.fromJS({ id: 0, placeId: this._currentPlaceIds[i], version: '' });
-                this.values.locations.push(location);
-            }
         }
 
         private _addPlaceId(addedPlaceId: number, e: kendo.ui.MultiSelectEvent): void {
@@ -634,6 +635,15 @@ module ViewModels.Activities {
             })
                 .done((): void => {
                     this._currentPlaceIds.push(addedPlaceId);
+                    var dataItem = Enumerable.From(e.sender.dataItems())
+                        .Single(function (x: any): any {
+                            return x.id() == addedPlaceId;
+                        });
+                    this.places.push({
+                        activityId: this.id(),
+                        placeId: addedPlaceId,
+                        placeName: dataItem.officialName(),
+                    });
                 })
                 .fail((xhr: JQueryXHR): void => { // remove from ui
                     App.Failures.message(xhr, 'while trying to add this location, please try again', true);
@@ -655,6 +665,9 @@ module ViewModels.Activities {
                 .done((): void => {
                     var index = $.inArray(removedPlaceId, this._currentPlaceIds);
                     this._currentPlaceIds.splice(index, 1);
+                    this.places.remove(function (x: any): any {
+                        return x.placeId == removedPlaceId;
+                    });
                 })
                 .fail((xhr: JQueryXHR): void => { // add back to ui
                     App.Failures.message(xhr, 'while trying to remove this location, please try again', true);
@@ -664,6 +677,9 @@ module ViewModels.Activities {
 
         //#endregion
         //#region Types
+
+        // Array of activity types displayed as list of checkboxes
+        activityTypes: KnockoutObservableArray<any> = ko.observableArray();
 
         private _populateTypes(types: Service.ApiModels.IEmployeeActivityType[]): void {
             var typesMapping: KnockoutMappingOptions = {
@@ -743,6 +759,9 @@ module ViewModels.Activities {
 
         //#endregion
         //#region Tags
+
+        // Data bound to new tag textArea
+        newTag: KnockoutObservable<string> = ko.observable();
 
         private _getTagAutoCompleteDataSource(): kendo.data.DataSource {
             var dataSource = new kendo.data.DataSource({
@@ -911,15 +930,23 @@ module ViewModels.Activities {
         //#endregion
         //#region Documents
 
+        private static iconMaxSide: number = 64;
+
+        // array to hold file upload errors
+        fileUploadErrors: KnockoutObservableArray<any> = ko.observableArray();
+
+        // Old document name - used during document rename.
+        previousDocumentTitle: string;
+
         private _loadDocuments(): void {
             var url = $('#documents_get_url_format').text().format(this.id());
             $.ajax({
                 type: 'GET',
                 //url: App.Routes.WebApi.Activities.Documents.get(this.id(), null, this.modeText()),
                 url: url,
-                data: {
-                    mode: this.modeText(),
-                },
+                //data: {
+                //    mode: this.modeText(),
+                //},
             })
                 .done((documents: any, textStatus: string, jqXhr: JQueryXHR): void => {
 

@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
@@ -11,9 +13,13 @@ using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc.ApiControllers
 {
-    [RoutePrefix("api/activities")]
+    //[RoutePrefix("api/activities")]
     public class ActivitiesController : ApiController
     {
+        private const string PluralUrl =    "api/activities/";
+        private const string SingleUrl =    "api/activities/{activityId:int}";
+        private const string MoveUrl =      "api/activities/{workCopyActivityId:int}/{originalActivityId:int}/{mode}";
+
         private readonly IProcessQueries _queryProcessor;
         private readonly IHandleCommands<UpdateActivity> _updateActivity;
         private readonly IHandleCommands<ReplaceActivity> _replaceActivity;
@@ -31,7 +37,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             _purgeActivity = purgeActivity;
         }
 
-        [GET("")]
+        [GET(PluralUrl)]
         public PageOfActivityApiModel Get([FromUri] ActivitySearchInputModel input)
         {
             if (input.PageSize < 1) { throw new HttpResponseException(HttpStatusCode.BadRequest); }
@@ -48,20 +54,69 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return model;
         }
 
-        [GET("{activityId:int}")]
+        [GET(SingleUrl, ActionPrecedence = 1)]
         public ActivityApiModel Get(int activityId)
         {
-            var activity = _queryProcessor.Execute(new ActivityById(User, activityId));
+            var activity = _queryProcessor.Execute(new ActivityById(User, activityId)
+            {
+                EagerLoad = new Expression<Func<Activity, object>>[]
+                {
+                    x => x.Values,
+                }
+            });
             if (activity == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
             var model = Mapper.Map<ActivityApiModel>(activity);
+            var values = activity.Values.Single(x => x.Mode == x.Activity.Mode);
+            var model2 = new ActivityApiEditModel
+            {
+                ActivityId = activityId,
+                Mode = activity.Mode,
+                Title = values.Title,
+                Content = values.Content,
+                StartsOn = values.StartsOn,
+                EndsOn = values.EndsOn,
+                OnGoing = values.OnGoing,
+                DateFormat = values.DateFormat,
+                WasExternallyFunded = values.WasExternallyFunded,
+                WasInternallyFunded = values.WasInternallyFunded,
+            };
             return model;
         }
 
+        [GET("api/activities2/{activityId:int}", ActionPrecedence = 1)]
+        public ActivityApiEditModel Get2(int activityId)
+        {
+            var activity = _queryProcessor.Execute(new ActivityById(User, activityId)
+            {
+                EagerLoad = new Expression<Func<Activity, object>>[]
+                {
+                    x => x.Values,
+                }
+            });
+            if (activity == null)
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            var values = activity.Values.Single(x => x.Mode == x.Activity.Mode);
+            var model = new ActivityApiEditModel
+            {
+                ActivityId = activityId,
+                Mode = activity.Mode,
+                Title = values.Title,
+                Content = values.Content,
+                StartsOn = values.StartsOn,
+                EndsOn = values.EndsOn,
+                OnGoing = values.OnGoing,
+                DateFormat = values.DateFormat,
+                WasExternallyFunded = values.WasExternallyFunded,
+                WasInternallyFunded = values.WasInternallyFunded,
+            };
+            return model;
+        }
 
         [Authorize]
-        [PUT("{activityId:int}")]
+        [PUT(SingleUrl)]
         public HttpResponseMessage Put(int activityId, ActivityApiPutModel model)
         {
             // autosave invokes this method for everything except documents
@@ -80,7 +135,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [Authorize]
-        [PUT("{workCopyActivityId:int}/{originalActivityId:int}/{mode}")]
+        [PUT(MoveUrl)]
         public HttpResponseMessage PutMove(int workCopyActivityId, int originalActivityId, ActivityMode mode)
         {
             if (workCopyActivityId == 0 || originalActivityId == 0)
@@ -96,7 +151,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [Authorize]
-        [DELETE("{activityId}")]
+        [DELETE(SingleUrl)]
         public HttpResponseMessage Delete(int activityId)
         {
             try

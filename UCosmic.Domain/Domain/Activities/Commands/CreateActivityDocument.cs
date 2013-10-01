@@ -83,7 +83,7 @@ namespace UCosmic.Domain.Activities
 
             // file size cannot exceed 25 megabytes
             RuleFor(x => x.Content)
-                .MustNotExceedFileSize(25, FileSizeUnitName.Megabyte, x => x.FileName)
+                .MustNotExceedFileSize(2, FileSizeUnitName.Megabyte, x => x.FileName)
                 .When(x => x.Content != null, ApplyConditionTo.CurrentValidator)
             ;
         }
@@ -144,9 +144,17 @@ namespace UCosmic.Domain.Activities
 
             if (!command.NoCommit)
             {
-                _entities.SaveChanges();
-                command.CreatedActivityDocument = _detachedEntities.Query<ActivityDocument>()
-                    .Single(x => x.RevisionId == activityDocument.RevisionId);
+                try
+                {
+                    _entities.SaveChanges();
+                    command.CreatedActivityDocument = _detachedEntities.Query<ActivityDocument>()
+                        .Single( x => x.RevisionId == activityDocument.RevisionId);
+                }
+                catch
+                {
+                    _binaryData.Delete(activityDocument.Path);
+                    throw;
+                }
             }
             else
             {

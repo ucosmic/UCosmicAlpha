@@ -3,9 +3,9 @@ using System.Linq;
 
 namespace UCosmic.Domain.Activities
 {
-    public class ActivityDocumentsByActivityId : BaseEntitiesQuery<ActivityDocument>, IDefineQuery<ActivityDocument[]>
+    public class ActivityPlacesByActivityId : BaseEntitiesQuery<ActivityLocation>, IDefineQuery<ActivityLocation[]>
     {
-        public ActivityDocumentsByActivityId(int activityId)
+        public ActivityPlacesByActivityId(int activityId)
         {
             ActivityId = activityId;
         }
@@ -14,20 +14,20 @@ namespace UCosmic.Domain.Activities
         public ActivityMode? Mode { get; set; }
     }
 
-    public class HandleActivityDocumentsByActivityIdQuery : IHandleQueries<ActivityDocumentsByActivityId, ActivityDocument[]>
+    public class HandleActivityPlacesByActivityIdQuery : IHandleQueries<ActivityPlacesByActivityId, ActivityLocation[]>
     {
         private readonly IQueryEntities _entities;
 
-        public HandleActivityDocumentsByActivityIdQuery(IQueryEntities entities)
+        public HandleActivityPlacesByActivityIdQuery(IQueryEntities entities)
         {
             _entities = entities;
         }
 
-        public ActivityDocument[] Handle(ActivityDocumentsByActivityId query)
+        public ActivityLocation[] Handle(ActivityPlacesByActivityId query)
         {
             if (query == null) throw new ArgumentNullException("query");
 
-            var queryable = _entities.Query<ActivityDocument>()
+            var queryable = _entities.Query<ActivityLocation>()
                 .EagerLoad(_entities, query.EagerLoad)
                 .Where(x => x.ActivityValues.ActivityId == query.ActivityId)
             ;

@@ -17,19 +17,8 @@ var ViewModels;
             //#endregion
             //#region Construction & Initialization
             function Activity(activityId, activityWorkCopyId) {
+                //#region Class Properties
                 this.ready = ko.observable(false);
-                // Array of all locations offered in Country/Location multiselect
-                this.locations = ko.observableArray();
-                // Array of placeIds of selected locations, kendo multiselect stores these as strings
-                this.kendoPlaceIds = ko.observableArray();
-                // Array of activity types displayed as list of checkboxes
-                //activityTypes: KnockoutObservableArray<any> = ko.observableArray();
-                this.activityTypes = ko.observableArray();
-                // Data bound to new tag textArea
-                this.newTag = ko.observable();
-                //newEstablishment: any; // Because KendoUI autocomplete does not offer dataValueField.
-                // array to hold file upload errors
-                this.fileUploadErrors = ko.observableArray();
                 // Autosave after so many keydowns
                 this.AUTOSAVE_KEYCOUNT = 10;
                 this.keyCounter = 0;
@@ -40,6 +29,24 @@ var ViewModels;
                 this.saveSpinner = new App.Spinner(new App.SpinnerOptions(200));
                 this._isSaved = false;
                 this._isDeleted = false;
+                //#endregion
+                //#region Places
+                // array of places for this activity
+                this.places = ko.observableArray();
+                // Array of all locations offered in Country/Location multiselect
+                this.locations = ko.observableArray();
+                // Array of placeIds of selected locations, kendo multiselect stores these as strings
+                this.kendoPlaceIds = ko.observableArray();
+                //#endregion
+                //#region Types
+                // Array of activity types displayed as list of checkboxes
+                this.activityTypes = ko.observableArray();
+                //#endregion
+                //#region Tags
+                // Data bound to new tag textArea
+                this.newTag = ko.observable();
+                // array to hold file upload errors
+                this.fileUploadErrors = ko.observableArray();
                 this._initialize(activityId, activityWorkCopyId);
             }
             Activity.prototype._initialize = function (activityId, activityWorkCopyId) {
@@ -77,15 +84,24 @@ var ViewModels;
                 });
 
                 var dataPact = $.Deferred();
-                $.get(App.Routes.WebApi.Activities.get(this.workCopyId())).done(function (data) {
+                var dataUrl = $('#activity_get_url_format').text().format(this.workCopyId());
+                $.get(dataUrl).done(function (data) {
                     dataPact.resolve(data);
                 }).fail(function (jqXhr, textStatus, errorThrown) {
                     dataPact.reject(jqXhr, textStatus, errorThrown);
                 });
 
+                var placesPact = $.Deferred();
+                var placesUrl = $('#places_get_url_format').text().format(this.workCopyId());
+                $.get(placesUrl).done(function (data) {
+                    placesPact.resolve(data);
+                }).fail(function (jqXhr, textStatus, errorThrown) {
+                    placesPact.reject(jqXhr, textStatus, errorThrown);
+                });
+
                 //#endregion
                 //#region process after all have been loaded
-                $.when(typesPact, locationsPact, dataPact).done(function (types, locations, data) {
+                $.when(typesPact, locationsPact, dataPact, placesPact).done(function (types, locations, data, places) {
                     //#region populate activity data
                     // Although the MVC DateTime to JSON serializer will output an ISO compatible
                     // string, we are not guarenteed that a browser's Date(string) or Date.parse(string)
@@ -122,8 +138,9 @@ var ViewModels;
                     _this.locations = ko.mapping.fromJS(locations);
 
                     // Initialize the list of selected locations with current locations in values
-                    var currentPlaceIds = Enumerable.From(_this.values.locations()).Select(function (x) {
-                        return x.placeId();
+                    _this.places(places);
+                    var currentPlaceIds = Enumerable.From(places).Select(function (x) {
+                        return x.placeId;
                     }).ToArray();
                     _this.kendoPlaceIds(currentPlaceIds.slice(0));
 
@@ -224,7 +241,7 @@ var ViewModels;
                         _this._loadDocuments();
                     },
                     error: function (e) {
-                        if (e.XMLHttpRequest.responseText && e.XMLHttpRequest.responseText.length < 1000) {
+                        if (e.XMLHttpRequest.status != 500 && e.XMLHttpRequest.responseText && e.XMLHttpRequest.responseText.length < 1000) {
                             _this.fileUploadErrors.push({
                                 message: e.XMLHttpRequest.responseText
                             });
@@ -250,8 +267,6 @@ var ViewModels;
                 //#endregion
             };
 
-            //#endregion
-            //#region Knockout Validation setup
             Activity.prototype.setupValidation = function () {
                 ko.validation.rules['atLeast'] = {
                     validator: function (val, otherVal) {
@@ -291,9 +306,10 @@ var ViewModels;
                 ko.validation.registerExtenders();
 
                 ko.validation.group(this.values);
+                ko.validation.group(this);
 
                 this.values.title.extend({ required: true, minLength: 1, maxLength: 500 });
-                this.values.locations.extend({ atLeast: 1 });
+                this.places.extend({ atLeast: 1 });
                 if (this.activityTypes().length)
                     this.values.types.extend({ atLeast: 1 });
                 this.values.startsOn.extend({ nullSafeDate: { message: 'Start date must valid.' } });
@@ -446,8 +462,9 @@ var ViewModels;
             Activity.prototype._save = function (mode) {
                 var _this = this;
                 this.autoSave().done(function (data) {
-                    if (!_this.values.isValid()) {
+                    if (!_this.values.isValid() || !_this.isValid()) {
                         _this.values.errors.showAllMessages();
+                        _this.errors.showAllMessages();
                         return;
                     }
 
@@ -531,8 +548,6 @@ var ViewModels;
                 });
             };
 
-            //#endregion
-            //#region Places
             Activity.prototype._onPlaceMultiSelectDataBound = function (e) {
                 this._currentPlaceIds = e.sender.value().slice(0);
             };
@@ -547,12 +562,6 @@ var ViewModels;
                     this._addPlaceId(addedPlaceIds[0], e);
 else if (removedPlaceIds.length === 1)
                     this._removePlaceId(removedPlaceIds[0], e);
-
-                this.values.locations.removeAll();
-                for (var i = 0; i < this._currentPlaceIds.length; i++) {
-                    var location = ko.mapping.fromJS({ id: 0, placeId: this._currentPlaceIds[i], version: '' });
-                    this.values.locations.push(location);
-                }
             };
 
             Activity.prototype._addPlaceId = function (addedPlaceId, e) {
@@ -564,6 +573,14 @@ else if (removedPlaceIds.length === 1)
                     async: false
                 }).done(function () {
                     _this._currentPlaceIds.push(addedPlaceId);
+                    var dataItem = Enumerable.From(e.sender.dataItems()).Single(function (x) {
+                        return x.id() == addedPlaceId;
+                    });
+                    _this.places.push({
+                        activityId: _this.id(),
+                        placeId: addedPlaceId,
+                        placeName: dataItem.officialName()
+                    });
                 }).fail(function (xhr) {
                     App.Failures.message(xhr, 'while trying to add this location, please try again', true);
                     var restored = _this._currentPlaceIds.slice(0);
@@ -583,14 +600,15 @@ else if (removedPlaceIds.length === 1)
                 }).done(function () {
                     var index = $.inArray(removedPlaceId, _this._currentPlaceIds);
                     _this._currentPlaceIds.splice(index, 1);
+                    _this.places.remove(function (x) {
+                        return x.placeId == removedPlaceId;
+                    });
                 }).fail(function (xhr) {
                     App.Failures.message(xhr, 'while trying to remove this location, please try again', true);
                     e.sender.value(_this._currentPlaceIds);
                 });
             };
 
-            //#endregion
-            //#region Types
             Activity.prototype._populateTypes = function (types) {
                 var _this = this;
                 var typesMapping = {
@@ -663,8 +681,6 @@ else
                 }
             };
 
-            //#endregion
-            //#region Tags
             Activity.prototype._getTagAutoCompleteDataSource = function () {
                 var dataSource = new kendo.data.DataSource({
                     serverFiltering: true,
@@ -828,18 +844,13 @@ else
                 return deferred;
             };
 
-            //#endregion
-            //#region Documents
             Activity.prototype._loadDocuments = function () {
                 var _this = this;
                 var url = $('#documents_get_url_format').text().format(this.id());
                 $.ajax({
                     type: 'GET',
                     //url: App.Routes.WebApi.Activities.Documents.get(this.id(), null, this.modeText()),
-                    url: url,
-                    data: {
-                        mode: this.modeText()
-                    }
+                    url: url
                 }).done(function (documents, textStatus, jqXhr) {
                     // TODO - This needs to be combined with the initial load mapping.
                     var augmentedDocumentModel = function (data) {

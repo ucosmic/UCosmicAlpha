@@ -4,6 +4,13 @@ using UCosmic.Domain.Activities;
 
 namespace UCosmic.Web.Mvc.Models
 {
+    public class ActivityPlaceApiModel
+    {
+        public int ActivityId { get; set; }
+        public int PlaceId { get; set; }
+        public string PlaceName { get; set; }
+    }
+
     public class ActivityLocationApiModel
     {
         public int Id { get; set; }

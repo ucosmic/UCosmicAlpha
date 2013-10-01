@@ -283,7 +283,7 @@
                                     <td class="label"><span class="container required"><span class="text">Countries / Locations</span></span></td>
                                     <td>
                                         <select id="countrySelector" style="overflow-y: auto" data-bind="selectedOptions: kendoPlaceIds"></select>
-                                        <span data-bind="validationMessage: values.locations" class="validationMessage"></span>
+                                        <span data-bind="validationMessage: places" class="validationMessage"></span>
                                     </td>
                                 </tr>
                                 @* TYPE *@
@@ -465,36 +465,10 @@
                         @* API URL's *@
                         <div style="display: none">
                             @{
-                                var placePutUrlFormat = Url.HttpRouteUrl(null, new { controller = "ActivityPlaces", action = "Put", activityId = 0, placeId = 1 });
-                                if (placePutUrlFormat != null)
+                                var activityGetUrlFormat = Url.HttpRouteUrl(null, new { controller = "Activities", action = "Get", activityId = 0 });
+                                if (activityGetUrlFormat != null)
                                 {
-                                    placePutUrlFormat = placePutUrlFormat.Replace("0", "{0}").Replace("1", "{1}");
-                                }
-                                var placeDeleteUrlFormat = Url.HttpRouteUrl(null, new { controller = "ActivityPlaces", action = "Delete", activityId = 0, placeId = 1 });
-                                if (placeDeleteUrlFormat != null)
-                                {
-                                    placeDeleteUrlFormat = placeDeleteUrlFormat.Replace("0", "{0}").Replace("1", "{1}");
-                                }
-                                var typePutUrlFormat = Url.HttpRouteUrl(null, new { controller = "ActivityTypes", action = "Put", activityId = 0, activityTypeId = 1 });
-                                if (typePutUrlFormat != null)
-                                {
-                                    typePutUrlFormat = typePutUrlFormat.Replace("0", "{0}").Replace("1", "{1}");
-                                }
-                                var typeDeleteUrlFormat = Url.HttpRouteUrl(null, new { controller = "ActivityTypes", action = "Delete", activityId = 0, activityTypeId = 1 });
-                                if (typeDeleteUrlFormat != null)
-                                {
-                                    typeDeleteUrlFormat = typeDeleteUrlFormat.Replace("0", "{0}").Replace("1", "{1}");
-                                }
-                                var establishmentNameGetUrlFormat = Url.HttpRouteUrl(null, new { controller = "EstablishmentNames", action = "GetByKeyword" });
-                                var tagPostUrlFormat = Url.HttpRouteUrl(null, new { controller = "ActivityTags", action = "Post", activityId = 0 });
-                                if (tagPostUrlFormat != null)
-                                {
-                                    tagPostUrlFormat = tagPostUrlFormat.Replace("0", "{0}");
-                                }
-                                var tagDeleteUrlFormat = Url.HttpRouteUrl(null, new { controller = "ActivityTags", action = "Delete", activityId = 0 });
-                                if (tagDeleteUrlFormat != null)
-                                {
-                                    tagDeleteUrlFormat = tagDeleteUrlFormat.Replace("0", "{0}");
+                                    activityGetUrlFormat = activityGetUrlFormat.Replace("0", "{0}");
                                 }
                                 var activityPutUrlFormat = Url.HttpRouteUrl(null, new { controller = "Activities", action = "Put", activityId = 0 });
                                 if (activityPutUrlFormat != null)
@@ -511,6 +485,42 @@
                                 {
                                     activityDeleteUrlFormat = activityDeleteUrlFormat.Replace("0", "{0}");
                                 }
+                                var typePutUrlFormat = Url.HttpRouteUrl(null, new { controller = "ActivityTypes", action = "Put", activityId = 0, activityTypeId = 1 });
+                                if (typePutUrlFormat != null)
+                                {
+                                    typePutUrlFormat = typePutUrlFormat.Replace("0", "{0}").Replace("1", "{1}");
+                                }
+                                var typeDeleteUrlFormat = Url.HttpRouteUrl(null, new { controller = "ActivityTypes", action = "Delete", activityId = 0, activityTypeId = 1 });
+                                if (typeDeleteUrlFormat != null)
+                                {
+                                    typeDeleteUrlFormat = typeDeleteUrlFormat.Replace("0", "{0}").Replace("1", "{1}");
+                                }
+                                var placesGetUrlFormat = Url.HttpRouteUrl(null, new { controller = "ActivityPlaces", action = "Get", activityId = 0 });
+                                if (placesGetUrlFormat != null)
+                                {
+                                    placesGetUrlFormat = placesGetUrlFormat.Replace("0", "{0}");
+                                }
+                                var placePutUrlFormat = Url.HttpRouteUrl(null, new { controller = "ActivityPlaces", action = "Put", activityId = 0, placeId = 1 });
+                                if (placePutUrlFormat != null)
+                                {
+                                    placePutUrlFormat = placePutUrlFormat.Replace("0", "{0}").Replace("1", "{1}");
+                                }
+                                var placeDeleteUrlFormat = Url.HttpRouteUrl(null, new { controller = "ActivityPlaces", action = "Delete", activityId = 0, placeId = 1 });
+                                if (placeDeleteUrlFormat != null)
+                                {
+                                    placeDeleteUrlFormat = placeDeleteUrlFormat.Replace("0", "{0}").Replace("1", "{1}");
+                                }
+                                var establishmentNameGetUrlFormat = Url.HttpRouteUrl(null, new { controller = "EstablishmentNames", action = "GetByKeyword" });
+                                var tagPostUrlFormat = Url.HttpRouteUrl(null, new { controller = "ActivityTags", action = "Post", activityId = 0 });
+                                if (tagPostUrlFormat != null)
+                                {
+                                    tagPostUrlFormat = tagPostUrlFormat.Replace("0", "{0}");
+                                }
+                                var tagDeleteUrlFormat = Url.HttpRouteUrl(null, new { controller = "ActivityTags", action = "Delete", activityId = 0 });
+                                if (tagDeleteUrlFormat != null)
+                                {
+                                    tagDeleteUrlFormat = tagDeleteUrlFormat.Replace("0", "{0}");
+                                }
                                 var documentPutUrlFormat = Url.HttpRouteUrl(null, new { controller = "ActivityDocuments", action = "Put", activityId = 0, documentId = 1 });
                                 if (documentPutUrlFormat != null)
                                 {
@@ -522,16 +532,18 @@
                                     documentsGetUrlFormat = documentsGetUrlFormat.Replace("0", "{0}");
                                 }
                             }
-                            <span id="place_put_url_format">@placePutUrlFormat</span>
-                            <span id="place_delete_url_format">@placeDeleteUrlFormat</span>
-                            <span id="type_put_url_format">@typePutUrlFormat</span>
-                            <span id="type_delete_url_format">@typeDeleteUrlFormat</span>
-                            <span id="establishment_names_get_url_format">@establishmentNameGetUrlFormat</span>
-                            <span id="tag_post_url_format">@tagPostUrlFormat</span>
-                            <span id="tag_delete_url_format">@tagDeleteUrlFormat</span>
+                            <span id="activity_get_url_format">@activityGetUrlFormat</span>
                             <span id="activity_put_url_format">@activityPutUrlFormat</span>
                             <span id="activity_replace_url_format">@activityReplaceUrlFormat</span>
                             <span id="activity_delete_url_format">@activityDeleteUrlFormat</span>
+                            <span id="type_put_url_format">@typePutUrlFormat</span>
+                            <span id="type_delete_url_format">@typeDeleteUrlFormat</span>
+                            <span id="places_get_url_format">@placesGetUrlFormat</span>
+                            <span id="place_put_url_format">@placePutUrlFormat</span>
+                            <span id="place_delete_url_format">@placeDeleteUrlFormat</span>
+                            <span id="establishment_names_get_url_format">@establishmentNameGetUrlFormat</span>
+                            <span id="tag_post_url_format">@tagPostUrlFormat</span>
+                            <span id="tag_delete_url_format">@tagDeleteUrlFormat</span>
                             <span id="document_put_url_format">@documentPutUrlFormat</span>
                             <span id="documents_get_url_format">@documentsGetUrlFormat</span>
                         </div>

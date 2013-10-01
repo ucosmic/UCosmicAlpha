@@ -209,7 +209,8 @@ namespace UCosmic.Domain.External
                     {
                         Debug.WriteLine(DateTime.Now + " Emails don't match: record=" + record.UsfEmailAddress +
                                         ", user=" + user.Name);
-                        throw new Exception("Error getting faculty record (emails don't match).");
+                        throw new Exception(string.Format(
+                            "Error getting faculty record (emails don't match). USF Record: '{0}'; UCosmic Record: '{1}'", recordEmail, userEmail));
                     }
                 }
 
