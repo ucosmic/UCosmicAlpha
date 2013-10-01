@@ -1,5 +1,5 @@
-var ViewModels;
-(function (ViewModels) {
+var Activities;
+(function (Activities) {
     /// <reference path="../../typings/jquery/jquery.d.ts" />
     /// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
     /// <reference path="../../typings/knockout/knockout.d.ts" />
@@ -12,7 +12,7 @@ var ViewModels;
     /// <reference path="../../app/Routes.ts" />
     /// <reference path="../../app/Spinner.ts" />
     /// <reference path="../activities/ServiceApiModel.d.ts" />
-    (function (Activities) {
+    (function (ViewModels) {
         var Activity = (function () {
             //#endregion
             //#region Construction & Initialization
@@ -1001,17 +1001,17 @@ else
             Activity.iconMaxSide = 64;
             return Activity;
         })();
-        Activities.Activity = Activity;
+        ViewModels.Activity = Activity;
 
         var ActivityTypeCheckBox = (function () {
             function ActivityTypeCheckBox(mappingOptions) {
                 this.checked = ko.observable(false);
-                this.text = mappingOptions.data.type;
                 this.id = mappingOptions.data.id;
+                this.text = mappingOptions.data.type;
             }
             return ActivityTypeCheckBox;
         })();
-        Activities.ActivityTypeCheckBox = ActivityTypeCheckBox;
-    })(ViewModels.Activities || (ViewModels.Activities = {}));
-    var Activities = ViewModels.Activities;
-})(ViewModels || (ViewModels = {}));
+        ViewModels.ActivityTypeCheckBox = ActivityTypeCheckBox;
+    })(Activities.ViewModels || (Activities.ViewModels = {}));
+    var ViewModels = Activities.ViewModels;
+})(Activities || (Activities = {}));

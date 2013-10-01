@@ -213,7 +213,7 @@
         (function($, window) {
             var activityId = parseInt('@ViewBag.ActivityId');
             var activityWorkCopyId = parseInt('@ViewBag.ActivityWorkCopyId');
-            var activityViewModel = new ViewModels.Activities.Activity(activityId, activityWorkCopyId);
+            var activityViewModel = new Activities.ViewModels.Activity(activityId, activityWorkCopyId);
             activityViewModel.load()
                 .done(function() {
                     activityViewModel.setupWidgets("fromDatePicker", "toDatePicker", "countrySelector", "uploadFile", "newTag");

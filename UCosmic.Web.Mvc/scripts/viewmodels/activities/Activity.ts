@@ -11,7 +11,7 @@
 /// <reference path="../../app/Spinner.ts" />
 /// <reference path="../activities/ServiceApiModel.d.ts" />
 
-module ViewModels.Activities {
+module Activities.ViewModels {
     export class Activity implements Service.ApiModels.IObservableActivity, KnockoutValidationGroup {
 
         //#region Class Properties
@@ -113,7 +113,7 @@ module ViewModels.Activities {
             var typesPact = $.Deferred();
             var typesUrl = $('#types_get_url_format').text().format(this.workCopyId());
             $.get(typesUrl)
-                .done((data: any[]): void => {
+                .done((data: ApiModels.ActivityType[]): void => {
                     typesPact.resolve(data);
                 })
                 .fail((jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
@@ -128,7 +128,7 @@ module ViewModels.Activities {
                 .done((typeOptions: any[],
                     placeOptions: any[],
                     data: Service.ApiModels.IObservableActivity,
-                    selectedPlaces: any[], selectedTypes: any[]): void => {
+                    selectedPlaces: any[], selectedTypes: ApiModels.ActivityType[]): void => {
 
                     //#region populate activity data
 
@@ -693,14 +693,14 @@ module ViewModels.Activities {
         typeOptions: KnockoutObservableArray<ActivityTypeCheckBox> = ko.observableArray();
 
         // array of selected type data
-        selectedTypes: KnockoutObservableArray<any> = ko.observableArray();
+        selectedTypes: KnockoutObservableArray<ApiModels.ActivityType> = ko.observableArray();
 
         private _populateTypes(typeOptions: any[]): void {
             var typesMapping: KnockoutMappingOptions = {
                 create: (options: KnockoutMappingCreateOptions): any => {
                     var checkBox = new ActivityTypeCheckBox(options);
                     var isChecked = Enumerable.From(this.selectedTypes())
-                        .Any(function (x: any): boolean {
+                        .Any(function (x: ApiModels.ActivityType): boolean {
                             return x.typeId == checkBox.id;
                         });
                     checkBox.checked(isChecked);
@@ -716,7 +716,7 @@ module ViewModels.Activities {
 
         private _addType(checkBox: ActivityTypeCheckBox): void {
             var needsAdded = Enumerable.From(this.selectedTypes())
-                .All(function (x): boolean {
+                .All(function (x: ApiModels.ActivityType): boolean {
                     return x.typeId != checkBox.id;
                 });
             if (needsAdded) {
@@ -750,7 +750,7 @@ module ViewModels.Activities {
 
         private _removeType(checkBox: ActivityTypeCheckBox): void {
             var needsRemoved = Enumerable.From(this.selectedTypes())
-                .Any(function (x): boolean {
+                .Any(function (x: ApiModels.ActivityType): boolean {
                     return x.typeId == checkBox.id;
                 });
             if (needsRemoved) {
@@ -762,7 +762,7 @@ module ViewModels.Activities {
                     type: 'DELETE',
                 })
                     .done((): void => {
-                        this.selectedTypes.remove(function (x: any): boolean {
+                        this.selectedTypes.remove(function (x: ApiModels.ActivityType): boolean {
                             return x.typeId == checkBox.id;
                         });
                         setTimeout(function () {
@@ -1109,8 +1109,8 @@ module ViewModels.Activities {
         id: number;
 
         constructor(mappingOptions: KnockoutMappingCreateOptions) {
-            this.text = mappingOptions.data.type;
             this.id = mappingOptions.data.id;
+            this.text = mappingOptions.data.type;
         }
     }
 }

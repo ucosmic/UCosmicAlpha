@@ -1,5 +1,13 @@
 ﻿/// <reference path="../../typings/knockout/knockout.d.ts" />
 
+declare module Activities.ApiModels {
+    export interface ActivityType {
+        activityId: number;
+        typeId: number;
+        text: string;
+    }
+}
+
 declare module Service.ApiModels {
 
     export interface IEmployeeActivityType {
