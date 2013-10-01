@@ -39,9 +39,9 @@ var Activities;
                 this.kendoPlaceIds = ko.observableArray();
                 //#endregion
                 //#region Types
-                // Array of activity types displayed as list of checkboxes
+                // array of activity type options displayed as list of checkboxes
                 this.typeOptions = ko.observableArray();
-                // array of selected type data
+                // array of selected activity type data
                 this.selectedTypes = ko.observableArray();
                 //#endregion
                 //#region Tags
@@ -155,9 +155,8 @@ var Activities;
                     _this.kendoPlaceIds(currentPlaceIds.slice(0));
 
                     //#endregion
-                    //#region populate type checkboxes
-                    _this.selectedTypes(selectedTypes);
-                    _this._populateTypes(typeOptions);
+                    //#region set up type checkboxes
+                    _this._bindTypes(typeOptions, selectedTypes);
 
                     //#endregion
                     deferred.resolve();
@@ -619,85 +618,16 @@ else if (removedPlaceIds.length === 1)
                 });
             };
 
-            Activity.prototype._populateTypes = function (typeOptions) {
+            Activity.prototype._bindTypes = function (typeOptions, selectedTypes) {
                 var _this = this;
+                this.selectedTypes(selectedTypes);
                 var typesMapping = {
                     create: function (options) {
-                        var checkBox = new ActivityTypeCheckBox(options);
-                        var isChecked = Enumerable.From(_this.selectedTypes()).Any(function (x) {
-                            return x.typeId == checkBox.id;
-                        });
-                        checkBox.checked(isChecked);
-                        checkBox.checked.subscribe(function (newValue) {
-                            if (newValue)
-                                _this._addType(checkBox);
-else
-                                _this._removeType(checkBox);
-                        });
+                        var checkBox = new ActivityTypeCheckBox(options, _this);
                         return checkBox;
                     }
                 };
                 ko.mapping.fromJS(typeOptions, typesMapping, this.typeOptions);
-            };
-
-            Activity.prototype._addType = function (checkBox) {
-                var _this = this;
-                var needsAdded = Enumerable.From(this.selectedTypes()).All(function (x) {
-                    return x.typeId != checkBox.id;
-                });
-                if (needsAdded) {
-                    this.saveSpinner.start();
-                    var url = $('#type_put_url_format').text().format(this.id(), checkBox.id);
-                    $.ajax({
-                        url: url,
-                        type: 'PUT'
-                    }).done(function () {
-                        _this.selectedTypes.push({
-                            activityId: _this.id(),
-                            typeId: checkBox.id,
-                            text: checkBox.text
-                        });
-                        setTimeout(function () {
-                            checkBox.checked(true);
-                        }, 0);
-                    }).fail(function (xhr) {
-                        App.Failures.message(xhr, 'while trying to add this activity type, please try again', true);
-                        setTimeout(function () {
-                            checkBox.checked(false);
-                        }, 0);
-                    }).always(function () {
-                        _this.saveSpinner.stop();
-                    });
-                }
-            };
-
-            Activity.prototype._removeType = function (checkBox) {
-                var _this = this;
-                var needsRemoved = Enumerable.From(this.selectedTypes()).Any(function (x) {
-                    return x.typeId == checkBox.id;
-                });
-                if (needsRemoved) {
-                    this.saveSpinner.start();
-                    var url = $('#type_delete_url_format').text().format(this.id(), checkBox.id);
-                    $.ajax({
-                        url: url,
-                        type: 'DELETE'
-                    }).done(function () {
-                        _this.selectedTypes.remove(function (x) {
-                            return x.typeId == checkBox.id;
-                        });
-                        setTimeout(function () {
-                            checkBox.checked(false);
-                        }, 0);
-                    }).fail(function (xhr) {
-                        App.Failures.message(xhr, 'while trying to remove this activity type, please try again', true);
-                        setTimeout(function () {
-                            checkBox.checked(true);
-                        }, 0);
-                    }).always(function () {
-                        _this.saveSpinner.stop();
-                    });
-                }
             };
 
             Activity.prototype._getTagAutoCompleteDataSource = function () {
@@ -1004,11 +934,85 @@ else
         ViewModels.Activity = Activity;
 
         var ActivityTypeCheckBox = (function () {
-            function ActivityTypeCheckBox(mappingOptions) {
-                this.checked = ko.observable(false);
+            function ActivityTypeCheckBox(mappingOptions, owner) {
+                var _this = this;
                 this.id = mappingOptions.data.id;
                 this.text = mappingOptions.data.type;
+                this._owner = owner;
+
+                var isChecked = Enumerable.From(this._owner.selectedTypes()).Any(function (x) {
+                    return x.typeId == _this.id;
+                });
+                this.checked = ko.observable(isChecked);
+
+                this.checked.subscribe(function (newValue) {
+                    if (newValue)
+                        _this._onChecked();
+else
+                        _this._onUnchecked();
+                });
             }
+            ActivityTypeCheckBox.prototype._onChecked = function () {
+                var _this = this;
+                var needsAdded = Enumerable.From(this._owner.selectedTypes()).All(function (x) {
+                    return x.typeId != _this.id;
+                });
+                if (!needsAdded)
+                    return;
+
+                this._owner.saveSpinner.start();
+                var url = $('#type_put_url_format').text().format(this._owner.id(), this.id);
+                $.ajax({
+                    url: url,
+                    type: 'PUT'
+                }).done(function () {
+                    _this._owner.selectedTypes.push({
+                        activityId: _this._owner.id(),
+                        typeId: _this.id,
+                        text: _this.text
+                    });
+                    setTimeout(function () {
+                        _this.checked(true);
+                    }, 0);
+                }).fail(function (xhr) {
+                    App.Failures.message(xhr, 'while trying to add this activity type, please try again', true);
+                    setTimeout(function () {
+                        _this.checked(false);
+                    }, 0);
+                }).always(function () {
+                    _this._owner.saveSpinner.stop();
+                });
+            };
+
+            ActivityTypeCheckBox.prototype._onUnchecked = function () {
+                var _this = this;
+                var needsRemoved = Enumerable.From(this._owner.selectedTypes()).Any(function (x) {
+                    return x.typeId == _this.id;
+                });
+                if (!needsRemoved)
+                    return;
+
+                this._owner.saveSpinner.start();
+                var url = $('#type_delete_url_format').text().format(this._owner.id(), this.id);
+                $.ajax({
+                    url: url,
+                    type: 'DELETE'
+                }).done(function () {
+                    _this._owner.selectedTypes.remove(function (x) {
+                        return x.typeId == _this.id;
+                    });
+                    setTimeout(function () {
+                        _this.checked(false);
+                    }, 0);
+                }).fail(function (xhr) {
+                    App.Failures.message(xhr, 'while trying to remove this activity type, please try again', true);
+                    setTimeout(function () {
+                        _this.checked(true);
+                    }, 0);
+                }).always(function () {
+                    _this._owner.saveSpinner.stop();
+                });
+            };
             return ActivityTypeCheckBox;
         })();
         ViewModels.ActivityTypeCheckBox = ActivityTypeCheckBox;

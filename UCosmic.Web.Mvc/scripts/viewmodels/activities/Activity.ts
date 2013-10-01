@@ -176,10 +176,9 @@ module Activities.ViewModels {
                     this.kendoPlaceIds(currentPlaceIds.slice(0));
 
                     //#endregion
-                    //#region populate type checkboxes
+                    //#region set up type checkboxes
 
-                    this.selectedTypes(selectedTypes);
-                    this._populateTypes(typeOptions);
+                    this._bindTypes(typeOptions, selectedTypes);
 
                     //#endregion
 
@@ -689,96 +688,21 @@ module Activities.ViewModels {
         //#endregion
         //#region Types
 
-        // Array of activity types displayed as list of checkboxes
+        // array of activity type options displayed as list of checkboxes
         typeOptions: KnockoutObservableArray<ActivityTypeCheckBox> = ko.observableArray();
 
-        // array of selected type data
+        // array of selected activity type data
         selectedTypes: KnockoutObservableArray<ApiModels.ActivityType> = ko.observableArray();
 
-        private _populateTypes(typeOptions: any[]): void {
+        private _bindTypes(typeOptions: any[], selectedTypes: ApiModels.ActivityType[]): void {
+            this.selectedTypes(selectedTypes);
             var typesMapping: KnockoutMappingOptions = {
                 create: (options: KnockoutMappingCreateOptions): any => {
-                    var checkBox = new ActivityTypeCheckBox(options);
-                    var isChecked = Enumerable.From(this.selectedTypes())
-                        .Any(function (x: ApiModels.ActivityType): boolean {
-                            return x.typeId == checkBox.id;
-                        });
-                    checkBox.checked(isChecked);
-                    checkBox.checked.subscribe((newValue: boolean): void => {
-                        if (newValue) this._addType(checkBox);
-                        else this._removeType(checkBox);
-                    });
+                    var checkBox = new ActivityTypeCheckBox(options, this);
                     return checkBox;
                 }
             };
             ko.mapping.fromJS(typeOptions, typesMapping, this.typeOptions);
-        }
-
-        private _addType(checkBox: ActivityTypeCheckBox): void {
-            var needsAdded = Enumerable.From(this.selectedTypes())
-                .All(function (x: ApiModels.ActivityType): boolean {
-                    return x.typeId != checkBox.id;
-                });
-            if (needsAdded) {
-                this.saveSpinner.start();
-                var url = $('#type_put_url_format').text().format(this.id(), checkBox.id);
-                $.ajax({
-                    url: url,
-                    type: 'PUT',
-                })
-                    .done((): void => {
-                        this.selectedTypes.push({
-                            activityId: this.id(),
-                            typeId: checkBox.id,
-                            text: checkBox.text,
-                        });
-                        setTimeout(function () {
-                            checkBox.checked(true);
-                        }, 0);
-                    })
-                    .fail((xhr: JQueryXHR): void => {
-                        App.Failures.message(xhr, 'while trying to add this activity type, please try again', true);
-                        setTimeout(function () {
-                            checkBox.checked(false);
-                        }, 0);
-                    })
-                    .always((): void => {
-                        this.saveSpinner.stop();
-                    });
-            }
-        }
-
-        private _removeType(checkBox: ActivityTypeCheckBox): void {
-            var needsRemoved = Enumerable.From(this.selectedTypes())
-                .Any(function (x: ApiModels.ActivityType): boolean {
-                    return x.typeId == checkBox.id;
-                });
-            if (needsRemoved) {
-                this.saveSpinner.start();
-                var url = $('#type_delete_url_format').text()
-                    .format(this.id(), checkBox.id);
-                $.ajax({
-                    url: url,
-                    type: 'DELETE',
-                })
-                    .done((): void => {
-                        this.selectedTypes.remove(function (x: ApiModels.ActivityType): boolean {
-                            return x.typeId == checkBox.id;
-                        });
-                        setTimeout(function () {
-                            checkBox.checked(false);
-                        }, 0);
-                    })
-                    .fail((xhr: JQueryXHR): void => {
-                        App.Failures.message(xhr, 'while trying to remove this activity type, please try again', true);
-                        setTimeout(function () {
-                            checkBox.checked(true);
-                        }, 0);
-                    })
-                    .always((): void => {
-                        this.saveSpinner.stop();
-                    });
-            }
         }
 
         //#endregion
@@ -1104,13 +1028,94 @@ module Activities.ViewModels {
 
     export class ActivityTypeCheckBox {
 
-        checked: KnockoutObservable<boolean> = ko.observable(false);
-        text: string;
         id: number;
+        text: string;
+        checked: KnockoutObservable<boolean>
+        private _owner: Activity;
 
-        constructor(mappingOptions: KnockoutMappingCreateOptions) {
+        constructor(mappingOptions: KnockoutMappingCreateOptions, owner: Activity) {
+
             this.id = mappingOptions.data.id;
             this.text = mappingOptions.data.type;
+            this._owner = owner;
+
+            var isChecked = Enumerable.From(this._owner.selectedTypes())
+                .Any((x: ApiModels.ActivityType): boolean => {
+                    return x.typeId == this.id;
+                });
+            this.checked = ko.observable(isChecked);
+
+            this.checked.subscribe((newValue: boolean): void => {
+                if (newValue) this._onChecked();
+                else this._onUnchecked();
+            });
+        }
+
+        private _onChecked(): void {
+            var needsAdded = Enumerable.From(this._owner.selectedTypes())
+                .All((x: ApiModels.ActivityType): boolean => {
+                    return x.typeId != this.id;
+                });
+            if (!needsAdded) return;
+
+            this._owner.saveSpinner.start();
+            var url = $('#type_put_url_format').text().format(this._owner.id(), this.id);
+            $.ajax({
+                url: url,
+                type: 'PUT',
+            })
+                .done((): void => {
+                    this._owner.selectedTypes.push({
+                        activityId: this._owner.id(),
+                        typeId: this.id,
+                        text: this.text,
+                    });
+                    setTimeout((): void => {
+                        this.checked(true);
+                    }, 0);
+                })
+                .fail((xhr: JQueryXHR): void => {
+                    App.Failures.message(xhr, 'while trying to add this activity type, please try again', true);
+                    setTimeout((): void => {
+                        this.checked(false);
+                    }, 0);
+                })
+                .always((): void => {
+                    this._owner.saveSpinner.stop();
+                });
+        }
+
+        private _onUnchecked(): void {
+            var needsRemoved = Enumerable.From(this._owner.selectedTypes())
+                .Any((x: ApiModels.ActivityType): boolean => {
+                    return x.typeId == this.id;
+                });
+            if (!needsRemoved) return;
+
+            this._owner.saveSpinner.start();
+            var url = $('#type_delete_url_format').text()
+                .format(this._owner.id(), this.id);
+            $.ajax({
+                url: url,
+                type: 'DELETE',
+            })
+                .done((): void => {
+                    this._owner.selectedTypes.remove((x: ApiModels.ActivityType): boolean => {
+                        return x.typeId == this.id;
+                    });
+                    setTimeout((): void => {
+                        this.checked(false);
+                    }, 0);
+                })
+                .fail((xhr: JQueryXHR): void => {
+                    App.Failures.message(xhr, 'while trying to remove this activity type, please try again', true);
+                    setTimeout((): void => {
+                        this.checked(true);
+                    }, 0);
+                })
+                .always((): void => {
+                    this._owner.saveSpinner.stop();
+                });
         }
     }
 }
