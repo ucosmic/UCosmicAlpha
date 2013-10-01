@@ -42,7 +42,7 @@ var Activities;
                 // array of activity type options displayed as list of checkboxes
                 this.typeOptions = ko.observableArray();
                 // array of selected activity type data
-                this.selectedTypes = ko.observableArray();
+                this.selectedTypeIds = ko.observableArray();
                 //#endregion
                 //#region Tags
                 // Data bound to new tag textArea
@@ -321,7 +321,7 @@ var Activities;
                 this.values.title.extend({ required: true, minLength: 1, maxLength: 500 });
                 this.selectedPlaces.extend({ atLeast: 1 });
                 if (this.typeOptions().length)
-                    this.selectedTypes.extend({ atLeast: 1 });
+                    this.selectedTypeIds.extend({ atLeast: 1 });
                 this.values.startsOn.extend({ nullSafeDate: { message: 'Start date must valid.' } });
                 this.values.endsOn.extend({ nullSafeDate: { message: 'End date must valid.' } });
             };
@@ -620,7 +620,10 @@ else if (removedPlaceIds.length === 1)
 
             Activity.prototype._bindTypes = function (typeOptions, selectedTypes) {
                 var _this = this;
-                this.selectedTypes(selectedTypes);
+                var selectedTypeIds = Enumerable.From(selectedTypes).Select(function (x) {
+                    return x.typeId;
+                }).ToArray();
+                this.selectedTypeIds(selectedTypeIds);
                 var typesMapping = {
                     create: function (options) {
                         var checkBox = new ActivityTypeCheckBox(options, _this);
@@ -940,8 +943,8 @@ else if (removedPlaceIds.length === 1)
                 this.text = mappingOptions.data.type;
                 this._owner = owner;
 
-                var isChecked = Enumerable.From(this._owner.selectedTypes()).Any(function (x) {
-                    return x.typeId == _this.id;
+                var isChecked = Enumerable.From(this._owner.selectedTypeIds()).Any(function (x) {
+                    return x == _this.id;
                 });
                 this.checked = ko.observable(isChecked);
 
@@ -954,8 +957,8 @@ else
             }
             ActivityTypeCheckBox.prototype._onChecked = function () {
                 var _this = this;
-                var needsAdded = Enumerable.From(this._owner.selectedTypes()).All(function (x) {
-                    return x.typeId != _this.id;
+                var needsAdded = Enumerable.From(this._owner.selectedTypeIds()).All(function (x) {
+                    return x != _this.id;
                 });
                 if (!needsAdded)
                     return;
@@ -966,11 +969,7 @@ else
                     url: url,
                     type: 'PUT'
                 }).done(function () {
-                    _this._owner.selectedTypes.push({
-                        activityId: _this._owner.id(),
-                        typeId: _this.id,
-                        text: _this.text
-                    });
+                    _this._owner.selectedTypeIds.push(_this.id);
                     setTimeout(function () {
                         _this.checked(true);
                     }, 0);
@@ -986,8 +985,8 @@ else
 
             ActivityTypeCheckBox.prototype._onUnchecked = function () {
                 var _this = this;
-                var needsRemoved = Enumerable.From(this._owner.selectedTypes()).Any(function (x) {
-                    return x.typeId == _this.id;
+                var needsRemoved = Enumerable.From(this._owner.selectedTypeIds()).Any(function (x) {
+                    return x == _this.id;
                 });
                 if (!needsRemoved)
                     return;
@@ -998,9 +997,7 @@ else
                     url: url,
                     type: 'DELETE'
                 }).done(function () {
-                    _this._owner.selectedTypes.remove(function (x) {
-                        return x.typeId == _this.id;
-                    });
+                    _this._owner.selectedTypeIds.remove(_this.id);
                     setTimeout(function () {
                         _this.checked(false);
                     }, 0);

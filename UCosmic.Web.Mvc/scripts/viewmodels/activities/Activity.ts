@@ -361,7 +361,7 @@ module Activities.ViewModels {
             this.values.title.extend({ required: true, minLength: 1, maxLength: 500 });
             this.selectedPlaces.extend({ atLeast: 1 });
             if (this.typeOptions().length)
-                this.selectedTypes.extend({ atLeast: 1 });
+                this.selectedTypeIds.extend({ atLeast: 1 });
             this.values.startsOn.extend({ nullSafeDate: { message: 'Start date must valid.' } });
             this.values.endsOn.extend({ nullSafeDate: { message: 'End date must valid.' } });
         }
@@ -692,10 +692,14 @@ module Activities.ViewModels {
         typeOptions: KnockoutObservableArray<ActivityTypeCheckBox> = ko.observableArray();
 
         // array of selected activity type data
-        selectedTypes: KnockoutObservableArray<ApiModels.ActivityType> = ko.observableArray();
+        selectedTypeIds: KnockoutObservableArray<number> = ko.observableArray();
 
         private _bindTypes(typeOptions: any[], selectedTypes: ApiModels.ActivityType[]): void {
-            this.selectedTypes(selectedTypes);
+            var selectedTypeIds = Enumerable.From(selectedTypes)
+                .Select(function (x: ApiModels.ActivityType): number {
+                    return x.typeId;
+                }).ToArray();
+            this.selectedTypeIds(selectedTypeIds);
             var typesMapping: KnockoutMappingOptions = {
                 create: (options: KnockoutMappingCreateOptions): any => {
                     var checkBox = new ActivityTypeCheckBox(options, this);
@@ -1039,9 +1043,9 @@ module Activities.ViewModels {
             this.text = mappingOptions.data.type;
             this._owner = owner;
 
-            var isChecked = Enumerable.From(this._owner.selectedTypes())
-                .Any((x: ApiModels.ActivityType): boolean => {
-                    return x.typeId == this.id;
+            var isChecked = Enumerable.From(this._owner.selectedTypeIds())
+                .Any((x: number): boolean => {
+                    return x == this.id;
                 });
             this.checked = ko.observable(isChecked);
 
@@ -1052,9 +1056,9 @@ module Activities.ViewModels {
         }
 
         private _onChecked(): void {
-            var needsAdded = Enumerable.From(this._owner.selectedTypes())
-                .All((x: ApiModels.ActivityType): boolean => {
-                    return x.typeId != this.id;
+            var needsAdded = Enumerable.From(this._owner.selectedTypeIds())
+                .All((x: number): boolean => {
+                    return x != this.id;
                 });
             if (!needsAdded) return;
 
@@ -1065,11 +1069,7 @@ module Activities.ViewModels {
                 type: 'PUT',
             })
                 .done((): void => {
-                    this._owner.selectedTypes.push({
-                        activityId: this._owner.id(),
-                        typeId: this.id,
-                        text: this.text,
-                    });
+                    this._owner.selectedTypeIds.push(this.id);
                     setTimeout((): void => {
                         this.checked(true);
                     }, 0);
@@ -1086,9 +1086,9 @@ module Activities.ViewModels {
         }
 
         private _onUnchecked(): void {
-            var needsRemoved = Enumerable.From(this._owner.selectedTypes())
-                .Any((x: ApiModels.ActivityType): boolean => {
-                    return x.typeId == this.id;
+            var needsRemoved = Enumerable.From(this._owner.selectedTypeIds())
+                .Any((x: number): boolean => {
+                    return x == this.id;
                 });
             if (!needsRemoved) return;
 
@@ -1100,9 +1100,7 @@ module Activities.ViewModels {
                 type: 'DELETE',
             })
                 .done((): void => {
-                    this._owner.selectedTypes.remove((x: ApiModels.ActivityType): boolean => {
-                        return x.typeId == this.id;
-                    });
+                    this._owner.selectedTypeIds.remove(this.id);
                     setTimeout((): void => {
                         this.checked(false);
                     }, 0);
