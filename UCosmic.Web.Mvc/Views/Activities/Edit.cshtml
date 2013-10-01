@@ -397,12 +397,12 @@
                                     <img src="~/images/icons/plus/plus-24-green.png" alt="Add new tag" />
                                 </a>
                             </div>
-                            <div data-bind="visible: !values.tags().length">
+                            <div data-bind="visible: !tags().length">
                                 <p style="padding-bottom: 10px;">
                                     There are currently no tags or keywords associated with this activity.
                                 </p>
                             </div>
-                            <ul data-bind="template: { name: 'tags-template', foreach: values.tags, visible: values.tags().length }"></ul>
+                            <ul data-bind="template: { name: 'tags-template', foreach: tags, visible: tags().length }"></ul>
                             <div style="clear: left;"></div>
                         </div>
 
@@ -516,6 +516,11 @@
                                     placeDeleteUrlFormat = placeDeleteUrlFormat.Replace("0", "{0}").Replace("1", "{1}");
                                 }
                                 var establishmentNameGetUrlFormat = Url.HttpRouteUrl(null, new { controller = "EstablishmentNames", action = "GetByKeyword" });
+                                var tagsGetUrlFormat = Url.HttpRouteUrl(null, new { controller = "ActivityTags", action = "Get", activityId = 0 });
+                                if (tagsGetUrlFormat != null)
+                                {
+                                    tagsGetUrlFormat = tagsGetUrlFormat.Replace("0", "{0}");
+                                }
                                 var tagPostUrlFormat = Url.HttpRouteUrl(null, new { controller = "ActivityTags", action = "Post", activityId = 0 });
                                 if (tagPostUrlFormat != null)
                                 {
@@ -548,6 +553,7 @@
                             <span id="place_put_url_format">@placePutUrlFormat</span>
                             <span id="place_delete_url_format">@placeDeleteUrlFormat</span>
                             <span id="establishment_names_get_url_format">@establishmentNameGetUrlFormat</span>
+                            <span id="tags_get_url_format">@tagsGetUrlFormat</span>
                             <span id="tag_post_url_format">@tagPostUrlFormat</span>
                             <span id="tag_delete_url_format">@tagDeleteUrlFormat</span>
                             <span id="document_put_url_format">@documentPutUrlFormat</span>

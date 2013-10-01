@@ -176,6 +176,7 @@
     <Compile Include="Domain\Activities\Queries\ActivityDocumentsByValuesId.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityPlacesByActivityId.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityTypesByActivityId.cs" />
+    <Compile Include="Domain\Activities\Queries\ActivityTagsByActivityId.cs" />
     <Compile Include="Domain\Activities\Validation\MustBeDocumentForActivity.cs" />
     <Compile Include="Domain\Activities\Validation\MustBeActivityWorkCopy.cs" />
     <Compile Include="Domain\Activities\Validation\MustNotBeDuplicateActivityTag.cs" />

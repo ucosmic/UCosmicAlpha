@@ -4,6 +4,14 @@ using UCosmic.Domain.Activities;
 
 namespace UCosmic.Web.Mvc.Models
 {
+    public class ActivityTagApiModel2
+    {
+        public int ActivityId { get; set; }
+        public string Text { get; set; }
+        public ActivityTagDomainType DomainType { get; set; }
+        public int? DomainKey { get; set; }
+    }
+
     public class ActivityTagApiModel
     {
         public int Id { get; set; }

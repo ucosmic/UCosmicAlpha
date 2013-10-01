@@ -6,6 +6,12 @@ declare module Activities.ApiModels {
         typeId: number;
         text: string;
     }
+    export interface ActivityTag {
+        activityId: number;
+        text: string;
+        domainType: string;
+        domainKey: number;
+    }
 }
 
 declare module Service.ApiModels {

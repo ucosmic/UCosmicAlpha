@@ -1,4 +1,8 @@
-﻿using System.Net;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using AttributeRouting;
@@ -11,16 +15,43 @@ namespace UCosmic.Web.Mvc.ApiControllers
     [RoutePrefix("api/activities/{activityId:int}/tags")]
     public class ActivityTagsController : ApiController
     {
+        private const string PluralUrl = "";
+
+        private readonly IProcessQueries _queryProcessor;
         private readonly IHandleCommands<CreateActivityTag> _createHandler;
         private readonly IHandleCommands<PurgeActivityTag> _purgeHandler;
 
-        public ActivityTagsController(IHandleCommands<CreateActivityTag> createHandler, IHandleCommands<PurgeActivityTag> purgeHandler)
+        public ActivityTagsController(IProcessQueries queryProcessor
+            , IHandleCommands<CreateActivityTag> createHandler
+            , IHandleCommands<PurgeActivityTag> purgeHandler
+        )
         {
+            _queryProcessor = queryProcessor;
             _createHandler = createHandler;
             _purgeHandler = purgeHandler;
         }
 
-        [POST("")]
+        [GET(PluralUrl)]
+        public IEnumerable<ActivityTagApiModel2> Get(int activityId)
+        {
+            var entities = _queryProcessor.Execute(new ActivityTagsByActivityId(activityId)
+            {
+                EagerLoad = new Expression<Func<ActivityTag, object>>[]
+                {
+                    x => x.ActivityValues,
+                }
+            });
+            var models = entities.Select(x => new ActivityTagApiModel2
+            {
+                ActivityId = x.ActivityValues.ActivityId,
+                Text = x.Text,
+                DomainType = x.DomainType,
+                DomainKey = x.DomainKey,
+            });
+            return models;
+        }
+
+        [POST(PluralUrl)]
         public HttpResponseMessage Post(int activityId, ActivityTagApiPutModel model)
         {
             //throw new HttpResponseException(HttpStatusCode.GatewayTimeout); // test api failures
@@ -38,7 +69,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return Request.CreateResponse(HttpStatusCode.OK);
         }
 
-        [DELETE("")]
+        [DELETE(PluralUrl)]
         public HttpResponseMessage Delete(int activityId, ActivityTagApiDeleteModel model)
         {
             //throw new HttpResponseException(HttpStatusCode.GatewayTimeout); // test api failures

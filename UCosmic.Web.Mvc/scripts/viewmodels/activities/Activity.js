@@ -46,6 +46,7 @@ var Activities;
                 //#endregion
                 //#region Tags
                 // Data bound to new tag textArea
+                this.tags = ko.observableArray();
                 this.newTag = ko.observable();
                 // array to hold file upload errors
                 this.fileUploadErrors = ko.observableArray();
@@ -109,9 +110,17 @@ var Activities;
                     typesPact.reject(jqXhr, textStatus, errorThrown);
                 });
 
+                var tagsPact = $.Deferred();
+                var tagsUrl = $('#tags_get_url_format').text().format(this.workCopyId());
+                $.get(tagsUrl).done(function (data) {
+                    tagsPact.resolve(data);
+                }).fail(function (jqXhr, textStatus, errorThrown) {
+                    tagsPact.reject(jqXhr, textStatus, errorThrown);
+                });
+
                 //#endregion
                 //#region process after all have been loaded
-                $.when(typeOptionsPact, placeOptionsPact, dataPact, placesPact, typesPact).done(function (typeOptions, placeOptions, data, selectedPlaces, selectedTypes) {
+                $.when(typeOptionsPact, placeOptionsPact, dataPact, placesPact, typesPact, tagsPact).done(function (typeOptions, placeOptions, data, selectedPlaces, selectedTypes, tags) {
                     //#region populate activity data
                     // Although the MVC DateTime to JSON serializer will output an ISO compatible
                     // string, we are not guarenteed that a browser's Date(string) or Date.parse(string)
@@ -159,6 +168,8 @@ var Activities;
                     _this._bindTypes(typeOptions, selectedTypes);
 
                     //#endregion
+                    _this.tags(tags);
+
                     deferred.resolve();
                 }).fail(function (xhr, textStatus, errorThrown) {
                     deferred.reject(xhr, textStatus, errorThrown);
@@ -709,7 +720,7 @@ else if (removedPlaceIds.length === 1)
             };
 
             Activity.prototype.deleteTag = function (item) {
-                this._deleteTag(item.text()).fail(function (xhr) {
+                this._deleteTag(item.text).fail(function (xhr) {
                     App.Failures.message(xhr, 'while trying to delete this activity tag, please try again', true);
                 });
             };
@@ -721,8 +732,8 @@ else if (removedPlaceIds.length === 1)
                     deferred.resolve();
                 } else {
                     text = $.trim(text);
-                    var tagToReplace = Enumerable.From(this.values.tags()).SingleOrDefault(undefined, function (x) {
-                        return x.text().toUpperCase() === text.toUpperCase();
+                    var tagToReplace = Enumerable.From(this.tags()).SingleOrDefault(undefined, function (x) {
+                        return x.text.toUpperCase() === text.toUpperCase();
                     });
                     if (tagToReplace) {
                         this._deleteTag(text).done(function () {
@@ -759,12 +770,12 @@ else if (removedPlaceIds.length === 1)
                     }
                 }).done(function () {
                     var tag = {
+                        activityId: _this.id(),
                         text: text,
-                        domainTypeText: establishmentId ? 'Establishment' : 'Custom',
+                        domainType: establishmentId ? 'Establishment' : 'Custom',
                         domainKey: establishmentId
                     };
-                    var observableTag = ko.mapping.fromJS(tag);
-                    _this.values.tags.push(observableTag);
+                    _this.tags.push(tag);
                     deferred.resolve();
                 }).fail(function (xhr) {
                     deferred.reject(xhr);
@@ -784,11 +795,11 @@ else if (removedPlaceIds.length === 1)
                     }
                 }).done(function () {
                     // there should always be matching tag, but check to be safe
-                    var tagToRemove = Enumerable.From(_this.values.tags()).SingleOrDefault(undefined, function (x) {
-                        return text && x.text().toUpperCase() === text.toUpperCase();
+                    var tagToRemove = Enumerable.From(_this.tags()).SingleOrDefault(undefined, function (x) {
+                        return text && x.text.toUpperCase() === text.toUpperCase();
                     });
                     if (tagToRemove)
-                        _this.values.tags.remove(tagToRemove);
+                        _this.tags.remove(tagToRemove);
                     deferred.resolve();
                 }).fail(function (xhr) {
                     deferred.reject(xhr);

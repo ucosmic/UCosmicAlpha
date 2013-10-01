@@ -121,14 +121,27 @@ module Activities.ViewModels {
                 })
             ;
 
+            var tagsPact = $.Deferred();
+            var tagsUrl = $('#tags_get_url_format').text().format(this.workCopyId());
+            $.get(tagsUrl)
+                .done((data: ApiModels.ActivityType[]): void => {
+                    tagsPact.resolve(data);
+                })
+                .fail((jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
+                    tagsPact.reject(jqXhr, textStatus, errorThrown);
+                })
+            ;
+
             //#endregion
             //#region process after all have been loaded
 
-            $.when(typeOptionsPact, placeOptionsPact, dataPact, placesPact, typesPact)
+            $.when(typeOptionsPact, placeOptionsPact, dataPact, placesPact, typesPact, tagsPact)
                 .done((typeOptions: any[],
                     placeOptions: any[],
                     data: Service.ApiModels.IObservableActivity,
-                    selectedPlaces: any[], selectedTypes: ApiModels.ActivityType[]): void => {
+                    selectedPlaces: any[],
+                    selectedTypes: ApiModels.ActivityType[],
+                    tags: ApiModels.ActivityTag[]): void => {
 
                     //#region populate activity data
 
@@ -181,6 +194,8 @@ module Activities.ViewModels {
                     this._bindTypes(typeOptions, selectedTypes);
 
                     //#endregion
+
+                    this.tags(tags);
 
                     deferred.resolve();
                 })
@@ -713,6 +728,7 @@ module Activities.ViewModels {
         //#region Tags
 
         // Data bound to new tag textArea
+        tags: KnockoutObservableArray<ApiModels.ActivityTag> = ko.observableArray();
         newTag: KnockoutObservable<string> = ko.observable();
 
         private _getTagAutoCompleteDataSource(): kendo.data.DataSource {
@@ -794,8 +810,8 @@ module Activities.ViewModels {
                 });
         }
 
-        deleteTag(item: any): void {
-            this._deleteTag(item.text())
+        deleteTag(item: ApiModels.ActivityTag): void {
+            this._deleteTag(item.text)
                 .fail((xhr: JQueryXHR): void => {
                     App.Failures.message(xhr, 'while trying to delete this activity tag, please try again', true);
                 });
@@ -808,9 +824,9 @@ module Activities.ViewModels {
             }
             else {
                 text = $.trim(text);
-                var tagToReplace = Enumerable.From(this.values.tags())
-                    .SingleOrDefault(undefined, function (x: any): boolean {
-                        return x.text().toUpperCase() === text.toUpperCase();
+                var tagToReplace = Enumerable.From(this.tags())
+                    .SingleOrDefault(undefined, function (x: ApiModels.ActivityTag): boolean {
+                        return x.text.toUpperCase() === text.toUpperCase();
                     });
                 if (tagToReplace) {
                     this._deleteTag(text)
@@ -843,13 +859,13 @@ module Activities.ViewModels {
                 },
             })
                 .done((): void => { // push observable tag into view's array
-                    var tag = {
+                    var tag: ApiModels.ActivityTag = {
+                        activityId: this.id(),
                         text: text,
-                        domainTypeText: establishmentId ? 'Establishment' : 'Custom',
+                        domainType: establishmentId ? 'Establishment' : 'Custom',
                         domainKey: establishmentId,
                     };
-                    var observableTag = ko.mapping.fromJS(tag);
-                    this.values.tags.push(observableTag);
+                    this.tags.push(tag);
                     deferred.resolve();
                 })
                 .fail((xhr: JQueryXHR): void => { deferred.reject(xhr); });
@@ -868,11 +884,11 @@ module Activities.ViewModels {
             })
                 .done((): void => {
                     // there should always be matching tag, but check to be safe
-                    var tagToRemove = Enumerable.From(this.values.tags())
-                        .SingleOrDefault(undefined, function (x: any): boolean {
-                            return text && x.text().toUpperCase() === text.toUpperCase();
+                    var tagToRemove = Enumerable.From(this.tags())
+                        .SingleOrDefault(undefined, function (x: ApiModels.ActivityTag): boolean {
+                            return text && x.text.toUpperCase() === text.toUpperCase();
                         });
-                    if (tagToRemove) this.values.tags.remove(tagToRemove);
+                    if (tagToRemove) this.tags.remove(tagToRemove);
                     deferred.resolve();
                 })
                 .fail((xhr: JQueryXHR): void => { deferred.reject(xhr); });
