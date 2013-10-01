@@ -105,7 +105,7 @@ module Agreements.ViewModels {
         }
 
         getPage(sammyContext: Sammy.EventContext): void {
-            if (window.location.href.indexOf("agreements/new") != -1) {
+            if (window.location.href.indexOf("agreements/new") != -1 || window.location.href.indexOf("agreements/settings") != -1) {
                 this.sammy.destroy();
                 window.location.hash = "";
                 window.location.reload();

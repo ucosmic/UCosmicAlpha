@@ -22,6 +22,10 @@ namespace UCosmic.Web.Mvc.Models
 
         public string CountryNames { get; set; }
 
+        public string[] EstablishmentOfficialName { get; set; }
+
+        public string[] EstablishmentTranslatedName { get; set; }
+
     }
     public class PageOfAgreementApiFlatModel : PageOf<AgreementPageApiModel> { }
 
@@ -34,14 +38,25 @@ namespace UCosmic.Web.Mvc.Models
                 CreateMap<AgreementView, AgreementPageApiModel>()
                     .ForMember(d => d.CountryNames, o => o.ResolveUsing(s =>
                     {
-                        var countryNames = s.Participants.Where(x => !x.IsOwner).Select(x => x.CountryName).Distinct();
-
+                        var countryNames =
+                            s.Participants.Where(x => !x.IsOwner)
+                             .OrderBy(x => x.CountryName)
+                             .Select(x => x.CountryName)
+                             .Distinct();
                         return countryNames.Implode(", ");
                     }))
-                    //.ForMember(d => d.OfficialUrl, o => o.ResolveUsing(s => s.WebsiteUrl))
-                    //.AfterMap((s, d) => d.Participants = d.Participants
-                    //    .OrderByDescending(x => x.IsOwner)
-                    //    .ThenBy(x => x.EstablishmentTranslatedName).ToArray())
+                    .ForMember(d => d.EstablishmentTranslatedName, o => o.ResolveUsing(s =>
+                    {
+                        var translatedNames =
+                            s.Participants.Where(x => !x.IsOwner).Select(x => x.EstablishmentTranslatedName);
+                        return translatedNames;//.Implode(", ");
+                    }))
+                    .ForMember(d => d.EstablishmentOfficialName, o => o.ResolveUsing(s =>
+                    {
+                        var officialNames =
+                            s.Participants.Where(x => !x.IsOwner).Select(x => x.EstablishmentOfficialName);
+                        return officialNames;//.Implode(", ");
+                    }))
                 ;
             }
         }
@@ -54,21 +69,4 @@ namespace UCosmic.Web.Mvc.Models
             }
         }
     }
-
-    //public static class AgreementPageApiProfiler
-    //{
-    //    public class EntityToModelProfile : Profile
-    //    {
-    //        protected override void Configure()
-    //        {
-    //            CreateMap<Agreement, AgreementApiModel>()
-    //                //.ForMember(d => d.Content, o => o.MapFrom(s => s.Description))
-    //                .AfterMap((s, d) => d.Participants = d.Participants
-    //                                                      .OrderByDescending(x => x.IsOwner)
-    //                                                      .ThenBy(x => x.AgreementTranslatedName).ToArray())
-    //                ;
-    //        }
-    //    }
-    //}
-
 }

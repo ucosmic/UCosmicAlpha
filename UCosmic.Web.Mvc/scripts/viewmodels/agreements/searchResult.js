@@ -23,13 +23,14 @@ var Agreements;
             SearchResult.prototype._setupComputeds = function () {
                 this._setupCountryComputeds();
                 this._setupDateComputeds();
+                this._setupNameComputeds();
             };
 
             SearchResult.prototype._setupCountryComputeds = function () {
                 var _this = this;
                 // show alternate text when country is undefined
                 this.nullDisplayCountryName = ko.computed(function () {
-                    return _this.countryNames() || '[Undefined]';
+                    return _this.countryNames() || '[Unknown]';
                 });
             };
 
@@ -41,7 +42,7 @@ var Agreements;
                     if (myDate.getFullYear() < 1500) {
                         return "unknown";
                     }
-                    return (moment(value)).format('MMMM Do YYYY');
+                    return (moment(value)).format('YYYY-MM-DD');
                 });
                 this.expiresOnDate = ko.computed(function () {
                     var value = _this.expiresOn();
@@ -49,12 +50,29 @@ var Agreements;
                     if (myDate.getFullYear() < 1500) {
                         return "unknown";
                     } else {
-                        return (moment(value)).format('MMMM Do YYYY');
+                        return (moment(value)).format('YYYY-MM-DD');
                     }
                 });
             };
 
-            ////#endregion
+            SearchResult.prototype._setupNameComputeds = function () {
+                var _this = this;
+                // are the official name and translated name the same?
+                this.participantsNames = ko.computed(function () {
+                    var myName = "";
+                    $.each(_this.establishmentOfficialName(), function (i, item) {
+                        if (_this.establishmentTranslatedName()[i] != null && _this.establishmentOfficialName()[i] != _this.establishmentTranslatedName()[i]) {
+                            myName += "<strong>" + _this.establishmentTranslatedName()[i] + "</strong> (" + _this.establishmentOfficialName()[i] + ")";
+                        } else {
+                            myName += "<strong>" + _this.establishmentOfficialName()[i] + "</strong>";
+                        }
+                        myName += "<br />";
+                    });
+                    return myName;
+                });
+            };
+
+            //#endregion
             //#region Click handlers
             // navigate to detail page
             SearchResult.prototype.clickAction = function (viewModel, e) {

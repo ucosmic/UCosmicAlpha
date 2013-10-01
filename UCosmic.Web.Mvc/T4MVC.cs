@@ -1410,6 +1410,11 @@ namespace Links
             public static readonly string jquery_validate_unobtrusive_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/jquery.validate.unobtrusive.min.js") ? Url("jquery.validate.unobtrusive.min.js") : Url("jquery.validate.unobtrusive.js");
                           
             public static readonly string jquery_validate_unobtrusive_min_js = Url("jquery.validate.unobtrusive.min.js");
+            public static readonly string linq_vsdoc_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/linq-vsdoc.min.js") ? Url("linq-vsdoc.min.js") : Url("linq-vsdoc.js");
+                          
+            public static readonly string linq_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/linq.min.js") ? Url("linq.min.js") : Url("linq.js");
+                          
+            public static readonly string linq_min_js = Url("linq.min.js");
             public static readonly string moment_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/moment.min.js") ? Url("moment.min.js") : Url("moment.js");
                           
             public static readonly string moment_min_js = Url("moment.min.js");
@@ -2709,6 +2714,16 @@ namespace Links
                 public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
                 public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
                 public static readonly string knockout_validation_d_ts = Url("knockout.validation.d.ts");
+            }
+        
+            [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+            public static class linq {
+                private const string URLPATH = "~/scripts/typings/linq";
+                public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+                public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                public static readonly string linq_3_0_3_Beta4_d_ts = Url("linq.3.0.3-Beta4.d.ts");
+                public static readonly string linq_d_ts = Url("linq.d.ts");
+                public static readonly string linq_jquery_d_ts = Url("linq.jquery.d.ts");
             }
         
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]

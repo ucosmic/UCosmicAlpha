@@ -20,8 +20,8 @@ module Agreements.ViewModels {
         //#region Observable data
 
         id: KnockoutObservable<number>;
-        officialName: KnockoutObservable<string>;
-        translatedName: KnockoutObservable<string>;
+        establishmentOfficialName: KnockoutObservable<string>;
+        establishmentTranslatedName: KnockoutObservable<string>;
         officialUrl: KnockoutObservable<string>;
         countryNames: KnockoutObservable<string>;
         countryCode: KnockoutObservable<string>;
@@ -42,6 +42,7 @@ module Agreements.ViewModels {
         private _setupComputeds(): void {
             this._setupCountryComputeds();
             this._setupDateComputeds();
+            this._setupNameComputeds();
         }
 
         //#region Country computeds
@@ -51,7 +52,7 @@ module Agreements.ViewModels {
         private _setupCountryComputeds(): void {
             // show alternate text when country is undefined
             this.nullDisplayCountryName = ko.computed((): string => {
-                return this.countryNames() || '[Undefined]';
+                return this.countryNames() || '[Unknown]';
             });
         }
 
@@ -69,7 +70,7 @@ module Agreements.ViewModels {
                 if (myDate.getFullYear() < 1500) {
                     return "unknown";
                 }
-                return (moment(value)).format('MMMM Do YYYY');
+                return (moment(value)).format('YYYY-MM-DD');
             });
             this.expiresOnDate = ko.computed((): string => {
                 var value = this.expiresOn();
@@ -77,13 +78,37 @@ module Agreements.ViewModels {
                 if (myDate.getFullYear() < 1500) {
                     return "unknown";
                 } else {
-                    return (moment(value)).format('MMMM Do YYYY');
+                    return (moment(value)).format('YYYY-MM-DD');
                 }
             });
         }
         
         ////#endregion
-        
+
+        //#region Name computeds
+
+        participantsNames: KnockoutComputed<string>;
+
+        private _setupNameComputeds(): void {
+            // are the official name and translated name the same?
+            this.participantsNames = ko.computed((): string => {
+                var myName = "";
+                $.each(this.establishmentOfficialName(), (i, item) => {
+                    //myName += this.establishmentOfficialName()[i];
+                    if (this.establishmentTranslatedName()[i] != null && this.establishmentOfficialName()[i] != this.establishmentTranslatedName()[i]) {
+                        myName += "<strong>" + this.establishmentTranslatedName()[i] + "</strong> (" + this.establishmentOfficialName()[i] + ")"; 
+                    } else
+                    {
+                        myName += "<strong>" + this.establishmentOfficialName()[i] + "</strong>";
+                    }
+                    myName += "<br />";
+                });
+                return myName;
+            });
+        }
+
+        //#endregion
+
         //#region Click handlers
 
         // navigate to detail page

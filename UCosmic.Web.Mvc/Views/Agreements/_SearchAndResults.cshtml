@@ -1,6 +1,6 @@
 ﻿<div class="field" style="margin-bottom: 0;">
     <input type="hidden" data-bind="value: keyword" />
-    <input type="search" placeholder="Find an agreement by name or keyword" data-bind="value: keyword, valueUpdate: 'afterkeydown search'" />
+    <input type="search" placeholder="Find an agreement by name, partner, country, or keyword" data-bind="value: keyword, valueUpdate: 'afterkeydown search'" />
 </div>
 <p data-bind="visible: hasNoItems" style="display: none;">
     There are no results that match your search terms.
@@ -46,20 +46,21 @@
                                             <span data-bind="visible: name"><br/></span>
                                         </span>
                                         <span>
-                                            <strong >Type: </strong> 
-                                            <span data-bind="text: type() + ', ' "></span>
+                                            <span data-bind="html: participantsNames"></span>
                                         </span>
-                                        <span>
-                                            <strong>Status: </strong> 
-                                            <span data-bind="text: status"></span><br/>
-                                        </span>
-                                        <span>
-                                            <strong>Starts on: </strong> 
-                                            <span data-bind="text: startsOnDate() + ', '"></span>
-                                        </span>
-                                        <span>
-                                            <strong>Expires on: </strong> 
-                                            <span data-bind="text: expiresOnDate"></span>
+                                        <span style="font-size: 14px;">
+                                            <span>
+                                                <span data-bind="text: type() + ', ' "></span>
+                                            </span>
+                                            <span>
+                                                <span style="color: blue;" data-bind="text: status"></span><br/>
+                                            </span>
+                                            <span>
+                                                <span data-bind="text:'Starts on: ' + startsOnDate() + ', '"></span>
+                                            </span>
+                                            <span>
+                                                <span data-bind="text:'Ends on: ' + expiresOnDate()"></span>
+                                            </span>
                                         </span>
                                     </div>
                                 </td>
