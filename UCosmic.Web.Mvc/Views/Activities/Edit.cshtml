@@ -283,7 +283,7 @@
                                     <td class="label"><span class="container required"><span class="text">Countries / Locations</span></span></td>
                                     <td>
                                         <select id="countrySelector" style="overflow-y: auto" data-bind="selectedOptions: kendoPlaceIds"></select>
-                                        <span data-bind="validationMessage: places" class="validationMessage"></span>
+                                        <span data-bind="validationMessage: selectedPlaces" class="validationMessage"></span>
                                     </td>
                                 </tr>
                                 @* TYPE *@
@@ -293,9 +293,9 @@
                                     <td>
                                         @* Need this div for the validation message to display. *@
                                         <div>
-                                            <ul class="data-items" data-bind="template: { name: 'activity-types-template', foreach: activityTypes }" />
+                                            <ul class="data-items" data-bind="template: { name: 'activity-types-template', foreach: typeOptions }" />
                                         </div>
-                                        <span data-bind="validationMessage: values.types" class="validationMessage"></span>
+                                        <span data-bind="validationMessage: selectedTypes" class="validationMessage"></span>
                                     </td>
                                 </tr>
                                 @* FROM and TO DATES *@
@@ -485,6 +485,11 @@
                                 {
                                     activityDeleteUrlFormat = activityDeleteUrlFormat.Replace("0", "{0}");
                                 }
+                                var typesGetUrlFormat = Url.HttpRouteUrl(null, new { controller = "ActivityTypes", action = "Get", activityId = 0 });
+                                if (typesGetUrlFormat != null)
+                                {
+                                    typesGetUrlFormat = typesGetUrlFormat.Replace("0", "{0}");
+                                }
                                 var typePutUrlFormat = Url.HttpRouteUrl(null, new { controller = "ActivityTypes", action = "Put", activityId = 0, activityTypeId = 1 });
                                 if (typePutUrlFormat != null)
                                 {
@@ -536,6 +541,7 @@
                             <span id="activity_put_url_format">@activityPutUrlFormat</span>
                             <span id="activity_replace_url_format">@activityReplaceUrlFormat</span>
                             <span id="activity_delete_url_format">@activityDeleteUrlFormat</span>
+                            <span id="types_get_url_format">@typesGetUrlFormat</span>
                             <span id="type_put_url_format">@typePutUrlFormat</span>
                             <span id="type_delete_url_format">@typeDeleteUrlFormat</span>
                             <span id="places_get_url_format">@placesGetUrlFormat</span>

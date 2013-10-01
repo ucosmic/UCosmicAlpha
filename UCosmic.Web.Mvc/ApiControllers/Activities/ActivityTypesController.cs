@@ -1,27 +1,61 @@
-﻿using System.Net;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using AttributeRouting;
 using AttributeRouting.Web.Http;
 using UCosmic.Domain.Activities;
+using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc.ApiControllers
 {
     [RoutePrefix("api/activities/{activityId:int}/types")]
     public class ActivityTypesController : ApiController
     {
+        private const string PluralUrl = "";
+        private const string SingleUrl = "{activityTypeId:int}";
+
+        private readonly IProcessQueries _queryProcessor;
         private readonly IHandleCommands<CreateActivityType> _createHandler;
         private readonly IHandleCommands<PurgeActivityType> _purgeHandler;
 
-        public ActivityTypesController(IHandleCommands<CreateActivityType> createHandler, IHandleCommands<PurgeActivityType> purgeHandler)
+        public ActivityTypesController(IProcessQueries queryProcessor
+            , IHandleCommands<CreateActivityType> createHandler
+            , IHandleCommands<PurgeActivityType> purgeHandler
+        )
         {
+            _queryProcessor = queryProcessor;
             _createHandler = createHandler;
             _purgeHandler = purgeHandler;
         }
 
-        [PUT("{activityTypeId:int}")]
+        [GET(PluralUrl)]
+        public IEnumerable<ActivityTypeApiModel2> Get(int activityId)
+        {
+            var entities = _queryProcessor.Execute(new ActivityTypesByActivityId(activityId)
+            {
+                EagerLoad = new Expression<Func<ActivityType, object>>[]
+                {
+                    x => x.ActivityValues,
+                    x => x.Type,
+                }
+            });
+            var models = entities.Select(x => new ActivityTypeApiModel2
+            {
+                ActivityId = x.ActivityValues.ActivityId,
+                TypeId = x.TypeId,
+                Text = x.Type.Type,
+            });
+            return models;
+        }
+
+        [PUT(SingleUrl)]
         public HttpResponseMessage Put(int activityId, int activityTypeId)
         {
+            //Thread.Sleep(2000);
             //throw new HttpResponseException(HttpStatusCode.GatewayTimeout); // test api failures
             var command = new CreateActivityType(User, activityId)
             {
@@ -32,9 +66,10 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return Request.CreateResponse(HttpStatusCode.OK);
         }
 
-        [DELETE("{activityTypeId:int}")]
+        [DELETE(SingleUrl)]
         public HttpResponseMessage Delete(int activityId, int activityTypeId)
         {
+            //Thread.Sleep(2000);
             //throw new HttpResponseException(HttpStatusCode.GatewayTimeout); // test api failures
             var command = new PurgeActivityType(User, activityId)
             {

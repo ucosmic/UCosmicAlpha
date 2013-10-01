@@ -32,15 +32,17 @@ var ViewModels;
                 //#endregion
                 //#region Places
                 // array of places for this activity
-                this.places = ko.observableArray();
+                this.selectedPlaces = ko.observableArray();
                 // Array of all locations offered in Country/Location multiselect
-                this.locations = ko.observableArray();
+                this.placeOptions = ko.observableArray();
                 // Array of placeIds of selected locations, kendo multiselect stores these as strings
                 this.kendoPlaceIds = ko.observableArray();
                 //#endregion
                 //#region Types
                 // Array of activity types displayed as list of checkboxes
-                this.activityTypes = ko.observableArray();
+                this.typeOptions = ko.observableArray();
+                // array of selected type data
+                this.selectedTypes = ko.observableArray();
                 //#endregion
                 //#region Tags
                 // Data bound to new tag textArea
@@ -69,18 +71,18 @@ var ViewModels;
                 var deferred = $.Deferred();
 
                 //#region load places dropdown, module types, and activity work copy
-                var locationsPact = $.Deferred();
+                var placeOptionsPact = $.Deferred();
                 $.get(App.Routes.WebApi.Activities.Locations.get()).done(function (data) {
-                    locationsPact.resolve(data);
+                    placeOptionsPact.resolve(data);
                 }).fail(function (jqXHR, textStatus, errorThrown) {
-                    locationsPact.reject(jqXHR, textStatus, errorThrown);
+                    placeOptionsPact.reject(jqXHR, textStatus, errorThrown);
                 });
 
-                var typesPact = $.Deferred();
+                var typeOptionsPact = $.Deferred();
                 $.get(App.Routes.WebApi.Employees.ModuleSettings.ActivityTypes.get()).done(function (data) {
-                    typesPact.resolve(data);
+                    typeOptionsPact.resolve(data);
                 }).fail(function (jqXHR, textStatus, errorThrown) {
-                    typesPact.reject(jqXHR, textStatus, errorThrown);
+                    typeOptionsPact.reject(jqXHR, textStatus, errorThrown);
                 });
 
                 var dataPact = $.Deferred();
@@ -99,9 +101,17 @@ var ViewModels;
                     placesPact.reject(jqXhr, textStatus, errorThrown);
                 });
 
+                var typesPact = $.Deferred();
+                var typesUrl = $('#types_get_url_format').text().format(this.workCopyId());
+                $.get(typesUrl).done(function (data) {
+                    typesPact.resolve(data);
+                }).fail(function (jqXhr, textStatus, errorThrown) {
+                    typesPact.reject(jqXhr, textStatus, errorThrown);
+                });
+
                 //#endregion
                 //#region process after all have been loaded
-                $.when(typesPact, locationsPact, dataPact, placesPact).done(function (types, locations, data, places) {
+                $.when(typeOptionsPact, placeOptionsPact, dataPact, placesPact, typesPact).done(function (typeOptions, placeOptions, data, selectedPlaces, selectedTypes) {
                     //#region populate activity data
                     // Although the MVC DateTime to JSON serializer will output an ISO compatible
                     // string, we are not guarenteed that a browser's Date(string) or Date.parse(string)
@@ -135,18 +145,19 @@ var ViewModels;
                     //#endregion
                     //#region populate places multiselect
                     // map places multiselect datasource to locations
-                    _this.locations = ko.mapping.fromJS(locations);
+                    _this.placeOptions = ko.mapping.fromJS(placeOptions);
 
                     // Initialize the list of selected locations with current locations in values
-                    _this.places(places);
-                    var currentPlaceIds = Enumerable.From(places).Select(function (x) {
+                    _this.selectedPlaces(selectedPlaces);
+                    var currentPlaceIds = Enumerable.From(selectedPlaces).Select(function (x) {
                         return x.placeId;
                     }).ToArray();
                     _this.kendoPlaceIds(currentPlaceIds.slice(0));
 
                     //#endregion
                     //#region populate type checkboxes
-                    _this._populateTypes(types);
+                    _this.selectedTypes(selectedTypes);
+                    _this._populateTypes(typeOptions);
 
                     //#endregion
                     deferred.resolve();
@@ -183,7 +194,7 @@ var ViewModels;
                     ignoreCase: 'true',
                     dataTextField: 'officialName()',
                     dataValueField: 'id()',
-                    dataSource: this.locations(),
+                    dataSource: this.placeOptions(),
                     value: this.kendoPlaceIds(),
                     dataBound: function (e) {
                         _this._onPlaceMultiSelectDataBound(e);
@@ -309,9 +320,9 @@ var ViewModels;
                 ko.validation.group(this);
 
                 this.values.title.extend({ required: true, minLength: 1, maxLength: 500 });
-                this.places.extend({ atLeast: 1 });
-                if (this.activityTypes().length)
-                    this.values.types.extend({ atLeast: 1 });
+                this.selectedPlaces.extend({ atLeast: 1 });
+                if (this.typeOptions().length)
+                    this.selectedTypes.extend({ atLeast: 1 });
                 this.values.startsOn.extend({ nullSafeDate: { message: 'Start date must valid.' } });
                 this.values.endsOn.extend({ nullSafeDate: { message: 'End date must valid.' } });
             };
@@ -342,7 +353,6 @@ var ViewModels;
                 this.values.wasInternallyFunded.subscribe(function (newValue) {
                     _this.dirtyFlag(true);
                 });
-                //this.values.types.subscribe((newValue: any): void => { this.dirtyFlag(true); });
             };
 
             //#endregion
@@ -576,7 +586,7 @@ else if (removedPlaceIds.length === 1)
                     var dataItem = Enumerable.From(e.sender.dataItems()).Single(function (x) {
                         return x.id() == addedPlaceId;
                     });
-                    _this.places.push({
+                    _this.selectedPlaces.push({
                         activityId: _this.id(),
                         placeId: addedPlaceId,
                         placeName: dataItem.officialName()
@@ -600,7 +610,7 @@ else if (removedPlaceIds.length === 1)
                 }).done(function () {
                     var index = $.inArray(removedPlaceId, _this._currentPlaceIds);
                     _this._currentPlaceIds.splice(index, 1);
-                    _this.places.remove(function (x) {
+                    _this.selectedPlaces.remove(function (x) {
                         return x.placeId == removedPlaceId;
                     });
                 }).fail(function (xhr) {
@@ -609,13 +619,13 @@ else if (removedPlaceIds.length === 1)
                 });
             };
 
-            Activity.prototype._populateTypes = function (types) {
+            Activity.prototype._populateTypes = function (typeOptions) {
                 var _this = this;
                 var typesMapping = {
                     create: function (options) {
                         var checkBox = new ActivityTypeCheckBox(options);
-                        var isChecked = Enumerable.From(_this.values.types()).Any(function (x) {
-                            return x.typeId() == checkBox.id;
+                        var isChecked = Enumerable.From(_this.selectedTypes()).Any(function (x) {
+                            return x.typeId == checkBox.id;
                         });
                         checkBox.checked(isChecked);
                         checkBox.checked.subscribe(function (newValue) {
@@ -627,56 +637,65 @@ else
                         return checkBox;
                     }
                 };
-                ko.mapping.fromJS(types, typesMapping, this.activityTypes);
+                ko.mapping.fromJS(typeOptions, typesMapping, this.typeOptions);
             };
 
             Activity.prototype._addType = function (checkBox) {
                 var _this = this;
-                var needsAdded = Enumerable.From(this.values.types()).All(function (x) {
-                    return x.typeId() != checkBox.id;
+                var needsAdded = Enumerable.From(this.selectedTypes()).All(function (x) {
+                    return x.typeId != checkBox.id;
                 });
                 if (needsAdded) {
+                    this.saveSpinner.start();
                     var url = $('#type_put_url_format').text().format(this.id(), checkBox.id);
                     $.ajax({
                         url: url,
-                        type: 'PUT',
-                        async: false
+                        type: 'PUT'
                     }).done(function () {
-                        _this.values.types.push({
-                            id: ko.observable(0),
-                            typeId: ko.observable(checkBox.id),
-                            version: ko.observable('')
+                        _this.selectedTypes.push({
+                            activityId: _this.id(),
+                            typeId: checkBox.id,
+                            text: checkBox.text
                         });
+                        setTimeout(function () {
+                            checkBox.checked(true);
+                        }, 0);
                     }).fail(function (xhr) {
                         App.Failures.message(xhr, 'while trying to add this activity type, please try again', true);
                         setTimeout(function () {
-                            checkBox.checked(!checkBox.checked());
+                            checkBox.checked(false);
                         }, 0);
+                    }).always(function () {
+                        _this.saveSpinner.stop();
                     });
                 }
             };
 
             Activity.prototype._removeType = function (checkBox) {
                 var _this = this;
-                var needsRemoved = Enumerable.From(this.values.types()).Any(function (x) {
-                    return x.typeId() == checkBox.id;
+                var needsRemoved = Enumerable.From(this.selectedTypes()).Any(function (x) {
+                    return x.typeId == checkBox.id;
                 });
                 if (needsRemoved) {
+                    this.saveSpinner.start();
                     var url = $('#type_delete_url_format').text().format(this.id(), checkBox.id);
                     $.ajax({
                         url: url,
-                        type: 'DELETE',
-                        async: false
+                        type: 'DELETE'
                     }).done(function () {
-                        var type = Enumerable.From(_this.values.types()).Single(function (x) {
-                            return x.typeId() == checkBox.id;
+                        _this.selectedTypes.remove(function (x) {
+                            return x.typeId == checkBox.id;
                         });
-                        _this.values.types.remove(type);
+                        setTimeout(function () {
+                            checkBox.checked(false);
+                        }, 0);
                     }).fail(function (xhr) {
                         App.Failures.message(xhr, 'while trying to remove this activity type, please try again', true);
                         setTimeout(function () {
-                            checkBox.checked(!checkBox.checked());
+                            checkBox.checked(true);
                         }, 0);
+                    }).always(function () {
+                        _this.saveSpinner.stop();
                     });
                 }
             };

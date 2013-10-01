@@ -68,23 +68,23 @@ module ViewModels.Activities {
 
             //#region load places dropdown, module types, and activity work copy
 
-            var locationsPact = $.Deferred();
+            var placeOptionsPact = $.Deferred();
             $.get(App.Routes.WebApi.Activities.Locations.get())
-                .done((data: Service.ApiModels.IActivityLocation[]): void => {
-                    locationsPact.resolve(data);
+                .done((data: any[]): void => {
+                    placeOptionsPact.resolve(data);
                 })
                 .fail((jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void => {
-                    locationsPact.reject(jqXHR, textStatus, errorThrown);
+                    placeOptionsPact.reject(jqXHR, textStatus, errorThrown);
                 })
             ;
 
-            var typesPact = $.Deferred();
+            var typeOptionsPact = $.Deferred();
             $.get(App.Routes.WebApi.Employees.ModuleSettings.ActivityTypes.get())
-                .done((data: Service.ApiModels.IEmployeeActivityType[]): void => {
-                    typesPact.resolve(data);
+                .done((data: any[]): void => {
+                    typeOptionsPact.resolve(data);
                 })
                 .fail((jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void => {
-                    typesPact.reject(jqXHR, textStatus, errorThrown);
+                    typeOptionsPact.reject(jqXHR, textStatus, errorThrown);
                 })
             ;
 
@@ -102,7 +102,7 @@ module ViewModels.Activities {
             var placesPact = $.Deferred();
             var placesUrl = $('#places_get_url_format').text().format(this.workCopyId());
             $.get(placesUrl)
-                .done((data: Service.ApiModels.IActivityPage): void => {
+                .done((data: any[]): void => {
                     placesPact.resolve(data);
                 })
                 .fail((jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
@@ -110,14 +110,25 @@ module ViewModels.Activities {
                 })
             ;
 
+            var typesPact = $.Deferred();
+            var typesUrl = $('#types_get_url_format').text().format(this.workCopyId());
+            $.get(typesUrl)
+                .done((data: any[]): void => {
+                    typesPact.resolve(data);
+                })
+                .fail((jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
+                    typesPact.reject(jqXhr, textStatus, errorThrown);
+                })
+            ;
+
             //#endregion
             //#region process after all have been loaded
 
-            $.when(typesPact, locationsPact, dataPact, placesPact)
-                .done((types: Service.ApiModels.IEmployeeActivityType[],
-                    locations: Service.ApiModels.IActivityLocation[],
+            $.when(typeOptionsPact, placeOptionsPact, dataPact, placesPact, typesPact)
+                .done((typeOptions: any[],
+                    placeOptions: any[],
                     data: Service.ApiModels.IObservableActivity,
-                    places: any[]): void => {
+                    selectedPlaces: any[], selectedTypes: any[]): void => {
 
                     //#region populate activity data
 
@@ -154,11 +165,11 @@ module ViewModels.Activities {
                     //#region populate places multiselect
 
                     // map places multiselect datasource to locations
-                    this.locations = ko.mapping.fromJS(locations);
+                    this.placeOptions = ko.mapping.fromJS(placeOptions);
 
                     // Initialize the list of selected locations with current locations in values
-                    this.places(places);
-                    var currentPlaceIds = Enumerable.From(places)
+                    this.selectedPlaces(selectedPlaces);
+                    var currentPlaceIds = Enumerable.From(selectedPlaces)
                         .Select(function (x): any {
                             return x.placeId;
                         }).ToArray();
@@ -167,7 +178,8 @@ module ViewModels.Activities {
                     //#endregion
                     //#region populate type checkboxes
 
-                    this._populateTypes(types);
+                    this.selectedTypes(selectedTypes);
+                    this._populateTypes(typeOptions);
 
                     //#endregion
 
@@ -207,7 +219,7 @@ module ViewModels.Activities {
                 ignoreCase: 'true',
                 dataTextField: 'officialName()',
                 dataValueField: 'id()',
-                dataSource: this.locations(),
+                dataSource: this.placeOptions(),
                 value: this.kendoPlaceIds(),
                 dataBound: (e: kendo.ui.MultiSelectEvent): void => {
                     this._onPlaceMultiSelectDataBound(e);
@@ -348,9 +360,9 @@ module ViewModels.Activities {
             ko.validation.group(this);
 
             this.values.title.extend({ required: true, minLength: 1, maxLength: 500 });
-            this.places.extend({ atLeast: 1 });
-            if (this.activityTypes().length)
-                this.values.types.extend({ atLeast: 1 });
+            this.selectedPlaces.extend({ atLeast: 1 });
+            if (this.typeOptions().length)
+                this.selectedTypes.extend({ atLeast: 1 });
             this.values.startsOn.extend({ nullSafeDate: { message: 'Start date must valid.' } });
             this.values.endsOn.extend({ nullSafeDate: { message: 'End date must valid.' } });
         }
@@ -367,7 +379,6 @@ module ViewModels.Activities {
             this.values.onGoing.subscribe((newValue: any): void => { this.dirtyFlag(true); });
             this.values.wasExternallyFunded.subscribe((newValue: any): void => { this.dirtyFlag(true); });
             this.values.wasInternallyFunded.subscribe((newValue: any): void => { this.dirtyFlag(true); });
-            //this.values.types.subscribe((newValue: any): void => { this.dirtyFlag(true); });
         }
 
         //#endregion
@@ -599,10 +610,10 @@ module ViewModels.Activities {
         //#region Places
 
         // array of places for this activity
-        places: KnockoutObservableArray<any> = ko.observableArray();
+        selectedPlaces: KnockoutObservableArray<any> = ko.observableArray();
 
         // Array of all locations offered in Country/Location multiselect
-        locations: KnockoutObservableArray<any> = ko.observableArray();
+        placeOptions: KnockoutObservableArray<any> = ko.observableArray();
 
         // Array of placeIds of selected locations, kendo multiselect stores these as strings
         kendoPlaceIds: KnockoutObservableArray<number> = ko.observableArray();
@@ -639,7 +650,7 @@ module ViewModels.Activities {
                         .Single(function (x: any): any {
                             return x.id() == addedPlaceId;
                         });
-                    this.places.push({
+                    this.selectedPlaces.push({
                         activityId: this.id(),
                         placeId: addedPlaceId,
                         placeName: dataItem.officialName(),
@@ -665,7 +676,7 @@ module ViewModels.Activities {
                 .done((): void => {
                     var index = $.inArray(removedPlaceId, this._currentPlaceIds);
                     this._currentPlaceIds.splice(index, 1);
-                    this.places.remove(function (x: any): any {
+                    this.selectedPlaces.remove(function (x: any): any {
                         return x.placeId == removedPlaceId;
                     });
                 })
@@ -679,15 +690,18 @@ module ViewModels.Activities {
         //#region Types
 
         // Array of activity types displayed as list of checkboxes
-        activityTypes: KnockoutObservableArray<any> = ko.observableArray();
+        typeOptions: KnockoutObservableArray<ActivityTypeCheckBox> = ko.observableArray();
 
-        private _populateTypes(types: Service.ApiModels.IEmployeeActivityType[]): void {
+        // array of selected type data
+        selectedTypes: KnockoutObservableArray<any> = ko.observableArray();
+
+        private _populateTypes(typeOptions: any[]): void {
             var typesMapping: KnockoutMappingOptions = {
                 create: (options: KnockoutMappingCreateOptions): any => {
                     var checkBox = new ActivityTypeCheckBox(options);
-                    var isChecked = Enumerable.From(this.values.types())
+                    var isChecked = Enumerable.From(this.selectedTypes())
                         .Any(function (x: any): boolean {
-                            return x.typeId() == checkBox.id;
+                            return x.typeId == checkBox.id;
                         });
                     checkBox.checked(isChecked);
                     checkBox.checked.subscribe((newValue: boolean): void => {
@@ -697,62 +711,72 @@ module ViewModels.Activities {
                     return checkBox;
                 }
             };
-            ko.mapping.fromJS(types, typesMapping, this.activityTypes);
+            ko.mapping.fromJS(typeOptions, typesMapping, this.typeOptions);
         }
 
         private _addType(checkBox: ActivityTypeCheckBox): void {
-            var needsAdded = Enumerable.From(this.values.types())
+            var needsAdded = Enumerable.From(this.selectedTypes())
                 .All(function (x): boolean {
-                    return x.typeId() != checkBox.id;
+                    return x.typeId != checkBox.id;
                 });
             if (needsAdded) {
+                this.saveSpinner.start();
                 var url = $('#type_put_url_format').text().format(this.id(), checkBox.id);
                 $.ajax({
                     url: url,
                     type: 'PUT',
-                    async: false
                 })
                     .done((): void => {
-                        this.values.types.push({
-                            id: ko.observable(0),
-                            typeId: ko.observable(checkBox.id),
-                            version: ko.observable('')
+                        this.selectedTypes.push({
+                            activityId: this.id(),
+                            typeId: checkBox.id,
+                            text: checkBox.text,
                         });
+                        setTimeout(function () {
+                            checkBox.checked(true);
+                        }, 0);
                     })
                     .fail((xhr: JQueryXHR): void => {
                         App.Failures.message(xhr, 'while trying to add this activity type, please try again', true);
                         setTimeout(function () {
-                            checkBox.checked(!checkBox.checked());
+                            checkBox.checked(false);
                         }, 0);
+                    })
+                    .always((): void => {
+                        this.saveSpinner.stop();
                     });
             }
         }
 
         private _removeType(checkBox: ActivityTypeCheckBox): void {
-            var needsRemoved = Enumerable.From(this.values.types())
+            var needsRemoved = Enumerable.From(this.selectedTypes())
                 .Any(function (x): boolean {
-                    return x.typeId() == checkBox.id;
+                    return x.typeId == checkBox.id;
                 });
             if (needsRemoved) {
+                this.saveSpinner.start();
                 var url = $('#type_delete_url_format').text()
                     .format(this.id(), checkBox.id);
                 $.ajax({
                     url: url,
                     type: 'DELETE',
-                    async: false
                 })
                     .done((): void => {
-                        var type = Enumerable.From(this.values.types())
-                            .Single(function (x: any): boolean {
-                                return x.typeId() == checkBox.id;
-                            });
-                        this.values.types.remove(type);
+                        this.selectedTypes.remove(function (x: any): boolean {
+                            return x.typeId == checkBox.id;
+                        });
+                        setTimeout(function () {
+                            checkBox.checked(false);
+                        }, 0);
                     })
                     .fail((xhr: JQueryXHR): void => {
                         App.Failures.message(xhr, 'while trying to remove this activity type, please try again', true);
                         setTimeout(function () {
-                            checkBox.checked(!checkBox.checked());
+                            checkBox.checked(true);
                         }, 0);
+                    })
+                    .always((): void => {
+                        this.saveSpinner.stop();
                     });
             }
         }
