@@ -20,7 +20,7 @@
                     <span data-bind="text: transitionedPageNumber"></span>
                     of <span data-bind="text: pageCount"></span>)</span>
             </p>
-            <div data-bind="visible: hasItems" style="display: none;">
+            <div id="searchResults"  style="display: none;">
                 <div data-bind="visible: lens() === 'table'">
                     <table class="data">
                         <colgroup>

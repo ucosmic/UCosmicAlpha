@@ -121,6 +121,7 @@ namespace UCosmic.Web.Mvc.Controllers
             public _ViewNamesClass ViewNames { get { return s_ViewNames; } }
             public class _ViewNamesClass
             {
+                public readonly string _Agreement = "_Agreement";
                 public readonly string _Bib = "_Bib";
                 public readonly string _FormBasicInfo = "_FormBasicInfo";
                 public readonly string _FormContacts = "_FormContacts";
@@ -129,15 +130,18 @@ namespace UCosmic.Web.Mvc.Controllers
                 public readonly string _FormOverallVisibility = "_FormOverallVisibility";
                 public readonly string _FormParticipants = "_FormParticipants";
                 public readonly string _FormSidebarNav = "_FormSidebarNav";
+                public readonly string _PublicViewSideBar = "_PublicViewSideBar";
                 public readonly string _SearchAndResults = "_SearchAndResults";
                 public readonly string _SearchSideBar = "_SearchSideBar";
                 public readonly string Form = "Form";
                 public readonly string Index = "Index";
                 public readonly string Index_old = "Index_old";
                 public readonly string Owners = "Owners";
+                public readonly string PublicView = "PublicView";
                 public readonly string Settings = "Settings";
                 public readonly string Show = "Show";
             }
+            public readonly string _Agreement = "~/Views/Agreements/_Agreement.cshtml";
             public readonly string _Bib = "~/Views/Agreements/_Bib.cshtml";
             public readonly string _FormBasicInfo = "~/Views/Agreements/_FormBasicInfo.cshtml";
             public readonly string _FormContacts = "~/Views/Agreements/_FormContacts.cshtml";
@@ -146,12 +150,14 @@ namespace UCosmic.Web.Mvc.Controllers
             public readonly string _FormOverallVisibility = "~/Views/Agreements/_FormOverallVisibility.cshtml";
             public readonly string _FormParticipants = "~/Views/Agreements/_FormParticipants.cshtml";
             public readonly string _FormSidebarNav = "~/Views/Agreements/_FormSidebarNav.cshtml";
+            public readonly string _PublicViewSideBar = "~/Views/Agreements/_PublicViewSideBar.cshtml";
             public readonly string _SearchAndResults = "~/Views/Agreements/_SearchAndResults.cshtml";
             public readonly string _SearchSideBar = "~/Views/Agreements/_SearchSideBar.cshtml";
             public readonly string Form = "~/Views/Agreements/Form.cshtml";
             public readonly string Index = "~/Views/Agreements/Index.cshtml";
             public readonly string Index_old = "~/Views/Agreements/Index_old.cshtml";
             public readonly string Owners = "~/Views/Agreements/Owners.cshtml";
+            public readonly string PublicView = "~/Views/Agreements/PublicView.cshtml";
             public readonly string Settings = "~/Views/Agreements/Settings.cshtml";
             public readonly string Show = "~/Views/Agreements/Show.cshtml";
         }

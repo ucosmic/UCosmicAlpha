@@ -1,0 +1,44 @@
+﻿@{
+    ViewBag.Title = "Institutional Agreement";
+}
+@section bib
+{
+    @{
+        var currentBib = ViewBag.Id == 0 ? "new" : "edit";
+    }
+    <nav class="bib hide" data-current-bib="@currentBib">
+        @Html.Partial(MVC.Agreements.Views._Bib, new ViewDataDictionary { { "Edit", currentBib == "edit" ? true : (bool?)null } })
+    </nav>
+}
+@section scripts
+{
+    @Scripts.Render("~/bundles/agreementPublicView")
+    <script type="text/javascript">
+
+        var agreementSearcdhViewModel = new Agreements.ViewModels.Search();
+        ko.applyBindings(agreementSearcdhViewModel, $('#publicView')[0]);
+        agreementSearcdhViewModel.sammy.run();
+    </script>
+}
+
+
+<div class="content fixed to-top" data-current-module="agreements" id="publicView">
+    <form class="group">
+        <div class="on-left from-top">
+            <header>
+                <h1>
+                    @ViewBag.Title
+                </h1>
+            </header>
+           @Html.Partial(MVC.Agreements.Views._Agreement)
+        </div>
+        <aside class="on-right from-top" data-fixed-scroll="root">
+            <div data-fixed-scroll="anchor"></div>
+            <div data-fixed-scroll="content">
+                @Html.Partial(MVC.Agreements.Views._PublicViewSideBar)
+            </div>
+        </aside>
+    </form>
+</div>
+
+

@@ -25,6 +25,9 @@ var Agreements;
                 _super.call(this);
                 this.initDefaultPageRoute = initDefaultPageRoute;
                 this.header = ko.observable();
+                this.$searchResults = $("#searchResults");
+                this.dfdFadeInOut = $.Deferred();
+                this.dfdFadeInOut2 = $.Deferred();
                 // sammy & URL hashing
                 this.sammy = Sammy();
                 this.sammyBeforeRoute = /\#\/page\/(.*)\//;
@@ -134,7 +137,6 @@ var Agreements;
             };
 
             Search.prototype.getPage = function (sammyContext) {
-                var _this = this;
                 if (window.location.href.indexOf("agreements/new") != -1 || window.location.href.indexOf("agreements/settings") != -1) {
                     this.sammy.destroy();
                     window.location.hash = "";
@@ -147,30 +149,33 @@ var Agreements;
                 if (trail.length > 1 && trail[trail.length - 2] === sammyContext.path) {
                     // swipe backward
                     trail.pop();
-                    this.swipeCallback = function () {
-                        clone = _this.$itemsPage.clone(true).removeAttr('data-bind').data('bind', undefined).removeAttr('id');
-                        clone.appendTo(_this.$itemsPage.parent());
-                        _this.$itemsPage.attr('data-side-swiper', 'off').hide();
-                        _this.lockAnimation();
-                        $(window).scrollTop(0);
-                        _this.sideSwiper.prev(1, function () {
-                            _this.$itemsPage.siblings().remove();
-                            _this.unlockAnimation();
-                        });
-                    };
+
+                    //this.swipeCallback = (): void => {
+                    //clone = this.$itemsPage.clone(true)
+                    //    .removeAttr('data-bind').data('bind', undefined).removeAttr('id');
+                    //clone.appendTo(this.$itemsPage.parent());
+                    //this.$itemsPage.attr('data-side-swiper', 'off').hide();
+                    //this.lockAnimation();
+                    //$(window).scrollTop(0);
+                    //this.sideSwiper.prev(1, (): void => {
+                    //    this.$itemsPage.siblings().remove();
+                    //    this.unlockAnimation();
+                    //});
+                    //};
                     return;
                 } else if (trail.length > 0) {
                     // swipe forward
-                    this.swipeCallback = function () {
-                        clone = _this.$itemsPage.clone(true).removeAttr('data-bind').data('bind', undefined).removeAttr('id');
-                        clone.insertBefore(_this.$itemsPage);
-                        _this.$itemsPage.attr('data-side-swiper', 'off').hide();
-                        _this.lockAnimation();
-                        $(window).scrollTop(0);
-                        _this.sideSwiper.next(1, function () {
-                            _this.unlockAnimation();
-                        });
-                    };
+                    //this.swipeCallback = (): void => {
+                    //clone = this.$itemsPage.clone(true)
+                    //    .removeAttr('data-bind').data('bind', undefined).removeAttr('id');
+                    //clone.insertBefore(this.$itemsPage);
+                    //this.$itemsPage.attr('data-side-swiper', 'off').hide();
+                    //this.lockAnimation();
+                    //$(window).scrollTop(0);
+                    //this.sideSwiper.next(1, (): void => {
+                    //    this.unlockAnimation();
+                    //});
+                    //};
                 }
                 trail.push(sammyContext.path);
             };
@@ -218,9 +223,10 @@ var Agreements;
                     ko.mapping.fromJS(js, this.resultsMapping, this);
                 }
                 App.WindowScroller.restoreTop();
-                this.spinner.stop();
-                this.swipeCallback();
+
+                //this.swipeCallback();
                 this.transitionedPageNumber(this.pageNumber());
+                this.dfdFadeInOut2.resolve();
             };
 
             Search.prototype.requestResults = function () {
@@ -228,7 +234,19 @@ var Agreements;
                 if (this.pageSize() === undefined || this.orderBy() === undefined)
                     return;
                 this.spinner.start();
-
+                $.when(this.dfdFadeInOut2).done(function () {
+                    _this.spinner.stop();
+                    _this.$searchResults.fadeIn(400);
+                    _this.dfdFadeInOut = $.Deferred();
+                    _this.dfdFadeInOut2 = $.Deferred();
+                });
+                if (this.$searchResults.is(":visible")) {
+                    this.$searchResults.fadeOut(400, function () {
+                        _this.dfdFadeInOut.resolve();
+                    });
+                } else {
+                    this.dfdFadeInOut.resolve();
+                }
                 $.get(App.Routes.WebApi.Agreements.Search.get(), {
                     pageSize: this.pageSize(),
                     pageNumber: this.pageNumber(),
@@ -236,7 +254,9 @@ var Agreements;
                     keyword: this.throttledKeyword(),
                     orderBy: this.orderBy()
                 }).done(function (response) {
-                    _this.receiveResults(response);
+                    $.when(_this.dfdFadeInOut).done(function () {
+                        _this.receiveResults(response);
+                    });
                 });
             };
 

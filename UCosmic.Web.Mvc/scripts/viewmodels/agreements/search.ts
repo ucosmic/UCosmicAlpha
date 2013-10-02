@@ -35,6 +35,9 @@ module Agreements.ViewModels {
             this.requestResults = <() => void > this.requestResults.bind(this);
         }
         header = ko.observable();
+        $searchResults = $("#searchResults");
+        dfdFadeInOut = $.Deferred();
+        dfdFadeInOut2 = $.Deferred();
         // countries dropdown
         private _setupCountryDropDown(): void {
             ko.computed((): void => {
@@ -117,32 +120,32 @@ module Agreements.ViewModels {
             if (trail.length > 1 && trail[trail.length - 2] === sammyContext.path) {
                 // swipe backward
                 trail.pop();
-                this.swipeCallback = (): void => {
-                    clone = this.$itemsPage.clone(true)
-                        .removeAttr('data-bind').data('bind', undefined).removeAttr('id');
-                    clone.appendTo(this.$itemsPage.parent());
-                    this.$itemsPage.attr('data-side-swiper', 'off').hide();
-                    this.lockAnimation();
-                    $(window).scrollTop(0);
-                    this.sideSwiper.prev(1, (): void => {
-                        this.$itemsPage.siblings().remove();
-                        this.unlockAnimation();
-                    });
-                };
+                //this.swipeCallback = (): void => {
+                    //clone = this.$itemsPage.clone(true)
+                    //    .removeAttr('data-bind').data('bind', undefined).removeAttr('id');
+                    //clone.appendTo(this.$itemsPage.parent());
+                    //this.$itemsPage.attr('data-side-swiper', 'off').hide();
+                    //this.lockAnimation();
+                    //$(window).scrollTop(0);
+                    //this.sideSwiper.prev(1, (): void => {
+                    //    this.$itemsPage.siblings().remove();
+                    //    this.unlockAnimation();
+                    //});
+                //};
                 return;
             } else if (trail.length > 0) {
                 // swipe forward
-                this.swipeCallback = (): void => {
-                    clone = this.$itemsPage.clone(true)
-                        .removeAttr('data-bind').data('bind', undefined).removeAttr('id');
-                    clone.insertBefore(this.$itemsPage);
-                    this.$itemsPage.attr('data-side-swiper', 'off').hide();
-                    this.lockAnimation();
-                    $(window).scrollTop(0);
-                    this.sideSwiper.next(1, (): void => {
-                        this.unlockAnimation();
-                    });
-                };
+                //this.swipeCallback = (): void => {
+                    //clone = this.$itemsPage.clone(true)
+                    //    .removeAttr('data-bind').data('bind', undefined).removeAttr('id');
+                    //clone.insertBefore(this.$itemsPage);
+                    //this.$itemsPage.attr('data-side-swiper', 'off').hide();
+                    //this.lockAnimation();
+                    //$(window).scrollTop(0);
+                    //this.sideSwiper.next(1, (): void => {
+                    //    this.unlockAnimation();
+                    //});
+                //};
             }
             trail.push(sammyContext.path);
         }
@@ -227,16 +230,29 @@ module Agreements.ViewModels {
                 ko.mapping.fromJS(js, this.resultsMapping, this);
             }
             App.WindowScroller.restoreTop(); // restore scroll when coming back from detail page
-            this.spinner.stop();
-            this.swipeCallback();
+            //this.swipeCallback();
             this.transitionedPageNumber(this.pageNumber());
+            this.dfdFadeInOut2.resolve();
         }
 
         requestResults(): void {
             if (this.pageSize() === undefined || this.orderBy() === undefined)
                 return;
             this.spinner.start();
-
+            $.when(this.dfdFadeInOut2)
+                .done(() => {
+                    this.spinner.stop();
+                    this.$searchResults.fadeIn(400);
+                    this.dfdFadeInOut = $.Deferred();
+                    this.dfdFadeInOut2 = $.Deferred();
+                });
+            if (this.$searchResults.is(":visible")) {
+                this.$searchResults.fadeOut(400, () => {
+                    this.dfdFadeInOut.resolve();
+                });
+            } else {
+                this.dfdFadeInOut.resolve();
+            }
             $.get(App.Routes.WebApi.Agreements.Search.get(), {
                 pageSize: this.pageSize(),
                 pageNumber: this.pageNumber(),
@@ -244,8 +260,11 @@ module Agreements.ViewModels {
                 keyword: this.throttledKeyword(),
                 orderBy: this.orderBy()
             })
-            .done((response: ApiModels.FlatEstablishment[]): void => {
-                this.receiveResults(response);
+                .done((response: ApiModels.FlatEstablishment[]): void => {
+                    $.when(this.dfdFadeInOut)
+                        .done(() => {
+                            this.receiveResults(response);
+                        });
             });
         }
 

@@ -12,13 +12,6 @@
 
          @Scripts.Render("~/bundles/agreementSearch")
     <script type="text/javascript">
-        //ko.bindingHandlers.stopBinding = {
-        //    init: function () {
-        //        return { controlsDescendantBindings: true };
-        //    }
-        //};
-
-        //ko.virtualElements.allowedBindings.stopBinding = true;
 
         var agreementSearcdhViewModel = new Agreements.ViewModels.Search();
         ko.applyBindings(agreementSearcdhViewModel, $('#search')[0]);
