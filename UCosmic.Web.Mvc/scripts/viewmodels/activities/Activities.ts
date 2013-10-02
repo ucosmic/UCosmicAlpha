@@ -183,26 +183,27 @@ module ViewModels.Activities {
             return locationName;
         }
 
-        activityDatesFormatted(startsOnStr: Date, endsOnStr: Date, onGoing: boolean, dateFormat: string): string {
+        activityDatesFormatted(startsOnStr: Date, endsOnStr: Date, onGoing: boolean, startsFormat: string, endsFormat: string): string {
             var formattedDateRange: string = '';
 
             /* May need a separate function to convert from CLR custom date formats to moment formats */
-            dateFormat = (dateFormat != null) ? dateFormat.toUpperCase() : 'MM/DD/YYYY';
+            startsFormat = (startsFormat != null) ? startsFormat.toUpperCase() : 'MM/DD/YYYY';
+            endsFormat = (endsFormat != null) ? endsFormat.toUpperCase() : 'MM/DD/YYYY';
 
             if (startsOnStr == null) {
                 if (endsOnStr != null) {
-                    formattedDateRange = moment(endsOnStr).format(dateFormat);
+                    formattedDateRange = moment(endsOnStr).format(endsFormat);
                 }
                 else if (onGoing) {
                     formattedDateRange = '(Ongoing)';
                 }
             }
             else {
-                formattedDateRange = moment(startsOnStr).format(dateFormat);
+                formattedDateRange = moment(startsOnStr).format(startsFormat);
                 if (onGoing) {
                     formattedDateRange += ' (Ongoing)';
                 } else if (endsOnStr != null) {
-                    formattedDateRange += ' - ' + moment(endsOnStr).format(dateFormat);
+                    formattedDateRange += ' - ' + moment(endsOnStr).format(endsFormat);
                 }
             }
 

@@ -41,6 +41,20 @@ module Activities.ViewModels {
         modeText: KnockoutObservable<string>;
         values: Service.ApiModels.IObservableActivityValues;    // only values for modeText
 
+        activityId: KnockoutObservable<number> = ko.observable();
+        mode: KnockoutObservable<string> = ko.observable();
+        title: KnockoutObservable<string> = ko.observable();
+        content: KnockoutObservable<string> = ko.observable();
+        startsOn: KnockoutObservable<Date> = ko.observable();
+        startsFormat: KnockoutObservable<string> = ko.observable();
+        startsInput: KnockoutObservable<string> = ko.observable();
+        endsOn: KnockoutObservable<Date> = ko.observable();
+        endsFormat: KnockoutObservable<string> = ko.observable();
+        endsInput: KnockoutObservable<string> = ko.observable();
+        onGoing: KnockoutObservable<boolean> = ko.observable();
+        isExternallyFunded: KnockoutObservable<boolean> = ko.observable();
+        isInternallyFunded: KnockoutObservable<boolean> = ko.observable();
+
         //#endregion
         //#region Construction & Initialization
 
@@ -70,75 +84,47 @@ module Activities.ViewModels {
 
             var placeOptionsPact = $.Deferred();
             $.get(App.Routes.WebApi.Activities.Locations.get())
-                .done((data: any[]): void => {
-                    placeOptionsPact.resolve(data);
-                })
-                .fail((jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void => {
-                    placeOptionsPact.reject(jqXHR, textStatus, errorThrown);
-                })
-            ;
+                .done((data: any[]): void => { placeOptionsPact.resolve(data); })
+                .fail((xhr: JQueryXHR): void => { placeOptionsPact.reject(xhr); });
 
             var typeOptionsPact = $.Deferred();
             $.get(App.Routes.WebApi.Employees.ModuleSettings.ActivityTypes.get())
-                .done((data: any[]): void => {
-                    typeOptionsPact.resolve(data);
-                })
-                .fail((jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void => {
-                    typeOptionsPact.reject(jqXHR, textStatus, errorThrown);
-                })
-            ;
+                .done((data: any[]): void => { typeOptionsPact.resolve(data); })
+                .fail((xhr: JQueryXHR): void => { typeOptionsPact.reject(xhr); });
 
             var dataPact = $.Deferred();
-            var dataUrl = $('#activity_get_url_format').text().format(this.workCopyId());
-            $.get(dataUrl)
-                .done((data: Service.ApiModels.IActivityPage): void => {
-                    dataPact.resolve(data);
-                })
-                .fail((jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
-                    dataPact.reject(jqXhr, textStatus, errorThrown);
-                })
-            ;
+            $.get(App.Routes.WebApi.Activities.get(this.workCopyId()))
+                .done((data: Service.ApiModels.IActivityPage): void => { dataPact.resolve(data); })
+                .fail((xhr: JQueryXHR): void => { dataPact.reject(xhr); });
+
+            var data2Pact = $.Deferred();
+            $.get($('#activity_get_url_format').text().format(this.workCopyId()))
+                .done((data: any): void => { data2Pact.resolve(data); })
+                .fail((xhr: JQueryXHR): void => { data2Pact.reject(xhr); });
 
             var placesPact = $.Deferred();
-            var placesUrl = $('#places_get_url_format').text().format(this.workCopyId());
-            $.get(placesUrl)
-                .done((data: any[]): void => {
-                    placesPact.resolve(data);
-                })
-                .fail((jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
-                    placesPact.reject(jqXhr, textStatus, errorThrown);
-                })
-            ;
+            $.get($('#places_get_url_format').text().format(this.workCopyId()))
+                .done((data: any[]): void => { placesPact.resolve(data); })
+                .fail((xhr: JQueryXHR): void => { placesPact.reject(xhr); });
 
             var typesPact = $.Deferred();
-            var typesUrl = $('#types_get_url_format').text().format(this.workCopyId());
-            $.get(typesUrl)
-                .done((data: ApiModels.ActivityType[]): void => {
-                    typesPact.resolve(data);
-                })
-                .fail((jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
-                    typesPact.reject(jqXhr, textStatus, errorThrown);
-                })
-            ;
+            $.get($('#types_get_url_format').text().format(this.workCopyId()))
+                .done((data: ApiModels.ActivityType[]): void => { typesPact.resolve(data); })
+                .fail((xhr: JQueryXHR): void => { typesPact.reject(xhr); });
 
             var tagsPact = $.Deferred();
-            var tagsUrl = $('#tags_get_url_format').text().format(this.workCopyId());
-            $.get(tagsUrl)
-                .done((data: ApiModels.ActivityType[]): void => {
-                    tagsPact.resolve(data);
-                })
-                .fail((jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
-                    tagsPact.reject(jqXhr, textStatus, errorThrown);
-                })
-            ;
+            $.get($('#tags_get_url_format').text().format(this.workCopyId()))
+                .done((data: ApiModels.ActivityType[]): void => { tagsPact.resolve(data); })
+                .fail((xhr: JQueryXHR): void => { tagsPact.reject(xhr); });
 
             //#endregion
             //#region process after all have been loaded
 
-            $.when(typeOptionsPact, placeOptionsPact, dataPact, placesPact, typesPact, tagsPact)
+            $.when(typeOptionsPact, placeOptionsPact, dataPact, data2Pact, placesPact, typesPact, tagsPact)
                 .done((typeOptions: any[],
                     placeOptions: any[],
                     data: Service.ApiModels.IObservableActivity,
+                    data2: any,
                     selectedPlaces: any[],
                     selectedTypes: ApiModels.ActivityType[],
                     tags: ApiModels.ActivityTag[]): void => {
@@ -171,8 +157,65 @@ module Activities.ViewModels {
                             }
                         }
                     };
-
                     ko.mapping.fromJS(data, mapping, this);
+
+                    var mapping2 = {
+                        startsOn: {
+                            update: (options: any): KnockoutObservable<Date> => {
+                                return (options.data != null) ? ko.observable(moment(options.data).toDate()) : ko.observable();
+                            }
+                        },
+                        endsOn: {
+                            update: (options: any): KnockoutObservable<Date> => {
+                                return (options.data != null) ? ko.observable(moment(options.data).toDate()) : ko.observable();
+                            }
+                        }
+                    };
+                    ko.mapping.fromJS(data2, mapping2, this);
+                    this.startsInput.subscribe((newValue: string): void => {
+                        var trimmedValue = $.trim(newValue);
+                        if (trimmedValue != newValue) {
+                            this.startsInput(trimmedValue);
+                            return;
+                        }
+
+                        var newFormat = 'MM/dd/yyyy';
+                        if (newValue) {
+                            newFormat = this.getDateFormat(newValue);
+                        }
+                        this.startsFormat(newFormat);
+                        $("#fromDatePicker").data("kendoDatePicker").options.format = this.startsFormat();
+
+                        if (newValue) {
+                            var date = moment(newValue, [newFormat.toUpperCase()]).toDate();
+                            this.startsOn(date);
+                        }
+                        else {
+                            this.startsOn(undefined);
+                        }
+                    });
+                    this.endsInput.subscribe((newValue: string): void => {
+                        var trimmedValue = $.trim(newValue);
+                        if (trimmedValue != newValue) {
+                            this.endsInput(trimmedValue);
+                            return;
+                        }
+
+                        var newFormat = 'MM/dd/yyyy';
+                        if (newValue) {
+                            newFormat = this.getDateFormat(newValue);
+                        }
+                        this.endsFormat(newFormat);
+                        $("#toDatePicker").data("kendoDatePicker").options.format = this.endsFormat();
+
+                        if (newValue) {
+                            var date = moment(newValue, [newFormat.toUpperCase()]).toDate();
+                            this.endsOn(date);
+                        }
+                        else {
+                            this.endsOn(undefined);
+                        }
+                    });
 
                     //#endregion
                     //#region populate places multiselect
@@ -199,8 +242,8 @@ module Activities.ViewModels {
 
                     deferred.resolve();
                 })
-                .fail((xhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
-                    deferred.reject(xhr, textStatus, errorThrown);
+                .fail((xhr: JQueryXHR): void => {
+                    deferred.reject(xhr);
                 });
 
             //#endregion
@@ -217,12 +260,20 @@ module Activities.ViewModels {
             //#region Kendo DatePickers
 
             $('#' + fromDatePickerId).kendoDatePicker({
-                /* If user clicks date picker button, reset format */
-                open: function (e) { this.options.format = 'MM/dd/yyyy'; }
+                value: this.startsOn(),
+                format: this.startsFormat(),
+                // if user clicks date picker button, reset format
+                open: function (e: kendo.ui.DatePickerEvent) {
+                    this.options.format = 'M/d/yyyy';
+                },
             });
 
             $('#' + toDatePickerId).kendoDatePicker({
-                open: function (e) { this.options.format = 'MM/dd/yyyy'; }
+                value: this.endsOn(),
+                format: this.endsFormat(),
+                open: function (e) {
+                    this.options.format = 'M/d/yyyy';
+                },
             });
 
             //#endregion
@@ -339,31 +390,16 @@ module Activities.ViewModels {
             };
 
             ko.validation.rules['nullSafeDate'] = {
-                validator: (val: any, otherVal: any): boolean => {
-                    var valid: boolean = true;
-                    var format: string = null;
-                    var YYYYPattern = new RegExp('^\\d{4}$');
-                    var MMYYYYPattern = new RegExp('^\\d{1,}/\\d{4}$');
-                    var MMDDYYYYPattern = new RegExp('^\\d{1,}/\\d{1,}/\\d{4}$');
-
-                    if ((val != null) && (val.length > 0)) {
-                        val = $.trim(val);
-
-                        if (YYYYPattern.test(val)) {
-                            val = '01/01/' + val;
-                            format = 'YYYY';
-                        }
-                        else if (MMYYYYPattern.test(val)) {
-                            format = 'MM/YYYY';
-                        }
-                        else if (MMDDYYYYPattern.test(val)) {
-                            format = 'MM/DD/YYYY';
-                        }
-
-                        valid = (format != null) ? moment(val, format).isValid() : false;
-                    }
-
-                    return valid;
+                validator: (value: string): boolean => {
+                    if (!value) return true;
+                    var format: string;
+                    if (this._yyyy.test(value))
+                        format = 'YYYY';
+                    else if (this._mxYyyy.test(value))
+                        format = 'M/YYYY';
+                    else if (this._mxDxYyyy.test(value))
+                        format = 'M/D/YYYY';
+                    return format && moment(value, format).isValid();
                 },
                 message: 'Date must be valid.'
             };
@@ -373,12 +409,12 @@ module Activities.ViewModels {
             ko.validation.group(this.values);
             ko.validation.group(this);
 
-            this.values.title.extend({ required: true, minLength: 1, maxLength: 500 });
+            this.title.extend({ required: true, minLength: 1, maxLength: 500 });
             this.selectedPlaces.extend({ atLeast: 1 });
             if (this.typeOptions().length)
                 this.selectedTypeIds.extend({ atLeast: 1 });
-            this.values.startsOn.extend({ nullSafeDate: { message: 'Start date must valid.' } });
-            this.values.endsOn.extend({ nullSafeDate: { message: 'End date must valid.' } });
+            this.startsInput.extend({ nullSafeDate: { message: 'Start date is not valid.' } });
+            this.endsInput.extend({ nullSafeDate: { message: 'End date is not valid.' } });
         }
 
         //#endregion
@@ -386,70 +422,74 @@ module Activities.ViewModels {
 
         setupSubscriptions(): void {
             /* Autosave when fields change. */
-            this.values.title.subscribe((newValue: any): void => { this.dirtyFlag(true); });
-            this.values.content.subscribe((newValue: any): void => { this.keyCountAutoSave(newValue); });
-            this.values.startsOn.subscribe((newValue: any): void => { this.dirtyFlag(true); });
-            this.values.endsOn.subscribe((newValue: any): void => { this.dirtyFlag(true); });
-            this.values.onGoing.subscribe((newValue: any): void => { this.dirtyFlag(true); });
-            this.values.wasExternallyFunded.subscribe((newValue: any): void => { this.dirtyFlag(true); });
-            this.values.wasInternallyFunded.subscribe((newValue: any): void => { this.dirtyFlag(true); });
+            this.title.subscribe((newValue: any): void => { this.dirtyFlag(true); });
+            this.content.subscribe((newValue: any): void => { this.keyCountAutoSave(newValue); });
+            this.startsOn.subscribe((newValue: any): void => { this.dirtyFlag(true); });
+            this.endsOn.subscribe((newValue: any): void => { this.dirtyFlag(true); });
+            this.onGoing.subscribe((newValue: any): void => { this.dirtyFlag(true); });
+            this.isExternallyFunded.subscribe((newValue: any): void => { this.dirtyFlag(true); });
+            this.isInternallyFunded.subscribe((newValue: any): void => { this.dirtyFlag(true); });
         }
 
         //#endregion
         //#region Date formatting & conversion
 
+        private _yyyy: RegExp = new RegExp('^\\d{4}$');
+        private _mYyyy: RegExp = new RegExp('^\\d{1}/\\d{4}$');
+        private _mmYyyy: RegExp = new RegExp('^\\d{2}/\\d{4}$');
+        private _mxYyyy: RegExp = new RegExp('^\\d{1,}/\\d{4}$');
+        private _mDYyyy: RegExp = new RegExp('^\\d{1}/\\d{1}/\\d{4}$');
+        private _mmDYyyy: RegExp = new RegExp('^\\d{2}/\\d{1}/\\d{4}$');
+        private _mDdYyyy: RegExp = new RegExp('^\\d{1}/\\d{2}/\\d{4}$');
+        private _mmDdYyyy: RegExp = new RegExp('^\\d{2}/\\d{2}/\\d{4}$');
+        private _mxDxYyyy: RegExp = new RegExp('^\\d{1,}/\\d{1,}/\\d{4}$');
+
         getDateFormat(dateStr: string): string {
             var format: string = null;
-            var YYYYPattern = new RegExp('^\\d{4}$');
-            var MMYYYYPattern = new RegExp('^\\d{1,}/\\d{4}$');
-            var MMDDYYYYPattern = new RegExp('^\\d{1,}/\\d{1,}/\\d{4}$');
 
             if ((dateStr != null) && (dateStr.length > 0)) {
                 dateStr = $.trim(dateStr);
 
-                if (YYYYPattern.test(dateStr)) {
-                    format = 'yyyy';
-                }
-                else if (MMYYYYPattern.test(dateStr)) {
-                    format = 'MM/yyyy';
-                }
-                else {
-                    format = 'MM/dd/yyyy';
-                }
+                if (this._yyyy.test(dateStr)) format = 'yyyy';
+                else if (this._mYyyy.test(dateStr)) format = 'M/yyyy';
+                else if (this._mmYyyy.test(dateStr)) format = 'MM/yyyy';
+                else if (this._mDYyyy.test(dateStr)) format = 'M/d/yyyy';
+                else if (this._mmDYyyy.test(dateStr)) format = 'MM/d/yyyy';
+                else if (this._mDdYyyy.test(dateStr)) format = 'M/dd/yyyy';
+                else format = 'MM/dd/yyyy';
             }
 
             return format;
         }
 
-        convertDate(date: any): string {
-            var formatted = null;
-            var YYYYPattern = new RegExp('^\\d{4}$');
-            var MMYYYYPattern = new RegExp('^\\d{1,}/\\d{4}$');
-            var MMDDYYYYPattern = new RegExp('^\\d{1,}/\\d{1,}/\\d{4}$');
+        //convertDate(date: any): string {
+        //    var formatted = null;
+        //    if (typeof (date) === 'object') {
+        //        formatted = moment(date).format();
+        //    }
+        //    else {
+        //        var dateStr = date;
+        //        if ((dateStr != null) && (dateStr.length > 0)) {
+        //            dateStr = $.trim(dateStr);
 
-            if (typeof (date) === 'object') {
-                formatted = moment(date).format();
-            }
-            else {
-                var dateStr = date;
-                if ((dateStr != null) && (dateStr.length > 0)) {
-                    dateStr = $.trim(dateStr);
+        //            if (this._yyyy.test(dateStr)) {
+        //                dateStr = '01/01/' + dateStr; // fixes Moment rounding error)
+        //                formatted = moment(dateStr, ['MM/DD/YYYY']).format();
+        //            }
+        //            //else if (MMYYYYPattern.test(dateStr)) {
+        //            //    formatted = moment(dateStr, ['MM/YYYY']).format();
+        //            //}
+        //            //else if (MMDDYYYYPattern.test(dateStr)) {
+        //            //    formatted = moment(dateStr, ['MM/DD/YYYY']).format();
+        //            //}
+        //            else {
+        //                formatted = moment(dateStr, [this.getDateFormat(dateStr).toUpperCase()]).format();
+        //            }
+        //        }
+        //    }
 
-                    if (YYYYPattern.test(dateStr)) {
-                        dateStr = '01/01/' + dateStr; // fixes Moment rounding error
-                        formatted = moment(dateStr, ['MM/DD/YYYY']).format();
-                    }
-                    else if (MMYYYYPattern.test(dateStr)) {
-                        formatted = moment(dateStr, ['MM/YYYY']).format();
-                    }
-                    else if (MMDDYYYYPattern.test(dateStr)) {
-                        formatted = moment(dateStr, ['MM/DD/YYYY']).format();
-                    }
-                }
-            }
-
-            return formatted;
-        }
+        //    return formatted;
+        //}
 
         //#endregion
         //#region Saving
@@ -477,41 +517,51 @@ module Activities.ViewModels {
 
             var model = ko.mapping.toJS(this);
 
-            if (model.values.startsOn != null) {
-                var dateStr = $('#fromDatePicker').get(0).value;
-                model.values.dateFormat = this.getDateFormat(dateStr);
-                model.values.startsOn = this.convertDate(model.values.startsOn);
-            }
+            //if (model.startsOn != null) {
+            //    var dateStr = $('#fromDatePicker').get(0).value;
+            //    model.startsFormat = this.getDateFormat(dateStr);
+            //    model.startsOn = this.convertDate(model.startsOn);
+            //}
 
-            if (model.values.onGoing) {
-                model.values.endsOn = null;
+            if (model.onGoing) {
+                model.endsOn = null;
             }
-            else if (model.values.endsOn != null) {
-                model.values.endsOn = this.convertDate(model.values.endsOn);
-            }
+            //else if (model.endsOn != null) {
+            //    model.endsOn = this.convertDate(model.endsOn);
+            //}
 
             var url = $('#activity_put_url_format').text().format(this.id());
+            var startsOn: any = this.startsOn();
+            if (startsOn) {
+                startsOn = moment(startsOn).utc().hours(0).format();
+            }
+            var endsOn: any = this.endsOn();
+            if (endsOn) {
+                endsOn = moment(endsOn).utc().hours(0).format();
+            }
+            var data = {
+                mode: model.modeText,
+                title: model.title,
+                content: model.content,
+                startsOn: startsOn,//'1976-04-01T00:00:00-00:00',
+                endsOn: endsOn,
+                startsFormat: model.startsFormat,
+                endsFormat: model.endsFormat,
+                onGoing: model.onGoing,
+                isExternallyFunded: model.isExternallyFunded,
+                isInternallyFunded: model.isInternallyFunded,
+            };
             $.ajax({
                 type: 'PUT',
                 //url: App.Routes.WebApi.Activities.put(this.id()),
                 url: url,
-                data: {
-                    mode: model.modeText,
-                    title: model.values.title,
-                    content: model.values.content,
-                    startsOn: model.values.startsOn,
-                    endsOn: model.values.endsOn,
-                    dateFormat: model.values.dateFormat,
-                    onGoing: model.values.onGoing,
-                    wasExternallyFunded: model.values.wasExternallyFunded,
-                    wasInternallyFunded: model.values.wasInternallyFunded,
-                },
+                data: data,
             })
                 .done((): void => {
                     deferred.resolve();
                 })
-                .fail((jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
-                    deferred.reject(jqXhr, textStatus, errorThrown);
+                .fail((xhr: JQueryXHR): void => {
+                    deferred.reject(xhr);
                 })
                 .always((): void => {
                     this.dirtyFlag(false);
@@ -553,7 +603,7 @@ module Activities.ViewModels {
                             this.saveSpinner.stop();
                         });
                 })
-                .fail((xhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
+                .fail((xhr: JQueryXHR): void => {
                     App.Failures.message(xhr, 'while trying to save your activity', true);
                 });
         }
@@ -916,7 +966,7 @@ module Activities.ViewModels {
                 //    mode: this.modeText(),
                 //},
             })
-                .done((documents: any, textStatus: string, jqXhr: JQueryXHR): void => {
+                .done((documents: any): void => {
 
                     // TODO - This needs to be combined with the initial load mapping.
                     var augmentedDocumentModel = function (data) {
@@ -1016,19 +1066,19 @@ module Activities.ViewModels {
                 data: {
                     title: item.title()
                 },
-                success: (data: any, textStatus: string, jqXhr: JQueryXHR): void => {
+                success: (data: any): void => {
                     $(inputElement).hide();
                     $(inputElement).removeAttr('disabled');
                     var textElement = $(inputElement).siblings('#documentTitle')[0];
                     $(textElement).show();
                 },
-                error: (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
+                error: (xhr: JQueryXHR): void => {
                     item.title(this.previousDocumentTitle);
                     $(inputElement).hide();
                     $(inputElement).removeAttr('disabled');
                     var textElement = $(inputElement).siblings('#documentTitle')[0];
                     $(textElement).show();
-                    $('#documentRenameErrorDialog > #message')[0].innerText = jqXhr.responseText;
+                    $('#documentRenameErrorDialog > #message')[0].innerText = xhr.responseText;
                     $('#documentRenameErrorDialog').dialog({
                         modal: true,
                         resizable: false,

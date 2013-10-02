@@ -84,7 +84,8 @@ declare module Service.ApiModels {
         startsOn?: KnockoutObservable<Date>;
         endsOn?: KnockoutObservable<Date>;
         onGoing?: KnockoutObservable<boolean>;
-        dateFormat: KnockoutObservable<string>;
+        startsFormat: KnockoutObservable<string>;
+        endsFormat: KnockoutObservable<string>;
         wasExternallyFunded: KnockoutObservable<boolean>;
         wasInternallyFunded: KnockoutObservable<boolean>;
         locations: KnockoutObservableArray<any>;

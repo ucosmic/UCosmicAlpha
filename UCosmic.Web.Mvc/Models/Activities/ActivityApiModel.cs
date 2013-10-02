@@ -1,22 +1,27 @@
 ﻿using System;
 using System.Linq;
 using AutoMapper;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using UCosmic.Domain.Activities;
 
 namespace UCosmic.Web.Mvc.Models
 {
     public class ActivityApiEditModel
     {
-        public int ActivityId { get; set; }
+        [JsonConverter(typeof(StringEnumConverter))]
         public ActivityMode Mode { get; set; }
+
+        public int ActivityId { get; set; }
         public string Title { get; set; }
         public string Content { get; set; }
         public DateTime? StartsOn { get; set; }
         public DateTime? EndsOn { get; set; }
+        public string StartsFormat { get; set; }
+        public string EndsFormat { get; set; }
         public bool? OnGoing { get; set; }
-        public string DateFormat { get; set; }
-        public bool? WasExternallyFunded { get; set; }
-        public bool? WasInternallyFunded { get; set; }
+        public bool? IsExternallyFunded { get; set; }
+        public bool? IsInternallyFunded { get; set; }
     }
 
     public class ActivityApiModel

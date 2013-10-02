@@ -216,24 +216,23 @@
             var activityViewModel = new Activities.ViewModels.Activity(activityId, activityWorkCopyId);
             activityViewModel.load()
                 .done(function() {
+                    ko.applyBindings(activityViewModel, $("#activity-edit")[0]);
                     activityViewModel.setupWidgets("fromDatePicker", "toDatePicker", "countrySelector", "uploadFile", "newTag");
 
                     activityViewModel.setupValidation();
 
-                    ko.applyBindings(activityViewModel, $("#activity-edit")[0]);
+                    //var datePicker = $("#fromDatePicker").data("kendoDatePicker");
+                    //datePicker.options.format = activityViewModel.startsFormat();
+                    //datePicker.value(activityViewModel.startsOn());
 
-                    var datePicker = $("#fromDatePicker").data("kendoDatePicker");
-                    datePicker.options.format = activityViewModel.values.dateFormat();
-                    datePicker.value(activityViewModel.values.startsOn());
-
-                    datePicker = $("#toDatePicker").data("kendoDatePicker");
-                    datePicker.options.format = activityViewModel.values.dateFormat();
-                    datePicker.value(activityViewModel.values.endsOn());
+                    //datePicker = $("#toDatePicker").data("kendoDatePicker");
+                    //datePicker.options.format = activityViewModel.endsFormat();
+                    //datePicker.value(activityViewModel.endsOn());
 
                     /* NOTE: Using TinyMCE autosave plugin will disable window.onbeforeunload. */
-                    window.onbeforeunload = function() {
-                        activityViewModel.autoSave();
-                    };
+                    //window.onbeforeunload = function() {
+                    //    activityViewModel.autoSave();
+                    //};
 
                     activityViewModel.setupSubscriptions();
                     activityViewModel.ready(true);
@@ -271,11 +270,11 @@
                     <div style="margin-bottom: 38px">
                         <table class="activity">
                             <tbody>
+                                @* TITLE *@
                                 <tr>
-                                    @* TITLE *@
                                     <td class="label"><span class="container required"><span class="text">Title</span></span></td>
                                     <td>
-                                        <textarea rows="1" placeholder="[Enter Title]" maxlength="500" data-bind="value: values.title"></textarea>
+                                        <textarea rows="1" placeholder="[Enter Title]" maxlength="500" data-bind="value: title"></textarea>
                                     </td>
                                 </tr>
                                 @* COUNTRY *@
@@ -304,26 +303,26 @@
                                     <td>
                                         <div data-bind='validationOptions: { insertMessages: false }'>
                                             <span style="display: inline-block; margin-right: 24px;">
-                                                <input id="fromDatePicker" data-bind="value: values.startsOn" />
+                                                <input id="fromDatePicker" data-bind="value: startsInput" />
                                             </span>
                                             <span style="display: inline-block; margin-right: 24px;">
                                                 <label>
-                                                    <input id="ongoingCheckbox" type="checkbox" data-bind="checked: values.onGoing" />
+                                                    <input id="ongoingCheckbox" type="checkbox" data-bind="checked: onGoing" />
                                                     <span>&nbsp;On-going&nbsp;</span>
                                                 </label>
                                             </span>
-                                            <span style="display: inline-block; width: 220px;" data-bind="visible: !values.onGoing()">
+                                            <span style="display: inline-block; width: 220px;" data-bind="visible: !onGoing()">
                                                 <span>To:</span>
                                                 &nbsp;
-                                                <input id="toDatePicker" data-bind="value: values.endsOn" />
+                                                <input id="toDatePicker" data-bind="value: endsInput" />
                                             </span>
                                         </div>
-                                        @*<span data-bind="validationMessage: values.endsOn" class="validationMessage"></span>*@
+                                        @*<span data-bind="validationMessage: endsOn" class="validationMessage"></span>*@
                                         <div class="example" style="margin-top: 8px">
                                             <span>Enter dates as yyyy, mm/yyyy or use date picker.</span>
                                             <div>
-                                                <span data-bind="validationMessage: values.startsOn" class="validationMessage"></span>
-                                                <span data-bind="validationMessage: values.endsOn" class="validationMessage"></span>
+                                                <span data-bind="validationMessage: startsInput" class="validationMessage"></span>
+                                                <span data-bind="validationMessage: endsInput" class="validationMessage"></span>
                                             </div>
                                         </div>
                                     </td>
@@ -334,13 +333,13 @@
                                     <td>
                                         <div style="margin-bottom: 4px;">
                                             <label>
-                                                <input type="checkbox" style="margin-right: 4px; margin-left: 4px" data-bind="checked: values.wasExternallyFunded" />
+                                                <input type="checkbox" style="margin-right: 4px; margin-left: 4px" data-bind="checked: isExternallyFunded" />
                                                 <span>This activity received <strong>external</strong> funding</span>
                                             </label>
                                         </div>
                                         <div>
                                             <label>
-                                                <input type="checkbox" style="margin-right: 4px; margin-left: 4px" data-bind="checked: values.wasInternallyFunded" />
+                                                <input type="checkbox" style="margin-right: 4px; margin-left: 4px" data-bind="checked: isInternallyFunded" />
                                                 <span>This activity received <strong>internal</strong> funding</span>
                                             </label>
                                         </div>
@@ -354,7 +353,7 @@
                                 <h2 style="font-weight: normal">Description</h2>
                                  @*<img src="~/images/icons/help/question-mark-24-blue.png" alt="Help" style="width: 16px; height: 16px; float: right; margin-bottom: 3px"/>*@ 
                             </header>
-                            <textarea data-bind="tinymce: values.content, valueUpdate: ['afterkeydown','keyup'], tinymceOptions:
+                            <textarea data-bind="tinymce: content, valueUpdate: ['afterkeydown','keyup'], tinymceOptions:
                                 {
                                     content_css: App.Routes.Content.styles('tinymce.css'),
                                     convert_urls: false,
@@ -381,7 +380,7 @@
                                     theme_advanced_path : false
                                 }">
                             </textarea>
-                            @*<textarea id="description" rows="8" data-bind="value: values.content"></textarea>*@
+                            @*<textarea id="description" rows="8" data-bind="value: content"></textarea>*@
                         </div>
                         @* TAGS *@
                         <div style="margin-bottom: 32px">
@@ -465,7 +464,7 @@
                         @* API URL's *@
                         <div style="display: none">
                             @{
-                                var activityGetUrlFormat = Url.HttpRouteUrl(null, new { controller = "Activities", action = "Get", activityId = 0 });
+                                var activityGetUrlFormat = Url.HttpRouteUrl(null, new { controller = "Activities", action = "Get2", activityId = 0 });
                                 if (activityGetUrlFormat != null)
                                 {
                                     activityGetUrlFormat = activityGetUrlFormat.Replace("0", "{0}");

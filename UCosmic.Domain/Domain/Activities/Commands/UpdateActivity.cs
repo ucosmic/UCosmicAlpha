@@ -24,7 +24,8 @@ namespace UCosmic.Domain.Activities
         public DateTime? StartsOn { get; set; }
         public DateTime? EndsOn { get; set; }
         public bool? OnGoing { get; set; }
-        public string DateFormat { get; set; }
+        public string StartsFormat { get; set; }
+        public string EndsFormat { get; set; }
         public bool? WasExternallyFunded { get; set; }
         public bool? WasInternallyFunded { get; set; }
         public IPrincipal Impersonator { get; set; }
@@ -104,7 +105,8 @@ namespace UCosmic.Domain.Activities
 
             values.Title = command.Title;
             values.Content = command.Content;
-            values.DateFormat = command.DateFormat;
+            values.StartsFormat = command.StartsFormat;
+            values.EndsFormat = command.EndsFormat;
             values.StartsOn = command.StartsOn;
             values.EndsOn = command.EndsOn;
             values.OnGoing = command.OnGoing;

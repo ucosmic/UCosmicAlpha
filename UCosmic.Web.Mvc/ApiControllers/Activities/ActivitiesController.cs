@@ -68,20 +68,6 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
             var model = Mapper.Map<ActivityApiModel>(activity);
-            var values = activity.Values.Single(x => x.Mode == x.Activity.Mode);
-            var model2 = new ActivityApiEditModel
-            {
-                ActivityId = activityId,
-                Mode = activity.Mode,
-                Title = values.Title,
-                Content = values.Content,
-                StartsOn = values.StartsOn,
-                EndsOn = values.EndsOn,
-                OnGoing = values.OnGoing,
-                DateFormat = values.DateFormat,
-                WasExternallyFunded = values.WasExternallyFunded,
-                WasInternallyFunded = values.WasInternallyFunded,
-            };
             return model;
         }
 
@@ -108,9 +94,10 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 StartsOn = values.StartsOn,
                 EndsOn = values.EndsOn,
                 OnGoing = values.OnGoing,
-                DateFormat = values.DateFormat,
-                WasExternallyFunded = values.WasExternallyFunded,
-                WasInternallyFunded = values.WasInternallyFunded,
+                StartsFormat = values.StartsFormat,
+                EndsFormat = values.EndsFormat,
+                IsExternallyFunded = values.WasExternallyFunded,
+                IsInternallyFunded = values.WasInternallyFunded,
             };
             return model;
         }

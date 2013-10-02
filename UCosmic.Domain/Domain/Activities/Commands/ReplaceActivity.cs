@@ -108,7 +108,8 @@ namespace UCosmic.Domain.Activities
             originalActivity.UpdatedOnUtc = DateTime.UtcNow;
             originalValues.Title = workCopyValues.Title;
             originalValues.Content = workCopyValues.Content;
-            originalValues.DateFormat = workCopyValues.DateFormat;
+            originalValues.StartsFormat = workCopyValues.StartsFormat;
+            originalValues.EndsFormat = workCopyValues.EndsFormat;
             originalValues.StartsOn = workCopyValues.StartsOn;
             originalValues.EndsOn = workCopyValues.EndsOn;
             originalValues.OnGoing = workCopyValues.OnGoing;

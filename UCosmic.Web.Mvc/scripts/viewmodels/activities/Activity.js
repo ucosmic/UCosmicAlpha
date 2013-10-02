@@ -27,6 +27,30 @@ var Activities;
                 // In the process of saving
                 this.saving = false;
                 this.saveSpinner = new App.Spinner(new App.SpinnerOptions(200));
+                this.activityId = ko.observable();
+                this.mode = ko.observable();
+                this.title = ko.observable();
+                this.content = ko.observable();
+                this.startsOn = ko.observable();
+                this.startsFormat = ko.observable();
+                this.startsInput = ko.observable();
+                this.endsOn = ko.observable();
+                this.endsFormat = ko.observable();
+                this.endsInput = ko.observable();
+                this.onGoing = ko.observable();
+                this.isExternallyFunded = ko.observable();
+                this.isInternallyFunded = ko.observable();
+                //#endregion
+                //#region Date formatting & conversion
+                this._yyyy = new RegExp('^\\d{4}$');
+                this._mYyyy = new RegExp('^\\d{1}/\\d{4}$');
+                this._mmYyyy = new RegExp('^\\d{2}/\\d{4}$');
+                this._mxYyyy = new RegExp('^\\d{1,}/\\d{4}$');
+                this._mDYyyy = new RegExp('^\\d{1}/\\d{1}/\\d{4}$');
+                this._mmDYyyy = new RegExp('^\\d{2}/\\d{1}/\\d{4}$');
+                this._mDdYyyy = new RegExp('^\\d{1}/\\d{2}/\\d{4}$');
+                this._mmDdYyyy = new RegExp('^\\d{2}/\\d{2}/\\d{4}$');
+                this._mxDxYyyy = new RegExp('^\\d{1,}/\\d{1,}/\\d{4}$');
                 this._isSaved = false;
                 this._isDeleted = false;
                 //#endregion
@@ -75,52 +99,55 @@ var Activities;
                 var placeOptionsPact = $.Deferred();
                 $.get(App.Routes.WebApi.Activities.Locations.get()).done(function (data) {
                     placeOptionsPact.resolve(data);
-                }).fail(function (jqXHR, textStatus, errorThrown) {
-                    placeOptionsPact.reject(jqXHR, textStatus, errorThrown);
+                }).fail(function (xhr) {
+                    placeOptionsPact.reject(xhr);
                 });
 
                 var typeOptionsPact = $.Deferred();
                 $.get(App.Routes.WebApi.Employees.ModuleSettings.ActivityTypes.get()).done(function (data) {
                     typeOptionsPact.resolve(data);
-                }).fail(function (jqXHR, textStatus, errorThrown) {
-                    typeOptionsPact.reject(jqXHR, textStatus, errorThrown);
+                }).fail(function (xhr) {
+                    typeOptionsPact.reject(xhr);
                 });
 
                 var dataPact = $.Deferred();
-                var dataUrl = $('#activity_get_url_format').text().format(this.workCopyId());
-                $.get(dataUrl).done(function (data) {
+                $.get(App.Routes.WebApi.Activities.get(this.workCopyId())).done(function (data) {
                     dataPact.resolve(data);
-                }).fail(function (jqXhr, textStatus, errorThrown) {
-                    dataPact.reject(jqXhr, textStatus, errorThrown);
+                }).fail(function (xhr) {
+                    dataPact.reject(xhr);
+                });
+
+                var data2Pact = $.Deferred();
+                $.get($('#activity_get_url_format').text().format(this.workCopyId())).done(function (data) {
+                    data2Pact.resolve(data);
+                }).fail(function (xhr) {
+                    data2Pact.reject(xhr);
                 });
 
                 var placesPact = $.Deferred();
-                var placesUrl = $('#places_get_url_format').text().format(this.workCopyId());
-                $.get(placesUrl).done(function (data) {
+                $.get($('#places_get_url_format').text().format(this.workCopyId())).done(function (data) {
                     placesPact.resolve(data);
-                }).fail(function (jqXhr, textStatus, errorThrown) {
-                    placesPact.reject(jqXhr, textStatus, errorThrown);
+                }).fail(function (xhr) {
+                    placesPact.reject(xhr);
                 });
 
                 var typesPact = $.Deferred();
-                var typesUrl = $('#types_get_url_format').text().format(this.workCopyId());
-                $.get(typesUrl).done(function (data) {
+                $.get($('#types_get_url_format').text().format(this.workCopyId())).done(function (data) {
                     typesPact.resolve(data);
-                }).fail(function (jqXhr, textStatus, errorThrown) {
-                    typesPact.reject(jqXhr, textStatus, errorThrown);
+                }).fail(function (xhr) {
+                    typesPact.reject(xhr);
                 });
 
                 var tagsPact = $.Deferred();
-                var tagsUrl = $('#tags_get_url_format').text().format(this.workCopyId());
-                $.get(tagsUrl).done(function (data) {
+                $.get($('#tags_get_url_format').text().format(this.workCopyId())).done(function (data) {
                     tagsPact.resolve(data);
-                }).fail(function (jqXhr, textStatus, errorThrown) {
-                    tagsPact.reject(jqXhr, textStatus, errorThrown);
+                }).fail(function (xhr) {
+                    tagsPact.reject(xhr);
                 });
 
                 //#endregion
                 //#region process after all have been loaded
-                $.when(typeOptionsPact, placeOptionsPact, dataPact, placesPact, typesPact, tagsPact).done(function (typeOptions, placeOptions, data, selectedPlaces, selectedTypes, tags) {
+                $.when(typeOptionsPact, placeOptionsPact, dataPact, data2Pact, placesPact, typesPact, tagsPact).done(function (typeOptions, placeOptions, data, data2, selectedPlaces, selectedTypes, tags) {
                     //#region populate activity data
                     // Although the MVC DateTime to JSON serializer will output an ISO compatible
                     // string, we are not guarenteed that a browser's Date(string) or Date.parse(string)
@@ -148,8 +175,63 @@ var Activities;
                             }
                         }
                     };
-
                     ko.mapping.fromJS(data, mapping, _this);
+
+                    var mapping2 = {
+                        startsOn: {
+                            update: function (options) {
+                                return (options.data != null) ? ko.observable(moment(options.data).toDate()) : ko.observable();
+                            }
+                        },
+                        endsOn: {
+                            update: function (options) {
+                                return (options.data != null) ? ko.observable(moment(options.data).toDate()) : ko.observable();
+                            }
+                        }
+                    };
+                    ko.mapping.fromJS(data2, mapping2, _this);
+                    _this.startsInput.subscribe(function (newValue) {
+                        var trimmedValue = $.trim(newValue);
+                        if (trimmedValue != newValue) {
+                            _this.startsInput(trimmedValue);
+                            return;
+                        }
+
+                        var newFormat = 'MM/dd/yyyy';
+                        if (newValue) {
+                            newFormat = _this.getDateFormat(newValue);
+                        }
+                        _this.startsFormat(newFormat);
+                        $("#fromDatePicker").data("kendoDatePicker").options.format = _this.startsFormat();
+
+                        if (newValue) {
+                            var date = moment(newValue, [newFormat.toUpperCase()]).toDate();
+                            _this.startsOn(date);
+                        } else {
+                            _this.startsOn(undefined);
+                        }
+                    });
+                    _this.endsInput.subscribe(function (newValue) {
+                        var trimmedValue = $.trim(newValue);
+                        if (trimmedValue != newValue) {
+                            _this.endsInput(trimmedValue);
+                            return;
+                        }
+
+                        var newFormat = 'MM/dd/yyyy';
+                        if (newValue) {
+                            newFormat = _this.getDateFormat(newValue);
+                        }
+                        _this.endsFormat(newFormat);
+                        $("#toDatePicker").data("kendoDatePicker").options.format = _this.endsFormat();
+
+                        if (newValue) {
+                            var date = moment(newValue, [newFormat.toUpperCase()]).toDate();
+                            _this.endsOn(date);
+                        } else {
+                            _this.endsOn(undefined);
+                        }
+                    });
 
                     //#endregion
                     //#region populate places multiselect
@@ -171,8 +253,8 @@ var Activities;
                     _this.tags(tags);
 
                     deferred.resolve();
-                }).fail(function (xhr, textStatus, errorThrown) {
-                    deferred.reject(xhr, textStatus, errorThrown);
+                }).fail(function (xhr) {
+                    deferred.reject(xhr);
                 });
 
                 //#endregion
@@ -185,15 +267,19 @@ var Activities;
                 var _this = this;
                 //#region Kendo DatePickers
                 $('#' + fromDatePickerId).kendoDatePicker({
-                    /* If user clicks date picker button, reset format */
+                    value: this.startsOn(),
+                    format: this.startsFormat(),
+                    // if user clicks date picker button, reset format
                     open: function (e) {
-                        this.options.format = 'MM/dd/yyyy';
+                        this.options.format = 'M/d/yyyy';
                     }
                 });
 
                 $('#' + toDatePickerId).kendoDatePicker({
+                    value: this.endsOn(),
+                    format: this.endsFormat(),
                     open: function (e) {
-                        this.options.format = 'MM/dd/yyyy';
+                        this.options.format = 'M/d/yyyy';
                     }
                 });
 
@@ -289,6 +375,7 @@ var Activities;
             };
 
             Activity.prototype.setupValidation = function () {
+                var _this = this;
                 ko.validation.rules['atLeast'] = {
                     validator: function (val, otherVal) {
                         return val.length >= otherVal;
@@ -297,29 +384,17 @@ var Activities;
                 };
 
                 ko.validation.rules['nullSafeDate'] = {
-                    validator: function (val, otherVal) {
-                        var valid = true;
-                        var format = null;
-                        var YYYYPattern = new RegExp('^\\d{4}$');
-                        var MMYYYYPattern = new RegExp('^\\d{1,}/\\d{4}$');
-                        var MMDDYYYYPattern = new RegExp('^\\d{1,}/\\d{1,}/\\d{4}$');
-
-                        if ((val != null) && (val.length > 0)) {
-                            val = $.trim(val);
-
-                            if (YYYYPattern.test(val)) {
-                                val = '01/01/' + val;
-                                format = 'YYYY';
-                            } else if (MMYYYYPattern.test(val)) {
-                                format = 'MM/YYYY';
-                            } else if (MMDDYYYYPattern.test(val)) {
-                                format = 'MM/DD/YYYY';
-                            }
-
-                            valid = (format != null) ? moment(val, format).isValid() : false;
-                        }
-
-                        return valid;
+                    validator: function (value) {
+                        if (!value)
+                            return true;
+                        var format;
+                        if (_this._yyyy.test(value))
+                            format = 'YYYY';
+else if (_this._mxYyyy.test(value))
+                            format = 'M/YYYY';
+else if (_this._mxDxYyyy.test(value))
+                            format = 'M/D/YYYY';
+                        return format && moment(value, format).isValid();
                     },
                     message: 'Date must be valid.'
                 };
@@ -329,12 +404,12 @@ var Activities;
                 ko.validation.group(this.values);
                 ko.validation.group(this);
 
-                this.values.title.extend({ required: true, minLength: 1, maxLength: 500 });
+                this.title.extend({ required: true, minLength: 1, maxLength: 500 });
                 this.selectedPlaces.extend({ atLeast: 1 });
                 if (this.typeOptions().length)
                     this.selectedTypeIds.extend({ atLeast: 1 });
-                this.values.startsOn.extend({ nullSafeDate: { message: 'Start date must valid.' } });
-                this.values.endsOn.extend({ nullSafeDate: { message: 'End date must valid.' } });
+                this.startsInput.extend({ nullSafeDate: { message: 'Start date is not valid.' } });
+                this.endsInput.extend({ nullSafeDate: { message: 'End date is not valid.' } });
             };
 
             //#endregion
@@ -342,79 +417,80 @@ var Activities;
             Activity.prototype.setupSubscriptions = function () {
                 var _this = this;
                 /* Autosave when fields change. */
-                this.values.title.subscribe(function (newValue) {
+                this.title.subscribe(function (newValue) {
                     _this.dirtyFlag(true);
                 });
-                this.values.content.subscribe(function (newValue) {
+                this.content.subscribe(function (newValue) {
                     _this.keyCountAutoSave(newValue);
                 });
-                this.values.startsOn.subscribe(function (newValue) {
+                this.startsOn.subscribe(function (newValue) {
                     _this.dirtyFlag(true);
                 });
-                this.values.endsOn.subscribe(function (newValue) {
+                this.endsOn.subscribe(function (newValue) {
                     _this.dirtyFlag(true);
                 });
-                this.values.onGoing.subscribe(function (newValue) {
+                this.onGoing.subscribe(function (newValue) {
                     _this.dirtyFlag(true);
                 });
-                this.values.wasExternallyFunded.subscribe(function (newValue) {
+                this.isExternallyFunded.subscribe(function (newValue) {
                     _this.dirtyFlag(true);
                 });
-                this.values.wasInternallyFunded.subscribe(function (newValue) {
+                this.isInternallyFunded.subscribe(function (newValue) {
                     _this.dirtyFlag(true);
                 });
             };
 
-            //#endregion
-            //#region Date formatting & conversion
             Activity.prototype.getDateFormat = function (dateStr) {
                 var format = null;
-                var YYYYPattern = new RegExp('^\\d{4}$');
-                var MMYYYYPattern = new RegExp('^\\d{1,}/\\d{4}$');
-                var MMDDYYYYPattern = new RegExp('^\\d{1,}/\\d{1,}/\\d{4}$');
 
                 if ((dateStr != null) && (dateStr.length > 0)) {
                     dateStr = $.trim(dateStr);
 
-                    if (YYYYPattern.test(dateStr)) {
+                    if (this._yyyy.test(dateStr))
                         format = 'yyyy';
-                    } else if (MMYYYYPattern.test(dateStr)) {
+else if (this._mYyyy.test(dateStr))
+                        format = 'M/yyyy';
+else if (this._mmYyyy.test(dateStr))
                         format = 'MM/yyyy';
-                    } else {
+else if (this._mDYyyy.test(dateStr))
+                        format = 'M/d/yyyy';
+else if (this._mmDYyyy.test(dateStr))
+                        format = 'MM/d/yyyy';
+else if (this._mDdYyyy.test(dateStr))
+                        format = 'M/dd/yyyy';
+else
                         format = 'MM/dd/yyyy';
-                    }
                 }
 
                 return format;
             };
 
-            Activity.prototype.convertDate = function (date) {
-                var formatted = null;
-                var YYYYPattern = new RegExp('^\\d{4}$');
-                var MMYYYYPattern = new RegExp('^\\d{1,}/\\d{4}$');
-                var MMDDYYYYPattern = new RegExp('^\\d{1,}/\\d{1,}/\\d{4}$');
-
-                if (typeof (date) === 'object') {
-                    formatted = moment(date).format();
-                } else {
-                    var dateStr = date;
-                    if ((dateStr != null) && (dateStr.length > 0)) {
-                        dateStr = $.trim(dateStr);
-
-                        if (YYYYPattern.test(dateStr)) {
-                            dateStr = '01/01/' + dateStr;
-                            formatted = moment(dateStr, ['MM/DD/YYYY']).format();
-                        } else if (MMYYYYPattern.test(dateStr)) {
-                            formatted = moment(dateStr, ['MM/YYYY']).format();
-                        } else if (MMDDYYYYPattern.test(dateStr)) {
-                            formatted = moment(dateStr, ['MM/DD/YYYY']).format();
-                        }
-                    }
-                }
-
-                return formatted;
-            };
-
+            //convertDate(date: any): string {
+            //    var formatted = null;
+            //    if (typeof (date) === 'object') {
+            //        formatted = moment(date).format();
+            //    }
+            //    else {
+            //        var dateStr = date;
+            //        if ((dateStr != null) && (dateStr.length > 0)) {
+            //            dateStr = $.trim(dateStr);
+            //            if (this._yyyy.test(dateStr)) {
+            //                dateStr = '01/01/' + dateStr; // fixes Moment rounding error)
+            //                formatted = moment(dateStr, ['MM/DD/YYYY']).format();
+            //            }
+            //            //else if (MMYYYYPattern.test(dateStr)) {
+            //            //    formatted = moment(dateStr, ['MM/YYYY']).format();
+            //            //}
+            //            //else if (MMDDYYYYPattern.test(dateStr)) {
+            //            //    formatted = moment(dateStr, ['MM/DD/YYYY']).format();
+            //            //}
+            //            else {
+            //                formatted = moment(dateStr, [this.getDateFormat(dateStr).toUpperCase()]).format();
+            //            }
+            //        }
+            //    }
+            //    return formatted;
+            //}
             //#endregion
             //#region Saving
             Activity.prototype.keyCountAutoSave = function (newValue) {
@@ -438,38 +514,43 @@ var Activities;
 
                 var model = ko.mapping.toJS(this);
 
-                if (model.values.startsOn != null) {
-                    var dateStr = $('#fromDatePicker').get(0).value;
-                    model.values.dateFormat = this.getDateFormat(dateStr);
-                    model.values.startsOn = this.convertDate(model.values.startsOn);
+                if (model.onGoing) {
+                    model.endsOn = null;
                 }
 
-                if (model.values.onGoing) {
-                    model.values.endsOn = null;
-                } else if (model.values.endsOn != null) {
-                    model.values.endsOn = this.convertDate(model.values.endsOn);
-                }
-
+                //else if (model.endsOn != null) {
+                //    model.endsOn = this.convertDate(model.endsOn);
+                //}
                 var url = $('#activity_put_url_format').text().format(this.id());
+                var startsOn = this.startsOn();
+                if (startsOn) {
+                    startsOn = moment(startsOn).utc().hours(0).format();
+                }
+                var endsOn = this.endsOn();
+                if (endsOn) {
+                    endsOn = moment(endsOn).utc().hours(0).format();
+                }
+                var data = {
+                    mode: model.modeText,
+                    title: model.title,
+                    content: model.content,
+                    startsOn: startsOn,
+                    endsOn: endsOn,
+                    startsFormat: model.startsFormat,
+                    endsFormat: model.endsFormat,
+                    onGoing: model.onGoing,
+                    isExternallyFunded: model.isExternallyFunded,
+                    isInternallyFunded: model.isInternallyFunded
+                };
                 $.ajax({
                     type: 'PUT',
                     //url: App.Routes.WebApi.Activities.put(this.id()),
                     url: url,
-                    data: {
-                        mode: model.modeText,
-                        title: model.values.title,
-                        content: model.values.content,
-                        startsOn: model.values.startsOn,
-                        endsOn: model.values.endsOn,
-                        dateFormat: model.values.dateFormat,
-                        onGoing: model.values.onGoing,
-                        wasExternallyFunded: model.values.wasExternallyFunded,
-                        wasInternallyFunded: model.values.wasInternallyFunded
-                    }
+                    data: data
                 }).done(function () {
                     deferred.resolve();
-                }).fail(function (jqXhr, textStatus, errorThrown) {
-                    deferred.reject(jqXhr, textStatus, errorThrown);
+                }).fail(function (xhr) {
+                    deferred.reject(xhr);
                 }).always(function () {
                     _this.dirtyFlag(false);
                     _this.saveSpinner.stop();
@@ -504,7 +585,7 @@ var Activities;
                         _this.dirtyFlag(false);
                         _this.saveSpinner.stop();
                     });
-                }).fail(function (xhr, textStatus, errorThrown) {
+                }).fail(function (xhr) {
                     App.Failures.message(xhr, 'while trying to save your activity', true);
                 });
             };
@@ -814,7 +895,7 @@ else if (removedPlaceIds.length === 1)
                     type: 'GET',
                     //url: App.Routes.WebApi.Activities.Documents.get(this.id(), null, this.modeText()),
                     url: url
-                }).done(function (documents, textStatus, jqXhr) {
+                }).done(function (documents) {
                     // TODO - This needs to be combined with the initial load mapping.
                     var augmentedDocumentModel = function (data) {
                         ko.mapping.fromJS(data, {}, this);
@@ -914,19 +995,19 @@ else if (removedPlaceIds.length === 1)
                     data: {
                         title: item.title()
                     },
-                    success: function (data, textStatus, jqXhr) {
+                    success: function (data) {
                         $(inputElement).hide();
                         $(inputElement).removeAttr('disabled');
                         var textElement = $(inputElement).siblings('#documentTitle')[0];
                         $(textElement).show();
                     },
-                    error: function (jqXhr, textStatus, errorThrown) {
+                    error: function (xhr) {
                         item.title(_this.previousDocumentTitle);
                         $(inputElement).hide();
                         $(inputElement).removeAttr('disabled');
                         var textElement = $(inputElement).siblings('#documentTitle')[0];
                         $(textElement).show();
-                        $('#documentRenameErrorDialog > #message')[0].innerText = jqXhr.responseText;
+                        $('#documentRenameErrorDialog > #message')[0].innerText = xhr.responseText;
                         $('#documentRenameErrorDialog').dialog({
                             modal: true,
                             resizable: false,
