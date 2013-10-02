@@ -303,7 +303,7 @@
                                     <td>
                                         <div data-bind='validationOptions: { insertMessages: false }'>
                                             <span style="display: inline-block; margin-right: 24px;">
-                                                <input id="fromDatePicker" data-bind="value: startsInput" />
+                                                <input id="fromDatePicker" data-bind="value: startsOn.input" />
                                             </span>
                                             <span style="display: inline-block; margin-right: 24px;">
                                                 <label>
@@ -314,15 +314,14 @@
                                             <span style="display: inline-block; width: 220px;" data-bind="visible: !onGoing()">
                                                 <span>To:</span>
                                                 &nbsp;
-                                                <input id="toDatePicker" data-bind="value: endsInput" />
+                                                <input id="toDatePicker" data-bind="value: endsOn.input" />
                                             </span>
                                         </div>
-                                        @*<span data-bind="validationMessage: endsOn" class="validationMessage"></span>*@
                                         <div class="example" style="margin-top: 8px">
                                             <span>Enter dates as yyyy, mm/yyyy or use date picker.</span>
                                             <div>
-                                                <span data-bind="validationMessage: startsInput" class="validationMessage"></span>
-                                                <span data-bind="validationMessage: endsInput" class="validationMessage"></span>
+                                                <span data-bind="validationMessage: startsOn.input" class="validationMessage"></span>
+                                                <span data-bind="validationMessage: endsOn.input" class="validationMessage"></span>
                                             </div>
                                         </div>
                                     </td>

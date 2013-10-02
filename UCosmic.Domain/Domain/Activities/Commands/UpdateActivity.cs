@@ -72,6 +72,9 @@ namespace UCosmic.Domain.Activities
         {
             if (command == null) throw new ArgumentNullException("command");
 
+            if (command.OnGoing.HasValue && command.OnGoing.Value)
+                command.EndsOn = null;
+
             var activity = _entities.Get<Activity>()
                 .EagerLoad(_entities, new Expression<Func<Activity, object>>[]
                 {

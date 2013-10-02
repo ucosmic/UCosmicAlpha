@@ -45,12 +45,8 @@ module Activities.ViewModels {
         mode: KnockoutObservable<string> = ko.observable();
         title: KnockoutObservable<string> = ko.observable();
         content: KnockoutObservable<string> = ko.observable();
-        startsOn: KnockoutObservable<Date> = ko.observable();
-        startsFormat: KnockoutObservable<string> = ko.observable();
-        startsInput: KnockoutObservable<string> = ko.observable();
-        endsOn: KnockoutObservable<Date> = ko.observable();
-        endsFormat: KnockoutObservable<string> = ko.observable();
-        endsInput: KnockoutObservable<string> = ko.observable();
+        startsOn: FormattedDateInput;
+        endsOn: FormattedDateInput;
         onGoing: KnockoutObservable<boolean> = ko.observable();
         isExternallyFunded: KnockoutObservable<boolean> = ko.observable();
         isInternallyFunded: KnockoutObservable<boolean> = ko.observable();
@@ -146,76 +142,16 @@ module Activities.ViewModels {
                                 return new augmentedDocumentModel(options.data);
                             }
                         },
-                        startsOn: {
-                            create: (options: any): KnockoutObservable<Date> => {
-                                return (options.data != null) ? ko.observable(moment(options.data).toDate()) : ko.observable();
-                            }
-                        },
-                        endsOn: {
-                            create: (options: any): KnockoutObservable<Date> => {
-                                return (options.data != null) ? ko.observable(moment(options.data).toDate()) : ko.observable();
-                            }
-                        }
                     };
                     ko.mapping.fromJS(data, mapping, this);
 
                     var mapping2 = {
-                        startsOn: {
-                            update: (options: any): KnockoutObservable<Date> => {
-                                return (options.data != null) ? ko.observable(moment(options.data).toDate()) : ko.observable();
-                            }
-                        },
-                        endsOn: {
-                            update: (options: any): KnockoutObservable<Date> => {
-                                return (options.data != null) ? ko.observable(moment(options.data).toDate()) : ko.observable();
-                            }
-                        }
+                        ignore: ['startsOn', 'endsOn', 'startsFormat', 'endsFormat'],
                     };
                     ko.mapping.fromJS(data2, mapping2, this);
-                    this.startsInput.subscribe((newValue: string): void => {
-                        var trimmedValue = $.trim(newValue);
-                        if (trimmedValue != newValue) {
-                            this.startsInput(trimmedValue);
-                            return;
-                        }
 
-                        var newFormat = 'MM/dd/yyyy';
-                        if (newValue) {
-                            newFormat = this.getDateFormat(newValue);
-                        }
-                        this.startsFormat(newFormat);
-                        $("#fromDatePicker").data("kendoDatePicker").options.format = this.startsFormat();
-
-                        if (newValue) {
-                            var date = moment(newValue, [newFormat.toUpperCase()]).toDate();
-                            this.startsOn(date);
-                        }
-                        else {
-                            this.startsOn(undefined);
-                        }
-                    });
-                    this.endsInput.subscribe((newValue: string): void => {
-                        var trimmedValue = $.trim(newValue);
-                        if (trimmedValue != newValue) {
-                            this.endsInput(trimmedValue);
-                            return;
-                        }
-
-                        var newFormat = 'MM/dd/yyyy';
-                        if (newValue) {
-                            newFormat = this.getDateFormat(newValue);
-                        }
-                        this.endsFormat(newFormat);
-                        $("#toDatePicker").data("kendoDatePicker").options.format = this.endsFormat();
-
-                        if (newValue) {
-                            var date = moment(newValue, [newFormat.toUpperCase()]).toDate();
-                            this.endsOn(date);
-                        }
-                        else {
-                            this.endsOn(undefined);
-                        }
-                    });
+                    this.startsOn = new FormattedDateInput(data2.startsOn, data2.startsFormat);
+                    this.endsOn = new FormattedDateInput(data2.endsOn, data2.endsFormat);
 
                     //#endregion
                     //#region populate places multiselect
@@ -260,21 +196,23 @@ module Activities.ViewModels {
             //#region Kendo DatePickers
 
             $('#' + fromDatePickerId).kendoDatePicker({
-                value: this.startsOn(),
-                format: this.startsFormat(),
+                value: this.startsOn.date(),
+                format: this.startsOn.format(),
                 // if user clicks date picker button, reset format
                 open: function (e: kendo.ui.DatePickerEvent) {
                     this.options.format = 'M/d/yyyy';
                 },
             });
+            this.startsOn.kendoDatePicker = $('#' + fromDatePickerId).data('kendoDatePicker');
 
             $('#' + toDatePickerId).kendoDatePicker({
-                value: this.endsOn(),
-                format: this.endsFormat(),
+                value: this.endsOn.date(),
+                format: this.endsOn.format(),
                 open: function (e) {
                     this.options.format = 'M/d/yyyy';
                 },
             });
+            this.endsOn.kendoDatePicker = $('#' + toDatePickerId).data('kendoDatePicker');
 
             //#endregion
             //#region Kendo MultiSelect for Places
@@ -389,19 +327,11 @@ module Activities.ViewModels {
                 message: 'At least {0} must be selected.'
             };
 
-            ko.validation.rules['nullSafeDate'] = {
-                validator: (value: string): boolean => {
-                    if (!value) return true;
-                    var format: string;
-                    if (this._yyyy.test(value))
-                        format = 'YYYY';
-                    else if (this._mxYyyy.test(value))
-                        format = 'M/YYYY';
-                    else if (this._mxDxYyyy.test(value))
-                        format = 'M/D/YYYY';
-                    return format && moment(value, format).isValid();
+            ko.validation.rules['formattedDate'] = {
+                validator: (value: string, params: FormattedDateInput): boolean => {
+                    return params.isValid();
                 },
-                message: 'Date must be valid.'
+                message: 'Date is not valid.'
             };
 
             ko.validation.registerExtenders();
@@ -413,8 +343,19 @@ module Activities.ViewModels {
             this.selectedPlaces.extend({ atLeast: 1 });
             if (this.typeOptions().length)
                 this.selectedTypeIds.extend({ atLeast: 1 });
-            this.startsInput.extend({ nullSafeDate: { message: 'Start date is not valid.' } });
-            this.endsInput.extend({ nullSafeDate: { message: 'End date is not valid.' } });
+
+            this.startsOn.input.extend({
+                formattedDate: {
+                    params: this.startsOn,
+                    message: 'Start date is not valid.',
+                }
+            });
+            this.endsOn.input.extend({
+                formattedDate: {
+                    params: this.endsOn,
+                    message: 'End date is not valid.',
+                }
+            });
         }
 
         //#endregion
@@ -424,72 +365,12 @@ module Activities.ViewModels {
             /* Autosave when fields change. */
             this.title.subscribe((newValue: any): void => { this.dirtyFlag(true); });
             this.content.subscribe((newValue: any): void => { this.keyCountAutoSave(newValue); });
-            this.startsOn.subscribe((newValue: any): void => { this.dirtyFlag(true); });
-            this.endsOn.subscribe((newValue: any): void => { this.dirtyFlag(true); });
+            this.startsOn.input.subscribe((newValue: any): void => { this.dirtyFlag(true); });
+            this.endsOn.input.subscribe((newValue: any): void => { this.dirtyFlag(true); });
             this.onGoing.subscribe((newValue: any): void => { this.dirtyFlag(true); });
             this.isExternallyFunded.subscribe((newValue: any): void => { this.dirtyFlag(true); });
             this.isInternallyFunded.subscribe((newValue: any): void => { this.dirtyFlag(true); });
         }
-
-        //#endregion
-        //#region Date formatting & conversion
-
-        private _yyyy: RegExp = new RegExp('^\\d{4}$');
-        private _mYyyy: RegExp = new RegExp('^\\d{1}/\\d{4}$');
-        private _mmYyyy: RegExp = new RegExp('^\\d{2}/\\d{4}$');
-        private _mxYyyy: RegExp = new RegExp('^\\d{1,}/\\d{4}$');
-        private _mDYyyy: RegExp = new RegExp('^\\d{1}/\\d{1}/\\d{4}$');
-        private _mmDYyyy: RegExp = new RegExp('^\\d{2}/\\d{1}/\\d{4}$');
-        private _mDdYyyy: RegExp = new RegExp('^\\d{1}/\\d{2}/\\d{4}$');
-        private _mmDdYyyy: RegExp = new RegExp('^\\d{2}/\\d{2}/\\d{4}$');
-        private _mxDxYyyy: RegExp = new RegExp('^\\d{1,}/\\d{1,}/\\d{4}$');
-
-        getDateFormat(dateStr: string): string {
-            var format: string = null;
-
-            if ((dateStr != null) && (dateStr.length > 0)) {
-                dateStr = $.trim(dateStr);
-
-                if (this._yyyy.test(dateStr)) format = 'yyyy';
-                else if (this._mYyyy.test(dateStr)) format = 'M/yyyy';
-                else if (this._mmYyyy.test(dateStr)) format = 'MM/yyyy';
-                else if (this._mDYyyy.test(dateStr)) format = 'M/d/yyyy';
-                else if (this._mmDYyyy.test(dateStr)) format = 'MM/d/yyyy';
-                else if (this._mDdYyyy.test(dateStr)) format = 'M/dd/yyyy';
-                else format = 'MM/dd/yyyy';
-            }
-
-            return format;
-        }
-
-        //convertDate(date: any): string {
-        //    var formatted = null;
-        //    if (typeof (date) === 'object') {
-        //        formatted = moment(date).format();
-        //    }
-        //    else {
-        //        var dateStr = date;
-        //        if ((dateStr != null) && (dateStr.length > 0)) {
-        //            dateStr = $.trim(dateStr);
-
-        //            if (this._yyyy.test(dateStr)) {
-        //                dateStr = '01/01/' + dateStr; // fixes Moment rounding error)
-        //                formatted = moment(dateStr, ['MM/DD/YYYY']).format();
-        //            }
-        //            //else if (MMYYYYPattern.test(dateStr)) {
-        //            //    formatted = moment(dateStr, ['MM/YYYY']).format();
-        //            //}
-        //            //else if (MMDDYYYYPattern.test(dateStr)) {
-        //            //    formatted = moment(dateStr, ['MM/DD/YYYY']).format();
-        //            //}
-        //            else {
-        //                formatted = moment(dateStr, [this.getDateFormat(dateStr).toUpperCase()]).format();
-        //            }
-        //        }
-        //    }
-
-        //    return formatted;
-        //}
 
         //#endregion
         //#region Saving
@@ -517,37 +398,16 @@ module Activities.ViewModels {
 
             var model = ko.mapping.toJS(this);
 
-            //if (model.startsOn != null) {
-            //    var dateStr = $('#fromDatePicker').get(0).value;
-            //    model.startsFormat = this.getDateFormat(dateStr);
-            //    model.startsOn = this.convertDate(model.startsOn);
-            //}
-
-            if (model.onGoing) {
-                model.endsOn = null;
-            }
-            //else if (model.endsOn != null) {
-            //    model.endsOn = this.convertDate(model.endsOn);
-            //}
-
             var url = $('#activity_put_url_format').text().format(this.id());
-            var startsOn: any = this.startsOn();
-            if (startsOn) {
-                startsOn = moment(startsOn).utc().hours(0).format();
-            }
-            var endsOn: any = this.endsOn();
-            if (endsOn) {
-                endsOn = moment(endsOn).utc().hours(0).format();
-            }
             var data = {
                 mode: model.modeText,
                 title: model.title,
                 content: model.content,
-                startsOn: startsOn,//'1976-04-01T00:00:00-00:00',
-                endsOn: endsOn,
-                startsFormat: model.startsFormat,
-                endsFormat: model.endsFormat,
+                startsOn: this.startsOn.isoString(),
+                startsFormat: this.startsOn.format(),
                 onGoing: model.onGoing,
+                endsOn: model.onGoing ? undefined : this.endsOn.isoString(),
+                endsFormat: model.onGoing ? undefined : this.endsOn.format(),
                 isExternallyFunded: model.isExternallyFunded,
                 isInternallyFunded: model.isInternallyFunded,
             };
@@ -1180,6 +1040,80 @@ module Activities.ViewModels {
                 .always((): void => {
                     this._owner.saveSpinner.stop();
                 });
+        }
+    }
+
+    export class FormattedDateInput {
+
+        input: KnockoutObservable<string> = ko.observable();
+        kendoDatePicker: any;
+        private static _defaultFormat = 'M/d/yyyy';
+
+        constructor(isoFormattedDate: string, format: string) {
+
+            if (!isoFormattedDate) return;
+
+            var date = moment(isoFormattedDate).toDate();
+            format = format || FormattedDateInput._defaultFormat;
+            var input = moment(date).format(format.toUpperCase());
+            this.input(input);
+
+            this.input.subscribe((newValue: string): void => {
+                var trimmedValue = $.trim(newValue);
+                if (trimmedValue != newValue)
+                    this.input(trimmedValue);
+            });
+
+            this.format.subscribe((newValue: string): void => {
+                if (this.kendoDatePicker)
+                    this.kendoDatePicker.options.format = newValue || FormattedDateInput._defaultFormat;
+            });
+        }
+
+        format: KnockoutComputed<string> = ko.computed((): string => { // depends on observable input
+            return this._computeDateFormat(this.input());
+        });
+
+        date: KnockoutComputed<Date> = ko.computed((): Date => { // depends on computed format (& input)
+            var input = this.input();
+            if (!input) return undefined;
+            return moment(input, [this.format().toUpperCase()]).toDate();
+        });
+
+        isoString: KnockoutComputed<string> = ko.computed((): string => { // depends on computed date
+            var date = this.date();
+            if (!date) return undefined;
+            return moment(date).utc().hours(0).format();
+        });
+
+        //#region input formatting
+
+        private static _yyyy: RegExp = new RegExp('^\\d{4}$');
+        private static _mYyyy: RegExp = new RegExp('^\\d{1}/\\d{4}$');
+        private static _mmYyyy: RegExp = new RegExp('^\\d{2}/\\d{4}$');
+        private static _mxYyyy: RegExp = new RegExp('^\\d{1,}/\\d{4}$');
+        private static _mDYyyy: RegExp = new RegExp('^\\d{1}/\\d{1}/\\d{4}$');
+        private static _mmDYyyy: RegExp = new RegExp('^\\d{2}/\\d{1}/\\d{4}$');
+        private static _mDdYyyy: RegExp = new RegExp('^\\d{1}/\\d{2}/\\d{4}$');
+        private static _mmDdYyyy: RegExp = new RegExp('^\\d{2}/\\d{2}/\\d{4}$');
+        private static _mxDxYyyy: RegExp = new RegExp('^\\d{1,}/\\d{1,}/\\d{4}$');
+
+        private _computeDateFormat(input: string): string {
+            if (!input) return undefined;
+            if (FormattedDateInput._yyyy.test(input)) return 'yyyy';
+            else if (FormattedDateInput._mYyyy.test(input)) return 'M/yyyy';
+            else if (FormattedDateInput._mmYyyy.test(input)) return 'MM/yyyy';
+            else if (FormattedDateInput._mDYyyy.test(input)) return 'M/d/yyyy';
+            else if (FormattedDateInput._mmDYyyy.test(input)) return 'MM/d/yyyy';
+            else if (FormattedDateInput._mDdYyyy.test(input)) return 'M/dd/yyyy';
+            return 'MM/dd/yyyy';
+        }
+
+        //#endregion
+
+        isValid(): boolean {
+            var input = this.input(), format = this.format();
+            return !input || moment(input, format).isValid();
         }
     }
 }
