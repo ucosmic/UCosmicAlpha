@@ -708,19 +708,15 @@ var App;
                     //export function put(activityId: number, documentId: number): string {
                     //    return makeUrl('activities/' + activityId + '/documents/' + documentId);
                     //}
-                    function del(activityId, documentId) {
-                        return makeUrl('activities/' + activityId + '/documents/' + documentId);
-                    }
-                    Documents.del = del;
-
+                    //export function del(activityId: number, documentId: number): string {
+                    //    return makeUrl('activities/' + activityId + '/documents/' + documentId);
+                    //}
                     //export function rename(activityId: number, documentId: number): string {
                     //    return makeUrl('activities/' + activityId + '/documents/' + documentId + "/title");
                     //}
-                    function validateUpload() {
-                        return makeUrl('activities/documents/validate-upload');
-                    }
-                    Documents.validateUpload = validateUpload;
-
+                    //export function validateUpload(): string {
+                    //    return makeUrl('activities/documents/validate-upload');
+                    //}
                     (function (Thumbnail) {
                         function get(activityId, documentId, params) {
                             var url = makeUrl('activities/' + activityId + '/documents/' + documentId + '/thumbnail');

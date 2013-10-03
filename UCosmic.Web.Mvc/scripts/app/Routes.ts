@@ -571,17 +571,17 @@ module App.Routes {
                 //    return makeUrl('activities/' + activityId + '/documents/' + documentId);
                 //}
 
-                export function del(activityId: number, documentId: number): string {
-                    return makeUrl('activities/' + activityId + '/documents/' + documentId);
-                }
+                //export function del(activityId: number, documentId: number): string {
+                //    return makeUrl('activities/' + activityId + '/documents/' + documentId);
+                //}
 
                 //export function rename(activityId: number, documentId: number): string {
                 //    return makeUrl('activities/' + activityId + '/documents/' + documentId + "/title");
                 //}
 
-                export function validateUpload(): string {
-                    return makeUrl('activities/documents/validate-upload');
-                }
+                //export function validateUpload(): string {
+                //    return makeUrl('activities/documents/validate-upload');
+                //}
 
                 export module Thumbnail {
                     export function get (activityId: number, documentId: number, params?: any): string {

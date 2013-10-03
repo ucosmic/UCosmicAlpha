@@ -88,27 +88,27 @@ module Activities.ViewModels {
                 .fail((xhr: JQueryXHR): void => { typeOptionsPact.reject(xhr); });
 
             var dataPact = $.Deferred();
-            $.ajax({ url: $('#activity_get_url_format').text().format(this._workCopyId), cache: false, })
+            $.ajax({ url: $('#activity2_api').text().format(this._workCopyId), cache: false, })
                 .done((data: any): void => { dataPact.resolve(data); })
                 .fail((xhr: JQueryXHR): void => { dataPact.reject(xhr); });
 
             var placesPact = $.Deferred();
-            $.ajax({ url: $('#places_get_url_format').text().format(this._workCopyId), cache: false, })
+            $.ajax({ url: $('#places_api').text().format(this._workCopyId), cache: false, })
                 .done((data: any[]): void => { placesPact.resolve(data); })
                 .fail((xhr: JQueryXHR): void => { placesPact.reject(xhr); });
 
             var typesPact = $.Deferred();
-            $.ajax({ url: $('#types_get_url_format').text().format(this._workCopyId), cache: false, })
+            $.ajax({ url: $('#types_api').text().format(this._workCopyId), cache: false, })
                 .done((data: ApiModels.ActivityType[]): void => { typesPact.resolve(data); })
                 .fail((xhr: JQueryXHR): void => { typesPact.reject(xhr); });
 
             var tagsPact = $.Deferred();
-            $.ajax({ url: $('#tags_get_url_format').text().format(this._workCopyId), cache: false, })
+            $.ajax({ url: $('#tags_api').text().format(this._workCopyId), cache: false, })
                 .done((data: ApiModels.ActivityType[]): void => { tagsPact.resolve(data); })
                 .fail((xhr: JQueryXHR): void => { tagsPact.reject(xhr); });
 
             var documentsPact = $.Deferred();
-            $.ajax({ url: $('#documents_get_url_format').text().format(this._workCopyId), cache: false, })
+            $.ajax({ url: $('#documents_api').text().format(this._workCopyId), cache: false, })
                 .done((data: any[]): void => { documentsPact.resolve(data); })
                 .fail((xhr: JQueryXHR): void => { documentsPact.reject(xhr); });
 
@@ -304,7 +304,7 @@ module Activities.ViewModels {
 
             var model = ko.mapping.toJS(this);
 
-            var url = $('#activity_put_url_format').text().format(this.activityId());
+            var url = $('#activity_api').text().format(this.activityId());
             var data = {
                 title: model.title,
                 content: model.content,
@@ -347,7 +347,7 @@ module Activities.ViewModels {
 
                     this.saveSpinner.start();
 
-                    var url = $('#activity_replace_url_format').text()
+                    var url = $('#activity_replace_api').text()
                         .format(this._workCopyId, this._originalId, mode);
                     $.ajax({
                         type: 'PUT',
@@ -427,7 +427,7 @@ module Activities.ViewModels {
 
         private _purge(async: boolean = true): JQueryDeferred<void>{
             var deferred = $.Deferred();
-            var url = $('#activity_delete_url_format').text().format(this.activityId());
+            var url = $('#activity_api').text().format(this.activityId());
             $.ajax({
                 type: 'DELETE',
                 url: url,
@@ -497,7 +497,7 @@ module Activities.ViewModels {
         }
 
         private _addPlaceId(addedPlaceId: number, e: kendo.ui.MultiSelectEvent): void {
-            var url = $('#place_put_url_format').text()
+            var url = $('#place_api').text()
                 .format(this.activityId(), addedPlaceId);
             $.ajax({
                 type: 'PUT',
@@ -526,7 +526,7 @@ module Activities.ViewModels {
         }
 
         private _removePlaceId(removedPlaceId: number, e: kendo.ui.MultiSelectEvent): void {
-            var url = $('#place_delete_url_format').text()
+            var url = $('#place_api').text()
                 .format(this.activityId(), removedPlaceId);
             $.ajax({
                 type: 'DELETE',
@@ -591,7 +591,7 @@ module Activities.ViewModels {
                 transport: {
                     read: (options: any): void => {
                         $.ajax({
-                            url: $('#establishment_names_get_url_format').text(),
+                            url: $('#establishment_names_api').text(),
                             data: {
                                 keyword: options.data.filter.filters[0].value,
                                 pageNumber: 1,
@@ -612,7 +612,7 @@ module Activities.ViewModels {
 
         private _getTagEstablishmentId(text: string): number {
             var establishmentId: number;
-            var url = $('#establishment_names_get_url_format').text();
+            var url = $('#establishment_names_api').text();
             $.ajax({
                 type: 'GET',
                 url: url,
@@ -702,7 +702,7 @@ module Activities.ViewModels {
 
         private _postTag(text: string, establishmentId: number): JQueryDeferred<any> {
             var deferred = $.Deferred();
-            var url = $('#tag_post_url_format').text().format(this.activityId());
+            var url = $('#tags_api').text().format(this.activityId());
             $.ajax({
                 url: url,
                 type: 'POST',
@@ -728,7 +728,7 @@ module Activities.ViewModels {
 
         private _deleteTag(text: string): JQueryDeferred<any> {
             var deferred = $.Deferred();
-            var url = $('#tag_delete_url_format').text().format(this.activityId());
+            var url = $('#tags_api').text().format(this.activityId());
             $.ajax({
                 url: url,
                 type: 'DELETE',
@@ -763,7 +763,7 @@ module Activities.ViewModels {
                 multiple: true,
                 showFileList: false,
                 localization: { select: 'Choose one or more documents to share...' },
-                async: { saveUrl: $('#document_post_url_format').text().format(this.activityId()), },
+                async: { saveUrl: $('#documents_api').text().format(this.activityId()), },
                 select: (e: kendo.ui.UploadSelectEvent): void => { this._onDocumentKendoSelect(e); },
                 upload: (e: kendo.ui.UploadUploadEvent): void => { this._onDocumentKendoUpload(e); },
                 success: (e: kendo.ui.UploadSuccessEvent): void => { this._onDocumentKendoSuccess(e); },
@@ -777,7 +777,7 @@ module Activities.ViewModels {
                 $.ajax({
                     async: false,
                     type: 'POST',
-                    url: App.Routes.WebApi.Activities.Documents.validateUpload(),
+                    url: $('#documents_validate_api').text(),
                     data: {
                         name: file.name,
                         length: file.size
@@ -826,7 +826,7 @@ module Activities.ViewModels {
         }
 
         documentIcon(documentId: number) {
-            var url = $('#document_icon_url_format').text().format(this.activityId(), documentId);
+            var url = $('#document_icon_api').text().format(this.activityId(), documentId);
             var params = { maxSide: Activity.iconMaxSide };
             return '{0}?{1}'.format(url, $.param(params));
         }
@@ -851,7 +851,7 @@ module Activities.ViewModels {
 
                             $.ajax({ // submit delete api request
                                 type: 'DELETE',
-                                url: App.Routes.WebApi.Activities.Documents.del(this.activityId(), item.id())
+                                url: $('#document_api').text().format(this.activityId(), item.id()),
                             })
                                 .done((): void => {
                                     $dialog.dialog('close');
@@ -898,7 +898,7 @@ module Activities.ViewModels {
             $(inputElement).unbind('keypress');
             $(inputElement).attr('disabled', 'disabled');
 
-            var url = $('#document_put_url_format').text().format(this.activityId(), item.id());
+            var url = $('#document_api').text().format(this.activityId(), item.id());
             $.ajax({
                 type: 'PUT',
                 url: url,
@@ -968,7 +968,7 @@ module Activities.ViewModels {
             if (!needsAdded) return;
 
             this._owner.saveSpinner.start();
-            var url = $('#type_put_url_format').text().format(this._owner.activityId(), this.id);
+            var url = $('#type_api').text().format(this._owner.activityId(), this.id);
             $.ajax({
                 url: url,
                 type: 'PUT',
@@ -998,7 +998,7 @@ module Activities.ViewModels {
             if (!needsRemoved) return;
 
             this._owner.saveSpinner.start();
-            var url = $('#type_delete_url_format').text()
+            var url = $('#type_api').text()
                 .format(this._owner.activityId(), this.id);
             $.ajax({
                 url: url,

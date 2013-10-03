@@ -104,35 +104,35 @@ var Activities;
                 });
 
                 var dataPact = $.Deferred();
-                $.ajax({ url: $('#activity_get_url_format').text().format(this._workCopyId), cache: false }).done(function (data) {
+                $.ajax({ url: $('#activity2_api').text().format(this._workCopyId), cache: false }).done(function (data) {
                     dataPact.resolve(data);
                 }).fail(function (xhr) {
                     dataPact.reject(xhr);
                 });
 
                 var placesPact = $.Deferred();
-                $.ajax({ url: $('#places_get_url_format').text().format(this._workCopyId), cache: false }).done(function (data) {
+                $.ajax({ url: $('#places_api').text().format(this._workCopyId), cache: false }).done(function (data) {
                     placesPact.resolve(data);
                 }).fail(function (xhr) {
                     placesPact.reject(xhr);
                 });
 
                 var typesPact = $.Deferred();
-                $.ajax({ url: $('#types_get_url_format').text().format(this._workCopyId), cache: false }).done(function (data) {
+                $.ajax({ url: $('#types_api').text().format(this._workCopyId), cache: false }).done(function (data) {
                     typesPact.resolve(data);
                 }).fail(function (xhr) {
                     typesPact.reject(xhr);
                 });
 
                 var tagsPact = $.Deferred();
-                $.ajax({ url: $('#tags_get_url_format').text().format(this._workCopyId), cache: false }).done(function (data) {
+                $.ajax({ url: $('#tags_api').text().format(this._workCopyId), cache: false }).done(function (data) {
                     tagsPact.resolve(data);
                 }).fail(function (xhr) {
                     tagsPact.reject(xhr);
                 });
 
                 var documentsPact = $.Deferred();
-                $.ajax({ url: $('#documents_get_url_format').text().format(this._workCopyId), cache: false }).done(function (data) {
+                $.ajax({ url: $('#documents_api').text().format(this._workCopyId), cache: false }).done(function (data) {
                     documentsPact.resolve(data);
                 }).fail(function (xhr) {
                     documentsPact.reject(xhr);
@@ -301,7 +301,7 @@ var Activities;
 
                 var model = ko.mapping.toJS(this);
 
-                var url = $('#activity_put_url_format').text().format(this.activityId());
+                var url = $('#activity_api').text().format(this.activityId());
                 var data = {
                     title: model.title,
                     content: model.content,
@@ -340,7 +340,7 @@ var Activities;
 
                     _this.saveSpinner.start();
 
-                    var url = $('#activity_replace_url_format').text().format(_this._workCopyId, _this._originalId, mode);
+                    var url = $('#activity_replace_api').text().format(_this._workCopyId, _this._originalId, mode);
                     $.ajax({
                         type: 'PUT',
                         url: url
@@ -415,7 +415,7 @@ var Activities;
                 if (typeof async === "undefined") { async = true; }
                 var _this = this;
                 var deferred = $.Deferred();
-                var url = $('#activity_delete_url_format').text().format(this.activityId());
+                var url = $('#activity_api').text().format(this.activityId());
                 $.ajax({
                     type: 'DELETE',
                     url: url,
@@ -470,7 +470,7 @@ else if (removedPlaceIds.length === 1)
 
             Activity.prototype._addPlaceId = function (addedPlaceId, e) {
                 var _this = this;
-                var url = $('#place_put_url_format').text().format(this.activityId(), addedPlaceId);
+                var url = $('#place_api').text().format(this.activityId(), addedPlaceId);
                 $.ajax({
                     type: 'PUT',
                     url: url,
@@ -496,7 +496,7 @@ else if (removedPlaceIds.length === 1)
 
             Activity.prototype._removePlaceId = function (removedPlaceId, e) {
                 var _this = this;
-                var url = $('#place_delete_url_format').text().format(this.activityId(), removedPlaceId);
+                var url = $('#place_api').text().format(this.activityId(), removedPlaceId);
                 $.ajax({
                     type: 'DELETE',
                     url: url,
@@ -547,7 +547,7 @@ else if (removedPlaceIds.length === 1)
                     transport: {
                         read: function (options) {
                             $.ajax({
-                                url: $('#establishment_names_get_url_format').text(),
+                                url: $('#establishment_names_api').text(),
                                 data: {
                                     keyword: options.data.filter.filters[0].value,
                                     pageNumber: 1,
@@ -566,7 +566,7 @@ else if (removedPlaceIds.length === 1)
 
             Activity.prototype._getTagEstablishmentId = function (text) {
                 var establishmentId;
-                var url = $('#establishment_names_get_url_format').text();
+                var url = $('#establishment_names_api').text();
                 $.ajax({
                     type: 'GET',
                     url: url,
@@ -656,7 +656,7 @@ else if (removedPlaceIds.length === 1)
             Activity.prototype._postTag = function (text, establishmentId) {
                 var _this = this;
                 var deferred = $.Deferred();
-                var url = $('#tag_post_url_format').text().format(this.activityId());
+                var url = $('#tags_api').text().format(this.activityId());
                 $.ajax({
                     url: url,
                     type: 'POST',
@@ -683,7 +683,7 @@ else if (removedPlaceIds.length === 1)
             Activity.prototype._deleteTag = function (text) {
                 var _this = this;
                 var deferred = $.Deferred();
-                var url = $('#tag_delete_url_format').text().format(this.activityId());
+                var url = $('#tags_api').text().format(this.activityId());
                 $.ajax({
                     url: url,
                     type: 'DELETE',
@@ -710,7 +710,7 @@ else if (removedPlaceIds.length === 1)
                     multiple: true,
                     showFileList: false,
                     localization: { select: 'Choose one or more documents to share...' },
-                    async: { saveUrl: $('#document_post_url_format').text().format(this.activityId()) },
+                    async: { saveUrl: $('#documents_api').text().format(this.activityId()) },
                     select: function (e) {
                         _this._onDocumentKendoSelect(e);
                     },
@@ -733,7 +733,7 @@ else if (removedPlaceIds.length === 1)
                     $.ajax({
                         async: false,
                         type: 'POST',
-                        url: App.Routes.WebApi.Activities.Documents.validateUpload(),
+                        url: $('#documents_validate_api').text(),
                         data: {
                             name: file.name,
                             length: file.size
@@ -776,7 +776,7 @@ else if (removedPlaceIds.length === 1)
             };
 
             Activity.prototype.documentIcon = function (documentId) {
-                var url = $('#document_icon_url_format').text().format(this.activityId(), documentId);
+                var url = $('#document_icon_api').text().format(this.activityId(), documentId);
                 var params = { maxSide: Activity.iconMaxSide };
                 return '{0}?{1}'.format(url, $.param(params));
             };
@@ -802,7 +802,7 @@ else if (removedPlaceIds.length === 1)
 
                                 $.ajax({
                                     type: 'DELETE',
-                                    url: App.Routes.WebApi.Activities.Documents.del(_this.activityId(), item.id())
+                                    url: $('#document_api').text().format(_this.activityId(), item.id())
                                 }).done(function () {
                                     $dialog.dialog('close');
                                     _this.documents.splice(index, 1);
@@ -850,7 +850,7 @@ else if (removedPlaceIds.length === 1)
                 $(inputElement).unbind('keypress');
                 $(inputElement).attr('disabled', 'disabled');
 
-                var url = $('#document_put_url_format').text().format(this.activityId(), item.id());
+                var url = $('#document_api').text().format(this.activityId(), item.id());
                 $.ajax({
                     type: 'PUT',
                     url: url,
@@ -920,7 +920,7 @@ else
                     return;
 
                 this._owner.saveSpinner.start();
-                var url = $('#type_put_url_format').text().format(this._owner.activityId(), this.id);
+                var url = $('#type_api').text().format(this._owner.activityId(), this.id);
                 $.ajax({
                     url: url,
                     type: 'PUT'
@@ -948,7 +948,7 @@ else
                     return;
 
                 this._owner.saveSpinner.start();
-                var url = $('#type_delete_url_format').text().format(this._owner.activityId(), this.id);
+                var url = $('#type_api').text().format(this._owner.activityId(), this.id);
                 $.ajax({
                     url: url,
                     type: 'DELETE'

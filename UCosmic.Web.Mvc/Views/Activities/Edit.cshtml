@@ -1,5 +1,4 @@
-﻿@using UCosmic.Domain.Activities
-@{
+﻿@{
     ViewBag.Title = "My International Activity";
 }
 
@@ -23,7 +22,7 @@
     @Scripts.Render("~/bundles/activity")
 
     <script type="text/javascript">
-        (function ($, window) {
+        (function ($) {
             var activityId = parseInt('@ViewBag.ActivityId');
             var activityWorkCopyId = parseInt('@ViewBag.ActivityWorkCopyId');
             var activityViewModel = new Activities.ViewModels.Activity(activityId, activityWorkCopyId);
@@ -40,7 +39,7 @@
                 .fail(function (xhr) {
                     App.Failures.message(xhr, 'while trying to load the activity editor', true);
                 });
-        }(jQuery, window));
+        }(jQuery));
 
     </script>
 
@@ -263,118 +262,19 @@
 
                         @* API URL's *@
                         <div style="display: none">
-                            @{
-                                var activityGetUrlFormat = Url.HttpRouteUrl(null, new { controller = "Activities", action = "Get2", activityId = 0 });
-                                if (activityGetUrlFormat != null)
-                                {
-                                    activityGetUrlFormat = activityGetUrlFormat.Replace("0", "{0}");
-                                }
-                                var activityPutUrlFormat = Url.HttpRouteUrl(null, new { controller = "Activities", action = "Put", activityId = 0 });
-                                if (activityPutUrlFormat != null)
-                                {
-                                    activityPutUrlFormat = activityPutUrlFormat.Replace("0", "{0}");
-                                }
-                                var activityReplaceUrlFormat = Url.HttpRouteUrl(null, new { controller = "Activities", action = "PutMove", workCopyActivityId = 0, originalActivityId = 1, mode = ActivityMode.Draft });
-                                if (activityReplaceUrlFormat != null)
-                                {
-                                    activityReplaceUrlFormat = activityReplaceUrlFormat.Replace("0", "{0}").Replace("1", "{1}").Replace(ActivityMode.Draft.ToString(), "{2}");
-                                }
-                                var activityDeleteUrlFormat = Url.HttpRouteUrl(null, new { controller = "Activities", action = "Delete", activityId = 0 });
-                                if (activityDeleteUrlFormat != null)
-                                {
-                                    activityDeleteUrlFormat = activityDeleteUrlFormat.Replace("0", "{0}");
-                                }
-                                var typesGetUrlFormat = Url.HttpRouteUrl(null, new { controller = "ActivityTypes", action = "Get", activityId = 0 });
-                                if (typesGetUrlFormat != null)
-                                {
-                                    typesGetUrlFormat = typesGetUrlFormat.Replace("0", "{0}");
-                                }
-                                var typePutUrlFormat = Url.HttpRouteUrl(null, new { controller = "ActivityTypes", action = "Put", activityId = 0, activityTypeId = 1 });
-                                if (typePutUrlFormat != null)
-                                {
-                                    typePutUrlFormat = typePutUrlFormat.Replace("0", "{0}").Replace("1", "{1}");
-                                }
-                                var typeDeleteUrlFormat = Url.HttpRouteUrl(null, new { controller = "ActivityTypes", action = "Delete", activityId = 0, activityTypeId = 1 });
-                                if (typeDeleteUrlFormat != null)
-                                {
-                                    typeDeleteUrlFormat = typeDeleteUrlFormat.Replace("0", "{0}").Replace("1", "{1}");
-                                }
-                                var placesGetUrlFormat = Url.HttpRouteUrl(null, new { controller = "ActivityPlaces", action = "Get", activityId = 0 });
-                                if (placesGetUrlFormat != null)
-                                {
-                                    placesGetUrlFormat = placesGetUrlFormat.Replace("0", "{0}");
-                                }
-                                var placePutUrlFormat = Url.HttpRouteUrl(null, new { controller = "ActivityPlaces", action = "Put", activityId = 0, placeId = 1 });
-                                if (placePutUrlFormat != null)
-                                {
-                                    placePutUrlFormat = placePutUrlFormat.Replace("0", "{0}").Replace("1", "{1}");
-                                }
-                                var placeDeleteUrlFormat = Url.HttpRouteUrl(null, new { controller = "ActivityPlaces", action = "Delete", activityId = 0, placeId = 1 });
-                                if (placeDeleteUrlFormat != null)
-                                {
-                                    placeDeleteUrlFormat = placeDeleteUrlFormat.Replace("0", "{0}").Replace("1", "{1}");
-                                }
-                                var establishmentNameGetUrlFormat = Url.HttpRouteUrl(null, new { controller = "EstablishmentNames", action = "GetByKeyword" });
-                                var tagsGetUrlFormat = Url.HttpRouteUrl(null, new { controller = "ActivityTags", action = "Get", activityId = 0 });
-                                if (tagsGetUrlFormat != null)
-                                {
-                                    tagsGetUrlFormat = tagsGetUrlFormat.Replace("0", "{0}");
-                                }
-                                var tagPostUrlFormat = Url.HttpRouteUrl(null, new { controller = "ActivityTags", action = "Post", activityId = 0 });
-                                if (tagPostUrlFormat != null)
-                                {
-                                    tagPostUrlFormat = tagPostUrlFormat.Replace("0", "{0}");
-                                }
-                                var tagDeleteUrlFormat = Url.HttpRouteUrl(null, new { controller = "ActivityTags", action = "Delete", activityId = 0 });
-                                if (tagDeleteUrlFormat != null)
-                                {
-                                    tagDeleteUrlFormat = tagDeleteUrlFormat.Replace("0", "{0}");
-                                }
-                                var documentsGetUrlFormat = Url.HttpRouteUrl(null, new { controller = "ActivityDocuments", action = "Get", activityId = 0 });
-                                if (documentsGetUrlFormat != null)
-                                {
-                                    documentsGetUrlFormat = documentsGetUrlFormat.Replace("0", "{0}");
-                                }
-                                var documentGetUrlFormat = Url.HttpRouteUrl(null, new { controller = "ActivityDocuments", action = "Get", activityId = 0, documentId = 1 });
-                                if (documentGetUrlFormat != null)
-                                {
-                                    documentGetUrlFormat = documentGetUrlFormat.Replace("0", "{0}").Replace("1", "{1}");
-                                }
-                                var documentIconUrlFormat = Url.HttpRouteUrl(null, new { controller = "ActivityDocuments", action = "GetThumbnail", activityId = 0, documentId = 1 });
-                                if (documentIconUrlFormat != null)
-                                {
-                                    documentIconUrlFormat = documentIconUrlFormat.Replace("0", "{0}").Replace("1", "{1}");
-                                }
-                                var documentPostUrlFormat = Url.HttpRouteUrl(null, new { controller = "ActivityDocuments", action = "Post", activityId = 0 });
-                                if (documentPostUrlFormat != null)
-                                {
-                                    documentPostUrlFormat = documentPostUrlFormat.Replace("0", "{0}");
-                                }
-                                var documentPutUrlFormat = Url.HttpRouteUrl(null, new { controller = "ActivityDocuments", action = "Put", activityId = 0, documentId = 1 });
-                                if (documentPutUrlFormat != null)
-                                {
-                                    documentPutUrlFormat = documentPutUrlFormat.Replace("0", "{0}").Replace("1", "{1}");
-                                }
-                            }
-                            <span id="activity_get_url_format">@activityGetUrlFormat</span>
-                            <span id="activity_put_url_format">@activityPutUrlFormat</span>
-                            <span id="activity_replace_url_format">@activityReplaceUrlFormat</span>
-                            <span id="activity_delete_url_format">@activityDeleteUrlFormat</span>
-                            <span id="types_get_url_format">@typesGetUrlFormat</span>
-                            <span id="type_put_url_format">@typePutUrlFormat</span>
-                            <span id="type_delete_url_format">@typeDeleteUrlFormat</span>
-                            <span id="places_get_url_format">@placesGetUrlFormat</span>
-                            <span id="place_put_url_format">@placePutUrlFormat</span>
-                            <span id="place_delete_url_format">@placeDeleteUrlFormat</span>
-                            <span id="establishment_names_get_url_format">@establishmentNameGetUrlFormat</span>
-                            <span id="tags_get_url_format">@tagsGetUrlFormat</span>
-                            <span id="tag_post_url_format">@tagPostUrlFormat</span>
-                            <span id="tag_delete_url_format">@tagDeleteUrlFormat</span>
-                            <span id="documents_get_url_format">@documentsGetUrlFormat</span>
-                            <span id="document_get_url_format">@documentGetUrlFormat</span>
-                            <span id="document_icon_url_format">@documentIconUrlFormat</span>
-                            <span id="document_post_url_format">@documentPostUrlFormat</span>
-                            <span id="document_put_url_format">@documentPutUrlFormat</span>
+                            <span id="activity2_api">@ViewBag.Activity2Api</span>
+                            <span id="activity_api">@ViewBag.ActivityApi</span>
+                            <span id="activity_replace_api">@ViewBag.ActivityReplaceApi</span>
+                            <span id="type_api">@ViewBag.TypeApi</span>
+                            <span id="types_api">@ViewBag.TypesApi</span>
+                            <span id="place_api">@ViewBag.PlaceApi</span>
+                            <span id="places_api">@ViewBag.PlacesApi</span>
+                            <span id="establishment_names_api">@ViewBag.EstablishmentNamesApi</span>
+                            <span id="tags_api">@ViewBag.TagsApi</span>
+                            <span id="document_api">@ViewBag.DocumentApi</span>
+                            <span id="documents_api">@ViewBag.DocumentsApi</span>
+                            <span id="documents_validate_api">@ViewBag.DocumentsValidateApi</span>
+                            <span id="document_icon_api">@ViewBag.DocumentIconApi</span>
                         </div>
                     </div>
                 </div>
