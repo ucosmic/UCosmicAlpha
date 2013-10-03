@@ -12,34 +12,15 @@
 /// <reference path="../activities/ServiceApiModel.d.ts" />
 
 module Activities.ViewModels {
+
     export class Activity implements KnockoutValidationGroup {
 
-        //#region Class Properties
+        //#region Primary scalar observables & properties
 
         ready: KnockoutObservable<boolean> = ko.observable(false);
 
-        // Autosave after so many keydowns
-        AUTOSAVE_KEYCOUNT: number = 10;
-        keyCounter: number = 0;
-
-        // Dirty
-        dirtyFlag: KnockoutObservable<boolean> = ko.observable(false);
-        dirty: KnockoutComputed<void>;
-
-        // In the process of saving
-        saving: boolean = false;
-        saveSpinner = new App.Spinner(new App.SpinnerOptions(200));
-
-        // IObservableActivity implemented
-        id: KnockoutObservable<number>;
-        workCopyId: KnockoutObservable<number>;
-        originalId: KnockoutObservable<number>;
-        //version: KnockoutObservable<string>;                    // byte[] converted to base64
-        //personId: KnockoutObservable<number>;
-        //number: KnockoutObservable<number>;
-        //entityId: KnockoutObservable<string>;                   // guid converted to string
-        modeText: KnockoutObservable<string>;
-        values: Service.ApiModels.IObservableActivityValues;    // only values for modeText
+        private _workCopyId: number;
+        private _originalId: number;
 
         activityId: KnockoutObservable<number> = ko.observable();
         mode: KnockoutObservable<string> = ko.observable();
@@ -50,22 +31,40 @@ module Activities.ViewModels {
         onGoing: KnockoutObservable<boolean> = ko.observable();
         isExternallyFunded: KnockoutObservable<boolean> = ko.observable();
         isInternallyFunded: KnockoutObservable<boolean> = ko.observable();
+        updatedByPrincipal: KnockoutObservable<string> = ko.observable();
+        updatedOnUtc: KnockoutObservable<string> = ko.observable();
+
+        //#endregion
+        //#region View convenience computeds
+
+        isDraft: KnockoutComputed<boolean> = ko.computed((): boolean => {
+            var mode = this.mode();
+            if (!mode) return false;
+            return mode.toLowerCase() == 'draft';
+        });
+
+        isPublished: KnockoutComputed<boolean> = ko.computed((): boolean => {
+            var mode = this.mode();
+            if (!mode) return false;
+            return mode.toLowerCase() == 'public';
+        });
+
+        updatedOnDate: KnockoutComputed<string> = ko.computed((): string => {
+            var updatedOnUtc = this.updatedOnUtc();
+            if (!updatedOnUtc) return undefined;
+            return moment(updatedOnUtc).format('M/D/YYYY');
+        });
 
         //#endregion
         //#region Construction & Initialization
 
         constructor(activityId: number, activityWorkCopyId: number) {
-            this._initialize(activityId, activityWorkCopyId);
-        }
+            this._originalId = activityId;
+            this._workCopyId = activityWorkCopyId;
 
-        private _initialize(activityId: number, activityWorkCopyId: number): void {
-            this.id = ko.observable(activityId);
-            this.originalId = ko.observable(activityId);
-            this.workCopyId = ko.observable(activityWorkCopyId);
-
-            this.dirty = ko.computed((): void => {
-                if (this.dirtyFlag()) {
-                    this.autoSave();
+            ko.computed((): void => {
+                if (this._isDirty()) {
+                    this._autoSave();
                 }
             });
         }
@@ -89,43 +88,37 @@ module Activities.ViewModels {
                 .fail((xhr: JQueryXHR): void => { typeOptionsPact.reject(xhr); });
 
             var dataPact = $.Deferred();
-            $.get(App.Routes.WebApi.Activities.get(this.workCopyId()))
-                .done((data: Service.ApiModels.IActivityPage): void => { dataPact.resolve(data); })
+            $.ajax({ url: $('#activity_get_url_format').text().format(this._workCopyId), cache: false, })
+                .done((data: any): void => { dataPact.resolve(data); })
                 .fail((xhr: JQueryXHR): void => { dataPact.reject(xhr); });
 
-            var data2Pact = $.Deferred();
-            $.get($('#activity_get_url_format').text().format(this.workCopyId()))
-                .done((data: any): void => { data2Pact.resolve(data); })
-                .fail((xhr: JQueryXHR): void => { data2Pact.reject(xhr); });
-
             var placesPact = $.Deferred();
-            $.get($('#places_get_url_format').text().format(this.workCopyId()))
+            $.ajax({ url: $('#places_get_url_format').text().format(this._workCopyId), cache: false, })
                 .done((data: any[]): void => { placesPact.resolve(data); })
                 .fail((xhr: JQueryXHR): void => { placesPact.reject(xhr); });
 
             var typesPact = $.Deferred();
-            $.get($('#types_get_url_format').text().format(this.workCopyId()))
+            $.ajax({ url: $('#types_get_url_format').text().format(this._workCopyId), cache: false, })
                 .done((data: ApiModels.ActivityType[]): void => { typesPact.resolve(data); })
                 .fail((xhr: JQueryXHR): void => { typesPact.reject(xhr); });
 
             var tagsPact = $.Deferred();
-            $.get($('#tags_get_url_format').text().format(this.workCopyId()))
+            $.ajax({ url: $('#tags_get_url_format').text().format(this._workCopyId), cache: false, })
                 .done((data: ApiModels.ActivityType[]): void => { tagsPact.resolve(data); })
                 .fail((xhr: JQueryXHR): void => { tagsPact.reject(xhr); });
 
             var documentsPact = $.Deferred();
-            $.get($('#documents_get_url_format').text().format(this.workCopyId()))
+            $.ajax({ url: $('#documents_get_url_format').text().format(this._workCopyId), cache: false, })
                 .done((data: any[]): void => { documentsPact.resolve(data); })
                 .fail((xhr: JQueryXHR): void => { documentsPact.reject(xhr); });
 
             //#endregion
             //#region process after all have been loaded
 
-            $.when(typeOptionsPact, placeOptionsPact, dataPact, data2Pact, placesPact, typesPact, tagsPact, documentsPact)
+            $.when(typeOptionsPact, placeOptionsPact, dataPact, placesPact, typesPact, tagsPact, documentsPact)
                 .done((typeOptions: any[],
                     placeOptions: any[],
-                    data: Service.ApiModels.IObservableActivity,
-                    data2: any,
+                    data: any,
                     selectedPlaces: any[],
                     selectedTypes: ApiModels.ActivityType[],
                     tags: ApiModels.ActivityTag[],
@@ -133,33 +126,13 @@ module Activities.ViewModels {
 
                     //#region populate activity data
 
-                    ko.mapping.fromJS(documents, {}, this.documents);
-
-                    // Although the MVC DateTime to JSON serializer will output an ISO compatible
-                    // string, we are not guarenteed that a browser's Date(string) or Date.parse(string)
-                    // functions will accurately convert to Date.  So, we are using
-                    // moment.js to handle the parsing and conversion.
-                    //var augmentedDocumentModel = function (data) {
-                    //    ko.mapping.fromJS(data, {}, this);
-                    //    this.proxyImageSource = ko.observable(App.Routes.WebApi.Activities.Documents.Thumbnail.get(data.activityId, data.id, { maxSide: Activity.iconMaxSide }));
-                    //};
-
                     var mapping = {
-                        //documents: {
-                        //    create: (options: any): KnockoutObservable<any> => {
-                        //        return new augmentedDocumentModel(options.data);
-                        //    }
-                        //},
+                        ignore: ['startsOn', 'endsOn', 'startsFormat', 'endsFormat'],
                     };
                     ko.mapping.fromJS(data, mapping, this);
 
-                    var mapping2 = {
-                        ignore: ['startsOn', 'endsOn', 'startsFormat', 'endsFormat'],
-                    };
-                    ko.mapping.fromJS(data2, mapping2, this);
-
-                    this.startsOn = new FormattedDateInput(data2.startsOn, data2.startsFormat);
-                    this.endsOn = new FormattedDateInput(data2.endsOn, data2.endsFormat);
+                    this.startsOn = new FormattedDateInput(data.startsOn, data.startsFormat);
+                    this.endsOn = new FormattedDateInput(data.endsOn, data.endsFormat);
 
                     //#endregion
                     //#region populate places multiselect
@@ -183,6 +156,7 @@ module Activities.ViewModels {
                     //#endregion
 
                     this.tags(tags);
+                    ko.mapping.fromJS(documents, {}, this.documents);
 
                     deferred.resolve();
                 })
@@ -252,7 +226,6 @@ module Activities.ViewModels {
 
             ko.validation.registerExtenders();
 
-            ko.validation.group(this.values);
             ko.validation.group(this);
 
             this.title.extend({ required: true, minLength: 1, maxLength: 500 });
@@ -277,46 +250,62 @@ module Activities.ViewModels {
         //#endregion
         //#region Value subscriptions setup
 
+        private _isDirty: KnockoutObservable<boolean> = ko.observable(false); // dirty
+
         setupSubscriptions(): void {
-            /* Autosave when fields change. */
-            this.title.subscribe((newValue: any): void => { this.dirtyFlag(true); });
-            this.content.subscribe((newValue: any): void => { this.keyCountAutoSave(newValue); });
-            this.startsOn.input.subscribe((newValue: any): void => { this.dirtyFlag(true); });
-            this.endsOn.input.subscribe((newValue: any): void => { this.dirtyFlag(true); });
-            this.onGoing.subscribe((newValue: any): void => { this.dirtyFlag(true); });
-            this.isExternallyFunded.subscribe((newValue: any): void => { this.dirtyFlag(true); });
-            this.isInternallyFunded.subscribe((newValue: any): void => { this.dirtyFlag(true); });
+            // autosave when fields change
+            this.title.subscribe((newValue: any): void => { this._isDirty(true); });
+            this.content.subscribe((newValue: any): void => { this._descriptionCheckIsDirty(newValue); });
+            this.startsOn.input.subscribe((newValue: any): void => { this._isDirty(true); });
+            this.endsOn.input.subscribe((newValue: any): void => { this._isDirty(true); });
+            this.onGoing.subscribe((newValue: any): void => { this._isDirty(true); });
+            this.isExternallyFunded.subscribe((newValue: any): void => { this._isDirty(true); });
+            this.isInternallyFunded.subscribe((newValue: any): void => { this._isDirty(true); });
+
+            window.onbeforeunload = (): any => {
+                if (!this._hasData() && !this._isDeleted) {
+                    return "This activity currently has no data. If you continue, the activity will be kept and you can come back to add data later. If you intended to delete it, please stay on this page and click one of the 'Cancel' buttons provided instead.";
+                } else {
+                    this._autoSave();
+                }
+            }
         }
 
         //#endregion
         //#region Saving
 
-        keyCountAutoSave(newValue: any): void {
-            this.keyCounter += 1;
-            if (this.keyCounter >= this.AUTOSAVE_KEYCOUNT) {
-                this.dirtyFlag(true);
-                this.keyCounter = 0;
+        private static _descriptionIsDirtyAfter: number = 10; // autosave after so many keydowns in description
+        private _descriptionIsDirtyCurrent: number = 0;
+
+        private _descriptionCheckIsDirty(newValue: any): void {
+            ++this._descriptionIsDirtyCurrent;
+            if (this._descriptionIsDirtyCurrent >= Activity._descriptionIsDirtyAfter) {
+                this._isDirty(true);
+                this._descriptionIsDirtyCurrent = 0;
             }
         }
 
-        _isSaved: boolean = false;
-        _isDeleted: boolean = false;
+        saveSpinner = new App.Spinner(new App.SpinnerOptions(200));
 
-        autoSave(): JQueryDeferred<void> {
+        private _isAutoSaving: boolean = false; // in the process of saving
+        private _isSaved: boolean = false; // prevent autosave when already saved (published or draft)
+        private _isDeleted: boolean = false; // prevent autosave when already deleted (on cancel)
+
+        private _autoSave(): JQueryDeferred<void> {
             var deferred: JQueryDeferred<void> = $.Deferred();
-            if (this._isSaved || this._isDeleted || this.saving || (!this.dirtyFlag() && this.keyCounter == 0)) {
+            if (this._isSaved || this._isDeleted || this._isAutoSaving ||
+                (!this._isDirty() && this._descriptionIsDirtyCurrent == 0)) {
                 deferred.resolve();
                 return deferred;
             }
 
             this.saveSpinner.start();
-            this.saving = true;
+            this._isAutoSaving = true;
 
             var model = ko.mapping.toJS(this);
 
-            var url = $('#activity_put_url_format').text().format(this.id());
+            var url = $('#activity_put_url_format').text().format(this.activityId());
             var data = {
-                mode: model.modeText,
                 title: model.title,
                 content: model.content,
                 startsOn: this.startsOn.isoString(),
@@ -329,7 +318,6 @@ module Activities.ViewModels {
             };
             $.ajax({
                 type: 'PUT',
-                //url: App.Routes.WebApi.Activities.put(this.id()),
                 url: url,
                 data: data,
             })
@@ -340,32 +328,30 @@ module Activities.ViewModels {
                     deferred.reject(xhr);
                 })
                 .always((): void => {
-                    this.dirtyFlag(false);
+                    this._isDirty(false);
                     this.saveSpinner.stop();
-                    this.saving = false;
+                    this._isAutoSaving = false;
                 });
 
             return deferred;
         }
 
         private _save(mode: string): void {
-            this.autoSave() // play through the autosave function first
+            this._autoSave() // play through the autosave function first
                 .done((data: any): void => {
 
-                    if (!this.values.isValid() || !this.isValid()) {
-                        this.values.errors.showAllMessages();
+                    if (!this.isValid()) {
                         this.errors.showAllMessages();
                         return;
                     }
 
                     this.saveSpinner.start();
 
-                    var url = $('#activity_replace_url_format').text().format(this.workCopyId(), this.originalId(), mode);
+                    var url = $('#activity_replace_url_format').text()
+                        .format(this._workCopyId, this._originalId, mode);
                     $.ajax({
                         type: 'PUT',
-                        //url: App.Routes.WebApi.Activities.putEdit(this.id()),
                         url: url,
-                        //data: { mode: mode }
                     })
                         .done(() => {
                             this._isSaved = true; // prevent tinymce onbeforeunload from updating again
@@ -375,7 +361,7 @@ module Activities.ViewModels {
                             App.Failures.message(xhr, 'while trying to save your activity', true);
                         })
                         .always((): void => {
-                            this.dirtyFlag(false);
+                            this._isDirty(false);
                             this.saveSpinner.stop();
                         });
                 })
@@ -413,15 +399,9 @@ module Activities.ViewModels {
                             });
                             $dialog.find('.spinner').css('visibility', '');
 
-                            var url = $('#activity_delete_url_format').text().format(this.id());
-                            $.ajax({
-                                type: 'DELETE',
-                                //url: App.Routes.WebApi.Activities.del(this.id())
-                                url: url,
-                            })
+                            this._purge()
                                 .done((): void => {
                                     $dialog.dialog('close');
-                                    this._isDeleted = true; // prevent tinymce onbeforeunload from updating again
                                     location.href = App.Routes.Mvc.My.Profile.get();
                                 })
                                 .fail((xhr: JQueryXHR): void => {
@@ -433,7 +413,6 @@ module Activities.ViewModels {
                                     });
                                     $dialog.find('.spinner').css('visibility', 'hidden');
                                 });
-
                         }
                     },
                     {
@@ -444,6 +423,37 @@ module Activities.ViewModels {
                         'data-css-link': true
                     }]
             });
+        }
+
+        private _purge(async: boolean = true): JQueryDeferred<void>{
+            var deferred = $.Deferred();
+            var url = $('#activity_delete_url_format').text().format(this.activityId());
+            $.ajax({
+                type: 'DELETE',
+                url: url,
+                async: async,
+            })
+                .done((): void => {
+                    this._isDeleted = true; // prevent tinymce onbeforeunload from updating again
+                    deferred.resolve();
+                })
+                .fail((xhr: JQueryXHR): void => {
+                    deferred.reject(xhr);
+                })
+                .always((): void => { // re-enable buttons
+                    deferred.always();
+                });
+
+            return deferred;
+        }
+
+        private _hasData(): boolean {
+            var _hasData = this.title() || this.content() || this.onGoing() || this.startsOn.input()
+                || this.endsOn.input() || this.isExternallyFunded() || this.isInternallyFunded()
+                || this.selectedTypeIds().length || this.selectedPlaces().length || this.tags().length
+                || this.documents().length
+            ;
+            return _hasData;
         }
 
         //#endregion
@@ -488,7 +498,7 @@ module Activities.ViewModels {
 
         private _addPlaceId(addedPlaceId: number, e: kendo.ui.MultiSelectEvent): void {
             var url = $('#place_put_url_format').text()
-                .format(this.id(), addedPlaceId);
+                .format(this.activityId(), addedPlaceId);
             $.ajax({
                 type: 'PUT',
                 url: url,
@@ -501,7 +511,7 @@ module Activities.ViewModels {
                             return x.id() == addedPlaceId;
                         });
                     this.selectedPlaces.push({
-                        activityId: this.id(),
+                        activityId: this.activityId(),
                         placeId: addedPlaceId,
                         placeName: dataItem.officialName(),
                     });
@@ -517,7 +527,7 @@ module Activities.ViewModels {
 
         private _removePlaceId(removedPlaceId: number, e: kendo.ui.MultiSelectEvent): void {
             var url = $('#place_delete_url_format').text()
-                .format(this.id(), removedPlaceId);
+                .format(this.activityId(), removedPlaceId);
             $.ajax({
                 type: 'DELETE',
                 url: url,
@@ -692,7 +702,7 @@ module Activities.ViewModels {
 
         private _postTag(text: string, establishmentId: number): JQueryDeferred<any> {
             var deferred = $.Deferred();
-            var url = $('#tag_post_url_format').text().format(this.id());
+            var url = $('#tag_post_url_format').text().format(this.activityId());
             $.ajax({
                 url: url,
                 type: 'POST',
@@ -704,7 +714,7 @@ module Activities.ViewModels {
             })
                 .done((): void => { // push observable tag into view's array
                     var tag: ApiModels.ActivityTag = {
-                        activityId: this.id(),
+                        activityId: this.activityId(),
                         text: text,
                         domainType: establishmentId ? 'Establishment' : 'Custom',
                         domainKey: establishmentId,
@@ -718,7 +728,7 @@ module Activities.ViewModels {
 
         private _deleteTag(text: string): JQueryDeferred<any> {
             var deferred = $.Deferred();
-            var url = $('#tag_delete_url_format').text().format(this.id());
+            var url = $('#tag_delete_url_format').text().format(this.activityId());
             $.ajax({
                 url: url,
                 type: 'DELETE',
@@ -816,7 +826,7 @@ module Activities.ViewModels {
         }
 
         documentIcon(documentId: number) {
-            var url = $('#document_icon_url_format').text().format(this.id(), documentId);
+            var url = $('#document_icon_url_format').text().format(this.activityId(), documentId);
             var params = { maxSide: Activity.iconMaxSide };
             return '{0}?{1}'.format(url, $.param(params));
         }
@@ -841,7 +851,7 @@ module Activities.ViewModels {
 
                             $.ajax({ // submit delete api request
                                 type: 'DELETE',
-                                url: App.Routes.WebApi.Activities.Documents.del(this.id(), item.id())
+                                url: App.Routes.WebApi.Activities.Documents.del(this.activityId(), item.id())
                             })
                                 .done((): void => {
                                     $dialog.dialog('close');
@@ -888,7 +898,7 @@ module Activities.ViewModels {
             $(inputElement).unbind('keypress');
             $(inputElement).attr('disabled', 'disabled');
 
-            var url = $('#document_put_url_format').text().format(this.id(), item.id());
+            var url = $('#document_put_url_format').text().format(this.activityId(), item.id());
             $.ajax({
                 type: 'PUT',
                 url: url,
@@ -958,7 +968,7 @@ module Activities.ViewModels {
             if (!needsAdded) return;
 
             this._owner.saveSpinner.start();
-            var url = $('#type_put_url_format').text().format(this._owner.id(), this.id);
+            var url = $('#type_put_url_format').text().format(this._owner.activityId(), this.id);
             $.ajax({
                 url: url,
                 type: 'PUT',
@@ -989,7 +999,7 @@ module Activities.ViewModels {
 
             this._owner.saveSpinner.start();
             var url = $('#type_delete_url_format').text()
-                .format(this._owner.id(), this.id);
+                .format(this._owner.activityId(), this.id);
             $.ajax({
                 url: url,
                 type: 'DELETE',

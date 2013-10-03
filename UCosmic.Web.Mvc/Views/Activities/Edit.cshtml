@@ -5,194 +5,7 @@
 
 @section styles
 {
-    <style>
-        .k-upload .k-upload-button {
-            max-width: 500px;
-            -webkit-border-radius: 0;
-            -moz-border-radius: 0;
-            border-radius: 0;
-        }
-
-        .k-autocomplete, .k-autocomplete.k-state-default, .k-autocomplete.k-state-focused {
-            -webkit-border-radius: 0;
-            -moz-border-radius: 0;
-            border-radius: 0;
-            border: solid 1px #aaa;
-            border-right-color: #ddd;
-            border-bottom-color: #ddd;
-        }
-
-            .k-autocomplete .k-input, .k-autocomplete.k-state-focused .k-input {
-                -webkit-border-radius: 0;
-                -moz-border-radius: 0;
-                border-radius: 0;
-                padding: 8px;
-                font-size: 16px;
-                line-height: 20px;
-                height: auto;
-                text-indent: 0;
-            }
-
-        .k-list-container, .k-list-container.k-state-border-up, .k-list-container.k-state-border-down {
-            -webkit-border-radius: 0;
-            -moz-border-radius: 0;
-            border-radius: 0;
-        }
-
-        .k-multiselect {
-            background-image: none;
-            background-color: transparent;
-        }
-
-            .k-multiselect.k-header {
-                border: solid 1px #aaa;
-                border-right-color: #ddd;
-                border-bottom-color: #ddd;
-            }
-
-            .k-multiselect.k-state-focused {
-                -webkit-box-shadow: none;
-                box-shadow: none;
-            }
-
-            .k-multiselect .k-input {
-                -moz-box-sizing: border-box;
-                -webkit-box-sizing: border-box;
-                box-sizing: border-box;
-                display: block;
-                padding: 8px 0 8px 4px;
-                font-size: 16px;
-                line-height: 20px;
-                height: 36px;
-                margin: 0;
-                font-family: Arial;
-                color: #000;
-            }
-
-                .k-multiselect .k-input.k-readonly {
-                    color: #666;
-                }
-
-            .k-multiselect.k-state-hover, .xk-multiselect.k-state-hover:hover {
-                background-image: none;
-                background-color: transparent;
-            }
-
-            .k-multiselect, .k-multiselect.k-state-border-down, .k-multiselect.k-state-border-up, .k-multiselect .k-multiselect-wrap {
-                -webkit-border-radius: 0;
-                -moz-border-radius: 0;
-                border-radius: 0;
-                min-height: 36px;
-            }
-
-                .k-multiselect ul .k-button {
-                    -webkit-border-radius: 0;
-                    -moz-border-radius: 0;
-                    border-radius: 0;
-                    margin: 2px 0 0 2px;
-                    padding: 5px 6px 5px 8px;
-                    line-height: 16px;
-                    font-size: 16px;
-                    vertical-align: middle;
-                    color: #000;
-                    background-color: #eee;
-                    background-image: none;
-                    border-color: #ddd;
-                }
-
-                    .k-multiselect ul .k-button .k-delete.k-icon {
-                        background-position: top left;
-                        background-image: url('/images/icons/minus/minus-20-red.png');
-                        width: 20px;
-                        height: 20px;
-                        margin-left: 8px;
-                        cursor: pointer;
-                    }
-
-        .k-datepicker {
-            width: 175px;
-        }
-
-            .k-datepicker .k-picker-wrap {
-                -webkit-border-radius: 0;
-                -moz-border-radius: 0;
-                border-radius: 0;
-                padding-right: 28px;
-                border-color: #aaa;
-                border-right-color: #ddd;
-                border-bottom-color: #ddd;
-            }
-
-                .k-datepicker .k-picker-wrap .k-input {
-                    -moz-box-sizing: border-box;
-                    -webkit-box-sizing: border-box;
-                    box-sizing: border-box;
-                    color: #000;
-                    font-size: 16px;
-                    line-height: 20px;
-                    color: #000;
-                    padding: 8px 0 8px 8px;
-                    height: 36px;
-                    text-indent: 0;
-                }
-
-                .k-datepicker .k-picker-wrap .k-select {
-                    -moz-box-sizing: border-box;
-                    -webkit-box-sizing: border-box;
-                    box-sizing: border-box;
-                    height: 36px;
-                    width: 29px;
-                    padding-top: 1px;
-                    padding-left: 0;
-                    cursor: pointer;
-                    margin-left: 0;
-                }
-
-        .k-animation-container .k-calendar-container {
-            -webkit-border-radius: 0;
-            -moz-border-radius: 0;
-            border-radius: 0;
-        }
-
-        .k-calendar-container .k-calendar {
-            -webkit-border-radius: 0;
-            -moz-border-radius: 0;
-            border-radius: 0;
-            font-size: 12px;
-        }
-
-        .k-calendar .k-meta-view td {
-            vertical-align: middle;
-        }
-
-            .k-calendar .k-meta-view td.k-state-hover, .k-calendar .k-meta-view td.k-state-hover:hover, .k-calendar .k-meta-view td.k-other-month.k-state-hover, .k-calendar .k-meta-view td.k-other-month.k-state-hover:hover {
-                background-color: #ddd;
-                background-image: none;
-                -webkit-box-shadow: none;
-                box-shadow: none;
-            }
-
-                .k-calendar .k-meta-view td.k-state-hover .k-link, .k-calendar .k-meta-view td.k-state-hover:hover .k-link, .k-calendar .k-meta-view td.k-other-month.k-state-hover .k-link, .k-calendar .k-meta-view td.k-other-month.k-state-hover:hover .k-link {
-                    background-color: #ddd;
-                    background-image: none;
-                    -webkit-box-shadow: none;
-                    box-shadow: none;
-                }
-
-        .k-calendar .k-content td.k-state-hover, .k-calendar .k-content td.k-state-hover:hover, .k-calendar .k-content td.k-other-month.k-state-hover, .k-calendar .k-content td.k-other-month.k-state-hover:hover {
-            background-color: #ddd;
-            background-image: none;
-            -webkit-box-shadow: none;
-            box-shadow: none;
-        }
-
-            .k-calendar .k-content td.k-state-hover .k-link, .k-calendar .k-content td.k-state-hover:hover .k-link, .k-calendar .k-content td.k-other-month.k-state-hover .k-link, .k-calendar .k-content td.k-other-month.k-state-hover:hover .k-link {
-                background-color: #ddd;
-                background-image: none;
-                -webkit-box-shadow: none;
-                box-shadow: none;
-            }
-    </style>
+    @{ Html.RenderPartial(MVC.Activities.Views._EditStyles, null); }
 }
 
 @section scripts
@@ -210,37 +23,24 @@
     @Scripts.Render("~/bundles/activity")
 
     <script type="text/javascript">
-        (function($, window) {
+        (function ($, window) {
             var activityId = parseInt('@ViewBag.ActivityId');
             var activityWorkCopyId = parseInt('@ViewBag.ActivityWorkCopyId');
             var activityViewModel = new Activities.ViewModels.Activity(activityId, activityWorkCopyId);
             activityViewModel.load()
-                .done(function() {
+                .done(function () {
                     ko.applyBindings(activityViewModel, $("#activity-edit")[0]);
                     activityViewModel.setupWidgets("fromDatePicker", "toDatePicker", "countrySelector", "uploadFile", "newTag");
 
                     activityViewModel.setupValidation();
 
-                    //var datePicker = $("#fromDatePicker").data("kendoDatePicker");
-                    //datePicker.options.format = activityViewModel.startsFormat();
-                    //datePicker.value(activityViewModel.startsOn());
-
-                    //datePicker = $("#toDatePicker").data("kendoDatePicker");
-                    //datePicker.options.format = activityViewModel.endsFormat();
-                    //datePicker.value(activityViewModel.endsOn());
-
-                    /* NOTE: Using TinyMCE autosave plugin will disable window.onbeforeunload. */
-                    //window.onbeforeunload = function() {
-                    //    activityViewModel.autoSave();
-                    //};
-
                     activityViewModel.setupSubscriptions();
                     activityViewModel.ready(true);
                 })
-                .fail(function(xhr) {
+                .fail(function (xhr) {
                     App.Failures.message(xhr, 'while trying to load the activity editor', true);
                 });
-        } (jQuery, window));
+        }(jQuery, window));
 
     </script>
 
@@ -260,11 +60,12 @@
                 <div id="activity-edit" data-bind="visible: ready" style="display: none;">
 
                     @* BUTTONS *@
-                    <div style="margin-bottom: 32px" data-bind="template: { name: 'buttons-template'}"></div>
+                    <div style="margin-bottom: 32px" data-bind="template: { name: 'buttons-template' }"></div>
 
                     <header>
                         <h1>@ViewBag.Title</h1>
-                        <span class="red badge" style="vertical-align: middle;" data-bind="visible: modeText().toLowerCase() == 'draft'">Draft</span>
+                        <span class="red badge" style="vertical-align: middle;" data-bind="visible: isDraft">Draft</span>
+                        <span class="green badge" style="vertical-align: middle;" data-bind="visible: isPublished">Published</span>
                     </header>
 
                     <div style="margin-bottom: 38px">
@@ -350,14 +151,14 @@
                         <div style="margin-bottom: inherit">
                             <header style="margin-bottom: 4px">
                                 <h2 style="font-weight: normal">Description</h2>
-                                 @*<img src="~/images/icons/help/question-mark-24-blue.png" alt="Help" style="width: 16px; height: 16px; float: right; margin-bottom: 3px"/>*@ 
+                                @*<img src="~/images/icons/help/question-mark-24-blue.png" alt="Help" style="width: 16px; height: 16px; float: right; margin-bottom: 3px"/>*@
                             </header>
-                            <textarea data-bind="tinymce: content, valueUpdate: ['afterkeydown','keyup'], tinymceOptions:
+                            <textarea data-bind="tinymce: content, valueUpdate: ['afterkeydown', 'keyup'], tinymceOptions:
                                 {
                                     content_css: App.Routes.Content.styles('tinymce.css'),
                                     convert_urls: false,
                                     theme: 'advanced',
-                                    gecko_spellcheck : true,
+                                    gecko_spellcheck: true,
                                     mode: 'exact',
                                     height: '300',
                                     width: '100%',
@@ -375,8 +176,8 @@
                                     theme_advanced_resize_horizontal: false,
                                     theme_advanced_blockformats: 'h2,h3,p,blockquote',
                                     save_enablewhendirty: true,
-                                    gecko_spellcheck : true,
-                                    theme_advanced_path : false
+                                    gecko_spellcheck: true,
+                                    theme_advanced_path: false
                                 }">
                             </textarea>
                             @*<textarea id="description" rows="8" data-bind="value: content"></textarea>*@
@@ -425,7 +226,7 @@
                                         <div>
                                             <span class="validationMessage" data-bind="text: message" style="display: inline; line-height: 1.2em;"></span>
                                             &nbsp;
-                                            <a href="#" data-bind="click: function() { $root.dismissFileUploadError($index()); }">OK</a>
+                                            <a href="#" data-bind="click: function () { $root.dismissFileUploadError($index()); }">OK</a>
                                         </div>
                                     </li>
                                 </ul>
@@ -448,15 +249,15 @@
                         </div>
 
                         @* BUTTONS *@
-                        <div style="margin-bottom: 32px" data-bind="template: { name: 'buttons-template'}"></div>
+                        <div style="margin-bottom: 32px" data-bind="template: { name: 'buttons-template' }"></div>
 
                         @* LAST UPDATED *@
                         <div style="width: 50%; height: 1.5em; border-top: 1px; border-style: solid">
                             <span style="font-size: smaller; color: slategray">
                                 <span>Last updated</span>
-                                <label id="last-updated-date" data-bind="text: whenLastUpdated() ? moment(whenLastUpdated()).format('MM/DD/YYYY') : ''"></label>
-                                <span>by </span>
-                                <label id="last-updated-name" data-bind="text: whoLastUpdated"></label>
+                                <span id="last-updated-date" data-bind="text: updatedOnDate"></span>
+                                <span data-bind="visible: updatedByPrincipal">by <span id="last-updated-name" data-bind="    text: updatedByPrincipal"></span></span>
+
                             </span>
                         </div>
 

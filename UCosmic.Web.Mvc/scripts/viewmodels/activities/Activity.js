@@ -17,16 +17,9 @@ var Activities;
             //#endregion
             //#region Construction & Initialization
             function Activity(activityId, activityWorkCopyId) {
-                //#region Class Properties
+                var _this = this;
+                //#region Primary scalar observables & properties
                 this.ready = ko.observable(false);
-                // Autosave after so many keydowns
-                this.AUTOSAVE_KEYCOUNT = 10;
-                this.keyCounter = 0;
-                // Dirty
-                this.dirtyFlag = ko.observable(false);
-                // In the process of saving
-                this.saving = false;
-                this.saveSpinner = new App.Spinner(new App.SpinnerOptions(200));
                 this.activityId = ko.observable();
                 this.mode = ko.observable();
                 this.title = ko.observable();
@@ -34,6 +27,34 @@ var Activities;
                 this.onGoing = ko.observable();
                 this.isExternallyFunded = ko.observable();
                 this.isInternallyFunded = ko.observable();
+                this.updatedByPrincipal = ko.observable();
+                this.updatedOnUtc = ko.observable();
+                //#endregion
+                //#region View convenience computeds
+                this.isDraft = ko.computed(function () {
+                    var mode = _this.mode();
+                    if (!mode)
+                        return false;
+                    return mode.toLowerCase() == 'draft';
+                });
+                this.isPublished = ko.computed(function () {
+                    var mode = _this.mode();
+                    if (!mode)
+                        return false;
+                    return mode.toLowerCase() == 'public';
+                });
+                this.updatedOnDate = ko.computed(function () {
+                    var updatedOnUtc = _this.updatedOnUtc();
+                    if (!updatedOnUtc)
+                        return undefined;
+                    return moment(updatedOnUtc).format('M/D/YYYY');
+                });
+                //#endregion
+                //#region Value subscriptions setup
+                this._isDirty = ko.observable(false);
+                this._descriptionIsDirtyCurrent = 0;
+                this.saveSpinner = new App.Spinner(new App.SpinnerOptions(200));
+                this._isAutoSaving = false;
                 this._isSaved = false;
                 this._isDeleted = false;
                 //#endregion
@@ -52,21 +73,15 @@ var Activities;
                 this.documents = ko.observableArray();
                 this.fileUploadErrors = ko.observableArray();
                 this._invalidFileNames = ko.observableArray([]);
-                this._initialize(activityId, activityWorkCopyId);
-            }
-            Activity.prototype._initialize = function (activityId, activityWorkCopyId) {
-                var _this = this;
-                this.id = ko.observable(activityId);
-                this.originalId = ko.observable(activityId);
-                this.workCopyId = ko.observable(activityWorkCopyId);
+                this._originalId = activityId;
+                this._workCopyId = activityWorkCopyId;
 
-                this.dirty = ko.computed(function () {
-                    if (_this.dirtyFlag()) {
-                        _this.autoSave();
+                ko.computed(function () {
+                    if (_this._isDirty()) {
+                        _this._autoSave();
                     }
                 });
-            };
-
+            }
             //#endregion
             //#region Initial data load
             Activity.prototype.load = function () {
@@ -89,42 +104,35 @@ var Activities;
                 });
 
                 var dataPact = $.Deferred();
-                $.get(App.Routes.WebApi.Activities.get(this.workCopyId())).done(function (data) {
+                $.ajax({ url: $('#activity_get_url_format').text().format(this._workCopyId), cache: false }).done(function (data) {
                     dataPact.resolve(data);
                 }).fail(function (xhr) {
                     dataPact.reject(xhr);
                 });
 
-                var data2Pact = $.Deferred();
-                $.get($('#activity_get_url_format').text().format(this.workCopyId())).done(function (data) {
-                    data2Pact.resolve(data);
-                }).fail(function (xhr) {
-                    data2Pact.reject(xhr);
-                });
-
                 var placesPact = $.Deferred();
-                $.get($('#places_get_url_format').text().format(this.workCopyId())).done(function (data) {
+                $.ajax({ url: $('#places_get_url_format').text().format(this._workCopyId), cache: false }).done(function (data) {
                     placesPact.resolve(data);
                 }).fail(function (xhr) {
                     placesPact.reject(xhr);
                 });
 
                 var typesPact = $.Deferred();
-                $.get($('#types_get_url_format').text().format(this.workCopyId())).done(function (data) {
+                $.ajax({ url: $('#types_get_url_format').text().format(this._workCopyId), cache: false }).done(function (data) {
                     typesPact.resolve(data);
                 }).fail(function (xhr) {
                     typesPact.reject(xhr);
                 });
 
                 var tagsPact = $.Deferred();
-                $.get($('#tags_get_url_format').text().format(this.workCopyId())).done(function (data) {
+                $.ajax({ url: $('#tags_get_url_format').text().format(this._workCopyId), cache: false }).done(function (data) {
                     tagsPact.resolve(data);
                 }).fail(function (xhr) {
                     tagsPact.reject(xhr);
                 });
 
                 var documentsPact = $.Deferred();
-                $.get($('#documents_get_url_format').text().format(this.workCopyId())).done(function (data) {
+                $.ajax({ url: $('#documents_get_url_format').text().format(this._workCopyId), cache: false }).done(function (data) {
                     documentsPact.resolve(data);
                 }).fail(function (xhr) {
                     documentsPact.reject(xhr);
@@ -132,28 +140,15 @@ var Activities;
 
                 //#endregion
                 //#region process after all have been loaded
-                $.when(typeOptionsPact, placeOptionsPact, dataPact, data2Pact, placesPact, typesPact, tagsPact, documentsPact).done(function (typeOptions, placeOptions, data, data2, selectedPlaces, selectedTypes, tags, documents) {
+                $.when(typeOptionsPact, placeOptionsPact, dataPact, placesPact, typesPact, tagsPact, documentsPact).done(function (typeOptions, placeOptions, data, selectedPlaces, selectedTypes, tags, documents) {
                     //#region populate activity data
-                    ko.mapping.fromJS(documents, {}, _this.documents);
-
-                    // Although the MVC DateTime to JSON serializer will output an ISO compatible
-                    // string, we are not guarenteed that a browser's Date(string) or Date.parse(string)
-                    // functions will accurately convert to Date.  So, we are using
-                    // moment.js to handle the parsing and conversion.
-                    //var augmentedDocumentModel = function (data) {
-                    //    ko.mapping.fromJS(data, {}, this);
-                    //    this.proxyImageSource = ko.observable(App.Routes.WebApi.Activities.Documents.Thumbnail.get(data.activityId, data.id, { maxSide: Activity.iconMaxSide }));
-                    //};
-                    var mapping = {};
-                    ko.mapping.fromJS(data, mapping, _this);
-
-                    var mapping2 = {
+                    var mapping = {
                         ignore: ['startsOn', 'endsOn', 'startsFormat', 'endsFormat']
                     };
-                    ko.mapping.fromJS(data2, mapping2, _this);
+                    ko.mapping.fromJS(data, mapping, _this);
 
-                    _this.startsOn = new FormattedDateInput(data2.startsOn, data2.startsFormat);
-                    _this.endsOn = new FormattedDateInput(data2.endsOn, data2.endsFormat);
+                    _this.startsOn = new FormattedDateInput(data.startsOn, data.startsFormat);
+                    _this.endsOn = new FormattedDateInput(data.endsOn, data.endsFormat);
 
                     //#endregion
                     //#region populate places multiselect
@@ -173,6 +168,7 @@ var Activities;
 
                     //#endregion
                     _this.tags(tags);
+                    ko.mapping.fromJS(documents, {}, _this.documents);
 
                     deferred.resolve();
                 }).fail(function (xhr) {
@@ -229,7 +225,6 @@ var Activities;
 
                 ko.validation.registerExtenders();
 
-                ko.validation.group(this.values);
                 ko.validation.group(this);
 
                 this.title.extend({ required: true, minLength: 1, maxLength: 500 });
@@ -251,60 +246,63 @@ var Activities;
                 });
             };
 
-            //#endregion
-            //#region Value subscriptions setup
             Activity.prototype.setupSubscriptions = function () {
                 var _this = this;
-                /* Autosave when fields change. */
+                // autosave when fields change
                 this.title.subscribe(function (newValue) {
-                    _this.dirtyFlag(true);
+                    _this._isDirty(true);
                 });
                 this.content.subscribe(function (newValue) {
-                    _this.keyCountAutoSave(newValue);
+                    _this._descriptionCheckIsDirty(newValue);
                 });
                 this.startsOn.input.subscribe(function (newValue) {
-                    _this.dirtyFlag(true);
+                    _this._isDirty(true);
                 });
                 this.endsOn.input.subscribe(function (newValue) {
-                    _this.dirtyFlag(true);
+                    _this._isDirty(true);
                 });
                 this.onGoing.subscribe(function (newValue) {
-                    _this.dirtyFlag(true);
+                    _this._isDirty(true);
                 });
                 this.isExternallyFunded.subscribe(function (newValue) {
-                    _this.dirtyFlag(true);
+                    _this._isDirty(true);
                 });
                 this.isInternallyFunded.subscribe(function (newValue) {
-                    _this.dirtyFlag(true);
+                    _this._isDirty(true);
                 });
+
+                window.onbeforeunload = function () {
+                    if (!_this._hasData() && !_this._isDeleted) {
+                        return "This activity currently has no data. If you continue, the activity will be kept and you can come back to add data later. If you intended to delete it, please stay on this page and click one of the 'Cancel' buttons provided instead.";
+                    } else {
+                        _this._autoSave();
+                    }
+                };
             };
 
-            //#endregion
-            //#region Saving
-            Activity.prototype.keyCountAutoSave = function (newValue) {
-                this.keyCounter += 1;
-                if (this.keyCounter >= this.AUTOSAVE_KEYCOUNT) {
-                    this.dirtyFlag(true);
-                    this.keyCounter = 0;
+            Activity.prototype._descriptionCheckIsDirty = function (newValue) {
+                ++this._descriptionIsDirtyCurrent;
+                if (this._descriptionIsDirtyCurrent >= Activity._descriptionIsDirtyAfter) {
+                    this._isDirty(true);
+                    this._descriptionIsDirtyCurrent = 0;
                 }
             };
 
-            Activity.prototype.autoSave = function () {
+            Activity.prototype._autoSave = function () {
                 var _this = this;
                 var deferred = $.Deferred();
-                if (this._isSaved || this._isDeleted || this.saving || (!this.dirtyFlag() && this.keyCounter == 0)) {
+                if (this._isSaved || this._isDeleted || this._isAutoSaving || (!this._isDirty() && this._descriptionIsDirtyCurrent == 0)) {
                     deferred.resolve();
                     return deferred;
                 }
 
                 this.saveSpinner.start();
-                this.saving = true;
+                this._isAutoSaving = true;
 
                 var model = ko.mapping.toJS(this);
 
-                var url = $('#activity_put_url_format').text().format(this.id());
+                var url = $('#activity_put_url_format').text().format(this.activityId());
                 var data = {
-                    mode: model.modeText,
                     title: model.title,
                     content: model.content,
                     startsOn: this.startsOn.isoString(),
@@ -317,7 +315,6 @@ var Activities;
                 };
                 $.ajax({
                     type: 'PUT',
-                    //url: App.Routes.WebApi.Activities.put(this.id()),
                     url: url,
                     data: data
                 }).done(function () {
@@ -325,9 +322,9 @@ var Activities;
                 }).fail(function (xhr) {
                     deferred.reject(xhr);
                 }).always(function () {
-                    _this.dirtyFlag(false);
+                    _this._isDirty(false);
                     _this.saveSpinner.stop();
-                    _this.saving = false;
+                    _this._isAutoSaving = false;
                 });
 
                 return deferred;
@@ -335,19 +332,17 @@ var Activities;
 
             Activity.prototype._save = function (mode) {
                 var _this = this;
-                this.autoSave().done(function (data) {
-                    if (!_this.values.isValid() || !_this.isValid()) {
-                        _this.values.errors.showAllMessages();
+                this._autoSave().done(function (data) {
+                    if (!_this.isValid()) {
                         _this.errors.showAllMessages();
                         return;
                     }
 
                     _this.saveSpinner.start();
 
-                    var url = $('#activity_replace_url_format').text().format(_this.workCopyId(), _this.originalId(), mode);
+                    var url = $('#activity_replace_url_format').text().format(_this._workCopyId, _this._originalId, mode);
                     $.ajax({
                         type: 'PUT',
-                        //url: App.Routes.WebApi.Activities.putEdit(this.id()),
                         url: url
                     }).done(function () {
                         _this._isSaved = true;
@@ -355,7 +350,7 @@ var Activities;
                     }).fail(function (xhr) {
                         App.Failures.message(xhr, 'while trying to save your activity', true);
                     }).always(function () {
-                        _this.dirtyFlag(false);
+                        _this._isDirty(false);
                         _this.saveSpinner.stop();
                     });
                 }).fail(function (xhr) {
@@ -392,14 +387,8 @@ var Activities;
                                 });
                                 $dialog.find('.spinner').css('visibility', '');
 
-                                var url = $('#activity_delete_url_format').text().format(_this.id());
-                                $.ajax({
-                                    type: 'DELETE',
-                                    //url: App.Routes.WebApi.Activities.del(this.id())
-                                    url: url
-                                }).done(function () {
+                                _this._purge().done(function () {
                                     $dialog.dialog('close');
-                                    _this._isDeleted = true;
                                     location.href = App.Routes.Mvc.My.Profile.get();
                                 }).fail(function (xhr) {
                                     App.Failures.message(xhr, 'while trying to discard your activity edits', true);
@@ -420,6 +409,32 @@ var Activities;
                         }
                     ]
                 });
+            };
+
+            Activity.prototype._purge = function (async) {
+                if (typeof async === "undefined") { async = true; }
+                var _this = this;
+                var deferred = $.Deferred();
+                var url = $('#activity_delete_url_format').text().format(this.activityId());
+                $.ajax({
+                    type: 'DELETE',
+                    url: url,
+                    async: async
+                }).done(function () {
+                    _this._isDeleted = true;
+                    deferred.resolve();
+                }).fail(function (xhr) {
+                    deferred.reject(xhr);
+                }).always(function () {
+                    deferred.always();
+                });
+
+                return deferred;
+            };
+
+            Activity.prototype._hasData = function () {
+                var _hasData = this.title() || this.content() || this.onGoing() || this.startsOn.input() || this.endsOn.input() || this.isExternallyFunded() || this.isInternallyFunded() || this.selectedTypeIds().length || this.selectedPlaces().length || this.tags().length || this.documents().length;
+                return _hasData;
             };
 
             Activity.prototype._initPlacesKendoMultiSelect = function () {
@@ -455,7 +470,7 @@ else if (removedPlaceIds.length === 1)
 
             Activity.prototype._addPlaceId = function (addedPlaceId, e) {
                 var _this = this;
-                var url = $('#place_put_url_format').text().format(this.id(), addedPlaceId);
+                var url = $('#place_put_url_format').text().format(this.activityId(), addedPlaceId);
                 $.ajax({
                     type: 'PUT',
                     url: url,
@@ -466,7 +481,7 @@ else if (removedPlaceIds.length === 1)
                         return x.id() == addedPlaceId;
                     });
                     _this.selectedPlaces.push({
-                        activityId: _this.id(),
+                        activityId: _this.activityId(),
                         placeId: addedPlaceId,
                         placeName: dataItem.officialName()
                     });
@@ -481,7 +496,7 @@ else if (removedPlaceIds.length === 1)
 
             Activity.prototype._removePlaceId = function (removedPlaceId, e) {
                 var _this = this;
-                var url = $('#place_delete_url_format').text().format(this.id(), removedPlaceId);
+                var url = $('#place_delete_url_format').text().format(this.activityId(), removedPlaceId);
                 $.ajax({
                     type: 'DELETE',
                     url: url,
@@ -641,7 +656,7 @@ else if (removedPlaceIds.length === 1)
             Activity.prototype._postTag = function (text, establishmentId) {
                 var _this = this;
                 var deferred = $.Deferred();
-                var url = $('#tag_post_url_format').text().format(this.id());
+                var url = $('#tag_post_url_format').text().format(this.activityId());
                 $.ajax({
                     url: url,
                     type: 'POST',
@@ -652,7 +667,7 @@ else if (removedPlaceIds.length === 1)
                     }
                 }).done(function () {
                     var tag = {
-                        activityId: _this.id(),
+                        activityId: _this.activityId(),
                         text: text,
                         domainType: establishmentId ? 'Establishment' : 'Custom',
                         domainKey: establishmentId
@@ -668,7 +683,7 @@ else if (removedPlaceIds.length === 1)
             Activity.prototype._deleteTag = function (text) {
                 var _this = this;
                 var deferred = $.Deferred();
-                var url = $('#tag_delete_url_format').text().format(this.id());
+                var url = $('#tag_delete_url_format').text().format(this.activityId());
                 $.ajax({
                     url: url,
                     type: 'DELETE',
@@ -761,7 +776,7 @@ else if (removedPlaceIds.length === 1)
             };
 
             Activity.prototype.documentIcon = function (documentId) {
-                var url = $('#document_icon_url_format').text().format(this.id(), documentId);
+                var url = $('#document_icon_url_format').text().format(this.activityId(), documentId);
                 var params = { maxSide: Activity.iconMaxSide };
                 return '{0}?{1}'.format(url, $.param(params));
             };
@@ -787,7 +802,7 @@ else if (removedPlaceIds.length === 1)
 
                                 $.ajax({
                                     type: 'DELETE',
-                                    url: App.Routes.WebApi.Activities.Documents.del(_this.id(), item.id())
+                                    url: App.Routes.WebApi.Activities.Documents.del(_this.activityId(), item.id())
                                 }).done(function () {
                                     $dialog.dialog('close');
                                     _this.documents.splice(index, 1);
@@ -835,7 +850,7 @@ else if (removedPlaceIds.length === 1)
                 $(inputElement).unbind('keypress');
                 $(inputElement).attr('disabled', 'disabled');
 
-                var url = $('#document_put_url_format').text().format(this.id(), item.id());
+                var url = $('#document_put_url_format').text().format(this.activityId(), item.id());
                 $.ajax({
                     type: 'PUT',
                     url: url,
@@ -870,6 +885,8 @@ else if (removedPlaceIds.length === 1)
             Activity.prototype.dismissFileUploadError = function (index) {
                 this.fileUploadErrors.splice(index, 1);
             };
+            Activity._descriptionIsDirtyAfter = 10;
+
             Activity.iconMaxSide = 64;
             return Activity;
         })();
@@ -903,7 +920,7 @@ else
                     return;
 
                 this._owner.saveSpinner.start();
-                var url = $('#type_put_url_format').text().format(this._owner.id(), this.id);
+                var url = $('#type_put_url_format').text().format(this._owner.activityId(), this.id);
                 $.ajax({
                     url: url,
                     type: 'PUT'
@@ -931,7 +948,7 @@ else
                     return;
 
                 this._owner.saveSpinner.start();
-                var url = $('#type_delete_url_format').text().format(this._owner.id(), this.id);
+                var url = $('#type_delete_url_format').text().format(this._owner.activityId(), this.id);
                 $.ajax({
                     url: url,
                     type: 'DELETE'

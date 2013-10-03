@@ -93,8 +93,10 @@ namespace UCosmic.Web.Mvc.Controllers
             public _ViewNamesClass ViewNames { get { return s_ViewNames; } }
             public class _ViewNamesClass
             {
+                public readonly string _EditStyles = "_EditStyles";
                 public readonly string Edit = "Edit";
             }
+            public readonly string _EditStyles = "~/Views/Activities/_EditStyles.cshtml";
             public readonly string Edit = "~/Views/Activities/Edit.cshtml";
         }
     }

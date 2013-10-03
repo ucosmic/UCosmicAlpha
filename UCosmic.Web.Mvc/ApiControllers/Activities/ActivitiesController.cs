@@ -43,14 +43,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
             if (input.PageSize < 1) { throw new HttpResponseException(HttpStatusCode.BadRequest); }
 
             var query = Mapper.Map<ActivitySearchInputModel, ActivitiesByPersonId>(input);
-            var activities = _queryProcessor.Execute(query);
-            if (activities == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
-
-            var model = Mapper.Map<PageOfActivityApiModel>(activities);
-
+            var page = _queryProcessor.Execute(query);
+            var model = Mapper.Map<PageOfActivityApiModel>(page);
             return model;
         }
 
@@ -98,6 +92,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 EndsFormat = values.EndsFormat,
                 IsExternallyFunded = values.WasExternallyFunded,
                 IsInternallyFunded = values.WasInternallyFunded,
+                UpdatedByPrincipal = activity.UpdatedByPrincipal,
+                UpdatedOnUtc = activity.UpdatedOnUtc ?? activity.CreatedOnUtc,
             };
             return model;
         }

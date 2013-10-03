@@ -2412,6 +2412,7 @@
     <Content Include="Views\Agreements\_Agreement.cshtml" />
     <Content Include="Views\Agreements\_PublicViewSideBar.cshtml" />
     <Content Include="Views\Agreements\_PublicViewContent.cshtml" />
+    <Content Include="Views\Activities\_EditStyles.cshtml" />
     <None Include="Views\ApiTest\Index.cshtml" />
     <Content Include="Views\Agreements\Settings.cshtml" />
     <Content Include="Views\Agreements\_SearchSideBar.cshtml" />

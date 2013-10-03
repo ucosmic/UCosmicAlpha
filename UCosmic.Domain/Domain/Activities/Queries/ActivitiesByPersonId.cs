@@ -87,7 +87,7 @@ namespace UCosmic.Domain.Activities
                                                            .Concat(undatedResults);
 
 
-            var pagedResults = new PagedQueryResult<Activity>(results, query.PageSize, query.PageNumber);
+            var pagedResults = new PagedQueryResult<Activity>(results.Distinct(), query.PageSize, query.PageNumber);
 
             return pagedResults;
         }

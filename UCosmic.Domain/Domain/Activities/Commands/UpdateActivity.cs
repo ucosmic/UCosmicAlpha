@@ -18,7 +18,7 @@ namespace UCosmic.Domain.Activities
 
         public IPrincipal Principal { get; private set; }
         public int ActivityId { get; private set; }
-        public ActivityMode Mode { get; set; }
+        public ActivityMode? Mode { get; set; }
         public string Title { get; set; }
         public string Content { get; set; }
         public DateTime? StartsOn { get; set; }
@@ -81,7 +81,8 @@ namespace UCosmic.Domain.Activities
                     x => x.Values,
                 })
                 .ById(command.ActivityId, false);
-            activity.Mode = command.Mode;
+            if (command.Mode.HasValue && command.Mode.Value != activity.Mode)
+                activity.Mode = command.Mode.Value;
             activity.UpdatedByPrincipal = command.Impersonator == null
                 ? command.Principal.Identity.Name
                 : command.Impersonator.Identity.Name;

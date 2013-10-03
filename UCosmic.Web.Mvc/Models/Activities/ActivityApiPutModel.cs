@@ -6,7 +6,7 @@ namespace UCosmic.Web.Mvc.Models
 {
     public class ActivityApiPutModel
     {
-        public ActivityMode Mode { get; set; }
+        public ActivityMode? Mode { get; set; }
         public string Title { get; set; }
         public string Content { get; set; }
         public DateTime? StartsOn { get; set; }

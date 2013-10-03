@@ -22,6 +22,8 @@ namespace UCosmic.Web.Mvc.Models
         public bool? OnGoing { get; set; }
         public bool? IsExternallyFunded { get; set; }
         public bool? IsInternallyFunded { get; set; }
+        public string UpdatedByPrincipal { get; set; }
+        public DateTime UpdatedOnUtc { get; set; }
     }
 
     public class ActivityApiModel
