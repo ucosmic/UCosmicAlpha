@@ -1,0 +1,32 @@
+﻿ <section id="basicInfo">
+        <header>
+            <h2>
+                Basic Info
+            </h2>
+        </header>
+        <div class="field-table w690-l190-v500">
+            <div>
+                <span>
+                    <em data-bind="text: name, visible: name"></em>
+                    <span data-bind="visible: name"><br/></span>
+                </span>
+                <span>
+                    <span data-bind="html: participantsNames"></span>
+                </span>
+                <span style="font-size: 14px;">
+                    <span>
+                        <span data-bind="text: type() + ', ' "></span>
+                    </span>
+                    <span>
+                        <span style="color: blue;" data-bind="text: status"></span><br/>
+                    </span>
+                    <span>
+                        <span data-bind="text: 'Starts on: ' + startsOnDate() + ', '"></span>
+                    </span>
+                    <span>
+                        <span data-bind="text: 'Ends on: ' + expiresOnDate()"></span>
+                    </span>
+                </span>
+            </div>
+        </div>
+    </section>

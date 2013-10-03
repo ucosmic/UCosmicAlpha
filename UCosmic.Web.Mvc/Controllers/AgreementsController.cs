@@ -17,6 +17,12 @@ namespace UCosmic.Web.Mvc.Controllers
             _queryProcessor = queryProcessor;
         }
 
+        [GET("agreements/{agreementId:int}")]
+        public virtual ViewResult Show(int agreementId)
+        {
+            return View(MVC.Agreements.Views.PublicView);
+        }
+
         [GET("agreements/{domain?}")]
         public virtual ActionResult Index(string domain = null)
         {
@@ -46,11 +52,6 @@ namespace UCosmic.Web.Mvc.Controllers
             return View();
         }
 
-        [GET("agreements/{agreementId:int}")]
-        public virtual ViewResult Show(int agreementId)
-        {
-            return View();
-        }
 
         [GET("agreements/new/", SitePrecedence = 1)]
         [TryAuthorize(Roles = RoleName.AgreementManagers)]

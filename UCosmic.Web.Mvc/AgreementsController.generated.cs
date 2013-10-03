@@ -69,8 +69,8 @@ namespace UCosmic.Web.Mvc.Controllers
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public class ActionNamesClass
         {
-            public readonly string Index = "Index";
             public readonly string Show = "Show";
+            public readonly string Index = "Index";
             public readonly string New = "New";
             public readonly string Edit = "Edit";
             public readonly string Settings = "Settings";
@@ -79,22 +79,14 @@ namespace UCosmic.Web.Mvc.Controllers
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public class ActionNameConstants
         {
-            public const string Index = "Index";
             public const string Show = "Show";
+            public const string Index = "Index";
             public const string New = "New";
             public const string Edit = "Edit";
             public const string Settings = "Settings";
         }
 
 
-        static readonly ActionParamsClass_Index s_params_Index = new ActionParamsClass_Index();
-        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public ActionParamsClass_Index IndexParams { get { return s_params_Index; } }
-        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public class ActionParamsClass_Index
-        {
-            public readonly string domain = "domain";
-        }
         static readonly ActionParamsClass_Show s_params_Show = new ActionParamsClass_Show();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public ActionParamsClass_Show ShowParams { get { return s_params_Show; } }
@@ -102,6 +94,14 @@ namespace UCosmic.Web.Mvc.Controllers
         public class ActionParamsClass_Show
         {
             public readonly string agreementId = "agreementId";
+        }
+        static readonly ActionParamsClass_Index s_params_Index = new ActionParamsClass_Index();
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public ActionParamsClass_Index IndexParams { get { return s_params_Index; } }
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public class ActionParamsClass_Index
+        {
+            public readonly string domain = "domain";
         }
         static readonly ActionParamsClass_Edit s_params_Edit = new ActionParamsClass_Edit();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -130,6 +130,7 @@ namespace UCosmic.Web.Mvc.Controllers
                 public readonly string _FormOverallVisibility = "_FormOverallVisibility";
                 public readonly string _FormParticipants = "_FormParticipants";
                 public readonly string _FormSidebarNav = "_FormSidebarNav";
+                public readonly string _PublicViewContent = "_PublicViewContent";
                 public readonly string _PublicViewSideBar = "_PublicViewSideBar";
                 public readonly string _SearchAndResults = "_SearchAndResults";
                 public readonly string _SearchSideBar = "_SearchSideBar";
@@ -150,6 +151,7 @@ namespace UCosmic.Web.Mvc.Controllers
             public readonly string _FormOverallVisibility = "~/Views/Agreements/_FormOverallVisibility.cshtml";
             public readonly string _FormParticipants = "~/Views/Agreements/_FormParticipants.cshtml";
             public readonly string _FormSidebarNav = "~/Views/Agreements/_FormSidebarNav.cshtml";
+            public readonly string _PublicViewContent = "~/Views/Agreements/_PublicViewContent.cshtml";
             public readonly string _PublicViewSideBar = "~/Views/Agreements/_PublicViewSideBar.cshtml";
             public readonly string _SearchAndResults = "~/Views/Agreements/_SearchAndResults.cshtml";
             public readonly string _SearchSideBar = "~/Views/Agreements/_SearchSideBar.cshtml";
@@ -168,17 +170,17 @@ namespace UCosmic.Web.Mvc.Controllers
     {
         public T4MVC_AgreementsController() : base(Dummy.Instance) { }
 
-        public override System.Web.Mvc.ActionResult Index(string domain)
-        {
-            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Index);
-            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "domain", domain);
-            return callInfo;
-        }
-
         public override System.Web.Mvc.ViewResult Show(int agreementId)
         {
             var callInfo = new T4MVC_System_Web_Mvc_ViewResult(Area, Name, ActionNames.Show);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "agreementId", agreementId);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.ActionResult Index(string domain)
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Index);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "domain", domain);
             return callInfo;
         }
 

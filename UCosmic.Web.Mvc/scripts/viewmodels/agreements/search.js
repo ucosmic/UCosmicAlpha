@@ -272,7 +272,7 @@ var Agreements;
                 //location.hash = "";
                 this.sammy.unload();
                 location.hash = "";
-                location.pathname = "agreements/" + viewModel.id() + "/edit/";
+                location.pathname = "agreements/" + viewModel.id() + "/";
 
                 //alert(viewModel.id());
                 return true;

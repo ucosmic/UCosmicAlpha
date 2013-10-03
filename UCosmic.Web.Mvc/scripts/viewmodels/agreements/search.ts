@@ -10,7 +10,6 @@
 /// <reference path="SearchResult.ts" />
 /// <reference path="ApiModels.d.ts" />
 
-
 module Agreements.ViewModels {
 
     export interface Lens {
@@ -281,7 +280,7 @@ module Agreements.ViewModels {
             //location.hash = "";
             this.sammy.unload();
             location.hash = "";
-            location.pathname = "agreements/" + viewModel.id() + "/edit/"
+            location.pathname = "agreements/" + viewModel.id() + "/"
             //alert(viewModel.id());
             return true;
         }

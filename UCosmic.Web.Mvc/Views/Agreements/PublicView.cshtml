@@ -7,7 +7,7 @@
         var currentBib = ViewBag.Id == 0 ? "new" : "edit";
     }
     <nav class="bib hide" data-current-bib="@currentBib">
-        @Html.Partial(MVC.Agreements.Views._Bib, new ViewDataDictionary { { "Edit", currentBib == "edit" ? true : (bool?)null } })
+        @Html.Partial(MVC.Agreements.Views._Bib, new ViewDataDictionary { { "Search", currentBib == "search" ? true : (bool?)null } })
     </nav>
 }
 @section scripts
@@ -15,9 +15,8 @@
     @Scripts.Render("~/bundles/agreementPublicView")
     <script type="text/javascript">
 
-        var agreementSearcdhViewModel = new Agreements.ViewModels.Search();
+        var agreementSearcdhViewModel = new Agreements.ViewModels.PublicView();
         ko.applyBindings(agreementSearcdhViewModel, $('#publicView')[0]);
-        agreementSearcdhViewModel.sammy.run();
     </script>
 }
 
@@ -30,7 +29,7 @@
                     @ViewBag.Title
                 </h1>
             </header>
-           @Html.Partial(MVC.Agreements.Views._Agreement)
+           @Html.Partial(MVC.Agreements.Views._PublicViewContent)
         </div>
         <aside class="on-right from-top" data-fixed-scroll="root">
             <div data-fixed-scroll="anchor"></div>
