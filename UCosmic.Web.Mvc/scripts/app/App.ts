@@ -20,10 +20,11 @@ module App {
 
     // react to unexpected situations
     export module Failures {
-        export function message(xhr: JQueryXHR, reason: string = '', autoAlert: boolean = false): string {
+        export function message(xhr: any, reason: string = '', autoAlert: boolean = false): string {
 
             // do not report error if user clicked on link or browser control
-            if (xhr.readyState === 0 || xhr.status === 0) return null;
+            if (xhr)
+                if (xhr.readyState === 0 || xhr.status === 0) return null;
 
             if (reason !== '') reason = ' ' + reason;
             var format = 'UCosmic experienced an unexpected error{0}. If this continues to happen, ' +

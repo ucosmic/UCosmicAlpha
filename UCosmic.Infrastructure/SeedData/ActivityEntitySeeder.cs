@@ -138,21 +138,21 @@ namespace UCosmic.SeedData
 
                     /* ----- Add Documents ----- */
 
-                    Seed(new CreateActivityDocument(principal, activity.RevisionId, activity.Mode)
+                    Seed(new CreateActivityDocument(principal, activity.RevisionId)
                     {
                         FileName = "02E6D488-B3FA-4D79-848F-303779A53ABE.docx",
                         MimeType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                        Title = "Dissertation Excerpt"
+                        Title = "Dissertation Excerpt",
                     });
 
-                    Seed(new CreateActivityDocument(principal, activity.RevisionId, activity.Mode)
+                    Seed(new CreateActivityDocument(principal, activity.RevisionId)
                     {
                         FileName = "10EC87BD-3A95-439D-807A-0F57C3F89C8A.xls",
                         MimeType = "application/vnd.ms-excel",
                         Title = "Research Funding Breakdown"
                     });
 
-                    Seed(new CreateActivityDocument(principal, activity.RevisionId, activity.Mode)
+                    Seed(new CreateActivityDocument(principal, activity.RevisionId)
                     {
                         FileName = "1322FF22-E863-435E-929E-765EB95FB460.ppt",
                         MimeType = "application/vnd.ms-powerpoint",
@@ -269,7 +269,7 @@ namespace UCosmic.SeedData
                         PlaceId = _entities.Get<Place>().Single(x => x.OfficialName == "China").RevisionId,
                     });
 
-                    Seed(new CreateActivityDocument(principal, activity.RevisionId, activity.Mode)
+                    Seed(new CreateActivityDocument(principal, activity.RevisionId)
                     {
                         FileName = "817DB81E-53FC-47E1-A1DE-B8C108C7ACD6.pdf",
                         MimeType = "application/pdf",
@@ -323,35 +323,35 @@ namespace UCosmic.SeedData
                         PlaceId = _entities.Get<Place>().Single(x => x.OfficialName == "China").RevisionId,
                     });
 
-                    Seed(new CreateActivityDocument(principal, activity.RevisionId, activity.Mode)
+                    Seed(new CreateActivityDocument(principal, activity.RevisionId)
                     {
                         FileName = "5C62D74E-E8EE-4B9A-95F3-B2ABB1F6F912.gif",
                         MimeType = "image/gif",
                         Title = "Photo of the site"
                     });
 
-                    Seed(new CreateActivityDocument(principal, activity.RevisionId, activity.Mode)
+                    Seed(new CreateActivityDocument(principal, activity.RevisionId)
                     {
                         FileName = "A44FAB3B-DEBA-4F14-8965-E379569066A9.png",
                         MimeType = "image/png",
                         Title = "Grads working hard"
                     });
 
-                    Seed(new CreateActivityDocument(principal, activity.RevisionId, activity.Mode)
+                    Seed(new CreateActivityDocument(principal, activity.RevisionId)
                     {
                         FileName = "C0DA4900-762B-4B26-AE03-843CBB7C0E7B.bmp",
                         MimeType = "image/bmp",
                         Title = "Map of the incident"
                     });
 
-                    Seed(new CreateActivityDocument(principal, activity.RevisionId, activity.Mode)
+                    Seed(new CreateActivityDocument(principal, activity.RevisionId)
                     {
                         FileName = "E4E53300-08D3-47C0-954C-BF15EF54F0A3.tif",
                         MimeType = "image/tiff",
                         Title = "Sunrise over the delta"
                     });
 
-                    Seed(new CreateActivityDocument(principal, activity.RevisionId, activity.Mode)
+                    Seed(new CreateActivityDocument(principal, activity.RevisionId)
                     {
                         FileName = "EE23D741-C50D-40D5-8214-C18DF68CC6D3.jpg",
                         MimeType = "image/jpg",

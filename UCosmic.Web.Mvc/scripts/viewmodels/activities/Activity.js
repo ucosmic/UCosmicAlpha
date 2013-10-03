@@ -38,25 +38,20 @@ var Activities;
                 this._isDeleted = false;
                 //#endregion
                 //#region Places
-                // array of places for this activity
                 this.selectedPlaces = ko.observableArray();
-                // Array of all locations offered in Country/Location multiselect
                 this.placeOptions = ko.observableArray();
-                // Array of placeIds of selected locations, kendo multiselect stores these as strings
                 this.kendoPlaceIds = ko.observableArray();
                 //#endregion
                 //#region Types
-                // array of activity type options displayed as list of checkboxes
                 this.typeOptions = ko.observableArray();
-                // array of selected activity type data
                 this.selectedTypeIds = ko.observableArray();
                 //#endregion
                 //#region Tags
-                // Data bound to new tag textArea
                 this.tags = ko.observableArray();
                 this.newTag = ko.observable();
-                // array to hold file upload errors
+                this.documents = ko.observableArray();
                 this.fileUploadErrors = ko.observableArray();
+                this._invalidFileNames = ko.observableArray([]);
                 this._initialize(activityId, activityWorkCopyId);
             }
             Activity.prototype._initialize = function (activityId, activityWorkCopyId) {
@@ -128,26 +123,28 @@ var Activities;
                     tagsPact.reject(xhr);
                 });
 
+                var documentsPact = $.Deferred();
+                $.get($('#documents_get_url_format').text().format(this.workCopyId())).done(function (data) {
+                    documentsPact.resolve(data);
+                }).fail(function (xhr) {
+                    documentsPact.reject(xhr);
+                });
+
                 //#endregion
                 //#region process after all have been loaded
-                $.when(typeOptionsPact, placeOptionsPact, dataPact, data2Pact, placesPact, typesPact, tagsPact).done(function (typeOptions, placeOptions, data, data2, selectedPlaces, selectedTypes, tags) {
+                $.when(typeOptionsPact, placeOptionsPact, dataPact, data2Pact, placesPact, typesPact, tagsPact, documentsPact).done(function (typeOptions, placeOptions, data, data2, selectedPlaces, selectedTypes, tags, documents) {
                     //#region populate activity data
+                    ko.mapping.fromJS(documents, {}, _this.documents);
+
                     // Although the MVC DateTime to JSON serializer will output an ISO compatible
                     // string, we are not guarenteed that a browser's Date(string) or Date.parse(string)
                     // functions will accurately convert to Date.  So, we are using
                     // moment.js to handle the parsing and conversion.
-                    var augmentedDocumentModel = function (data) {
-                        ko.mapping.fromJS(data, {}, this);
-                        this.proxyImageSource = ko.observable(App.Routes.WebApi.Activities.Documents.Thumbnail.get(data.activityId, data.id, { maxSide: Activity.iconMaxSide }));
-                    };
-
-                    var mapping = {
-                        documents: {
-                            create: function (options) {
-                                return new augmentedDocumentModel(options.data);
-                            }
-                        }
-                    };
+                    //var augmentedDocumentModel = function (data) {
+                    //    ko.mapping.fromJS(data, {}, this);
+                    //    this.proxyImageSource = ko.observable(App.Routes.WebApi.Activities.Documents.Thumbnail.get(data.activityId, data.id, { maxSide: Activity.iconMaxSide }));
+                    //};
+                    var mapping = {};
                     ko.mapping.fromJS(data, mapping, _this);
 
                     var mapping2 = {
@@ -161,7 +158,7 @@ var Activities;
                     //#endregion
                     //#region populate places multiselect
                     // map places multiselect datasource to locations
-                    _this.placeOptions = ko.mapping.fromJS(placeOptions);
+                    ko.mapping.fromJS(placeOptions, {}, _this.placeOptions);
 
                     // Initialize the list of selected locations with current locations in values
                     _this.selectedPlaces(selectedPlaces);
@@ -189,7 +186,6 @@ var Activities;
             //#endregion
             //#region Kendo widget setup
             Activity.prototype.setupWidgets = function (fromDatePickerId, toDatePickerId, countrySelectorId, uploadFileId, newTagId) {
-                var _this = this;
                 //#region Kendo DatePickers
                 $('#' + fromDatePickerId).kendoDatePicker({
                     value: this.startsOn.date(),
@@ -211,94 +207,9 @@ var Activities;
                 this.endsOn.kendoDatePicker = $('#' + toDatePickerId).data('kendoDatePicker');
 
                 //#endregion
-                //#region Kendo MultiSelect for Places
-                $('#' + countrySelectorId).kendoMultiSelect({
-                    filter: 'contains',
-                    ignoreCase: 'true',
-                    dataTextField: 'officialName()',
-                    dataValueField: 'id()',
-                    dataSource: this.placeOptions(),
-                    value: this.kendoPlaceIds(),
-                    dataBound: function (e) {
-                        _this._onPlaceMultiSelectDataBound(e);
-                    },
-                    change: function (e) {
-                        _this._onPlaceMultiSelectChange(e);
-                    },
-                    placeholder: '[Select Country/Location, Body of Water or Global]'
-                });
-
-                //#endregion
-                //#region Kendo Upload
-                var invalidFileNames = [];
-                $('#' + uploadFileId).kendoUpload({
-                    multiple: true,
-                    showFileList: false,
-                    localization: {
-                        select: 'Choose one or more documents to share...'
-                    },
-                    async: {
-                        saveUrl: App.Routes.WebApi.Activities.Documents.post(this.id(), this.modeText())
-                    },
-                    select: function (e) {
-                        for (var i = 0; i < e.files.length; i++) {
-                            var file = e.files[i];
-                            $.ajax({
-                                async: false,
-                                type: 'POST',
-                                url: App.Routes.WebApi.Activities.Documents.validateUpload(),
-                                data: {
-                                    name: file.name,
-                                    length: file.size
-                                }
-                            }).fail(function (xhr) {
-                                if (xhr.status === 400) {
-                                    if ($.inArray(e.files[i].name, invalidFileNames) < 0)
-                                        invalidFileNames.push(file.name);
-                                    _this.fileUploadErrors.push({
-                                        message: xhr.responseText
-                                    });
-                                }
-                            });
-                        }
-                    },
-                    upload: function (e) {
-                        var file = e.files[0];
-                        var indexOfInvalidName = $.inArray(file.name, invalidFileNames);
-                        if (indexOfInvalidName >= 0) {
-                            e.preventDefault();
-                            invalidFileNames.splice(indexOfInvalidName, 1);
-                            return;
-                        }
-                    },
-                    success: function (e) {
-                        _this._loadDocuments();
-                    },
-                    error: function (e) {
-                        if (e.XMLHttpRequest.status != 500 && e.XMLHttpRequest.responseText && e.XMLHttpRequest.responseText.length < 1000) {
-                            _this.fileUploadErrors.push({
-                                message: e.XMLHttpRequest.responseText
-                            });
-                        } else {
-                            _this.fileUploadErrors.push({
-                                message: 'UCosmic experienced an unexpected error uploading your document, please try again. If you continue to experience this issue, please use the Feedback & Support link on this page to report it.'
-                            });
-                        }
-                    }
-                });
-
-                //#endregion
-                //#region Kendo AutoComplete for Tags
-                $('#' + newTagId).kendoAutoComplete({
-                    minLength: 3,
-                    placeholder: '[Enter tag or keyword]',
-                    dataTextField: 'text',
-                    dataSource: this._getTagAutoCompleteDataSource(),
-                    select: function (e) {
-                        _this._onTagAutoCompleteSelect(e);
-                    }
-                });
-                //#endregion
+                this._initPlacesKendoMultiSelect();
+                this._initDocumentsKendoUpload();
+                this._initTagsKendoAutoComplete();
             };
 
             Activity.prototype.setupValidation = function () {
@@ -511,8 +422,23 @@ var Activities;
                 });
             };
 
-            Activity.prototype._onPlaceMultiSelectDataBound = function (e) {
-                this._currentPlaceIds = e.sender.value().slice(0);
+            Activity.prototype._initPlacesKendoMultiSelect = function () {
+                var _this = this;
+                $('#countrySelector').kendoMultiSelect({
+                    filter: 'contains',
+                    ignoreCase: 'true',
+                    dataTextField: 'officialName()',
+                    dataValueField: 'id()',
+                    dataSource: this.placeOptions(),
+                    value: this.kendoPlaceIds(),
+                    dataBound: function (e) {
+                        _this._currentPlaceIds = e.sender.value().slice(0);
+                    },
+                    change: function (e) {
+                        _this._onPlaceMultiSelectChange(e);
+                    },
+                    placeholder: '[Select Country/Location, Body of Water or Global]'
+                });
             };
 
             Activity.prototype._onPlaceMultiSelectChange = function (e) {
@@ -585,6 +511,19 @@ else if (removedPlaceIds.length === 1)
                     }
                 };
                 ko.mapping.fromJS(typeOptions, typesMapping, this.typeOptions);
+            };
+
+            Activity.prototype._initTagsKendoAutoComplete = function () {
+                var _this = this;
+                $('#newTag').kendoAutoComplete({
+                    minLength: 3,
+                    placeholder: '[Enter tag or keyword]',
+                    dataTextField: 'text',
+                    dataSource: this._getTagAutoCompleteDataSource(),
+                    select: function (e) {
+                        _this._onTagAutoCompleteSelect(e);
+                    }
+                });
             };
 
             Activity.prototype._getTagAutoCompleteDataSource = function () {
@@ -750,35 +689,81 @@ else if (removedPlaceIds.length === 1)
                 return deferred;
             };
 
-            Activity.prototype._loadDocuments = function () {
+            Activity.prototype._initDocumentsKendoUpload = function () {
                 var _this = this;
-                var url = $('#documents_get_url_format').text().format(this.id());
-                $.ajax({
-                    type: 'GET',
-                    //url: App.Routes.WebApi.Activities.Documents.get(this.id(), null, this.modeText()),
-                    url: url
-                }).done(function (documents) {
-                    // TODO - This needs to be combined with the initial load mapping.
-                    var augmentedDocumentModel = function (data) {
-                        ko.mapping.fromJS(data, {}, this);
-                        this.proxyImageSource = ko.observable(App.Routes.WebApi.Activities.Documents.Thumbnail.get(data.activityId, data.id, { maxSide: Activity.iconMaxSide }));
-                    };
-
-                    var mapping = {
-                        create: function (options) {
-                            return new augmentedDocumentModel(options.data);
-                        }
-                    };
-
-                    var observableDocs = ko.mapping.fromJS(documents, mapping);
-
-                    _this.values.documents.removeAll();
-                    for (var i = 0; i < observableDocs().length; i += 1) {
-                        _this.values.documents.push(observableDocs()[i]);
+                $('#uploadFile').kendoUpload({
+                    multiple: true,
+                    showFileList: false,
+                    localization: { select: 'Choose one or more documents to share...' },
+                    async: { saveUrl: $('#document_post_url_format').text().format(this.activityId()) },
+                    select: function (e) {
+                        _this._onDocumentKendoSelect(e);
+                    },
+                    upload: function (e) {
+                        _this._onDocumentKendoUpload(e);
+                    },
+                    success: function (e) {
+                        _this._onDocumentKendoSuccess(e);
+                    },
+                    error: function (e) {
+                        _this._onDocumentKendoError(e);
                     }
-                }).fail(function (xhr) {
-                    App.Failures.message(xhr, 'while trying to load your activity documents', true);
                 });
+            };
+
+            Activity.prototype._onDocumentKendoSelect = function (e) {
+                var _this = this;
+                for (var i = 0; i < e.files.length; i++) {
+                    var file = e.files[i];
+                    $.ajax({
+                        async: false,
+                        type: 'POST',
+                        url: App.Routes.WebApi.Activities.Documents.validateUpload(),
+                        data: {
+                            name: file.name,
+                            length: file.size
+                        }
+                    }).fail(function (xhr) {
+                        var isAlreadyInvalid = Enumerable.From(_this._invalidFileNames()).Any(function (x) {
+                            return x == file.name;
+                        });
+                        if (!isAlreadyInvalid)
+                            _this._invalidFileNames.push(file.name);
+                        var message = xhr.status === 400 ? xhr.responseText : App.Failures.message(xhr, "while trying to upload '{0}'".format(file.name));
+                        _this.fileUploadErrors.push({ message: message });
+                    });
+                }
+            };
+
+            Activity.prototype._onDocumentKendoUpload = function (e) {
+                var file = e.files[0];
+                var isInvalidFileName = Enumerable.From(this._invalidFileNames()).Any(function (x) {
+                    return x == file.name;
+                });
+                if (isInvalidFileName) {
+                    e.preventDefault();
+                    this._invalidFileNames.remove(file.name);
+                }
+            };
+
+            Activity.prototype._onDocumentKendoSuccess = function (e) {
+                var _this = this;
+                var location = e.XMLHttpRequest.getResponseHeader('location');
+                $.get(location).done(function (data) {
+                    var document = ko.mapping.fromJS(data);
+                    _this.documents.push(document);
+                });
+            };
+
+            Activity.prototype._onDocumentKendoError = function (e) {
+                var message = e.XMLHttpRequest.status != 500 && e.XMLHttpRequest.responseText && e.XMLHttpRequest.responseText.length < 1000 ? e.XMLHttpRequest.responseText : App.Failures.message(e.XMLHttpRequest, 'while uploading your document, please try again');
+                this.fileUploadErrors.push({ message: message });
+            };
+
+            Activity.prototype.documentIcon = function (documentId) {
+                var url = $('#document_icon_url_format').text().format(this.id(), documentId);
+                var params = { maxSide: Activity.iconMaxSide };
+                return '{0}?{1}'.format(url, $.param(params));
             };
 
             Activity.prototype.deleteDocument = function (item, index) {
@@ -805,7 +790,7 @@ else if (removedPlaceIds.length === 1)
                                     url: App.Routes.WebApi.Activities.Documents.del(_this.id(), item.id())
                                 }).done(function () {
                                     $dialog.dialog('close');
-                                    _this.values.documents.splice(index, 1);
+                                    _this.documents.splice(index, 1);
                                 }).fail(function (xhr) {
                                     App.Failures.message(xhr, 'while trying to delete your activity document', true);
                                 }).always(function () {
@@ -831,7 +816,7 @@ else if (removedPlaceIds.length === 1)
                 var _this = this;
                 var textElement = event.target;
                 $(textElement).hide();
-                this.previousDocumentTitle = item.title();
+                this._previousDocumentTitle = item.title();
                 var inputElement = $(textElement).siblings('#documentTitleInput')[0];
                 $(inputElement).show();
                 $(inputElement).focusout(event, function (event) {
@@ -864,7 +849,7 @@ else if (removedPlaceIds.length === 1)
                         $(textElement).show();
                     },
                     error: function (xhr) {
-                        item.title(_this.previousDocumentTitle);
+                        item.title(_this._previousDocumentTitle);
                         $(inputElement).hide();
                         $(inputElement).removeAttr('disabled');
                         var textElement = $(inputElement).siblings('#documentTitle')[0];

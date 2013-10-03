@@ -411,7 +411,7 @@
                                     <span style="font-weight: normal">Shared Documents</span>
                                 </h2>
                             </header>
-                            <div data-bind="visible: !values.documents().length">
+                            <div data-bind="visible: !documents().length">
                                 <p>
                                     There are currently no shared documents associated with this activity.
                                 </p>
@@ -430,7 +430,7 @@
                                     </li>
                                 </ul>
                             </div>
-                            <div data-bind="visible: values.documents().length">
+                            <div data-bind="visible: documents().length">
                                 <table class="data">
                                     <thead>
                                         <tr>
@@ -442,7 +442,7 @@
                                             <th style="width: 5%"></th>
                                         </tr>
                                     </thead>
-                                    <tbody data-bind="template: { name: 'activity-document-template', foreach: values.documents }"></tbody>
+                                    <tbody data-bind="template: { name: 'activity-document-template', foreach: documents }"></tbody>
                                 </table>
                             </div>
                         </div>
@@ -529,15 +529,30 @@
                                 {
                                     tagDeleteUrlFormat = tagDeleteUrlFormat.Replace("0", "{0}");
                                 }
-                                var documentPutUrlFormat = Url.HttpRouteUrl(null, new { controller = "ActivityDocuments", action = "Put", activityId = 0, documentId = 1 });
-                                if (documentPutUrlFormat != null)
-                                {
-                                    documentPutUrlFormat = documentPutUrlFormat.Replace("0", "{0}").Replace("1", "{1}");
-                                }
                                 var documentsGetUrlFormat = Url.HttpRouteUrl(null, new { controller = "ActivityDocuments", action = "Get", activityId = 0 });
                                 if (documentsGetUrlFormat != null)
                                 {
                                     documentsGetUrlFormat = documentsGetUrlFormat.Replace("0", "{0}");
+                                }
+                                var documentGetUrlFormat = Url.HttpRouteUrl(null, new { controller = "ActivityDocuments", action = "Get", activityId = 0, documentId = 1 });
+                                if (documentGetUrlFormat != null)
+                                {
+                                    documentGetUrlFormat = documentGetUrlFormat.Replace("0", "{0}").Replace("1", "{1}");
+                                }
+                                var documentIconUrlFormat = Url.HttpRouteUrl(null, new { controller = "ActivityDocuments", action = "GetThumbnail", activityId = 0, documentId = 1 });
+                                if (documentIconUrlFormat != null)
+                                {
+                                    documentIconUrlFormat = documentIconUrlFormat.Replace("0", "{0}").Replace("1", "{1}");
+                                }
+                                var documentPostUrlFormat = Url.HttpRouteUrl(null, new { controller = "ActivityDocuments", action = "Post", activityId = 0 });
+                                if (documentPostUrlFormat != null)
+                                {
+                                    documentPostUrlFormat = documentPostUrlFormat.Replace("0", "{0}");
+                                }
+                                var documentPutUrlFormat = Url.HttpRouteUrl(null, new { controller = "ActivityDocuments", action = "Put", activityId = 0, documentId = 1 });
+                                if (documentPutUrlFormat != null)
+                                {
+                                    documentPutUrlFormat = documentPutUrlFormat.Replace("0", "{0}").Replace("1", "{1}");
                                 }
                             }
                             <span id="activity_get_url_format">@activityGetUrlFormat</span>
@@ -554,8 +569,11 @@
                             <span id="tags_get_url_format">@tagsGetUrlFormat</span>
                             <span id="tag_post_url_format">@tagPostUrlFormat</span>
                             <span id="tag_delete_url_format">@tagDeleteUrlFormat</span>
-                            <span id="document_put_url_format">@documentPutUrlFormat</span>
                             <span id="documents_get_url_format">@documentsGetUrlFormat</span>
+                            <span id="document_get_url_format">@documentGetUrlFormat</span>
+                            <span id="document_icon_url_format">@documentIconUrlFormat</span>
+                            <span id="document_post_url_format">@documentPostUrlFormat</span>
+                            <span id="document_put_url_format">@documentPutUrlFormat</span>
                         </div>
                     </div>
                 </div>
@@ -623,7 +641,7 @@
     <tr class="hover-hilite" style="white-space: normal">
         <!-- Preview -->
         <td style="text-align: center">
-            <img alt="thumbnail" data-bind="attr: { src: proxyImageSource }" src="@Url.Content("~/images/icons/spinner/spinner-24-blue.gif")">
+            <img alt="thumbnail" data-bind="attr: { src: $parent.documentIcon(id()) }" src="@Url.Content("~/images/icons/spinner/spinner-24-blue.gif")">
         </td>
         <!-- Title -->
         <td>

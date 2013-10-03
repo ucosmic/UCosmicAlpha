@@ -19,8 +19,9 @@ var App;
         function message(xhr, reason, autoAlert) {
             if (typeof reason === "undefined") { reason = ''; }
             if (typeof autoAlert === "undefined") { autoAlert = false; }
-            if (xhr.readyState === 0 || xhr.status === 0)
-                return null;
+            if (xhr)
+                if (xhr.readyState === 0 || xhr.status === 0)
+                    return null;
 
             if (reason !== '')
                 reason = ' ' + reason;

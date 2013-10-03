@@ -9,16 +9,15 @@ namespace UCosmic.Domain.Activities
 {
     public class CreateActivityDocument
     {
-        public CreateActivityDocument(IPrincipal principal, int activityId, ActivityMode? mode = null)
+        public CreateActivityDocument(IPrincipal principal, int activityId)
         {
             if (principal == null) throw new ArgumentNullException("principal");
             Principal = principal;
             ActivityId = activityId;
-            Mode = mode ?? ActivityMode.Public;
         }
 
         internal CreateActivityDocument(IPrincipal principal, ActivityValues activityValues)
-            :this(principal, 0)
+            : this(principal, 0)
         {
             ActivityValues = activityValues;
             Mode = activityValues.Mode;
@@ -26,7 +25,7 @@ namespace UCosmic.Domain.Activities
 
         public IPrincipal Principal { get; private set; }
         public int ActivityId { get; private set; }
-        public ActivityMode Mode { get; private set; }
+        public ActivityMode? Mode { get; set; }
         public string Title { get; set; }
         public byte[] Content { get; set; }
         public string MimeType { get; set; }
@@ -46,12 +45,23 @@ namespace UCosmic.Domain.Activities
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
-            When(x => x.ActivityValues == null, () =>
+            When(x => x.ActivityValues == null && x.ActivityId != 0, () =>
             {
                 RuleFor(x => x.ActivityId)
                     .MustFindActivityById(queryProcessor)
-                    .MustHaveValuesForMode(queryProcessor, x => x.Mode)
                 ;
+
+                When(x => x.Mode.HasValue, () =>
+                    // ReSharper disable PossibleInvalidOperationException
+                    RuleFor(x => x.ActivityId)
+                        .MustHaveValuesForMode(queryProcessor, x => x.Mode.Value)
+                    // ReSharper restore PossibleInvalidOperationException
+                );
+
+                When(x => !x.Mode.HasValue, () =>
+                    RuleFor(x => x.ActivityId)
+                        .MustHaveValuesForMode(queryProcessor)
+                );
 
                 RuleFor(x => x.Principal)
                     .MustFindUserByPrincipal(queryProcessor)
@@ -83,7 +93,7 @@ namespace UCosmic.Domain.Activities
 
             // file size cannot exceed 4 megabytes
             RuleFor(x => x.Content)
-                .MustNotExceedFileSize(4, FileSizeUnitName.Megabyte, x => x.FileName)
+                .MustNotExceedFileSize(ActivityDocumentConstraints.MaxFileMegaBytes, ActivityDocumentConstraints.MaxFileUnitName, x => x.FileName)
                 .When(x => x.Content != null, ApplyConditionTo.CurrentValidator)
             ;
         }
@@ -109,10 +119,21 @@ namespace UCosmic.Domain.Activities
         {
             if (command == null) throw new ArgumentNullException("command");
 
-            var modeText = command.Mode.AsSentenceFragment();
-            var values = command.ActivityValues
-                ?? _entities.Get<ActivityValues>()
-                    .Single(x => x.ActivityId == command.ActivityId && x.ModeText == modeText);
+            var values = command.ActivityValues;
+            if (values == null)
+            {
+                if (command.Mode.HasValue)
+                {
+                    var modeText = command.Mode.Value.AsSentenceFragment();
+                    values = _entities.Get<ActivityValues>()
+                        .Single(x => x.ActivityId == command.ActivityId && x.ModeText == modeText);
+                }
+                else
+                {
+                    values = _entities.Get<ActivityValues>()
+                        .Single(x => x.ActivityId == command.ActivityId && x.ModeText == x.Activity.ModeText);
+                }
+            }
 
             var path = command.Path;
             if (string.IsNullOrWhiteSpace(path))
@@ -148,7 +169,7 @@ namespace UCosmic.Domain.Activities
                 {
                     _entities.SaveChanges();
                     command.CreatedActivityDocument = _detachedEntities.Query<ActivityDocument>()
-                        .Single( x => x.RevisionId == activityDocument.RevisionId);
+                        .Single(x => x.RevisionId == activityDocument.RevisionId);
                 }
                 catch
                 {

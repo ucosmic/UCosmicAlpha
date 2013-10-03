@@ -700,18 +700,14 @@ var App;
                     //    }
                     //    return url;
                     //}
-                    function post(activityId, activityMode) {
-                        var url = makeUrl('activities/' + activityId + '/documents/');
-                        url += '?activityMode=' + activityMode;
-                        return url;
-                    }
-                    Documents.post = post;
-
-                    function put(activityId, documentId) {
-                        return makeUrl('activities/' + activityId + '/documents/' + documentId);
-                    }
-                    Documents.put = put;
-
+                    //export function post(activityId: number, activityMode: string): string {
+                    //    var url = makeUrl('activities/' + activityId + '/documents/');
+                    //    url += '?activityMode=' + activityMode;
+                    //    return url;
+                    //}
+                    //export function put(activityId: number, documentId: number): string {
+                    //    return makeUrl('activities/' + activityId + '/documents/' + documentId);
+                    //}
                     function del(activityId, documentId) {
                         return makeUrl('activities/' + activityId + '/documents/' + documentId);
                     }

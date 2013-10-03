@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
@@ -15,6 +16,7 @@ using FluentValidation;
 using FluentValidation.Results;
 using ImageResizer;
 using UCosmic.Domain.Activities;
+using UCosmic.Domain.Files;
 using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc.ApiControllers
@@ -59,6 +61,14 @@ namespace UCosmic.Web.Mvc.ApiControllers
             });
             var models = Mapper.Map<ActivityDocumentApiModel[]>(entities);
             return models;
+        }
+
+        [GET(SingleUrl, ActionPrecedence = 1)]
+        public ActivityDocumentApiModel Get(int activityId, int documentId)
+        {
+            var entity = _queryProcessor.Execute(new ActivityDocumentById(activityId, documentId));
+            var model = Mapper.Map<ActivityDocumentApiModel>(entity);
+            return model;
         }
 
         [CacheHttpGet(Duration = 3600)]
@@ -107,9 +117,9 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
         [Authorize]
         [POST(PluralUrl)]
-        public HttpResponseMessage Post(int activityId, ActivityMode activityMode, FileMedium fileMedium)
+        public HttpResponseMessage Post(int activityId, FileMedium fileMedium)
         {
-            var command = new CreateActivityDocument(User, activityId, activityMode)
+            var command = new CreateActivityDocument(User, activityId)
             {
                 Title = Path.GetFileNameWithoutExtension(fileMedium.FileName),
                 Content = fileMedium.Content,
@@ -132,13 +142,34 @@ namespace UCosmic.Web.Mvc.ApiControllers
                     return Request.CreateResponse(HttpStatusCode.RequestEntityTooLarge,
                         ex.Errors.First(forContent).ErrorMessage, "text/plain");
             }
-            return Request.CreateResponse(HttpStatusCode.Created);
+
+            var response = Request.CreateResponse(HttpStatusCode.Created, "Activity document was successfully uploaded.");
+            var url = Url.Link(null, new
+            {
+                controller = "ActivityDocuments",
+                action = "Get",
+                activityId,
+                documentId = command.CreatedActivityDocument.RevisionId,
+            });
+            Debug.Assert(url != null);
+            response.Headers.Location = new Uri(url);
+
+            return response;
         }
 
         [Authorize]
         [POST(ValidateUrl)]
         public HttpResponseMessage PostValidate([FromBody] FileUploadValidationModel model)
         {
+            // before creating command, make sure there is enough memory
+            if (model.Length.HasValue && model.Length.Value > ActivityDocumentConstraints.MaxFileBytes)
+            {
+                var message = string.Format(MustNotExceedFileSize<object>.FailMessageFormat, model.Name,
+                    ((decimal)model.Length.Value).ToFileSize(2, ActivityDocumentConstraints.MaxFileUnitName),
+                    ((decimal)ActivityDocumentConstraints.MaxFileBytes).ToFileSize(2, ActivityDocumentConstraints.MaxFileUnitName));
+                return Request.CreateResponse(HttpStatusCode.BadRequest, message, "text/plain");
+            }
+
             var command = new CreateActivityDocument(User, 0)
             {
                 FileName = model.Name,
