@@ -19,9 +19,9 @@ GO
 --------------------------------------------------------------------------------------------------------------
 ----- DROP CONSTRAINTS
 --------------------------------------------------------------------------------------------------------------
-PRINT N'Dropping DF_Affiliation_IsPrimary...';
+PRINT N'Dropping DF_ActivityDocument_Visible...';
 GO
-ALTER TABLE [People].[Affiliation] DROP CONSTRAINT [DF_Affiliation_IsPrimary];
+ALTER TABLE [ActivitiesV2].[ActivityDocument] DROP CONSTRAINT [DF_ActivityDocument_Visible];
 GO
 
 PRINT N'Dropping FK_ActivitiesV2.Activity_People.Person_PersonId...';
@@ -32,6 +32,26 @@ GO
 PRINT N'Dropping FK_ActivitiesV2.ActivityValues_ActivitiesV2.Activity_ActivityId...';
 GO
 ALTER TABLE [ActivitiesV2].[ActivityValues] DROP CONSTRAINT [FK_ActivitiesV2.ActivityValues_ActivitiesV2.Activity_ActivityId];
+GO
+
+PRINT N'Dropping FK_ActivitiesV2.ActivityDocument_ActivitiesV2.ActivityValues_ActivityValuesId...';
+GO
+ALTER TABLE [ActivitiesV2].[ActivityDocument] DROP CONSTRAINT [FK_ActivitiesV2.ActivityDocument_ActivitiesV2.ActivityValues_ActivityValuesId];
+GO
+
+PRINT N'Dropping FK_ActivitiesV2.ActivityLocation_ActivitiesV2.ActivityValues_ActivityValuesId...';
+GO
+ALTER TABLE [ActivitiesV2].[ActivityLocation] DROP CONSTRAINT [FK_ActivitiesV2.ActivityLocation_ActivitiesV2.ActivityValues_ActivityValuesId];
+GO
+
+PRINT N'Dropping FK_ActivitiesV2.ActivityTag_ActivitiesV2.ActivityValues_ActivityValuesId...';
+GO
+ALTER TABLE [ActivitiesV2].[ActivityTag] DROP CONSTRAINT [FK_ActivitiesV2.ActivityTag_ActivitiesV2.ActivityValues_ActivityValuesId];
+GO
+
+PRINT N'Dropping FK_ActivitiesV2.ActivityType_ActivitiesV2.ActivityValues_ActivityValuesId...';
+GO
+ALTER TABLE [ActivitiesV2].[ActivityType] DROP CONSTRAINT [FK_ActivitiesV2.ActivityType_ActivitiesV2.ActivityValues_ActivityValuesId];
 GO
 
 PRINT N'Dropping FK_Files.LoadableFileBinary_Files.LoadableFile_Id...';
@@ -78,17 +98,6 @@ DROP TABLE [Files].[LoadableFileBinary];
 GO
 
 /*
-Table [Files].[LooseFile] is being dropped.  Deployment will halt if the table contains data.
-*/
---IF EXISTS (select top 1 1 from [Files].[LooseFile])
---    RAISERROR (N'Rows were detected. The schema update is terminating because data loss might occur.', 16, 127) WITH NOWAIT
---GO
-PRINT N'Dropping [Files].[LooseFile]...';
-GO
-DROP TABLE [Files].[LooseFile];
-GO
-
-/*
 Table [Files].[ProxyImageMimeTypeXRef] is being dropped.  Deployment will halt if the table contains data.
 */
 --IF EXISTS (select top 1 1 from [Files].[ProxyImageMimeTypeXRef])
@@ -119,14 +128,20 @@ SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
 SET XACT_ABORT ON;
 
 -- delete all activities with orphaned editsourceid
+PRINT N'Deleting orphaned activities...';
+GO
 DELETE
 FROM [ActivitiesV2].[Activity]
 WHERE [EditSourceId] IS NOT NULL AND [EditSourceId] NOT IN (SELECT [RevisionId] FROM [ActivitiesV2].[Activity])
 
+PRINT N'Deleting orphaned activity values...';
+GO
 DELETE
 FROM [ActivitiesV2].[ActivityValues]
 WHERE [ActivityId] NOT IN (SELECT [RevisionId] FROM [ActivitiesV2].[Activity])
 
+PRINT N'Deleting orphaned activity collections...';
+GO
 DELETE
 FROM [ActivitiesV2].[ActivityDocument]
 WHERE [ActivityValuesId] NOT IN (SELECT [RevisionId] FROM [ActivitiesV2].[ActivityValues])
@@ -160,9 +175,10 @@ CREATE TABLE [ActivitiesV2].[tmp_ms_xx_Activity] (
     CONSTRAINT [tmp_ms_xx_constraint_PK_ActivitiesV2.Activity] PRIMARY KEY CLUSTERED ([RevisionId] ASC)
 );
 
-IF EXISTS (SELECT TOP 1 1 
+IF EXISTS (SELECT TOP 1 1
            FROM   [ActivitiesV2].[Activity])
     BEGIN
+		PRINT N'Rebuilding into new table...';
         SET IDENTITY_INSERT [ActivitiesV2].[tmp_ms_xx_Activity] ON;
         INSERT INTO [ActivitiesV2].[tmp_ms_xx_Activity] ([RevisionId], [PersonId], [Mode], [EditSourceId], [EntityId], [CreatedOnUtc], [CreatedByPrincipal], [UpdatedOnUtc], [UpdatedByPrincipal], [IsCurrent], [IsArchived], [IsDeleted])
         SELECT   a.[RevisionId],
@@ -206,7 +222,91 @@ GO
 
 
 --------------------------------------------------------------------------------------------------------------
------ ALTER ActivityDocument DROP 3 COLUMNS & change [Length] to NOT NULL
+----- REBUILD ActivityValues
+--------------------------------------------------------------------------------------------------------------
+PRINT N'Starting rebuilding table [ActivitiesV2].[ActivityValues]...';
+GO
+BEGIN TRANSACTION;
+SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
+SET XACT_ABORT ON;
+
+CREATE TABLE [ActivitiesV2].[tmp_ms_xx_ActivityValues] (
+    [RevisionId]          INT              IDENTITY (1, 1) NOT NULL,
+    [ActivityId]          INT              NOT NULL,
+    [Title]               NVARCHAR (500)   NULL,
+    [Content]             NTEXT            NULL,
+    [StartsOn]            DATETIME         NULL,
+    [EndsOn]              DATETIME         NULL,
+    [OnGoing]             BIT              NULL,
+    [StartsFormat]        VARCHAR (10)     NULL,
+    [EndsFormat]          VARCHAR (10)     NULL,
+    [Mode]                NVARCHAR (20)    NOT NULL,
+    [WasExternallyFunded] BIT              NULL,
+    [WasInternallyFunded] BIT              NULL,
+    [EntityId]            UNIQUEIDENTIFIER NOT NULL,
+    [CreatedOnUtc]        DATETIME         NOT NULL,
+    [CreatedByPrincipal]  NVARCHAR (256)   NULL,
+    [UpdatedOnUtc]        DATETIME         NULL,
+    [UpdatedByPrincipal]  NVARCHAR (256)   NULL,
+    [Version]             ROWVERSION       NOT NULL,
+    [IsCurrent]           BIT              NOT NULL,
+    [IsArchived]          BIT              NOT NULL,
+    [IsDeleted]           BIT              NOT NULL,
+    CONSTRAINT [tmp_ms_xx_constraint_PK_ActivitiesV2.ActivityValues] PRIMARY KEY CLUSTERED ([RevisionId] ASC)
+);
+
+IF EXISTS (SELECT TOP 1 1
+           FROM   [ActivitiesV2].[ActivityValues])
+    BEGIN
+        SET IDENTITY_INSERT [ActivitiesV2].[tmp_ms_xx_ActivityValues] ON;
+        INSERT INTO [ActivitiesV2].[tmp_ms_xx_ActivityValues] ([RevisionId], [ActivityId], [Title], [Content], [StartsOn], [EndsOn], [StartsFormat], [EndsFormat], [OnGoing], [Mode], [WasExternallyFunded], [WasInternallyFunded], [EntityId], [CreatedOnUtc], [CreatedByPrincipal], [UpdatedOnUtc], [UpdatedByPrincipal], [IsCurrent], [IsArchived], [IsDeleted])
+        SELECT   [RevisionId],
+                 [ActivityId],
+                 [Title],
+                 [Content],
+                 [StartsOn],
+                 [EndsOn],
+                 [DateFormat],
+                 [DateFormat],
+                 [OnGoing],
+                 [Mode],
+                 [WasExternallyFunded],
+                 [WasInternallyFunded],
+                 [EntityId],
+                 [CreatedOnUtc],
+                 [CreatedByPrincipal],
+                 [UpdatedOnUtc],
+                 [UpdatedByPrincipal],
+                 [IsCurrent],
+                 [IsArchived],
+                 [IsDeleted]
+        FROM     [ActivitiesV2].[ActivityValues]
+        ORDER BY [RevisionId] ASC;
+        SET IDENTITY_INSERT [ActivitiesV2].[tmp_ms_xx_ActivityValues] OFF;
+    END
+
+DROP TABLE [ActivitiesV2].[ActivityValues];
+
+EXECUTE sp_rename N'[ActivitiesV2].[tmp_ms_xx_ActivityValues]', N'ActivityValues';
+EXECUTE sp_rename N'[ActivitiesV2].[tmp_ms_xx_constraint_PK_ActivitiesV2.ActivityValues]', N'PK_ActivitiesV2.ActivityValues', N'OBJECT';
+
+COMMIT TRANSACTION;
+
+SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
+
+
+GO
+
+PRINT N'Creating [ActivitiesV2].[ActivityValues].[IX_ActivityId]...';
+GO
+CREATE NONCLUSTERED INDEX [IX_ActivityId]
+    ON [ActivitiesV2].[ActivityValues]([ActivityId] ASC);
+GO
+
+
+
+--------------------------------------------------------------------------------------------------------------
+----- ALTER ActivityDocument DROP COLUMNS & change [Length] to NOT NULL
 --------------------------------------------------------------------------------------------------------------
 /*
 The column [ActivitiesV2].[ActivityDocument].[FileId] is being dropped, data loss could occur.
@@ -222,7 +322,7 @@ The column Length on table [ActivitiesV2].[ActivityDocument] must be changed fro
 --GO
 PRINT N'Altering [ActivitiesV2].[ActivityDocument]...';
 GO
-ALTER TABLE [ActivitiesV2].[ActivityDocument] DROP COLUMN [FileId], COLUMN [ImageId], COLUMN [Visible];
+ALTER TABLE [ActivitiesV2].[ActivityDocument] DROP COLUMN [FileId], COLUMN [ImageId], COLUMN [Visible], COLUMN [Mode];
 GO
 ALTER TABLE [ActivitiesV2].[ActivityDocument] ALTER COLUMN [Length] INT NOT NULL;
 GO
@@ -230,17 +330,11 @@ GO
 
 
 --------------------------------------------------------------------------------------------------------------
------ ALTER Affiliation DROP [IsPrimary]
+----- ALTER ActivityTag DROP COLUMNS
 --------------------------------------------------------------------------------------------------------------
-/*
-The column [People].[Affiliation].[IsPrimary] is being dropped, data loss could occur.
-*/
---IF EXISTS (select top 1 1 from [People].[Affiliation])
---    RAISERROR (N'Rows were detected. The schema update is terminating because data loss might occur.', 16, 127) WITH NOWAIT
---GO
-PRINT N'Altering [People].[Affiliation]...';
+PRINT N'Altering [ActivitiesV2].[ActivityTag]...';
 GO
-ALTER TABLE [People].[Affiliation] DROP COLUMN [IsPrimary];
+ALTER TABLE [ActivitiesV2].[ActivityTag] DROP COLUMN [Number], COLUMN [Mode]
 GO
 
 
@@ -269,6 +363,30 @@ ALTER TABLE [ActivitiesV2].[Activity] WITH NOCHECK
     ADD CONSTRAINT [FK_ActivitiesV2.Activity_ActivitiesV2.Activity_EditSourceId] FOREIGN KEY ([EditSourceId]) REFERENCES [ActivitiesV2].[Activity] ([RevisionId]);
 GO
 
+PRINT N'Creating FK_ActivitiesV2.ActivityDocument_ActivitiesV2.ActivityValues_ActivityValuesId...';
+GO
+ALTER TABLE [ActivitiesV2].[ActivityDocument] WITH NOCHECK
+    ADD CONSTRAINT [FK_ActivitiesV2.ActivityDocument_ActivitiesV2.ActivityValues_ActivityValuesId] FOREIGN KEY ([ActivityValuesId]) REFERENCES [ActivitiesV2].[ActivityValues] ([RevisionId]) ON DELETE CASCADE;
+GO
+
+PRINT N'Creating FK_ActivitiesV2.ActivityLocation_ActivitiesV2.ActivityValues_ActivityValuesId...';
+GO
+ALTER TABLE [ActivitiesV2].[ActivityLocation] WITH NOCHECK
+    ADD CONSTRAINT [FK_ActivitiesV2.ActivityLocation_ActivitiesV2.ActivityValues_ActivityValuesId] FOREIGN KEY ([ActivityValuesId]) REFERENCES [ActivitiesV2].[ActivityValues] ([RevisionId]) ON DELETE CASCADE;
+GO
+
+PRINT N'Creating FK_ActivitiesV2.ActivityTag_ActivitiesV2.ActivityValues_ActivityValuesId...';
+GO
+ALTER TABLE [ActivitiesV2].[ActivityTag] WITH NOCHECK
+    ADD CONSTRAINT [FK_ActivitiesV2.ActivityTag_ActivitiesV2.ActivityValues_ActivityValuesId] FOREIGN KEY ([ActivityValuesId]) REFERENCES [ActivitiesV2].[ActivityValues] ([RevisionId]) ON DELETE CASCADE;
+GO
+
+PRINT N'Creating FK_ActivitiesV2.ActivityType_ActivitiesV2.ActivityValues_ActivityValuesId...';
+GO
+ALTER TABLE [ActivitiesV2].[ActivityType] WITH NOCHECK
+    ADD CONSTRAINT [FK_ActivitiesV2.ActivityType_ActivitiesV2.ActivityValues_ActivityValuesId] FOREIGN KEY ([ActivityValuesId]) REFERENCES [ActivitiesV2].[ActivityValues] ([RevisionId]) ON DELETE CASCADE;
+GO
+
 
 
 --------------------------------------------------------------------------------------------------------------
@@ -288,6 +406,12 @@ ALTER TABLE [ActivitiesV2].[ActivityValues] WITH CHECK CHECK CONSTRAINT [FK_Acti
 PRINT N'Checking [FK_ActivitiesV2.Activity_ActivitiesV2.Activity_EditSourceId]';
 GO
 ALTER TABLE [ActivitiesV2].[Activity] WITH CHECK CHECK CONSTRAINT [FK_ActivitiesV2.Activity_ActivitiesV2.Activity_EditSourceId];
+
+ALTER TABLE [ActivitiesV2].[ActivityDocument] WITH CHECK CHECK CONSTRAINT [FK_ActivitiesV2.ActivityDocument_ActivitiesV2.ActivityValues_ActivityValuesId];
+ALTER TABLE [ActivitiesV2].[ActivityLocation] WITH CHECK CHECK CONSTRAINT [FK_ActivitiesV2.ActivityLocation_ActivitiesV2.ActivityValues_ActivityValuesId];
+ALTER TABLE [ActivitiesV2].[ActivityTag] WITH CHECK CHECK CONSTRAINT [FK_ActivitiesV2.ActivityTag_ActivitiesV2.ActivityValues_ActivityValuesId];
+ALTER TABLE [ActivitiesV2].[ActivityType] WITH CHECK CHECK CONSTRAINT [FK_ActivitiesV2.ActivityType_ActivitiesV2.ActivityValues_ActivityValuesId];
+
 
 GO
 
