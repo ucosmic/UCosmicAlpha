@@ -228,7 +228,13 @@ module Activities.ViewModels {
 
             ko.validation.group(this);
 
-            this.title.extend({ required: true, minLength: 1, maxLength: 500 });
+            this.title.extend({
+                required: {
+                    message: 'Title is required.'
+                },
+                minLength: 1,
+                maxLength: 500
+            });
             this.selectedPlaces.extend({ atLeast: 1 });
             if (this.typeOptions().length)
                 this.selectedTypeIds.extend({ atLeast: 1 });
