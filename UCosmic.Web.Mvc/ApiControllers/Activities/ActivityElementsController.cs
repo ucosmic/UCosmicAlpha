@@ -68,52 +68,52 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return model;
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-         * Get all establishments by keyword
-        */
-        // --------------------------------------------------------------------------------
-        [GET("activity-establishments")]
-        public IEnumerable<ActivityEstablishmentApiModel> GetActivityInstitutions(string keyword)
-        {
-            var pagedEstablishments = _queryProcessor.Execute(new EstablishmentViewsByKeyword
-            {
-                Keyword = keyword,
-                PageSize = int.MaxValue,
-                PageNumber = 1
-            });
+        //// --------------------------------------------------------------------------------
+        ///*
+        // * Get all establishments by keyword
+        //*/
+        //// --------------------------------------------------------------------------------
+        //[GET("activity-establishments")]
+        //public IEnumerable<ActivityEstablishmentApiModel> GetActivityInstitutions(string keyword)
+        //{
+        //    var pagedEstablishments = _queryProcessor.Execute(new EstablishmentViewsByKeyword
+        //    {
+        //        Keyword = keyword,
+        //        PageSize = int.MaxValue,
+        //        PageNumber = 1
+        //    });
 
-            var model = Mapper.Map<IEnumerable<ActivityEstablishmentApiModel>>(pagedEstablishments.Items);
-            return model;
-        }
+        //    var model = Mapper.Map<IEnumerable<ActivityEstablishmentApiModel>>(pagedEstablishments.Items);
+        //    return model;
+        //}
 
         // --------------------------------------------------------------------------------
         /*
          * Get activity counts by country
         */
         // --------------------------------------------------------------------------------
-        [GET("activity-country-counts")]
-        public IEnumerable<ActivityPlaceCount> GetActivityCountryCounts(int establishmentId)
-        {
-            Place[] countries = _queryProcessor.Execute(new Countries()).ToArray();
-            var countryCounts = new ActivityPlaceCount[countries.Length];
-            int? reportsDefaultYearRange = _queryProcessor.Execute(new ReportDefaultYearRangeByEstablishmentId(establishmentId));
-            DateTime toDateUtc = new DateTime(DateTime.UtcNow.Year+1,1,1);
-            DateTime fromDateUtc = (reportsDefaultYearRange.HasValue)
-                                       ? toDateUtc.AddYears(-(reportsDefaultYearRange.Value+1))
-                                       : new DateTime(DateTime.MinValue.Year, 1, 1);
+        //[GET("activity-country-counts")]
+        //public IEnumerable<ActivityPlaceCount> GetActivityCountryCounts(int establishmentId)
+        //{
+        //    Place[] countries = _queryProcessor.Execute(new Countries()).ToArray();
+        //    var countryCounts = new ActivityPlaceCount[countries.Length];
+        //    int? reportsDefaultYearRange = _queryProcessor.Execute(new ReportDefaultYearRangeByEstablishmentId(establishmentId));
+        //    DateTime toDateUtc = new DateTime(DateTime.UtcNow.Year+1,1,1);
+        //    DateTime fromDateUtc = (reportsDefaultYearRange.HasValue)
+        //                               ? toDateUtc.AddYears(-(reportsDefaultYearRange.Value+1))
+        //                               : new DateTime(DateTime.MinValue.Year, 1, 1);
 
-            for (int i = 0; i < countries.Length; i += 1)
-            {
-                countryCounts[i] = new ActivityPlaceCount
-                {
-                    PlaceId = countries[i].RevisionId,
-                    OfficialName = countries[i].OfficialName,
-                    Count = _queryProcessor.Execute(new ActivityCountByPlaceIds(countries[i].RevisionId, fromDateUtc, toDateUtc))
-                };
-            }
+        //    for (int i = 0; i < countries.Length; i += 1)
+        //    {
+        //        countryCounts[i] = new ActivityPlaceCount
+        //        {
+        //            PlaceId = countries[i].RevisionId,
+        //            OfficialName = countries[i].OfficialName,
+        //            Count = _queryProcessor.Execute(new ActivityCountByPlaceIds(countries[i].RevisionId, fromDateUtc, toDateUtc))
+        //        };
+        //    }
 
-            return countryCounts;
-        }
+        //    return countryCounts;
+        //}
     }
 }

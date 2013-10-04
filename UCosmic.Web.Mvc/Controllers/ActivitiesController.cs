@@ -95,6 +95,10 @@ namespace UCosmic.Web.Mvc.Controllers
             place = place.Replace("0", "{0}").Replace("1", "{1}");
             ViewBag.PlaceApi = place;
 
+            var placeOptions = Url.HttpRouteUrl(null, new { controller = "ActivityPlaces", action = "GetOptions" });
+            Debug.Assert(placeOptions != null);
+            ViewBag.PlaceOptionsApi = placeOptions;
+
             var tags = Url.HttpRouteUrl(null, new { controller = "ActivityTags", action = "Get", activityId = 0 });
             Debug.Assert(tags != null);
             tags = tags.Replace("0", "{0}");

@@ -90,7 +90,7 @@ var Activities;
 
                 //#region load places dropdown, module types, and activity work copy
                 var placeOptionsPact = $.Deferred();
-                $.get(App.Routes.WebApi.Activities.Locations.get()).done(function (data) {
+                $.get($('#place_options_api').text()).done(function (data) {
                     placeOptionsPact.resolve(data);
                 }).fail(function (xhr) {
                     placeOptionsPact.reject(xhr);

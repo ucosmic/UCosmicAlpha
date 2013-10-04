@@ -737,18 +737,6 @@ var App;
                     Locations.get = get;
                 })(Activities.Locations || (Activities.Locations = {}));
                 var Locations = Activities.Locations;
-
-                (function (CountryCounts) {
-                    function get() {
-                        return makeUrl('activity-country-counts');
-                    }
-                    CountryCounts.get = get;
-                    function post() {
-                        return makeUrl('activity-country-counts');
-                    }
-                    CountryCounts.post = post;
-                })(Activities.CountryCounts || (Activities.CountryCounts = {}));
-                var CountryCounts = Activities.CountryCounts;
             })(WebApi.Activities || (WebApi.Activities = {}));
             var Activities = WebApi.Activities;
 

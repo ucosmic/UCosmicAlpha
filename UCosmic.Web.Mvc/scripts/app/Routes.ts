@@ -598,14 +598,14 @@ module App.Routes {
                 }
             }
 
-            export module CountryCounts {
-                export function get (): string {
-                    return makeUrl('activity-country-counts');
-                }
-                export function post (): string {
-                    return makeUrl('activity-country-counts');
-                }
-            }
+            //export module CountryCounts {
+            //    export function get (): string {
+            //        return makeUrl('activity-country-counts');
+            //    }
+            //    export function post (): string {
+            //        return makeUrl('activity-country-counts');
+            //    }
+            //}
 
         }
 

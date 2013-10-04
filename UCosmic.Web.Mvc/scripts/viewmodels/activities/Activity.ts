@@ -78,7 +78,7 @@ module Activities.ViewModels {
             //#region load places dropdown, module types, and activity work copy
 
             var placeOptionsPact = $.Deferred();
-            $.get(App.Routes.WebApi.Activities.Locations.get())
+            $.get($('#place_options_api').text())
                 .done((data: any[]): void => { placeOptionsPact.resolve(data); })
                 .fail((xhr: JQueryXHR): void => { placeOptionsPact.reject(xhr); });
 
