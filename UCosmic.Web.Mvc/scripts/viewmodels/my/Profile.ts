@@ -47,7 +47,7 @@ module ViewModels.My {
         private _sammy: Sammy.Application = Sammy();
         //private _isInitialized: boolean = false;
         private _originalValues: IServerProfileApiModel;
-        private _activitiesViewModel: ViewModels.Activities.ActivityList = null;
+        private _activitiesViewModel: Activities.ViewModels.ActivityList = null;
         private _geographicExpertisesViewModel: ViewModels.GeographicExpertises.GeographicExpertiseList = null;
         private _languageExpertisesViewModel: ViewModels.LanguageExpertises.LanguageExpertiseList = null;
         private _degreesViewModel: ViewModels.Degrees.DegreeList = null;
@@ -213,7 +213,7 @@ module ViewModels.My {
 
             if ( tabName === "activities" ) {
                 if ( this._activitiesViewModel == null ) {
-                    this._activitiesViewModel = new ViewModels.Activities.ActivityList( this.personId );
+                    this._activitiesViewModel = new Activities.ViewModels.ActivityList();
                     this._activitiesViewModel.load()
                         .done( (): void => {
                             ko.applyBindings( this._activitiesViewModel, $( "#activities" )[0] );

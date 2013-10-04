@@ -139,6 +139,7 @@ namespace UCosmic.Web.Mvc
 
             // activities
             bundles.Add(new ScriptBundle("~/bundles/activities").Include(
+                "~/scripts/oss/linq.js",
                 "~/scripts/viewmodels/activities/Activities.js"));
             bundles.Add(new ScriptBundle("~/bundles/activity").Include( // do not bundle tinyMCE, causes errors when optimized.
                 "~/scripts/oss/linq.js",

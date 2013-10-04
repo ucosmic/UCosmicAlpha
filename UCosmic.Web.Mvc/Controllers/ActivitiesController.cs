@@ -24,6 +24,18 @@ namespace UCosmic.Web.Mvc.Controllers
         }
 
         [Authorize]
+        [GET("my/activities")]
+        public virtual ActionResult Get()
+        {
+            if (ControllerContext.IsChildAction)
+            {
+                BagUrlFormats();
+                return PartialView(MVC.MyProfile.Views._Activities);
+            }
+            return HttpNotFound();
+        }
+
+        [Authorize]
         [POST("my/activities")]
         public virtual RedirectToRouteResult Create()
         {
@@ -54,21 +66,25 @@ namespace UCosmic.Web.Mvc.Controllers
 
             ViewBag.ActivityId = activityId;
             ViewBag.ActivityWorkCopyId = copyActivityAndValues.CreatedActivity.RevisionId;
-            BagEditApiUrls();
+            BagUrlFormats();
             return View(MVC.Activities.Views.Edit);
         }
 
-        private void BagEditApiUrls()
+        private void BagUrlFormats()
         {
-            var activity2 = Url.HttpRouteUrl(null, new { controller = "Activities", action = "Get2", activityId = 0 });
-            Debug.Assert(activity2 != null);
-            activity2 = activity2.Replace("0", "{0}");
-            ViewBag.Activity2Api = activity2;
+            var edit = Url.RouteUrl(new {controller = "Activities", action = "Edit", activityId = 0});
+            Debug.Assert(edit != null);
+            edit = edit.Replace("0", "{0}");
+            ViewBag.EditUrl = edit;
 
-            var activity = Url.HttpRouteUrl(null, new { controller = "Activities", action = "Put", activityId = 0 });
+            var activity = Url.HttpRouteUrl(null, new { controller = "Activities", action = "Get", activityId = 0 });
             Debug.Assert(activity != null);
             activity = activity.Replace("0", "{0}");
             ViewBag.ActivityApi = activity;
+
+            var activities = Url.HttpRouteUrl(null, new { controller = "Activities", action = "Get" });
+            Debug.Assert(activities != null);
+            ViewBag.ActivitiesApi = activities;
 
             var activityReplace = Url.HttpRouteUrl(null, new { controller = "Activities", action = "PutMove", workCopyActivityId = 0, originalActivityId = 1, mode = ActivityMode.Draft });
             Debug.Assert(activityReplace != null);
@@ -84,6 +100,11 @@ namespace UCosmic.Web.Mvc.Controllers
             Debug.Assert(type != null);
             type = type.Replace("0", "{0}").Replace("1", "{1}");
             ViewBag.TypeApi = type;
+
+            var typeIcon = Url.HttpRouteUrl(null, new { controller = "EmployeeModuleSettings", action = "GetIcon", typeId = 0 });
+            Debug.Assert(typeIcon != null);
+            typeIcon = typeIcon.Replace("0", "{0}");
+            ViewBag.TypeIconApi = typeIcon;
 
             var places = Url.HttpRouteUrl(null, new { controller = "ActivityPlaces", action = "Get", activityId = 0 });
             Debug.Assert(places != null);

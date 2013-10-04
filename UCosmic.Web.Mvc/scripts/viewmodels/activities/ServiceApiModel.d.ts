@@ -16,6 +16,15 @@ declare module Activities.ApiModels {
     }
 }
 
+declare module Activities.KoModels {
+
+    export interface ActivityType {
+        activityId: KnockoutObservable<number>;
+        typeId: KnockoutObservable<number>;
+        text: KnockoutObservable<string>;
+    }
+}
+
 declare module Service.ApiModels {
 
     export interface IEmployeeActivityType {

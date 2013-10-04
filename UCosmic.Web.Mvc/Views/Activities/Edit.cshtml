@@ -25,7 +25,7 @@
         (function ($) {
             var activityId = parseInt('@ViewBag.ActivityId');
             var activityWorkCopyId = parseInt('@ViewBag.ActivityWorkCopyId');
-            var activityViewModel = new Activities.ViewModels.Activity(activityId, activityWorkCopyId);
+            var activityViewModel = new Activities.ViewModels.ActivityForm(activityId, activityWorkCopyId);
             activityViewModel.load()
                 .done(function () {
                     ko.applyBindings(activityViewModel, $("#activity-edit")[0]);
@@ -263,7 +263,6 @@
 
                         @* API URL's *@
                         <div style="display: none">
-                            <span id="activity2_api">@ViewBag.Activity2Api</span>
                             <span id="activity_api">@ViewBag.ActivityApi</span>
                             <span id="activity_replace_api">@ViewBag.ActivityReplaceApi</span>
                             <span id="type_api">@ViewBag.TypeApi</span>

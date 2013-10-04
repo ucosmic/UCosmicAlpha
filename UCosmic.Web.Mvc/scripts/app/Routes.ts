@@ -516,99 +516,6 @@ module App.Routes {
             }
         }
 
-        export module Activities {
-            export function get (activityId?: number): string {
-                var url = makeUrl('activities');
-                if (activityId) {
-                    url += '/' + activityId;
-                }
-                return url;
-            }
-
-            //export function post(): string {
-            //    return makeUrl('activities');
-            //}
-
-            //export function getEdit(activityId: number): string {
-            //    return makeUrl('activities/' + activityId + "/edit");
-            //}
-
-            //export function getEditState(activityId: number): string {
-            //    return makeUrl('activities/' + activityId + "/edit-state");
-            //}
-
-            //export function put(activityId: number): string {
-            //    return makeUrl('activities/' + activityId);
-            //}
-
-            //export function putEdit(activityId: number): string {
-            //    return makeUrl('activities/' + activityId + "/edit");
-            //}
-
-            export function del(activityId: number): string {
-                return makeUrl('activities/' + activityId);
-            }
-
-            export module Documents {
-                //export function get (activityId: number, documentId?: number, activityMode?: string): string {
-                //    var url = makeUrl('activities/' + activityId + '/documents');
-                //    if (documentId) {
-                //        url += '/' + documentId;
-                //    }
-                //    else if (activityId) {
-                //        url += '/?activityMode=' + activityMode;
-                //    }
-                //    return url;
-                //}
-
-                //export function post(activityId: number, activityMode: string): string {
-                //    var url = makeUrl('activities/' + activityId + '/documents/');
-                //    url += '?activityMode=' + activityMode;
-                //    return url;
-                //}
-
-                //export function put(activityId: number, documentId: number): string {
-                //    return makeUrl('activities/' + activityId + '/documents/' + documentId);
-                //}
-
-                //export function del(activityId: number, documentId: number): string {
-                //    return makeUrl('activities/' + activityId + '/documents/' + documentId);
-                //}
-
-                //export function rename(activityId: number, documentId: number): string {
-                //    return makeUrl('activities/' + activityId + '/documents/' + documentId + "/title");
-                //}
-
-                //export function validateUpload(): string {
-                //    return makeUrl('activities/documents/validate-upload');
-                //}
-
-                export module Thumbnail {
-                    export function get (activityId: number, documentId: number, params?: any): string {
-                        var url = makeUrl('activities/' + activityId + '/documents/' + documentId + '/thumbnail');
-                        if (params) url += '?' + $.param(params);
-                        return url;
-                    }
-                }
-            }
-
-            export module Locations {
-                export function get (): string {
-                    return makeUrl('activity-locations');
-                }
-            }
-
-            //export module CountryCounts {
-            //    export function get (): string {
-            //        return makeUrl('activity-country-counts');
-            //    }
-            //    export function post (): string {
-            //        return makeUrl('activity-country-counts');
-            //    }
-            //}
-
-        }
-
         export module GeographicExpertise {
             export function get (expertiseId?: number): string {
                 var url = 'geographic-expertise';
@@ -782,9 +689,6 @@ module App.Routes {
                 export function post(startEditing: boolean, startTabName: string) {
                     var url = makeUrlWithParams('my/profile') + "startEditing=" + startEditing + "&startTabName=" + startTabName;
                     return url;
-                }
-                export function activityEdit(activityId: number) {
-                    return makeUrl('my/activities/{0}/edit'.format(activityId));
                 }
             }
 

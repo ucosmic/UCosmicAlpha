@@ -165,7 +165,7 @@
     <Compile Include="Domain\Activities\Events\ActivityChanged.cs" />
     <Compile Include="Domain\Activities\Events\ActivityCreated.cs" />
     <Compile Include="Domain\Activities\Events\ActivityDeleted.cs" />
-    <Compile Include="Domain\Activities\Queries\ActivitiesByPersonId.cs" />
+    <Compile Include="Domain\Activities\Queries\Deprecated\_ActivitiesByPersonId.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityByEditSourceId.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityById.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityCountByPlaceIdsEstablishmentId.cs" />
@@ -177,6 +177,7 @@
     <Compile Include="Domain\Activities\Queries\ActivityPlacesByActivityId.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityTypesByActivityId.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityTagsByActivityId.cs" />
+    <Compile Include="Domain\Activities\Queries\MyActivities.cs" />
     <Compile Include="Domain\Activities\Validation\MustBeDocumentForActivity.cs" />
     <Compile Include="Domain\Activities\Validation\MustBeActivityWorkCopy.cs" />
     <Compile Include="Domain\Activities\Validation\MustNotBeDuplicateActivityTag.cs" />

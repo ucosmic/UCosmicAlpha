@@ -9,6 +9,7 @@ namespace UCosmic.Web.Mvc.Models
         public int ActivityId { get; set; }
         public int TypeId { get; set; }
         public string Text { get; set; }
+        public int Rank { get; set; }
     }
 
     public class ActivityTypeApiModel

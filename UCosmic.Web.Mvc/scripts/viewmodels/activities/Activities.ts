@@ -4,11 +4,12 @@
 /// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
 /// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
 /// <reference path="../../typings/kendo/kendo.all.d.ts" />
+/// <reference path="../../typings/linq/linq.d.ts" />
 /// <reference path="../../app/Routes.ts" />
 /// <reference path="../../typings/moment/moment.d.ts" />
 /// <reference path="../activities/ServiceApiModel.d.ts" />
 
-module ViewModels.Activities {
+module Activities.ViewModels {
 
     export class ActivitySearchInput {
         personId: number;
@@ -19,104 +20,149 @@ module ViewModels.Activities {
 
     export class ActivityList implements KnockoutValidationGroup {
 
-        private static iconMaxSide: number = 64;
+        static iconMaxSide: number = 64;
 
-        activityLocationsList: Service.ApiModels.IActivityLocation[];
-        activityTypesList: Service.ApiModels.IEmployeeActivityType[];
-
-        personId: number;
-        orderBy: string;
         pageSize: number;
         pageNumber: number;
-        items: KnockoutObservableArray<any>; // array of IObservableActivity
+        items: KnockoutObservableArray<ActivityListItem>;
 
-        constructor(personId: number) {
-            this.personId = personId;
-        }
+        constructor() { }
 
-        load(): JQueryPromise<any> {
+        load(): JQueryDeferred<void> {
             var deferred: JQueryDeferred<void> = $.Deferred();
 
-            var locationsPact = $.Deferred();
-            $.get(App.Routes.WebApi.Activities.Locations.get())
-                .done((data: Service.ApiModels.IActivityLocation[], textStatus: string, jqXHR: JQueryXHR): void => {
-                    locationsPact.resolve(data);
-                })
-                .fail((jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void => {
-                    locationsPact.reject(jqXHR, textStatus, errorThrown);
-                });
+            var itemsUrl = $('#activities_api').text();
+            var params = { pageSize: 500, pageNumber: 1, };
+            itemsUrl = '{0}?{1}'.format(itemsUrl, $.param(params));
 
-            var typesPact = $.Deferred();
-            $.get(App.Routes.WebApi.Employees.ModuleSettings.ActivityTypes.get())
-                .done((data: Service.ApiModels.IEmployeeActivityType[], textStatus: string, jqXHR: JQueryXHR): void => {
-                    typesPact.resolve(data);
-                })
-                .fail((jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void => {
-                    typesPact.reject(jqXHR, textStatus, errorThrown);
-                });
-
-            var dataPact = $.Deferred();
-            var activitiesSearchInput: ActivitySearchInput = new ActivitySearchInput();
-
-            activitiesSearchInput.personId = this.personId;
-            activitiesSearchInput.orderBy = '';
-            activitiesSearchInput.pageNumber = 1;
-            activitiesSearchInput.pageSize = App.Constants.int32Max;
-
-            $.get(App.Routes.WebApi.Activities.get(), activitiesSearchInput)
-                .done((data: Service.ApiModels.IEmployeeActivityType[], textStatus: string, jqXHR: JQueryXHR): void => {
-                    { dataPact.resolve(data); }
-                })
-                .fail((jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
-                    { dataPact.reject(jqXhr, textStatus, errorThrown); }
-                });
-
-            // only process after all requests have been resolved
-            $.when(typesPact, locationsPact, dataPact)
-                .done((types: Service.ApiModels.IEmployeeActivityType[],
-                    locations: Service.ApiModels.IActivityLocation[],
-                    data: Service.ApiModels.IActivityPage): void => {
-
-                    this.activityTypesList = types;
-                    this.activityLocationsList = locations;
-
-                    {
-                        var augmentedDocumentModel = function (data) {
-                            ko.mapping.fromJS(data, {}, this);
-                            this.proxyImageSource = App.Routes.WebApi.Activities.Documents.Thumbnail.get(data.activityId, data.id, { maxSide: ActivityList.iconMaxSide });
-                        };
-
-                        var mapping = {
-                            'documents': {
-                                create: function (options) {
-                                    return new augmentedDocumentModel(options.data);
-                                },
-                            },
-                            'startsOn': {
-                                create: (options: any): KnockoutObservable<Date> => {
-                                    return (options.data != null) ? ko.observable(moment(options.data).toDate()) : ko.observable();
-                                }
-                            },
-                            'endsOn': {
-                                create: (options: any): KnockoutObservable<Date> => {
-                                    return (options.data != null) ? ko.observable(moment(options.data).toDate()) : ko.observable();
-                                }
+            $.ajax({
+                url: itemsUrl,
+                cache: false,
+            })
+                .done((data: any): void => {
+                    var mapping = {
+                        items: {
+                            create: (options: KnockoutMappingCreateOptions): any => {
+                                return new ActivityListItem(options.data, options.parent);
                             }
-                        };
+                        }
+                    };
 
-                        ko.mapping.fromJS(data, mapping, this);
-                    }
-
+                    ko.mapping.fromJS(data, mapping, this);
                     deferred.resolve();
-                })
-                .fail((xhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
-                    deferred.reject(xhr, textStatus, errorThrown);
                 });
 
             return deferred;
         }
+    }
 
-        deleteActivity(item: any, index: number): void {
+    export class ActivityListItem {
+
+        private _owner: ActivityList;
+        activityId: KnockoutObservable<string>;
+        mode: KnockoutObservable<string>;
+        title: KnockoutObservable<string>;
+        onGoing: KnockoutObservable<boolean>;
+        startsOn: KnockoutObservable<string>;
+        startsFormat: KnockoutObservable<string>;
+        endsOn: KnockoutObservable<string>;
+        endsFormat: KnockoutObservable<string>;
+        types: KnockoutObservableArray<KoModels.ActivityType>;
+        places: KnockoutObservableArray<any>;
+        documents: KnockoutObservableArray<any>;
+
+        constructor(data: any, owner: ActivityList) {
+            this._owner = owner;
+
+            // make sure types are ordered by rank
+            if (data.types && data.types.length)
+                data.types = Enumerable.From(data.types)
+                    .OrderBy(function (x: any): any { return x.rank; })
+                    .ToArray();
+
+            var mapping = {};
+            ko.mapping.fromJS(data, mapping, this);
+        }
+
+        //#region Computeds
+
+        editUrl: KnockoutComputed<string> = ko.computed((): string => {
+            var activityId = this.activityId();
+            return $('#activity_edit').text().format(activityId);
+        });
+
+        titleText: KnockoutComputed<string> = ko.computed((): string => {
+            var title = this.title();
+            return title || '[Untitled Activity #{0}]'.format(this.activityId());
+        });
+
+        isDraft: KnockoutComputed<boolean> = ko.computed((): boolean => {
+            var mode = this.mode();
+            if (!mode) return false;
+            return mode.toLowerCase() == 'draft';
+        });
+
+        isPublished: KnockoutComputed<boolean> = ko.computed((): boolean => {
+            var mode = this.mode();
+            if (!mode) return false;
+            return mode.toLowerCase() == 'public';
+        });
+
+        datesText: KnockoutComputed<string> = ko.computed((): string => {
+            return this._computeDatesText();
+        });
+
+        //#endregion
+
+        typeText(index: number): string {
+            var types = this.types();
+            var typeText = types[index].text();
+            if (index < types.length - 1)
+                typeText = "{0}; ".format(typeText);
+            return typeText;
+        }
+
+        placeText(index: number): string {
+            var places = this.places();
+            var placeText = places[index].placeName();
+            if (index < places.length - 1)
+                placeText = "{0}, ".format(placeText);
+            return placeText;
+        }
+
+        typeIcon(typeId: number) {
+            var src = $('#type_icon_api').text().format(typeId);
+            return src;
+        }
+
+        documentIcon(documentId: number) {
+            var src = $('#document_icon_api').text().format(this.activityId(), documentId);
+            var params = { maxSide: ActivityList.iconMaxSide };
+            return '{0}?{1}'.format(src, $.param(params));
+        }
+
+        private _computeDatesText(): string {
+            var startsOnIso = this.startsOn();
+            var endsOnIso = this.endsOn();
+            var startsFormat = this.startsFormat() || 'M/D/YYYY';
+            var endsFormat = this.endsFormat() || 'M/D/YYYY';
+            startsFormat = startsFormat.toUpperCase();
+            endsFormat = endsFormat.toUpperCase();
+            var onGoing = this.onGoing();
+            var datesText;
+
+            if (!startsOnIso)
+                if (endsOnIso) datesText = moment(endsOnIso).format(endsFormat);
+                else datesText = '(Ongoing)';
+            else
+                if (onGoing) datesText = '{0} (Ongoing)'.format(moment(startsOnIso).format(startsFormat));
+                else if (endsOnIso) datesText = '{0} - {1}'.format(moment(startsOnIso).format(startsFormat),
+                    moment(endsOnIso).format(endsFormat));
+
+            return datesText;
+        }
+
+        purge(): void {
             var $dialog = $('#confirmActivityDeleteDialog');
             $dialog.dialog({ // open a dialog to confirm deletion of activity
                 dialogClass: 'jquery-ui no-close',
@@ -136,11 +182,12 @@ module ViewModels.Activities {
 
                             $.ajax({ // submit delete api request
                                 type: 'DELETE',
-                                url: App.Routes.WebApi.Activities.del(item.id())
+                                //url: App.Routes.WebApi.Activities.del(item.id())
+                                url: $('#activity_api').text().format(this.activityId()),
                             })
                                 .done((): void => {
                                     $dialog.dialog('close');
-                                    this.items.splice(index, 1);
+                                    this._owner.items.remove(this);
                                 })
                                 .fail((xhr: JQueryXHR): void => { // display failure message
                                     App.Failures.message(xhr, 'while trying to delete your activity', true);
@@ -161,102 +208,7 @@ module ViewModels.Activities {
                         'data-css-link': true
                     }]
             });
-        }
 
-        editActivityUrl(id: number): string {
-            return App.Routes.Mvc.My.Profile.activityEdit(id);
-        }
-
-        getLocationName(id: number): string {
-            var locationName: string = '';
-
-            if (this.activityLocationsList != null) {
-                var i = 0;
-                while ((i < this.activityLocationsList.length) &&
-                    (id != this.activityLocationsList[i].id)) { i += 1 }
-
-                if (i < this.activityLocationsList.length) {
-                    locationName = this.activityLocationsList[i].officialName;
-                }
-            }
-
-            return locationName;
-        }
-
-        activityDatesFormatted(startsOnStr: Date, endsOnStr: Date, onGoing: boolean, startsFormat: string, endsFormat: string): string {
-            var formattedDateRange: string = '';
-
-            /* May need a separate function to convert from CLR custom date formats to moment formats */
-            startsFormat = (startsFormat != null) ? startsFormat.toUpperCase() : 'MM/DD/YYYY';
-            endsFormat = (endsFormat != null) ? endsFormat.toUpperCase() : 'MM/DD/YYYY';
-
-            if (startsOnStr == null) {
-                if (endsOnStr != null) {
-                    formattedDateRange = moment(endsOnStr).format(endsFormat);
-                }
-                else if (onGoing) {
-                    formattedDateRange = '(Ongoing)';
-                }
-            }
-            else {
-                formattedDateRange = moment(startsOnStr).format(startsFormat);
-                if (onGoing) {
-                    formattedDateRange += ' (Ongoing)';
-                } else if (endsOnStr != null) {
-                    formattedDateRange += ' - ' + moment(endsOnStr).format(endsFormat);
-                }
-            }
-
-            if (formattedDateRange.length > 0) {
-                formattedDateRange += '\xa0\xa0';
-            }
-
-            return formattedDateRange;
-        }
-
-        activityTypesFormatted(types: Service.ApiModels.IObservableValuesActivityType[]): string {
-            var formattedTypes: string = '';
-            var location: Service.ApiModels.IActivityLocation;
-
-            /* ----- Assemble in sorted order ----- */
-            for (var i = 0; i < this.activityTypesList.length; i += 1) {
-                for (var j = 0; j < types.length; j += 1) {
-                    if (types[j].typeId() == this.activityTypesList[i].id) {
-                        if (formattedTypes.length > 0) { formattedTypes += '; '; }
-                        formattedTypes += this.activityTypesList[i].type;
-                    }
-                }
-            }
-
-            return formattedTypes;
-        }
-
-        activityLocationsFormatted(locations: Service.ApiModels.IObservableValuesActivityLocation[]): string {
-            var formattedLocations: string = '';
-            var location: Service.ApiModels.IActivityLocation;
-
-            for (var i = 0; i < locations.length; i += 1) {
-                if (i > 0) { formattedLocations += ', '; }
-                formattedLocations += this.getLocationName(locations[i].placeId());
-            }
-
-            return formattedLocations;
-        }
-
-        getActivityTypeIconName(typeId: number): string {
-            var i: number = 0;
-            while ((i < this.activityTypesList.length) && (this.activityTypesList[i].id != typeId)) {
-                i += 1;
-            }
-            return (i < this.activityTypesList.length) ? this.activityTypesList[i].iconName : null;
-        }
-
-        getActivityTypeToolTip(typeId: number): string {
-            var i: number = 0;
-            while ((i < this.activityTypesList.length) && (this.activityTypesList[i].id != typeId)) {
-                i += 1;
-            }
-            return (i < this.activityTypesList.length) ? this.activityTypesList[i].type : null;
         }
     }
 }

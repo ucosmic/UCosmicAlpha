@@ -13,7 +13,7 @@
 
 module Activities.ViewModels {
 
-    export class Activity implements KnockoutValidationGroup {
+    export class ActivityForm implements KnockoutValidationGroup {
 
         //#region Primary scalar observables & properties
 
@@ -88,7 +88,7 @@ module Activities.ViewModels {
                 .fail((xhr: JQueryXHR): void => { typeOptionsPact.reject(xhr); });
 
             var dataPact = $.Deferred();
-            $.ajax({ url: $('#activity2_api').text().format(this._workCopyId), cache: false, })
+            $.ajax({ url: $('#activity_api').text().format(this._workCopyId), cache: false, })
                 .done((data: any): void => { dataPact.resolve(data); })
                 .fail((xhr: JQueryXHR): void => { dataPact.reject(xhr); });
 
@@ -285,7 +285,7 @@ module Activities.ViewModels {
 
         private _descriptionCheckIsDirty(newValue: any): void {
             ++this._descriptionIsDirtyCurrent;
-            if (this._descriptionIsDirtyCurrent >= Activity._descriptionIsDirtyAfter) {
+            if (this._descriptionIsDirtyCurrent >= ActivityForm._descriptionIsDirtyAfter) {
                 this._isDirty(true);
                 this._descriptionIsDirtyCurrent = 0;
             }
@@ -833,7 +833,7 @@ module Activities.ViewModels {
 
         documentIcon(documentId: number) {
             var url = $('#document_icon_api').text().format(this.activityId(), documentId);
-            var params = { maxSide: Activity.iconMaxSide };
+            var params = { maxSide: ActivityForm.iconMaxSide };
             return '{0}?{1}'.format(url, $.param(params));
         }
 
@@ -946,9 +946,9 @@ module Activities.ViewModels {
         id: number;
         text: string;
         checked: KnockoutObservable<boolean>
-        private _owner: Activity;
+        private _owner: ActivityForm;
 
-        constructor(mappingOptions: KnockoutMappingCreateOptions, owner: Activity) {
+        constructor(mappingOptions: KnockoutMappingCreateOptions, owner: ActivityForm) {
 
             this.id = mappingOptions.data.id;
             this.text = mappingOptions.data.type;

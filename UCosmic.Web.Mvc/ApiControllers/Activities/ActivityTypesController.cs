@@ -48,6 +48,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 ActivityId = x.ActivityValues.ActivityId,
                 TypeId = x.TypeId,
                 Text = x.Type.Type,
+                Rank = x.Type.Rank,
             });
             return models;
         }

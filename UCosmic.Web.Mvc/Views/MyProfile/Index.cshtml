@@ -141,7 +141,8 @@
                                 <li>Email Addresses</li>
                             </ul>
                             <div>
-                                @Html.Partial(MVC.MyProfile.Views._Activities)
+                                @{ Html.RenderAction(MVC.Activities.Get()); }
+                                @*@Html.Partial(MVC.MyProfile.Views._Activities)*@
                             </div>
                             <div>
                                 @Html.Partial(MVC.MyProfile.Views._GeographicExpertises)

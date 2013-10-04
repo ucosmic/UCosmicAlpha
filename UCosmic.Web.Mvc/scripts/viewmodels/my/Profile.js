@@ -161,7 +161,7 @@ var ViewModels;
 
                 if (tabName === "activities") {
                     if (this._activitiesViewModel == null) {
-                        this._activitiesViewModel = new ViewModels.Activities.ActivityList(this.personId);
+                        this._activitiesViewModel = new Activities.ViewModels.ActivityList();
                         this._activitiesViewModel.load().done(function () {
                             ko.applyBindings(_this._activitiesViewModel, $("#activities")[0]);
                         }).fail(function (jqXhr, textStatus, errorThrown) {

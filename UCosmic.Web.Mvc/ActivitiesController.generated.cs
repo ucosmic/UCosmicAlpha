@@ -63,6 +63,7 @@ namespace UCosmic.Web.Mvc.Controllers
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public class ActionNamesClass
         {
+            public readonly string Get = "Get";
             public readonly string Create = "Create";
             public readonly string Edit = "Edit";
         }
@@ -70,6 +71,7 @@ namespace UCosmic.Web.Mvc.Controllers
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public class ActionNameConstants
         {
+            public const string Get = "Get";
             public const string Create = "Create";
             public const string Edit = "Edit";
         }
@@ -105,6 +107,12 @@ namespace UCosmic.Web.Mvc.Controllers
     public class T4MVC_ActivitiesController : UCosmic.Web.Mvc.Controllers.ActivitiesController
     {
         public T4MVC_ActivitiesController() : base(Dummy.Instance) { }
+
+        public override System.Web.Mvc.ActionResult Get()
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Get);
+            return callInfo;
+        }
 
         public override System.Web.Mvc.RedirectToRouteResult Create()
         {

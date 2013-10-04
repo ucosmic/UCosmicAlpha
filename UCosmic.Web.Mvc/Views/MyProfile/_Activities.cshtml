@@ -7,10 +7,23 @@
             </h2>
         </form>
     </header>
-    <table class="data">
+    <table class="data" data-bind="visible: items().length">
         <tbody data-bind="template: { name: 'activities-template', foreach: items }">
         </tbody>
     </table>
+    <form action="@Url.Action(MVC.Activities.Create())" method="POST" data-bind="visible: !items().length" style="display: none;">
+        <div>
+            You currently have no activities.
+            <input type="submit" class="link" value="Click here to create one" />.
+        </div>
+    </form>
+    <div style="display: none">
+        <span id="activities_api">@ViewBag.ActivitiesApi</span> @* for items *@
+        <span id="activity_api">@ViewBag.ActivityApi</span> @* for delete *@
+        <span id="activity_edit">@ViewBag.EditUrl</span> @* for link to edit *@
+        <span id="document_icon_api">@ViewBag.DocumentIconApi</span>
+        <span id="type_icon_api">@ViewBag.TypeIconApi</span>
+    </div>
 </section>
 
 <!-- DIALOGS -->
@@ -30,50 +43,56 @@
 
 <!-- KNOCKOUT TEMPLATES -->
 
+<script type="text/html" id="activities-template">
+    <tr class="hover-hilite">
+        <!-- Description -->
+        <td>
+            <a href="#" data-bind="attr: { href: editUrl }"
+               style="display: block; text-decoration: inherit; color: inherit;">
+                <div>
+                    <span class="ellipsis" style="font-size: large; font-weight: bold; vertical-align: middle; max-width: 700px; display: inline-block;" data-bind="text: titleText"></span>
+                    <span class="red badge" style="display: inline; vertical-align: middle" data-bind="visible: isDraft">Draft</span>
+                    <span class="green badge" style="display: inline; vertical-align: middle" data-bind="visible: isPublished">Published</span>
+                </div>
+                <div>
+                    <span data-bind="foreach: types">@* when multiple, all but last have semicolon appended *@
+                        <span data-bind="text: $parent.typeText($index())"></span>
+                    </span>
+                </div>
+                <div style="margin-bottom: 4px">
+                    <span style="font-size: small" data-bind="text: datesText"></span>
+                    <span data-bind="foreach: places" style="font-size: small">@* when multiple, all but last have comma appended *@
+                        <span data-bind="text: $parent.placeText($index())"></span>
+                    </span>
+                </div>
+                <div class="data-items" data-bind="template: { name: 'activities-documents-template', foreach: documents }"></div>
+                <div style="clear: both;"></div>
+            </a>
+        </td>
+        <!-- Activity Types -->
+        <td style="text-align: center; vertical-align: middle">
+            <div class="data-items" data-bind="template: { name: 'activities-types-template', foreach: types }"></div>
+        </td>
+        <!-- Remove Button -->
+        <td style="text-align: center; vertical-align: middle">
+            <a href="#" title="Delete this activity" data-bind="click: purge, clickBubble: false">
+                <img src="@Links.images.icons.minus.minus_24_red_png" alt="Delete this activity" />
+            </a>
+        </td>
+    </tr>
+</script>
+
 <script type="text/html" id="activities-documents-template">
     <div style="width: 150px; font-size: small; text-align: center; float: left">
         <div>
-            <img data-bind="attr: { src: proxyImageSource }" src="@Url.Content("~/images/transparent.png")" alt=""/>
+            <img data-bind="attr: { src: $parent.documentIcon(documentId()) }" src="@Url.Content("~/images/transparent.png")" alt=""/>
         </div>
         <div class="ellipsis"><span data-bind="text: title"></span></div>
     </div>
 </script>
 
 <script type="text/html" id="activities-types-template">
-    <img img data-bind="attr: { src: '/api/my/employee-module-settings/icon/' + $root.getActivityTypeIconName(typeId()), title: $root.getActivityTypeToolTip(typeId()) }"
+    <img img data-bind="attr: { src: $parent.typeIcon(typeId()), title: text }"
         src="" title="" width="32" height="32" />
-</script>
-
-<script type="text/html" id="activities-template">
-    <tr class="hover-hilite">
-        <!-- Description -->
-        <td>
-            <a href="#" data-bind="attr: { href: $parent.editActivityUrl(id()) }"
-               style="display: inline-block; text-decoration: inherit; color: inherit;">
-                <div>
-                    <span  class="ellipsis"style="font-size: large; font-weight: bold; vertical-align: middle; max-width: 700px; display: inline-block;" data-bind="text: values.title()"></span>
-                    <span class="red badge" style="display: inline; vertical-align: middle" data-bind="visible: modeText().toLowerCase() == 'draft'">Draft</span>
-                    <span class="green badge" style="display: inline; vertical-align: middle" data-bind="visible: modeText().toLowerCase() == 'public'">Published</span>
-                </div>
-                <div data-bind="text: $parent.activityTypesFormatted(values.types())">
-                </div>
-                <div style="margin-bottom: 4px">
-                    <span style="font-size: small" data-bind="text: $parent.activityDatesFormatted(values.startsOn(), values.endsOn(), values.onGoing(), values.startsFormat(), values.endsFormat())"></span>
-                    <span style="font-size: small" data-bind="text: $parent.activityLocationsFormatted(values.locations())"></span>
-                </div>
-                <div class="data-items" data-bind="template: { name: 'activities-documents-template', foreach: values.documents }"></div>
-            </a>
-        </td>
-        <!-- Activity Types -->
-        <td style="text-align: center; vertical-align: middle">
-            <div class="data-items" data-bind="template: { name: 'activities-types-template', foreach: values.types }"></div>
-        </td>
-        <!-- Remove Button -->
-        <td style="text-align: center; vertical-align: middle">
-            <a href="#" title="Delete this activity" data-bind="click: function (item, index) { $parent.deleteActivity(item, $index()); }, clickBubble: false">
-                <img src="@Links.images.icons.minus.minus_24_red_png" alt="Delete this activity" />
-            </a>
-        </td>
-    </tr>
 </script>
 

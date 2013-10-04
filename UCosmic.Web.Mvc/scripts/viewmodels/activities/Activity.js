@@ -13,10 +13,10 @@ var Activities;
     /// <reference path="../../app/Spinner.ts" />
     /// <reference path="../activities/ServiceApiModel.d.ts" />
     (function (ViewModels) {
-        var Activity = (function () {
+        var ActivityForm = (function () {
             //#endregion
             //#region Construction & Initialization
-            function Activity(activityId, activityWorkCopyId) {
+            function ActivityForm(activityId, activityWorkCopyId) {
                 var _this = this;
                 //#region Primary scalar observables & properties
                 this.ready = ko.observable(false);
@@ -84,7 +84,7 @@ var Activities;
             }
             //#endregion
             //#region Initial data load
-            Activity.prototype.load = function () {
+            ActivityForm.prototype.load = function () {
                 var _this = this;
                 var deferred = $.Deferred();
 
@@ -104,7 +104,7 @@ var Activities;
                 });
 
                 var dataPact = $.Deferred();
-                $.ajax({ url: $('#activity2_api').text().format(this._workCopyId), cache: false }).done(function (data) {
+                $.ajax({ url: $('#activity_api').text().format(this._workCopyId), cache: false }).done(function (data) {
                     dataPact.resolve(data);
                 }).fail(function (xhr) {
                     dataPact.reject(xhr);
@@ -181,7 +181,7 @@ var Activities;
 
             //#endregion
             //#region Kendo widget setup
-            Activity.prototype.setupWidgets = function (fromDatePickerId, toDatePickerId, countrySelectorId, uploadFileId, newTagId) {
+            ActivityForm.prototype.setupWidgets = function (fromDatePickerId, toDatePickerId, countrySelectorId, uploadFileId, newTagId) {
                 //#region Kendo DatePickers
                 $('#' + fromDatePickerId).kendoDatePicker({
                     value: this.startsOn.date(),
@@ -208,7 +208,7 @@ var Activities;
                 this._initTagsKendoAutoComplete();
             };
 
-            Activity.prototype.setupValidation = function () {
+            ActivityForm.prototype.setupValidation = function () {
                 ko.validation.rules['atLeast'] = {
                     validator: function (val, otherVal) {
                         return val.length >= otherVal;
@@ -252,7 +252,7 @@ var Activities;
                 });
             };
 
-            Activity.prototype.setupSubscriptions = function () {
+            ActivityForm.prototype.setupSubscriptions = function () {
                 var _this = this;
                 // autosave when fields change
                 this.title.subscribe(function (newValue) {
@@ -286,15 +286,15 @@ var Activities;
                 };
             };
 
-            Activity.prototype._descriptionCheckIsDirty = function (newValue) {
+            ActivityForm.prototype._descriptionCheckIsDirty = function (newValue) {
                 ++this._descriptionIsDirtyCurrent;
-                if (this._descriptionIsDirtyCurrent >= Activity._descriptionIsDirtyAfter) {
+                if (this._descriptionIsDirtyCurrent >= ActivityForm._descriptionIsDirtyAfter) {
                     this._isDirty(true);
                     this._descriptionIsDirtyCurrent = 0;
                 }
             };
 
-            Activity.prototype._autoSave = function () {
+            ActivityForm.prototype._autoSave = function () {
                 var _this = this;
                 var deferred = $.Deferred();
                 if (this._isSaved || this._isDeleted || this._isAutoSaving || (!this._isDirty() && this._descriptionIsDirtyCurrent == 0)) {
@@ -336,7 +336,7 @@ var Activities;
                 return deferred;
             };
 
-            Activity.prototype._save = function (mode) {
+            ActivityForm.prototype._save = function (mode) {
                 var _this = this;
                 this._autoSave().done(function (data) {
                     if (!_this.isValid()) {
@@ -364,17 +364,17 @@ var Activities;
                 });
             };
 
-            Activity.prototype.saveDraft = function () {
+            ActivityForm.prototype.saveDraft = function () {
                 this._save('Draft');
             };
 
-            Activity.prototype.publish = function () {
+            ActivityForm.prototype.publish = function () {
                 this._save('Public');
             };
 
             //#endregion
             //#region Canceling
-            Activity.prototype.cancel = function () {
+            ActivityForm.prototype.cancel = function () {
                 var _this = this;
                 var $dialog = $('#cancelConfirmDialog');
                 $dialog.dialog({
@@ -417,7 +417,7 @@ var Activities;
                 });
             };
 
-            Activity.prototype._purge = function (async) {
+            ActivityForm.prototype._purge = function (async) {
                 if (typeof async === "undefined") { async = true; }
                 var _this = this;
                 var deferred = $.Deferred();
@@ -438,12 +438,12 @@ var Activities;
                 return deferred;
             };
 
-            Activity.prototype._hasData = function () {
+            ActivityForm.prototype._hasData = function () {
                 var _hasData = this.title() || this.content() || this.onGoing() || this.startsOn.input() || this.endsOn.input() || this.isExternallyFunded() || this.isInternallyFunded() || this.selectedTypeIds().length || this.selectedPlaces().length || this.tags().length || this.documents().length;
                 return _hasData;
             };
 
-            Activity.prototype._initPlacesKendoMultiSelect = function () {
+            ActivityForm.prototype._initPlacesKendoMultiSelect = function () {
                 var _this = this;
                 $('#countrySelector').kendoMultiSelect({
                     filter: 'contains',
@@ -462,7 +462,7 @@ var Activities;
                 });
             };
 
-            Activity.prototype._onPlaceMultiSelectChange = function (e) {
+            ActivityForm.prototype._onPlaceMultiSelectChange = function (e) {
                 // find out if a place was added or deleted
                 var newPlaceIds = e.sender.value();
                 var addedPlaceIds = $(newPlaceIds).not(this._currentPlaceIds).get();
@@ -474,7 +474,7 @@ else if (removedPlaceIds.length === 1)
                     this._removePlaceId(removedPlaceIds[0], e);
             };
 
-            Activity.prototype._addPlaceId = function (addedPlaceId, e) {
+            ActivityForm.prototype._addPlaceId = function (addedPlaceId, e) {
                 var _this = this;
                 var url = $('#place_api').text().format(this.activityId(), addedPlaceId);
                 $.ajax({
@@ -500,7 +500,7 @@ else if (removedPlaceIds.length === 1)
                 });
             };
 
-            Activity.prototype._removePlaceId = function (removedPlaceId, e) {
+            ActivityForm.prototype._removePlaceId = function (removedPlaceId, e) {
                 var _this = this;
                 var url = $('#place_api').text().format(this.activityId(), removedPlaceId);
                 $.ajax({
@@ -519,7 +519,7 @@ else if (removedPlaceIds.length === 1)
                 });
             };
 
-            Activity.prototype._bindTypes = function (typeOptions, selectedTypes) {
+            ActivityForm.prototype._bindTypes = function (typeOptions, selectedTypes) {
                 var _this = this;
                 var selectedTypeIds = Enumerable.From(selectedTypes).Select(function (x) {
                     return x.typeId;
@@ -534,7 +534,7 @@ else if (removedPlaceIds.length === 1)
                 ko.mapping.fromJS(typeOptions, typesMapping, this.typeOptions);
             };
 
-            Activity.prototype._initTagsKendoAutoComplete = function () {
+            ActivityForm.prototype._initTagsKendoAutoComplete = function () {
                 var _this = this;
                 $('#newTag').kendoAutoComplete({
                     minLength: 3,
@@ -547,7 +547,7 @@ else if (removedPlaceIds.length === 1)
                 });
             };
 
-            Activity.prototype._getTagAutoCompleteDataSource = function () {
+            ActivityForm.prototype._getTagAutoCompleteDataSource = function () {
                 var dataSource = new kendo.data.DataSource({
                     serverFiltering: true,
                     transport: {
@@ -570,7 +570,7 @@ else if (removedPlaceIds.length === 1)
                 return dataSource;
             };
 
-            Activity.prototype._getTagEstablishmentId = function (text) {
+            ActivityForm.prototype._getTagEstablishmentId = function (text) {
                 var establishmentId;
                 var url = $('#establishment_names_api').text();
                 $.ajax({
@@ -594,7 +594,7 @@ else if (removedPlaceIds.length === 1)
                 return establishmentId;
             };
 
-            Activity.prototype._onTagAutoCompleteSelect = function (e) {
+            ActivityForm.prototype._onTagAutoCompleteSelect = function (e) {
                 var _this = this;
                 // the autocomplete filter will search establishment names, not establishments
                 // name.ownerId corresponds to the establishment.id
@@ -609,7 +609,7 @@ else if (removedPlaceIds.length === 1)
                 });
             };
 
-            Activity.prototype.addTag = function () {
+            ActivityForm.prototype.addTag = function () {
                 var _this = this;
                 var text = this.newTag();
                 if (text)
@@ -622,13 +622,13 @@ else if (removedPlaceIds.length === 1)
                 });
             };
 
-            Activity.prototype.deleteTag = function (item) {
+            ActivityForm.prototype.deleteTag = function (item) {
                 this._deleteTag(item.text).fail(function (xhr) {
                     App.Failures.message(xhr, 'while trying to delete this activity tag, please try again', true);
                 });
             };
 
-            Activity.prototype._addOrReplaceTag = function (text, establishmentId) {
+            ActivityForm.prototype._addOrReplaceTag = function (text, establishmentId) {
                 var _this = this;
                 var deferred = $.Deferred();
                 if (!text) {
@@ -659,7 +659,7 @@ else if (removedPlaceIds.length === 1)
                 return deferred;
             };
 
-            Activity.prototype._postTag = function (text, establishmentId) {
+            ActivityForm.prototype._postTag = function (text, establishmentId) {
                 var _this = this;
                 var deferred = $.Deferred();
                 var url = $('#tags_api').text().format(this.activityId());
@@ -686,7 +686,7 @@ else if (removedPlaceIds.length === 1)
                 return deferred;
             };
 
-            Activity.prototype._deleteTag = function (text) {
+            ActivityForm.prototype._deleteTag = function (text) {
                 var _this = this;
                 var deferred = $.Deferred();
                 var url = $('#tags_api').text().format(this.activityId());
@@ -710,7 +710,7 @@ else if (removedPlaceIds.length === 1)
                 return deferred;
             };
 
-            Activity.prototype._initDocumentsKendoUpload = function () {
+            ActivityForm.prototype._initDocumentsKendoUpload = function () {
                 var _this = this;
                 $('#uploadFile').kendoUpload({
                     multiple: true,
@@ -732,7 +732,7 @@ else if (removedPlaceIds.length === 1)
                 });
             };
 
-            Activity.prototype._onDocumentKendoSelect = function (e) {
+            ActivityForm.prototype._onDocumentKendoSelect = function (e) {
                 var _this = this;
                 for (var i = 0; i < e.files.length; i++) {
                     var file = e.files[i];
@@ -756,7 +756,7 @@ else if (removedPlaceIds.length === 1)
                 }
             };
 
-            Activity.prototype._onDocumentKendoUpload = function (e) {
+            ActivityForm.prototype._onDocumentKendoUpload = function (e) {
                 var file = e.files[0];
                 var isInvalidFileName = Enumerable.From(this._invalidFileNames()).Any(function (x) {
                     return x == file.name;
@@ -767,7 +767,7 @@ else if (removedPlaceIds.length === 1)
                 }
             };
 
-            Activity.prototype._onDocumentKendoSuccess = function (e) {
+            ActivityForm.prototype._onDocumentKendoSuccess = function (e) {
                 var _this = this;
                 var location = e.XMLHttpRequest.getResponseHeader('location');
                 $.get(location).done(function (data) {
@@ -776,18 +776,18 @@ else if (removedPlaceIds.length === 1)
                 });
             };
 
-            Activity.prototype._onDocumentKendoError = function (e) {
+            ActivityForm.prototype._onDocumentKendoError = function (e) {
                 var message = e.XMLHttpRequest.status != 500 && e.XMLHttpRequest.responseText && e.XMLHttpRequest.responseText.length < 1000 ? e.XMLHttpRequest.responseText : App.Failures.message(e.XMLHttpRequest, 'while uploading your document, please try again');
                 this.fileUploadErrors.push({ message: message });
             };
 
-            Activity.prototype.documentIcon = function (documentId) {
+            ActivityForm.prototype.documentIcon = function (documentId) {
                 var url = $('#document_icon_api').text().format(this.activityId(), documentId);
-                var params = { maxSide: Activity.iconMaxSide };
+                var params = { maxSide: ActivityForm.iconMaxSide };
                 return '{0}?{1}'.format(url, $.param(params));
             };
 
-            Activity.prototype.deleteDocument = function (item, index) {
+            ActivityForm.prototype.deleteDocument = function (item, index) {
                 var _this = this;
                 var $dialog = $('#deleteDocumentConfirmDialog');
                 $dialog.dialog({
@@ -833,7 +833,7 @@ else if (removedPlaceIds.length === 1)
                 });
             };
 
-            Activity.prototype.startDocumentTitleEdit = function (item, event) {
+            ActivityForm.prototype.startDocumentTitleEdit = function (item, event) {
                 var _this = this;
                 var textElement = event.target;
                 $(textElement).hide();
@@ -849,7 +849,7 @@ else if (removedPlaceIds.length === 1)
                 });
             };
 
-            Activity.prototype.endDocumentTitleEdit = function (item, event) {
+            ActivityForm.prototype.endDocumentTitleEdit = function (item, event) {
                 var _this = this;
                 var inputElement = event.target;
                 $(inputElement).unbind('focusout');
@@ -888,15 +888,15 @@ else if (removedPlaceIds.length === 1)
                 });
             };
 
-            Activity.prototype.dismissFileUploadError = function (index) {
+            ActivityForm.prototype.dismissFileUploadError = function (index) {
                 this.fileUploadErrors.splice(index, 1);
             };
-            Activity._descriptionIsDirtyAfter = 10;
+            ActivityForm._descriptionIsDirtyAfter = 10;
 
-            Activity.iconMaxSide = 64;
-            return Activity;
+            ActivityForm.iconMaxSide = 64;
+            return ActivityForm;
         })();
-        ViewModels.Activity = Activity;
+        ViewModels.ActivityForm = ActivityForm;
 
         var ActivityTypeCheckBox = (function () {
             function ActivityTypeCheckBox(mappingOptions, owner) {

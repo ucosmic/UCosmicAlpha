@@ -24,6 +24,9 @@ namespace UCosmic.Web.Mvc.Models
         public bool? IsInternallyFunded { get; set; }
         public string UpdatedByPrincipal { get; set; }
         public DateTime UpdatedOnUtc { get; set; }
+        public ActivityTypeApiModel2[] Types { get; set; }
+        public ActivityPlaceApiModel[] Places { get; set; }
+        public ActivityDocumentApiModel2[] Documents { get; set; }
     }
 
     public class ActivityApiModel
@@ -39,6 +42,8 @@ namespace UCosmic.Web.Mvc.Models
     }
 
     public class PageOfActivityApiModel : PageOf<ActivityApiModel> { }
+
+    public class PageOfActivityApiEditModel : PageOf<ActivityApiEditModel> { }
 
     public static class ActivityApiProfiler
     {

@@ -21,6 +21,23 @@ namespace UCosmic.Web.Mvc.Models
         }
     }
 
+    public class ActivityDocumentApiModel2
+    {
+        public int ActivityId { get; set; }
+        public int DocumentId { get; set; }
+        public string Title { get; set; }
+        public string FileName { get; set; }
+        public long ByteCount { get; set; }
+        public string Size
+        {
+            get { return ByteCount.ToAbbreviatedFileSize().ToUpper(); }
+        }
+        public string Extension
+        {
+            get { return Path.GetExtension(FileName); }
+        }
+    }
+
     public static class ActivityDocumentApiProfiler
     {
         public class EntityToModel : Profile

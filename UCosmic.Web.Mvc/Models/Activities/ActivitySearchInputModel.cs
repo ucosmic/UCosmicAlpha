@@ -5,21 +5,19 @@ namespace UCosmic.Web.Mvc.Models
 {
     public class ActivitySearchInputModel
     {
-        public int PersonId { get; set; }
-        public string OrderBy { get; set; }
         public int PageSize { get; set; }
         public int PageNumber { get; set; }
     }
 
-    public static class ActivitySearchInputProfiler
-    {
-        public class EntityToQuery : Profile
-        {
-            protected override void Configure()
-            {
-                CreateMap<ActivitySearchInputModel, ActivitiesByPersonId>()
-                    .ForMember(d => d.EagerLoad, o => o.Ignore());
-            }
-        }
-    }
+    //public static class ActivitySearchInputProfiler
+    //{
+    //    public class EntityToQuery : Profile
+    //    {
+    //        protected override void Configure()
+    //        {
+    //            CreateMap<ActivitySearchInputModel, ActivitiesByPersonId>()
+    //                .ForMember(d => d.EagerLoad, o => o.Ignore());
+    //        }
+    //    }
+    //}
 }

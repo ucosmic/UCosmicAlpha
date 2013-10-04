@@ -1,103 +1,146 @@
-var ViewModels;
-(function (ViewModels) {
+var Activities;
+(function (Activities) {
     /// <reference path="../../typings/jquery/jquery.d.ts" />
     /// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
     /// <reference path="../../typings/knockout/knockout.d.ts" />
     /// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
     /// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
     /// <reference path="../../typings/kendo/kendo.all.d.ts" />
+    /// <reference path="../../typings/linq/linq.d.ts" />
     /// <reference path="../../app/Routes.ts" />
     /// <reference path="../../typings/moment/moment.d.ts" />
     /// <reference path="../activities/ServiceApiModel.d.ts" />
-    (function (Activities) {
+    (function (ViewModels) {
         var ActivitySearchInput = (function () {
             function ActivitySearchInput() {
             }
             return ActivitySearchInput;
         })();
-        Activities.ActivitySearchInput = ActivitySearchInput;
+        ViewModels.ActivitySearchInput = ActivitySearchInput;
 
         var ActivityList = (function () {
-            function ActivityList(personId) {
-                this.personId = personId;
+            function ActivityList() {
             }
             ActivityList.prototype.load = function () {
                 var _this = this;
                 var deferred = $.Deferred();
 
-                var locationsPact = $.Deferred();
-                $.get(App.Routes.WebApi.Activities.Locations.get()).done(function (data, textStatus, jqXHR) {
-                    locationsPact.resolve(data);
-                }).fail(function (jqXHR, textStatus, errorThrown) {
-                    locationsPact.reject(jqXHR, textStatus, errorThrown);
-                });
+                var itemsUrl = $('#activities_api').text();
+                var params = { pageSize: 500, pageNumber: 1 };
+                itemsUrl = '{0}?{1}'.format(itemsUrl, $.param(params));
 
-                var typesPact = $.Deferred();
-                $.get(App.Routes.WebApi.Employees.ModuleSettings.ActivityTypes.get()).done(function (data, textStatus, jqXHR) {
-                    typesPact.resolve(data);
-                }).fail(function (jqXHR, textStatus, errorThrown) {
-                    typesPact.reject(jqXHR, textStatus, errorThrown);
-                });
-
-                var dataPact = $.Deferred();
-                var activitiesSearchInput = new ActivitySearchInput();
-
-                activitiesSearchInput.personId = this.personId;
-                activitiesSearchInput.orderBy = '';
-                activitiesSearchInput.pageNumber = 1;
-                activitiesSearchInput.pageSize = App.Constants.int32Max;
-
-                $.get(App.Routes.WebApi.Activities.get(), activitiesSearchInput).done(function (data, textStatus, jqXHR) {
-                     {
-                        dataPact.resolve(data);
-                    }
-                }).fail(function (jqXhr, textStatus, errorThrown) {
-                     {
-                        dataPact.reject(jqXhr, textStatus, errorThrown);
-                    }
-                });
-
-                // only process after all requests have been resolved
-                $.when(typesPact, locationsPact, dataPact).done(function (types, locations, data) {
-                    _this.activityTypesList = types;
-                    _this.activityLocationsList = locations;
-
-                     {
-                        var augmentedDocumentModel = function (data) {
-                            ko.mapping.fromJS(data, {}, this);
-                            this.proxyImageSource = App.Routes.WebApi.Activities.Documents.Thumbnail.get(data.activityId, data.id, { maxSide: ActivityList.iconMaxSide });
-                        };
-
-                        var mapping = {
-                            'documents': {
-                                create: function (options) {
-                                    return new augmentedDocumentModel(options.data);
-                                }
-                            },
-                            'startsOn': {
-                                create: function (options) {
-                                    return (options.data != null) ? ko.observable(moment(options.data).toDate()) : ko.observable();
-                                }
-                            },
-                            'endsOn': {
-                                create: function (options) {
-                                    return (options.data != null) ? ko.observable(moment(options.data).toDate()) : ko.observable();
-                                }
+                $.ajax({
+                    url: itemsUrl,
+                    cache: false
+                }).done(function (data) {
+                    var mapping = {
+                        items: {
+                            create: function (options) {
+                                return new ActivityListItem(options.data, options.parent);
                             }
-                        };
+                        }
+                    };
 
-                        ko.mapping.fromJS(data, mapping, _this);
-                    }
-
+                    ko.mapping.fromJS(data, mapping, _this);
                     deferred.resolve();
-                }).fail(function (xhr, textStatus, errorThrown) {
-                    deferred.reject(xhr, textStatus, errorThrown);
                 });
 
                 return deferred;
             };
+            ActivityList.iconMaxSide = 64;
+            return ActivityList;
+        })();
+        ViewModels.ActivityList = ActivityList;
 
-            ActivityList.prototype.deleteActivity = function (item, index) {
+        var ActivityListItem = (function () {
+            function ActivityListItem(data, owner) {
+                var _this = this;
+                //#region Computeds
+                this.editUrl = ko.computed(function () {
+                    var activityId = _this.activityId();
+                    return $('#activity_edit').text().format(activityId);
+                });
+                this.titleText = ko.computed(function () {
+                    var title = _this.title();
+                    return title || '[Untitled Activity #{0}]'.format(_this.activityId());
+                });
+                this.isDraft = ko.computed(function () {
+                    var mode = _this.mode();
+                    if (!mode)
+                        return false;
+                    return mode.toLowerCase() == 'draft';
+                });
+                this.isPublished = ko.computed(function () {
+                    var mode = _this.mode();
+                    if (!mode)
+                        return false;
+                    return mode.toLowerCase() == 'public';
+                });
+                this.datesText = ko.computed(function () {
+                    return _this._computeDatesText();
+                });
+                this._owner = owner;
+
+                if (data.types && data.types.length)
+                    data.types = Enumerable.From(data.types).OrderBy(function (x) {
+                        return x.rank;
+                    }).ToArray();
+
+                var mapping = {};
+                ko.mapping.fromJS(data, mapping, this);
+            }
+            //#endregion
+            ActivityListItem.prototype.typeText = function (index) {
+                var types = this.types();
+                var typeText = types[index].text();
+                if (index < types.length - 1)
+                    typeText = "{0}; ".format(typeText);
+                return typeText;
+            };
+
+            ActivityListItem.prototype.placeText = function (index) {
+                var places = this.places();
+                var placeText = places[index].placeName();
+                if (index < places.length - 1)
+                    placeText = "{0}, ".format(placeText);
+                return placeText;
+            };
+
+            ActivityListItem.prototype.typeIcon = function (typeId) {
+                var src = $('#type_icon_api').text().format(typeId);
+                return src;
+            };
+
+            ActivityListItem.prototype.documentIcon = function (documentId) {
+                var src = $('#document_icon_api').text().format(this.activityId(), documentId);
+                var params = { maxSide: ActivityList.iconMaxSide };
+                return '{0}?{1}'.format(src, $.param(params));
+            };
+
+            ActivityListItem.prototype._computeDatesText = function () {
+                var startsOnIso = this.startsOn();
+                var endsOnIso = this.endsOn();
+                var startsFormat = this.startsFormat() || 'M/D/YYYY';
+                var endsFormat = this.endsFormat() || 'M/D/YYYY';
+                startsFormat = startsFormat.toUpperCase();
+                endsFormat = endsFormat.toUpperCase();
+                var onGoing = this.onGoing();
+                var datesText;
+
+                if (!startsOnIso)
+                    if (endsOnIso)
+                        datesText = moment(endsOnIso).format(endsFormat);
+else
+                        datesText = '(Ongoing)';
+else if (onGoing)
+                    datesText = '{0} (Ongoing)'.format(moment(startsOnIso).format(startsFormat));
+else if (endsOnIso)
+                    datesText = '{0} - {1}'.format(moment(startsOnIso).format(startsFormat), moment(endsOnIso).format(endsFormat));
+
+                return datesText;
+            };
+
+            ActivityListItem.prototype.purge = function () {
                 var _this = this;
                 var $dialog = $('#confirmActivityDeleteDialog');
                 $dialog.dialog({
@@ -118,10 +161,11 @@ var ViewModels;
 
                                 $.ajax({
                                     type: 'DELETE',
-                                    url: App.Routes.WebApi.Activities.del(item.id())
+                                    //url: App.Routes.WebApi.Activities.del(item.id())
+                                    url: $('#activity_api').text().format(_this.activityId())
                                 }).done(function () {
                                     $dialog.dialog('close');
-                                    _this.items.splice(index, 1);
+                                    _this._owner.items.remove(_this);
                                 }).fail(function (xhr) {
                                     App.Failures.message(xhr, 'while trying to delete your activity', true);
                                 }).always(function () {
@@ -142,108 +186,9 @@ var ViewModels;
                     ]
                 });
             };
-
-            ActivityList.prototype.editActivityUrl = function (id) {
-                return App.Routes.Mvc.My.Profile.activityEdit(id);
-            };
-
-            ActivityList.prototype.getLocationName = function (id) {
-                var locationName = '';
-
-                if (this.activityLocationsList != null) {
-                    var i = 0;
-                    while ((i < this.activityLocationsList.length) && (id != this.activityLocationsList[i].id)) {
-                        i += 1;
-                    }
-
-                    if (i < this.activityLocationsList.length) {
-                        locationName = this.activityLocationsList[i].officialName;
-                    }
-                }
-
-                return locationName;
-            };
-
-            ActivityList.prototype.activityDatesFormatted = function (startsOnStr, endsOnStr, onGoing, startsFormat, endsFormat) {
-                var formattedDateRange = '';
-
-                /* May need a separate function to convert from CLR custom date formats to moment formats */
-                startsFormat = (startsFormat != null) ? startsFormat.toUpperCase() : 'MM/DD/YYYY';
-                endsFormat = (endsFormat != null) ? endsFormat.toUpperCase() : 'MM/DD/YYYY';
-
-                if (startsOnStr == null) {
-                    if (endsOnStr != null) {
-                        formattedDateRange = moment(endsOnStr).format(endsFormat);
-                    } else if (onGoing) {
-                        formattedDateRange = '(Ongoing)';
-                    }
-                } else {
-                    formattedDateRange = moment(startsOnStr).format(startsFormat);
-                    if (onGoing) {
-                        formattedDateRange += ' (Ongoing)';
-                    } else if (endsOnStr != null) {
-                        formattedDateRange += ' - ' + moment(endsOnStr).format(endsFormat);
-                    }
-                }
-
-                if (formattedDateRange.length > 0) {
-                    formattedDateRange += '\xa0\xa0';
-                }
-
-                return formattedDateRange;
-            };
-
-            ActivityList.prototype.activityTypesFormatted = function (types) {
-                var formattedTypes = '';
-                var location;
-
-                for (var i = 0; i < this.activityTypesList.length; i += 1) {
-                    for (var j = 0; j < types.length; j += 1) {
-                        if (types[j].typeId() == this.activityTypesList[i].id) {
-                            if (formattedTypes.length > 0) {
-                                formattedTypes += '; ';
-                            }
-                            formattedTypes += this.activityTypesList[i].type;
-                        }
-                    }
-                }
-
-                return formattedTypes;
-            };
-
-            ActivityList.prototype.activityLocationsFormatted = function (locations) {
-                var formattedLocations = '';
-                var location;
-
-                for (var i = 0; i < locations.length; i += 1) {
-                    if (i > 0) {
-                        formattedLocations += ', ';
-                    }
-                    formattedLocations += this.getLocationName(locations[i].placeId());
-                }
-
-                return formattedLocations;
-            };
-
-            ActivityList.prototype.getActivityTypeIconName = function (typeId) {
-                var i = 0;
-                while ((i < this.activityTypesList.length) && (this.activityTypesList[i].id != typeId)) {
-                    i += 1;
-                }
-                return (i < this.activityTypesList.length) ? this.activityTypesList[i].iconName : null;
-            };
-
-            ActivityList.prototype.getActivityTypeToolTip = function (typeId) {
-                var i = 0;
-                while ((i < this.activityTypesList.length) && (this.activityTypesList[i].id != typeId)) {
-                    i += 1;
-                }
-                return (i < this.activityTypesList.length) ? this.activityTypesList[i].type : null;
-            };
-            ActivityList.iconMaxSide = 64;
-            return ActivityList;
+            return ActivityListItem;
         })();
-        Activities.ActivityList = ActivityList;
-    })(ViewModels.Activities || (ViewModels.Activities = {}));
-    var Activities = ViewModels.Activities;
-})(ViewModels || (ViewModels = {}));
+        ViewModels.ActivityListItem = ActivityListItem;
+    })(Activities.ViewModels || (Activities.ViewModels = {}));
+    var ViewModels = Activities.ViewModels;
+})(Activities || (Activities = {}));

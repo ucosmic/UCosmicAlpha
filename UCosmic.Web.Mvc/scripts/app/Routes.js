@@ -659,87 +659,6 @@ var App;
             })(WebApi.FacultyStaff || (WebApi.FacultyStaff = {}));
             var FacultyStaff = WebApi.FacultyStaff;
 
-            (function (Activities) {
-                function get(activityId) {
-                    var url = makeUrl('activities');
-                    if (activityId) {
-                        url += '/' + activityId;
-                    }
-                    return url;
-                }
-                Activities.get = get;
-
-                //export function post(): string {
-                //    return makeUrl('activities');
-                //}
-                //export function getEdit(activityId: number): string {
-                //    return makeUrl('activities/' + activityId + "/edit");
-                //}
-                //export function getEditState(activityId: number): string {
-                //    return makeUrl('activities/' + activityId + "/edit-state");
-                //}
-                //export function put(activityId: number): string {
-                //    return makeUrl('activities/' + activityId);
-                //}
-                //export function putEdit(activityId: number): string {
-                //    return makeUrl('activities/' + activityId + "/edit");
-                //}
-                function del(activityId) {
-                    return makeUrl('activities/' + activityId);
-                }
-                Activities.del = del;
-
-                (function (Documents) {
-                    //export function get (activityId: number, documentId?: number, activityMode?: string): string {
-                    //    var url = makeUrl('activities/' + activityId + '/documents');
-                    //    if (documentId) {
-                    //        url += '/' + documentId;
-                    //    }
-                    //    else if (activityId) {
-                    //        url += '/?activityMode=' + activityMode;
-                    //    }
-                    //    return url;
-                    //}
-                    //export function post(activityId: number, activityMode: string): string {
-                    //    var url = makeUrl('activities/' + activityId + '/documents/');
-                    //    url += '?activityMode=' + activityMode;
-                    //    return url;
-                    //}
-                    //export function put(activityId: number, documentId: number): string {
-                    //    return makeUrl('activities/' + activityId + '/documents/' + documentId);
-                    //}
-                    //export function del(activityId: number, documentId: number): string {
-                    //    return makeUrl('activities/' + activityId + '/documents/' + documentId);
-                    //}
-                    //export function rename(activityId: number, documentId: number): string {
-                    //    return makeUrl('activities/' + activityId + '/documents/' + documentId + "/title");
-                    //}
-                    //export function validateUpload(): string {
-                    //    return makeUrl('activities/documents/validate-upload');
-                    //}
-                    (function (Thumbnail) {
-                        function get(activityId, documentId, params) {
-                            var url = makeUrl('activities/' + activityId + '/documents/' + documentId + '/thumbnail');
-                            if (params)
-                                url += '?' + $.param(params);
-                            return url;
-                        }
-                        Thumbnail.get = get;
-                    })(Documents.Thumbnail || (Documents.Thumbnail = {}));
-                    var Thumbnail = Documents.Thumbnail;
-                })(Activities.Documents || (Activities.Documents = {}));
-                var Documents = Activities.Documents;
-
-                (function (Locations) {
-                    function get() {
-                        return makeUrl('activity-locations');
-                    }
-                    Locations.get = get;
-                })(Activities.Locations || (Activities.Locations = {}));
-                var Locations = Activities.Locations;
-            })(WebApi.Activities || (WebApi.Activities = {}));
-            var Activities = WebApi.Activities;
-
             (function (GeographicExpertise) {
                 function get(expertiseId) {
                     var url = 'geographic-expertise';
@@ -961,10 +880,6 @@ var App;
                         return url;
                     }
                     Profile.post = post;
-                    function activityEdit(activityId) {
-                        return makeUrl('my/activities/{0}/edit'.format(activityId));
-                    }
-                    Profile.activityEdit = activityEdit;
                 })(My.Profile || (My.Profile = {}));
                 var Profile = My.Profile;
 
