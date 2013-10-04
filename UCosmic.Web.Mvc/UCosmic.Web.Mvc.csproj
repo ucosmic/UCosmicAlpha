@@ -1968,6 +1968,13 @@
     <Content Include="scripts\viewmodels\agreements\Phones.min.js">
       <DependentUpon>phones.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="scripts\viewmodels\agreements\populateFiles.ts" />
+    <Content Include="scripts\viewmodels\agreements\populateFiles.js">
+      <DependentUpon>populateFiles.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\agreements\populateFiles.min.js">
+      <DependentUpon>populateFiles.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\viewmodels\agreements\publicView.js">
       <DependentUpon>publicView.ts</DependentUpon>
     </Content>

@@ -20,6 +20,7 @@ namespace UCosmic.Web.Mvc.Controllers
         [GET("agreements/{agreementId:int}")]
         public virtual ViewResult Show(int agreementId)
         {
+            ViewBag.Show = true;
             return View(MVC.Agreements.Views.PublicView);
         }
 

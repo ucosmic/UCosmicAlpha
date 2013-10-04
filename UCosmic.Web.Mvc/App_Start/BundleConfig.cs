@@ -100,6 +100,7 @@ namespace UCosmic.Web.Mvc
                 "~/scripts/viewmodels/establishments/Item.js",
                 "~/scripts/viewmodels/agreements/scrollBody.js",
                 "~/scripts/viewmodels/agreements/contacts.js",
+                "~/scripts/viewmodels/agreements/populateFiles.js",
                 "~/scripts/viewmodels/agreements/fileAttachments.js",
                 "~/scripts/viewmodels/agreements/datesStatus.js",
                 "~/scripts/viewmodels/agreements/visibility.js",

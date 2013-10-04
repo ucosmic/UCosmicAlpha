@@ -3,11 +3,8 @@
 }
 @section bib
 {
-    @{
-        var currentBib = ViewBag.Id == 0 ? "new" : "edit";
-    }
-    <nav class="bib hide" data-current-bib="@currentBib">
-        @Html.Partial(MVC.Agreements.Views._Bib, new ViewDataDictionary { { "Search", currentBib == "search" ? true : (bool?)null } })
+    <nav class="bib hide" data-current-bib="view">
+        @Html.Partial(MVC.Agreements.Views._Bib)
     </nav>
 }
 @section scripts
@@ -31,12 +28,12 @@
             </header>
            @Html.Partial(MVC.Agreements.Views._PublicViewContent)
         </div>
-        <aside class="on-right from-top" data-fixed-scroll="root">
+        @*<aside class="on-right from-top" data-fixed-scroll="root">
             <div data-fixed-scroll="anchor"></div>
             <div data-fixed-scroll="content">
                 @Html.Partial(MVC.Agreements.Views._PublicViewSideBar)
             </div>
-        </aside>
+        </aside>*@
     </form>
 </div>
 

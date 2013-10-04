@@ -1,17 +1,21 @@
+
+
 module agreements {
 
     export class fileAttachments {
-        constructor(agreementId, agreementIsEdit, spinner, establishmentItemViewModel, dfdPopFiles) {
+        constructor(agreementId, agreementIsEdit, spinner, establishmentItemViewModel, files) {
             this.agreementId = agreementId;
+            this.files = files;
             this.agreementIsEdit = agreementIsEdit;
             this.spinner = spinner;
             this.establishmentItemViewModel = establishmentItemViewModel;
-            this.dfdPopFiles = dfdPopFiles;
+            //this.dfdPopFiles = dfdPopFiles;
             this.updateFile = <() => void > this.updateFile.bind(this);
             this.fileVisibilityClicked = <() => boolean > this.fileVisibilityClicked.bind(this);
             this.removeFile = <() => void > this.removeFile.bind(this);
         }
         //imported vars
+        files;
         agreementId;
         agreementIsEdit;
         spinner;
@@ -33,7 +37,7 @@ module agreements {
         fileDeleteSpinner = new App.Spinner(new App.SpinnerOptions(400));
         $confirmPurgeDialog: JQuery;
         tempFileId = 0;
-        files = ko.mapping.fromJS([]);
+        //files = ko.mapping.fromJS([]);
 
         $bindKendoFile(): void {
             var saveUrl = "";
@@ -278,23 +282,23 @@ module agreements {
             return true;
         }
 
-        populateFiles(): void {
-            $.get(App.Routes.WebApi.Agreements.Files.get(this.agreementId.val), { useTestData: true })
-                .done((response: any): void => {
-                    $.each(response, (i, item) => {
-                        this.files.push(ko.mapping.fromJS({
-                            id: item.id,
-                            originalName: item.originalName,
-                            customName: item.customName,
-                            visibility: item.visibility,
-                            isEdit: false,
-                            customNameFile: item.customName.substring(0, item.customName.lastIndexOf(".")),
-                            customNameExt: item.customName.substring(item.customName.lastIndexOf("."), item.customName.length)
-                        }));
-                    });
-                    this.dfdPopFiles.resolve();
-                });
-        }
+        //populateFiles(): void {
+        //    $.get(App.Routes.WebApi.Agreements.Files.get(this.agreementId.val), { useTestData: true })
+        //        .done((response: any): void => {
+        //            $.each(response, (i, item) => {
+        //                this.files.push(ko.mapping.fromJS({
+        //                    id: item.id,
+        //                    originalName: item.originalName,
+        //                    customName: item.customName,
+        //                    visibility: item.visibility,
+        //                    isEdit: false,
+        //                    customNameFile: item.customName.substring(0, item.customName.lastIndexOf(".")),
+        //                    customNameExt: item.customName.substring(item.customName.lastIndexOf("."), item.customName.length)
+        //                }));
+        //            });
+        //            this.dfdPopFiles.resolve();
+        //        });
+        //}
 
         //post files
         postMe(data, url): void {

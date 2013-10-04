@@ -17,6 +17,7 @@ var Agreements;
                 this.content = ko.observable();
                 this.expiresOn = ko.observable();
                 this.isAutoRenew = ko.observable();
+                this.status = ko.observable();
                 this.isExpirationEstimated = ko.observable();
                 this.name = ko.observable();
                 this.notes = ko.observable();
@@ -26,9 +27,9 @@ var Agreements;
                 this.umbrellaId = ko.observable();
                 this.myUrl = window.location.href.toLowerCase();
                 this.agreementId = parseInt(this.myUrl.substring(this.myUrl.indexOf("agreements/") + 11));
-                this.getData();
-                this._setupNameComputeds();
                 this._setupDateComputeds();
+                this._setupNameComputeds();
+                this.getData();
             }
             PublicView.prototype.getData = function () {
                 var _this = this;
@@ -36,10 +37,11 @@ var Agreements;
                     _this.content(response.content);
                     _this.expiresOn(response.expiresOn);
                     _this.isAutoRenew(response.isAutoRenew);
+                    _this.status(response.status);
                     _this.isExpirationEstimated(response.isExpirationEstimated);
                     _this.name(response.name);
                     _this.notes(response.notes);
-                    _this.participants = ko.mapping.fromJS(response.participants);
+                    ko.mapping.fromJS(response.participants, {}, _this.participants);
                     _this.startsOn(response.startsOn);
                     _this.type(response.type);
                     _this.umbrellaId(response.umbrellaId);
@@ -52,9 +54,11 @@ var Agreements;
                 // are the official name and translated name the same?
                 this.participantsNames = ko.computed(function () {
                     var myName = "";
-                    $.each(_this.participants(), function (i, item) {
-                        if (item.establishmentTranslatedName() != null && item.establishmentOfficialName() != item.establishmentTranslatedName()) {
+                    ko.utils.arrayForEach(_this.participants(), function (item) {
+                        if (item.establishmentTranslatedName() != null && item.establishmentOfficialName() != item.establishmentTranslatedName() && item.establishmentOfficialName() != null) {
                             myName += "<strong>" + item.establishmentTranslatedName() + "</strong> (" + item.establishmentOfficialName() + ")";
+                        } else if (item.establishmentTranslatedName() != null && item.establishmentOfficialName() != item.establishmentTranslatedName()) {
+                            myName += "<strong>" + item.establishmentTranslatedName() + "</strong>";
                         } else {
                             myName += "<strong>" + item.establishmentOfficialName() + "</strong>";
                         }

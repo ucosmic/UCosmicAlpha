@@ -10,17 +10,17 @@
 
 module Agreements.ViewModels {
 
-
     export class PublicView {
         constructor(public initDefaultPageRoute: boolean = true) {
-            this.getData();
-            this._setupNameComputeds();
             this._setupDateComputeds();
+            this._setupNameComputeds();
+            this.getData();
         }
 
         content = ko.observable();
         expiresOn = ko.observable();
         isAutoRenew = ko.observable();
+        status = ko.observable();
         isExpirationEstimated = ko.observable();
         name = ko.observable();
         notes = ko.observable();
@@ -29,7 +29,6 @@ module Agreements.ViewModels {
         type = ko.observable();
         umbrellaId = ko.observable();
         participantsNames: KnockoutComputed<string>;
-
         myUrl = window.location.href.toLowerCase();
         agreementId = parseInt(this.myUrl.substring(this.myUrl.indexOf("agreements/") + 11));
 
@@ -39,25 +38,28 @@ module Agreements.ViewModels {
                     this.content(response.content);
                     this.expiresOn(response.expiresOn);
                     this.isAutoRenew(response.isAutoRenew);
+                    this.status(response.status);
                     this.isExpirationEstimated(response.isExpirationEstimated);
                     this.name(response.name);
                     this.notes(response.notes);
-                    this.participants = ko.mapping.fromJS(response.participants);
+                    ko.mapping.fromJS(response.participants, {}, this.participants);
                     this.startsOn(response.startsOn);
                     this.type(response.type);
                     this.umbrellaId(response.umbrellaId);
                 });
         }
+
         //#region Name computeds
         
         private _setupNameComputeds(): void {
             // are the official name and translated name the same?
             this.participantsNames = ko.computed((): string => {
                 var myName = "";
-                $.each(this.participants(), (i, item) => {
-                    //myName += this.establishmentOfficialName()[i];
-                    if (item.establishmentTranslatedName() != null && item.establishmentOfficialName() != item.establishmentTranslatedName()) {
-                        myName += "<strong>" + item.establishmentTranslatedName() + "</strong> (" + item.establishmentOfficialName() + ")"; 
+                ko.utils.arrayForEach(this.participants(), (item) => {
+                    if (item.establishmentTranslatedName() != null && item.establishmentOfficialName() != item.establishmentTranslatedName() && item.establishmentOfficialName() != null) {
+                        myName += "<strong>" + item.establishmentTranslatedName() + "</strong> (" + item.establishmentOfficialName() + ")";
+                    } else if (item.establishmentTranslatedName() != null && item.establishmentOfficialName() != item.establishmentTranslatedName()) {
+                        myName += "<strong>" + item.establishmentTranslatedName() + "</strong>"; 
                     } else
                     {
                         myName += "<strong>" + item.establishmentOfficialName() + "</strong>";

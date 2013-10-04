@@ -17,6 +17,7 @@
 /// <reference path="./datesStatus.ts" />
 /// <reference path="./visibility.ts" />
 /// <reference path="./participants.ts" />
+/// <reference path="./populateFiles.ts" />
 /// <reference path="./basicInfo.ts" />
 /// <reference path="./establishmentSearchNav.ts" />
 
@@ -40,8 +41,11 @@ class InstitutionalAgreementEditModel {
             this.establishmentSearchNavClass.establishmentItemViewModel, this.agreementIsEdit, this.agreementId,
             this.kendoWindowBug, this.dfdPopContacts);
         ko.applyBindings(this.contactClass, $('#contacts')[0]);
+
+        this.populateFilesClass = new agreements.populateFiles();
+        //ko.applyBindings(this.populateFilesClass, $('#fileAttachments')[0]); 
         this.fileAttachmentClass = new agreements.fileAttachments(this.agreementId, this.agreementIsEdit,
-            this.spinner, this.establishmentSearchNavClass.establishmentItemViewModel, this.dfdPopFiles);
+            this.spinner, this.establishmentSearchNavClass.establishmentItemViewModel, this.populateFilesClass.files);
         ko.applyBindings(this.fileAttachmentClass, $('#fileAttachments')[0]);
         this.datesStatusClass = new agreements.datesStatus(this.basicInfoClass.isCustomStatusAllowed);
         ko.applyBindings(this.datesStatusClass, $('#effectiveDatesCurrentStatus')[0]);
@@ -67,7 +71,7 @@ class InstitutionalAgreementEditModel {
             this.agreementIsEdit(true);
             this.agreementId.val = parseInt(this.editOrNewUrl.val.substring(0, this.editOrNewUrl.val.indexOf("/")));
             this.participantsClass.populateParticipants();
-            this.fileAttachmentClass.populateFiles();
+            this.populateFilesClass.populate(this.agreementId, this.dfdPopFiles);
             this.contactClass.populateContacts();
             Globalize.culture(culture)
             this.populateAgreementData();
@@ -99,6 +103,7 @@ class InstitutionalAgreementEditModel {
     visibilityClass;
     establishmentSearchNavClass;
     scrollBodyClass;
+    populateFilesClass;
 
     percentOffBodyHeight = .6;
     //jquery defered for setting body height.

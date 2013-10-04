@@ -2827,6 +2827,10 @@ namespace Links
                 public static readonly string Phones_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Phones.min.js") ? Url("Phones.min.js") : Url("Phones.js");
                               
                 public static readonly string Phones_min_js = Url("Phones.min.js");
+                public static readonly string populateFiles_ts = Url("populateFiles.ts");
+                public static readonly string populateFiles_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/populateFiles.min.js") ? Url("populateFiles.min.js") : Url("populateFiles.js");
+                              
+                public static readonly string populateFiles_min_js = Url("populateFiles.min.js");
                 public static readonly string publicView_ts = Url("publicView.ts");
                 public static readonly string Copy_of_AgreementVM_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Copy of AgreementVM.min.js") ? Url("Copy of AgreementVM.min.js") : Url("Copy of AgreementVM.js");
                               

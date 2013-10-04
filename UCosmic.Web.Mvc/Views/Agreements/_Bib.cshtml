@@ -14,6 +14,12 @@
             <span>Edit</span>
         </li>
     }
+    @if (ViewBag.Show != null)
+    {
+        <li class="view">
+            <span>View</span>
+        </li>
+    }
     @if (User.IsInAnyRole(RoleName.AgreementSupervisor))
     {
         <li class="settings">
