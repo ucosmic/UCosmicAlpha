@@ -593,36 +593,11 @@ module Activities.ViewModels {
             return dataSource;
         }
 
-        private _getTagEstablishmentId(text: string): number {
-            var establishmentId: number;
-            var url = $('#establishment_names_api').text();
-            $.ajax({
-                type: 'GET',
-                url: url,
-                data: {
-                    keyword: text,
-                    keywordMatchStrategy: 'Equals',
-                    pageNumber: 1,
-                    pageSize: 250,
-                },
-                async: false,
-            })
-                .done((results: any): void => {
-                    // only treat as establishment if there is exactly 1 establishment id
-                    var establishmentIds: number[] = Enumerable.From(results.items)
-                        .Select(function (x: any): number {
-                            return x.ownerId;
-                        }).Distinct().ToArray();
-                    if (establishmentIds.length == 1) establishmentId = establishmentIds[0];
-                });
-            return establishmentId;
-        }
-
         private _onTagAutoCompleteSelect(e: kendo.ui.AutoCompleteSelectEvent): void {
             // the autocomplete filter will search establishment names, not establishments
             // name.ownerId corresponds to the establishment.id
             var dataItem = e.sender.dataItem(e.item.index());
-            this._addOrReplaceTag(dataItem.text, dataItem.ownerId)
+            this._addOrReplaceTag(dataItem.text)
                 .done((): void => {
                     this.newTag('');
                     e.preventDefault();
@@ -637,8 +612,7 @@ module Activities.ViewModels {
         addTag(): void {
             var text = this.newTag();
             if (text) text = $.trim(text);
-            var establishmentId = this._getTagEstablishmentId(text);
-            this._addOrReplaceTag(text, establishmentId)
+            this._addOrReplaceTag(text)
                 .done((): void => {
                     this.newTag('');
                 })
@@ -654,7 +628,7 @@ module Activities.ViewModels {
                 });
         }
 
-        private _addOrReplaceTag(text: string, establishmentId: number): JQueryDeferred<any> {
+        private _addOrReplaceTag(text: string): JQueryDeferred<any> {
             var deferred = $.Deferred();
             if (!text) {
                 deferred.resolve();
@@ -668,14 +642,14 @@ module Activities.ViewModels {
                 if (tagToReplace) {
                     this._deleteTag(text)
                         .done((): void => {
-                            this._postTag(text, establishmentId)
+                            this._postTag(text)
                                 .done((): void => { deferred.resolve(); })
                                 .fail((xhr: JQueryXHR): void => { deferred.reject(xhr); });
                         })
                         .fail((xhr: JQueryXHR): void => { deferred.reject(xhr); });
                 }
                 else {
-                    this._postTag(text, establishmentId)
+                    this._postTag(text)
                         .done((): void => { deferred.resolve(); })
                         .fail((xhr: JQueryXHR): void => { deferred.reject(xhr); });
                 }
@@ -683,7 +657,7 @@ module Activities.ViewModels {
             return deferred;
         }
 
-        private _postTag(text: string, establishmentId: number): JQueryDeferred<any> {
+        private _postTag(text: string): JQueryDeferred<any> {
             var deferred = $.Deferred();
             var url = $('#tags_api').text().format(this.activityId());
             this.isSaving(true);
@@ -692,16 +666,14 @@ module Activities.ViewModels {
                 type: 'POST',
                 data: {
                     text: text,
-                    domainType: establishmentId ? ActivityTagDomainType.establishment : ActivityTagDomainType.custom,
-                    domainKey: establishmentId,
                 },
             })
                 .done((): void => { // push observable tag into view's array
                     var tag: ApiModels.ActivityTag = {
                         activityId: this.activityId(),
                         text: text,
-                        domainType: establishmentId ? ActivityTagDomainType.establishment : ActivityTagDomainType.custom,
-                        domainKey: establishmentId,
+                        domainType: ActivityTagDomainType.custom,
+                        domainKey: undefined,
                     };
                     var observableTag: KoModels.ActivityTag = ko.mapping.fromJS(tag);
                     this.tags.push(observableTag);

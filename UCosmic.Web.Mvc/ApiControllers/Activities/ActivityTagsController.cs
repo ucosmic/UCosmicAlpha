@@ -47,7 +47,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [POST(PluralUrl)]
-        public HttpResponseMessage Post(int activityId, ActivityTagApiPutModel model)
+        public HttpResponseMessage Post(int activityId, ActivityTagTextModel model)
         {
             //throw new HttpResponseException(HttpStatusCode.GatewayTimeout); // test api failures
             if (activityId < 1 || model == null)
@@ -56,8 +56,6 @@ namespace UCosmic.Web.Mvc.ApiControllers
             var command = new CreateActivityTag(User, activityId)
             {
                 Text = model.Text,
-                DomainKey = model.DomainKey,
-                DomainType = model.DomainType,
                 Impersonator = Request.GetHttpContext().Session.UserImpersonating(),
             };
             _createHandler.Handle(command);
@@ -65,7 +63,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [DELETE(PluralUrl)]
-        public HttpResponseMessage Delete(int activityId, ActivityTagApiDeleteModel model)
+        public HttpResponseMessage Delete(int activityId, ActivityTagTextModel model)
         {
             //throw new HttpResponseException(HttpStatusCode.GatewayTimeout); // test api failures
             if (activityId < 1 || model == null)

@@ -350,9 +350,8 @@
     <Compile Include="Models\Activities\ActivityLocationNameApiModel.cs" />
     <Compile Include="Models\Activities\ActivityPlaceCount.cs" />
     <Compile Include="Models\Activities\MyActivitiesInputModel.cs" />
-    <Compile Include="Models\Activities\ActivityTagApiDeleteModel.cs" />
+    <Compile Include="Models\Activities\ActivityTagTextModel.cs" />
     <Compile Include="Models\Activities\ActivityTagApiModel.cs" />
-    <Compile Include="Models\Activities\ActivityTagApiPutModel.cs" />
     <Compile Include="Models\Activities\ActivityTypeApiModel.cs" />
     <Compile Include="Models\Activities\_Deprecated\_ActivityTypeNameApiModel.cs" />
     <Compile Include="Models\Activities\_Deprecated\_ActivityValuesApiModel.cs" />

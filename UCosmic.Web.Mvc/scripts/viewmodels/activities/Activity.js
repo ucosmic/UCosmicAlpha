@@ -541,36 +541,12 @@ else if (removedPlaceIds.length === 1)
                 return dataSource;
             };
 
-            ActivityForm.prototype._getTagEstablishmentId = function (text) {
-                var establishmentId;
-                var url = $('#establishment_names_api').text();
-                $.ajax({
-                    type: 'GET',
-                    url: url,
-                    data: {
-                        keyword: text,
-                        keywordMatchStrategy: 'Equals',
-                        pageNumber: 1,
-                        pageSize: 250
-                    },
-                    async: false
-                }).done(function (results) {
-                    // only treat as establishment if there is exactly 1 establishment id
-                    var establishmentIds = Enumerable.From(results.items).Select(function (x) {
-                        return x.ownerId;
-                    }).Distinct().ToArray();
-                    if (establishmentIds.length == 1)
-                        establishmentId = establishmentIds[0];
-                });
-                return establishmentId;
-            };
-
             ActivityForm.prototype._onTagAutoCompleteSelect = function (e) {
                 var _this = this;
                 // the autocomplete filter will search establishment names, not establishments
                 // name.ownerId corresponds to the establishment.id
                 var dataItem = e.sender.dataItem(e.item.index());
-                this._addOrReplaceTag(dataItem.text, dataItem.ownerId).done(function () {
+                this._addOrReplaceTag(dataItem.text).done(function () {
                     _this.newTag('');
                     e.preventDefault();
                     e.sender.value('');
@@ -585,8 +561,7 @@ else if (removedPlaceIds.length === 1)
                 var text = this.newTag();
                 if (text)
                     text = $.trim(text);
-                var establishmentId = this._getTagEstablishmentId(text);
-                this._addOrReplaceTag(text, establishmentId).done(function () {
+                this._addOrReplaceTag(text).done(function () {
                     _this.newTag('');
                 }).fail(function (xhr) {
                     App.Failures.message(xhr, 'while trying to add this activity tag, please try again', true);
@@ -599,7 +574,7 @@ else if (removedPlaceIds.length === 1)
                 });
             };
 
-            ActivityForm.prototype._addOrReplaceTag = function (text, establishmentId) {
+            ActivityForm.prototype._addOrReplaceTag = function (text) {
                 var _this = this;
                 var deferred = $.Deferred();
                 if (!text) {
@@ -611,7 +586,7 @@ else if (removedPlaceIds.length === 1)
                     });
                     if (tagToReplace) {
                         this._deleteTag(text).done(function () {
-                            _this._postTag(text, establishmentId).done(function () {
+                            _this._postTag(text).done(function () {
                                 deferred.resolve();
                             }).fail(function (xhr) {
                                 deferred.reject(xhr);
@@ -620,7 +595,7 @@ else if (removedPlaceIds.length === 1)
                             deferred.reject(xhr);
                         });
                     } else {
-                        this._postTag(text, establishmentId).done(function () {
+                        this._postTag(text).done(function () {
                             deferred.resolve();
                         }).fail(function (xhr) {
                             deferred.reject(xhr);
@@ -630,7 +605,7 @@ else if (removedPlaceIds.length === 1)
                 return deferred;
             };
 
-            ActivityForm.prototype._postTag = function (text, establishmentId) {
+            ActivityForm.prototype._postTag = function (text) {
                 var _this = this;
                 var deferred = $.Deferred();
                 var url = $('#tags_api').text().format(this.activityId());
@@ -639,16 +614,14 @@ else if (removedPlaceIds.length === 1)
                     url: url,
                     type: 'POST',
                     data: {
-                        text: text,
-                        domainType: establishmentId ? ViewModels.ActivityTagDomainType.establishment : ViewModels.ActivityTagDomainType.custom,
-                        domainKey: establishmentId
+                        text: text
                     }
                 }).done(function () {
                     var tag = {
                         activityId: _this.activityId(),
                         text: text,
-                        domainType: establishmentId ? ViewModels.ActivityTagDomainType.establishment : ViewModels.ActivityTagDomainType.custom,
-                        domainKey: establishmentId
+                        domainType: ViewModels.ActivityTagDomainType.custom,
+                        domainKey: undefined
                     };
                     var observableTag = ko.mapping.fromJS(tag);
                     _this.tags.push(observableTag);

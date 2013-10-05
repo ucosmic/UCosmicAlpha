@@ -118,22 +118,16 @@ namespace UCosmic.SeedData
                     _createActivityTag.Handle(new CreateActivityTag(principal, activity.RevisionId)
                     {
                         Text = "Vietnam",
-                        DomainType = ActivityTagDomainType.Place,
-                        DomainKey = _entities.Get<Place>().Single(x => x.OfficialName == "Vietnam").RevisionId,
                     });
 
                     _createActivityTag.Handle(new CreateActivityTag(principal, activity.RevisionId)
                     {
                         Text = "India",
-                        DomainType = ActivityTagDomainType.Place,
-                        DomainKey = _entities.Get<Place>().Single(x => x.OfficialName == "India").RevisionId,
                     });
 
                     _createActivityTag.Handle(new CreateActivityTag(principal, activity.RevisionId)
                     {
                         Text = "Japan",
-                        DomainType = ActivityTagDomainType.Place,
-                        DomainKey = _entities.Get<Place>().Single(x => x.OfficialName == "Japan").RevisionId,
                     });
 
                     /* ----- Add Documents ----- */
