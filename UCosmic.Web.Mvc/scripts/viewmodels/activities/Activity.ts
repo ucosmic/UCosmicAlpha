@@ -123,8 +123,8 @@ module Activities.ViewModels {
                     },
                 },
                 places: {
-                    create: (options: KnockoutMappingCreateOptions): ApiModels.ActivityPlace => {
-                        return options.data;
+                    create: (options: KnockoutMappingCreateOptions): number => {
+                        return options.data.placeId;
                     },
                 },
                 ignore: ['startsOn', 'endsOn', 'startsFormat', 'endsFormat'],
@@ -447,21 +447,16 @@ module Activities.ViewModels {
         //#endregion
         //#region Places
 
-        places: KnockoutObservableArray<ApiModels.ActivityPlace>;
+        places: KnockoutObservableArray<number>;
         placeOptions: KnockoutObservableArray<any> = ko.observableArray(); // Array of all locations offered in Country/Location multiselect
         kendoPlaceIds: KnockoutObservableArray<number> = ko.observableArray(); // Array of placeIds of selected locations, kendo multiselect stores these as strings
-        private _currentPlaceIds: number[];
 
         private _bindPlaceOptions(placeOptions: any[]): void {
             // map places multiselect datasource to locations
             ko.mapping.fromJS(placeOptions, {}, this.placeOptions);
 
             // Initialize the list of selected locations with current locations in values
-            var currentPlaceIds = Enumerable.From(this.places())
-                .Select(function (x: ApiModels.ActivityPlace): number {
-                    return x.placeId;
-                }).ToArray();
-            this.kendoPlaceIds(currentPlaceIds.slice(0));
+            this.kendoPlaceIds(this.places().slice(0));
         }
 
         private _bindPlacesKendoMultiSelect(): void {
@@ -473,7 +468,7 @@ module Activities.ViewModels {
                 dataSource: this.placeOptions(),
                 value: this.kendoPlaceIds(),
                 dataBound: (e: kendo.ui.MultiSelectEvent): void => {
-                    this._currentPlaceIds = e.sender.value().slice(0);
+                    this.places(e.sender.value().slice(0));
                 },
                 change: (e: kendo.ui.MultiSelectEvent): void => {
                     this._onPlaceMultiSelectChange(e);
@@ -485,9 +480,10 @@ module Activities.ViewModels {
 
         private _onPlaceMultiSelectChange(e: kendo.ui.MultiSelectEvent): void {
             // find out if a place was added or deleted
+            var oldPlaceIds = this.places();
             var newPlaceIds = e.sender.value();
-            var addedPlaceIds: number[] = $(newPlaceIds).not(this._currentPlaceIds).get();
-            var removedPlaceIds: number[] = $(this._currentPlaceIds).not(newPlaceIds).get();
+            var addedPlaceIds: number[] = $(newPlaceIds).not(oldPlaceIds).get();
+            var removedPlaceIds: number[] = $(oldPlaceIds).not(newPlaceIds).get();
 
             if (addedPlaceIds.length === 1)
                 this._addPlaceId(addedPlaceIds[0], e);
@@ -506,23 +502,14 @@ module Activities.ViewModels {
                 //async: false
             })
                 .done((): void => {
-                    this._currentPlaceIds.push(addedPlaceId);
-                    var dataItem = Enumerable.From(e.sender.dataItems())
-                        .Single(function (x: any): any {
-                            return x.id() == addedPlaceId;
-                        });
-                    this.places.push({
-                        activityId: this.activityId(),
-                        placeId: addedPlaceId,
-                        placeName: dataItem.officialName(),
-                    });
+                    this.places.push(addedPlaceId);
                 })
                 .fail((xhr: JQueryXHR): void => { // remove from ui
                     App.Failures.message(xhr, 'while trying to add this location, please try again', true);
-                    var restored = this._currentPlaceIds.slice(0);
+                    var restored = this.places().slice(0);
                     e.sender.dataSource.filter({});
                     e.sender.value(restored);
-                    this._currentPlaceIds = restored;
+                    this.places(restored);
                 })
                 .always((): void => { this.isSaving(false); });
         }
@@ -537,15 +524,11 @@ module Activities.ViewModels {
                 //async: false
             })
                 .done((): void => {
-                    var index = $.inArray(removedPlaceId, this._currentPlaceIds);
-                    this._currentPlaceIds.splice(index, 1);
-                    this.places.remove(function (x: any): any {
-                        return x.placeId == removedPlaceId;
-                    });
+                    this.places.remove(removedPlaceId);
                 })
                 .fail((xhr: JQueryXHR): void => { // add back to ui
                     App.Failures.message(xhr, 'while trying to remove this location, please try again', true);
-                    e.sender.value(this._currentPlaceIds);
+                    e.sender.value(this.places());
                 })
                 .always((): void => { this.isSaving(false); });
         }

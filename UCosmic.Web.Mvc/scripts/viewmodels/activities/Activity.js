@@ -124,7 +124,7 @@ var Activities;
                     },
                     places: {
                         create: function (options) {
-                            return options.data;
+                            return options.data.placeId;
                         }
                     },
                     ignore: ['startsOn', 'endsOn', 'startsFormat', 'endsFormat']
@@ -419,10 +419,7 @@ else
                 ko.mapping.fromJS(placeOptions, {}, this.placeOptions);
 
                 // Initialize the list of selected locations with current locations in values
-                var currentPlaceIds = Enumerable.From(this.places()).Select(function (x) {
-                    return x.placeId;
-                }).ToArray();
-                this.kendoPlaceIds(currentPlaceIds.slice(0));
+                this.kendoPlaceIds(this.places().slice(0));
             };
 
             ActivityForm.prototype._bindPlacesKendoMultiSelect = function () {
@@ -435,7 +432,7 @@ else
                     dataSource: this.placeOptions(),
                     value: this.kendoPlaceIds(),
                     dataBound: function (e) {
-                        _this._currentPlaceIds = e.sender.value().slice(0);
+                        _this.places(e.sender.value().slice(0));
                     },
                     change: function (e) {
                         _this._onPlaceMultiSelectChange(e);
@@ -446,9 +443,10 @@ else
 
             ActivityForm.prototype._onPlaceMultiSelectChange = function (e) {
                 // find out if a place was added or deleted
+                var oldPlaceIds = this.places();
                 var newPlaceIds = e.sender.value();
-                var addedPlaceIds = $(newPlaceIds).not(this._currentPlaceIds).get();
-                var removedPlaceIds = $(this._currentPlaceIds).not(newPlaceIds).get();
+                var addedPlaceIds = $(newPlaceIds).not(oldPlaceIds).get();
+                var removedPlaceIds = $(oldPlaceIds).not(newPlaceIds).get();
 
                 if (addedPlaceIds.length === 1)
                     this._addPlaceId(addedPlaceIds[0], e);
@@ -464,21 +462,13 @@ else if (removedPlaceIds.length === 1)
                     type: 'PUT',
                     url: url
                 }).done(function () {
-                    _this._currentPlaceIds.push(addedPlaceId);
-                    var dataItem = Enumerable.From(e.sender.dataItems()).Single(function (x) {
-                        return x.id() == addedPlaceId;
-                    });
-                    _this.places.push({
-                        activityId: _this.activityId(),
-                        placeId: addedPlaceId,
-                        placeName: dataItem.officialName()
-                    });
+                    _this.places.push(addedPlaceId);
                 }).fail(function (xhr) {
                     App.Failures.message(xhr, 'while trying to add this location, please try again', true);
-                    var restored = _this._currentPlaceIds.slice(0);
+                    var restored = _this.places().slice(0);
                     e.sender.dataSource.filter({});
                     e.sender.value(restored);
-                    _this._currentPlaceIds = restored;
+                    _this.places(restored);
                 }).always(function () {
                     _this.isSaving(false);
                 });
@@ -492,14 +482,10 @@ else if (removedPlaceIds.length === 1)
                     type: 'DELETE',
                     url: url
                 }).done(function () {
-                    var index = $.inArray(removedPlaceId, _this._currentPlaceIds);
-                    _this._currentPlaceIds.splice(index, 1);
-                    _this.places.remove(function (x) {
-                        return x.placeId == removedPlaceId;
-                    });
+                    _this.places.remove(removedPlaceId);
                 }).fail(function (xhr) {
                     App.Failures.message(xhr, 'while trying to remove this location, please try again', true);
-                    e.sender.value(_this._currentPlaceIds);
+                    e.sender.value(_this.places());
                 }).always(function () {
                     _this.isSaving(false);
                 });
