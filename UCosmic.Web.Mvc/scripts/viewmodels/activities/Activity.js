@@ -20,52 +20,38 @@ var Activities;
                 var _this = this;
                 //#region Primary scalar observables & properties
                 this.ready = ko.observable(false);
-                this.activityId = ko.observable();
-                this.mode = ko.observable();
-                this.title = ko.observable();
-                this.content = ko.observable();
-                this.onGoing = ko.observable();
-                this.isExternallyFunded = ko.observable();
-                this.isInternallyFunded = ko.observable();
-                this.updatedByPrincipal = ko.observable();
-                this.updatedOnUtc = ko.observable();
                 //#endregion
                 //#region View convenience computeds
                 this.isDraft = ko.computed(function () {
-                    var mode = _this.mode();
+                    var mode = _this.mode ? _this.mode() : undefined;
                     if (!mode)
                         return false;
                     return mode.toLowerCase() == 'draft';
                 });
                 this.isPublished = ko.computed(function () {
-                    var mode = _this.mode();
+                    var mode = _this.mode ? _this.mode() : undefined;
                     if (!mode)
                         return false;
                     return mode.toLowerCase() == 'public';
                 });
                 this.updatedOnDate = ko.computed(function () {
-                    var updatedOnUtc = _this.updatedOnUtc();
+                    var updatedOnUtc = _this.updatedOnUtc ? _this.updatedOnUtc() : undefined;
                     if (!updatedOnUtc)
                         return undefined;
                     return moment(updatedOnUtc).format('M/D/YYYY');
                 });
                 //#endregion
-                //#region Value subscriptions setup
+                //#region Subscriptions
+                this.isSaving = ko.observable(false);
+                this.saveSpinner = new App.Spinner(new App.SpinnerOptions(200));
                 this._isDirty = ko.observable(false);
                 this._descriptionIsDirtyCurrent = 0;
-                this.saveSpinner = new App.Spinner(new App.SpinnerOptions(200));
                 this._isAutoSaving = false;
                 this._isSaved = false;
                 this._isDeleted = false;
-                //#endregion
-                //#region Places
-                this.selectedPlaces = ko.observableArray();
                 this.placeOptions = ko.observableArray();
                 this.kendoPlaceIds = ko.observableArray();
-                //#endregion
-                //#region Types
                 this.typeOptions = ko.observableArray();
-                this.selectedTypeIds = ko.observableArray();
                 //#endregion
                 //#region Tags
                 this.tags = ko.observableArray();
@@ -75,20 +61,20 @@ var Activities;
                 this._invalidFileNames = ko.observableArray([]);
                 this._originalId = activityId;
                 this._workCopyId = activityWorkCopyId;
-
-                ko.computed(function () {
-                    if (_this._isDirty()) {
-                        _this._autoSave();
-                    }
-                });
             }
             //#endregion
             //#region Initial data load
-            ActivityForm.prototype.load = function () {
+            ActivityForm.prototype.bind = function (target) {
                 var _this = this;
                 var deferred = $.Deferred();
 
-                //#region load places dropdown, module types, and activity work copy
+                var dataPact = $.Deferred();
+                $.ajax({ url: $('#activity_api').text().format(this._workCopyId), cache: false }).done(function (data) {
+                    dataPact.resolve(data);
+                }).fail(function (xhr) {
+                    dataPact.reject(xhr);
+                });
+
                 var placeOptionsPact = $.Deferred();
                 $.get($('#place_options_api').text()).done(function (data) {
                     placeOptionsPact.resolve(data);
@@ -103,112 +89,53 @@ var Activities;
                     typeOptionsPact.reject(xhr);
                 });
 
-                var dataPact = $.Deferred();
-                $.ajax({ url: $('#activity_api').text().format(this._workCopyId), cache: false }).done(function (data) {
-                    dataPact.resolve(data);
-                }).fail(function (xhr) {
-                    dataPact.reject(xhr);
-                });
-
-                var placesPact = $.Deferred();
-                $.ajax({ url: $('#places_api').text().format(this._workCopyId), cache: false }).done(function (data) {
-                    placesPact.resolve(data);
-                }).fail(function (xhr) {
-                    placesPact.reject(xhr);
-                });
-
-                var typesPact = $.Deferred();
-                $.ajax({ url: $('#types_api').text().format(this._workCopyId), cache: false }).done(function (data) {
-                    typesPact.resolve(data);
-                }).fail(function (xhr) {
-                    typesPact.reject(xhr);
-                });
-
-                var tagsPact = $.Deferred();
-                $.ajax({ url: $('#tags_api').text().format(this._workCopyId), cache: false }).done(function (data) {
-                    tagsPact.resolve(data);
-                }).fail(function (xhr) {
-                    tagsPact.reject(xhr);
-                });
-
-                var documentsPact = $.Deferred();
-                $.ajax({ url: $('#documents_api').text().format(this._workCopyId), cache: false }).done(function (data) {
-                    documentsPact.resolve(data);
-                }).fail(function (xhr) {
-                    documentsPact.reject(xhr);
-                });
-
-                //#endregion
-                //#region process after all have been loaded
-                $.when(typeOptionsPact, placeOptionsPact, dataPact, placesPact, typesPact, tagsPact, documentsPact).done(function (typeOptions, placeOptions, data, selectedPlaces, selectedTypes, tags, documents) {
-                    //#region populate activity data
-                    var mapping = {
-                        ignore: ['startsOn', 'endsOn', 'startsFormat', 'endsFormat']
-                    };
-                    ko.mapping.fromJS(data, mapping, _this);
-
-                    _this.startsOn = new FormattedDateInput(data.startsOn, data.startsFormat);
-                    _this.endsOn = new FormattedDateInput(data.endsOn, data.endsFormat);
-
-                    //#endregion
-                    //#region populate places multiselect
-                    // map places multiselect datasource to locations
-                    ko.mapping.fromJS(placeOptions, {}, _this.placeOptions);
-
-                    // Initialize the list of selected locations with current locations in values
-                    _this.selectedPlaces(selectedPlaces);
-                    var currentPlaceIds = Enumerable.From(selectedPlaces).Select(function (x) {
-                        return x.placeId;
-                    }).ToArray();
-                    _this.kendoPlaceIds(currentPlaceIds.slice(0));
-
-                    //#endregion
-                    //#region set up type checkboxes
-                    _this._bindTypes(typeOptions, selectedTypes);
-
-                    //#endregion
-                    _this.tags(tags);
-                    ko.mapping.fromJS(documents, {}, _this.documents);
-
+                $.when(dataPact, placeOptionsPact, typeOptionsPact).done(function (data, placeOptions, typeOptions) {
+                    _this._applyBindings(target, data, placeOptions, typeOptions);
                     deferred.resolve();
                 }).fail(function (xhr) {
                     deferred.reject(xhr);
                 });
 
-                //#endregion
                 return deferred;
             };
 
             //#endregion
-            //#region Kendo widget setup
-            ActivityForm.prototype.setupWidgets = function (fromDatePickerId, toDatePickerId, countrySelectorId, uploadFileId, newTagId) {
-                //#region Kendo DatePickers
-                $('#' + fromDatePickerId).kendoDatePicker({
-                    value: this.startsOn.date(),
-                    format: this.startsOn.format(),
-                    // if user clicks date picker button, reset format
-                    open: function (e) {
-                        this.options.format = 'M/d/yyyy';
-                    }
-                });
-                this.startsOn.kendoDatePicker = $('#' + fromDatePickerId).data('kendoDatePicker');
+            //#region Data Binding
+            ActivityForm.prototype._applyBindings = function (target, data, placeOptions, typeOptions) {
+                this._bindData(data);
+                this._bindPlaceOptions(placeOptions);
+                this._bindTypeOptions(typeOptions);
 
-                $('#' + toDatePickerId).kendoDatePicker({
-                    value: this.endsOn.date(),
-                    format: this.endsOn.format(),
-                    open: function (e) {
-                        this.options.format = 'M/d/yyyy';
-                    }
-                });
-                this.endsOn.kendoDatePicker = $('#' + toDatePickerId).data('kendoDatePicker');
+                this._bindValidation();
+                this._bindSubscriptions();
 
-                //#endregion
-                this._initPlacesKendoMultiSelect();
-                this._initDocumentsKendoUpload();
-                this._initTagsKendoAutoComplete();
+                ko.applyBindings(this, target);
+
+                this._bindKendo();
+                this.ready(true);
             };
 
-            ActivityForm.prototype.setupValidation = function () {
+            ActivityForm.prototype._bindData = function (data) {
+                var mapping = {
+                    types: {
+                        create: function (options) {
+                            return options.data.typeId;
+                        }
+                    },
+                    places: {
+                        create: function (options) {
+                            return options.data;
+                        }
+                    },
+                    ignore: ['startsOn', 'endsOn', 'startsFormat', 'endsFormat']
+                };
+                ko.mapping.fromJS(data, mapping, this);
+
+                this.startsOn = new FormattedDateInput(data.startsOn, data.startsFormat);
+                this.endsOn = new FormattedDateInput(data.endsOn, data.endsFormat);
+            };
+
+            ActivityForm.prototype._bindValidation = function () {
                 ko.validation.rules['atLeast'] = {
                     validator: function (val, otherVal) {
                         return val.length >= otherVal;
@@ -234,9 +161,9 @@ var Activities;
                     minLength: 1,
                     maxLength: 500
                 });
-                this.selectedPlaces.extend({ atLeast: 1 });
+                this.places.extend({ atLeast: 1 });
                 if (this.typeOptions().length)
-                    this.selectedTypeIds.extend({ atLeast: 1 });
+                    this.types.extend({ atLeast: 1 });
 
                 this.startsOn.input.extend({
                     formattedDate: {
@@ -252,7 +179,7 @@ var Activities;
                 });
             };
 
-            ActivityForm.prototype.setupSubscriptions = function () {
+            ActivityForm.prototype._bindSubscriptions = function () {
                 var _this = this;
                 // autosave when fields change
                 this.title.subscribe(function (newValue) {
@@ -277,6 +204,20 @@ var Activities;
                     _this._isDirty(true);
                 });
 
+                ko.computed(function () {
+                    if (_this._isDirty()) {
+                        _this._autoSave();
+                    }
+                });
+
+                this.isSaving.subscribe(function (newValue) {
+                    if (newValue)
+                        _this.saveSpinner.start();
+else
+                        _this.saveSpinner.stop();
+                });
+
+                // popup when leaving empty undeleted page
                 window.onbeforeunload = function () {
                     if (!_this._hasData() && !_this._isDeleted) {
                         return "This activity currently has no data. If you continue, the activity will be kept and you can come back to add data later. If you intended to delete it, please stay on this page and click one of the 'Cancel' buttons provided instead.";
@@ -284,6 +225,15 @@ var Activities;
                         _this._autoSave();
                     }
                 };
+            };
+
+            //#endregion
+            //#region Kendo
+            ActivityForm.prototype._bindKendo = function () {
+                this._bindDatePickers();
+                this._bindPlacesKendoMultiSelect();
+                this._bindDocumentsKendoUpload();
+                this._bindTagsKendoAutoComplete();
             };
 
             ActivityForm.prototype._descriptionCheckIsDirty = function (newValue) {
@@ -302,8 +252,8 @@ var Activities;
                     return deferred;
                 }
 
-                this.saveSpinner.start();
                 this._isAutoSaving = true;
+                this.isSaving(true);
 
                 var model = ko.mapping.toJS(this);
 
@@ -329,8 +279,8 @@ var Activities;
                     deferred.reject(xhr);
                 }).always(function () {
                     _this._isDirty(false);
-                    _this.saveSpinner.stop();
                     _this._isAutoSaving = false;
+                    _this.isSaving(false);
                 });
 
                 return deferred;
@@ -344,7 +294,7 @@ var Activities;
                         return;
                     }
 
-                    _this.saveSpinner.start();
+                    _this.isSaving(true);
 
                     var url = $('#activity_replace_api').text().format(_this._workCopyId, _this._originalId, mode);
                     $.ajax({
@@ -357,7 +307,7 @@ var Activities;
                         App.Failures.message(xhr, 'while trying to save your activity', true);
                     }).always(function () {
                         _this._isDirty(false);
-                        _this.saveSpinner.stop();
+                        _this.isSaving(false);
                     });
                 }).fail(function (xhr) {
                     App.Failures.message(xhr, 'while trying to save your activity', true);
@@ -439,11 +389,43 @@ var Activities;
             };
 
             ActivityForm.prototype._hasData = function () {
-                var _hasData = this.title() || this.content() || this.onGoing() || this.startsOn.input() || this.endsOn.input() || this.isExternallyFunded() || this.isInternallyFunded() || this.selectedTypeIds().length || this.selectedPlaces().length || this.tags().length || this.documents().length;
+                var _hasData = this.title() || this.content() || this.onGoing() || this.startsOn.input() || this.endsOn.input() || this.isExternallyFunded() || this.isInternallyFunded() || this.types().length || this.places().length || this.tags().length || this.documents().length;
                 return _hasData;
             };
 
-            ActivityForm.prototype._initPlacesKendoMultiSelect = function () {
+            ActivityForm.prototype._bindDatePickers = function () {
+                this.$startsOn.kendoDatePicker({
+                    value: this.startsOn.date(),
+                    format: this.startsOn.format(),
+                    // if user clicks date picker button, reset format
+                    open: function (e) {
+                        this.options.format = 'M/d/yyyy';
+                    }
+                });
+                this.startsOn.kendoDatePicker = this.$startsOn.data('kendoDatePicker');
+
+                this.$endsOn.kendoDatePicker({
+                    value: this.endsOn.date(),
+                    format: this.endsOn.format(),
+                    open: function (e) {
+                        this.options.format = 'M/d/yyyy';
+                    }
+                });
+                this.endsOn.kendoDatePicker = this.$endsOn.data('kendoDatePicker');
+            };
+
+            ActivityForm.prototype._bindPlaceOptions = function (placeOptions) {
+                // map places multiselect datasource to locations
+                ko.mapping.fromJS(placeOptions, {}, this.placeOptions);
+
+                // Initialize the list of selected locations with current locations in values
+                var currentPlaceIds = Enumerable.From(this.places()).Select(function (x) {
+                    return x.placeId;
+                }).ToArray();
+                this.kendoPlaceIds(currentPlaceIds.slice(0));
+            };
+
+            ActivityForm.prototype._bindPlacesKendoMultiSelect = function () {
                 var _this = this;
                 $('#countrySelector').kendoMultiSelect({
                     filter: 'contains',
@@ -477,16 +459,16 @@ else if (removedPlaceIds.length === 1)
             ActivityForm.prototype._addPlaceId = function (addedPlaceId, e) {
                 var _this = this;
                 var url = $('#place_api').text().format(this.activityId(), addedPlaceId);
+                this.isSaving(true);
                 $.ajax({
                     type: 'PUT',
-                    url: url,
-                    async: false
+                    url: url
                 }).done(function () {
                     _this._currentPlaceIds.push(addedPlaceId);
                     var dataItem = Enumerable.From(e.sender.dataItems()).Single(function (x) {
                         return x.id() == addedPlaceId;
                     });
-                    _this.selectedPlaces.push({
+                    _this.places.push({
                         activityId: _this.activityId(),
                         placeId: addedPlaceId,
                         placeName: dataItem.officialName()
@@ -497,34 +479,34 @@ else if (removedPlaceIds.length === 1)
                     e.sender.dataSource.filter({});
                     e.sender.value(restored);
                     _this._currentPlaceIds = restored;
+                }).always(function () {
+                    _this.isSaving(false);
                 });
             };
 
             ActivityForm.prototype._removePlaceId = function (removedPlaceId, e) {
                 var _this = this;
                 var url = $('#place_api').text().format(this.activityId(), removedPlaceId);
+                this.isSaving(true);
                 $.ajax({
                     type: 'DELETE',
-                    url: url,
-                    async: false
+                    url: url
                 }).done(function () {
                     var index = $.inArray(removedPlaceId, _this._currentPlaceIds);
                     _this._currentPlaceIds.splice(index, 1);
-                    _this.selectedPlaces.remove(function (x) {
+                    _this.places.remove(function (x) {
                         return x.placeId == removedPlaceId;
                     });
                 }).fail(function (xhr) {
                     App.Failures.message(xhr, 'while trying to remove this location, please try again', true);
                     e.sender.value(_this._currentPlaceIds);
+                }).always(function () {
+                    _this.isSaving(false);
                 });
             };
 
-            ActivityForm.prototype._bindTypes = function (typeOptions, selectedTypes) {
+            ActivityForm.prototype._bindTypeOptions = function (typeOptions) {
                 var _this = this;
-                var selectedTypeIds = Enumerable.From(selectedTypes).Select(function (x) {
-                    return x.typeId;
-                }).ToArray();
-                this.selectedTypeIds(selectedTypeIds);
                 var typesMapping = {
                     create: function (options) {
                         var checkBox = new ActivityTypeCheckBox(options, _this);
@@ -534,7 +516,7 @@ else if (removedPlaceIds.length === 1)
                 ko.mapping.fromJS(typeOptions, typesMapping, this.typeOptions);
             };
 
-            ActivityForm.prototype._initTagsKendoAutoComplete = function () {
+            ActivityForm.prototype._bindTagsKendoAutoComplete = function () {
                 var _this = this;
                 $('#newTag').kendoAutoComplete({
                     minLength: 3,
@@ -623,7 +605,7 @@ else if (removedPlaceIds.length === 1)
             };
 
             ActivityForm.prototype.deleteTag = function (item) {
-                this._deleteTag(item.text).fail(function (xhr) {
+                this._deleteTag(item.text()).fail(function (xhr) {
                     App.Failures.message(xhr, 'while trying to delete this activity tag, please try again', true);
                 });
             };
@@ -636,7 +618,7 @@ else if (removedPlaceIds.length === 1)
                 } else {
                     text = $.trim(text);
                     var tagToReplace = Enumerable.From(this.tags()).SingleOrDefault(undefined, function (x) {
-                        return x.text.toUpperCase() === text.toUpperCase();
+                        return x.text().toUpperCase() === text.toUpperCase();
                     });
                     if (tagToReplace) {
                         this._deleteTag(text).done(function () {
@@ -663,6 +645,7 @@ else if (removedPlaceIds.length === 1)
                 var _this = this;
                 var deferred = $.Deferred();
                 var url = $('#tags_api').text().format(this.activityId());
+                this.isSaving(true);
                 $.ajax({
                     url: url,
                     type: 'POST',
@@ -678,10 +661,13 @@ else if (removedPlaceIds.length === 1)
                         domainType: establishmentId ? 'Establishment' : 'Custom',
                         domainKey: establishmentId
                     };
-                    _this.tags.push(tag);
+                    var observableTag = ko.mapping.fromJS(tag);
+                    _this.tags.push(observableTag);
                     deferred.resolve();
                 }).fail(function (xhr) {
                     deferred.reject(xhr);
+                }).always(function () {
+                    _this.isSaving(false);
                 });
                 return deferred;
             };
@@ -690,6 +676,7 @@ else if (removedPlaceIds.length === 1)
                 var _this = this;
                 var deferred = $.Deferred();
                 var url = $('#tags_api').text().format(this.activityId());
+                this.isSaving(true);
                 $.ajax({
                     url: url,
                     type: 'DELETE',
@@ -699,18 +686,20 @@ else if (removedPlaceIds.length === 1)
                 }).done(function () {
                     // there should always be matching tag, but check to be safe
                     var tagToRemove = Enumerable.From(_this.tags()).SingleOrDefault(undefined, function (x) {
-                        return text && x.text.toUpperCase() === text.toUpperCase();
+                        return text && x.text().toUpperCase() === text.toUpperCase();
                     });
                     if (tagToRemove)
                         _this.tags.remove(tagToRemove);
                     deferred.resolve();
                 }).fail(function (xhr) {
                     deferred.reject(xhr);
+                }).always(function () {
+                    _this.isSaving(false);
                 });
                 return deferred;
             };
 
-            ActivityForm.prototype._initDocumentsKendoUpload = function () {
+            ActivityForm.prototype._bindDocumentsKendoUpload = function () {
                 var _this = this;
                 $('#uploadFile').kendoUpload({
                     multiple: true,
@@ -728,12 +717,16 @@ else if (removedPlaceIds.length === 1)
                     },
                     error: function (e) {
                         _this._onDocumentKendoError(e);
+                    },
+                    complete: function () {
+                        _this.isSaving(false);
                     }
                 });
             };
 
             ActivityForm.prototype._onDocumentKendoSelect = function (e) {
                 var _this = this;
+                this.isSaving(true);
                 for (var i = 0; i < e.files.length; i++) {
                     var file = e.files[i];
                     $.ajax({
@@ -754,6 +747,7 @@ else if (removedPlaceIds.length === 1)
                         _this.fileUploadErrors.push({ message: message });
                     });
                 }
+                this.isSaving(false);
             };
 
             ActivityForm.prototype._onDocumentKendoUpload = function (e) {
@@ -764,6 +758,8 @@ else if (removedPlaceIds.length === 1)
                 if (isInvalidFileName) {
                     e.preventDefault();
                     this._invalidFileNames.remove(file.name);
+                } else {
+                    this.isSaving(true);
                 }
             };
 
@@ -808,7 +804,7 @@ else if (removedPlaceIds.length === 1)
 
                                 $.ajax({
                                     type: 'DELETE',
-                                    url: $('#document_api').text().format(_this.activityId(), item.id())
+                                    url: $('#document_api').text().format(_this.activityId(), item.documentId())
                                 }).done(function () {
                                     $dialog.dialog('close');
                                     _this.documents.splice(index, 1);
@@ -856,7 +852,7 @@ else if (removedPlaceIds.length === 1)
                 $(inputElement).unbind('keypress');
                 $(inputElement).attr('disabled', 'disabled');
 
-                var url = $('#document_api').text().format(this.activityId(), item.id());
+                var url = $('#document_api').text().format(this.activityId(), item.documentId());
                 $.ajax({
                     type: 'PUT',
                     url: url,
@@ -905,7 +901,7 @@ else if (removedPlaceIds.length === 1)
                 this.text = mappingOptions.data.type;
                 this._owner = owner;
 
-                var isChecked = Enumerable.From(this._owner.selectedTypeIds()).Any(function (x) {
+                var isChecked = Enumerable.From(this._owner.types()).Any(function (x) {
                     return x == _this.id;
                 });
                 this.checked = ko.observable(isChecked);
@@ -919,19 +915,19 @@ else
             }
             ActivityTypeCheckBox.prototype._onChecked = function () {
                 var _this = this;
-                var needsAdded = Enumerable.From(this._owner.selectedTypeIds()).All(function (x) {
+                var needsAdded = Enumerable.From(this._owner.types()).All(function (x) {
                     return x != _this.id;
                 });
                 if (!needsAdded)
                     return;
 
-                this._owner.saveSpinner.start();
+                this._owner.isSaving(true);
                 var url = $('#type_api').text().format(this._owner.activityId(), this.id);
                 $.ajax({
                     url: url,
                     type: 'PUT'
                 }).done(function () {
-                    _this._owner.selectedTypeIds.push(_this.id);
+                    _this._owner.types.push(_this.id);
                     setTimeout(function () {
                         _this.checked(true);
                     }, 0);
@@ -941,25 +937,25 @@ else
                         _this.checked(false);
                     }, 0);
                 }).always(function () {
-                    _this._owner.saveSpinner.stop();
+                    _this._owner.isSaving(false);
                 });
             };
 
             ActivityTypeCheckBox.prototype._onUnchecked = function () {
                 var _this = this;
-                var needsRemoved = Enumerable.From(this._owner.selectedTypeIds()).Any(function (x) {
+                var needsRemoved = Enumerable.From(this._owner.types()).Any(function (x) {
                     return x == _this.id;
                 });
                 if (!needsRemoved)
                     return;
 
-                this._owner.saveSpinner.start();
+                this._owner.isSaving(true);
                 var url = $('#type_api').text().format(this._owner.activityId(), this.id);
                 $.ajax({
                     url: url,
                     type: 'DELETE'
                 }).done(function () {
-                    _this._owner.selectedTypeIds.remove(_this.id);
+                    _this._owner.types.remove(_this.id);
                     setTimeout(function () {
                         _this.checked(false);
                     }, 0);
@@ -969,7 +965,7 @@ else
                         _this.checked(true);
                     }, 0);
                 }).always(function () {
-                    _this._owner.saveSpinner.stop();
+                    _this._owner.isSaving(false);
                 });
             };
             return ActivityTypeCheckBox;

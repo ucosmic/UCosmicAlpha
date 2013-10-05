@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Net;
@@ -39,118 +38,28 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [GET(PluralUrl)]
-        public PageOfActivityApiEditModel Get([FromUri] ActivitySearchInputModel input)
+        public PageOfActivityApiModel Get([FromUri] MyActivitiesInputModel input)
         {
-            if (input.PageSize < 1) { throw new HttpResponseException(HttpStatusCode.BadRequest); }
+            if (input.PageSize < 1 || input.PageNumber < 1)
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
 
-            var query = new MyActivities(User)
-            {
-                PageNumber = input.PageNumber,
-                PageSize = input.PageSize,
-                EagerLoad = new Expression<Func<Activity, object>>[]
-                {
-                    x => x.Values.Select(y => y.Locations.Select(z => z.Place)),
-                    x => x.Values.Select(y => y.Types.Select(z => z.Type)),
-                    x => x.Values.Select(y => y.Tags),
-                    x => x.Values.Select(y => y.Documents),
-                },
-                /* Order as follows:
-                 *  All ongoing first by fromDate, then title
-                 *  If date(s) exist, order by:
-                 *      if toDate exists, sort most recent first else, use fromDate
-                 *          then alphabetically by title
-                 *
-                 *  Activities with no dates are listed last
-                 */
-                OrderBy = new Dictionary<Expression<Func<Activity, object>>, OrderByDirection>
-                {
-                    { x => x.Values.FirstOrDefault(y => y.ModeText == y.Activity.ModeText).OnGoing.HasValue, OrderByDirection.Descending }, // null ongoings at bottom
-                    { x => x.Values.FirstOrDefault(y => y.ModeText == y.Activity.ModeText).OnGoing, OrderByDirection.Descending }, // true ongoings above false ongoings
-                    { x => x.Values.FirstOrDefault(y => y.ModeText == y.Activity.ModeText).StartsOn.HasValue, OrderByDirection.Descending }, // null start dates at bottom
-                    { x => x.Values.FirstOrDefault(y => y.ModeText == y.Activity.ModeText).EndsOn.HasValue, OrderByDirection.Descending }, // null end dates at bottom
-                    { x => x.Values.FirstOrDefault(y => y.ModeText == y.Activity.ModeText).EndsOn, OrderByDirection.Descending }, // latest ending at top
-                    { x => x.Values.FirstOrDefault(y => y.ModeText == y.Activity.ModeText).StartsOn, OrderByDirection.Descending }, // latest starting at top
-                    { x => x.Values.FirstOrDefault(y => y.ModeText == y.Activity.ModeText).Title, OrderByDirection.Ascending }, // title A-Z
-                },
-            };
-
+            var query = new MyActivities(User);
+            Mapper.Map(input, query);
             var page = _queryProcessor.Execute(query);
-            var model = new PageOfActivityApiEditModel
-            {
-                ItemTotal = page.ItemTotal,
-                PageNumber = page.PageNumber,
-                PageSize = page.PageSize,
-                Items = page.Select(x => new ActivityApiEditModel
-                {
-                    ActivityId = x.RevisionId,
-                    Mode = x.Mode,
-                    Content = x.Values.Single(y => y.Mode == y.Activity.Mode).Content,
-                    Title = x.Values.Single(y => y.Mode == y.Activity.Mode).Title,
-                    OnGoing = x.Values.Single(y => y.Mode == y.Activity.Mode).OnGoing,
-                    StartsOn = x.Values.Single(y => y.Mode == y.Activity.Mode).StartsOn,
-                    StartsFormat = x.Values.Single(y => y.Mode == y.Activity.Mode).StartsFormat,
-                    EndsOn = x.Values.Single(y => y.Mode == y.Activity.Mode).EndsOn,
-                    EndsFormat = x.Values.Single(y => y.Mode == y.Activity.Mode).EndsFormat,
-                    IsExternallyFunded = x.Values.Single(y => y.Mode == y.Activity.Mode).WasExternallyFunded,
-                    IsInternallyFunded = x.Values.Single(y => y.Mode == y.Activity.Mode).WasExternallyFunded,
-                    UpdatedOnUtc = x.UpdatedOnUtc ?? x.CreatedOnUtc,
-                    UpdatedByPrincipal = x.UpdatedByPrincipal,
-                    Types = x.Values.Single(y => y.Mode == y.Activity.Mode).Types.Select(y => new ActivityTypeApiModel2
-                    {
-                        ActivityId = x.RevisionId,
-                        TypeId = y.TypeId,
-                        Text = y.Type.Type,
-                        Rank = y.Type.Rank,
-                    }).ToArray(),
-                    Places = x.Values.Single(y => y.Mode == y.Activity.Mode).Locations.Select(y => new ActivityPlaceApiModel
-                    {
-                        ActivityId = x.RevisionId,
-                        PlaceId = y.PlaceId,
-                        PlaceName = y.Place.OfficialName,
-                    }).ToArray(),
-                    Documents = x.Values.Single(y => y.Mode == y.Activity.Mode).Documents.Select(y => new ActivityDocumentApiModel2
-                    {
-                        ActivityId = x.RevisionId,
-                        DocumentId = y.RevisionId,
-                        Title = y.Title,
-                        ByteCount = y.Length,
-                        FileName = y.FileName,
-                    }).ToArray(),
-                }),
-            };
+            var model = Mapper.Map<PageOfActivityApiModel>(page);
             return model;
         }
 
         [GET(SingleUrl, ActionPrecedence = 1)]
-        public ActivityApiEditModel Get(int activityId)
+        public ActivityApiModel Get(int activityId)
         {
-            var activity = _queryProcessor.Execute(new ActivityById(User, activityId)
+            var entity = _queryProcessor.Execute(new ActivityById(User, activityId)
             {
-                EagerLoad = new Expression<Func<Activity, object>>[]
-                {
-                    x => x.Values,
-                }
+                EagerLoad = ActivityApiModel.EagerLoad,
             });
-            if (activity == null)
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+            if (entity == null) throw new HttpResponseException(HttpStatusCode.NotFound);
 
-            var values = activity.Values.Single(x => x.Mode == x.Activity.Mode);
-            var model = new ActivityApiEditModel
-            {
-                ActivityId = activityId,
-                Mode = activity.Mode,
-                Title = values.Title,
-                Content = values.Content,
-                StartsOn = values.StartsOn,
-                EndsOn = values.EndsOn,
-                OnGoing = values.OnGoing,
-                StartsFormat = values.StartsFormat,
-                EndsFormat = values.EndsFormat,
-                IsExternallyFunded = values.WasExternallyFunded,
-                IsInternallyFunded = values.WasInternallyFunded,
-                UpdatedByPrincipal = activity.UpdatedByPrincipal,
-                UpdatedOnUtc = activity.UpdatedOnUtc ?? activity.CreatedOnUtc,
-            };
+            var model = Mapper.Map<ActivityApiModel>(entity);
             return model;
         }
 

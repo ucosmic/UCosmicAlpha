@@ -91,11 +91,6 @@ namespace UCosmic.Web.Mvc.Controllers
             activityReplace = activityReplace.Replace("0", "{0}").Replace("1", "{1}").Replace(ActivityMode.Draft.ToString(), "{2}");
             ViewBag.ActivityReplaceApi = activityReplace;
 
-            var types = Url.HttpRouteUrl(null, new { controller = "ActivityTypes", action = "Get", activityId = 0 });
-            Debug.Assert(types != null);
-            types = types.Replace("0", "{0}");
-            ViewBag.TypesApi = types;
-
             var type = Url.HttpRouteUrl(null, new { controller = "ActivityTypes", action = "Put", activityId = 0, activityTypeId = 1 });
             Debug.Assert(type != null);
             type = type.Replace("0", "{0}").Replace("1", "{1}");
@@ -105,11 +100,6 @@ namespace UCosmic.Web.Mvc.Controllers
             Debug.Assert(typeIcon != null);
             typeIcon = typeIcon.Replace("0", "{0}");
             ViewBag.TypeIconApi = typeIcon;
-
-            var places = Url.HttpRouteUrl(null, new { controller = "ActivityPlaces", action = "Get", activityId = 0 });
-            Debug.Assert(places != null);
-            places = places.Replace("0", "{0}");
-            ViewBag.PlacesApi = places;
 
             var place = Url.HttpRouteUrl(null, new { controller = "ActivityPlaces", action = "Put", activityId = 0, placeId = 1 });
             Debug.Assert(place != null);

@@ -182,7 +182,6 @@ module Activities.ViewModels {
 
                             $.ajax({ // submit delete api request
                                 type: 'DELETE',
-                                //url: App.Routes.WebApi.Activities.del(item.id())
                                 url: $('#activity_api').text().format(this.activityId()),
                             })
                                 .done((): void => {

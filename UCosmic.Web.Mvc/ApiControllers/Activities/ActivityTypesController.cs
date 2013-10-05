@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using AttributeRouting;
 using AttributeRouting.Web.Http;
+using AutoMapper;
 using UCosmic.Domain.Activities;
 using UCosmic.Web.Mvc.Models;
 
@@ -33,23 +33,13 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [GET(PluralUrl)]
-        public IEnumerable<ActivityTypeApiModel2> Get(int activityId)
+        public IEnumerable<ActivityTypeApiModel> Get(int activityId)
         {
             var entities = _queryProcessor.Execute(new ActivityTypesByActivityId(activityId)
             {
-                EagerLoad = new Expression<Func<ActivityType, object>>[]
-                {
-                    x => x.ActivityValues,
-                    x => x.Type,
-                }
+                EagerLoad = ActivityTypeApiModel.EagerLoad,
             });
-            var models = entities.Select(x => new ActivityTypeApiModel2
-            {
-                ActivityId = x.ActivityValues.ActivityId,
-                TypeId = x.TypeId,
-                Text = x.Type.Type,
-                Rank = x.Type.Rank,
-            });
+            var models = Mapper.Map<ActivityTypeApiModel[]>(entities);
             return models;
         }
 

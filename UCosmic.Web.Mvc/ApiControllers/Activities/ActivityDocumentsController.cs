@@ -53,11 +53,11 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [GET(PluralUrl)]
-        public IEnumerable<ActivityDocumentApiModel> Get(int activityId, ActivityMode? mode = null)
+        public IEnumerable<ActivityDocumentApiModel> Get(int activityId)
         {
             var entities = _queryProcessor.Execute(new ActivityDocumentsByActivityId(activityId)
             {
-                Mode = mode,
+                EagerLoad = ActivityDocumentApiModel.EagerLoad,
             });
             var models = Mapper.Map<ActivityDocumentApiModel[]>(entities);
             return models;
@@ -66,7 +66,10 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [GET(SingleUrl, ActionPrecedence = 1)]
         public ActivityDocumentApiModel Get(int activityId, int documentId)
         {
-            var entity = _queryProcessor.Execute(new ActivityDocumentById(activityId, documentId));
+            var entity = _queryProcessor.Execute(new ActivityDocumentById(activityId, documentId)
+            {
+                EagerLoad = ActivityDocumentApiModel.EagerLoad,
+            });
             var model = Mapper.Map<ActivityDocumentApiModel>(entity);
             return model;
         }

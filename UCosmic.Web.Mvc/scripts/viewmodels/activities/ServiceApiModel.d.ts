@@ -2,10 +2,36 @@
 
 declare module Activities.ApiModels {
 
+    export interface Activity {
+        activityMode: string;
+        activityId: number;
+        title: string;
+        content: string;
+        startsOn: string;
+        endsOn: string;
+        startsFormat: string;
+        endsFormat: string;
+        onGoing: boolean;
+        isExternallyFunded: boolean;
+        isInternallyFunded: boolean;
+        updatedByPrincipal: string;
+        updatedOnUtc: string;
+        types: ActivityType[];
+        places: ActivityPlace[]
+        tags: ActivityTag[]
+        documents: any;
+    }
+
     export interface ActivityType {
         activityId: number;
         typeId: number;
         text: string;
+    }
+
+    export interface ActivityPlace {
+        activityId: number;
+        placeId: number;
+        placeName: string;
     }
 
     export interface ActivityTag {
@@ -13,6 +39,14 @@ declare module Activities.ApiModels {
         text: string;
         domainType: string;
         domainKey: number;
+    }
+
+    export interface ActivityDocument {
+        activityId: number;
+        documentId: number;
+        title: string;
+        domainType: string;
+        byteCount: number;
     }
 }
 
@@ -22,6 +56,19 @@ declare module Activities.KoModels {
         activityId: KnockoutObservable<number>;
         typeId: KnockoutObservable<number>;
         text: KnockoutObservable<string>;
+    }
+
+    export interface ActivityDocument {
+        activityId: KnockoutObservable<number>;
+        documentId: KnockoutObservable<number>;
+        title: KnockoutObservable<string>;
+    }
+
+    export interface ActivityTag {
+        activityId: KnockoutObservable<number>;
+        text: KnockoutObservable<string>;
+        domainType: KnockoutObservable<string>;
+        domainKey: KnockoutObservable<number>;
     }
 }
 

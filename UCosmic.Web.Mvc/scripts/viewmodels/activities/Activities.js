@@ -161,7 +161,6 @@ else if (endsOnIso)
 
                                 $.ajax({
                                     type: 'DELETE',
-                                    //url: App.Routes.WebApi.Activities.del(item.id())
                                     url: $('#activity_api').text().format(_this.activityId())
                                 }).done(function () {
                                     $dialog.dialog('close');

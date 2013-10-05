@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Web.Http;
 using AttributeRouting;
 using AttributeRouting.Web.Http;
+using AutoMapper;
 using UCosmic.Domain.Activities;
 using UCosmic.Web.Mvc.Models;
 
@@ -32,7 +33,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [GET(PluralUrl)]
-        public IEnumerable<ActivityTagApiModel2> Get(int activityId)
+        public IEnumerable<ActivityTagApiModel> Get(int activityId)
         {
             var entities = _queryProcessor.Execute(new ActivityTagsByActivityId(activityId)
             {
@@ -41,13 +42,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                     x => x.ActivityValues,
                 }
             });
-            var models = entities.Select(x => new ActivityTagApiModel2
-            {
-                ActivityId = x.ActivityValues.ActivityId,
-                Text = x.Text,
-                DomainType = x.DomainType,
-                DomainKey = x.DomainKey,
-            });
+            var models = Mapper.Map<ActivityTagApiModel[]>(entities);
             return models;
         }
 

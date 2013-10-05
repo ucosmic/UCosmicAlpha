@@ -22,35 +22,35 @@ module Activities.ViewModels {
         private _workCopyId: number;
         private _originalId: number;
 
-        activityId: KnockoutObservable<number> = ko.observable();
-        mode: KnockoutObservable<string> = ko.observable();
-        title: KnockoutObservable<string> = ko.observable();
-        content: KnockoutObservable<string> = ko.observable();
+        activityId: KnockoutObservable<number>;
+        mode: KnockoutObservable<string>;
+        title: KnockoutObservable<string>;
+        content: KnockoutObservable<string>;
         startsOn: FormattedDateInput;
         endsOn: FormattedDateInput;
-        onGoing: KnockoutObservable<boolean> = ko.observable();
-        isExternallyFunded: KnockoutObservable<boolean> = ko.observable();
-        isInternallyFunded: KnockoutObservable<boolean> = ko.observable();
-        updatedByPrincipal: KnockoutObservable<string> = ko.observable();
-        updatedOnUtc: KnockoutObservable<string> = ko.observable();
+        onGoing: KnockoutObservable<boolean>;
+        isExternallyFunded: KnockoutObservable<boolean>;
+        isInternallyFunded: KnockoutObservable<boolean>;
+        updatedByPrincipal: KnockoutObservable<string>;
+        updatedOnUtc: KnockoutObservable<string>;
 
         //#endregion
         //#region View convenience computeds
 
         isDraft: KnockoutComputed<boolean> = ko.computed((): boolean => {
-            var mode = this.mode();
+            var mode = this.mode ? this.mode() : undefined;
             if (!mode) return false;
             return mode.toLowerCase() == 'draft';
         });
 
         isPublished: KnockoutComputed<boolean> = ko.computed((): boolean => {
-            var mode = this.mode();
+            var mode = this.mode ? this.mode() : undefined;
             if (!mode) return false;
             return mode.toLowerCase() == 'public';
         });
 
         updatedOnDate: KnockoutComputed<string> = ko.computed((): string => {
-            var updatedOnUtc = this.updatedOnUtc();
+            var updatedOnUtc = this.updatedOnUtc ? this.updatedOnUtc() : undefined;
             if (!updatedOnUtc) return undefined;
             return moment(updatedOnUtc).format('M/D/YYYY');
         });
@@ -61,21 +61,18 @@ module Activities.ViewModels {
         constructor(activityId: number, activityWorkCopyId: number) {
             this._originalId = activityId;
             this._workCopyId = activityWorkCopyId;
-
-            ko.computed((): void => {
-                if (this._isDirty()) {
-                    this._autoSave();
-                }
-            });
         }
 
         //#endregion
         //#region Initial data load
 
-        load(): JQueryDeferred<void> {
+        bind(target: Element): JQueryDeferred<void> {
             var deferred: JQueryDeferred<void> = $.Deferred();
 
-            //#region load places dropdown, module types, and activity work copy
+            var dataPact = $.Deferred();
+            $.ajax({ url: $('#activity_api').text().format(this._workCopyId), cache: false, })
+                .done((data: any): void => { dataPact.resolve(data); })
+                .fail((xhr: JQueryXHR): void => { dataPact.reject(xhr); });
 
             var placeOptionsPact = $.Deferred();
             $.get($('#place_options_api').text())
@@ -87,129 +84,64 @@ module Activities.ViewModels {
                 .done((data: any[]): void => { typeOptionsPact.resolve(data); })
                 .fail((xhr: JQueryXHR): void => { typeOptionsPact.reject(xhr); });
 
-            var dataPact = $.Deferred();
-            $.ajax({ url: $('#activity_api').text().format(this._workCopyId), cache: false, })
-                .done((data: any): void => { dataPact.resolve(data); })
-                .fail((xhr: JQueryXHR): void => { dataPact.reject(xhr); });
+            $.when(dataPact, placeOptionsPact, typeOptionsPact)
+                .done((data: ApiModels.Activity, placeOptions: any[], typeOptions: any[]): void => {
 
-            var placesPact = $.Deferred();
-            $.ajax({ url: $('#places_api').text().format(this._workCopyId), cache: false, })
-                .done((data: any[]): void => { placesPact.resolve(data); })
-                .fail((xhr: JQueryXHR): void => { placesPact.reject(xhr); });
-
-            var typesPact = $.Deferred();
-            $.ajax({ url: $('#types_api').text().format(this._workCopyId), cache: false, })
-                .done((data: ApiModels.ActivityType[]): void => { typesPact.resolve(data); })
-                .fail((xhr: JQueryXHR): void => { typesPact.reject(xhr); });
-
-            var tagsPact = $.Deferred();
-            $.ajax({ url: $('#tags_api').text().format(this._workCopyId), cache: false, })
-                .done((data: ApiModels.ActivityType[]): void => { tagsPact.resolve(data); })
-                .fail((xhr: JQueryXHR): void => { tagsPact.reject(xhr); });
-
-            var documentsPact = $.Deferred();
-            $.ajax({ url: $('#documents_api').text().format(this._workCopyId), cache: false, })
-                .done((data: any[]): void => { documentsPact.resolve(data); })
-                .fail((xhr: JQueryXHR): void => { documentsPact.reject(xhr); });
-
-            //#endregion
-            //#region process after all have been loaded
-
-            $.when(typeOptionsPact, placeOptionsPact, dataPact, placesPact, typesPact, tagsPact, documentsPact)
-                .done((typeOptions: any[],
-                    placeOptions: any[],
-                    data: any,
-                    selectedPlaces: any[],
-                    selectedTypes: ApiModels.ActivityType[],
-                    tags: ApiModels.ActivityTag[],
-                    documents: any[]): void => {
-
-                    //#region populate activity data
-
-                    var mapping = {
-                        ignore: ['startsOn', 'endsOn', 'startsFormat', 'endsFormat'],
-                    };
-                    ko.mapping.fromJS(data, mapping, this);
-
-                    this.startsOn = new FormattedDateInput(data.startsOn, data.startsFormat);
-                    this.endsOn = new FormattedDateInput(data.endsOn, data.endsFormat);
-
-                    //#endregion
-                    //#region populate places multiselect
-
-                    // map places multiselect datasource to locations
-                    ko.mapping.fromJS(placeOptions, {}, this.placeOptions);
-
-                    // Initialize the list of selected locations with current locations in values
-                    this.selectedPlaces(selectedPlaces);
-                    var currentPlaceIds = Enumerable.From(selectedPlaces)
-                        .Select(function (x): any {
-                            return x.placeId;
-                        }).ToArray();
-                    this.kendoPlaceIds(currentPlaceIds.slice(0));
-
-                    //#endregion
-                    //#region set up type checkboxes
-
-                    this._bindTypes(typeOptions, selectedTypes);
-
-                    //#endregion
-
-                    this.tags(tags);
-                    ko.mapping.fromJS(documents, {}, this.documents);
-
+                    this._applyBindings(target, data, placeOptions, typeOptions);
                     deferred.resolve();
                 })
                 .fail((xhr: JQueryXHR): void => {
                     deferred.reject(xhr);
                 });
 
-            //#endregion
-
             return deferred;
         }
 
         //#endregion
-        //#region Kendo widget setup
+        //#region Data Binding
 
-        setupWidgets(fromDatePickerId: string, toDatePickerId: string, countrySelectorId: string,
-            uploadFileId: string, newTagId: string): void {
+        private _applyBindings(target: Element, data: ApiModels.Activity,
+            placeOptions: any[], typeOptions: any[]): void {
+            this._bindData(data);
+            this._bindPlaceOptions(placeOptions);
+            this._bindTypeOptions(typeOptions);
 
-            //#region Kendo DatePickers
+            this._bindValidation();
+            this._bindSubscriptions();
 
-            $('#' + fromDatePickerId).kendoDatePicker({
-                value: this.startsOn.date(),
-                format: this.startsOn.format(),
-                // if user clicks date picker button, reset format
-                open: function (e: kendo.ui.DatePickerEvent) {
-                    this.options.format = 'M/d/yyyy';
+            ko.applyBindings(this, target);
+
+            this._bindKendo();
+            this.ready(true);
+        }
+
+        private _bindData(data: ApiModels.Activity): void {
+            var mapping = {
+                types: {
+                    create: (options: KnockoutMappingCreateOptions): number => {
+                        return options.data.typeId;
+                    },
                 },
-            });
-            this.startsOn.kendoDatePicker = $('#' + fromDatePickerId).data('kendoDatePicker');
-
-            $('#' + toDatePickerId).kendoDatePicker({
-                value: this.endsOn.date(),
-                format: this.endsOn.format(),
-                open: function (e) {
-                    this.options.format = 'M/d/yyyy';
+                places: {
+                    create: (options: KnockoutMappingCreateOptions): ApiModels.ActivityPlace => {
+                        return options.data;
+                    },
                 },
-            });
-            this.endsOn.kendoDatePicker = $('#' + toDatePickerId).data('kendoDatePicker');
+                ignore: ['startsOn', 'endsOn', 'startsFormat', 'endsFormat'],
+            };
+            ko.mapping.fromJS(data, mapping, this);
 
-            //#endregion
-
-            this._initPlacesKendoMultiSelect();
-            this._initDocumentsKendoUpload();
-            this._initTagsKendoAutoComplete();
+            this.startsOn = new FormattedDateInput(data.startsOn, data.startsFormat);
+            this.endsOn = new FormattedDateInput(data.endsOn, data.endsFormat);
         }
 
         //#endregion
-        //#region Knockout Validation setup
+        //#region Validation
 
         errors: KnockoutValidationErrors;
         isValid: () => boolean;
 
-        setupValidation(): void {
+        private _bindValidation(): void {
             ko.validation.rules['atLeast'] = {
                 validator: (val: any, otherVal: any): boolean => {
                     return val.length >= otherVal;
@@ -235,9 +167,9 @@ module Activities.ViewModels {
                 minLength: 1,
                 maxLength: 500
             });
-            this.selectedPlaces.extend({ atLeast: 1 });
+            this.places.extend({ atLeast: 1 });
             if (this.typeOptions().length)
-                this.selectedTypeIds.extend({ atLeast: 1 });
+                this.types.extend({ atLeast: 1 });
 
             this.startsOn.input.extend({
                 formattedDate: {
@@ -254,11 +186,13 @@ module Activities.ViewModels {
         }
 
         //#endregion
-        //#region Value subscriptions setup
+        //#region Subscriptions
 
-        private _isDirty: KnockoutObservable<boolean> = ko.observable(false); // dirty
+        isSaving: KnockoutObservable<boolean> = ko.observable(false);
+        saveSpinner = new App.Spinner(new App.SpinnerOptions(200));
+        private _isDirty: KnockoutObservable<boolean> = ko.observable(false);
 
-        setupSubscriptions(): void {
+        private _bindSubscriptions(): void {
             // autosave when fields change
             this.title.subscribe((newValue: any): void => { this._isDirty(true); });
             this.content.subscribe((newValue: any): void => { this._descriptionCheckIsDirty(newValue); });
@@ -268,6 +202,18 @@ module Activities.ViewModels {
             this.isExternallyFunded.subscribe((newValue: any): void => { this._isDirty(true); });
             this.isInternallyFunded.subscribe((newValue: any): void => { this._isDirty(true); });
 
+            ko.computed((): void => {
+                if (this._isDirty()) {
+                    this._autoSave();
+                }
+            });
+
+            this.isSaving.subscribe((newValue: boolean): void => {
+                if (newValue) this.saveSpinner.start();
+                else this.saveSpinner.stop();
+            });
+
+            // popup when leaving empty undeleted page
             window.onbeforeunload = (): any => {
                 if (!this._hasData() && !this._isDeleted) {
                     return "This activity currently has no data. If you continue, the activity will be kept and you can come back to add data later. If you intended to delete it, please stay on this page and click one of the 'Cancel' buttons provided instead.";
@@ -275,6 +221,16 @@ module Activities.ViewModels {
                     this._autoSave();
                 }
             }
+        }
+
+        //#endregion
+        //#region Kendo
+
+        private _bindKendo(): void {
+            this._bindDatePickers();
+            this._bindPlacesKendoMultiSelect();
+            this._bindDocumentsKendoUpload();
+            this._bindTagsKendoAutoComplete();
         }
 
         //#endregion
@@ -291,8 +247,6 @@ module Activities.ViewModels {
             }
         }
 
-        saveSpinner = new App.Spinner(new App.SpinnerOptions(200));
-
         private _isAutoSaving: boolean = false; // in the process of saving
         private _isSaved: boolean = false; // prevent autosave when already saved (published or draft)
         private _isDeleted: boolean = false; // prevent autosave when already deleted (on cancel)
@@ -305,8 +259,8 @@ module Activities.ViewModels {
                 return deferred;
             }
 
-            this.saveSpinner.start();
             this._isAutoSaving = true;
+            this.isSaving(true);
 
             var model = ko.mapping.toJS(this);
 
@@ -335,8 +289,8 @@ module Activities.ViewModels {
                 })
                 .always((): void => {
                     this._isDirty(false);
-                    this.saveSpinner.stop();
                     this._isAutoSaving = false;
+                    this.isSaving(false);
                 });
 
             return deferred;
@@ -351,7 +305,7 @@ module Activities.ViewModels {
                         return;
                     }
 
-                    this.saveSpinner.start();
+                    this.isSaving(true);
 
                     var url = $('#activity_replace_api').text()
                         .format(this._workCopyId, this._originalId, mode);
@@ -368,7 +322,7 @@ module Activities.ViewModels {
                         })
                         .always((): void => {
                             this._isDirty(false);
-                            this.saveSpinner.stop();
+                            this.isSaving(false);
                         });
                 })
                 .fail((xhr: JQueryXHR): void => {
@@ -431,7 +385,7 @@ module Activities.ViewModels {
             });
         }
 
-        private _purge(async: boolean = true): JQueryDeferred<void>{
+        private _purge(async: boolean = true): JQueryDeferred<void> {
             var deferred = $.Deferred();
             var url = $('#activity_api').text().format(this.activityId());
             $.ajax({
@@ -456,21 +410,61 @@ module Activities.ViewModels {
         private _hasData(): boolean {
             var _hasData = this.title() || this.content() || this.onGoing() || this.startsOn.input()
                 || this.endsOn.input() || this.isExternallyFunded() || this.isInternallyFunded()
-                || this.selectedTypeIds().length || this.selectedPlaces().length || this.tags().length
+                || this.types().length || this.places().length || this.tags().length
                 || this.documents().length
             ;
             return _hasData;
         }
 
         //#endregion
+        //#region Dates
+
+        $startsOn: JQuery;
+        $endsOn: JQuery;
+
+        private _bindDatePickers(): void {
+            this.$startsOn.kendoDatePicker({
+                value: this.startsOn.date(),
+                format: this.startsOn.format(),
+                // if user clicks date picker button, reset format
+                open: function (e: kendo.ui.DatePickerEvent) {
+                    this.options.format = 'M/d/yyyy';
+                },
+            });
+            this.startsOn.kendoDatePicker = this.$startsOn.data('kendoDatePicker');
+
+            this.$endsOn.kendoDatePicker({
+                value: this.endsOn.date(),
+                format: this.endsOn.format(),
+                open: function (e) {
+                    this.options.format = 'M/d/yyyy';
+                },
+            });
+            this.endsOn.kendoDatePicker = this.$endsOn.data('kendoDatePicker');
+        }
+
+
+        //#endregion
         //#region Places
 
-        selectedPlaces: KnockoutObservableArray<any> = ko.observableArray(); // array of places for this activity
+        places: KnockoutObservableArray<ApiModels.ActivityPlace>;
         placeOptions: KnockoutObservableArray<any> = ko.observableArray(); // Array of all locations offered in Country/Location multiselect
         kendoPlaceIds: KnockoutObservableArray<number> = ko.observableArray(); // Array of placeIds of selected locations, kendo multiselect stores these as strings
         private _currentPlaceIds: number[];
 
-        private _initPlacesKendoMultiSelect(): void {
+        private _bindPlaceOptions(placeOptions: any[]): void {
+            // map places multiselect datasource to locations
+            ko.mapping.fromJS(placeOptions, {}, this.placeOptions);
+
+            // Initialize the list of selected locations with current locations in values
+            var currentPlaceIds = Enumerable.From(this.places())
+                .Select(function (x: ApiModels.ActivityPlace): number {
+                    return x.placeId;
+                }).ToArray();
+            this.kendoPlaceIds(currentPlaceIds.slice(0));
+        }
+
+        private _bindPlacesKendoMultiSelect(): void {
             $('#countrySelector').kendoMultiSelect({
                 filter: 'contains',
                 ignoreCase: 'true',
@@ -505,10 +499,11 @@ module Activities.ViewModels {
         private _addPlaceId(addedPlaceId: number, e: kendo.ui.MultiSelectEvent): void {
             var url = $('#place_api').text()
                 .format(this.activityId(), addedPlaceId);
+            this.isSaving(true);
             $.ajax({
                 type: 'PUT',
                 url: url,
-                async: false
+                //async: false
             })
                 .done((): void => {
                     this._currentPlaceIds.push(addedPlaceId);
@@ -516,7 +511,7 @@ module Activities.ViewModels {
                         .Single(function (x: any): any {
                             return x.id() == addedPlaceId;
                         });
-                    this.selectedPlaces.push({
+                    this.places.push({
                         activityId: this.activityId(),
                         placeId: addedPlaceId,
                         placeName: dataItem.officialName(),
@@ -528,42 +523,40 @@ module Activities.ViewModels {
                     e.sender.dataSource.filter({});
                     e.sender.value(restored);
                     this._currentPlaceIds = restored;
-                });
+                })
+                .always((): void => { this.isSaving(false); });
         }
 
         private _removePlaceId(removedPlaceId: number, e: kendo.ui.MultiSelectEvent): void {
             var url = $('#place_api').text()
                 .format(this.activityId(), removedPlaceId);
+            this.isSaving(true);
             $.ajax({
                 type: 'DELETE',
                 url: url,
-                async: false
+                //async: false
             })
                 .done((): void => {
                     var index = $.inArray(removedPlaceId, this._currentPlaceIds);
                     this._currentPlaceIds.splice(index, 1);
-                    this.selectedPlaces.remove(function (x: any): any {
+                    this.places.remove(function (x: any): any {
                         return x.placeId == removedPlaceId;
                     });
                 })
                 .fail((xhr: JQueryXHR): void => { // add back to ui
                     App.Failures.message(xhr, 'while trying to remove this location, please try again', true);
                     e.sender.value(this._currentPlaceIds);
-                });
+                })
+                .always((): void => { this.isSaving(false); });
         }
 
         //#endregion
         //#region Types
 
+        types: KnockoutObservableArray<number>;
         typeOptions: KnockoutObservableArray<ActivityTypeCheckBox> = ko.observableArray(); // array of activity type options displayed as list of checkboxes
-        selectedTypeIds: KnockoutObservableArray<number> = ko.observableArray(); // array of selected activity type data
 
-        private _bindTypes(typeOptions: any[], selectedTypes: ApiModels.ActivityType[]): void {
-            var selectedTypeIds = Enumerable.From(selectedTypes)
-                .Select(function (x: ApiModels.ActivityType): number {
-                    return x.typeId;
-                }).ToArray();
-            this.selectedTypeIds(selectedTypeIds);
+        private _bindTypeOptions(typeOptions: any[]): void {
             var typesMapping: KnockoutMappingOptions = {
                 create: (options: KnockoutMappingCreateOptions): any => {
                     var checkBox = new ActivityTypeCheckBox(options, this);
@@ -576,10 +569,10 @@ module Activities.ViewModels {
         //#endregion
         //#region Tags
 
-        tags: KnockoutObservableArray<ApiModels.ActivityTag> = ko.observableArray(); // Data bound to new tag textArea
+        tags: KnockoutObservableArray<KoModels.ActivityTag> = ko.observableArray(); // Data bound to new tag textArea
         newTag: KnockoutObservable<string> = ko.observable();
 
-        private _initTagsKendoAutoComplete(): void {
+        private _bindTagsKendoAutoComplete(): void {
             $('#newTag').kendoAutoComplete({
                 minLength: 3,
                 placeholder: '[Enter tag or keyword]',
@@ -670,8 +663,8 @@ module Activities.ViewModels {
                 });
         }
 
-        deleteTag(item: ApiModels.ActivityTag): void {
-            this._deleteTag(item.text)
+        deleteTag(item: KoModels.ActivityTag): void {
+            this._deleteTag(item.text())
                 .fail((xhr: JQueryXHR): void => {
                     App.Failures.message(xhr, 'while trying to delete this activity tag, please try again', true);
                 });
@@ -685,8 +678,8 @@ module Activities.ViewModels {
             else {
                 text = $.trim(text);
                 var tagToReplace = Enumerable.From(this.tags())
-                    .SingleOrDefault(undefined, function (x: ApiModels.ActivityTag): boolean {
-                        return x.text.toUpperCase() === text.toUpperCase();
+                    .SingleOrDefault(undefined, function (x: KoModels.ActivityTag): boolean {
+                        return x.text().toUpperCase() === text.toUpperCase();
                     });
                 if (tagToReplace) {
                     this._deleteTag(text)
@@ -709,6 +702,7 @@ module Activities.ViewModels {
         private _postTag(text: string, establishmentId: number): JQueryDeferred<any> {
             var deferred = $.Deferred();
             var url = $('#tags_api').text().format(this.activityId());
+            this.isSaving(true);
             $.ajax({
                 url: url,
                 type: 'POST',
@@ -725,16 +719,19 @@ module Activities.ViewModels {
                         domainType: establishmentId ? 'Establishment' : 'Custom',
                         domainKey: establishmentId,
                     };
-                    this.tags.push(tag);
+                    var observableTag: KoModels.ActivityTag = ko.mapping.fromJS(tag);
+                    this.tags.push(observableTag);
                     deferred.resolve();
                 })
-                .fail((xhr: JQueryXHR): void => { deferred.reject(xhr); });
+                .fail((xhr: JQueryXHR): void => { deferred.reject(xhr); })
+                .always((): void => { this.isSaving(false); });
             return deferred;
         }
 
         private _deleteTag(text: string): JQueryDeferred<any> {
             var deferred = $.Deferred();
             var url = $('#tags_api').text().format(this.activityId());
+            this.isSaving(true);
             $.ajax({
                 url: url,
                 type: 'DELETE',
@@ -745,13 +742,14 @@ module Activities.ViewModels {
                 .done((): void => {
                     // there should always be matching tag, but check to be safe
                     var tagToRemove = Enumerable.From(this.tags())
-                        .SingleOrDefault(undefined, function (x: ApiModels.ActivityTag): boolean {
-                            return text && x.text.toUpperCase() === text.toUpperCase();
+                        .SingleOrDefault(undefined, function (x: KoModels.ActivityTag): boolean {
+                            return text && x.text().toUpperCase() === text.toUpperCase();
                         });
                     if (tagToRemove) this.tags.remove(tagToRemove);
                     deferred.resolve();
                 })
-                .fail((xhr: JQueryXHR): void => { deferred.reject(xhr); });
+                .fail((xhr: JQueryXHR): void => { deferred.reject(xhr); })
+                .always((): void => { this.isSaving(false); });
             return deferred;
         }
 
@@ -759,12 +757,12 @@ module Activities.ViewModels {
         //#region Documents
 
         private static iconMaxSide: number = 64; // max width or height of the document icon
-        documents: KnockoutObservableArray<any> = ko.observableArray();
+        documents: KnockoutObservableArray<KoModels.ActivityDocument> = ko.observableArray();
         fileUploadErrors: KnockoutObservableArray<any> = ko.observableArray(); // array to hold file upload errors
         private _previousDocumentTitle: string; // old document name - used during document rename
         private _invalidFileNames: KnockoutObservableArray<string> = ko.observableArray([]);
 
-        private _initDocumentsKendoUpload(): void {
+        private _bindDocumentsKendoUpload(): void {
             $('#uploadFile').kendoUpload({
                 multiple: true,
                 showFileList: false,
@@ -774,10 +772,12 @@ module Activities.ViewModels {
                 upload: (e: kendo.ui.UploadUploadEvent): void => { this._onDocumentKendoUpload(e); },
                 success: (e: kendo.ui.UploadSuccessEvent): void => { this._onDocumentKendoSuccess(e); },
                 error: (e: kendo.ui.UploadErrorEvent): void => { this._onDocumentKendoError(e); },
+                complete: (): void => { this.isSaving(false); }
             });
         }
 
         private _onDocumentKendoSelect(e: kendo.ui.UploadSelectEvent): void {
+            this.isSaving(true);
             for (var i = 0; i < e.files.length; i++) {
                 var file = e.files[i];
                 $.ajax({
@@ -801,6 +801,7 @@ module Activities.ViewModels {
                         this.fileUploadErrors.push({ message: message, });
                     });
             }
+            this.isSaving(false);
         }
 
         private _onDocumentKendoUpload(e: kendo.ui.UploadUploadEvent): void {
@@ -813,13 +814,16 @@ module Activities.ViewModels {
                 e.preventDefault();
                 this._invalidFileNames.remove(file.name);
             }
+            else {
+                this.isSaving(true);
+            }
         }
 
         private _onDocumentKendoSuccess(e: kendo.ui.UploadSuccessEvent): void {
             var location = e.XMLHttpRequest.getResponseHeader('location');
             $.get(location)
                 .done((data: any): void => {
-                    var document = ko.mapping.fromJS(data);
+                    var document: KoModels.ActivityDocument = ko.mapping.fromJS(data);
                     this.documents.push(document);
                 });
         }
@@ -837,7 +841,7 @@ module Activities.ViewModels {
             return '{0}?{1}'.format(url, $.param(params));
         }
 
-        deleteDocument(item: any, index: number): void {
+        deleteDocument(item: KoModels.ActivityDocument, index: number): void {
             var $dialog = $('#deleteDocumentConfirmDialog');
             $dialog.dialog({ // open a dialog to confirm deletion of document
                 dialogClass: 'jquery-ui no-close',
@@ -857,7 +861,7 @@ module Activities.ViewModels {
 
                             $.ajax({ // submit delete api request
                                 type: 'DELETE',
-                                url: $('#document_api').text().format(this.activityId(), item.id()),
+                                url: $('#document_api').text().format(this.activityId(), item.documentId()),
                             })
                                 .done((): void => {
                                     $dialog.dialog('close');
@@ -884,7 +888,7 @@ module Activities.ViewModels {
             });
         }
 
-        startDocumentTitleEdit(item: Service.ApiModels.IObservableActivityDocument, event: any): void {
+        startDocumentTitleEdit(item: KoModels.ActivityDocument, event: any): void {
             var textElement = event.target;
             $(textElement).hide();
             this._previousDocumentTitle = item.title();
@@ -898,13 +902,13 @@ module Activities.ViewModels {
             });
         }
 
-        endDocumentTitleEdit(item: Service.ApiModels.IObservableActivityDocument, event: any): void {
+        endDocumentTitleEdit(item: KoModels.ActivityDocument, event: any): void {
             var inputElement = event.target;
             $(inputElement).unbind('focusout');
             $(inputElement).unbind('keypress');
             $(inputElement).attr('disabled', 'disabled');
 
-            var url = $('#document_api').text().format(this.activityId(), item.id());
+            var url = $('#document_api').text().format(this.activityId(), item.documentId());
             $.ajax({
                 type: 'PUT',
                 url: url,
@@ -954,7 +958,7 @@ module Activities.ViewModels {
             this.text = mappingOptions.data.type;
             this._owner = owner;
 
-            var isChecked = Enumerable.From(this._owner.selectedTypeIds())
+            var isChecked = Enumerable.From(this._owner.types())
                 .Any((x: number): boolean => {
                     return x == this.id;
                 });
@@ -967,20 +971,20 @@ module Activities.ViewModels {
         }
 
         private _onChecked(): void {
-            var needsAdded = Enumerable.From(this._owner.selectedTypeIds())
+            var needsAdded = Enumerable.From(this._owner.types())
                 .All((x: number): boolean => {
                     return x != this.id;
                 });
             if (!needsAdded) return;
 
-            this._owner.saveSpinner.start();
+            this._owner.isSaving(true);
             var url = $('#type_api').text().format(this._owner.activityId(), this.id);
             $.ajax({
                 url: url,
                 type: 'PUT',
             })
                 .done((): void => {
-                    this._owner.selectedTypeIds.push(this.id);
+                    this._owner.types.push(this.id);
                     setTimeout((): void => {
                         this.checked(true);
                     }, 0);
@@ -991,19 +995,17 @@ module Activities.ViewModels {
                         this.checked(false);
                     }, 0);
                 })
-                .always((): void => {
-                    this._owner.saveSpinner.stop();
-                });
+                .always((): void => { this._owner.isSaving(false); });
         }
 
         private _onUnchecked(): void {
-            var needsRemoved = Enumerable.From(this._owner.selectedTypeIds())
+            var needsRemoved = Enumerable.From(this._owner.types())
                 .Any((x: number): boolean => {
                     return x == this.id;
                 });
             if (!needsRemoved) return;
 
-            this._owner.saveSpinner.start();
+            this._owner.isSaving(true);
             var url = $('#type_api').text()
                 .format(this._owner.activityId(), this.id);
             $.ajax({
@@ -1011,7 +1013,7 @@ module Activities.ViewModels {
                 type: 'DELETE',
             })
                 .done((): void => {
-                    this._owner.selectedTypeIds.remove(this.id);
+                    this._owner.types.remove(this.id);
                     setTimeout((): void => {
                         this.checked(false);
                     }, 0);
@@ -1022,9 +1024,7 @@ module Activities.ViewModels {
                         this.checked(true);
                     }, 0);
                 })
-                .always((): void => {
-                    this._owner.saveSpinner.stop();
-                });
+                .always((): void => { this._owner.isSaving(false); });
         }
     }
 

@@ -288,7 +288,6 @@
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
     <Compile Include="ApiControllers\Activities\ActivitiesController.cs" />
-    <Compile Include="ApiControllers\Activities\ActivityElementsController.cs" />
     <Compile Include="ApiControllers\Activities\ActivityDocumentsController.cs" />
     <Compile Include="ApiControllers\Activities\ActivityPlacesController.cs" />
     <Compile Include="ApiControllers\Activities\ActivityTypesController.cs" />
@@ -347,16 +346,16 @@
     <Compile Include="Models\Activities\ActivityDocumentApiPutModel.cs" />
     <Compile Include="Models\Activities\_Deprecated\_ActivityEditState.cs" />
     <Compile Include="Models\Activities\ActivityEstablishmentApiModel.cs" />
-    <Compile Include="Models\Activities\ActivityLocationApiModel.cs" />
+    <Compile Include="Models\Activities\ActivityPlaceApiModel.cs" />
     <Compile Include="Models\Activities\ActivityLocationNameApiModel.cs" />
     <Compile Include="Models\Activities\ActivityPlaceCount.cs" />
-    <Compile Include="Models\Activities\ActivitySearchInputModel.cs" />
+    <Compile Include="Models\Activities\MyActivitiesInputModel.cs" />
     <Compile Include="Models\Activities\ActivityTagApiDeleteModel.cs" />
     <Compile Include="Models\Activities\ActivityTagApiModel.cs" />
     <Compile Include="Models\Activities\ActivityTagApiPutModel.cs" />
     <Compile Include="Models\Activities\ActivityTypeApiModel.cs" />
     <Compile Include="Models\Activities\_Deprecated\_ActivityTypeNameApiModel.cs" />
-    <Compile Include="Models\Activities\ActivityValuesApiModel.cs" />
+    <Compile Include="Models\Activities\_Deprecated\_ActivityValuesApiModel.cs" />
     <Compile Include="Helpers\VersionAttribute.cs" />
     <Compile Include="Helpers\ElmahHandleApiErrorAttribute.cs" />
     <Compile Include="Helpers\LocalApiAuthorizeAttribute.cs" />

@@ -26,16 +26,7 @@
             var activityId = parseInt('@ViewBag.ActivityId');
             var activityWorkCopyId = parseInt('@ViewBag.ActivityWorkCopyId');
             var activityViewModel = new Activities.ViewModels.ActivityForm(activityId, activityWorkCopyId);
-            activityViewModel.load()
-                .done(function () {
-                    ko.applyBindings(activityViewModel, $("#activity-edit")[0]);
-                    activityViewModel.setupWidgets("fromDatePicker", "toDatePicker", "countrySelector", "uploadFile", "newTag");
-
-                    activityViewModel.setupValidation();
-
-                    activityViewModel.setupSubscriptions();
-                    activityViewModel.ready(true);
-                })
+            activityViewModel.bind($("#activity_editor")[0])
                 .fail(function (xhr) {
                     App.Failures.message(xhr, 'while trying to load the activity editor', true);
                 });
@@ -52,233 +43,232 @@
     </nav>
 }
 
-<div class="fixed content" data-current-module="home">
-    <div data-side-swiper="root">
-        <div data-side-swiper="deck">
-            <div data-side-swiper="on">
-                <div id="activity-edit" data-bind="visible: ready" style="display: none;">
+@* API URL's *@
+<div style="display: none">
+    <span id="activity_api">@ViewBag.ActivityApi</span>
+    <span id="activity_replace_api">@ViewBag.ActivityReplaceApi</span>
+    <span id="type_api">@ViewBag.TypeApi</span>
+    <span id="place_api">@ViewBag.PlaceApi</span>
+    <span id="place_options_api">@ViewBag.PlaceOptionsApi</span>
+    <span id="establishment_names_api">@ViewBag.EstablishmentNamesApi</span>
+    <span id="tags_api">@ViewBag.TagsApi</span>
+    <span id="document_api">@ViewBag.DocumentApi</span>
+    <span id="documents_api">@ViewBag.DocumentsApi</span>
+    <span id="documents_validate_api">@ViewBag.DocumentsValidateApi</span>
+    <span id="document_icon_api">@ViewBag.DocumentIconApi</span>
+</div>
 
-                    @* BUTTONS *@
-                    <div style="margin-bottom: 32px" data-bind="template: { name: 'buttons-template' }"></div>
+<div class="content fixed to-top" data-current-module="home">
+    <div id="activity_editor" style="padding-top: 20px;">
 
-                    <header>
-                        <h1>@ViewBag.Title</h1>
-                        <span class="red badge" style="vertical-align: middle;" data-bind="visible: isDraft">Draft</span>
-                        <span class="green badge" style="vertical-align: middle;" data-bind="visible: isPublished">Published</span>
-                    </header>
+        <header>
+            <h1>@ViewBag.Title</h1>
+            <span class="red badge" style="vertical-align: middle; display: none;" data-bind="visible: isDraft">Draft</span>
+            <span class="green badge" style="vertical-align: middle; display: none;" data-bind="visible: isPublished">Published</span>
+        </header>
 
-                    <div style="margin-bottom: 38px">
-                        <table class="activity">
-                            <tbody>
-                                @* TITLE *@
-                                <tr>
-                                    <td class="label"><span class="container required"><span class="text">Title</span></span></td>
-                                    <td>
-                                        <textarea rows="1" placeholder="[Enter Title]" maxlength="500" data-bind="value: title"></textarea>
-                                        <span data-bind="validationMessage: title" class="validationMessage"></span>
-                                    </td>
-                                </tr>
-                                @* COUNTRY *@
-                                <tr>
-                                    <td class="label"><span class="container required"><span class="text">Countries / Locations</span></span></td>
-                                    <td>
-                                        <select id="countrySelector" style="overflow-y: auto" data-bind="selectedOptions: kendoPlaceIds"></select>
-                                        <span data-bind="validationMessage: selectedPlaces" class="validationMessage"></span>
-                                    </td>
-                                </tr>
-                                @* TYPE *@
-                                <tr>
-                                    @* TODO: activity types / categories are not always required *@
-                                    <td class="label" style="padding-top: 0;"><span class="container required"><span class="text">Type(s)</span></span></td>
-                                    <td>
-                                        @* Need this div for the validation message to display. *@
-                                        <div>
-                                            <ul class="data-items" data-bind="template: { name: 'activity-types-template', foreach: typeOptions }" />
-                                        </div>
-                                        <span data-bind="validationMessage: selectedTypeIds" class="validationMessage"></span>
-                                    </td>
-                                </tr>
-                                @* FROM and TO DATES *@
-                                <tr>
-                                    <td class="label"><span class="container required"><span class="text">On / From</span></span></td>
-                                    <td>
-                                        <div data-bind='validationOptions: { insertMessages: false }'>
-                                            <span style="display: inline-block; margin-right: 24px;">
-                                                <input id="fromDatePicker" data-bind="value: startsOn.input" />
-                                            </span>
-                                            <span style="display: inline-block; margin-right: 24px;">
-                                                <label>
-                                                    <input id="ongoingCheckbox" type="checkbox" data-bind="checked: onGoing" />
-                                                    <span>&nbsp;On-going&nbsp;</span>
-                                                </label>
-                                            </span>
-                                            <span style="display: inline-block; width: 220px;" data-bind="visible: !onGoing()">
-                                                <span>To:</span>
-                                                &nbsp;
-                                                <input id="toDatePicker" data-bind="value: endsOn.input" />
-                                            </span>
-                                        </div>
-                                        <div class="example" style="margin-top: 8px">
-                                            <span>Enter dates as yyyy, mm/yyyy or use date picker.</span>
-                                            <div>
-                                                <span data-bind="validationMessage: startsOn.input" class="validationMessage"></span>
-                                                <span data-bind="validationMessage: endsOn.input" class="validationMessage"></span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                @* FUNDING *@
-                                <tr>
-                                    <td class="label" style="padding-top: 0;"><span class="container"><span class="text">Funding</span></span></td>
-                                    <td>
-                                        <div style="margin-bottom: 4px;">
-                                            <label>
-                                                <input type="checkbox" style="margin-right: 4px; margin-left: 4px" data-bind="checked: isExternallyFunded" />
-                                                <span>This activity received <strong>external</strong> funding</span>
-                                            </label>
-                                        </div>
-                                        <div>
-                                            <label>
-                                                <input type="checkbox" style="margin-right: 4px; margin-left: 4px" data-bind="checked: isInternallyFunded" />
-                                                <span>This activity received <strong>internal</strong> funding</span>
-                                            </label>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        @* DESCRIPTION *@
-                        <div style="margin-bottom: inherit">
-                            <header style="margin-bottom: 4px">
-                                <h2 style="font-weight: normal">Description</h2>
-                                @*<img src="~/images/icons/help/question-mark-24-blue.png" alt="Help" style="width: 16px; height: 16px; float: right; margin-bottom: 3px"/>*@
-                            </header>
-                            <textarea data-bind="tinymce: content, valueUpdate: ['afterkeydown', 'keyup'], tinymceOptions:
-                                {
-                                    content_css: App.Routes.Content.styles('tinymce.css'),
-                                    convert_urls: false,
-                                    theme: 'advanced',
-                                    gecko_spellcheck: true,
-                                    mode: 'exact',
-                                    height: '300',
-                                    width: '100%',
-                                    verify_html: true,
-                                    plugins: 'paste,searchreplace,table,nonbreaking,inlinepopups',
-                                    theme_advanced_buttons1: 'undo,redo,restoredraft,|,formatselect,fontsizeselect ,bold,italic,underline,|,link,unlink,|,bullist,numlist,|,outdent,indent,blockquote,|,sub,sup,charmap,code',
-                                    theme_advanced_buttons2: 'cut,copy,paste,pastetext,pasteword,|,search,replace,|,image,hr,nonbreaking,tablecontrols',
-                                    theme_advanced_buttons3: '',
-                                    theme_advanced_font_sizes: '10px,12px,14px,16px,24px',
-                                    theme_advanced_toolbar_location: 'top',
-                                    theme_advanced_toolbar_align: 'left',
-                                    theme_advanced_statusbar_location: 'bottom',
-                                    theme_advanced_resizing: true,
-                                    theme_advanced_resizing_max_height: '580',
-                                    theme_advanced_resize_horizontal: false,
-                                    theme_advanced_blockformats: 'h2,h3,p,blockquote',
-                                    save_enablewhendirty: true,
-                                    gecko_spellcheck: true,
-                                    theme_advanced_path: false
-                                }">
-                            </textarea>
-                            @*<textarea id="description" rows="8" data-bind="value: content"></textarea>*@
-                        </div>
-                        @* TAGS *@
-                        <div style="margin-bottom: 32px">
-                            <header style="margin-bottom: 10px">
-                                <h2 style="font-weight: normal">
-                                    <span>Tags or Keywords</span>
-                                </h2>
-                            </header>
-                            <div style="width: 100%; margin-bottom: 16px">
-                                <input id="newTag" style="width: 600px; white-space: nowrap; overflow: hidden" data-bind="value: newTag" />
-                                &nbsp;
-                                <a href="/#" data-bind="click: addTag" title="Add tag">
-                                    <img src="~/images/icons/plus/plus-24-green.png" alt="Add new tag" />
-                                </a>
+        <div data-bind="visible: false">
+            <img src="~/images/icons/spinner/spinner-24-blue.gif" alt="" />
+            &nbsp;&nbsp;&nbsp;
+            <strong>Loading...</strong>
+        </div>
+
+        <div style="display: none;" data-bind="visible: true">
+            @* BUTTONS *@
+            <div data-bind="template: { name: 'buttons-template' }"></div>
+
+            <table class="activity">
+                <tbody>
+                    @* TITLE *@
+                    <tr>
+                        <td class="label"><span class="container required"><span class="text">Title</span></span></td>
+                        <td>
+                            <textarea rows="1" placeholder="[Enter Title]" maxlength="500" data-bind="value: title"></textarea>
+                            <span data-bind="validationMessage: title" class="validationMessage"></span>
+                        </td>
+                    </tr>
+                    @* COUNTRY *@
+                    <tr>
+                        <td class="label"><span class="container required"><span class="text">Countries / Locations</span></span></td>
+                        <td>
+                            <select id="countrySelector" style="overflow-y: auto" data-bind="selectedOptions: kendoPlaceIds"></select>
+                            <span data-bind="validationMessage: places" class="validationMessage"></span>
+                        </td>
+                    </tr>
+                    @* TYPE *@
+                    <tr>
+                        @* TODO: activity types / categories are not always required *@
+                        <td class="label" style="padding-top: 0;"><span class="container required"><span class="text">Type(s)</span></span></td>
+                        <td>
+                            @* Need this div for the validation message to display. *@
+                            <div>
+                                <ul class="data-items" data-bind="template: { name: 'activity-types-template', foreach: typeOptions }" />
                             </div>
-                            <div data-bind="visible: !tags().length">
-                                <p style="padding-bottom: 10px;">
-                                    There are currently no tags or keywords associated with this activity.
-                                </p>
+                            <span data-bind="validationMessage: types" class="validationMessage"></span>
+                        </td>
+                    </tr>
+                    @* FROM and TO DATES *@
+                    <tr>
+                        <td class="label"><span class="container required"><span class="text">On / From</span></span></td>
+                        <td>
+                            <div data-bind='validationOptions: { insertMessages: false }'>
+                                <span style="display: inline-block; margin-right: 24px;">
+                                    <input data-bind="value: startsOn.input, jQuery: '$startsOn'" />
+                                </span>
+                                <span style="display: inline-block; margin-right: 24px;">
+                                    <label>
+                                        <input id="ongoingCheckbox" type="checkbox" data-bind="checked: onGoing" />
+                                        <span>&nbsp;On-going&nbsp;</span>
+                                    </label>
+                                </span>
+                                <span style="display: inline-block; width: 220px;" data-bind="visible: !onGoing()">
+                                    <span>To:</span>
+                                    &nbsp;
+                                    <input data-bind="value: endsOn.input, jQuery: '$endsOn'" />
+                                </span>
                             </div>
-                            <ul data-bind="template: { name: 'tags-template', foreach: tags, visible: tags().length }"></ul>
-                            <div style="clear: left;"></div>
-                        </div>
-
-                        @* DOCUMENTS *@
-                        <div style="width: 100%; margin-bottom: inherit">
-                            <header>
-                                <h2>
-                                    <span style="font-weight: normal">Shared Documents</span>
-                                </h2>
-                            </header>
-                            <div data-bind="visible: !documents().length">
-                                <p>
-                                    There are currently no shared documents associated with this activity.
-                                </p>
+                            <div class="example" style="margin-top: 8px">
+                                <span>Enter dates as yyyy, mm/yyyy or use date picker.</span>
+                                <div>
+                                    <span data-bind="validationMessage: startsOn.input" class="validationMessage"></span>
+                                    <span data-bind="validationMessage: endsOn.input" class="validationMessage"></span>
+                                </div>
                             </div>
-                            <div style="margin-bottom: 16px">
-                                <input type="file" name="uploadFile" id="uploadFile" />
+                        </td>
+                    </tr>
+                    @* FUNDING *@
+                    <tr>
+                        <td class="label" style="padding-top: 0;"><span class="container"><span class="text">Funding</span></span></td>
+                        <td>
+                            <div style="margin-bottom: 4px;">
+                                <label>
+                                    <input type="checkbox" style="margin-right: 4px; margin-left: 4px" data-bind="checked: isExternallyFunded" />
+                                    <span>This activity received <strong>external</strong> funding</span>
+                                </label>
                             </div>
-                            <div data-bind="visible: fileUploadErrors().length" style="display: none;">
-                                <ul data-bind="foreach: fileUploadErrors">
-                                    <li style="margin-bottom: 0.5em;">
-                                        <div>
-                                            <span class="validationMessage" data-bind="text: message" style="display: inline; line-height: 1.2em;"></span>
-                                            &nbsp;
-                                            <a href="#" data-bind="click: function () { $root.dismissFileUploadError($index()); }">OK</a>
-                                        </div>
-                                    </li>
-                                </ul>
+                            <div>
+                                <label>
+                                    <input type="checkbox" style="margin-right: 4px; margin-left: 4px" data-bind="checked: isInternallyFunded" />
+                                    <span>This activity received <strong>internal</strong> funding</span>
+                                </label>
                             </div>
-                            <div data-bind="visible: documents().length">
-                                <table class="data">
-                                    <thead>
-                                        <tr>
-                                            <th style="width: 10%; text-align: center">Preview</th>
-                                            <th style="width: 65%">Title</th>
-                                            <th style="width: 10%; text-align: center">Type</th>
-                                            <th style="width: 10%; text-align: center">Size</th>
-                                            @*<th style="width: 5%; text-align: center">Hide</th>*@
-                                            <th style="width: 5%"></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody data-bind="template: { name: 'activity-document-template', foreach: documents }"></tbody>
-                                </table>
-                            </div>
-                        </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
 
-                        @* BUTTONS *@
-                        <div style="margin-bottom: 32px" data-bind="template: { name: 'buttons-template' }"></div>
+            @* DESCRIPTION *@
+            <div style="margin-bottom: 32px;">
+                <header style="margin-bottom: 4px">
+                    <h2 style="font-weight: normal">Description</h2>
+                </header>
+                <textarea data-bind="tinymce: content, valueUpdate: ['afterkeydown', 'keyup'], tinymceOptions:
+                    {
+                        content_css: App.Routes.Content.styles('tinymce.css'),
+                        convert_urls: false,
+                        theme: 'advanced',
+                        gecko_spellcheck: true,
+                        mode: 'exact',
+                        height: '300',
+                        width: '100%',
+                        verify_html: true,
+                        plugins: 'paste,searchreplace,table,nonbreaking,inlinepopups',
+                        theme_advanced_buttons1: 'undo,redo,restoredraft,|,formatselect,fontsizeselect ,bold,italic,underline,|,link,unlink,|,bullist,numlist,|,outdent,indent,blockquote,|,sub,sup,charmap,code',
+                        theme_advanced_buttons2: 'cut,copy,paste,pastetext,pasteword,|,search,replace,|,image,hr,nonbreaking,tablecontrols',
+                        theme_advanced_buttons3: '',
+                        theme_advanced_font_sizes: '10px,12px,14px,16px,24px',
+                        theme_advanced_toolbar_location: 'top',
+                        theme_advanced_toolbar_align: 'left',
+                        theme_advanced_statusbar_location: 'bottom',
+                        theme_advanced_resizing: true,
+                        theme_advanced_resizing_max_height: '580',
+                        theme_advanced_resize_horizontal: false,
+                        theme_advanced_blockformats: 'h2,h3,p,blockquote',
+                        save_enablewhendirty: true,
+                        gecko_spellcheck: true,
+                        theme_advanced_path: false
+                    }">
+                </textarea>
+                @*<textarea id="description" rows="8" data-bind="value: content"></textarea>*@
+            </div>
 
-                        @* LAST UPDATED *@
-                        <div style="width: 50%; height: 1.5em; border-top: 1px; border-style: solid">
-                            <span style="font-size: smaller; color: slategray">
-                                <span>Last updated</span>
-                                <span id="last-updated-date" data-bind="text: updatedOnDate"></span>
-                                <span data-bind="visible: updatedByPrincipal">by <span id="last-updated-name" data-bind="    text: updatedByPrincipal"></span></span>
-
-                            </span>
-                        </div>
-
-                        @* API URL's *@
-                        <div style="display: none">
-                            <span id="activity_api">@ViewBag.ActivityApi</span>
-                            <span id="activity_replace_api">@ViewBag.ActivityReplaceApi</span>
-                            <span id="type_api">@ViewBag.TypeApi</span>
-                            <span id="types_api">@ViewBag.TypesApi</span>
-                            <span id="place_api">@ViewBag.PlaceApi</span>
-                            <span id="places_api">@ViewBag.PlacesApi</span>
-                            <span id="place_options_api">@ViewBag.PlaceOptionsApi</span>
-                            <span id="establishment_names_api">@ViewBag.EstablishmentNamesApi</span>
-                            <span id="tags_api">@ViewBag.TagsApi</span>
-                            <span id="document_api">@ViewBag.DocumentApi</span>
-                            <span id="documents_api">@ViewBag.DocumentsApi</span>
-                            <span id="documents_validate_api">@ViewBag.DocumentsValidateApi</span>
-                            <span id="document_icon_api">@ViewBag.DocumentIconApi</span>
-                        </div>
-                    </div>
+            @* TAGS *@
+            <div style="margin-bottom: 32px;">
+                <header style="margin-bottom: 10px">
+                    <h2 style="font-weight: normal">
+                        <span>Tags or Keywords</span>
+                    </h2>
+                </header>
+                <div style="width: 100%; margin-bottom: 16px">
+                    <input id="newTag" style="width: 600px; white-space: nowrap; overflow: hidden" data-bind="value: newTag" />
+                    &nbsp;
+                    <a href="/#" data-bind="click: addTag" title="Add tag">
+                        <img src="~/images/icons/plus/plus-24-green.png" alt="Add new tag" />
+                    </a>
                 </div>
+                <div data-bind="visible: !tags().length">
+                    <p style="padding-bottom: 10px;">
+                        There are currently no tags or keywords associated with this activity.
+                    </p>
+                </div>
+                <ul data-bind="template: { name: 'tags-template', foreach: tags, visible: tags().length }"></ul>
+                <div style="clear: left;"></div>
+            </div>
+
+            @* DOCUMENTS *@
+            <div style="width: 100%; margin-bottom: 38px;">
+                <header>
+                    <h2>
+                        <span style="font-weight: normal">Shared Documents</span>
+                    </h2>
+                </header>
+                <div data-bind="visible: !documents().length">
+                    <p>
+                        There are currently no shared documents associated with this activity.
+                    </p>
+                </div>
+                <div style="margin-bottom: 16px">
+                    <input type="file" name="uploadFile" id="uploadFile" />
+                </div>
+                <div data-bind="visible: fileUploadErrors().length" style="display: none;">
+                    <ul data-bind="foreach: fileUploadErrors">
+                        <li style="margin-bottom: 0.5em;">
+                            <div>
+                                <span class="validationMessage" data-bind="text: message" style="display: inline; line-height: 1.2em;"></span>
+                                &nbsp;
+                                <a href="#" data-bind="click: function () { $root.dismissFileUploadError($index()); }">OK</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div data-bind="visible: documents().length">
+                    <table class="data">
+                        <thead>
+                            <tr>
+                                <th style="width: 10%; text-align: center">Preview</th>
+                                <th style="width: 65%">Title</th>
+                                <th style="width: 10%; text-align: center">Type</th>
+                                <th style="width: 10%; text-align: center">Size</th>
+                                @*<th style="width: 5%; text-align: center">Hide</th>*@
+                                <th style="width: 5%"></th>
+                            </tr>
+                        </thead>
+                        <tbody data-bind="template: { name: 'activity-document-template', foreach: documents }"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            @* BUTTONS *@
+            <div data-bind="template: { name: 'buttons-template' }"></div>
+
+            @* LAST UPDATED *@
+            <div style="width: 50%; height: 1.5em; border-top: 1px; border-style: solid">
+                <span style="font-size: smaller; color: slategray">
+                    <span>Last updated</span>
+                    <span id="last-updated-date" data-bind="text: updatedOnDate"></span>
+                    <span data-bind="visible: updatedByPrincipal">by <span id="last-updated-name" data-bind="    text: updatedByPrincipal"></span></span>
+
+                </span>
             </div>
         </div>
     </div>
@@ -343,7 +333,7 @@
     <tr class="hover-hilite" style="white-space: normal">
         <!-- Preview -->
         <td style="text-align: center">
-            <img alt="thumbnail" data-bind="attr: { src: $parent.documentIcon(id()) }" src="@Url.Content("~/images/icons/spinner/spinner-24-blue.gif")">
+            <img alt="thumbnail" data-bind="attr: { src: $parent.documentIcon(documentId()) }" src="@Url.Content("~/images/icons/spinner/spinner-24-blue.gif")">
         </td>
         <!-- Title -->
         <td>
@@ -373,7 +363,23 @@
 </script>
 
 <script type="text/html" id="buttons-template">
-    <span>
+    <div style="margin-bottom: 32px;">
+        <div class="group">
+            <div class="on-left">
+                <input type="button" value="Save as Draft" data-bind="click: saveDraft, disable: isSaving()" />
+                <input type="button" value="Publish" data-bind="click: publish, disable: isSaving()" />
+                <input type="button" value="Cancel" class="link" data-bind="click: cancel, disable: isSaving()" />
+                <span style="margin-left: 32px" data-bind="visible: saveSpinner.isVisible()">
+                    <img src="@Url.Content("~/images/icons/spinner/spinner-20-blue.gif")" alt="" />
+                    <strong>Saving...</strong>
+                </span>
+            </div>
+            <div class="on-right">
+                <input type="button" value="Guide Me" style="margin-left: 50px;" />
+            </div>
+        </div>
+    </div>
+    @*<span style="vertical-align: middle;">
         <input type="button" value="Save as Draft" data-bind="click: saveDraft" />
         <input type="button" value="Publish" data-bind="click: publish" />
         <input type="button" value="Guide Me" style="margin-left: 50px" />
@@ -381,7 +387,9 @@
             <img src="@Url.Content("~/images/icons/spinner/spinner-20-blue.gif")" alt="" />
             <strong>Saving...</strong>
         </span>
-        <input type="button" value="Cancel" style="float: right" data-bind="click: cancel" />
+        <input type="button" value="Cancel" style="float: right; vertical-align: middle; display: block;" data-bind="click: cancel" class="link" />
+        <span style="clear: both;"></span>
     </span>
+    <span style="clear: both;"></span>*@
 </script>
 

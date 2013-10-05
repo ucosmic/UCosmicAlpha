@@ -13,7 +13,6 @@ namespace UCosmic.Domain.Activities
         }
 
         public IPrincipal Principal { get; private set; }
-        internal int PersonId { get; set; }
         public int PageSize { get; set; }
         public int PageNumber { get; set; }
     }

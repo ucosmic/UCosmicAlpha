@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
@@ -40,18 +38,9 @@ namespace UCosmic.Web.Mvc.ApiControllers
         {
             var entities = _queryProcessor.Execute(new ActivityPlacesByActivityId(activityId)
             {
-                EagerLoad = new Expression<Func<ActivityLocation, object>>[]
-                {
-                    x => x.ActivityValues,
-                    x => x.Place,
-                }
+                EagerLoad = ActivityPlaceApiModel.EagerLoad,
             });
-            var models = entities.Select(x => new ActivityPlaceApiModel
-            {
-                ActivityId = x.ActivityValues.ActivityId,
-                PlaceId = x.PlaceId,
-                PlaceName = x.Place.OfficialName,
-            });
+            var models = Mapper.Map<ActivityPlaceApiModel[]>(entities);
             return models;
         }
 

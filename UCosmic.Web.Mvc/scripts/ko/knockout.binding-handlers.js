@@ -15,6 +15,13 @@ ko.bindingHandlers.jqElement = {
     }
 };
 
+ko.bindingHandlers.jQuery = {
+    update: function (element, valueAccessor, allBindingsAccessor, viewModel) {
+        var name = ko.utils.unwrapObservable(valueAccessor());
+        viewModel[name] = $(element);
+    }
+};
+
 ko.bindingHandlers.jqObservableElement = {
     update: function (element, valueAccessor, allBindingsAccessor, viewModel) {
         var name = ko.utils.unwrapObservable(valueAccessor());

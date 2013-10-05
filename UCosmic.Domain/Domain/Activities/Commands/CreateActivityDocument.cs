@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Security.Principal;
+using System.Threading;
 using FluentValidation;
 using UCosmic.Domain.Files;
 using UCosmic.Domain.Identity;
@@ -158,8 +159,8 @@ namespace UCosmic.Domain.Activities
                 activityDocument.EntityId = command.EntityId.Value;
             values.Documents.Add(activityDocument);
 
-            values.Activity.UpdatedOnUtc = DateTime.UtcNow;
-            values.Activity.UpdatedByPrincipal = activityDocument.CreatedByPrincipal;
+            // do NOT update activity here as it throws concurrency exceptions
+            // when users upload multiple documents at once
 
             _entities.Create(activityDocument);
 

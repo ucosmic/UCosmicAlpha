@@ -7,7 +7,12 @@
             </h2>
         </form>
     </header>
-    <table class="data" data-bind="visible: items().length">
+    <div data-bind="visible: false">
+        <img src="~/images/icons/spinner/spinner-24-blue.gif" alt="" />
+        &nbsp;&nbsp;&nbsp;
+        <strong>Loading...</strong>
+    </div>
+    <table class="data" data-bind="visible: items().length" style="display: none;">
         <tbody data-bind="template: { name: 'activities-template', foreach: items }">
         </tbody>
     </table>

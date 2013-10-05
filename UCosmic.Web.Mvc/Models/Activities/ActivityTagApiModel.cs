@@ -1,24 +1,19 @@
-﻿using System;
-using AutoMapper;
+﻿using AutoMapper;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using UCosmic.Domain.Activities;
 
 namespace UCosmic.Web.Mvc.Models
 {
-    public class ActivityTagApiModel2
+    public class ActivityTagApiModel
     {
         public int ActivityId { get; set; }
         public string Text { get; set; }
-        public ActivityTagDomainType DomainType { get; set; }
-        public int? DomainKey { get; set; }
-    }
 
-    public class ActivityTagApiModel
-    {
-        public int Id { get; set; }
-        public string Text { get; set; }
-        public string DomainTypeText { get; set; }
+        [JsonConverter(typeof(StringEnumConverter))]
+        public ActivityTagDomainType DomainType { get; set; }
+
         public int? DomainKey { get; set; }
-        public string Version { get; set; }
     }
 
     public static class ActivityTagApiProfiler
@@ -28,9 +23,7 @@ namespace UCosmic.Web.Mvc.Models
             protected override void Configure()
             {
                 CreateMap<ActivityTag, ActivityTagApiModel>()
-                    .ForMember(d => d.Id, o => o.MapFrom(s => s.RevisionId))
-                    .ForMember(d => d.DomainTypeText, o => o.MapFrom(s => s.DomainTypeText))
-                    .ForMember(d => d.Version, o => o.MapFrom(s => Convert.ToBase64String(s.Version)))
+                    .ForMember(d => d.ActivityId, o => o.MapFrom(s => s.ActivityValues.ActivityId))
                 ;
             }
         }
