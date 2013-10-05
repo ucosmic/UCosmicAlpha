@@ -71,6 +71,15 @@ declare module Activities.KoModels {
         domainType: KnockoutObservable<string>;
         domainKey: KnockoutObservable<number>;
     }
+
+    export interface ActivityFormBindings {
+        activityId: number;
+        workCopyId: number;
+        target: Element;
+        dataUrlFormat: string;
+        placeOptionsUrlFormat: string;
+        typeOptionsUrlFormat: string;
+    }
 }
 
 declare module Service.ApiModels {

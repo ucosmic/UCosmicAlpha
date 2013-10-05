@@ -16,8 +16,8 @@ var Activities;
     (function (ViewModels) {
         var ActivityForm = (function () {
             //#endregion
-            //#region Construction & Initialization
-            function ActivityForm(activityId, activityWorkCopyId) {
+            //#region Initial data load
+            function ActivityForm() {
                 var _this = this;
                 //#region Primary scalar observables & properties
                 this.ready = ko.observable(false);
@@ -52,48 +52,60 @@ var Activities;
                 this._isAutoSaving = false;
                 this._isSaved = false;
                 this._isDeleted = false;
+                this.cancelSpinner = new App.Spinner();
                 this.placeOptions = ko.observableArray();
                 this.kendoPlaceIds = ko.observableArray();
                 this.typeOptions = ko.observableArray();
                 //#endregion
                 //#region Tags
                 this.tags = ko.observableArray();
-                this.newTag = ko.observable();
+                this.tagInput = ko.observable();
                 this.documents = ko.observableArray();
                 this.fileUploadErrors = ko.observableArray();
                 this._invalidFileNames = ko.observableArray([]);
-                this._originalId = activityId;
-                this._workCopyId = activityWorkCopyId;
+                this.deleteDocumentSpinner = new App.Spinner();
             }
-            //#endregion
-            //#region Initial data load
-            ActivityForm.prototype.bind = function (target) {
+            ActivityForm.bind = function (bindings) {
+                var viewModel = new ActivityForm();
+                viewModel.bind(bindings).fail(function (xhr) {
+                    App.Failures.message(xhr, 'while trying to load the activity editor', true);
+                });
+                return viewModel;
+            };
+
+            ActivityForm.prototype.bind = function (bindings) {
                 var _this = this;
+                this._originalId = bindings.activityId;
+                this._workCopyId = bindings.workCopyId;
+                this._dataUrl = bindings.dataUrlFormat.format(bindings.workCopyId);
+                this._placeOptionsUrl = bindings.placeOptionsUrlFormat;
+                this._typeOptionsUrl = bindings.typeOptionsUrlFormat;
+
                 var deferred = $.Deferred();
 
                 var dataPact = $.Deferred();
-                $.ajax({ url: $('#activity_api').text().format(this._workCopyId), cache: false }).done(function (data) {
+                $.ajax({ url: this._dataUrl, cache: false }).done(function (data) {
                     dataPact.resolve(data);
                 }).fail(function (xhr) {
                     dataPact.reject(xhr);
                 });
 
                 var placeOptionsPact = $.Deferred();
-                $.get($('#place_options_api').text()).done(function (data) {
+                $.get(this._placeOptionsUrl).done(function (data) {
                     placeOptionsPact.resolve(data);
                 }).fail(function (xhr) {
                     placeOptionsPact.reject(xhr);
                 });
 
                 var typeOptionsPact = $.Deferred();
-                $.get(App.Routes.WebApi.Employees.ModuleSettings.ActivityTypes.get()).done(function (data) {
+                $.get(this._typeOptionsUrl).done(function (data) {
                     typeOptionsPact.resolve(data);
                 }).fail(function (xhr) {
                     typeOptionsPact.reject(xhr);
                 });
 
                 $.when(dataPact, placeOptionsPact, typeOptionsPact).done(function (data, placeOptions, typeOptions) {
-                    _this._applyBindings(target, data, placeOptions, typeOptions);
+                    _this._applyBindings(bindings.target, data, placeOptions, typeOptions);
                     deferred.resolve();
                 }).fail(function (xhr) {
                     deferred.reject(xhr);
@@ -247,7 +259,7 @@ else
                 }
             };
 
-            ActivityForm.prototype._autoSave = function () {
+            ActivityForm.prototype._autoSave = function (isNested) {
                 var _this = this;
                 var deferred = $.Deferred();
                 if (this._isSaved || this._isDeleted || this._isAutoSaving || (!this._isDirty() && this._descriptionIsDirtyCurrent == 0)) {
@@ -260,7 +272,6 @@ else
 
                 var model = ko.mapping.toJS(this);
 
-                var url = $('#activity_api').text().format(this.activityId());
                 var data = {
                     title: model.title,
                     content: model.content,
@@ -274,7 +285,7 @@ else
                 };
                 $.ajax({
                     type: 'PUT',
-                    url: url,
+                    url: this._dataUrl,
                     data: data
                 }).done(function () {
                     deferred.resolve();
@@ -283,7 +294,8 @@ else
                 }).always(function () {
                     _this._isDirty(false);
                     _this._isAutoSaving = false;
-                    _this.isSaving(false);
+                    if (!isNested || !_this.isValid())
+                        _this.isSaving(false);
                 });
 
                 return deferred;
@@ -291,15 +303,13 @@ else
 
             ActivityForm.prototype._save = function (mode) {
                 var _this = this;
-                this._autoSave().done(function (data) {
+                this._autoSave(true).done(function (data) {
                     if (!_this.isValid()) {
                         _this.errors.showAllMessages();
                         return;
                     }
 
-                    _this.isSaving(true);
-
-                    var url = $('#activity_replace_api').text().format(_this._workCopyId, _this._originalId, mode);
+                    var url = _this.$activityReplaceUrlFormat.text().format(_this._workCopyId, _this._originalId, mode);
                     $.ajax({
                         type: 'PUT',
                         url: url
@@ -308,9 +318,9 @@ else
                         location.href = App.Routes.Mvc.My.Profile.get();
                     }).fail(function (xhr) {
                         App.Failures.message(xhr, 'while trying to save your activity', true);
+                        _this.isSaving(false);
                     }).always(function () {
                         _this._isDirty(false);
-                        _this.isSaving(false);
                     });
                 }).fail(function (xhr) {
                     App.Failures.message(xhr, 'while trying to save your activity', true);
@@ -325,12 +335,9 @@ else
                 this._save('Public');
             };
 
-            //#endregion
-            //#region Canceling
             ActivityForm.prototype.cancel = function () {
                 var _this = this;
-                var $dialog = $('#cancelConfirmDialog');
-                $dialog.dialog({
+                this.$cancelDialog.dialog({
                     dialogClass: 'jquery-ui no-close',
                     closeOnEscape: false,
                     modal: true,
@@ -340,14 +347,14 @@ else
                         {
                             text: 'Cancel and lose changes',
                             click: function () {
-                                var $buttons = $dialog.parents('.ui-dialog').find('button');
+                                var $buttons = _this.$cancelDialog.parents('.ui-dialog').find('button');
                                 $.each($buttons, function () {
                                     $(this).attr('disabled', 'disabled');
                                 });
-                                $dialog.find('.spinner').css('visibility', '');
+                                _this.cancelSpinner.start();
 
                                 _this._purge().done(function () {
-                                    $dialog.dialog('close');
+                                    _this.$cancelDialog.dialog('close');
                                     location.href = App.Routes.Mvc.My.Profile.get();
                                 }).fail(function (xhr) {
                                     App.Failures.message(xhr, 'while trying to discard your activity edits', true);
@@ -355,14 +362,14 @@ else
                                     $.each($buttons, function () {
                                         $(this).removeAttr('disabled');
                                     });
-                                    $dialog.find('.spinner').css('visibility', 'hidden');
+                                    _this.cancelSpinner.stop();
                                 });
                             }
                         },
                         {
                             text: 'Do not cancel',
                             click: function () {
-                                $dialog.dialog('close');
+                                _this.$cancelDialog.dialog('close');
                             },
                             'data-css-link': true
                         }
@@ -374,7 +381,7 @@ else
                 if (typeof async === "undefined") { async = true; }
                 var _this = this;
                 var deferred = $.Deferred();
-                var url = $('#activity_api').text().format(this.activityId());
+                var url = this._dataUrl;
                 $.ajax({
                     type: 'DELETE',
                     url: url,
@@ -427,16 +434,13 @@ else
 
             ActivityForm.prototype._bindPlacesKendoMultiSelect = function () {
                 var _this = this;
-                $('#countrySelector').kendoMultiSelect({
+                this.$placeOptions.kendoMultiSelect({
                     filter: 'contains',
                     ignoreCase: 'true',
                     dataTextField: 'officialName()',
                     dataValueField: 'id()',
                     dataSource: this.placeOptions(),
                     value: this.kendoPlaceIds(),
-                    dataBound: function (e) {
-                        _this.places(e.sender.value().slice(0));
-                    },
                     change: function (e) {
                         _this._onPlaceMultiSelectChange(e);
                     },
@@ -459,7 +463,7 @@ else if (removedPlaceIds.length === 1)
 
             ActivityForm.prototype._addPlaceId = function (addedPlaceId, e) {
                 var _this = this;
-                var url = $('#place_api').text().format(this.activityId(), addedPlaceId);
+                var url = this.$placeUrlFormat.text().format(this.activityId(), addedPlaceId);
                 this.isSaving(true);
                 $.ajax({
                     type: 'PUT',
@@ -479,7 +483,7 @@ else if (removedPlaceIds.length === 1)
 
             ActivityForm.prototype._removePlaceId = function (removedPlaceId, e) {
                 var _this = this;
-                var url = $('#place_api').text().format(this.activityId(), removedPlaceId);
+                var url = this.$placeUrlFormat.text().format(this.activityId(), removedPlaceId);
                 this.isSaving(true);
                 $.ajax({
                     type: 'DELETE',
@@ -507,7 +511,7 @@ else if (removedPlaceIds.length === 1)
 
             ActivityForm.prototype._bindTagsKendoAutoComplete = function () {
                 var _this = this;
-                $('#newTag').kendoAutoComplete({
+                this.$tagInput.kendoAutoComplete({
                     minLength: 3,
                     placeholder: '[Enter tag or keyword]',
                     dataTextField: 'text',
@@ -519,12 +523,13 @@ else if (removedPlaceIds.length === 1)
             };
 
             ActivityForm.prototype._getTagAutoCompleteDataSource = function () {
+                var _this = this;
                 var dataSource = new kendo.data.DataSource({
                     serverFiltering: true,
                     transport: {
                         read: function (options) {
                             $.ajax({
-                                url: $('#establishment_names_api').text(),
+                                url: _this.$tagsAutoCompleteUrl.text(),
                                 data: {
                                     keyword: options.data.filter.filters[0].value,
                                     pageNumber: 1,
@@ -547,7 +552,7 @@ else if (removedPlaceIds.length === 1)
                 // name.ownerId corresponds to the establishment.id
                 var dataItem = e.sender.dataItem(e.item.index());
                 this._addOrReplaceTag(dataItem.text).done(function () {
-                    _this.newTag('');
+                    _this.tagInput('');
                     e.preventDefault();
                     e.sender.value('');
                     e.sender.element.focus();
@@ -558,11 +563,11 @@ else if (removedPlaceIds.length === 1)
 
             ActivityForm.prototype.addTag = function () {
                 var _this = this;
-                var text = this.newTag();
+                var text = this.tagInput();
                 if (text)
                     text = $.trim(text);
                 this._addOrReplaceTag(text).done(function () {
-                    _this.newTag('');
+                    _this.tagInput('');
                 }).fail(function (xhr) {
                     App.Failures.message(xhr, 'while trying to add this activity tag, please try again', true);
                 });
@@ -608,7 +613,7 @@ else if (removedPlaceIds.length === 1)
             ActivityForm.prototype._postTag = function (text) {
                 var _this = this;
                 var deferred = $.Deferred();
-                var url = $('#tags_api').text().format(this.activityId());
+                var url = this.$tagsUrlFormat.text().format(this.activityId());
                 this.isSaving(true);
                 $.ajax({
                     url: url,
@@ -637,7 +642,7 @@ else if (removedPlaceIds.length === 1)
             ActivityForm.prototype._deleteTag = function (text) {
                 var _this = this;
                 var deferred = $.Deferred();
-                var url = $('#tags_api').text().format(this.activityId());
+                var url = this.$tagsUrlFormat.text().format(this.activityId());
                 this.isSaving(true);
                 $.ajax({
                     url: url,
@@ -663,11 +668,11 @@ else if (removedPlaceIds.length === 1)
 
             ActivityForm.prototype._bindDocumentsKendoUpload = function () {
                 var _this = this;
-                $('#uploadFile').kendoUpload({
+                this.$fileUpload.kendoUpload({
                     multiple: true,
                     showFileList: false,
                     localization: { select: 'Choose one or more documents to share...' },
-                    async: { saveUrl: $('#documents_api').text().format(this.activityId()) },
+                    async: { saveUrl: this.$documentsUrlFormat.text().format(this.activityId()) },
                     select: function (e) {
                         _this._onDocumentKendoSelect(e);
                     },
@@ -694,7 +699,7 @@ else if (removedPlaceIds.length === 1)
                     $.ajax({
                         async: false,
                         type: 'POST',
-                        url: $('#documents_validate_api').text(),
+                        url: this.$documentsValidateUrl.text(),
                         data: {
                             name: file.name,
                             length: file.size
@@ -740,15 +745,14 @@ else if (removedPlaceIds.length === 1)
             };
 
             ActivityForm.prototype.documentIcon = function (documentId) {
-                var url = $('#document_icon_api').text().format(this.activityId(), documentId);
+                var url = this.$documentIconUrlFormat.text().format(this.activityId(), documentId);
                 var params = { maxSide: ActivityForm.iconMaxSide };
                 return '{0}?{1}'.format(url, $.param(params));
             };
 
             ActivityForm.prototype.deleteDocument = function (item, index) {
                 var _this = this;
-                var $dialog = $('#deleteDocumentConfirmDialog');
-                $dialog.dialog({
+                this.$deleteDialog.dialog({
                     dialogClass: 'jquery-ui no-close',
                     closeOnEscape: false,
                     width: 'auto',
@@ -758,17 +762,17 @@ else if (removedPlaceIds.length === 1)
                         {
                             text: 'Yes, confirm delete',
                             click: function () {
-                                var $buttons = $dialog.parents('.ui-dialog').find('button');
+                                var $buttons = _this.$deleteDialog.parents('.ui-dialog').find('button');
                                 $.each($buttons, function () {
                                     $(this).attr('disabled', 'disabled');
                                 });
-                                $dialog.find('.spinner').css('visibility', '');
+                                _this.deleteDocumentSpinner.start();
 
                                 $.ajax({
                                     type: 'DELETE',
-                                    url: $('#document_api').text().format(_this.activityId(), item.documentId())
+                                    url: _this.$documentUrlFormat.text().format(_this.activityId(), item.documentId())
                                 }).done(function () {
-                                    $dialog.dialog('close');
+                                    _this.$deleteDialog.dialog('close');
                                     _this.documents.splice(index, 1);
                                 }).fail(function (xhr) {
                                     App.Failures.message(xhr, 'while trying to delete your activity document', true);
@@ -776,14 +780,14 @@ else if (removedPlaceIds.length === 1)
                                     $.each($buttons, function () {
                                         $(this).removeAttr('disabled');
                                     });
-                                    $dialog.find('.spinner').css('visibility', 'hidden');
+                                    _this.deleteDocumentSpinner.stop();
                                 });
                             }
                         },
                         {
                             text: 'No, cancel delete',
                             click: function () {
-                                $dialog.dialog('close');
+                                _this.$deleteDialog.dialog('close');
                             },
                             'data-css-link': true
                         }
@@ -814,10 +818,9 @@ else if (removedPlaceIds.length === 1)
                 $(inputElement).unbind('keypress');
                 $(inputElement).attr('disabled', 'disabled');
 
-                var url = $('#document_api').text().format(this.activityId(), item.documentId());
                 $.ajax({
                     type: 'PUT',
-                    url: url,
+                    url: this.$documentUrlFormat.text().format(this.activityId(), item.documentId()),
                     data: {
                         title: item.title()
                     },
@@ -884,7 +887,7 @@ else
                     return;
 
                 this._owner.isSaving(true);
-                var url = $('#type_api').text().format(this._owner.activityId(), this.id);
+                var url = this._owner.$typeUrlFormat.text().format(this._owner.activityId(), this.id);
                 $.ajax({
                     url: url,
                     type: 'PUT'
@@ -912,7 +915,7 @@ else
                     return;
 
                 this._owner.isSaving(true);
-                var url = $('#type_api').text().format(this._owner.activityId(), this.id);
+                var url = this._owner.$typeUrlFormat.text().format(this._owner.activityId(), this.id);
                 $.ajax({
                     url: url,
                     type: 'DELETE'

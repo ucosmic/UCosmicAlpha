@@ -57,38 +57,51 @@ module Activities.ViewModels {
         });
 
         //#endregion
-        //#region Construction & Initialization
-
-        constructor(activityId: number, activityWorkCopyId: number) {
-            this._originalId = activityId;
-            this._workCopyId = activityWorkCopyId;
-        }
-
-        //#endregion
         //#region Initial data load
 
-        bind(target: Element): JQueryDeferred<void> {
+        constructor() { }
+
+        private _dataUrl: string;
+        private _placeOptionsUrl: string;
+        private _typeOptionsUrl: string;
+
+        static bind(bindings: KoModels.ActivityFormBindings): ActivityForm {
+            var viewModel = new ActivityForm();
+            viewModel.bind(bindings).fail((xhr: JQueryXHR): void => {
+                App.Failures.message(xhr, 'while trying to load the activity editor', true);
+            });
+            return viewModel;
+        }
+
+        bind(bindings: KoModels.ActivityFormBindings): JQueryDeferred<void> {
+
+            this._originalId = bindings.activityId;
+            this._workCopyId = bindings.workCopyId;
+            this._dataUrl = bindings.dataUrlFormat.format(bindings.workCopyId);
+            this._placeOptionsUrl = bindings.placeOptionsUrlFormat;
+            this._typeOptionsUrl = bindings.typeOptionsUrlFormat;
+
             var deferred: JQueryDeferred<void> = $.Deferred();
 
             var dataPact = $.Deferred();
-            $.ajax({ url: $('#activity_api').text().format(this._workCopyId), cache: false, })
+            $.ajax({ url: this._dataUrl, cache: false, })
                 .done((data: any): void => { dataPact.resolve(data); })
                 .fail((xhr: JQueryXHR): void => { dataPact.reject(xhr); });
 
             var placeOptionsPact = $.Deferred();
-            $.get($('#place_options_api').text())
+            $.get(this._placeOptionsUrl)
                 .done((data: any[]): void => { placeOptionsPact.resolve(data); })
                 .fail((xhr: JQueryXHR): void => { placeOptionsPact.reject(xhr); });
 
             var typeOptionsPact = $.Deferred();
-            $.get(App.Routes.WebApi.Employees.ModuleSettings.ActivityTypes.get())
+            $.get(this._typeOptionsUrl)
                 .done((data: any[]): void => { typeOptionsPact.resolve(data); })
                 .fail((xhr: JQueryXHR): void => { typeOptionsPact.reject(xhr); });
 
             $.when(dataPact, placeOptionsPact, typeOptionsPact)
                 .done((data: ApiModels.Activity, placeOptions: any[], typeOptions: any[]): void => {
 
-                    this._applyBindings(target, data, placeOptions, typeOptions);
+                    this._applyBindings(bindings.target, data, placeOptions, typeOptions);
                     deferred.resolve();
                 })
                 .fail((xhr: JQueryXHR): void => {
@@ -252,7 +265,7 @@ module Activities.ViewModels {
         private _isSaved: boolean = false; // prevent autosave when already saved (published or draft)
         private _isDeleted: boolean = false; // prevent autosave when already deleted (on cancel)
 
-        private _autoSave(): JQueryDeferred<void> {
+        private _autoSave(isNested?: boolean): JQueryDeferred<void> {
             var deferred: JQueryDeferred<void> = $.Deferred();
             if (this._isSaved || this._isDeleted || this._isAutoSaving ||
                 (!this._isDirty() && this._descriptionIsDirtyCurrent == 0)) {
@@ -265,7 +278,6 @@ module Activities.ViewModels {
 
             var model = ko.mapping.toJS(this);
 
-            var url = $('#activity_api').text().format(this.activityId());
             var data = {
                 title: model.title,
                 content: model.content,
@@ -279,7 +291,7 @@ module Activities.ViewModels {
             };
             $.ajax({
                 type: 'PUT',
-                url: url,
+                url: this._dataUrl,
                 data: data,
             })
                 .done((): void => {
@@ -291,14 +303,17 @@ module Activities.ViewModels {
                 .always((): void => {
                     this._isDirty(false);
                     this._isAutoSaving = false;
-                    this.isSaving(false);
+                    if (!isNested || !this.isValid())
+                        this.isSaving(false);
                 });
 
             return deferred;
         }
 
+        $activityReplaceUrlFormat: JQuery;
+
         private _save(mode: string): void {
-            this._autoSave() // play through the autosave function first
+            this._autoSave(true) // play through the autosave function first
                 .done((data: any): void => {
 
                     if (!this.isValid()) {
@@ -306,9 +321,7 @@ module Activities.ViewModels {
                         return;
                     }
 
-                    this.isSaving(true);
-
-                    var url = $('#activity_replace_api').text()
+                    var url = this.$activityReplaceUrlFormat.text()
                         .format(this._workCopyId, this._originalId, mode);
                     $.ajax({
                         type: 'PUT',
@@ -320,10 +333,10 @@ module Activities.ViewModels {
                         })
                         .fail((xhr: JQueryXHR): void => {
                             App.Failures.message(xhr, 'while trying to save your activity', true);
+                            this.isSaving(false);
                         })
                         .always((): void => {
                             this._isDirty(false);
-                            this.isSaving(false);
                         });
                 })
                 .fail((xhr: JQueryXHR): void => {
@@ -342,9 +355,10 @@ module Activities.ViewModels {
         //#endregion
         //#region Canceling
 
+        $cancelDialog: JQuery;
+        cancelSpinner = new App.Spinner();
         cancel(): void {
-            var $dialog = $('#cancelConfirmDialog');
-            $dialog.dialog({
+            this.$cancelDialog.dialog({
                 dialogClass: 'jquery-ui no-close',
                 closeOnEscape: false,
                 modal: true,
@@ -354,15 +368,15 @@ module Activities.ViewModels {
                     {
                         text: 'Cancel and lose changes',
                         click: (): void => {
-                            var $buttons = $dialog.parents('.ui-dialog').find('button');
+                            var $buttons = this.$cancelDialog.parents('.ui-dialog').find('button');
                             $.each($buttons, function (): void { // disable buttons
                                 $(this).attr('disabled', 'disabled');
                             });
-                            $dialog.find('.spinner').css('visibility', '');
+                            this.cancelSpinner.start();
 
                             this._purge()
                                 .done((): void => {
-                                    $dialog.dialog('close');
+                                    this.$cancelDialog.dialog('close');
                                     location.href = App.Routes.Mvc.My.Profile.get();
                                 })
                                 .fail((xhr: JQueryXHR): void => {
@@ -372,14 +386,14 @@ module Activities.ViewModels {
                                     $.each($buttons, function (): void {
                                         $(this).removeAttr('disabled');
                                     });
-                                    $dialog.find('.spinner').css('visibility', 'hidden');
+                                    this.cancelSpinner.stop();
                                 });
                         }
                     },
                     {
                         text: 'Do not cancel',
                         click: (): void => {
-                            $dialog.dialog('close');
+                            this.$cancelDialog.dialog('close');
                         },
                         'data-css-link': true
                     }]
@@ -388,7 +402,7 @@ module Activities.ViewModels {
 
         private _purge(async: boolean = true): JQueryDeferred<void> {
             var deferred = $.Deferred();
-            var url = $('#activity_api').text().format(this.activityId());
+            var url = this._dataUrl;
             $.ajax({
                 type: 'DELETE',
                 url: url,
@@ -450,7 +464,9 @@ module Activities.ViewModels {
 
         places: KnockoutObservableArray<number>;
         placeOptions: KnockoutObservableArray<any> = ko.observableArray(); // Array of all locations offered in Country/Location multiselect
-        kendoPlaceIds: KnockoutObservableArray<number> = ko.observableArray(); // Array of placeIds of selected locations, kendo multiselect stores these as strings
+        kendoPlaceIds: KnockoutObservableArray<any> = ko.observableArray(); // Array of placeIds of selected locations, kendo multiselect stores these as strings
+        $placeOptions: JQuery;
+        $placeUrlFormat: JQuery;
 
         private _bindPlaceOptions(placeOptions: any[]): void {
             // map places multiselect datasource to locations
@@ -461,16 +477,13 @@ module Activities.ViewModels {
         }
 
         private _bindPlacesKendoMultiSelect(): void {
-            $('#countrySelector').kendoMultiSelect({
+            this.$placeOptions.kendoMultiSelect({
                 filter: 'contains',
                 ignoreCase: 'true',
                 dataTextField: 'officialName()',
                 dataValueField: 'id()',
                 dataSource: this.placeOptions(),
                 value: this.kendoPlaceIds(),
-                dataBound: (e: kendo.ui.MultiSelectEvent): void => {
-                    this.places(e.sender.value().slice(0));
-                },
                 change: (e: kendo.ui.MultiSelectEvent): void => {
                     this._onPlaceMultiSelectChange(e);
                 },
@@ -494,7 +507,7 @@ module Activities.ViewModels {
         }
 
         private _addPlaceId(addedPlaceId: number, e: kendo.ui.MultiSelectEvent): void {
-            var url = $('#place_api').text()
+            var url = this.$placeUrlFormat.text()
                 .format(this.activityId(), addedPlaceId);
             this.isSaving(true);
             $.ajax({
@@ -516,7 +529,7 @@ module Activities.ViewModels {
         }
 
         private _removePlaceId(removedPlaceId: number, e: kendo.ui.MultiSelectEvent): void {
-            var url = $('#place_api').text()
+            var url = this.$placeUrlFormat.text()
                 .format(this.activityId(), removedPlaceId);
             this.isSaving(true);
             $.ajax({
@@ -539,6 +552,7 @@ module Activities.ViewModels {
 
         types: KnockoutObservableArray<number>;
         typeOptions: KnockoutObservableArray<ActivityTypeCheckBox> = ko.observableArray(); // array of activity type options displayed as list of checkboxes
+        $typeUrlFormat: JQuery;
 
         private _bindTypeOptions(typeOptions: any[]): void {
             var typesMapping: KnockoutMappingOptions = {
@@ -554,10 +568,13 @@ module Activities.ViewModels {
         //#region Tags
 
         tags: KnockoutObservableArray<KoModels.ActivityTag> = ko.observableArray(); // Data bound to new tag textArea
-        newTag: KnockoutObservable<string> = ko.observable();
+        tagInput: KnockoutObservable<string> = ko.observable();
+        $tagInput: JQuery;
+        $tagsUrlFormat: JQuery;
+        $tagsAutoCompleteUrl: JQuery;
 
         private _bindTagsKendoAutoComplete(): void {
-            $('#newTag').kendoAutoComplete({
+            this.$tagInput.kendoAutoComplete({
                 minLength: 3,
                 placeholder: '[Enter tag or keyword]',
                 dataTextField: 'text',
@@ -574,7 +591,7 @@ module Activities.ViewModels {
                 transport: {
                     read: (options: any): void => {
                         $.ajax({
-                            url: $('#establishment_names_api').text(),
+                            url: this.$tagsAutoCompleteUrl.text(),
                             data: {
                                 keyword: options.data.filter.filters[0].value,
                                 pageNumber: 1,
@@ -599,7 +616,7 @@ module Activities.ViewModels {
             var dataItem = e.sender.dataItem(e.item.index());
             this._addOrReplaceTag(dataItem.text)
                 .done((): void => {
-                    this.newTag('');
+                    this.tagInput('');
                     e.preventDefault();
                     e.sender.value('');
                     e.sender.element.focus(); // this resets the value of e.sender._prev
@@ -610,11 +627,11 @@ module Activities.ViewModels {
         }
 
         addTag(): void {
-            var text = this.newTag();
+            var text = this.tagInput();
             if (text) text = $.trim(text);
             this._addOrReplaceTag(text)
                 .done((): void => {
-                    this.newTag('');
+                    this.tagInput('');
                 })
                 .fail((xhr: JQueryXHR): void => {
                     App.Failures.message(xhr, 'while trying to add this activity tag, please try again', true);
@@ -659,7 +676,7 @@ module Activities.ViewModels {
 
         private _postTag(text: string): JQueryDeferred<any> {
             var deferred = $.Deferred();
-            var url = $('#tags_api').text().format(this.activityId());
+            var url = this.$tagsUrlFormat.text().format(this.activityId());
             this.isSaving(true);
             $.ajax({
                 url: url,
@@ -686,7 +703,7 @@ module Activities.ViewModels {
 
         private _deleteTag(text: string): JQueryDeferred<any> {
             var deferred = $.Deferred();
-            var url = $('#tags_api').text().format(this.activityId());
+            var url = this.$tagsUrlFormat.text().format(this.activityId());
             this.isSaving(true);
             $.ajax({
                 url: url,
@@ -717,13 +734,18 @@ module Activities.ViewModels {
         fileUploadErrors: KnockoutObservableArray<any> = ko.observableArray(); // array to hold file upload errors
         private _previousDocumentTitle: string; // old document name - used during document rename
         private _invalidFileNames: KnockoutObservableArray<string> = ko.observableArray([]);
+        $fileUpload: JQuery;
+        $documentUrlFormat: JQuery;
+        $documentsUrlFormat: JQuery;
+        $documentIconUrlFormat: JQuery;
+        $documentsValidateUrl: JQuery;
 
         private _bindDocumentsKendoUpload(): void {
-            $('#uploadFile').kendoUpload({
+            this.$fileUpload.kendoUpload({
                 multiple: true,
                 showFileList: false,
                 localization: { select: 'Choose one or more documents to share...' },
-                async: { saveUrl: $('#documents_api').text().format(this.activityId()), },
+                async: { saveUrl: this.$documentsUrlFormat.text().format(this.activityId()), },
                 select: (e: kendo.ui.UploadSelectEvent): void => { this._onDocumentKendoSelect(e); },
                 upload: (e: kendo.ui.UploadUploadEvent): void => { this._onDocumentKendoUpload(e); },
                 success: (e: kendo.ui.UploadSuccessEvent): void => { this._onDocumentKendoSuccess(e); },
@@ -739,7 +761,7 @@ module Activities.ViewModels {
                 $.ajax({
                     async: false,
                     type: 'POST',
-                    url: $('#documents_validate_api').text(),
+                    url: this.$documentsValidateUrl.text(),
                     data: {
                         name: file.name,
                         length: file.size
@@ -792,14 +814,15 @@ module Activities.ViewModels {
         }
 
         documentIcon(documentId: number) {
-            var url = $('#document_icon_api').text().format(this.activityId(), documentId);
+            var url = this.$documentIconUrlFormat.text().format(this.activityId(), documentId);
             var params = { maxSide: ActivityForm.iconMaxSide };
             return '{0}?{1}'.format(url, $.param(params));
         }
 
+        $deleteDialog: JQuery;
+        deleteDocumentSpinner = new App.Spinner();
         deleteDocument(item: KoModels.ActivityDocument, index: number): void {
-            var $dialog = $('#deleteDocumentConfirmDialog');
-            $dialog.dialog({ // open a dialog to confirm deletion of document
+            this.$deleteDialog.dialog({ // open a dialog to confirm deletion of document
                 dialogClass: 'jquery-ui no-close',
                 closeOnEscape: false,
                 width: 'auto',
@@ -809,18 +832,18 @@ module Activities.ViewModels {
                     {
                         text: 'Yes, confirm delete',
                         click: (): void => {
-                            var $buttons = $dialog.parents('.ui-dialog').find('button');
+                            var $buttons = this.$deleteDialog.parents('.ui-dialog').find('button');
                             $.each($buttons, function (): void { // disable buttons
                                 $(this).attr('disabled', 'disabled');
                             });
-                            $dialog.find('.spinner').css('visibility', '');
+                            this.deleteDocumentSpinner.start();
 
                             $.ajax({ // submit delete api request
                                 type: 'DELETE',
-                                url: $('#document_api').text().format(this.activityId(), item.documentId()),
+                                url: this.$documentUrlFormat.text().format(this.activityId(), item.documentId()),
                             })
                                 .done((): void => {
-                                    $dialog.dialog('close');
+                                    this.$deleteDialog.dialog('close');
                                     this.documents.splice(index, 1);
                                 })
                                 .fail((xhr: JQueryXHR): void => { // display failure message
@@ -830,14 +853,14 @@ module Activities.ViewModels {
                                     $.each($buttons, function (): void {
                                         $(this).removeAttr('disabled');
                                     });
-                                    $dialog.find('.spinner').css('visibility', 'hidden');
+                                    this.deleteDocumentSpinner.stop();
                                 });
                         }
                     },
                     {
                         text: 'No, cancel delete',
                         click: (): void => {
-                            $dialog.dialog('close');
+                            this.$deleteDialog.dialog('close');
                         },
                         'data-css-link': true
                     }]
@@ -864,10 +887,9 @@ module Activities.ViewModels {
             $(inputElement).unbind('keypress');
             $(inputElement).attr('disabled', 'disabled');
 
-            var url = $('#document_api').text().format(this.activityId(), item.documentId());
             $.ajax({
                 type: 'PUT',
-                url: url,
+                url: this.$documentUrlFormat.text().format(this.activityId(), item.documentId()),
                 data: {
                     title: item.title()
                 },
@@ -934,7 +956,7 @@ module Activities.ViewModels {
             if (!needsAdded) return;
 
             this._owner.isSaving(true);
-            var url = $('#type_api').text().format(this._owner.activityId(), this.id);
+            var url = this._owner.$typeUrlFormat.text().format(this._owner.activityId(), this.id);
             $.ajax({
                 url: url,
                 type: 'PUT',
@@ -962,7 +984,7 @@ module Activities.ViewModels {
             if (!needsRemoved) return;
 
             this._owner.isSaving(true);
-            var url = $('#type_api').text()
+            var url = this._owner.$typeUrlFormat.text()
                 .format(this._owner.activityId(), this.id);
             $.ajax({
                 url: url,
