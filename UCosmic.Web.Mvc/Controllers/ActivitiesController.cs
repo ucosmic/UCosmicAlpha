@@ -86,6 +86,11 @@ namespace UCosmic.Web.Mvc.Controllers
             Debug.Assert(activities != null);
             ViewBag.ActivitiesApi = activities;
 
+            var activityCopy = Url.HttpRouteUrl(null, new { controller = "Activities", action = "GetCopy", activityId = 0 });
+            Debug.Assert(activityCopy != null);
+            activityCopy = activityCopy.Replace("0", "{0}");
+            ViewBag.ActivityCopyApi = activityCopy;
+
             var activityReplace = Url.HttpRouteUrl(null, new { controller = "Activities", action = "PutMove", workCopyActivityId = 0, originalActivityId = 1, mode = ActivityMode.Draft });
             Debug.Assert(activityReplace != null);
             activityReplace = activityReplace.Replace("0", "{0}").Replace("1", "{1}").Replace(ActivityMode.Draft.ToString(), "{2}");

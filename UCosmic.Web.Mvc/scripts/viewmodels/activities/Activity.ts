@@ -77,7 +77,7 @@ module Activities.ViewModels {
 
             this._originalId = bindings.activityId;
             this._workCopyId = bindings.workCopyId;
-            this._dataUrl = bindings.dataUrlFormat.format(bindings.workCopyId);
+            this._dataUrl = bindings.dataUrlFormat.format(bindings.activityId);
             this._placeOptionsUrl = bindings.placeOptionsUrlFormat;
             this._typeOptionsUrl = bindings.typeOptionsUrlFormat;
 
@@ -139,6 +139,11 @@ module Activities.ViewModels {
                 places: {
                     create: (options: KnockoutMappingCreateOptions): number => {
                         return options.data.placeId;
+                    },
+                },
+                documents: {
+                    create: (options: KnockoutMappingCreateOptions): ActivityDocumentForm => {
+                        return new ActivityDocumentForm(options.data, this);
                     },
                 },
                 ignore: ['startsOn', 'endsOn', 'startsFormat', 'endsFormat'],
@@ -264,6 +269,7 @@ module Activities.ViewModels {
         private _isAutoSaving: boolean = false; // in the process of saving
         private _isSaved: boolean = false; // prevent autosave when already saved (published or draft)
         private _isDeleted: boolean = false; // prevent autosave when already deleted (on cancel)
+        $activityUrlFormat: JQuery;
 
         private _autoSave(isNested?: boolean): JQueryDeferred<void> {
             var deferred: JQueryDeferred<void> = $.Deferred();
@@ -291,7 +297,7 @@ module Activities.ViewModels {
             };
             $.ajax({
                 type: 'PUT',
-                url: this._dataUrl,
+                url: this.$activityUrlFormat.text().format(this.activityId()),
                 data: data,
             })
                 .done((): void => {
@@ -322,7 +328,7 @@ module Activities.ViewModels {
                     }
 
                     var url = this.$activityReplaceUrlFormat.text()
-                        .format(this._workCopyId, this._originalId, mode);
+                        .format(this.activityId(), this._originalId, mode);
                     $.ajax({
                         type: 'PUT',
                         url: url,
@@ -402,7 +408,7 @@ module Activities.ViewModels {
 
         private _purge(async: boolean = true): JQueryDeferred<void> {
             var deferred = $.Deferred();
-            var url = this._dataUrl;
+            var url = this.$activityUrlFormat.text().format(this.activityId());
             $.ajax({
                 type: 'DELETE',
                 url: url,
@@ -729,12 +735,13 @@ module Activities.ViewModels {
         //#endregion
         //#region Documents
 
-        private static iconMaxSide: number = 64; // max width or height of the document icon
-        documents: KnockoutObservableArray<KoModels.ActivityDocument> = ko.observableArray();
+        static iconMaxSide: number = 64; // max width or height of the document icon
+        documents: KnockoutObservableArray<ActivityDocumentForm> = ko.observableArray();
         fileUploadErrors: KnockoutObservableArray<any> = ko.observableArray(); // array to hold file upload errors
-        private _previousDocumentTitle: string; // old document name - used during document rename
         private _invalidFileNames: KnockoutObservableArray<string> = ko.observableArray([]);
         $fileUpload: JQuery;
+        $deleteDocumentDialog: JQuery;
+        deleteDocumentSpinner = new App.Spinner();
         $documentUrlFormat: JQuery;
         $documentsUrlFormat: JQuery;
         $documentIconUrlFormat: JQuery;
@@ -800,9 +807,8 @@ module Activities.ViewModels {
         private _onDocumentKendoSuccess(e: kendo.ui.UploadSuccessEvent): void {
             var location = e.XMLHttpRequest.getResponseHeader('location');
             $.get(location)
-                .done((data: any): void => {
-                    var document: KoModels.ActivityDocument = ko.mapping.fromJS(data);
-                    this.documents.push(document);
+                .done((data: ApiModels.ActivityDocument): void => {
+                    this.documents.push(new ActivityDocumentForm(data, this));
                 });
         }
 
@@ -811,109 +817,6 @@ module Activities.ViewModels {
                 ? e.XMLHttpRequest.responseText
                 : App.Failures.message(e.XMLHttpRequest, 'while uploading your document, please try again');
             this.fileUploadErrors.push({ message: message, });
-        }
-
-        documentIcon(documentId: number) {
-            var url = this.$documentIconUrlFormat.text().format(this.activityId(), documentId);
-            var params = { maxSide: ActivityForm.iconMaxSide };
-            return '{0}?{1}'.format(url, $.param(params));
-        }
-
-        $deleteDialog: JQuery;
-        deleteDocumentSpinner = new App.Spinner();
-        deleteDocument(item: KoModels.ActivityDocument, index: number): void {
-            this.$deleteDialog.dialog({ // open a dialog to confirm deletion of document
-                dialogClass: 'jquery-ui no-close',
-                closeOnEscape: false,
-                width: 'auto',
-                resizable: false,
-                modal: true,
-                buttons: [
-                    {
-                        text: 'Yes, confirm delete',
-                        click: (): void => {
-                            var $buttons = this.$deleteDialog.parents('.ui-dialog').find('button');
-                            $.each($buttons, function (): void { // disable buttons
-                                $(this).attr('disabled', 'disabled');
-                            });
-                            this.deleteDocumentSpinner.start();
-
-                            $.ajax({ // submit delete api request
-                                type: 'DELETE',
-                                url: this.$documentUrlFormat.text().format(this.activityId(), item.documentId()),
-                            })
-                                .done((): void => {
-                                    this.$deleteDialog.dialog('close');
-                                    this.documents.splice(index, 1);
-                                })
-                                .fail((xhr: JQueryXHR): void => { // display failure message
-                                    App.Failures.message(xhr, 'while trying to delete your activity document', true);
-                                })
-                                .always((): void => { // re-enable buttons
-                                    $.each($buttons, function (): void {
-                                        $(this).removeAttr('disabled');
-                                    });
-                                    this.deleteDocumentSpinner.stop();
-                                });
-                        }
-                    },
-                    {
-                        text: 'No, cancel delete',
-                        click: (): void => {
-                            this.$deleteDialog.dialog('close');
-                        },
-                        'data-css-link': true
-                    }]
-            });
-        }
-
-        startDocumentTitleEdit(item: KoModels.ActivityDocument, event: any): void {
-            var textElement = event.target;
-            $(textElement).hide();
-            this._previousDocumentTitle = item.title();
-            var inputElement = $(textElement).siblings('#documentTitleInput')[0];
-            $(inputElement).show();
-            $(inputElement).focusout(event, (event: any): void => {
-                this.endDocumentTitleEdit(item, event);
-            });
-            $(inputElement).keypress(event, (event: any): void => {
-                if (event.which == 13) inputElement.blur();
-            });
-        }
-
-        endDocumentTitleEdit(item: KoModels.ActivityDocument, event: any): void {
-            var inputElement = event.target;
-            $(inputElement).unbind('focusout');
-            $(inputElement).unbind('keypress');
-            $(inputElement).attr('disabled', 'disabled');
-
-            $.ajax({
-                type: 'PUT',
-                url: this.$documentUrlFormat.text().format(this.activityId(), item.documentId()),
-                data: {
-                    title: item.title()
-                },
-                success: (data: any): void => {
-                    $(inputElement).hide();
-                    $(inputElement).removeAttr('disabled');
-                    var textElement = $(inputElement).siblings('#documentTitle')[0];
-                    $(textElement).show();
-                },
-                error: (xhr: JQueryXHR): void => {
-                    item.title(this._previousDocumentTitle);
-                    $(inputElement).hide();
-                    $(inputElement).removeAttr('disabled');
-                    var textElement = $(inputElement).siblings('#documentTitle')[0];
-                    $(textElement).show();
-                    $('#documentRenameErrorDialog > #message')[0].innerText = xhr.responseText;
-                    $('#documentRenameErrorDialog').dialog({
-                        modal: true,
-                        resizable: false,
-                        width: 400,
-                        buttons: { Ok: function () { $(this).dialog('close'); } }
-                    });
-                }
-            });
         }
 
         dismissFileUploadError(index: number): void {
@@ -1077,6 +980,146 @@ module Activities.ViewModels {
         isValid(): boolean {
             var input = this.input(), format = this.format();
             return !input || moment(input, format).isValid();
+        }
+    }
+
+    export class ActivityDocumentForm implements KoModels.ActivityDocument {
+
+        private _owner: ActivityForm;
+        activityId: KnockoutObservable<number> = ko.observable();
+        documentId: KnockoutObservable<number> = ko.observable();
+        title: KnockoutObservable<string> = ko.observable();
+        extension: KnockoutObservable<string> = ko.observable();
+        private static _iconSrcFormat;
+        private static _maxLengthMessageFormat = 'Document name cannot be longer than {0} characters. You entered {1} characters.';
+
+        constructor(data: ApiModels.ActivityDocument, owner: ActivityForm) {
+            ko.mapping.fromJS(data, {}, this);
+            this._owner = owner;
+
+            this.title.extend({
+                required: {
+                    message: 'Document name is required.'
+                },
+                maxLength: {
+                    params: 64,
+                    message: ActivityDocumentForm._maxLengthMessageFormat,
+                }
+            });
+
+            ko.validation.group(this);
+
+            this.title.subscribe((newValue: string): void => {
+                if (this.title.error && this.title.error.indexOf('{1}') >= 0)
+                    this.title.error = this.title.error.format(undefined, this.title().length);
+            });
+        }
+
+        displayExtension: KnockoutComputed<string> = ko.computed((): string => {
+            var extension = this.extension();
+            return extension ? extension.toLowerCase() : undefined;
+        });
+
+        displayName: KnockoutComputed<string> = ko.computed((): string => {
+            return '{0}{1}'.format(this.title(), this.displayExtension());
+        });
+
+        iconSrc(img: Element): string {
+            var url = $(img).data('src-format').format(this.activityId(), this.documentId());
+            var params = { maxSide: ActivityForm.iconMaxSide };
+            return '{0}?{1}'.format(url, $.param(params));
+        }
+
+        isEditingTitle: KnockoutObservable<boolean> = ko.observable(false);
+        $titleInput: JQuery;
+        private _stashedTitle: string;
+        editTitle(): void {
+            if (this.isSavingTitle()) return;
+            this._stashedTitle = this.title();
+            this.isEditingTitle(true);
+            this.$titleInput.focus();
+        }
+
+        blurTitle(item: ActivityDocumentForm, e: JQueryEventObject): boolean {
+            if (e.which == 13) {
+                this.$titleInput.blur();
+            }
+            return true;
+        }
+
+        cancelTitle(): void {
+            this.title(this._stashedTitle);
+            this.isEditingTitle(false);
+        }
+
+        isSavingTitle: KnockoutObservable<boolean> = ko.observable(false);
+        saveTitle(): void {
+            var title = this.title();
+            if (!title || !this.title.isValid()) return;
+
+            this.isSavingTitle(true);
+            this.isEditingTitle(false);
+
+            $.ajax({
+                type: 'PUT',
+                url: this._owner.$documentUrlFormat.text().format(this.activityId(), this.documentId()),
+                data: {
+                    title: this.title()
+                },
+            })
+                .fail((xhr: JQueryXHR): void => {
+                    App.Failures.message(xhr, 'while trying to edit this document name', true);
+                    this.title(this._stashedTitle);
+                })
+                .always((): void => {
+                    this.isSavingTitle(false);
+                });
+        }
+
+        purge(item: ActivityDocumentForm, index: number): void {
+            this._owner.$deleteDocumentDialog.dialog({ // open a dialog to confirm deletion of document
+                dialogClass: 'jquery-ui no-close',
+                closeOnEscape: false,
+                width: 'auto',
+                resizable: false,
+                modal: true,
+                buttons: [
+                    {
+                        text: 'Yes, confirm delete',
+                        click: (): void => {
+                            var $buttons = this._owner.$deleteDocumentDialog.parents('.ui-dialog').find('button');
+                            $.each($buttons, function (): void { // disable buttons
+                                $(this).attr('disabled', 'disabled');
+                            });
+                            this._owner.deleteDocumentSpinner.start();
+
+                            $.ajax({ // submit delete api request
+                                type: 'DELETE',
+                                url: this._owner.$documentUrlFormat.text().format(this.activityId(), item.documentId()),
+                            })
+                                .done((): void => {
+                                    this._owner.$deleteDocumentDialog.dialog('close');
+                                    this._owner.documents.remove(this);
+                                })
+                                .fail((xhr: JQueryXHR): void => { // display failure message
+                                    App.Failures.message(xhr, 'while trying to delete your activity document', true);
+                                })
+                                .always((): void => { // re-enable buttons
+                                    $.each($buttons, function (): void {
+                                        $(this).removeAttr('disabled');
+                                    });
+                                    this._owner.deleteDocumentSpinner.stop();
+                                });
+                        }
+                    },
+                    {
+                        text: 'No, cancel delete',
+                        click: (): void => {
+                            this._owner.$deleteDocumentDialog.dialog('close');
+                        },
+                        'data-css-link': true
+                    }]
+            });
         }
     }
 }

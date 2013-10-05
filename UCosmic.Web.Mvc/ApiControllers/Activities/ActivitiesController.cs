@@ -18,23 +18,27 @@ namespace UCosmic.Web.Mvc.ApiControllers
     {
         private const string PluralUrl =    "";
         private const string SingleUrl =    "{activityId:int}";
-        private const string MoveUrl =      "{workCopyActivityId:int}/{originalActivityId:int}/{mode}";
+        private const string CopyUrl = "{activityId:int}/copy";
+        private const string MoveUrl = "{workCopyActivityId:int}/{originalActivityId:int}/{mode}";
 
         private readonly IProcessQueries _queryProcessor;
         private readonly IHandleCommands<UpdateActivity> _updateActivity;
         private readonly IHandleCommands<ReplaceActivity> _replaceActivity;
         private readonly IHandleCommands<PurgeActivity> _purgeActivity;
+        private readonly IHandleCommands<CopyActivityAndValues> _copyActivityAndValues;
 
         public ActivitiesController(IProcessQueries queryProcessor
             , IHandleCommands<UpdateActivity> updateActivity
             , IHandleCommands<ReplaceActivity> replaceActivity
             , IHandleCommands<PurgeActivity> purgeActivity
+            , IHandleCommands<CopyActivityAndValues> copyActivityAndValues
         )
         {
             _queryProcessor = queryProcessor;
             _updateActivity = updateActivity;
             _replaceActivity = replaceActivity;
             _purgeActivity = purgeActivity;
+            _copyActivityAndValues = copyActivityAndValues;
         }
 
         [GET(PluralUrl)]
@@ -61,6 +65,26 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
             var model = Mapper.Map<ActivityApiModel>(entity);
             return model;
+        }
+
+        [GET(CopyUrl, ActionPrecedence = 1)]
+        public ActivityApiModel GetCopy(int activityId)
+        {
+            var entity = _queryProcessor.Execute(new ActivityById(User, activityId)
+            {
+                EagerLoad = new Expression<Func<Activity, object>>[]
+                {
+                    x => x.WorkCopy,
+                },
+            });
+
+            if (entity != null && entity.WorkCopy != null)
+                return Get(entity.WorkCopy.RevisionId);
+
+            var command = new CopyActivityAndValues(User, activityId);
+            _copyActivityAndValues.Handle(command);
+            return Get(command.CreatedActivity.RevisionId);
+
         }
 
         [Authorize]

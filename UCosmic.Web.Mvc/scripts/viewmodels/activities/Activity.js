@@ -77,7 +77,7 @@ var Activities;
                 var _this = this;
                 this._originalId = bindings.activityId;
                 this._workCopyId = bindings.workCopyId;
-                this._dataUrl = bindings.dataUrlFormat.format(bindings.workCopyId);
+                this._dataUrl = bindings.dataUrlFormat.format(bindings.activityId);
                 this._placeOptionsUrl = bindings.placeOptionsUrlFormat;
                 this._typeOptionsUrl = bindings.typeOptionsUrlFormat;
 
@@ -131,6 +131,7 @@ var Activities;
             };
 
             ActivityForm.prototype._bindData = function (data) {
+                var _this = this;
                 var mapping = {
                     types: {
                         create: function (options) {
@@ -140,6 +141,11 @@ var Activities;
                     places: {
                         create: function (options) {
                             return options.data.placeId;
+                        }
+                    },
+                    documents: {
+                        create: function (options) {
+                            return new ActivityDocumentForm(options.data, _this);
                         }
                     },
                     ignore: ['startsOn', 'endsOn', 'startsFormat', 'endsFormat']
@@ -285,7 +291,7 @@ else
                 };
                 $.ajax({
                     type: 'PUT',
-                    url: this._dataUrl,
+                    url: this.$activityUrlFormat.text().format(this.activityId()),
                     data: data
                 }).done(function () {
                     deferred.resolve();
@@ -309,7 +315,7 @@ else
                         return;
                     }
 
-                    var url = _this.$activityReplaceUrlFormat.text().format(_this._workCopyId, _this._originalId, mode);
+                    var url = _this.$activityReplaceUrlFormat.text().format(_this.activityId(), _this._originalId, mode);
                     $.ajax({
                         type: 'PUT',
                         url: url
@@ -381,7 +387,7 @@ else
                 if (typeof async === "undefined") { async = true; }
                 var _this = this;
                 var deferred = $.Deferred();
-                var url = this._dataUrl;
+                var url = this.$activityUrlFormat.text().format(this.activityId());
                 $.ajax({
                     type: 'DELETE',
                     url: url,
@@ -734,119 +740,13 @@ else if (removedPlaceIds.length === 1)
                 var _this = this;
                 var location = e.XMLHttpRequest.getResponseHeader('location');
                 $.get(location).done(function (data) {
-                    var document = ko.mapping.fromJS(data);
-                    _this.documents.push(document);
+                    _this.documents.push(new ActivityDocumentForm(data, _this));
                 });
             };
 
             ActivityForm.prototype._onDocumentKendoError = function (e) {
                 var message = e.XMLHttpRequest.status != 500 && e.XMLHttpRequest.responseText && e.XMLHttpRequest.responseText.length < 1000 ? e.XMLHttpRequest.responseText : App.Failures.message(e.XMLHttpRequest, 'while uploading your document, please try again');
                 this.fileUploadErrors.push({ message: message });
-            };
-
-            ActivityForm.prototype.documentIcon = function (documentId) {
-                var url = this.$documentIconUrlFormat.text().format(this.activityId(), documentId);
-                var params = { maxSide: ActivityForm.iconMaxSide };
-                return '{0}?{1}'.format(url, $.param(params));
-            };
-
-            ActivityForm.prototype.deleteDocument = function (item, index) {
-                var _this = this;
-                this.$deleteDialog.dialog({
-                    dialogClass: 'jquery-ui no-close',
-                    closeOnEscape: false,
-                    width: 'auto',
-                    resizable: false,
-                    modal: true,
-                    buttons: [
-                        {
-                            text: 'Yes, confirm delete',
-                            click: function () {
-                                var $buttons = _this.$deleteDialog.parents('.ui-dialog').find('button');
-                                $.each($buttons, function () {
-                                    $(this).attr('disabled', 'disabled');
-                                });
-                                _this.deleteDocumentSpinner.start();
-
-                                $.ajax({
-                                    type: 'DELETE',
-                                    url: _this.$documentUrlFormat.text().format(_this.activityId(), item.documentId())
-                                }).done(function () {
-                                    _this.$deleteDialog.dialog('close');
-                                    _this.documents.splice(index, 1);
-                                }).fail(function (xhr) {
-                                    App.Failures.message(xhr, 'while trying to delete your activity document', true);
-                                }).always(function () {
-                                    $.each($buttons, function () {
-                                        $(this).removeAttr('disabled');
-                                    });
-                                    _this.deleteDocumentSpinner.stop();
-                                });
-                            }
-                        },
-                        {
-                            text: 'No, cancel delete',
-                            click: function () {
-                                _this.$deleteDialog.dialog('close');
-                            },
-                            'data-css-link': true
-                        }
-                    ]
-                });
-            };
-
-            ActivityForm.prototype.startDocumentTitleEdit = function (item, event) {
-                var _this = this;
-                var textElement = event.target;
-                $(textElement).hide();
-                this._previousDocumentTitle = item.title();
-                var inputElement = $(textElement).siblings('#documentTitleInput')[0];
-                $(inputElement).show();
-                $(inputElement).focusout(event, function (event) {
-                    _this.endDocumentTitleEdit(item, event);
-                });
-                $(inputElement).keypress(event, function (event) {
-                    if (event.which == 13)
-                        inputElement.blur();
-                });
-            };
-
-            ActivityForm.prototype.endDocumentTitleEdit = function (item, event) {
-                var _this = this;
-                var inputElement = event.target;
-                $(inputElement).unbind('focusout');
-                $(inputElement).unbind('keypress');
-                $(inputElement).attr('disabled', 'disabled');
-
-                $.ajax({
-                    type: 'PUT',
-                    url: this.$documentUrlFormat.text().format(this.activityId(), item.documentId()),
-                    data: {
-                        title: item.title()
-                    },
-                    success: function (data) {
-                        $(inputElement).hide();
-                        $(inputElement).removeAttr('disabled');
-                        var textElement = $(inputElement).siblings('#documentTitle')[0];
-                        $(textElement).show();
-                    },
-                    error: function (xhr) {
-                        item.title(_this._previousDocumentTitle);
-                        $(inputElement).hide();
-                        $(inputElement).removeAttr('disabled');
-                        var textElement = $(inputElement).siblings('#documentTitle')[0];
-                        $(textElement).show();
-                        $('#documentRenameErrorDialog > #message')[0].innerText = xhr.responseText;
-                        $('#documentRenameErrorDialog').dialog({
-                            modal: true,
-                            resizable: false,
-                            width: 400,
-                            buttons: { Ok: function () {
-                                    $(this).dialog('close');
-                                } }
-                        });
-                    }
-                });
             };
 
             ActivityForm.prototype.dismissFileUploadError = function (index) {
@@ -1012,6 +912,140 @@ else if (FormattedDateInput._mDdYyyy.test(input))
             return FormattedDateInput;
         })();
         ViewModels.FormattedDateInput = FormattedDateInput;
+
+        var ActivityDocumentForm = (function () {
+            function ActivityDocumentForm(data, owner) {
+                var _this = this;
+                this.activityId = ko.observable();
+                this.documentId = ko.observable();
+                this.title = ko.observable();
+                this.extension = ko.observable();
+                this.displayExtension = ko.computed(function () {
+                    var extension = _this.extension();
+                    return extension ? extension.toLowerCase() : undefined;
+                });
+                this.displayName = ko.computed(function () {
+                    return '{0}{1}'.format(_this.title(), _this.displayExtension());
+                });
+                this.isEditingTitle = ko.observable(false);
+                this.isSavingTitle = ko.observable(false);
+                ko.mapping.fromJS(data, {}, this);
+                this._owner = owner;
+
+                this.title.extend({
+                    required: {
+                        message: 'Document name is required.'
+                    },
+                    maxLength: {
+                        params: 64,
+                        message: ActivityDocumentForm._maxLengthMessageFormat
+                    }
+                });
+
+                ko.validation.group(this);
+
+                this.title.subscribe(function (newValue) {
+                    if (_this.title.error && _this.title.error.indexOf('{1}') >= 0)
+                        _this.title.error = _this.title.error.format(undefined, _this.title().length);
+                });
+            }
+            ActivityDocumentForm.prototype.iconSrc = function (img) {
+                var url = $(img).data('src-format').format(this.activityId(), this.documentId());
+                var params = { maxSide: ActivityForm.iconMaxSide };
+                return '{0}?{1}'.format(url, $.param(params));
+            };
+
+            ActivityDocumentForm.prototype.editTitle = function () {
+                if (this.isSavingTitle())
+                    return;
+                this._stashedTitle = this.title();
+                this.isEditingTitle(true);
+                this.$titleInput.focus();
+            };
+
+            ActivityDocumentForm.prototype.blurTitle = function (item, e) {
+                if (e.which == 13) {
+                    this.$titleInput.blur();
+                }
+                return true;
+            };
+
+            ActivityDocumentForm.prototype.cancelTitle = function () {
+                this.title(this._stashedTitle);
+                this.isEditingTitle(false);
+            };
+
+            ActivityDocumentForm.prototype.saveTitle = function () {
+                var _this = this;
+                var title = this.title();
+                if (!title || !this.title.isValid())
+                    return;
+
+                this.isSavingTitle(true);
+                this.isEditingTitle(false);
+
+                $.ajax({
+                    type: 'PUT',
+                    url: this._owner.$documentUrlFormat.text().format(this.activityId(), this.documentId()),
+                    data: {
+                        title: this.title()
+                    }
+                }).fail(function (xhr) {
+                    App.Failures.message(xhr, 'while trying to edit this document name', true);
+                    _this.title(_this._stashedTitle);
+                }).always(function () {
+                    _this.isSavingTitle(false);
+                });
+            };
+
+            ActivityDocumentForm.prototype.purge = function (item, index) {
+                var _this = this;
+                this._owner.$deleteDocumentDialog.dialog({
+                    dialogClass: 'jquery-ui no-close',
+                    closeOnEscape: false,
+                    width: 'auto',
+                    resizable: false,
+                    modal: true,
+                    buttons: [
+                        {
+                            text: 'Yes, confirm delete',
+                            click: function () {
+                                var $buttons = _this._owner.$deleteDocumentDialog.parents('.ui-dialog').find('button');
+                                $.each($buttons, function () {
+                                    $(this).attr('disabled', 'disabled');
+                                });
+                                _this._owner.deleteDocumentSpinner.start();
+
+                                $.ajax({
+                                    type: 'DELETE',
+                                    url: _this._owner.$documentUrlFormat.text().format(_this.activityId(), item.documentId())
+                                }).done(function () {
+                                    _this._owner.$deleteDocumentDialog.dialog('close');
+                                    _this._owner.documents.remove(_this);
+                                }).fail(function (xhr) {
+                                    App.Failures.message(xhr, 'while trying to delete your activity document', true);
+                                }).always(function () {
+                                    $.each($buttons, function () {
+                                        $(this).removeAttr('disabled');
+                                    });
+                                    _this._owner.deleteDocumentSpinner.stop();
+                                });
+                            }
+                        },
+                        {
+                            text: 'No, cancel delete',
+                            click: function () {
+                                _this._owner.$deleteDocumentDialog.dialog('close');
+                            },
+                            'data-css-link': true
+                        }
+                    ]
+                });
+            };
+            ActivityDocumentForm._maxLengthMessageFormat = 'Document name cannot be longer than {0} characters. You entered {1} characters.';
+            return ActivityDocumentForm;
+        })();
+        ViewModels.ActivityDocumentForm = ActivityDocumentForm;
     })(Activities.ViewModels || (Activities.ViewModels = {}));
     var ViewModels = Activities.ViewModels;
 })(Activities || (Activities = {}));

@@ -20,7 +20,7 @@ declare module Activities.ApiModels {
         types: ActivityType[];
         places: ActivityPlace[]
         tags: ActivityTag[]
-        documents: any;
+        documents: ActivityDocument[];
     }
 
     export interface ActivityType {
@@ -48,6 +48,7 @@ declare module Activities.ApiModels {
         title: string;
         domainType: string;
         byteCount: number;
+        extension: string;
     }
 }
 
@@ -63,6 +64,7 @@ declare module Activities.KoModels {
         activityId: KnockoutObservable<number>;
         documentId: KnockoutObservable<number>;
         title: KnockoutObservable<string>;
+        extension: KnockoutObservable<string>;
     }
 
     export interface ActivityTag {

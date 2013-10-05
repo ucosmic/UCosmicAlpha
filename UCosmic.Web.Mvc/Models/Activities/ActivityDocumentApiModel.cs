@@ -16,7 +16,7 @@ namespace UCosmic.Web.Mvc.Models
         public long ByteCount { get; set; }
         public string Size
         {
-            get { return ByteCount.ToAbbreviatedFileSize().ToUpper(); }
+            get { return ByteCount.ToFileSize(); }
         }
         public string Extension
         {

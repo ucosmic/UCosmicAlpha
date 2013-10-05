@@ -1,4 +1,5 @@
-﻿@{
+﻿@using UCosmic.Domain.Activities
+@{
     ViewBag.Title = "My International Activity";
 }
 
@@ -22,12 +23,12 @@
     @Scripts.Render("~/bundles/activity")
 
     <script type="text/javascript">
-        (function($) {
+        (function ($) {
             Activities.ViewModels.ActivityForm.bind({
                 activityId: parseInt('@ViewBag.ActivityId'),
                 workCopyId: parseInt('@ViewBag.ActivityWorkCopyId'),
                 target: $("#activity_editor")[0],
-                dataUrlFormat: '@ViewBag.ActivityApi',
+                dataUrlFormat: '@ViewBag.ActivityCopyApi',
                 placeOptionsUrlFormat: '@ViewBag.PlaceOptionsApi',
                 typeOptionsUrlFormat: App.Routes.WebApi.Employees.ModuleSettings.ActivityTypes.get()
             });
@@ -45,10 +46,11 @@
 }
 
 <div class="content fixed to-top" data-current-module="home">
-    <div id="activity_editor" style="padding-top: 20px;">
+    <form id="activity_editor" style="padding-top: 20px;">
 
         @* API URL's *@
         <div style="display: none">
+            <span data-bind="jQuery: '$activityUrlFormat'">@ViewBag.ActivityApi</span>
             <span data-bind="jQuery: '$activityReplaceUrlFormat'">@ViewBag.ActivityReplaceApi</span>
             <span data-bind="jQuery: '$typeUrlFormat'">@ViewBag.TypeApi</span>
             <span data-bind="jQuery: '$placeUrlFormat'">@ViewBag.PlaceApi</span>
@@ -241,6 +243,54 @@
                     </ul>
                 </div>
                 <div data-bind="visible: documents().length">
+                    <div data-bind="foreach: documents" class="group">
+                        <div class="on-left" style="width: 475px; margin-right: 5px; margin-bottom: 12px;">
+                            <div class="group" style="height: 64px;">
+                                <div class="on-left" style="width: 72px; text-align: center;">
+                                    <img alt="thumbnail" data-bind="attr: { src: iconSrc($element), title: size }" src="@Url.Content("~/images/icons/spinner/spinner-24-blue.gif")"
+                                         data-src-format="@ViewBag.DocumentIconApi">
+                                </div>
+                                <div class="on-left" style="width: 370px;">
+                                    <div data-bind="visible: !isEditingTitle()">
+                                        <div class="text-box when-hovered" data-bind="click: editTitle" title="Click to edit document name">
+                                            <div class="group">
+                                                <div class="on-left ellipsis" style="max-width: 290px;">
+                                                    <span data-bind="text: title"></span>
+                                                </div>
+                                                <div class="on-left" style="max-width: 35px;">
+                                                    <span data-bind="text: displayExtension"></span>
+                                                </div>
+                                                <div class="on-right">
+                                                    <a href="#" title="Click to delete this document" data-bind="click: purge, clickBubble: false, visible: !isSavingTitle()">
+                                                        <img src="@Links.images.icons.minus.minus_20_red_png" alt="Click to delete this document" />
+                                                    </a>
+                                                    <img src="@Links.images.icons.spinner.spinner_20_blue_gif" data-bind="visible: isSavingTitle" alt="" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div data-bind="visible: isEditingTitle" style="display: none;">
+                                        <div class="group">
+                                            <div class="on-left">
+                                                <div style="width: 310px;">
+                                                    <input type="text" data-bind="value: title, jQuery: '$titleInput', event: { keypress: blurTitle }"
+                                                        maxlength="@ActivityDocumentConstraints.MaxTitleLength"  />
+                                                </div>
+                                            </div>
+                                            <div class="on-left" style="line-height: 38px; margin-left: 12px; font-family: Arial, Helvetica, sans-serif;">
+                                                <span data-bind="text: displayExtension"></span>
+                                            </div>
+                                        </div>
+                                        <div style="margin-top: 2px; margin-left: 4px;">
+                                            <a href="#" data-bind="click: saveTitle">Save</a> | <a href="#" data-bind="    click: cancelTitle">Cancel</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @*<div data-bind="visible: documents().length">
                     <table class="data">
                         <thead>
                             <tr>
@@ -248,13 +298,12 @@
                                 <th style="width: 65%">Title</th>
                                 <th style="width: 10%; text-align: center">Type</th>
                                 <th style="width: 10%; text-align: center">Size</th>
-                                @*<th style="width: 5%; text-align: center">Hide</th>*@
                                 <th style="width: 5%"></th>
                             </tr>
                         </thead>
                         <tbody data-bind="template: { name: 'activity-document-template', foreach: documents }"></tbody>
                     </table>
-                </div>
+                </div>*@
             </div>
 
             @* BUTTONS *@
@@ -272,7 +321,7 @@
         </div>
 
         @* JQUERY DIALOGS *@
-        <div class="dialog" title="Please confirm your intent" data-bind="jQuery: '$deleteDialog'">
+        <div class="dialog" title="Please confirm your intent" data-bind="jQuery: '$deleteDocumentDialog'">
             <div>
                 Are you sure you want to delete this document?
             </div>
@@ -296,24 +345,10 @@
             </div>
         </div>
 
-    </div>
+    </form>
 </div>
-
-
-@* JQUERY DIALOGS *@
-<div id="documentRenameErrorDialog" class="dialog" title="Error Renaming Document">
-    <span id="message" style="float: left"></span>
-</div>
-
-<div id="activityBeingEditedDialog" class="dialog" title="Error Renaming Document">
-    <span style="font-weight: bold">The activity cannot be edited at this time because it is in use by:</span>
-    <div id="editingUserName" style="text-align: center"></div>
-    <a id="editingUserEmail" style="text-align: center"></a>
-</div>
-
 
 @* KNOCKOUT TEMPLATES *@
-
 <script type="text/html" id="activity-types-template">
     <li>
         <label>
@@ -334,7 +369,7 @@
     </li>
 </script>
 
-<script type="text/html" id="activity-document-template">
+@*<script type="text/html" id="activity-document-template">
     <tr class="hover-hilite" style="white-space: normal">
         <!-- Preview -->
         <td style="text-align: center">
@@ -365,7 +400,7 @@
             </a>
         </td>
     </tr>
-</script>
+</script>*@
 
 <script type="text/html" id="buttons-template">
     <div style="margin-bottom: 32px;">
