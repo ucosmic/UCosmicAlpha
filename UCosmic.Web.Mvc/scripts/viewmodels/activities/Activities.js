@@ -9,15 +9,9 @@ var Activities;
     /// <reference path="../../typings/linq/linq.d.ts" />
     /// <reference path="../../app/Routes.ts" />
     /// <reference path="../../typings/moment/moment.d.ts" />
-    /// <reference path="../activities/ServiceApiModel.d.ts" />
+    /// <reference path="ActivityEnums.ts" />
+    /// <reference path="ServiceApiModel.d.ts" />
     (function (ViewModels) {
-        var ActivitySearchInput = (function () {
-            function ActivitySearchInput() {
-            }
-            return ActivitySearchInput;
-        })();
-        ViewModels.ActivitySearchInput = ActivitySearchInput;
-
         var ActivityList = (function () {
             function ActivityList() {
             }
@@ -55,6 +49,7 @@ var Activities;
         var ActivityListItem = (function () {
             function ActivityListItem(data, owner) {
                 var _this = this;
+                this.mode = ko.observable();
                 //#region Computeds
                 this.editUrl = ko.computed(function () {
                     var activityId = _this.activityId();
@@ -68,13 +63,13 @@ var Activities;
                     var mode = _this.mode();
                     if (!mode)
                         return false;
-                    return mode.toLowerCase() == 'draft';
+                    return mode == ViewModels.ActivityMode.draft;
                 });
                 this.isPublished = ko.computed(function () {
                     var mode = _this.mode();
                     if (!mode)
                         return false;
-                    return mode.toLowerCase() == 'public';
+                    return mode == ViewModels.ActivityMode.published;
                 });
                 this.datesText = ko.computed(function () {
                     return _this._computeDatesText();

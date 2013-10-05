@@ -1886,6 +1886,13 @@
     <Content Include="scripts\typings\linq\linq.3.0.3-Beta4.d.ts" />
     <Content Include="scripts\typings\linq\linq.d.ts" />
     <Content Include="scripts\typings\linq\linq.jquery.d.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\activities\ActivityEnums.ts" />
+    <Content Include="scripts\viewmodels\activities\ActivityEnums.js">
+      <DependentUpon>ActivityEnums.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\activities\ActivityEnums.min.js">
+      <DependentUpon>ActivityEnums.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\viewmodels\agreements\AgreementVM.js">
       <DependentUpon>AgreementVM.ts</DependentUpon>
     </Content>

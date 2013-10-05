@@ -11,7 +11,8 @@ var Activities;
     /// <reference path="../../typings/linq/linq.d.ts" />
     /// <reference path="../../app/Routes.ts" />
     /// <reference path="../../app/Spinner.ts" />
-    /// <reference path="../activities/ServiceApiModel.d.ts" />
+    /// <reference path="ActivityEnums.ts" />
+    /// <reference path="ServiceApiModel.d.ts" />
     (function (ViewModels) {
         var ActivityForm = (function () {
             //#endregion
@@ -20,22 +21,24 @@ var Activities;
                 var _this = this;
                 //#region Primary scalar observables & properties
                 this.ready = ko.observable(false);
+                this.mode = ko.observable();
+                this.updatedOnUtc = ko.observable();
                 //#endregion
                 //#region View convenience computeds
                 this.isDraft = ko.computed(function () {
-                    var mode = _this.mode ? _this.mode() : undefined;
+                    var mode = _this.mode();
                     if (!mode)
                         return false;
-                    return mode.toLowerCase() == 'draft';
+                    return mode == ViewModels.ActivityMode.draft;
                 });
                 this.isPublished = ko.computed(function () {
-                    var mode = _this.mode ? _this.mode() : undefined;
+                    var mode = _this.mode();
                     if (!mode)
                         return false;
-                    return mode.toLowerCase() == 'public';
+                    return mode == ViewModels.ActivityMode.published;
                 });
                 this.updatedOnDate = ko.computed(function () {
-                    var updatedOnUtc = _this.updatedOnUtc ? _this.updatedOnUtc() : undefined;
+                    var updatedOnUtc = _this.updatedOnUtc();
                     if (!updatedOnUtc)
                         return undefined;
                     return moment(updatedOnUtc).format('M/D/YYYY');
@@ -637,14 +640,14 @@ else if (removedPlaceIds.length === 1)
                     type: 'POST',
                     data: {
                         text: text,
-                        domainType: establishmentId ? 'Establishment' : 'Custom',
+                        domainType: establishmentId ? ViewModels.ActivityTagDomainType.establishment : ViewModels.ActivityTagDomainType.custom,
                         domainKey: establishmentId
                     }
                 }).done(function () {
                     var tag = {
                         activityId: _this.activityId(),
                         text: text,
-                        domainType: establishmentId ? 'Establishment' : 'Custom',
+                        domainType: establishmentId ? ViewModels.ActivityTagDomainType.establishment : ViewModels.ActivityTagDomainType.custom,
                         domainKey: establishmentId
                     };
                     var observableTag = ko.mapping.fromJS(tag);

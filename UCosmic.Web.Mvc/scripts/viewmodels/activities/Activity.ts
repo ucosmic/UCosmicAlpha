@@ -9,7 +9,8 @@
 /// <reference path="../../typings/linq/linq.d.ts" />
 /// <reference path="../../app/Routes.ts" />
 /// <reference path="../../app/Spinner.ts" />
-/// <reference path="../activities/ServiceApiModel.d.ts" />
+/// <reference path="ActivityEnums.ts" />
+/// <reference path="ServiceApiModel.d.ts" />
 
 module Activities.ViewModels {
 
@@ -23,7 +24,7 @@ module Activities.ViewModels {
         private _originalId: number;
 
         activityId: KnockoutObservable<number>;
-        mode: KnockoutObservable<string>;
+        mode: KnockoutObservable<ActivityMode> = ko.observable();
         title: KnockoutObservable<string>;
         content: KnockoutObservable<string>;
         startsOn: FormattedDateInput;
@@ -32,25 +33,25 @@ module Activities.ViewModels {
         isExternallyFunded: KnockoutObservable<boolean>;
         isInternallyFunded: KnockoutObservable<boolean>;
         updatedByPrincipal: KnockoutObservable<string>;
-        updatedOnUtc: KnockoutObservable<string>;
+        updatedOnUtc: KnockoutObservable<string> = ko.observable();
 
         //#endregion
         //#region View convenience computeds
 
         isDraft: KnockoutComputed<boolean> = ko.computed((): boolean => {
-            var mode = this.mode ? this.mode() : undefined;
+            var mode = this.mode();
             if (!mode) return false;
-            return mode.toLowerCase() == 'draft';
+            return mode == ActivityMode.draft;
         });
 
         isPublished: KnockoutComputed<boolean> = ko.computed((): boolean => {
-            var mode = this.mode ? this.mode() : undefined;
+            var mode = this.mode();
             if (!mode) return false;
-            return mode.toLowerCase() == 'public';
+            return mode == ActivityMode.published;
         });
 
         updatedOnDate: KnockoutComputed<string> = ko.computed((): string => {
-            var updatedOnUtc = this.updatedOnUtc ? this.updatedOnUtc() : undefined;
+            var updatedOnUtc = this.updatedOnUtc();
             if (!updatedOnUtc) return undefined;
             return moment(updatedOnUtc).format('M/D/YYYY');
         });
@@ -691,7 +692,7 @@ module Activities.ViewModels {
                 type: 'POST',
                 data: {
                     text: text,
-                    domainType: establishmentId ? 'Establishment' : 'Custom',
+                    domainType: establishmentId ? ActivityTagDomainType.establishment : ActivityTagDomainType.custom,
                     domainKey: establishmentId,
                 },
             })
@@ -699,7 +700,7 @@ module Activities.ViewModels {
                     var tag: ApiModels.ActivityTag = {
                         activityId: this.activityId(),
                         text: text,
-                        domainType: establishmentId ? 'Establishment' : 'Custom',
+                        domainType: establishmentId ? ActivityTagDomainType.establishment : ActivityTagDomainType.custom,
                         domainKey: establishmentId,
                     };
                     var observableTag: KoModels.ActivityTag = ko.mapping.fromJS(tag);

@@ -7,16 +7,10 @@
 /// <reference path="../../typings/linq/linq.d.ts" />
 /// <reference path="../../app/Routes.ts" />
 /// <reference path="../../typings/moment/moment.d.ts" />
-/// <reference path="../activities/ServiceApiModel.d.ts" />
+/// <reference path="ActivityEnums.ts" />
+/// <reference path="ServiceApiModel.d.ts" />
 
 module Activities.ViewModels {
-
-    export class ActivitySearchInput {
-        personId: number;
-        orderBy: string;
-        pageSize: number;
-        pageNumber: number;
-    }
 
     export class ActivityList implements KnockoutValidationGroup {
 
@@ -60,7 +54,7 @@ module Activities.ViewModels {
 
         private _owner: ActivityList;
         activityId: KnockoutObservable<string>;
-        mode: KnockoutObservable<string>;
+        mode: KnockoutObservable<ActivityMode> = ko.observable();
         title: KnockoutObservable<string>;
         onGoing: KnockoutObservable<boolean>;
         startsOn: KnockoutObservable<string>;
@@ -99,13 +93,13 @@ module Activities.ViewModels {
         isDraft: KnockoutComputed<boolean> = ko.computed((): boolean => {
             var mode = this.mode();
             if (!mode) return false;
-            return mode.toLowerCase() == 'draft';
+            return mode == ActivityMode.draft;
         });
 
         isPublished: KnockoutComputed<boolean> = ko.computed((): boolean => {
             var mode = this.mode();
             if (!mode) return false;
-            return mode.toLowerCase() == 'public';
+            return mode == ActivityMode.published;
         });
 
         datesText: KnockoutComputed<string> = ko.computed((): string => {

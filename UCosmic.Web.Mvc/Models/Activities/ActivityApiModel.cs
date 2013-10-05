@@ -3,17 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using AutoMapper;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using UCosmic.Domain.Activities;
 
 namespace UCosmic.Web.Mvc.Models
 {
     public class ActivityApiModel
     {
-        [JsonConverter(typeof(StringEnumConverter))]
         public ActivityMode Mode { get; set; }
-
         public int ActivityId { get; set; }
         public string Title { get; set; }
         public string Content { get; set; }
