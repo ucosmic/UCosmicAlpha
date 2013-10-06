@@ -96,7 +96,6 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [DELETE("{degreeId:int}")]
-        [Authorize(Roles = RoleName.EmployeeProfileManager)]
         public HttpResponseMessage Delete(int degreeId)
         {
             var command = new DeleteDegree(User, degreeId);
