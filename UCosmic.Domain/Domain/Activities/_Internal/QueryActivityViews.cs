@@ -25,22 +25,11 @@ namespace UCosmic.Domain.Activities
             return queryable.Where(a =>
                                (
                                    /* include undated activities? */
-
-                                   /*
-                                    *                 undated activity
-                                    *                 0 1
-                                    *  -------------------------------
-                                    *  noUndated   0 |1 1
-                                    *  flag        1 |1 0
-                                    *
-                                    *  NAND
-                                    */
-
-                                   !(noUndated && (!a.StartsOn.HasValue  &&
+                                   (!noUndated && (!a.StartsOn.HasValue  &&
                                         (!a.OnGoing.HasValue || !a.OnGoing.Value) &&
-                                        !a.EndsOn.HasValue)) &&
+                                        !a.EndsOn.HasValue))
 
-                                   /* and */
+                                   || /* or */
                                    (
                                        /* On-going only. If OnGoing has value and true, do not check EndsOn, because
                                         * user may have checked, then uncheck Ongoing and EndsOn is not necessarily null'd

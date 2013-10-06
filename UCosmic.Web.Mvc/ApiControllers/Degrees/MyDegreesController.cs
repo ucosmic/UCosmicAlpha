@@ -82,7 +82,6 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [PUT("{degreeId:int}")]
-        [Authorize(Roles = RoleName.EmployeeProfileManager)]
         public HttpResponseMessage Put(int degreeId, DegreeApiModel model)
         {
             if (degreeId == 0 || model == null)

@@ -58,8 +58,8 @@ namespace UCosmic.Domain.Activities
                                                                                                       establishmentId,
                                                                                                       fromDateUtc,
                                                                                                       toDateUtc,
-                                                                                                      false, /* include undated */
-                                                                                                      true /* include future */));
+                                                                                                      false, /* no undated? */
+                                                                                                      true /* include future? */));
 
                 PlaceCounts.Add(new PlaceCount
                 {
@@ -85,8 +85,8 @@ namespace UCosmic.Domain.Activities
                                                                             establishmentId,
                                                                             fromDateUtc,
                                                                             toDateUtc,
-                                                                            false, /* include undated */
-                                                                            true /* include future */));
+                                                                            false, /* no undated? */
+                                                                            true /* include future? */));
 
                         var typeCount = TypeCounts.SingleOrDefault(t => t.TypeId == type.Id);
                         if (typeCount != null)

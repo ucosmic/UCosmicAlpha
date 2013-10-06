@@ -53,8 +53,8 @@ namespace UCosmic.Domain.Activities
                                                        establishmentId,
                                                        new DateTime(fromDateUtc.Year, 1, 1),
                                                        new DateTime(year + 1, 1, 1),
-                                                       true /* No Undated Activities */,
-                                                       (year == toDateUtc.Year - 1) /* Include future in last year */))
+                                                       true /* No Undated Activities? */,
+                                                       (year == toDateUtc.Year - 1) /* Include future in last year? */))
                 };
 
                 Data.Add(yearCount);

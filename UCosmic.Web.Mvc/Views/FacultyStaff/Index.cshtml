@@ -194,6 +194,39 @@
             white-space: nowrap;
         }
 
+
+        #antarctica:hover {
+            background-image: url('../../images/icons/maps/antarcticaLabeledHover.png');
+        }
+        
+        #pacificOcean:hover {
+            background-image: url('../../images/icons/maps/pacificOceanHover.png');
+        }
+        
+        #atlanticOcean:hover {
+            background-image: url('../../images/icons/maps/atlanticOceanHover.png');
+        }
+        
+        #indianOcean:hover {
+            background-image: url('../../images/icons/maps/indianOceanHover.png');
+        }
+        
+        #southernOcean:hover {
+            background-image: url('../../images/icons/maps/southernOceanHover.png');
+        }
+        
+        #gulfOfMexico:hover {
+            background-image: url('../../images/icons/maps/gulfOfMexicoHover.png');
+        }
+        
+        #caribbean:hover {
+            background-image: url('../../images/icons/maps/caribbeanHover.png');
+        }
+        
+        #arcticOcean:hover {
+            background-image: url('../../images/icons/maps/arcticOceanHover.png');
+        }
+
     </style>
 }
 
@@ -324,8 +357,8 @@
                             <span style="margin-right: 2px; margin-top: 2px">Find an Expert</span>
                             <img src='@Url.Content("~/api/my/employee-module-settings/icon/FindAnExpertIcon.svg")' width="28" height="28" alt="Find an Expert"/>
                         </span>                
-                        <span style="float: right" data-bind="click: function(item,event) { globalViewClickHandler(item,event); }">
-                            <span style="margin-right: 2px; margin-top: 4px;">Global View</span>
+                        <span style="float: right" data-bind="visible: selectedPlace() != null, click: function(item,event) { globalViewClickHandler(item,event); }">
+                            <span style="margin-right: 2px; margin-top: 4px;">Return to Global View</span>
                             <img style="padding-top: 2px" src='@Url.Content("~/api/my/employee-module-settings/icon/GlobalViewIcon.png")' alt="Global View"/>
                         </span>
                     </div>
@@ -338,78 +371,58 @@
                         
                             <!-- Antarctica -->
                             <div style="position: absolute; left: 340px; bottom: 0;">                   
-                                <img src="../../images/antarctica_283x35.png"/>
+                                <img src="~/images/icons/maps/antarcticaLabeled.png"> 
                             </div>
                         
                             <!-- Pacific Ocean -->
-                            <div style="position: absolute; left: 70px; top: 320px; width: 50px">
-                                <div style="width: 100%; text-align: center">
-                                    <img src="../../images/icons/glyphs/glyphicons_261_buoy_blue.png" width="24" height="24"/>
-                                </div>
-                                <div class="customPlaceText">
-                                    <span>Pacific Ocean</span>
-                                </div>
-                            </div>
+                            <div style="position: absolute; left: 68px; top: 349px; width: 57px">
+	                        	<div style="width: 100%; text-align: center">
+	                        		<img width="57" height="26" src="~/images/icons/maps/pacificOcean.png"> 
+	                        	</div>
+                        	</div>
                         
                             <!-- Atlantic Ocean -->
-                            <div style="position: absolute; left: 240px; top: 250px; width: 50px">
-                                <div style="width: 100%; text-align: center">
-                                    <img src="../../images/icons/glyphs/glyphicons_261_buoy_blue.png" width="24" height="24"/>
-                                </div>
-                                <div class="customPlaceText">
-                                    <span>Atlantic Ocean</span>
-                                </div>
+                            <div style="position: absolute; left: 236px; top: 271px; width: 57px">
+		                        <div style="width: 100%; text-align: center">
+			                        <img width="57" height="26" src="~/images/icons/maps/atlanticOcean.png"> 
+		                        </div>
                             </div>
                         
                             <!-- Indian Ocean -->
-                            <div style="position: absolute; left: 460px; top: 360px; width: 50px">
-                                <div style="width: 100%; text-align: center">
-                                    <img src="../../images/icons/glyphs/glyphicons_261_buoy_blue.png" width="24" height="24"/>
-                                </div>
-                                <div class="customPlaceText">
-                                    <span>Indian Ocean</span>
-                                </div>
-                            </div>
+                           	<div style="position: absolute; left: 456px; top: 381px; width: 57px">
+	                            <div style="width: 100%; text-align: center">
+			                        <img width="57" height="26" src="~/images/icons/maps/indianOcean.png"> 
+		                        </div>
+	                        </div>
+
                          
                             <!-- Southern Ocean -->
-                            <div style="position: absolute; left: 270px; top: 420px; width: 50px">
+                            <div style="position: absolute; left: 267px; top: 441px; width: 57px">
                                 <div style="width: 100%; text-align: center">
-                                    <img src="../../images/icons/glyphs/glyphicons_261_buoy_blue.png" width="24" height="24"/>
-                                </div>
-                                <div class="customPlaceText">
-                                    <span>Southern Ocean</span>
-                                </div>
-                            </div>
+			                        <img width="57" height="26" src="~/images/icons/maps/southernOcean.png"> 
+		                        </div>
+	                        </div>
                           
                             <!-- Gulf of Mexico -->
-                            @*                        <div style="position: absolute; left: 150px; top: 270px; width: 50px; z-index: 3">
-                            <div style="width: 100%; text-align: center">
-                                <img src="../../images/icons/glyphs/glyphicons_261_buoy_blue.png" width="12" height="12"/>
-                            </div>
-                            <div style="width: 100%; text-align: center; line-height: 0.5">
-                                <span style="font-size: x-small">Gulf of Mexico</span>
-                            </div>
-                        </div>  *@                     
+                            @*          <div data-bind="visible: !loadSpinner.isVisible()" style="position: absolute; left: 157px; top: 289px; width: 37px; z-index: 3;">
+		                                    <div style="width: 100%; text-align: center">
+			                                    <img width="37" height="18" src="../../images/buttonGraphics/gulfOfMexico.png"> 
+		                                    </div>
+	                                    </div> *@                     
                            
                             <!-- Caribbean -->
-                            <div style="position: absolute; left: 200px; top: 300px; width: 50px">
-                                <div style="width: 100%; text-align: center">
-                                    <img src="../../images/icons/glyphs/glyphicons_261_buoy_blue.png" width="12" height="12"/>
-                                </div>
-                                <div class="customPlaceText" style="line-height: 0.5">
-                                    <span style="font-size: x-small">Caribbean</span>
-                                </div>
-                            </div>
+                            <div style="position: absolute; left: 188px; top: 309px; width: 51px">
+		                        <div style="width: 100%; text-align: center">
+			                        <img width="51" height="9" src="~/images/icons/maps/caribbean.png" > 
+		                        </div>
+	                        </div>
 
                             <!-- Arctic Ocean -->
-                            <div style="position: absolute; left: 315px; top: 5px; width: 50px">
-                                <div style="width: 100%; text-align: center">
-                                    <img src="../../images/icons/glyphs/glyphicons_261_buoy_blue.png" width="24" height="24"/>
-                                </div>
-                                <div class="customPlaceText">
-                                    <span>Arctic Ocean</span>
-                                </div>
-                            </div>                       
+                            <div style="position: absolute; left: 319px; top: 23px; width: 57px">
+		                        <div style="width: 100%; text-align: center">
+			                        <img width="57" height="26" src="~/images/icons/maps/arcticOcean.png"> 
+		                        </div>
+	                        </div>             
                         </div>
 
                         <!-- GeoChart -->
@@ -417,54 +430,52 @@
                     
                         <div data-bind="visible: mapRegion() === 'world'">
                             <!-- Antarctica Title Phantom -->
-                            <div id="antarctica" style="position: absolute; left: 330px; bottom: 0; z-index: 4" data-bind="click: function(event,item) { customPlaceClick(event,item,'Antarctica'); }">
-                                <img src="../../images/transparent.png" width="300" height="50"/>
+                            <div id="antarctica" style="position: absolute; left: 340px; top: 465px; width:285px; z-index: 4" data-bind="click: function(event,item) { customPlaceClick(event,item,'Antarctica'); }">
+                                <img width="285" height="35" src="~/images/transparent.png">
                             </div>
                     
                             <!-- Pacific Ocean Title Phantom -->
-                            <div id="pacificOcean" style="position: absolute; left: 70px; top: 320px; width: 50px; z-index: 4" data-bind="click: function(event,item) { customPlaceClick(event,item,'Pacific Ocean'); }">
-                                <img src="../../images/transparent.png" width="50" height="50"/>
+                            <div id="pacificOcean" style="position: absolute; left: 68px; top: 349px; width: 57px; z-index: 4" data-bind="click: function(event,item) { customPlaceClick(event,item,'Pacific Ocean'); }">
+                                <img src="../../images/transparent.png" width="57" height="26"> 
                             </div>
                     
                             <!-- Atlantic Ocean Title Phantom -->
-                            <div id="atlanticOcean" style="position: absolute; left: 240px; top: 250px; width: 50px; z-index: 4" data-bind="click: function(event,item) { customPlaceClick(event,item,'North Atlantic Ocean'); }">
-                                <img src="../../images/transparent.png" width="50" height="50"/>
+                            <div id="atlanticOcean" style="position: absolute; left: 236px; top: 271px; width: 57px; z-index: 4" data-bind="click: function(event,item) { customPlaceClick(event,item,'North Atlantic Ocean'); }">
+                                <img src="../../images/transparent.png" width="57" height="26"/>
                             </div>
                        
                             <!-- Indian Ocean Title Phantom -->
-                            <div id="indianOcean" style="position: absolute; left: 460px; top: 360px; width: 50px; z-index: 4" data-bind="click: function(event,item) { customPlaceClick(event,item,'Indian Ocean'); }">
-                                <img src="../../images/transparent.png" width="50" height="50"/>
+                            <div id="indianOcean" style="position: absolute; left: 456px; top: 381px; width: 57px; z-index: 4" data-bind="click: function(event,item) { customPlaceClick(event,item,'Indian Ocean'); }">
+                                <img src="../../images/transparent.png" width="57" height="26"/>
                             </div>
                   
                             <!-- Southern Ocean Title Phantom -->
-                            <div id="southernOcean" style="position: absolute; left: 270px; top: 420px; width: 50px; z-index: 4" data-bind="click: function(event,item) { customPlaceClick(event,item,'Southern Ocean'); }">
-                                <img src="../../images/transparent.png" width="50" height="50"/>
+                            <div id="southernOcean" style="position: absolute; left: 267px; top: 441px; width: 57px; z-index: 4" data-bind="click: function(event,item) { customPlaceClick(event,item,'Southern Ocean'); }">
+                                <img src="../../images/transparent.png" width="57" height="26"/>
                             </div>
 
                             <!-- Gulf of Mexico-->
-                            <div style="position: absolute; left: 150px; top: 270px; width: 50px; z-index: 3"
+                            <div style="position: absolute; left: 157px; top: 289px; width: 37px; height: 18px; z-index: 3"
                                  data-bind="visible: !loadSpinner.isVisible()">
-                                <div style="width: 100%; text-align: center">
-                                    <img src="../../images/icons/glyphs/glyphicons_261_buoy_blue.png" width="12" height="12"/>
-                                </div>
-                                <div class="customPlaceText" style="line-height: 0.5">
-                                    <span style="font-size: x-small">Gulf of Mexico</span>
-                                </div>
+	                        	<div style="width: 100%; text-align: center">
+			                        <img width="37" height="18" src="~/images/icons/maps/gulfOfMexico.png" > 
+		                        </div>
                             </div>
                     
                             <!-- Gulf of Mexico Title Phantom  -->
-                            <div id="gulfOfMexico" style="position: absolute; left: 150px; top: 270px; width: 50px; z-index: 4" data-bind="click: function(event,item) { customPlaceClick(event,item,'Gulf of Mexico'); }">
-                                <img src="../../images/transparent.png" width="25" height="25"/>
+                            <div id="gulfOfMexico" style="position: absolute; left: 157px; top: 293px; width: 37px; height: 18px; z-index: 4" data-bind="click: function(event,item) { customPlaceClick(event,item,'Gulf of Mexico'); }" valign="top">
+                                <img src="~/images/transparent.png" width="37" height="18"/>
                             </div>
                     
                             <!-- Caribbean Title Phantom -->
-                            <div id="caribbean" style="position: absolute; left: 200px; top: 300px; width: 50px; z-index: 4" data-bind="click: function(event,item) { customPlaceClick(event,item,'Caribbean Sea'); }">
-                                <img src="../../images/transparent.png" width="25" height="25"/>
+                            <div id="caribbean" style="position: absolute; left: 188px; top: 317px; width: 51px; height: 9px; z-index: 4" data-bind="click: function(event,item) { customPlaceClick(event,item,'Caribbean Sea'); }">
+                                <img src="~/images/transparent.png" width="51" height="9"/>
                             </div>
 
+
                             <!-- Arctic Ocean Title Phantom -->
-                            <div id="arcticOcean" style="position: absolute; left: 315px; top: 5px; width: 50px; z-index: 4" data-bind="click: function(event,item) { customPlaceClick(event,item,'Arctic Ocean'); }">
-                                <img src="../../images/transparent.png" width="50" height="50"/>
+                            <div id="arcticOcean" style="position: absolute; left: 319px; top: 23px; width: 57px; z-index: 4" data-bind="click: function(event,item) { customPlaceClick(event,item,'Arctic Ocean'); }">
+                                <img src="~/images/transparent.png" width="57" height="26"/>
                             </div>
                         </div>
 

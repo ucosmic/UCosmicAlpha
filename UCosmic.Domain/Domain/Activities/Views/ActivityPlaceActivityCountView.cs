@@ -57,8 +57,8 @@ namespace UCosmic.Domain.Activities
                                                                                        establishmentId,
                                                                                        fromDateUtc,
                                                                                        toDateUtc,
-                                                                                       false, /* include undated */
-                                                                                       true /* include future */));
+                                                                                       false, /* no undated? */
+                                                                                       true /* include future? */));
 
             if ((settings != null) && settings.ActivityTypes.Any())
             {
@@ -70,8 +70,8 @@ namespace UCosmic.Domain.Activities
                                                                          establishmentId,
                                                                          fromDateUtc,
                                                                          toDateUtc,
-                                                                         false, /* include undated */
-                                                                         true /* include future */));
+                                                                         false, /* no undated? */
+                                                                         true /* include future? */));
 
                     var typeCount = TypeCounts.SingleOrDefault(c => c.TypeId == type.Id);
                     if (typeCount != null)
