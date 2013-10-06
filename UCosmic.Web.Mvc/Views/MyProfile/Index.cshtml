@@ -37,7 +37,7 @@
     @Scripts.Render("~/bundles/activities")
     @Scripts.Render("~/bundles/geographicExpertises")
     @Scripts.Render("~/bundles/languageExpertises")
-    @Scripts.Render("~/bundles/internationalAffiliations")
+    @*@Scripts.Render("~/bundles/internationalAffiliations")*@
     @Scripts.Render("~/bundles/degrees")
 
     <script type="text/javascript">
@@ -137,8 +137,8 @@
                                 <li>Geographic Expertise</li>
                                 <li>Language Expertise</li>
                                 <li>Formal Education</li>
-                                <li>Affiliations</li>
-                                <li>Email Addresses</li>
+                                @*<li>Affiliations</li>
+                                <li>Email Addresses</li>*@
                             </ul>
                             <div>
                                 @{ Html.RenderAction(MVC.Activities.Get()); }
@@ -153,13 +153,13 @@
                             <div>
                                 @Html.Partial(MVC.MyProfile.Views._Degrees)
                             </div>
-                            <div>
+                            @*<div>
                                 @Html.Partial(MVC.MyProfile.Views._InternationalAffiliations)
                             </div>
                             <div>
                                 My Email Addresses
                                 @Html.Partial(MVC.MyProfile.Views._EmailAddresses)
-                            </div>
+                            </div>*@
                         </div>
                     </div>
                 </div>
