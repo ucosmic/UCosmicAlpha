@@ -27,7 +27,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         private const string PluralUrl =        "{activityId:int}/documents";
         private const string SingleUrl =        "{activityId:int}/documents/{documentId:int}";
         private const string ThumbnailUrl =     "{activityId:int}/documents/{documentId:int}/thumbnail";
-        private const string ValidateUrl =      "documents/validate-upload";
+        private const string ValidateUrl =      "{activityId:int}/documents/validate-upload";
 
         private readonly IProcessQueries _queryProcessor;
         private readonly IStoreBinaryData _binaryData;
@@ -137,10 +137,14 @@ namespace UCosmic.Web.Mvc.ApiControllers
             catch (ValidationException ex)
             {
                 Func<ValidationFailure, bool> forName = x => x.PropertyName == command.PropertyName(y => y.FileName);
+                Func<ValidationFailure, bool> forTitle = x => x.PropertyName == command.PropertyName(y => y.Title);
                 Func<ValidationFailure, bool> forContent = x => x.PropertyName == command.PropertyName(y => y.Content);
                 if (ex.Errors.Any(forName))
                     return Request.CreateResponse(HttpStatusCode.UnsupportedMediaType,
                         ex.Errors.First(forName).ErrorMessage, "text/plain");
+                if (ex.Errors.Any(forTitle))
+                    return Request.CreateResponse(HttpStatusCode.BadRequest,
+                        ex.Errors.First(forTitle).ErrorMessage, "text/plain");
                 if (ex.Errors.Any(forContent))
                     return Request.CreateResponse(HttpStatusCode.RequestEntityTooLarge,
                         ex.Errors.First(forContent).ErrorMessage, "text/plain");
@@ -161,8 +165,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [Authorize]
-        [POST(ValidateUrl)]
-        public HttpResponseMessage PostValidate([FromBody] FileUploadValidationModel model)
+        [POST(ValidateUrl, ControllerPrecedence = 1)]
+        public HttpResponseMessage PostValidate(int activityId, [FromBody] FileUploadValidationModel model)
         {
             // before creating command, make sure there is enough memory
             if (model.Length.HasValue && model.Length.Value > ActivityDocumentConstraints.MaxFileBytes)
@@ -173,7 +177,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 return Request.CreateResponse(HttpStatusCode.BadRequest, message, "text/plain");
             }
 
-            var command = new CreateActivityDocument(User, 0)
+            var command = new CreateActivityDocument(User, activityId)
             {
                 FileName = model.Name,
                 Content = model.Length.HasValue ? new byte[model.Length.Value] : new byte[0],
@@ -182,6 +186,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             var forProperties = new List<Func<ValidationFailure, bool>>
             {
                 x => x.PropertyName == command.PropertyName(y => y.FileName),
+                x => x.PropertyName == command.PropertyName(y => y.Title),
             };
             if (model.Length.HasValue)
                 forProperties.Add(x => x.PropertyName == command.PropertyName(y => y.Content));
@@ -209,7 +214,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             }
             catch (ValidationException ex)
             {
-                return Request.CreateResponse(HttpStatusCode.BadRequest, ex.Message, "text/plain");
+                return Request.CreateResponse(HttpStatusCode.BadRequest, ex.Errors.First().ErrorMessage, "text/plain");
             }
 
             return Request.CreateResponse(HttpStatusCode.OK, "Activity document was successfully renamed.");

@@ -172,7 +172,7 @@ module Activities.ViewModels {
                 validator: (value: string, params: FormattedDateInput): boolean => {
                     return params.isValid();
                 },
-                message: 'Date is not valid.'
+                message: 'The {0} is not valid.'
             };
 
             ko.validation.registerExtenders();
@@ -745,7 +745,7 @@ module Activities.ViewModels {
         $documentUrlFormat: JQuery;
         $documentsUrlFormat: JQuery;
         $documentIconUrlFormat: JQuery;
-        $documentsValidateUrl: JQuery;
+        $documentsValidateUrlFormat: JQuery;
 
         private _bindDocumentsKendoUpload(): void {
             this.$fileUpload.kendoUpload({
@@ -768,7 +768,7 @@ module Activities.ViewModels {
                 $.ajax({
                     async: false,
                     type: 'POST',
-                    url: this.$documentsValidateUrl.text(),
+                    url: this.$documentsValidateUrlFormat.text().format(this.activityId()),
                     data: {
                         name: file.name,
                         length: file.size
@@ -992,10 +992,32 @@ module Activities.ViewModels {
         extension: KnockoutObservable<string> = ko.observable();
         private static _iconSrcFormat;
         private static _maxLengthMessageFormat = 'Document name cannot be longer than {0} characters. You entered {1} characters.';
+        private static _duplicateNameMessageFormat = "The file name '{0}' is not allowed because this activity already has a file with the same name. " + 
+            "Please rename or delete the existing '{1}' first.";
 
         constructor(data: ApiModels.ActivityDocument, owner: ActivityForm) {
             ko.mapping.fromJS(data, {}, this);
             this._owner = owner;
+            this._bindValidation();
+        }
+
+        private _bindValidation(): void {
+            ko.validation.rules['uniqueDocumentName'] = {
+                validator: function (value: string, params: ActivityDocumentForm): boolean {
+                    var otherDocumentForms = Enumerable.From(params._owner.documents())
+                        .Except([params]).ToArray();
+                    var duplicateDocument = Enumerable.From(otherDocumentForms)
+                        .FirstOrDefault(undefined, function (x: ActivityDocumentForm): boolean {
+                            return x.displayName().toUpperCase() == params.displayName().toUpperCase();
+                        });
+                    if (!duplicateDocument) return true;
+
+                    this.message = ActivityDocumentForm._duplicateNameMessageFormat
+                        .format(params.displayName(), duplicateDocument.displayName());
+                    return false;
+                },
+            };
+            ko.validation.registerExtenders();
 
             this.title.extend({
                 required: {
@@ -1004,13 +1026,14 @@ module Activities.ViewModels {
                 maxLength: {
                     params: 64,
                     message: ActivityDocumentForm._maxLengthMessageFormat,
-                }
+                },
+                uniqueDocumentName: this,
             });
 
             ko.validation.group(this);
 
             this.title.subscribe((newValue: string): void => {
-                if (this.title.error && this.title.error.indexOf('{1}') >= 0)
+                if (this.title.error && this.title().length > 64 && this.title.error.indexOf('{1}') >= 0)
                     this.title.error = this.title.error.format(undefined, this.title().length);
             });
         }
@@ -1068,7 +1091,10 @@ module Activities.ViewModels {
                 },
             })
                 .fail((xhr: JQueryXHR): void => {
-                    App.Failures.message(xhr, 'while trying to edit this document name', true);
+                    var message = xhr.status === 400 && xhr.responseText && xhr.responseText.length < 1000
+                        ? xhr.responseText
+                        : App.Failures.message(xhr, 'while trying to edit this document name');
+                    this._owner.fileUploadErrors.push({ message: message, });
                     this.title(this._stashedTitle);
                 })
                 .always((): void => {

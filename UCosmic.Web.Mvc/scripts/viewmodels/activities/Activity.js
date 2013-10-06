@@ -168,7 +168,7 @@ var Activities;
                     validator: function (value, params) {
                         return params.isValid();
                     },
-                    message: 'Date is not valid.'
+                    message: 'The {0} is not valid.'
                 };
 
                 ko.validation.registerExtenders();
@@ -705,7 +705,7 @@ else if (removedPlaceIds.length === 1)
                     $.ajax({
                         async: false,
                         type: 'POST',
-                        url: this.$documentsValidateUrl.text(),
+                        url: this.$documentsValidateUrlFormat.text().format(this.activityId()),
                         data: {
                             name: file.name,
                             length: file.size
@@ -931,6 +931,24 @@ else if (FormattedDateInput._mDdYyyy.test(input))
                 this.isSavingTitle = ko.observable(false);
                 ko.mapping.fromJS(data, {}, this);
                 this._owner = owner;
+                this._bindValidation();
+            }
+            ActivityDocumentForm.prototype._bindValidation = function () {
+                var _this = this;
+                ko.validation.rules['uniqueDocumentName'] = {
+                    validator: function (value, params) {
+                        var otherDocumentForms = Enumerable.From(params._owner.documents()).Except([params]).ToArray();
+                        var duplicateDocument = Enumerable.From(otherDocumentForms).FirstOrDefault(undefined, function (x) {
+                            return x.displayName().toUpperCase() == params.displayName().toUpperCase();
+                        });
+                        if (!duplicateDocument)
+                            return true;
+
+                        this.message = ActivityDocumentForm._duplicateNameMessageFormat.format(params.displayName(), duplicateDocument.displayName());
+                        return false;
+                    }
+                };
+                ko.validation.registerExtenders();
 
                 this.title.extend({
                     required: {
@@ -939,16 +957,18 @@ else if (FormattedDateInput._mDdYyyy.test(input))
                     maxLength: {
                         params: 64,
                         message: ActivityDocumentForm._maxLengthMessageFormat
-                    }
+                    },
+                    uniqueDocumentName: this
                 });
 
                 ko.validation.group(this);
 
                 this.title.subscribe(function (newValue) {
-                    if (_this.title.error && _this.title.error.indexOf('{1}') >= 0)
+                    if (_this.title.error && _this.title().length > 64 && _this.title.error.indexOf('{1}') >= 0)
                         _this.title.error = _this.title.error.format(undefined, _this.title().length);
                 });
-            }
+            };
+
             ActivityDocumentForm.prototype.iconSrc = function (img) {
                 var url = $(img).data('src-format').format(this.activityId(), this.documentId());
                 var params = { maxSide: ActivityForm.iconMaxSide };
@@ -991,7 +1011,8 @@ else if (FormattedDateInput._mDdYyyy.test(input))
                         title: this.title()
                     }
                 }).fail(function (xhr) {
-                    App.Failures.message(xhr, 'while trying to edit this document name', true);
+                    var message = xhr.status === 400 && xhr.responseText && xhr.responseText.length < 1000 ? xhr.responseText : App.Failures.message(xhr, 'while trying to edit this document name');
+                    _this._owner.fileUploadErrors.push({ message: message });
                     _this.title(_this._stashedTitle);
                 }).always(function () {
                     _this.isSavingTitle(false);
@@ -1043,6 +1064,7 @@ else if (FormattedDateInput._mDdYyyy.test(input))
                 });
             };
             ActivityDocumentForm._maxLengthMessageFormat = 'Document name cannot be longer than {0} characters. You entered {1} characters.';
+            ActivityDocumentForm._duplicateNameMessageFormat = "The file name '{0}' is not allowed because this activity already has a file with the same name. " + "Please rename or delete the existing '{1}' first.";
             return ActivityDocumentForm;
         })();
         ViewModels.ActivityDocumentForm = ActivityDocumentForm;

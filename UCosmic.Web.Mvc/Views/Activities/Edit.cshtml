@@ -58,7 +58,7 @@
             <span data-bind="jQuery: '$tagsUrlFormat'">@ViewBag.TagsApi</span>
             <span data-bind="jQuery: '$documentUrlFormat'">@ViewBag.DocumentApi</span>
             <span data-bind="jQuery: '$documentsUrlFormat'">@ViewBag.DocumentsApi</span>
-            <span data-bind="jQuery: '$documentsValidateUrl'">@ViewBag.DocumentsValidateApi</span>
+            <span data-bind="jQuery: '$documentsValidateUrlFormat'">@ViewBag.DocumentsValidateApi</span>
             <span data-bind="jQuery: '$documentIconUrlFormat'">@ViewBag.DocumentIconApi</span>
         </div>
 
@@ -264,7 +264,7 @@
                                                     <a href="#" title="Click to delete this document" data-bind="click: purge, clickBubble: false, visible: !isSavingTitle()">
                                                         <img src="@Links.images.icons.minus.minus_20_red_png" alt="Click to delete this document" />
                                                     </a>
-                                                    <img src="@Links.images.icons.spinner.spinner_20_blue_gif" data-bind="visible: isSavingTitle" alt="" />
+                                                    <img src="@Links.images.icons.spinner.spinner_20_blue_gif" data-bind="visible: isSavingTitle" alt="" title="Renaming document..." />
                                                 </div>
                                             </div>
                                         </div>
@@ -290,20 +290,6 @@
                         </div>
                     </div>
                 </div>
-                @*<div data-bind="visible: documents().length">
-                    <table class="data">
-                        <thead>
-                            <tr>
-                                <th style="width: 10%; text-align: center">Preview</th>
-                                <th style="width: 65%">Title</th>
-                                <th style="width: 10%; text-align: center">Type</th>
-                                <th style="width: 10%; text-align: center">Size</th>
-                                <th style="width: 5%"></th>
-                            </tr>
-                        </thead>
-                        <tbody data-bind="template: { name: 'activity-document-template', foreach: documents }"></tbody>
-                    </table>
-                </div>*@
             </div>
 
             @* BUTTONS *@
@@ -349,6 +335,7 @@
 </div>
 
 @* KNOCKOUT TEMPLATES *@
+
 <script type="text/html" id="activity-types-template">
     <li>
         <label>
@@ -368,39 +355,6 @@
         </div>
     </li>
 </script>
-
-@*<script type="text/html" id="activity-document-template">
-    <tr class="hover-hilite" style="white-space: normal">
-        <!-- Preview -->
-        <td style="text-align: center">
-            <img alt="thumbnail" data-bind="attr: { src: $parent.documentIcon(documentId()) }" src="@Url.Content("~/images/icons/spinner/spinner-24-blue.gif")">
-        </td>
-        <!-- Title -->
-        <td>
-            <span style="display: inline"
-                id="documentTitle"
-                data-bind="text: title, click: function (item, event) { $parent.startDocumentTitleEdit(item, event); }"></span>
-            <input type="text"
-                id="documentTitleInput"
-                style="display: none"
-                data-bind="value: title" />
-        </td>
-        <!-- Type -->
-        <td style="text-align: center">
-            <span data-bind="text: extension"></span>
-        </td>
-        <!-- Size -->
-        <td style="text-align: center">
-            <span data-bind="text: size"></span>
-        </td>
-        <!-- Remove Button -->
-        <td style="text-align: center; vertical-align: middle">
-            <a href="#" title="Delete this document" data-bind="click: function (item, index) { $parent.deleteDocument(item, $index()); }, clickBubble: false">
-                <img src="@Links.images.icons.minus.minus_24_red_png" alt="Delete this document" />
-            </a>
-        </td>
-    </tr>
-</script>*@
 
 <script type="text/html" id="buttons-template">
     <div style="margin-bottom: 32px;">

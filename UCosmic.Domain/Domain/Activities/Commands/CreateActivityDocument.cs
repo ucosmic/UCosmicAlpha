@@ -87,9 +87,11 @@ namespace UCosmic.Domain.Activities
                     .WithMessage(MustHaveFileName.FailMessage)
 
                 // only allow whitelisted extensions
-                .MustHaveAllowedFileExtension(
-                    validFileExtensions
-                )
+                .MustHaveAllowedFileExtension(validFileExtensions)
+            ;
+
+            RuleFor(x => x.Title)
+                .MustNotBeDuplicateActivityDocument(queryProcessor, x => x.FileName, x => x.ActivityId, x => x.Mode)
             ;
 
             // file size cannot exceed 4 megabytes

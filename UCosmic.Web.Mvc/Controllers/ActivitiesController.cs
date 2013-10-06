@@ -134,8 +134,9 @@ namespace UCosmic.Web.Mvc.Controllers
             document = document.Replace("0", "{0}").Replace("1", "{1}");
             ViewBag.DocumentApi = document;
 
-            var documentsValidate = Url.HttpRouteUrl(null, new { controller = "ActivityDocuments", action = "PostValidate" });
+            var documentsValidate = Url.HttpRouteUrl(null, new { controller = "ActivityDocuments", action = "PostValidate", activityId = 0 });
             Debug.Assert(documentsValidate != null);
+            documentsValidate = documentsValidate.Replace("0", "{0}");
             ViewBag.DocumentsValidateApi = documentsValidate;
 
             var documentIcon = Url.HttpRouteUrl(null, new { controller = "ActivityDocuments", action = "GetThumbnail", activityId = 0, documentId = 1 });

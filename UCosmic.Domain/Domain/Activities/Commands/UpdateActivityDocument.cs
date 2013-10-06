@@ -44,6 +44,14 @@ namespace UCosmic.Domain.Activities
                 .MustFindActivityDocumentById(queryProcessor)
                 .MustBeDocumentForActivity(queryProcessor, x => x.ActivityId)
             ;
+
+            RuleFor(x => x.Title)
+                .NotEmpty().WithMessage("Document name is required.")
+                .Length(1, ActivityDocumentConstraints.MaxTitleLength)
+                    .WithMessage(MustNotExceedStringLength.FailMessageFormat, x => "Document name",
+                        x => ActivityDocumentConstraints.MaxTitleLength, x => x.Title.Length)
+                .MustNotBeDuplicateActivityDocument(queryProcessor, x => null, x => x.ActivityId, x => null, x => x.DocumentId)
+            ;
         }
     }
 
