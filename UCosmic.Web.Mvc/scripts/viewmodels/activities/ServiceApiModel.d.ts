@@ -46,8 +46,9 @@ declare module Activities.ApiModels {
         activityId: number;
         documentId: number;
         title: string;
-        domainType: string;
+        fileName: string;
         byteCount: number;
+        size: string;
         extension: string;
     }
 }
@@ -64,6 +65,9 @@ declare module Activities.KoModels {
         activityId: KnockoutObservable<number>;
         documentId: KnockoutObservable<number>;
         title: KnockoutObservable<string>;
+        fileName: KnockoutObservable<string>;
+        byteCount: KnockoutObservable<number>;
+        size: KnockoutObservable<string>;
         extension: KnockoutObservable<string>;
     }
 

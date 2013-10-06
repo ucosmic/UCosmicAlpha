@@ -29,10 +29,10 @@ namespace UCosmic.Domain.Activities
         public ActivityMode? Mode { get; set; }
         public string Title { get; set; }
         public byte[] Content { get; set; }
+        public long? Length { get; set; }
         public string MimeType { get; set; }
         public string FileName { get; set; }
         internal bool NoCommit { get; set; }
-        internal int? Length { get; set; }
         internal string Path { get; set; }
         internal Guid? EntityId { get; set; }
         internal ActivityValues ActivityValues { get; private set; }
@@ -95,10 +95,14 @@ namespace UCosmic.Domain.Activities
             ;
 
             // file size cannot exceed 4 megabytes
-            RuleFor(x => x.Content)
-                .MustNotExceedFileSize(ActivityDocumentConstraints.MaxFileMegaBytes, ActivityDocumentConstraints.MaxFileUnitName, x => x.FileName)
-                .When(x => x.Content != null, ApplyConditionTo.CurrentValidator)
-            ;
+            When(x => x.Content != null, () =>
+                RuleFor(x => x.Content)
+                    .MustNotExceedFileSize(ActivityDocumentConstraints.MaxFileMegaBytes, ActivityDocumentConstraints.MaxFileUnitName, x => x.FileName)
+            );
+            When(x => x.Length.HasValue, () =>
+                RuleFor(x => x.Length.Value)
+                    .MustNotExceedFileSize(ActivityDocumentConstraints.MaxFileMegaBytes, ActivityDocumentConstraints.MaxFileUnitName, x => x.FileName)
+            );
         }
     }
 
@@ -152,7 +156,7 @@ namespace UCosmic.Domain.Activities
                 FileName = command.FileName,
                 MimeType = command.MimeType,
                 Path = path,
-                Length = command.Length.HasValue ? command.Length.Value : command.Content.Length,
+                Length = command.Length.HasValue ? (int)command.Length.Value : command.Content.Length,
                 CreatedByPrincipal = command.Impersonator == null
                     ? command.Principal.Identity.Name
                     : command.Impersonator.Identity.Name,

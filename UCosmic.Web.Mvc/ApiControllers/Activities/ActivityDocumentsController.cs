@@ -15,6 +15,7 @@ using AutoMapper;
 using FluentValidation;
 using FluentValidation.Results;
 using ImageResizer;
+using Newtonsoft.Json;
 using UCosmic.Domain.Activities;
 using UCosmic.Domain.Files;
 using UCosmic.Web.Mvc.Models;
@@ -24,10 +25,10 @@ namespace UCosmic.Web.Mvc.ApiControllers
     [RoutePrefix("api/activities")]
     public class ActivityDocumentsController : ApiController
     {
-        private const string PluralUrl =        "{activityId:int}/documents";
-        private const string SingleUrl =        "{activityId:int}/documents/{documentId:int}";
-        private const string ThumbnailUrl =     "{activityId:int}/documents/{documentId:int}/thumbnail";
-        private const string ValidateUrl =      "{activityId:int}/documents/validate-upload";
+        private const string PluralUrl = "{activityId:int}/documents";
+        private const string SingleUrl = "{activityId:int}/documents/{documentId:int}";
+        private const string ThumbnailUrl = "{activityId:int}/documents/{documentId:int}/thumbnail";
+        private const string ValidateUrl = "{activityId:int}/documents/validate-upload";
 
         private readonly IProcessQueries _queryProcessor;
         private readonly IStoreBinaryData _binaryData;
@@ -150,7 +151,6 @@ namespace UCosmic.Web.Mvc.ApiControllers
                         ex.Errors.First(forContent).ErrorMessage, "text/plain");
             }
 
-            var response = Request.CreateResponse(HttpStatusCode.Created, "Activity document was successfully uploaded.");
             var url = Url.Link(null, new
             {
                 controller = "ActivityDocuments",
@@ -159,6 +159,9 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 documentId = command.CreatedActivityDocument.RevisionId,
             });
             Debug.Assert(url != null);
+            var successPayload = new { location = url, message = "Activity document was successfully uploaded." };
+            var successJson = JsonConvert.SerializeObject(successPayload);
+            var response = Request.CreateResponse(HttpStatusCode.Created, successJson, "text/plain");
             response.Headers.Location = new Uri(url);
 
             return response;
@@ -168,19 +171,10 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [POST(ValidateUrl, ControllerPrecedence = 1)]
         public HttpResponseMessage PostValidate(int activityId, [FromBody] FileUploadValidationModel model)
         {
-            // before creating command, make sure there is enough memory
-            if (model.Length.HasValue && model.Length.Value > ActivityDocumentConstraints.MaxFileBytes)
-            {
-                var message = string.Format(MustNotExceedFileSize<object>.FailMessageFormat, model.Name,
-                    ((decimal)model.Length.Value).ToFileSize(2, ActivityDocumentConstraints.MaxFileUnitName),
-                    ((decimal)ActivityDocumentConstraints.MaxFileBytes).ToFileSize(2, ActivityDocumentConstraints.MaxFileUnitName));
-                return Request.CreateResponse(HttpStatusCode.BadRequest, message, "text/plain");
-            }
-
             var command = new CreateActivityDocument(User, activityId)
             {
                 FileName = model.Name,
-                Content = model.Length.HasValue ? new byte[model.Length.Value] : new byte[0],
+                Length = model.Length,
             };
             var validationResult = _createValidator.Validate(command);
             var forProperties = new List<Func<ValidationFailure, bool>>
@@ -189,7 +183,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 x => x.PropertyName == command.PropertyName(y => y.Title),
             };
             if (model.Length.HasValue)
-                forProperties.Add(x => x.PropertyName == command.PropertyName(y => y.Content));
+                forProperties.Add(x => x.PropertyName == command.PropertyName(y => y.Length.Value));
             foreach (var forProperty in forProperties)
                 if (validationResult.Errors.Any(forProperty))
                     return Request.CreateResponse(HttpStatusCode.BadRequest,

@@ -2494,17 +2494,17 @@ declare module kendo.ui {
     }
 
     interface UploadCancelEvent extends UploadEvent {
-        files?: any;
+        files: UploadFile[];
     }
 
     interface UploadErrorEvent extends UploadEvent {
-        files?: any;
+        files: UploadFile[];
         operation?: string;
         XMLHttpRequest?: any;
     }
 
     interface UploadProgressEvent extends UploadEvent {
-        files?: any;
+        files: UploadFile[];
         percentComplete?: number;
     }
 
@@ -2515,22 +2515,28 @@ declare module kendo.ui {
 
     interface UploadSelectEvent extends UploadEvent {
         e?: any;
-        files?: any;
+        files: UploadFile[];
         preventDefault: Function;
     }
 
     interface UploadSuccessEvent extends UploadEvent {
-        files?: any;
+        files: UploadFile[];
         operation?: string;
-        response?: string;
+        response?: any;
         XMLHttpRequest?: any;
     }
 
     interface UploadUploadEvent extends UploadEvent {
-        files?: any;
+        files: UploadFile[];
         data?: any;
         preventDefault: Function;
         isDefaultPrevented: () => boolean;
+    }
+
+    interface UploadFile {
+        name: string;
+        extension: string;
+        size: number;
     }
 
 

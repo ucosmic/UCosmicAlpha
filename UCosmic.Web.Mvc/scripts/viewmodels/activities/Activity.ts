@@ -1,3 +1,4 @@
+//#region References
 /// <reference path="../../typings/jquery/jquery.d.ts" />
 /// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
 /// <reference path="../../typings/knockout/knockout.d.ts" />
@@ -11,6 +12,7 @@
 /// <reference path="../../app/Spinner.ts" />
 /// <reference path="ActivityEnums.ts" />
 /// <reference path="ServiceApiModel.d.ts" />
+//#endregion
 
 module Activities.ViewModels {
 
@@ -737,8 +739,6 @@ module Activities.ViewModels {
 
         static iconMaxSide: number = 64; // max width or height of the document icon
         documents: KnockoutObservableArray<ActivityDocumentForm> = ko.observableArray();
-        fileUploadErrors: KnockoutObservableArray<any> = ko.observableArray(); // array to hold file upload errors
-        private _invalidFileNames: KnockoutObservableArray<string> = ko.observableArray([]);
         $fileUpload: JQuery;
         $deleteDocumentDialog: JQuery;
         deleteDocumentSpinner = new App.Spinner();
@@ -755,9 +755,11 @@ module Activities.ViewModels {
                 async: { saveUrl: this.$documentsUrlFormat.text().format(this.activityId()), },
                 select: (e: kendo.ui.UploadSelectEvent): void => { this._onDocumentKendoSelect(e); },
                 upload: (e: kendo.ui.UploadUploadEvent): void => { this._onDocumentKendoUpload(e); },
+                progress: (e: kendo.ui.UploadProgressEvent): void => { this._onDocumentKendoProgress(e); },
+                cancel: (e: kendo.ui.UploadCancelEvent): void => { this._onDocumentKendoCancel(e); },
                 success: (e: kendo.ui.UploadSuccessEvent): void => { this._onDocumentKendoSuccess(e); },
                 error: (e: kendo.ui.UploadErrorEvent): void => { this._onDocumentKendoError(e); },
-                complete: (): void => { this.isSaving(false); }
+                complete: (): void => { this.isSaving(false); },
             });
         }
 
@@ -765,62 +767,70 @@ module Activities.ViewModels {
             this.isSaving(true);
             for (var i = 0; i < e.files.length; i++) {
                 var file = e.files[i];
-                $.ajax({
-                    async: false,
-                    type: 'POST',
-                    url: this.$documentsValidateUrlFormat.text().format(this.activityId()),
-                    data: {
-                        name: file.name,
-                        length: file.size
-                    },
-                })
-                    .fail((xhr: JQueryXHR) => {
-                        var isAlreadyInvalid = Enumerable.From(this._invalidFileNames())
-                            .Any(function (x: string): boolean {
-                                return x == file.name;
-                            });
-                        if (!isAlreadyInvalid) this._invalidFileNames.push(file.name);
-                        var message = xhr.status === 400
-                            ? xhr.responseText
-                            : App.Failures.message(xhr, "while trying to upload '{0}'".format(file.name));
-                        this.fileUploadErrors.push({ message: message, });
-                    });
+                this.documents.push(new ActivityDocumentForm(<kendo.ui.UploadFile>file, this));
             }
-            this.isSaving(false);
         }
 
         private _onDocumentKendoUpload(e: kendo.ui.UploadUploadEvent): void {
             var file = e.files[0];
-            var isInvalidFileName = Enumerable.From(this._invalidFileNames())
-                .Any(function (x: string): boolean {
-                    return x == file.name;
+
+            var form: ActivityDocumentForm = Enumerable.From(this.documents())
+                .First(function (x: ActivityDocumentForm): boolean {
+                    return x.isUpload() && x.fileName() === file.name;
                 });
-            if (isInvalidFileName) {
-                e.preventDefault();
-                this._invalidFileNames.remove(file.name);
-            }
-            else {
-                this.isSaving(true);
-            }
+            if (!form || form.uploadError()) e.preventDefault();
+
+            var hasUploads = Enumerable.From(this.documents())
+                .Any(function (x: ActivityDocumentForm): boolean {
+                    return x.isUpload() && !x.uploadError();
+                });
+            if (!hasUploads) this.isSaving(false);
         }
 
-        private _onDocumentKendoSuccess(e: kendo.ui.UploadSuccessEvent): void {
-            var location = e.XMLHttpRequest.getResponseHeader('location');
-            $.get(location)
-                .done((data: ApiModels.ActivityDocument): void => {
-                    this.documents.push(new ActivityDocumentForm(data, this));
+        private _onDocumentKendoProgress(e: kendo.ui.UploadProgressEvent): void {
+            var form: ActivityDocumentForm = Enumerable.From(this.documents())
+                .FirstOrDefault(undefined, function (x: ActivityDocumentForm): boolean {
+                    return x.isUpload() && !x.uploadError() && x.fileName() === e.files[0].name;
                 });
+            if (!form) return;
+            form.uploadProgress(e.percentComplete);
+        }
+
+        private _onDocumentKendoCancel(e: kendo.ui.UploadCancelEvent): void {
+            var form: ActivityDocumentForm = Enumerable.From(this.documents())
+                .FirstOrDefault(undefined, function (x: ActivityDocumentForm): boolean {
+                    return x.isUpload() && !x.uploadError() && x.fileName() === e.files[0].name;
+                });
+            this.documents.remove(form);
+        }
+
+        _testData: ApiModels.ActivityDocument;
+        private _onDocumentKendoSuccess(e: kendo.ui.UploadSuccessEvent): void {
+            var form: ActivityDocumentForm = Enumerable.From(this.documents())
+                .FirstOrDefault(undefined, function (x: ActivityDocumentForm): boolean {
+                    return x.isUpload() && !x.uploadError() && x.fileName() === e.files[0].name;
+                });
+            if (form) {
+                form.uploadProgress(100);
+                var location = e.XMLHttpRequest.getResponseHeader
+                    ? e.XMLHttpRequest.getResponseHeader('location')
+                    : e.response.location;
+                $.get(location)
+                    .done((data: ApiModels.ActivityDocument): void => {
+                        form.completeUpload(data);
+                    });
+            }
         }
 
         private _onDocumentKendoError(e: kendo.ui.UploadErrorEvent): void {
             var message = e.XMLHttpRequest.status != 500 && e.XMLHttpRequest.responseText && e.XMLHttpRequest.responseText.length < 1000
                 ? e.XMLHttpRequest.responseText
-                : App.Failures.message(e.XMLHttpRequest, 'while uploading your document, please try again');
-            this.fileUploadErrors.push({ message: message, });
-        }
-
-        dismissFileUploadError(index: number): void {
-            this.fileUploadErrors.splice(index, 1);
+                : App.Failures.message(e.XMLHttpRequest, "while uploading '{0}', please try again".format(e.files[0].name));
+            var form: ActivityDocumentForm = Enumerable.From(this.documents())
+                .FirstOrDefault(undefined, function (x: ActivityDocumentForm): boolean {
+                    return x.isUpload() && !x.uploadError() && x.fileName() === e.files[0].name;
+                });
+            if (form) form.uploadError(message);
         }
 
         //#endregion
@@ -984,21 +994,69 @@ module Activities.ViewModels {
     }
 
     export class ActivityDocumentForm implements KoModels.ActivityDocument {
+        //#region Properties
 
         private _owner: ActivityForm;
         activityId: KnockoutObservable<number> = ko.observable();
         documentId: KnockoutObservable<number> = ko.observable();
         title: KnockoutObservable<string> = ko.observable();
+        fileName: KnockoutObservable<string> = ko.observable();
+        byteCount: KnockoutObservable<number> = ko.observable();
+        size: KnockoutObservable<string> = ko.observable();
         extension: KnockoutObservable<string> = ko.observable();
+        isUpload: KnockoutObservable<boolean> = ko.observable();
+        uploadError: KnockoutObservable<string> = ko.observable();
+        uploadProgress: KnockoutObservable<number> = ko.observable();
         private static _iconSrcFormat;
         private static _maxLengthMessageFormat = 'Document name cannot be longer than {0} characters. You entered {1} characters.';
-        private static _duplicateNameMessageFormat = "The file name '{0}' is not allowed because this activity already has a file with the same name. " + 
-            "Please rename or delete the existing '{1}' first.";
+        private static _duplicateNameMessageFormat = "The file name '{0}' is not allowed because this activity already has a file with the same name. " +
+        "Please rename or delete the existing '{1}' first.";
 
-        constructor(data: ApiModels.ActivityDocument, owner: ActivityForm) {
-            ko.mapping.fromJS(data, {}, this);
+        //#endregion
+        //#region Construction & initialization
+
+        constructor(file: kendo.ui.UploadFile, owner: ActivityForm);
+        constructor(data: ApiModels.ActivityDocument, owner: ActivityForm);
+
+        constructor(arg0: any, owner: ActivityForm) {
             this._owner = owner;
+            if (typeof arg0.documentId === 'undefined')
+                this._constructUploading(arg0);
+            else this._constructUploaded(arg0);
+        }
+
+        private _constructUploaded(data: ApiModels.ActivityDocument): void {
+            ko.mapping.fromJS(data, {}, this);
             this._bindValidation();
+        }
+
+        private _constructUploading(file: kendo.ui.UploadFile): void {
+            this._bindValidation();
+            this.fileName(file.name);
+            this.extension(file.extension);
+            this.title(file.extension ? file.name.substr(0, file.name.lastIndexOf('.')) : file.name);
+            this.isUpload(true);
+            if (!this.title.isValid()) {
+                this.uploadError(this.title.error);
+            }
+            else {
+                $.ajax({
+                    async: false,
+                    type: 'POST',
+                    url: this._owner.$documentsValidateUrlFormat.text().format(this._owner.activityId()),
+                    data: {
+                        name: file.name,
+                        length: file.size,
+                    },
+                })
+                    .fail((xhr: JQueryXHR) => {
+                        var message = xhr.status === 400
+                            ? xhr.responseText
+                            : App.Failures.message(xhr, "while trying to upload '{0}'".format(file.name));
+                        this.uploadError(message);
+                    });
+            }
+            if (!this.uploadError()) this.uploadProgress(5);
         }
 
         private _bindValidation(): void {
@@ -1036,11 +1094,24 @@ module Activities.ViewModels {
                 if (this.title.error && this.title().length > 64 && this.title.error.indexOf('{1}') >= 0)
                     this.title.error = this.title.error.format(undefined, this.title().length);
             });
+
+            this.uploadProgress.subscribe((newValue: number): void => {
+                if (newValue < 0) this.uploadProgress(0)
+                else if (newValue > 100) this.uploadProgress(100);
+            });
         }
+
+        completeUpload(data: ApiModels.ActivityDocument): void {
+            ko.mapping.fromJS(data, {}, this);
+            this.isUpload(false);
+        }
+
+        //#endregion
+        //#region View Computeds
 
         displayExtension: KnockoutComputed<string> = ko.computed((): string => {
             var extension = this.extension();
-            return extension ? extension.toLowerCase() : undefined;
+            return extension ? extension.toLowerCase() : '';
         });
 
         displayName: KnockoutComputed<string> = ko.computed((): string => {
@@ -1048,14 +1119,23 @@ module Activities.ViewModels {
         });
 
         iconSrc(img: Element): string {
+            if (!this.activityId() || !this.documentId()) return $(img).attr('src');
             var url = $(img).data('src-format').format(this.activityId(), this.documentId());
             var params = { maxSide: ActivityForm.iconMaxSide };
             return '{0}?{1}'.format(url, $.param(params));
         }
 
+        uploadPercent: KnockoutComputed<string> = ko.computed((): string => {
+            return '{0}%'.format(this.uploadProgress() || 0);
+        });
+
+        //#endregion
+        //#region Title editing
+
         isEditingTitle: KnockoutObservable<boolean> = ko.observable(false);
         $titleInput: JQuery;
         private _stashedTitle: string;
+        renameError: KnockoutObservable<string> = ko.observable();
         editTitle(): void {
             if (this.isSavingTitle()) return;
             this._stashedTitle = this.title();
@@ -1093,13 +1173,32 @@ module Activities.ViewModels {
                 .fail((xhr: JQueryXHR): void => {
                     var message = xhr.status === 400 && xhr.responseText && xhr.responseText.length < 1000
                         ? xhr.responseText
-                        : App.Failures.message(xhr, 'while trying to edit this document name');
-                    this._owner.fileUploadErrors.push({ message: message, });
-                    this.title(this._stashedTitle);
+                        : App.Failures.message(xhr, 'while trying to rename this document');
+                    this.renameError(message);
+                    this.isEditingTitle(true);
                 })
                 .always((): void => {
                     this.isSavingTitle(false);
                 });
+        }
+
+        //#endregion
+        //#region Deletion
+
+        cancelEnabled: KnockoutComputed<boolean> = ko.computed((): boolean => {
+            return this.uploadProgress() < 10;
+        });
+
+        uploadCancel(item: ActivityDocumentForm, e: JQueryEventObject): void {
+            var kendoUpload = this._owner.$fileUpload.data('kendoUpload');
+            if (kendoUpload) {
+                var cancelButton = kendoUpload.wrapper.find('ul.k-upload-files')
+                    .find('.k-file:has([title="' + this.fileName() + '"]) .k-cancel');
+                cancelButton.click();
+            }
+            else {
+                alert('could not get kendoUpload data');
+            }
         }
 
         purge(item: ActivityDocumentForm, index: number): void {
@@ -1147,5 +1246,11 @@ module Activities.ViewModels {
                     }]
             });
         }
+
+        dismissUploadError(): void {
+            this._owner.documents.remove(this);
+        }
+
+        //#endregion
     }
 }

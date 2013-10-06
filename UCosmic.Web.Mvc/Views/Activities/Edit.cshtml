@@ -231,23 +231,12 @@
                 <div style="margin-bottom: 16px">
                     <input type="file" name="fileUpload" data-bind="jQuery: '$fileUpload'" />
                 </div>
-                <div data-bind="visible: fileUploadErrors().length" style="display: none;">
-                    <ul data-bind="foreach: fileUploadErrors">
-                        <li style="margin-bottom: 0.5em;">
-                            <div>
-                                <span class="validationMessage" data-bind="text: message" style="display: inline; line-height: 1.2em;"></span>
-                                &nbsp;
-                                <a href="#" data-bind="click: function () { $root.dismissFileUploadError($index()); }">OK</a>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
                 <div data-bind="visible: documents().length">
                     <div data-bind="foreach: documents" class="group">
                         <div class="on-left" style="width: 475px; margin-right: 5px; margin-bottom: 12px;">
-                            <div class="group" style="height: 64px;">
+                            <div class="group" style="min-height: 64px;" data-bind="visible: !isUpload()">
                                 <div class="on-left" style="width: 72px; text-align: center;">
-                                    <img alt="thumbnail" data-bind="attr: { src: iconSrc($element), title: size }" src="@Url.Content("~/images/icons/spinner/spinner-24-blue.gif")"
+                                    <img alt="thumbnail" data-bind="attr: { src: iconSrc($element), title: size }" src="~/images/icons/spinner/spinner-24-blue.gif"
                                          data-src-format="@ViewBag.DocumentIconApi">
                                 </div>
                                 <div class="on-left" style="width: 370px;">
@@ -274,17 +263,60 @@
                                             <div class="on-left">
                                                 <div style="width: 310px;">
                                                     <input type="text" data-bind="value: title, jQuery: '$titleInput', event: { keypress: blurTitle }"
-                                                        maxlength="@ActivityDocumentConstraints.MaxTitleLength"  />
+                                                           maxlength="@ActivityDocumentConstraints.MaxTitleLength"  />
                                                 </div>
                                             </div>
                                             <div class="on-left" style="line-height: 38px; margin-left: 12px; font-family: Arial, Helvetica, sans-serif;">
                                                 <span data-bind="text: displayExtension"></span>
                                             </div>
                                         </div>
+                                        <div>
+                                            <span class="validationMessage" data-bind="text: renameError, visible: renameError"></span>
+                                        </div>
                                         <div style="margin-top: 2px; margin-left: 4px;">
                                             <a href="#" data-bind="click: saveTitle">Save</a> | <a href="#" data-bind="    click: cancelTitle">Cancel</a>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+                            <div class="group" style="min-height: 64px; display: none; border: 0 none;" data-bind="visible: isUpload">
+                                <div data-bind="visible: !uploadError()">
+                                    <div class="group">
+                                        <div class="on-left" style="width: 72px; padding-top: 8px; text-align: center;">
+                                            <img alt="" src="~/images/icons/spinner/spinner-24-blue.gif">
+                                        </div>
+                                        <div class="on-left">
+                                            <div style="position: relative;">
+                                                <div style="position: absolute; border: solid 1px transparent; padding: 8px;">
+                                                    <div class="group">
+                                                        <div class="on-left ellipsis" style="max-width: 290px;">
+                                                            <span data-bind="text: title"></span>
+                                                        </div>
+                                                        <div class="on-left" style="max-width: 35px;">
+                                                            <span data-bind="text: displayExtension"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div style="width: 370px;">
+                                                    <div style="-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; width: 100%; height: 40px; border: solid 1px green; border-color: #7bd47b;">
+                                                        <div style="width: 5%; height: 38px; background-color: #7bd47b; -moz-transition: width 1s; -o-transition: width 1s; -webkit-transition: width 1s; transition: width 1s;"
+                                                            data-bind="style: { width: uploadPercent }">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div style="margin-top: 2px; margin-left: 4px;">
+                                                <span data-bind="text: uploadProgress"></span>% complete
+                                                &nbsp;
+                                                <button class="link" data-bind="click: uploadCancel, enable: cancelEnabled">Cancel</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div data-bind="visible: uploadError">
+                                    <span class="validationMessage" data-bind="text: uploadError" style="display: inline;"></span>
+                                    &nbsp;
+                                    <a href="#" data-bind="click: dismissUploadError">Dismiss this error message</a>
                                 </div>
                             </div>
                         </div>
@@ -313,7 +345,7 @@
             </div>
             <div style="height: 22px; margin-top: 8px;">
                 <div data-bind="visible: deleteDocumentSpinner.isVisible">
-                    <img src="@Url.Content("~/images/icons/spinner/spinner-20-blue.gif")" alt="" />
+                    <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
                     <strong>Deleting document...</strong>
                 </div>
             </div>
@@ -325,7 +357,7 @@
             </div>
             <div style="height: 22px; margin-top: 8px;">
                 <div data-bind="visible: cancelSpinner.isVisible">
-                    <img src="@Url.Content("~/images/icons/spinner/spinner-20-blue.gif")" alt="" />
+                    <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
                     <strong>Canceling...</strong>
                 </div>
             </div>

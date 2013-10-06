@@ -25,10 +25,6 @@ namespace UCosmic.Domain.Files
 
         protected override bool IsValid(PropertyValidatorContext context)
         {
-            if (!(context.PropertyValue is byte[]) && !(context.PropertyValue is Guid))
-                throw new NotSupportedException(string.Format(
-                    "The {0} PropertyValidator can only operate on Guid or byte[] properties", GetType().Name));
-
             decimal contentLengthInBytes;
             string fileName;
             if (_entities != null)
@@ -40,7 +36,7 @@ namespace UCosmic.Domain.Files
             }
             else
             {
-                contentLengthInBytes = ((byte[])context.PropertyValue).Length;
+                contentLengthInBytes = context.PropertyValue is byte[] ? ((byte[])context.PropertyValue).Length : (long)context.PropertyValue;
                 fileName = _fileName((T) context.Instance);
             }
 
@@ -70,6 +66,13 @@ namespace UCosmic.Domain.Files
         {
             var fileSizeInBytes = fileSize.ConvertToBytes(unit);
             return ruleBuilder.SetValidator(new MustNotExceedFileSize<T>(fileSizeInBytes, unit, null, entities));
+        }
+
+        public static IRuleBuilderOptions<T, long> MustNotExceedFileSize<T>
+            (this IRuleBuilder<T, long> ruleBuilder, decimal fileSize, FileSizeUnitName unit, Func<T, string> fileName)
+        {
+            var fileSizeInBytes = fileSize.ConvertToBytes(unit);
+            return ruleBuilder.SetValidator(new MustNotExceedFileSize<T>(fileSizeInBytes, unit, fileName, null));
         }
 
         private static decimal ConvertToBytes(this decimal fileSize, FileSizeUnitName unit)

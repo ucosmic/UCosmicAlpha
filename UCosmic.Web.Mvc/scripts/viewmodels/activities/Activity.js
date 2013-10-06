@@ -1,5 +1,6 @@
 var Activities;
 (function (Activities) {
+    //#region References
     /// <reference path="../../typings/jquery/jquery.d.ts" />
     /// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
     /// <reference path="../../typings/knockout/knockout.d.ts" />
@@ -13,6 +14,7 @@ var Activities;
     /// <reference path="../../app/Spinner.ts" />
     /// <reference path="ActivityEnums.ts" />
     /// <reference path="ServiceApiModel.d.ts" />
+    //#endregion
     (function (ViewModels) {
         var ActivityForm = (function () {
             //#endregion
@@ -61,8 +63,6 @@ var Activities;
                 this.tags = ko.observableArray();
                 this.tagInput = ko.observable();
                 this.documents = ko.observableArray();
-                this.fileUploadErrors = ko.observableArray();
-                this._invalidFileNames = ko.observableArray([]);
                 this.deleteDocumentSpinner = new App.Spinner();
             }
             ActivityForm.bind = function (bindings) {
@@ -685,6 +685,12 @@ else if (removedPlaceIds.length === 1)
                     upload: function (e) {
                         _this._onDocumentKendoUpload(e);
                     },
+                    progress: function (e) {
+                        _this._onDocumentKendoProgress(e);
+                    },
+                    cancel: function (e) {
+                        _this._onDocumentKendoCancel(e);
+                    },
                     success: function (e) {
                         _this._onDocumentKendoSuccess(e);
                     },
@@ -698,59 +704,65 @@ else if (removedPlaceIds.length === 1)
             };
 
             ActivityForm.prototype._onDocumentKendoSelect = function (e) {
-                var _this = this;
                 this.isSaving(true);
                 for (var i = 0; i < e.files.length; i++) {
                     var file = e.files[i];
-                    $.ajax({
-                        async: false,
-                        type: 'POST',
-                        url: this.$documentsValidateUrlFormat.text().format(this.activityId()),
-                        data: {
-                            name: file.name,
-                            length: file.size
-                        }
-                    }).fail(function (xhr) {
-                        var isAlreadyInvalid = Enumerable.From(_this._invalidFileNames()).Any(function (x) {
-                            return x == file.name;
-                        });
-                        if (!isAlreadyInvalid)
-                            _this._invalidFileNames.push(file.name);
-                        var message = xhr.status === 400 ? xhr.responseText : App.Failures.message(xhr, "while trying to upload '{0}'".format(file.name));
-                        _this.fileUploadErrors.push({ message: message });
-                    });
+                    this.documents.push(new ActivityDocumentForm(file, this));
                 }
-                this.isSaving(false);
             };
 
             ActivityForm.prototype._onDocumentKendoUpload = function (e) {
                 var file = e.files[0];
-                var isInvalidFileName = Enumerable.From(this._invalidFileNames()).Any(function (x) {
-                    return x == file.name;
+
+                var form = Enumerable.From(this.documents()).First(function (x) {
+                    return x.isUpload() && x.fileName() === file.name;
                 });
-                if (isInvalidFileName) {
+                if (!form || form.uploadError())
                     e.preventDefault();
-                    this._invalidFileNames.remove(file.name);
-                } else {
-                    this.isSaving(true);
-                }
+
+                var hasUploads = Enumerable.From(this.documents()).Any(function (x) {
+                    return x.isUpload() && !x.uploadError();
+                });
+                if (!hasUploads)
+                    this.isSaving(false);
+            };
+
+            ActivityForm.prototype._onDocumentKendoProgress = function (e) {
+                var form = Enumerable.From(this.documents()).FirstOrDefault(undefined, function (x) {
+                    return x.isUpload() && !x.uploadError() && x.fileName() === e.files[0].name;
+                });
+                if (!form)
+                    return;
+                form.uploadProgress(e.percentComplete);
+            };
+
+            ActivityForm.prototype._onDocumentKendoCancel = function (e) {
+                var form = Enumerable.From(this.documents()).FirstOrDefault(undefined, function (x) {
+                    return x.isUpload() && !x.uploadError() && x.fileName() === e.files[0].name;
+                });
+                this.documents.remove(form);
             };
 
             ActivityForm.prototype._onDocumentKendoSuccess = function (e) {
-                var _this = this;
-                var location = e.XMLHttpRequest.getResponseHeader('location');
-                $.get(location).done(function (data) {
-                    _this.documents.push(new ActivityDocumentForm(data, _this));
+                var form = Enumerable.From(this.documents()).FirstOrDefault(undefined, function (x) {
+                    return x.isUpload() && !x.uploadError() && x.fileName() === e.files[0].name;
                 });
+                if (form) {
+                    form.uploadProgress(100);
+                    var location = e.XMLHttpRequest.getResponseHeader ? e.XMLHttpRequest.getResponseHeader('location') : e.response.location;
+                    $.get(location).done(function (data) {
+                        form.completeUpload(data);
+                    });
+                }
             };
 
             ActivityForm.prototype._onDocumentKendoError = function (e) {
-                var message = e.XMLHttpRequest.status != 500 && e.XMLHttpRequest.responseText && e.XMLHttpRequest.responseText.length < 1000 ? e.XMLHttpRequest.responseText : App.Failures.message(e.XMLHttpRequest, 'while uploading your document, please try again');
-                this.fileUploadErrors.push({ message: message });
-            };
-
-            ActivityForm.prototype.dismissFileUploadError = function (index) {
-                this.fileUploadErrors.splice(index, 1);
+                var message = e.XMLHttpRequest.status != 500 && e.XMLHttpRequest.responseText && e.XMLHttpRequest.responseText.length < 1000 ? e.XMLHttpRequest.responseText : App.Failures.message(e.XMLHttpRequest, "while uploading '{0}', please try again".format(e.files[0].name));
+                var form = Enumerable.From(this.documents()).FirstOrDefault(undefined, function (x) {
+                    return x.isUpload() && !x.uploadError() && x.fileName() === e.files[0].name;
+                });
+                if (form)
+                    form.uploadError(message);
             };
             ActivityForm._descriptionIsDirtyAfter = 10;
 
@@ -914,25 +926,78 @@ else if (FormattedDateInput._mDdYyyy.test(input))
         ViewModels.FormattedDateInput = FormattedDateInput;
 
         var ActivityDocumentForm = (function () {
-            function ActivityDocumentForm(data, owner) {
+            function ActivityDocumentForm(arg0, owner) {
                 var _this = this;
                 this.activityId = ko.observable();
                 this.documentId = ko.observable();
                 this.title = ko.observable();
+                this.fileName = ko.observable();
+                this.byteCount = ko.observable();
+                this.size = ko.observable();
                 this.extension = ko.observable();
+                this.isUpload = ko.observable();
+                this.uploadError = ko.observable();
+                this.uploadProgress = ko.observable();
+                //#endregion
+                //#region View Computeds
                 this.displayExtension = ko.computed(function () {
                     var extension = _this.extension();
-                    return extension ? extension.toLowerCase() : undefined;
+                    return extension ? extension.toLowerCase() : '';
                 });
                 this.displayName = ko.computed(function () {
                     return '{0}{1}'.format(_this.title(), _this.displayExtension());
                 });
+                this.uploadPercent = ko.computed(function () {
+                    return '{0}%'.format(_this.uploadProgress() || 0);
+                });
+                //#endregion
+                //#region Title editing
                 this.isEditingTitle = ko.observable(false);
+                this.renameError = ko.observable();
                 this.isSavingTitle = ko.observable(false);
-                ko.mapping.fromJS(data, {}, this);
+                //#endregion
+                //#region Deletion
+                this.cancelEnabled = ko.computed(function () {
+                    return _this.uploadProgress() < 10;
+                });
                 this._owner = owner;
-                this._bindValidation();
+                if (typeof arg0.documentId === 'undefined')
+                    this._constructUploading(arg0);
+else
+                    this._constructUploaded(arg0);
             }
+            ActivityDocumentForm.prototype._constructUploaded = function (data) {
+                ko.mapping.fromJS(data, {}, this);
+                this._bindValidation();
+            };
+
+            ActivityDocumentForm.prototype._constructUploading = function (file) {
+                var _this = this;
+                this._bindValidation();
+                this.fileName(file.name);
+                this.extension(file.extension);
+                this.title(file.extension ? file.name.substr(0, file.name.lastIndexOf('.')) : file.name);
+                this.isUpload(true);
+                if (!this.title.isValid()) {
+                    this.uploadError(this.title.error);
+                } else {
+                    $.ajax({
+                        async: false,
+                        type: 'POST',
+                        url: this._owner.$documentsValidateUrlFormat.text().format(this._owner.activityId()),
+                        data: {
+                            name: file.name,
+                            length: file.size
+                        }
+                    }).fail(function (xhr) {
+                        var message = xhr.status === 400 ? xhr.responseText : App.Failures.message(xhr, "while trying to upload '{0}'".format(file.name));
+                        _this.uploadError(message);
+                    });
+                }
+                if (!this.uploadError())
+                    this.uploadProgress(5);
+            };
+
             ActivityDocumentForm.prototype._bindValidation = function () {
                 var _this = this;
                 ko.validation.rules['uniqueDocumentName'] = {
@@ -967,9 +1032,23 @@ else if (FormattedDateInput._mDdYyyy.test(input))
                     if (_this.title.error && _this.title().length > 64 && _this.title.error.indexOf('{1}') >= 0)
                         _this.title.error = _this.title.error.format(undefined, _this.title().length);
                 });
+
+                this.uploadProgress.subscribe(function (newValue) {
+                    if (newValue < 0)
+                        _this.uploadProgress(0);
+else if (newValue > 100)
+                        _this.uploadProgress(100);
+                });
+            };
+
+            ActivityDocumentForm.prototype.completeUpload = function (data) {
+                ko.mapping.fromJS(data, {}, this);
+                this.isUpload(false);
             };
 
             ActivityDocumentForm.prototype.iconSrc = function (img) {
+                if (!this.activityId() || !this.documentId())
+                    return $(img).attr('src');
                 var url = $(img).data('src-format').format(this.activityId(), this.documentId());
                 var params = { maxSide: ActivityForm.iconMaxSide };
                 return '{0}?{1}'.format(url, $.param(params));
@@ -1011,12 +1090,22 @@ else if (FormattedDateInput._mDdYyyy.test(input))
                         title: this.title()
                     }
                 }).fail(function (xhr) {
-                    var message = xhr.status === 400 && xhr.responseText && xhr.responseText.length < 1000 ? xhr.responseText : App.Failures.message(xhr, 'while trying to edit this document name');
-                    _this._owner.fileUploadErrors.push({ message: message });
-                    _this.title(_this._stashedTitle);
+                    var message = xhr.status === 400 && xhr.responseText && xhr.responseText.length < 1000 ? xhr.responseText : App.Failures.message(xhr, 'while trying to rename this document');
+                    _this.renameError(message);
+                    _this.isEditingTitle(true);
                 }).always(function () {
                     _this.isSavingTitle(false);
                 });
+            };
+
+            ActivityDocumentForm.prototype.uploadCancel = function (item, e) {
+                var kendoUpload = this._owner.$fileUpload.data('kendoUpload');
+                if (kendoUpload) {
+                    var cancelButton = kendoUpload.wrapper.find('ul.k-upload-files').find('.k-file:has([title="' + this.fileName() + '"]) .k-cancel');
+                    cancelButton.click();
+                } else {
+                    alert('could not get kendoUpload data');
+                }
             };
 
             ActivityDocumentForm.prototype.purge = function (item, index) {
@@ -1062,6 +1151,10 @@ else if (FormattedDateInput._mDdYyyy.test(input))
                         }
                     ]
                 });
+            };
+
+            ActivityDocumentForm.prototype.dismissUploadError = function () {
+                this._owner.documents.remove(this);
             };
             ActivityDocumentForm._maxLengthMessageFormat = 'Document name cannot be longer than {0} characters. You entered {1} characters.';
             ActivityDocumentForm._duplicateNameMessageFormat = "The file name '{0}' is not allowed because this activity already has a file with the same name. " + "Please rename or delete the existing '{1}' first.";
