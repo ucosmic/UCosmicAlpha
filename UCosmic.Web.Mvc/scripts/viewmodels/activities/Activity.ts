@@ -85,9 +85,9 @@ module Activities.ViewModels {
 
             var deferred: JQueryDeferred<void> = $.Deferred();
 
-            var dataPact = $.Deferred();
+            var dataPact: JQueryDeferred<ApiModels.Activity> = $.Deferred();
             $.ajax({ url: this._dataUrl, cache: false, })
-                .done((data: any): void => { dataPact.resolve(data); })
+                .done((data: ApiModels.Activity): void => { dataPact.resolve(data); })
                 .fail((xhr: JQueryXHR): void => { dataPact.reject(xhr); });
 
             var placeOptionsPact = $.Deferred();
@@ -164,8 +164,8 @@ module Activities.ViewModels {
 
         private _bindValidation(): void {
             ko.validation.rules['atLeast'] = {
-                validator: (val: any, otherVal: any): boolean => {
-                    return val.length >= otherVal;
+                validator: (value: any[], minLength: number): boolean => {
+                    return value.length >= minLength;
                 },
                 message: 'At least {0} must be selected.'
             };
@@ -215,13 +215,13 @@ module Activities.ViewModels {
 
         private _bindSubscriptions(): void {
             // autosave when fields change
-            this.title.subscribe((newValue: any): void => { this._isDirty(true); });
-            this.content.subscribe((newValue: any): void => { this._descriptionCheckIsDirty(newValue); });
-            this.startsOn.input.subscribe((newValue: any): void => { this._isDirty(true); });
-            this.endsOn.input.subscribe((newValue: any): void => { this._isDirty(true); });
-            this.onGoing.subscribe((newValue: any): void => { this._isDirty(true); });
-            this.isExternallyFunded.subscribe((newValue: any): void => { this._isDirty(true); });
-            this.isInternallyFunded.subscribe((newValue: any): void => { this._isDirty(true); });
+            this.title.subscribe((): void => { this._isDirty(true); });
+            this.content.subscribe((): void => { this._descriptionCheckIsDirty(); });
+            this.startsOn.input.subscribe((): void => { this._isDirty(true); });
+            this.endsOn.input.subscribe((): void => { this._isDirty(true); });
+            this.onGoing.subscribe((): void => { this._isDirty(true); });
+            this.isExternallyFunded.subscribe((): void => { this._isDirty(true); });
+            this.isInternallyFunded.subscribe((): void => { this._isDirty(true); });
 
             ko.computed((): void => {
                 if (this._isDirty()) {
@@ -260,7 +260,7 @@ module Activities.ViewModels {
         private static _descriptionIsDirtyAfter: number = 10; // autosave after so many keydowns in description
         private _descriptionIsDirtyCurrent: number = 0;
 
-        private _descriptionCheckIsDirty(newValue: any): void {
+        private _descriptionCheckIsDirty(): void {
             ++this._descriptionIsDirtyCurrent;
             if (this._descriptionIsDirtyCurrent >= ActivityForm._descriptionIsDirtyAfter) {
                 this._isDirty(true);
@@ -322,7 +322,7 @@ module Activities.ViewModels {
 
         private _save(mode: string): void {
             this._autoSave(true) // play through the autosave function first
-                .done((data: any): void => {
+                .done((): void => {
 
                     if (!this.isValid()) {
                         this.errors.showAllMessages();
@@ -564,7 +564,7 @@ module Activities.ViewModels {
 
         private _bindTypeOptions(typeOptions: any[]): void {
             var typesMapping: KnockoutMappingOptions = {
-                create: (options: KnockoutMappingCreateOptions): any => {
+                create: (options: KnockoutMappingCreateOptions): ActivityTypeCheckBox => {
                     var checkBox = new ActivityTypeCheckBox(options, this);
                     return checkBox;
                 }

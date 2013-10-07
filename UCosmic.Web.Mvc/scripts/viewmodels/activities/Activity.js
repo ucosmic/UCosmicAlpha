@@ -158,8 +158,8 @@ var Activities;
 
             ActivityForm.prototype._bindValidation = function () {
                 ko.validation.rules['atLeast'] = {
-                    validator: function (val, otherVal) {
-                        return val.length >= otherVal;
+                    validator: function (value, minLength) {
+                        return value.length >= minLength;
                     },
                     message: 'At least {0} must be selected.'
                 };
@@ -203,25 +203,25 @@ var Activities;
             ActivityForm.prototype._bindSubscriptions = function () {
                 var _this = this;
                 // autosave when fields change
-                this.title.subscribe(function (newValue) {
+                this.title.subscribe(function () {
                     _this._isDirty(true);
                 });
-                this.content.subscribe(function (newValue) {
-                    _this._descriptionCheckIsDirty(newValue);
+                this.content.subscribe(function () {
+                    _this._descriptionCheckIsDirty();
                 });
-                this.startsOn.input.subscribe(function (newValue) {
+                this.startsOn.input.subscribe(function () {
                     _this._isDirty(true);
                 });
-                this.endsOn.input.subscribe(function (newValue) {
+                this.endsOn.input.subscribe(function () {
                     _this._isDirty(true);
                 });
-                this.onGoing.subscribe(function (newValue) {
+                this.onGoing.subscribe(function () {
                     _this._isDirty(true);
                 });
-                this.isExternallyFunded.subscribe(function (newValue) {
+                this.isExternallyFunded.subscribe(function () {
                     _this._isDirty(true);
                 });
-                this.isInternallyFunded.subscribe(function (newValue) {
+                this.isInternallyFunded.subscribe(function () {
                     _this._isDirty(true);
                 });
 
@@ -257,7 +257,7 @@ else
                 this._bindTagsKendoAutoComplete();
             };
 
-            ActivityForm.prototype._descriptionCheckIsDirty = function (newValue) {
+            ActivityForm.prototype._descriptionCheckIsDirty = function () {
                 ++this._descriptionIsDirtyCurrent;
                 if (this._descriptionIsDirtyCurrent >= ActivityForm._descriptionIsDirtyAfter) {
                     this._isDirty(true);
@@ -309,7 +309,7 @@ else
 
             ActivityForm.prototype._save = function (mode) {
                 var _this = this;
-                this._autoSave(true).done(function (data) {
+                this._autoSave(true).done(function () {
                     if (!_this.isValid()) {
                         _this.errors.showAllMessages();
                         return;

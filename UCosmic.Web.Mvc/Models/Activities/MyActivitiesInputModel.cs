@@ -40,7 +40,8 @@ namespace UCosmic.Web.Mvc.Models
 
                 CreateMap<MyActivitiesInputModel, MyActivities>()
                     .ForMember(d => d.Principal, o => o.Ignore())
-                    .ForMember(d => d.EagerLoad, o => o.UseValue(ActivityApiModel.EagerLoad))
+                    //.ForMember(d => d.EagerLoad, o => o.UseValue(ActivityApiModel.EagerLoad))
+                    .ForMember(d => d.EagerLoad, o => o.Ignore())
                     .ForMember(d => d.OrderBy, o => o.UseValue(defaultOrderBy))
                 ;
             }
