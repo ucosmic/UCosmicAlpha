@@ -11,6 +11,7 @@ var agreements;
         }
         populateFiles.prototype.populate = function (agreementId, dfdPopFiles) {
             var _this = this;
+            dfdPopFiles = ((dfdPopFiles) ? dfdPopFiles : $.Deferred());
             $.get(App.Routes.WebApi.Agreements.Files.get(agreementId.val), { useTestData: true }).done(function (response) {
                 $.each(response, function (i, item) {
                     _this.files.push(ko.mapping.fromJS({
@@ -23,7 +24,9 @@ var agreements;
                         customNameExt: item.customName.substring(item.customName.lastIndexOf("."), item.customName.length)
                     }));
                 });
-                dfdPopFiles.resolve();
+                if (dfdPopFiles != undefined) {
+                    dfdPopFiles.resolve();
+                }
             });
         };
         return populateFiles;

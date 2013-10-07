@@ -14,6 +14,7 @@ namespace UCosmic.Web.Mvc.Models
         public string CountryCode { get; set; }
         public string OrderBy { get; set; }
         public string[] TypeEnglishNames { get; set; }
+        public string Domain { get; set; }
     }
 
     public static class AgreementSearchInputProfiler

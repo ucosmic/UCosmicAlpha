@@ -7,16 +7,24 @@
 /// <reference path="../../app/App.ts" />
 /// <reference path="../../typings/moment/moment.d.ts" />
 /// <reference path="../../app/Routes.ts" />
+/// <reference path="./populateFiles.ts" />
 
 module Agreements.ViewModels {
 
     export class PublicView {
         constructor(public initDefaultPageRoute: boolean = true) {
+            this.agreementId.val = parseInt(this.myUrl.substring(this.myUrl.indexOf("agreements/") + 11));
+
+            this.populateFilesClass = new agreements.populateFiles();
             this._setupDateComputeds();
             this._setupNameComputeds();
             this.getData();
         }
+        //imported classes
+        populateFilesClass;
 
+        isBound = ko.observable(false);
+        files = ko.observableArray();
         content = ko.observable();
         expiresOn = ko.observable();
         isAutoRenew = ko.observable();
@@ -30,10 +38,11 @@ module Agreements.ViewModels {
         umbrellaId = ko.observable();
         participantsNames: KnockoutComputed<string>;
         myUrl = window.location.href.toLowerCase();
-        agreementId = parseInt(this.myUrl.substring(this.myUrl.indexOf("agreements/") + 11));
+        agreementId = { val: 0 }
+        //dfdPopFiles = $.Deferred();
 
         getData(): void {
-            $.get(App.Routes.WebApi.Agreements.get(this.agreementId))
+            $.get(App.Routes.WebApi.Agreements.get(this.agreementId.val))
                 .done((response: any): void => {
                     this.content(response.content);
                     this.expiresOn(response.expiresOn);
@@ -46,7 +55,10 @@ module Agreements.ViewModels {
                     this.startsOn(response.startsOn);
                     this.type(response.type);
                     this.umbrellaId(response.umbrellaId);
+                    this.isBound(true);
                 });
+            this.populateFilesClass.populate(this.agreementId);//, this.dfdPopFiles);
+            this.files = this.populateFilesClass.files;
         }
 
         //#region Name computeds

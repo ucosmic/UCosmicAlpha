@@ -12,6 +12,7 @@ namespace UCosmic.Domain.Agreements
         public DateTime StartsOn { get; set; }
         public DateTime ExpiresOn { get; set; }
         public IEnumerable<AgreementParticipantView> Participants { get; set; }
+        //public ICollection<AgreementParticipant> Participants { get; set; }
 
 
         public AgreementView() { }

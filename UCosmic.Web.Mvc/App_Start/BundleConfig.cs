@@ -121,6 +121,7 @@ namespace UCosmic.Web.Mvc
                 "~/scripts/app/Spinner.js",
                 "~/scripts/app/PagedSearch.js",
                 "~/scripts/viewmodels/agreements/publicView.js",
+                "~/scripts/viewmodels/agreements/populateFiles.js",
                 "~/scripts/oss/moment.js"));
 
             // employee personal profile page

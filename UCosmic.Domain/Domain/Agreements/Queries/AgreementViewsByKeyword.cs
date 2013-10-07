@@ -11,10 +11,14 @@ namespace UCosmic.Domain.Agreements
         public int PageSize { get; set; }
         public int PageNumber { get; set; }
         public string[] TypeEnglishNames { get; set; }
+        public string Domain { get; set; }
     }
 
     public class HandleAgreementViewsByKeywordQuery : IHandleQueries<AgreementViewsByKeyword, PagedQueryResult<AgreementView>>
     {
+        private readonly IQueryEntities _entities;
+        private readonly IProcessQueries _queryProcessor;
+
         private readonly AgreementViewProjector _projector;
 
         public HandleAgreementViewsByKeywordQuery(AgreementViewProjector projector)
@@ -46,6 +50,20 @@ namespace UCosmic.Domain.Agreements
             {
                 view = view.Where(x => x.Participants.Any(p => query.CountryCode.Equals(p.CountryCode, ordinalIgnoreCase)));
             }
+            query.Domain = "www.uc.edu";
+
+            //var domains = new List<string> { query.Domain.ToLower() };
+            //if (!query.Domain.Equals("default", StringComparison.OrdinalIgnoreCase)
+            //    && !query.Domain.StartsWith("www.", StringComparison.OrdinalIgnoreCase))
+            //    domains.Add(string.Format("www.{0}", query.Domain));
+
+            view = view.Where(x => x.Participants.Any(y => y.IsOwner
+                    && (
+                        (y.WebsiteUrl != null && query.Domain.Contains(y.WebsiteUrl))
+                ||
+                (y.Offspring.Any(z => query.Domain.Contains(z.WebsiteUrl)))
+                    )
+                ));
             //search names & URL's for keyword
             if (!string.IsNullOrWhiteSpace(query.Keyword))
             {
@@ -60,6 +78,8 @@ namespace UCosmic.Domain.Agreements
                 view = view.Where(x => x.Id == query.Id.Value);
 
             view = view.OrderBy(query.OrderBy);
+
+
 
             var pagedResults = new PagedQueryResult<AgreementView>(view, query.PageSize, query.PageNumber);
 

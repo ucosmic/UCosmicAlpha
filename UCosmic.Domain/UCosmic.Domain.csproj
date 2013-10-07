@@ -243,6 +243,7 @@
     <Compile Include="Domain\Agreements\Validation\MustBeOwnedByPrincipal.cs" />
     <Compile Include="Domain\Agreements\Views\AgreementParticipantView.cs" />
     <Compile Include="Domain\Agreements\Views\AgreementView.cs" />
+    <Compile Include="Domain\Agreements\Views\AgreementOffspringView.cs" />
     <Compile Include="Domain\Agreements\_Internal\QueryAgreementParticipants.cs" />
     <Compile Include="Domain\Agreements\_Internal\QueryAgreementContacts.cs" />
     <Compile Include="Domain\Employees\_Internal\EmployeeConsts.cs" />

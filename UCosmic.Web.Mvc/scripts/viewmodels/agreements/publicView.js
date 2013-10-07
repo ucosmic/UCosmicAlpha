@@ -9,11 +9,14 @@ var Agreements;
     /// <reference path="../../app/App.ts" />
     /// <reference path="../../typings/moment/moment.d.ts" />
     /// <reference path="../../app/Routes.ts" />
+    /// <reference path="./populateFiles.ts" />
     (function (ViewModels) {
         var PublicView = (function () {
             function PublicView(initDefaultPageRoute) {
                 if (typeof initDefaultPageRoute === "undefined") { initDefaultPageRoute = true; }
                 this.initDefaultPageRoute = initDefaultPageRoute;
+                this.isBound = ko.observable(false);
+                this.files = ko.observableArray();
                 this.content = ko.observable();
                 this.expiresOn = ko.observable();
                 this.isAutoRenew = ko.observable();
@@ -26,14 +29,18 @@ var Agreements;
                 this.type = ko.observable();
                 this.umbrellaId = ko.observable();
                 this.myUrl = window.location.href.toLowerCase();
-                this.agreementId = parseInt(this.myUrl.substring(this.myUrl.indexOf("agreements/") + 11));
+                this.agreementId = { val: 0 };
+                this.agreementId.val = parseInt(this.myUrl.substring(this.myUrl.indexOf("agreements/") + 11));
+
+                this.populateFilesClass = new agreements.populateFiles();
                 this._setupDateComputeds();
                 this._setupNameComputeds();
                 this.getData();
             }
+            //dfdPopFiles = $.Deferred();
             PublicView.prototype.getData = function () {
                 var _this = this;
-                $.get(App.Routes.WebApi.Agreements.get(this.agreementId)).done(function (response) {
+                $.get(App.Routes.WebApi.Agreements.get(this.agreementId.val)).done(function (response) {
                     _this.content(response.content);
                     _this.expiresOn(response.expiresOn);
                     _this.isAutoRenew(response.isAutoRenew);
@@ -45,7 +52,10 @@ var Agreements;
                     _this.startsOn(response.startsOn);
                     _this.type(response.type);
                     _this.umbrellaId(response.umbrellaId);
+                    _this.isBound(true);
                 });
+                this.populateFilesClass.populate(this.agreementId);
+                this.files = this.populateFilesClass.files;
             };
 
             //#region Name computeds
