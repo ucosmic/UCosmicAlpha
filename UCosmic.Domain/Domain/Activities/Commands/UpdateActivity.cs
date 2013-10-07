@@ -109,10 +109,10 @@ namespace UCosmic.Domain.Activities
 
             values.Title = command.Title;
             values.Content = command.Content;
-            values.StartsFormat = command.StartsFormat;
-            values.EndsFormat = command.EndsFormat;
             values.StartsOn = command.StartsOn;
             values.EndsOn = command.EndsOn;
+            values.StartsFormat = command.StartsOn.HasValue ? command.StartsFormat ?? "M/d/yyyy" : null;
+            values.EndsFormat = command.EndsOn.HasValue ? command.EndsFormat ?? "M/d/yyyy" : null;
             values.OnGoing = command.OnGoing;
             values.WasExternallyFunded = command.WasExternallyFunded;
             values.WasInternallyFunded = command.WasInternallyFunded;

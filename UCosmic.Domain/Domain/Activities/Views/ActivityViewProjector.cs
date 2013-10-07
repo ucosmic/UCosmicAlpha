@@ -324,10 +324,10 @@ namespace UCosmic.Domain.Activities
             //StatsRwlock.ExitReadLock();
         }
 
-        public void Handle(ApplicationStarted @event)
-        {
-            BuildViews();
-        }
+        //public void Handle(ApplicationStarted @event)
+        //{
+        //    BuildViews();
+        //}
 
         private readonly IDictionary<int, EmployeeModuleSettings> _emsByEstablishmentId = new Dictionary<int, EmployeeModuleSettings>();
         private EmployeeModuleSettings GetEmployeeModuleSettings(int establishmentId)

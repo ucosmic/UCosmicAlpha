@@ -9,7 +9,6 @@ namespace UCosmic.Domain.Activities
         public CreateActivityValues(IPrincipal principal)
         {
             Principal = principal;
-            StartsFormat = ActivityValues.DefaultDateFormat;
         }
 
         public IPrincipal Principal { get; private set; }
@@ -84,8 +83,8 @@ namespace UCosmic.Domain.Activities
                 StartsOn = command.StartsOn,
                 EndsOn = command.EndsOn,
                 OnGoing = command.OnGoing,
-                StartsFormat = command.StartsFormat ?? ActivityValues.DefaultDateFormat,
-                EndsFormat = command.EndsFormat ?? ActivityValues.DefaultDateFormat,
+                StartsFormat = command.StartsOn.HasValue ? command.StartsFormat ?? "M/d/yyyy" : null,
+                EndsFormat = command.EndsOn.HasValue ? command.EndsFormat ?? "M/d/yyyy" : null,
                 Mode = command.Mode,
                 WasExternallyFunded = command.WasExternallyFunded,
                 WasInternallyFunded = command.WasInternallyFunded,

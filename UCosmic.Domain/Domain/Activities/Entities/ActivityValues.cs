@@ -6,8 +6,6 @@ namespace UCosmic.Domain.Activities
 {
     public class ActivityValues : RevisableEntity
     {
-        public const string DefaultDateFormat = "MM/dd/yyyy";
-
         protected internal ActivityValues()
         {
             Mode = ActivityMode.Draft;
@@ -16,8 +14,6 @@ namespace UCosmic.Domain.Activities
             Types = new Collection<ActivityType>();
             Tags = new Collection<ActivityTag>();
             Documents = new Collection<ActivityDocument>();
-            StartsFormat = DefaultDateFormat; // "Custom Date and Time Format Strings" http://msdn.microsoft.com/en-us/library/8kb3ddd4.aspx
-            EndsFormat = DefaultDateFormat;
             // ReSharper restore DoNotCallOverridableMethodsInConstructor
         }
 
@@ -33,36 +29,6 @@ namespace UCosmic.Domain.Activities
          * 2. StartsOn and EndsOn may or may not have a value
          * 3. Both are stored in UTC
          */
-
-        //private DateTime? _startsOn;
-        //public DateTime? StartsOn
-        //{
-        //    get
-        //    {
-        //        return _startsOn.HasValue ? _startsOn.Value.ToLocalTime() : (DateTime?)null;
-        //    }
-
-        //    protected internal set
-        //    {
-        //        _startsOn = value.HasValue ? value.Value.ToUniversalTime() : (DateTime?)null;
-        //        OrderTime();
-        //    }
-        //}
-
-        //private DateTime? _endsOn;
-        //public DateTime? EndsOn
-        //{
-        //    get
-        //    {
-        //        return _endsOn.HasValue ? _endsOn.Value.ToLocalTime() : (DateTime?)null;
-        //    }
-
-        //    protected internal set
-        //    {
-        //        _endsOn = value.HasValue ? value.Value.ToUniversalTime() : (DateTime?)null;
-        //        OrderTime();
-        //    }
-        //}
 
         public DateTime? StartsOn { get; protected internal set; }
         public DateTime? EndsOn { get; protected internal set; }
@@ -81,18 +47,5 @@ namespace UCosmic.Domain.Activities
         }
         public bool? WasExternallyFunded { get; protected internal set; }
         public bool? WasInternallyFunded { get; protected internal set; }
-
-        //private void OrderTime()
-        //{
-        //    if (_startsOn.HasValue && _endsOn.HasValue)
-        //    {
-        //        if (_startsOn.Value.CompareTo(_endsOn.Value) > 0)
-        //        {
-        //            DateTime temp = _endsOn.Value;
-        //            _endsOn = _startsOn.Value;
-        //            _startsOn = temp;
-        //        }
-        //    }
-        //}
     }
 }

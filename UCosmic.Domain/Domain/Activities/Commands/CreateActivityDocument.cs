@@ -68,6 +68,10 @@ namespace UCosmic.Domain.Activities
                     .MustFindUserByPrincipal(queryProcessor)
                     .MustOwnActivity(queryProcessor, x => x.ActivityId)
                 ;
+
+                RuleFor(x => x.Title)
+                    .MustNotBeDuplicateActivityDocument(queryProcessor, x => x.FileName, x => x.ActivityId, x => x.Mode)
+                ;
             });
 
             When(x => x.ActivityValues != null, () =>
@@ -88,10 +92,6 @@ namespace UCosmic.Domain.Activities
 
                 // only allow whitelisted extensions
                 .MustHaveAllowedFileExtension(validFileExtensions)
-            ;
-
-            RuleFor(x => x.Title)
-                .MustNotBeDuplicateActivityDocument(queryProcessor, x => x.FileName, x => x.ActivityId, x => x.Mode)
             ;
 
             // file size cannot exceed 4 megabytes
