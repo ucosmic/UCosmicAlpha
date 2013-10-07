@@ -157,6 +157,7 @@ var Activities;
             };
 
             ActivityForm.prototype._bindValidation = function () {
+                var _this = this;
                 ko.validation.rules['atLeast'] = {
                     validator: function (value, minLength) {
                         return value.length >= minLength;
@@ -171,9 +172,15 @@ var Activities;
                     message: 'The {0} is not valid.'
                 };
 
-                ko.validation.registerExtenders();
+                ko.validation.rules['startBeforeEnd'] = {
+                    validator: function (value, params) {
+                        var isValid = !params.startsOn.date() || !params.endsOn.date() || params.onGoing() || params.startsOn.date() <= params.endsOn.date();
+                        return isValid;
+                    },
+                    message: 'When both start and end date are specified, end date must be equal to or after start date.'
+                };
 
-                ko.validation.group(this);
+                ko.validation.registerExtenders();
 
                 this.title.extend({
                     required: {
@@ -198,6 +205,17 @@ var Activities;
                         message: 'End date is not valid.'
                     }
                 });
+
+                this.dateValues = ko.computed(function () {
+                    var value = '{0}{1}{2}'.format(_this.startsOn.isoString(), _this.endsOn.isoString(), _this.onGoing());
+                    return value;
+                });
+
+                this.dateValues.extend({
+                    startBeforeEnd: this
+                });
+
+                ko.validation.group(this);
             };
 
             ActivityForm.prototype._bindSubscriptions = function () {
@@ -907,8 +925,8 @@ else if (FormattedDateInput._mDdYyyy.test(input))
 
             //#endregion
             FormattedDateInput.prototype.isValid = function () {
-                var input = this.input(), format = this.format();
-                return !input || moment(input, format).isValid();
+                var input = this.input(), format = this.format() || 'M/D/YYYY';
+                return !input || moment(input, format.toUpperCase()).isValid();
             };
             FormattedDateInput._defaultFormat = 'M/d/yyyy';
 

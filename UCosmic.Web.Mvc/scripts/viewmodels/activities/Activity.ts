@@ -161,6 +161,7 @@ module Activities.ViewModels {
 
         errors: KnockoutValidationErrors;
         isValid: () => boolean;
+        dateValues: KnockoutComputed<string>;
 
         private _bindValidation(): void {
             ko.validation.rules['atLeast'] = {
@@ -177,9 +178,16 @@ module Activities.ViewModels {
                 message: 'The {0} is not valid.'
             };
 
-            ko.validation.registerExtenders();
+            ko.validation.rules['startBeforeEnd'] = {
+                validator: (value: string, params: ActivityForm): boolean => {
+                    var isValid = !params.startsOn.date() || !params.endsOn.date() || params.onGoing()
+                        || params.startsOn.date() <= params.endsOn.date();
+                    return isValid;
+                },
+                message: 'When both start and end date are specified, end date must be equal to or after start date.'
+            };
 
-            ko.validation.group(this);
+            ko.validation.registerExtenders();
 
             this.title.extend({
                 required: {
@@ -196,14 +204,25 @@ module Activities.ViewModels {
                 formattedDate: {
                     params: this.startsOn,
                     message: 'Start date is not valid.',
-                }
+                },
             });
             this.endsOn.input.extend({
                 formattedDate: {
                     params: this.endsOn,
                     message: 'End date is not valid.',
-                }
+                },
             });
+
+            this.dateValues = ko.computed((): string => {
+                var value = '{0}{1}{2}'.format(this.startsOn.isoString(), this.endsOn.isoString(), this.onGoing());
+                return value;
+            });
+
+            this.dateValues.extend({
+                startBeforeEnd: this
+            });
+
+            ko.validation.group(this);
         }
 
         //#endregion
@@ -988,8 +1007,8 @@ module Activities.ViewModels {
         //#endregion
 
         isValid(): boolean {
-            var input = this.input(), format = this.format();
-            return !input || moment(input, format).isValid();
+            var input = this.input(), format = this.format() || 'M/D/YYYY';
+            return !input || moment(input, format.toUpperCase()).isValid();
         }
     }
 
