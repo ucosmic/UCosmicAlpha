@@ -36,7 +36,7 @@ module Activities.ViewModels {
                 .done((data: any): void => {
                     var mapping = {
                         items: {
-                            create: (options: KnockoutMappingCreateOptions): any => {
+                            create: (options: KnockoutMappingCreateOptions): ActivityListItem => {
                                 return new ActivityListItem(options.data, options.parent);
                             }
                         }
@@ -65,13 +65,13 @@ module Activities.ViewModels {
         places: KnockoutObservableArray<any>;
         documents: KnockoutObservableArray<any>;
 
-        constructor(data: any, owner: ActivityList) {
+        constructor(data: ApiModels.Activity, owner: ActivityList) {
             this._owner = owner;
 
             // make sure types are ordered by rank
             if (data.types && data.types.length)
                 data.types = Enumerable.From(data.types)
-                    .OrderBy(function (x: any): any { return x.rank; })
+                    .OrderBy(function (x: ApiModels.ActivityType): number { return x.rank; })
                     .ToArray();
 
             var mapping = {};

@@ -1079,7 +1079,7 @@ module Activities.ViewModels {
                         this.uploadError(message);
                     });
             }
-            if (!this.uploadError()) this.uploadProgress(5);
+            if (!this.uploadError()) this.uploadProgress(1);
         }
 
         private _bindValidation(): void {

@@ -1011,7 +1011,7 @@ else
                     });
                 }
                 if (!this.uploadError())
-                    this.uploadProgress(5);
+                    this.uploadProgress(1);
             };
 
             ActivityDocumentForm.prototype._bindValidation = function () {

@@ -3826,6 +3826,8 @@ namespace Links
                 private const string URLPATH = "~/images/icons/spinner";
                 public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
                 public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                public static readonly string barber_38_green_gif = Url("barber-38-green.gif");
+                public static readonly string barber_40_green_gif = Url("barber-40-green.gif");
                 public static readonly string spinner_20_blue_gif = Url("spinner-20-blue.gif");
                 public static readonly string spinner_24_blue_gif = Url("spinner-24-blue.gif");
             }

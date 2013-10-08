@@ -756,6 +756,8 @@
     <Content Include="images\icons\save\Save-24.png" />
     <Content Include="images\icons\save\Save-256.png" />
     <Content Include="images\icons\search\search-24-black.png" />
+    <Content Include="images\icons\spinner\barber-38-green.gif" />
+    <Content Include="images\icons\spinner\barber-40-green.gif" />
     <Content Include="images\icons\spinner\spinner-24-blue.gif" />
     <None Include="scripts\jquery\jquery-1.9.1.intellisense.js" />
     <Content Include="images\placeholders\ExpertiseMock.png" />

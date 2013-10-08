@@ -27,6 +27,7 @@ declare module Activities.ApiModels {
         activityId: number;
         typeId: number;
         text: string;
+        rank: number;
     }
 
     export interface ActivityPlace {

@@ -87,6 +87,7 @@
             @* BUTTONS *@
             <div data-bind="template: { name: 'buttons-template' }"></div>
 
+            @* TITLE, LOCATIONS, TYPES, DATES, FUNDING *@
             <table class="activity">
                 <tbody>
                     @* TITLE *@
@@ -307,16 +308,34 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div style="width: 370px;">
-                                                    <div style="-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; width: 100%; height: 40px; border: solid 1px green; border-color: #7bd47b;">
+                                                <div style="width: 370px;" data-bind="visible: window.FormData">
+                                                    <div style="-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; width: 100%; height: 40px; border: solid 1px #7bd47b;">
                                                         <div style="width: 1%; height: 38px; background-color: #7bd47b; -moz-transition: width 1s; -o-transition: width 1s; -webkit-transition: width 1s; transition: width 1s;"
                                                             data-bind="style: { width: uploadPercent }">
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <div style="width: 370px;" data-bind="visible: !window.FormData">
+                                                    <div style="-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; width: 100%; height: 40px; border: 0 none;">
+                                                        <div class="group">
+                                                            @* barber pole repeats pattern at 33px, so first must be a multiple of that *@
+                                                            <div class="on-left" style="max-width: 165px; overflow: hidden;">
+                                                                <img alt="" src="~/images/icons/spinner/barber-40-green.gif" />
+                                                            </div>
+                                                            <div class="on-left" style="max-width: 205px; overflow: hidden;">
+                                                                <img alt="" src="~/images/icons/spinner/barber-40-green.gif" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div style="margin-top: 2px; margin-left: 4px;">
+                                            <div style="margin-top: 2px; margin-left: 4px;" data-bind="visible: window.FormData">
                                                 <span data-bind="text: uploadProgress"></span>% complete
+                                                @*&nbsp;
+                                                <button class="link" data-bind="click: uploadCancel, enable: cancelEnabled">Cancel</button>*@
+                                            </div>
+                                            <div style="margin-top: 2px; margin-left: 4px;" data-bind="visible: !window.FormData">
+                                                <span>Uploading...</span>
                                                 @*&nbsp;
                                                 <button class="link" data-bind="click: uploadCancel, enable: cancelEnabled">Cancel</button>*@
                                             </div>
@@ -373,6 +392,7 @@
         </div>
 
     </form>
+    <div style="height: 160px;"></div>
 </div>
 
 @* KNOCKOUT TEMPLATES *@
