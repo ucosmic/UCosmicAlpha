@@ -758,7 +758,7 @@ module Activities.ViewModels {
 
         static iconMaxSide: number = 64; // max width or height of the document icon
         documents: KnockoutObservableArray<ActivityDocumentForm> = ko.observableArray();
-        $fileUpload: JQuery;
+        //$fileUpload: JQuery;
         $deleteDocumentDialog: JQuery;
         deleteDocumentSpinner = new App.Spinner();
         $documentUrlFormat: JQuery;
@@ -767,7 +767,7 @@ module Activities.ViewModels {
         $documentsValidateUrlFormat: JQuery;
 
         private _bindDocumentsKendoUpload(): void {
-            this.$fileUpload.kendoUpload({
+            $('#files_upload').kendoUpload({
                 multiple: true,
                 showFileList: false,
                 localization: { select: 'Choose one or more documents to share...' },
@@ -775,7 +775,7 @@ module Activities.ViewModels {
                 select: (e: kendo.ui.UploadSelectEvent): void => { this._onDocumentKendoSelect(e); },
                 upload: (e: kendo.ui.UploadUploadEvent): void => { this._onDocumentKendoUpload(e); },
                 progress: (e: kendo.ui.UploadProgressEvent): void => { this._onDocumentKendoProgress(e); },
-                cancel: (e: kendo.ui.UploadCancelEvent): void => { this._onDocumentKendoCancel(e); },
+                //cancel: (e: kendo.ui.UploadCancelEvent): void => { this._onDocumentKendoCancel(e); },
                 success: (e: kendo.ui.UploadSuccessEvent): void => { this._onDocumentKendoSuccess(e); },
                 error: (e: kendo.ui.UploadErrorEvent): void => { this._onDocumentKendoError(e); },
                 complete: (): void => { this.isSaving(false); },
@@ -815,15 +815,19 @@ module Activities.ViewModels {
             form.uploadProgress(e.percentComplete);
         }
 
-        private _onDocumentKendoCancel(e: kendo.ui.UploadCancelEvent): void {
-            var form: ActivityDocumentForm = Enumerable.From(this.documents())
-                .FirstOrDefault(undefined, function (x: ActivityDocumentForm): boolean {
-                    return x.isUpload() && !x.uploadError() && x.fileName() === e.files[0].name;
-                });
-            this.documents.remove(form);
-        }
+        //private _onDocumentKendoCancel(e: kendo.ui.UploadCancelEvent): void {
+        //    var form: ActivityDocumentForm = Enumerable.From(this.documents())
+        //        .FirstOrDefault(undefined, function (x: ActivityDocumentForm): boolean {
+        //            return x.isUpload() && !x.uploadError() && x.fileName() === e.files[0].name;
+        //        });
+        //    this.documents.remove(form);
+        //    var hasUploads = Enumerable.From(this.documents())
+        //        .Any(function (x: ActivityDocumentForm): boolean {
+        //            return x.isUpload() && !x.uploadError();
+        //        });
+        //    if (!hasUploads) this.isSaving(false);
+        //}
 
-        _testData: ApiModels.ActivityDocument;
         private _onDocumentKendoSuccess(e: kendo.ui.UploadSuccessEvent): void {
             var form: ActivityDocumentForm = Enumerable.From(this.documents())
                 .FirstOrDefault(undefined, function (x: ActivityDocumentForm): boolean {
@@ -1204,21 +1208,18 @@ module Activities.ViewModels {
         //#endregion
         //#region Deletion
 
-        cancelEnabled: KnockoutComputed<boolean> = ko.computed((): boolean => {
-            return this.uploadProgress() < 10;
-        });
+        //cancelEnabled: KnockoutComputed<boolean> = ko.computed((): boolean => {
+        //    return this.uploadProgress() < 90;
+        //});
 
-        uploadCancel(item: ActivityDocumentForm, e: JQueryEventObject): void {
-            var kendoUpload = this._owner.$fileUpload.data('kendoUpload');
-            if (kendoUpload) {
-                var cancelButton = kendoUpload.wrapper.find('ul.k-upload-files')
-                    .find('.k-file:has([title="' + this.fileName() + '"]) .k-cancel');
-                cancelButton.click();
-            }
-            else {
-                alert('could not get kendoUpload data');
-            }
-        }
+        //uploadCancel(item: ActivityDocumentForm, e: JQueryEventObject): void {
+        //    var kendoUpload = $('#files_upload').data('kendoUpload');
+        //    if (kendoUpload) {
+        //        var cancelButton = kendoUpload.wrapper.find('ul.k-upload-files')
+        //            .find('.k-file:has([title="' + this.fileName() + '"]) .k-cancel');
+        //        cancelButton.click();
+        //    }
+        //}
 
         purge(item: ActivityDocumentForm, index: number): void {
             this._owner.$deleteDocumentDialog.dialog({ // open a dialog to confirm deletion of document

@@ -692,7 +692,7 @@ else if (removedPlaceIds.length === 1)
 
             ActivityForm.prototype._bindDocumentsKendoUpload = function () {
                 var _this = this;
-                this.$fileUpload.kendoUpload({
+                $('#files_upload').kendoUpload({
                     multiple: true,
                     showFileList: false,
                     localization: { select: 'Choose one or more documents to share...' },
@@ -706,9 +706,7 @@ else if (removedPlaceIds.length === 1)
                     progress: function (e) {
                         _this._onDocumentKendoProgress(e);
                     },
-                    cancel: function (e) {
-                        _this._onDocumentKendoCancel(e);
-                    },
+                    //cancel: (e: kendo.ui.UploadCancelEvent): void => { this._onDocumentKendoCancel(e); },
                     success: function (e) {
                         _this._onDocumentKendoSuccess(e);
                     },
@@ -754,13 +752,18 @@ else if (removedPlaceIds.length === 1)
                 form.uploadProgress(e.percentComplete);
             };
 
-            ActivityForm.prototype._onDocumentKendoCancel = function (e) {
-                var form = Enumerable.From(this.documents()).FirstOrDefault(undefined, function (x) {
-                    return x.isUpload() && !x.uploadError() && x.fileName() === e.files[0].name;
-                });
-                this.documents.remove(form);
-            };
-
+            //private _onDocumentKendoCancel(e: kendo.ui.UploadCancelEvent): void {
+            //    var form: ActivityDocumentForm = Enumerable.From(this.documents())
+            //        .FirstOrDefault(undefined, function (x: ActivityDocumentForm): boolean {
+            //            return x.isUpload() && !x.uploadError() && x.fileName() === e.files[0].name;
+            //        });
+            //    this.documents.remove(form);
+            //    var hasUploads = Enumerable.From(this.documents())
+            //        .Any(function (x: ActivityDocumentForm): boolean {
+            //            return x.isUpload() && !x.uploadError();
+            //        });
+            //    if (!hasUploads) this.isSaving(false);
+            //}
             ActivityForm.prototype._onDocumentKendoSuccess = function (e) {
                 var form = Enumerable.From(this.documents()).FirstOrDefault(undefined, function (x) {
                     return x.isUpload() && !x.uploadError() && x.fileName() === e.files[0].name;
@@ -973,11 +976,6 @@ else if (FormattedDateInput._mDdYyyy.test(input))
                 this.isEditingTitle = ko.observable(false);
                 this.renameError = ko.observable();
                 this.isSavingTitle = ko.observable(false);
-                //#endregion
-                //#region Deletion
-                this.cancelEnabled = ko.computed(function () {
-                    return _this.uploadProgress() < 10;
-                });
                 this._owner = owner;
                 if (typeof arg0.documentId === 'undefined')
                     this._constructUploading(arg0);
@@ -1116,16 +1114,19 @@ else if (newValue > 100)
                 });
             };
 
-            ActivityDocumentForm.prototype.uploadCancel = function (item, e) {
-                var kendoUpload = this._owner.$fileUpload.data('kendoUpload');
-                if (kendoUpload) {
-                    var cancelButton = kendoUpload.wrapper.find('ul.k-upload-files').find('.k-file:has([title="' + this.fileName() + '"]) .k-cancel');
-                    cancelButton.click();
-                } else {
-                    alert('could not get kendoUpload data');
-                }
-            };
-
+            //#endregion
+            //#region Deletion
+            //cancelEnabled: KnockoutComputed<boolean> = ko.computed((): boolean => {
+            //    return this.uploadProgress() < 90;
+            //});
+            //uploadCancel(item: ActivityDocumentForm, e: JQueryEventObject): void {
+            //    var kendoUpload = $('#files_upload').data('kendoUpload');
+            //    if (kendoUpload) {
+            //        var cancelButton = kendoUpload.wrapper.find('ul.k-upload-files')
+            //            .find('.k-file:has([title="' + this.fileName() + '"]) .k-cancel');
+            //        cancelButton.click();
+            //    }
+            //}
             ActivityDocumentForm.prototype.purge = function (item, index) {
                 var _this = this;
                 this._owner.$deleteDocumentDialog.dialog({

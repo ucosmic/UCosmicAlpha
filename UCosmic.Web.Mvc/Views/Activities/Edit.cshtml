@@ -6,6 +6,15 @@
 @section styles
 {
     @{ Html.RenderPartial(MVC.Activities.Views._EditStyles, null); }
+    @*<style>
+    /* use this to see default kendo upload progress section */
+        .k-upload-files {
+            max-width: 900px;
+        }
+        .k-upload .k-upload-status {
+            display: block;
+        }
+    </style>*@
 }
 
 @section scripts
@@ -230,7 +239,7 @@
                     </p>
                 </div>
                 <div style="margin-bottom: 16px">
-                    <input type="file" name="fileUpload" data-bind="jQuery: '$fileUpload'" />
+                    <input type="file" name="fileUpload" id="files_upload" data-xbind="jQuery: '$fileUpload'" />
                 </div>
                 <div data-bind="visible: documents().length">
                     <div data-bind="foreach: documents" class="group">
@@ -300,7 +309,7 @@
                                                 </div>
                                                 <div style="width: 370px;">
                                                     <div style="-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; width: 100%; height: 40px; border: solid 1px green; border-color: #7bd47b;">
-                                                        <div style="width: 5%; height: 38px; background-color: #7bd47b; -moz-transition: width 1s; -o-transition: width 1s; -webkit-transition: width 1s; transition: width 1s;"
+                                                        <div style="width: 1%; height: 38px; background-color: #7bd47b; -moz-transition: width 1s; -o-transition: width 1s; -webkit-transition: width 1s; transition: width 1s;"
                                                             data-bind="style: { width: uploadPercent }">
                                                         </div>
                                                     </div>
@@ -308,8 +317,8 @@
                                             </div>
                                             <div style="margin-top: 2px; margin-left: 4px;">
                                                 <span data-bind="text: uploadProgress"></span>% complete
-                                                &nbsp;
-                                                <button class="link" data-bind="click: uploadCancel, enable: cancelEnabled">Cancel</button>
+                                                @*&nbsp;
+                                                <button class="link" data-bind="click: uploadCancel, enable: cancelEnabled">Cancel</button>*@
                                             </div>
                                         </div>
                                     </div>
@@ -334,7 +343,6 @@
                     <span>Last updated</span>
                     <span id="last-updated-date" data-bind="text: updatedOnDate"></span>
                     <span data-bind="visible: updatedByPrincipal">by <span id="last-updated-name" data-bind="    text: updatedByPrincipal"></span></span>
-
                 </span>
             </div>
         </div>
