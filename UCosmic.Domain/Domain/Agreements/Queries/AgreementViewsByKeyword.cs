@@ -11,7 +11,7 @@ namespace UCosmic.Domain.Agreements
         public int PageSize { get; set; }
         public int PageNumber { get; set; }
         public string[] TypeEnglishNames { get; set; }
-        public string Domain { get; set; }
+        public string MyDomain { get; set; }
     }
 
     public class HandleAgreementViewsByKeywordQuery : IHandleQueries<AgreementViewsByKeyword, PagedQueryResult<AgreementView>>
@@ -50,18 +50,18 @@ namespace UCosmic.Domain.Agreements
             {
                 view = view.Where(x => x.Participants.Any(p => query.CountryCode.Equals(p.CountryCode, ordinalIgnoreCase)));
             }
-            query.Domain = "www.uc.edu";
+            //query.MyDomain = "www.uc.edu";
 
             //var domains = new List<string> { query.Domain.ToLower() };
-            //if (!query.Domain.Equals("default", StringComparison.OrdinalIgnoreCase)
-            //    && !query.Domain.StartsWith("www.", StringComparison.OrdinalIgnoreCase))
-            //    domains.Add(string.Format("www.{0}", query.Domain));
+            if (!query.MyDomain.Equals("default", StringComparison.OrdinalIgnoreCase)
+                && !query.MyDomain.StartsWith("www.", StringComparison.OrdinalIgnoreCase))
+                query.MyDomain = (string.Format("www.{0}", query.MyDomain));
 
             view = view.Where(x => x.Participants.Any(y => y.IsOwner
                     && (
-                        (y.WebsiteUrl != null && query.Domain.Contains(y.WebsiteUrl))
-                ||
-                (y.Offspring.Any(z => query.Domain.Contains(z.WebsiteUrl)))
+                        (y.WebsiteUrl != null && query.MyDomain.Contains(y.WebsiteUrl))
+                        ||
+                        (y.Offspring.Any(z => z.WebsiteUrl != null && query.MyDomain.Contains(z.WebsiteUrl)))
                     )
                 ));
             //search names & URL's for keyword

@@ -2786,6 +2786,10 @@ namespace Links
                 public static readonly string Activity_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Activity.min.js") ? Url("Activity.min.js") : Url("Activity.js");
                               
                 public static readonly string Activity_min_js = Url("Activity.min.js");
+                public static readonly string ActivityEnums_ts = Url("ActivityEnums.ts");
+                public static readonly string ActivityEnums_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/ActivityEnums.min.js") ? Url("ActivityEnums.min.js") : Url("ActivityEnums.js");
+                              
+                public static readonly string ActivityEnums_min_js = Url("ActivityEnums.min.js");
                 public static readonly string ServiceApiModel_d_ts = Url("ServiceApiModel.d.ts");
             }
         
@@ -3748,6 +3752,24 @@ namespace Links
                 private const string URLPATH = "~/images/icons/maps";
                 public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
                 public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                public static readonly string antarctica_png = Url("antarctica.png");
+                public static readonly string antarcticaHover_png = Url("antarcticaHover.png");
+                public static readonly string antarcticaLabeled_png = Url("antarcticaLabeled.png");
+                public static readonly string antarcticaLabeledHover_png = Url("antarcticaLabeledHover.png");
+                public static readonly string arcticOcean_png = Url("arcticOcean.png");
+                public static readonly string arcticOceanHover_png = Url("arcticOceanHover.png");
+                public static readonly string atlanticOcean_png = Url("atlanticOcean.png");
+                public static readonly string atlanticOceanHover_png = Url("atlanticOceanHover.png");
+                public static readonly string caribbean_png = Url("caribbean.png");
+                public static readonly string caribbeanHover_png = Url("caribbeanHover.png");
+                public static readonly string gulfOfMexico_png = Url("gulfOfMexico.png");
+                public static readonly string gulfOfMexicoHover_png = Url("gulfOfMexicoHover.png");
+                public static readonly string indianOcean_png = Url("indianOcean.png");
+                public static readonly string indianOceanHover_png = Url("indianOceanHover.png");
+                public static readonly string pacificOcean_png = Url("pacificOcean.png");
+                public static readonly string pacificOceanHover_png = Url("pacificOceanHover.png");
+                public static readonly string southernOcean_png = Url("southernOcean.png");
+                public static readonly string southernOceanHover_png = Url("southernOceanHover.png");
                 public static readonly string tools_marker_add_png = Url("tools-marker-add.png");
                 public static readonly string tools_marker_drag_png = Url("tools-marker-drag.png");
                 public static readonly string tools_marker_remove_png = Url("tools-marker-remove.png");

@@ -21,6 +21,10 @@ module Agreements.ViewModels {
 
         constructor (public initDefaultPageRoute: boolean = true) {
             super();
+            this.domain = window.location.href.toLowerCase();
+            this.domain = this.domain.substring(this.domain.indexOf("agreements/") + 11);
+            var domainIndexOf = (this.domain.indexOf("/") > 0) ? this.domain.indexOf("/") : this.domain.length;
+            this.domain = this.domain.substring(0, domainIndexOf);
 
             this.clickAction = <() => boolean > this.clickAction.bind(this);
 
@@ -37,6 +41,7 @@ module Agreements.ViewModels {
         $searchResults = $("#searchResults");
         dfdFadeInOut = $.Deferred();
         dfdFadeInOut2 = $.Deferred();
+        domain;
         // countries dropdown
         private _setupCountryDropDown(): void {
             ko.computed((): void => {
@@ -257,7 +262,8 @@ module Agreements.ViewModels {
                 pageNumber: this.pageNumber(),
                 countryCode: this.countryCode(),
                 keyword: this.throttledKeyword(),
-                orderBy: this.orderBy()
+                orderBy: this.orderBy(),
+                myDomain: this.domain
             })
                 .done((response: ApiModels.FlatEstablishment[]): void => {
                     $.when(this.dfdFadeInOut)

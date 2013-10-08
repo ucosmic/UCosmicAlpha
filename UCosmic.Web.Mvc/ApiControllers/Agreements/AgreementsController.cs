@@ -48,6 +48,18 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return model;
         }
 
+        [GET("")]
+        public PageOfAgreementApiFlatModel Get([FromUri] AgreementSearchInputModel input)
+        {
+            if (input.PageSize < 1)
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
+
+            var query = Mapper.Map<AgreementViewsByKeyword>(input);
+            var views = _queryProcessor.Execute(query);
+            var model = Mapper.Map<PageOfAgreementApiFlatModel>(views);
+            return model;
+        }
+
         [GET("{domain}")]
         public IEnumerable<AgreementApiModel> Get(string domain)
         {
@@ -71,17 +83,6 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
 
-        [GET("")]
-        public PageOfAgreementApiFlatModel Get([FromUri] AgreementSearchInputModel input)
-        {
-            if (input.PageSize < 1)
-                throw new HttpResponseException(HttpStatusCode.BadRequest);
-
-            var query = Mapper.Map<AgreementViewsByKeyword>(input);
-            var views = _queryProcessor.Execute(query);
-            var model = Mapper.Map<PageOfAgreementApiFlatModel>(views);
-            return model;
-        }
         
         [GET("{agreementId:int}/umbrellas")]
         [Authorize(Roles = RoleName.AgreementManagers)]

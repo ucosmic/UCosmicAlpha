@@ -62,6 +62,10 @@ var Agreements;
                     },
                     ignore: ['pageSize', 'pageNumber']
                 };
+                this.domain = window.location.href.toLowerCase();
+                this.domain = this.domain.substring(this.domain.indexOf("agreements/") + 11);
+                var domainIndexOf = (this.domain.indexOf("/") > 0) ? this.domain.indexOf("/") : this.domain.length;
+                this.domain = this.domain.substring(0, domainIndexOf);
 
                 this.clickAction = this.clickAction.bind(this);
 
@@ -252,7 +256,8 @@ var Agreements;
                     pageNumber: this.pageNumber(),
                     countryCode: this.countryCode(),
                     keyword: this.throttledKeyword(),
-                    orderBy: this.orderBy()
+                    orderBy: this.orderBy(),
+                    myDomain: this.domain
                 }).done(function (response) {
                     $.when(_this.dfdFadeInOut).done(function () {
                         _this.receiveResults(response);
