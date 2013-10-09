@@ -139,19 +139,23 @@ module Activities.ViewModels {
             var startsOnIso = this.startsOn();
             var endsOnIso = this.endsOn();
             var startsFormat = this.startsFormat() || 'M/D/YYYY';
-            var endsFormat = this.endsFormat() || 'M/D/YYYY';
+            var endsFormat = this.endsFormat() || this.startsFormat() || 'M/D/YYYY';
             startsFormat = startsFormat.toUpperCase();
             endsFormat = endsFormat.toUpperCase();
             var onGoing = this.onGoing();
             var datesText;
 
-            if (!startsOnIso)
-                if (endsOnIso) datesText = moment(endsOnIso).format(endsFormat);
-                else datesText = '(Ongoing)';
-            else
-                if (onGoing) datesText = '{0} (Ongoing)'.format(moment(startsOnIso).format(startsFormat));
-                else if (endsOnIso) datesText = '{0} - {1}'.format(moment(startsOnIso).format(startsFormat),
-                    moment(endsOnIso).format(endsFormat));
+            if (!startsOnIso) {
+                if (endsOnIso) { datesText = moment(endsOnIso).format(endsFormat); }
+                else { datesText = '(Ongoing)'; }
+            }
+            else {
+                datesText = moment(startsOnIso).format(startsFormat);
+                if (onGoing) { datesText = '{0} (Ongoing)'.format(datesText); }
+                else if (endsOnIso) {
+                    datesText = '{0} - {1}'.format(datesText, moment(endsOnIso).format(endsFormat));
+                }
+            }
 
             return datesText;
         }
