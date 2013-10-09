@@ -17,6 +17,7 @@ var Agreements;
     /// <reference path="../places/ApiModels.d.ts" />
     /// <reference path="SearchResult.ts" />
     /// <reference path="ApiModels.d.ts" />
+    /// <reference path="./publicView.ts" />
     (function (ViewModels) {
         var Search = (function (_super) {
             __extends(Search, _super);
@@ -62,6 +63,9 @@ var Agreements;
                     },
                     ignore: ['pageSize', 'pageNumber']
                 };
+                this.publicViewClass = new Agreements.ViewModels.PublicView();
+                ko.applyBindings(this.publicViewClass, $('#publicView')[0]);
+
                 this.domain = window.location.href.toLowerCase();
                 this.domain = this.domain.substring(this.domain.indexOf("agreements/") + 11);
                 var domainIndexOf = (this.domain.indexOf("/") > 0) ? this.domain.indexOf("/") : this.domain.length;
@@ -273,13 +277,17 @@ var Agreements;
             // click item
             // TODO: is this still needed?
             Search.prototype.clickAction = function (viewModel, e) {
-                ///4/edit/#/index
+                //this.sammy.unload();
                 //location.hash = "";
-                this.sammy.unload();
-                location.hash = "";
-                location.pathname = "agreements/" + viewModel.id() + "/";
-
-                //alert(viewModel.id());
+                //location.pathname = "agreements/" + viewModel.id() + "/"
+                // to do the following I need to set a location with sammy
+                //$("nav.bib .search").removeClass("current");
+                //$("nav.bib ul").append("<li class='view current'><span> View </span></ li>");
+                //this.publicViewClass.agreementId.val = viewModel.id();
+                //this.publicViewClass.getData();
+                //$("#search").fadeOut(500, function () {
+                //    $("#publicView").fadeIn(500);
+                //});
                 return true;
             };
 

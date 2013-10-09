@@ -115,6 +115,8 @@ namespace UCosmic.Web.Mvc
                 "~/scripts/app/PagedSearch.js",
                 "~/scripts/viewmodels/agreements/searchResult.js",
                 "~/scripts/viewmodels/agreements/search.js",
+                "~/scripts/viewmodels/agreements/publicView.js",
+                "~/scripts/viewmodels/agreements/populateFiles.js",
                 "~/scripts/oss/moment.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/agreementPublicView").Include(

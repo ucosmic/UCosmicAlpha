@@ -12,9 +12,9 @@ var Agreements;
     /// <reference path="./populateFiles.ts" />
     (function (ViewModels) {
         var PublicView = (function () {
-            function PublicView(initDefaultPageRoute) {
-                if (typeof initDefaultPageRoute === "undefined") { initDefaultPageRoute = true; }
-                this.initDefaultPageRoute = initDefaultPageRoute;
+            function PublicView(agreementId) {
+                if (typeof agreementId === "undefined") { agreementId = { val: parseInt(window.location.href.toLowerCase().substring(window.location.href.toLowerCase().indexOf("agreements/") + 11)) }; }
+                this.agreementId = agreementId;
                 this.isBound = ko.observable(false);
                 this.files = ko.observableArray();
                 this.content = ko.observable();
@@ -29,15 +29,15 @@ var Agreements;
                 this.type = ko.observable();
                 this.umbrellaId = ko.observable();
                 this.myUrl = window.location.href.toLowerCase();
-                this.agreementId = { val: 0 };
-                this.agreementId.val = parseInt(this.myUrl.substring(this.myUrl.indexOf("agreements/") + 11));
-
+                if (isNaN(this.agreementId.val)) {
+                    this.agreementId.val = 0;
+                }
                 this.populateFilesClass = new agreements.populateFiles();
                 this._setupDateComputeds();
                 this._setupNameComputeds();
                 this.getData();
             }
-            //dfdPopFiles = $.Deferred();
+            //agreementId = { val: 0 }
             PublicView.prototype.getData = function () {
                 var _this = this;
                 $.get(App.Routes.WebApi.Agreements.get(this.agreementId.val)).done(function (response) {
@@ -97,17 +97,6 @@ var Agreements;
                         return (moment(value)).format('YYYY-MM-DD');
                     }
                 });
-            };
-
-            ////#endregion
-            // go to add new
-            PublicView.prototype.gotoAddBack = function () {
-                return true;
-            };
-
-            // go to add new
-            PublicView.prototype.gotoAddEdit = function () {
-                return true;
             };
             return PublicView;
         })();

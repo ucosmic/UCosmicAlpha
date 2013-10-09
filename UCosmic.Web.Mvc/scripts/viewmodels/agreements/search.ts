@@ -9,6 +9,7 @@
 /// <reference path="../places/ApiModels.d.ts" />
 /// <reference path="SearchResult.ts" />
 /// <reference path="ApiModels.d.ts" />
+/// <reference path="./publicView.ts" />
 
 module Agreements.ViewModels {
 
@@ -21,6 +22,9 @@ module Agreements.ViewModels {
 
         constructor (public initDefaultPageRoute: boolean = true) {
             super();
+            this.publicViewClass = new Agreements.ViewModels.PublicView();
+            ko.applyBindings(this.publicViewClass, $('#publicView')[0]);
+
             this.domain = window.location.href.toLowerCase();
             this.domain = this.domain.substring(this.domain.indexOf("agreements/") + 11);
             var domainIndexOf = (this.domain.indexOf("/") > 0) ? this.domain.indexOf("/") : this.domain.length;
@@ -42,6 +46,9 @@ module Agreements.ViewModels {
         dfdFadeInOut = $.Deferred();
         dfdFadeInOut2 = $.Deferred();
         domain;
+        //imported classes
+        publicViewClass
+        
         // countries dropdown
         private _setupCountryDropDown(): void {
             ko.computed((): void => {
@@ -282,12 +289,20 @@ module Agreements.ViewModels {
         // TODO: is this still needed?
         clickAction(viewModel: SearchResult, e: JQueryEventObject): boolean {
 
-            ///4/edit/#/index
+            //this.sammy.unload();
             //location.hash = "";
-            this.sammy.unload();
-            location.hash = "";
-            location.pathname = "agreements/" + viewModel.id() + "/"
-            //alert(viewModel.id());
+            //location.pathname = "agreements/" + viewModel.id() + "/"
+
+
+            // to do the following I need to set a location with sammy
+            //$("nav.bib .search").removeClass("current");
+            //$("nav.bib ul").append("<li class='view current'><span> View </span></ li>");
+            //this.publicViewClass.agreementId.val = viewModel.id();
+            //this.publicViewClass.getData();
+            //$("#search").fadeOut(500, function () {
+            //    $("#publicView").fadeIn(500);
+            //});
+            
             return true;
         }
 

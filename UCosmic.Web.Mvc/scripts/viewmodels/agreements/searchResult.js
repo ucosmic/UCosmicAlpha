@@ -24,6 +24,15 @@ var Agreements;
                 this._setupCountryComputeds();
                 this._setupDateComputeds();
                 this._setupNameComputeds();
+                this._setupLinkComputeds();
+            };
+
+            SearchResult.prototype._setupLinkComputeds = function () {
+                var _this = this;
+                // show alternate text when Link is undefined
+                this.detailHref = ko.computed(function () {
+                    return "/agreements/" + _this.id();
+                });
             };
 
             SearchResult.prototype._setupCountryComputeds = function () {
@@ -62,7 +71,8 @@ var Agreements;
                     var myName = "";
                     $.each(_this.establishmentOfficialName(), function (i, item) {
                         if (_this.establishmentTranslatedName()[i] != null && _this.establishmentOfficialName()[i] != _this.establishmentTranslatedName()[i]) {
-                            myName += "<strong>" + _this.establishmentTranslatedName()[i] + "</strong> (" + _this.establishmentOfficialName()[i] + ")";
+                            // myName += "<strong>" + this.establishmentTranslatedName()[i] + "</strong> (" + this.establishmentOfficialName()[i] + ")";
+                            myName += "<strong title='" + _this.establishmentOfficialName()[i] + "'>" + _this.establishmentTranslatedName()[i] + "</strong>";
                         } else {
                             myName += "<strong>" + _this.establishmentOfficialName()[i] + "</strong>";
                         }

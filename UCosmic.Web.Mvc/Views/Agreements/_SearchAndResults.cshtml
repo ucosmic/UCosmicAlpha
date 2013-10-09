@@ -41,26 +41,17 @@
                             <tr data-bind="click: $root.clickAction">
                                 <td>
                                     <div data-bind="attr: { title: $root.detailTooltip() }">
+                                        <a href="" data-bind="attr: { href: detailHref }">View Details</a><br/>
                                         <span>
                                             <em data-bind="text: name, visible: name"></em>
                                             <span data-bind="visible: name"><br/></span>
                                         </span>
-                                        <span>
-                                            <span data-bind="html: participantsNames"></span>
-                                        </span>
+                                        <span data-bind="html: participantsNames"></span>
                                         <span style="font-size: 14px;">
-                                            <span>
-                                                <span data-bind="text: type() + ', ' "></span>
-                                            </span>
-                                            <span>
-                                                <span style="color: blue;" data-bind="text: status"></span><br/>
-                                            </span>
-                                            <span>
-                                                <span data-bind="text:'Starts on: ' + startsOnDate() + ', '"></span>
-                                            </span>
-                                            <span>
-                                                <span data-bind="text:'Ends on: ' + expiresOnDate()"></span>
-                                            </span>
+                                            <span data-bind="text: type() + ', ' "></span>
+                                            <span style="color: blue;" data-bind="text: status"></span><br/>
+                                            <span data-bind="text:startsOnDate() + '-'"></span>
+                                            <span data-bind="text:expiresOnDate"></span>
                                         </span>
                                     </div>
                                 </td>

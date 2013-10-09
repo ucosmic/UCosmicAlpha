@@ -43,7 +43,21 @@ module Agreements.ViewModels {
             this._setupCountryComputeds();
             this._setupDateComputeds();
             this._setupNameComputeds();
+            this._setupLinkComputeds();
         }
+
+        //#region Link computeds
+
+        detailHref: KnockoutComputed<string>;
+
+        private _setupLinkComputeds(): void {
+            // show alternate text when Link is undefined
+            this.detailHref = ko.computed((): string => {
+                return "/agreements/"+this.id();
+            });
+        }
+
+        //#endregion
 
         //#region Country computeds
 
@@ -96,7 +110,8 @@ module Agreements.ViewModels {
                 $.each(this.establishmentOfficialName(), (i, item) => {
                     //myName += this.establishmentOfficialName()[i];
                     if (this.establishmentTranslatedName()[i] != null && this.establishmentOfficialName()[i] != this.establishmentTranslatedName()[i]) {
-                        myName += "<strong>" + this.establishmentTranslatedName()[i] + "</strong> (" + this.establishmentOfficialName()[i] + ")"; 
+                       // myName += "<strong>" + this.establishmentTranslatedName()[i] + "</strong> (" + this.establishmentOfficialName()[i] + ")"; 
+                        myName += "<strong title='" + this.establishmentOfficialName()[i] + "'>" + this.establishmentTranslatedName()[i] + "</strong>"; 
                     } else
                     {
                         myName += "<strong>" + this.establishmentOfficialName()[i] + "</strong>";

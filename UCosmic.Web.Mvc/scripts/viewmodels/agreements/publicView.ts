@@ -12,9 +12,12 @@
 module Agreements.ViewModels {
 
     export class PublicView {
-        constructor(public initDefaultPageRoute: boolean = true) {
-            this.agreementId.val = parseInt(this.myUrl.substring(this.myUrl.indexOf("agreements/") + 11));
+        constructor(public agreementId = { val: parseInt(window.location.href.toLowerCase().substring(window.location.href.toLowerCase().indexOf("agreements/") + 11)) }) {
 
+            //this.agreementId.val = parseInt(this.myUrl.substring(this.myUrl.indexOf("agreements/") + 11));
+            if (isNaN(this.agreementId.val)) {
+                this.agreementId.val = 0;
+            }
             this.populateFilesClass = new agreements.populateFiles();
             this._setupDateComputeds();
             this._setupNameComputeds();
@@ -38,8 +41,7 @@ module Agreements.ViewModels {
         umbrellaId = ko.observable();
         participantsNames: KnockoutComputed<string>;
         myUrl = window.location.href.toLowerCase();
-        agreementId = { val: 0 }
-        //dfdPopFiles = $.Deferred();
+        //agreementId = { val: 0 }
 
         getData(): void {
             $.get(App.Routes.WebApi.Agreements.get(this.agreementId.val))
@@ -57,7 +59,7 @@ module Agreements.ViewModels {
                     this.umbrellaId(response.umbrellaId);
                     this.isBound(true);
                 });
-            this.populateFilesClass.populate(this.agreementId);//, this.dfdPopFiles);
+            this.populateFilesClass.populate(this.agreementId);
             this.files = this.populateFilesClass.files;
         }
 
@@ -112,14 +114,5 @@ module Agreements.ViewModels {
         
         ////#endregion
 
-        // go to add new
-        gotoAddBack(): boolean {
-            return true;
-        }
-
-        // go to add new
-        gotoAddEdit(): boolean {
-            return true;
-        }
     }
 }

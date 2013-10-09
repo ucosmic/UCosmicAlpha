@@ -19,18 +19,19 @@
     </script>
 }
 
-@*<div class="content fixed to-top" data-current-module="agreements" id="LoadingPage">
-    <div class="on-left from-top">
-        <header>
-            <h1>
-                <p data-bind="visible: spinner.isVisible">
-                    <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
-                    <strong>Loading page...</strong>
-                </p>
-            </h1>
-        </header>
-    </div>
-</div>*@
+
+<div class="content fixed to-top" data-current-module="agreements" id="publicView" style="display: none">
+    <form class="group">
+        <div class="on-left from-top">
+            <header>
+                <h1>
+                    @ViewBag.Title
+                </h1>
+            </header>
+           @Html.Partial(MVC.Agreements.Views._PublicViewContent)
+        </div>
+    </form>
+</div>
 
 
 <div class="content fixed to-top" data-current-module="agreements" id="search">
