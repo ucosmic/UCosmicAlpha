@@ -43,6 +43,7 @@ module Activities.ViewModels {
                     };
 
                     ko.mapping.fromJS(data, mapping, this);
+
                     deferred.resolve();
                 });
 
@@ -147,7 +148,7 @@ module Activities.ViewModels {
 
             if (!startsOnIso) {
                 if (endsOnIso) { datesText = moment(endsOnIso).format(endsFormat); }
-                else { datesText = '(Ongoing)'; }
+                else if (onGoing) { datesText = '(Ongoing)'; }
             }
             else {
                 datesText = moment(startsOnIso).format(startsFormat);

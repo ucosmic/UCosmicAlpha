@@ -36,6 +36,7 @@ var Activities;
                     };
 
                     ko.mapping.fromJS(data, mapping, _this);
+
                     deferred.resolve();
                 });
 
@@ -125,7 +126,7 @@ var Activities;
                 if (!startsOnIso) {
                     if (endsOnIso) {
                         datesText = moment(endsOnIso).format(endsFormat);
-                    } else {
+                    } else if (onGoing) {
                         datesText = '(Ongoing)';
                     }
                 } else {
