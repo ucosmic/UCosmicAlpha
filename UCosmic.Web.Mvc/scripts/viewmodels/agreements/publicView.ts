@@ -21,7 +21,9 @@ module Agreements.ViewModels {
             this.populateFilesClass = new agreements.populateFiles();
             this._setupDateComputeds();
             this._setupNameComputeds();
-            this.getData();
+            if (this.agreementId.val !== 0) {
+                this.getData();
+            }
         }
         //imported classes
         populateFilesClass;
@@ -70,15 +72,16 @@ module Agreements.ViewModels {
             this.participantsNames = ko.computed((): string => {
                 var myName = "";
                 ko.utils.arrayForEach(this.participants(), (item) => {
+                    myName += "<div style='margin-bottom:10px'>"
                     if (item.establishmentTranslatedName() != null && item.establishmentOfficialName() != item.establishmentTranslatedName() && item.establishmentOfficialName() != null) {
-                        myName += "<strong>" + item.establishmentTranslatedName() + "</strong> (" + item.establishmentOfficialName() + ")";
+                        myName += "<strong>" + item.establishmentTranslatedName() + "</strong><br /> (" + item.establishmentOfficialName() + ")";
                     } else if (item.establishmentTranslatedName() != null && item.establishmentOfficialName() != item.establishmentTranslatedName()) {
                         myName += "<strong>" + item.establishmentTranslatedName() + "</strong>"; 
                     } else
                     {
                         myName += "<strong>" + item.establishmentOfficialName() + "</strong>";
                     }
-                    myName += "<br />";
+                    myName += "</div>";
                 });
                 return myName;
             });

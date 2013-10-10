@@ -12,21 +12,25 @@
     @Scripts.Render("~/bundles/agreementPublicView")
     <script type="text/javascript">
 
-        var agreementSearcdhViewModel = new Agreements.ViewModels.PublicView();
-        ko.applyBindings(agreementSearcdhViewModel, $('#publicView')[0]);
+        var agreementSearchViewModel = new Agreements.ViewModels.PublicView();
+        ko.applyBindings(agreementSearchViewModel, $('#publicView')[0]);
     </script>
 }
 
 
 <div class="content fixed to-top" data-current-module="agreements" id="publicView">
     <form class="group">
-        <div class="on-left from-top">
+        <div class="from-top" style="float: left; width:500px;">
             <header>
                 <h1>
                     @ViewBag.Title
                 </h1>
             </header>
            @Html.Partial(MVC.Agreements.Views._PublicViewContent)
+        </div>
+        <div class="from-top" style="float: right; width: 450px; height: 400px; background-color: grey; margin-top: 50px;">
+            placeHolder for map
+            @*@Html.Partial(MVC.Agreements.Views._PublicViewContent)*@
         </div>
         @*<aside class="on-right from-top" data-fixed-scroll="root">
             <div data-fixed-scroll="anchor"></div>

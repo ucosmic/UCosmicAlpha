@@ -35,7 +35,9 @@ var Agreements;
                 this.populateFilesClass = new agreements.populateFiles();
                 this._setupDateComputeds();
                 this._setupNameComputeds();
-                this.getData();
+                if (this.agreementId.val !== 0) {
+                    this.getData();
+                }
             }
             //agreementId = { val: 0 }
             PublicView.prototype.getData = function () {
@@ -65,14 +67,15 @@ var Agreements;
                 this.participantsNames = ko.computed(function () {
                     var myName = "";
                     ko.utils.arrayForEach(_this.participants(), function (item) {
+                        myName += "<div style='margin-bottom:10px'>";
                         if (item.establishmentTranslatedName() != null && item.establishmentOfficialName() != item.establishmentTranslatedName() && item.establishmentOfficialName() != null) {
-                            myName += "<strong>" + item.establishmentTranslatedName() + "</strong> (" + item.establishmentOfficialName() + ")";
+                            myName += "<strong>" + item.establishmentTranslatedName() + "</strong><br /> (" + item.establishmentOfficialName() + ")";
                         } else if (item.establishmentTranslatedName() != null && item.establishmentOfficialName() != item.establishmentTranslatedName()) {
                             myName += "<strong>" + item.establishmentTranslatedName() + "</strong>";
                         } else {
                             myName += "<strong>" + item.establishmentOfficialName() + "</strong>";
                         }
-                        myName += "<br />";
+                        myName += "</div>";
                     });
                     return myName;
                 });

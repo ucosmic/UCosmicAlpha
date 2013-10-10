@@ -13,9 +13,9 @@
          @Scripts.Render("~/bundles/agreementSearch")
     <script type="text/javascript">
 
-        var agreementSearcdhViewModel = new Agreements.ViewModels.Search();
-        ko.applyBindings(agreementSearcdhViewModel, $('#search')[0]);
-        agreementSearcdhViewModel.sammy.run();
+        var agreementSearchViewModel = new Agreements.ViewModels.Search('@ViewBag.Domain');
+        ko.applyBindings(agreementSearchViewModel, $('#search')[0]);
+        agreementSearchViewModel.sammy.run();
     </script>
 }
 

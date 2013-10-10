@@ -83,8 +83,9 @@ module Agreements.ViewModels {
                 var myDate = new Date(value);
                 if (myDate.getFullYear() < 1500) {
                     return "unknown";
+                } else {
+                    return (moment(value)).format('M/D/YYYY');
                 }
-                return (moment(value)).format('YYYY-MM-DD');
             });
             this.expiresOnDate = ko.computed((): string => {
                 var value = this.expiresOn();
@@ -92,7 +93,7 @@ module Agreements.ViewModels {
                 if (myDate.getFullYear() < 1500) {
                     return "unknown";
                 } else {
-                    return (moment(value)).format('YYYY-MM-DD');
+                    return (moment(value)).format('M/D/YYYY');
                 }
             });
         }

@@ -20,15 +20,15 @@ module Agreements.ViewModels {
 
     export class Search extends App.PagedSearch {
 
-        constructor (public initDefaultPageRoute: boolean = true) {
+        constructor(public domain, public initDefaultPageRoute: boolean = true) {
             super();
             this.publicViewClass = new Agreements.ViewModels.PublicView();
             ko.applyBindings(this.publicViewClass, $('#publicView')[0]);
 
-            this.domain = window.location.href.toLowerCase();
-            this.domain = this.domain.substring(this.domain.indexOf("agreements/") + 11);
-            var domainIndexOf = (this.domain.indexOf("/") > 0) ? this.domain.indexOf("/") : this.domain.length;
-            this.domain = this.domain.substring(0, domainIndexOf);
+            //this.domain = window.location.href.toLowerCase();
+            //this.domain = this.domain.substring(this.domain.indexOf("agreements/") + 11);
+            //var domainIndexOf = (this.domain.indexOf("/") > 0) ? this.domain.indexOf("/") : this.domain.length;
+            //this.domain = this.domain.substring(0, domainIndexOf);
 
             this.clickAction = <() => boolean > this.clickAction.bind(this);
 
@@ -45,7 +45,7 @@ module Agreements.ViewModels {
         $searchResults = $("#searchResults");
         dfdFadeInOut = $.Deferred();
         dfdFadeInOut2 = $.Deferred();
-        domain;
+        //domain;
         //imported classes
         publicViewClass
         
@@ -119,7 +119,10 @@ module Agreements.ViewModels {
         }
 
         getPage(sammyContext: Sammy.EventContext): void {
-            if (window.location.href.indexOf("agreements/new") != -1 || window.location.href.indexOf("agreements/settings") != -1) {
+            var windowHref = window.location.href;
+            if (windowHref.indexOf("agreements/new") != -1
+                || windowHref.indexOf("agreements/settings") != -1
+                || parseInt(windowHref.substr(windowHref.indexOf("agreements/") + 11, 1)) > 0 ){
                 this.sammy.destroy();
                 window.location.hash = "";
                 window.location.reload();

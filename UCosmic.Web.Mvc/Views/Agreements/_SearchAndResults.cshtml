@@ -20,8 +20,8 @@
                     <span data-bind="text: transitionedPageNumber"></span>
                     of <span data-bind="text: pageCount"></span>)</span>
             </p>
-            <div id="searchResults"  style="display: none;">
-                <div data-bind="visible: lens() === 'table'">
+            <div id="searchResults" style="display: none;">
+                <div data-bind="visible: lens() === 'table' && (items().length > 0)">
                     <table class="data">
                         <colgroup>
                             <col style="width: 75%;" />
@@ -41,7 +41,6 @@
                             <tr data-bind="click: $root.clickAction">
                                 <td>
                                     <div data-bind="attr: { title: $root.detailTooltip() }">
-                                        <a href="" data-bind="attr: { href: detailHref }">View Details</a><br/>
                                         <span>
                                             <em data-bind="text: name, visible: name"></em>
                                             <span data-bind="visible: name"><br/></span>
@@ -49,10 +48,11 @@
                                         <span data-bind="html: participantsNames"></span>
                                         <span style="font-size: 14px;">
                                             <span data-bind="text: type() + ', ' "></span>
-                                            <span style="color: blue;" data-bind="text: status"></span><br/>
-                                            <span data-bind="text:startsOnDate() + '-'"></span>
+                                            <span  style="font-size: 12px;" class="badge blue" data-bind="text: status"></span><br/>
+                                            <span data-bind="text:startsOnDate() + ' -'"></span>
                                             <span data-bind="text:expiresOnDate"></span>
-                                        </span>
+                                        </span><br/>
+                                        <a href="" data-bind="attr: { href: detailHref }">View Details</a>
                                     </div>
                                 </td>
                                 <td>
@@ -62,7 +62,7 @@
                         </tbody>
                     </table>
                 </div>
-              @*  <div data-bind="visible: lens() === 'list'">
+                @*  <div data-bind="visible: lens() === 'list'">
                     <ol class="data" data-bind="foreach: items" data-href="@Url.Action(MVC.Agreements.Show(0))">
                         <li class="hover-hilite" data-bind="click: clickAction">
                             <div>

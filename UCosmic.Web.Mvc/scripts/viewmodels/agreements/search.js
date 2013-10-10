@@ -21,9 +21,10 @@ var Agreements;
     (function (ViewModels) {
         var Search = (function (_super) {
             __extends(Search, _super);
-            function Search(initDefaultPageRoute) {
+            function Search(domain, initDefaultPageRoute) {
                 if (typeof initDefaultPageRoute === "undefined") { initDefaultPageRoute = true; }
                 _super.call(this);
+                this.domain = domain;
                 this.initDefaultPageRoute = initDefaultPageRoute;
                 this.header = ko.observable();
                 this.$searchResults = $("#searchResults");
@@ -66,11 +67,10 @@ var Agreements;
                 this.publicViewClass = new Agreements.ViewModels.PublicView();
                 ko.applyBindings(this.publicViewClass, $('#publicView')[0]);
 
-                this.domain = window.location.href.toLowerCase();
-                this.domain = this.domain.substring(this.domain.indexOf("agreements/") + 11);
-                var domainIndexOf = (this.domain.indexOf("/") > 0) ? this.domain.indexOf("/") : this.domain.length;
-                this.domain = this.domain.substring(0, domainIndexOf);
-
+                //this.domain = window.location.href.toLowerCase();
+                //this.domain = this.domain.substring(this.domain.indexOf("agreements/") + 11);
+                //var domainIndexOf = (this.domain.indexOf("/") > 0) ? this.domain.indexOf("/") : this.domain.length;
+                //this.domain = this.domain.substring(0, domainIndexOf);
                 this.clickAction = this.clickAction.bind(this);
 
                 this._setupCountryDropDown();
@@ -145,7 +145,8 @@ var Agreements;
             };
 
             Search.prototype.getPage = function (sammyContext) {
-                if (window.location.href.indexOf("agreements/new") != -1 || window.location.href.indexOf("agreements/settings") != -1) {
+                var windowHref = window.location.href;
+                if (windowHref.indexOf("agreements/new") != -1 || windowHref.indexOf("agreements/settings") != -1 || parseInt(windowHref.substr(windowHref.indexOf("agreements/") + 11, 1)) > 0) {
                     this.sammy.destroy();
                     window.location.hash = "";
                     window.location.reload();

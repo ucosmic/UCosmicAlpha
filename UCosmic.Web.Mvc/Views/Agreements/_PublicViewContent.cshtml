@@ -1,19 +1,17 @@
 ﻿ <section id="publicView">
-        <header>
+        <header data-bind="visible: name">
             <h2>
                 <em data-bind="text: name, visible: name"></em>
-                <span data-bind="visible: name"><br/></span>
+                <br/>
             </h2>
         </header>
-        <div class="field-table w690-l190-v500" data-bind="visible: isBound" style="display:none;">
+        <div data-bind="visible: isBound" style="display:none;font-size: 24px;">
             <div>
-                <span>
-                    <span data-bind="html: participantsNames"></span>
-                </span>
-                <span style="font-size: 14px;">
-                    <span data-bind="text: type()"></span>
-                    , Status is:
-                    <strong style="color: blue;" data-bind="text: status"></strong><br/>
+                <div data-bind="text: type()" style="margin-bottom: 20px;"></div>
+                <span data-bind="html: participantsNames"></span>
+                <span style="font-size: 18px;">
+                    Status is:
+                    <span  style="font-size: 16px; margin-top: 8px;" class="badge blue" data-bind="text: status"></span><br/>
                     This agreement is 
                     <span data-bind="visible: !isAutoRenew()">not </span>
                     auto-renewable.
