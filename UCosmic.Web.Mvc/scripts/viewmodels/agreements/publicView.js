@@ -10,6 +10,7 @@ var Agreements;
     /// <reference path="../../typings/moment/moment.d.ts" />
     /// <reference path="../../app/Routes.ts" />
     /// <reference path="./populateFiles.ts" />
+    /// <reference path="../../typings/googlemaps/google.maps.d.ts" />
     (function (ViewModels) {
         var PublicView = (function () {
             function PublicView(agreementId) {
@@ -38,6 +39,7 @@ var Agreements;
                 if (this.agreementId.val !== 0) {
                     this.getData();
                 }
+                //this.createMap
             }
             //agreementId = { val: 0 }
             PublicView.prototype.getData = function () {
@@ -100,6 +102,19 @@ var Agreements;
                         return (moment(value)).format('YYYY-MM-DD');
                     }
                 });
+            };
+
+            ////#endregion
+            PublicView.prototype.createMap = function () {
+                function initialize() {
+                    var mapOptions = {
+                        center: new google.maps.LatLng(-34.397, 150.644),
+                        zoom: 8,
+                        mapTypeId: google.maps.MapTypeId.ROADMAP
+                    };
+                    var map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+                }
+                google.maps.event.addDomListener(window, 'load', initialize);
             };
             return PublicView;
         })();
