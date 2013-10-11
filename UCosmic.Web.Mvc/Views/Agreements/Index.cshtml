@@ -9,16 +9,13 @@
 }
 @section scripts
 {
-
-         @Scripts.Render("~/bundles/agreementSearch")
+    @Scripts.Render("~/bundles/agreementSearch")
     <script type="text/javascript">
-
         var agreementSearchViewModel = new Agreements.ViewModels.Search('@ViewBag.Domain');
         ko.applyBindings(agreementSearchViewModel, $('#search')[0]);
         agreementSearchViewModel.sammy.run();
     </script>
 }
-
 
 <div class="content fixed to-top" data-current-module="agreements" id="publicView" style="display: none">
     <form class="group">
@@ -32,7 +29,6 @@
         </div>
     </form>
 </div>
-
 
 <div class="content fixed to-top" data-current-module="agreements" id="search">
     <form class="group">
@@ -53,22 +49,3 @@
     </form>
 </div>
 
-
-@*<div class="content fixed to-top" data-current-module="agreements">
-    <form class="group">
-        <div class="on-left from-top">
-            <header>
-                <h1>
-                    @ViewBag.Title
-                </h1>
-            </header>
-            <section>
-                <header>
-                    <h2 data-bind="text: isWorking">Second heading</h2>
-                </header>
-            </section>
-            <div id="google_map_canvas" style="height: 500px;">
-            </div>
-        </div>
-    </form>
-</div>*@

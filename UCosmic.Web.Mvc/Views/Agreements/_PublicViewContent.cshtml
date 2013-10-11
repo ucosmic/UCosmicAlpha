@@ -10,17 +10,22 @@
                 <div data-bind="text: type()" style="margin-bottom: 20px;"></div>
                 <span data-bind="html: participantsNames"></span>
                 <span style="font-size: 18px;">
-                    Status is:
-                    <span  style="font-size: 16px; margin-top: 8px;" class="badge blue" data-bind="text: status"></span><br/>
+                    <span data-bind=" visible: status() != '[Private Data]'">
+                        Status is:
+                        <span  style="font-size: 16px; margin-top: 8px;" class="badge blue" data-bind="text: status"></span><br/>
+                    </span>
                     This agreement is 
                     <span data-bind="visible: !isAutoRenew()">not </span>
                     auto-renewable.
                     <br/>
-                    <strong data-bind="text: startsOnDate() + ' - '"></strong>
-                    <strong data-bind="text:  expiresOnDate"></strong>
+                    <span data-bind=" visible: expiresOnDate() == 'unknown'">
+                        Starts on: 
+                    </span>
+                    <strong data-bind="text: startsOnDate"></strong>
+                    <strong data-bind="text: ' - ' + expiresOnDate(), visible: expiresOnDate() != 'unknown'"></strong>
                 </span>
             </div>
-            <div style="padding-top: 20px;">
+            <div data-bind="visible: files.length > 0" style="padding-top: 20px;">
                 <ul data-bind="foreach: files">
                     <li data-bind="element: 'fileE1'">
                         <div> 
@@ -35,5 +40,6 @@
                     </li>
                 </ul>
             </div>
+            <div data-bind="html: content, visible: content() != undefined"></div>
         </div>
     </section>

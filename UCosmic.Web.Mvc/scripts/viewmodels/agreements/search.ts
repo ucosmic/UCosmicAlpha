@@ -94,8 +94,8 @@ module Agreements.ViewModels {
         sammy: Sammy.Application = Sammy();
         sammyBeforeRoute: any = /\#\/page\/(.*)\//;
         sammyGetPageRoute: any = '#/page/:pageNumber/';
-        sammyDefaultPageRoute: any = '/agreements/(.*)[\/]?';
-
+        //sammyDefaultPageRoute: any = '/agreements/(.*?\..*)[\/]?';
+        sammyDefaultPageRoute: any = '/agreements/'+ this.domain + '[\/]?';
         private _setupSammy(): void {
             var self = this;
             self.sammy.before(self.sammyBeforeRoute, function () {
@@ -119,47 +119,33 @@ module Agreements.ViewModels {
         }
 
         getPage(sammyContext: Sammy.EventContext): void {
-            var windowHref = window.location.href;
-            if (windowHref.indexOf("agreements/new") != -1
-                || windowHref.indexOf("agreements/settings") != -1
-                || parseInt(windowHref.substr(windowHref.indexOf("agreements/") + 11, 1)) > 0 ){
-                this.sammy.destroy();
-                window.location.hash = "";
-                window.location.reload();
-                return ;
-            }
+            //var windowHref = window.location.href;
+            //if (windowHref.indexOf("agreements/new") != -1
+            //    || windowHref.indexOf("agreements/settings") != -1
+            //    || parseInt(windowHref.substr(windowHref.indexOf("agreements/") + 11, 1)) > 0 ){
+            //        this.sammy.destroy();
+            //        window.location.hash = "";
+            //        window.location.reload;
+            //    //window.location.replace(window.location.href);
+            // // to do the following I need to set a location with sammy
+            ////$("nav.bib .search").removeClass("current");
+            ////$("nav.bib ul").append("<li class='view current'><span> View </span></ li>");
+            ////this.publicViewClass.agreementId.val = viewModel.id();
+            ////this.publicViewClass.getData();
+            ////$("#search").fadeOut(500, function () {
+            ////    $("#publicView").fadeIn(500);
+            ////});
+            //    return ;
+            //}
             var trail = this.trail(),
                 clone;
             if (trail.length > 0 && trail[trail.length - 1] === sammyContext.path) return;
             if (trail.length > 1 && trail[trail.length - 2] === sammyContext.path) {
                 // swipe backward
                 trail.pop();
-                //this.swipeCallback = (): void => {
-                    //clone = this.$itemsPage.clone(true)
-                    //    .removeAttr('data-bind').data('bind', undefined).removeAttr('id');
-                    //clone.appendTo(this.$itemsPage.parent());
-                    //this.$itemsPage.attr('data-side-swiper', 'off').hide();
-                    //this.lockAnimation();
-                    //$(window).scrollTop(0);
-                    //this.sideSwiper.prev(1, (): void => {
-                    //    this.$itemsPage.siblings().remove();
-                    //    this.unlockAnimation();
-                    //});
-                //};
                 return;
             } else if (trail.length > 0) {
                 // swipe forward
-                //this.swipeCallback = (): void => {
-                    //clone = this.$itemsPage.clone(true)
-                    //    .removeAttr('data-bind').data('bind', undefined).removeAttr('id');
-                    //clone.insertBefore(this.$itemsPage);
-                    //this.$itemsPage.attr('data-side-swiper', 'off').hide();
-                    //this.lockAnimation();
-                    //$(window).scrollTop(0);
-                    //this.sideSwiper.next(1, (): void => {
-                    //    this.unlockAnimation();
-                    //});
-                //};
             }
             trail.push(sammyContext.path);
         }
@@ -244,7 +230,6 @@ module Agreements.ViewModels {
                 ko.mapping.fromJS(js, this.resultsMapping, this);
             }
             App.WindowScroller.restoreTop(); // restore scroll when coming back from detail page
-            //this.swipeCallback();
             this.transitionedPageNumber(this.pageNumber());
             this.dfdFadeInOut2.resolve();
         }
@@ -292,20 +277,6 @@ module Agreements.ViewModels {
         // TODO: is this still needed?
         clickAction(viewModel: SearchResult, e: JQueryEventObject): boolean {
 
-            //this.sammy.unload();
-            //location.hash = "";
-            //location.pathname = "agreements/" + viewModel.id() + "/"
-
-
-            // to do the following I need to set a location with sammy
-            //$("nav.bib .search").removeClass("current");
-            //$("nav.bib ul").append("<li class='view current'><span> View </span></ li>");
-            //this.publicViewClass.agreementId.val = viewModel.id();
-            //this.publicViewClass.getData();
-            //$("#search").fadeOut(500, function () {
-            //    $("#publicView").fadeIn(500);
-            //});
-            
             return true;
         }
 

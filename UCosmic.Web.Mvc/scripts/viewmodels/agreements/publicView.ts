@@ -8,13 +8,12 @@
 /// <reference path="../../typings/moment/moment.d.ts" />
 /// <reference path="../../app/Routes.ts" />
 /// <reference path="./populateFiles.ts" />
+/// <reference path="../../typings/googlemaps/google.maps.d.ts" />
 
 module Agreements.ViewModels {
 
     export class PublicView {
         constructor(public agreementId = { val: parseInt(window.location.href.toLowerCase().substring(window.location.href.toLowerCase().indexOf("agreements/") + 11)) }) {
-
-            //this.agreementId.val = parseInt(this.myUrl.substring(this.myUrl.indexOf("agreements/") + 11));
             if (isNaN(this.agreementId.val)) {
                 this.agreementId.val = 0;
             }
@@ -24,6 +23,7 @@ module Agreements.ViewModels {
             if (this.agreementId.val !== 0) {
                 this.getData();
             }
+            //this.createMap
         }
         //imported classes
         populateFilesClass;
@@ -95,7 +95,6 @@ module Agreements.ViewModels {
         expiresOnDate: KnockoutComputed<string>;
 
         private _setupDateComputeds(): void {
-
             this.startsOnDate = ko.computed((): string => {
                 var value = this.startsOn();
                 var myDate = new Date(value);
@@ -117,5 +116,17 @@ module Agreements.ViewModels {
         
         ////#endregion
 
+        createMap(): void {
+            function initialize() {
+                var mapOptions = {
+                    center: new google.maps.LatLng(-34.397, 150.644),
+                    zoom: 8,
+                    mapTypeId: google.maps.MapTypeId.ROADMAP
+                };
+                var map = new google.maps.Map(document.getElementById("map-canvas"),
+                    mapOptions);
+            }
+            google.maps.event.addDomListener(window, 'load', initialize);
+        }
     }
 }

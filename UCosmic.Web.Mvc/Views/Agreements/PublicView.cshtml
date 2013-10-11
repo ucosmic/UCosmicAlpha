@@ -17,7 +17,6 @@
     </script>
 }
 
-
 <div class="content fixed to-top" data-current-module="agreements" id="publicView">
     <form class="group">
         <div class="from-top" style="float: left; width:500px;">
@@ -29,15 +28,8 @@
            @Html.Partial(MVC.Agreements.Views._PublicViewContent)
         </div>
         <div class="from-top" style="float: right; width: 450px; height: 400px; background-color: grey; margin-top: 50px;">
-            placeHolder for map
-            @*@Html.Partial(MVC.Agreements.Views._PublicViewContent)*@
+            <div style="height: 400px" id="map-canvas"/>
         </div>
-        @*<aside class="on-right from-top" data-fixed-scroll="root">
-            <div data-fixed-scroll="anchor"></div>
-            <div data-fixed-scroll="content">
-                @Html.Partial(MVC.Agreements.Views._PublicViewSideBar)
-            </div>
-        </aside>*@
     </form>
 </div>
 

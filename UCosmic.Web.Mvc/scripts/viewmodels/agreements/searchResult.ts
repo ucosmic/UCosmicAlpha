@@ -109,9 +109,7 @@ module Agreements.ViewModels {
             this.participantsNames = ko.computed((): string => {
                 var myName = "";
                 $.each(this.establishmentOfficialName(), (i, item) => {
-                    //myName += this.establishmentOfficialName()[i];
                     if (this.establishmentTranslatedName()[i] != null && this.establishmentOfficialName()[i] != this.establishmentTranslatedName()[i]) {
-                       // myName += "<strong>" + this.establishmentTranslatedName()[i] + "</strong> (" + this.establishmentOfficialName()[i] + ")"; 
                         myName += "<strong title='" + this.establishmentOfficialName()[i] + "'>" + this.establishmentTranslatedName()[i] + "</strong>"; 
                     } else
                     {

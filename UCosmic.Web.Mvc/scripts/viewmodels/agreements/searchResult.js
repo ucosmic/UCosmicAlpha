@@ -72,7 +72,6 @@ var Agreements;
                     var myName = "";
                     $.each(_this.establishmentOfficialName(), function (i, item) {
                         if (_this.establishmentTranslatedName()[i] != null && _this.establishmentOfficialName()[i] != _this.establishmentTranslatedName()[i]) {
-                            // myName += "<strong>" + this.establishmentTranslatedName()[i] + "</strong> (" + this.establishmentOfficialName()[i] + ")";
                             myName += "<strong title='" + _this.establishmentOfficialName()[i] + "'>" + _this.establishmentTranslatedName()[i] + "</strong>";
                         } else {
                             myName += "<strong>" + _this.establishmentOfficialName()[i] + "</strong>";
