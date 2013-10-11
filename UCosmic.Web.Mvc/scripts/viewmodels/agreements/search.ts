@@ -45,6 +45,7 @@ module Agreements.ViewModels {
         $searchResults = $("#searchResults");
         dfdFadeInOut = $.Deferred();
         dfdFadeInOut2 = $.Deferred();
+        optionsEnabled = ko.observable(true);
         //domain;
         //imported classes
         publicViewClass
@@ -112,6 +113,7 @@ module Agreements.ViewModels {
                     self.initPageHash(this);
                 });
             }
+            //this.unlockAnimation();
 
             ko.computed((): void => {
                 self.requestResults();
@@ -235,13 +237,18 @@ module Agreements.ViewModels {
         }
 
         requestResults(): void {
+            this.optionsEnabled(false);
             if (this.pageSize() === undefined || this.orderBy() === undefined)
                 return;
+            this.lockAnimation();
             this.spinner.start();
             $.when(this.dfdFadeInOut2)
                 .done(() => {
                     this.spinner.stop();
-                    this.$searchResults.fadeIn(400);
+                    this.$searchResults.fadeIn(400, () => {
+                        this.unlockAnimation();
+                        this.optionsEnabled(true)
+                    });
                     this.dfdFadeInOut = $.Deferred();
                     this.dfdFadeInOut2 = $.Deferred();
                 });

@@ -136,6 +136,13 @@ body {
             background-color: #F5F5F5;
             color: #000 !important;
         }
+        
+        &.light-transparent {
+            background-color: transparent;
+            border: solid 1px #000;
+            color: #000 !important;
+            text-shadow: none;
+        }
 
         &.link {
             @include

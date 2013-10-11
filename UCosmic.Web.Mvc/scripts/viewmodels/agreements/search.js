@@ -30,6 +30,7 @@ var Agreements;
                 this.$searchResults = $("#searchResults");
                 this.dfdFadeInOut = $.Deferred();
                 this.dfdFadeInOut2 = $.Deferred();
+                this.optionsEnabled = ko.observable(true);
                 // sammy & URL hashing
                 this.sammy = Sammy();
                 this.sammyBeforeRoute = /\#\/page\/(.*)\//;
@@ -140,6 +141,7 @@ var Agreements;
                     });
                 }
 
+                //this.unlockAnimation();
                 ko.computed(function () {
                     self.requestResults();
                 }).extend({ throttle: 1 });
@@ -226,12 +228,17 @@ var Agreements;
 
             Search.prototype.requestResults = function () {
                 var _this = this;
+                this.optionsEnabled(false);
                 if (this.pageSize() === undefined || this.orderBy() === undefined)
                     return;
+                this.lockAnimation();
                 this.spinner.start();
                 $.when(this.dfdFadeInOut2).done(function () {
                     _this.spinner.stop();
-                    _this.$searchResults.fadeIn(400);
+                    _this.$searchResults.fadeIn(400, function () {
+                        _this.unlockAnimation();
+                        _this.optionsEnabled(true);
+                    });
                     _this.dfdFadeInOut = $.Deferred();
                     _this.dfdFadeInOut2 = $.Deferred();
                 });

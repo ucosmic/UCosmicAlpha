@@ -13,13 +13,13 @@
             <span class="text">Search options</span>
             <div class="content">
                 <div class="field">
-                    <select class="side" data-bind="options: countries, optionsCaption: '[All countries]', optionsText: 'name', optionsValue: 'code', value: countryCode">
+                    <select class="side" data-bind="options: countries, optionsCaption: '[All countries]', optionsText: 'name', optionsValue: 'code', value: countryCode, enable: optionsEnabled">
                         <option>[Loading...]</option>
                     </select>
                     <input type="hidden" data-bind="value: countryCode" />
                 </div>
                 <div class="field">
-                    <select class="side" data-bind="value: orderBy">
+                    <select class="side" data-bind="value: orderBy, enable: optionsEnabled">
                         <option value="start-desc">Sort by start date - newest first</option>
                         <option value="start-asc">Sort by start date - oldest first</option>
                         <option value="expires-desc">Sort by expiration - newest first</option>
@@ -33,7 +33,7 @@
                     </select>
                 </div>
                 <div class="field">
-                    <select class="side" data-bind="value: pageSize">
+                    <select class="side" data-bind="value: pageSize, enable: optionsEnabled">
                         <option value="10">Show 10 results per page</option>
                         <option value="20">Show 20 results per page</option>
                         <option value="50">Show 50 results per page</option>

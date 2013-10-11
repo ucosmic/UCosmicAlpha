@@ -1,45 +1,48 @@
 ﻿ <section id="publicView">
-        <header data-bind="visible: name">
-            <h2>
-                <em data-bind="text: name, visible: name"></em>
-                <br/>
-            </h2>
-        </header>
-        <div data-bind="visible: isBound" style="display:none;font-size: 24px;">
-            <div>
-                <div data-bind="text: type()" style="margin-bottom: 20px;"></div>
-                <span data-bind="html: participantsNames"></span>
-                <span style="font-size: 18px;">
-                    <span data-bind=" visible: status() != '[Private Data]'">
-                        Status is:
-                        <span  style="font-size: 14px; margin-top: 8px;" class="badge light-gray" data-bind="text: status"></span><br/>
-                    </span>
-                    This agreement is 
-                    <span data-bind="visible: !isAutoRenew()">not </span>
-                    auto-renewable.
-                    <br/>
-                    <span data-bind=" visible: expiresOnDate() == 'unknown'">
-                        Starts on: 
-                    </span>
-                    <strong data-bind="text: startsOnDate"></strong>
-                    <strong data-bind="text: ' - ' + expiresOnDate(), visible: expiresOnDate() != 'unknown'"></strong>
+    <header data-bind="visible: name">
+        <h2>
+            <em data-bind="text: name, visible: name"></em>
+            <br/>
+        </h2>
+    </header>
+    <div data-bind="visible: isBound" style="display:none;font-size: 24px;">
+        <div>
+            <div data-bind="text: type()" style="margin-bottom: 20px;"></div>
+            <span data-bind="html: participantsNames"></span>
+            <span style="font-size: 18px;">
+                <span data-bind=" visible: status() != '[Private Data]'">
+                    Status is:
+                    <span  style="font-size: 14px; margin-top: 8px;" class="badge light-transparent" data-bind="text: status"></span><br/>
                 </span>
-            </div>
-            <div data-bind="visible: files.length > 0" style="padding-top: 20px;">
-                <ul data-bind="foreach: files">
-                    <li data-bind="element: 'fileE1'">
-                        <div> 
-                            <div class="on-left" style="padding-right: 10px;">
-                                <div>
-                                    <a title="View this file" target="_blank" data-bind="attr: { href: '/api/agreements/' + $root.agreementId.val + '/files/' + id() + '/content/' }"><strong data-bind="    text: customName, visible: !isEdit()"></strong></a>
-                                </div>
-                            </div>
-                            <a title="Download this file" data-bind="attr: { href: '/api/agreements/' + $root.agreementId.val + '/files/' + id() + '/download/' }"><i class="download on-left"></i></a>
-                               
-                        </div>
-                    </li>
-                </ul>
-            </div>
-            <div data-bind="html: content, visible: content() != undefined"></div>
+                This agreement is 
+                <span data-bind="visible: !isAutoRenew()">not </span>
+                auto-renewable.
+                <br/>
+                <span data-bind=" visible: expiresOnDate() == 'unknown'">
+                    Starts on: 
+                </span>
+                <strong data-bind="text: startsOnDate"></strong>
+                <strong data-bind="text: ' - ' + expiresOnDate(), visible: expiresOnDate() != 'unknown'"></strong>
+            </span>
         </div>
-    </section>
+        <div data-bind="visible: files.length > 0" style="padding-top: 20px;">
+            <ul data-bind="foreach: files">
+                <li data-bind="element: 'fileE1'">
+                    <div> 
+                        <div class="on-left" style="padding-right: 10px;">
+                            <div>
+                                <a title="View this file" target="_blank" data-bind="attr: { href: '/api/agreements/' + $root.agreementId.val + '/files/' + id() + '/content/' }"><strong data-bind="    text: customName, visible: !isEdit()"></strong></a>
+                            </div>
+                        </div>
+                        <a title="Download this file" data-bind="attr: { href: '/api/agreements/' + $root.agreementId.val + '/files/' + id() + '/download/' }"><i class="download on-left"></i></a>
+                               
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div data-bind="html: content, visible: content() != undefined"></div>
+    </div>
+    <div style="display: none">
+        <span id="agreementPartners_api">@ViewBag.AgreementPartnersApi</span> @* for map *@
+    </div>
+</section>

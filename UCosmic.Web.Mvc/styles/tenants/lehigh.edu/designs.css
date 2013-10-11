@@ -86,6 +86,11 @@ body .badge {
   body .badge.light-gray {
     background-color: #F5F5F5;
     color: #000 !important; }
+  body .badge.light-transparent {
+    background-color: transparent;
+    border: solid 1px #000;
+    color: #000 !important;
+    text-shadow: none; }
   body .badge.link {
     -webkit-text-shadow: 0 0 0 black;
     text-shadow: 0 0 0 black;

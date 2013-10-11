@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System.Diagnostics;
+using System.Web.Mvc;
 using AttributeRouting.Web.Mvc;
 using UCosmic.Domain.Agreements;
 using UCosmic.Domain.Establishments;
@@ -19,6 +20,12 @@ namespace UCosmic.Web.Mvc.Controllers
         [GET("agreements/{agreementId:int}", ControllerPrecedence = 1)]
         public virtual ViewResult Show(int agreementId)
         {
+
+            var agreementPartnersApi = Url.HttpRouteUrl(null, new { controller = "AgreementPartners", action = "GetPartners", agreementId = 0 });
+            Debug.Assert(agreementPartnersApi != null);
+            agreementPartnersApi = agreementPartnersApi.Replace("0", "{0}");
+            ViewBag.AgreementPartnersApi = agreementPartnersApi;
+
             ViewBag.Show = true;
             return View(MVC.Agreements.Views.PublicView);
         }

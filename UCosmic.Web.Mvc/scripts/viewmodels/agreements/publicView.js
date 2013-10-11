@@ -11,6 +11,7 @@ var Agreements;
     /// <reference path="../../app/Routes.ts" />
     /// <reference path="./populateFiles.ts" />
     /// <reference path="../../typings/googlemaps/google.maps.d.ts" />
+    /// <reference path="../../typings/linq/linq.d.ts" />
     (function (ViewModels) {
         var PublicView = (function () {
             function PublicView(agreementId) {
@@ -38,8 +39,8 @@ var Agreements;
                 this._setupNameComputeds();
                 if (this.agreementId.val !== 0) {
                     this.getData();
+                    this.createMap();
                 }
-                this.createMap();
             }
             //agreementId = { val: 0 }
             PublicView.prototype.getData = function () {
@@ -57,6 +58,7 @@ var Agreements;
                     _this.type(response.type);
                     _this.umbrellaId(response.umbrellaId);
                     _this.isBound(true);
+                    _this.partners = response.participants;
                 });
                 this.populateFilesClass.populate(this.agreementId);
                 this.files = this.populateFilesClass.files;
@@ -105,14 +107,76 @@ var Agreements;
             };
 
             ////#endregion
+            //createMap(): void {
+            //    var self = this;
+            //    function initialize() {
+            //        // /api/agreements/{agreementId}/partners
+            //        //var mapUrl = $('#agreementPartners_api').text();
+            //        //var params = { agreementId: self.agreementId.val };
+            //        //mapUrl = '{0}'.format(mapUrl, $.param(params));
+            //        //$('#agreementPartners_api').text().format(self.agreementId.val)
+            //        $.get($('#agreementPartners_api').text().format(self.agreementId.val))
+            //            .done((response: any): void => {
+            //                var lat = -34.397, long = 150.644, googleMapZoomLevel, mapOptions,
+            //                    map;
+            //                if (response[0].center.hasValue) {
+            //                    lat = response[0].center.latitude;
+            //                    long = response[0].center.longitude;
+            //                }
+            //                googleMapZoomLevel = (response[0].googleMapZoomLevel) ? response[0].googleMapZoomLevel : 8;
+            //                mapOptions = {
+            //                    center: new google.maps.LatLng(lat, long),
+            //                    zoom: googleMapZoomLevel,
+            //                    mapTypeId: google.maps.MapTypeId.ROADMAP
+            //                };
+            //                map = new google.maps.Map(document.getElementById("map-canvas"),
+            //                    mapOptions);
+            //            });
+            //    }
+            //    google.maps.event.addDomListener(window, 'load', initialize);
+            //}
             PublicView.prototype.createMap = function () {
+                var self = this;
                 function initialize() {
-                    var mapOptions = {
-                        center: new google.maps.LatLng(-34.397, 150.644),
-                        zoom: 8,
-                        mapTypeId: google.maps.MapTypeId.ROADMAP
-                    };
-                    var map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+                    //https://developers.google.com/maps/documentation/javascript/markers#add
+                    var partners = Enumerable.From(self.partners).Where(function (x) {
+                        return !x.isOwner;
+                    }).ToArray(), centers = Enumerable.From(partners).Select(function (x) {
+                        return x.center;
+                    }).ToArray(), LatLngList = Enumerable.From(centers).Select(function (x) {
+                        return new google.maps.LatLng(x.latitude, x.longitude);
+                    }).ToArray(), map;
+
+                    //  Make an array of the LatLng's of the markers you want to show
+                    //var LatLngList = new Array(new google.maps.LatLng(52.537, -2.061), new google.maps.LatLng(52.564, -2.017));
+                    //  Create a new viewpoint bound
+                    var bounds = new google.maps.LatLngBounds();
+
+                    for (var i = 0, LtLgLen = LatLngList.length; i < LtLgLen; i++) {
+                        //  And increase the bounds to take this point
+                        bounds.extend(LatLngList[i]);
+                    }
+
+                    //  Fit these bounds to the map
+                    map = new google.maps.Map(document.getElementById("map-canvas"), { mapTypeId: google.maps.MapTypeId.ROADMAP, mapMaker: true });
+                    map.fitBounds(bounds);
+                    //$.get($('#agreementPartners_api').text().format(self.agreementId.val))
+                    //    .done((response: any): void => {
+                    //        var lat = -34.397, long = 150.644, googleMapZoomLevel, mapOptions,
+                    //            map;
+                    //        if (response[0].center.hasValue) {
+                    //            lat = response[0].center.latitude;
+                    //            long = response[0].center.longitude;
+                    //        }
+                    //        googleMapZoomLevel = (response[0].googleMapZoomLevel) ? response[0].googleMapZoomLevel : 8;
+                    //        mapOptions = {
+                    //            center: new google.maps.LatLng(lat, long),
+                    //            zoom: googleMapZoomLevel,
+                    //            mapTypeId: google.maps.MapTypeId.ROADMAP
+                    //        };
+                    //        map = new google.maps.Map(document.getElementById("map-canvas"),
+                    //            mapOptions);
+                    //    });
                 }
                 google.maps.event.addDomListener(window, 'load', initialize);
             };
