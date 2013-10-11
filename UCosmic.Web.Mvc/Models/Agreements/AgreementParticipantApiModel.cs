@@ -11,6 +11,7 @@ namespace UCosmic.Web.Mvc.Models
         public string EstablishmentOfficialName { get; set; }
         public string EstablishmentTranslatedName { get; set; }
         public MapPointModel Center { get; set; }
+        public int? GoogleMapZoomLevel { get; set; }
     }
 
     public static class AgreementParticipantApiProfiler
@@ -25,8 +26,8 @@ namespace UCosmic.Web.Mvc.Models
                     .ForMember(d => d.EstablishmentId, o => o.MapFrom(s => s.Establishment.RevisionId))
                     .ForMember(d => d.EstablishmentOfficialName, o => o.MapFrom(s =>
                         s.Establishment.OfficialName == s.Establishment.TranslatedName.Text ? null : s.Establishment.OfficialName))
-                    .ForMember(d => d.Center, o => o.MapFrom(s =>
-                        s.Establishment.Location.Center))
+                    .ForMember(d => d.Center, o => o.MapFrom(s => s.Establishment.Location.Center))
+                    .ForMember(d => d.GoogleMapZoomLevel, o => o.MapFrom(s => s.Establishment.Location.GoogleMapZoomLevel))
                 ;
             }
         }

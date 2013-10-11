@@ -22,6 +22,25 @@ namespace UCosmic.Web.Mvc.ApiControllers
             _queryProcessor = queryProcessor;
         }
 
+        [GET("{agreementId:int}/partners")]
+        public IEnumerable<AgreementParticipantApiModel> GetPartners(int agreementId)
+        {
+            var query = new ParticipantsByAgreementId(User, agreementId)
+            {
+                EagerLoad = new Expression<Func<AgreementParticipant, object>>[]
+                {
+                    x => x.Establishment.Location,
+                    x => x.Establishment.Names.Select(y => y.TranslationToLanguage),
+                }
+            };
+            var participants = _queryProcessor.Execute(query).Where(x => !x.IsOwner);
+
+            // convert to model
+            var models = Mapper.Map<AgreementParticipantApiModel[]>(participants);
+
+            return models;
+        }
+
         [GET("{domain}/partners")]
         public IEnumerable<AgreementParticipantApiModel> GetPartners(string domain)
         {
