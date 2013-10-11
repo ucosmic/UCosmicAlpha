@@ -23,7 +23,7 @@ module Agreements.ViewModels {
             if (this.agreementId.val !== 0) {
                 this.getData();
             }
-            //this.createMap
+            this.createMap();
         }
         //imported classes
         populateFilesClass;

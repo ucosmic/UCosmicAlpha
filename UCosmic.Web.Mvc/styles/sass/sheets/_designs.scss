@@ -126,10 +126,15 @@ body {
             background-color: #c00;
             color: #fff;
         }
-
+        
         &.blue {
             background-color: #33f;
             color: #fff !important;
+        }
+
+        &.light-gray {
+            background-color: #F5F5F5;
+            color: #000 !important;
         }
 
         &.link {

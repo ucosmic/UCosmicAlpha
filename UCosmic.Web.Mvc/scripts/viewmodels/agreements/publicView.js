@@ -39,7 +39,7 @@ var Agreements;
                 if (this.agreementId.val !== 0) {
                     this.getData();
                 }
-                //this.createMap
+                this.createMap();
             }
             //agreementId = { val: 0 }
             PublicView.prototype.getData = function () {

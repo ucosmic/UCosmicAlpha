@@ -120,6 +120,7 @@ namespace UCosmic.Web.Mvc
                 "~/scripts/oss/moment.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/agreementPublicView").Include(
+                "~/scripts/google/ToolsOverlay.js",
                 "~/scripts/app/Spinner.js",
                 "~/scripts/app/PagedSearch.js",
                 "~/scripts/viewmodels/agreements/publicView.js",

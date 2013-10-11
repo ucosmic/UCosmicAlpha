@@ -40,23 +40,26 @@
                         <tbody class="searchResults" data-bind="foreach: items">
                             <tr data-bind="click: $root.clickAction">
                                 <td>
-                                    <div data-bind="attr: { title: $root.detailTooltip() }">
-                                        <span>
-                                            <em data-bind="text: name, visible: name"></em>
-                                            <span data-bind="visible: name"><br/></span>
-                                        </span>
-                                        <span data-bind="html: participantsNames"></span>
-                                        <span style="font-size: 14px;">
-                                            <span data-bind="text: type() + ', ' "></span>
-                                            <span  style="font-size: 12px;" class="badge blue" data-bind="text: status"></span><br/>
-                                            <span data-bind="text:startsOnDate() + ' -'"></span>
-                                            <span data-bind="text:expiresOnDate"></span>
-                                        </span><br/>
-                                        <a href="" data-bind="attr: { href: detailHref }">View Details</a>
+                                     <a data-bind="attr: { href: detailHref }" style="text-decoration: none; color: inherit;">
+                                     <div data-bind="attr: { title: $root.detailTooltip() }">
+                                         <span>
+                                             <em data-bind="text: name, visible: name"></em>
+                                             <span data-bind="visible: name"><br/></span>
+                                         </span>
+                                         <span data-bind="html: participantsNames"></span>
+                                         <span style="font-size: 14px;">
+                                             <span data-bind="text: type() + ', ' "></span>
+                                             <span  style="font-size: 10px;" class="badge light-gray" data-bind="text: status"></span><br/>
+                                             <span data-bind="text:startsOnDate() + ' -'"></span>
+                                             <span data-bind="text:expiresOnDate"></span>
+                                         </span><br/>
                                     </div>
+                                    </a>
                                 </td>
                                 <td>
-                                    <span data-bind="text: nullDisplayCountryName"></span>
+                                    <a data-bind="attr: { href: detailHref }" style="text-decoration: none;  color: inherit;">
+                                        <span data-bind="text: nullDisplayCountryName"></span>
+                                    </a>
                                 </td>
                             </tr>
                         </tbody>
