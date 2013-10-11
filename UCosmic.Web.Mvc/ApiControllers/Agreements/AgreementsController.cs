@@ -16,7 +16,7 @@ using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc.ApiControllers
 {
-    [RoutePrefix("api/agreements")]
+    [RoutePrefix("api")]
     public class AgreementsController : ApiController
     {
         private readonly IProcessQueries _queryProcessor;
@@ -39,7 +39,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             _purgeHandler = purgeHandler;
         }
 
-        [GET("{agreementId:int}")]
+        [GET("agreements/{agreementId:int}", ControllerPrecedence = 2)]
         public AgreementApiModel Get(int agreementId)
         {
             var entity = _queryProcessor.Execute(new AgreementById(User, agreementId));
@@ -48,10 +48,10 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return model;
         }
 
-        [GET("")]
+        [GET("agreements", ControllerPrecedence = 1)]
         public PageOfAgreementApiFlatModel Get([FromUri] AgreementSearchInputModel input)
         {
-            if (input.PageSize < 1)
+            if (input.PageSize < 1 || input == null || string.IsNullOrWhiteSpace(input.MyDomain))
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
 
             var query = Mapper.Map<AgreementViewsByKeyword>(input);
@@ -60,7 +60,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return model;
         }
 
-        [GET("{domain}")]
+        [GET("{domain}/agreements", ControllerPrecedence = 3)]
         public IEnumerable<AgreementApiModel> Get(string domain)
         {
             // use domain parameter, but fall back to style cookie if not passed.
@@ -82,9 +82,15 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return models;
         }
 
+        [GET("{domain}/agreements/visibility")]
+        public string GetVisibility(string domain)
+        {
+            var query = new MyAgreementVisibility(User, domain);
+            var visibility = _queryProcessor.Execute(query);
+            return visibility.AsSentenceFragment();
+        }
 
-        
-        [GET("{agreementId:int}/umbrellas")]
+        [GET("agreements/{agreementId:int}/umbrellas")]
         [Authorize(Roles = RoleName.AgreementManagers)]
         public IEnumerable<TextValuePair> GetUmbrellaOptions(int agreementId)
         {
@@ -100,7 +106,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return models;
         }
 
-        [POST("")]
+        [POST("agreements")]
         [Authorize(Roles = RoleName.AgreementManagers)]
         public HttpResponseMessage Post(AgreementApiModel model)
         {
@@ -120,7 +126,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return response;
         }
 
-        [POST("validate")]
+        [POST("agreements/validate")]
         [Authorize(Roles = RoleName.AgreementManagers)]
         public HttpResponseMessage PostValidate(AgreementApiModel model)
         {
@@ -135,7 +141,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return Request.CreateResponse(HttpStatusCode.OK);
         }
 
-        [PUT("{agreementId:int}")]
+        [PUT("agreements/{agreementId:int}")]
         [Authorize(Roles = RoleName.AgreementManagers)]
         public HttpResponseMessage Put(int agreementId, AgreementApiModel model)
         {
@@ -149,7 +155,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return response;
         }
 
-        [DELETE("{agreementId:int}")]
+        [DELETE("agreements/{agreementId:int}")]
         [Authorize(Roles = RoleName.AgreementManagers)]
         public HttpResponseMessage Delete(int agreementId)
         {
