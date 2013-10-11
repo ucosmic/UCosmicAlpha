@@ -258,6 +258,12 @@ module App.Routes {
                 return put(agreementId);
             }
 
+            export module Search {
+                export function get(domain: string): string {
+                    return makeUrl('{0}/agreements'.format(domain));
+                }
+            }
+
             export module Participants {
                 export function get (agreementId: number, establishmentId?: number): string {
                     var url = 'agreements/{0}/participants'.format(agreementId);
@@ -356,14 +362,6 @@ module App.Routes {
                 export function get (agreementId?: number): string {
                     var url = 'agreements/0/umbrellas';
                     if (agreementId) url = url.replace('0', agreementId.toString());
-                    return makeUrl(url);
-                }
-            }
-
-            export module Search {
-                export function get(agreementId?: number): string {
-                    var url = 'agreements';
-                    if (agreementId) url += '/' + agreementId;
                     return makeUrl(url);
                 }
             }

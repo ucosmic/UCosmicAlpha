@@ -14,11 +14,11 @@ namespace UCosmic.Cqrs
 
         private DbSet<JsonView> JsonViews { get { return Set<JsonView>(); } }
 
-        public TView Get<TView>()
+        public TView Get<TView>(params object[] parameters)
         {
             try
             {
-                var key = typeof(TView).GetViewKey();
+                var key = typeof(TView).GetViewKey(parameters);
                 var entity = JsonViews.AsNoTracking().SingleOrDefault(x => x.Key == key);
                 if (entity == null)
                 {
@@ -36,15 +36,15 @@ namespace UCosmic.Cqrs
             }
             catch (Exception)
             {
-                return Get<TView>();
+                return Get<TView>(parameters);
             }
         }
 
-        public void Set<TView>(object value)
+        public void Set<TView>(object value, params object[] parameters)
         {
             try
             {
-                var key = typeof(TView).GetViewKey();
+                var key = typeof(TView).GetViewKey(parameters);
                 var entity = JsonViews.SingleOrDefault(x => x.Key == key);
                 var json = JsonConvert.SerializeObject(value);
                 if (entity == null)
@@ -63,7 +63,7 @@ namespace UCosmic.Cqrs
             }
             catch (Exception)
             {
-                Set<TView>(value);
+                Set<TView>(value, parameters);
             }
         }
 

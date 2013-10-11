@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 
 namespace UCosmic.Domain.Agreements
 {
-    public class AgreementViewProjector : IHandleEvents<ApplicationStarted>, IHandleEvents<AgreementChanged>
+    public class AgreementViewProjector// : IHandleEvents<ApplicationStarted>, IHandleEvents<AgreementChanged>
     {
         private static readonly object UpdateLock = new object();
         private static bool _isUpdating;

@@ -6,7 +6,6 @@ using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc.Controllers
 {
-    //[RestfulRouteConvention]
     [UserVoiceForum(UserVoiceForum.Agreements)]
     public partial class AgreementsController : Controller
     {
@@ -17,14 +16,14 @@ namespace UCosmic.Web.Mvc.Controllers
             _queryProcessor = queryProcessor;
         }
 
-        [GET("agreements/{agreementId:int}")]
+        [GET("agreements/{agreementId:int}", ControllerPrecedence = 1)]
         public virtual ViewResult Show(int agreementId)
         {
             ViewBag.Show = true;
             return View(MVC.Agreements.Views.PublicView);
         }
 
-        [GET("agreements/{domain?}")]
+        [GET("agreements/{domain?}", ControllerPrecedence = 3)]
         public virtual ActionResult Index(string domain = null)
         {
             // when no domain is passed, try to detect it
@@ -53,22 +52,13 @@ namespace UCosmic.Web.Mvc.Controllers
             return View();
         }
 
-
-        [GET("agreements/new/", SitePrecedence = 1)]
+        [GET("agreements/new/", ControllerPrecedence = 2)]
         [TryAuthorize(Roles = RoleName.AgreementManagers)]
         public virtual ViewResult New()
         {
             ViewBag.Id = 0;
             return View(MVC.Agreements.Views.Form);
         }
-
-        //[GET("agreements/edit/", SitePrecedence = 1)]
-        //[TryAuthorize(Roles = RoleName.AgreementManagers)]
-        //public virtual ViewResult Edit()
-        //{
-        //    ViewBag.Id = 0;
-        //    return View(MVC.Agreements.Views.Form);
-        //}
 
         [GET("agreements/{agreementId:int}/edit")]
         [TryAuthorize(Roles = RoleName.AgreementManagers)]

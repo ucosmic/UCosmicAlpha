@@ -306,6 +306,14 @@ var App;
                 }
                 Agreements.del = del;
 
+                (function (Search) {
+                    function get(domain) {
+                        return makeUrl('{0}/agreements'.format(domain));
+                    }
+                    Search.get = get;
+                })(Agreements.Search || (Agreements.Search = {}));
+                var Search = Agreements.Search;
+
                 (function (Participants) {
                     function get(agreementId, establishmentId) {
                         var url = 'agreements/{0}/participants'.format(agreementId);
@@ -439,17 +447,6 @@ var App;
                     UmbrellaOptions.get = get;
                 })(Agreements.UmbrellaOptions || (Agreements.UmbrellaOptions = {}));
                 var UmbrellaOptions = Agreements.UmbrellaOptions;
-
-                (function (Search) {
-                    function get(agreementId) {
-                        var url = 'agreements';
-                        if (agreementId)
-                            url += '/' + agreementId;
-                        return makeUrl(url);
-                    }
-                    Search.get = get;
-                })(Agreements.Search || (Agreements.Search = {}));
-                var Search = Agreements.Search;
             })(WebApi.Agreements || (WebApi.Agreements = {}));
             var Agreements = WebApi.Agreements;
 

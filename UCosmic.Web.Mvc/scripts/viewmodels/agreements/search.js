@@ -65,9 +65,9 @@ var Agreements;
                     },
                     ignore: ['pageSize', 'pageNumber']
                 };
-                this.publicViewClass = new Agreements.ViewModels.PublicView();
-                ko.applyBindings(this.publicViewClass, $('#publicView')[0]);
 
+                //this.publicViewClass = new Agreements.ViewModels.PublicView();
+                //ko.applyBindings(this.publicViewClass, $('#publicView')[0]);
                 //this.domain = window.location.href.toLowerCase();
                 //this.domain = this.domain.substring(this.domain.indexOf("agreements/") + 11);
                 //var domainIndexOf = (this.domain.indexOf("/") > 0) ? this.domain.indexOf("/") : this.domain.length;
@@ -242,13 +242,12 @@ var Agreements;
                 } else {
                     this.dfdFadeInOut.resolve();
                 }
-                $.get(App.Routes.WebApi.Agreements.Search.get(), {
+                $.get(App.Routes.WebApi.Agreements.Search.get(this.domain), {
                     pageSize: this.pageSize(),
                     pageNumber: this.pageNumber(),
                     countryCode: this.countryCode(),
                     keyword: this.throttledKeyword(),
-                    orderBy: this.orderBy(),
-                    myDomain: this.domain
+                    orderBy: this.orderBy()
                 }).done(function (response) {
                     $.when(_this.dfdFadeInOut).done(function () {
                         _this.receiveResults(response);

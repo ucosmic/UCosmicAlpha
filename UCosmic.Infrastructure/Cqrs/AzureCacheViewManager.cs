@@ -15,11 +15,11 @@ namespace UCosmic.Cqrs
             _maxTtl = maxTtl;
         }
 
-        public TResult Get<TResult>()
+        public TResult Get<TResult>(params object[] parameters)
         {
             try
             {
-                var result = _dataCache.Get(typeof(TResult).GetViewKey());
+                var result = _dataCache.Get(typeof(TResult).GetViewKey(parameters));
                 if (result != null)
                 {
                     var tResult = JsonConvert.DeserializeObject<TResult>(result.ToString());
@@ -29,20 +29,20 @@ namespace UCosmic.Cqrs
             }
             catch (Exception)
             {
-                return Get<TResult>();
+                return Get<TResult>(parameters);
             }
         }
 
-        public void Set<TResult>(object value)
+        public void Set<TResult>(object value, params object[] parameters)
         {
             try
             {
                 var result = JsonConvert.SerializeObject(value);
-                _dataCache.Put(typeof(TResult).GetViewKey(), result, _maxTtl);
+                _dataCache.Put(typeof(TResult).GetViewKey(parameters), result, _maxTtl);
             }
             catch (Exception)
             {
-                Set<TResult>(value);
+                Set<TResult>(value, parameters);
             }
         }
     }

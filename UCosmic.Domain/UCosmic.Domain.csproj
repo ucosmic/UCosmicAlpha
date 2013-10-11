@@ -224,7 +224,8 @@
     <Compile Include="Domain\Agreements\Events\AgreementChanged.cs" />
     <Compile Include="Domain\Agreements\Queries\ContactById.cs" />
     <Compile Include="Domain\Agreements\Queries\AgreementViewsByKeyword.cs" />
-    <Compile Include="Domain\Agreements\Queries\AgreementViewProjector.cs" />
+    <Compile Include="Domain\Agreements\Queries\AgreementsByKeyword.cs" />
+    <Compile Include="Domain\Agreements\Views\AgreementViewProjector.cs" />
     <Compile Include="Domain\Agreements\Queries\MyAgreementVisibility.cs" />
     <Compile Include="Domain\Agreements\Queries\OwnershipByEstablishmentId.cs" />
     <Compile Include="Domain\Agreements\Queries\UmbrellaOptions.cs" />

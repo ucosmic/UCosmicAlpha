@@ -22,8 +22,8 @@ module Agreements.ViewModels {
 
         constructor(public domain, public initDefaultPageRoute: boolean = true) {
             super();
-            this.publicViewClass = new Agreements.ViewModels.PublicView();
-            ko.applyBindings(this.publicViewClass, $('#publicView')[0]);
+            //this.publicViewClass = new Agreements.ViewModels.PublicView();
+            //ko.applyBindings(this.publicViewClass, $('#publicView')[0]);
 
             //this.domain = window.location.href.toLowerCase();
             //this.domain = this.domain.substring(this.domain.indexOf("agreements/") + 11);
@@ -252,13 +252,13 @@ module Agreements.ViewModels {
             } else {
                 this.dfdFadeInOut.resolve();
             }
-            $.get(App.Routes.WebApi.Agreements.Search.get(), {
+            $.get(App.Routes.WebApi.Agreements.Search.get(this.domain), {
                 pageSize: this.pageSize(),
                 pageNumber: this.pageNumber(),
                 countryCode: this.countryCode(),
                 keyword: this.throttledKeyword(),
                 orderBy: this.orderBy(),
-                myDomain: this.domain
+                //myDomain: this.domain
             })
                 .done((response: ApiModels.FlatEstablishment[]): void => {
                     $.when(this.dfdFadeInOut)

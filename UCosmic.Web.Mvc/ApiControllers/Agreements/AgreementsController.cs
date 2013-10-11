@@ -11,7 +11,6 @@ using AttributeRouting.Web.Http;
 using AutoMapper;
 using FluentValidation;
 using UCosmic.Domain.Agreements;
-using UCosmic.Domain.Identity;
 using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc.ApiControllers
@@ -48,39 +47,42 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return model;
         }
 
-        [GET("agreements", ControllerPrecedence = 1)]
-        public PageOfAgreementApiFlatModel Get([FromUri] AgreementSearchInputModel input)
+        [GET("{domain}/agreements", ControllerPrecedence = 1)]
+        public PageOfAgreementApiFlatModel Get(string domain, [FromUri] AgreementSearchInputModel input)
         {
-            if (input.PageSize < 1 || input == null || string.IsNullOrWhiteSpace(input.MyDomain))
+            if (input.PageSize < 1 || input == null || string.IsNullOrWhiteSpace(domain))
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
 
-            var query = Mapper.Map<AgreementViewsByKeyword>(input);
-            var views = _queryProcessor.Execute(query);
-            var model = Mapper.Map<PageOfAgreementApiFlatModel>(views);
+            var query = new AgreementsByKeyword(User, domain);
+            Mapper.Map(input, query);
+
+            var results = _queryProcessor.Execute(query);
+
+            var model = Mapper.Map<PageOfAgreementApiFlatModel>(results);
             return model;
         }
 
-        [GET("{domain}/agreements", ControllerPrecedence = 3)]
-        public IEnumerable<AgreementApiModel> Get(string domain)
-        {
-            // use domain parameter, but fall back to style cookie if not passed.
-            var tenancy = Request.Tenancy() ?? new Tenancy { StyleDomain = "default" };
-            domain = string.IsNullOrWhiteSpace(domain)
-                ? tenancy.StyleDomain : domain;
+        //[GET("{domain}/agreements", ControllerPrecedence = 3)]
+        //public IEnumerable<AgreementApiModel> Get(string domain)
+        //{
+        //    // use domain parameter, but fall back to style cookie if not passed.
+        //    var tenancy = Request.Tenancy() ?? new Tenancy { StyleDomain = "default" };
+        //    domain = string.IsNullOrWhiteSpace(domain)
+        //        ? tenancy.StyleDomain : domain;
 
-            if ("default".Equals(domain) || string.IsNullOrWhiteSpace(domain))
-            {
-                // fall back again to user default affiliation
-                var defaultAffliation = _queryProcessor.Execute(new MyDefaultAffiliation(User));
-                if (defaultAffliation != null)
-                    domain = defaultAffliation.WebsiteUrl;
-            }
+        //    if ("default".Equals(domain) || string.IsNullOrWhiteSpace(domain))
+        //    {
+        //        // fall back again to user default affiliation
+        //        var defaultAffliation = _queryProcessor.Execute(new MyDefaultAffiliation(User));
+        //        if (defaultAffliation != null)
+        //            domain = defaultAffliation.WebsiteUrl;
+        //    }
 
-            var entities = _queryProcessor.Execute(new AgreementsByOwnerDomain(User, domain));
-            if (entities == null || !entities.Any()) throw new HttpResponseException(HttpStatusCode.NotFound);
-            var models = Mapper.Map<AgreementApiModel[]>(entities);
-            return models;
-        }
+        //    var entities = _queryProcessor.Execute(new AgreementsByOwnerDomain(User, domain));
+        //    if (entities == null || !entities.Any()) throw new HttpResponseException(HttpStatusCode.NotFound);
+        //    var models = Mapper.Map<AgreementApiModel[]>(entities);
+        //    return models;
+        //}
 
         [GET("{domain}/agreements/visibility")]
         public string GetVisibility(string domain)

@@ -16,9 +16,6 @@ namespace UCosmic.Domain.Agreements
 
     public class HandleAgreementViewsByKeywordQuery : IHandleQueries<AgreementViewsByKeyword, PagedQueryResult<AgreementView>>
     {
-        private readonly IQueryEntities _entities;
-        private readonly IProcessQueries _queryProcessor;
-
         private readonly AgreementViewProjector _projector;
 
         public HandleAgreementViewsByKeywordQuery(AgreementViewProjector projector)
