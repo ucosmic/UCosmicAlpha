@@ -14,9 +14,7 @@ var Agreements;
     /// <reference path="../../typings/linq/linq.d.ts" />
     (function (ViewModels) {
         var PublicView = (function () {
-            function PublicView(agreementId) {
-                if (typeof agreementId === "undefined") { agreementId = { val: parseInt(window.location.href.toLowerCase().substring(window.location.href.toLowerCase().indexOf("agreements/") + 11)) }; }
-                this.agreementId = agreementId;
+            function PublicView(agreementId, agreementVisibility) {
                 this.isBound = ko.observable(false);
                 this.files = ko.observableArray();
                 this.content = ko.observable();
@@ -31,9 +29,11 @@ var Agreements;
                 this.type = ko.observable();
                 this.umbrellaId = ko.observable();
                 this.myUrl = window.location.href.toLowerCase();
-                if (isNaN(this.agreementId.val)) {
-                    this.agreementId.val = 0;
+                if (isNaN(agreementId)) {
+                    agreementId = 0;
                 }
+                this.agreementId = { val: agreementId };
+                this.agreementVisibility = agreementVisibility || 'Public';
                 this.populateFilesClass = new agreements.populateFiles();
                 this._setupDateComputeds();
                 this._setupNameComputeds();
@@ -95,7 +95,7 @@ var Agreements;
                     if (myDate.getFullYear() < 1500) {
                         return "unknown";
                     }
-                    return (moment(value)).format('YYYY-MM-DD');
+                    return (moment(value)).format('M/D/YYYY');
                 });
                 this.expiresOnDate = ko.computed(function () {
                     var value = _this.expiresOn();
@@ -103,7 +103,7 @@ var Agreements;
                     if (myDate.getFullYear() < 1500) {
                         return "unknown";
                     } else {
-                        return (moment(value)).format('YYYY-MM-DD');
+                        return (moment(value)).format('M/D/YYYY');
                     }
                 });
             };

@@ -56,7 +56,11 @@ namespace UCosmic.Web.Mvc.Controllers
             agreementPartnersApi = agreementPartnersApi.Replace("0", "{0}");
             ViewBag.AgreementPartnersApi = agreementPartnersApi;
 
-            return View(MVC.Agreements.Views.PublicView);
+            var visibility = _queryProcessor.Execute(new MyAgreementVisibility(User, agreementId));
+            ViewBag.AgreementVisibility = visibility;
+
+            ViewBag.AgreementId = agreementId;
+            return View();
         }
 
         [GET("agreements/new/")]

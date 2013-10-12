@@ -14,10 +14,12 @@
 module Agreements.ViewModels {
 
     export class PublicView {
-        constructor(public agreementId = { val: parseInt(window.location.href.toLowerCase().substring(window.location.href.toLowerCase().indexOf("agreements/") + 11)) }) {
-            if (isNaN(this.agreementId.val)) {
-                this.agreementId.val = 0;
+        constructor(agreementId: number, agreementVisibility: string) {
+            if (isNaN(agreementId)) {
+                agreementId = 0;
             }
+            this.agreementId = { val: agreementId, };
+            this.agreementVisibility = agreementVisibility || 'Public';
             this.populateFilesClass = new agreements.populateFiles();
             this._setupDateComputeds();
             this._setupNameComputeds();
@@ -29,6 +31,8 @@ module Agreements.ViewModels {
         //imported classes
         populateFilesClass;
 
+        agreementId: any;
+        agreementVisibility: string;
         isBound = ko.observable(false);
         files = ko.observableArray();
         content = ko.observable();
@@ -69,7 +73,7 @@ module Agreements.ViewModels {
         }
 
         //#region Name computeds
-        
+
         // TODO: do not create view elements in the viewmodel like this. do it with bindings.
         // see the removed participantsNames computed in searchResult.ts for reference.
         private _setupNameComputeds(): void {
@@ -81,9 +85,8 @@ module Agreements.ViewModels {
                     if (item.establishmentTranslatedName() != null && item.establishmentOfficialName() != item.establishmentTranslatedName() && item.establishmentOfficialName() != null) {
                         myName += "<strong>" + item.establishmentTranslatedName() + "</strong><br /> (" + item.establishmentOfficialName() + ")";
                     } else if (item.establishmentTranslatedName() != null && item.establishmentOfficialName() != item.establishmentTranslatedName()) {
-                        myName += "<strong>" + item.establishmentTranslatedName() + "</strong>"; 
-                    } else
-                    {
+                        myName += "<strong>" + item.establishmentTranslatedName() + "</strong>";
+                    } else {
                         myName += "<strong>" + item.establishmentOfficialName() + "</strong>";
                     }
                     myName += "</div>";
@@ -106,7 +109,7 @@ module Agreements.ViewModels {
                 if (myDate.getFullYear() < 1500) {
                     return "unknown";
                 }
-                return (moment(value)).format('YYYY-MM-DD');
+                return (moment(value)).format('M/D/YYYY');
             });
             this.expiresOnDate = ko.computed((): string => {
                 var value = this.expiresOn();
@@ -114,11 +117,11 @@ module Agreements.ViewModels {
                 if (myDate.getFullYear() < 1500) {
                     return "unknown";
                 } else {
-                    return (moment(value)).format('YYYY-MM-DD');
+                    return (moment(value)).format('M/D/YYYY');
                 }
             });
         }
-        
+
         ////#endregion
 
         //createMap(): void {
@@ -138,7 +141,7 @@ module Agreements.ViewModels {
         //                    long = response[0].center.longitude;
         //                }
         //                googleMapZoomLevel = (response[0].googleMapZoomLevel) ? response[0].googleMapZoomLevel : 8;
-                        
+
         //                mapOptions = {
         //                    center: new google.maps.LatLng(lat, long),
         //                    zoom: googleMapZoomLevel,
@@ -160,13 +163,13 @@ module Agreements.ViewModels {
                             return !x.isOwner
                         }).ToArray(),
                     centers = Enumerable.From(partners)
-                    .Select(function (x) {
-                        return x.center;
-                    }).ToArray(),
+                        .Select(function (x) {
+                            return x.center;
+                        }).ToArray(),
                     LatLngList = Enumerable.From(centers)
-                    .Select(function (x) {
-                        return new google.maps.LatLng(x.latitude, x.longitude);
-                    }).ToArray(), map;
+                        .Select(function (x) {
+                            return new google.maps.LatLng(x.latitude, x.longitude);
+                        }).ToArray(), map;
                 //  Make an array of the LatLng's of the markers you want to show
                 //var LatLngList = new Array(new google.maps.LatLng(52.537, -2.061), new google.maps.LatLng(52.564, -2.017));
                 //  Create a new viewpoint bound
@@ -177,7 +180,7 @@ module Agreements.ViewModels {
                     bounds.extend(LatLngList[i]);
                 }
                 //  Fit these bounds to the map
-                map = new google.maps.Map(document.getElementById("map-canvas"), {mapTypeId: google.maps.MapTypeId.ROADMAP, mapMaker: true})
+                map = new google.maps.Map(document.getElementById("map-canvas"), { mapTypeId: google.maps.MapTypeId.ROADMAP, mapMaker: true })
                 map.fitBounds(bounds);
                 //$.get($('#agreementPartners_api').text().format(self.agreementId.val))
                 //    .done((response: any): void => {

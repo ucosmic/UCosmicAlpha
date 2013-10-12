@@ -2433,7 +2433,7 @@
     <Content Include="Views\Agreements\_FormSidebarNav.cshtml" />
     <Content Include="Views\Agreements\Index_old.cshtml" />
     <Content Include="Views\Agreements\_SearchAndResults.cshtml" />
-    <Content Include="Views\Agreements\PublicView.cshtml" />
+    <Content Include="Views\Agreements\Show.cshtml" />
     <Content Include="Views\Agreements\_Agreement.cshtml" />
     <Content Include="Views\Agreements\_PublicViewSideBar.cshtml" />
     <Content Include="Views\Agreements\_PublicViewContent.cshtml" />
@@ -2441,7 +2441,6 @@
     <None Include="Views\ApiTest\Index.cshtml" />
     <Content Include="Views\Agreements\Settings.cshtml" />
     <Content Include="Views\Agreements\_SearchSideBar.cshtml" />
-    <Content Include="Views\Agreements\Show.cshtml" />
     <Content Include="Views\Agreements\Owners.cshtml" />
     <Content Include="Views\MyProfile\_InternationalAffiliations.cshtml" />
     <Content Include="Views\Reps\Settings.cshtml" />
