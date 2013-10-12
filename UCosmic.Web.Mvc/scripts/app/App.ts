@@ -80,10 +80,14 @@ module App {
                     update = function () {
                         var windowScrollTop = $window.scrollTop(),
                             anchorOffsetTop = $anchor.offset().top;
+                        contentWidth = contentWidth == 0 ? $content.width() : contentWidth;
                         if (windowScrollTop > anchorOffsetTop) {
                             $content.css({
                                 position: 'fixed',
-                                //width: contentWidth//this caused the side nav to seperate.
+                                // this was commented out on 2013.08.16 by tim because it caused display
+                                // issues with the agreement form sidbar. re-added by dan on 2013.10.12
+                                // by updating contentWidth when it is initialized as zero.
+                                width: contentWidth,
                             });
                             if ($content.height() > $window.height())
                                 $content.css({

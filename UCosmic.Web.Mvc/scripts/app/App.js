@@ -81,9 +81,14 @@ var App;
             $('[data-fixed-scroll=root]').each(function () {
                 var $window = $(window), $root = $(this), $content = $root.find('[data-fixed-scroll=content]'), $anchor = $root.find('[data-fixed-scroll=anchor]'), contentWidth = $content.width(), update = function () {
                     var windowScrollTop = $window.scrollTop(), anchorOffsetTop = $anchor.offset().top;
+                    contentWidth = contentWidth == 0 ? $content.width() : contentWidth;
                     if (windowScrollTop > anchorOffsetTop) {
                         $content.css({
-                            position: 'fixed'
+                            position: 'fixed',
+                            // this was commented out on 2013.08.16 by tim because it caused display
+                            // issues with the agreement form sidbar. re-added by dan on 2013.10.12
+                            // by updating contentWidth when it is initialized as zero.
+                            width: contentWidth
                         });
                         if ($content.height() > $window.height())
                             $content.css({
