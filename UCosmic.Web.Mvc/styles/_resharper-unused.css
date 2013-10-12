@@ -1,6 +1,6 @@
 ﻿.home, .agreements, .employees, .alumni, .students, .reps, .travel, .corporate, .press, .admin { color: #000; }
 .grants, .establishments, .users { color: #000; }
-.settings, .new, .edit { color: #000; }
+.settings, .new, .edit, .show { color: #000; }
 .confirm-destroy-marker-dialog { color: #000; }
 .world-report, .country-report, .org-report { color: #000; }
 .hasDate{ color: #000; }

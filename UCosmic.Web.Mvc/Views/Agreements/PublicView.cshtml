@@ -3,8 +3,8 @@
 }
 @section bib
 {
-    <nav class="bib hide" data-current-bib="view">
-        @Html.Partial(MVC.Agreements.Views._Bib)
+    <nav class="bib hide" data-current-bib="show">
+        @Html.Partial(MVC.Agreements.Views._Bib, new ViewDataDictionary { { "Show", true } })
     </nav>
 }
 @section scripts
