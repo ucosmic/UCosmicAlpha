@@ -6,125 +6,123 @@
 <p data-bind="visible: hasNoItems" style="display: none;">
     There are no results that match your search terms.
 </p>
-<div data-side-swiper="root" id="search">
-    <div data-side-swiper="deck">
-        <div data-side-swiper="on" class="left" data-bind="jqElement: '$itemsPage'">
-            <p data-bind="visible: spinner.isVisible">
-                <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
-                <strong>Loading search results...</strong>
-            </p>
-            <p data-bind="visible: showStatus" style="display: none;">
-                <strong>Showing <span data-bind="text: firstNumber"></span>
-                    <span data-bind="visible: hasManyItems">- <span data-bind="    text: lastNumber"></span></span>
-                    of <span data-bind="text: itemTotal"></span></strong>
-                <span data-bind="visible: hasManyPages">(page
-                    <span data-bind="text: transitionedPageNumber"></span>
-                    of <span data-bind="text: pageCount"></span>)</span>
-            </p>
-            <div id="searchResults" style="display: none;">
-                <div data-bind="visible: lens() === 'table' && (items().length > 0)">
-                    <table class="data">
-                        <colgroup>
-                            <col style="width: 75%;" />
-                            <col style="width: 25%;" />
-                        </colgroup>
-                        <thead>
-                            <tr>
-                                <th>
-                                    Agreement
-                                </th>
-                                <th>
-                                    Country
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody class="searchResults" data-bind="foreach: items">
-                            <tr data-xbind="click: $root.clickAction">
-                                <td>
-                                    <a data-bind="attr: { href: detailHref }" title="View this agreement's details" style="display: block; text-decoration: inherit; color: inherit;">
-                                        @* HTML: <a> may only contain inline elements. <div> is a block element. see http://stackoverflow.com/a/1828032/304832 *@
-                                        @*<div data-bind="attr: { title: $root.detailTooltip() }">*@
-                                        <span data-bind="visible: name" style="display: block;">
-                                            <em data-bind="text: name, visible: name"></em>
+<div id="search">
+    <div data-bind="jqElement: '$itemsPage'">
+        <p data-bind="visible: spinner.isVisible">
+            <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
+            <strong>Loading search results...</strong>
+        </p>
+        <p data-bind="visible: showStatus" style="display: none;">
+            <strong>Showing <span data-bind="text: firstNumber"></span>
+                <span data-bind="visible: hasManyItems">- <span data-bind="    text: lastNumber"></span></span>
+                of <span data-bind="text: itemTotal"></span></strong>
+            <span data-bind="visible: hasManyPages">(page
+                <span data-bind="text: transitionedPageNumber"></span>
+                of <span data-bind="text: pageCount"></span>)</span>
+        </p>
+        <div id="searchResults" style="display: none;">
+            <div data-bind="visible: lens() === 'table' && items().length > 0" style="">
+                <table class="data">
+                    <colgroup>
+                        <col style="width: 75%;" />
+                        <col style="width: 25%;" />
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>
+                                Agreement
+                            </th>
+                            <th>
+                                Country
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="searchResults" data-bind="foreach: items">
+                        <tr>
+                            <td>
+                                <a data-bind="attr: { href: detailHref }" title="View this agreement's details" style="display: block; text-decoration: inherit; color: inherit;">
+                                    @* HTML: <a> may only contain inline elements. <div> is a block element. see http://stackoverflow.com/a/1828032/304832 *@
+                                    @*<div data-bind="attr: { title: $root.detailTooltip() }">*@
+                                    <span data-bind="visible: name" style="display: block;">
+                                        <em data-bind="text: name, visible: name"></em>
+                                    </span>
+                                    @*<span data-bind="html: participantsNames"></span>*@
+                                    <span style="display: block;">
+                                        <span data-bind="foreach: establishmentTranslatedName">
+                                            <strong data-bind="text: '{0} '.format($data), visible: $data == $parent.establishmentOfficialName()[$index()]"></strong>
+                                            <strong data-bind="text: '{0} '.format($data), visible: $data != $parent.establishmentOfficialName()[$index()], attr: { title: $parent.establishmentOfficialName()[$index()] }"></strong>
+                                            <span data-bind="visible: $data != $parent.establishmentTranslatedName()[$parent.establishmentTranslatedName().length - 1]">| </span>
                                         </span>
-                                        @*<span data-bind="html: participantsNames"></span>*@
-                                        <span style="display: block;">
-                                            <span data-bind="foreach: establishmentTranslatedName">
-                                                <strong data-bind="text: '{0} '.format($data), visible: $data == $parent.establishmentOfficialName()[$index()]"></strong>
-                                                <strong data-bind="text: '{0} '.format($data), visible: $data != $parent.establishmentOfficialName()[$index()], attr: { title: $parent.establishmentOfficialName()[$index()] }"></strong>
-                                                <span data-bind="visible: $data != $parent.establishmentTranslatedName()[$parent.establishmentTranslatedName().length - 1]">| </span>
-                                            </span>
-                                        </span>
-                                        @{
-                                            var badgeMargin = ViewBag.AgreementsVisibility == AgreementVisibility.Private ? "2px 0 0;" : "0";
+                                    </span>
+                                    @{
+                                        var badgeMargin = ViewBag.AgreementsVisibility == AgreementVisibility.Private ? "2px 0 0;" : "0";
+                                    }
+                                    <span style="font-size: 14px; display: block; margin: @badgeMargin;">
+                                        @if (ViewBag.AgreementsVisibility == AgreementVisibility.Private)
+                                        {
+                                            <span style="font-size: 10px; margin: 0 4px 0 0;" class="badge light-transparent" data-bind="text: status"></span>
                                         }
-                                        <span style="font-size: 14px; display: block; margin: @badgeMargin;">
-                                            @if (ViewBag.AgreementsVisibility == AgreementVisibility.Private)
-                                            {
-                                                <span style="font-size: 10px; margin: 0 4px 0 0;" class="badge light-transparent" data-bind="text: status"></span>
-                                            }
-                                            <span data-bind="text: type" style="vertical-align: middle;"></span>
-                                        </span>
-                                        <span style="font-size: 14px; display: block;">
-                                            <span data-bind="text: '{0} '.format(startsOnDate())" style="vertical-align: middle;"></span>
-                                            @if (ViewBag.AgreementsVisibility != AgreementVisibility.Public)
-                                            {
-                                                <span style="vertical-align: middle;">-</span>
-                                                <span data-bind="text: expiresOnDate" style="vertical-align: middle;"></span>
-                                            }
-                                        </span>
-                                        @*</div>*@
-                                    </a>
-                                </td>
-                                <td>
-                                    @*<a data-bind="attr: { href: detailHref }" style="text-decoration: none; color: inherit;">*@
-                                    <span data-bind="text: nullDisplayCountryName"></span>
-                                    @*</a>*@
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                @*  <div data-bind="visible: lens() === 'list'">
-                    <ol class="data" data-bind="foreach: items" data-href="@Url.Action(MVC.Agreements.Show(0))">
-                        <li class="hover-hilite" data-bind="click: clickAction">
-                            <div>
-                                <div class="on-right" style="text-align: right;">
-                                    <div data-bind="text: nullDisplayCountryName"></div>
-                                    <div data-bind="visible: officialUrl">
-                                        <a href="#" target="_blank"
-                                            data-bind="text: fitOfficialUrl, click: openOfficialUrl, attr: { href: 'http://' + officialUrl(), title: officialUrlTooltip }"></a>
-                                    </div>
+                                        <span data-bind="text: type" style="vertical-align: middle;"></span>
+                                    </span>
+                                    <span style="font-size: 14px; display: block;">
+                                        <span data-bind="text: '{0} '.format(startsOnDate())" style="vertical-align: middle;"></span>
+                                        @if (ViewBag.AgreementsVisibility != AgreementVisibility.Public)
+                                        {
+                                            <span style="vertical-align: middle;">-</span>
+                                            <span data-bind="text: expiresOnDate" style="vertical-align: middle;"></span>
+                                        }
+                                    </span>
+                                    @*</div>*@
+                                </a>
+                            </td>
+                            <td>
+                                @*<a data-bind="attr: { href: detailHref }" style="text-decoration: none; color: inherit;">*@
+                                <span data-bind="text: nullDisplayCountryName"></span>
+                                @*</a>*@
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            @*  <div data-bind="visible: lens() === 'list'">
+                <ol class="data" data-bind="foreach: items" data-href="@Url.Action(MVC.Agreements.Show(0))">
+                    <li class="hover-hilite" data-bind="click: clickAction">
+                        <div>
+                            <div class="on-right" style="text-align: right;">
+                                <div data-bind="text: nullDisplayCountryName"></div>
+                                <div data-bind="visible: officialUrl">
+                                    <a href="#" target="_blank"
+                                        data-bind="text: fitOfficialUrl, click: openOfficialUrl, attr: { href: 'http://' + officialUrl(), title: officialUrlTooltip }"></a>
                                 </div>
-                                <div>
-                                    <a href="#/" style="color: inherit;"
-                                        data-bind="attr: { href: detailHref, title: detailTooltip }">
-                                        <strong data-bind="text: translatedName"></strong>
-                                        <span data-bind="visible: officialNameDoesNotMatchTranslation">
-                                            (<span data-bind="text: officialName"></span>)
-                                        </span>
-                                    </a>
-                                </div>
-                                <div style="clear: right;"></div>
                             </div>
-                        </li>
-                    </ol>
-                </div>*@
-                <div data-bind="visible: lens() === 'grid'">
-                    <p>
-                        This is a placeholder for the Grid data lens. Grid data will go here.
-                    </p>
-                </div>
-                <div data-bind="visible: lens() === 'map'">
-                    <p>
-                        This is a placeholder for the Map data lens. Map data will go here.
-                    </p>
-                </div>
-                <div data-bind="visible: lens() === 'tree'">
-                    <p>
-                        This is a placeholder for the Tree data lens. Tree data will go here.
-                    </p>
-                </div>
+                            <div>
+                                <a href="#/" style="color: inherit;"
+                                    data-bind="attr: { href: detailHref, title: detailTooltip }">
+                                    <strong data-bind="text: translatedName"></strong>
+                                    <span data-bind="visible: officialNameDoesNotMatchTranslation">
+                                        (<span data-bind="text: officialName"></span>)
+                                    </span>
+                                </a>
+                            </div>
+                            <div style="clear: right;"></div>
+                        </div>
+                    </li>
+                </ol>
+            </div>*@
+            <div data-bind="visible: lens() === 'grid'">
+                <p>
+                    This is a placeholder for the Grid data lens. Grid data will go here.
+                </p>
+            </div>
+            <div data-bind="visible: lens() === 'map'">
+                <p>
+                    This is a placeholder for the Map data lens. Map data will go here.
+                </p>
+            </div>
+            <div data-bind="visible: lens() === 'tree'">
+                <p>
+                    This is a placeholder for the Tree data lens. Tree data will go here.
+                </p>
             </div>
         </div>
     </div>

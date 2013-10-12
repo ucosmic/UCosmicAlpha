@@ -49,7 +49,7 @@ module Agreements.ViewModels {
         //domain;
         //imported classes
         publicViewClass
-        
+
         // countries dropdown
         private _setupCountryDropDown(): void {
             ko.computed((): void => {
@@ -58,22 +58,22 @@ module Agreements.ViewModels {
                 var lastCountryCode = $('input[type=hidden][data-bind="value: countryCode"]').val();
 
                 $.get(App.Routes.WebApi.Countries.get()) // hit the API
-                .done((response: Places.ApiModels.Country[]): void => {
-                    // setup empty value
-                    var emptyValue: Places.ApiModels.Country = {
-                        code: '-1',
-                        name: '[Without country]'
-                    };
-                    response.splice(response.length, 0, emptyValue);
+                    .done((response: Places.ApiModels.Country[]): void => {
+                        // setup empty value
+                        var emptyValue: Places.ApiModels.Country = {
+                            code: '-1',
+                            name: '[Without country]'
+                        };
+                        response.splice(response.length, 0, emptyValue);
 
-                    this.countries(response); // push into observable array
+                        this.countries(response); // push into observable array
 
-                    // restore selected value when paging backwards
-                    if (lastCountryCode && lastCountryCode !== this.countryCode())
-                        this.countryCode(lastCountryCode);
-                });
+                        // restore selected value when paging backwards
+                        if (lastCountryCode && lastCountryCode !== this.countryCode())
+                            this.countryCode(lastCountryCode);
+                    });
             })
-            .extend({ throttle: 1 });
+                .extend({ throttle: 1 });
         }
 
         // paging subscriptions
@@ -247,7 +247,8 @@ module Agreements.ViewModels {
                     this.spinner.stop();
                     this.$searchResults.fadeIn(400, () => {
                         this.unlockAnimation();
-                        this.optionsEnabled(true)
+                        this.optionsEnabled(true);
+                        this.$searchResults.children().offset({ top: this.$searchResults.offset().top });
                     });
                     this.dfdFadeInOut = $.Deferred();
                     this.dfdFadeInOut2 = $.Deferred();
@@ -272,7 +273,7 @@ module Agreements.ViewModels {
                         .done(() => {
                             this.receiveResults(response);
                         });
-            });
+                });
         }
 
         // go to add new

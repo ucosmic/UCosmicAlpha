@@ -238,6 +238,7 @@ var Agreements;
                     _this.$searchResults.fadeIn(400, function () {
                         _this.unlockAnimation();
                         _this.optionsEnabled(true);
+                        _this.$searchResults.children().offset({ top: _this.$searchResults.offset().top });
                     });
                     _this.dfdFadeInOut = $.Deferred();
                     _this.dfdFadeInOut2 = $.Deferred();
