@@ -36,7 +36,7 @@ var Agreements;
                 this.sammyBeforeRoute = /\#\/page\/(.*)\//;
                 this.sammyGetPageRoute = '#/page/:pageNumber/';
                 //sammyDefaultPageRoute: any = '/agreements/(.*?\..*)[\/]?';
-                this.sammyDefaultPageRoute = '/agreements/' + this.domain + '[\/]?';
+                this.sammyDefaultPageRoute = '{0}/agreements[\/]?'.format(this.domain);
                 // filtering
                 this.countries = ko.observableArray();
                 this.countryCode = ko.observable();

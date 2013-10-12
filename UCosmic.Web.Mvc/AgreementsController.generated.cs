@@ -49,6 +49,12 @@ namespace UCosmic.Web.Mvc.Controllers
         }
         [NonAction]
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public System.Web.Mvc.ActionResult TenantIndex()
+        {
+            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.TenantIndex);
+        }
+        [NonAction]
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public System.Web.Mvc.ActionResult Edit()
         {
             return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Edit);
@@ -71,6 +77,7 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             public readonly string Show = "Show";
             public readonly string Index = "Index";
+            public readonly string TenantIndex = "TenantIndex";
             public readonly string New = "New";
             public readonly string Edit = "Edit";
             public readonly string Settings = "Settings";
@@ -81,6 +88,7 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             public const string Show = "Show";
             public const string Index = "Index";
+            public const string TenantIndex = "TenantIndex";
             public const string New = "New";
             public const string Edit = "Edit";
             public const string Settings = "Settings";
@@ -95,11 +103,11 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             public readonly string agreementId = "agreementId";
         }
-        static readonly ActionParamsClass_Index s_params_Index = new ActionParamsClass_Index();
+        static readonly ActionParamsClass_TenantIndex s_params_TenantIndex = new ActionParamsClass_TenantIndex();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public ActionParamsClass_Index IndexParams { get { return s_params_Index; } }
+        public ActionParamsClass_TenantIndex TenantIndexParams { get { return s_params_TenantIndex; } }
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public class ActionParamsClass_Index
+        public class ActionParamsClass_TenantIndex
         {
             public readonly string domain = "domain";
         }
@@ -177,9 +185,15 @@ namespace UCosmic.Web.Mvc.Controllers
             return callInfo;
         }
 
-        public override System.Web.Mvc.ActionResult Index(string domain)
+        public override System.Web.Mvc.ActionResult Index()
         {
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Index);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.ActionResult TenantIndex(string domain)
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.TenantIndex);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "domain", domain);
             return callInfo;
         }

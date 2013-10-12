@@ -30,33 +30,33 @@ namespace UCosmic.Web.Mvc.Controllers
             return View(MVC.Agreements.Views.PublicView);
         }
 
-        [GET("agreements/{domain?}", ControllerPrecedence = 3)]
-        public virtual ActionResult Index(string domain = null)
+        [GET("agreements", ControllerPrecedence = 3)]
+        public virtual ActionResult Index()
         {
-            // when no domain is passed, try to detect it
-            if (string.IsNullOrWhiteSpace(domain))
+            var tenancy = Request.Tenancy() ?? new Tenancy();
+
+            // first check style domain
+            if (!string.IsNullOrWhiteSpace(tenancy.StyleDomain) && !"default".Equals(tenancy.StyleDomain))
+                return RedirectToAction(MVC.Agreements.TenantIndex(tenancy.StyleDomain));
+
+            if (tenancy.TenantId.HasValue)
             {
-                var tenancy = Request.Tenancy() ?? new Tenancy();
-
-                // first check style domain
-                if (!string.IsNullOrWhiteSpace(tenancy.StyleDomain) && !"default".Equals(tenancy.StyleDomain))
-                    return RedirectToAction(MVC.Agreements.Index(tenancy.StyleDomain));
-
-                if (tenancy.TenantId.HasValue)
+                var establishment = _queryProcessor.Execute(new EstablishmentById(tenancy.TenantId.Value));
+                if (establishment != null && !string.IsNullOrWhiteSpace(establishment.WebsiteUrl))
                 {
-                    var establishment = _queryProcessor.Execute(new EstablishmentById(tenancy.TenantId.Value));
-                    if (establishment != null && !string.IsNullOrWhiteSpace(establishment.WebsiteUrl))
-                    {
-                        domain = (establishment.WebsiteUrl.StartsWith("www.")) ? establishment.WebsiteUrl.Substring(4) : establishment.WebsiteUrl;
-                        return RedirectToAction(MVC.Agreements.Index(domain));
-                    }
+                    var domain = (establishment.WebsiteUrl.StartsWith("www.")) ? establishment.WebsiteUrl.Substring(4) : establishment.WebsiteUrl;
+                    return RedirectToAction(MVC.Agreements.TenantIndex(domain));
                 }
-
-                return View(MVC.Agreements.Views.Owners);
             }
 
+            return View(MVC.Agreements.Views.Owners);
+        }
+
+        [GET("{domain}/agreements")]
+        public virtual ActionResult TenantIndex(string domain)
+        {
             ViewBag.Domain = domain;
-            return View();
+            return View(MVC.Agreements.Views.Index);
         }
 
         [GET("agreements/new/", ControllerPrecedence = 2)]

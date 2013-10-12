@@ -96,7 +96,7 @@ module Agreements.ViewModels {
         sammyBeforeRoute: any = /\#\/page\/(.*)\//;
         sammyGetPageRoute: any = '#/page/:pageNumber/';
         //sammyDefaultPageRoute: any = '/agreements/(.*?\..*)[\/]?';
-        sammyDefaultPageRoute: any = '/agreements/'+ this.domain + '[\/]?';
+        sammyDefaultPageRoute: string = '{0}/agreements[\/]?'.format(this.domain);
         private _setupSammy(): void {
             var self = this;
             self.sammy.before(self.sammyBeforeRoute, function () {
