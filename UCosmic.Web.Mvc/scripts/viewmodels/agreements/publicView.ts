@@ -22,10 +22,15 @@ module Agreements.ViewModels {
             this.agreementVisibility = agreementVisibility || 'Public';
             this.populateFilesClass = new agreements.populateFiles();
             this._setupDateComputeds();
-            this._setupNameComputeds();
+            //this._setupNameComputeds();
             if (this.agreementId.val !== 0) {
-                this.getData();
-                this.createMap();
+                //this.getData();
+                var dataBound = this._bindData();
+                //this.createMap();
+                var mapCreated = this._createMap();
+                $.when(dataBound, mapCreated).done((): void => {
+                    this._bindMap();
+                });
             }
         }
         //imported classes
@@ -46,10 +51,27 @@ module Agreements.ViewModels {
         startsOn = ko.observable();
         type = ko.observable();
         umbrellaId = ko.observable();
-        participantsNames: KnockoutComputed<string>;
         myUrl = window.location.href.toLowerCase();
-        partners;
+        //partners;
         //agreementId = { val: 0 }
+
+        private _bindData(): JQueryDeferred<void> {
+            var deferred = $.Deferred();
+            $.get(App.Routes.WebApi.Agreements.get(this.agreementId.val))
+                .done((response: any): void => {
+                    var mapping = {
+                        participants: { // don't need observables on participant properties
+                            create: (options: KnockoutMappingCreateOptions): any => {
+                                return options.data;
+                            }
+                        },
+                    };
+                    ko.mapping.fromJS(response, mapping, this);
+                    this.isBound(true);
+                    deferred.resolve();
+                });
+            return deferred;
+        }
 
         getData(): void {
             $.get(App.Routes.WebApi.Agreements.get(this.agreementId.val))
@@ -66,7 +88,7 @@ module Agreements.ViewModels {
                     this.type(response.type);
                     this.umbrellaId(response.umbrellaId);
                     this.isBound(true);
-                    this.partners = response.participants;
+                    //this.partners = response.participants;
                 });
             this.populateFilesClass.populate(this.agreementId);
             this.files = this.populateFilesClass.files;
@@ -76,6 +98,21 @@ module Agreements.ViewModels {
 
         // TODO: do not create view elements in the viewmodel like this. do it with bindings.
         // see the removed participantsNames computed in searchResult.ts for reference.
+        participantsNames: KnockoutComputed<string> = ko.computed((): string => {
+            var myName = "";
+            ko.utils.arrayForEach(this.participants(), (item) => {
+                myName += "<div style='margin-bottom:10px'>"
+                    if (item.establishmentTranslatedName != null && item.establishmentOfficialName != item.establishmentTranslatedName && item.establishmentOfficialName != null) {
+                    myName += "<strong>" + item.establishmentTranslatedName + "</strong><br /> (" + item.establishmentOfficialName + ")";
+                } else if (item.establishmentTranslatedName != null && item.establishmentOfficialName != item.establishmentTranslatedName) {
+                    myName += "<strong>" + item.establishmentTranslatedName + "</strong>";
+                } else {
+                    myName += "<strong>" + item.establishmentOfficialName + "</strong>";
+                }
+                myName += "</div>";
+            });
+            return myName;
+        });
         private _setupNameComputeds(): void {
             // are the official name and translated name the same?
             this.participantsNames = ko.computed((): string => {
@@ -124,6 +161,84 @@ module Agreements.ViewModels {
 
         ////#endregion
 
+        private _googleMap: google.maps.Map;
+        private _createMap(): JQueryDeferred<void> {
+            this._googleMap = new google.maps.Map(document.getElementById("map-canvas"), {
+                mapTypeId: google.maps.MapTypeId.ROADMAP,
+                center: new google.maps.LatLng(0, 0), // americas on left, australia on right
+                zoom: 1, // zoom out
+                draggable: true, // allow map panning
+                scrollwheel: false // prevent mouse wheel zooming
+            });
+            var deferred = $.Deferred();
+            google.maps.event.addListenerOnce(this._googleMap, 'idle', function () {
+                deferred.resolve();
+            });
+            return deferred;
+        }
+        private _googleMarkers: KnockoutObservableArray<google.maps.Marker> = ko.observableArray();
+        private _bindMap(): void {
+            // extract the partners from participants (they are non-owners)
+            var partners = Enumerable.From(this.participants())
+                .Where(function (x) { return !x.isOwner; }).ToArray();
+            // collect together all of the plottable partner marker points
+            var centers = Enumerable.From(partners)
+                // note that centers.length may not be the same as partners.length
+                .Where(function (x) { return x.center && x.center.hasValue; })
+                .Select(function (x) { return x.center; }).ToArray();
+            var latLngs = Enumerable.From(centers)
+                .Select(function (x) { return new google.maps.LatLng(x.latitude, x.longitude); })
+                .ToArray();
+
+            var bounds = new google.maps.LatLngBounds();
+            $.each(latLngs, (index: number, latLng: google.maps.LatLng): void => {
+                // matching partner may have different index than this latLng
+                var title = Enumerable.From(partners)
+                    .Single(function (x) {
+                        return x.center && x.center == centers[index];
+                    }).establishmentTranslatedName;
+                // plot the marker
+                var options: google.maps.MarkerOptions = {
+                    map: this._googleMap,
+                    position: latLng,
+                    title: title,
+                };
+                var marker = new google.maps.Marker(options);
+                bounds.extend(latLng);
+                this._googleMarkers.push(marker);
+            });
+
+            // when there is only 1 marker, center the map on it
+            if (centers.length == 1) {
+                this._googleMap.setCenter(latLngs[0]);
+                // check to see if the centered partner has zoom
+                var zoom = Enumerable.From(partners)
+                    .Single(function (x) {
+                        return x.center && x.center == centers[0];
+                    }).googleMapZoomLevel;
+                if (zoom) {
+                    //this._animateMapZoom(zoom);
+                    this._googleMap.setZoom(zoom);
+                }
+            }
+            else if (centers.length > 0) {
+                this._googleMap.fitBounds(bounds);
+            }
+        }
+
+        private _animateMapZoom(zoom: number): void {
+            var currentZoom = this._googleMap.getZoom();
+            if (currentZoom == zoom) return;
+            var difference = zoom - currentZoom;
+            var direction = difference > 0 ? 1 : -1;
+            var nextZoom = currentZoom + direction;
+            this._googleMap.setZoom(nextZoom);
+            if (nextZoom != currentZoom)
+                setTimeout((): void => {
+                    this._animateMapZoom(zoom);
+                }, 100);
+        }
+
         //createMap(): void {
         //    var self = this;
         //    function initialize() {
@@ -158,11 +273,11 @@ module Agreements.ViewModels {
             var self = this;
             function initialize() {
                 //https://developers.google.com/maps/documentation/javascript/markers#add
-                var partners = Enumerable.From(self.partners)
+                var partners = Enumerable.From(self.participants())
                     .Where(function (x) {
                             return !x.isOwner
                         }).ToArray(),
-                    centers = Enumerable.From(partners)
+                    centers = Enumerable.From(self.participants())
                         .Select(function (x) {
                             return x.center;
                         }).ToArray(),
@@ -180,7 +295,10 @@ module Agreements.ViewModels {
                     bounds.extend(LatLngList[i]);
                 }
                 //  Fit these bounds to the map
-                map = new google.maps.Map(document.getElementById("map-canvas"), { mapTypeId: google.maps.MapTypeId.ROADMAP, mapMaker: true })
+                map = new google.maps.Map(document.getElementById("map-canvas"), {
+                    mapTypeId: google.maps.MapTypeId.ROADMAP,
+                    mapMaker: true,
+                })
                 map.fitBounds(bounds);
                 //$.get($('#agreementPartners_api').text().format(self.agreementId.val))
                 //    .done((response: any): void => {
