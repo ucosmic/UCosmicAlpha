@@ -42,7 +42,7 @@ module Agreements.ViewModels {
         private _setupComputeds(): void {
             this._setupCountryComputeds();
             this._setupDateComputeds();
-            this._setupNameComputeds();
+            //this._setupNameComputeds();
             this._setupLinkComputeds();
         }
 
@@ -89,6 +89,7 @@ module Agreements.ViewModels {
             });
             this.expiresOnDate = ko.computed((): string => {
                 var value = this.expiresOn();
+                if (!value) return undefined;
                 var myDate = new Date(value);
                 if (myDate.getFullYear() < 1500) {
                     return "unknown";
@@ -102,24 +103,26 @@ module Agreements.ViewModels {
 
         //#region Name computeds
 
-        participantsNames: KnockoutComputed<string>;
+        //participantsNames: KnockoutComputed<string>;
 
-        private _setupNameComputeds(): void {
-            // are the official name and translated name the same?
-            this.participantsNames = ko.computed((): string => {
-                var myName = "";
-                $.each(this.establishmentOfficialName(), (i, item) => {
-                    if (this.establishmentTranslatedName()[i] != null && this.establishmentOfficialName()[i] != this.establishmentTranslatedName()[i]) {
-                        myName += "<strong title='" + this.establishmentOfficialName()[i] + "'>" + this.establishmentTranslatedName()[i] + "</strong>"; 
-                    } else
-                    {
-                        myName += "<strong>" + this.establishmentOfficialName()[i] + "</strong>";
-                    }
-                    myName += "<br />";
-                });
-                return myName;
-            });
-        }
+        // not the right place to do this, do it in html bindings
+        // see changes in _SearchAndResults.cshtml
+        //private _setupNameComputeds(): void {
+        //    // are the official name and translated name the same?
+        //    this.participantsNames = ko.computed((): string => {
+        //        var myName = "";
+        //        $.each(this.establishmentOfficialName(), (i, item) => {
+        //            if (this.establishmentTranslatedName()[i] != null && this.establishmentOfficialName()[i] != this.establishmentTranslatedName()[i]) {
+        //                myName += "<strong title='" + this.establishmentOfficialName()[i] + "'>" + this.establishmentTranslatedName()[i] + "</strong>"; 
+        //            } else
+        //            {
+        //                myName += "<strong>" + this.establishmentOfficialName()[i] + "</strong>";
+        //            }
+        //            myName += "<br />";
+        //        });
+        //        return myName;
+        //    });
+        //}
 
         //#endregion
 

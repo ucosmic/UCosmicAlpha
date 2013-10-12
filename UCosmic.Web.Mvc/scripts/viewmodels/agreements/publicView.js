@@ -65,6 +65,8 @@ var Agreements;
             };
 
             //#region Name computeds
+            // TODO: do not create view elements in the viewmodel like this. do it with bindings.
+            // see the removed participantsNames computed in searchResult.ts for reference.
             PublicView.prototype._setupNameComputeds = function () {
                 var _this = this;
                 // are the official name and translated name the same?

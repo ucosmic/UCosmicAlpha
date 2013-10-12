@@ -44,7 +44,7 @@
             this.pointData = [];
             this.heatMap = undefined;
 
-            $.get('/api/agreements/@ViewBag.Domain/partners/')
+            $.get('/api/agreements/@ViewBag.AgreementsDomain/partners/')
                 .done(function (results) {
                     for (var i = 0; i < results.length; i++) {
                         var result = results[i];
@@ -75,7 +75,7 @@
                 });
 
 
-            //$.get('/api/agreements/@ViewBag.Domain/partners/')
+            //$.get('/api/agreements/@ViewBag.AgreementsDomain/partners/')
             //    .done(function (results) {
             //        //alert('got result');
             //    })

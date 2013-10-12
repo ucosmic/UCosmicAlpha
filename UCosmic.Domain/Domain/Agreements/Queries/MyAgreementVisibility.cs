@@ -1,33 +1,21 @@
 ﻿using System;
 using System.Linq;
 using System.Security.Principal;
-using UCosmic.Domain.Establishments;
 using UCosmic.Domain.Identity;
 
 namespace UCosmic.Domain.Agreements
 {
     public class MyAgreementVisibility : IDefineQuery<AgreementVisibility>
     {
-        public MyAgreementVisibility(IPrincipal principal, string domain)
+        public MyAgreementVisibility(IPrincipal principal, int agreementId)
         {
             if (principal == null) throw new ArgumentNullException("principal");
             Principal = principal;
-            Domain = domain;
+            AgreementId = agreementId;
         }
 
         public IPrincipal Principal { get; private set; }
-        public string Domain { get; private set; }
-
-        internal string WebsiteUrl
-        {
-            get
-            {
-                if (string.IsNullOrWhiteSpace(Domain)) return Domain;
-                if (!Domain.StartsWith("www."))
-                    return string.Format("www.{0}", Domain);
-                return Domain;
-            }
-        }
+        public int AgreementId { get; private set; }
     }
 
     public class HandleMyAgreementVisibilityQuery : IHandleQueries<MyAgreementVisibility, AgreementVisibility>
@@ -45,20 +33,23 @@ namespace UCosmic.Domain.Agreements
         {
             if (query == null) throw new ArgumentNullException("query");
 
-            if (!query.Principal.Identity.IsAuthenticated) return AgreementVisibility.Public;
+            var visibility = AgreementVisibility.Public;
 
+            if (!query.Principal.Identity.IsAuthenticated)
+                return visibility;
+
+            // when i own the agreement owner, i have protected access
             var myOwnedTenantIds = _queryProcessor.Execute(new MyOwnedTenantIds(query.Principal));
+            var agreementOwnerIds = _entities.Query<Agreement>()
+                .Where(x => x.Id == query.AgreementId)
+                .SelectMany(x => x.Participants.Where(y => y.IsOwner).Select(y => y.EstablishmentId));
+            if (agreementOwnerIds.All(x => myOwnedTenantIds.Contains(x)))
+                visibility = AgreementVisibility.Protected;
 
-            // when i own the tenant id of the website url, i have protected access
-            var websiteUrls = _entities.Query<Establishment>()
-                .Where(x => myOwnedTenantIds.Contains(x.RevisionId) && x.WebsiteUrl != null)
-                .Select(x => x.WebsiteUrl);
-            if (websiteUrls.Contains(query.WebsiteUrl))
-                return query.Principal.IsInAnyRole(RoleName.AgreementManagers)
-                    ? AgreementVisibility.Private
-                    : AgreementVisibility.Protected;
+            if (visibility == AgreementVisibility.Protected && query.Principal.IsInAnyRole(RoleName.AgreementManagers))
+                visibility = AgreementVisibility.Private;
 
-            return AgreementVisibility.Public;
+            return visibility;
         }
     }
 }

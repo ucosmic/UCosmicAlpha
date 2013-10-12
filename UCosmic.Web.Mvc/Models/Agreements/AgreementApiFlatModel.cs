@@ -12,7 +12,7 @@ namespace UCosmic.Web.Mvc.Models
         public string Type { get; set; }
         public string Status { get; set; }
         public DateTime StartsOn { get; set; }
-        public DateTime ExpiresOn { get; set; }
+        public DateTime? ExpiresOn { get; set; }
 
         public string CountryNames { get; set; }
         public string[] EstablishmentOfficialName { get; set; }
@@ -49,6 +49,7 @@ namespace UCosmic.Web.Mvc.Models
                             .Select(x => x.TranslatedName);
                         return partners.ToArray();
                     }))
+                    .ForMember(d => d.ExpiresOn, o => o.MapFrom(s => s.ExpiresOn == DateTime.MinValue ? (DateTime?)null : s.ExpiresOn))
                 ;
             }
         }

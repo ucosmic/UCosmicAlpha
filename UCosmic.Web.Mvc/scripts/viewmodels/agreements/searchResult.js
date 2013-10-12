@@ -23,7 +23,8 @@ var Agreements;
             SearchResult.prototype._setupComputeds = function () {
                 this._setupCountryComputeds();
                 this._setupDateComputeds();
-                this._setupNameComputeds();
+
+                //this._setupNameComputeds();
                 this._setupLinkComputeds();
             };
 
@@ -56,6 +57,8 @@ var Agreements;
                 });
                 this.expiresOnDate = ko.computed(function () {
                     var value = _this.expiresOn();
+                    if (!value)
+                        return undefined;
                     var myDate = new Date(value);
                     if (myDate.getFullYear() < 1500) {
                         return "unknown";
@@ -65,23 +68,27 @@ var Agreements;
                 });
             };
 
-            SearchResult.prototype._setupNameComputeds = function () {
-                var _this = this;
-                // are the official name and translated name the same?
-                this.participantsNames = ko.computed(function () {
-                    var myName = "";
-                    $.each(_this.establishmentOfficialName(), function (i, item) {
-                        if (_this.establishmentTranslatedName()[i] != null && _this.establishmentOfficialName()[i] != _this.establishmentTranslatedName()[i]) {
-                            myName += "<strong title='" + _this.establishmentOfficialName()[i] + "'>" + _this.establishmentTranslatedName()[i] + "</strong>";
-                        } else {
-                            myName += "<strong>" + _this.establishmentOfficialName()[i] + "</strong>";
-                        }
-                        myName += "<br />";
-                    });
-                    return myName;
-                });
-            };
-
+            ////#endregion
+            //#region Name computeds
+            //participantsNames: KnockoutComputed<string>;
+            // not the right place to do this, do it in html bindings
+            // see changes in _SearchAndResults.cshtml
+            //private _setupNameComputeds(): void {
+            //    // are the official name and translated name the same?
+            //    this.participantsNames = ko.computed((): string => {
+            //        var myName = "";
+            //        $.each(this.establishmentOfficialName(), (i, item) => {
+            //            if (this.establishmentTranslatedName()[i] != null && this.establishmentOfficialName()[i] != this.establishmentTranslatedName()[i]) {
+            //                myName += "<strong title='" + this.establishmentOfficialName()[i] + "'>" + this.establishmentTranslatedName()[i] + "</strong>";
+            //            } else
+            //            {
+            //                myName += "<strong>" + this.establishmentOfficialName()[i] + "</strong>";
+            //            }
+            //            myName += "<br />";
+            //        });
+            //        return myName;
+            //    });
+            //}
             //#endregion
             //#region Click handlers
             // navigate to detail page

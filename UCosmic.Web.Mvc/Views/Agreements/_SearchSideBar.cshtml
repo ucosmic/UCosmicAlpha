@@ -1,4 +1,5 @@
-﻿<nav class="side">
+﻿@using UCosmic.Domain.Agreements
+<nav class="side">
     <ul class="top">
         <li>
             <a href="@Url.Action(MVC.Agreements.New())" class="group" data-bind="click: gotoAddNew" id="searchSideBarAddNew">
@@ -22,12 +23,18 @@
                     <select class="side" data-bind="value: orderBy, enable: optionsEnabled">
                         <option value="start-desc">Sort by start date - newest first</option>
                         <option value="start-asc">Sort by start date - oldest first</option>
-                        <option value="expires-desc">Sort by expiration - newest first</option>
-                        <option value="expires-asc">Sort by expiration - oldest first</option>
+                        @if (@ViewBag.AgreementsVisibility != AgreementVisibility.Public)
+                        {
+                            <option value="expires-desc">Sort by expiration - newest first</option>
+                            <option value="expires-asc">Sort by expiration - oldest first</option>
+                        }
                         <option value="type-asc">Sort by agreement type A-Z</option>
                         <option value="type-desc">Sort by agreement type Z-A</option>
-                        <option value="status-asc">Sort by agreement status A-Z</option>
-                        <option value="status-desc">Sort by agreement status Z-A</option>
+                        @if (@ViewBag.AgreementsVisibility != AgreementVisibility.Public)
+                        {
+                            <option value="status-asc">Sort by agreement status A-Z</option>
+                            <option value="status-desc">Sort by agreement status Z-A</option>
+                        }
                         <option value="country-asc">Sort by country A-Z</option>
                         <option value="country-desc">Sort by country Z-A</option>
                     </select>

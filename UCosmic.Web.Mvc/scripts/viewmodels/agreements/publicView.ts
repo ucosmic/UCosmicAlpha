@@ -70,6 +70,8 @@ module Agreements.ViewModels {
 
         //#region Name computeds
         
+        // TODO: do not create view elements in the viewmodel like this. do it with bindings.
+        // see the removed participantsNames computed in searchResult.ts for reference.
         private _setupNameComputeds(): void {
             // are the official name and translated name the same?
             this.participantsNames = ko.computed((): string => {

@@ -277,10 +277,9 @@ var Agreements;
                 return App.Routes.Mvc.Establishments.show(id);
             };
 
-            Search.prototype.detailTooltip = function () {
-                return 'View & edit this agreement\'s details';
-            };
-
+            //detailTooltip(): string {
+            //    return 'View & edit this agreement\'s details';
+            //}
             Search.prototype._setupPagingDefaults = function () {
                 this.orderBy('country');
                 this.pageSize(10);

@@ -46,11 +46,8 @@ namespace UCosmic.Web.Mvc.Controllers
             if (tenancy != null && !string.IsNullOrWhiteSpace(tenancy.StyleDomain))
             {
                 // get the establishment for this skin
-                var styleDomain = tenancy.StyleDomain;
-                if (!styleDomain.StartsWith("www."))
-                    styleDomain = "www." + styleDomain;
                 var establishment = _queryProcessor.Execute(
-                    new EstablishmentByUrl(styleDomain)
+                    new EstablishmentByDomain(tenancy.StyleDomain)
                     {
                         EagerLoad = new Expression<Func<Establishment, object>>[]
                         {

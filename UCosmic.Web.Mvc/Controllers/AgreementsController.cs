@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Web.Mvc;
 using AttributeRouting.Web.Mvc;
 using UCosmic.Domain.Agreements;
@@ -17,20 +18,7 @@ namespace UCosmic.Web.Mvc.Controllers
             _queryProcessor = queryProcessor;
         }
 
-        [GET("agreements/{agreementId:int}", ControllerPrecedence = 1)]
-        public virtual ViewResult Show(int agreementId)
-        {
-
-            var agreementPartnersApi = Url.HttpRouteUrl(null, new { controller = "AgreementPartners", action = "GetPartners", agreementId = 0 });
-            Debug.Assert(agreementPartnersApi != null);
-            agreementPartnersApi = agreementPartnersApi.Replace("0", "{0}");
-            ViewBag.AgreementPartnersApi = agreementPartnersApi;
-
-            ViewBag.Show = true;
-            return View(MVC.Agreements.Views.PublicView);
-        }
-
-        [GET("agreements", ControllerPrecedence = 3)]
+        [GET("agreements")]
         public virtual ActionResult Index()
         {
             var tenancy = Request.Tenancy() ?? new Tenancy();
@@ -55,11 +43,26 @@ namespace UCosmic.Web.Mvc.Controllers
         [GET("{domain}/agreements")]
         public virtual ActionResult TenantIndex(string domain)
         {
-            ViewBag.Domain = domain;
+            var visibility = _queryProcessor.Execute(new MyAgreementsVisibility(User, domain));
+            ViewBag.AgreementsVisibility = visibility;
+            ViewBag.AgreementsDomain = domain;
             return View(MVC.Agreements.Views.Index);
         }
 
-        [GET("agreements/new/", ControllerPrecedence = 2)]
+        [GET("agreements/{agreementId:int}")]
+        public virtual ViewResult Show(int agreementId)
+        {
+
+            var agreementPartnersApi = Url.HttpRouteUrl(null, new { controller = "AgreementPartners", action = "GetPartners", agreementId = 0 });
+            Debug.Assert(agreementPartnersApi != null);
+            agreementPartnersApi = agreementPartnersApi.Replace("0", "{0}");
+            ViewBag.AgreementPartnersApi = agreementPartnersApi;
+
+            ViewBag.Show = true;
+            return View(MVC.Agreements.Views.PublicView);
+        }
+
+        [GET("agreements/new/")]
         [TryAuthorize(Roles = RoleName.AgreementManagers)]
         public virtual ViewResult New()
         {
@@ -83,7 +86,7 @@ namespace UCosmic.Web.Mvc.Controllers
             return View(MVC.Agreements.Views.Form);
         }
 
-        [GET("agreements/settings", SitePrecedence = 1)]
+        [GET("agreements/settings", ControllerPrecedence = 1)]
         [TryAuthorize(Roles = RoleName.AgreementSupervisor)]
         public virtual ViewResult Settings()
         {

@@ -22,18 +22,11 @@ namespace UCosmic.Web.Mvc.Controllers
         [GET("as/{id?}")]
         public virtual RedirectResult Tenant(string id, string returnUrl)
         {
-            var styleDomain = id;
             var tenancy = Request.Tenancy() ?? new Tenancy();
-            tenancy.StyleDomain = styleDomain;
-
-            // account for www. prefix
-            var wwwId = id;
-            if (wwwId != null && !wwwId.StartsWith("www.", StringComparison.OrdinalIgnoreCase))
-                wwwId = string.Format("www.{0}", wwwId);
-            wwwId = wwwId ?? "default";
+            tenancy.StyleDomain = id;
 
             // find associated establishment
-            var establishment = _queries.Execute(new EstablishmentByUrl(wwwId)
+            var establishment = _queries.Execute(new EstablishmentByDomain(tenancy.StyleDomain ?? "default")
             {
                 EagerLoad = new Expression<Func<Establishment, object>>[]
                 {

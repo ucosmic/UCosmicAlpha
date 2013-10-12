@@ -38,16 +38,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             _purgeHandler = purgeHandler;
         }
 
-        [GET("agreements/{agreementId:int}", ControllerPrecedence = 2)]
-        public AgreementApiModel Get(int agreementId)
-        {
-            var entity = _queryProcessor.Execute(new AgreementById(User, agreementId));
-            if (entity == null) throw new HttpResponseException(HttpStatusCode.NotFound);
-            var model = Mapper.Map<AgreementApiModel>(entity);
-            return model;
-        }
-
-        [GET("{domain}/agreements", ControllerPrecedence = 1)]
+        [GET("{domain}/agreements")]
         public PageOfAgreementApiFlatModel Get(string domain, [FromUri] AgreementSearchInputModel input)
         {
             if (input.PageSize < 1 || input == null || string.IsNullOrWhiteSpace(domain))
@@ -62,32 +53,27 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return model;
         }
 
-        //[GET("{domain}/agreements", ControllerPrecedence = 3)]
-        //public IEnumerable<AgreementApiModel> Get(string domain)
-        //{
-        //    // use domain parameter, but fall back to style cookie if not passed.
-        //    var tenancy = Request.Tenancy() ?? new Tenancy { StyleDomain = "default" };
-        //    domain = string.IsNullOrWhiteSpace(domain)
-        //        ? tenancy.StyleDomain : domain;
-
-        //    if ("default".Equals(domain) || string.IsNullOrWhiteSpace(domain))
-        //    {
-        //        // fall back again to user default affiliation
-        //        var defaultAffliation = _queryProcessor.Execute(new MyDefaultAffiliation(User));
-        //        if (defaultAffliation != null)
-        //            domain = defaultAffliation.WebsiteUrl;
-        //    }
-
-        //    var entities = _queryProcessor.Execute(new AgreementsByOwnerDomain(User, domain));
-        //    if (entities == null || !entities.Any()) throw new HttpResponseException(HttpStatusCode.NotFound);
-        //    var models = Mapper.Map<AgreementApiModel[]>(entities);
-        //    return models;
-        //}
+        [GET("agreements/{agreementId:int}")]
+        public AgreementApiModel Get(int agreementId)
+        {
+            var entity = _queryProcessor.Execute(new AgreementById(User, agreementId));
+            if (entity == null) throw new HttpResponseException(HttpStatusCode.NotFound);
+            var model = Mapper.Map<AgreementApiModel>(entity);
+            return model;
+        }
 
         [GET("{domain}/agreements/visibility")]
         public string GetVisibility(string domain)
         {
-            var query = new MyAgreementVisibility(User, domain);
+            var query = new MyAgreementsVisibility(User, domain);
+            var visibility = _queryProcessor.Execute(query);
+            return visibility.AsSentenceFragment();
+        }
+
+        [GET("agreements/{agreementId:int}/visibility")]
+        public string GetVisibility(int agreementId)
+        {
+            var query = new MyAgreementVisibility(User, agreementId);
             var visibility = _queryProcessor.Execute(query);
             return visibility.AsSentenceFragment();
         }

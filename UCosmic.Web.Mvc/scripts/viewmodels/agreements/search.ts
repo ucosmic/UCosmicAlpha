@@ -291,9 +291,9 @@ module Agreements.ViewModels {
             return App.Routes.Mvc.Establishments.show(id);
         }
 
-        detailTooltip(): string {
-            return 'View & edit this agreement\'s details';
-        }
+        //detailTooltip(): string {
+        //    return 'View & edit this agreement\'s details';
+        //}
 
         private _setupPagingDefaults(): void {
             this.orderBy('country');
