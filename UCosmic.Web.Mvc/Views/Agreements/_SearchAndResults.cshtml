@@ -49,9 +49,9 @@
                                     @*<span data-bind="html: participantsNames"></span>*@
                                     <span style="display: block;">
                                         <span data-bind="foreach: establishmentTranslatedName">
-                                            <strong data-bind="text: '{0} '.format($data), visible: $data == $parent.establishmentOfficialName()[$index()]"></strong>
-                                            <strong data-bind="text: '{0} '.format($data), visible: $data != $parent.establishmentOfficialName()[$index()], attr: { title: $parent.establishmentOfficialName()[$index()] }"></strong>
-                                            <span data-bind="visible: $data != $parent.establishmentTranslatedName()[$parent.establishmentTranslatedName().length - 1]">| </span>
+                                            <strong data-bind="text: $data, visible: $data == $parent.establishmentOfficialName()[$index()]">&nbsp;</strong>
+                                            <strong data-bind="text: $data, visible: $data != $parent.establishmentOfficialName()[$index()], attr: { title: $parent.establishmentOfficialName()[$index()] }">&nbsp;</strong>
+                                            <span data-bind="visible: $data != $parent.establishmentTranslatedName()[$parent.establishmentTranslatedName().length - 1]">|</span>
                                         </span>
                                     </span>
                                     @{
@@ -62,10 +62,10 @@
                                         {
                                             <span style="font-size: 10px; margin: 0 4px 0 0;" class="badge light-transparent" data-bind="text: status"></span>
                                         }
-                                        <span data-bind="text: type" style="vertical-align: middle;"></span>
+                                        <span data-bind="text: type" style="vertical-align: middle;">&nbsp;</span>
                                     </span>
                                     <span style="font-size: 14px; display: block;">
-                                        <span data-bind="text: '{0} '.format(startsOnDate())" style="vertical-align: middle;"></span>
+                                        <span data-bind="text: startsOnDate" style="vertical-align: middle;">&nbsp;</span>
                                         @if (ViewBag.AgreementsVisibility != AgreementVisibility.Public)
                                         {
                                             <span style="vertical-align: middle;">-</span>

@@ -1,11 +1,10 @@
-﻿@using UCosmic.Web.Mvc.Models
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 @{
     var tenancy = Request.Tenancy();
     var styleDomain = tenancy != null ? tenancy.StyleDomain : "default";
     var hasStyleDomain = !string.IsNullOrWhiteSpace(styleDomain);
 }
-
+@using UCosmic.Web.Mvc.Models
 <html>
 <head>
     <meta charset="utf-8" />
