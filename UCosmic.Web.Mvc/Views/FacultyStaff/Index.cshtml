@@ -138,8 +138,13 @@
             line-height: 1;
             font-size: small;
             width: 120px;
-            height: 48px;
+            height: 40px;
             z-index: 3;
+            padding: 6px !important;
+        }
+
+        .geochartTooltip span {
+            font-weight: bold;
         }
 
         .customPlaceText {
@@ -518,11 +523,11 @@
                     <!-- Activities Results -->
                     <div id="resultstable" style="display: none" data-bind="visible: isPointmapVisible() && (lens() == 'table') && (searchType() == 'activities')">                   
                         <div style="width: 665px">
-                            <div class="activitySearchResultsColumnHeader" style="width: 11%">Location</div>
-                            <div class="activitySearchResultsColumnHeader" style="width: 20%">Last, First Name</div>
-                            <div class="activitySearchResultsColumnHeader" style="width: 48%">Activity Title</div>
-                            <div class="activitySearchResultsColumnHeader" style="width: 7%">Type</div>
-                            <div class="activitySearchResultsColumnHeader" style="width: 11%">Date</div>
+                            <div class="activitySearchResultsColumnHeader" style="width: 11%" data-bind="click: function ( item, event ) { sortActivitiesBy( 'location' ) }">Location</div>
+                            <div class="activitySearchResultsColumnHeader" style="width: 20%" data-bind="click: function ( item, event ) { sortActivitiesBy( 'name' ) }">Last, First Name</div>
+                            <div class="activitySearchResultsColumnHeader" style="width: 48%" data-bind="click: function ( item, event ) { sortActivitiesBy( 'title' ) }">Activity Title</div>
+                            <div class="activitySearchResultsColumnHeader" style="width: 7%"  data-bind="click: function ( item, event ) { sortActivitiesBy( 'type' ) }">Type</div>
+                            <div class="activitySearchResultsColumnHeader" style="width: 11%" data-bind="click: function ( item, event ) { sortActivitiesBy( 'date' ) }">Date</div>
                         </div>
                         <div style="height: 600px; overflow-y: scroll">
                             <ul data-bind="foreach: activityResults.placeResults">
@@ -546,11 +551,11 @@
                     <!-- People Results -->
                     <div id="people_resultstable" style="display: none" data-bind="visible: isPointmapVisible() && (lens() == 'table') && (searchType() == 'people')">                   
                         <div style="width: 665px">
-                            <div class="activitySearchResultsColumnHeader" style="width: 20%">Name/Email</div>
-                            <div class="activitySearchResultsColumnHeader" style="width: 15%">Department</div>                   
-                            <div class="activitySearchResultsColumnHeader" style="width: 11%">Location</div>
-                            <div class="activitySearchResultsColumnHeader" style="width: 40%">Activity</div>
-                            <div class="activitySearchResultsColumnHeader" style="width: 11%">Type</div>
+                            <div class="activitySearchResultsColumnHeader" style="width: 20%" data-bind="click: function ( item, event ) { sortPeopleBy( 'name' ) }">Name/Email</div>
+                            <div class="activitySearchResultsColumnHeader" style="width: 15%" data-bind="click: function ( item, event ) { sortPeopleBy( 'department' ) }">Department</div>                   
+                            <div class="activitySearchResultsColumnHeader" style="width: 11%" data-bind="click: function ( item, event ) { sortPeopleBy( 'location' ) }">Location</div>
+                            <div class="activitySearchResultsColumnHeader" style="width: 40%" data-bind="click: function ( item, event ) { sortPeopleBy( 'activity' ) }">Activity</div>
+                            <div class="activitySearchResultsColumnHeader" style="width: 11%" data-bind="click: function ( item, event ) { sortPeopleBy( 'type' ) }">Type</div>
                         </div>
                         <div style="height: 600px; overflow-y: scroll">
                             <ul data-bind="foreach: activityResults.placeResults">

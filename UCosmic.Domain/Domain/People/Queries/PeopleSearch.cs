@@ -33,7 +33,7 @@ namespace UCosmic.Domain.People
         public int EstablishmentId { get; set; }
         public int[] PlaceIds { get; set; }
         public int[] ActivityTypes { get; set; }
-        public string[] Degrees { get; set; }
+        public bool IncludeDegrees { get; set; }
         public string[] Tags { get; set; }
         public DateTime? FromDate { get; set; }
         public DateTime? ToDate { get; set; }
@@ -174,7 +174,7 @@ namespace UCosmic.Domain.People
             /* Set of unique people filtered by establishment, place and activity types */
             results.Activities = activities.Distinct();
 
-
+#if FALSE
             /* ADD People that Degree.Title contains supplied degrees
              *  AND restrict to only those Degrees Awarded Years that fall between From/To Dates*/
             if ((query.Degrees != null) && (query.Degrees.Length > 0))
@@ -220,6 +220,52 @@ namespace UCosmic.Domain.People
 
                 results.Degrees = degrees.Distinct();
             }
+#endif
+
+            /* ADD People that have degrees
+             *  AND restrict to only those Degrees Awarded Years that fall between From/To Dates*/
+            if (query.IncludeDegrees)
+            {
+                var degrees = _entities.Query<Degrees.Degree>().Where(d =>
+                                                                      d.Person.Affiliations.Any(
+                                                                          /* must be associated with establishment */
+                                                                          pa =>
+                                                                          (pa.EstablishmentId == query.EstablishmentId)
+                                                                              /* check for campus association */
+                                                                          && (!query.CampusId.HasValue ||
+                                                                              (pa.CampusId.HasValue &&
+                                                                               (pa.CampusId.Value ==
+                                                                                query.CampusId.Value)))
+                                                                              /* check for college association */
+                                                                          && (!query.CollegeId.HasValue ||
+                                                                              (pa.CollegeId.HasValue &&
+                                                                               (pa.CollegeId.Value ==
+                                                                                query.CollegeId.Value)))
+                                                                              /* check for department association */
+                                                                          && (!query.DepartmentId.HasValue ||
+                                                                              (pa.DepartmentId.HasValue &&
+                                                                               (pa.DepartmentId.Value ==
+                                                                                query.DepartmentId.Value)))
+                                                                          )
+                    );
+
+                if (query.FromDate.HasValue || query.ToDate.HasValue)
+                {
+                    DateTime toDateUtc = query.ToDate.HasValue
+                                             ? query.ToDate.Value
+                                             : new DateTime(DateTime.UtcNow.Year + 1, 1, 1);
+                    DateTime fromDateUtc = query.FromDate.HasValue
+                                               ? query.FromDate.Value
+                                               : new DateTime(DateTime.MinValue.Year, 1, 1);
+
+                    degrees =
+                        degrees.Where(d => (d.YearAwarded.HasValue && (d.YearAwarded.Value >= fromDateUtc.Year)) &&
+                                           (d.YearAwarded.HasValue && (d.YearAwarded < toDateUtc.Year)));
+                }
+
+                results.Degrees = degrees.Distinct();
+            }
+
 
             /* ADD GeographiceExpertise.Description Tag matches */
             if ((query.Tags != null) && (query.Tags.Length > 0))

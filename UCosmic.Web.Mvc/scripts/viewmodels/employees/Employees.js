@@ -114,6 +114,50 @@ var ViewModels;
                         peopleCount: 0
                     }
                 ];
+                this.activityTableRows = [
+                    {
+                        placeOfficialName: '',
+                        personName: '',
+                        activityTitle: '',
+                        activityTypes: [
+                            {
+                                rank: 0,
+                                iconName: '',
+                                toolTip: ''
+                            }
+                        ],
+                        activityDate: ''
+                    }
+                ];
+                this.peopleTableRows = [
+                    {
+                        personName: '',
+                        personEmail: '',
+                        personDepartment: '',
+                        placeOfficialName: '',
+                        activityTypes: [
+                            {
+                                rank: 0,
+                                iconName: '',
+                                toolTip: ''
+                            }
+                        ]
+                    }
+                ];
+                this.activityColumnSort = [
+                    { name: 'location', order: false },
+                    { name: 'name', order: false },
+                    { name: 'title', order: false },
+                    { name: 'type', order: false },
+                    { name: 'date', order: false }
+                ];
+                this.peopleColumnSort = [
+                    { name: 'name', order: false },
+                    { name: 'department', order: false },
+                    { name: 'location', order: false },
+                    { name: 'activity', order: false },
+                    { name: 'type', order: false }
+                ];
                 this._initialize(institutionInfo);
             }
             FacultyAndStaff.prototype._initialize = function (institutionInfo) {
@@ -143,7 +187,7 @@ var ViewModels;
                 this.mapRegion = ko.observable('world');
                 this.isGlobalView = ko.observable(true);
 
-                this.degrees = ko.observable();
+                this.degreesChecked = ko.observable();
                 this.tags = ko.observable();
 
                 this.loadSpinner = new App.Spinner(new App.SpinnerOptions(200));
@@ -519,7 +563,7 @@ var ViewModels;
                     });
                 }
 
-                this.degrees.subscribe(function (newValue) {
+                this.degreesChecked.subscribe(function (newValue) {
                     if (_this.mapType() === 'pointmap') {
                         _this.drawPointmap(true);
                     }
@@ -1474,11 +1518,11 @@ var ViewModels;
             };
 
             FacultyAndStaff.prototype.makeActivityTooltip = function (name, count) {
-                return "<b>" + name + "</b><br/>Total Activities: " + count.toString();
+                return "<span>" + name + "</span><br/>Total Activities: " + count.toString();
             };
 
             FacultyAndStaff.prototype.makePeopleTooltip = function (name, count) {
-                return "<b>" + name + "</b><br/>Total People: " + count.toString();
+                return "<span>" + name + "</span><br/>Total People: " + count.toString();
             };
 
             FacultyAndStaff.prototype.updateCustomGeochartPlaceTooltips = function (selector) {
@@ -1870,11 +1914,6 @@ var ViewModels;
                     }
                 }
 
-                var degrees = null;
-                if ((this.degrees() != null) && (this.degrees().length > 0)) {
-                    degrees = this.degrees().split(',');
-                }
-
                 var tags = null;
                 if ((this.tags() != null) && (this.tags().length > 0)) {
                     tags = this.tags().split(',');
@@ -1902,7 +1941,7 @@ var ViewModels;
                     filterType: this.searchType(),
                     locationIds: locationIds,
                     activityTypes: activityTypeIds,
-                    degrees: degrees,
+                    includeDegrees: this.degreesChecked(),
                     tags: tags,
                     fromDate: fromDate,
                     toDate: toDate,
@@ -1972,6 +2011,58 @@ var ViewModels;
                         _this.loadSpinner.stop();
                     });
                 }
+            };
+
+            FacultyAndStaff.prototype.sortActivitiesBy = function (column) {
+                var i = 0;
+                while ((i < this.activityColumnSort.length) && (this.activityColumnSort[i].name !== column)) {
+                    i += 1;
+                }
+
+                if (i < this.activityColumnSort.length) {
+                    if (column === 'location') {
+                        if (this.activityColumnSort[i].order) {
+                            this.activityResults.placeResults.sort(function (a, b) {
+                                if (a.officialName() > b.officialName())
+                                    return 1;
+                                if (a.officialName() < b.officialName())
+                                    return -1;
+                                return 0;
+                            });
+                        } else {
+                            this.activityResults.placeResults.sort(function (a, b) {
+                                if (a.officialName() > b.officialName())
+                                    return -1;
+                                if (a.officialName() < b.officialName())
+                                    return 1;
+                                return 0;
+                            });
+                        }
+                    } else if (column === 'name') {
+                        if (this.activityColumnSort[i].order) {
+                            this.activityResults.placeResults.sort(function (a, b) {
+                                if (a.officialName() > b.officialName())
+                                    return 1;
+                                if (a.officialName() < b.officialName())
+                                    return -1;
+                                return 0;
+                            });
+                        } else {
+                            this.activityResults.placeResults.sort(function (a, b) {
+                                if (a.officialName() > b.officialName())
+                                    return -1;
+                                if (a.officialName() < b.officialName())
+                                    return 1;
+                                return 0;
+                            });
+                        }
+                    }
+
+                    this.activityColumnSort[i].order = !this.activityColumnSort[i].order;
+                }
+            };
+
+            FacultyAndStaff.prototype.sortPeopleBy = function (column) {
             };
             return FacultyAndStaff;
         })();

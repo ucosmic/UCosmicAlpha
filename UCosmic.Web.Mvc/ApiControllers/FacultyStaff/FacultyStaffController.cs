@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
+using System.Web;
 using System.Web.Http;
 using AttributeRouting;
 using AttributeRouting.Web.Http;
@@ -13,8 +14,6 @@ using UCosmic.Domain.Activities;
 using UCosmic.Domain.Degrees;
 using UCosmic.Domain.Employees;
 using UCosmic.Domain.Establishments;
-using UCosmic.Domain.GeographicExpertise;
-using UCosmic.Domain.LanguageExpertise;
 using UCosmic.Domain.People;
 using UCosmic.Domain.Places;
 using UCosmic.Web.Mvc.Models;
@@ -637,7 +636,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                     PlaceIds = filter.LocationIds,
                     ActivityTypes = filter.ActivityTypes,
                     Tags = filter.Tags,
-                    Degrees = filter.Degrees,
+                    IncludeDegrees = filter.IncludeDegrees,
                     FromDate = fromDate,
                     ToDate = toDate,
                     NoUndated = filter.NoUndated,
@@ -772,26 +771,42 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 {
                     foreach (var degree in peopleSearchResult.Degrees)
                     {
-                        var country = degree.Institution.Location.Places.FirstOrDefault(x => x.IsCountry);
-                        if (country == null)
-                        {
-                            throw new Exception("Can't find location for establishment " +
-                                                degree.Institution.OfficialName);
-                        }
+                        FacultyStaffPlaceResult placeResult;
 
-                        var placeResult = new FacultyStaffPlaceResult
+                        if (degree.Institution != null)
                         {
-                            PlaceId = country.RevisionId,
-                            OfficialName = country.OfficialName,
-                            Lat =
-                                country.Center.Latitude.HasValue
-                                    ? country.Center.Latitude.Value
-                                    : 0,
-                            Lng =
-                                country.Center.Longitude.HasValue
-                                    ? country.Center.Longitude.Value
-                                    : 0
-                        };
+                            var country = degree.Institution.Location.Places.FirstOrDefault(x => x.IsCountry);
+                            if (country == null)
+                            {
+                                throw new Exception("Can't find location for establishment " +
+                                                    degree.Institution.OfficialName);
+                            }
+
+                            placeResult = new FacultyStaffPlaceResult
+                            {
+                                PlaceId = country.RevisionId,
+                                OfficialName = country.OfficialName,
+                                Lat =
+                                    country.Center.Latitude.HasValue
+                                        ? country.Center.Latitude.Value
+                                        : 0,
+                                Lng =
+                                    country.Center.Longitude.HasValue
+                                        ? country.Center.Longitude.Value
+                                        : 0
+                            };
+                        }
+                        else
+                        {
+                            var global = _entities.Query<Place>().SingleOrDefault(p => p.IsEarth);
+                            placeResult = new FacultyStaffPlaceResult
+                            {
+                                PlaceId = global.RevisionId,
+                                OfficialName = global.OfficialName,
+                                Lat = global.Center.Latitude.Value,
+                                Lng = global.Center.Longitude.Value
+                            };                            
+                        }
 
                         var result = new FacultyStaffResult
                         {
@@ -801,7 +816,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
                             PersonDepartment = degree.Person.GetDepartment(),
                             ActivityId = null,
                             ActivityTitle =
-                                String.Format("Degree: {0}, {1}", degree.Title, degree.Institution.OfficialName),
+                                String.Format("Degree: {0}, {1}", degree.Title,
+                                    (degree.Institution != null) ? degree.Institution.OfficialName : ""),
                             ActivityTypeIds = null,
                             ActivityDate = null,
                             ActivityDescription = null,
@@ -928,8 +944,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                             ActivityDescription =
                                 (activityValues.Content == null)
                                     ? null
-                                    : Regex.Replace(activityValues.Content, "<.*?>", string.Empty,
-                                                    RegexOptions.Singleline), // TODO: Better way to strip HTML?
+                                    : Regex.Replace(activityValues.Content, @"<[^>]*>|&nbsp;", string.Empty),
                             SortDate =
                                 GetSortDate(activityValues.StartsOn, activityValues.EndsOn, activityValues.OnGoing)
                             // local use only

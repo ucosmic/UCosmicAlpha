@@ -26,8 +26,11 @@
         </div>
         
         <div class="section" data-bind="visible: searchType() == 'people'">
-            <div class="section-header">Degrees</div>
-            <input type="text" id="degreesTextbox" style="height: 28px"  data-bind="value: degrees"/>
+            @*            <div class="section-header">Degrees</div>
+            <input type="text" id="degreesTextbox" style="height: 28px"  data-bind="value: degrees"/>*@
+            <div style="font-size: small; padding-left: 8px">
+                <input type="checkbox" data-bind="checked: degreesChecked"/><span>Include degrees earned</span>
+            </div>
         </div>
 
         <div class="section">

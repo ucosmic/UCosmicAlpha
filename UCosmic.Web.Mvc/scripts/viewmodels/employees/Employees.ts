@@ -129,7 +129,7 @@ module ViewModels.Employees {
         institutions: KnockoutObservable<string>;
         locations: KnockoutObservableArray<any>;
 
-        degrees: KnockoutObservable<string>;
+        degreesChecked: KnockoutObservable<boolean>;
         tags: KnockoutObservable<string>;
 
         errors: KnockoutValidationErrors;
@@ -206,6 +206,50 @@ module ViewModels.Employees {
             },
         ];
 
+        activityTableRows: any[] = [
+            {
+                placeOfficialName: '',
+                personName: '',
+                activityTitle: '',
+                activityTypes: [{
+                    rank: 0,
+                    iconName: '',
+                    toolTip: ''
+                }],
+                activityDate: ''
+            }
+        ];
+
+        peopleTableRows: any[] = [
+            {
+                personName: '',
+                personEmail: '',
+                personDepartment: '',
+                placeOfficialName: '',
+                activityTypes: [{
+                    rank: 0,
+                    iconName: '',
+                    toolTip: ''
+                }],
+            }
+        ];
+
+        activityColumnSort: any[] = [
+            { name: 'location', order: false },
+            { name: 'name', order: false },
+            { name: 'title', order: false },
+            { name: 'type', order: false },
+            { name: 'date', order: false },
+        ];
+
+        peopleColumnSort: any[] = [
+            { name: 'name', order: false },
+            { name: 'department', order: false },
+            { name: 'location', order: false },
+            { name: 'activity', order: false },
+            { name: 'type', order: false },
+        ];
+
 
         loadSpinner: App.Spinner;
 
@@ -234,7 +278,7 @@ module ViewModels.Employees {
             this.mapRegion = ko.observable('world');
             this.isGlobalView = ko.observable(true);
 
-            this.degrees = ko.observable();
+            this.degreesChecked = ko.observable();
             this.tags = ko.observable();
             
             this.loadSpinner = new App.Spinner(new App.SpinnerOptions(200));
@@ -618,7 +662,7 @@ module ViewModels.Employees {
                 });
             }
 
-            this.degrees.subscribe((newValue: any): void => {
+            this.degreesChecked.subscribe((newValue: any): void => {
                 if (this.mapType() === 'pointmap') {
                     this.drawPointmap(true);
                 }
@@ -1657,11 +1701,11 @@ module ViewModels.Employees {
         }
 
         makeActivityTooltip(name: string, count: number): string {
-            return "<b>" + name + "</b><br/>Total Activities: " + count.toString();
+            return "<span>" + name + "</span><br/>Total Activities: " + count.toString();
         }
 
         makePeopleTooltip(name: string, count: number): string {
-            return "<b>" + name + "</b><br/>Total People: " + count.toString();
+            return "<span>" + name + "</span><br/>Total People: " + count.toString();
         }
 
         updateCustomGeochartPlaceTooltips(selector: string): any {
@@ -2070,12 +2114,6 @@ module ViewModels.Employees {
                 }
             }
 
-            var degrees: string[] = null;
-            if ((this.degrees() != null)
-                && (this.degrees().length > 0)) {
-                degrees = this.degrees().split(',');
-            }
-
             var tags: string[] = null;
             if ((this.tags() != null)
                 && (this.tags().length > 0)) {
@@ -2104,7 +2142,7 @@ module ViewModels.Employees {
                 filterType: this.searchType(),              //public string FilterType
                 locationIds: locationIds,                   //public int[]LocationIds
                 activityTypes: activityTypeIds,             //public int[]ActivityTypes
-                degrees: degrees,                           //public string Degrees ( people only )
+                includeDegrees: this.degreesChecked(),      //public boolean IncludeDegrees ( people only )
                 tags: tags,                                 //public string[] Tags
                 fromDate: fromDate,                         //public DateTime? FromDate
                 toDate: toDate,                             //public DateTime? ToDate
@@ -2179,6 +2217,51 @@ module ViewModels.Employees {
                         this.loadSpinner.stop();
                     });
             }
+        }
+
+        sortActivitiesBy(column: string): void {
+            var i = 0;
+            while ((i < this.activityColumnSort.length) &&
+                (this.activityColumnSort[i].name !== column)) {
+                i += 1;
+            }
+
+            if (i < this.activityColumnSort.length) {
+                if (column === 'location') {
+                    if (this.activityColumnSort[i].order) {
+                        this.activityResults.placeResults.sort(function (a, b) {
+                            if (a.officialName() > b.officialName()) return 1;
+                            if (a.officialName() < b.officialName()) return -1;
+                            return 0;
+                        });
+                    } else {
+                        this.activityResults.placeResults.sort(function (a, b) {
+                            if (a.officialName() > b.officialName()) return -1;
+                            if (a.officialName() < b.officialName()) return 1;
+                            return 0;
+                        });
+                    }
+                } else if (column === 'name') {
+                    if (this.activityColumnSort[i].order) {
+                        this.activityResults.placeResults.sort(function (a, b) {
+                            if (a.officialName() > b.officialName()) return 1;
+                            if (a.officialName() < b.officialName()) return -1;
+                            return 0;
+                        });
+                    } else {
+                        this.activityResults.placeResults.sort(function (a, b) {
+                            if (a.officialName() > b.officialName()) return -1;
+                            if (a.officialName() < b.officialName()) return 1;
+                            return 0;
+                        });
+                    }
+                }
+
+                this.activityColumnSort[i].order = !this.activityColumnSort[i].order;
+            }
+        }
+
+        sortPeopleBy(column: string): void {
         }
         
     }
