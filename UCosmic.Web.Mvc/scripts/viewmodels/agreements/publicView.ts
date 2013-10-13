@@ -212,13 +212,25 @@ module Agreements.ViewModels {
             if (centers.length == 1) {
                 this._googleMap.setCenter(latLngs[0]);
                 // check to see if the centered partner has zoom
-                var zoom = Enumerable.From(partners)
+                var partner = Enumerable.From(partners)
                     .Single(function (x) {
                         return x.center && x.center == centers[0];
-                    }).googleMapZoomLevel;
+                    });
+                var zoom = partner.googleMapZoomLevel;
                 if (zoom) {
                     //this._animateMapZoom(zoom);
                     this._googleMap.setZoom(zoom);
+                }
+                // see it partner has bounding box without zoom
+                else if (partner.boundingBox && partner.boundingBox.hasValue) {
+                    bounds = new google.maps.LatLngBounds(
+                        new google.maps.LatLng(partner.boundingBox.southWest.latitude,
+                            partner.boundingBox.southWest.longitude),
+                        new google.maps.LatLng(partner.boundingBox.northEast.latitude,
+                            partner.boundingBox.northEast.longitude)
+                    );
+                    this._googleMap.fitBounds(bounds);
+                    this._googleMap.setCenter(latLngs[0]);
                 }
             }
             else if (centers.length > 0) {

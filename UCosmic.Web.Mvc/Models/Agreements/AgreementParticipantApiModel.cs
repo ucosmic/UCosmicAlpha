@@ -11,6 +11,7 @@ namespace UCosmic.Web.Mvc.Models
         public string EstablishmentOfficialName { get; set; }
         public string EstablishmentTranslatedName { get; set; }
         public MapPointModel Center { get; set; }
+        public MapBoxModel BoundingBox { get; set; }
         public int? GoogleMapZoomLevel { get; set; }
     }
 
@@ -27,6 +28,7 @@ namespace UCosmic.Web.Mvc.Models
                     .ForMember(d => d.EstablishmentOfficialName, o => o.MapFrom(s =>
                         s.Establishment.OfficialName == s.Establishment.TranslatedName.Text ? null : s.Establishment.OfficialName))
                     .ForMember(d => d.Center, o => o.MapFrom(s => s.Establishment.Location.Center))
+                    .ForMember(d => d.BoundingBox, o => o.MapFrom(s => s.Establishment.Location.BoundingBox))
                     .ForMember(d => d.GoogleMapZoomLevel, o => o.MapFrom(s => s.Establishment.Location.GoogleMapZoomLevel))
                 ;
             }
