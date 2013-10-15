@@ -30,6 +30,7 @@ namespace UCosmic.Web.Mvc
             MvcHandler.DisableMvcResponseHeader = true;
 
             DependencyResolver.Current.GetService<IProcessEvents>().Raise(new ApplicationStarted());
+
             //DependencyResolver.Current.GetService<PerformSeedAtlanticOceanWork>().Perform(new SeedAtlanticOcean());
             //DependencyResolver.Current.GetService<PerformLoadPacificOceanToponymsWork>().Perform(new LoadPacificOceanToponyms());
             //DependencyResolver.Current.GetService<PerformCanonilizeOceansWork>().Perform(new CanonilizeOceans());

@@ -1,4 +1,4 @@
-﻿#if DEBUG
+﻿#if true
 using System;
 using System.Linq;
 
