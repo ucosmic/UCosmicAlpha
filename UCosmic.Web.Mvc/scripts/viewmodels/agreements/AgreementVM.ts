@@ -85,13 +85,13 @@ class InstitutionalAgreementEditModel {
         
         this.isBound(true);
         this.basicInfoClass.populateUmbrella();
-        this.hideOtherGroups();
         this.establishmentSearchNavClass.bindSearch();
         this.getSettings();
 
         $(window).resize(() => {
             this.updateKendoDialog($(window).width());
         });
+        this.hideOtherGroups();
     }
 
     //imported classes
@@ -156,7 +156,8 @@ class InstitutionalAgreementEditModel {
                         var dropdownlist,
                             editor = $("#agreementContent").data("kendoEditor");
 
-                        editor.value(response.content);
+
+                        //editor.value(response.content);
                         this.basicInfoClass.content(response.content);
                         this.datesStatusClass.expDate(Globalize.format(new Date(response.expiresOn.substring(0, response.expiresOn.lastIndexOf("T"))), 'd'));
                         this.datesStatusClass.startDate(Globalize.format(new Date(response.startsOn.substring(0, response.startsOn.lastIndexOf("T"))), 'd'));
@@ -182,6 +183,10 @@ class InstitutionalAgreementEditModel {
                             dropdownlist.select((dataItem) => {
                                 return dataItem.name === this.datesStatusClass.statusOptionSelected();
                             });
+                            if (dropdownlist.selectedIndex === -1) {
+                                dropdownlist.dataSource.add({ name: this.datesStatusClass.statusOptionSelected() });
+                                dropdownlist.select(dropdownlist.dataSource.length);
+                            }
                         } else {
                             dropdownlist = $("#statusOptions").data("kendoDropDownList");
                             dropdownlist.select((dataItem) => {
@@ -194,6 +199,10 @@ class InstitutionalAgreementEditModel {
                             dropdownlist.select((dataItem) => {
                                 return dataItem.name === this.basicInfoClass.typeOptionSelected();
                             });
+                            if (dropdownlist.selectedIndex === -1) {
+                                dropdownlist.dataSource.add({ name: this.basicInfoClass.typeOptionSelected() });
+                                dropdownlist.select(dropdownlist.dataSource.length);
+                            }
                         } else {
                             dropdownlist = $("#typeOptions").data("kendoDropDownList");
                             dropdownlist.select((dataItem) => {

@@ -28,8 +28,8 @@ var Agreements;
                 this.initDefaultPageRoute = initDefaultPageRoute;
                 this.header = ko.observable();
                 this.$searchResults = $("#searchResults");
-                this.dfdFadeInOut = $.Deferred();
-                this.dfdFadeInOut2 = $.Deferred();
+                this.deferredFadeInOut = $.Deferred();
+                this.deferredFadeInOut2 = $.Deferred();
                 this.optionsEnabled = ko.observable(true);
                 // sammy & URL hashing
                 this.sammy = Sammy();
@@ -73,17 +73,22 @@ var Agreements;
                 //this.domain = this.domain.substring(this.domain.indexOf("agreements/") + 11);
                 //var domainIndexOf = (this.domain.indexOf("/") > 0) ? this.domain.indexOf("/") : this.domain.length;
                 //this.domain = this.domain.substring(0, domainIndexOf);
-                this.clickAction = this.clickAction.bind(this);
+                //this.clickAction = <() => boolean > this.clickAction.bind(this);
+                this._init();
 
-                this._setupCountryDropDown();
-                this._setupPagingSubscriptions();
-                this._setupLensing();
-
-                this._setupSammy();
-                this._setupPagingDefaults();
                 this.changeLens(this.lenses()[0]);
                 this.requestResults = this.requestResults.bind(this);
             }
+            Search.prototype._init = function () {
+                this._setupCountryDropDown();
+                this._setupPagingSubscriptions();
+                this._setupLensing();
+                this._setupPagingDefaults();
+                this._applySession();
+                this._setupSammy();
+                this._setupSessionStorage();
+            };
+
             // countries dropdown
             Search.prototype._setupCountryDropDown = function () {
                 var _this = this;
@@ -126,6 +131,8 @@ var Agreements;
 
             Search.prototype._setupSammy = function () {
                 var self = this;
+
+                //self.beforePage(this.sammy());
                 self.sammy.before(self.sammyBeforeRoute, function () {
                     self.beforePage(this);
                 });
@@ -223,33 +230,38 @@ var Agreements;
                 }
                 App.WindowScroller.restoreTop();
                 this.transitionedPageNumber(this.pageNumber());
-                this.dfdFadeInOut2.resolve();
+                this.deferredFadeInOut2.resolve();
             };
 
             Search.prototype.requestResults = function () {
                 var _this = this;
                 this.optionsEnabled(false);
-                if (this.pageSize() === undefined || this.orderBy() === undefined)
+                if (this.pageSize() === undefined || this.orderBy() === undefined || this.pageNumber() === undefined || this.keyword() !== this.throttledKeyword())
                     return;
                 this.lockAnimation();
                 this.spinner.start();
-                $.when(this.dfdFadeInOut2).done(function () {
+                this.deferredFadeInOut = $.Deferred();
+                this.deferredFadeInOut2 = $.Deferred();
+                $.when(this.deferredFadeInOut2).done(function () {
                     _this.spinner.stop();
                     _this.$searchResults.fadeIn(400, function () {
                         _this.unlockAnimation();
                         _this.optionsEnabled(true);
                         _this.$searchResults.children().offset({ top: _this.$searchResults.offset().top });
                     });
-                    _this.dfdFadeInOut = $.Deferred();
-                    _this.dfdFadeInOut2 = $.Deferred();
+                    //this.deferredFadeInOut = $.Deferred();
+                    //this.deferredFadeInOut2 = $.Deferred();
                 });
                 if (this.$searchResults.is(":visible")) {
                     this.$searchResults.fadeOut(400, function () {
-                        _this.dfdFadeInOut.resolve();
+                        _this.deferredFadeInOut.resolve();
                     });
                 } else {
-                    this.dfdFadeInOut.resolve();
+                    this.deferredFadeInOut.resolve();
                 }
+
+                //$.when(this.deferredSessionLoaded)
+                //.done(() => {
                 $.get(App.Routes.WebApi.Agreements.Search.get(this.domain), {
                     pageSize: this.pageSize(),
                     pageNumber: this.pageNumber(),
@@ -257,10 +269,11 @@ var Agreements;
                     keyword: this.throttledKeyword(),
                     orderBy: this.orderBy()
                 }).done(function (response) {
-                    $.when(_this.dfdFadeInOut).done(function () {
+                    $.when(_this.deferredFadeInOut).done(function () {
                         _this.receiveResults(response);
                     });
                 });
+                //});
             };
 
             // go to add new
@@ -285,6 +298,45 @@ var Agreements;
                 this.orderBy('country');
                 this.pageSize(10);
             };
+
+            Search.prototype._setupSessionStorage = function () {
+                this.keyword.subscribe(function (newValue) {
+                    sessionStorage.setItem(Search.KeywordSessionKey, newValue);
+                });
+                this.pageSize.subscribe(function (newValue) {
+                    sessionStorage.setItem(Search.PageSizeSessionKey, newValue.toString());
+                });
+                this.orderBy.subscribe(function (newValue) {
+                    sessionStorage.setItem(Search.OrderBySessionKey, newValue);
+                });
+                this.countryCode.subscribe(function (newValue) {
+                    sessionStorage.setItem(Search.CountrySessionKey, newValue);
+                });
+                this.pageNumber.subscribe(function (newValue) {
+                    sessionStorage.setItem(Search.PageNumberSessionKey, newValue.toString());
+                });
+            };
+
+            Search.prototype._applySession = function () {
+                this.keyword(sessionStorage.getItem(Search.KeywordSessionKey) || this.keyword());
+
+                //this.keyword.notifySubscribers;
+                this.pageSize(parseInt(sessionStorage.getItem(Search.PageSizeSessionKey)) || Number(this.pageSize()));
+
+                //this.pageSize(parseInt(window.sessionStorage.getItem('UserSearchPageSize'))
+                //    || Number(this.pageSize()));
+                this.orderBy(sessionStorage.getItem(Search.OrderBySessionKey) || this.orderBy());
+                if (sessionStorage.getItem(Search.CountrySessionKey) !== "undefined") {
+                    this.countryCode(sessionStorage.getItem(Search.CountrySessionKey) || this.countryCode());
+                }
+
+                this.pageNumber(parseInt(sessionStorage.getItem(Search.PageNumberSessionKey)) || Number(this.pageNumber()));
+            };
+            Search.KeywordSessionKey = 'AgreementSearchKeyword';
+            Search.PageSizeSessionKey = 'AgreementSearchPageSize';
+            Search.OrderBySessionKey = 'AgreementSearchOrderBy';
+            Search.CountrySessionKey = 'AgreementSearchCountry';
+            Search.PageNumberSessionKey = 'AgreementSearchPageNumber';
             return Search;
         })(App.PagedSearch);
         ViewModels.Search = Search;

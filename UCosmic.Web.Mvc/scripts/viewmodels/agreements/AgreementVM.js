@@ -104,13 +104,13 @@ var InstitutionalAgreementEditModel = (function () {
 
         this.isBound(true);
         this.basicInfoClass.populateUmbrella();
-        this.hideOtherGroups();
         this.establishmentSearchNavClass.bindSearch();
         this.getSettings();
 
         $(window).resize(function () {
             _this.updateKendoDialog($(window).width());
         });
+        this.hideOtherGroups();
     }
     //to correctly bind with ko, must set visibility to hidden. this removes the visibility to hidden and
     //changes it to display none.
@@ -126,7 +126,7 @@ var InstitutionalAgreementEditModel = (function () {
             $.get(App.Routes.WebApi.Agreements.get(_this.agreementId.val)).done(function (response) {
                 var dropdownlist, editor = $("#agreementContent").data("kendoEditor");
 
-                editor.value(response.content);
+                //editor.value(response.content);
                 _this.basicInfoClass.content(response.content);
                 _this.datesStatusClass.expDate(Globalize.format(new Date(response.expiresOn.substring(0, response.expiresOn.lastIndexOf("T"))), 'd'));
                 _this.datesStatusClass.startDate(Globalize.format(new Date(response.startsOn.substring(0, response.startsOn.lastIndexOf("T"))), 'd'));
@@ -153,6 +153,10 @@ var InstitutionalAgreementEditModel = (function () {
                     dropdownlist.select(function (dataItem) {
                         return dataItem.name === _this.datesStatusClass.statusOptionSelected();
                     });
+                    if (dropdownlist.selectedIndex === -1) {
+                        dropdownlist.dataSource.add({ name: _this.datesStatusClass.statusOptionSelected() });
+                        dropdownlist.select(dropdownlist.dataSource.length);
+                    }
                 } else {
                     dropdownlist = $("#statusOptions").data("kendoDropDownList");
                     dropdownlist.select(function (dataItem) {
@@ -165,6 +169,10 @@ var InstitutionalAgreementEditModel = (function () {
                     dropdownlist.select(function (dataItem) {
                         return dataItem.name === _this.basicInfoClass.typeOptionSelected();
                     });
+                    if (dropdownlist.selectedIndex === -1) {
+                        dropdownlist.dataSource.add({ name: _this.basicInfoClass.typeOptionSelected() });
+                        dropdownlist.select(dropdownlist.dataSource.length);
+                    }
                 } else {
                     dropdownlist = $("#typeOptions").data("kendoDropDownList");
                     dropdownlist.select(function (dataItem) {

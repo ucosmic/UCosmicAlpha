@@ -20,6 +20,12 @@ module Agreements.ViewModels {
 
     export class Search extends App.PagedSearch {
 
+        static KeywordSessionKey = 'AgreementSearchKeyword';
+        static PageSizeSessionKey = 'AgreementSearchPageSize';
+        static OrderBySessionKey = 'AgreementSearchOrderBy';
+        static CountrySessionKey = 'AgreementSearchCountry';
+        static PageNumberSessionKey = 'AgreementSearchPageNumber';
+
         constructor(public domain, public initDefaultPageRoute: boolean = true) {
             super();
             //this.publicViewClass = new Agreements.ViewModels.PublicView();
@@ -30,25 +36,32 @@ module Agreements.ViewModels {
             //var domainIndexOf = (this.domain.indexOf("/") > 0) ? this.domain.indexOf("/") : this.domain.length;
             //this.domain = this.domain.substring(0, domainIndexOf);
 
-            this.clickAction = <() => boolean > this.clickAction.bind(this);
+            //this.clickAction = <() => boolean > this.clickAction.bind(this);
 
-            this._setupCountryDropDown();
-            this._setupPagingSubscriptions();
-            this._setupLensing();
 
-            this._setupSammy();
-            this._setupPagingDefaults();
+            this._init();
+
             this.changeLens(this.lenses()[0]);
             this.requestResults = <() => void > this.requestResults.bind(this);
         }
         header = ko.observable();
         $searchResults = $("#searchResults");
-        dfdFadeInOut = $.Deferred();
-        dfdFadeInOut2 = $.Deferred();
+        deferredFadeInOut = $.Deferred();
+        deferredFadeInOut2 = $.Deferred();
         optionsEnabled = ko.observable(true);
         //domain;
         //imported classes
         publicViewClass
+
+        private _init() {
+            this._setupCountryDropDown();
+            this._setupPagingSubscriptions();
+            this._setupLensing();
+            this._setupPagingDefaults();
+            this._applySession();
+            this._setupSammy();
+            this._setupSessionStorage();
+        }
 
         // countries dropdown
         private _setupCountryDropDown(): void {
@@ -99,6 +112,7 @@ module Agreements.ViewModels {
         sammyDefaultPageRoute: string = '{0}/agreements[\/]?'.format(this.domain);
         private _setupSammy(): void {
             var self = this;
+            //self.beforePage(this.sammy());
             self.sammy.before(self.sammyBeforeRoute, function () {
                 self.beforePage(this);
             });
@@ -233,16 +247,19 @@ module Agreements.ViewModels {
             }
             App.WindowScroller.restoreTop(); // restore scroll when coming back from detail page
             this.transitionedPageNumber(this.pageNumber());
-            this.dfdFadeInOut2.resolve();
+            this.deferredFadeInOut2.resolve();
         }
 
         requestResults(): void {
             this.optionsEnabled(false);
-            if (this.pageSize() === undefined || this.orderBy() === undefined)
+            if (this.pageSize() === undefined || this.orderBy()=== undefined || this.pageNumber() === undefined
+                || this.keyword() !== this.throttledKeyword())
                 return;
             this.lockAnimation();
             this.spinner.start();
-            $.when(this.dfdFadeInOut2)
+            this.deferredFadeInOut = $.Deferred();
+            this.deferredFadeInOut2 = $.Deferred();
+            $.when(this.deferredFadeInOut2)
                 .done(() => {
                     this.spinner.stop();
                     this.$searchResults.fadeIn(400, () => {
@@ -250,30 +267,33 @@ module Agreements.ViewModels {
                         this.optionsEnabled(true);
                         this.$searchResults.children().offset({ top: this.$searchResults.offset().top });
                     });
-                    this.dfdFadeInOut = $.Deferred();
-                    this.dfdFadeInOut2 = $.Deferred();
+                    //this.deferredFadeInOut = $.Deferred();
+                    //this.deferredFadeInOut2 = $.Deferred();
                 });
             if (this.$searchResults.is(":visible")) {
                 this.$searchResults.fadeOut(400, () => {
-                    this.dfdFadeInOut.resolve();
+                    this.deferredFadeInOut.resolve();
                 });
             } else {
-                this.dfdFadeInOut.resolve();
+                this.deferredFadeInOut.resolve();
             }
-            $.get(App.Routes.WebApi.Agreements.Search.get(this.domain), {
-                pageSize: this.pageSize(),
-                pageNumber: this.pageNumber(),
-                countryCode: this.countryCode(),
-                keyword: this.throttledKeyword(),
-                orderBy: this.orderBy(),
-                //myDomain: this.domain
-            })
-                .done((response: ApiModels.FlatEstablishment[]): void => {
-                    $.when(this.dfdFadeInOut)
-                        .done(() => {
-                            this.receiveResults(response);
+            //$.when(this.deferredSessionLoaded)
+                //.done(() => {
+                    $.get(App.Routes.WebApi.Agreements.Search.get(this.domain), {
+                        pageSize: this.pageSize(),
+                        pageNumber: this.pageNumber(),
+                        countryCode: this.countryCode(),
+                        keyword: this.throttledKeyword(),
+                        orderBy: this.orderBy(),
+                        //myDomain: this.domain
+                    })
+                        .done((response: ApiModels.FlatEstablishment[]): void => {
+                            $.when(this.deferredFadeInOut)
+                                .done(() => {
+                                    this.receiveResults(response);
+                                });
                         });
-                });
+                //});
         }
 
         // go to add new
@@ -299,6 +319,40 @@ module Agreements.ViewModels {
         private _setupPagingDefaults(): void {
             this.orderBy('country');
             this.pageSize(10);
+        }
+
+
+        private _setupSessionStorage(): void {
+            this.keyword.subscribe((newValue: string): void => {
+                sessionStorage.setItem(Search.KeywordSessionKey, newValue);
+            });
+            this.pageSize.subscribe((newValue: number): void => {
+                sessionStorage.setItem(Search.PageSizeSessionKey, newValue.toString());
+            });
+            this.orderBy.subscribe((newValue: string): void => {
+                sessionStorage.setItem(Search.OrderBySessionKey, newValue);
+            });
+            this.countryCode.subscribe((newValue: string): void => {
+                sessionStorage.setItem(Search.CountrySessionKey, newValue);
+            });
+            this.pageNumber.subscribe((newValue: number): void => {
+                sessionStorage.setItem(Search.PageNumberSessionKey, newValue.toString());
+            });
+        }
+
+        private _applySession(): void {
+            this.keyword(sessionStorage.getItem(Search.KeywordSessionKey) || this.keyword());
+            //this.keyword.notifySubscribers;
+            this.pageSize(parseInt(sessionStorage.getItem(Search.PageSizeSessionKey)) || Number(this.pageSize()));
+            //this.pageSize(parseInt(window.sessionStorage.getItem('UserSearchPageSize'))
+            //    || Number(this.pageSize()));
+            this.orderBy(sessionStorage.getItem(Search.OrderBySessionKey) || this.orderBy());
+            if (sessionStorage.getItem(Search.CountrySessionKey) !== "undefined") {
+                this.countryCode(sessionStorage.getItem(Search.CountrySessionKey) || this.countryCode());
+            }
+
+            this.pageNumber(parseInt(sessionStorage.getItem(Search.PageNumberSessionKey)) || Number(this.pageNumber()));
+
         }
     }
 }
