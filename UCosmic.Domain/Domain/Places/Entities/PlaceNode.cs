@@ -27,7 +27,7 @@
 
         public override string ToString()
         {
-            return string.Format("({0}) {1}", Separation, Offspring.OfficialName);
+            return string.Format("{0} ({1}) {2}", Ancestor.OfficialName, Separation, Offspring.OfficialName);
         }
     }
 }

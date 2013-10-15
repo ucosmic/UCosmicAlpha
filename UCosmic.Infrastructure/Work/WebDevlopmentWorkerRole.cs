@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using SimpleInjector;
 using UCosmic.Domain.Activities;
+using UCosmic.Domain.Places;
 
 namespace UCosmic.Work
 {
@@ -20,6 +21,7 @@ namespace UCosmic.Work
             new Dictionary<IDefineWork, IEnumerable<dynamic>>
             {
                 { new ProjectActivityViews(), null },
+                { new RepairPlaceHierarchies(), null },
             };
 
         public void OnStart()

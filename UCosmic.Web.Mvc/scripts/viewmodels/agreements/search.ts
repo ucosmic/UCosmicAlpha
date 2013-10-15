@@ -308,6 +308,7 @@ module Agreements.ViewModels {
             return true;
         }
 
+        // TODO: this is also not used anywhere, detailHref on SearchResult is though.
         detailHref(id: number): string {
             return App.Routes.Mvc.Establishments.show(id);
         }

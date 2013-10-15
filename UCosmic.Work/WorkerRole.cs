@@ -8,6 +8,7 @@ using Microsoft.WindowsAzure.ServiceRuntime;
 using SimpleInjector;
 using UCosmic.CompositionRoot;
 using UCosmic.Domain.Activities;
+using UCosmic.Domain.Places;
 
 namespace UCosmic.Work
 {
@@ -52,6 +53,7 @@ namespace UCosmic.Work
             new Dictionary<IDefineWork, IEnumerable<dynamic>>
             {
                 { new ProjectActivityViews(), null },
+                { new RepairPlaceHierarchies(), null },
             };
 
         // ReSharper disable FunctionNeverReturns

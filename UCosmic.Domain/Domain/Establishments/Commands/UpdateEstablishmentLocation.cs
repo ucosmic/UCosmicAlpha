@@ -59,7 +59,6 @@ namespace UCosmic.Domain.Establishments
             When(x => x.PlaceId.HasValue, () =>
                 RuleFor(x => x.PlaceId.Value)
                     .MustFindPlaceById(entities)
-                    .WithMessage(MustFindPlaceById.FailMessageFormat, x => x.PlaceId != null ? x.PlaceId.Value : 0)
             );
         }
     }

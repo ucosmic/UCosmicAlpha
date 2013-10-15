@@ -16,6 +16,8 @@ namespace UCosmic.Domain.Places
             Children = new Collection<Place>();
             Ancestors = new Collection<PlaceNode>();
             Offspring = new Collection<PlaceNode>();
+            Components = new Collection<Place>();
+            Composites = new Collection<Place>();
             // ReSharper restore DoNotCallOverridableMethodsInConstructor
         }
 
@@ -30,6 +32,8 @@ namespace UCosmic.Domain.Places
         public virtual ICollection<Place> Children { get; protected set; }
         public virtual ICollection<PlaceNode> Ancestors { get; protected set; }
         public virtual ICollection<PlaceNode> Offspring { get; protected set; }
+        public virtual ICollection<Place> Composites { get; protected set; }
+        public virtual ICollection<Place> Components { get; protected set; }
 
         public virtual GeoNamesToponym GeoNamesToponym { get; protected internal set; }
         public virtual GeoPlanetPlace GeoPlanetPlace { get; protected internal set; }

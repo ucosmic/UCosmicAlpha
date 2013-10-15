@@ -145,6 +145,8 @@ namespace UCosmic.Domain.Places
                     .ForMember(target => target.Children, opt => opt.Ignore())
                     .ForMember(target => target.Ancestors, opt => opt.Ignore())
                     .ForMember(target => target.Offspring, opt => opt.Ignore())
+                    .ForMember(target => target.Composites, opt => opt.Ignore())
+                    .ForMember(target => target.Components, opt => opt.Ignore())
                     .ForMember(target => target.RevisionId, opt => opt.Ignore())
                     .ForMember(target => target.EntityId, opt => opt.Ignore())
                     .ForMember(target => target.CreatedOnUtc, opt => opt.Ignore())

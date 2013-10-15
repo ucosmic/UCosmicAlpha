@@ -126,6 +126,8 @@ namespace UCosmic.Domain.Places
                     .ForMember(d => d.Children, o => o.Ignore())
                     .ForMember(d => d.Ancestors, o => o.Ignore())
                     .ForMember(d => d.Offspring, o => o.Ignore())
+                    .ForMember(d => d.Composites, o => o.Ignore())
+                    .ForMember(d => d.Components, o => o.Ignore())
                     .ForMember(d => d.Names, o => o.Ignore())
                     .ForMember(d => d.GeoNamesToponym, o => o.Ignore())
                     .ForMember(d => d.GeoPlanetPlace, o => o.Ignore())

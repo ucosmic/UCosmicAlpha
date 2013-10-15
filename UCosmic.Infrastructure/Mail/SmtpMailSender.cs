@@ -36,7 +36,10 @@ namespace UCosmic.Mail
                     // in development & qa, deliver mail to test mail server folder
                     if (smtpClient.DeliveryMethod == SmtpDeliveryMethod.SpecifiedPickupDirectory)
                     {
-                        var path = Path.Combine(HttpRuntime.AppDomainAppPath, _configurationManager.TestMailServer);
+                        var path = HttpRuntime.AppDomainAppId != null
+                            ? HttpRuntime.AppDomainAppPath
+                            : Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "../../UCosmic.Web.Mvc");
+                        path = Path.Combine(path, _configurationManager.TestMailServer);
                         var directory = Directory.CreateDirectory(path);
                         smtpClient.PickupDirectoryLocation = directory.FullName;
                     }

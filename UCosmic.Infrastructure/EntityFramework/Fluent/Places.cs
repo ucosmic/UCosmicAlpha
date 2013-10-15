@@ -15,13 +15,17 @@ namespace UCosmic.EntityFramework
     {
         public PlaceOrm()
         {
-            ToTable(typeof(Place).Name, "Places");
+            ToTable(typeof(Place).Name, DbSchemaName.Places);
 
             // ParentPlace 0..1 <---> * ChildPlace
             HasOptional(d => d.Parent)
                 .WithMany(p => p.Children)
                 .HasForeignKey(d => d.ParentId)
                 .WillCascadeOnDelete(false);
+
+            HasMany(p => p.Components)
+                .WithMany(p => p.Composites)
+                .Map(x => x.ToTable("PlaceComposition", DbSchemaName.Places).MapLeftKey("CompositeId").MapRightKey("ComponentId"));
 
             // name properties
             Property(p => p.OfficialName).IsRequired().HasMaxLength(200);

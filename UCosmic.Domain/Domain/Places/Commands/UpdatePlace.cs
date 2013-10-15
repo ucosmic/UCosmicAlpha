@@ -1,77 +1,101 @@
-﻿//// DEPRECATED: bring this back in when needed, for now IsRegion gets seeded correctly by geo services
-//using System;
-//using System.Linq;
-//using FluentValidation;
-//using Newtonsoft.Json;
-//using UCosmic.Domain.Audit;
+﻿using System;
+using System.Linq;
+using FluentValidation;
 
-//namespace UCosmic.Domain.Places
-//{
-//    public class UpdatePlace
-//    {
-//        public UpdatePlace(int placeId)
-//        {
-//            PlaceId = placeId;
-//        }
+namespace UCosmic.Domain.Places
+{
+    public class UpdatePlace
+    {
+        public UpdatePlace(int placeId)
+        {
+            PlaceId = placeId;
+            ParentId = 0;
+        }
 
-//        public int PlaceId { get; private set; }
-//        public bool? IsRegion { get; set; }
-//    }
+        public UpdatePlace(int placeId, int? parentId)
+        {
+            PlaceId = placeId;
+            ParentId = parentId;
+        }
 
-//    public class ValidateUpdatePlaceCommand : AbstractValidator<UpdatePlace>
-//    {
-//        public ValidateUpdatePlaceCommand(IQueryEntities entities)
-//        {
-//            CascadeMode = CascadeMode.StopOnFirstFailure;
+        public int PlaceId { get; private set; }
+        public int? ParentId { get; private set; }
+        public bool? IsRegion { get; set; }
+        public bool? IsWater { get; set; }
+    }
 
-//            // id must be within valid range and exist in the database
-//            RuleFor(x => x.PlaceId)
-//                .MustFindPlaceById(entities)
-//                    .WithMessage(MustFindPlaceById.FailMessageFormat, x => x.PlaceId)
-//            ;
-//        }
-//    }
+    public class ValidateUpdatePlaceCommand : AbstractValidator<UpdatePlace>
+    {
+        public ValidateUpdatePlaceCommand(IQueryEntities entities)
+        {
+            CascadeMode = CascadeMode.StopOnFirstFailure;
 
-//    public class HandleUpdatePlaceCommand : IHandleCommands<UpdatePlace>
-//    {
-//        private readonly ICommandEntities _entities;
-//        //private readonly IProcessQueries _queryProcessor;
-//        private readonly IUnitOfWork _unitOfWork;
+            // id must be within valid range and exist in the database
+            RuleFor(x => x.PlaceId)
+                .MustFindPlaceById(entities)
+            ;
 
-//        public HandleUpdatePlaceCommand(ICommandEntities entities
-//            //, IProcessQueries queryProcessor
-//            , IUnitOfWork unitOfWork
-//        )
-//        {
-//            //_queryProcessor = queryProcessor;
-//            _entities = entities;
-//            _unitOfWork = unitOfWork;
-//        }
+            When(x => x.ParentId.HasValue && x.ParentId.Value != 0, () =>
+                RuleFor(x => x.ParentId.Value)
+                    .MustFindPlaceById(entities)
+            );
+        }
+    }
 
-//        public void Handle(UpdatePlace command)
-//        {
-//            if (command == null) throw new ArgumentNullException("command");
+    public class HandleUpdatePlaceCommand : IHandleCommands<UpdatePlace>
+    {
+        private readonly ICommandEntities _entities;
+        private readonly IHandleCommands<EnsurePlaceHierarchy> _hierarchy;
 
-//            var place = _entities.Get<Place>().Single(x => x.RevisionId == command.PlaceId);
+        public HandleUpdatePlaceCommand(ICommandEntities entities
+            , IHandleCommands<EnsurePlaceHierarchy> hierarchy
+        )
+        {
+            _entities = entities;
+            _hierarchy = hierarchy;
+        }
 
-//            var audit = new CommandEvent
-//            {
-//                RaisedBy = System.Threading.Thread.CurrentPrincipal.Identity.Name,
-//                Name = command.GetType().FullName,
-//                Value = JsonConvert.SerializeObject(new
-//                {
-//                    command.PlaceId,
-//                    command.IsRegion,
-//                }),
-//                PreviousState = place.ToJsonAudit(),
-//            };
+        public void Handle(UpdatePlace command)
+        {
+            if (command == null) throw new ArgumentNullException("command");
 
-//            if (command.IsRegion.HasValue)
-//                place.IsRegion = command.IsRegion.Value;
+            var entity = _entities.Get<Place>().Single(x => x.RevisionId == command.PlaceId);
 
-//            audit.NewState = place.ToJsonAudit();
-//            _entities.Create(audit);
-//            _unitOfWork.SaveChanges();
-//        }
-//    }
-//}
+            //var audit = new CommandEvent
+            //{
+            //    RaisedBy = System.Threading.Thread.CurrentPrincipal.Identity.Name,
+            //    Name = command.GetType().FullName,
+            //    Value = JsonConvert.SerializeObject(new
+            //    {
+            //        command.PlaceId,
+            //        command.IsRegion,
+            //    }),
+            //    PreviousState = place.ToJsonAudit(),
+            //};
+
+            var lastParentId = entity.ParentId; // do not change parent when command.ParentId is zero
+            if (command.ParentId.HasValue && command.ParentId.Value != 0)
+            {
+                var parent = _entities.Get<Place>().Single(x => x.RevisionId == command.ParentId.Value);
+                entity.Parent = parent;
+                entity.ParentId = parent.RevisionId;
+            }
+            else if (!command.ParentId.HasValue)
+            {
+                entity.Parent = null;
+                entity.ParentId = null;
+            }
+
+            if (command.IsRegion.HasValue) entity.IsRegion = command.IsRegion.Value;
+            if (command.IsWater.HasValue) entity.IsWater = command.IsWater.Value;
+
+            //audit.NewState = place.ToJsonAudit();
+            //_entities.Create(audit);
+
+            if (lastParentId != entity.ParentId)
+                _hierarchy.Handle(new EnsurePlaceHierarchy(entity));
+
+            _entities.SaveChanges();
+        }
+    }
+}

@@ -7,10 +7,10 @@ namespace UCosmic.SeedData
     public class RegionsByGeoServicesEntitySeeder : ISeedData
     {
         private readonly IProcessQueries _queryProcessor;
-        private readonly IQueryEntities _entities;
+        private readonly ICommandEntities _entities;
 
         public RegionsByGeoServicesEntitySeeder(IProcessQueries queryProcessor
-            , IQueryEntities entities
+            , ICommandEntities entities
         )
         {
             _queryProcessor = queryProcessor;
@@ -19,7 +19,7 @@ namespace UCosmic.SeedData
 
         public void Seed()
         {
-            //if (_entities.Query<Place>().Any(x => x.IsWater)) return;
+            if (_entities.Query<Place>().Any(x => x.IsRegion || x.Components.Any())) return;
 
             // map Woe ID's to GeoName ID's
             var regionsToImport = new Dictionary<int, int?>
@@ -56,6 +56,38 @@ namespace UCosmic.SeedData
                 {
                     _queryProcessor.Execute(new PlaceByWoeId(woeId, geoNameId));
                 }
+            }
+
+            ComposeRegionsFromGeoPlanet();
+        }
+
+        private void ComposeRegionsFromGeoPlanet()
+        {
+            var regions = _entities.Get<Place>()
+                .Where(x => x.IsRegion && !x.IsWater && !x.Components.Any())
+                .ToList();
+            if (regions.Any())
+            {
+                var mutated = false;
+                foreach (var region in regions)
+                {
+                    if (!region.IsRegion) continue;
+                    var woeId = region.GeoPlanetPlace.WoeId;
+                    var components = _entities.Get<Place>()
+                        .Where(x => x.GeoPlanetPlace != null
+                            && x.GeoPlanetPlace.BelongTos.Select(y => y.BelongToWoeId).Contains(woeId));
+                    foreach (var component in components)
+                    {
+                        if (!component.IsCountry && !component.IsWater) continue;
+                        if (component.IsRegion) continue;
+                        if (region.Components.All(x => x.RevisionId != component.RevisionId))
+                        {
+                            region.Components.Add(component);
+                            if (!mutated) mutated = true;
+                        }
+                    }
+                }
+                if (mutated) _entities.SaveChanges();
             }
         }
     }

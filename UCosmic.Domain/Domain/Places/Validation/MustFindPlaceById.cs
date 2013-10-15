@@ -7,12 +7,10 @@ namespace UCosmic.Domain.Places
 {
     public class MustFindPlaceById : PropertyValidator
     {
-        public const string FailMessageFormat = "Place with id '{0}' does not exist.";
-
         private readonly IQueryEntities _entities;
 
         internal MustFindPlaceById(IQueryEntities entities)
-            : base(FailMessageFormat.Replace("{0}", "{PropertyValue}"))
+            : base("Place with id '{PropertyValue}' does not exist.")
         {
             if (entities == null) throw new ArgumentNullException("entities");
             _entities = entities;
@@ -20,17 +18,15 @@ namespace UCosmic.Domain.Places
 
         protected override bool IsValid(PropertyValidatorContext context)
         {
-            if (!(context.PropertyValue is int))
-                throw new NotSupportedException(string.Format(
-                    "The {0} PropertyValidator can only operate on integer properties", GetType().Name));
-
-            context.MessageFormatter.AppendArgument("PropertyValue", context.PropertyValue);
             var value = (int)context.PropertyValue;
 
             var entity = _entities.Query<Place>()
                 .SingleOrDefault(x => x.RevisionId == value);
 
-            return entity != null;
+            if (entity != null) return true;
+
+            context.MessageFormatter.AppendArgument("PropertyValue", context.PropertyValue);
+            return false;
         }
     }
 

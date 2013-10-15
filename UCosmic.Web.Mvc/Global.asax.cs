@@ -6,13 +6,14 @@ using System.Web.Optimization;
 using System.Web.Routing;
 using System.Web.SessionState;
 using UCosmic.Domain;
+using UCosmic.Domain.Places;
 
 namespace UCosmic.Web.Mvc
 {
     // Note: For instructions on enabling IIS6 or IIS7 classic mode, 
     // visit http://go.microsoft.com/?LinkId=9394801
 
-    public class WebApiApplication : System.Web.HttpApplication
+    public class WebApiApplication : HttpApplication
     {
         protected void Application_Start()
         {
@@ -29,6 +30,10 @@ namespace UCosmic.Web.Mvc
             MvcHandler.DisableMvcResponseHeader = true;
 
             DependencyResolver.Current.GetService<IProcessEvents>().Raise(new ApplicationStarted());
+            //DependencyResolver.Current.GetService<PerformSeedAtlanticOceanWork>().Perform(new SeedAtlanticOcean());
+            //DependencyResolver.Current.GetService<PerformLoadPacificOceanToponymsWork>().Perform(new LoadPacificOceanToponyms());
+            //DependencyResolver.Current.GetService<PerformCanonilizeOceansWork>().Perform(new CanonilizeOceans());
+            //DependencyResolver.Current.GetService<PerformComposeRegionsWork>().Perform(new ComposeRegions());
         }
 
         protected void Application_PostAuthorizeRequest()

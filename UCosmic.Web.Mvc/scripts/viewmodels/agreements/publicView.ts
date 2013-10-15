@@ -221,7 +221,7 @@ module Agreements.ViewModels {
                     //this._animateMapZoom(zoom);
                     this._googleMap.setZoom(zoom);
                 }
-                // see it partner has bounding box without zoom
+                // see if partner has bounding box without zoom
                 else if (partner.boundingBox && partner.boundingBox.hasValue) {
                     bounds = new google.maps.LatLngBounds(
                         new google.maps.LatLng(partner.boundingBox.southWest.latitude,

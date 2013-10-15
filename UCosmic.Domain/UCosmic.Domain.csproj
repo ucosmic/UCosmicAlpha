@@ -64,6 +64,7 @@
       <HintPath>..\packages\Pluralizer.0.3.0.1\lib\net40\Pluralize.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web" />
@@ -97,6 +98,7 @@
     <Compile Include="Api\Work\IDefineWork.cs" />
     <Compile Include="Api\Work\IPerformWork.cs" />
     <Compile Include="Api\Work\IScheduleWork.cs" />
+    <Compile Include="Api\Work\WorkReportBuilder.cs" />
     <Compile Include="Api\_Etc\IConsumeHttp.cs" />
     <Compile Include="Api\_Etc\ISendMail.cs" />
     <Compile Include="Api\_Extensions\ByteExtensions.cs" />
@@ -251,6 +253,13 @@
     <Compile Include="Domain\Agreements\_Internal\QueryAgreementContacts.cs" />
     <Compile Include="Domain\Employees\_Internal\EmployeeConsts.cs" />
     <Compile Include="Domain\Establishments\Queries\EstablishmentByDomain.cs" />
+    <Compile Include="Domain\Places\Commands\EnsurePlaceHierarchies.cs" />
+    <Compile Include="Domain\Places\Commands\CreatePlace.cs" />
+    <Compile Include="Domain\Places\Work\RepairPlaceHierarchies.cs" />
+    <Compile Include="Domain\Places\Work\CanonilizeOceans.cs" />
+    <Compile Include="Domain\Places\Work\ComposeRegions.cs" />
+    <Compile Include="Domain\Places\Work\LoadPacificOceanToponyms.cs" />
+    <Compile Include="Domain\Places\Work\SeedAtlanticOcean.cs" />
     <Compile Include="Domain\_Etc\CompositeId.cs" />
     <Compile Include="Domain\Places\Entities\PlaceNodeId.cs" />
     <Compile Include="Domain\_Etc\EntityWithId.cs" />
@@ -487,6 +496,7 @@
     <Compile Include="Domain\Representatives\Commands\CreateRepModuleSettings.cs" />
     <Compile Include="Domain\Representatives\Entities\ApplicationRecipient.cs" />
     <Compile Include="Domain\Places\Commands\UpdatePlaceGeoNamesReference.cs" />
+    <Compile Include="Domain\Places\Commands\EnsurePlaceHierarchy.cs" />
     <Compile Include="Domain\Places\Commands\UpdatePlaceHierarchy.cs" />
     <Compile Include="Domain\Representatives\Entities\RepModuleSettings.cs" />
     <Compile Include="Domain\Establishments\Queries\EstablishmentCategories.cs" />

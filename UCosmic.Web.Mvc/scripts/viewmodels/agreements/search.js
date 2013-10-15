@@ -287,6 +287,7 @@ var Agreements;
                 return true;
             };
 
+            // TODO: this is also not used anywhere, detailHref on SearchResult is though.
             Search.prototype.detailHref = function (id) {
                 return App.Routes.Mvc.Establishments.show(id);
             };

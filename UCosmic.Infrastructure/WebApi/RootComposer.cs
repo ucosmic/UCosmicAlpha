@@ -18,12 +18,12 @@ namespace UCosmic.WebApi
         internal static void RegisterNGeo(this Container container, RootCompositionSettings settings)
         {
             container.RegisterPerWebRequest<IConsumeGeoNames, GeoNamesClient>();
-            container.RegisterPerWebRequest<IContainGeoNames>(() => 
+            container.RegisterPerWebRequest<IContainGeoNames>(() =>
                 new GeoNamesContainer(ConfigurationManager.AppSettings[AppSettingsKey.GeoNamesUserName.ToString()])
             );
 
             container.RegisterPerWebRequest<IConsumeGeoPlanet, GeoPlanetClient>();
-            container.RegisterPerWebRequest<IContainGeoPlanet>(() => 
+            container.RegisterPerWebRequest<IContainGeoPlanet>(() =>
                 new GeoPlanetContainer(ConfigurationManager.AppSettings[AppSettingsKey.GeoPlanetAppId.ToString()])
             );
 
@@ -31,7 +31,7 @@ namespace UCosmic.WebApi
             if (settings.Flags.HasFlag(RootCompositionFlags.Debug)) return;
 
             container.RegisterPerWebRequest<IConsumePlaceFinder, PlaceFinderClient>();
-            container.RegisterPerWebRequest<IContainPlaceFinder>(() => 
+            container.RegisterPerWebRequest<IContainPlaceFinder>(() =>
                 new PlaceFinderContainer(
                     ConfigurationManager.AppSettings[AppSettingsKey.PlaceFinderConsumerKey.ToString()],
                     ConfigurationManager.AppSettings[AppSettingsKey.PlaceFinderConsumerSecret.ToString()]

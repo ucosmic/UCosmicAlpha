@@ -5,14 +5,14 @@ using FluentValidation.Results;
 
 namespace UCosmic.Domain.Places
 {
-    public class PlacesWithName : BaseEntitiesQuery<Place>, IDefineQuery<Place[]>
+    public class PlacesWithName : BaseEntitiesQuery<Place>, IDefineQuery<IQueryable<Place>>
     {
         public string Term { get; set; }
         public int MaxResults { get; set; }
         public StringMatchStrategy TermMatchStrategy { get; set; }
     }
 
-    public class HandlePlacesWithNameQuery : IHandleQueries<PlacesWithName, Place[]>
+    public class HandlePlacesWithNameQuery : IHandleQueries<PlacesWithName, IQueryable<Place>>
     {
         private readonly IQueryEntities _entities;
 
@@ -21,7 +21,7 @@ namespace UCosmic.Domain.Places
             _entities = entities;
         }
 
-        public Place[] Handle(PlacesWithName query)
+        public IQueryable<Place> Handle(PlacesWithName query)
         {
             if (query == null) throw new ArgumentNullException("query");
 
@@ -45,7 +45,7 @@ namespace UCosmic.Domain.Places
             if (query.MaxResults > 0)
                 results = results.Take(query.MaxResults);
 
-            return results.ToArray();
+            return results;
         }
     }
 }

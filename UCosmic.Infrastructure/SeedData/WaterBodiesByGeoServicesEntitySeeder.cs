@@ -13,17 +13,20 @@ namespace UCosmic.SeedData
         private readonly IQueryEntities _entities;
         private readonly IContainGeoPlanet _geoPlanet;
         private readonly IContainGeoNames _geoNames;
+        private readonly IHandleCommands<UpdatePlace> _updatePlace;
 
         public WaterBodiesByGeoServicesEntitySeeder(IProcessQueries queryProcessor
             , IQueryEntities entities
             , IContainGeoPlanet geoPlanet
             , IContainGeoNames geoNames
+            , IHandleCommands<UpdatePlace> updatePlace
         )
         {
             _queryProcessor = queryProcessor;
             _entities = entities;
             _geoPlanet = geoPlanet;
             _geoNames = geoNames;
+            _updatePlace = updatePlace;
         }
 
         public void Seed()
@@ -32,6 +35,7 @@ namespace UCosmic.SeedData
 
             var watersToSeed = new[] {
                 "Adriatic Sea",
+                "Atlantic Ocean",
                 "Andaman Sea",
                 "Southern Ocean",
                 "Arabian Sea",
@@ -88,12 +92,12 @@ namespace UCosmic.SeedData
                 "White Sea",
                 "Yellow Sea",
             };
+
             var geoPlanetSkips = new[] { "North Atlantic Ocean", "North Pacific Ocean", "South Atlantic Ocean", "South Pacific Ocean", };
 
             foreach (var waterToSeed in watersToSeed)
             {
                 // for bodies of water, trust geonames over geoplanet
-
                 var geoPlanetPlaces = _geoPlanet.Places(waterToSeed);
                 var geoPlanetToponyms = _geoNames.Search(new SearchOptions(SearchType.NameEquals, waterToSeed));
 
@@ -118,6 +122,42 @@ namespace UCosmic.SeedData
                     _queryProcessor.Execute(new PlaceByGeoNameId(geoNamesToponym.GeoNameId));
                 }
             }
+
+            EnsureAllGeoNamesPacificsAreLoaded();
+            CanonilizeOceans();
+        }
+
+        private void EnsureAllGeoNamesPacificsAreLoaded()
+        {
+            // make sure we have both pacifics, but don't change relationship
+            _queryProcessor.Execute(new SingleGeoNamesToponym(8411083));
+            _queryProcessor.Execute(new SingleGeoNamesToponym(2363254));
+        }
+
+        private void CanonilizeOceans()
+        {
+            // need an Atlantic Ocean
+            const string atlanticText = "Atlantic Ocean";
+            const string southAtlanticText = "South Atlantic Ocean";
+            const string northAtlanticText = "North Atlantic Ocean";
+            var atlantic = _entities.Query<Place>().Single(x => x.OfficialName == atlanticText);
+            var subAtlantics = _entities.Query<Place>()
+                .Where(x => x.OfficialName == southAtlanticText || x.OfficialName == northAtlanticText)
+                .Where(x => x.ParentId != atlantic.RevisionId)
+                .ToArray();
+            foreach (var subAtlantic in subAtlantics)
+                _updatePlace.Handle(new UpdatePlace(subAtlantic.RevisionId, atlantic.RevisionId));
+
+            const string pacificText = "Pacific Ocean";
+            const string southPacificText = "South Pacific Ocean";
+            const string northPacificText = "North Pacific Ocean";
+            var pacific = _entities.Query<Place>().Single(x => x.OfficialName == pacificText);
+            var subPacifics = _entities.Query<Place>()
+                .Where(x => x.OfficialName == southPacificText || x.OfficialName == northPacificText)
+                .Where(x => x.ParentId != pacific.RevisionId)
+                .ToArray();
+            foreach (var subPacific in subPacifics)
+                _updatePlace.Handle(new UpdatePlace(subPacific.RevisionId, pacific.RevisionId));
         }
     }
 }
