@@ -9,7 +9,18 @@
     <div data-bind="visible: isBound" style="display: none; font-size: 24px;">
         <div style="margin-bottom: 20px;">
             <div data-bind="text: type" style="margin-bottom: 20px;"></div>
-            <div data-bind="html: participantsNames" style="margin-bottom: 20px;"></div>
+            @*<div data-bind="html: participantsNames" style="margin-bottom: 20px;"></div> *@
+            <span data-bind="foreach: participants" style="margin-bottom: 30px; display: block;">
+                <span style="margin-bottom: 20px; display: block;">
+                    <strong style="display: block;" data-bind="text: establishmentTranslatedName,
+                        visible: (establishmentTranslatedName != null && establishmentOfficialName != establishmentTranslatedName)"></strong>
+                    <span data-bind="text: '(' + establishmentOfficialName + ')',
+                        visible: (establishmentTranslatedName != null && establishmentOfficialName != establishmentTranslatedName && establishmentOfficialName != null)"></span>
+                    <strong style="display: block;" data-bind="text: establishmentOfficialName,
+                        visible: (establishmentTranslatedName === null || establishmentOfficialName === establishmentTranslatedName)"></strong>
+                
+                </span>
+            </span>
             <div style="font-size: 18px;">
                 @if (ViewBag.AgreementVisibility == AgreementVisibility.Private)
                 {

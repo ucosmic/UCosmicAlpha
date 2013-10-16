@@ -25,22 +25,22 @@ module agreements {
     };
 
     export class establishmentSearchNav {
-        constructor(editOrNewUrl, participantsClass, agreementIsEdit, agreementId, scrollBody, dfdPageFadeIn) {
+        constructor(editOrNewUrl, participants, agreementIsEdit, agreementId, scrollBody, deferredPageFadeIn) {
             this.editOrNewUrl = editOrNewUrl;
-            this.participantsClass = participantsClass;
+            this.participants = participants;
             this.agreementIsEdit = agreementIsEdit;
             this.agreementId = agreementId;
             this.scrollBody = scrollBody;
-            this.dfdPageFadeIn = dfdPageFadeIn;
+            this.deferredPageFadeIn = deferredPageFadeIn;
         }
 
         //imported vars
         editOrNewUrl;
-        participantsClass;
+        participants;
         agreementIsEdit;
         agreementId;
         scrollBody;
-        dfdPageFadeIn;
+        deferredPageFadeIn;
 
         //search vars
         establishmentSearchViewModel = new Establishments.ViewModels.Search();
@@ -51,8 +51,8 @@ module agreements {
         SearchPageBind(parentOrParticipant: string): void {
             var $cancelAddParticipant = $("#cancelAddParticipant"),
                 $searchSideBarAddNew = $("#searchSideBarAddNew"),
-                dfd = $.Deferred(),
-                dfd2 = $.Deferred(),
+                deferred = $.Deferred(),
+                deferred2 = $.Deferred(),
                 $obj = $("#allParticipants"),
                 $obj2 = $("#addEstablishment"),
                 time = 500;
@@ -81,30 +81,30 @@ module agreements {
                     return false;
                 });
             }
-            this.fadeModsOut(dfd, dfd2, $obj, $obj2, time);
+            this.fadeModsOut(deferred, deferred2, $obj, $obj2, time);
 
-            $.when(dfd, dfd2).done(function () {
+            $.when(deferred, deferred2).done(function () {
                 $("#estSearch").fadeIn(500);
             });
         }
 
         //fade non active modules out
-        fadeModsOut(dfd, dfd2, $obj, $obj2, time): void {
+        fadeModsOut(deferred, deferred2, $obj, $obj2, time): void {
             if ($obj.css("display") !== "none") {
                 $obj.fadeOut(time, function () {
-                    dfd.resolve();
+                    deferred.resolve();
                 });
             }
             else {
-                dfd.resolve();
+                deferred.resolve();
             }
             if ($obj2.css("display") !== "none") {
                 $obj2.fadeOut(time, function () {
-                    dfd2.resolve();
+                    deferred2.resolve();
                 });
             }
             else {
-                dfd2.resolve();
+                deferred2.resolve();
             }
         }
 
@@ -135,14 +135,14 @@ module agreements {
 
                         if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("" + this.editOrNewUrl.val + "#/new/") > 0) {
                             var $addEstablishment = $("#addEstablishment");
-                                dfd = $.Deferred(),
-                                dfd2 = $.Deferred(),
+                                deferred = $.Deferred(),
+                                deferred2 = $.Deferred(),
                                 $obj = $("#estSearch"),
                                 $obj2 = $("#allParticipants"),
                                 time = 500;
 
-                            this.fadeModsOut(dfd, dfd2, $obj, $obj2, time);
-                            $.when(dfd, dfd2)
+                            this.fadeModsOut(deferred, deferred2, $obj, $obj2, time);
+                            $.when(deferred, deferred2)
                                 .done(() => {
                                     $addEstablishment.css("visibility", "").hide().fadeIn(500, () => {
                                         if (!this.hasBoundItem) {
@@ -269,8 +269,8 @@ module agreements {
                                         ),
                                         alreadyExist = false;
 
-                                    for (var i = 0, j = this.participantsClass.participants().length; i < j; i++) {
-                                        if (this.participantsClass.participants()[i].establishmentId() === myParticipant.establishmentId()) {
+                                    for (var i = 0, j = this.participants.participants().length; i < j; i++) {
+                                        if (this.participants.participants()[i].establishmentId() === myParticipant.establishmentId()) {
                                             alreadyExist = true;
                                             break;
                                         }
@@ -284,42 +284,42 @@ module agreements {
                                             .done((response) => {
                                                 myParticipant.isOwner(response);
                                                 if (this.agreementIsEdit()) {
-                                                    var url = App.Routes.WebApi.Agreements.Participants.put(this.agreementId.val, myParticipant.establishmentId());
+                                                    var url = App.Routes.WebApi.Agreements.Participants.put(this.agreementId, myParticipant.establishmentId());
 
                                                     $.ajax({
                                                         type: 'PUT',
                                                         url: url,
                                                         data: myParticipant,
                                                         success: (response: any, statusText: string, xhr: JQueryXHR): void => {
-                                                            this.participantsClass.participants.push(myParticipant);
+                                                            this.participants.participants.push(myParticipant);
                                                         },
                                                         error: (xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
                                                             alert(xhr.responseText);
                                                         }
                                                     });
                                                 } else {
-                                                    this.participantsClass.participants.push(myParticipant);
+                                                    this.participants.participants.push(myParticipant);
                                                 }
                                                 this.establishmentSearchViewModel.sammy.setLocation("agreements/" + this.editOrNewUrl.val + "");
                                                 $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * .85)));
                                             })
                                             .fail(() => {
                                                 if (this.agreementIsEdit()) {
-                                                    var url = App.Routes.WebApi.Agreements.Participants.put(this.agreementId.val, myParticipant.establishmentId());
+                                                    var url = App.Routes.WebApi.Agreements.Participants.put(this.agreementId, myParticipant.establishmentId());
 
                                                     $.ajax({
                                                         type: 'PUT',
                                                         url: url,
                                                         data: myParticipant,
                                                         success: (response: any, statusText: string, xhr: JQueryXHR): void => {
-                                                            this.participantsClass.participants.push(myParticipant);
+                                                            this.participants.participants.push(myParticipant);
                                                         },
                                                         error: (xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
                                                             alert(xhr.responseText);
                                                         }
                                                     });
                                                 } else {
-                                                    this.participantsClass.participants.push(myParticipant);
+                                                    this.participants.participants.push(myParticipant);
                                                 }
                                                 this.establishmentSearchViewModel.sammy.setLocation("agreements/" + this.editOrNewUrl.val + "");
                                             });
@@ -332,8 +332,8 @@ module agreements {
                             this.scrollBody.scrollMyBody(0);
                             lastURL = "#/page/";
                         } else if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("agreements/" + this.editOrNewUrl.val + "") > 0) {
-                            var dfd = $.Deferred(),
-                                dfd2 = $.Deferred(),
+                            var deferred = $.Deferred(),
+                                deferred2 = $.Deferred(),
                                 $obj = $("#estSearch"),
                                 $obj2 = $("#addEstablishment"),
                                 time = 500;
@@ -341,13 +341,13 @@ module agreements {
                             sessionStorage.setItem("addest", "no");
                             lastURL = "#/index";
                             this.establishmentSearchViewModel.sammy.setLocation('#/index');
-                            this.fadeModsOut(dfd, dfd2, $obj, $obj2, time);
-                            $.when(dfd, dfd2)
+                            this.fadeModsOut(deferred, deferred2, $obj, $obj2, time);
+                            $.when(deferred, deferred2)
                                 .done(() => {
                                     $("#allParticipants").fadeIn(500).promise().done(() => {
                                         $(this).show();
                                         this.scrollBody.scrollMyBody(0);
-                                        this.dfdPageFadeIn.resolve();
+                                        this.deferredPageFadeIn.resolve();
                                     });
                                 });
                         } else {

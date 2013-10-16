@@ -43,6 +43,20 @@ module Agreements.ViewModels {
 
             this.changeLens(this.lenses()[0]);
             this.requestResults = <() => void > this.requestResults.bind(this);
+
+            this.prevPage = (): void => {
+                if (this.pageNumber() > 1) {
+                    var pageNumber = Number(this.pageNumber()) - 1;
+                    this.pageNumber(pageNumber);
+                }
+            }
+            this.nextPage = (): void => {
+                if (this.nextEnabled()) {
+                var pageNumber = Number(this.pageNumber()) + 1;
+                this.pageNumber(pageNumber);
+            }
+        }
+        
         }
         header = ko.observable();
         $searchResults = $("#searchResults");
@@ -50,8 +64,9 @@ module Agreements.ViewModels {
         deferredFadeInOut2 = $.Deferred();
         optionsEnabled = ko.observable(true);
         //domain;
-        //imported classes
-        publicViewClass
+
+        //imported class instances
+        publicView
 
         private _init() {
             this._setupCountryDropDown();
@@ -146,7 +161,7 @@ module Agreements.ViewModels {
             // // to do the following I need to set a location with sammy
             ////$("nav.bib .search").removeClass("current");
             ////$("nav.bib ul").append("<li class='view current'><span> View </span></ li>");
-            ////this.publicViewClass.agreementId.val = viewModel.id();
+            ////this.publicViewClass.agreementId = viewModel.id();
             ////this.publicViewClass.getData();
             ////$("#search").fadeOut(500, function () {
             ////    $("#publicView").fadeIn(500);
@@ -235,7 +250,7 @@ module Agreements.ViewModels {
         };
         swipeCallback(): void {
         }
-        receiveResults(js: ApiModels.FlatEstablishment[]): void {
+        receiveResults(js: any): void {
             if (!js) {
                 ko.mapping.fromJS({
                     items: [],
@@ -287,7 +302,7 @@ module Agreements.ViewModels {
                         orderBy: this.orderBy(),
                         //myDomain: this.domain
                     })
-                        .done((response: ApiModels.FlatEstablishment[]): void => {
+                        .done((response: any): void => {
                             $.when(this.deferredFadeInOut)
                                 .done(() => {
                                     this.receiveResults(response);

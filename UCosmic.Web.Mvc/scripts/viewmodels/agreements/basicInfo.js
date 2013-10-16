@@ -7,7 +7,7 @@
 var agreements;
 (function (agreements) {
     var basicInfo = (function () {
-        function basicInfo(agreementId, dfdUAgreements) {
+        function basicInfo(agreementId, deferredUAgreements) {
             //basic info vars
             this.$uAgreements = ko.observable();
             this.uAgreements = ko.mapping.fromJS([]);
@@ -23,13 +23,13 @@ var agreements;
             this.isCustomStatusAllowed = ko.observable();
             this.isCustomContactTypeAllowed = ko.observable();
             this.agreementId = agreementId;
-            this.dfdUAgreements = dfdUAgreements;
+            this.deferredUAgreements = deferredUAgreements;
             this._setupValidation = this._setupValidation.bind(this);
             this._setupValidation();
         }
         basicInfo.prototype.populateUmbrella = function () {
             var _this = this;
-            $.get(App.Routes.WebApi.Agreements.UmbrellaOptions.get(this.agreementId.val)).done(function (response) {
+            $.get(App.Routes.WebApi.Agreements.UmbrellaOptions.get(this.agreementId)).done(function (response) {
                 _this.uAgreements(response);
                 $("#uAgreements").kendoDropDownList({
                     dataTextField: "text",
@@ -39,7 +39,7 @@ var agreements;
                         data: _this.uAgreements()
                     })
                 });
-                _this.dfdUAgreements.resolve();
+                _this.deferredUAgreements.resolve();
             });
         };
 

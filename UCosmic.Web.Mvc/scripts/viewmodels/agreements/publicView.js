@@ -29,35 +29,16 @@ var Agreements;
                 this.startsOn = ko.observable();
                 this.type = ko.observable();
                 this.umbrellaId = ko.observable();
-                this.myUrl = window.location.href.toLowerCase();
-                //#region Name computeds
-                // TODO: do not create view elements in the viewmodel like this. do it with bindings.
-                // see the removed participantsNames computed in searchResult.ts for reference.
-                this.participantsNames = ko.computed(function () {
-                    var myName = "";
-                    ko.utils.arrayForEach(_this.participants(), function (item) {
-                        myName += "<div style='margin-bottom:10px'>";
-                        if (item.establishmentTranslatedName != null && item.establishmentOfficialName != item.establishmentTranslatedName && item.establishmentOfficialName != null) {
-                            myName += "<strong>" + item.establishmentTranslatedName + "</strong><br /> (" + item.establishmentOfficialName + ")";
-                        } else if (item.establishmentTranslatedName != null && item.establishmentOfficialName != item.establishmentTranslatedName) {
-                            myName += "<strong>" + item.establishmentTranslatedName + "</strong>";
-                        } else {
-                            myName += "<strong>" + item.establishmentOfficialName + "</strong>";
-                        }
-                        myName += "</div>";
-                    });
-                    return myName;
-                });
                 this._googleMarkers = ko.observableArray();
                 if (isNaN(agreementId)) {
                     agreementId = 0;
                 }
-                this.agreementId = { val: agreementId };
+                this.agreementId = agreementId;
                 this.agreementVisibility = agreementVisibility || 'Public';
-                this.populateFilesClass = new agreements.populateFiles();
+                this.populateFiles = new agreements.populateFiles();
                 this._setupDateComputeds();
 
-                if (this.agreementId.val !== 0) {
+                if (this.agreementId !== 0) {
                     //this.getData();
                     var dataBound = this._bindData();
 
@@ -68,12 +49,13 @@ var Agreements;
                     });
                 }
             }
+            //myUrl = window.location.href.toLowerCase();
             //partners;
             //agreementId = { val: 0 }
             PublicView.prototype._bindData = function () {
                 var _this = this;
                 var deferred = $.Deferred();
-                $.get(App.Routes.WebApi.Agreements.get(this.agreementId.val)).done(function (response) {
+                $.get(App.Routes.WebApi.Agreements.get(this.agreementId)).done(function (response) {
                     var mapping = {
                         participants: {
                             create: function (options) {
@@ -90,7 +72,7 @@ var Agreements;
 
             PublicView.prototype.getData = function () {
                 var _this = this;
-                $.get(App.Routes.WebApi.Agreements.get(this.agreementId.val)).done(function (response) {
+                $.get(App.Routes.WebApi.Agreements.get(this.agreementId)).done(function (response) {
                     _this.content(response.content);
                     _this.expiresOn(response.expiresOn);
                     _this.isAutoRenew(response.isAutoRenew);
@@ -105,28 +87,8 @@ var Agreements;
                     _this.isBound(true);
                     //this.partners = response.participants;
                 });
-                this.populateFilesClass.populate(this.agreementId);
-                this.files = this.populateFilesClass.files;
-            };
-
-            PublicView.prototype._setupNameComputeds = function () {
-                var _this = this;
-                // are the official name and translated name the same?
-                this.participantsNames = ko.computed(function () {
-                    var myName = "";
-                    ko.utils.arrayForEach(_this.participants(), function (item) {
-                        myName += "<div style='margin-bottom:10px'>";
-                        if (item.establishmentTranslatedName() != null && item.establishmentOfficialName() != item.establishmentTranslatedName() && item.establishmentOfficialName() != null) {
-                            myName += "<strong>" + item.establishmentTranslatedName() + "</strong><br /> (" + item.establishmentOfficialName() + ")";
-                        } else if (item.establishmentTranslatedName() != null && item.establishmentOfficialName() != item.establishmentTranslatedName()) {
-                            myName += "<strong>" + item.establishmentTranslatedName() + "</strong>";
-                        } else {
-                            myName += "<strong>" + item.establishmentOfficialName() + "</strong>";
-                        }
-                        myName += "</div>";
-                    });
-                    return myName;
-                });
+                this.populateFiles.populate(this.agreementId);
+                this.files = this.populateFiles.files;
             };
 
             PublicView.prototype._setupDateComputeds = function () {
@@ -241,10 +203,10 @@ var Agreements;
             //    function initialize() {
             //        // /api/agreements/{agreementId}/partners
             //        //var mapUrl = $('#agreementPartners_api').text();
-            //        //var params = { agreementId: self.agreementId.val };
+            //        //var params = { agreementId: self.agreementId };
             //        //mapUrl = '{0}'.format(mapUrl, $.param(params));
-            //        //$('#agreementPartners_api').text().format(self.agreementId.val)
-            //        $.get($('#agreementPartners_api').text().format(self.agreementId.val))
+            //        //$('#agreementPartners_api').text().format(self.agreementId)
+            //        $.get($('#agreementPartners_api').text().format(self.agreementId))
             //            .done((response: any): void => {
             //                var lat = -34.397, long = 150.644, googleMapZoomLevel, mapOptions,
             //                    map;
@@ -292,7 +254,7 @@ var Agreements;
                         mapMaker: true
                     });
                     map.fitBounds(bounds);
-                    //$.get($('#agreementPartners_api').text().format(self.agreementId.val))
+                    //$.get($('#agreementPartners_api').text().format(self.agreementId))
                     //    .done((response: any): void => {
                     //        var lat = -34.397, long = 150.644, googleMapZoomLevel, mapOptions,
                     //            map;

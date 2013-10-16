@@ -8,7 +8,7 @@ namespace UCosmic.Web.Mvc.Models
     public class AgreementApiModel
     {
         public int Id { get; set; }
-        public int UmbrellaId { get; set; }
+        public int? UmbrellaId { get; set; }
         public string Name { get; set; }
         public string Type { get; set; }
         public string Content { get; set; }

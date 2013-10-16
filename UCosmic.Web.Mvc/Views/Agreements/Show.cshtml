@@ -11,7 +11,7 @@
 {
     @Scripts.Render("~/bundles/agreementPublicView")
     <script type="text/javascript">
-        var viewModel = new Agreements.ViewModels.PublicView(parseInt('@ViewBag.AgreementId'), '@ViewBag.AgreementVisibility');
+        var viewModel = new Agreements.ViewModels.PublicView(parseInt(@ViewBag.AgreementId), '@ViewBag.AgreementVisibility');
         ko.applyBindings(viewModel, $('#publicView')[0]);
     </script>
 }

@@ -4,15 +4,15 @@
 module agreements {
 
     export class contacts {
-        constructor(isCustomContactTypeAllowed, establishmentItemViewModel, agreementIsEdit, agreementId, kendoWindowBug, dfdPopContacts) {
+        constructor(isCustomContactTypeAllowed, establishmentItemViewModel, agreementIsEdit, agreementId, kendoWindowBug, deferredPopContacts) {
 
             this.agreementId = agreementId;
-            this.phonesClass = new agreements.phones(agreementId, establishmentItemViewModel, this.contactId);
+            this.phones = new agreements.phones(agreementId, establishmentItemViewModel, this.contactId);
             this.isCustomContactTypeAllowed = isCustomContactTypeAllowed;
             this.establishmentItemViewModel = establishmentItemViewModel;
             this.agreementIsEdit = agreementIsEdit;
             this.kendoWindowBug = kendoWindowBug;
-            this.dfdPopContacts = dfdPopContacts;
+            this.deferredPopContacts = deferredPopContacts;
             this._setupValidation = <() => void > this._setupValidation.bind(this);
             this.editAContact = <() => boolean> this.editAContact.bind(this);
             this.removeContact = <() => boolean> this.removeContact.bind(this);
@@ -35,8 +35,8 @@ module agreements {
             this._setupValidation();
         }
 
-        //imported classes
-        phonesClass;
+        //imported class instances
+        phones;
 
         //imported vars
         isCustomContactTypeAllowed;
@@ -44,7 +44,7 @@ module agreements {
         agreementIsEdit;
         agreementId;
         kendoWindowBug;
-        dfdPopContacts;
+        deferredPopContacts;
 
         //contact vars
         $contactTypeOptions: KnockoutObservable<JQuery> = ko.observable();
@@ -105,7 +105,7 @@ module agreements {
                 if (data.type == null) {
                     data.type = '';
                 }
-                this.phonesClass.contactPhones.push(data);
+                this.phones.contactPhones.push(data);
             })
             this.contactMiddleName(me.middleName());
             this.contactIndex = this.contacts.indexOf(me)
@@ -139,7 +139,7 @@ module agreements {
                 dataTextField: "name",
                 dataValueField: "id",
                 dataSource: new kendo.data.DataSource({
-                    data: ko.mapping.toJS(this.phonesClass.phoneTypes())
+                    data: ko.mapping.toJS(this.phones.phoneTypes())
                 })
             })
             $("input.phoneTypes").each(function (index) {
@@ -168,7 +168,7 @@ module agreements {
                 this.contacts()[this.contactIndex].lastName(this.contactLastName());
                 this.contacts()[this.contactIndex].middleName(this.contactMiddleName());
                 this.contacts()[this.contactIndex].phones.removeAll();
-                $.each(this.phonesClass.contactPhones(), (i, item) => {
+                $.each(this.phones.contactPhones(), (i, item) => {
                     data = ko.mapping.toJS({
                         id: item.id,
                         contactId: item.contactId,
@@ -183,7 +183,7 @@ module agreements {
                 $("#addAContact").fadeIn(500);
                 if (this.agreementIsEdit()) {
                     var data, url;
-                    this.contacts()[this.contactIndex].agreementId(this.agreementId.val)
+                    this.contacts()[this.contactIndex].agreementId(this.agreementId)
 
                     data = {
                         agreementId: this.contacts()[this.contactIndex].agreementId(),
@@ -199,7 +199,7 @@ module agreements {
                         Phones: this.contacts()[this.contactIndex].phones(),
                         Title: this.contacts()[this.contactIndex].title()
                     }
-                    url = App.Routes.WebApi.Agreements.Contacts.put(this.agreementId.val, this.contacts()[this.contactIndex].id());
+                    url = App.Routes.WebApi.Agreements.Contacts.put(this.agreementId, this.contacts()[this.contactIndex].id());
                     $.ajax({
                         type: 'PUT',
                         url: url,
@@ -238,14 +238,14 @@ module agreements {
                     this.contactDisplayName(this.contactFirstName() + " " + this.contactLastName());
                 }
                 data = {
-                    agreementId: this.agreementId.val,
+                    agreementId: this.agreementId,
                     title: this.contactJobTitle(),
                     firstName: this.contactFirstName(),
                     lastName: this.contactLastName(),
                     id: this.contactUserId(),
                     personId: this.contactPersonId(),
                     userId: this.contactUserId(),
-                    phones: ko.mapping.toJS(this.phonesClass.contactPhones()),
+                    phones: ko.mapping.toJS(this.phones.contactPhones()),
                     emailAddress: this.contactEmail(),
                     type: this.contactTypeOptionSelected(),
                     suffix: this.contactSuffixSelected(),
@@ -257,7 +257,7 @@ module agreements {
                 $("#addAContact").fadeIn(500);
                 $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * .85)));
                 if (this.agreementIsEdit()) {
-                    var url = App.Routes.WebApi.Agreements.Contacts.post(this.agreementId.val);
+                    var url = App.Routes.WebApi.Agreements.Contacts.post(this.agreementId);
 
                     $.post(url, data)
                         .done((response: any, statusText: string, xhr: JQueryXHR): void => {
@@ -323,7 +323,7 @@ module agreements {
             this.contactFirstName('');
             this.contactMiddleName('');
             this.contactLastName('');
-            this.phonesClass.contactPhones.removeAll();
+            this.phones.contactPhones.removeAll();
             this.contactTypeOptionSelected('');
             if (this.isCustomContactTypeAllowed) {
                 dropdownlist = $("#contactTypeOptions").data("kendoComboBox");
@@ -345,7 +345,7 @@ module agreements {
                     var url = "";
 
                     if (this.agreementIsEdit()) {
-                        url = App.Routes.WebApi.Agreements.Contacts.del(this.agreementId.val, me.id());
+                        url = App.Routes.WebApi.Agreements.Contacts.del(this.agreementId, me.id());
 
                         $.ajax({
                             url: url,
@@ -495,7 +495,7 @@ module agreements {
                     context.type = $(this).val()
                 }
                 if (context.id) {
-                    var url = App.Routes.WebApi.Agreements.Contacts.Phones.put(self.agreementId.val, context.contactId, context.id);
+                    var url = App.Routes.WebApi.Agreements.Contacts.Phones.put(self.agreementId, context.contactId, context.id);
 
                     $.ajax({
                         type: 'PUT',
@@ -530,7 +530,7 @@ module agreements {
                 if ($(this).val() == '') {
                     $("#phoneNumberValidate" + context.id).css("visibility", "visible");
                 } else {
-                    var url = App.Routes.WebApi.Agreements.Contacts.Phones.put(self.agreementId.val, context.contactId, context.id);
+                    var url = App.Routes.WebApi.Agreements.Contacts.Phones.put(self.agreementId, context.contactId, context.id);
 
                     $("#phoneNumberValidate" + context.id).css("visibility", "hidden");
                     $.ajax({
@@ -634,10 +634,10 @@ module agreements {
         }
 
         populateContacts(): void {
-            $.get(App.Routes.WebApi.Agreements.Contacts.get(this.agreementId.val), { useTestData: false })
+            $.get(App.Routes.WebApi.Agreements.Contacts.get(this.agreementId), { useTestData: false })
                 .done((response: any): void => {
                     ko.mapping.fromJS(response, this.contacts)
-                    this.dfdPopContacts.resolve();
+                    this.deferredPopContacts.resolve();
                 });
 
         }
@@ -667,12 +667,12 @@ module agreements {
 
         //part of save agreement
         agreementPostContacts(response: any, statusText: string, xhr: JQueryXHR): void {
-            var tempUrl = App.Routes.WebApi.Agreements.Contacts.post(this.agreementId.val),
+            var tempUrl = App.Routes.WebApi.Agreements.Contacts.post(this.agreementId),
                 data;
 
             $.each(this.contacts(), (i, item) => {
                 data = {
-                    agreementId: this.agreementId.val,
+                    agreementId: this.agreementId,
                     title: item.title(),
                     firstName: item.firstName(),
                     lastName: item.lastName(),

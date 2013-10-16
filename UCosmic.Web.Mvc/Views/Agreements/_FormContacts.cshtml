@@ -132,7 +132,7 @@
                     </div>
                 </div>
             </div>
-            <ul data-bind="foreach: phonesClass.contactPhones" style="margin-top: 40px; margin-bottom: 16px">
+            <ul data-bind="foreach: phones.contactPhones" style="margin-top: 40px; margin-bottom: 16px">
                 <li>
                     <div class="field-row" style="margin-bottom: 5px">
                         <div class="field-column-left">
@@ -154,7 +154,7 @@
                                 <input  class="phoneTypes" type="text" placeholder="[None]" 
                                        data-bind="value: type, valueUpdate: 'afterkeydown', attr: { id: 'phoneTypes' + $index() }" />
                             </div>
-                            <a title="Remove this phone" data-bind="click: $root.phonesClass.removePhone"><i class="red minus on-right"></i></a>
+                            <a title="Remove this phone" data-bind="click: $root.phones.removePhone"><i class="red minus on-right"></i></a>
                         </div>
                     </div>
                 </li>
@@ -165,9 +165,9 @@
                         <label>New phone</label>
                     </div>
                     <div class="field-input-label-top"  style="width: 400px">
-                        <input id="contactPhoneTextValue" type="text" data-bind="value: phonesClass.contactPhoneTextValue" />
+                        <input id="contactPhoneTextValue" type="text" data-bind="value: phones.contactPhoneTextValue" />
                     </div>
-                    <a title="add phone" data-bind="click: phonesClass.addPhone" class="addLink on-right"><i class="green plus"></i></a>
+                    <a title="add phone" data-bind="click: phones.addPhone" class="addLink on-right"><i class="green plus"></i></a>
                 </div>
             </div>
             <footer>

@@ -32,7 +32,7 @@ var agreements;
         }
         phones.prototype.removePhone = function (me, e) {
             var _this = this;
-            var url = App.Routes.WebApi.Agreements.Contacts.Phones.del(this.agreementId.val, me.contactId, me.id);
+            var url = App.Routes.WebApi.Agreements.Contacts.Phones.del(this.agreementId, me.contactId, me.id);
 
             $.ajax({
                 url: url,
@@ -68,7 +68,7 @@ var agreements;
             this.contactPhoneTextValue.subscribe(function (me) {
                 if (_this.contactPhoneTextValue().length > 0) {
                     if (_this.contactId()) {
-                        var url = App.Routes.WebApi.Agreements.Contacts.Phones.post(_this.agreementId.val, _this.contactId()), data = { id: "0", type: '', contactId: _this.contactId(), value: _this.contactPhoneTextValue() };
+                        var url = App.Routes.WebApi.Agreements.Contacts.Phones.post(_this.agreementId, _this.contactId()), data = { id: "0", type: '', contactId: _this.contactId(), value: _this.contactPhoneTextValue() };
 
                         $.post(url, data).done(function (response, statusText, xhr) {
                             var myUrl = xhr.getResponseHeader('Location');

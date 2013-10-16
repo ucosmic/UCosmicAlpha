@@ -9,7 +9,7 @@ module agreements {
             this.agreementIsEdit = agreementIsEdit;
             this.spinner = spinner;
             this.establishmentItemViewModel = establishmentItemViewModel;
-            //this.dfdPopFiles = dfdPopFiles;
+            //this.deferredPopFiles = deferredPopFiles;
             this.updateFile = <() => void > this.updateFile.bind(this);
             this.fileVisibilityClicked = <() => boolean > this.fileVisibilityClicked.bind(this);
             this.removeFile = <() => void > this.removeFile.bind(this);
@@ -20,7 +20,7 @@ module agreements {
         agreementIsEdit;
         spinner;
         establishmentItemViewModel;
-        dfdPopFiles;
+        deferredPopFiles;
 
         //file vars
         $file: KnockoutObservable<JQuery> = ko.observable();
@@ -43,7 +43,7 @@ module agreements {
             var saveUrl = "";
 
             if (this.agreementIsEdit()) {
-                    saveUrl = App.Routes.WebApi.Agreements.Files.post(this.agreementId.val)
+                    saveUrl = App.Routes.WebApi.Agreements.Files.post(this.agreementId)
             } else {
                     saveUrl = App.Routes.WebApi.Uploads.post()
             }
@@ -89,7 +89,7 @@ module agreements {
                             originalName: e.files[0].name,
                             visibility: 'Private',
                             customName: e.files[0].name,
-                            agreementId: this.agreementId.val
+                            agreementId: this.agreementId
                         }
                 }
                     if (!e.isDefaultPrevented()) {
@@ -161,7 +161,7 @@ module agreements {
                 var url = "";
 
                 if (this.agreementIsEdit()) {
-                    url = App.Routes.WebApi.Agreements.Files.del(this.agreementId.val, me.id());
+                    url = App.Routes.WebApi.Agreements.Files.del(this.agreementId, me.id());
                 } else {
                     url = App.Routes.WebApi.Uploads.del(me.guid());
                 }
@@ -201,7 +201,7 @@ module agreements {
                     customName: me.customName,
                     visibility: me.visibility
                 }),
-                    url = App.Routes.WebApi.Agreements.Files.put(this.agreementId.val, me.id());
+                    url = App.Routes.WebApi.Agreements.Files.put(this.agreementId, me.id());
 
                 $.ajax({
                     type: 'PUT',
@@ -245,14 +245,14 @@ module agreements {
             //add e.target.textContent for double click firing.
             if (this.agreementIsEdit() && e.target.textContent == "") {
                 var data = ko.mapping.toJS({
-                    agreementId: this.agreementId.val,
+                    agreementId: this.agreementId,
                     uploadGuid: me.guid,
                     originalName: me.guid,
                     extension: me.extension,
                     customName: me.customName,
                     visibility: me.visibility
                 }),
-                    url = App.Routes.WebApi.Agreements.Files.put(this.agreementId.val, me.id());
+                    url = App.Routes.WebApi.Agreements.Files.put(this.agreementId, me.id());
 
                 $.ajax({
                     type: 'PUT',
@@ -283,7 +283,7 @@ module agreements {
         }
 
         //populateFiles(): void {
-        //    $.get(App.Routes.WebApi.Agreements.Files.get(this.agreementId.val), { useTestData: true })
+        //    $.get(App.Routes.WebApi.Agreements.Files.get(this.agreementId), { useTestData: true })
         //        .done((response: any): void => {
         //            $.each(response, (i, item) => {
         //                this.files.push(ko.mapping.fromJS({
@@ -296,7 +296,7 @@ module agreements {
         //                    customNameExt: item.customName.substring(item.customName.lastIndexOf("."), item.customName.length)
         //                }));
         //            });
-        //            this.dfdPopFiles.resolve();
+        //            this.deferredPopFiles.resolve();
         //        });
         //}
 
@@ -325,7 +325,7 @@ module agreements {
 
         //part of save agreement
         agreementPostFiles(response: any, statusText: string, xhr: JQueryXHR): void {
-            var tempUrl = App.Routes.WebApi.Agreements.Files.post(this.agreementId.val),
+            var tempUrl = App.Routes.WebApi.Agreements.Files.post(this.agreementId),
                 data;
 
             $.each(this.files(), (i, item) => {

@@ -23,21 +23,21 @@ var agreements;
     ;
 
     var establishmentSearchNav = (function () {
-        function establishmentSearchNav(editOrNewUrl, participantsClass, agreementIsEdit, agreementId, scrollBody, dfdPageFadeIn) {
+        function establishmentSearchNav(editOrNewUrl, participants, agreementIsEdit, agreementId, scrollBody, deferredPageFadeIn) {
             //search vars
             this.establishmentSearchViewModel = new Establishments.ViewModels.Search();
             this.hasBoundSearch = { does: false };
             this.hasBoundItem = false;
             this.editOrNewUrl = editOrNewUrl;
-            this.participantsClass = participantsClass;
+            this.participants = participants;
             this.agreementIsEdit = agreementIsEdit;
             this.agreementId = agreementId;
             this.scrollBody = scrollBody;
-            this.dfdPageFadeIn = dfdPageFadeIn;
+            this.deferredPageFadeIn = deferredPageFadeIn;
         }
         establishmentSearchNav.prototype.SearchPageBind = function (parentOrParticipant) {
             var _this = this;
-            var $cancelAddParticipant = $("#cancelAddParticipant"), $searchSideBarAddNew = $("#searchSideBarAddNew"), dfd = $.Deferred(), dfd2 = $.Deferred(), $obj = $("#allParticipants"), $obj2 = $("#addEstablishment"), time = 500;
+            var $cancelAddParticipant = $("#cancelAddParticipant"), $searchSideBarAddNew = $("#searchSideBarAddNew"), deferred = $.Deferred(), deferred2 = $.Deferred(), $obj = $("#allParticipants"), $obj2 = $("#addEstablishment"), time = 500;
 
             this.establishmentSearchViewModel.detailTooltip = function () {
                 return 'Choose this establishment as a ' + parentOrParticipant;
@@ -63,28 +63,28 @@ var agreements;
                     return false;
                 });
             }
-            this.fadeModsOut(dfd, dfd2, $obj, $obj2, time);
+            this.fadeModsOut(deferred, deferred2, $obj, $obj2, time);
 
-            $.when(dfd, dfd2).done(function () {
+            $.when(deferred, deferred2).done(function () {
                 $("#estSearch").fadeIn(500);
             });
         };
 
         //fade non active modules out
-        establishmentSearchNav.prototype.fadeModsOut = function (dfd, dfd2, $obj, $obj2, time) {
+        establishmentSearchNav.prototype.fadeModsOut = function (deferred, deferred2, $obj, $obj2, time) {
             if ($obj.css("display") !== "none") {
                 $obj.fadeOut(time, function () {
-                    dfd.resolve();
+                    deferred.resolve();
                 });
             } else {
-                dfd.resolve();
+                deferred.resolve();
             }
             if ($obj2.css("display") !== "none") {
                 $obj2.fadeOut(time, function () {
-                    dfd2.resolve();
+                    deferred2.resolve();
                 });
             } else {
-                dfd2.resolve();
+                deferred2.resolve();
             }
         };
 
@@ -116,10 +116,10 @@ var agreements;
 
                         if (_this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("" + _this.editOrNewUrl.val + "#/new/") > 0) {
                             var $addEstablishment = $("#addEstablishment");
-                            dfd = $.Deferred(), dfd2 = $.Deferred(), $obj = $("#estSearch"), $obj2 = $("#allParticipants"), time = 500;
+                            deferred = $.Deferred(), deferred2 = $.Deferred(), $obj = $("#estSearch"), $obj2 = $("#allParticipants"), time = 500;
 
-                            _this.fadeModsOut(dfd, dfd2, $obj, $obj2, time);
-                            $.when(dfd, dfd2).done(function () {
+                            _this.fadeModsOut(deferred, deferred2, $obj, $obj2, time);
+                            $.when(deferred, deferred2).done(function () {
                                 $addEstablishment.css("visibility", "").hide().fadeIn(500, function () {
                                     if (!_this.hasBoundItem) {
                                         var $cancelAddEstablishment = $("#cancelAddEstablishment");
@@ -231,8 +231,8 @@ var agreements;
                                 _this.establishmentSearchViewModel.clickAction = function (context) {
                                     var myParticipant = new InstitutionalAgreementParticipantModel(false, context.id(), context.officialName(), context.translatedName()), alreadyExist = false;
 
-                                    for (var i = 0, j = _this.participantsClass.participants().length; i < j; i++) {
-                                        if (_this.participantsClass.participants()[i].establishmentId() === myParticipant.establishmentId()) {
+                                    for (var i = 0, j = _this.participants.participants().length; i < j; i++) {
+                                        if (_this.participants.participants()[i].establishmentId() === myParticipant.establishmentId()) {
                                             alreadyExist = true;
                                             break;
                                         }
@@ -245,41 +245,41 @@ var agreements;
                                         }).done(function (response) {
                                             myParticipant.isOwner(response);
                                             if (_this.agreementIsEdit()) {
-                                                var url = App.Routes.WebApi.Agreements.Participants.put(_this.agreementId.val, myParticipant.establishmentId());
+                                                var url = App.Routes.WebApi.Agreements.Participants.put(_this.agreementId, myParticipant.establishmentId());
 
                                                 $.ajax({
                                                     type: 'PUT',
                                                     url: url,
                                                     data: myParticipant,
                                                     success: function (response, statusText, xhr) {
-                                                        _this.participantsClass.participants.push(myParticipant);
+                                                        _this.participants.participants.push(myParticipant);
                                                     },
                                                     error: function (xhr, statusText, errorThrown) {
                                                         alert(xhr.responseText);
                                                     }
                                                 });
                                             } else {
-                                                _this.participantsClass.participants.push(myParticipant);
+                                                _this.participants.participants.push(myParticipant);
                                             }
                                             _this.establishmentSearchViewModel.sammy.setLocation("agreements/" + _this.editOrNewUrl.val + "");
                                             $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * .85)));
                                         }).fail(function () {
                                             if (_this.agreementIsEdit()) {
-                                                var url = App.Routes.WebApi.Agreements.Participants.put(_this.agreementId.val, myParticipant.establishmentId());
+                                                var url = App.Routes.WebApi.Agreements.Participants.put(_this.agreementId, myParticipant.establishmentId());
 
                                                 $.ajax({
                                                     type: 'PUT',
                                                     url: url,
                                                     data: myParticipant,
                                                     success: function (response, statusText, xhr) {
-                                                        _this.participantsClass.participants.push(myParticipant);
+                                                        _this.participants.participants.push(myParticipant);
                                                     },
                                                     error: function (xhr, statusText, errorThrown) {
                                                         alert(xhr.responseText);
                                                     }
                                                 });
                                             } else {
-                                                _this.participantsClass.participants.push(myParticipant);
+                                                _this.participants.participants.push(myParticipant);
                                             }
                                             _this.establishmentSearchViewModel.sammy.setLocation("agreements/" + _this.editOrNewUrl.val + "");
                                         });
@@ -292,17 +292,17 @@ var agreements;
                             _this.scrollBody.scrollMyBody(0);
                             lastURL = "#/page/";
                         } else if (_this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("agreements/" + _this.editOrNewUrl.val + "") > 0) {
-                            var dfd = $.Deferred(), dfd2 = $.Deferred(), $obj = $("#estSearch"), $obj2 = $("#addEstablishment"), time = 500;
+                            var deferred = $.Deferred(), deferred2 = $.Deferred(), $obj = $("#estSearch"), $obj2 = $("#addEstablishment"), time = 500;
 
                             sessionStorage.setItem("addest", "no");
                             lastURL = "#/index";
                             _this.establishmentSearchViewModel.sammy.setLocation('#/index');
-                            _this.fadeModsOut(dfd, dfd2, $obj, $obj2, time);
-                            $.when(dfd, dfd2).done(function () {
+                            _this.fadeModsOut(deferred, deferred2, $obj, $obj2, time);
+                            $.when(deferred, deferred2).done(function () {
                                 $("#allParticipants").fadeIn(500).promise().done(function () {
                                     $(_this).show();
                                     _this.scrollBody.scrollMyBody(0);
-                                    _this.dfdPageFadeIn.resolve();
+                                    _this.deferredPageFadeIn.resolve();
                                 });
                             });
                         } else {

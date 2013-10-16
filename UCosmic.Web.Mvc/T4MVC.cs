@@ -3822,6 +3822,20 @@ namespace Links
             }
         
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+            public static class sort {
+                private const string URLPATH = "~/images/icons/sort";
+                public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+                public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                public static readonly string glyphicons_403_sorting_png = Url("glyphicons_403_sorting.png");
+                public static readonly string glyphicons_404_sort_by_alphabet_png = Url("glyphicons_404_sort-by-alphabet.png");
+                public static readonly string glyphicons_405_sort_by_alphabet_alt_png = Url("glyphicons_405_sort-by-alphabet-alt.png");
+                public static readonly string glyphicons_406_sort_by_order_png = Url("glyphicons_406_sort-by-order.png");
+                public static readonly string glyphicons_407_sort_by_order_alt_png = Url("glyphicons_407_sort-by-order-alt.png");
+                public static readonly string glyphicons_408_sort_by_attributes_png = Url("glyphicons_408_sort-by-attributes.png");
+                public static readonly string glyphicons_409_sort_by_attributes_alt_png = Url("glyphicons_409_sort-by-attributes-alt.png");
+            }
+        
+            [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
             public static class spinner {
                 private const string URLPATH = "~/images/icons/spinner";
                 public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }

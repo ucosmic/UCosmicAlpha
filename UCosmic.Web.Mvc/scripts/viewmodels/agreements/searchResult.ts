@@ -11,7 +11,7 @@ module Agreements.ViewModels {
 
         private _owner: Search;
 
-        constructor (values: ApiModels.FlatEstablishment, owner: Search) {
+        constructor (values: any, owner: Search) {
             this._owner = owner;
             this._pullData(values);
             this._setupComputeds();
@@ -31,7 +31,7 @@ module Agreements.ViewModels {
         expiresOn: KnockoutObservable<string>;
         name: KnockoutObservable<string>;
 
-        private _pullData(values: ApiModels.FlatEstablishment): void {
+        private _pullData(values: any): void {
             // map input model to observables
             ko.mapping.fromJS(values, {}, this);
         }

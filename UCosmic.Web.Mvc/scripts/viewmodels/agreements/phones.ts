@@ -39,7 +39,7 @@ module agreements {
         }
 
         removePhone(me, e): void {
-            var url = App.Routes.WebApi.Agreements.Contacts.Phones.del(this.agreementId.val, me.contactId, me.id);
+            var url = App.Routes.WebApi.Agreements.Contacts.Phones.del(this.agreementId, me.contactId, me.id);
 
             $.ajax({
                 url: url,
@@ -74,7 +74,7 @@ module agreements {
             this.contactPhoneTextValue.subscribe((me: string): void => {
                 if (this.contactPhoneTextValue().length > 0) {
                     if (this.contactId()) {
-                        var url = App.Routes.WebApi.Agreements.Contacts.Phones.post(this.agreementId.val, this.contactId()),
+                        var url = App.Routes.WebApi.Agreements.Contacts.Phones.post(this.agreementId, this.contactId()),
                             data = { id: "0", type: '', contactId: this.contactId(), value: this.contactPhoneTextValue() };
 
                         $.post(url, data)

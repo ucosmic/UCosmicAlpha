@@ -6,9 +6,9 @@
 module agreements {
     export class populateFiles{
         files = ko.mapping.fromJS([]);
-        populate(agreementId, dfdPopFiles?): void {
-            dfdPopFiles = ((dfdPopFiles) ? dfdPopFiles : $.Deferred());
-            $.get(App.Routes.WebApi.Agreements.Files.get(agreementId.val), { useTestData: true })
+        populate(agreementId, deferredPopFiles?): void {
+            deferredPopFiles = ((deferredPopFiles) ? deferredPopFiles : $.Deferred());
+            $.get(App.Routes.WebApi.Agreements.Files.get(agreementId), { useTestData: true })
                 .done((response: any): void => {
                     $.each(response, (i, item) => {
                         this.files.push(ko.mapping.fromJS({
@@ -21,8 +21,8 @@ module agreements {
                             customNameExt: item.customName.substring(item.customName.lastIndexOf("."), item.customName.length)
                         }));
                     });
-                    if (dfdPopFiles != undefined) {
-                        dfdPopFiles.resolve();
+                    if (deferredPopFiles != undefined) {
+                        deferredPopFiles.resolve();
                     }
                 });
         }

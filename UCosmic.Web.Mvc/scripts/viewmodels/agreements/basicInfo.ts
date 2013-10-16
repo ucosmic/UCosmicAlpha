@@ -8,15 +8,15 @@
 module agreements {
 
     export class basicInfo {
-        constructor(agreementId, dfdUAgreements) {
+        constructor(agreementId, deferredUAgreements) {
             this.agreementId = agreementId;
-            this.dfdUAgreements = dfdUAgreements;
+            this.deferredUAgreements = deferredUAgreements;
             this._setupValidation = <() => void > this._setupValidation.bind(this);
             this._setupValidation();
         }
         //imported vars
         agreementId;
-        dfdUAgreements;
+        deferredUAgreements;
 
         //basic info vars
         $uAgreements: KnockoutObservable<JQuery> = ko.observable();
@@ -35,7 +35,7 @@ module agreements {
         validateBasicInfo;
 
         populateUmbrella(): void {
-            $.get(App.Routes.WebApi.Agreements.UmbrellaOptions.get(this.agreementId.val))
+            $.get(App.Routes.WebApi.Agreements.UmbrellaOptions.get(this.agreementId))
                 .done((response: any): void => {
                     this.uAgreements(response);
                     $("#uAgreements").kendoDropDownList({
@@ -46,7 +46,7 @@ module agreements {
                             data: this.uAgreements()
                         })
                     });
-                    this.dfdUAgreements.resolve();
+                    this.deferredUAgreements.resolve();
                 });
         }
 

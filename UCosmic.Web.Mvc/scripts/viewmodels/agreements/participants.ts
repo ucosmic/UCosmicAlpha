@@ -55,7 +55,7 @@ module agreements {
                     var self = this;
 
                 if (this.agreementIsEdit()) {
-                    var url = App.Routes.WebApi.Agreements.Participants.del(this.agreementId.val, ko.dataFor(e.target).establishmentId());
+                    var url = App.Routes.WebApi.Agreements.Participants.del(this.agreementId, ko.dataFor(e.target).establishmentId());
 
                     $.ajax({
                         url: url,
@@ -92,7 +92,7 @@ module agreements {
             return false;
         }
 
-        receiveParticipants(js: Establishments.ApiModels.FlatEstablishment[]): void {
+        receiveParticipants(js: any): void {
             if (!js) {
                 ko.mapping.fromJS({
                     items: [],
@@ -105,8 +105,8 @@ module agreements {
         }
 
         populateParticipants(): void {
-            $.get(App.Routes.WebApi.Agreements.Participants.get(this.agreementId.val))
-                .done((response: Establishments.ApiModels.FlatEstablishment[]): void => {
+            $.get(App.Routes.WebApi.Agreements.Participants.get(this.agreementId))
+                .done((response: any): void => {
                     this.receiveParticipants(response);
                     this.dfdPopParticipants.resolve();
                 });

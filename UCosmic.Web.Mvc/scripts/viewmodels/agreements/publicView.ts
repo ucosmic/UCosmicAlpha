@@ -18,12 +18,12 @@ module Agreements.ViewModels {
             if (isNaN(agreementId)) {
                 agreementId = 0;
             }
-            this.agreementId = { val: agreementId, };
+            this.agreementId =  agreementId;
             this.agreementVisibility = agreementVisibility || 'Public';
-            this.populateFilesClass = new agreements.populateFiles();
+            this.populateFiles = new agreements.populateFiles();
             this._setupDateComputeds();
             //this._setupNameComputeds();
-            if (this.agreementId.val !== 0) {
+            if (this.agreementId !== 0) {
                 //this.getData();
                 var dataBound = this._bindData();
                 //this.createMap();
@@ -33,8 +33,8 @@ module Agreements.ViewModels {
                 });
             }
         }
-        //imported classes
-        populateFilesClass;
+        //imported class instances
+        populateFiles;
 
         agreementId: any;
         agreementVisibility: string;
@@ -51,13 +51,13 @@ module Agreements.ViewModels {
         startsOn = ko.observable();
         type = ko.observable();
         umbrellaId = ko.observable();
-        myUrl = window.location.href.toLowerCase();
+        //myUrl = window.location.href.toLowerCase();
         //partners;
         //agreementId = { val: 0 }
 
         private _bindData(): JQueryDeferred<void> {
             var deferred = $.Deferred();
-            $.get(App.Routes.WebApi.Agreements.get(this.agreementId.val))
+            $.get(App.Routes.WebApi.Agreements.get(this.agreementId))
                 .done((response: any): void => {
                     var mapping = {
                         participants: { // don't need observables on participant properties
@@ -74,7 +74,7 @@ module Agreements.ViewModels {
         }
 
         getData(): void {
-            $.get(App.Routes.WebApi.Agreements.get(this.agreementId.val))
+            $.get(App.Routes.WebApi.Agreements.get(this.agreementId))
                 .done((response: any): void => {
                     this.content(response.content);
                     this.expiresOn(response.expiresOn);
@@ -90,47 +90,49 @@ module Agreements.ViewModels {
                     this.isBound(true);
                     //this.partners = response.participants;
                 });
-            this.populateFilesClass.populate(this.agreementId);
-            this.files = this.populateFilesClass.files;
+            this.populateFiles.populate(this.agreementId);
+            this.files = this.populateFiles.files;
         }
 
         //#region Name computeds
 
         // TODO: do not create view elements in the viewmodel like this. do it with bindings.
         // see the removed participantsNames computed in searchResult.ts for reference.
-        participantsNames: KnockoutComputed<string> = ko.computed((): string => {
-            var myName = "";
-            ko.utils.arrayForEach(this.participants(), (item) => {
-                myName += "<div style='margin-bottom:10px'>"
-                    if (item.establishmentTranslatedName != null && item.establishmentOfficialName != item.establishmentTranslatedName && item.establishmentOfficialName != null) {
-                    myName += "<strong>" + item.establishmentTranslatedName + "</strong><br /> (" + item.establishmentOfficialName + ")";
-                } else if (item.establishmentTranslatedName != null && item.establishmentOfficialName != item.establishmentTranslatedName) {
-                    myName += "<strong>" + item.establishmentTranslatedName + "</strong>";
-                } else {
-                    myName += "<strong>" + item.establishmentOfficialName + "</strong>";
-                }
-                myName += "</div>";
-            });
-            return myName;
-        });
-        private _setupNameComputeds(): void {
-            // are the official name and translated name the same?
-            this.participantsNames = ko.computed((): string => {
-                var myName = "";
-                ko.utils.arrayForEach(this.participants(), (item) => {
-                    myName += "<div style='margin-bottom:10px'>"
-                    if (item.establishmentTranslatedName() != null && item.establishmentOfficialName() != item.establishmentTranslatedName() && item.establishmentOfficialName() != null) {
-                        myName += "<strong>" + item.establishmentTranslatedName() + "</strong><br /> (" + item.establishmentOfficialName() + ")";
-                    } else if (item.establishmentTranslatedName() != null && item.establishmentOfficialName() != item.establishmentTranslatedName()) {
-                        myName += "<strong>" + item.establishmentTranslatedName() + "</strong>";
-                    } else {
-                        myName += "<strong>" + item.establishmentOfficialName() + "</strong>";
-                    }
-                    myName += "</div>";
-                });
-                return myName;
-            });
-        }
+
+        //participantsNames: KnockoutComputed<string> = ko.computed((): string => {
+        //    var myName = "";
+        //    ko.utils.arrayForEach(this.participants(), (item) => {
+        //        myName += "<div style='margin-bottom:10px'>"
+        //            if (item.establishmentTranslatedName != null && item.establishmentOfficialName != item.establishmentTranslatedName && item.establishmentOfficialName != null) {
+        //            myName += "<strong>" + item.establishmentTranslatedName + "</strong><br /> (" + item.establishmentOfficialName + ")";
+        //        } else if (item.establishmentTranslatedName != null && item.establishmentOfficialName != item.establishmentTranslatedName) {
+        //            myName += "<strong>" + item.establishmentTranslatedName + "</strong>";
+        //        } else {
+        //            myName += "<strong>" + item.establishmentOfficialName + "</strong>";
+        //        }
+        //        myName += "</div>";
+        //    });
+        //    return myName;
+        //});
+
+        //private _setupNameComputeds(): void {
+        //    // are the official name and translated name the same?
+        //    this.participantsNames = ko.computed((): string => {
+        //        var myName = "";
+        //        ko.utils.arrayForEach(this.participants(), (item) => {
+        //            myName += "<div style='margin-bottom:10px'>"
+        //            if (item.establishmentTranslatedName() != null && item.establishmentOfficialName() != item.establishmentTranslatedName() && item.establishmentOfficialName() != null) {
+        //                myName += "<strong>" + item.establishmentTranslatedName() + "</strong><br /> (" + item.establishmentOfficialName() + ")";
+        //            } else if (item.establishmentTranslatedName() != null && item.establishmentOfficialName() != item.establishmentTranslatedName()) {
+        //                myName += "<strong>" + item.establishmentTranslatedName() + "</strong>";
+        //            } else {
+        //                myName += "<strong>" + item.establishmentOfficialName() + "</strong>";
+        //            }
+        //            myName += "</div>";
+        //        });
+        //        return myName;
+        //    });
+        //}
 
         //#endregion
 
@@ -256,10 +258,10 @@ module Agreements.ViewModels {
         //    function initialize() {
         //        // /api/agreements/{agreementId}/partners
         //        //var mapUrl = $('#agreementPartners_api').text();
-        //        //var params = { agreementId: self.agreementId.val };
+        //        //var params = { agreementId: self.agreementId };
         //        //mapUrl = '{0}'.format(mapUrl, $.param(params));
-        //        //$('#agreementPartners_api').text().format(self.agreementId.val)
-        //        $.get($('#agreementPartners_api').text().format(self.agreementId.val))
+        //        //$('#agreementPartners_api').text().format(self.agreementId)
+        //        $.get($('#agreementPartners_api').text().format(self.agreementId))
         //            .done((response: any): void => {
         //                var lat = -34.397, long = 150.644, googleMapZoomLevel, mapOptions,
         //                    map;
@@ -312,7 +314,7 @@ module Agreements.ViewModels {
                     mapMaker: true,
                 })
                 map.fitBounds(bounds);
-                //$.get($('#agreementPartners_api').text().format(self.agreementId.val))
+                //$.get($('#agreementPartners_api').text().format(self.agreementId))
                 //    .done((response: any): void => {
                 //        var lat = -34.397, long = 150.644, googleMapZoomLevel, mapOptions,
                 //            map;

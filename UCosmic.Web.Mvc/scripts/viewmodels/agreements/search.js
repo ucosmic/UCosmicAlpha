@@ -23,6 +23,7 @@ var Agreements;
             __extends(Search, _super);
             function Search(domain, initDefaultPageRoute) {
                 if (typeof initDefaultPageRoute === "undefined") { initDefaultPageRoute = true; }
+                var _this = this;
                 _super.call(this);
                 this.domain = domain;
                 this.initDefaultPageRoute = initDefaultPageRoute;
@@ -78,6 +79,19 @@ var Agreements;
 
                 this.changeLens(this.lenses()[0]);
                 this.requestResults = this.requestResults.bind(this);
+
+                this.prevPage = function () {
+                    if (_this.pageNumber() > 1) {
+                        var pageNumber = Number(_this.pageNumber()) - 1;
+                        _this.pageNumber(pageNumber);
+                    }
+                };
+                this.nextPage = function () {
+                    if (_this.nextEnabled()) {
+                        var pageNumber = Number(_this.pageNumber()) + 1;
+                        _this.pageNumber(pageNumber);
+                    }
+                };
             }
             Search.prototype._init = function () {
                 this._setupCountryDropDown();
@@ -166,7 +180,7 @@ var Agreements;
                 // // to do the following I need to set a location with sammy
                 ////$("nav.bib .search").removeClass("current");
                 ////$("nav.bib ul").append("<li class='view current'><span> View </span></ li>");
-                ////this.publicViewClass.agreementId.val = viewModel.id();
+                ////this.publicViewClass.agreementId = viewModel.id();
                 ////this.publicViewClass.getData();
                 ////$("#search").fadeOut(500, function () {
                 ////    $("#publicView").fadeIn(500);

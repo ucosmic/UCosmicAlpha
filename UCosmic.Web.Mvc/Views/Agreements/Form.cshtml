@@ -23,7 +23,7 @@
 
         ko.virtualElements.allowedBindings.stopBinding = true;
 
-        var agreementViewModel = new InstitutionalAgreementEditModel();
+        var agreementViewModel = new InstitutionalAgreementEditModel(@ViewBag.Id);
         ko.applyBindings(agreementViewModel, $('#allParticipants')[0]);
     </script>
 }
