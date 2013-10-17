@@ -4,7 +4,7 @@
 /// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
 /// <reference path="../../app/Routes.ts" />
 module agreements {
-    export class populateFiles{
+    export class FileListPopulator{
         files = ko.mapping.fromJS([]);
         populate(agreementId, deferredPopFiles?): void {
             deferredPopFiles = ((deferredPopFiles) ? deferredPopFiles : $.Deferred());

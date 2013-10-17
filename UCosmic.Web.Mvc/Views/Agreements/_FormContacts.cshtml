@@ -14,9 +14,10 @@
                                 
                     <div class="item">
                         <div>
-                            <strong data-bind="text: type() + ': '"></strong><span data-bind="text: displayName() + ', '"></span>
-                            <a data-bind="attr: {href: 'mailto:' + emailAddress()}, text: emailAddress"></a>
-                            <br/>
+                            <div>
+                                <strong data-bind="text: type() + ': '"></strong><span data-bind="text: displayName() + ', '"></span>
+                                <a data-bind="attr: {href: 'mailto:' + emailAddress()}, text: emailAddress"></a>
+                            </div>
                             <table>
                                 <tr>
                                     <td data-bind="visible: title() != undefined && title() != ''" >
@@ -39,7 +40,7 @@
     </div>
 
     <footer id="addAContact">
-        <a href="" data-bind="click: addAContact" class="button">
+        <a data-bind="click: addAContact" class="button">
             <i class="green plus"></i>
             <span class="text">Add a contact</span>
         </a>
@@ -171,18 +172,18 @@
                 </div>
             </div>
             <footer>
-                <a href="" data-bind="click: addContact, visible: !contactsIsEdit()" class="button" style="float: left">
+                <a data-bind="click: addContact, visible: !contactsIsEdit()" class="button" style="float: left">
                     <i class="green plus"></i>
                     <span class="text">Add contact</span>
                 </a>
-                <a href="" data-bind="click: editContact, visible: contactsIsEdit" class="button" style="float: left">
+                <a data-bind="click: editContact, visible: contactsIsEdit" class="button" style="float: left">
                     <i class="green plus"></i>
                     <span class="text">Save Changes</span>
                 </a>
-                <a href="" data-bind="click: clearContact, visible: !contactsIsEdit()" class="link" style="float: left; font-size: 26px; margin-right: 10px;">
+                <a data-bind="click: clearContact, visible: !contactsIsEdit()" class="link" style="float: left; font-size: 26px; margin-right: 10px;">
                     <span class="text">Clear</span>
                 </a>
-                <a href="" data-bind="click: cancelContact" class="link" style="float: left; font-size: 26px">
+                <a data-bind="click: cancelContact" class="link" style="float: left; font-size: 26px">
                     <span class="text">Cancel</span>
                 </a>
             </footer><br/>

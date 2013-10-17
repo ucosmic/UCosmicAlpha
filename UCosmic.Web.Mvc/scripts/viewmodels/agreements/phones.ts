@@ -18,7 +18,7 @@ module agreements {
                 new this.selectConstructor("work", "work"),
                 new this.selectConstructor("mobile", "mobile")
             ]);
-            this.bindJquery();
+            this._bindJquery();
         }
 
         //imported vars
@@ -68,7 +68,7 @@ module agreements {
             }
         }
 
-        bindJquery(): void {
+        private _bindJquery(): void {
             var self = this;
 
             this.contactPhoneTextValue.subscribe((me: string): void => {

@@ -49,11 +49,11 @@ var Agreements;
                 this.lens = ko.observable();
                 // items page
                 this.$itemsPage = undefined;
-                this.sideSwiper = new App.SideSwiper({
-                    frameWidth: 710,
-                    speed: 'fast',
-                    root: '#search'
-                });
+                //sideSwiper = new App.SideSwiper({
+                //    frameWidth: 710,
+                //    speed: 'fast',
+                //    root: '#search'
+                //});
                 this.trail = ko.observableArray([]);
                 // results
                 this.resultsMapping = {
@@ -78,7 +78,7 @@ var Agreements;
                 this._init();
 
                 this.changeLens(this.lenses()[0]);
-                this.requestResults = this.requestResults.bind(this);
+                this._requestResults = this._requestResults.bind(this);
 
                 this.prevPage = function () {
                     if (_this.pageNumber() > 1) {
@@ -131,7 +131,7 @@ var Agreements;
                 var _this = this;
                 // whenever pageNumber changes, set the location for sammy
                 this.pageNumber.subscribe(function (newValue) {
-                    _this.setLocation();
+                    _this._setLocation();
                 });
             };
 
@@ -148,27 +148,27 @@ var Agreements;
 
                 //self.beforePage(this.sammy());
                 self.sammy.before(self.sammyBeforeRoute, function () {
-                    self.beforePage(this);
+                    self._beforePage(this);
                 });
 
                 self.sammy.get(self.sammyGetPageRoute, function () {
-                    self.getPage(this);
+                    self._getPage(this);
                 });
 
                 if (self.initDefaultPageRoute) {
                     // match /establishments or /establishments/
                     self.sammy.get(self.sammyDefaultPageRoute, function () {
-                        self.initPageHash(this);
+                        self._initPageHash(this);
                     });
                 }
 
                 //this.unlockAnimation();
                 ko.computed(function () {
-                    self.requestResults();
+                    self._requestResults();
                 }).extend({ throttle: 1 });
             };
 
-            Search.prototype.getPage = function (sammyContext) {
+            Search.prototype._getPage = function (sammyContext) {
                 //var windowHref = window.location.href;
                 //if (windowHref.indexOf("agreements/new") != -1
                 //    || windowHref.indexOf("agreements/settings") != -1
@@ -200,7 +200,7 @@ var Agreements;
                 trail.push(sammyContext.path);
             };
 
-            Search.prototype.beforePage = function (sammyContext) {
+            Search.prototype._beforePage = function (sammyContext) {
                 var pageNumber;
                 if (this.nextForceDisabled() || this.prevForceDisabled())
                     return false;
@@ -212,11 +212,11 @@ var Agreements;
                 return true;
             };
 
-            Search.prototype.initPageHash = function (sammyContext) {
+            Search.prototype._initPageHash = function (sammyContext) {
                 sammyContext.app.setLocation('#/page/1/');
             };
 
-            Search.prototype.setLocation = function () {
+            Search.prototype._setLocation = function () {
                 var location = '#/page/' + this.pageNumber() + '/';
                 if (this.sammy.getLocation() !== location)
                     this.sammy.setLocation(location);
@@ -231,9 +231,9 @@ var Agreements;
                 this.prevForceDisabled(false);
             };
 
-            Search.prototype.swipeCallback = function () {
-            };
-            Search.prototype.receiveResults = function (js) {
+            //swipeCallback(): void {
+            //}
+            Search.prototype._receiveResults = function (js) {
                 if (!js) {
                     ko.mapping.fromJS({
                         items: [],
@@ -247,7 +247,7 @@ var Agreements;
                 this.deferredFadeInOut2.resolve();
             };
 
-            Search.prototype.requestResults = function () {
+            Search.prototype._requestResults = function () {
                 var _this = this;
                 this.optionsEnabled(false);
                 if (this.pageSize() === undefined || this.orderBy() === undefined || this.pageNumber() === undefined || this.keyword() !== this.throttledKeyword())
@@ -284,7 +284,7 @@ var Agreements;
                     orderBy: this.orderBy()
                 }).done(function (response) {
                     $.when(_this.deferredFadeInOut).done(function () {
-                        _this.receiveResults(response);
+                        _this._receiveResults(response);
                     });
                 });
                 //});

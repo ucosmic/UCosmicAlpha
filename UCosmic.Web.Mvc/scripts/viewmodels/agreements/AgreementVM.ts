@@ -21,6 +21,13 @@
 /// <reference path="./basicInfo.ts" />
 /// <reference path="./establishmentSearchNav.ts" />
 
+//class SelectConstructor{
+//    constructor(public name: string, public id: string) {
+//        this.name = name;
+//        this.id = id;
+//    }
+//}
+
 class InstitutionalAgreementEditModel {
     constructor(public agreementId: number) {
         $("table.data").children("tbody").addClass("searchResults");
@@ -42,10 +49,10 @@ class InstitutionalAgreementEditModel {
             this.kendoWindowBug, this.deferredPopContacts);
         ko.applyBindings(this.contact, $('#contacts')[0]);
 
-        this.populateFiles = new agreements.populateFiles();
+        this.fileListPopulator = new agreements.FileListPopulator();
         //ko.applyBindings(this.populateFiles, $('#fileAttachments')[0]); 
         this.fileAttachment = new agreements.fileAttachments(this.agreementId, this.agreementIsEdit,
-            this.spinner, this.establishmentSearchNav.establishmentItemViewModel, this.populateFiles.files);
+            this.spinner, this.establishmentSearchNav.establishmentItemViewModel, this.fileListPopulator.files);
         ko.applyBindings(this.fileAttachment, $('#fileAttachments')[0]);
         this.datesStatus = new agreements.datesStatus(this.basicInfo.isCustomStatusAllowed);
         ko.applyBindings(this.datesStatus, $('#effectiveDatesCurrentStatus')[0]);
@@ -61,7 +68,7 @@ class InstitutionalAgreementEditModel {
             this.participants.populateParticipants();
             $.when(this.deferredPageFadeIn, this.deferredPopParticipants)
                 .done(() => {
-                    this.updateKendoDialog($(window).width());
+                    this._updateKendoDialog($(window).width());
                     $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * this.percentOffBodyHeight)));
                 });
         } else {
@@ -71,14 +78,14 @@ class InstitutionalAgreementEditModel {
             this.agreementIsEdit(true);
             //this.agreementId = parseInt(this.editOrNewUrl.val.substring(0, this.editOrNewUrl.val.indexOf("/")));
             this.participants.populateParticipants();
-            this.populateFiles.populate(this.agreementId, this.deferredPopFiles);
+            this.fileListPopulator.populate(this.agreementId, this.deferredPopFiles);
             this.contact.populateContacts();
             Globalize.culture(culture)
-            this.populateAgreementData();
+            this._populateAgreementData();
             $("#LoadingPage").hide();
             $.when(this.deferredPopContacts, this.deferredPopFiles, this.deferredPopParticipants, this.deferredPageFadeIn)
                 .done(() => {
-                    this.updateKendoDialog($(window).width());
+                    this._updateKendoDialog($(window).width());
                     $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * this.percentOffBodyHeight)));
                 });
         }
@@ -86,12 +93,12 @@ class InstitutionalAgreementEditModel {
         this.isBound(true);
         this.basicInfo.populateUmbrella();
         this.establishmentSearchNav.bindSearch();
-        this.getSettings();
+        this._getSettings();
 
         $(window).resize(() => {
-            this.updateKendoDialog($(window).width());
+            this._updateKendoDialog($(window).width());
         });
-        this.hideOtherGroups();
+        this._hideOtherGroups();
     }
 
     //imported class instances
@@ -103,7 +110,7 @@ class InstitutionalAgreementEditModel {
     visibility;
     establishmentSearchNav;
     scrollBody;
-    populateFiles;
+    fileListPopulator;
 
     percentOffBodyHeight = .6;
     //jquery defered for setting body height.
@@ -131,14 +138,14 @@ class InstitutionalAgreementEditModel {
     isBound = ko.observable();
     spinner: App.Spinner = new App.Spinner(new App.SpinnerOptions(400, true));
 
-    selectConstructor = function (name: string, id: string) {
-        this.name = name;
-        this.id = id;
-    }
+    //agreements.SelectConstructor = function (name: string, id: string) {
+    //    this.name = name;
+    //    this.id = id;
+    //}
 
     //to correctly bind with ko, must set visibility to hidden. this removes the visibility to hidden and 
     //changes it to display none.
-    hideOtherGroups(): void {
+    private _hideOtherGroups(): void {
         $("#allParticipants").css("visibility", "").hide();
         $("#estSearch").css("visibility", "").hide();
         $("#addEstablishment").css("visibility", "").hide();
@@ -148,7 +155,7 @@ class InstitutionalAgreementEditModel {
         return !(this.participants.establishmentOfficialName === this.participants.establishmentTranslatedName);
     });
     
-    populateAgreementData(): void {
+    private _populateAgreementData(): void {
         $.when(this.deferredUAgreements)
             .done(() => {
                 $.get(App.Routes.WebApi.Agreements.get(this.agreementId))
@@ -213,29 +220,29 @@ class InstitutionalAgreementEditModel {
             });
     }
             
-    updateKendoDialog(windowWidth): void {
+    private _updateKendoDialog(windowWidth): void {
         $(".k-window").css({
             left: (windowWidth / 2 - ($(".k-window").width() / 2) + 10)
         });
     }
 
-    bindjQueryKendo(result): void {
+    private _bindjQueryKendo(result): void {
         var self = this;
 
         this.basicInfo.isCustomTypeAllowed(result.isCustomTypeAllowed);
         this.basicInfo.isCustomStatusAllowed(result.isCustomStatusAllowed);
         this.basicInfo.isCustomContactTypeAllowed(result.isCustomContactTypeAllowed);
-        this.datesStatus.statusOptions.push(new this.selectConstructor("", ""));
+        this.datesStatus.statusOptions.push(new agreements.SelectConstructor("", ""));
         for (var i = 0, j = result.statusOptions.length; i < j; i++) {
-            this.datesStatus.statusOptions.push(new this.selectConstructor(result.statusOptions[i], result.statusOptions[i]));
+            this.datesStatus.statusOptions.push(new agreements.SelectConstructor(result.statusOptions[i], result.statusOptions[i]));
         };
-        this.contact.contactTypeOptions.push(new this.selectConstructor("", undefined));
+        this.contact.contactTypeOptions.push(new agreements.SelectConstructor("", undefined));
         for (var i = 0, j = result.contactTypeOptions.length; i < j; i++) {
-            this.contact.contactTypeOptions.push(new this.selectConstructor(result.contactTypeOptions[i], result.contactTypeOptions[i]));
+            this.contact.contactTypeOptions.push(new agreements.SelectConstructor(result.contactTypeOptions[i], result.contactTypeOptions[i]));
         };
-        this.basicInfo.typeOptions.push(new this.selectConstructor("", ""));
+        this.basicInfo.typeOptions.push(new agreements.SelectConstructor("", ""));
         for (var i = 0, j = result.typeOptions.length; i < j; i++) {
-            this.basicInfo.typeOptions.push(new this.selectConstructor(result.typeOptions[i], result.typeOptions[i]));
+            this.basicInfo.typeOptions.push(new agreements.SelectConstructor(result.typeOptions[i], result.typeOptions[i]));
         };
         $(".hasDate").each(function (index, item) {
             $(item).kendoDatePicker({
@@ -304,7 +311,7 @@ class InstitutionalAgreementEditModel {
     }
 
     //get settings for agreements.
-    getSettings(): void {
+    private _getSettings(): void {
         var url = 'App.Routes.WebApi.Agreements.Settings.get()',
             agreementSettingsGet;
 
@@ -313,7 +320,7 @@ class InstitutionalAgreementEditModel {
             type: 'GET'
         })
         .done((result) => {
-            this.bindjQueryKendo(result);
+            this._bindjQueryKendo(result);
         })
         .fail(function (xhr) {
             alert('fail: status = ' + xhr.status + ' ' + xhr.statusText + '; message = "' + xhr.responseText + '"');
@@ -364,11 +371,6 @@ class InstitutionalAgreementEditModel {
             } else {
                 $("body").scrollTop(0);
             }
-            $LoadingPage.text("Saving agreement...");
-
-            $("#allParticipants").show().fadeOut(500, function ()  {
-                $("#LoadingPage").hide().fadeIn(500);
-            });
 
             $.each(this.participants.participants(), (i, item) => {
                 this.participants.participantsExport.push({
@@ -401,6 +403,11 @@ class InstitutionalAgreementEditModel {
                 type: this.basicInfo.typeOptionSelected()
             })
             if (this.agreementIsEdit()) {
+                $LoadingPage.text("Saving changes...");
+
+                $("#allParticipants").show().fadeOut(500, function () {
+                    $("#LoadingPage").hide().fadeIn(500);
+                });
                 url = App.Routes.WebApi.Agreements.put(this.agreementId);
                 $.ajax({
                     type: 'PUT',
@@ -433,6 +440,11 @@ class InstitutionalAgreementEditModel {
                     }
                 });
             } else {
+                $LoadingPage.text("Saving agreement...");
+
+                $("#allParticipants").show().fadeOut(500, function () {
+                    $("#LoadingPage").hide().fadeIn(500);
+                });
                 url = App.Routes.WebApi.Agreements.post();
                 $.post(url, data)
                     .done((response: any, statusText: string, xhr: JQueryXHR): void => {

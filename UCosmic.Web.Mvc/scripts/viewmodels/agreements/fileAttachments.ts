@@ -39,7 +39,7 @@ module agreements {
         tempFileId = 0;
         //files = ko.mapping.fromJS([]);
 
-        $bindKendoFile(): void {
+        private _$bindKendoFile(): void {
             var saveUrl = "";
 
             if (this.agreementIsEdit()) {
@@ -231,7 +231,7 @@ module agreements {
         }
 
         bindJquery(): void {
-            this.$bindKendoFile();
+            this._$bindKendoFile();
             $("#helpExpDate").kendoTooltip({
                 width: 520,
                 position: "top",
@@ -281,24 +281,6 @@ module agreements {
             }
             return true;
         }
-
-        //populateFiles(): void {
-        //    $.get(App.Routes.WebApi.Agreements.Files.get(this.agreementId), { useTestData: true })
-        //        .done((response: any): void => {
-        //            $.each(response, (i, item) => {
-        //                this.files.push(ko.mapping.fromJS({
-        //                    id: item.id,
-        //                    originalName: item.originalName,
-        //                    customName: item.customName,
-        //                    visibility: item.visibility,
-        //                    isEdit: false,
-        //                    customNameFile: item.customName.substring(0, item.customName.lastIndexOf(".")),
-        //                    customNameExt: item.customName.substring(item.customName.lastIndexOf("."), item.customName.length)
-        //                }));
-        //            });
-        //            this.deferredPopFiles.resolve();
-        //        });
-        //}
 
         //post files
         postMe(data, url): void {

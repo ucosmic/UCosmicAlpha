@@ -14,7 +14,7 @@ module Agreements.ViewModels {
         constructor (values: any, owner: Search) {
             this._owner = owner;
             this._pullData(values);
-            this._setupComputeds();
+            //this._setupComputeds();
         }
 
         //#region Observable data
@@ -39,65 +39,65 @@ module Agreements.ViewModels {
         //#endregion
         //#region Computeds
 
-        private _setupComputeds(): void {
-            this._setupCountryComputeds();
-            this._setupDateComputeds();
-            //this._setupNameComputeds();
-            this._setupLinkComputeds();
-        }
+        //private _setupComputeds(): void {
+        //    this._setupCountryComputeds();
+        //    this._setupDateComputeds();
+        //    //this._setupNameComputeds();
+        //    this._setupLinkComputeds();
+        //}
 
         //#region Link computeds
 
-        detailHref: KnockoutComputed<string>;
+        //detailHref: KnockoutComputed<string>;
 
-        private _setupLinkComputeds(): void {
-            // show alternate text when Link is undefined
-            this.detailHref = ko.computed((): string => {
-                return "/agreements/"+this.id();
-            });
-        }
+        //private _setupLinkComputeds(): void {
+        // show alternate text when Link is undefined
+        detailHref = ko.computed((): string => {
+            return "/agreements/" + this.id();
+        });
+        //}
 
         //#endregion
 
         //#region Country computeds
 
-        nullDisplayCountryName: KnockoutComputed<string>;
-        
-        private _setupCountryComputeds(): void {
-            // show alternate text when country is undefined
-            this.nullDisplayCountryName = ko.computed((): string => {
-                return this.countryNames() || '[Unknown]';
-            });
-        }
+        //nullDisplayCountryName: KnockoutComputed<string>;
+
+        //private _setupCountryComputeds(): void {
+        // show alternate text when country is undefined
+        nullDisplayCountryName = ko.computed((): string => {
+            return this.countryNames() || '[Unknown]';
+        });
+        //}
 
         //#endregion
         //#region Date computeds
 
-        startsOnDate: KnockoutComputed<string>;
-        expiresOnDate: KnockoutComputed<string>;
+        //startsOnDate: KnockoutComputed<string>;
+        //expiresOnDate: KnockoutComputed<string>;
 
-        private _setupDateComputeds(): void {
+        //private _setupDateComputeds(): void {
 
-            this.startsOnDate = ko.computed((): string => {
-                var value = this.startsOn();
-                var myDate = new Date(value);
-                if (myDate.getFullYear() < 1500) {
-                    return "unknown";
-                } else {
-                    return (moment(value)).format('M/D/YYYY');
-                }
-            });
-            this.expiresOnDate = ko.computed((): string => {
-                var value = this.expiresOn();
-                if (!value) return undefined;
-                var myDate = new Date(value);
-                if (myDate.getFullYear() < 1500) {
-                    return "unknown";
-                } else {
-                    return (moment(value)).format('M/D/YYYY');
-                }
-            });
-        }
+        startsOnDate = ko.computed((): string => {
+            var value = this.startsOn();
+            var myDate = new Date(value);
+            if (myDate.getFullYear() < 1500) {
+                return "unknown";
+            } else {
+                return (moment(value)).format('M/D/YYYY');
+            }
+        });
+        expiresOnDate = ko.computed((): string => {
+            var value = this.expiresOn();
+            if (!value) return undefined;
+            var myDate = new Date(value);
+            if (myDate.getFullYear() < 1500) {
+                return "unknown";
+            } else {
+                return (moment(value)).format('M/D/YYYY');
+            }
+        });
+        //}
         
         ////#endregion
 

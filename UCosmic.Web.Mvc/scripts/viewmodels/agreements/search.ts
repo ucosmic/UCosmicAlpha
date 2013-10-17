@@ -42,7 +42,7 @@ module Agreements.ViewModels {
             this._init();
 
             this.changeLens(this.lenses()[0]);
-            this.requestResults = <() => void > this.requestResults.bind(this);
+            this._requestResults = <() => void > this._requestResults.bind(this);
 
             this.prevPage = (): void => {
                 if (this.pageNumber() > 1) {
@@ -108,7 +108,7 @@ module Agreements.ViewModels {
         private _setupPagingSubscriptions(): void {
             // whenever pageNumber changes, set the location for sammy
             this.pageNumber.subscribe((newValue: number) => {
-                this.setLocation();
+                this._setLocation();
             });
         }
 
@@ -129,27 +129,27 @@ module Agreements.ViewModels {
             var self = this;
             //self.beforePage(this.sammy());
             self.sammy.before(self.sammyBeforeRoute, function () {
-                self.beforePage(this);
+                self._beforePage(this);
             });
 
             self.sammy.get(self.sammyGetPageRoute, function () {
-                self.getPage(this);
+                self._getPage(this);
             });
 
             if (self.initDefaultPageRoute) {
                 // match /establishments or /establishments/
                 self.sammy.get(self.sammyDefaultPageRoute, function () {
-                    self.initPageHash(this);
+                    self._initPageHash(this);
                 });
             }
             //this.unlockAnimation();
 
             ko.computed((): void => {
-                self.requestResults();
+                self._requestResults();
             }).extend({ throttle: 1 });
         }
 
-        getPage(sammyContext: Sammy.EventContext): void {
+        private _getPage(sammyContext: Sammy.EventContext): void {
             //var windowHref = window.location.href;
             //if (windowHref.indexOf("agreements/new") != -1
             //    || windowHref.indexOf("agreements/settings") != -1
@@ -181,7 +181,7 @@ module Agreements.ViewModels {
             trail.push(sammyContext.path);
         }
 
-        beforePage(sammyContext: Sammy.EventContext): boolean {
+        private _beforePage(sammyContext: Sammy.EventContext): boolean {
             var pageNumber;
             if (this.nextForceDisabled() || this.prevForceDisabled())
                 return false;
@@ -194,11 +194,11 @@ module Agreements.ViewModels {
             return true;
         }
 
-        initPageHash(sammyContext: Sammy.EventContext): void {
+        private _initPageHash(sammyContext: Sammy.EventContext): void {
             sammyContext.app.setLocation('#/page/1/');
         }
 
-        setLocation(): void {
+        private _setLocation(): void {
             var location = '#/page/' + this.pageNumber() + '/';
             if (this.sammy.getLocation() !== location)
                 this.sammy.setLocation(location);
@@ -221,11 +221,11 @@ module Agreements.ViewModels {
 
         // items page
         $itemsPage: JQuery = undefined;
-        sideSwiper = new App.SideSwiper({
-            frameWidth: 710,
-            speed: 'fast',
-            root: '#search'
-        });
+        //sideSwiper = new App.SideSwiper({
+        //    frameWidth: 710,
+        //    speed: 'fast',
+        //    root: '#search'
+        //});
         trail: KnockoutObservableArray<string> = ko.observableArray([]);
         lockAnimation(): void {
             this.nextForceDisabled(true);
@@ -248,9 +248,10 @@ module Agreements.ViewModels {
             },
             ignore: ['pageSize', 'pageNumber']
         };
-        swipeCallback(): void {
-        }
-        receiveResults(js: any): void {
+        //swipeCallback(): void {
+        //}
+
+        private _receiveResults(js: any): void {
             if (!js) {
                 ko.mapping.fromJS({
                     items: [],
@@ -265,7 +266,7 @@ module Agreements.ViewModels {
             this.deferredFadeInOut2.resolve();
         }
 
-        requestResults(): void {
+        private _requestResults(): void {
             this.optionsEnabled(false);
             if (this.pageSize() === undefined || this.orderBy()=== undefined || this.pageNumber() === undefined
                 || this.keyword() !== this.throttledKeyword())
@@ -305,7 +306,7 @@ module Agreements.ViewModels {
                         .done((response: any): void => {
                             $.when(this.deferredFadeInOut)
                                 .done(() => {
-                                    this.receiveResults(response);
+                                    this._receiveResults(response);
                                 });
                         });
                 //});

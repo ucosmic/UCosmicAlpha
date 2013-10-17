@@ -28,7 +28,7 @@ var agreements;
             this.removeFile = this.removeFile.bind(this);
         }
         //files = ko.mapping.fromJS([]);
-        fileAttachments.prototype.$bindKendoFile = function () {
+        fileAttachments.prototype._$bindKendoFile = function () {
             var _this = this;
             var saveUrl = "";
 
@@ -222,7 +222,7 @@ else
         };
 
         fileAttachments.prototype.bindJquery = function () {
-            this.$bindKendoFile();
+            this._$bindKendoFile();
             $("#helpExpDate").kendoTooltip({
                 width: 520,
                 position: "top",
@@ -273,23 +273,6 @@ else
             return true;
         };
 
-        //populateFiles(): void {
-        //    $.get(App.Routes.WebApi.Agreements.Files.get(this.agreementId), { useTestData: true })
-        //        .done((response: any): void => {
-        //            $.each(response, (i, item) => {
-        //                this.files.push(ko.mapping.fromJS({
-        //                    id: item.id,
-        //                    originalName: item.originalName,
-        //                    customName: item.customName,
-        //                    visibility: item.visibility,
-        //                    isEdit: false,
-        //                    customNameFile: item.customName.substring(0, item.customName.lastIndexOf(".")),
-        //                    customNameExt: item.customName.substring(item.customName.lastIndexOf("."), item.customName.length)
-        //                }));
-        //            });
-        //            this.deferredPopFiles.resolve();
-        //        });
-        //}
         //post files
         fileAttachments.prototype.postMe = function (data, url) {
             var _this = this;

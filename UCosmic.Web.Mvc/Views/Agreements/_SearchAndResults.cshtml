@@ -43,35 +43,35 @@
                                 <a data-bind="attr: { href: detailHref }" title="View this agreement's details" style="display: block; text-decoration: inherit; color: inherit;">
                                     @* HTML: <a> may only contain inline elements. <div> is a block element. see http://stackoverflow.com/a/1828032/304832 *@
                                     @*<div data-bind="attr: { title: $root.detailTooltip() }">*@
-                                    <span data-bind="visible: name" style="display: block;">
+                                    <div data-bind="visible: name" >
                                         <em data-bind="text: name, visible: name"></em>
-                                    </span>
+                                    </div>
                                     @*<span data-bind="html: participantsNames"></span>*@
-                                    <span style="display: block;">
+                                    <div>
                                         <span data-bind="foreach: establishmentTranslatedName">
                                             <strong data-bind="text: $data, visible: $data == $parent.establishmentOfficialName()[$index()]">&nbsp;</strong>
                                             <strong data-bind="text: $data, visible: $data != $parent.establishmentOfficialName()[$index()], attr: { title: $parent.establishmentOfficialName()[$index()] }">&nbsp;</strong>
                                             <span data-bind="visible: $data != $parent.establishmentTranslatedName()[$parent.establishmentTranslatedName().length - 1]">|</span>
                                         </span>
-                                    </span>
+                                    </div>
                                     @{
                                         var badgeMargin = ViewBag.AgreementsVisibility == AgreementVisibility.Private ? "2px 0 0;" : "0";
                                     }
-                                    <span style="font-size: 14px; display: block; margin: @badgeMargin;">
+                                    <div style="font-size: 14px; margin: @badgeMargin;">
                                         @if (ViewBag.AgreementsVisibility == AgreementVisibility.Private)
                                         {
                                             <span style="font-size: 10px; margin: 0 4px 0 0;" class="badge light-transparent" data-bind="text: status"></span>
                                         }
                                         <span data-bind="text: type" style="vertical-align: middle;">&nbsp;</span>
-                                    </span>
-                                    <span style="font-size: 14px; display: block;">
+                                    </div>
+                                    <div style="font-size: 14px;">
                                         <span data-bind="text: startsOnDate" style="vertical-align: middle;">&nbsp;</span>
                                         @if (ViewBag.AgreementsVisibility != AgreementVisibility.Public)
                                         {
                                             <span style="vertical-align: middle;">-</span>
                                             <span data-bind="text: expiresOnDate" style="vertical-align: middle;"></span>
                                         }
-                                    </span>
+                                    </div>
                                     @*</div>*@
                                 </a>
                             </td>

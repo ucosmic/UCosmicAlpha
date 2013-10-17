@@ -5,11 +5,11 @@
 /// <reference path="../../app/Routes.ts" />
 var agreements;
 (function (agreements) {
-    var populateFiles = (function () {
-        function populateFiles() {
+    var FileListPopulator = (function () {
+        function FileListPopulator() {
             this.files = ko.mapping.fromJS([]);
         }
-        populateFiles.prototype.populate = function (agreementId, deferredPopFiles) {
+        FileListPopulator.prototype.populate = function (agreementId, deferredPopFiles) {
             var _this = this;
             deferredPopFiles = ((deferredPopFiles) ? deferredPopFiles : $.Deferred());
             $.get(App.Routes.WebApi.Agreements.Files.get(agreementId), { useTestData: true }).done(function (response) {
@@ -29,7 +29,7 @@ var agreements;
                 }
             });
         };
-        return populateFiles;
+        return FileListPopulator;
     })();
-    agreements.populateFiles = populateFiles;
+    agreements.FileListPopulator = FileListPopulator;
 })(agreements || (agreements = {}));

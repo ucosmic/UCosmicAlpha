@@ -29,14 +29,91 @@ var Agreements;
                 this.startsOn = ko.observable();
                 this.type = ko.observable();
                 this.umbrellaId = ko.observable();
+                //getData(): void {
+                //    $.get(App.Routes.WebApi.Agreements.get(this.agreementId))
+                //        .done((response: any): void => {
+                //            this.content(response.content);
+                //            this.expiresOn(response.expiresOn);
+                //            this.isAutoRenew(response.isAutoRenew);
+                //            this.status(response.status);
+                //            this.isExpirationEstimated(response.isExpirationEstimated);
+                //            this.name(response.name);
+                //            this.notes(response.notes);
+                //            ko.mapping.fromJS(response.participants, {}, this.participants);
+                //            this.startsOn(response.startsOn);
+                //            this.type(response.type);
+                //            this.umbrellaId(response.umbrellaId);
+                //            this.isBound(true);
+                //            //this.partners = response.participants;
+                //        });
+                //    this.fileListPopulator.populate(this.agreementId);
+                //    this.files = this.fileListPopulator.files;
+                //}
+                //#region Name computeds
+                // TODO: do not create view elements in the viewmodel like this. do it with bindings.
+                // see the removed participantsNames computed in searchResult.ts for reference.
+                //participantsNames: KnockoutComputed<string> = ko.computed((): string => {
+                //    var myName = "";
+                //    ko.utils.arrayForEach(this.participants(), (item) => {
+                //        myName += "<div style='margin-bottom:10px'>"
+                //            if (item.establishmentTranslatedName != null && item.establishmentOfficialName != item.establishmentTranslatedName && item.establishmentOfficialName != null) {
+                //            myName += "<strong>" + item.establishmentTranslatedName + "</strong><br /> (" + item.establishmentOfficialName + ")";
+                //        } else if (item.establishmentTranslatedName != null && item.establishmentOfficialName != item.establishmentTranslatedName) {
+                //            myName += "<strong>" + item.establishmentTranslatedName + "</strong>";
+                //        } else {
+                //            myName += "<strong>" + item.establishmentOfficialName + "</strong>";
+                //        }
+                //        myName += "</div>";
+                //    });
+                //    return myName;
+                //});
+                //private _setupNameComputeds(): void {
+                //    // are the official name and translated name the same?
+                //    this.participantsNames = ko.computed((): string => {
+                //        var myName = "";
+                //        ko.utils.arrayForEach(this.participants(), (item) => {
+                //            myName += "<div style='margin-bottom:10px'>"
+                //            if (item.establishmentTranslatedName() != null && item.establishmentOfficialName() != item.establishmentTranslatedName() && item.establishmentOfficialName() != null) {
+                //                myName += "<strong>" + item.establishmentTranslatedName() + "</strong><br /> (" + item.establishmentOfficialName() + ")";
+                //            } else if (item.establishmentTranslatedName() != null && item.establishmentOfficialName() != item.establishmentTranslatedName()) {
+                //                myName += "<strong>" + item.establishmentTranslatedName() + "</strong>";
+                //            } else {
+                //                myName += "<strong>" + item.establishmentOfficialName() + "</strong>";
+                //            }
+                //            myName += "</div>";
+                //        });
+                //        return myName;
+                //    });
+                //}
+                //#endregion
+                //#region Date computeds
+                //startsOnDate: KnockoutComputed<string>;
+                //expiresOnDate: KnockoutComputed<string>;
+                //private _setupDateComputeds(): void {
+                this.startsOnDate = ko.computed(function () {
+                    var value = _this.startsOn();
+                    var myDate = new Date(value);
+                    if (myDate.getFullYear() < 1500) {
+                        return "unknown";
+                    }
+                    return (moment(value)).format('M/D/YYYY');
+                });
+                this.expiresOnDate = ko.computed(function () {
+                    var value = _this.expiresOn();
+                    var myDate = new Date(value);
+                    if (myDate.getFullYear() < 1500) {
+                        return "unknown";
+                    } else {
+                        return (moment(value)).format('M/D/YYYY');
+                    }
+                });
                 this._googleMarkers = ko.observableArray();
                 if (isNaN(agreementId)) {
                     agreementId = 0;
                 }
                 this.agreementId = agreementId;
                 this.agreementVisibility = agreementVisibility || 'Public';
-                this.populateFiles = new agreements.populateFiles();
-                this._setupDateComputeds();
+                this.fileListPopulator = new agreements.FileListPopulator();
 
                 if (this.agreementId !== 0) {
                     //this.getData();
@@ -68,48 +145,6 @@ var Agreements;
                     deferred.resolve();
                 });
                 return deferred;
-            };
-
-            PublicView.prototype.getData = function () {
-                var _this = this;
-                $.get(App.Routes.WebApi.Agreements.get(this.agreementId)).done(function (response) {
-                    _this.content(response.content);
-                    _this.expiresOn(response.expiresOn);
-                    _this.isAutoRenew(response.isAutoRenew);
-                    _this.status(response.status);
-                    _this.isExpirationEstimated(response.isExpirationEstimated);
-                    _this.name(response.name);
-                    _this.notes(response.notes);
-                    ko.mapping.fromJS(response.participants, {}, _this.participants);
-                    _this.startsOn(response.startsOn);
-                    _this.type(response.type);
-                    _this.umbrellaId(response.umbrellaId);
-                    _this.isBound(true);
-                    //this.partners = response.participants;
-                });
-                this.populateFiles.populate(this.agreementId);
-                this.files = this.populateFiles.files;
-            };
-
-            PublicView.prototype._setupDateComputeds = function () {
-                var _this = this;
-                this.startsOnDate = ko.computed(function () {
-                    var value = _this.startsOn();
-                    var myDate = new Date(value);
-                    if (myDate.getFullYear() < 1500) {
-                        return "unknown";
-                    }
-                    return (moment(value)).format('M/D/YYYY');
-                });
-                this.expiresOnDate = ko.computed(function () {
-                    var value = _this.expiresOn();
-                    var myDate = new Date(value);
-                    if (myDate.getFullYear() < 1500) {
-                        return "unknown";
-                    } else {
-                        return (moment(value)).format('M/D/YYYY');
-                    }
-                });
             };
 
             PublicView.prototype._createMap = function () {

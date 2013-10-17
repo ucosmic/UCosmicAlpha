@@ -2,7 +2,12 @@
 /// <reference path="./phones.ts" />
 
 module agreements {
-
+    export class SelectConstructor {
+        constructor(public name: string, public id: string) {
+            this.name = name;
+            this.id = id;
+        }
+    }
     export class contacts {
         constructor(isCustomContactTypeAllowed, establishmentItemViewModel, agreementIsEdit, agreementId, kendoWindowBug, deferredPopContacts) {
 
@@ -18,19 +23,19 @@ module agreements {
             this.removeContact = <() => boolean> this.removeContact.bind(this);
             this.populateContacts = <() => void > this.populateContacts.bind(this);
             this.contactSalutation = ko.mapping.fromJS([
-                new this.selectConstructor("[None]", ""),
-                new this.selectConstructor("Dr.", "Dr."),
-                new this.selectConstructor("Mr.", "Mr."),
-                new this.selectConstructor("Ms.", "Ms."),
-                new this.selectConstructor("Mrs.", "Mrs."),
-                new this.selectConstructor("Prof.", "Prof.")
+                new SelectConstructor("[None]", ""),
+                new SelectConstructor("Dr.", "Dr."),
+                new SelectConstructor("Mr.", "Mr."),
+                new SelectConstructor("Ms.", "Ms."),
+                new SelectConstructor("Mrs.", "Mrs."),
+                new SelectConstructor("Prof.", "Prof.")
             ]);
             this.contactSuffix = ko.mapping.fromJS([
-                new this.selectConstructor("[None]", ""),
-                new this.selectConstructor("Esq.", "Esq."),
-                new this.selectConstructor("Jr.", "Jr."),
-                new this.selectConstructor("PhD", "PhD"),
-                new this.selectConstructor("Sr.", "Sr.")
+                new SelectConstructor("[None]", ""),
+                new SelectConstructor("Esq.", "Esq."),
+                new SelectConstructor("Jr.", "Jr."),
+                new SelectConstructor("PhD", "PhD"),
+                new SelectConstructor("Sr.", "Sr.")
             ]);
             this._setupValidation();
         }
@@ -76,10 +81,6 @@ module agreements {
         contacts = ko.mapping.fromJS([]);
         validateContact;
 
-        selectConstructor = function (name: string, id: string) {
-            this.name = name;
-            this.id = id;
-        }
 
         editAContact(me): void {
             var dropdownlist,

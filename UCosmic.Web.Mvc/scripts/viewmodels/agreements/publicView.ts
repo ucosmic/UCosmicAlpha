@@ -20,8 +20,8 @@ module Agreements.ViewModels {
             }
             this.agreementId =  agreementId;
             this.agreementVisibility = agreementVisibility || 'Public';
-            this.populateFiles = new agreements.populateFiles();
-            this._setupDateComputeds();
+            this.fileListPopulator = new agreements.FileListPopulator();
+            //this._setupDateComputeds();
             //this._setupNameComputeds();
             if (this.agreementId !== 0) {
                 //this.getData();
@@ -34,7 +34,7 @@ module Agreements.ViewModels {
             }
         }
         //imported class instances
-        populateFiles;
+        fileListPopulator;
 
         agreementId: any;
         agreementVisibility: string;
@@ -73,26 +73,26 @@ module Agreements.ViewModels {
             return deferred;
         }
 
-        getData(): void {
-            $.get(App.Routes.WebApi.Agreements.get(this.agreementId))
-                .done((response: any): void => {
-                    this.content(response.content);
-                    this.expiresOn(response.expiresOn);
-                    this.isAutoRenew(response.isAutoRenew);
-                    this.status(response.status);
-                    this.isExpirationEstimated(response.isExpirationEstimated);
-                    this.name(response.name);
-                    this.notes(response.notes);
-                    ko.mapping.fromJS(response.participants, {}, this.participants);
-                    this.startsOn(response.startsOn);
-                    this.type(response.type);
-                    this.umbrellaId(response.umbrellaId);
-                    this.isBound(true);
-                    //this.partners = response.participants;
-                });
-            this.populateFiles.populate(this.agreementId);
-            this.files = this.populateFiles.files;
-        }
+        //getData(): void {
+        //    $.get(App.Routes.WebApi.Agreements.get(this.agreementId))
+        //        .done((response: any): void => {
+        //            this.content(response.content);
+        //            this.expiresOn(response.expiresOn);
+        //            this.isAutoRenew(response.isAutoRenew);
+        //            this.status(response.status);
+        //            this.isExpirationEstimated(response.isExpirationEstimated);
+        //            this.name(response.name);
+        //            this.notes(response.notes);
+        //            ko.mapping.fromJS(response.participants, {}, this.participants);
+        //            this.startsOn(response.startsOn);
+        //            this.type(response.type);
+        //            this.umbrellaId(response.umbrellaId);
+        //            this.isBound(true);
+        //            //this.partners = response.participants;
+        //        });
+        //    this.fileListPopulator.populate(this.agreementId);
+        //    this.files = this.fileListPopulator.files;
+        //}
 
         //#region Name computeds
 
@@ -138,28 +138,28 @@ module Agreements.ViewModels {
 
         //#region Date computeds
 
-        startsOnDate: KnockoutComputed<string>;
-        expiresOnDate: KnockoutComputed<string>;
+        //startsOnDate: KnockoutComputed<string>;
+        //expiresOnDate: KnockoutComputed<string>;
 
-        private _setupDateComputeds(): void {
-            this.startsOnDate = ko.computed((): string => {
-                var value = this.startsOn();
-                var myDate = new Date(value);
-                if (myDate.getFullYear() < 1500) {
-                    return "unknown";
-                }
+        //private _setupDateComputeds(): void {
+        startsOnDate = ko.computed((): string => {
+            var value = this.startsOn();
+            var myDate = new Date(value);
+            if (myDate.getFullYear() < 1500) {
+                return "unknown";
+            }
+            return (moment(value)).format('M/D/YYYY');
+        });
+        expiresOnDate = ko.computed((): string => {
+            var value = this.expiresOn();
+            var myDate = new Date(value);
+            if (myDate.getFullYear() < 1500) {
+                return "unknown";
+            } else {
                 return (moment(value)).format('M/D/YYYY');
-            });
-            this.expiresOnDate = ko.computed((): string => {
-                var value = this.expiresOn();
-                var myDate = new Date(value);
-                if (myDate.getFullYear() < 1500) {
-                    return "unknown";
-                } else {
-                    return (moment(value)).format('M/D/YYYY');
-                }
-            });
-        }
+            }
+        });
+        //}
 
         ////#endregion
 

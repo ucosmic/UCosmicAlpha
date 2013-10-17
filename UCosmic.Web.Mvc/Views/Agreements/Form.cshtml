@@ -31,12 +31,10 @@
 <div class="content fixed to-top" data-current-module="agreements" id="LoadingPage">
     <div class="on-left from-top">
         <header>
-            <h1>
-                <p data-bind="visible: spinner.isVisible">
-                    <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
-                    <strong>Loading page...</strong>
-                </p>
-            </h1>
+            <p data-bind="visible: spinner.isVisible">
+                <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
+                <strong>Loading page...</strong>
+            </p>
         </header>
     </div>
 </div>
@@ -63,11 +61,11 @@
             
             <footer id="saveAgreement">
                 @* TODO: render these as buttons instead of links with button styles *@
-                <a href="" data-bind="click: saveUpdateAgreement, visible: !agreementIsEdit()" class="button">
+                <a data-bind="click: saveUpdateAgreement, visible: !agreementIsEdit()" class="button">
                     <i class="green plus"></i>
                     <span class="text">Save Agreement</span>
                 </a>
-                <a href="" data-bind="click: saveUpdateAgreement, visible: agreementIsEdit" class="button">
+                <a data-bind="click: saveUpdateAgreement, visible: agreementIsEdit" class="button">
                     <i class="green plus"></i>
                     <span class="text">Update Agreement</span>
                 </a>

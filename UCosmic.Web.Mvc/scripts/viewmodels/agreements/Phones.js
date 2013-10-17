@@ -28,7 +28,7 @@ var agreements;
                 new this.selectConstructor("work", "work"),
                 new this.selectConstructor("mobile", "mobile")
             ]);
-            this.bindJquery();
+            this._bindJquery();
         }
         phones.prototype.removePhone = function (me, e) {
             var _this = this;
@@ -61,7 +61,7 @@ var agreements;
             }
         };
 
-        phones.prototype.bindJquery = function () {
+        phones.prototype._bindJquery = function () {
             var _this = this;
             var self = this;
 

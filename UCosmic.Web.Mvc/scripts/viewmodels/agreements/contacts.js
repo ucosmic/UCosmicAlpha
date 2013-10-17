@@ -2,6 +2,16 @@
 /// <reference path="./phones.ts" />
 var agreements;
 (function (agreements) {
+    var SelectConstructor = (function () {
+        function SelectConstructor(name, id) {
+            this.name = name;
+            this.id = id;
+            this.name = name;
+            this.id = id;
+        }
+        return SelectConstructor;
+    })();
+    agreements.SelectConstructor = SelectConstructor;
     var contacts = (function () {
         function contacts(isCustomContactTypeAllowed, establishmentItemViewModel, agreementIsEdit, agreementId, kendoWindowBug, deferredPopContacts) {
             //contact vars
@@ -32,10 +42,6 @@ var agreements;
             this.$contactSalutation = $("#contactSalutation");
             this.$contactSuffix = $("#contactSuffix");
             this.contacts = ko.mapping.fromJS([]);
-            this.selectConstructor = function (name, id) {
-                this.name = name;
-                this.id = id;
-            };
             this.agreementId = agreementId;
             this.phones = new agreements.phones(agreementId, establishmentItemViewModel, this.contactId);
             this.isCustomContactTypeAllowed = isCustomContactTypeAllowed;
@@ -48,19 +54,19 @@ var agreements;
             this.removeContact = this.removeContact.bind(this);
             this.populateContacts = this.populateContacts.bind(this);
             this.contactSalutation = ko.mapping.fromJS([
-                new this.selectConstructor("[None]", ""),
-                new this.selectConstructor("Dr.", "Dr."),
-                new this.selectConstructor("Mr.", "Mr."),
-                new this.selectConstructor("Ms.", "Ms."),
-                new this.selectConstructor("Mrs.", "Mrs."),
-                new this.selectConstructor("Prof.", "Prof.")
+                new SelectConstructor("[None]", ""),
+                new SelectConstructor("Dr.", "Dr."),
+                new SelectConstructor("Mr.", "Mr."),
+                new SelectConstructor("Ms.", "Ms."),
+                new SelectConstructor("Mrs.", "Mrs."),
+                new SelectConstructor("Prof.", "Prof.")
             ]);
             this.contactSuffix = ko.mapping.fromJS([
-                new this.selectConstructor("[None]", ""),
-                new this.selectConstructor("Esq.", "Esq."),
-                new this.selectConstructor("Jr.", "Jr."),
-                new this.selectConstructor("PhD", "PhD"),
-                new this.selectConstructor("Sr.", "Sr.")
+                new SelectConstructor("[None]", ""),
+                new SelectConstructor("Esq.", "Esq."),
+                new SelectConstructor("Jr.", "Jr."),
+                new SelectConstructor("PhD", "PhD"),
+                new SelectConstructor("Sr.", "Sr.")
             ]);
             this._setupValidation();
         }
