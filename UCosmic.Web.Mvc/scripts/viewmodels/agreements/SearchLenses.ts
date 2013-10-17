@@ -1,5 +1,6 @@
-/// <reference path="SearchTable.ts" />
 /// <reference path="../../typings/knockout/knockout.d.ts" />
+/// <reference path="SearchTable.ts" />
+/// <reference path="SearchMap.ts" />
 
 module Agreements.ViewModels {
 
@@ -15,6 +16,11 @@ module Agreements.ViewModels {
     export class SearchLenses {
 
         table: SearchTable;
+        map: SearchMap;
+        lens: KnockoutObservable<string> = ko.observable(
+            sessionStorage.getItem(SearchLenses.LensSessionKey) || 'map');
+
+        static LensSessionKey = 'AgreementSearchLens';
 
         constructor(public settings: SearchLensSettings) {
             this._runSammy();
@@ -27,9 +33,41 @@ module Agreements.ViewModels {
                 detailUrl: this.settings.detailUrl,
                 sammy: this.sammy,
             });
+            this.map = new SearchMap({
+                element: undefined,
+                domain: this.settings.domain,
+                visibility: this.settings.visibility,
+                route: 'map',
+                activationRoute: '#/map/',
+                detailUrl: this.settings.detailUrl,
+                sammy: this.sammy,
+            });
+
+            this.table.countryCode.subscribe((newValue: string): void => {
+                var mapCountry = this.map.countryCode();
+                if (mapCountry != newValue) this.map.countryCode(newValue);
+            });
+
+            this.map.countryCode.subscribe((newValue: string): void => {
+                var tableCountry = this.table.countryCode();
+                if (tableCountry != newValue) this.table.countryCode(newValue);
+            });
+
             this.sammy.run();
-            this.sammy.setLocation('#/table/');
+            var initialLocation = this.sammy.getLocation();
+            var lensRoute = '#/{0}/'.format(this.lens());
+            if (initialLocation.indexOf(lensRoute) < 0) {
+                this.sammy.setLocation(lensRoute);
+            }
         }
+
+        isTableLens: KnockoutComputed<boolean> = ko.computed((): boolean => {
+            return this.lens() === 'table';
+        });
+
+        isMapLens: KnockoutComputed<boolean> = ko.computed((): boolean => {
+            return this.lens() === 'map';
+        });
 
         sammy: Sammy.Application = Sammy();
 
@@ -47,8 +85,12 @@ module Agreements.ViewModels {
 
         private _onRoute(e: Sammy.EventContext): void {
             var lens = e.params['lens'];
-            if (lens === 'table') {
+            this.lens(lens);
+            if (this.isTableLens()) {
                 this.table.onBeforeActivation(e);
+            }
+            else if (this.isMapLens()) {
+                this.map.onBeforeActivation(e);
             }
         }
     }

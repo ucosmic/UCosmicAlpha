@@ -48,7 +48,7 @@ var Agreements;
                 this._countryChanged = ko.computed(function () {
                     _this._onCountryChanged();
                 });
-                this.routeFormat = '#/{0}/country/{5}/sort/{1}/size/{2}/page/{3}/'.format(this.settings.route).replace('{5}', '{0}');
+                this.routeFormat = '#/{0}/country/{4}/sort/{1}/size/{2}/page/{3}/'.format(this.settings.route).replace('{4}', '{0}');
                 this._isActivated = ko.observable(false);
                 this._route = ko.computed(function () {
                     // this will run once during construction

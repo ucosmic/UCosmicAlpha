@@ -17,6 +17,8 @@
 
     <script src="~/scripts/viewmodels/agreements/SearchTable.js"></script>
 
+    <script src="~/scripts/viewmodels/agreements/SearchMap.js"></script>
+
     <script src="~/scripts/viewmodels/agreements/SearchLenses.js"></script>
 
     <script type="text/javascript">
@@ -51,7 +53,7 @@
                     @ViewBag.Title
                 </h1>
             </header>
-            <div data-bind="with: table">
+            <div data-bind="visible: isTableLens, with: table">
                 @* KEYWORD TEXT BOX *@
                 <div class="field" style="margin-bottom: 0;">
                     <input type="search" placeholder="Find an agreement by name, partner, country, or keyword" data-bind="value: keyword, valueUpdate: 'afterkeydown search'" />
@@ -72,7 +74,7 @@
                             <span data-bind="visible: hasManyPages">(page
                                 @*<span data-bind="text: pageNumber"></span>*@
                                 <select data-bind="value: $parent.pager.input.pageNumberText, options: $parent.pager.input.pageNumberOptions"
-                                    style="padding: 0; margin: 0; line-height: 16px; height: auto;">
+                                        style="padding: 0; margin: 0; line-height: 16px; height: auto;">
                                     <option>1</option>
                                 </select>
                                 of <span data-bind="text: pageCount"></span>)</span>
@@ -156,6 +158,9 @@
                 </div>
 
             </div>
+            <div data-bind="visible: isMapLens, with: map">
+                here is my map
+            </div>
         </div>
         <aside class="on-right from-top" data-fixed-scroll="root">
             <div data-fixed-scroll="anchor"></div>
@@ -186,7 +191,7 @@
                                     <span class="text">Search options</span>
                                 </div>
                             }
-                            <div class="content" data-bind="with: table">
+                            <div class="content" data-bind="visible: isTableLens, with: table">
                                 <div class="field">
                                     <select class="side" data-bind="value: countryCode, options: countryOptions, optionsText: 'name', optionsValue: 'code'">
                                         <option value="any">[Loading...]</option>
@@ -233,17 +238,24 @@
                                     <button class="link" data-bind="click: next, enable: nextAllowed">Next &gt;&gt;</button>
                                 </div>
                             </div>
+                            <div class="content" data-bind="visible: isMapLens, with: map">
+                                <div class="field">
+                                    <select class="side" data-bind="value: countryCode, options: countryOptions, optionsText: 'name', optionsValue: 'code'">
+                                        <option value="any">[Loading...]</option>
+                                    </select>
+                                </div>
+                            </div>
                         </li>
                     </ul>
                     <ul class="bottom">
-                        <li class="current">
-                            <a href="#" class="group">
+                        <li data-bind="css: { current: isTableLens }">
+                            <a href="#/table/" class="group">
                                 <div class="arrow"></div>
                                 <span class="text">Table</span>
                             </a>
                         </li>
-                        <li class="">
-                            <a href="#" class="group">
+                        <li data-bind="css: { current: isMapLens }">
+                            <a href="#/map/" class="group">
                                 <div class="arrow"></div>
                                 <span class="text">Map</span>
                             </a>

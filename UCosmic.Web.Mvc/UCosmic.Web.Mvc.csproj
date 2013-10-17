@@ -1975,6 +1975,7 @@
     <Content Include="scripts\viewmodels\agreements\Copy of AgreementVM.min.js">
       <DependentUpon>PublicView.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="scripts\viewmodels\agreements\SearchMap.ts" />
     <Content Include="scripts\viewmodels\agreements\datesStatus.js">
       <DependentUpon>DatesStatus.ts</DependentUpon>
     </Content>
@@ -2043,6 +2044,12 @@
     </Content>
     <Content Include="scripts\viewmodels\agreements\SearchLenses.min.js">
       <DependentUpon>SearchLenses.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\agreements\SearchMap.js">
+      <DependentUpon>SearchMap.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\agreements\SearchMap.min.js">
+      <DependentUpon>SearchMap.ts</DependentUpon>
     </Content>
     <Content Include="scripts\viewmodels\agreements\searchResult.js">
       <DependentUpon>SearchResult.ts</DependentUpon>

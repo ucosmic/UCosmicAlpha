@@ -135,8 +135,8 @@ module Agreements.ViewModels {
         //#region Sammy Routing
 
         sammy: Sammy.Application;
-        routeFormat: string = '#/{0}/country/{5}/sort/{1}/size/{2}/page/{3}/'
-            .format(this.settings.route).replace('{5}', '{0}');
+        routeFormat: string = '#/{0}/country/{4}/sort/{1}/size/{2}/page/{3}/'
+            .format(this.settings.route).replace('{4}', '{0}');
         private _isActivated: KnockoutObservable<boolean> = ko.observable(false);
 
         private _runSammy(): void {
