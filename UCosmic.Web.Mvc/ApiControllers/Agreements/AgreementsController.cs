@@ -41,6 +41,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [GET("{domain}/agreements")]
         public PageOfAgreementApiFlatModel Get(string domain, [FromUri] AgreementSearchInputModel input)
         {
+            //Thread.Sleep(2000);
             if (input.PageSize < 1 || input == null || string.IsNullOrWhiteSpace(domain))
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
 

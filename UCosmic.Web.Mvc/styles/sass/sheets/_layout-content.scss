@@ -63,7 +63,7 @@ body {
                     > ul {
                         > li {
                             margin-bottom: 1px;
-                            &:first-child > a > .text {
+                            &:first-child > a > .text, &:first-child > div.no-link > .text {
                                 @include border-radius(8px 8px 0 0);
                             }
                             &:first-child.current > a > .text {
@@ -81,7 +81,7 @@ body {
                             &:last-child.current > .content {
                                 @include border-radius(0 0 8px 8px);
                             }
-                            > a {
+                            > a, div.no-link {
                                 display: block;
                                 text-decoration: none;
                                 > .arrow {
@@ -96,7 +96,7 @@ body {
                                     }
                                 }
                             }
-                            > a > .text, > .text {
+                            > a > .text, > .text, > div.no-link > .text {
                                 display: inline-block;
                                 @include border-box;
                                 width: 245px;

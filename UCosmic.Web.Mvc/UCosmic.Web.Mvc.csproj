@@ -783,6 +783,14 @@
     <Content Include="scripts\app\PagedSearch.min.js">
       <DependentUpon>PagedSearch.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="scripts\app\Pager.ts" />
+    <TypeScriptCompile Include="scripts\app\Pagination.d.ts" />
+    <Content Include="scripts\app\Pager.js">
+      <DependentUpon>Pager.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\app\Pager.min.js">
+      <DependentUpon>Pager.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\app\Spinner.js">
       <DependentUpon>Spinner.ts</DependentUpon>
     </Content>

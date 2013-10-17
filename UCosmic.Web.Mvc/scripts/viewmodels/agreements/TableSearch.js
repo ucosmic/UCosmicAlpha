@@ -6,10 +6,11 @@ var Agreements;
     /// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
     /// <reference path="../../typings/linq/linq.d.ts" />
     /// <reference path="../../typings/moment/moment.d.ts" />
-    /// <reference path="../../typings/kendo/kendo.all.d.ts" />
     /// <reference path="../../app/App.ts" />
     /// <reference path="../../app/Routes.ts" />
     /// <reference path="../../app/Spinner.ts" />
+    /// <reference path="../../app/Pagination.d.ts" />
+    /// <reference path="../../app/Pager.ts" />
     /// <reference path="../places/ApiModels.d.ts" />
     (function (ViewModels) {
         var TableSearch = (function () {
@@ -24,8 +25,8 @@ var Agreements;
                 this.keywordThrottled = ko.computed(this.keyword).extend({ throttle: 400 });
                 // instead of throttling, both this and the options are observed
                 this.countryCode = ko.observable(sessionStorage.getItem(TableSearch.CountrySessionKey) || 'any');
-                this.pager = new SearchResultPager(sessionStorage.getItem(TableSearch.PageNumberSessionKey) || 1, sessionStorage.getItem(TableSearch.PageSizeSessionKey) || 10);
-                this.displayPager = new SearchResultPager(sessionStorage.getItem(TableSearch.PageNumberSessionKey) || 1, sessionStorage.getItem(TableSearch.PageSizeSessionKey) || 10);
+                this.pager = new App.Pager(sessionStorage.getItem(TableSearch.PageNumberSessionKey) || 1, sessionStorage.getItem(TableSearch.PageSizeSessionKey) || 10);
+                this.displayPager = new App.Pager(sessionStorage.getItem(TableSearch.PageNumberSessionKey) || 1, sessionStorage.getItem(TableSearch.PageSizeSessionKey) || 10);
                 this.orderBy = ko.observable(sessionStorage.getItem(TableSearch.OrderBySessionKey) || 'start-desc');
                 // automatically save the search inputs to session when they change
                 this._inputChanged = ko.computed(function () {
@@ -53,6 +54,7 @@ var Agreements;
                 });
                 //#endregion
                 //#region API Requests
+                this.spinner = new App.Spinner(new App.SpinnerOptions(400, true));
                 this._requestHistory = ko.observableArray();
                 this._currentRequest = ko.computed(function () {
                     // this will run once during construction
@@ -62,12 +64,8 @@ var Agreements;
                     // this will run once during construction
                     _this._onRequestDirty();
                 }).extend({ throttle: 1 });
-                //#endregion
-                //#region Results
-                this.spinner = new App.Spinner(new App.SpinnerOptions(400, true));
                 this._loadCountryOptions();
                 this._runSammy();
-                ko.applyBindings(this, this.settings.element);
             }
             TableSearch.prototype._onCountryChanged = function () {
                 // changes when applyBindings happens and after options data is loaded
@@ -112,32 +110,49 @@ var Agreements;
                 var beforeRegex = new RegExp('\\{0}'.format(this.routeFormat.format('(.*)', '(.*)', '(.*)', '(.*)').replace(/\//g, '\\/')));
                 this.sammy.before(beforeRegex, function () {
                     var e = this;
-
-                    // this will always run when the route is first activated, either explicitly from the URL
-                    // or after hitting the activation route pattern
-                    // it will also run when users page back & forward through the history
-                    // keyword is not stored as part of the route or history
-                    viewModel.countryCode(e.params['country']);
-                    viewModel.orderBy(e.params['sort']);
-                    viewModel.pager.input.pageSizeText(e.params['size']);
-                    viewModel.pager.input.pageNumberText(e.params['number']);
-                    return true;
+                    return viewModel._onBeforeRoute(e);
                 });
 
                 // do this when we already have hashtag parameters in the page
                 this.sammy.get(this.routeFormat.format(':country', ':sort', ':size', ':number'), function () {
                     var e = this;
-                    if (!viewModel._isActivated())
-                        viewModel._isActivated(true);
+                    viewModel._onRoute(e);
                 });
 
                 // activate the page route (create default hashtag parameters)
                 this.sammy.get(this.settings.activationRoute || this.sammy.getLocation(), function () {
                     var e = this;
-                    viewModel._setLocation();
+                    viewModel._onBeforeActivation(e);
                 });
 
                 this.sammy.run();
+            };
+
+            TableSearch.prototype._onBeforeRoute = function (e) {
+                var country = e.params['country'];
+                var sort = e.params['sort'];
+                var size = e.params['size'];
+                var page = e.params['number'];
+
+                // this will always run when the route is first activated, either explicitly from the URL
+                // or after hitting the activation route pattern
+                // it will also run when users page back & forward through the history
+                // keyword is not stored as part of the route or history
+                this.countryCode(country);
+                this.orderBy(sort);
+                this.pager.input.pageSizeText(size);
+                this.pager.input.pageNumberText(page);
+
+                return true;
+            };
+
+            TableSearch.prototype._onRoute = function (e) {
+                if (!this._isActivated())
+                    this._isActivated(true);
+            };
+
+            TableSearch.prototype._onBeforeActivation = function (e) {
+                this._setLocation();
             };
 
             TableSearch.prototype._computeRoute = function () {
@@ -172,9 +187,11 @@ var Agreements;
             TableSearch.prototype._onRequestDirty = function () {
                 if (!this._isActivated())
                     return;
+
                 var requestHistory = this._requestHistory();
                 var lastRequest = requestHistory.length ? Enumerable.From(requestHistory).Last() : null;
                 var thisRequest = this._currentRequest();
+
                 if (!lastRequest || !this._areRequestsAligned(thisRequest, lastRequest)) {
                     this._requestHistory.push(thisRequest);
                     this._load();
@@ -182,20 +199,17 @@ var Agreements;
             };
 
             TableSearch.prototype._load = function () {
-                var _this = this;
                 this._request().done(function () {
-                    if (_this.$results && _this.pager.output.hasItems()) {
-                        _this.$results.fadeTo(0, 1);
-                    }
                 });
             };
 
             TableSearch.prototype._request = function () {
                 var _this = this;
                 var deferred = $.Deferred();
-                var lastRequest = Enumerable.From(this._requestHistory()).Last();
+                var requestHistory = this._requestHistory();
+                var lastRequest = requestHistory[requestHistory.length - 1];
                 var thisRequest = this._currentRequest();
-                if (thisRequest != lastRequest) {
+                if (!this._areRequestsAligned(thisRequest, lastRequest)) {
                     deferred.reject();
                     return deferred;
                 }
@@ -207,12 +221,13 @@ var Agreements;
                     // need to make sure the current inputs still match the request
                     var currentRequest = _this._currentRequest();
                     if (thisRequest == currentRequest) {
-                        if (response.itemTotal < 1 && thisRequest.pageNumber != 1)
+                        if (response.itemTotal < 1 && thisRequest.pageNumber != 1) {
                             // need to correct the page number here
                             _this._fixOverflowedPageNumber(thisRequest, 1);
-else if (response.pageNumber != thisRequest.pageNumber)
+                        } else if (response.pageNumber != thisRequest.pageNumber) {
                             // need to correct the page number here
                             _this._fixOverflowedPageNumber(thisRequest, response.pageNumber);
+                        }
 
                         response.items = Enumerable.From(response.items).Select(function (x) {
                             return new TableRow(x, _this);
@@ -225,6 +240,11 @@ else if (response.pageNumber != thisRequest.pageNumber)
                     } else {
                         deferred.reject();
                     }
+                }).always(function () {
+                    _this._restoreResultOpactity();
+                    setTimeout(function () {
+                        _this._restoreResultOpactity();
+                    }, 10);
                 });
                 return deferred;
             };
@@ -237,8 +257,9 @@ else if (response.pageNumber != thisRequest.pageNumber)
                         break;
                     requestToFix = requests[i];
 
-                    if (this._requestHistory().length > 1 && this._areRequestsAligned(request, requests[i - 1], true))
+                    if (this._requestHistory().length > 1 && this._areRequestsAligned(request, requests[i - 1], true)) {
                         this._requestHistory.pop();
+                    }
                 }
                 requestToFix.pageNumber = pageNumber;
             };
@@ -251,9 +272,11 @@ else if (response.pageNumber != thisRequest.pageNumber)
                 return aligned;
             };
 
-            TableSearch.prototype._getPageCount = function (pageNumber, pageSize, itemTotal) {
-                var pageCount = Math.ceil(itemTotal / pageSize);
-                return pageCount;
+            TableSearch.prototype._restoreResultOpactity = function () {
+                if (this.$results && this.pager.output.hasItems()) {
+                    this.$results.fadeTo(1, 1);
+                    this.$results.css({ opacity: 1 });
+                }
             };
             TableSearch.KeywordSessionKey = 'AgreementSearchKeyword2';
             TableSearch.PageSizeSessionKey = 'AgreementSearchPageSize2';
@@ -314,103 +337,6 @@ else if (response.pageNumber != thisRequest.pageNumber)
             return TableRow;
         })();
         ViewModels.TableRow = TableRow;
-
-        var SearchResultPager = (function () {
-            function SearchResultPager(pageNumber, pageSize) {
-                this.items = ko.observableArray();
-                this.input = new SearchResultPagerStatus(pageNumber, pageSize);
-                this.output = new SearchResultPagerStatus(pageNumber, pageSize);
-            }
-            SearchResultPager.prototype.apply = function (page) {
-                this.input.apply(page);
-                this.output.apply(page);
-                this.items(page.items);
-            };
-            return SearchResultPager;
-        })();
-        ViewModels.SearchResultPager = SearchResultPager;
-
-        var SearchResultPagerStatus = (function () {
-            function SearchResultPagerStatus(pageNumber, pageSize) {
-                var _this = this;
-                this.pageNumberText = ko.observable('1');
-                this.pageSizeText = ko.observable('10');
-                this.itemCount = ko.observable();
-                this.itemTotal = ko.observable();
-                this.pageNumber = ko.computed(function () {
-                    return parseInt(_this.pageNumberText());
-                });
-                this.pageSize = ko.computed(function () {
-                    return parseInt(_this.pageSizeText());
-                });
-                this.isItemTotalDefined = ko.computed(function () {
-                    var itemTotal = _this.itemTotal();
-                    return itemTotal || itemTotal == 0;
-                });
-                this.pageCount = ko.computed(function () {
-                    if (!_this.isItemTotalDefined())
-                        return undefined;
-                    return Math.ceil(_this.itemTotal() / _this.pageSize());
-                });
-                this.pageIndex = ko.computed(function () {
-                    return _this.pageNumber() - 1;
-                });
-                this.firstIndex = ko.computed(function () {
-                    return _this.pageIndex() * _this.pageSize();
-                });
-                this.firstNumber = ko.computed(function () {
-                    return _this.firstIndex() + 1;
-                });
-                this.lastNumber = ko.computed(function () {
-                    if (!_this.isItemTotalDefined())
-                        return 0;
-                    return _this.firstIndex() + _this.itemCount();
-                });
-                this.lastIndex = ko.computed(function () {
-                    return _this.lastNumber() - 1;
-                });
-                this.nextAllowed = ko.computed(function () {
-                    var pageCount = _this.pageCount();
-                    return pageCount == undefined || pageCount > _this.pageNumber();
-                });
-                this.prevAllowed = ko.computed(function () {
-                    var pageNumber = _this.pageNumber() - 1;
-                    return pageNumber > 0;
-                });
-                this.hasItems = ko.computed(function () {
-                    return _this.isItemTotalDefined() && _this.itemTotal() > 0;
-                });
-                this.hasManyItems = ko.computed(function () {
-                    return _this.lastNumber() > _this.firstNumber();
-                });
-                this.hasNoItems = ko.computed(function () {
-                    return !_this.hasItems();
-                });
-                this.hasManyPages = ko.computed(function () {
-                    return _this.pageCount() > 1;
-                });
-                this.pageNumberText(pageNumber);
-                this.pageSizeText(pageSize);
-            }
-            SearchResultPagerStatus.prototype.apply = function (page) {
-                this.pageSizeText(page.pageSize.toString());
-                this.pageNumberText(page.itemTotal > 0 ? page.pageNumber.toString() : '1');
-                this.itemTotal(page.itemTotal);
-                this.itemCount(page.items.length);
-            };
-
-            SearchResultPagerStatus.prototype.next = function () {
-                var pageNumber = this.pageNumber() + 1;
-                this.pageNumberText(pageNumber.toString());
-            };
-
-            SearchResultPagerStatus.prototype.prev = function () {
-                var pageNumber = this.pageNumber() - 1;
-                this.pageNumberText(pageNumber.toString());
-            };
-            return SearchResultPagerStatus;
-        })();
-        ViewModels.SearchResultPagerStatus = SearchResultPagerStatus;
     })(Agreements.ViewModels || (Agreements.ViewModels = {}));
     var ViewModels = Agreements.ViewModels;
 })(Agreements || (Agreements = {}));

@@ -382,7 +382,7 @@ body #main {
           width: 260px; }
       body #main > .content.fixed nav.side > ul > li {
         margin-bottom: 1px; }
-        body #main > .content.fixed nav.side > ul > li:first-child > a > .text {
+        body #main > .content.fixed nav.side > ul > li:first-child > a > .text, body #main > .content.fixed nav.side > ul > li:first-child > div.no-link > .text {
           -moz-border-radius: 8px 8px 0 0;
           -webkit-border-radius: 8px 8px 0 0;
           border-radius: 8px 8px 0 0; }
@@ -406,17 +406,17 @@ body #main {
           -moz-border-radius: 0 0 8px 8px;
           -webkit-border-radius: 0 0 8px 8px;
           border-radius: 0 0 8px 8px; }
-        body #main > .content.fixed nav.side > ul > li > a {
+        body #main > .content.fixed nav.side > ul > li > a, body #main > .content.fixed nav.side > ul > li div.no-link {
           display: block;
           text-decoration: none; }
-          body #main > .content.fixed nav.side > ul > li > a > .arrow {
+          body #main > .content.fixed nav.side > ul > li > a > .arrow, body #main > .content.fixed nav.side > ul > li div.no-link > .arrow {
             display: inline-block;
             border: solid 15px transparent;
             border-left: none;
             float: left; }
-          body #main > .content.fixed nav.side > ul > li > a > .text > img {
+          body #main > .content.fixed nav.side > ul > li > a > .text > img, body #main > .content.fixed nav.side > ul > li div.no-link > .text > img {
             vertical-align: top; }
-        body #main > .content.fixed nav.side > ul > li > a > .text, body #main > .content.fixed nav.side > ul > li > .text {
+        body #main > .content.fixed nav.side > ul > li > a > .text, body #main > .content.fixed nav.side > ul > li > .text, body #main > .content.fixed nav.side > ul > li > div.no-link > .text {
           display: inline-block;
           -webkit-box-sizing: border-box;
           -moz-box-sizing: border-box;

@@ -4,13 +4,31 @@
 /// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
 /// <reference path="../../typings/linq/linq.d.ts" />
 /// <reference path="../../typings/moment/moment.d.ts" />
-/// <reference path="../../typings/kendo/kendo.all.d.ts" />
 /// <reference path="../../app/App.ts" />
 /// <reference path="../../app/Routes.ts" />
 /// <reference path="../../app/Spinner.ts" />
+/// <reference path="../../app/Pagination.d.ts" />
+/// <reference path="../../app/Pager.ts" />
 /// <reference path="../places/ApiModels.d.ts" />
 
 module Agreements.ViewModels {
+
+    export interface TableSearchSettings {
+        element: Element;
+        domain: string;
+        visibility: string;
+        route: string;
+        activationRoute?: string;
+        detailUrl: string;
+    }
+
+    export interface TableSearchInput {
+        keyword: string;
+        countryCode: string;
+        pageSize: number;
+        pageNumber: number;
+        orderBy: string;
+    }
 
     export class TableSearch {
         //#region Search Filter Inputs
@@ -25,11 +43,11 @@ module Agreements.ViewModels {
         countryCode: KnockoutObservable<string> = ko.observable(
             sessionStorage.getItem(TableSearch.CountrySessionKey) || 'any');
 
-        pager = new SearchResultPager<TableRow>(
+        pager = new App.Pager<TableRow>(
             sessionStorage.getItem(TableSearch.PageNumberSessionKey) || 1,
             sessionStorage.getItem(TableSearch.PageSizeSessionKey) || 10);
 
-        displayPager = new SearchResultPager<TableRow>(
+        displayPager = new App.Pager<TableRow>(
             sessionStorage.getItem(TableSearch.PageNumberSessionKey) || 1,
             sessionStorage.getItem(TableSearch.PageSizeSessionKey) || 10);
 
@@ -60,7 +78,6 @@ module Agreements.ViewModels {
         constructor(public settings: TableSearchSettings) {
             this._loadCountryOptions();
             this._runSammy();
-            ko.applyBindings(this, this.settings.element);
         }
 
         ////#endregion
@@ -127,15 +144,7 @@ module Agreements.ViewModels {
                 beforeRegex,
                 function (): boolean {
                     var e: Sammy.EventContext = this;
-                    // this will always run when the route is first activated, either explicitly from the URL
-                    // or after hitting the activation route pattern
-                    // it will also run when users page back & forward through the history
-                    // keyword is not stored as part of the route or history
-                    viewModel.countryCode(e.params['country']);
-                    viewModel.orderBy(e.params['sort']);
-                    viewModel.pager.input.pageSizeText(e.params['size']);
-                    viewModel.pager.input.pageNumberText(e.params['number']);
-                    return true;
+                    return viewModel._onBeforeRoute(e);
                 })
 
             // do this when we already have hashtag parameters in the page
@@ -143,8 +152,7 @@ module Agreements.ViewModels {
                 this.routeFormat.format(':country', ':sort', ':size', ':number'),
                 function (): void {
                     var e: Sammy.EventContext = this;
-                    if (!viewModel._isActivated())
-                        viewModel._isActivated(true);
+                    viewModel._onRoute(e);
                 });
 
             // activate the page route (create default hashtag parameters)
@@ -152,10 +160,37 @@ module Agreements.ViewModels {
                 this.settings.activationRoute || this.sammy.getLocation(),
                 function (): void {
                     var e: Sammy.EventContext = this;
-                    viewModel._setLocation(); // base activated route on current input filters
+                    viewModel._onBeforeActivation(e);
                 });
 
             this.sammy.run();
+        }
+
+        private _onBeforeRoute(e: Sammy.EventContext): boolean {
+            var country = e.params['country'];
+            var sort = e.params['sort'];
+            var size = e.params['size'];
+            var page = e.params['number'];
+
+            // this will always run when the route is first activated, either explicitly from the URL
+            // or after hitting the activation route pattern
+            // it will also run when users page back & forward through the history
+            // keyword is not stored as part of the route or history
+            this.countryCode(country);
+            this.orderBy(sort);
+            this.pager.input.pageSizeText(size);
+            this.pager.input.pageNumberText(page);
+
+            return true;
+        }
+
+        private _onRoute(e: Sammy.EventContext): void {
+            if (!this._isActivated())
+                this._isActivated(true);
+        }
+
+        private _onBeforeActivation(e: Sammy.EventContext): void {
+            this._setLocation(); // base activated route on current input filters
         }
 
         private _route: KnockoutComputed<string> = ko.computed((): string => {
@@ -185,8 +220,9 @@ module Agreements.ViewModels {
         //#endregion
         //#region API Requests
 
+        spinner = new App.Spinner(new App.SpinnerOptions(400, true));
+        $results: JQuery;
         private _requestHistory: KnockoutObservableArray<TableSearchInput> = ko.observableArray();
-
         private _currentRequest: KnockoutComputed<TableSearchInput> = ko.computed((): TableSearchInput => {
             // this will run once during construction
             return this._computeCurrentRequest();
@@ -210,10 +246,12 @@ module Agreements.ViewModels {
 
         private _onRequestDirty(): void {
             if (!this._isActivated()) return;
+
             var requestHistory = this._requestHistory();
             var lastRequest: TableSearchInput = requestHistory.length
                 ? Enumerable.From(requestHistory).Last() : null;
             var thisRequest = this._currentRequest();
+
             if (!lastRequest || !this._areRequestsAligned(thisRequest, lastRequest)) {
                 this._requestHistory.push(thisRequest);
                 this._load();
@@ -223,38 +261,37 @@ module Agreements.ViewModels {
         private _load(): void {
             this._request()
                 .done((): void => {
-                    if (this.$results && this.pager.output.hasItems()) {
-                        this.$results.fadeTo(0, 1);
-                    }
                 });
         }
 
         private _request(): JQueryDeferred<void> {
             var deferred = $.Deferred();
-            var lastRequest: TableSearchInput = Enumerable.From(this._requestHistory()).Last();
+            var requestHistory = this._requestHistory();
+            var lastRequest: TableSearchInput = requestHistory[requestHistory.length - 1];
             var thisRequest = this._currentRequest();
-            if (thisRequest != lastRequest) {
+            if (!this._areRequestsAligned(thisRequest, lastRequest)) {
                 deferred.reject();
                 return deferred;
             }
             this.spinner.start();
-            if (this.$results) {
+            if (this.$results) { // just give results less opacity, do not fade out entirely
                 this.$results.fadeTo(200, 0.5);
             }
             $.get(App.Routes.WebApi.Agreements.Search.get(this.settings.domain), lastRequest)
-                .done((response: PageOf<any>): void => {
+                .done((response: App.PageOf<any>): void => {
                     // need to make sure the current inputs still match the request
                     var currentRequest = this._currentRequest();
                     if (thisRequest == currentRequest) {
                         // when there are zero results, server will NOT correct the pageNumber
-                        if (response.itemTotal < 1 && thisRequest.pageNumber != 1)
+                        if (response.itemTotal < 1 && thisRequest.pageNumber != 1) {
                             // need to correct the page number here
                             this._fixOverflowedPageNumber(thisRequest, 1);
-
+                        }
                         // when there are one or more results, server WILL correct the pageNumber
-                        else if (response.pageNumber != thisRequest.pageNumber)
+                        else if (response.pageNumber != thisRequest.pageNumber) {
                             // need to correct the page number here
                             this._fixOverflowedPageNumber(thisRequest, response.pageNumber);
+                        }
 
                         response.items = Enumerable.From(response.items)
                             .Select((x: any): TableRow => {
@@ -269,6 +306,12 @@ module Agreements.ViewModels {
                     else {
                         deferred.reject();
                     }
+                })
+                .always((): void => {
+                    this._restoreResultOpactity();
+                    setTimeout((): void => {
+                        this._restoreResultOpactity();
+                    }, 10);
                 });
             return deferred;
         }
@@ -285,8 +328,10 @@ module Agreements.ViewModels {
 
                 // only pop off the request if it matches everything but the overflowed page number
                 // and it is not the first request
-                if (this._requestHistory().length > 1 && this._areRequestsAligned(request, requests[i - 1], true))
+                if (this._requestHistory().length > 1 &&
+                    this._areRequestsAligned(request, requests[i - 1], true)) {
                     this._requestHistory.pop();
+                }
             }
             requestToFix.pageNumber = pageNumber;
         }
@@ -302,16 +347,12 @@ module Agreements.ViewModels {
             return aligned;
         }
 
-        private _getPageCount(pageNumber: number, pageSize: number, itemTotal: number): number {
-            var pageCount = Math.ceil(itemTotal / pageSize);
-            return pageCount;
+        private _restoreResultOpactity(): void {
+            if (this.$results && this.pager.output.hasItems()) {
+                this.$results.fadeTo(1, 1);
+                this.$results.css({ opacity: 1 });
+            }
         }
-
-        //#endregion
-        //#region Results
-
-        spinner = new App.Spinner(new App.SpinnerOptions(400, true));
-        $results: JQuery;
 
         //#endregion
     }
@@ -370,141 +411,5 @@ module Agreements.ViewModels {
             if (!expiresOn) return '';
             return moment(expiresOn).format('M/D/YYYY');
         });
-    }
-
-    export class SearchResultPager<T> {
-
-        input: SearchResultPagerStatus;
-        output: SearchResultPagerStatus;
-        items: KnockoutObservableArray<T> = ko.observableArray();
-
-        constructor(pageNumber: string, pageSize: string) {
-            this.input = new SearchResultPagerStatus(pageNumber, pageSize);
-            this.output = new SearchResultPagerStatus(pageNumber, pageSize);
-        }
-
-        apply(page: PageOf<T>): void {
-            this.input.apply(page);
-            this.output.apply(page);
-            this.items(page.items);
-        }
-    }
-
-    export class SearchResultPagerStatus {
-
-        pageNumberText: KnockoutObservable<string> = ko.observable('1');
-        pageSizeText: KnockoutObservable<string> = ko.observable('10');
-        itemCount: KnockoutObservable<number> = ko.observable();
-        itemTotal: KnockoutObservable<number> = ko.observable();
-
-        constructor(pageNumber: string, pageSize: string) {
-            this.pageNumberText(pageNumber);
-            this.pageSizeText(pageSize);
-        }
-
-        pageNumber: KnockoutComputed<number> = ko.computed((): number => {
-            return parseInt(this.pageNumberText());
-        });
-        pageSize: KnockoutComputed<number> = ko.computed((): number => {
-            return parseInt(this.pageSizeText());
-        });
-
-        apply(page: PageOf<any>): void {
-            this.pageSizeText(page.pageSize.toString());
-            this.pageNumberText(page.itemTotal > 0 ? page.pageNumber.toString() : '1');
-            this.itemTotal(page.itemTotal);
-            this.itemCount(page.items.length);
-        }
-
-        isItemTotalDefined: KnockoutComputed<boolean> = ko.computed((): boolean => {
-            var itemTotal = this.itemTotal();
-            return itemTotal || itemTotal == 0;
-        });
-
-        pageCount: KnockoutComputed<number> = ko.computed((): number => {
-            if (!this.isItemTotalDefined()) return undefined;
-            return Math.ceil(this.itemTotal() / this.pageSize());
-        });
-
-        pageIndex: KnockoutComputed<number> = ko.computed((): number => {
-            return this.pageNumber() - 1;
-        });
-
-        firstIndex: KnockoutComputed<number> = ko.computed((): number => {
-            return this.pageIndex() * this.pageSize();
-        });
-
-        firstNumber: KnockoutComputed<number> = ko.computed((): number => {
-            return this.firstIndex() + 1;
-        });
-
-        lastNumber: KnockoutComputed<number> = ko.computed((): number => {
-            if (!this.isItemTotalDefined()) return 0;
-            return this.firstIndex() + this.itemCount();
-        });
-
-        lastIndex: KnockoutComputed<number> = ko.computed((): number => {
-            return this.lastNumber() - 1;
-        });
-
-        next(): void {
-            var pageNumber = this.pageNumber() + 1;
-            this.pageNumberText(pageNumber.toString());
-        }
-
-        nextAllowed: KnockoutComputed<boolean> = ko.computed((): boolean => {
-            var pageCount = this.pageCount();
-            return pageCount == undefined || pageCount > this.pageNumber();
-        });
-
-        prev(): void {
-            var pageNumber = this.pageNumber() - 1;
-            this.pageNumberText(pageNumber.toString());
-        }
-
-        prevAllowed: KnockoutComputed<boolean> = ko.computed((): boolean => {
-            var pageNumber = this.pageNumber() - 1;
-            return pageNumber > 0;
-        });
-
-        hasItems: KnockoutComputed<boolean> = ko.computed((): boolean => {
-            return this.isItemTotalDefined() && this.itemTotal() > 0;
-        });
-
-        hasManyItems: KnockoutComputed<boolean> = ko.computed((): boolean => {
-            return this.lastNumber() > this.firstNumber();
-        });
-
-        hasNoItems: KnockoutComputed<boolean> = ko.computed((): boolean => {
-            return !this.hasItems();
-        });
-
-        hasManyPages: KnockoutComputed<boolean> = ko.computed((): boolean => {
-            return this.pageCount() > 1;
-        });
-    }
-
-    export interface TableSearchSettings {
-        element: Element;
-        domain: string;
-        visibility: string;
-        route: string;
-        activationRoute?: string;
-        detailUrl: string;
-    }
-
-    export interface TableSearchInput {
-        keyword: string;
-        countryCode: string;
-        pageSize: number;
-        pageNumber: number;
-        orderBy: string;
-    }
-
-    export interface PageOf<T> {
-        pageSize: number;
-        pageNumber: number;
-        itemTotal: number;
-        items: T[];
     }
 }
