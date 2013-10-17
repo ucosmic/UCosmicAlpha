@@ -2028,6 +2028,7 @@
       <DependentUpon>Search.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="scripts\viewmodels\agreements\SearchResult.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\agreements\TableSearch.ts" />
     <Content Include="scripts\viewmodels\agreements\searchResult.js">
       <DependentUpon>SearchResult.ts</DependentUpon>
     </Content>
@@ -2039,6 +2040,12 @@
     </Content>
     <Content Include="scripts\viewmodels\agreements\searchResults.min.js">
       <DependentUpon>SearchResult.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\agreements\TableSearch.js">
+      <DependentUpon>TableSearch.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\agreements\TableSearch.min.js">
+      <DependentUpon>TableSearch.ts</DependentUpon>
     </Content>
     <Content Include="scripts\viewmodels\agreements\visibility.js">
       <DependentUpon>Visibility.ts</DependentUpon>
@@ -2445,6 +2452,7 @@
     <Content Include="Views\Agreements\_PublicViewSideBar.cshtml" />
     <Content Include="Views\Agreements\_PublicViewContent.cshtml" />
     <Content Include="Views\Activities\_EditStyles.cshtml" />
+    <Content Include="Views\Agreements\TableSearch.cshtml" />
     <None Include="Views\ApiTest\Index.cshtml" />
     <Content Include="Views\Agreements\Settings.cshtml" />
     <Content Include="Views\Agreements\_SearchSideBar.cshtml" />

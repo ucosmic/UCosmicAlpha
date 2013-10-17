@@ -15,6 +15,8 @@ namespace UCosmic.Web.Mvc.Models
         public DateTime? ExpiresOn { get; set; }
 
         public string CountryNames { get; set; }
+        public string[] Countries { get; set; }
+        public AgreementParticipantApiModel[] Participants { get; set; }
         public string[] EstablishmentOfficialName { get; set; }
         public string[] EstablishmentTranslatedName { get; set; }
 
@@ -36,6 +38,15 @@ namespace UCosmic.Web.Mvc.Models
                             .OrderBy(x => x)
                         ;
                         return countries.Implode(", ");
+                    }))
+                    .ForMember(d => d.Countries, o => o.ResolveUsing(s =>
+                    {
+                        var partners = s.Participants.Where(x => !x.IsOwner).Select(x => x.Establishment);
+                        var countries = partners.Select(x => x.Location.Places.FirstOrDefault(y => y.IsCountry))
+                            .Where(x => x != null).Select(x => x.OfficialName).Distinct()
+                            .OrderBy(x => x)
+                        ;
+                        return countries;
                     }))
                     .ForMember(d => d.EstablishmentOfficialName, o => o.ResolveUsing(s =>
                     {

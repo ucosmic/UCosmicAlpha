@@ -39,6 +39,20 @@ namespace UCosmic.Web.Mvc.Controllers
             return View(MVC.Agreements.Views.Owners);
         }
 
+        [GET("{domain}/agreements2")]
+        public virtual ActionResult Index2(string domain)
+        {
+            var detailUrl = Url.RouteUrl(null, new { controller = "Agreements", action = "Show", agreementId = 0 });
+            Debug.Assert(detailUrl != null);
+            detailUrl = detailUrl.Replace("0", "{0}");
+            ViewBag.DetailUrl = detailUrl;
+
+            var visibility = _queryProcessor.Execute(new MyAgreementsVisibility(User, domain));
+            ViewBag.AgreementsVisibility = visibility;
+            ViewBag.AgreementsDomain = domain;
+            return View(MVC.Agreements.Views.TableSearch);
+        }
+
         [GET("{domain}/agreements")]
         public virtual ActionResult TenantIndex(string domain)
         {

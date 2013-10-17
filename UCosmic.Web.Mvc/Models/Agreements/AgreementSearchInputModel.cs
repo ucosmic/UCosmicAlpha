@@ -30,10 +30,11 @@ namespace UCosmic.Web.Mvc.Models
                     .ForMember(d => d.CountryCode, o => o.ResolveUsing(s =>
                     {
                         // a country code value of null implies finding results without a country code
-                        if (s.CountryCode == "-1") return null;
+                        if (s.CountryCode == "-1" || "none".Equals(s.CountryCode, StringComparison.OrdinalIgnoreCase)) return null;
 
                         // a country code value of "" implies finding all results regardless of country code
-                        return string.IsNullOrWhiteSpace(s.CountryCode) ? string.Empty : s.CountryCode;
+                        return "any".Equals(s.CountryCode, StringComparison.OrdinalIgnoreCase) || string.IsNullOrWhiteSpace(s.CountryCode)
+                            ? string.Empty : s.CountryCode;
                     }))
 
                     // map the order by

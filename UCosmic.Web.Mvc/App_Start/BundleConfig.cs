@@ -65,11 +65,11 @@ namespace UCosmic.Web.Mvc
                 "~/scripts/app/SideSwiper.js",
                 "~/scripts/app/Routes.js",
                 "~/scripts/app/Flasher.js",
+                "~/scripts/app/Spinner.js",
                 "~/scripts/oss/moment.js"));
 
             // establishment search page
             bundles.Add(new ScriptBundle("~/bundles/establishments").Include(
-                "~/scripts/app/Spinner.js",
                 "~/scripts/app/PagedSearch.js",
                 "~/scripts/viewmodels/establishments/SearchResult.js",
                 "~/scripts/viewmodels/establishments/Search.js"));
@@ -77,7 +77,6 @@ namespace UCosmic.Web.Mvc
             // establishment item form
             bundles.Add(new ScriptBundle("~/bundles/establishments/item").Include(
                 "~/scripts/google/ToolsOverlay.js",
-                "~/scripts/app/Spinner.js",
                 "~/scripts/app/PagedSearch.js",
                 "~/scripts/viewmodels/places/Utils.js",
                 "~/scripts/viewmodels/establishments/SearchResult.js",
@@ -89,7 +88,6 @@ namespace UCosmic.Web.Mvc
 
             bundles.Add(new ScriptBundle("~/bundles/agreements").Include(
                 "~/scripts/jquery/jquery.globalize/globalize.js",
-                "~/scripts/app/Spinner.js",
                 "~/scripts/app/PagedSearch.js",
                 "~/scripts/google/toolsoverlay.js",
                 "~/scripts/viewmodels/establishments/SearchResult.js",
@@ -111,7 +109,6 @@ namespace UCosmic.Web.Mvc
                 "~/scripts/viewmodels/agreements/agreementVM.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/agreementSearch").Include(
-                "~/scripts/app/Spinner.js",
                 "~/scripts/app/PagedSearch.js",
                 "~/scripts/viewmodels/agreements/searchResult.js",
                 "~/scripts/viewmodels/agreements/search.js",
@@ -121,7 +118,6 @@ namespace UCosmic.Web.Mvc
 
             bundles.Add(new ScriptBundle("~/bundles/agreementPublicView").Include(
                 "~/scripts/google/ToolsOverlay.js",
-                "~/scripts/app/Spinner.js",
                 "~/scripts/app/PagedSearch.js",
                 "~/scripts/viewmodels/agreements/publicView.js",
                 "~/scripts/viewmodels/agreements/populateFiles.js",
@@ -139,7 +135,6 @@ namespace UCosmic.Web.Mvc
 
             // my personal profile page
             bundles.Add(new ScriptBundle("~/bundles/my/profile").Include(
-                "~/scripts/app/Spinner.js",
                 "~/scripts/viewmodels/my/Profile.js"));
 
             // activities
@@ -150,8 +145,7 @@ namespace UCosmic.Web.Mvc
             bundles.Add(new ScriptBundle("~/bundles/activity").Include( // do not bundle tinyMCE, causes errors when optimized.
                 "~/scripts/oss/linq.js",
                 "~/scripts/viewmodels/activities/ActivityEnums.js",
-                "~/scripts/viewmodels/activities/Activity.js",
-                "~/scripts/app/Spinner.js"));
+                "~/scripts/viewmodels/activities/Activity.js"));
 
             // geographic expertise
             bundles.Add(new ScriptBundle("~/bundles/geographicExpertises").Include(
@@ -185,19 +179,16 @@ namespace UCosmic.Web.Mvc
 
             // employees, faculty and staff
             bundles.Add(new ScriptBundle("~/bundles/employees").Include(
-                "~/scripts/app/Spinner.js",
                 "~/scripts/viewmodels/employees/Employees.js"));
 
             // user search page
             bundles.Add(new ScriptBundle("~/bundles/users").Include(
-                "~/scripts/app/Spinner.js",
                 "~/scripts/app/PagedSearch.js",
                 "~/scripts/viewmodels/users/SearchResult.js",
                 "~/scripts/viewmodels/users/Search.js"));
 
             // user create form
             bundles.Add(new ScriptBundle("~/bundles/users/create").Include(
-                "~/scripts/app/Spinner.js",
                 "~/scripts/viewmodels/users/User.js"));
 
             // bootstrap css bundles
