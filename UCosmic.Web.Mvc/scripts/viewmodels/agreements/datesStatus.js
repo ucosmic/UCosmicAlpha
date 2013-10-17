@@ -4,10 +4,10 @@
 /// <reference path="../../typings/globalize/globalize.d.ts" />
 /// <reference path="../../typings/jquery/jquery.d.ts" />
 /// <reference path="../../typings/kendo/kendo.all.d.ts" />
-var agreements;
-(function (agreements) {
-    var datesStatus = (function () {
-        function datesStatus(isCustomStatusAllowed) {
+var Agreements;
+(function (Agreements) {
+    var DatesStatus = (function () {
+        function DatesStatus(isCustomStatusAllowed) {
             //dates vars
             this.startDate = ko.observable();
             this.expDate = ko.observable();
@@ -19,7 +19,7 @@ var agreements;
             this.isCustomStatusAllowed = isCustomStatusAllowed;
             this._setupValidation();
         }
-        datesStatus.prototype._setupValidation = function () {
+        DatesStatus.prototype._setupValidation = function () {
             ko.validation.rules['greaterThan'] = {
                 validator: function (val, otherVal) {
                     if (otherVal() == undefined) {
@@ -63,7 +63,7 @@ var agreements;
             });
         };
 
-        datesStatus.prototype.bindJquery = function () {
+        DatesStatus.prototype.bindJquery = function () {
             if (this.isCustomStatusAllowed) {
                 $("#statusOptions").kendoComboBox({
                     dataTextField: "name",
@@ -82,7 +82,7 @@ var agreements;
                 });
             }
         };
-        return datesStatus;
+        return DatesStatus;
     })();
-    agreements.datesStatus = datesStatus;
-})(agreements || (agreements = {}));
+    Agreements.DatesStatus = DatesStatus;
+})(Agreements || (Agreements = {}));

@@ -3,10 +3,10 @@
 /// <reference path="../../typings/jquery/jquery.d.ts" />
 /// <reference path="../../app/Routes.ts" />
 /// <reference path="../../typings/kendo/kendo.all.d.ts" />
-var agreements;
-(function (agreements) {
-    var phones = (function () {
-        function phones(agreementId, establishmentItemViewModel, contactId) {
+var Agreements;
+(function (Agreements) {
+    var Phones = (function () {
+        function Phones(agreementId, establishmentItemViewModel, contactId) {
             //phone vars
             this.contactPhoneTextValue = ko.observable("");
             this.contactPhoneType = ko.observable();
@@ -30,7 +30,7 @@ var agreements;
             ]);
             this._bindJquery();
         }
-        phones.prototype.removePhone = function (me, e) {
+        Phones.prototype.removePhone = function (me, e) {
             var _this = this;
             var url = App.Routes.WebApi.Agreements.Contacts.Phones.del(this.agreementId, me.contactId, me.id);
 
@@ -47,7 +47,7 @@ var agreements;
             e.stopPropagation();
         };
 
-        phones.prototype.addPhone = function (me, e) {
+        Phones.prototype.addPhone = function (me, e) {
             if (this.contactPhoneTextValue().length > 0) {
                 this.contactPhones.push({ type: '', contactId: '', value: this.contactPhoneTextValue() });
                 this.contactPhoneTextValue("");
@@ -61,7 +61,7 @@ var agreements;
             }
         };
 
-        phones.prototype._bindJquery = function () {
+        Phones.prototype._bindJquery = function () {
             var _this = this;
             var self = this;
 
@@ -114,7 +114,7 @@ var agreements;
                 }
             });
         };
-        return phones;
+        return Phones;
     })();
-    agreements.phones = phones;
-})(agreements || (agreements = {}));
+    Agreements.Phones = Phones;
+})(Agreements || (Agreements = {}));

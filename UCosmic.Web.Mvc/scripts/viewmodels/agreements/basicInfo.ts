@@ -5,9 +5,9 @@
 /// <reference path="../../typings/kendo/kendo.all.d.ts" />
 /// <reference path="../../app/Routes.ts" />
 
-module agreements {
+module Agreements {
 
-    export class basicInfo {
+    export class BasicInfo {
         constructor(agreementId, deferredUAgreements) {
             this.agreementId = agreementId;
             this.deferredUAgreements = deferredUAgreements;

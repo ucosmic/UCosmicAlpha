@@ -1,9 +1,9 @@
 /// <reference path="../../typings/jquery/jquery.d.ts" />
 
 // Module
-module scrollBody {
+module ScrollBody {
 
-    export class scroll {
+    export class Scroll {
 
         constructor(section1?: string, section2?: string, section3?: string, section4?: string, section5?: string, section6?: string,
         section7?: string, section8?: string, section9?: string, section10?: string, kendoWindowBug?) {

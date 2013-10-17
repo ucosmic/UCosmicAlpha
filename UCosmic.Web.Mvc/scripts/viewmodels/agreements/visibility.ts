@@ -1,7 +1,7 @@
 /// <reference path="../../typings/knockout/knockout.d.ts" />
-module agreements {
+module Agreements {
 
-    export class visibility {
+    export class Visibility {
         constructor() {
 
         }

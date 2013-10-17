@@ -3,9 +3,9 @@
 /// <reference path="../../typings/jquery/jquery.d.ts" />
 /// <reference path="../../app/Routes.ts" />
 /// <reference path="../../typings/kendo/kendo.all.d.ts" />
-module agreements {
+module Agreements {
 
-    export class phones {
+    export class Phones {
         constructor(agreementId, establishmentItemViewModel, contactId) {
             this.agreementId = agreementId; 
             this.contactId = contactId;

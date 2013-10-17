@@ -1,9 +1,9 @@
 /// <reference path="../../typings/jquery/jquery.d.ts" />
 // Module
-var scrollBody;
-(function (scrollBody) {
-    var scroll = (function () {
-        function scroll(section1, section2, section3, section4, section5, section6, section7, section8, section9, section10, kendoWindowBug) {
+var ScrollBody;
+(function (ScrollBody) {
+    var Scroll = (function () {
+        function Scroll(section1, section2, section3, section4, section5, section6, section7, section8, section9, section10, kendoWindowBug) {
             //scroll based on top position
             this.scrollMyBody = function (position) {
                 var $body;
@@ -59,7 +59,7 @@ var scrollBody;
             this.kendoWindowBug = ((kendoWindowBug) ? kendoWindowBug : { val: 0 });
             this.$body;
         }
-        scroll.prototype.bindJquery = function () {
+        Scroll.prototype.bindJquery = function () {
             var _this = this;
             var self = this;
 
@@ -113,7 +113,7 @@ var scrollBody;
                 }
             });
         };
-        return scroll;
+        return Scroll;
     })();
-    scrollBody.scroll = scroll;
-})(scrollBody || (scrollBody = {}));
+    ScrollBody.Scroll = Scroll;
+})(ScrollBody || (ScrollBody = {}));

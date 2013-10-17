@@ -32,31 +32,31 @@ class InstitutionalAgreementEditModel {
     constructor(public agreementId: number) {
         $("table.data").children("tbody").addClass("searchResults");
         var culture = $("meta[name='accept-language']").attr("content");
-        this.scrollBody = new scrollBody.scroll("participants","basicInfo",
+        this.scrollBody = new ScrollBody.Scroll("participants","basicInfo",
             "effectiveDatesCurrentStatus", "contacts", "fileAttachments", "overallVisibility", null, null, null,
             null, this.kendoWindowBug);
-        this.establishmentSearchNav = new agreements.establishmentSearchNav(this.editOrNewUrl,
+        this.establishmentSearchNav = new Agreements.EstablishmentSearchNav(this.editOrNewUrl,
             this.participants, this.agreementIsEdit, this.agreementId, this.scrollBody, this.deferredPageFadeIn);
-        this.participants = new agreements.participants(this.agreementId, this.deferredPopParticipants,
+        this.participants = new Agreements.Participants(this.agreementId, this.deferredPopParticipants,
             this.agreementIsEdit, this.establishmentSearchNav.establishmentSearchViewModel,
             this.establishmentSearchNav.hasBoundSearch);
         this.establishmentSearchNav.participants = this.participants;
         ko.applyBindings(this.participants, $('#participants')[0]);
-        this.basicInfo = new agreements.basicInfo(this.agreementId, this.deferredUAgreements);
+        this.basicInfo = new Agreements.BasicInfo(this.agreementId, this.deferredUAgreements);
         ko.applyBindings(this.basicInfo, $('#basicInfo')[0]);
-        this.contact = new agreements.contacts(this.basicInfo.isCustomContactTypeAllowed,
+        this.contact = new Agreements.Contacts(this.basicInfo.isCustomContactTypeAllowed,
             this.establishmentSearchNav.establishmentItemViewModel, this.agreementIsEdit, this.agreementId,
             this.kendoWindowBug, this.deferredPopContacts);
         ko.applyBindings(this.contact, $('#contacts')[0]);
 
-        this.fileListPopulator = new agreements.FileListPopulator();
+        this.fileListPopulator = new Agreements.FileListPopulator();
         //ko.applyBindings(this.populateFiles, $('#fileAttachments')[0]); 
-        this.fileAttachment = new agreements.fileAttachments(this.agreementId, this.agreementIsEdit,
+        this.fileAttachment = new Agreements.FileAttachments(this.agreementId, this.agreementIsEdit,
             this.spinner, this.establishmentSearchNav.establishmentItemViewModel, this.fileListPopulator.files);
         ko.applyBindings(this.fileAttachment, $('#fileAttachments')[0]);
-        this.datesStatus = new agreements.datesStatus(this.basicInfo.isCustomStatusAllowed);
+        this.datesStatus = new Agreements.DatesStatus(this.basicInfo.isCustomStatusAllowed);
         ko.applyBindings(this.datesStatus, $('#effectiveDatesCurrentStatus')[0]);
-        this.visibility = new agreements.visibility();
+        this.visibility = new Agreements.Visibility();
         ko.applyBindings(this.visibility, $('#overallVisibility')[0]);     
 
         if (this.agreementId === 0) {
@@ -232,17 +232,17 @@ class InstitutionalAgreementEditModel {
         this.basicInfo.isCustomTypeAllowed(result.isCustomTypeAllowed);
         this.basicInfo.isCustomStatusAllowed(result.isCustomStatusAllowed);
         this.basicInfo.isCustomContactTypeAllowed(result.isCustomContactTypeAllowed);
-        this.datesStatus.statusOptions.push(new agreements.SelectConstructor("", ""));
+        this.datesStatus.statusOptions.push(new Agreements.SelectConstructor("", ""));
         for (var i = 0, j = result.statusOptions.length; i < j; i++) {
-            this.datesStatus.statusOptions.push(new agreements.SelectConstructor(result.statusOptions[i], result.statusOptions[i]));
+            this.datesStatus.statusOptions.push(new Agreements.SelectConstructor(result.statusOptions[i], result.statusOptions[i]));
         };
-        this.contact.contactTypeOptions.push(new agreements.SelectConstructor("", undefined));
+        this.contact.contactTypeOptions.push(new Agreements.SelectConstructor("", undefined));
         for (var i = 0, j = result.contactTypeOptions.length; i < j; i++) {
-            this.contact.contactTypeOptions.push(new agreements.SelectConstructor(result.contactTypeOptions[i], result.contactTypeOptions[i]));
+            this.contact.contactTypeOptions.push(new Agreements.SelectConstructor(result.contactTypeOptions[i], result.contactTypeOptions[i]));
         };
-        this.basicInfo.typeOptions.push(new agreements.SelectConstructor("", ""));
+        this.basicInfo.typeOptions.push(new Agreements.SelectConstructor("", ""));
         for (var i = 0, j = result.typeOptions.length; i < j; i++) {
-            this.basicInfo.typeOptions.push(new agreements.SelectConstructor(result.typeOptions[i], result.typeOptions[i]));
+            this.basicInfo.typeOptions.push(new Agreements.SelectConstructor(result.typeOptions[i], result.typeOptions[i]));
         };
         $(".hasDate").each(function (index, item) {
             $(item).kendoDatePicker({

@@ -1,7 +1,7 @@
-var agreements;
-(function (agreements) {
-    var fileAttachments = (function () {
-        function fileAttachments(agreementId, agreementIsEdit, spinner, establishmentItemViewModel, files) {
+var Agreements;
+(function (Agreements) {
+    var FileAttachments = (function () {
+        function FileAttachments(agreementId, agreementIsEdit, spinner, establishmentItemViewModel, files) {
             //file vars
             this.$file = ko.observable();
             this.hasFile = ko.observable();
@@ -28,7 +28,7 @@ var agreements;
             this.removeFile = this.removeFile.bind(this);
         }
         //files = ko.mapping.fromJS([]);
-        fileAttachments.prototype._$bindKendoFile = function () {
+        FileAttachments.prototype._$bindKendoFile = function () {
             var _this = this;
             var saveUrl = "";
 
@@ -143,7 +143,7 @@ else
             });
         };
 
-        fileAttachments.prototype.removeFile = function (me, e) {
+        FileAttachments.prototype.removeFile = function (me, e) {
             var _this = this;
             if (confirm('Are you sure you want to remove this file from this agreement?')) {
                 // all files will have a guid in create, none will have a guid in edit agreement
@@ -168,18 +168,18 @@ else
             e.stopPropagation();
         };
 
-        fileAttachments.prototype.editAFile = function (me, e) {
+        FileAttachments.prototype.editAFile = function (me, e) {
             me.isEdit(true);
         };
 
-        fileAttachments.prototype.cancelEditAFile = function (me, e) {
+        FileAttachments.prototype.cancelEditAFile = function (me, e) {
             me.customNameFile(me.customName().substring(0, me.customName().lastIndexOf(".")));
             me.isEdit(false);
             e.stopImmediatePropagation();
             return false;
         };
 
-        fileAttachments.prototype.updateFile = function (me, e) {
+        FileAttachments.prototype.updateFile = function (me, e) {
             var _this = this;
             me.customName(me.customNameFile() + me.customNameExt());
             me.isEdit(false);
@@ -221,7 +221,7 @@ else
             }
         };
 
-        fileAttachments.prototype.bindJquery = function () {
+        FileAttachments.prototype.bindJquery = function () {
             this._$bindKendoFile();
             $("#helpExpDate").kendoTooltip({
                 width: 520,
@@ -232,7 +232,7 @@ else
             });
         };
 
-        fileAttachments.prototype.fileVisibilityClicked = function (me, e) {
+        FileAttachments.prototype.fileVisibilityClicked = function (me, e) {
             var _this = this;
             if (this.agreementIsEdit() && e.target.textContent == "") {
                 var data = ko.mapping.toJS({
@@ -274,7 +274,7 @@ else
         };
 
         //post files
-        fileAttachments.prototype.postMe = function (data, url) {
+        FileAttachments.prototype.postMe = function (data, url) {
             var _this = this;
             $.post(url, data).done(function (response, statusText, xhr) {
             }).fail(function (xhr, statusText, errorThrown) {
@@ -297,7 +297,7 @@ else
         };
 
         //part of save agreement
-        fileAttachments.prototype.agreementPostFiles = function (response, statusText, xhr) {
+        FileAttachments.prototype.agreementPostFiles = function (response, statusText, xhr) {
             var _this = this;
             var tempUrl = App.Routes.WebApi.Agreements.Files.post(this.agreementId), data;
 
@@ -314,7 +314,7 @@ else
             });
             this.spinner.stop();
         };
-        return fileAttachments;
+        return FileAttachments;
     })();
-    agreements.fileAttachments = fileAttachments;
-})(agreements || (agreements = {}));
+    Agreements.FileAttachments = FileAttachments;
+})(Agreements || (Agreements = {}));

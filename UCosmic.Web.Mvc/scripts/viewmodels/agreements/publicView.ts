@@ -20,7 +20,7 @@ module Agreements.ViewModels {
             }
             this.agreementId =  agreementId;
             this.agreementVisibility = agreementVisibility || 'Public';
-            this.fileListPopulator = new agreements.FileListPopulator();
+            this.fileListPopulator = new Agreements.FileListPopulator();
             //this._setupDateComputeds();
             //this._setupNameComputeds();
             if (this.agreementId !== 0) {

@@ -1,8 +1,7 @@
 
+module Agreements {
 
-module agreements {
-
-    export class fileAttachments {
+    export class FileAttachments {
         constructor(agreementId, agreementIsEdit, spinner, establishmentItemViewModel, files) {
             this.agreementId = agreementId;
             this.files = files;

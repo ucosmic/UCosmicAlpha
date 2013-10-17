@@ -7,9 +7,9 @@
 /// <reference path="../../app/Routes.ts" />
 /// <reference path="../establishments/ApiModels.d.ts" />
 
-module agreements {
+module Agreements {
 
-    export class participants {
+    export class Participants {
         constructor(agreementId, dfdPopParticipants, agreementIsEdit, establishmentSearchViewModel, hasBoundSearch) {
             this.removeParticipant = <() => boolean> this.removeParticipant.bind(this);
             this.agreementIsEdit = agreementIsEdit;

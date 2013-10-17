@@ -1,7 +1,7 @@
 /// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
 /// <reference path="./phones.ts" />
-var agreements;
-(function (agreements) {
+var Agreements;
+(function (Agreements) {
     var SelectConstructor = (function () {
         function SelectConstructor(name, id) {
             this.name = name;
@@ -11,9 +11,9 @@ var agreements;
         }
         return SelectConstructor;
     })();
-    agreements.SelectConstructor = SelectConstructor;
-    var contacts = (function () {
-        function contacts(isCustomContactTypeAllowed, establishmentItemViewModel, agreementIsEdit, agreementId, kendoWindowBug, deferredPopContacts) {
+    Agreements.SelectConstructor = SelectConstructor;
+    var Contacts = (function () {
+        function Contacts(isCustomContactTypeAllowed, establishmentItemViewModel, agreementIsEdit, agreementId, kendoWindowBug, deferredPopContacts) {
             //contact vars
             this.$contactTypeOptions = ko.observable();
             this.contactTypeOptions = ko.mapping.fromJS([]);
@@ -43,7 +43,7 @@ var agreements;
             this.$contactSuffix = $("#contactSuffix");
             this.contacts = ko.mapping.fromJS([]);
             this.agreementId = agreementId;
-            this.phones = new agreements.phones(agreementId, establishmentItemViewModel, this.contactId);
+            this.phones = new Agreements.Phones(agreementId, establishmentItemViewModel, this.contactId);
             this.isCustomContactTypeAllowed = isCustomContactTypeAllowed;
             this.establishmentItemViewModel = establishmentItemViewModel;
             this.agreementIsEdit = agreementIsEdit;
@@ -70,7 +70,7 @@ var agreements;
             ]);
             this._setupValidation();
         }
-        contacts.prototype.editAContact = function (me) {
+        Contacts.prototype.editAContact = function (me) {
             var _this = this;
             var dropdownlist, data;
 
@@ -139,7 +139,7 @@ var agreements;
             });
         };
 
-        contacts.prototype.editContact = function (me) {
+        Contacts.prototype.editContact = function (me) {
             var _this = this;
             if (this.validateContact.isValid()) {
                 var data;
@@ -221,7 +221,7 @@ var agreements;
             this.$addContactDialog.data("kendoWindow").close();
         };
 
-        contacts.prototype.addContact = function (me, e) {
+        Contacts.prototype.addContact = function (me, e) {
             var _this = this;
             if (this.validateContact.isValid()) {
                 var data;
@@ -281,19 +281,19 @@ var agreements;
             }
         };
 
-        contacts.prototype.addAContact = function (me, e) {
+        Contacts.prototype.addAContact = function (me, e) {
             this.contactsIsEdit(false);
             this.clearContact();
             this.$addContactDialog.data("kendoWindow").open().title("Add Contact");
             $("#addAContact").fadeOut(500);
         };
 
-        contacts.prototype.cancelContact = function () {
+        Contacts.prototype.cancelContact = function () {
             this.$addContactDialog.data("kendoWindow").close();
             $("#addAContact").fadeIn(500);
         };
 
-        contacts.prototype.clearContact = function () {
+        Contacts.prototype.clearContact = function () {
             var dropdownlist;
 
             this.$contactEmail.prop('disabled', '');
@@ -328,7 +328,7 @@ var agreements;
             this.validateContact.errors.showAllMessages(false);
         };
 
-        contacts.prototype.removeContact = function (me, e) {
+        Contacts.prototype.removeContact = function (me, e) {
             var _this = this;
             if (confirm('Are you sure you want to remove "' + me.firstName() + " " + me.lastName() + '" as a contact from this agreement?')) {
                 var url = "";
@@ -351,7 +351,7 @@ var agreements;
             return false;
         };
 
-        contacts.prototype.bindJquery = function () {
+        Contacts.prototype.bindJquery = function () {
             var _this = this;
             var self = this, kacSelect;
 
@@ -584,7 +584,7 @@ var agreements;
             });
         };
 
-        contacts.prototype._setupValidation = function () {
+        Contacts.prototype._setupValidation = function () {
             this.validateContact = ko.validatedObservable({
                 contactSalutation: this.contactSalutation.extend({
                     maxLength: 50
@@ -625,7 +625,7 @@ var agreements;
             });
         };
 
-        contacts.prototype.populateContacts = function () {
+        Contacts.prototype.populateContacts = function () {
             var _this = this;
             $.get(App.Routes.WebApi.Agreements.Contacts.get(this.agreementId), { useTestData: false }).done(function (response) {
                 ko.mapping.fromJS(response, _this.contacts);
@@ -634,7 +634,7 @@ var agreements;
         };
 
         //post files
-        contacts.prototype.postMe = function (data, url) {
+        Contacts.prototype.postMe = function (data, url) {
             var _this = this;
             $.post(url, data).done(function (response, statusText, xhr) {
             }).fail(function (xhr, statusText, errorThrown) {
@@ -657,7 +657,7 @@ var agreements;
         };
 
         //part of save agreement
-        contacts.prototype.agreementPostContacts = function (response, statusText, xhr) {
+        Contacts.prototype.agreementPostContacts = function (response, statusText, xhr) {
             var _this = this;
             var tempUrl = App.Routes.WebApi.Agreements.Contacts.post(this.agreementId), data;
 
@@ -680,7 +680,7 @@ var agreements;
                 _this.postMe(data, tempUrl);
             });
         };
-        return contacts;
+        return Contacts;
     })();
-    agreements.contacts = contacts;
-})(agreements || (agreements = {}));
+    Agreements.Contacts = Contacts;
+})(Agreements || (Agreements = {}));

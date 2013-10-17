@@ -1,11 +1,11 @@
 /// <reference path="../../typings/knockout/knockout.d.ts" />
-var agreements;
-(function (agreements) {
-    var visibility = (function () {
-        function visibility() {
+var Agreements;
+(function (Agreements) {
+    var Visibility = (function () {
+        function Visibility() {
             this.visibility = ko.observable();
         }
-        return visibility;
+        return Visibility;
     })();
-    agreements.visibility = visibility;
-})(agreements || (agreements = {}));
+    Agreements.Visibility = Visibility;
+})(Agreements || (Agreements = {}));

@@ -3,8 +3,8 @@
 /// <reference path="../../app/App.ts" />
 /// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
 /// <reference path="../../app/Routes.ts" />
-var agreements;
-(function (agreements) {
+var Agreements;
+(function (Agreements) {
     var FileListPopulator = (function () {
         function FileListPopulator() {
             this.files = ko.mapping.fromJS([]);
@@ -31,5 +31,5 @@ var agreements;
         };
         return FileListPopulator;
     })();
-    agreements.FileListPopulator = FileListPopulator;
-})(agreements || (agreements = {}));
+    Agreements.FileListPopulator = FileListPopulator;
+})(Agreements || (Agreements = {}));

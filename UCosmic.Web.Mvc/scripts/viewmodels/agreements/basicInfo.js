@@ -4,10 +4,10 @@
 /// <reference path="../../typings/jquery/jquery.d.ts" />
 /// <reference path="../../typings/kendo/kendo.all.d.ts" />
 /// <reference path="../../app/Routes.ts" />
-var agreements;
-(function (agreements) {
-    var basicInfo = (function () {
-        function basicInfo(agreementId, deferredUAgreements) {
+var Agreements;
+(function (Agreements) {
+    var BasicInfo = (function () {
+        function BasicInfo(agreementId, deferredUAgreements) {
             //basic info vars
             this.$uAgreements = ko.observable();
             this.uAgreements = ko.mapping.fromJS([]);
@@ -27,7 +27,7 @@ var agreements;
             this._setupValidation = this._setupValidation.bind(this);
             this._setupValidation();
         }
-        basicInfo.prototype.populateUmbrella = function () {
+        BasicInfo.prototype.populateUmbrella = function () {
             var _this = this;
             $.get(App.Routes.WebApi.Agreements.UmbrellaOptions.get(this.agreementId)).done(function (response) {
                 _this.uAgreements(response);
@@ -43,7 +43,7 @@ var agreements;
             });
         };
 
-        basicInfo.prototype._setupValidation = function () {
+        BasicInfo.prototype._setupValidation = function () {
             this.validateBasicInfo = ko.validatedObservable({
                 agreementType: this.typeOptionSelected.extend({
                     required: {
@@ -63,7 +63,7 @@ var agreements;
             });
         };
 
-        basicInfo.prototype.bindJquery = function () {
+        BasicInfo.prototype.bindJquery = function () {
             if (this.isCustomTypeAllowed) {
                 $("#typeOptions").kendoComboBox({
                     dataTextField: "name",
@@ -82,7 +82,7 @@ var agreements;
                 });
             }
         };
-        return basicInfo;
+        return BasicInfo;
     })();
-    agreements.basicInfo = basicInfo;
-})(agreements || (agreements = {}));
+    Agreements.BasicInfo = BasicInfo;
+})(Agreements || (Agreements = {}));

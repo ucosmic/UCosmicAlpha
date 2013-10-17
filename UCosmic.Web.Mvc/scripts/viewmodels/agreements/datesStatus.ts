@@ -4,9 +4,9 @@
 /// <reference path="../../typings/globalize/globalize.d.ts" />
 /// <reference path="../../typings/jquery/jquery.d.ts" />
 /// <reference path="../../typings/kendo/kendo.all.d.ts" />
-module agreements {
+module Agreements {
 
-    export class datesStatus {
+    export class DatesStatus {
         constructor(isCustomStatusAllowed) {
             this.isCustomStatusAllowed = isCustomStatusAllowed
             this._setupValidation();

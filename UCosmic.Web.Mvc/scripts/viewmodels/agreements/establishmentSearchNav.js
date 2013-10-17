@@ -8,8 +8,8 @@
 /// <reference path="../establishments/Search.ts" />
 /// <reference path="../establishments/Name.ts" />
 /// <reference path="../establishments/Item.ts" />
-var agreements;
-(function (agreements) {
+var Agreements;
+(function (Agreements) {
     var InstitutionalAgreementParticipantModel = (function () {
         function InstitutionalAgreementParticipantModel(isOwner, establishmentId, establishmentOfficialName, establishmentTranslatedName) {
             this.isOwner = ko.observable(isOwner);
@@ -19,11 +19,11 @@ var agreements;
         }
         return InstitutionalAgreementParticipantModel;
     })();
-    agreements.InstitutionalAgreementParticipantModel = InstitutionalAgreementParticipantModel;
+    Agreements.InstitutionalAgreementParticipantModel = InstitutionalAgreementParticipantModel;
     ;
 
-    var establishmentSearchNav = (function () {
-        function establishmentSearchNav(editOrNewUrl, participants, agreementIsEdit, agreementId, scrollBody, deferredPageFadeIn) {
+    var EstablishmentSearchNav = (function () {
+        function EstablishmentSearchNav(editOrNewUrl, participants, agreementIsEdit, agreementId, scrollBody, deferredPageFadeIn) {
             //search vars
             this.establishmentSearchViewModel = new Establishments.ViewModels.Search();
             this.hasBoundSearch = { does: false };
@@ -35,7 +35,7 @@ var agreements;
             this.scrollBody = scrollBody;
             this.deferredPageFadeIn = deferredPageFadeIn;
         }
-        establishmentSearchNav.prototype.SearchPageBind = function (parentOrParticipant) {
+        EstablishmentSearchNav.prototype.SearchPageBind = function (parentOrParticipant) {
             var _this = this;
             var $cancelAddParticipant = $("#cancelAddParticipant"), $searchSideBarAddNew = $("#searchSideBarAddNew"), deferred = $.Deferred(), deferred2 = $.Deferred(), $obj = $("#allParticipants"), $obj2 = $("#addEstablishment"), time = 500;
 
@@ -71,7 +71,7 @@ var agreements;
         };
 
         //fade non active modules out
-        establishmentSearchNav.prototype.fadeModsOut = function (deferred, deferred2, $obj, $obj2, time) {
+        EstablishmentSearchNav.prototype.fadeModsOut = function (deferred, deferred2, $obj, $obj2, time) {
             if ($obj.css("display") !== "none") {
                 $obj.fadeOut(time, function () {
                     deferred.resolve();
@@ -89,7 +89,7 @@ var agreements;
         };
 
         //sammy navigation
-        establishmentSearchNav.prototype.bindSearch = function () {
+        EstablishmentSearchNav.prototype.bindSearch = function () {
             var _this = this;
             if (!this.hasBoundSearch.does) {
                 var lastURL = "asdf";
@@ -313,7 +313,7 @@ var agreements;
                 this.establishmentSearchViewModel.sammy.run();
             }
         };
-        return establishmentSearchNav;
+        return EstablishmentSearchNav;
     })();
-    agreements.establishmentSearchNav = establishmentSearchNav;
-})(agreements || (agreements = {}));
+    Agreements.EstablishmentSearchNav = EstablishmentSearchNav;
+})(Agreements || (Agreements = {}));

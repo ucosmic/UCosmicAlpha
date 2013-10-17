@@ -8,7 +8,7 @@
 /// <reference path="../establishments/Search.ts" />
 /// <reference path="../establishments/Name.ts" />
 /// <reference path="../establishments/Item.ts" />
-module agreements {
+module Agreements {
 
     export class InstitutionalAgreementParticipantModel {
         constructor(isOwner: any, establishmentId: number, establishmentOfficialName: string,
@@ -24,7 +24,7 @@ module agreements {
         establishmentTranslatedName;
     };
 
-    export class establishmentSearchNav {
+    export class EstablishmentSearchNav {
         constructor(editOrNewUrl, participants, agreementIsEdit, agreementId, scrollBody, deferredPageFadeIn) {
             this.editOrNewUrl = editOrNewUrl;
             this.participants = participants;

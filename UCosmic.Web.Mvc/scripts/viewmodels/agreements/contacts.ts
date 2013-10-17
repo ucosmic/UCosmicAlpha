@@ -1,18 +1,18 @@
 /// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
 /// <reference path="./phones.ts" />
 
-module agreements {
+module Agreements {
     export class SelectConstructor {
         constructor(public name: string, public id: string) {
             this.name = name;
             this.id = id;
         }
     }
-    export class contacts {
+    export class Contacts {
         constructor(isCustomContactTypeAllowed, establishmentItemViewModel, agreementIsEdit, agreementId, kendoWindowBug, deferredPopContacts) {
 
             this.agreementId = agreementId;
-            this.phones = new agreements.phones(agreementId, establishmentItemViewModel, this.contactId);
+            this.phones = new Agreements.Phones(agreementId, establishmentItemViewModel, this.contactId);
             this.isCustomContactTypeAllowed = isCustomContactTypeAllowed;
             this.establishmentItemViewModel = establishmentItemViewModel;
             this.agreementIsEdit = agreementIsEdit;

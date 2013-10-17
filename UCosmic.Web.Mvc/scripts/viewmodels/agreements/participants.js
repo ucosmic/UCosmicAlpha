@@ -6,10 +6,10 @@
 /// <reference path="../../typings/kendo/kendo.all.d.ts" />
 /// <reference path="../../app/Routes.ts" />
 /// <reference path="../establishments/ApiModels.d.ts" />
-var agreements;
-(function (agreements) {
-    var participants = (function () {
-        function participants(agreementId, dfdPopParticipants, agreementIsEdit, establishmentSearchViewModel, hasBoundSearch) {
+var Agreements;
+(function (Agreements) {
+    var Participants = (function () {
+        function Participants(agreementId, dfdPopParticipants, agreementIsEdit, establishmentSearchViewModel, hasBoundSearch) {
             var _this = this;
             //participant vars
             this.participantsExport = ko.mapping.fromJS([]);
@@ -38,7 +38,7 @@ var agreements;
                 }
             });
         }
-        participants.prototype.removeParticipant = function (establishmentResultViewModel, e) {
+        Participants.prototype.removeParticipant = function (establishmentResultViewModel, e) {
             if (confirm('Are you sure you want to remove "' + establishmentResultViewModel.establishmentTranslatedName() + '" as a participant from this agreement?')) {
                 var self = this;
 
@@ -80,7 +80,7 @@ var agreements;
             return false;
         };
 
-        participants.prototype.receiveParticipants = function (js) {
+        Participants.prototype.receiveParticipants = function (js) {
             if (!js) {
                 ko.mapping.fromJS({
                     items: [],
@@ -91,7 +91,7 @@ var agreements;
             }
         };
 
-        participants.prototype.populateParticipants = function () {
+        Participants.prototype.populateParticipants = function () {
             var _this = this;
             $.get(App.Routes.WebApi.Agreements.Participants.get(this.agreementId)).done(function (response) {
                 _this.receiveParticipants(response);
@@ -99,11 +99,11 @@ var agreements;
             });
         };
 
-        participants.prototype.addParticipant = function (establishmentResultViewModel) {
+        Participants.prototype.addParticipant = function (establishmentResultViewModel) {
             this.establishmentSearchViewModel.sammy.setLocation('#/page/1/');
             this.hasBoundSearch.does = true;
         };
-        return participants;
+        return Participants;
     })();
-    agreements.participants = participants;
-})(agreements || (agreements = {}));
+    Agreements.Participants = Participants;
+})(Agreements || (Agreements = {}));
