@@ -151,6 +151,11 @@ namespace Links
             public static readonly string PagedSearch_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/PagedSearch.min.js") ? Url("PagedSearch.min.js") : Url("PagedSearch.js");
                           
             public static readonly string PagedSearch_min_js = Url("PagedSearch.min.js");
+            public static readonly string Pager_ts = Url("Pager.ts");
+            public static readonly string Pager_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Pager.min.js") ? Url("Pager.min.js") : Url("Pager.js");
+                          
+            public static readonly string Pager_min_js = Url("Pager.min.js");
+            public static readonly string Pagination_d_ts = Url("Pagination.d.ts");
             public static readonly string Routes_ts = Url("Routes.ts");
             public static readonly string Routes_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Routes.min.js") ? Url("Routes.min.js") : Url("Routes.js");
                           
@@ -2850,6 +2855,10 @@ namespace Links
                 public static readonly string search_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/search.min.js") ? Url("search.min.js") : Url("search.js");
                               
                 public static readonly string search_min_js = Url("search.min.js");
+                public static readonly string SearchLenses_ts = Url("SearchLenses.ts");
+                public static readonly string SearchLenses_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/SearchLenses.min.js") ? Url("SearchLenses.min.js") : Url("SearchLenses.js");
+                              
+                public static readonly string SearchLenses_min_js = Url("SearchLenses.min.js");
                 public static readonly string SearchResult_ts = Url("SearchResult.ts");
                 public static readonly string searchResult_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/searchResult.min.js") ? Url("searchResult.min.js") : Url("searchResult.js");
                               
@@ -2857,10 +2866,10 @@ namespace Links
                 public static readonly string searchResults_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/searchResults.min.js") ? Url("searchResults.min.js") : Url("searchResults.js");
                               
                 public static readonly string searchResults_min_js = Url("searchResults.min.js");
-                public static readonly string TableSearch_ts = Url("TableSearch.ts");
-                public static readonly string TableSearch_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/TableSearch.min.js") ? Url("TableSearch.min.js") : Url("TableSearch.js");
+                public static readonly string SearchTable_ts = Url("SearchTable.ts");
+                public static readonly string SearchTable_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/SearchTable.min.js") ? Url("SearchTable.min.js") : Url("SearchTable.js");
                               
-                public static readonly string TableSearch_min_js = Url("TableSearch.min.js");
+                public static readonly string SearchTable_min_js = Url("SearchTable.min.js");
                 public static readonly string Visibility_ts = Url("Visibility.ts");
                 public static readonly string visibility_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/visibility.min.js") ? Url("visibility.min.js") : Url("visibility.js");
                               

@@ -13,28 +13,33 @@ var Agreements;
     /// <reference path="../../app/Pager.ts" />
     /// <reference path="../places/ApiModels.d.ts" />
     (function (ViewModels) {
-        var TableSearch = (function () {
+        var SearchTable = (function () {
             //#endregion
             //#region Construction & Initialization
-            function TableSearch(settings) {
+            function SearchTable(settings) {
                 var _this = this;
                 this.settings = settings;
                 //#region Search Filter Inputs
                 // throttle keyword to reduce number API requests
-                this.keyword = ko.observable(sessionStorage.getItem(TableSearch.KeywordSessionKey) || '');
+                this.keyword = ko.observable(sessionStorage.getItem(SearchTable.KeywordSessionKey) || '');
                 this.keywordThrottled = ko.computed(this.keyword).extend({ throttle: 400 });
                 // instead of throttling, both this and the options are observed
-                this.countryCode = ko.observable(sessionStorage.getItem(TableSearch.CountrySessionKey) || 'any');
-                this.pager = new App.Pager(sessionStorage.getItem(TableSearch.PageNumberSessionKey) || 1, sessionStorage.getItem(TableSearch.PageSizeSessionKey) || 10);
-                this.displayPager = new App.Pager(sessionStorage.getItem(TableSearch.PageNumberSessionKey) || 1, sessionStorage.getItem(TableSearch.PageSizeSessionKey) || 10);
-                this.orderBy = ko.observable(sessionStorage.getItem(TableSearch.OrderBySessionKey) || 'start-desc');
+                this.countryCode = ko.observable(sessionStorage.getItem(SearchTable.CountrySessionKey) || 'any');
+                this.pager = new App.Pager(sessionStorage.getItem(SearchTable.PageNumberSessionKey) || 1, sessionStorage.getItem(SearchTable.PageSizeSessionKey) || 10);
+                this.displayPager = new App.Pager(sessionStorage.getItem(SearchTable.PageNumberSessionKey) || 1, sessionStorage.getItem(SearchTable.PageSizeSessionKey) || 10);
+                this.orderBy = ko.observable(sessionStorage.getItem(SearchTable.OrderBySessionKey) || 'start-desc');
                 // automatically save the search inputs to session when they change
                 this._inputChanged = ko.computed(function () {
-                    sessionStorage.setItem(TableSearch.KeywordSessionKey, _this.keyword() || '');
-                    sessionStorage.setItem(TableSearch.CountrySessionKey, _this.countryCode());
-                    sessionStorage.setItem(TableSearch.PageNumberSessionKey, _this.pager.input.pageNumberText());
-                    sessionStorage.setItem(TableSearch.PageSizeSessionKey, _this.pager.input.pageSizeText());
-                    sessionStorage.setItem(TableSearch.OrderBySessionKey, _this.orderBy());
+                    if (_this.countryCode() == undefined)
+                        _this.countryCode('any');
+                    if (isNaN(_this.pager.input.pageNumber()))
+                        _this.pager.input.pageNumberText('1');
+
+                    sessionStorage.setItem(SearchTable.KeywordSessionKey, _this.keyword() || '');
+                    sessionStorage.setItem(SearchTable.CountrySessionKey, _this.countryCode());
+                    sessionStorage.setItem(SearchTable.PageNumberSessionKey, _this.pager.input.pageNumberText());
+                    sessionStorage.setItem(SearchTable.PageSizeSessionKey, _this.pager.input.pageSizeText());
+                    sessionStorage.setItem(SearchTable.OrderBySessionKey, _this.orderBy());
                 }).extend({ throttle: 0 });
                 ////#endregion
                 //#region Country Filter Options
@@ -43,9 +48,6 @@ var Agreements;
                 this._countryChanged = ko.computed(function () {
                     _this._onCountryChanged();
                 });
-                //#endregion
-                //#region Sammy Routing
-                this.sammy = Sammy();
                 this.routeFormat = '#/{0}/country/{5}/sort/{1}/size/{2}/page/{3}/'.format(this.settings.route).replace('{5}', '{0}');
                 this._isActivated = ko.observable(false);
                 this._route = ko.computed(function () {
@@ -65,9 +67,10 @@ var Agreements;
                     _this._onRequestDirty();
                 }).extend({ throttle: 1 });
                 this._loadCountryOptions();
+                this.sammy = this.settings.sammy || Sammy();
                 this._runSammy();
             }
-            TableSearch.prototype._onCountryChanged = function () {
+            SearchTable.prototype._onCountryChanged = function () {
                 // changes when applyBindings happens and after options data is loaded
                 var countryCode = this.countryCode();
                 var options = this.countryOptions();
@@ -76,7 +79,7 @@ var Agreements;
                     options[0].code = countryCode;
             };
 
-            TableSearch.prototype._loadCountryOptions = function () {
+            SearchTable.prototype._loadCountryOptions = function () {
                 var _this = this;
                 // this will run once during construction
                 // this will run before sammy and applyBindings...
@@ -102,7 +105,7 @@ var Agreements;
                 return deferred;
             };
 
-            TableSearch.prototype._runSammy = function () {
+            SearchTable.prototype._runSammy = function () {
                 // this will run once during construction
                 var viewModel = this;
 
@@ -122,13 +125,18 @@ var Agreements;
                 // activate the page route (create default hashtag parameters)
                 this.sammy.get(this.settings.activationRoute || this.sammy.getLocation(), function () {
                     var e = this;
-                    viewModel._onBeforeActivation(e);
+                    viewModel.onBeforeActivation(e);
                 });
 
-                this.sammy.run();
+                if (!this.settings.sammy && !this.sammy.isRunning())
+                    this.sammy.run();
             };
 
-            TableSearch.prototype._onBeforeRoute = function (e) {
+            SearchTable.prototype._onBeforeRoute = function (e) {
+                return true;
+            };
+
+            SearchTable.prototype._onRoute = function (e) {
                 var country = e.params['country'];
                 var sort = e.params['sort'];
                 var size = e.params['size'];
@@ -143,19 +151,15 @@ var Agreements;
                 this.pager.input.pageSizeText(size);
                 this.pager.input.pageNumberText(page);
 
-                return true;
-            };
-
-            TableSearch.prototype._onRoute = function (e) {
                 if (!this._isActivated())
                     this._isActivated(true);
             };
 
-            TableSearch.prototype._onBeforeActivation = function (e) {
+            SearchTable.prototype.onBeforeActivation = function (e) {
                 this._setLocation();
             };
 
-            TableSearch.prototype._computeRoute = function () {
+            SearchTable.prototype._computeRoute = function () {
                 // build what the route should be, based on current filter inputs
                 var countryCode = this.countryCode();
                 var orderBy = this.orderBy();
@@ -165,7 +169,7 @@ var Agreements;
                 return route;
             };
 
-            TableSearch.prototype._setLocation = function () {
+            SearchTable.prototype._setLocation = function () {
                 // only set the href hashtag to trigger sammy when the current route is stale
                 var route = this._route();
                 if (this.sammy.getLocation().indexOf(route) < 0) {
@@ -173,7 +177,7 @@ var Agreements;
                 }
             };
 
-            TableSearch.prototype._computeCurrentRequest = function () {
+            SearchTable.prototype._computeCurrentRequest = function () {
                 var thisRequest = {
                     keyword: this.keywordThrottled(),
                     countryCode: this.countryCode(),
@@ -184,7 +188,7 @@ var Agreements;
                 return thisRequest;
             };
 
-            TableSearch.prototype._onRequestDirty = function () {
+            SearchTable.prototype._onRequestDirty = function () {
                 if (!this._isActivated())
                     return;
 
@@ -198,12 +202,12 @@ var Agreements;
                 }
             };
 
-            TableSearch.prototype._load = function () {
+            SearchTable.prototype._load = function () {
                 this._request().done(function () {
                 });
             };
 
-            TableSearch.prototype._request = function () {
+            SearchTable.prototype._request = function () {
                 var _this = this;
                 var deferred = $.Deferred();
                 var requestHistory = this._requestHistory();
@@ -220,7 +224,7 @@ var Agreements;
                 $.get(App.Routes.WebApi.Agreements.Search.get(this.settings.domain), lastRequest).done(function (response) {
                     // need to make sure the current inputs still match the request
                     var currentRequest = _this._currentRequest();
-                    if (thisRequest == currentRequest) {
+                    if (_this._areRequestsAligned(thisRequest, currentRequest)) {
                         if (response.itemTotal < 1 && thisRequest.pageNumber != 1) {
                             // need to correct the page number here
                             _this._fixOverflowedPageNumber(thisRequest, 1);
@@ -249,7 +253,7 @@ var Agreements;
                 return deferred;
             };
 
-            TableSearch.prototype._fixOverflowedPageNumber = function (request, pageNumber) {
+            SearchTable.prototype._fixOverflowedPageNumber = function (request, pageNumber) {
                 var requests = this._requestHistory().slice(0);
                 var requestToFix = requests[requests.length - 1];
                 for (var i = requests.length - 1; i >= 0; i--) {
@@ -264,7 +268,7 @@ var Agreements;
                 requestToFix.pageNumber = pageNumber;
             };
 
-            TableSearch.prototype._areRequestsAligned = function (first, second, ignorePageNumber) {
+            SearchTable.prototype._areRequestsAligned = function (first, second, ignorePageNumber) {
                 if (typeof ignorePageNumber === "undefined") { ignorePageNumber = false; }
                 var aligned = first.keyword === second.keyword && first.countryCode === second.countryCode && first.orderBy === second.orderBy && first.pageSize === second.pageSize;
                 if (!ignorePageNumber)
@@ -272,20 +276,20 @@ var Agreements;
                 return aligned;
             };
 
-            TableSearch.prototype._restoreResultOpactity = function () {
+            SearchTable.prototype._restoreResultOpactity = function () {
                 if (this.$results && this.pager.output.hasItems()) {
                     this.$results.fadeTo(1, 1);
                     this.$results.css({ opacity: 1 });
                 }
             };
-            TableSearch.KeywordSessionKey = 'AgreementSearchKeyword2';
-            TableSearch.PageSizeSessionKey = 'AgreementSearchPageSize2';
-            TableSearch.OrderBySessionKey = 'AgreementSearchOrderBy2';
-            TableSearch.CountrySessionKey = 'AgreementSearchCountry2';
-            TableSearch.PageNumberSessionKey = 'AgreementSearchPageNumber2';
-            return TableSearch;
+            SearchTable.KeywordSessionKey = 'AgreementSearchKeyword2';
+            SearchTable.PageSizeSessionKey = 'AgreementSearchPageSize2';
+            SearchTable.OrderBySessionKey = 'AgreementSearchOrderBy2';
+            SearchTable.CountrySessionKey = 'AgreementSearchCountry2';
+            SearchTable.PageNumberSessionKey = 'AgreementSearchPageNumber2';
+            return SearchTable;
         })();
-        ViewModels.TableSearch = TableSearch;
+        ViewModels.SearchTable = SearchTable;
 
         var TableRow = (function () {
             function TableRow(data, owner) {

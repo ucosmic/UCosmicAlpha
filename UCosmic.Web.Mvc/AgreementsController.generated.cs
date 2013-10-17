@@ -162,9 +162,9 @@ namespace UCosmic.Web.Mvc.Controllers
                 public readonly string Index = "Index";
                 public readonly string Index_old = "Index_old";
                 public readonly string Owners = "Owners";
+                public readonly string SearchTable = "SearchTable";
                 public readonly string Settings = "Settings";
                 public readonly string Show = "Show";
-                public readonly string TableSearch = "TableSearch";
             }
             public readonly string _Agreement = "~/Views/Agreements/_Agreement.cshtml";
             public readonly string _Bib = "~/Views/Agreements/_Bib.cshtml";
@@ -183,9 +183,9 @@ namespace UCosmic.Web.Mvc.Controllers
             public readonly string Index = "~/Views/Agreements/Index.cshtml";
             public readonly string Index_old = "~/Views/Agreements/Index_old.cshtml";
             public readonly string Owners = "~/Views/Agreements/Owners.cshtml";
+            public readonly string SearchTable = "~/Views/Agreements/SearchTable.cshtml";
             public readonly string Settings = "~/Views/Agreements/Settings.cshtml";
             public readonly string Show = "~/Views/Agreements/Show.cshtml";
-            public readonly string TableSearch = "~/Views/Agreements/TableSearch.cshtml";
         }
     }
 

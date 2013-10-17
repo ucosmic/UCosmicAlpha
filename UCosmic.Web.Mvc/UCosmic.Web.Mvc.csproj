@@ -2036,7 +2036,14 @@
       <DependentUpon>Search.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="scripts\viewmodels\agreements\SearchResult.ts" />
-    <TypeScriptCompile Include="scripts\viewmodels\agreements\TableSearch.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\agreements\SearchTable.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\agreements\SearchLenses.ts" />
+    <Content Include="scripts\viewmodels\agreements\SearchLenses.js">
+      <DependentUpon>SearchLenses.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\agreements\SearchLenses.min.js">
+      <DependentUpon>SearchLenses.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\viewmodels\agreements\searchResult.js">
       <DependentUpon>SearchResult.ts</DependentUpon>
     </Content>
@@ -2049,11 +2056,11 @@
     <Content Include="scripts\viewmodels\agreements\searchResults.min.js">
       <DependentUpon>SearchResult.ts</DependentUpon>
     </Content>
-    <Content Include="scripts\viewmodels\agreements\TableSearch.js">
-      <DependentUpon>TableSearch.ts</DependentUpon>
+    <Content Include="scripts\viewmodels\agreements\SearchTable.js">
+      <DependentUpon>SearchTable.ts</DependentUpon>
     </Content>
-    <Content Include="scripts\viewmodels\agreements\TableSearch.min.js">
-      <DependentUpon>TableSearch.ts</DependentUpon>
+    <Content Include="scripts\viewmodels\agreements\SearchTable.min.js">
+      <DependentUpon>SearchTable.ts</DependentUpon>
     </Content>
     <Content Include="scripts\viewmodels\agreements\visibility.js">
       <DependentUpon>Visibility.ts</DependentUpon>
@@ -2460,7 +2467,7 @@
     <Content Include="Views\Agreements\_PublicViewSideBar.cshtml" />
     <Content Include="Views\Agreements\_PublicViewContent.cshtml" />
     <Content Include="Views\Activities\_EditStyles.cshtml" />
-    <Content Include="Views\Agreements\TableSearch.cshtml" />
+    <Content Include="Views\Agreements\SearchTable.cshtml" />
     <None Include="Views\ApiTest\Index.cshtml" />
     <Content Include="Views\Agreements\Settings.cshtml" />
     <Content Include="Views\Agreements\_SearchSideBar.cshtml" />

@@ -39,15 +39,23 @@ var App;
                     return undefined;
                 return Math.ceil(_this.itemTotal() / _this.pageSize());
             });
-            this.pages = ko.computed(function () {
-                var pages = [1];
+            this.pageNumberOptions = ko.computed(function () {
+                var options = [1];
                 var pageCount = _this.pageCount();
                 if (!pageCount)
-                    return pages;
+                    return options;
                 for (var i = 1; i < pageCount; i++) {
-                    pages[i] = i + 1;
+                    options[i] = i + 1;
                 }
-                return pages;
+                return options;
+            });
+            this._pageNumberChanged = ko.computed(function () {
+                // changes when applyBindings happens and after options data is loaded
+                var pageNumber = _this.pageNumber();
+                var options = _this.pageNumberOptions();
+
+                if (options.length == 1 && options[0] != pageNumber)
+                    options[0] = pageNumber;
             });
             this.pageIndex = ko.computed(function () {
                 return _this.pageNumber() - 1;

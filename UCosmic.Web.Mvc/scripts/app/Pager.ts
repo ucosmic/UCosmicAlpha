@@ -56,14 +56,23 @@ module App {
             return Math.ceil(this.itemTotal() / this.pageSize());
         });
 
-        pages: KnockoutComputed<number[]> = ko.computed((): number[]=> {
-            var pages: number[] = [1];
+        pageNumberOptions: KnockoutComputed<number[]> = ko.computed((): number[]=> {
+            var options: number[] = [1];
             var pageCount = this.pageCount();
-            if (!pageCount) return pages;
+            if (!pageCount) return options;
             for (var i = 1; i < pageCount; i++) {
-                pages[i] = i + 1;
+                options[i] = i + 1;
             }
-            return pages;
+            return options;
+        });
+
+        private _pageNumberChanged: KnockoutComputed<void> = ko.computed((): void => {
+            // changes when applyBindings happens and after options data is loaded
+            var pageNumber = this.pageNumber();
+            var options = this.pageNumberOptions();
+            // keep pageNumber as an option so that we don't lose it when options change
+            if (options.length == 1 && options[0] != pageNumber)
+                options[0] = pageNumber;
         });
 
         pageIndex: KnockoutComputed<number> = ko.computed((): number => {

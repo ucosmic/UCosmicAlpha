@@ -13,16 +13,17 @@
 
 module Agreements.ViewModels {
 
-    export interface TableSearchSettings {
+    export interface SearchTableSettings {
         element: Element;
         domain: string;
         visibility: string;
         route: string;
         activationRoute?: string;
         detailUrl: string;
+        sammy?: Sammy.Application
     }
 
-    export interface TableSearchInput {
+    export interface SearchTableInput {
         keyword: string;
         countryCode: string;
         pageSize: number;
@@ -30,29 +31,29 @@ module Agreements.ViewModels {
         orderBy: string;
     }
 
-    export class TableSearch {
+    export class SearchTable {
         //#region Search Filter Inputs
 
         // throttle keyword to reduce number API requests
         keyword: KnockoutObservable<string> = ko.observable(
-            sessionStorage.getItem(TableSearch.KeywordSessionKey) || '');
+            sessionStorage.getItem(SearchTable.KeywordSessionKey) || '');
         keywordThrottled: KnockoutComputed<string> = ko.computed(this.keyword)
             .extend({ throttle: 400 });
 
         // instead of throttling, both this and the options are observed
         countryCode: KnockoutObservable<string> = ko.observable(
-            sessionStorage.getItem(TableSearch.CountrySessionKey) || 'any');
+            sessionStorage.getItem(SearchTable.CountrySessionKey) || 'any');
 
         pager = new App.Pager<TableRow>(
-            sessionStorage.getItem(TableSearch.PageNumberSessionKey) || 1,
-            sessionStorage.getItem(TableSearch.PageSizeSessionKey) || 10);
+            sessionStorage.getItem(SearchTable.PageNumberSessionKey) || 1,
+            sessionStorage.getItem(SearchTable.PageSizeSessionKey) || 10);
 
         displayPager = new App.Pager<TableRow>(
-            sessionStorage.getItem(TableSearch.PageNumberSessionKey) || 1,
-            sessionStorage.getItem(TableSearch.PageSizeSessionKey) || 10);
+            sessionStorage.getItem(SearchTable.PageNumberSessionKey) || 1,
+            sessionStorage.getItem(SearchTable.PageSizeSessionKey) || 10);
 
         orderBy: KnockoutObservable<string> = ko.observable(
-            sessionStorage.getItem(TableSearch.OrderBySessionKey) || 'start-desc');
+            sessionStorage.getItem(SearchTable.OrderBySessionKey) || 'start-desc');
 
         //#endregion
         //#region Search Filter Input sessionStorage
@@ -65,18 +66,23 @@ module Agreements.ViewModels {
 
         // automatically save the search inputs to session when they change
         private _inputChanged: KnockoutComputed<void> = ko.computed((): void => {
-            sessionStorage.setItem(TableSearch.KeywordSessionKey, this.keyword() || '');
-            sessionStorage.setItem(TableSearch.CountrySessionKey, this.countryCode());
-            sessionStorage.setItem(TableSearch.PageNumberSessionKey, this.pager.input.pageNumberText());
-            sessionStorage.setItem(TableSearch.PageSizeSessionKey, this.pager.input.pageSizeText());
-            sessionStorage.setItem(TableSearch.OrderBySessionKey, this.orderBy());
+
+            if (this.countryCode() == undefined) this.countryCode('any');
+            if (isNaN(this.pager.input.pageNumber())) this.pager.input.pageNumberText('1');
+
+            sessionStorage.setItem(SearchTable.KeywordSessionKey, this.keyword() || '');
+            sessionStorage.setItem(SearchTable.CountrySessionKey, this.countryCode());
+            sessionStorage.setItem(SearchTable.PageNumberSessionKey, this.pager.input.pageNumberText());
+            sessionStorage.setItem(SearchTable.PageSizeSessionKey, this.pager.input.pageSizeText());
+            sessionStorage.setItem(SearchTable.OrderBySessionKey, this.orderBy());
         }).extend({ throttle: 0, });
 
         //#endregion
         //#region Construction & Initialization
 
-        constructor(public settings: TableSearchSettings) {
+        constructor(public settings: SearchTableSettings) {
             this._loadCountryOptions();
+            this.sammy = this.settings.sammy || Sammy();
             this._runSammy();
         }
 
@@ -128,7 +134,7 @@ module Agreements.ViewModels {
         //#endregion
         //#region Sammy Routing
 
-        sammy: Sammy.Application = Sammy();
+        sammy: Sammy.Application;
         routeFormat: string = '#/{0}/country/{5}/sort/{1}/size/{2}/page/{3}/'
             .format(this.settings.route).replace('{5}', '{0}');
         private _isActivated: KnockoutObservable<boolean> = ko.observable(false);
@@ -160,13 +166,18 @@ module Agreements.ViewModels {
                 this.settings.activationRoute || this.sammy.getLocation(),
                 function (): void {
                     var e: Sammy.EventContext = this;
-                    viewModel._onBeforeActivation(e);
+                    viewModel.onBeforeActivation(e);
                 });
 
-            this.sammy.run();
+            if (!this.settings.sammy && !this.sammy.isRunning())
+                this.sammy.run();
         }
 
         private _onBeforeRoute(e: Sammy.EventContext): boolean {
+            return true;
+        }
+
+        private _onRoute(e: Sammy.EventContext): void {
             var country = e.params['country'];
             var sort = e.params['sort'];
             var size = e.params['size'];
@@ -181,15 +192,11 @@ module Agreements.ViewModels {
             this.pager.input.pageSizeText(size);
             this.pager.input.pageNumberText(page);
 
-            return true;
-        }
-
-        private _onRoute(e: Sammy.EventContext): void {
             if (!this._isActivated())
                 this._isActivated(true);
         }
 
-        private _onBeforeActivation(e: Sammy.EventContext): void {
+        onBeforeActivation(e: Sammy.EventContext): void {
             this._setLocation(); // base activated route on current input filters
         }
 
@@ -222,14 +229,14 @@ module Agreements.ViewModels {
 
         spinner = new App.Spinner(new App.SpinnerOptions(400, true));
         $results: JQuery;
-        private _requestHistory: KnockoutObservableArray<TableSearchInput> = ko.observableArray();
-        private _currentRequest: KnockoutComputed<TableSearchInput> = ko.computed((): TableSearchInput => {
+        private _requestHistory: KnockoutObservableArray<SearchTableInput> = ko.observableArray();
+        private _currentRequest: KnockoutComputed<SearchTableInput> = ko.computed((): SearchTableInput => {
             // this will run once during construction
             return this._computeCurrentRequest();
         });
 
-        private _computeCurrentRequest(): TableSearchInput {
-            var thisRequest: TableSearchInput = {
+        private _computeCurrentRequest(): SearchTableInput {
+            var thisRequest: SearchTableInput = {
                 keyword: this.keywordThrottled(),
                 countryCode: this.countryCode(),
                 orderBy: this.orderBy(),
@@ -248,7 +255,7 @@ module Agreements.ViewModels {
             if (!this._isActivated()) return;
 
             var requestHistory = this._requestHistory();
-            var lastRequest: TableSearchInput = requestHistory.length
+            var lastRequest: SearchTableInput = requestHistory.length
                 ? Enumerable.From(requestHistory).Last() : null;
             var thisRequest = this._currentRequest();
 
@@ -267,7 +274,7 @@ module Agreements.ViewModels {
         private _request(): JQueryDeferred<void> {
             var deferred = $.Deferred();
             var requestHistory = this._requestHistory();
-            var lastRequest: TableSearchInput = requestHistory[requestHistory.length - 1];
+            var lastRequest: SearchTableInput = requestHistory[requestHistory.length - 1];
             var thisRequest = this._currentRequest();
             if (!this._areRequestsAligned(thisRequest, lastRequest)) {
                 deferred.reject();
@@ -281,7 +288,7 @@ module Agreements.ViewModels {
                 .done((response: App.PageOf<any>): void => {
                     // need to make sure the current inputs still match the request
                     var currentRequest = this._currentRequest();
-                    if (thisRequest == currentRequest) {
+                    if (this._areRequestsAligned(thisRequest, currentRequest)) {
                         // when there are zero results, server will NOT correct the pageNumber
                         if (response.itemTotal < 1 && thisRequest.pageNumber != 1) {
                             // need to correct the page number here
@@ -316,7 +323,7 @@ module Agreements.ViewModels {
             return deferred;
         }
 
-        private _fixOverflowedPageNumber(request: TableSearchInput, pageNumber: number): void {
+        private _fixOverflowedPageNumber(request: SearchTableInput, pageNumber: number): void {
             var requests = this._requestHistory().slice(0);
             var requestToFix = requests[requests.length - 1];
             for (var i = requests.length - 1; i >= 0; i--) { // go backwards through the request history
@@ -336,7 +343,7 @@ module Agreements.ViewModels {
             requestToFix.pageNumber = pageNumber;
         }
 
-        private _areRequestsAligned(first: TableSearchInput, second: TableSearchInput, ignorePageNumber: boolean = false): boolean {
+        private _areRequestsAligned(first: SearchTableInput, second: SearchTableInput, ignorePageNumber: boolean = false): boolean {
             var aligned = first.keyword === second.keyword
                 && first.countryCode === second.countryCode
                 && first.orderBy === second.orderBy
@@ -369,7 +376,7 @@ module Agreements.ViewModels {
         countries: KnockoutObservableArray<string> = ko.observableArray();
         participants: KnockoutObservableArray<any> = ko.observableArray();
 
-        constructor(data: any, public owner: TableSearch) {
+        constructor(data: any, public owner: SearchTable) {
             ko.mapping.fromJS(data, {}, this);
         }
 

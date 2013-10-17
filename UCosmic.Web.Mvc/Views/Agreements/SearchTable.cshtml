@@ -15,14 +15,27 @@
 
     <script src="~/scripts/app/Pager.js"></script>
 
-    <script src="~/scripts/viewmodels/agreements/TableSearch.js"></script>
+    <script src="~/scripts/viewmodels/agreements/SearchTable.js"></script>
+
+    <script src="~/scripts/viewmodels/agreements/SearchLenses.js"></script>
 
     <script type="text/javascript">
-        var viewModel = new Agreements.ViewModels.TableSearch({
+        //var viewModel = new Agreements.ViewModels.SearchTable({
+        //    element: $('[data-current-module=agreements]')[0],
+        //    domain: '@ViewBag.AgreementsDomain',
+        //    visibility: '@ViewBag.AgreementsVisibility',
+        //    route: 'table',
+        //    //activationRoute: 'table',
+        //    detailUrl: '@ViewBag.DetailUrl'
+        //});
+        //ko.applyBindings(viewModel, viewModel.settings.element);
+
+        var viewModel = new Agreements.ViewModels.SearchLenses({
             element: $('[data-current-module=agreements]')[0],
             domain: '@ViewBag.AgreementsDomain',
             visibility: '@ViewBag.AgreementsVisibility',
-            route: 'table',
+            route: '',
+            //activationRoute: 'table',
             detailUrl: '@ViewBag.DetailUrl'
         });
         ko.applyBindings(viewModel, viewModel.settings.element);
@@ -38,7 +51,7 @@
                     @ViewBag.Title
                 </h1>
             </header>
-            <div>
+            <div data-bind="with: table">
                 @* KEYWORD TEXT BOX *@
                 <div class="field" style="margin-bottom: 0;">
                     <input type="search" placeholder="Find an agreement by name, partner, country, or keyword" data-bind="value: keyword, valueUpdate: 'afterkeydown search'" />
@@ -58,7 +71,7 @@
                                 of <span data-bind="text: itemTotal"></span></strong>
                             <span data-bind="visible: hasManyPages">(page
                                 @*<span data-bind="text: pageNumber"></span>*@
-                                <select data-bind="value: $root.pager.input.pageNumberText, options: $root.pager.input.pages"
+                                <select data-bind="value: $parent.pager.input.pageNumberText, options: $parent.pager.input.pageNumberOptions"
                                     style="padding: 0; margin: 0; line-height: 16px; height: auto;">
                                     <option>1</option>
                                 </select>
@@ -83,7 +96,7 @@
                 <div data-bind="visible: pager.output.hasItems" style="display: none;">
 
                     @* TABLE *@
-                    <div data-bind="jQuery: '$results'" style="">
+                    <div data-bind="jQuery: '$results'">
                         <table class="data">
                             <colgroup>
                                 <col style="width: 75%;" />
@@ -140,21 +153,6 @@
                             </tbody>
                         </table>
                     </div>
-                    <div data-xbind="visible: lens() === 'map'" style="display: none;">
-                        <p>
-                            This is a placeholder for the Map data lens. Map data will go here.
-                        </p>
-                    </div>
-                    @*<div data-xbind="visible: lens() === 'tree'">
-                        <p>
-                            This is a placeholder for the Tree data lens. Tree data will go here.
-                        </p>
-                    </div>
-                    <div data-xbind="visible: lens() === 'grid'">
-                        <p>
-                            This is a placeholder for the Grid data lens. Grid data will go here.
-                        </p>
-                    </div>*@
                 </div>
 
             </div>
@@ -188,7 +186,7 @@
                                     <span class="text">Search options</span>
                                 </div>
                             }
-                            <div class="content">
+                            <div class="content" data-bind="with: table">
                                 <div class="field">
                                     <select class="side" data-bind="value: countryCode, options: countryOptions, optionsText: 'name', optionsValue: 'code'">
                                         <option value="any">[Loading...]</option>

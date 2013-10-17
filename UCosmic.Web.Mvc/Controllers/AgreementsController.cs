@@ -50,7 +50,7 @@ namespace UCosmic.Web.Mvc.Controllers
             var visibility = _queryProcessor.Execute(new MyAgreementsVisibility(User, domain));
             ViewBag.AgreementsVisibility = visibility;
             ViewBag.AgreementsDomain = domain;
-            return View(MVC.Agreements.Views.TableSearch);
+            return View(MVC.Agreements.Views.SearchTable);
         }
 
         [GET("{domain}/agreements")]
