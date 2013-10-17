@@ -50,14 +50,18 @@
                 </p>
 
                 @* PAGER STATUS & LOADING SPINNER *@
-                <div class="group" style="margin: 1em 0; height: 24px;">
-                    <div class="on-left" data-bind="with: pager.output">
+                <div class="group" style="margin: 1em 0;">
+                    <div class="on-left" data-bind="with: pager.output" style="height: 24px;">
                         <div data-bind="visible: hasItems" style="display: none;">
                             <strong>Showing <span data-bind="text: firstNumber"></span>
                                 <span data-bind="visible: hasManyItems">- <span data-bind="    text: lastNumber"></span></span>
                                 of <span data-bind="text: itemTotal"></span></strong>
                             <span data-bind="visible: hasManyPages">(page
-                                <span data-bind="text: pageNumber"></span>
+                                @*<span data-bind="text: pageNumber"></span>*@
+                                <select data-bind="value: $root.pager.input.pageNumberText, options: $root.pager.input.pages"
+                                    style="padding: 0; margin: 0; line-height: 16px; height: auto;">
+                                    <option>1</option>
+                                </select>
                                 of <span data-bind="text: pageCount"></span>)</span>
                         </div>
                     </div>
@@ -160,9 +164,9 @@
             <div data-fixed-scroll="content">
                 <nav class="side">
                     <ul class="top">
-                        <li>
-                            @if (User.IsInAnyRole(RoleName.AgreementManagers))
-                            {
+                        @if (User.IsInAnyRole(RoleName.AgreementManagers))
+                        {
+                            <li>
                                 <a href="@Url.Action(MVC.Agreements.New())" class="group">
                                     <div class="arrow"></div>
                                     <span class="text">
@@ -170,6 +174,12 @@
                                         <span>Add New</span>
                                     </span>
                                 </a>
+                            </li>
+                        }
+                        <li class="static square-bottom">
+                            @if (User.IsInAnyRole(RoleName.AgreementManagers))
+                            {
+                                <span class="text">Search options</span>
                             }
                             else
                             {
@@ -177,12 +187,6 @@
                                     <div class="arrow"></div>
                                     <span class="text">Search options</span>
                                 </div>
-                            }
-                        </li>
-                        <li class="static square-bottom">
-                            @if (User.IsInAnyRole(RoleName.AgreementManagers))
-                            {
-                                <span class="text">Search options</span>
                             }
                             <div class="content">
                                 <div class="field">

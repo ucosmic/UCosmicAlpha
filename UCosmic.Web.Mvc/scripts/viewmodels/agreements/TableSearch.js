@@ -30,7 +30,7 @@ var Agreements;
                 this.orderBy = ko.observable(sessionStorage.getItem(TableSearch.OrderBySessionKey) || 'start-desc');
                 // automatically save the search inputs to session when they change
                 this._inputChanged = ko.computed(function () {
-                    sessionStorage.setItem(TableSearch.KeywordSessionKey, _this.keyword());
+                    sessionStorage.setItem(TableSearch.KeywordSessionKey, _this.keyword() || '');
                     sessionStorage.setItem(TableSearch.CountrySessionKey, _this.countryCode());
                     sessionStorage.setItem(TableSearch.PageNumberSessionKey, _this.pager.input.pageNumberText());
                     sessionStorage.setItem(TableSearch.PageSizeSessionKey, _this.pager.input.pageSizeText());
@@ -244,7 +244,7 @@ var Agreements;
                     _this._restoreResultOpactity();
                     setTimeout(function () {
                         _this._restoreResultOpactity();
-                    }, 10);
+                    }, 100);
                 });
                 return deferred;
             };

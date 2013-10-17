@@ -56,6 +56,16 @@ module App {
             return Math.ceil(this.itemTotal() / this.pageSize());
         });
 
+        pages: KnockoutComputed<number[]> = ko.computed((): number[]=> {
+            var pages: number[] = [1];
+            var pageCount = this.pageCount();
+            if (!pageCount) return pages;
+            for (var i = 1; i < pageCount; i++) {
+                pages[i] = i + 1;
+            }
+            return pages;
+        });
+
         pageIndex: KnockoutComputed<number> = ko.computed((): number => {
             return this.pageNumber() - 1;
         });

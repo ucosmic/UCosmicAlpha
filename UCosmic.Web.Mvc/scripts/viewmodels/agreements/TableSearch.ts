@@ -65,7 +65,7 @@ module Agreements.ViewModels {
 
         // automatically save the search inputs to session when they change
         private _inputChanged: KnockoutComputed<void> = ko.computed((): void => {
-            sessionStorage.setItem(TableSearch.KeywordSessionKey, this.keyword());
+            sessionStorage.setItem(TableSearch.KeywordSessionKey, this.keyword() || '');
             sessionStorage.setItem(TableSearch.CountrySessionKey, this.countryCode());
             sessionStorage.setItem(TableSearch.PageNumberSessionKey, this.pager.input.pageNumberText());
             sessionStorage.setItem(TableSearch.PageSizeSessionKey, this.pager.input.pageSizeText());
@@ -311,7 +311,7 @@ module Agreements.ViewModels {
                     this._restoreResultOpactity();
                     setTimeout((): void => {
                         this._restoreResultOpactity();
-                    }, 10);
+                    }, 100);
                 });
             return deferred;
         }

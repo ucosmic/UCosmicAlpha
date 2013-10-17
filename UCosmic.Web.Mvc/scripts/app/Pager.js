@@ -39,6 +39,16 @@ var App;
                     return undefined;
                 return Math.ceil(_this.itemTotal() / _this.pageSize());
             });
+            this.pages = ko.computed(function () {
+                var pages = [1];
+                var pageCount = _this.pageCount();
+                if (!pageCount)
+                    return pages;
+                for (var i = 1; i < pageCount; i++) {
+                    pages[i] = i + 1;
+                }
+                return pages;
+            });
             this.pageIndex = ko.computed(function () {
                 return _this.pageNumber() - 1;
             });
