@@ -5,16 +5,22 @@ var Agreements;
     /// <reference path="SearchMap.ts" />
     (function (ViewModels) {
         var SearchLenses = (function () {
+            //#endregion
+            //#region Construction & Initialization
             function SearchLenses(settings) {
                 var _this = this;
                 this.settings = settings;
                 this.lens = ko.observable(sessionStorage.getItem(SearchLenses.LensSessionKey) || 'map');
+                //#endregion
+                //#region Lensing Computeds
                 this.isTableLens = ko.computed(function () {
                     return _this.lens() === 'table';
                 });
                 this.isMapLens = ko.computed(function () {
                     return _this.lens() === 'map';
                 });
+                //#endregion
+                //#region Sammy Routing
                 this.sammy = Sammy();
                 this._runSammy();
                 this.table = new ViewModels.SearchTable({
@@ -33,7 +39,9 @@ var Agreements;
                     route: 'map',
                     activationRoute: '#/map/',
                     detailUrl: this.settings.detailUrl,
-                    sammy: this.sammy
+                    sammy: this.sammy,
+                    partnerPlacesApi: this.settings.partnerPlacesApi,
+                    graphicsCircleApi: this.settings.graphicsCircleApi
                 });
 
                 this.table.countryCode.subscribe(function (newValue) {

@@ -126,6 +126,25 @@ namespace UCosmic.Domain.Agreements
                 }
             }
 
+            // add an unknown place for agreements that do not have place information
+            if (query.GroupBy.HasValue && query.GroupBy.Value == PlaceGroup.Continents)
+            {
+                var unknownAgreements = agreements
+                    .Where(x => !x.Participants.Any(y => !y.IsOwner && y.Establishment.Location.Places.Any(z => z.IsContinent)))
+                    .Distinct();
+                var unknownPlace = new AgreementPartnerPlaceResult
+                {
+                    AgreementIds = unknownAgreements.Select(x => x.Id).ToArray(),
+                    Place = new Place
+                    {
+                        OfficialName = "[Continent Unknown]",
+                        Center = new Coordinates(0, -180),
+                        BoundingBox = new BoundingBox(5, -175, -5, 175),
+                    },
+                };
+                partnerPlaces = partnerPlaces.Concat(new[] {unknownPlace}).ToArray();
+            }
+
             return partnerPlaces;
         }
     }

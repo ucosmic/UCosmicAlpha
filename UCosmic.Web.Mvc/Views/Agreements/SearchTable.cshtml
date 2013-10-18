@@ -38,7 +38,9 @@
             visibility: '@ViewBag.AgreementsVisibility',
             route: '',
             //activationRoute: 'table',
-            detailUrl: '@ViewBag.DetailUrl'
+            detailUrl: '@ViewBag.DetailUrl',
+            partnerPlacesApi: '@ViewBag.PartnerPlacesApi'.format('@ViewBag.AgreementsDomain', '{0}'),
+            graphicsCircleApi: '@ViewBag.GraphicsCircleApi'
         });
         ko.applyBindings(viewModel, viewModel.settings.element);
     </script>
@@ -74,7 +76,7 @@
                             <span data-bind="visible: hasManyPages">(page
                                 @*<span data-bind="text: pageNumber"></span>*@
                                 <select data-bind="value: $parent.pager.input.pageNumberText, options: $parent.pager.input.pageNumberOptions"
-                                        style="padding: 0; margin: 0; line-height: 16px; height: auto;">
+                                    style="padding: 0; margin: 0; line-height: 16px; height: auto;">
                                     <option>1</option>
                                 </select>
                                 of <span data-bind="text: pageCount"></span>)</span>
@@ -158,8 +160,7 @@
                 </div>
 
             </div>
-            <div data-bind="visible: isMapLens, with: map">
-                here is my map
+            <div id="google_map_canvas" style="height: 500px; width: 650px;" data-bind="visible: isMapLens">
             </div>
         </div>
         <aside class="on-right from-top" data-fixed-scroll="root">
@@ -191,7 +192,7 @@
                                     <span class="text">Search options</span>
                                 </div>
                             }
-                            <div class="content" data-bind="visible: isTableLens, with: table">
+                            <div class="content" data-bind="visible: isTableLens, with: table" style="display: none;">
                                 <div class="field">
                                     <select class="side" data-bind="value: countryCode, options: countryOptions, optionsText: 'name', optionsValue: 'code'">
                                         <option value="any">[Loading...]</option>

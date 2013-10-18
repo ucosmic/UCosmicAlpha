@@ -11,9 +11,12 @@ module Agreements.ViewModels {
         route: string;
         activationRoute?: string;
         detailUrl: string;
+        partnerPlacesApi: string;
+        graphicsCircleApi: string;
     }
 
     export class SearchLenses {
+        //#region Lenses
 
         table: SearchTable;
         map: SearchMap;
@@ -21,6 +24,9 @@ module Agreements.ViewModels {
             sessionStorage.getItem(SearchLenses.LensSessionKey) || 'map');
 
         static LensSessionKey = 'AgreementSearchLens';
+
+        //#endregion
+        //#region Construction & Initialization
 
         constructor(public settings: SearchLensSettings) {
             this._runSammy();
@@ -41,6 +47,8 @@ module Agreements.ViewModels {
                 activationRoute: '#/map/',
                 detailUrl: this.settings.detailUrl,
                 sammy: this.sammy,
+                partnerPlacesApi: this.settings.partnerPlacesApi,
+                graphicsCircleApi: this.settings.graphicsCircleApi,
             });
 
             this.table.countryCode.subscribe((newValue: string): void => {
@@ -61,6 +69,9 @@ module Agreements.ViewModels {
             }
         }
 
+        //#endregion
+        //#region Lensing Computeds
+
         isTableLens: KnockoutComputed<boolean> = ko.computed((): boolean => {
             return this.lens() === 'table';
         });
@@ -68,6 +79,9 @@ module Agreements.ViewModels {
         isMapLens: KnockoutComputed<boolean> = ko.computed((): boolean => {
             return this.lens() === 'map';
         });
+
+        //#endregion
+        //#region Sammy Routing
 
         sammy: Sammy.Application = Sammy();
 
@@ -93,5 +107,7 @@ module Agreements.ViewModels {
                 this.map.onBeforeActivation(e);
             }
         }
+
+        //#endregion
     }
 }

@@ -1,5 +1,6 @@
 var Agreements;
 (function (Agreements) {
+    /// <reference path="../../typings/googlemaps/google.maps.d.ts" />
     /// <reference path="../../typings/jquery/jquery.d.ts" />
     /// <reference path="../../typings/sammyjs/sammyjs.d.ts" />
     /// <reference path="../../typings/knockout/knockout.d.ts" />
@@ -26,8 +27,9 @@ var Agreements;
                 // instead of throttling, both this and the options are observed
                 this.countryCode = ko.observable(sessionStorage.getItem(SearchMap.CountrySessionKey) || 'any');
                 this.zoom = ko.observable(parseInt(sessionStorage.getItem(SearchMap.ZoomSessionKey)) || 1);
-                this.lat = ko.observable(parseInt(sessionStorage.getItem(SearchMap.LatSessionKey)) || 0.0);
-                this.lng = ko.observable(parseInt(sessionStorage.getItem(SearchMap.LngSessionKey)) || 0.0);
+                this.lat = ko.observable(parseInt(sessionStorage.getItem(SearchMap.LatSessionKey)) || 0);
+                this.lng = ko.observable(parseInt(sessionStorage.getItem(SearchMap.LngSessionKey)) || 17);
+                this.scope = ko.observable(parseInt(sessionStorage.getItem(SearchMap.ScopeSessionKey)) || 'continents');
                 // automatically save the search inputs to session when they change
                 this._inputChanged = ko.computed(function () {
                     if (_this.countryCode() == undefined)
@@ -38,6 +40,7 @@ var Agreements;
                     sessionStorage.setItem(SearchMap.ZoomSessionKey, _this.zoom().toString());
                     sessionStorage.setItem(SearchMap.LatSessionKey, _this.lat().toString());
                     sessionStorage.setItem(SearchMap.LngSessionKey, _this.lng().toString());
+                    sessionStorage.setItem(SearchMap.ScopeSessionKey, _this.scope());
                 }).extend({ throttle: 0 });
                 ////#endregion
                 //#region Country Filter Options
@@ -51,6 +54,10 @@ var Agreements;
                 this._route = ko.computed(function () {
                     // this will run once during construction
                     return _this._computeRoute();
+                });
+                this._mapCreated = this._createMap();
+                $.when(this._mapCreated).then(function () {
+                    _this._bindMap();
                 });
                 this._loadCountryOptions();
                 this.sammy = this.settings.sammy || Sammy();
@@ -155,11 +162,145 @@ var Agreements;
                     this.sammy.setLocation(route);
                 }
             };
+
+            SearchMap.prototype._createMap = function () {
+                var _this = this;
+                var element = document.getElementById('google_map_canvas');
+                this._googleMap = new google.maps.Map(element, {
+                    mapTypeId: google.maps.MapTypeId.ROADMAP,
+                    center: new google.maps.LatLng(this.lat(), this.lng()),
+                    zoom: 1,
+                    draggable: true,
+                    scrollwheel: false
+                });
+                var deferred = $.Deferred();
+                google.maps.event.addListenerOnce(this._googleMap, 'idle', function () {
+                    google.maps.event.addListener(_this._googleMap, 'center_changed', function () {
+                        _this._onMapCenterChanged();
+                    });
+                    google.maps.event.addListener(_this._googleMap, 'zoom_changed', function () {
+                        _this._onMapZoomChanged();
+                    });
+                    google.maps.event.addListener(_this._googleMap, 'bounds_changed', function () {
+                        _this._onMapBoundsChanged();
+                    });
+                    deferred.resolve();
+                });
+                return deferred;
+            };
+
+            SearchMap.prototype._onMapZoomChanged = function () {
+            };
+
+            SearchMap.prototype._onMapCenterChanged = function () {
+            };
+
+            SearchMap.prototype._onMapBoundsChanged = function () {
+                var bounds = this._googleMap.getBounds();
+                var north = bounds.getNorthEast().lat();
+                var south = bounds.getSouthWest().lat();
+                var east = bounds.getNorthEast().lng();
+                var west = bounds.getSouthWest().lng();
+            };
+
+            SearchMap.prototype._bindMap = function () {
+                var _this = this;
+                var scope = this.scope();
+                if (scope === 'continents') {
+                    $.ajax({
+                        url: this.settings.partnerPlacesApi.format(scope)
+                    }).done(function (response) {
+                        //alert(this.settings.graphicsCircleApi);
+                        _this._onContinentsResponse(response);
+                    });
+                }
+            };
+
+            SearchMap.prototype._onContinentsResponse = function (response) {
+                var range = {
+                    min: Enumerable.From(response).Min(function (x) {
+                        return x.agreementCount;
+                    }),
+                    max: Enumerable.From(response).Max(function (x) {
+                        return x.agreementCount;
+                    })
+                };
+                for (var i = 0; i < response.length; i++) {
+                    var continent = response[i];
+                    this._onContinentResponse(continent, range);
+                }
+            };
+
+            SearchMap.prototype._onContinentResponse = function (continent, range) {
+                var _this = this;
+                var side = this._getMarkerSide(range.min, range.max, continent.agreementCount);
+                var halfSide = side / 2;
+                var iconSettings = {
+                    opacity: 0.8,
+                    side: side,
+                    text: continent.agreementCount
+                };
+                var url = '{0}?{1}'.format(this.settings.graphicsCircleApi, $.param(iconSettings));
+                var icon = {
+                    url: url,
+                    size: new google.maps.Size(side, side),
+                    anchor: new google.maps.Point(halfSide, halfSide)
+                };
+                var iconShape = {
+                    type: 'circle',
+                    coords: [halfSide, halfSide, halfSide]
+                };
+                var isClickable = continent.agreementCount > 0 && continent.id > 0;
+                var cursor = isClickable ? 'pointer' : 'default';
+                var options = {
+                    map: this._googleMap,
+                    position: new google.maps.LatLng(continent.center.latitude, continent.center.longitude),
+                    title: '{0} - {1} agreement(s)'.format(continent.name, continent.agreementCount),
+                    clickable: true,
+                    cursor: cursor,
+                    icon: icon,
+                    shape: iconShape,
+                    optimized: false,
+                    zIndex: 100
+                };
+                var marker = new google.maps.Marker(options);
+                if (isClickable)
+                    google.maps.event.addListener(marker, 'click', function (e) {
+                        _this._onContinentClick(marker, continent, e);
+                    });
+            };
+
+            SearchMap.prototype._onContinentClick = function (marker, continent, e) {
+                var north = continent.boundingBox.northEast.latitude;
+                var south = continent.boundingBox.southWest.latitude;
+                var east = continent.boundingBox.northEast.longitude;
+                var west = continent.boundingBox.southWest.longitude;
+                var southWest = new google.maps.LatLng(south, west);
+                var northEast = new google.maps.LatLng(north, east);
+                var bounds = new google.maps.LatLngBounds(southWest, northEast);
+                this._googleMap.fitBounds(bounds);
+            };
+
+            SearchMap.prototype._getMarkerSide = function (min, max, point) {
+                var side = 24;
+                var range = max - min;
+                if (range) {
+                    var factor = (point - min) / range;
+                    var emphasis = Math.round(factor * 24);
+                    side += emphasis;
+                }
+                if (side > 48)
+                    side = 48;
+                if (side < 16)
+                    side = 16;
+                return side;
+            };
             SearchMap.KeywordSessionKey = 'AgreementSearchKeyword2';
             SearchMap.CountrySessionKey = 'AgreementSearchCountry2';
             SearchMap.ZoomSessionKey = 'AgreementSearchZoom';
             SearchMap.LatSessionKey = 'AgreementSearchLat';
             SearchMap.LngSessionKey = 'AgreementSearchLng';
+            SearchMap.ScopeSessionKey = 'AgreementSearchScope';
             return SearchMap;
         })();
         ViewModels.SearchMap = SearchMap;

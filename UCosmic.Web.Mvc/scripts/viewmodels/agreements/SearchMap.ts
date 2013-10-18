@@ -1,3 +1,4 @@
+/// <reference path="../../typings/googlemaps/google.maps.d.ts" />
 /// <reference path="../../typings/jquery/jquery.d.ts" />
 /// <reference path="../../typings/sammyjs/sammyjs.d.ts" />
 /// <reference path="../../typings/knockout/knockout.d.ts" />
@@ -19,7 +20,9 @@ module Agreements.ViewModels {
         route: string;
         activationRoute?: string;
         detailUrl: string;
-        sammy?: Sammy.Application
+        sammy?: Sammy.Application;
+        partnerPlacesApi: string;
+        graphicsCircleApi: string;
     }
 
     export class SearchMap {
@@ -38,9 +41,11 @@ module Agreements.ViewModels {
         zoom: KnockoutObservable<number> = ko.observable(
             parseInt(sessionStorage.getItem(SearchMap.ZoomSessionKey)) || 1);
         lat: KnockoutObservable<number> = ko.observable(
-            parseInt(sessionStorage.getItem(SearchMap.LatSessionKey)) || 0.0);
+            parseInt(sessionStorage.getItem(SearchMap.LatSessionKey)) || 0);
         lng: KnockoutObservable<number> = ko.observable(
-            parseInt(sessionStorage.getItem(SearchMap.LngSessionKey)) || 0.0);
+            parseInt(sessionStorage.getItem(SearchMap.LngSessionKey)) || 17);
+        scope: KnockoutObservable<string> = ko.observable(
+            parseInt(sessionStorage.getItem(SearchMap.ScopeSessionKey)) || 'continents');
 
         //#endregion
         //#region Search Filter Input sessionStorage
@@ -50,10 +55,11 @@ module Agreements.ViewModels {
         static ZoomSessionKey = 'AgreementSearchZoom';
         static LatSessionKey = 'AgreementSearchLat';
         static LngSessionKey = 'AgreementSearchLng';
+        static ScopeSessionKey = 'AgreementSearchScope';
 
         // automatically save the search inputs to session when they change
         private _inputChanged: KnockoutComputed<void> = ko.computed((): void => {
-            
+
             if (this.countryCode() == undefined) this.countryCode('any');
 
             sessionStorage.setItem(SearchMap.KeywordSessionKey, this.keyword() || '');
@@ -61,12 +67,17 @@ module Agreements.ViewModels {
             sessionStorage.setItem(SearchMap.ZoomSessionKey, this.zoom().toString());
             sessionStorage.setItem(SearchMap.LatSessionKey, this.lat().toString());
             sessionStorage.setItem(SearchMap.LngSessionKey, this.lng().toString());
+            sessionStorage.setItem(SearchMap.ScopeSessionKey, this.scope());
         }).extend({ throttle: 0, });
 
         //#endregion
         //#region Construction & Initialization
 
         constructor(public settings: SearchMapSettings) {
+            this._mapCreated = this._createMap();
+            $.when(this._mapCreated).then((): void => {
+                this._bindMap();
+            });
             this._loadCountryOptions();
             this.sammy = this.settings.sammy || Sammy();
             this._runSammy();
@@ -201,6 +212,138 @@ module Agreements.ViewModels {
             if (this.sammy.getLocation().indexOf(route) < 0) {
                 this.sammy.setLocation(route);
             }
+        }
+
+        //#endregion
+        //#region Google Map
+
+        private _googleMap: google.maps.Map;
+        private _mapCreated: JQueryDeferred<void>;
+        private _createMap(): JQueryDeferred<void> {
+            var element = document.getElementById('google_map_canvas');
+            this._googleMap = new google.maps.Map(element, {
+                mapTypeId: google.maps.MapTypeId.ROADMAP,
+                center: new google.maps.LatLng(this.lat(), this.lng()),
+                zoom: 1, // zoom out
+                draggable: true, // allow map panning
+                scrollwheel: false // prevent mouse wheel zooming
+            });
+            var deferred = $.Deferred();
+            google.maps.event.addListenerOnce(this._googleMap, 'idle', (): void => {
+                google.maps.event.addListener(this._googleMap, 'center_changed', (): void => {
+                    this._onMapCenterChanged();
+                })
+                google.maps.event.addListener(this._googleMap, 'zoom_changed', (): void => {
+                    this._onMapZoomChanged();
+                })
+                google.maps.event.addListener(this._googleMap, 'bounds_changed', (): void => {
+                    this._onMapBoundsChanged();
+                })
+                deferred.resolve();
+            });
+            return deferred;
+        }
+
+        private _onMapZoomChanged(): void {
+
+        }
+
+        private _onMapCenterChanged(): void {
+
+        }
+
+        private _onMapBoundsChanged(): void {
+            var bounds = this._googleMap.getBounds();
+            var north = bounds.getNorthEast().lat();
+            var south = bounds.getSouthWest().lat();
+            var east = bounds.getNorthEast().lng();
+            var west = bounds.getSouthWest().lng();
+        }
+
+        private _bindMap(): void {
+            var scope = this.scope();
+            if (scope === 'continents') {
+                $.ajax({
+                    url: this.settings.partnerPlacesApi.format(scope)
+                })
+                    .done((response: any[]): void => {
+                        //alert(this.settings.graphicsCircleApi);
+                        this._onContinentsResponse(response);
+                    });
+            }
+        }
+
+        private _onContinentsResponse(response: any[]): void {
+            var range = {
+                min: Enumerable.From(response).Min(function (x) { return x.agreementCount }),
+                max: Enumerable.From(response).Max(function (x) { return x.agreementCount }),
+            };
+            for (var i = 0; i < response.length; i++) {
+                var continent = response[i];
+                this._onContinentResponse(continent, range);
+            }
+        }
+
+        private _onContinentResponse(continent: any, range: any): void {
+            var side = this._getMarkerSide(range.min, range.max, continent.agreementCount);
+            var halfSide = side / 2;
+            var iconSettings = {
+                opacity: 0.8,
+                side: side,
+                text: continent.agreementCount,
+            };
+            var url = '{0}?{1}'.format(this.settings.graphicsCircleApi, $.param(iconSettings));
+            var icon = {
+                url: url,
+                size: new google.maps.Size(side, side),
+                anchor: new google.maps.Point(halfSide, halfSide),
+            };
+            var iconShape: google.maps.MarkerShape = {
+                type: 'circle',
+                coords: [halfSide, halfSide, halfSide],
+            };
+            var isClickable = continent.agreementCount > 0 && continent.id > 0;
+            var cursor = isClickable ? 'pointer' : 'default';
+            var options: google.maps.MarkerOptions = {
+                map: this._googleMap,
+                position: new google.maps.LatLng(continent.center.latitude, continent.center.longitude),
+                title: '{0} - {1} agreement(s)'.format(continent.name, continent.agreementCount),
+                clickable: true,
+                cursor: cursor,
+                icon: icon,
+                shape: iconShape,
+                optimized: false,
+                zIndex: 100,
+            };
+            var marker = new google.maps.Marker(options);
+            if (isClickable)
+                google.maps.event.addListener(marker, 'click', (e: google.maps.MouseEvent): void => {
+                    this._onContinentClick(marker, continent, e);
+                });
+        }
+
+        private _onContinentClick(marker: google.maps.Marker, continent: any, e: google.maps.MouseEvent): void {
+            var north = continent.boundingBox.northEast.latitude;
+            var south = continent.boundingBox.southWest.latitude;
+            var east = continent.boundingBox.northEast.longitude;
+            var west = continent.boundingBox.southWest.longitude;
+            var southWest = new google.maps.LatLng(south, west);
+            var northEast = new google.maps.LatLng(north, east);
+            var bounds = new google.maps.LatLngBounds(southWest, northEast);
+            this._googleMap.fitBounds(bounds);
+        }
+
+        private _getMarkerSide(min: number, max: number, point: number): number {
+            var side = 24;
+            var range = max - min;
+            if (range) {
+                var factor = (point - min) / range;
+                var emphasis = Math.round(factor * 24);
+                side += emphasis;
+            }
+            if (side > 48) side = 48;
+            if (side < 16) side = 16
+            return side;
         }
 
         //#endregion

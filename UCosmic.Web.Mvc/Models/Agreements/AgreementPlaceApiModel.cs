@@ -18,6 +18,7 @@ namespace UCosmic.Web.Mvc.Models
         public int AgreementCount { get { return (AgreementIds == null) ? 0 : AgreementIds.Length; } }
         //public PlaceApiModel[] Ancestors { get; set; } // eager loading this slows down query
         public MapPointModel Center { get; set; }
+        public MapBoxModel BoundingBox { get; set; }
     }
 
     public static class AgreementPlaceProfiler
@@ -36,13 +37,15 @@ namespace UCosmic.Web.Mvc.Models
                     //    .Where(x => !x.IsEarth)
                     //))
                     .ForMember(d => d.Center, o => o.MapFrom(s => s.Place.Center))
+                    .ForMember(d => d.BoundingBox, o => o.MapFrom(s => s.Place.BoundingBox))
                     .ForMember(d => d.IsEarth, o => o.MapFrom(s => s.Place.IsEarth))
                     .ForMember(d => d.IsContinent, o => o.MapFrom(s => s.Place.IsContinent))
                     .ForMember(d => d.IsCountry, o => o.MapFrom(s => s.Place.IsCountry))
                     .ForMember(d => d.IsAdmin1, o => o.MapFrom(s => s.Place.IsAdmin1))
                     .ForMember(d => d.IsAdmin2, o => o.MapFrom(s => s.Place.IsAdmin2))
                     .ForMember(d => d.IsAdmin3, o => o.MapFrom(s => s.Place.IsAdmin3))
-                    .ForMember(d => d.AgreementIds, o => o.UseValue(new int[0]))
+                    //.ForMember(d => d.AgreementIds, o => o.UseValue(new int[0]))
+                    //.ForMember(d => d.AgreementIds, o => o.MapFrom(s => s.AgreementIds))
                 ;
             }
         }
