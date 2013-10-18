@@ -76,7 +76,7 @@
                             <span data-bind="visible: hasManyPages">(page
                                 @*<span data-bind="text: pageNumber"></span>*@
                                 <select data-bind="value: $parent.pager.input.pageNumberText, options: $parent.pager.input.pageNumberOptions"
-                                    style="padding: 0; margin: 0; line-height: 16px; height: auto;">
+                                        style="padding: 0; margin: 0; line-height: 16px; height: auto;">
                                     <option>1</option>
                                 </select>
                                 of <span data-bind="text: pageCount"></span>)</span>
@@ -160,7 +160,34 @@
                 </div>
 
             </div>
-            <div id="google_map_canvas" style="height: 500px; width: 650px;" data-bind="visible: isMapLens">
+            <div data-bind="visible: isMapLens, with: map" style="margin: 1em 0;">
+                <div class="group">
+                    <div class="on-left" style="width: 162px;">
+                        North: <strong data-bind="text: north"></strong>
+                    </div>
+                    <div class="on-left" style="width: 162px;">
+                        East: <strong data-bind="text: east"></strong>
+                    </div>
+                    <div class="on-left" style="width: 162px;">
+                        South: <strong data-bind="text: south"></strong>
+                    </div>
+                    <div class="on-left" style="width: 162px;">
+                        West: <strong data-bind="text: west"></strong>
+                    </div>
+                </div>
+                <div class="group">
+                    <div class="on-left" style="width: 275px;">
+                        Latitude: <strong data-bind="text: latitude"></strong>
+                    </div>
+                    <div class="on-left" style="width: 275px;">
+                        Longitude: <strong data-bind="text: longitude"></strong>
+                    </div>
+                    <div class="on-left" style="width: 100px;">
+                        Zoom: <strong data-bind="text: mag"></strong>
+                    </div>
+                </div>
+            </div>
+            <div id="google_map_canvas" style="height: 500px;" data-bind="visible: isMapLens">
             </div>
         </div>
         <aside class="on-right from-top" data-fixed-scroll="root">

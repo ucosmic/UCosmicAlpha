@@ -55,6 +55,13 @@ var Agreements;
                     // this will run once during construction
                     return _this._computeRoute();
                 });
+                this.north = ko.observable();
+                this.south = ko.observable();
+                this.east = ko.observable();
+                this.west = ko.observable();
+                this.latitude = ko.observable();
+                this.longitude = ko.observable();
+                this.mag = ko.observable();
                 this._mapCreated = this._createMap();
                 $.when(this._mapCreated).then(function () {
                     _this._bindMap();
@@ -184,15 +191,22 @@ var Agreements;
                     google.maps.event.addListener(_this._googleMap, 'bounds_changed', function () {
                         _this._onMapBoundsChanged();
                     });
+                    google.maps.event.trigger(_this._googleMap, 'center_changed');
+                    google.maps.event.trigger(_this._googleMap, 'zoom_changed');
+                    google.maps.event.trigger(_this._googleMap, 'bounds_changed');
                     deferred.resolve();
                 });
                 return deferred;
             };
 
             SearchMap.prototype._onMapZoomChanged = function () {
+                this.mag(this._googleMap.getZoom());
             };
 
             SearchMap.prototype._onMapCenterChanged = function () {
+                var center = this._googleMap.getCenter();
+                this.latitude(center.lat());
+                this.longitude(center.lng());
             };
 
             SearchMap.prototype._onMapBoundsChanged = function () {
@@ -201,6 +215,11 @@ var Agreements;
                 var south = bounds.getSouthWest().lat();
                 var east = bounds.getNorthEast().lng();
                 var west = bounds.getSouthWest().lng();
+                var maxLength = 11;
+                this.north(Number(north.toString().substring(0, maxLength)));
+                this.south(Number(south.toString().substring(0, maxLength)));
+                this.east(Number(east.toString().substring(0, maxLength)));
+                this.west(Number(west.toString().substring(0, maxLength)));
             };
 
             SearchMap.prototype._bindMap = function () {

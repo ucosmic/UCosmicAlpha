@@ -239,17 +239,31 @@ module Agreements.ViewModels {
                 google.maps.event.addListener(this._googleMap, 'bounds_changed', (): void => {
                     this._onMapBoundsChanged();
                 })
+                google.maps.event.trigger(this._googleMap, 'center_changed');
+                google.maps.event.trigger(this._googleMap, 'zoom_changed');
+                google.maps.event.trigger(this._googleMap, 'bounds_changed');
                 deferred.resolve();
             });
             return deferred;
         }
 
-        private _onMapZoomChanged(): void {
+        north: KnockoutObservable<number> = ko.observable();
+        south: KnockoutObservable<number> = ko.observable();
+        east: KnockoutObservable<number> = ko.observable();
+        west: KnockoutObservable<number> = ko.observable();
+        latitude: KnockoutObservable<number> = ko.observable();
+        longitude: KnockoutObservable<number> = ko.observable();
+        mag: KnockoutObservable<number> = ko.observable();
 
+
+        private _onMapZoomChanged(): void {
+            this.mag(this._googleMap.getZoom());
         }
 
         private _onMapCenterChanged(): void {
-
+            var center = this._googleMap.getCenter();
+            this.latitude(center.lat());
+            this.longitude(center.lng());
         }
 
         private _onMapBoundsChanged(): void {
@@ -258,6 +272,11 @@ module Agreements.ViewModels {
             var south = bounds.getSouthWest().lat();
             var east = bounds.getNorthEast().lng();
             var west = bounds.getSouthWest().lng();
+            var maxLength = 11;
+            this.north(Number(north.toString().substring(0, maxLength)));
+            this.south(Number(south.toString().substring(0, maxLength)));
+            this.east(Number(east.toString().substring(0, maxLength)));
+            this.west(Number(west.toString().substring(0, maxLength)));
         }
 
         private _bindMap(): void {
