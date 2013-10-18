@@ -35,6 +35,8 @@ module Agreements.ViewModels {
             .extend({ throttle: 400 });
 
         // instead of throttling, both this and the options are observed
+        continentCode: KnockoutObservable<string> = ko.observable(
+            parseInt(sessionStorage.getItem(SearchMap.ContinentSessionKey)) || 'any');
         countryCode: KnockoutObservable<string> = ko.observable(
             sessionStorage.getItem(SearchMap.CountrySessionKey) || 'any');
 
@@ -44,30 +46,29 @@ module Agreements.ViewModels {
             parseInt(sessionStorage.getItem(SearchMap.LatSessionKey)) || 0);
         lng: KnockoutObservable<number> = ko.observable(
             parseInt(sessionStorage.getItem(SearchMap.LngSessionKey)) || 17);
-        scope: KnockoutObservable<string> = ko.observable(
-            parseInt(sessionStorage.getItem(SearchMap.ScopeSessionKey)) || 'continents');
 
         //#endregion
         //#region Search Filter Input sessionStorage
 
         static KeywordSessionKey = 'AgreementSearchKeyword2';
         static CountrySessionKey = 'AgreementSearchCountry2';
+        static ContinentSessionKey = 'AgreementSearchContinent';
         static ZoomSessionKey = 'AgreementSearchZoom';
         static LatSessionKey = 'AgreementSearchLat';
         static LngSessionKey = 'AgreementSearchLng';
-        static ScopeSessionKey = 'AgreementSearchScope';
 
         // automatically save the search inputs to session when they change
         private _inputChanged: KnockoutComputed<void> = ko.computed((): void => {
 
             if (this.countryCode() == undefined) this.countryCode('any');
+            if (this.continentCode() == undefined) this.continentCode('any');
 
             sessionStorage.setItem(SearchMap.KeywordSessionKey, this.keyword() || '');
+            sessionStorage.setItem(SearchMap.ContinentSessionKey, this.continentCode());
             sessionStorage.setItem(SearchMap.CountrySessionKey, this.countryCode());
             sessionStorage.setItem(SearchMap.ZoomSessionKey, this.zoom().toString());
             sessionStorage.setItem(SearchMap.LatSessionKey, this.lat().toString());
             sessionStorage.setItem(SearchMap.LngSessionKey, this.lng().toString());
-            sessionStorage.setItem(SearchMap.ScopeSessionKey, this.scope());
         }).extend({ throttle: 0, });
 
         //#endregion
@@ -87,20 +88,80 @@ module Agreements.ViewModels {
         //#region Country Filter Options
 
         // initial options show loading message
-        countryOptions: KnockoutObservableArray<Places.ApiModels.Country> = ko.observableArray(
-            [{ code: 'any', name: '[Loading...]' }]);
-
-        private _countryChanged: KnockoutComputed<void> = ko.computed((): void => {
-            this._onCountryChanged();
+        countries: KnockoutObservableArray<Places.ApiModels.Country> = ko.observableArray();
+        countryOptions = ko.computed((): Places.ApiModels.Country[]=> {
+            return this._computeCountryOptions();
+        });
+        continentOptions = ko.computed((): any[]=> {
+            return this._computeContinentOptions();
         });
 
-        private _onCountryChanged(): void {
-            // changes when applyBindings happens and after options data is loaded
-            var countryCode = this.countryCode();
-            var options = this.countryOptions();
-            // keep countryCode as an option so that we don't lose it when options change
-            if (options.length == 1 && options[0].code != countryCode)
-                options[0].code = countryCode;
+        private _computeCountryOptions(): Places.ApiModels.Country[] {
+            var options: Places.ApiModels.Country[] = [{
+                code: this.countryCode(),
+                name: '[Loading...]',
+            }];
+            var countries = this.countries();
+            if (countries && countries.length) {
+                var anyCountry: Places.ApiModels.Country = {
+                    code: 'any',
+                    name: '[All countries]',
+                };
+                var noCountry: Places.ApiModels.Country = {
+                    code: 'none',
+                    name: '[Without country]',
+                };
+                options = countries.slice(0);
+                var continentCode = this.continentCode();
+                if (continentCode != 'any' && continentCode != 'none') {
+                    options = Enumerable.From(options)
+                        .Where(function (x: Places.ApiModels.Country): boolean {
+                            return x.continentCode == continentCode;
+                        }).ToArray();
+                }
+                options = Enumerable.From([anyCountry])
+                    .Concat(options)
+                    .Concat([noCountry]).ToArray();
+            }
+
+            return options;
+        }
+
+        private _computeContinentOptions(): any[] {
+            var options: any[] = [{
+                code: this.continentCode(),
+                name: '[Loading...]',
+            }];
+            var countries = this.countries();
+            if (countries && countries.length) {
+                var anyContinent = {
+                    code: 'any',
+                    name: '[All continents]',
+                };
+                var noContinent = {
+                    code: 'none',
+                    name: '[Without continent]',
+                };
+                options = Enumerable.From(countries)
+                    .Select(function (x: Places.ApiModels.Country): any {
+                        return {
+                            code: x.continentCode,
+                            name: x.continentName
+                        };
+                    })
+                    .Distinct(function (x: any): string {
+                        return x.code;
+                    })
+                    .OrderBy(function (x: any): string {
+                        return x.name;
+                    })
+                    .ToArray();
+                options = Enumerable.From([anyContinent])
+                    .Concat(options)
+                    .Concat([noContinent]).ToArray();
+            }
+
+            return options;
         }
 
         private _loadCountryOptions(): JQueryDeferred<void> {
@@ -110,19 +171,7 @@ module Agreements.ViewModels {
             $.get(App.Routes.WebApi.Countries.get())
                 .done((response: Places.ApiModels.Country[]): void => {
                     // ...but this will run after sammy and applyBindings
-                    var options = response.slice(0);
-                    // customize options
-                    var any: Places.ApiModels.Country = {
-                        code: 'any',
-                        name: '[All countries]'
-                    };
-                    var none: Places.ApiModels.Country = {
-                        code: 'none',
-                        name: '[Without country]'
-                    };
-                    options = Enumerable.From([any]).Concat(options).Concat([none]).ToArray();
-
-                    this.countryOptions(options); // push into observable array
+                    this.countries(response);
                     deferred.resolve();
                 });
             return deferred;
@@ -132,7 +181,7 @@ module Agreements.ViewModels {
         //#region Sammy Routing
 
         sammy: Sammy.Application;
-        routeFormat: string = '#/{0}/scope/{5}/country/{1}/zoom/{2}/latitude/{3}/longitude/{4}/'
+        routeFormat: string = '#/{0}/continent/{5}/country/{1}/zoom/{2}/latitude/{3}/longitude/{4}/'
             .format(this.settings.route).replace('{5}', '{0}');
         private _isActivated: KnockoutObservable<boolean> = ko.observable(false);
 
@@ -153,7 +202,7 @@ module Agreements.ViewModels {
 
             // do this when we already have hashtag parameters in the page
             this.sammy.get(
-                this.routeFormat.format(':scope', ':country', ':zoom', ':lat', ':lng'),
+                this.routeFormat.format(':continent', ':country', ':zoom', ':lat', ':lng'),
                 function (): void {
                     var e: Sammy.EventContext = this;
                     viewModel._onRoute(e);
@@ -176,12 +225,13 @@ module Agreements.ViewModels {
         }
 
         private _onRoute(e: Sammy.EventContext): void {
-            var scope = e.params['scope'];
+            var continent = e.params['continent'];
             var country = e.params['country'];
             var zoom = e.params['zoom'];
             var lat = e.params['lat'];
             var lng = e.params['lng'];
 
+            this.continentCode(continent);
             this.countryCode(country);
 
             if (!this._isActivated())
@@ -199,12 +249,12 @@ module Agreements.ViewModels {
 
         private _computeRoute(): string {
             // build what the route should be, based on current filter inputs
-            var scope = this.scope();
+            var continentCode = this.continentCode();
             var countryCode = this.countryCode();
             var zoom = this.zoom();
             var lat = this.lat();
             var lng = this.lng();
-            var route = this.routeFormat.format(scope, countryCode, zoom, lat, lng);
+            var route = this.routeFormat.format(continentCode, countryCode, zoom, lat, lng);
             return route;
         }
 
@@ -260,23 +310,23 @@ module Agreements.ViewModels {
         }
 
         private _bindMap(): void {
-            var scope = this.scope();
-            if (scope === 'continents') {
+            var continentCode = this.continentCode();
+            if (continentCode === 'any') {
                 $.ajax({
-                    url: this.settings.partnerPlacesApi.format(scope)
+                    url: this.settings.partnerPlacesApi.format('continents')
                 })
                     .done((response: any[]): void => {
                         this._onContinentsResponse(response);
                     });
             }
-            else if (scope === 'countries') {
-                $.ajax({
-                    url: this.settings.partnerPlacesApi.format(scope)
-                })
-                    .done((response: any[]): void => {
-                        this._onCountriesResponse(response);
-                    });
-            }
+            //else if (scope === 'countries') {
+            //    $.ajax({
+            //        url: this.settings.partnerPlacesApi.format(scope)
+            //    })
+            //        .done((response: any[]): void => {
+            //            this._onCountriesResponse(response);
+            //        });
+            //}
         }
 
         //#endregion
@@ -385,7 +435,7 @@ module Agreements.ViewModels {
             //this._setLocation();
 
             // run query for country scope
-            this.scope('countries');
+            //this.scope('countries');
             this._scopedContinentId(continent.id);
             if (continent.id != 0)
                 this._bindMap();

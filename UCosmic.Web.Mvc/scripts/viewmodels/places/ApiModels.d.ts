@@ -27,6 +27,9 @@ declare module Places.ApiModels {
     export interface Country {
         code: string;
         name: string;
+        continentId?: number;
+        continentCode?: string;
+        continentName?: string;
         box?: Box;
     }
 }

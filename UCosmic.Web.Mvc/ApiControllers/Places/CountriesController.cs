@@ -32,6 +32,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 EagerLoad = new Expression<Func<Place, object>>[]
                 {
                     x => x.GeoPlanetPlace, // this is where the country code comes from
+                    x => x.Ancestors.Select(y => y.Ancestor.GeoNamesToponym), // this is where the continent code comes from
                 },
                 OrderBy = new Dictionary<Expression<Func<Place, object>>, OrderByDirection>
                 {

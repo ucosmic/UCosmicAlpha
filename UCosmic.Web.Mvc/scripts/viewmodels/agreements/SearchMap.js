@@ -25,31 +25,36 @@ var Agreements;
                 this.keyword = ko.observable(sessionStorage.getItem(SearchMap.KeywordSessionKey) || '');
                 this.keywordThrottled = ko.computed(this.keyword).extend({ throttle: 400 });
                 // instead of throttling, both this and the options are observed
+                this.continentCode = ko.observable(parseInt(sessionStorage.getItem(SearchMap.ContinentSessionKey)) || 'any');
                 this.countryCode = ko.observable(sessionStorage.getItem(SearchMap.CountrySessionKey) || 'any');
                 this.zoom = ko.observable(parseInt(sessionStorage.getItem(SearchMap.ZoomSessionKey)) || 1);
                 this.lat = ko.observable(parseInt(sessionStorage.getItem(SearchMap.LatSessionKey)) || 0);
                 this.lng = ko.observable(parseInt(sessionStorage.getItem(SearchMap.LngSessionKey)) || 17);
-                this.scope = ko.observable(parseInt(sessionStorage.getItem(SearchMap.ScopeSessionKey)) || 'continents');
                 // automatically save the search inputs to session when they change
                 this._inputChanged = ko.computed(function () {
                     if (_this.countryCode() == undefined)
                         _this.countryCode('any');
+                    if (_this.continentCode() == undefined)
+                        _this.continentCode('any');
 
                     sessionStorage.setItem(SearchMap.KeywordSessionKey, _this.keyword() || '');
+                    sessionStorage.setItem(SearchMap.ContinentSessionKey, _this.continentCode());
                     sessionStorage.setItem(SearchMap.CountrySessionKey, _this.countryCode());
                     sessionStorage.setItem(SearchMap.ZoomSessionKey, _this.zoom().toString());
                     sessionStorage.setItem(SearchMap.LatSessionKey, _this.lat().toString());
                     sessionStorage.setItem(SearchMap.LngSessionKey, _this.lng().toString());
-                    sessionStorage.setItem(SearchMap.ScopeSessionKey, _this.scope());
                 }).extend({ throttle: 0 });
                 ////#endregion
                 //#region Country Filter Options
                 // initial options show loading message
-                this.countryOptions = ko.observableArray([{ code: 'any', name: '[Loading...]' }]);
-                this._countryChanged = ko.computed(function () {
-                    _this._onCountryChanged();
+                this.countries = ko.observableArray();
+                this.countryOptions = ko.computed(function () {
+                    return _this._computeCountryOptions();
                 });
-                this.routeFormat = '#/{0}/scope/{5}/country/{1}/zoom/{2}/latitude/{3}/longitude/{4}/'.format(this.settings.route).replace('{5}', '{0}');
+                this.continentOptions = ko.computed(function () {
+                    return _this._computeContinentOptions();
+                });
+                this.routeFormat = '#/{0}/continent/{5}/country/{1}/zoom/{2}/latitude/{3}/longitude/{4}/'.format(this.settings.route).replace('{5}', '{0}');
                 this._isActivated = ko.observable(false);
                 this._route = ko.computed(function () {
                     // this will run once during construction
@@ -74,13 +79,67 @@ var Agreements;
                 this.sammy = this.settings.sammy || Sammy();
                 this._runSammy();
             }
-            SearchMap.prototype._onCountryChanged = function () {
-                // changes when applyBindings happens and after options data is loaded
-                var countryCode = this.countryCode();
-                var options = this.countryOptions();
+            SearchMap.prototype._computeCountryOptions = function () {
+                var options = [
+                    {
+                        code: this.countryCode(),
+                        name: '[Loading...]'
+                    }
+                ];
+                var countries = this.countries();
+                if (countries && countries.length) {
+                    var anyCountry = {
+                        code: 'any',
+                        name: '[All countries]'
+                    };
+                    var noCountry = {
+                        code: 'none',
+                        name: '[Without country]'
+                    };
+                    options = countries.slice(0);
+                    var continentCode = this.continentCode();
+                    if (continentCode != 'any' && continentCode != 'none') {
+                        options = Enumerable.From(options).Where(function (x) {
+                            return x.continentCode == continentCode;
+                        }).ToArray();
+                    }
+                    options = Enumerable.From([anyCountry]).Concat(options).Concat([noCountry]).ToArray();
+                }
 
-                if (options.length == 1 && options[0].code != countryCode)
-                    options[0].code = countryCode;
+                return options;
+            };
+
+            SearchMap.prototype._computeContinentOptions = function () {
+                var options = [
+                    {
+                        code: this.continentCode(),
+                        name: '[Loading...]'
+                    }
+                ];
+                var countries = this.countries();
+                if (countries && countries.length) {
+                    var anyContinent = {
+                        code: 'any',
+                        name: '[All continents]'
+                    };
+                    var noContinent = {
+                        code: 'none',
+                        name: '[Without continent]'
+                    };
+                    options = Enumerable.From(countries).Select(function (x) {
+                        return {
+                            code: x.continentCode,
+                            name: x.continentName
+                        };
+                    }).Distinct(function (x) {
+                        return x.code;
+                    }).OrderBy(function (x) {
+                        return x.name;
+                    }).ToArray();
+                    options = Enumerable.From([anyContinent]).Concat(options).Concat([noContinent]).ToArray();
+                }
+
+                return options;
             };
 
             SearchMap.prototype._loadCountryOptions = function () {
@@ -90,20 +149,7 @@ var Agreements;
                 var deferred = $.Deferred();
                 $.get(App.Routes.WebApi.Countries.get()).done(function (response) {
                     // ...but this will run after sammy and applyBindings
-                    var options = response.slice(0);
-
-                    // customize options
-                    var any = {
-                        code: 'any',
-                        name: '[All countries]'
-                    };
-                    var none = {
-                        code: 'none',
-                        name: '[Without country]'
-                    };
-                    options = Enumerable.From([any]).Concat(options).Concat([none]).ToArray();
-
-                    _this.countryOptions(options);
+                    _this.countries(response);
                     deferred.resolve();
                 });
                 return deferred;
@@ -121,7 +167,7 @@ var Agreements;
                 });
 
                 // do this when we already have hashtag parameters in the page
-                this.sammy.get(this.routeFormat.format(':scope', ':country', ':zoom', ':lat', ':lng'), function () {
+                this.sammy.get(this.routeFormat.format(':continent', ':country', ':zoom', ':lat', ':lng'), function () {
                     var e = this;
                     viewModel._onRoute(e);
                 });
@@ -141,12 +187,13 @@ var Agreements;
             };
 
             SearchMap.prototype._onRoute = function (e) {
-                var scope = e.params['scope'];
+                var continent = e.params['continent'];
                 var country = e.params['country'];
                 var zoom = e.params['zoom'];
                 var lat = e.params['lat'];
                 var lng = e.params['lng'];
 
+                this.continentCode(continent);
                 this.countryCode(country);
 
                 if (!this._isActivated())
@@ -159,12 +206,12 @@ var Agreements;
 
             SearchMap.prototype._computeRoute = function () {
                 // build what the route should be, based on current filter inputs
-                var scope = this.scope();
+                var continentCode = this.continentCode();
                 var countryCode = this.countryCode();
                 var zoom = this.zoom();
                 var lat = this.lat();
                 var lng = this.lng();
-                var route = this.routeFormat.format(scope, countryCode, zoom, lat, lng);
+                var route = this.routeFormat.format(continentCode, countryCode, zoom, lat, lng);
                 return route;
             };
 
@@ -216,20 +263,22 @@ var Agreements;
 
             SearchMap.prototype._bindMap = function () {
                 var _this = this;
-                var scope = this.scope();
-                if (scope === 'continents') {
+                var continentCode = this.continentCode();
+                if (continentCode === 'any') {
                     $.ajax({
-                        url: this.settings.partnerPlacesApi.format(scope)
+                        url: this.settings.partnerPlacesApi.format('continents')
                     }).done(function (response) {
                         _this._onContinentsResponse(response);
                     });
-                } else if (scope === 'countries') {
-                    $.ajax({
-                        url: this.settings.partnerPlacesApi.format(scope)
-                    }).done(function (response) {
-                        _this._onCountriesResponse(response);
-                    });
                 }
+                //else if (scope === 'countries') {
+                //    $.ajax({
+                //        url: this.settings.partnerPlacesApi.format(scope)
+                //    })
+                //        .done((response: any[]): void => {
+                //            this._onCountriesResponse(response);
+                //        });
+                //}
             };
 
             SearchMap.prototype._onMapZoomChanged = function () {
@@ -331,7 +380,7 @@ var Agreements;
                 //this.lng(this.longitude());
                 //this._setLocation();
                 // run query for country scope
-                this.scope('countries');
+                //this.scope('countries');
                 this._scopedContinentId(continent.id);
                 if (continent.id != 0)
                     this._bindMap();
@@ -414,10 +463,10 @@ var Agreements;
             };
             SearchMap.KeywordSessionKey = 'AgreementSearchKeyword2';
             SearchMap.CountrySessionKey = 'AgreementSearchCountry2';
+            SearchMap.ContinentSessionKey = 'AgreementSearchContinent';
             SearchMap.ZoomSessionKey = 'AgreementSearchZoom';
             SearchMap.LatSessionKey = 'AgreementSearchLat';
             SearchMap.LngSessionKey = 'AgreementSearchLng';
-            SearchMap.ScopeSessionKey = 'AgreementSearchScope';
             return SearchMap;
         })();
         ViewModels.SearchMap = SearchMap;
