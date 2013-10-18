@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Linq;
+using AutoMapper;
 using UCosmic.Domain.Agreements;
 
 namespace UCosmic.Web.Mvc.Models
@@ -6,6 +7,7 @@ namespace UCosmic.Web.Mvc.Models
     public class AgreementPlaceApiModel
     {
         public int Id { get; set; }
+        public int? ContinentId { get; set; }
         public string Name { get; set; }
         public string Type { get; set; }
         public int[] AgreementIds { get; set; }
@@ -44,6 +46,8 @@ namespace UCosmic.Web.Mvc.Models
                     .ForMember(d => d.IsAdmin1, o => o.MapFrom(s => s.Place.IsAdmin1))
                     .ForMember(d => d.IsAdmin2, o => o.MapFrom(s => s.Place.IsAdmin2))
                     .ForMember(d => d.IsAdmin3, o => o.MapFrom(s => s.Place.IsAdmin3))
+                    .ForMember(d => d.ContinentId, o => o.MapFrom(s => s.Place.Ancestors.Any(x => x.Ancestor.IsContinent)
+                        ? s.Place.Ancestors.FirstOrDefault(x => x.Ancestor.IsContinent).AncestorId : default(int?)))
                     //.ForMember(d => d.AgreementIds, o => o.UseValue(new int[0]))
                     //.ForMember(d => d.AgreementIds, o => o.MapFrom(s => s.AgreementIds))
                 ;

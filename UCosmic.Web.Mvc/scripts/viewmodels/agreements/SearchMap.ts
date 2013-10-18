@@ -132,8 +132,8 @@ module Agreements.ViewModels {
         //#region Sammy Routing
 
         sammy: Sammy.Application;
-        routeFormat: string = '#/{0}/country/{4}/zoom/{1}/latitude/{2}/longitude/{3}/'
-            .format(this.settings.route).replace('{4}', '{0}');
+        routeFormat: string = '#/{0}/scope/{5}/country/{1}/zoom/{2}/latitude/{3}/longitude/{4}/'
+            .format(this.settings.route).replace('{5}', '{0}');
         private _isActivated: KnockoutObservable<boolean> = ko.observable(false);
 
         private _runSammy(): void {
@@ -142,7 +142,8 @@ module Agreements.ViewModels {
 
             // sammy will run the first route that it matches
             var beforeRegex = new RegExp('\\{0}'.format(
-                this.routeFormat.format('(.*)', '(.*)', '(.*)', '(.*)').replace(/\//g, '\\/')));
+                this.routeFormat.format('(.*)', '(.*)', '(.*)', '(.*)', '(.*)')
+                    .replace(/\//g, '\\/')));
             this.sammy.before(
                 beforeRegex,
                 function (): boolean {
@@ -152,7 +153,7 @@ module Agreements.ViewModels {
 
             // do this when we already have hashtag parameters in the page
             this.sammy.get(
-                this.routeFormat.format(':country', ':zoom', ':lat', ':lng'),
+                this.routeFormat.format(':scope', ':country', ':zoom', ':lat', ':lng'),
                 function (): void {
                     var e: Sammy.EventContext = this;
                     viewModel._onRoute(e);
@@ -175,6 +176,7 @@ module Agreements.ViewModels {
         }
 
         private _onRoute(e: Sammy.EventContext): void {
+            var scope = e.params['scope'];
             var country = e.params['country'];
             var zoom = e.params['zoom'];
             var lat = e.params['lat'];
@@ -197,12 +199,12 @@ module Agreements.ViewModels {
 
         private _computeRoute(): string {
             // build what the route should be, based on current filter inputs
+            var scope = this.scope();
             var countryCode = this.countryCode();
             var zoom = this.zoom();
             var lat = this.lat();
             var lng = this.lng();
-            var route = this.routeFormat.format(countryCode,
-                zoom, lat, lng);
+            var route = this.routeFormat.format(scope, countryCode, zoom, lat, lng);
             return route;
         }
 
@@ -210,23 +212,33 @@ module Agreements.ViewModels {
             // only set the href hashtag to trigger sammy when the current route is stale
             var route = this._route();
             if (this.sammy.getLocation().indexOf(route) < 0) {
-                this.sammy.setLocation(route);
+                setTimeout((): void => {
+                    this.sammy.setLocation(route);
+                }, 1);
             }
         }
 
         //#endregion
         //#region Google Map
+        //#region Creation & Initialization
 
         private _googleMap: google.maps.Map;
         private _mapCreated: JQueryDeferred<void>;
         private _createMap(): JQueryDeferred<void> {
             var element = document.getElementById('google_map_canvas');
+            var options: google.maps.MapOptions = {
+            };
             this._googleMap = new google.maps.Map(element, {
                 mapTypeId: google.maps.MapTypeId.ROADMAP,
                 center: new google.maps.LatLng(this.lat(), this.lng()),
-                zoom: 1, // zoom out
+                zoom: this.zoom(), // zoom out
                 draggable: true, // allow map panning
-                scrollwheel: false // prevent mouse wheel zooming
+                scrollwheel: false, // prevent mouse wheel zooming
+                streetViewControl: false,
+                panControl: false,
+                zoomControlOptions: {
+                    style: google.maps.ZoomControlStyle.SMALL,
+                },
             });
             var deferred = $.Deferred();
             google.maps.event.addListenerOnce(this._googleMap, 'idle', (): void => {
@@ -247,6 +259,29 @@ module Agreements.ViewModels {
             return deferred;
         }
 
+        private _bindMap(): void {
+            var scope = this.scope();
+            if (scope === 'continents') {
+                $.ajax({
+                    url: this.settings.partnerPlacesApi.format(scope)
+                })
+                    .done((response: any[]): void => {
+                        this._onContinentsResponse(response);
+                    });
+            }
+            else if (scope === 'countries') {
+                $.ajax({
+                    url: this.settings.partnerPlacesApi.format(scope)
+                })
+                    .done((response: any[]): void => {
+                        this._onCountriesResponse(response);
+                    });
+            }
+        }
+
+        //#endregion
+        //#region Statistics
+
         north: KnockoutObservable<number> = ko.observable();
         south: KnockoutObservable<number> = ko.observable();
         east: KnockoutObservable<number> = ko.observable();
@@ -254,7 +289,6 @@ module Agreements.ViewModels {
         latitude: KnockoutObservable<number> = ko.observable();
         longitude: KnockoutObservable<number> = ko.observable();
         mag: KnockoutObservable<number> = ko.observable();
-
 
         private _onMapZoomChanged(): void {
             this.mag(this._googleMap.getZoom());
@@ -279,32 +313,24 @@ module Agreements.ViewModels {
             this.west(Number(west.toString().substring(0, maxLength)));
         }
 
-        private _bindMap(): void {
-            var scope = this.scope();
-            if (scope === 'continents') {
-                $.ajax({
-                    url: this.settings.partnerPlacesApi.format(scope)
-                })
-                    .done((response: any[]): void => {
-                        //alert(this.settings.graphicsCircleApi);
-                        this._onContinentsResponse(response);
-                    });
-            }
-        }
+        //#endregion
+        //#region Continent Scope
 
         private _onContinentsResponse(response: any[]): void {
-            var range = {
+            var countRange: Range = {
                 min: Enumerable.From(response).Min(function (x) { return x.agreementCount }),
                 max: Enumerable.From(response).Max(function (x) { return x.agreementCount }),
             };
+            var scaler = new Scaler(countRange, { min: 24, max: 48 });
+            this._clearContinentMarkers();
             for (var i = 0; i < response.length; i++) {
                 var continent = response[i];
-                this._onContinentResponse(continent, range);
+                this._onContinentResponse(continent, scaler);
             }
         }
 
-        private _onContinentResponse(continent: any, range: any): void {
-            var side = this._getMarkerSide(range.min, range.max, continent.agreementCount);
+        private _onContinentResponse(continent: any, scaler: Scaler): void {
+            var side = scaler.scale(continent.agreementCount);
             var halfSide = side / 2;
             var iconSettings = {
                 opacity: 0.8,
@@ -322,6 +348,7 @@ module Agreements.ViewModels {
                 coords: [halfSide, halfSide, halfSide],
             };
             var isClickable = continent.agreementCount > 0 && continent.id > 0;
+            isClickable = true;
             var cursor = isClickable ? 'pointer' : 'default';
             var options: google.maps.MarkerOptions = {
                 map: this._googleMap,
@@ -332,9 +359,9 @@ module Agreements.ViewModels {
                 icon: icon,
                 shape: iconShape,
                 optimized: false,
-                zIndex: 100,
             };
             var marker = new google.maps.Marker(options);
+            this._continentMarkers.push(marker);
             if (isClickable)
                 google.maps.event.addListener(marker, 'click', (e: google.maps.MouseEvent): void => {
                     this._onContinentClick(marker, continent, e);
@@ -350,21 +377,138 @@ module Agreements.ViewModels {
             var northEast = new google.maps.LatLng(north, east);
             var bounds = new google.maps.LatLngBounds(southWest, northEast);
             this._googleMap.fitBounds(bounds);
+            //this._onMapCenterChanged();
+            //this._onMapZoomChanged();
+            //this.zoom(this.mag());
+            //this.lat(this.latitude());
+            //this.lng(this.longitude());
+            //this._setLocation();
+
+            // run query for country scope
+            this.scope('countries');
+            this._scopedContinentId(continent.id);
+            if (continent.id != 0)
+                this._bindMap();
         }
 
-        private _getMarkerSide(min: number, max: number, point: number): number {
-            var side = 24;
-            var range = max - min;
-            if (range) {
-                var factor = (point - min) / range;
-                var emphasis = Math.round(factor * 24);
-                side += emphasis;
+        private _scopedContinentId: KnockoutObservable<number> = ko.observable(); // TODO: ensure this
+        private _continentMarkers: KnockoutObservableArray<google.maps.Marker> = ko.observableArray();
+
+        private _clearContinentMarkers(): void {
+            var markers = this._continentMarkers() || [];
+            for (var i = 0; i < markers.length; i++) {
+                var marker = markers[i];
+                marker.setMap(null);
             }
-            if (side > 48) side = 48;
-            if (side < 16) side = 16
-            return side;
+            this._continentMarkers([]);
         }
 
         //#endregion
+
+        private _onCountriesResponse(response: any[]): void {
+            this._clearContinentMarkers();
+            var continentId = this._scopedContinentId();
+            var countries = Enumerable.From(response)
+                .Where(function (x: any): boolean {
+                    return x.continentId == continentId;
+                })
+                .ToArray();
+            var bounds = new google.maps.LatLngBounds();
+            var countRange: Range = {
+                min: Enumerable.From(response).Min(function (x) { return x.agreementCount }),
+                max: Enumerable.From(response).Max(function (x) { return x.agreementCount }),
+            };
+            var scaler = new Scaler(countRange, { min: 24, max: 48 });
+            for (var i = 0; i < countries.length; i++) {
+                var country = countries[i];
+                this._onCountryResponse(country, scaler, bounds);
+            }
+            if (countries.length == 1) {
+                var country = countries[0];
+                var northEast = new google.maps.LatLng(country.boundingBox.northEast.latitude,
+                    country.boundingBox.northEast.longitude);
+                var southWest = new google.maps.LatLng(country.boundingBox.southWest.latitude,
+                    country.boundingBox.southWest.longitude);
+                bounds = new google.maps.LatLngBounds(southWest, northEast);
+            }
+            this._googleMap.fitBounds(bounds);
+        }
+
+        private _onCountryResponse(country: any, scaler: Scaler, bounds: google.maps.LatLngBounds): void {
+            var latLng = new google.maps.LatLng(country.center.latitude, country.center.longitude);
+            bounds.extend(latLng);
+            var side = scaler.scale(country.agreementCount);
+            var halfSide = side / 2;
+            var iconSettings = {
+                opacity: 0.7,
+                side: side,
+                text: country.agreementCount,
+            };
+            var url = '{0}?{1}'.format(this.settings.graphicsCircleApi, $.param(iconSettings));
+            var icon = {
+                url: url,
+                size: new google.maps.Size(side, side),
+                anchor: new google.maps.Point(halfSide, halfSide),
+            };
+            var iconShape: google.maps.MarkerShape = {
+                type: 'circle',
+                coords: [halfSide, halfSide, halfSide],
+            };
+            var options: google.maps.MarkerOptions = {
+                map: this._googleMap,
+                position: latLng,
+                title: '{0} - {1} agreement(s)'.format(country.name, country.agreementCount),
+                //clickable: true,
+                //cursor: cursor,
+                icon: icon,
+                shape: iconShape,
+                optimized: false,
+            };
+            var marker = new google.maps.Marker(options);
+            //if (isClickable)
+            //    google.maps.event.addListener(marker, 'click', (e: google.maps.MouseEvent): void => {
+            //        this._onContinentClick(marker, continent, e);
+            //    });
+        }
+
+        //private _getMarkerSide(countRange: Range, point: number): number {
+        //    var side = 24;
+        //    var range = countRange.max - countRange.min;
+        //    if (range) {
+        //        var factor = (point - countRange.min) / range;
+        //        var emphasis = Math.round(factor * 24);
+        //        side += emphasis;
+        //    }
+        //    if (side > 48) side = 48;
+        //    if (side < 16) side = 16
+        //    return side;
+        //}
+
+        //#endregion
+    }
+
+    export interface Range {
+        min: number;
+        max: number;
+    }
+
+    export class Scaler {
+        constructor(public from: Range, public into: Range) {
+        }
+        scale(point: number) {
+            var scaled = this.into.min; // start with min value then add emphasis
+            var fromRange = this.from.max - this.from.min;
+            var intoRange = this.into.max - this.into.min;
+            if (fromRange) { // do not divide by zero
+                // compute the percentage above min for the point
+                var factor = (point - this.from.min) / fromRange;
+                // multiply the percentage by the range going into
+                var emphasis = Math.round(factor * intoRange);
+                scaled += emphasis; // scale up from min to min + emphasis
+            }
+            if (scaled < this.into.min) scaled = this.into.min;
+            if (scaled > this.into.max) scaled = this.into.max;
+            return scaled;
+        }
     }
 }
