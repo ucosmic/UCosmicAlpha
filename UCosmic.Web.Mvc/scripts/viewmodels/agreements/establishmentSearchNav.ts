@@ -53,8 +53,8 @@ module Agreements {
                 $searchSideBarAddNew = $("#searchSideBarAddNew"),
                 deferred = $.Deferred(),
                 deferred2 = $.Deferred(),
-                $obj = $("#allParticipants"),
-                $obj2 = $("#addEstablishment"),
+                $obj = $("[data-current-module='agreements']"),
+                $obj2 = $("#add_establishment"),
                 time = 500;
 
             this.establishmentSearchViewModel.detailTooltip = (): string => {
@@ -84,7 +84,7 @@ module Agreements {
             this.fadeModsOut(deferred, deferred2, $obj, $obj2, time);
 
             $.when(deferred, deferred2).done(function () {
-                $("#estSearch").fadeIn(500);
+                $("#establishment_search").fadeIn(500);
             });
         }
 
@@ -116,7 +116,7 @@ module Agreements {
                 this.establishmentSearchViewModel.sammyBeforeRoute = /\#\/index\/(.*)\//;
                 this.establishmentSearchViewModel.sammyGetPageRoute = '#/index';
                 this.establishmentSearchViewModel.sammyDefaultPageRoute = '/agreements[\/]?';
-                ko.applyBindings(this.establishmentSearchViewModel, $('#estSearch')[0]);
+                ko.applyBindings(this.establishmentSearchViewModel, $('#establishment_search')[0]);
                 if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("#") === -1) {
                     if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("" + this.editOrNewUrl.val + "") === -1) {
                         this.establishmentSearchViewModel.sammy.setLocation("/agreements/" + this.editOrNewUrl.val + "#/index");
@@ -134,11 +134,11 @@ module Agreements {
                             $asideParentSearch = $("#asideParentSearch");
 
                         if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("" + this.editOrNewUrl.val + "#/new/") > 0) {
-                            var $addEstablishment = $("#addEstablishment");
+                            var $addEstablishment = $("#add_establishment");
                                 deferred = $.Deferred(),
                                 deferred2 = $.Deferred(),
-                                $obj = $("#estSearch"),
-                                $obj2 = $("#allParticipants"),
+                                $obj = $("#establishment_search"),
+                                $obj2 = $("[data-current-module='agreements']"),
                                 time = 500;
 
                             this.fadeModsOut(deferred, deferred2, $obj, $obj2, time);
@@ -185,7 +185,7 @@ module Agreements {
                                                     }
                                                     this.establishmentItemViewModel.validatingSpinner.stop();
                                                     if (officialName.isValid() && officialUrl.isValid() && this.establishmentItemViewModel.isValid()) {
-                                                        var $LoadingPage = $("#LoadingPage").find("strong"),
+                                                        var $LoadingPage = $("#Loading_page").find("strong"),
                                                             url = App.Routes.WebApi.Establishments.post(),
                                                             data = this.establishmentItemViewModel.serializeData();
 
@@ -198,10 +198,10 @@ module Agreements {
                                                             .done((response: any, statusText: string, xhr: JQueryXHR): void => {
                                                                 this.establishmentItemViewModel.createSpinner.stop();
                                                                 $LoadingPage.text("Establishment created, you are being redirected to previous page...");
-                                                                $("#addEstablishment").fadeOut(500, () => {
-                                                                    $("#LoadingPage").fadeIn(500);
+                                                                $("#add_establishment").fadeOut(500, () => {
+                                                                    $("#Loading_page").fadeIn(500);
                                                                     setTimeout(() => {
-                                                                        $("#LoadingPage").fadeOut(500, function () {
+                                                                        $("#Loading_page").fadeOut(500, function () {
                                                                             $LoadingPage.text("Loading Page...");
                                                                         });
                                                                         this.establishmentSearchViewModel.sammy.setLocation('#/page/1/');
@@ -334,8 +334,8 @@ module Agreements {
                         } else if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("agreements/" + this.editOrNewUrl.val + "") > 0) {
                             var deferred = $.Deferred(),
                                 deferred2 = $.Deferred(),
-                                $obj = $("#estSearch"),
-                                $obj2 = $("#addEstablishment"),
+                                $obj = $("#establishment_search"),
+                                $obj2 = $("#add_establishment"),
                                 time = 500;
 
                             sessionStorage.setItem("addest", "no");
@@ -344,7 +344,7 @@ module Agreements {
                             this.fadeModsOut(deferred, deferred2, $obj, $obj2, time);
                             $.when(deferred, deferred2)
                                 .done(() => {
-                                    $("#allParticipants").fadeIn(500).promise().done(() => {
+                                    $("[data-current-module='agreements']").fadeIn(500).promise().done(() => {
                                         $(this).show();
                                         this.scrollBody.scrollMyBody(0);
                                         this.deferredPageFadeIn.resolve();

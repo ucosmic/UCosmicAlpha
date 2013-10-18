@@ -1,4 +1,4 @@
-﻿ <section id="fileAttachments">
+﻿ <section id="file_attachments">
                 <header>
                     <h2>
                         File Attachments
@@ -19,7 +19,7 @@
                                         <div>
                                             <a title="View this file" data-bind="attr: { href: '/api/agreements/' + $root.agreementId + '/files/' + id() + '/content/', target: '_blank' }, visible: id() >= 1"><strong data-bind="    text: customName, visible: !isEdit()"></strong></a>
                                             <strong data-bind="text: customName, visible: !isEdit() && id() < 1"></strong>
-                                            <input id="typeOptions" type="text" placeholder="[None]" maxlength="200" style="width: 300px;"
+                                            <input id="file_type_options" type="text" placeholder="[None]" maxlength="200" style="width: 300px;"
                                                    data-bind="value: customNameFile, visible: isEdit" /><strong data-bind="text: customNameExt, visible: isEdit"></strong>
                                         </div>
                                         <label style="display: block;" data-bind="click: $root.fileVisibilityClicked"><input name="fileVisibility" type="radio" class="radio" value="Public" data-bind="checked: visibility, attr: { name: 'fileVisibility' + id()}" /><strong>Public:</strong><span class="radioText"> Anyone on the Internet to find this agreement.</span></label>

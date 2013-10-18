@@ -38,7 +38,7 @@ module Agreements {
             $.get(App.Routes.WebApi.Agreements.UmbrellaOptions.get(this.agreementId))
                 .done((response: any): void => {
                     this.uAgreements(response);
-                    $("#uAgreements").kendoDropDownList({
+                    $("#umbrella_agreements").kendoDropDownList({
                         dataTextField: "text",
                         dataValueField: "value",
                         optionLabel: "[None - this is a top-level or standalone agreement]",
@@ -72,7 +72,7 @@ module Agreements {
     
         bindJquery(): void{
             if (this.isCustomTypeAllowed) {
-                $("#typeOptions").kendoComboBox({
+                $("#type_options").kendoComboBox({
                     dataTextField: "name",
                     dataValueField: "id",
                     dataSource: new kendo.data.DataSource({
@@ -80,7 +80,7 @@ module Agreements {
                     })
                 });
             } else {
-                $("#typeOptions").kendoDropDownList({
+                $("#type_options").kendoDropDownList({
                     dataTextField: "name",
                     dataValueField: "id",
                     dataSource: new kendo.data.DataSource({

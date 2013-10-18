@@ -71,7 +71,7 @@ module Agreements {
         
         bindJquery(): void {
             if (this.isCustomStatusAllowed) {
-                $("#statusOptions").kendoComboBox({
+                $("#status_options").kendoComboBox({
                     dataTextField: "name",
                     dataValueField: "id",
                     dataSource: new kendo.data.DataSource({
@@ -79,7 +79,7 @@ module Agreements {
                     })
                 });
             } else {
-                $("#statusOptions").kendoDropDownList({
+                $("#status_options").kendoDropDownList({
                     dataTextField: "name",
                     dataValueField: "id",
                     dataSource: new kendo.data.DataSource({

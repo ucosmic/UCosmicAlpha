@@ -65,7 +65,7 @@ var Agreements;
 
         DatesStatus.prototype.bindJquery = function () {
             if (this.isCustomStatusAllowed) {
-                $("#statusOptions").kendoComboBox({
+                $("#status_options").kendoComboBox({
                     dataTextField: "name",
                     dataValueField: "id",
                     dataSource: new kendo.data.DataSource({
@@ -73,7 +73,7 @@ var Agreements;
                     })
                 });
             } else {
-                $("#statusOptions").kendoDropDownList({
+                $("#status_options").kendoDropDownList({
                     dataTextField: "name",
                     dataValueField: "id",
                     dataSource: new kendo.data.DataSource({

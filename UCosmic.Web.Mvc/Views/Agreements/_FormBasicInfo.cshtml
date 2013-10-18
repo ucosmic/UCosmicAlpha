@@ -1,4 +1,4 @@
-﻿ <section id="basicInfo">
+﻿ <section id="basic_info">
         <header>
             <h2>
                 Basic Info
@@ -10,7 +10,7 @@
                     <label>Umbrella agreement</label><i>(optional, public visibility)</i>
                 </div>
                 <div class="field-input-label-top">
-                    <input id="uAgreements" type="text" placeholder="[None - this is a top-level or standalone agreement]" 
+                    <input id="umbrella_agreements" type="text" placeholder="[None - this is a top-level or standalone agreement]" 
                            data-bind="value: uAgreementSelected, valueUpdate: 'afterkeydown', jqObservableElement: '$uAgreements'" />
                 </div>
                 <div class="field-label-description">Indicate whether this agreement falls under an umbrella or parent agreement..</div>
@@ -20,7 +20,7 @@
                     <label>Agreement type</label><i>(required, public visibility)</i>
                 </div>
                 <div class="field-input-label-top">
-                    <input id="typeOptions" type="text" placeholder="[None]" 
+                    <input id="type_options" type="text" placeholder="[None]" 
                             data-bind="value: typeOptionSelected, valueUpdate: 'afterkeydown', jqObservableElement: '$typeOptions'" />
                 </div>
                 <div data-bind="visible: isCustomTypeAllowed" class="field-label-description">Select from the drop-down list of pre-existing agreement types or enter a custom one in the text box above.</div>
@@ -40,7 +40,7 @@
                     <label>Content</label><i>(optional, public visibility)</i>
                 </div>
                 <div>
-                    <textarea rows="3" data-bind="value: content" placeholder="[Content of this agreement]" id="agreementContent"  ></textarea>
+                    <textarea rows="3" data-bind="value: content" placeholder="[Content of this agreement]" id="agreement_content"  ></textarea>
                 </div>
                 <div class="field-label-description">Optionally enter a description of the content of this agreement.</div>
             </div>

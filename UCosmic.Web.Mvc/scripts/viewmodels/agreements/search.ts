@@ -150,24 +150,6 @@ module Agreements.ViewModels {
         }
 
         private _getPage(sammyContext: Sammy.EventContext): void {
-            //var windowHref = window.location.href;
-            //if (windowHref.indexOf("agreements/new") != -1
-            //    || windowHref.indexOf("agreements/settings") != -1
-            //    || parseInt(windowHref.substr(windowHref.indexOf("agreements/") + 11, 1)) > 0 ){
-            //        this.sammy.destroy();
-            //        window.location.hash = "";
-            //        window.location.reload;
-            //    //window.location.replace(window.location.href);
-            // // to do the following I need to set a location with sammy
-            ////$("nav.bib .search").removeClass("current");
-            ////$("nav.bib ul").append("<li class='view current'><span> View </span></ li>");
-            ////this.publicViewClass.agreementId = viewModel.id();
-            ////this.publicViewClass.getData();
-            ////$("#search").fadeOut(500, function () {
-            ////    $("#publicView").fadeIn(500);
-            ////});
-            //    return ;
-            //}
             var trail = this.trail(),
                 clone;
             if (trail.length > 0 && trail[trail.length - 1] === sammyContext.path) return;
@@ -367,7 +349,7 @@ module Agreements.ViewModels {
             if (sessionStorage.getItem(Search.CountrySessionKey) !== "undefined") {
                 this.countryCode(sessionStorage.getItem(Search.CountrySessionKey) || this.countryCode());
             }
-
+            this.pageNumber(this.pageNumber() || 1);
             this.pageNumber(parseInt(sessionStorage.getItem(Search.PageNumberSessionKey)) || Number(this.pageNumber()));
 
         }
