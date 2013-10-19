@@ -341,7 +341,9 @@ var Agreements;
                 var _this = this;
                 var deferred = $.Deferred();
 
-                if ((placeType == 'continents' && !this._continentsResponse) || (placeType == 'countries' && !this._countriesResponse)) {
+                if (placeType == 'countries' && !this._continentsResponse) {
+                    deferred = this._sendRequest('continents');
+                } else if ((placeType == 'continents' && !this._continentsResponse) || (placeType == 'countries' && !this._countriesResponse)) {
                     $.ajax({
                         url: this.settings.partnerPlacesApi.format(placeType)
                     }).done(function (response) {
@@ -433,11 +435,21 @@ var Agreements;
                 var _this = this;
                 var scaler = placeType == 'continents' ? this._getMarkerIconScaler(places) : this._getMarkerIconScaler(this._countriesResponse());
                 var continentCode = this.continentCode();
+                if (placeType == 'countries' && !places.length && continentCode != 'none') {
+                    var continent = Enumerable.From(this._continentsResponse()).SingleOrDefault(undefined, function (x) {
+                        return x.continentCode == continentCode;
+                    });
+                    if (continent) {
+                        places = [continent];
+                    }
+                }
                 $.each(places, function (i, place) {
+                    if (placeType == 'continents' && !place.agreementCount)
+                        return;
                     var options = {
                         map: _this._googleMap,
                         position: Places.Utils.convertToLatLng(place.center),
-                        title: '{0} - {1} agreement(s)\r\nClick for more information.'.format(place.name, place.agreementCount),
+                        title: '{0} - {1} agreement(s)'.format(place.name, place.agreementCount),
                         clickable: true,
                         cursor: 'pointer'
                     };
@@ -479,6 +491,9 @@ var Agreements;
 
             SearchMap.prototype._setMarkerIcon = function (options, text, scaler) {
                 var side = isNaN(parseInt(text)) ? 24 : scaler.scale(parseInt(text));
+                if (text == '0') {
+                    side = 16;
+                }
                 var halfSide = side / 2;
                 var settings = {
                     opacity: 0.75,

@@ -411,7 +411,12 @@ module Agreements.ViewModels {
         private _sendRequest(placeType: string): JQueryDeferred<void> {
             var deferred: JQueryDeferred<void> = $.Deferred();
 
-            if ((placeType == 'continents' && !this._continentsResponse) ||
+            // load continents before countries
+            if (placeType == 'countries' && !this._continentsResponse) {
+                deferred = this._sendRequest('continents');
+            }
+
+            else if ((placeType == 'continents' && !this._continentsResponse) ||
                 (placeType == 'countries' && !this._countriesResponse)) {
                     $.ajax({
                         url: this.settings.partnerPlacesApi.format(placeType)
@@ -528,11 +533,21 @@ module Agreements.ViewModels {
                 ? this._getMarkerIconScaler(places)
                 : this._getMarkerIconScaler(this._countriesResponse()); // scale based on all countries
             var continentCode = this.continentCode();
+            if (placeType == 'countries' && !places.length && continentCode != 'none') {
+                var continent = Enumerable.From(this._continentsResponse())
+                    .SingleOrDefault(undefined, function (x: ApiModels.PlaceWithAgreements): boolean {
+                        return x.continentCode == continentCode;
+                    });
+                if (continent) {
+                    places = [continent];
+                }
+            }
             $.each(places, (i: number, place: ApiModels.PlaceWithAgreements): void => {
+                if (placeType == 'continents' && !place.agreementCount) return; // do not render zero on continent
                 var options: google.maps.MarkerOptions = {
                     map: this._googleMap,
                     position: Places.Utils.convertToLatLng(place.center),
-                    title: '{0} - {1} agreement(s)\r\nClick for more information.'
+                    title: '{0} - {1} agreement(s)'
                         .format(place.name, place.agreementCount),
                     clickable: true,
                     cursor: 'pointer',
@@ -571,6 +586,9 @@ module Agreements.ViewModels {
 
         private _setMarkerIcon(options: google.maps.MarkerOptions, text: string, scaler: Scaler): void {
             var side = isNaN(parseInt(text)) ? 24 : scaler.scale(parseInt(text));
+            if (text == '0') {
+                side = 16;
+            }
             var halfSide = side / 2;
             var settings = {
                 opacity: 0.75,

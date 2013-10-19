@@ -56,20 +56,20 @@ declare module Agreements.ApiModels {
     }
 
     export interface PlaceWithAgreements {
-        id: number;
-        continentId: number;
-        continentCode: string;
-        name: string;
-        type: string;
-        agreementIds: number[]
-        agreementCount: number;
-        isEarth: boolean;
-        isContinent: boolean;
-        isCountry: boolean;
-        isAdmin1: boolean;
-        isAdmin2: boolean;
-        isAdmin3: boolean;
-        center: Places.ApiModels.Point;
-        boundingBox: Places.ApiModels.Box;
+        id?: number;
+        continentId?: number;
+        continentCode?: string;
+        name?: string;
+        type?: string;
+        agreementIds?: number[]
+        agreementCount?: number;
+        isEarth?: boolean;
+        isContinent?: boolean;
+        isCountry?: boolean;
+        isAdmin1?: boolean;
+        isAdmin2?: boolean;
+        isAdmin3?: boolean;
+        center?: Places.ApiModels.Point;
+        boundingBox?: Places.ApiModels.Box;
     }
 }

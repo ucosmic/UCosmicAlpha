@@ -150,6 +150,22 @@ namespace UCosmic.Domain.Agreements
                 }
             }
 
+            // add continents that have zero agreements
+            if (query.GroupBy.HasValue && query.GroupBy.Value == PlaceGroup.Continents)
+            {
+                var parnerPlaceIds = partnerPlaces.Select(x => x.Place.RevisionId);
+                var zeroContinents = _entities.Query<Place>()
+                    .EagerLoad(_entities, query.EagerLoad)
+                    .Where(x => x.IsContinent && !parnerPlaceIds.Contains(x.RevisionId))
+                    .AsEnumerable()
+                    .Select(x => new AgreementPartnerPlaceResult
+                    {
+                        AgreementIds = new int[0],
+                        Place = x,
+                    });
+                partnerPlaces = partnerPlaces.Concat(zeroContinents).ToArray();
+            }
+
             return partnerPlaces;
         }
     }
