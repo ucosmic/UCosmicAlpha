@@ -127,11 +127,12 @@ namespace UCosmic.Domain.Agreements
             }
 
             // add an unknown place for agreements that do not have place information
-            if (query.GroupBy.HasValue && query.GroupBy.Value == PlaceGroup.Continents)
+            if (query.GroupBy.HasValue)
             {
-                var unknownAgreements = agreements
-                    .Where(x => !x.Participants.Any(y => !y.IsOwner && y.Establishment.Location.Places.Any(z => z.IsContinent)))
-                    .Distinct();
+                var unknownAgreements = query.GroupBy.Value == PlaceGroup.Continents
+                    ? agreements.Where(x => !x.Participants.Any(y => !y.IsOwner && y.Establishment.Location.Places.Any(z => z.IsContinent)))
+                    : agreements.Where(x => !x.Participants.Any(y => !y.IsOwner && y.Establishment.Location.Places.Any(z => z.IsCountry)));
+                unknownAgreements = unknownAgreements.Distinct();
                 if (unknownAgreements.Any())
                 {
                     var unknownPlace = new AgreementPartnerPlaceResult
@@ -139,7 +140,8 @@ namespace UCosmic.Domain.Agreements
                         AgreementIds = unknownAgreements.Select(x => x.Id).ToArray(),
                         Place = new Place
                         {
-                            OfficialName = "[Continent Unknown]",
+                            OfficialName = string.Format("[{0} Unknown]", query.GroupBy.Value == PlaceGroup.Continents ? "Continent" : "Country"),
+                            //OfficialName = "[Continent unknown]",
                             Center = new Coordinates(0, -180),
                             BoundingBox = new BoundingBox(5, -175, -5, 175),
                         },

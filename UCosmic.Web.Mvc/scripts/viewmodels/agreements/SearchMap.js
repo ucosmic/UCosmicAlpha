@@ -363,16 +363,16 @@ var Agreements;
             };
 
             SearchMap.prototype._receiveResponse = function (placeType) {
-                this._clearMarkers();
                 var places = placeType == 'continents' ? this._continentsResponse() : this._countriesResponse();
 
                 if (placeType == 'countries') {
                     var continentCode = this.continentCode();
                     places = Enumerable.From(places).Where(function (x) {
-                        return x.continentCode == continentCode;
+                        return continentCode == 'none' ? x.id == 0 : x.continentCode == continentCode;
                     }).ToArray();
                 }
 
+                this._clearMarkers();
                 this._setMapViewport(placeType, places);
                 this._plotMarkers(placeType, places);
                 this._updateRoute();
