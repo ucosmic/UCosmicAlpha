@@ -59,6 +59,8 @@ declare module Agreements.ApiModels {
         id?: number;
         continentId?: number;
         continentCode?: string;
+        countryId?: number;
+        countryCode?: string;
         name?: string;
         type?: string;
         agreementIds?: number[]

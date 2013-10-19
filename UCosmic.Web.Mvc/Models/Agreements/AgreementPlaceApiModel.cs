@@ -9,6 +9,8 @@ namespace UCosmic.Web.Mvc.Models
         public int Id { get; set; }
         public int? ContinentId { get; set; }
         public string ContinentCode { get; set; }
+        public int? CountryId { get; set; }
+        public string CountryCode { get; set; }
         public string Name { get; set; }
         public string Type { get; set; }
         public int[] AgreementIds { get; set; }
@@ -58,6 +60,18 @@ namespace UCosmic.Web.Mvc.Models
                         if (s.Place.IsContinent) return s.Place.GeoNamesToponym.ContinentCode;
                         return s.Place.Ancestors.Any(x => x.Ancestor.IsContinent)
                             ? s.Place.Ancestors.First(x => x.Ancestor.IsContinent).Ancestor.GeoNamesToponym.ContinentCode : null;
+                    }))
+                    .ForMember(d => d.CountryId, o => o.ResolveUsing(s =>
+                    {
+                        if (s.Place.IsCountry) return s.Place.RevisionId;
+                        return s.Place.Ancestors.Any(x => x.Ancestor.IsCountry)
+                            ? s.Place.Ancestors.First(x => x.Ancestor.IsCountry).AncestorId : default(int?);
+                    }))
+                    .ForMember(d => d.CountryCode, o => o.ResolveUsing(s =>
+                    {
+                        if (s.Place.IsCountry) return s.Place.GeoPlanetPlace.Country.Code;
+                        return s.Place.Ancestors.Any(x => x.Ancestor.IsCountry)
+                            ? s.Place.Ancestors.First(x => x.Ancestor.IsCountry).Ancestor.GeoPlanetPlace.Country.Code : null;
                     }))
                 ;
             }

@@ -161,6 +161,21 @@ module Agreements.ViewModels {
             this.west(Number(west.toString().substring(0, maxLength)));
         }
 
+        //private mapViewportChanged = ko.computed((): void => { this._onMapViewportChanged(); }).extend({ throttle: 500 });
+        //private _onMapViewportChanged(): void {
+        //    var mag = this.mag();
+        //    var lat = this.latitude();
+        //    var lng = this.longitude();
+        //    if (this._isActivated && this._isActivated() && mag != this.zoom()) {
+        //        google.maps.event.addListenerOnce(this._googleMap, 'idle', (): void => {
+        //            this.zoom(mag);
+        //            this.lat(lat);
+        //            this.lng(lng);
+        //            this._setLocation();
+        //        });
+        //    }
+        //}
+
         //#endregion
         //#region Country & Continent Options
 
@@ -253,6 +268,22 @@ module Agreements.ViewModels {
                 });
             return deferred;
         }
+
+        //private _countryChanged = ko.computed((): void => { this._onCountryChanged(); });
+        //private _onCountryChanged(): void {
+        //    var countryCode = this.countryCode();
+        //    var continentCode = this.continentCode();
+        //    var countryOptions = this.countryOptions();
+        //    if (countryCode != 'any' && countryCode != 'none') {
+        //        var country: Places.ApiModels.Country = Enumerable.From(countryOptions)
+        //            .SingleOrDefault(undefined, function (x: Places.ApiModels.Country): boolean {
+        //                return x.code == countryCode;
+        //            });
+        //        if (country && country.continentCode != continentCode) {
+        //            this.continentCode(country.continentCode);
+        //        }
+        //    }
+        //}
 
         //#endregion
         //#region Sammy Routing
@@ -392,6 +423,7 @@ module Agreements.ViewModels {
         private _markers: KnockoutObservableArray<google.maps.Marker> = ko.observableArray();
         private _continentsResponse: KnockoutObservableArray<ApiModels.PlaceWithAgreements>;
         private _countriesResponse: KnockoutObservableArray<ApiModels.PlaceWithAgreements>;
+        private _partnersResponse: KnockoutObservableArray<ApiModels.PlaceWithAgreements>;
         private _load(): void {
             var placeType = '';
             var continentCode = this.continentCode();
@@ -413,27 +445,36 @@ module Agreements.ViewModels {
 
             // load continents before countries
             if (placeType == 'countries' && !this._continentsResponse) {
-                deferred = this._sendRequest('continents');
+                var continentsReceived = this._sendRequest('continents');
+                $.when(continentsReceived).then((): void => {
+                    this._sendRequest('countries').done((): void => {
+                        deferred.resolve();
+                    });
+                });
             }
 
             else if ((placeType == 'continents' && !this._continentsResponse) ||
-                (placeType == 'countries' && !this._countriesResponse)) {
-                    $.ajax({
-                        url: this.settings.partnerPlacesApi.format(placeType)
+                (placeType == 'countries' && !this._countriesResponse) ||
+                !placeType) {
+                $.ajax({
+                    url: this.settings.partnerPlacesApi.format(placeType)
+                })
+                    .done((response: ApiModels.PlaceWithAgreements[]): void => {
+                        if (placeType == 'continents') {
+                            this._continentsResponse = ko.observableArray(response);
+                        }
+                        else if (placeType == 'countries') {
+                            this._countriesResponse = ko.observableArray(response);
+                        }
+                        else {
+                            this._partnersResponse = ko.observableArray(response);
+                        }
+                        deferred.resolve();
                     })
-                        .done((response: ApiModels.PlaceWithAgreements[]): void => {
-                            if (placeType == 'continents') {
-                                this._continentsResponse = ko.observableArray(response);
-                            }
-                            else if (placeType == 'countries') {
-                                this._countriesResponse = ko.observableArray(response);
-                            }
-                            deferred.resolve();
-                        })
-                        .fail((xhr: JQueryXHR): void => {
-                            App.Failures.message(xhr, 'while trying to load agreement map data', true)
+                    .fail((xhr: JQueryXHR): void => {
+                        App.Failures.message(xhr, 'while trying to load agreement map data', true)
                             deferred.reject();
-                        });
+                    });
             }
             else {
                 deferred.resolve();
@@ -445,15 +486,28 @@ module Agreements.ViewModels {
         private _receiveResponse(placeType: string): void {
             var places = placeType == 'continents'
                 ? this._continentsResponse()
-                : this._countriesResponse();
+                : placeType == 'countries'
+                ? this._countriesResponse()
+                : this._partnersResponse();
 
             if (placeType == 'countries') {
                 var continentCode = this.continentCode();
                 places = Enumerable.From(places)
-                    .Where(function (x: any): boolean {
+                    .Where(function (x: ApiModels.PlaceWithAgreements): boolean {
                         return continentCode == 'none'
-                            ? x.id == 0
+                            ? !x.id
                             : x.continentCode == continentCode;
+                    })
+                    .ToArray();
+            }
+
+            if (!placeType) {
+                var countryCode = this.countryCode();
+                places = Enumerable.From(places)
+                    .Where(function (x: ApiModels.PlaceWithAgreements): boolean {
+                        return countryCode == 'none'
+                            ? !x.countryId
+                            : x.countryCode == countryCode;
                     })
                     .ToArray();
             }
@@ -476,9 +530,11 @@ module Agreements.ViewModels {
 
         private _setMapViewport(placeType: string, places: ApiModels.PlaceWithAgreements[]): void {
             // zoom map to level 1 in order to view continents
-            if (placeType == 'continents' && this._googleMap.getZoom() != 1) {
-                this._googleMap.setZoom(1);
-                this._googleMap.setCenter(SearchMap._defaultMapCenter);
+            if (placeType == 'continents') {
+                if (this._googleMap.getZoom() != 1) {
+                    this._googleMap.setZoom(1);
+                    this._googleMap.setCenter(SearchMap._defaultMapCenter);
+                }
             }
 
             // zoom map for countries based on response length
@@ -526,12 +582,56 @@ module Agreements.ViewModels {
                     this._googleMap.setCenter(SearchMap._defaultMapCenter);
                 }
             }
+            else {
+                var countryCode = this.countryCode();
+                var bounds: google.maps.LatLngBounds;
+                //#region zero places, try continent bounds
+                if (!places.length) {
+                    if (continentCode && this._continentsResponse) {
+                        var continent: ApiModels.PlaceWithAgreements = Enumerable.From(this._continentsResponse())
+                            .SingleOrDefault(undefined, function (x: ApiModels.PlaceWithAgreements): boolean {
+                                return x.continentCode == continentCode;
+                            });
+                        if (continent && continent.boundingBox && continent.boundingBox.hasValue) {
+                            bounds = Places.Utils.convertToLatLngBounds(continent.boundingBox);
+                        }
+                    }
+                }
+                //#endregion
+                //#region one place, try country bounds
+                else if (places.length == 1) {
+                    var country = places[0];
+                    if (country && country.boundingBox && country.boundingBox.hasValue)
+                        bounds = Places.Utils.convertToLatLngBounds(country.boundingBox);
+                }
+                //#endregion
+                //#region multiple places, extend bounds
+                else {
+                    bounds = new google.maps.LatLngBounds();
+                    var latLngs = Enumerable.From(places)
+                        .Select(function (x: ApiModels.PlaceWithAgreements): any {
+                            return new google.maps.LatLng(x.center.latitude, x.center.longitude);
+                        }).ToArray();
+                    $.each(latLngs, function (index: number, latLng: google.maps.LatLng): void {
+                        bounds.extend(latLng);
+                    });
+                    this._googleMap.fitBounds(bounds);
+                }
+                //#endregion
+                if (bounds) {
+                    this._googleMap.fitBounds(bounds);
+                }
+                else if (this._googleMap.getZoom() != 1) {
+                    this._googleMap.setZoom(1);
+                    this._googleMap.setCenter(SearchMap._defaultMapCenter);
+                }
+            }
         }
 
         private _plotMarkers(placeType: string, places: ApiModels.PlaceWithAgreements[]) {
-            var scaler = placeType == 'continents'
-                ? this._getMarkerIconScaler(places)
-                : this._getMarkerIconScaler(this._countriesResponse()); // scale based on all countries
+            var scaler = placeType == 'countries'
+                ? this._getMarkerIconScaler(placeType, this._countriesResponse()) // scale based on all countries
+                : this._getMarkerIconScaler(placeType, places);
             var continentCode = this.continentCode();
             if (placeType == 'countries' && !places.length && continentCode != 'none') {
                 var continent = Enumerable.From(this._continentsResponse())
@@ -555,6 +655,11 @@ module Agreements.ViewModels {
                 this._setMarkerIcon(options, place.agreementCount.toString(), scaler);
                 var marker = new google.maps.Marker(options);
                 this._markers.push(marker);
+                google.maps.event.addListener(marker, 'mouseover', (e: google.maps.MouseEvent): void => {
+                    marker.setOptions({
+                        zIndex: 1000,
+                    });
+                });
                 if (placeType === 'continents') {
                     google.maps.event.addListener(marker, 'click', (e: google.maps.MouseEvent): void => {
                         this._googleMap.fitBounds(Places.Utils.convertToLatLngBounds(place.boundingBox));
@@ -563,6 +668,11 @@ module Agreements.ViewModels {
                         } else {
                             this.continentCode(place.continentCode);
                         }
+                    });
+                }
+                else if (placeType === 'countries') {
+                    google.maps.event.addListener(marker, 'click', (e: google.maps.MouseEvent): void => {
+                        if (place.id > 0) this.countryCode(place.countryCode);
                     });
                 }
             });
@@ -575,12 +685,14 @@ module Agreements.ViewModels {
             this._setLocation();
         }
 
-        private _getMarkerIconScaler(places: ApiModels.PlaceWithAgreements[]): Scaler {
+        private _getMarkerIconScaler(placeType: string, places: ApiModels.PlaceWithAgreements[]): Scaler {
             var from: Range = { // scale based on the smallest & largest agreement counts
                 min: Enumerable.From(places).Min(function (x) { return x.agreementCount }),
                 max: Enumerable.From(places).Max(function (x) { return x.agreementCount }),
             };
             var into: Range = { min: 24, max: 48 }; // smallest & largest placemarker circles
+            if (!placeType) into = { min: 16, max: 24 };
+
             return new Scaler(from, into);
         }
 
@@ -609,184 +721,6 @@ module Agreements.ViewModels {
             options.shape = shape;
         }
 
-        //#region Old Continent Scope
-
-        //private _onContinentsResponse(response: any[]): void {
-
-        //    this._clearMarkers();
-        //    var countRange: Range = {
-        //        min: Enumerable.From(response).Min(function (x) { return x.agreementCount }),
-        //        max: Enumerable.From(response).Max(function (x) { return x.agreementCount }),
-        //    };
-        //    var scaler = new Scaler(countRange, { min: 24, max: 48 });
-        //    for (var i = 0; i < response.length; i++) {
-        //        var continent = response[i];
-        //        this._onContinentResponse(continent, scaler);
-        //    }
-
-        //    this._googleMap.setZoom(1);
-        //    this._googleMap.setCenter(SearchMap._defaultMapCenter);
-        //}
-
-        //private _onContinentResponse(continent: any, scaler: Scaler): void {
-        //    var side = scaler.scale(continent.agreementCount);
-        //    var halfSide = side / 2;
-        //    var iconSettings = {
-        //        opacity: 0.8,
-        //        side: side,
-        //        text: continent.agreementCount,
-        //    };
-        //    var url = '{0}?{1}'.format(this.settings.graphicsCircleApi, $.param(iconSettings));
-        //    var icon = {
-        //        url: url,
-        //        size: new google.maps.Size(side, side),
-        //        anchor: new google.maps.Point(halfSide, halfSide),
-        //    };
-        //    var iconShape: google.maps.MarkerShape = {
-        //        type: 'circle',
-        //        coords: [halfSide, halfSide, halfSide],
-        //    };
-        //    var isClickable = continent.agreementCount > 0 && continent.id > 0;
-        //    isClickable = true;
-        //    var cursor = isClickable ? 'pointer' : 'default';
-        //    var options: google.maps.MarkerOptions = {
-        //        map: this._googleMap,
-        //        position: new google.maps.LatLng(continent.center.latitude, continent.center.longitude),
-        //        title: '{0} - {1} agreement(s)\r\nClick for more information'
-        //            .format(continent.name, continent.agreementCount),
-        //        clickable: true,
-        //        cursor: cursor,
-        //        icon: icon,
-        //        shape: iconShape,
-        //        //optimized: false, // causes icons to sometimes not render
-        //    };
-        //    var marker = new google.maps.Marker(options);
-        //    this._markers.push(marker);
-        //    if (isClickable)
-        //        google.maps.event.addListener(marker, 'click', (e: google.maps.MouseEvent): void => {
-        //            this._onContinentClick(marker, continent, e);
-        //        });
-        //}
-
-        //private _onContinentClick(marker: google.maps.Marker, continent: any, e: google.maps.MouseEvent): void {
-        //    var north = continent.boundingBox.northEast.latitude;
-        //    var south = continent.boundingBox.southWest.latitude;
-        //    var east = continent.boundingBox.northEast.longitude;
-        //    var west = continent.boundingBox.southWest.longitude;
-        //    var southWest = new google.maps.LatLng(south, west);
-        //    var northEast = new google.maps.LatLng(north, east);
-        //    var bounds = new google.maps.LatLngBounds(southWest, northEast);
-        //    this._googleMap.fitBounds(bounds);
-        //    this.continentCode(continent.continentCode);
-        //}
-
-        //#endregion
-        //#region Old Country Scope
-        //private _onCountriesResponse(response: any[]): void {
-        //    //#region collapse
-        //    this._clearMarkers();
-        //    var continentCode = this.continentCode();
-        //    var countries = Enumerable.From(response)
-        //        .Where(function (x: any): boolean {
-        //            return x.continentCode == continentCode;
-        //        })
-        //        .ToArray();
-        //    var bounds = new google.maps.LatLngBounds();
-        //    if (countries.length == 1) {
-        //        var country = countries[0];
-        //        var northEast = new google.maps.LatLng(country.boundingBox.northEast.latitude,
-        //            country.boundingBox.northEast.longitude);
-        //        var southWest = new google.maps.LatLng(country.boundingBox.southWest.latitude,
-        //            country.boundingBox.southWest.longitude);
-        //        bounds = new google.maps.LatLngBounds(southWest, northEast);
-        //        this._googleMap.fitBounds(bounds);
-        //    }
-        //    else if (countries.length > 1) {
-        //        var latLngs = Enumerable.From(countries)
-        //            .Select(function (x: any): any {
-        //                return new google.maps.LatLng(x.center.latitude, x.center.longitude);
-        //            }).ToArray();
-        //        $.each(latLngs, function (index: number, latLng: google.maps.LatLng): void {
-        //            bounds.extend(latLng);
-        //        });
-        //        this._googleMap.fitBounds(bounds);
-        //    }
-        //    else {
-        //        this._googleMap.setCenter(SearchMap._defaultMapCenter);
-        //        this._googleMap.setZoom(1);
-        //        if (continentCode != 'any') {
-        //            var continent = Enumerable.From(this.continentOptions())
-        //                .Single(function (x: any): boolean {
-        //                    return x.code == continentCode;
-        //                });
-        //            alert('No agreements found in {0}. Click your back button or select a different continent or country.'.format(continent.name));
-        //            //setTimeout(function (): void { history.back(); }, 100);
-        //        }
-        //        else {
-        //            alert('No agreements found. Click your back button or select a different continent or country.');
-        //        }
-        //        //return;
-        //    }
-
-        //    //#endregion
-        //    google.maps.event.addListenerOnce(this._googleMap, 'idle', (): void => {
-        //        var continentCode = this.continentCode();
-        //        var countRange: Range = {
-        //            min: Enumerable.From(response).Min(function (x) { return x.agreementCount }),
-        //            max: Enumerable.From(response).Max(function (x) { return x.agreementCount }),
-        //        };
-        //        var scaler = new Scaler(countRange, { min: 24, max: 48 });
-        //        for (var i = 0; i < countries.length; i++) {
-        //            var country = countries[i];
-        //            this._onCountryResponse(country, scaler, new google.maps.LatLngBounds());
-        //        }
-        //        this.lat(this.latitude());
-        //        this.lng(this.longitude());
-        //        this.zoom(this.mag());
-        //        this._setLocation();
-        //    });
-        //}
-
-        //private _onCountryResponse(country: any, scaler: Scaler, bounds: google.maps.LatLngBounds): void {
-        //    var latLng = new google.maps.LatLng(country.center.latitude, country.center.longitude);
-        //    var side = scaler.scale(country.agreementCount);
-        //    var halfSide = side / 2;
-        //    var iconSettings = {
-        //        opacity: 1,
-        //        side: side,
-        //        text: country.agreementCount,
-        //    };
-        //    var url = '{0}?{1}'.format(this.settings.graphicsCircleApi, $.param(iconSettings));
-        //    var icon = {
-        //        url: url,
-        //        size: new google.maps.Size(side, side),
-        //        origin: new google.maps.Point(0, 0),
-        //        anchor: new google.maps.Point(halfSide, halfSide),
-        //    };
-        //    var iconShape: google.maps.MarkerShape = {
-        //        type: 'circle',
-        //        coords: [halfSide, halfSide, halfSide],
-        //    };
-        //    var options: google.maps.MarkerOptions = {
-        //        map: this._googleMap,
-        //        position: latLng,
-        //        title: '{0} - {1} agreement(s)\r\nClick for more information.'
-        //            .format(country.name, country.agreementCount),
-        //        clickable: true,
-        //        cursor: 'pointer',
-        //        icon: icon,
-        //        shape: iconShape,
-        //        //optimized: false, // this causes icons to not be rendered after some pans.
-        //    };
-        //    var marker = new google.maps.Marker(options);
-        //    this._markers.push(marker);
-        //    //if (isClickable)
-        //    //    google.maps.event.addListener(marker, 'click', (e: google.maps.MouseEvent): void => {
-        //    //        this._onContinentClick(marker, continent, e);
-        //    //    });
-        //}
-
-        //#endregion
         //#endregion
     }
 
