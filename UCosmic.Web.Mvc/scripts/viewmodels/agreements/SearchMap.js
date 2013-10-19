@@ -12,7 +12,9 @@ var Agreements;
     /// <reference path="../../app/Spinner.ts" />
     /// <reference path="../../app/Pagination.d.ts" />
     /// <reference path="../../app/Pager.ts" />
+    /// <reference path="ApiModels.d.ts" />
     /// <reference path="../places/ApiModels.d.ts" />
+    /// <reference path="../places/Utils.ts" />
     (function (ViewModels) {
         var SearchMap = (function () {
             //#endregion
@@ -202,8 +204,8 @@ var Agreements;
                 this.continentCode(continent);
                 this.countryCode(country);
                 this.zoom(parseInt(zoom));
-                this.lat(parseInt(lat));
-                this.lng(parseInt(lng));
+                this.lat(parseFloat(lat));
+                this.lng(parseFloat(lng));
 
                 if (!this._isActivated())
                     this._isActivated(true);
@@ -255,7 +257,7 @@ var Agreements;
                 if (!lastScope || lastScope.countryCode != thisScope.countryCode || lastScope.continentCode != thisScope.continentCode) {
                     this._scopeHistory.push(thisScope);
                     $.when(this._mapCreated).then(function () {
-                        _this._bindMap();
+                        _this._load();
                     });
                 }
             };
@@ -296,39 +298,6 @@ var Agreements;
                 return deferred;
             };
 
-            SearchMap.prototype._bindMap = function () {
-                var _this = this;
-                var continentCode = this.continentCode();
-                var countryCode = this.countryCode();
-                if (continentCode == 'any' && countryCode == 'any') {
-                    $.ajax({
-                        url: this.settings.partnerPlacesApi.format('continents')
-                    }).done(function (response) {
-                        _this._onContinentsResponse(response);
-                        _this.lat(_this.latitude());
-                        _this.lng(_this.longitude());
-                        _this.zoom(_this.mag());
-                        _this._setLocation();
-                    });
-                } else if (continentCode != 'none' && countryCode == 'any') {
-                    $.ajax({
-                        url: this.settings.partnerPlacesApi.format('countries')
-                    }).done(function (response) {
-                        _this._onCountriesResponse(response);
-                    });
-                }
-            };
-
-            SearchMap.prototype._clearMarkers = function () {
-                var markers = this._markers() || [];
-                for (var i = 0; i < markers.length; i++) {
-                    var marker = markers[i];
-                    marker.setMap(null);
-                    marker = null;
-                }
-                this._markers([]);
-            };
-
             SearchMap.prototype._onMapZoomChanged = function () {
                 this.mag(this._googleMap.getZoom());
             };
@@ -352,7 +321,184 @@ var Agreements;
                 this.west(Number(west.toString().substring(0, maxLength)));
             };
 
-            //#endregion
+            SearchMap.prototype._load = function () {
+                var _this = this;
+                var placeType = '';
+                var continentCode = this.continentCode();
+                var countryCode = this.countryCode();
+                if (continentCode == 'any' && countryCode == 'any') {
+                    placeType = 'continents';
+                } else if (countryCode == 'any') {
+                    placeType = 'countries';
+                }
+                var responseReceived = this._sendRequest(placeType);
+                $.when(responseReceived).done(function () {
+                    _this._receiveResponse(placeType);
+                });
+            };
+
+            SearchMap.prototype._sendRequest = function (placeType) {
+                var _this = this;
+                var deferred = $.Deferred();
+
+                if ((placeType == 'continents' && !this._continentsResponse) || (placeType == 'countries' && !this._countriesResponse)) {
+                    $.ajax({
+                        url: this.settings.partnerPlacesApi.format(placeType)
+                    }).done(function (response) {
+                        if (placeType == 'continents') {
+                            _this._continentsResponse = ko.observableArray(response);
+                        } else if (placeType == 'countries') {
+                            _this._countriesResponse = ko.observableArray(response);
+                        }
+                        deferred.resolve();
+                    }).fail(function (xhr) {
+                        App.Failures.message(xhr, 'while trying to load agreement map data', true);
+                        deferred.reject();
+                    });
+                } else {
+                    deferred.resolve();
+                }
+
+                return deferred;
+            };
+
+            SearchMap.prototype._receiveResponse = function (placeType) {
+                this._clearMarkers();
+                var places = placeType == 'continents' ? this._continentsResponse() : this._countriesResponse();
+
+                if (placeType == 'countries') {
+                    var continentCode = this.continentCode();
+                    places = Enumerable.From(places).Where(function (x) {
+                        return x.continentCode == continentCode;
+                    }).ToArray();
+                }
+
+                this._setMapViewport(placeType, places);
+                this._plotMarkers(placeType, places);
+                this._updateRoute();
+            };
+
+            SearchMap.prototype._clearMarkers = function () {
+                var markers = this._markers() || [];
+                for (var i = 0; i < markers.length; i++) {
+                    var marker = markers[i];
+                    marker.setMap(null);
+                    marker = null;
+                }
+                this._markers([]);
+            };
+
+            SearchMap.prototype._setMapViewport = function (placeType, places) {
+                if (placeType == 'continents' && this._googleMap.getZoom() != 1) {
+                    this._googleMap.setZoom(1);
+                    this._googleMap.setCenter(SearchMap._defaultMapCenter);
+                } else if (placeType == 'countries') {
+                    var continentCode = this.continentCode();
+                    var bounds;
+
+                    if (!places.length) {
+                        if (continentCode && this._continentsResponse) {
+                            var continent = Enumerable.From(this._continentsResponse()).SingleOrDefault(undefined, function (x) {
+                                return x.continentCode == continentCode;
+                            });
+                            if (continent && continent.boundingBox && continent.boundingBox.hasValue) {
+                                bounds = Places.Utils.convertToLatLngBounds(continent.boundingBox);
+                            }
+                        }
+                    } else if (places.length == 1) {
+                        var country = places[0];
+                        if (country && country.boundingBox && country.boundingBox.hasValue)
+                            bounds = Places.Utils.convertToLatLngBounds(country.boundingBox);
+                    } else {
+                        bounds = new google.maps.LatLngBounds();
+                        var latLngs = Enumerable.From(places).Select(function (x) {
+                            return new google.maps.LatLng(x.center.latitude, x.center.longitude);
+                        }).ToArray();
+                        $.each(latLngs, function (index, latLng) {
+                            bounds.extend(latLng);
+                        });
+                        this._googleMap.fitBounds(bounds);
+                    }
+
+                    if (bounds) {
+                        this._googleMap.fitBounds(bounds);
+                    } else if (this._googleMap.getZoom() != 1) {
+                        this._googleMap.setZoom(1);
+                        this._googleMap.setCenter(SearchMap._defaultMapCenter);
+                    }
+                }
+            };
+
+            SearchMap.prototype._plotMarkers = function (placeType, places) {
+                var _this = this;
+                var scaler = placeType == 'continents' ? this._getMarkerIconScaler(places) : this._getMarkerIconScaler(this._countriesResponse());
+                var continentCode = this.continentCode();
+                $.each(places, function (i, place) {
+                    var options = {
+                        map: _this._googleMap,
+                        position: Places.Utils.convertToLatLng(place.center),
+                        title: '{0} - {1} agreement(s)\r\nClick for more information.'.format(place.name, place.agreementCount),
+                        clickable: true,
+                        cursor: 'pointer'
+                    };
+                    _this._setMarkerIcon(options, place.agreementCount.toString(), scaler);
+                    var marker = new google.maps.Marker(options);
+                    _this._markers.push(marker);
+                    if (placeType === 'continents') {
+                        google.maps.event.addListener(marker, 'click', function (e) {
+                            _this._googleMap.fitBounds(Places.Utils.convertToLatLngBounds(place.boundingBox));
+                            if (place.id < 1) {
+                                _this.continentCode('none');
+                            } else {
+                                _this.continentCode(place.continentCode);
+                            }
+                        });
+                    }
+                });
+            };
+
+            SearchMap.prototype._updateRoute = function () {
+                this.lat(this.latitude());
+                this.lng(this.longitude());
+                this.zoom(this.mag());
+                this._setLocation();
+            };
+
+            SearchMap.prototype._getMarkerIconScaler = function (places) {
+                var from = {
+                    min: Enumerable.From(places).Min(function (x) {
+                        return x.agreementCount;
+                    }),
+                    max: Enumerable.From(places).Max(function (x) {
+                        return x.agreementCount;
+                    })
+                };
+                var into = { min: 24, max: 48 };
+                return new Scaler(from, into);
+            };
+
+            SearchMap.prototype._setMarkerIcon = function (options, text, scaler) {
+                var side = isNaN(parseInt(text)) ? 24 : scaler.scale(parseInt(text));
+                var halfSide = side / 2;
+                var settings = {
+                    opacity: 0.75,
+                    side: side,
+                    text: text
+                };
+                var url = '{0}?{1}'.format(this.settings.graphicsCircleApi, $.param(settings));
+                var icon = {
+                    url: url,
+                    size: new google.maps.Size(side, side),
+                    anchor: new google.maps.Point(halfSide, halfSide)
+                };
+                var shape = {
+                    type: 'circle',
+                    coords: [halfSide, halfSide, halfSide]
+                };
+                options.icon = icon;
+                options.shape = shape;
+            };
+
             //#region Continent Scope
             SearchMap.prototype._onContinentsResponse = function (response) {
                 this._clearMarkers();
@@ -369,6 +515,7 @@ var Agreements;
                     var continent = response[i];
                     this._onContinentResponse(continent, scaler);
                 }
+
                 this._googleMap.setZoom(1);
                 this._googleMap.setCenter(SearchMap._defaultMapCenter);
             };
@@ -421,92 +568,70 @@ var Agreements;
                 var northEast = new google.maps.LatLng(north, east);
                 var bounds = new google.maps.LatLngBounds(southWest, northEast);
                 this._googleMap.fitBounds(bounds);
-
-                //this._onMapCenterChanged();
-                //this._onMapZoomChanged();
-                //this.zoom(this.mag());
-                //this.lat(this.latitude());
-                //this.lng(this.longitude());
-                //this._setLocation();
-                // run query for country scope
-                //this.scope('countries');
                 this.continentCode(continent.continentCode);
-                //this._scopedContinentId(continent.id);
-                //if (continent.id != 0)
-                //    this._bindMap();
             };
 
             //#endregion
+            //#region Country Scope
             SearchMap.prototype._onCountriesResponse = function (response) {
                 var _this = this;
+                //#region collapse
                 this._clearMarkers();
-                var setUp = function () {
-                    var continentCode = _this.continentCode();
-                    var countries = Enumerable.From(response).Where(function (x) {
-                        return x.continentCode == continentCode;
+                var continentCode = this.continentCode();
+                var countries = Enumerable.From(response).Where(function (x) {
+                    return x.continentCode == continentCode;
+                }).ToArray();
+                var bounds = new google.maps.LatLngBounds();
+                if (countries.length == 1) {
+                    var country = countries[0];
+                    var northEast = new google.maps.LatLng(country.boundingBox.northEast.latitude, country.boundingBox.northEast.longitude);
+                    var southWest = new google.maps.LatLng(country.boundingBox.southWest.latitude, country.boundingBox.southWest.longitude);
+                    bounds = new google.maps.LatLngBounds(southWest, northEast);
+                    this._googleMap.fitBounds(bounds);
+                } else if (countries.length > 1) {
+                    var latLngs = Enumerable.From(countries).Select(function (x) {
+                        return new google.maps.LatLng(x.center.latitude, x.center.longitude);
                     }).ToArray();
-                    var bounds = new google.maps.LatLngBounds();
-                    if (countries.length == 1) {
-                        var country = countries[0];
-                        var northEast = new google.maps.LatLng(country.boundingBox.northEast.latitude, country.boundingBox.northEast.longitude);
-                        var southWest = new google.maps.LatLng(country.boundingBox.southWest.latitude, country.boundingBox.southWest.longitude);
-                        bounds = new google.maps.LatLngBounds(southWest, northEast);
-                        _this._googleMap.fitBounds(bounds);
-                    } else if (countries.length > 1) {
-                        var latLngs = Enumerable.From(countries).Select(function (x) {
-                            return new google.maps.LatLng(x.center.latitude, x.center.longitude);
-                        }).ToArray();
-                        $.each(latLngs, function (index, latLng) {
-                            bounds.extend(latLng);
-                        });
-                        _this._googleMap.fitBounds(bounds);
-                    } else {
-                        _this._googleMap.setCenter(SearchMap._defaultMapCenter);
-                        _this._googleMap.setZoom(1);
-                        if (continentCode != 'any') {
-                            var continent = Enumerable.From(_this.continentOptions()).Single(function (x) {
-                                return x.code == continentCode;
-                            });
-                            alert('No agreements found in {0}. Click your back button or select a different continent or country.'.format(continent.name));
-                            //setTimeout(function (): void { history.back(); }, 100);
-                        } else {
-                            alert('No agreements found. Click your back button or select a different continent or country.');
-                        }
-                        //return;
-                    }
-
-                    google.maps.event.addListenerOnce(_this._googleMap, 'idle', function () {
-                        var continentCode = _this.continentCode();
-                        var countRange = {
-                            min: Enumerable.From(response).Min(function (x) {
-                                return x.agreementCount;
-                            }),
-                            max: Enumerable.From(response).Max(function (x) {
-                                return x.agreementCount;
-                            })
-                        };
-                        var scaler = new Scaler(countRange, { min: 24, max: 48 });
-                        for (var i = 0; i < countries.length; i++) {
-                            var country = countries[i];
-                            _this._onCountryResponse(country, scaler, new google.maps.LatLngBounds());
-                        }
-                        _this.lat(_this.latitude());
-                        _this.lng(_this.longitude());
-                        _this.zoom(_this.mag());
-                        _this._setLocation();
+                    $.each(latLngs, function (index, latLng) {
+                        bounds.extend(latLng);
                     });
-                };
-
-                var zoom = this._googleMap.getZoom();
-                if (zoom == 1) {
-                    setUp();
+                    this._googleMap.fitBounds(bounds);
                 } else {
                     this._googleMap.setCenter(SearchMap._defaultMapCenter);
                     this._googleMap.setZoom(1);
-                    google.maps.event.addListenerOnce(this._googleMap, 'idle', function () {
-                        setUp();
-                    });
+                    if (continentCode != 'any') {
+                        var continent = Enumerable.From(this.continentOptions()).Single(function (x) {
+                            return x.code == continentCode;
+                        });
+                        alert('No agreements found in {0}. Click your back button or select a different continent or country.'.format(continent.name));
+                        //setTimeout(function (): void { history.back(); }, 100);
+                    } else {
+                        alert('No agreements found. Click your back button or select a different continent or country.');
+                    }
+                    //return;
                 }
+
+                //#endregion
+                google.maps.event.addListenerOnce(this._googleMap, 'idle', function () {
+                    var continentCode = _this.continentCode();
+                    var countRange = {
+                        min: Enumerable.From(response).Min(function (x) {
+                            return x.agreementCount;
+                        }),
+                        max: Enumerable.From(response).Max(function (x) {
+                            return x.agreementCount;
+                        })
+                    };
+                    var scaler = new Scaler(countRange, { min: 24, max: 48 });
+                    for (var i = 0; i < countries.length; i++) {
+                        var country = countries[i];
+                        _this._onCountryResponse(country, scaler, new google.maps.LatLngBounds());
+                    }
+                    _this.lat(_this.latitude());
+                    _this.lng(_this.longitude());
+                    _this.zoom(_this.mag());
+                    _this._setLocation();
+                });
             };
 
             SearchMap.prototype._onCountryResponse = function (country, scaler, bounds) {
