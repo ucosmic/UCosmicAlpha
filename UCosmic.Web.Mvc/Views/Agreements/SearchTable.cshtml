@@ -8,6 +8,14 @@
         @Html.Partial(MVC.Agreements.Views._Bib)
     </nav>
 }
+@section styles {
+
+    <style>
+        #google_map_canvas * {
+            cursor: inherit;
+        }
+    </style>
+}
 @section scripts
 {
 
@@ -76,7 +84,7 @@
                             <span data-bind="visible: hasManyPages">(page
                                 @*<span data-bind="text: pageNumber"></span>*@
                                 <select data-bind="value: $parent.pager.input.pageNumberText, options: $parent.pager.input.pageNumberOptions"
-                                        style="padding: 0; margin: 0; line-height: 16px; height: auto;">
+                                    style="padding: 0; margin: 0; line-height: 16px; height: auto;">
                                     <option>1</option>
                                 </select>
                                 of <span data-bind="text: pageCount"></span>)</span>
@@ -187,7 +195,7 @@
                     </div>
                 </div>
             </div>
-            <div id="google_map_canvas" style="height: 500px;" data-bind="visible: isMapLens">
+            <div id="google_map_canvas" style="height: 500px; cursor: inherit;" data-bind="visible: isMapLens">
             </div>
         </div>
         <aside class="on-right from-top" data-fixed-scroll="root">

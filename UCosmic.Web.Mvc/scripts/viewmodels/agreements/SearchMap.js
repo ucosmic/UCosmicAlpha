@@ -402,8 +402,7 @@ var Agreements;
                     clickable: true,
                     cursor: cursor,
                     icon: icon,
-                    shape: iconShape,
-                    optimized: false
+                    shape: iconShape
                 };
                 var marker = new google.maps.Marker(options);
                 this._markers.push(marker);
@@ -537,8 +536,7 @@ var Agreements;
                     clickable: true,
                     cursor: 'pointer',
                     icon: icon,
-                    shape: iconShape,
-                    optimized: false
+                    shape: iconShape
                 };
                 var marker = new google.maps.Marker(options);
                 this._markers.push(marker);

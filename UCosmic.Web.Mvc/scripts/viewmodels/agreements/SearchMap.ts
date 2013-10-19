@@ -472,7 +472,7 @@ module Agreements.ViewModels {
                 cursor: cursor,
                 icon: icon,
                 shape: iconShape,
-                optimized: false, // causes icons to sometimes not render
+                //optimized: false, // causes icons to sometimes not render
             };
             var marker = new google.maps.Marker(options);
             this._markers.push(marker);
@@ -615,7 +615,7 @@ module Agreements.ViewModels {
                 cursor: 'pointer',
                 icon: icon,
                 shape: iconShape,
-                optimized: false, // this causes icons to not be rendered after some pans.
+                //optimized: false, // this causes icons to not be rendered after some pans.
             };
             var marker = new google.maps.Marker(options);
             this._markers.push(marker);
