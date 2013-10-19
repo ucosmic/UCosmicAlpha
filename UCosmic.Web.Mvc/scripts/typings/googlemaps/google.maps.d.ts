@@ -24,6 +24,8 @@ THE SOFTWARE.
 
 declare module google.maps {
 
+    export var visualRefresh: boolean;
+
     /***** MVC *****/
     export class MVCObject {
         constructor ();
