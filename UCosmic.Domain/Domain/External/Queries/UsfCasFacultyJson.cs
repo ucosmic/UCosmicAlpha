@@ -23,7 +23,8 @@
     public class HandleUsfCasFacultyResponseQuery : IHandleQueries<UsfCasFacultyResponse, string>
     {
         private readonly IConsumeHttp _httpConsumer;
-        private const string ServiceUrlFormat = "https://usfuat1.forest.usf.edu:8443/UcosmicSrvc/facultyInfo/{0}?ticket={1}";
+        //private const string ServiceUrlFormat = "https://usfuat1.forest.usf.edu:8443/UcosmicSrvc/facultyInfo/{0}?ticket={1}";
+        private const string ServiceUrlFormat = "https://usfpro12.forest.usf.edu:8443/UcosmicSrvc/facultyInfo/{0}?ticket={1}";
         private const int Timeout = 240000; // 4 minutes
 
         public HandleUsfCasFacultyResponseQuery(IConsumeHttp httpConsumer)

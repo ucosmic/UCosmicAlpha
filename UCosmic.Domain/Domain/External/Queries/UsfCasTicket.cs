@@ -18,8 +18,10 @@ namespace UCosmic.Domain.External
     public class HandleUsfCasTicketQuery : IHandleQueries<UsfCasTicket, string>
     {
         private readonly IConsumeHttp _httpConsumer;
-        private const string TicketsUrl = "https://authtest.it.usf.edu:444/v1/tickets";
-        private const string LoginUrl = "https://usfuat1.forest.usf.edu:8443/UcosmicSrvc/login";
+        //private const string TicketsUrl = "https://authtest.it.usf.edu:444/v1/tickets";
+        private const string TicketsUrl = "https://webauth.usf.edu/v1/tickets";
+        //private const string LoginUrl = "https://usfuat1.forest.usf.edu:8443/UcosmicSrvc/login";
+        private const string LoginUrl = "https://usfpro12.forest.usf.edu:8443/UcosmicSrvc/login";
         private const int Timeout = 10000;
         private const int Retries = 2;
 
