@@ -1969,12 +1969,6 @@
     <TypeScriptCompile Include="scripts\viewmodels\agreements\FileAttachments.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\agreements\DatesStatus.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\agreements\PublicView.ts" />
-    <Content Include="scripts\viewmodels\agreements\Copy of AgreementVM.js">
-      <DependentUpon>PublicView.ts</DependentUpon>
-    </Content>
-    <Content Include="scripts\viewmodels\agreements\Copy of AgreementVM.min.js">
-      <DependentUpon>PublicView.ts</DependentUpon>
-    </Content>
     <TypeScriptCompile Include="scripts\viewmodels\agreements\SearchMap.ts" />
     <Content Include="scripts\viewmodels\agreements\datesStatus.js">
       <DependentUpon>DatesStatus.ts</DependentUpon>
@@ -2055,12 +2049,6 @@
       <DependentUpon>SearchResult.ts</DependentUpon>
     </Content>
     <Content Include="scripts\viewmodels\agreements\searchResult.min.js">
-      <DependentUpon>SearchResult.ts</DependentUpon>
-    </Content>
-    <Content Include="scripts\viewmodels\agreements\searchResults.js">
-      <DependentUpon>SearchResult.ts</DependentUpon>
-    </Content>
-    <Content Include="scripts\viewmodels\agreements\searchResults.min.js">
       <DependentUpon>SearchResult.ts</DependentUpon>
     </Content>
     <Content Include="scripts\viewmodels\agreements\SearchTable.js">
