@@ -46,8 +46,15 @@ var Agreements;
                     sessionStorage.setItem(SearchMap.LatSessionKey, _this.lat().toString());
                     sessionStorage.setItem(SearchMap.LngSessionKey, _this.lng().toString());
                 }).extend({ throttle: 0 });
-                ////#endregion
-                //#region Country Filter Options
+                this.north = ko.observable();
+                this.south = ko.observable();
+                this.east = ko.observable();
+                this.west = ko.observable();
+                this.latitude = ko.observable();
+                this.longitude = ko.observable();
+                this.mag = ko.observable();
+                //#endregion
+                //#region Country & Continent Options
                 // initial options show loading message
                 this.countries = ko.observableArray();
                 this.countryOptions = ko.computed(function () {
@@ -63,7 +70,7 @@ var Agreements;
                     return _this._computeRoute();
                 });
                 //#endregion
-                //#region Query Changes
+                //#region Query Scoping
                 this._scopeHistory = ko.observableArray();
                 this._currentScope = ko.computed(function () {
                     // this will run once during construction
@@ -72,21 +79,73 @@ var Agreements;
                 this._scopeDirty = ko.computed(function () {
                     _this._onScopeDirty();
                 }).extend({ throttle: 1 });
-                this._markers = ko.observableArray();
                 //#endregion
-                //#region Statistics
-                this.north = ko.observable();
-                this.south = ko.observable();
-                this.east = ko.observable();
-                this.west = ko.observable();
-                this.latitude = ko.observable();
-                this.longitude = ko.observable();
-                this.mag = ko.observable();
+                //#region Navigational Binding
+                this._markers = ko.observableArray();
                 this._mapCreated = this._createMap();
                 this._loadCountryOptions();
                 this.sammy = this.settings.sammy || Sammy();
                 this._runSammy();
             }
+            SearchMap.prototype._createMap = function () {
+                var _this = this;
+                google.maps.visualRefresh = true;
+                var element = document.getElementById('google_map_canvas');
+                var options = {
+                    mapTypeId: google.maps.MapTypeId.ROADMAP,
+                    center: new google.maps.LatLng(this.lat(), this.lng()),
+                    zoom: this.zoom(),
+                    draggable: true,
+                    scrollwheel: false,
+                    streetViewControl: false,
+                    panControl: false,
+                    zoomControlOptions: {
+                        style: google.maps.ZoomControlStyle.SMALL
+                    }
+                };
+                this._googleMap = new google.maps.Map(element, options);
+                var deferred = $.Deferred();
+                google.maps.event.addListenerOnce(this._googleMap, 'idle', function () {
+                    google.maps.event.addListener(_this._googleMap, 'center_changed', function () {
+                        _this._onMapCenterChanged();
+                    });
+                    google.maps.event.addListener(_this._googleMap, 'zoom_changed', function () {
+                        _this._onMapZoomChanged();
+                    });
+                    google.maps.event.addListener(_this._googleMap, 'bounds_changed', function () {
+                        _this._onMapBoundsChanged();
+                    });
+                    google.maps.event.trigger(_this._googleMap, 'center_changed');
+                    google.maps.event.trigger(_this._googleMap, 'zoom_changed');
+                    google.maps.event.trigger(_this._googleMap, 'bounds_changed');
+                    deferred.resolve();
+                });
+                return deferred;
+            };
+
+            SearchMap.prototype._onMapZoomChanged = function () {
+                this.mag(this._googleMap.getZoom());
+            };
+
+            SearchMap.prototype._onMapCenterChanged = function () {
+                var center = this._googleMap.getCenter();
+                this.latitude(center.lat());
+                this.longitude(center.lng());
+            };
+
+            SearchMap.prototype._onMapBoundsChanged = function () {
+                var bounds = this._googleMap.getBounds();
+                var north = bounds.getNorthEast().lat();
+                var south = bounds.getSouthWest().lat();
+                var east = bounds.getNorthEast().lng();
+                var west = bounds.getSouthWest().lng();
+                var maxLength = 11;
+                this.north(Number(north.toString().substring(0, maxLength)));
+                this.south(Number(south.toString().substring(0, maxLength)));
+                this.east(Number(east.toString().substring(0, maxLength)));
+                this.west(Number(west.toString().substring(0, maxLength)));
+            };
+
             SearchMap.prototype._computeCountryOptions = function () {
                 var options = [
                     {
@@ -260,65 +319,6 @@ var Agreements;
                         _this._load();
                     });
                 }
-            };
-
-            SearchMap.prototype._createMap = function () {
-                var _this = this;
-                google.maps.visualRefresh = true;
-                var element = document.getElementById('google_map_canvas');
-                var options = {
-                    mapTypeId: google.maps.MapTypeId.ROADMAP,
-                    center: new google.maps.LatLng(this.lat(), this.lng()),
-                    zoom: this.zoom(),
-                    draggable: true,
-                    scrollwheel: false,
-                    streetViewControl: false,
-                    panControl: false,
-                    zoomControlOptions: {
-                        style: google.maps.ZoomControlStyle.SMALL
-                    }
-                };
-                this._googleMap = new google.maps.Map(element, options);
-                var deferred = $.Deferred();
-                google.maps.event.addListenerOnce(this._googleMap, 'idle', function () {
-                    google.maps.event.addListener(_this._googleMap, 'center_changed', function () {
-                        _this._onMapCenterChanged();
-                    });
-                    google.maps.event.addListener(_this._googleMap, 'zoom_changed', function () {
-                        _this._onMapZoomChanged();
-                    });
-                    google.maps.event.addListener(_this._googleMap, 'bounds_changed', function () {
-                        _this._onMapBoundsChanged();
-                    });
-                    google.maps.event.trigger(_this._googleMap, 'center_changed');
-                    google.maps.event.trigger(_this._googleMap, 'zoom_changed');
-                    google.maps.event.trigger(_this._googleMap, 'bounds_changed');
-                    deferred.resolve();
-                });
-                return deferred;
-            };
-
-            SearchMap.prototype._onMapZoomChanged = function () {
-                this.mag(this._googleMap.getZoom());
-            };
-
-            SearchMap.prototype._onMapCenterChanged = function () {
-                var center = this._googleMap.getCenter();
-                this.latitude(center.lat());
-                this.longitude(center.lng());
-            };
-
-            SearchMap.prototype._onMapBoundsChanged = function () {
-                var bounds = this._googleMap.getBounds();
-                var north = bounds.getNorthEast().lat();
-                var south = bounds.getSouthWest().lat();
-                var east = bounds.getNorthEast().lng();
-                var west = bounds.getSouthWest().lng();
-                var maxLength = 11;
-                this.north(Number(north.toString().substring(0, maxLength)));
-                this.south(Number(south.toString().substring(0, maxLength)));
-                this.east(Number(east.toString().substring(0, maxLength)));
-                this.west(Number(west.toString().substring(0, maxLength)));
             };
 
             SearchMap.prototype._load = function () {
@@ -497,178 +497,6 @@ var Agreements;
                 };
                 options.icon = icon;
                 options.shape = shape;
-            };
-
-            //#region Continent Scope
-            SearchMap.prototype._onContinentsResponse = function (response) {
-                this._clearMarkers();
-                var countRange = {
-                    min: Enumerable.From(response).Min(function (x) {
-                        return x.agreementCount;
-                    }),
-                    max: Enumerable.From(response).Max(function (x) {
-                        return x.agreementCount;
-                    })
-                };
-                var scaler = new Scaler(countRange, { min: 24, max: 48 });
-                for (var i = 0; i < response.length; i++) {
-                    var continent = response[i];
-                    this._onContinentResponse(continent, scaler);
-                }
-
-                this._googleMap.setZoom(1);
-                this._googleMap.setCenter(SearchMap._defaultMapCenter);
-            };
-
-            SearchMap.prototype._onContinentResponse = function (continent, scaler) {
-                var _this = this;
-                var side = scaler.scale(continent.agreementCount);
-                var halfSide = side / 2;
-                var iconSettings = {
-                    opacity: 0.8,
-                    side: side,
-                    text: continent.agreementCount
-                };
-                var url = '{0}?{1}'.format(this.settings.graphicsCircleApi, $.param(iconSettings));
-                var icon = {
-                    url: url,
-                    size: new google.maps.Size(side, side),
-                    anchor: new google.maps.Point(halfSide, halfSide)
-                };
-                var iconShape = {
-                    type: 'circle',
-                    coords: [halfSide, halfSide, halfSide]
-                };
-                var isClickable = continent.agreementCount > 0 && continent.id > 0;
-                isClickable = true;
-                var cursor = isClickable ? 'pointer' : 'default';
-                var options = {
-                    map: this._googleMap,
-                    position: new google.maps.LatLng(continent.center.latitude, continent.center.longitude),
-                    title: '{0} - {1} agreement(s)\r\nClick for more information'.format(continent.name, continent.agreementCount),
-                    clickable: true,
-                    cursor: cursor,
-                    icon: icon,
-                    shape: iconShape
-                };
-                var marker = new google.maps.Marker(options);
-                this._markers.push(marker);
-                if (isClickable)
-                    google.maps.event.addListener(marker, 'click', function (e) {
-                        _this._onContinentClick(marker, continent, e);
-                    });
-            };
-
-            SearchMap.prototype._onContinentClick = function (marker, continent, e) {
-                var north = continent.boundingBox.northEast.latitude;
-                var south = continent.boundingBox.southWest.latitude;
-                var east = continent.boundingBox.northEast.longitude;
-                var west = continent.boundingBox.southWest.longitude;
-                var southWest = new google.maps.LatLng(south, west);
-                var northEast = new google.maps.LatLng(north, east);
-                var bounds = new google.maps.LatLngBounds(southWest, northEast);
-                this._googleMap.fitBounds(bounds);
-                this.continentCode(continent.continentCode);
-            };
-
-            //#endregion
-            //#region Country Scope
-            SearchMap.prototype._onCountriesResponse = function (response) {
-                var _this = this;
-                //#region collapse
-                this._clearMarkers();
-                var continentCode = this.continentCode();
-                var countries = Enumerable.From(response).Where(function (x) {
-                    return x.continentCode == continentCode;
-                }).ToArray();
-                var bounds = new google.maps.LatLngBounds();
-                if (countries.length == 1) {
-                    var country = countries[0];
-                    var northEast = new google.maps.LatLng(country.boundingBox.northEast.latitude, country.boundingBox.northEast.longitude);
-                    var southWest = new google.maps.LatLng(country.boundingBox.southWest.latitude, country.boundingBox.southWest.longitude);
-                    bounds = new google.maps.LatLngBounds(southWest, northEast);
-                    this._googleMap.fitBounds(bounds);
-                } else if (countries.length > 1) {
-                    var latLngs = Enumerable.From(countries).Select(function (x) {
-                        return new google.maps.LatLng(x.center.latitude, x.center.longitude);
-                    }).ToArray();
-                    $.each(latLngs, function (index, latLng) {
-                        bounds.extend(latLng);
-                    });
-                    this._googleMap.fitBounds(bounds);
-                } else {
-                    this._googleMap.setCenter(SearchMap._defaultMapCenter);
-                    this._googleMap.setZoom(1);
-                    if (continentCode != 'any') {
-                        var continent = Enumerable.From(this.continentOptions()).Single(function (x) {
-                            return x.code == continentCode;
-                        });
-                        alert('No agreements found in {0}. Click your back button or select a different continent or country.'.format(continent.name));
-                        //setTimeout(function (): void { history.back(); }, 100);
-                    } else {
-                        alert('No agreements found. Click your back button or select a different continent or country.');
-                    }
-                    //return;
-                }
-
-                //#endregion
-                google.maps.event.addListenerOnce(this._googleMap, 'idle', function () {
-                    var continentCode = _this.continentCode();
-                    var countRange = {
-                        min: Enumerable.From(response).Min(function (x) {
-                            return x.agreementCount;
-                        }),
-                        max: Enumerable.From(response).Max(function (x) {
-                            return x.agreementCount;
-                        })
-                    };
-                    var scaler = new Scaler(countRange, { min: 24, max: 48 });
-                    for (var i = 0; i < countries.length; i++) {
-                        var country = countries[i];
-                        _this._onCountryResponse(country, scaler, new google.maps.LatLngBounds());
-                    }
-                    _this.lat(_this.latitude());
-                    _this.lng(_this.longitude());
-                    _this.zoom(_this.mag());
-                    _this._setLocation();
-                });
-            };
-
-            SearchMap.prototype._onCountryResponse = function (country, scaler, bounds) {
-                var latLng = new google.maps.LatLng(country.center.latitude, country.center.longitude);
-                var side = scaler.scale(country.agreementCount);
-                var halfSide = side / 2;
-                var iconSettings = {
-                    opacity: 1,
-                    side: side,
-                    text: country.agreementCount
-                };
-                var url = '{0}?{1}'.format(this.settings.graphicsCircleApi, $.param(iconSettings));
-                var icon = {
-                    url: url,
-                    size: new google.maps.Size(side, side),
-                    origin: new google.maps.Point(0, 0),
-                    anchor: new google.maps.Point(halfSide, halfSide)
-                };
-                var iconShape = {
-                    type: 'circle',
-                    coords: [halfSide, halfSide, halfSide]
-                };
-                var options = {
-                    map: this._googleMap,
-                    position: latLng,
-                    title: '{0} - {1} agreement(s)\r\nClick for more information.'.format(country.name, country.agreementCount),
-                    clickable: true,
-                    cursor: 'pointer',
-                    icon: icon,
-                    shape: iconShape
-                };
-                var marker = new google.maps.Marker(options);
-                this._markers.push(marker);
-                //if (isClickable)
-                //    google.maps.event.addListener(marker, 'click', (e: google.maps.MouseEvent): void => {
-                //        this._onContinentClick(marker, continent, e);
-                //    });
             };
             SearchMap._defaultMapCenter = new google.maps.LatLng(0, 17);
 

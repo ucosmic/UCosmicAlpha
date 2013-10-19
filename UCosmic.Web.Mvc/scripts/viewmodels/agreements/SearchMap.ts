@@ -90,8 +90,79 @@ module Agreements.ViewModels {
             this._runSammy();
         }
 
-        ////#endregion
-        //#region Country Filter Options
+        //#endregion
+        //#region Google Map
+
+        private _googleMap: google.maps.Map;
+        private _mapCreated: JQueryDeferred<void>;
+        private _createMap(): JQueryDeferred<void> {
+            google.maps.visualRefresh = true;
+            var element = document.getElementById('google_map_canvas');
+            var options: google.maps.MapOptions = {
+                mapTypeId: google.maps.MapTypeId.ROADMAP,
+                center: new google.maps.LatLng(this.lat(), this.lng()),
+                zoom: this.zoom(), // zoom out
+                draggable: true, // allow map panning
+                scrollwheel: false, // prevent mouse wheel zooming
+                streetViewControl: false,
+                panControl: false,
+                zoomControlOptions: {
+                    style: google.maps.ZoomControlStyle.SMALL,
+                },
+            };
+            this._googleMap = new google.maps.Map(element, options);
+            var deferred = $.Deferred();
+            google.maps.event.addListenerOnce(this._googleMap, 'idle', (): void => {
+                google.maps.event.addListener(this._googleMap, 'center_changed', (): void => {
+                    this._onMapCenterChanged();
+                })
+                google.maps.event.addListener(this._googleMap, 'zoom_changed', (): void => {
+                    this._onMapZoomChanged();
+                })
+                google.maps.event.addListener(this._googleMap, 'bounds_changed', (): void => {
+                    this._onMapBoundsChanged();
+                })
+                google.maps.event.trigger(this._googleMap, 'center_changed');
+                google.maps.event.trigger(this._googleMap, 'zoom_changed');
+                google.maps.event.trigger(this._googleMap, 'bounds_changed');
+                deferred.resolve();
+            });
+            return deferred;
+        }
+
+        north: KnockoutObservable<number> = ko.observable();
+        south: KnockoutObservable<number> = ko.observable();
+        east: KnockoutObservable<number> = ko.observable();
+        west: KnockoutObservable<number> = ko.observable();
+        latitude: KnockoutObservable<number> = ko.observable();
+        longitude: KnockoutObservable<number> = ko.observable();
+        mag: KnockoutObservable<number> = ko.observable();
+
+        private _onMapZoomChanged(): void {
+            this.mag(this._googleMap.getZoom());
+        }
+
+        private _onMapCenterChanged(): void {
+            var center = this._googleMap.getCenter();
+            this.latitude(center.lat());
+            this.longitude(center.lng());
+        }
+
+        private _onMapBoundsChanged(): void {
+            var bounds = this._googleMap.getBounds();
+            var north = bounds.getNorthEast().lat();
+            var south = bounds.getSouthWest().lat();
+            var east = bounds.getNorthEast().lng();
+            var west = bounds.getSouthWest().lng();
+            var maxLength = 11;
+            this.north(Number(north.toString().substring(0, maxLength)));
+            this.south(Number(south.toString().substring(0, maxLength)));
+            this.east(Number(east.toString().substring(0, maxLength)));
+            this.west(Number(west.toString().substring(0, maxLength)));
+        }
+
+        //#endregion
+        //#region Country & Continent Options
 
         // initial options show loading message
         countries: KnockoutObservableArray<Places.ApiModels.Country> = ko.observableArray();
@@ -278,7 +349,7 @@ module Agreements.ViewModels {
         }
 
         //#endregion
-        //#region Query Changes
+        //#region Query Scoping
 
         private _scopeHistory: KnockoutObservableArray<SearchMapScope> = ko.observableArray();
         private _currentScope = ko.computed((): SearchMapScope => {
@@ -316,83 +387,9 @@ module Agreements.ViewModels {
         }
 
         //#endregion
-        //#region Google Map
-        //#region Creation & Initialization
+        //#region Navigational Binding
 
-        private _googleMap: google.maps.Map;
         private _markers: KnockoutObservableArray<google.maps.Marker> = ko.observableArray();
-        private _mapCreated: JQueryDeferred<void>;
-        private _createMap(): JQueryDeferred<void> {
-            google.maps.visualRefresh = true;
-            var element = document.getElementById('google_map_canvas');
-            var options: google.maps.MapOptions = {
-                mapTypeId: google.maps.MapTypeId.ROADMAP,
-                center: new google.maps.LatLng(this.lat(), this.lng()),
-                zoom: this.zoom(), // zoom out
-                draggable: true, // allow map panning
-                scrollwheel: false, // prevent mouse wheel zooming
-                streetViewControl: false,
-                panControl: false,
-                zoomControlOptions: {
-                    style: google.maps.ZoomControlStyle.SMALL,
-                },
-            };
-            this._googleMap = new google.maps.Map(element, options);
-            var deferred = $.Deferred();
-            google.maps.event.addListenerOnce(this._googleMap, 'idle', (): void => {
-                google.maps.event.addListener(this._googleMap, 'center_changed', (): void => {
-                    this._onMapCenterChanged();
-                })
-                google.maps.event.addListener(this._googleMap, 'zoom_changed', (): void => {
-                    this._onMapZoomChanged();
-                })
-                google.maps.event.addListener(this._googleMap, 'bounds_changed', (): void => {
-                    this._onMapBoundsChanged();
-                })
-                google.maps.event.trigger(this._googleMap, 'center_changed');
-                google.maps.event.trigger(this._googleMap, 'zoom_changed');
-                google.maps.event.trigger(this._googleMap, 'bounds_changed');
-                deferred.resolve();
-            });
-            return deferred;
-        }
-
-        //#endregion
-        //#region Statistics
-
-        north: KnockoutObservable<number> = ko.observable();
-        south: KnockoutObservable<number> = ko.observable();
-        east: KnockoutObservable<number> = ko.observable();
-        west: KnockoutObservable<number> = ko.observable();
-        latitude: KnockoutObservable<number> = ko.observable();
-        longitude: KnockoutObservable<number> = ko.observable();
-        mag: KnockoutObservable<number> = ko.observable();
-
-        private _onMapZoomChanged(): void {
-            this.mag(this._googleMap.getZoom());
-        }
-
-        private _onMapCenterChanged(): void {
-            var center = this._googleMap.getCenter();
-            this.latitude(center.lat());
-            this.longitude(center.lng());
-        }
-
-        private _onMapBoundsChanged(): void {
-            var bounds = this._googleMap.getBounds();
-            var north = bounds.getNorthEast().lat();
-            var south = bounds.getSouthWest().lat();
-            var east = bounds.getNorthEast().lng();
-            var west = bounds.getSouthWest().lng();
-            var maxLength = 11;
-            this.north(Number(north.toString().substring(0, maxLength)));
-            this.south(Number(south.toString().substring(0, maxLength)));
-            this.east(Number(east.toString().substring(0, maxLength)));
-            this.west(Number(west.toString().substring(0, maxLength)));
-        }
-
-        //#endregion
-
         private _continentsResponse: KnockoutObservableArray<ApiModels.PlaceWithAgreements>;
         private _countriesResponse: KnockoutObservableArray<ApiModels.PlaceWithAgreements>;
         private _load(): void {
@@ -592,182 +589,182 @@ module Agreements.ViewModels {
             options.shape = shape;
         }
 
-        //#region Continent Scope
+        //#region Old Continent Scope
 
-        private _onContinentsResponse(response: any[]): void {
+        //private _onContinentsResponse(response: any[]): void {
 
-            this._clearMarkers();
-            var countRange: Range = {
-                min: Enumerable.From(response).Min(function (x) { return x.agreementCount }),
-                max: Enumerable.From(response).Max(function (x) { return x.agreementCount }),
-            };
-            var scaler = new Scaler(countRange, { min: 24, max: 48 });
-            for (var i = 0; i < response.length; i++) {
-                var continent = response[i];
-                this._onContinentResponse(continent, scaler);
-            }
+        //    this._clearMarkers();
+        //    var countRange: Range = {
+        //        min: Enumerable.From(response).Min(function (x) { return x.agreementCount }),
+        //        max: Enumerable.From(response).Max(function (x) { return x.agreementCount }),
+        //    };
+        //    var scaler = new Scaler(countRange, { min: 24, max: 48 });
+        //    for (var i = 0; i < response.length; i++) {
+        //        var continent = response[i];
+        //        this._onContinentResponse(continent, scaler);
+        //    }
 
-            this._googleMap.setZoom(1);
-            this._googleMap.setCenter(SearchMap._defaultMapCenter);
-        }
+        //    this._googleMap.setZoom(1);
+        //    this._googleMap.setCenter(SearchMap._defaultMapCenter);
+        //}
 
-        private _onContinentResponse(continent: any, scaler: Scaler): void {
-            var side = scaler.scale(continent.agreementCount);
-            var halfSide = side / 2;
-            var iconSettings = {
-                opacity: 0.8,
-                side: side,
-                text: continent.agreementCount,
-            };
-            var url = '{0}?{1}'.format(this.settings.graphicsCircleApi, $.param(iconSettings));
-            var icon = {
-                url: url,
-                size: new google.maps.Size(side, side),
-                anchor: new google.maps.Point(halfSide, halfSide),
-            };
-            var iconShape: google.maps.MarkerShape = {
-                type: 'circle',
-                coords: [halfSide, halfSide, halfSide],
-            };
-            var isClickable = continent.agreementCount > 0 && continent.id > 0;
-            isClickable = true;
-            var cursor = isClickable ? 'pointer' : 'default';
-            var options: google.maps.MarkerOptions = {
-                map: this._googleMap,
-                position: new google.maps.LatLng(continent.center.latitude, continent.center.longitude),
-                title: '{0} - {1} agreement(s)\r\nClick for more information'
-                    .format(continent.name, continent.agreementCount),
-                clickable: true,
-                cursor: cursor,
-                icon: icon,
-                shape: iconShape,
-                //optimized: false, // causes icons to sometimes not render
-            };
-            var marker = new google.maps.Marker(options);
-            this._markers.push(marker);
-            if (isClickable)
-                google.maps.event.addListener(marker, 'click', (e: google.maps.MouseEvent): void => {
-                    this._onContinentClick(marker, continent, e);
-                });
-        }
+        //private _onContinentResponse(continent: any, scaler: Scaler): void {
+        //    var side = scaler.scale(continent.agreementCount);
+        //    var halfSide = side / 2;
+        //    var iconSettings = {
+        //        opacity: 0.8,
+        //        side: side,
+        //        text: continent.agreementCount,
+        //    };
+        //    var url = '{0}?{1}'.format(this.settings.graphicsCircleApi, $.param(iconSettings));
+        //    var icon = {
+        //        url: url,
+        //        size: new google.maps.Size(side, side),
+        //        anchor: new google.maps.Point(halfSide, halfSide),
+        //    };
+        //    var iconShape: google.maps.MarkerShape = {
+        //        type: 'circle',
+        //        coords: [halfSide, halfSide, halfSide],
+        //    };
+        //    var isClickable = continent.agreementCount > 0 && continent.id > 0;
+        //    isClickable = true;
+        //    var cursor = isClickable ? 'pointer' : 'default';
+        //    var options: google.maps.MarkerOptions = {
+        //        map: this._googleMap,
+        //        position: new google.maps.LatLng(continent.center.latitude, continent.center.longitude),
+        //        title: '{0} - {1} agreement(s)\r\nClick for more information'
+        //            .format(continent.name, continent.agreementCount),
+        //        clickable: true,
+        //        cursor: cursor,
+        //        icon: icon,
+        //        shape: iconShape,
+        //        //optimized: false, // causes icons to sometimes not render
+        //    };
+        //    var marker = new google.maps.Marker(options);
+        //    this._markers.push(marker);
+        //    if (isClickable)
+        //        google.maps.event.addListener(marker, 'click', (e: google.maps.MouseEvent): void => {
+        //            this._onContinentClick(marker, continent, e);
+        //        });
+        //}
 
-        private _onContinentClick(marker: google.maps.Marker, continent: any, e: google.maps.MouseEvent): void {
-            var north = continent.boundingBox.northEast.latitude;
-            var south = continent.boundingBox.southWest.latitude;
-            var east = continent.boundingBox.northEast.longitude;
-            var west = continent.boundingBox.southWest.longitude;
-            var southWest = new google.maps.LatLng(south, west);
-            var northEast = new google.maps.LatLng(north, east);
-            var bounds = new google.maps.LatLngBounds(southWest, northEast);
-            this._googleMap.fitBounds(bounds);
-            this.continentCode(continent.continentCode);
-        }
+        //private _onContinentClick(marker: google.maps.Marker, continent: any, e: google.maps.MouseEvent): void {
+        //    var north = continent.boundingBox.northEast.latitude;
+        //    var south = continent.boundingBox.southWest.latitude;
+        //    var east = continent.boundingBox.northEast.longitude;
+        //    var west = continent.boundingBox.southWest.longitude;
+        //    var southWest = new google.maps.LatLng(south, west);
+        //    var northEast = new google.maps.LatLng(north, east);
+        //    var bounds = new google.maps.LatLngBounds(southWest, northEast);
+        //    this._googleMap.fitBounds(bounds);
+        //    this.continentCode(continent.continentCode);
+        //}
 
         //#endregion
-        //#region Country Scope
-        private _onCountriesResponse(response: any[]): void {
-            //#region collapse
-            this._clearMarkers();
-            var continentCode = this.continentCode();
-            var countries = Enumerable.From(response)
-                .Where(function (x: any): boolean {
-                    return x.continentCode == continentCode;
-                })
-                .ToArray();
-            var bounds = new google.maps.LatLngBounds();
-            if (countries.length == 1) {
-                var country = countries[0];
-                var northEast = new google.maps.LatLng(country.boundingBox.northEast.latitude,
-                    country.boundingBox.northEast.longitude);
-                var southWest = new google.maps.LatLng(country.boundingBox.southWest.latitude,
-                    country.boundingBox.southWest.longitude);
-                bounds = new google.maps.LatLngBounds(southWest, northEast);
-                this._googleMap.fitBounds(bounds);
-            }
-            else if (countries.length > 1) {
-                var latLngs = Enumerable.From(countries)
-                    .Select(function (x: any): any {
-                        return new google.maps.LatLng(x.center.latitude, x.center.longitude);
-                    }).ToArray();
-                $.each(latLngs, function (index: number, latLng: google.maps.LatLng): void {
-                    bounds.extend(latLng);
-                });
-                this._googleMap.fitBounds(bounds);
-            }
-            else {
-                this._googleMap.setCenter(SearchMap._defaultMapCenter);
-                this._googleMap.setZoom(1);
-                if (continentCode != 'any') {
-                    var continent = Enumerable.From(this.continentOptions())
-                        .Single(function (x: any): boolean {
-                            return x.code == continentCode;
-                        });
-                    alert('No agreements found in {0}. Click your back button or select a different continent or country.'.format(continent.name));
-                    //setTimeout(function (): void { history.back(); }, 100);
-                }
-                else {
-                    alert('No agreements found. Click your back button or select a different continent or country.');
-                }
-                //return;
-            }
+        //#region Old Country Scope
+        //private _onCountriesResponse(response: any[]): void {
+        //    //#region collapse
+        //    this._clearMarkers();
+        //    var continentCode = this.continentCode();
+        //    var countries = Enumerable.From(response)
+        //        .Where(function (x: any): boolean {
+        //            return x.continentCode == continentCode;
+        //        })
+        //        .ToArray();
+        //    var bounds = new google.maps.LatLngBounds();
+        //    if (countries.length == 1) {
+        //        var country = countries[0];
+        //        var northEast = new google.maps.LatLng(country.boundingBox.northEast.latitude,
+        //            country.boundingBox.northEast.longitude);
+        //        var southWest = new google.maps.LatLng(country.boundingBox.southWest.latitude,
+        //            country.boundingBox.southWest.longitude);
+        //        bounds = new google.maps.LatLngBounds(southWest, northEast);
+        //        this._googleMap.fitBounds(bounds);
+        //    }
+        //    else if (countries.length > 1) {
+        //        var latLngs = Enumerable.From(countries)
+        //            .Select(function (x: any): any {
+        //                return new google.maps.LatLng(x.center.latitude, x.center.longitude);
+        //            }).ToArray();
+        //        $.each(latLngs, function (index: number, latLng: google.maps.LatLng): void {
+        //            bounds.extend(latLng);
+        //        });
+        //        this._googleMap.fitBounds(bounds);
+        //    }
+        //    else {
+        //        this._googleMap.setCenter(SearchMap._defaultMapCenter);
+        //        this._googleMap.setZoom(1);
+        //        if (continentCode != 'any') {
+        //            var continent = Enumerable.From(this.continentOptions())
+        //                .Single(function (x: any): boolean {
+        //                    return x.code == continentCode;
+        //                });
+        //            alert('No agreements found in {0}. Click your back button or select a different continent or country.'.format(continent.name));
+        //            //setTimeout(function (): void { history.back(); }, 100);
+        //        }
+        //        else {
+        //            alert('No agreements found. Click your back button or select a different continent or country.');
+        //        }
+        //        //return;
+        //    }
 
-            //#endregion
-            google.maps.event.addListenerOnce(this._googleMap, 'idle', (): void => {
-                var continentCode = this.continentCode();
-                var countRange: Range = {
-                    min: Enumerable.From(response).Min(function (x) { return x.agreementCount }),
-                    max: Enumerable.From(response).Max(function (x) { return x.agreementCount }),
-                };
-                var scaler = new Scaler(countRange, { min: 24, max: 48 });
-                for (var i = 0; i < countries.length; i++) {
-                    var country = countries[i];
-                    this._onCountryResponse(country, scaler, new google.maps.LatLngBounds());
-                }
-                this.lat(this.latitude());
-                this.lng(this.longitude());
-                this.zoom(this.mag());
-                this._setLocation();
-            });
-        }
+        //    //#endregion
+        //    google.maps.event.addListenerOnce(this._googleMap, 'idle', (): void => {
+        //        var continentCode = this.continentCode();
+        //        var countRange: Range = {
+        //            min: Enumerable.From(response).Min(function (x) { return x.agreementCount }),
+        //            max: Enumerable.From(response).Max(function (x) { return x.agreementCount }),
+        //        };
+        //        var scaler = new Scaler(countRange, { min: 24, max: 48 });
+        //        for (var i = 0; i < countries.length; i++) {
+        //            var country = countries[i];
+        //            this._onCountryResponse(country, scaler, new google.maps.LatLngBounds());
+        //        }
+        //        this.lat(this.latitude());
+        //        this.lng(this.longitude());
+        //        this.zoom(this.mag());
+        //        this._setLocation();
+        //    });
+        //}
 
-        private _onCountryResponse(country: any, scaler: Scaler, bounds: google.maps.LatLngBounds): void {
-            var latLng = new google.maps.LatLng(country.center.latitude, country.center.longitude);
-            var side = scaler.scale(country.agreementCount);
-            var halfSide = side / 2;
-            var iconSettings = {
-                opacity: 1,
-                side: side,
-                text: country.agreementCount,
-            };
-            var url = '{0}?{1}'.format(this.settings.graphicsCircleApi, $.param(iconSettings));
-            var icon = {
-                url: url,
-                size: new google.maps.Size(side, side),
-                origin: new google.maps.Point(0, 0),
-                anchor: new google.maps.Point(halfSide, halfSide),
-            };
-            var iconShape: google.maps.MarkerShape = {
-                type: 'circle',
-                coords: [halfSide, halfSide, halfSide],
-            };
-            var options: google.maps.MarkerOptions = {
-                map: this._googleMap,
-                position: latLng,
-                title: '{0} - {1} agreement(s)\r\nClick for more information.'
-                    .format(country.name, country.agreementCount),
-                clickable: true,
-                cursor: 'pointer',
-                icon: icon,
-                shape: iconShape,
-                //optimized: false, // this causes icons to not be rendered after some pans.
-            };
-            var marker = new google.maps.Marker(options);
-            this._markers.push(marker);
-            //if (isClickable)
-            //    google.maps.event.addListener(marker, 'click', (e: google.maps.MouseEvent): void => {
-            //        this._onContinentClick(marker, continent, e);
-            //    });
-        }
+        //private _onCountryResponse(country: any, scaler: Scaler, bounds: google.maps.LatLngBounds): void {
+        //    var latLng = new google.maps.LatLng(country.center.latitude, country.center.longitude);
+        //    var side = scaler.scale(country.agreementCount);
+        //    var halfSide = side / 2;
+        //    var iconSettings = {
+        //        opacity: 1,
+        //        side: side,
+        //        text: country.agreementCount,
+        //    };
+        //    var url = '{0}?{1}'.format(this.settings.graphicsCircleApi, $.param(iconSettings));
+        //    var icon = {
+        //        url: url,
+        //        size: new google.maps.Size(side, side),
+        //        origin: new google.maps.Point(0, 0),
+        //        anchor: new google.maps.Point(halfSide, halfSide),
+        //    };
+        //    var iconShape: google.maps.MarkerShape = {
+        //        type: 'circle',
+        //        coords: [halfSide, halfSide, halfSide],
+        //    };
+        //    var options: google.maps.MarkerOptions = {
+        //        map: this._googleMap,
+        //        position: latLng,
+        //        title: '{0} - {1} agreement(s)\r\nClick for more information.'
+        //            .format(country.name, country.agreementCount),
+        //        clickable: true,
+        //        cursor: 'pointer',
+        //        icon: icon,
+        //        shape: iconShape,
+        //        //optimized: false, // this causes icons to not be rendered after some pans.
+        //    };
+        //    var marker = new google.maps.Marker(options);
+        //    this._markers.push(marker);
+        //    //if (isClickable)
+        //    //    google.maps.event.addListener(marker, 'click', (e: google.maps.MouseEvent): void => {
+        //    //        this._onContinentClick(marker, continent, e);
+        //    //    });
+        //}
 
         //#endregion
         //#endregion
