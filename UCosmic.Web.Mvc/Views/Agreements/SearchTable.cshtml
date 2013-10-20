@@ -193,8 +193,8 @@
                 </div>
                 <div data-bind="visible: continentCode() != 'any'">
                     <strong data-bind="text: status.agreementCount">?</strong>
-                    <span data-bind="visible: agreementCount == 1" style="display: none;">agreement</span>
-                    <span data-bind="visible: agreementCount != 1">agreements</span>
+                    <span data-bind="visible: status.agreementCount() == 1" style="display: none;">agreement</span>
+                    <span data-bind="visible: status.agreementCount() != 1">agreements</span>
                     with
                     <strong data-bind="text: status.partnerCount">?</strong> partners in
                     <strong data-bind="text: status.countryCount">?</strong>
@@ -294,12 +294,6 @@
                                         <option value="250">Show 250 results per page</option>
                                     </select>
                                 </div>
-                                <div class="field" style="display: none;">
-                                    <select class="side" data-xbind="value: lens">
-                                        <option value="table">Table</option>
-                                        <option value="list">List</option>
-                                    </select>
-                                </div>
                                 <div class="field" data-bind="with: pager.input">
                                     <button class="link" data-bind="click: prev, enable: prevAllowed">&lt;&lt; Previous</button>
                                     |
@@ -316,6 +310,12 @@
                                     <select class="side" data-bind="value: countryCode, options: countryOptions, optionsText: 'name', optionsValue: 'code'">
                                         <option value="any">[Loading...]</option>
                                     </select>
+                                </div>
+                                <div class="field">
+                                    <label style="vertical-align: middle;">
+                                        <input type="checkbox" value="_blank" data-bind="checked: detailPreferenceChecked" style="vertical-align: middle;" />
+                                        <span style="color: #000; font-size: 14px; vertical-align: middle;">Open details in a new tab</span>
+                                    </label>
                                 </div>
                             </div>
                         </li>

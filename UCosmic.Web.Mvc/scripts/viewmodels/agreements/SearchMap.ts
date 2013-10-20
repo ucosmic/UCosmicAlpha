@@ -54,16 +54,23 @@ module Agreements.ViewModels {
             parseInt(sessionStorage.getItem(SearchMap.LatSessionKey)) || SearchMap._defaultMapCenter.lat());
         lng: KnockoutObservable<number> = ko.observable(
             parseInt(sessionStorage.getItem(SearchMap.LngSessionKey)) || SearchMap._defaultMapCenter.lng());
+        detailPreference: KnockoutObservable<string> = ko.observable(
+            sessionStorage.getItem(SearchMap.DetailPrefSessionKey) || '_blank');
+        detailPreferenceChecked: KnockoutComputed<boolean> = ko.computed({
+            read: (): boolean => { return this.detailPreference() == '_blank' },
+            write: (value: boolean): void => { this.detailPreference(value ? '_blank' : ''); },
+        });
 
         //#endregion
         //#region Search Filter Input sessionStorage
 
         static ContinentSessionKey = 'AgreementSearchContinent';
         static CountrySessionKey = 'AgreementSearchCountry2';
+        static PlaceIdSessionKey = 'AgreementMapSearchPlaceId';
         static ZoomSessionKey = 'AgreementSearchZoom';
         static LatSessionKey = 'AgreementSearchLat';
         static LngSessionKey = 'AgreementSearchLng';
-        static PlaceIdSessionKey = 'AgreementMapSearchPlaceId';
+        static DetailPrefSessionKey = 'AgreementSearchMapDetailPreference';
 
         // automatically save the search inputs to session when they change
         private _inputChanged: KnockoutComputed<void> = ko.computed((): void => {
@@ -73,10 +80,11 @@ module Agreements.ViewModels {
 
             sessionStorage.setItem(SearchMap.ContinentSessionKey, this.continentCode());
             sessionStorage.setItem(SearchMap.CountrySessionKey, this.countryCode());
+            sessionStorage.setItem(SearchMap.PlaceIdSessionKey, this.placeId().toString());
             sessionStorage.setItem(SearchMap.ZoomSessionKey, this.zoom().toString());
             sessionStorage.setItem(SearchMap.LatSessionKey, this.lat().toString());
             sessionStorage.setItem(SearchMap.LngSessionKey, this.lng().toString());
-            sessionStorage.setItem(SearchMap.PlaceIdSessionKey, this.placeId().toString());
+            sessionStorage.setItem(SearchMap.DetailPrefSessionKey, this.detailPreference());
         }).extend({ throttle: 0, });
 
         //#endregion
@@ -735,7 +743,14 @@ module Agreements.ViewModels {
                 if (placeType === 'continents') {
                     google.maps.event.addListener(marker, 'click', (e: google.maps.MouseEvent): void => {
                         if (place.agreementCount == 1) {
-                            location.href = this.settings.detailUrl.format(place.agreementIds[0]);
+                            var url = this.settings.detailUrl.format(place.agreementIds[0]);
+                            var detailPreference = this.detailPreference();
+                            if (detailPreference == '_blank') {
+                                window.open(url, detailPreference);
+                            }
+                            else {
+                                location.href = url;
+                            }
                         }
                         else {
                             this._googleMap.fitBounds(Places.Utils.convertToLatLngBounds(place.boundingBox));
@@ -750,7 +765,14 @@ module Agreements.ViewModels {
                 else if (placeType === 'countries') {
                     google.maps.event.addListener(marker, 'click', (e: google.maps.MouseEvent): void => {
                         if (place.agreementCount == 1) {
-                            location.href = this.settings.detailUrl.format(place.agreementIds[0]);
+                            var url = this.settings.detailUrl.format(place.agreementIds[0]);
+                            var detailPreference = this.detailPreference();
+                            if (detailPreference == '_blank') {
+                                window.open(url, detailPreference);
+                            }
+                            else {
+                                location.href = url;
+                            }
                         }
                         else if (place.id > 0) {
                             this.countryCode(place.countryCode);
@@ -760,7 +782,14 @@ module Agreements.ViewModels {
                 else if (!placeType) {
                     google.maps.event.addListener(marker, 'click', (e: google.maps.MouseEvent): void => {
                         if (place.agreementCount == 1) {
-                            location.href = this.settings.detailUrl.format(place.agreementIds[0]);
+                            var url = this.settings.detailUrl.format(place.agreementIds[0]);
+                            var detailPreference = this.detailPreference();
+                            if (detailPreference == '_blank') {
+                                window.open(url, detailPreference);
+                            }
+                            else {
+                                location.href = url;
+                            }
                         }
                         else if (place.id) {
                             this.placeId(place.id);
@@ -949,6 +978,7 @@ module Agreements.ViewModels {
 
             this._updateRoute();
         }
+
         //#endregion
     }
 

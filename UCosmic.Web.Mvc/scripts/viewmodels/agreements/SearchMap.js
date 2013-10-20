@@ -30,6 +30,15 @@ var Agreements;
                 this.zoom = ko.observable(parseInt(sessionStorage.getItem(SearchMap.ZoomSessionKey)) || 1);
                 this.lat = ko.observable(parseInt(sessionStorage.getItem(SearchMap.LatSessionKey)) || SearchMap._defaultMapCenter.lat());
                 this.lng = ko.observable(parseInt(sessionStorage.getItem(SearchMap.LngSessionKey)) || SearchMap._defaultMapCenter.lng());
+                this.detailPreference = ko.observable(sessionStorage.getItem(SearchMap.DetailPrefSessionKey) || '_blank');
+                this.detailPreferenceChecked = ko.computed({
+                    read: function () {
+                        return _this.detailPreference() == '_blank';
+                    },
+                    write: function (value) {
+                        _this.detailPreference(value ? '_blank' : '');
+                    }
+                });
                 // automatically save the search inputs to session when they change
                 this._inputChanged = ko.computed(function () {
                     if (_this.countryCode() == undefined)
@@ -39,10 +48,11 @@ var Agreements;
 
                     sessionStorage.setItem(SearchMap.ContinentSessionKey, _this.continentCode());
                     sessionStorage.setItem(SearchMap.CountrySessionKey, _this.countryCode());
+                    sessionStorage.setItem(SearchMap.PlaceIdSessionKey, _this.placeId().toString());
                     sessionStorage.setItem(SearchMap.ZoomSessionKey, _this.zoom().toString());
                     sessionStorage.setItem(SearchMap.LatSessionKey, _this.lat().toString());
                     sessionStorage.setItem(SearchMap.LngSessionKey, _this.lng().toString());
-                    sessionStorage.setItem(SearchMap.PlaceIdSessionKey, _this.placeId().toString());
+                    sessionStorage.setItem(SearchMap.DetailPrefSessionKey, _this.detailPreference());
                 }).extend({ throttle: 0 });
                 this.north = ko.observable();
                 this.south = ko.observable();
@@ -610,7 +620,13 @@ var Agreements;
                     if (placeType === 'continents') {
                         google.maps.event.addListener(marker, 'click', function (e) {
                             if (place.agreementCount == 1) {
-                                location.href = _this.settings.detailUrl.format(place.agreementIds[0]);
+                                var url = _this.settings.detailUrl.format(place.agreementIds[0]);
+                                var detailPreference = _this.detailPreference();
+                                if (detailPreference == '_blank') {
+                                    window.open(url, detailPreference);
+                                } else {
+                                    location.href = url;
+                                }
                             } else {
                                 _this._googleMap.fitBounds(Places.Utils.convertToLatLngBounds(place.boundingBox));
                                 if (place.id < 1) {
@@ -623,7 +639,13 @@ var Agreements;
                     } else if (placeType === 'countries') {
                         google.maps.event.addListener(marker, 'click', function (e) {
                             if (place.agreementCount == 1) {
-                                location.href = _this.settings.detailUrl.format(place.agreementIds[0]);
+                                var url = _this.settings.detailUrl.format(place.agreementIds[0]);
+                                var detailPreference = _this.detailPreference();
+                                if (detailPreference == '_blank') {
+                                    window.open(url, detailPreference);
+                                } else {
+                                    location.href = url;
+                                }
                             } else if (place.id > 0) {
                                 _this.countryCode(place.countryCode);
                             }
@@ -631,7 +653,13 @@ var Agreements;
                     } else if (!placeType) {
                         google.maps.event.addListener(marker, 'click', function (e) {
                             if (place.agreementCount == 1) {
-                                location.href = _this.settings.detailUrl.format(place.agreementIds[0]);
+                                var url = _this.settings.detailUrl.format(place.agreementIds[0]);
+                                var detailPreference = _this.detailPreference();
+                                if (detailPreference == '_blank') {
+                                    window.open(url, detailPreference);
+                                } else {
+                                    location.href = url;
+                                }
                             } else if (place.id) {
                                 _this.placeId(place.id);
                             }
@@ -808,10 +836,11 @@ var Agreements;
 
             SearchMap.ContinentSessionKey = 'AgreementSearchContinent';
             SearchMap.CountrySessionKey = 'AgreementSearchCountry2';
+            SearchMap.PlaceIdSessionKey = 'AgreementMapSearchPlaceId';
             SearchMap.ZoomSessionKey = 'AgreementSearchZoom';
             SearchMap.LatSessionKey = 'AgreementSearchLat';
             SearchMap.LngSessionKey = 'AgreementSearchLng';
-            SearchMap.PlaceIdSessionKey = 'AgreementMapSearchPlaceId';
+            SearchMap.DetailPrefSessionKey = 'AgreementSearchMapDetailPreference';
             return SearchMap;
         })();
         ViewModels.SearchMap = SearchMap;
