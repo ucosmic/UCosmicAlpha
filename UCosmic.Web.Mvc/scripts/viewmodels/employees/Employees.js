@@ -15,6 +15,7 @@ var ViewModels;
     /// <reference path="../../typings/moment/moment.d.ts" />
     /// <reference path="../../typings/googlemaps/google.maps.d.ts" />
     /// <reference path="../../typings/sammyjs/sammyjs.d.ts" />
+    /// <reference path="../../typings/linq/linq.d.ts" />
     /// <reference path="../../app/Routes.ts" />
     /// <reference path="../../app/Spinner.ts" />
     /// <reference path="../activities/ServiceApiModel.d.ts" />
@@ -114,11 +115,13 @@ var ViewModels;
                         peopleCount: 0
                     }
                 ];
-                this.activityTableRows = [
+                this.activityTableRows = ko.observableArray([
                     {
                         placeOfficialName: '',
                         personName: '',
+                        activityDescription: '',
                         activityTitle: '',
+                        activityTypeIds: [],
                         activityTypes: [
                             {
                                 rank: 0,
@@ -128,13 +131,16 @@ var ViewModels;
                         ],
                         activityDate: ''
                     }
-                ];
-                this.peopleTableRows = [
+                ]);
+                this.peopleTableRows = ko.observableArray([
                     {
                         personName: '',
                         personEmail: '',
                         personDepartment: '',
+                        activityDescription: '',
+                        activityTitle: '',
                         placeOfficialName: '',
+                        activityTypeIds: [],
                         activityTypes: [
                             {
                                 rank: 0,
@@ -143,21 +149,23 @@ var ViewModels;
                             }
                         ]
                     }
-                ];
+                ]);
                 this.activityColumnSort = [
-                    { name: 'location', order: false },
-                    { name: 'name', order: false },
-                    { name: 'title', order: false },
-                    { name: 'type', order: false },
-                    { name: 'date', order: false }
+                    { name: 'location', order: true },
+                    { name: 'name', order: true },
+                    { name: 'title', order: true },
+                    { name: 'type', order: true },
+                    { name: 'date', order: true }
                 ];
+                this.activitySortColumnIndex = 0;
                 this.peopleColumnSort = [
-                    { name: 'name', order: false },
-                    { name: 'department', order: false },
-                    { name: 'location', order: false },
-                    { name: 'activity', order: false },
-                    { name: 'type', order: false }
+                    { name: 'name', order: true },
+                    { name: 'department', order: true },
+                    { name: 'location', order: true },
+                    { name: 'activity', order: true },
+                    { name: 'type', order: true }
                 ];
+                this.peopleSortColumnIndex = 0;
                 this._initialize(institutionInfo);
             }
             FacultyAndStaff.prototype._initialize = function (institutionInfo) {
@@ -191,6 +199,7 @@ var ViewModels;
                 this.tags = ko.observable();
 
                 this.loadSpinner = new App.Spinner(new App.SpinnerOptions(200));
+                this.sortSpinner = new App.Spinner(new App.SpinnerOptions(200));
 
                 this.globalActivityCountData = null;
                 this.placeActivityCountData = null;
@@ -1405,6 +1414,7 @@ var ViewModels;
                 }
                 if (this.pointmapActivityMarkers == null) {
                     this.advancedSearch().done(function (results) {
+                        _this.sortActivitiesByColumnIndex(_this.activitySortColumnIndex);
                         deferred.resolve(_this._getPointmapActivityMarkers(results));
                     }).fail(function (jqXHR, textStatus, errorThrown) {
                         deferred.reject(jqXHR, textStatus, errorThrown);
@@ -1468,6 +1478,7 @@ var ViewModels;
                 }
                 if (this.pointmapPeopleMarkers == null) {
                     this.advancedSearch().done(function (results) {
+                        _this.sortPeopleByColumnIndex(_this.peopleSortColumnIndex);
                         deferred.resolve(_this._getPointmapPeopleMarkers(results));
                     }).fail(function (jqXHR, textStatus, errorThrown) {
                         deferred.reject(jqXHR, textStatus, errorThrown);
@@ -1970,10 +1981,14 @@ var ViewModels;
             };
 
             FacultyAndStaff.prototype.selectLens = function (lens) {
+                $("#faculty-staff-on-right-map").removeClass("current");
+                $("#faculty-staff-on-right-table").removeClass("current");
                 if (lens === 'map') {
                     this.lens('map');
+                    $("#faculty-staff-on-right-map").addClass("current");
                 } else {
                     this.lens('table');
+                    $("#faculty-staff-on-right-table").addClass("current");
                 }
             };
 
@@ -2013,56 +2028,223 @@ var ViewModels;
                 }
             };
 
-            FacultyAndStaff.prototype.sortActivitiesBy = function (column) {
-                var i = 0;
-                while ((i < this.activityColumnSort.length) && (this.activityColumnSort[i].name !== column)) {
-                    i += 1;
+            FacultyAndStaff.prototype.handleActivityTableColumnClick = function (element, column) {
+                var colIndex = 0;
+                while ((colIndex < this.activityColumnSort.length) && (this.activityColumnSort[colIndex].name !== column)) {
+                    colIndex += 1;
                 }
 
-                if (i < this.activityColumnSort.length) {
-                    if (column === 'location') {
-                        if (this.activityColumnSort[i].order) {
-                            this.activityResults.placeResults.sort(function (a, b) {
-                                if (a.officialName() > b.officialName())
-                                    return 1;
-                                if (a.officialName() < b.officialName())
-                                    return -1;
-                                return 0;
-                            });
-                        } else {
-                            this.activityResults.placeResults.sort(function (a, b) {
-                                if (a.officialName() > b.officialName())
-                                    return -1;
-                                if (a.officialName() < b.officialName())
-                                    return 1;
-                                return 0;
-                            });
-                        }
-                    } else if (column === 'name') {
-                        if (this.activityColumnSort[i].order) {
-                            this.activityResults.placeResults.sort(function (a, b) {
-                                if (a.officialName() > b.officialName())
-                                    return 1;
-                                if (a.officialName() < b.officialName())
-                                    return -1;
-                                return 0;
-                            });
-                        } else {
-                            this.activityResults.placeResults.sort(function (a, b) {
-                                if (a.officialName() > b.officialName())
-                                    return -1;
-                                if (a.officialName() < b.officialName())
-                                    return 1;
-                                return 0;
-                            });
-                        }
-                    }
-
-                    this.activityColumnSort[i].order = !this.activityColumnSort[i].order;
+                if (colIndex < this.activityColumnSort.length) {
+                    this.activityColumnSort[colIndex].order = !this.activityColumnSort[colIndex].order;
+                    this.sortActivitiesByColumnIndex(colIndex);
                 }
             };
 
-            FacultyAndStaff.prototype.sortPeopleBy = function (column) {
+            FacultyAndStaff.prototype.sortActivitiesByColumnIndex = function (colIndex) {
+                if (colIndex >= this.activityColumnSort.length)
+                    return;
+
+                this.sortSpinner.start();
+
+                var activityTypeRanks = ko.toJS(this.activityResults.activityTypeRanks);
+
+                var unsorted = Enumerable.From(this.activityResults.placeResults()).SelectMany(function (placeResult) {
+                    var flatResults = new Array();
+                    for (var i = 0; i < placeResult.results().length; i += 1) {
+                        var flatResult = ko.toJS(placeResult.results()[i]);
+                        flatResult.placeOfficialName = placeResult.officialName();
+                        flatResults.push(flatResult);
+                    }
+                    return flatResults;
+                });
+
+                this.activitySortColumnIndex = colIndex;
+                var sorted = [];
+
+                switch (colIndex) {
+                    case 0:
+                        if (this.activityColumnSort[colIndex].order) {
+                            sorted = unsorted.OrderBy(function (x) {
+                                return x.placeOfficialName;
+                            }).ToArray();
+                        } else {
+                            sorted = unsorted.OrderByDescending(function (x) {
+                                return x.placeOfficialName;
+                            }).ToArray();
+                        }
+                        break;
+                    case 1:
+                        if (this.activityColumnSort[colIndex].order) {
+                            sorted = unsorted.OrderBy(function (x) {
+                                return x.personName;
+                            }).ToArray();
+                        } else {
+                            sorted = unsorted.OrderByDescending(function (x) {
+                                return x.personName;
+                            }).ToArray();
+                        }
+                        break;
+                    case 2:
+                        if (this.activityColumnSort[colIndex].order) {
+                            sorted = unsorted.OrderBy(function (x) {
+                                return x.activityTitle;
+                            }).ToArray();
+                        } else {
+                            sorted = unsorted.OrderByDescending(function (x) {
+                                return x.activityTitle;
+                            }).ToArray();
+                        }
+                        break;
+                    case 3:
+                        if (this.activityColumnSort[colIndex].order) {
+                            sorted = unsorted.OrderBy(function (y) {
+                                for (var r = 0; r < activityTypeRanks.length; r += 1) {
+                                    if (y.activityTypeIds[0] == activityTypeRanks[r].type) {
+                                        return activityTypeRanks[r].rank;
+                                    }
+                                }
+                                return 0;
+                            }).ToArray();
+                        } else {
+                            sorted = unsorted.OrderByDescending(function (y) {
+                                for (var r = 0; r < activityTypeRanks.length; r += 1) {
+                                    if (y.activityTypeIds[0] == activityTypeRanks[r].type) {
+                                        return activityTypeRanks[r].rank;
+                                    }
+                                }
+                                return 0;
+                            }).ToArray();
+                        }
+                        break;
+                    case 4:
+                        if (this.activityColumnSort[colIndex].order) {
+                            sorted = unsorted.OrderBy(function (x) {
+                                return x.activityDate;
+                            }).ToArray();
+                        } else {
+                            sorted = unsorted.OrderByDescending(function (x) {
+                                return x.activityDate;
+                            }).ToArray();
+                        }
+                        break;
+                }
+
+                this.activityTableRows.removeAll();
+                for (var i = 0; i < sorted.length; i += 1) {
+                    this.activityTableRows.push(sorted[i]);
+                }
+
+                this.sortSpinner.stop();
+            };
+
+            FacultyAndStaff.prototype.handlePeopleTableColumnClick = function (element, column) {
+                var colIndex = 0;
+                while ((colIndex < this.peopleColumnSort.length) && (this.peopleColumnSort[colIndex].name !== column)) {
+                    colIndex += 1;
+                }
+
+                if (colIndex < this.peopleColumnSort.length) {
+                    this.peopleColumnSort[colIndex].order = !this.peopleColumnSort[colIndex].order;
+                    this.sortPeopleByColumnIndex(colIndex);
+                    this.sortPeopleByColumnIndex(colIndex);
+                }
+            };
+
+            FacultyAndStaff.prototype.sortPeopleByColumnIndex = function (colIndex) {
+                if (colIndex >= this.peopleColumnSort.length)
+                    return;
+
+                this.sortSpinner.start();
+
+                var activityTypeRanks = ko.toJS(this.activityResults.activityTypeRanks);
+
+                var unsorted = Enumerable.From(this.activityResults.placeResults()).SelectMany(function (placeResult) {
+                    var flatResults = new Array();
+                    for (var i = 0; i < placeResult.results().length; i += 1) {
+                        var flatResult = ko.toJS(placeResult.results()[i]);
+                        flatResult.placeOfficialName = placeResult.officialName();
+                        flatResults.push(flatResult);
+                    }
+                    return flatResults;
+                });
+
+                this.peopleSortColumnIndex = colIndex;
+                var sorted = [];
+
+                switch (colIndex) {
+                    case 0:
+                        if (this.peopleColumnSort[colIndex].order) {
+                            sorted = unsorted.OrderBy(function (x) {
+                                return x.personName + ' ' + x.personEmail;
+                            }).ToArray();
+                        } else {
+                            sorted = unsorted.OrderByDescending(function (x) {
+                                return x.personName + ' ' + x.personEmail;
+                            }).ToArray();
+                        }
+                        break;
+                    case 1:
+                        if (this.peopleColumnSort[colIndex].order) {
+                            sorted = unsorted.OrderBy(function (x) {
+                                return x.personDepartment;
+                            }).ToArray();
+                        } else {
+                            sorted = unsorted.OrderByDescending(function (x) {
+                                return x.personDepartment;
+                            }).ToArray();
+                        }
+                        break;
+                    case 2:
+                        if (this.peopleColumnSort[colIndex].order) {
+                            sorted = unsorted.OrderBy(function (x) {
+                                return x.placeOfficialName;
+                            }).ToArray();
+                        } else {
+                            sorted = unsorted.OrderByDescending(function (x) {
+                                return x.placeOfficialName;
+                            }).ToArray();
+                        }
+                        break;
+                    case 3:
+                        if (this.peopleColumnSort[colIndex].order) {
+                            sorted = unsorted.OrderBy(function (x) {
+                                return x.peopleTitle;
+                            }).ToArray();
+                        } else {
+                            sorted = unsorted.OrderByDescending(function (x) {
+                                return x.peopleTitle;
+                            }).ToArray();
+                        }
+                        break;
+                    case 4:
+                        if (this.peopleColumnSort[colIndex].order) {
+                            sorted = unsorted.OrderBy(function (y) {
+                                for (var r = 0; r < activityTypeRanks.length; r += 1) {
+                                    if (y.activityTypeIds[0] == activityTypeRanks[r].type) {
+                                        return activityTypeRanks[r].rank;
+                                    }
+                                }
+                                return 0;
+                            }).ToArray();
+                        } else {
+                            sorted = unsorted.OrderByDescending(function (y) {
+                                for (var r = 0; r < activityTypeRanks.length; r += 1) {
+                                    if (y.activityTypeIds[0] == activityTypeRanks[r].type) {
+                                        return activityTypeRanks[r].rank;
+                                    }
+                                }
+                                return 0;
+                            }).ToArray();
+                        }
+                        break;
+                }
+
+                this.peopleTableRows.removeAll();
+                for (var i = 0; i < sorted.length; i += 1) {
+                    this.peopleTableRows.push(sorted[i]);
+                }
+
+                this.sortSpinner.stop();
             };
             return FacultyAndStaff;
         })();

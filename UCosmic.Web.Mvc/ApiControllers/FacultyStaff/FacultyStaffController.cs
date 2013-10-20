@@ -32,9 +32,9 @@ namespace UCosmic.Web.Mvc.ApiControllers
         private readonly ActivityViewProjector _activityProjector;
 
         public FacultyStaffController(IProcessQueries queryProcessor
-                                      ,IQueryEntities entities
-                                      //,IManageViews viewManager
-                                      ,ActivityViewProjector activityProjector
+                                      , IQueryEntities entities
+            //,IManageViews viewManager
+                                      , ActivityViewProjector activityProjector
             )
         {
             _queryProcessor = queryProcessor;
@@ -73,7 +73,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                         {
                             ids.Add(subPlace.RevisionId);
                         }
-                    }                    
+                    }
                 }
                 else
                 {
@@ -96,7 +96,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
             if (establishmentId.HasValue && (establishmentId.Value != 0))
             {
-                establishment = _queryProcessor.Execute(new EstablishmentById(establishmentId.Value)); 
+                establishment = _queryProcessor.Execute(new EstablishmentById(establishmentId.Value));
             }
             else
             {
@@ -116,7 +116,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 {
                     int[] placeIds = GetPlaceIds(placeId.Value);
 
-                    var view = new ActivityPlaceActivityCountView(_queryProcessor, _entities, 
+                    var view = new ActivityPlaceActivityCountView(_queryProcessor, _entities,
                                                                    establishment.RevisionId,
                                                                    placeIds);
 
@@ -331,7 +331,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 {
                     int[] placeIds = GetPlaceIds(placeId.Value);
 
-                    var view = new ActivityPlaceTrendActivityView( _queryProcessor, _entities,
+                    var view = new ActivityPlaceTrendActivityView(_queryProcessor, _entities,
                                                               establishment.RevisionId,
                                                               placeIds);
 
@@ -348,8 +348,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 }
                 else
                 {
-                    var view = new ActivityGlobalTrendActivityView( _queryProcessor, 
-                                                                    establishment.RevisionId );
+                    var view = new ActivityGlobalTrendActivityView(_queryProcessor,
+                                                                    establishment.RevisionId);
 
                     foreach (var data in view.Data)
                     {
@@ -413,8 +413,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 }
                 else
                 {
-                    var view = new ActivityGlobalTrendPeopleView( _queryProcessor,
-                                                                  establishment.RevisionId );
+                    var view = new ActivityGlobalTrendPeopleView(_queryProcessor,
+                                                                  establishment.RevisionId);
 
                     foreach (var data in view.Data)
                     {
@@ -561,9 +561,46 @@ namespace UCosmic.Web.Mvc.ApiControllers
         public FacultyStaffSearchResults PostSearch(FacultyStaffFilterModel filter)
         {
             var results = new FacultyStaffSearchResults();
+
+            var tenancy = Request.Tenancy();
+            Establishment establishment = null;
+
+            if (filter.EstablishmentId != 0)
+            {
+                establishment = _queryProcessor.Execute(new EstablishmentById(filter.EstablishmentId));
+            }
+            else
+            {
+                if (tenancy.TenantId.HasValue)
+                {
+                    establishment = _queryProcessor.Execute(new EstablishmentById(tenancy.TenantId.Value));
+                }
+                else if (!String.IsNullOrEmpty(tenancy.StyleDomain) && !"default".Equals(tenancy.StyleDomain))
+                {
+                    establishment = _queryProcessor.Execute(new EstablishmentByEmail(tenancy.StyleDomain));
+                }
+            }
+
+            if (establishment != null)
+            {
+                var settings = _queryProcessor.Execute(new EmployeeModuleSettingsByEstablishmentId(establishment.RevisionId));
+                if (settings != null)
+                {
+                    if (settings.ActivityTypes.Any())
+                    {
+                        results.ActivityTypeRanks = new FacultyStaffActivityTypeRank[settings.ActivityTypes.Count];
+                        for (int i = 0; i < settings.ActivityTypes.Count; i += 1)
+                        {
+                            results.ActivityTypeRanks[i] = new FacultyStaffActivityTypeRank();
+                            results.ActivityTypeRanks[i].Type = settings.ActivityTypes.ElementAt(i).Id;
+                            results.ActivityTypeRanks[i].Rank = settings.ActivityTypes.ElementAt(i).Rank;
+                        }
+                    }
+                }
+            }
+
             DateTime? fromDate = null;
             DateTime? toDate = null;
-
 
             if (!String.IsNullOrEmpty(filter.FromDate))
             {
@@ -805,7 +842,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                                 OfficialName = global.OfficialName,
                                 Lat = global.Center.Latitude.Value,
                                 Lng = global.Center.Longitude.Value
-                            };                            
+                            };
                         }
 
                         var result = new FacultyStaffResult

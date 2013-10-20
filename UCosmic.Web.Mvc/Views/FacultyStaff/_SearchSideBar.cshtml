@@ -1,87 +1,119 @@
-﻿<div class="filter-sidebar">
-    <div>
-        <div style="width: 100%; text-align: center; margin-bottom: 4px">
-            <input type="button" style="width:48%" value="Map" data-bind="click: function ( item, event ) { selectLens( 'map' ) }"/>
-            <input type="button" style="width:48%" value="Table" data-bind="click: function ( item, event ) { selectLens( 'table' ) }" />
-        </div>
-
-        <div class="section">
-            <div class="section-header">Search For</div>
-            <div style="text-align: center; font-size: large; padding-bottom: 4px">
-                <input type="radio" id="activitiesRadioButton" name="searchTypeGroup" value="activities" data-bind="checked: searchType"/><span>Activities&emsp;</span>
-                <input type="radio" id="peopleRadioButton" name="searchTypeGroup" value="people" data-bind="checked: searchType"/><span>People</span>
+﻿<nav class="side">
+    <ul class="top">
+        <li class="navTopSeg">
+            <span class="text navTopSeg" style="float:left;">Search For:</span>
+            <div style="float:right;">
+                <input type="button" class="kendoSideWidget" style="font-size: 10px; margin: 1px 5px 1px 5px; padding: 2px 3px;" value="Reset" id="searchResetButton" />
             </div>
-        </div>
-
-        <div class="section">
-            <div class="section-header">Country / Location</div>
-            <select id="location" style="width: 99%; overflow-y:auto"></select>
-        </div>
-
-        <div class="section" style="display: none" data-bind="visible: activityTypes().length > 0">
-            <div class="section-header">Type of Engagement</div>
-            <div style="font-size: small">
-                <ul class="data-items" data-bind="template: { name: 'activity-types-template', foreach: activityTypes }" />
+        </li>
+        <li class="static">
+            <div class="content">
+                <div class="field" style="padding-left: 16px;">
+                    <input class="side" type="radio" id="activitiesRadioButton" name="searchTypeGroup" value="activities" data-bind="checked: searchType" />
+                    <span style="font-size: small"> Activities </span>
+                    <input class="side"  style="margin-left: 10px;" type="radio" id="peopleRadioButton" name="searchTypeGroup" value="people" data-bind="checked: searchType" />
+                    <span style="font-size: small"> People </span>
+                </div>
             </div>
-        </div>
-        
-        <div class="section" data-bind="visible: searchType() == 'people'">
-            @*            <div class="section-header">Degrees</div>
-            <input type="text" id="degreesTextbox" style="height: 28px"  data-bind="value: degrees"/>*@
-            <div style="font-size: small; padding-left: 8px">
-                <input type="checkbox" data-bind="checked: degreesChecked"/><span>Include degrees earned</span>
+        </li>
+        <li class="static">
+            <span class="text">Country / Location</span><br/>
+            <div class="content">
+                <div class="field kendoSideWidget" style="clear:left;">
+                    <select id="location"> </select>
+                </div>
             </div>
-        </div>
-
-        <div class="section">
-            <div class="section-header">Tags / Keywords</div>
-            <textarea id="tagsTextbox" placeholder="Additional tags/keywords" rows="1" style="height: 28px" data-bind="value: tags"></textarea>
-        </div>
-
-        <div class="section">
-            <div class="section-header">Date Range</div>
-            <div style="margin-left: 4px">
-                <label for="fromDate">From</label>
-                <input id="fromDate" style="width: 100px" data-bind="value: fromDate"/>
-                <label for="toDate">To</label>
-                <input id="toDate" style="width: 100px" data-bind="value: toDate"/>
+        </li>
+        <li class="static">
+            <span class="text"> Type of Engagement </span> 
+            <div class="content" style="display: none" data-bind="visible: activityTypes().length > 0">
+                <div class="field" style="clear:left;">
+                    <ul class="data-items"  style="font-size: small;width: 100%;" data-bind="template: { name: 'activity-types-template', foreach: activityTypes }" />
+                </div>
+                <div class="section content" data-bind="visible: searchType() == 'people'">
+                    @* 
+                    <span class="text"> Degrees </span>
+                    <input type="text" id="degreesTextbox"  style="font-size: small;" data-bind="value: degrees" />
+                    *@ 
+                    <div  class="field" style="font-size: small; padding-left: 13px">
+                        <input type="checkbox" data-bind="checked: degreesChecked" />&nbsp;<span  style="font-size: small"> Include degrees earned </span> 
+                    </div>
+                </div>
             </div>
-            <div style="margin-top: 4px; margin-left: 4px">
-                <input id="undatedActivities" type="checkbox" data-bind="checked: includeUndated"/>
-                <span>Include undated activities</span>
+        </li>
+        <li class="static">
+            <span class="text">Tags / Keywords</span>
+            <div class="content">
+                <div class="kendoSideWidget side"> 
+                    <textarea id="tagsTextbox" placeholder="Additional tags/keywords" rows="1" data-bind="value: tags"></textarea>
+                </div>
             </div>
-        </div>
-
-        <div class="section" style="margin-bottom: 16px">
-            @*            <div style="display: none" data-bind="visible: institutionId() == null">
-                <div class="section-header">Institution</div>
+        </li>
+        <li class="static">
+            <span class="text">Date Range</span> 
+            <div class="content">
+                <div  class="field kendoSideWidget" style="text-align: right; margin-right: 50px">
+                    <label for="fromDate" style="font-size: small"> From: </label> 
+                    <input  class="kendoSideDate"  id="fromDate" style="height:22px; width: 120px" data-bind="value: fromDate" />
+                </div>
+                <div  class="field kendoSideWidget" style="text-align: right; margin-right: 50px">
+                    <label for="toDate" style="font-size: small"> To: </label> 
+                    <input  class="kendoSideDate"  id="toDate" style="height:22px; width: 120px" data-bind="value: toDate" />
+                </div>
+                <div  class="field" style="margin-top: 4px; padding-left: 16px; font-size: small">
+                    <input id="undatedActivities" type="checkbox" data-bind="checked: includeUndated" />
+                    <span  style="font-size: small;"> Include undated activities </span> 
+                </div>
+            </div>
+        </li>
+        <li class="static square-bottom"> <span class="text"> Institution / Campus </span> 
+            <div class="content">
+                @* 
+            <div style="display: none" data-bind="visible: institutionId() == null">
+                <div class="section-header field">
+                    Institution 
+                </div>
                 <input type="text" id="institutionTextbox" style="width: 100%" />
-            </div>*@
-            
-            <div style="display: none" data-bind="visible: institutionHasCampuses()">
-                <div class="section-header">Institution / Campus</div>
-                <select id="campusDropList" style="width: 100%"></select>
             </div>
-
-            @*<div class="section-header">College</div>*@
-            <div>
-                <select id="collegeDropList" style="width: 100%"></select>
+            *@ 
+                <div class="field kendoSideWidget" style="display: none" data-bind="visible: institutionHasCampuses()">
+                    <select class="kendoSideWidget" id="campusDropList"> </select>
+                </div>
+                @* 
+            <div class="section-header field">
+                College 
             </div>
-
-            @*<div id="departmentDiv" class="section-header">Department</div>*@
-            <div>
-                <select id="departmentDropList" style="width: 100%"></select>
+            *@ 
+                <div class="field kendoSideWidget">
+                    <select class="kendoSideWidget" id="collegeDropList"> </select>
+                </div>
+                @* 
+            <div id="departmentDiv" class="section-header field">
+                Department 
             </div>
-        </div>
-
-    </div>
-</div>
-
+            *@ 
+                <div class="field kendoSideWidget">
+                    <select class="kendoSideWidget" id="departmentDropList"> </select>
+                </div>
+            </div>
+        </li>
+    </ul>
+    <ul class="group bottom">
+        <li id="faculty-staff-on-right-map" class="map current"> <a href="#" class="group" value="map" data-bind="click: function ( item, event ) { selectLens( 'map' ) }" /> 
+            <div class="arrow"></div>
+            <span class="text"> Map </span>
+        </li>
+        <li id="faculty-staff-on-right-table" class="table"> <a href="#" class="group" value="table" data-bind="click: function ( item, event ) { selectLens( 'table' ) }" /> 
+            <div class="arrow"></div>
+            <span class="text"> Table </span>
+        </li>
+    </ul>
+</nav> 
 <!-- KNOCKOUT TEMPLATES -->
 <script type="text/html" id="activity-types-template">
     <li style="margin-left: 8px">
         <div class="ellipsis">
-            <input type="checkbox" data-bind="checked: $data.checked"/><span data-bind="text: $data.type()"></span>
+            <input type="checkbox" data-bind="checked: $data.checked" /><span data-bind="    text: $data.type()"></span>
         </div>
     </li>
-</script>
+</script> 

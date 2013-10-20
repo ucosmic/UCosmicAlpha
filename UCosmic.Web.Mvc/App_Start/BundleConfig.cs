@@ -179,6 +179,7 @@ namespace UCosmic.Web.Mvc
 
             // employees, faculty and staff
             bundles.Add(new ScriptBundle("~/bundles/employees").Include(
+                "~/scripts/oss/linq.js",
                 "~/scripts/viewmodels/employees/Employees.js"));
 
             // user search page

@@ -73,9 +73,16 @@ namespace UCosmic.Web.Mvc.Models
         }
     }
 
+    public class FacultyStaffActivityTypeRank
+    {
+        public int Type { get; set; }
+        public int Rank { get; set; }
+    }
+
     public class FacultyStaffSearchResults
     {
         public ICollection<FacultyStaffPlaceResult> PlaceResults { get; set; }
+        public FacultyStaffActivityTypeRank[] ActivityTypeRanks { get; set; }
 
         public FacultyStaffSearchResults()
         {

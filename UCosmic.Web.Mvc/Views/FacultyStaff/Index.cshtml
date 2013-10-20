@@ -10,114 +10,14 @@
 @section styles
 {
     <style>
-        .k-autocomplete, .k-autocomplete.k-state-focused {
-            -webkit-border-radius: 0;
-            -moz-border-radius: 0;
-            border-radius: 0;
-            border: solid 1px #aaa;
-            border-right-color: #ddd;
-            border-bottom-color: #ddd;
+
+        .field .data-items li {
+            font-size: small; 
+            padding-left: 5px;
         }
 
-        .k-autocomplete .k-input, .k-autocomplete.k-state-focused .k-input {
-            -webkit-border-radius: 0;
-            -moz-border-radius: 0;
-            border-radius: 0;
-            padding: 8px;
-            font-size: 12px;
-            line-height: 10px;
-            height: auto;
-        }
-
-        .k-list-container, .k-list-container.k-state-border-up, .k-list-container.k-state-border-down {
-            -webkit-border-radius: 0;
-            -moz-border-radius: 0;
-            border-radius: 0;
-        }
-
-        .k-multiselect {
-            border: solid 1px #aaa;
-            border-right-color: #ddd;
-            border-bottom-color: #ddd;
-            background-image: none;
-            background-color: transparent;
-        }
-
-        .k-multiselect .k-input {
-            font-family: Arial;
-            color: #000;
-            height: 28px;
-            line-height: 13px;
-            font-size: 12px;
-        }
-
-        .k-multiselect ul .k-button {
-            -webkit-border-radius: 0;
-            -moz-border-radius: 0;
-            border-radius: 0;
-            line-height: 18px;
-            font-size: 16px;
-            vertical-align: middle;
-            color: #000;
-            background-color: #eee;
-            background-image: none;
-            border-color: #ddd;
-        }
-
-        .k-multiselect, .k-multiselect.k-state-border-down, .k-multiselect.k-state-border-up, .k-multiselect .k-multiselect-wrap {
-            -webkit-border-radius: 0;
-            -moz-border-radius: 0;
-            border-radius: 0;
-            min-height: 34px;
-        }
-
-        .k-multiselect .k-input.k-readonly {
-            color: #666;
-        }
-
-        .k-multiselect.k-state-hover, .xk-multiselect.k-state-hover:hover {
-            background-image: none;
-            background-color: transparent;
-        }
-
-        .k-animation-container .k-calendar-container {
-            -webkit-border-radius: 0;
-            -moz-border-radius: 0;
-            border-radius: 0;
-        }
-
-        .k-dropdown .k-dropdown-wrap .k-input,
-        .k-dropdown .k-state-default.k-dropdown-wrap .k-input,
-        .k-dropdown .k-state-border-down.k-dropdown-wrap .k-input,
-        .k-dropdown .k-state-hover.k-dropdown-wrap .k-input,
-        .k-dropdown .k-state-focused.k-dropdown-wrap .k-input {
-            font-size: 12px;
-            height: 20px;
-            line-height: 20px;
-            padding-top: 0;
-            padding-bottom: 0;
-        }
-
-        .k-picker-wrap .k-select,
-        .k-numeric-wrap .k-select,
-        .k-dropdown-wrap .k-select {
-            padding-top: 0;
-            padding-bottom: 0;
-        }
-
-        .k-dropdown .k-dropdown-wrap .k-icon,
-        .k-dropdown .k-state-default.k-dropdown-wrap .k-icon,
-        .k-dropdown .k-state-border-down.k-dropdown-wrap .k-icon,
-        .k-dropdown .k-state-hover.k-dropdown-wrap .k-icon,
-        .k-dropdown .k-state-focused.k-dropdown-wrap .k-icon {
-            margin-top: 0;
-            margin-bottom: 0;
-        }
-
-        .k-picker-wrap .k-select,
-        .k-numeric-wrap .k-select,
-        .k-dropdown-wrap .k-select {
-            line-height: 1em;
+        .static .content .field ul.data-items li div span {
+         padding-left: 5px;
         }
 
         input[type="button"] {
@@ -192,13 +92,12 @@
         .googleMarkerLabel {
             color: white;
             background-color: transparent;
-            font-family: "Lucida Grande", "Arial", sans-serif;
+            font-family: 'Lucida Grande', 'Arial', sans-serif;
             font-size: 10px;
             text-align: center;
             width: 10px;
             white-space: nowrap;
         }
-
 
         #antarctica:hover {
             background-image: url('../../images/icons/maps/antarcticaLabeledHover.png');
@@ -232,6 +131,125 @@
             background-image: url('../../images/icons/maps/arcticOceanHover.png');
         }
 
+        /* Attempt top round corners.  Fail. */
+        
+        nav.side > ul > li:first-child > a > .text,
+        nav.side > ul > li:first-child > .text,
+        .navTopSeg {
+            -webkit-border-radius: 8px 8px 0 0;
+            -moz-border-radius: 8px 8px 0 0;
+            border-radius: 8px 8px 0 0;
+        }
+
+        /* Begin Kendo UI widget theming */
+        
+        .kendoSideWidget .k-widget .k-multiselect-wrap {
+            border-color: #999999;
+            border-radius: 0 0 0 0;
+            border-style: solid;
+            border-width: 0;
+            margin: 0; 
+            height: 16px;
+            -moz-box-sizing: border-box;
+            font-size: 14px;
+            padding: 0;
+            width: 100%;
+            color: #333333;
+        }
+
+
+        .kendoSideWidget .k-widget .k-picker-wrap input.kendoSideWidget,
+        .kendoSideWidget .k-widget .k-dropdown-wrap .k-input,
+        .kendoSideWidget .k-widget .k-multiselect-wrap .k-input,
+        .kendoSideWidget  .k-widget .k-picker-wrap .k-input {
+            border-color: #999999;
+            border-radius: 0 0 0 0;
+            border-style: solid;
+            border-width: 1px;
+            margin: 0; 
+            height: 16px;
+            min-height: 16px;
+            -moz-box-sizing: border-box;
+            font-size: 14px;
+            line-height: 18px;
+            padding: 1px;
+            width: 100%;
+            color: #333333;
+        }
+
+        .kendoSideWidget .k-widget .k-dropdown-wrap .k-input {
+            border-color: #bbbbbb;
+            border-radius: 0 4px 0 0;
+            border-style: solid;
+            border-width: 1px;
+            margin-left: 1px;
+            margin-top: 1px;
+            height: 22px;
+            min-height: 20px;
+            -moz-box-sizing: border-box;
+            font-size: 14px;
+            line-height: 20px;
+            padding: 1px;
+            width: 100%;
+            color: #333333;
+        }
+
+        .kendoSideWidget .k-widget .k-picker-wrap .k-select .k-icon,
+        .kendoSideWidget .k-widget .k-dropdown-wrap .k-select .k-icon {
+            vertical-align: top;
+        }
+
+        .kendoSideWidget .k-widget .k-picker-wrap .k-select .k-icon {
+            padding-top: 2px;
+        }
+
+        .kendoSideWidget .kendoSideDate {
+            border-color: #bbbbbb;
+            height: 22px; 
+            width: 120px;
+        }
+        
+        .kendoSideWidget textarea#tagsTextbox {
+            border-color: #999999;
+            border-radius: 0 0 0 0;
+            border-style: solid;
+            border-width: 1px;
+            margin: 0; 
+            height: 24px;
+            min-height: 24px;
+            -moz-box-sizing: border-box;
+            font-size: 14px;
+            line-height: 23px;
+            padding: 0 0 0 2px;
+            width: 100%;
+            color: #333333;
+        }
+
+        
+        .kendoSideWidget .k-widget .k-dropdown-wrap {
+            min-height: 24px;
+            height: 24px;
+        }
+        
+        .kendoSideWidget .k-widget .k-multiselect-wrap {
+            min-height: 25px;
+            height: 25px;
+        }
+
+        .kendoSideWidget .k-widget .k-multiselect-wrap .k-input {
+            border-color: #bbbbbb;
+            position: relative;
+            top: 5px;
+            left: 2px;
+        }
+        
+        .kendoSideWidget .k-widget .k-multiselect-wrap li {
+            float: left;
+            line-height: 18px;
+            margin: 1px 0 1px 1px;
+            padding: 1px 2px 1px 2px;
+        }
+        
     </style>
 }
 
@@ -346,7 +364,7 @@
     </li>
 </script>
 
-<div id="faculty-staff" class="content fixed to-top" style="display: none" data-current-module="employees">
+<div id="faculty-staff" class="content fixed to-top" style="display: none" data-current-module="employees"  data-fixed-scroll="root">
     <form class="group">
         <div class="on-left from-top">
             <header>
@@ -381,32 +399,32 @@
                         
                             <!-- Pacific Ocean -->
                             <div style="position: absolute; left: 68px; top: 349px; width: 57px">
-	                        	<div style="width: 100%; text-align: center">
-	                        		<img width="57" height="26" src="~/images/icons/maps/pacificOcean.png"> 
-	                        	</div>
-                        	</div>
+                                <div style="width: 100%; text-align: center">
+                                    <img width="57" height="26" src="~/images/icons/maps/pacificOcean.png"> 
+                                </div>
+                            </div>
                         
                             <!-- Atlantic Ocean -->
                             <div style="position: absolute; left: 236px; top: 271px; width: 57px">
-		                        <div style="width: 100%; text-align: center">
-			                        <img width="57" height="26" src="~/images/icons/maps/atlanticOcean.png"> 
-		                        </div>
+                                <div style="width: 100%; text-align: center">
+                                    <img width="57" height="26" src="~/images/icons/maps/atlanticOcean.png"> 
+                                </div>
                             </div>
                         
                             <!-- Indian Ocean -->
-                           	<div style="position: absolute; left: 456px; top: 381px; width: 57px">
-	                            <div style="width: 100%; text-align: center">
-			                        <img width="57" height="26" src="~/images/icons/maps/indianOcean.png"> 
-		                        </div>
-	                        </div>
+                            <div style="position: absolute; left: 456px; top: 381px; width: 57px">
+                                <div style="width: 100%; text-align: center">
+                                    <img width="57" height="26" src="~/images/icons/maps/indianOcean.png"> 
+                                </div>
+                            </div>
 
                          
                             <!-- Southern Ocean -->
                             <div style="position: absolute; left: 267px; top: 441px; width: 57px">
                                 <div style="width: 100%; text-align: center">
-			                        <img width="57" height="26" src="~/images/icons/maps/southernOcean.png"> 
-		                        </div>
-	                        </div>
+                                    <img width="57" height="26" src="~/images/icons/maps/southernOcean.png"> 
+                                </div>
+                            </div>
                           
                             <!-- Gulf of Mexico -->
                             @*          <div data-bind="visible: !loadSpinner.isVisible()" style="position: absolute; left: 157px; top: 289px; width: 37px; z-index: 3;">
@@ -417,17 +435,17 @@
                            
                             <!-- Caribbean -->
                             <div style="position: absolute; left: 188px; top: 309px; width: 51px">
-		                        <div style="width: 100%; text-align: center">
-			                        <img width="51" height="9" src="~/images/icons/maps/caribbean.png" > 
-		                        </div>
-	                        </div>
+                                <div style="width: 100%; text-align: center">
+                                    <img width="51" height="9" src="~/images/icons/maps/caribbean.png" > 
+                                </div>
+                            </div>
 
                             <!-- Arctic Ocean -->
                             <div style="position: absolute; left: 319px; top: 23px; width: 57px">
-		                        <div style="width: 100%; text-align: center">
-			                        <img width="57" height="26" src="~/images/icons/maps/arcticOcean.png"> 
-		                        </div>
-	                        </div>             
+                                <div style="width: 100%; text-align: center">
+                                    <img width="57" height="26" src="~/images/icons/maps/arcticOcean.png"> 
+                                </div>
+                            </div>             
                         </div>
 
                         <!-- GeoChart -->
@@ -462,9 +480,9 @@
                             <!-- Gulf of Mexico-->
                             <div style="position: absolute; left: 157px; top: 289px; width: 37px; height: 18px; z-index: 3"
                                  data-bind="visible: !loadSpinner.isVisible()">
-	                        	<div style="width: 100%; text-align: center">
-			                        <img width="37" height="18" src="~/images/icons/maps/gulfOfMexico.png" > 
-		                        </div>
+                                <div style="width: 100%; text-align: center">
+                                    <img width="37" height="18" src="~/images/icons/maps/gulfOfMexico.png" > 
+                                </div>
                             </div>
                     
                             <!-- Gulf of Mexico Title Phantom  -->
@@ -523,26 +541,22 @@
                     <!-- Activities Results -->
                     <div id="resultstable" style="display: none" data-bind="visible: isPointmapVisible() && (lens() == 'table') && (searchType() == 'activities')">                   
                         <div style="width: 665px">
-                            <div class="activitySearchResultsColumnHeader" style="width: 11%" data-bind="click: function ( item, event ) { sortActivitiesBy( 'location' ) }">Location</div>
-                            <div class="activitySearchResultsColumnHeader" style="width: 20%" data-bind="click: function ( item, event ) { sortActivitiesBy( 'name' ) }">Last, First Name</div>
-                            <div class="activitySearchResultsColumnHeader" style="width: 48%" data-bind="click: function ( item, event ) { sortActivitiesBy( 'title' ) }">Activity Title</div>
-                            <div class="activitySearchResultsColumnHeader" style="width: 7%"  data-bind="click: function ( item, event ) { sortActivitiesBy( 'type' ) }">Type</div>
-                            <div class="activitySearchResultsColumnHeader" style="width: 11%" data-bind="click: function ( item, event ) { sortActivitiesBy( 'date' ) }">Date</div>
+                            <div class="activitySearchResultsColumnHeader" style="width: 11%" data-bind="click: function ( item, event ) { handleActivityTableColumnClick( event, 'location' ) }">Location</div>
+                            <div class="activitySearchResultsColumnHeader" style="width: 20%" data-bind="click: function ( item, event ) { handleActivityTableColumnClick( event, 'name' ) }">Last, First Name</div>
+                            <div class="activitySearchResultsColumnHeader" style="width: 48%" data-bind="click: function ( item, event ) { handleActivityTableColumnClick( event, 'title' ) }">Activity Title</div>
+                            <div class="activitySearchResultsColumnHeader" style="width: 7%"  data-bind="click: function ( item, event ) { handleActivityTableColumnClick( event, 'type' ) }">Type</div>
+                            <div class="activitySearchResultsColumnHeader" style="width: 11%" data-bind="click: function ( item, event ) { handleActivityTableColumnClick( event, 'date' ) }">Date</div>
                         </div>
                         <div style="height: 600px; overflow-y: scroll">
-                            <ul data-bind="foreach: activityResults.placeResults">
+                            <ul data-bind="foreach: activityTableRows">
                                 <li>
-                                    <ul data-bind="foreach: results">
-                                        <li>
-                                            <div style="width: 100%; padding-top: 4px; padding-bottom: 4px; border-bottom-style: solid; border-bottom-color: black; border-bottom-width: 1px;">
-                                                <div class="activitySearchResultsRow" style="width: 11%" data-bind="text: $parent.officialName"></div>
-                                                <div class="activitySearchResultsRow" style="width: 20%" data-bind="text: personName()"></div>
-                                                <div class="activitySearchResultsRow" style="width: 48%" data-bind="text: activityTitle(), attr: { title: activityDescription() }"></div>
-                                                <div class="activitySearchResultsRow" style="width: 7.6%; text-align: center;" data-bind="template: { name: 'activities-types-template', foreach: activityTypeIds }"></div>
-                                                <div class="activitySearchResultsRow" style="width: 10.4%" data-bind="text: activityDate()"></div>
-                                            </div>
-                                        </li>
-                                    </ul>
+                                    <div style="width: 100%; padding-top: 4px; padding-bottom: 4px; border-bottom-style: solid; border-bottom-color: black; border-bottom-width: 1px;">
+                                        <div class="activitySearchResultsRow" style="width: 11%" data-bind="text: placeOfficialName"></div>
+                                        <div class="activitySearchResultsRow" style="width: 20%" data-bind="text: personName"></div>
+                                        <div class="activitySearchResultsRow" style="width: 48%" data-bind="text: activityTitle, attr: { title: activityDescription }"></div>
+                                        <div class="activitySearchResultsRow" style="width: 7.6%; text-align: center;" data-bind="template: { name: 'activities-types-template', foreach: activityTypeIds }"></div>
+                                        <div class="activitySearchResultsRow" style="width: 10.4%" data-bind="text: activityDate"></div>
+                                    </div>
                                 </li>
                             </ul>
                         </div>
@@ -551,37 +565,41 @@
                     <!-- People Results -->
                     <div id="people_resultstable" style="display: none" data-bind="visible: isPointmapVisible() && (lens() == 'table') && (searchType() == 'people')">                   
                         <div style="width: 665px">
-                            <div class="activitySearchResultsColumnHeader" style="width: 20%" data-bind="click: function ( item, event ) { sortPeopleBy( 'name' ) }">Name/Email</div>
-                            <div class="activitySearchResultsColumnHeader" style="width: 15%" data-bind="click: function ( item, event ) { sortPeopleBy( 'department' ) }">Department</div>                   
-                            <div class="activitySearchResultsColumnHeader" style="width: 11%" data-bind="click: function ( item, event ) { sortPeopleBy( 'location' ) }">Location</div>
-                            <div class="activitySearchResultsColumnHeader" style="width: 40%" data-bind="click: function ( item, event ) { sortPeopleBy( 'activity' ) }">Activity</div>
-                            <div class="activitySearchResultsColumnHeader" style="width: 11%" data-bind="click: function ( item, event ) { sortPeopleBy( 'type' ) }">Type</div>
+                            <div class="activitySearchResultsColumnHeader" style="width: 20%" data-bind="click: function ( item, event ) { handlePeopleTableColumnClick( event, 'name' ) }">Name/Email</div>
+                            <div class="activitySearchResultsColumnHeader" style="width: 15%" data-bind="click: function ( item, event ) { handlePeopleTableColumnClick( event, 'department' ) }">Department</div>                   
+                            <div class="activitySearchResultsColumnHeader" style="width: 11%" data-bind="click: function ( item, event ) { handlePeopleTableColumnClick( event, 'location' ) }">Location</div>
+                            <div class="activitySearchResultsColumnHeader" style="width: 43.4%" data-bind="click: function ( item, event ) { handlePeopleTableColumnClick( event, 'activity' ) }">Activity</div>
+                            <div class="activitySearchResultsColumnHeader" style="width: 7.6%" data-bind="click: function ( item, event ) { handlePeopleTableColumnClick( event, 'type' ) }">Type</div>
                         </div>
                         <div style="height: 600px; overflow-y: scroll">
-                            <ul data-bind="foreach: activityResults.placeResults">
+                            <ul data-bind="foreach: peopleTableRows">
                                 <li>
-                                    <ul data-bind="foreach: results">
-                                        <li>
-                                            <div style="width: 100%; padding-top: 4px; padding-bottom: 4px; border-bottom-style: solid; border-bottom-color: black; border-bottom-width: 1px;">
-                                                <div class="activitySearchResultsRow" style="width: 20%" data-bind="text: personName() + ' ' + personEmail()"></div>
-                                                <div class="activitySearchResultsRow" style="width: 15%" data-bind="text: personDepartment()"></div>
-                                                <div class="activitySearchResultsRow" style="width: 11%" data-bind="text: $parent.officialName"></div>
-                                                <div class="activitySearchResultsRow" style="width: 40%" data-bind="text: activityTitle(), attr: { title: activityDescription() }"></div>
-                                                <div class="activitySearchResultsRow" style="width: 11%" data-bind="template: { name: 'activities-types-template', foreach: activityTypeIds }"></div>
-                                            </div>
-                                        </li>
-                                    </ul>
+                                    <div style="width: 100%; padding-top: 4px; padding-bottom: 4px; border-bottom-style: solid; border-bottom-color: black; border-bottom-width: 1px;">
+                                        <div class="activitySearchResultsRow" style="width: 20%" data-bind="text: personName + ' ' + personEmail"></div>
+                                        <div class="activitySearchResultsRow" style="width: 15%" data-bind="text: personDepartment"></div>
+                                        <div class="activitySearchResultsRow" style="width: 11%" data-bind="text: placeOfficialName"></div>
+                                        <div class="activitySearchResultsRow" style="width: 43.4%" data-bind="text: activityTitle, attr: { title: activityDescription }"></div>
+                                        <div class="activitySearchResultsRow" style="width: 7.6%; text-align: center;" data-bind="template: { name: 'activities-types-template', foreach: activityTypeIds }"></div>
+                                    </div>
                                 </li>
                             </ul>
                         </div>
                     </div>
                       
-                    <!-- Spinner -->
+                    <!-- Spinners -->
                     <div class="spinnerBox" data-bind="visible: loadSpinner.isVisible() && isPointmapVisible() && (lens() == 'table')">
                         <div style="position: absolute; top: 0; left: 0; bottom: 0; right: 0; margin: auto; width: 100px; height: 20px">
                             <span>
                                 <img src="~/images/icons/spinner/spinner-20-blue.gif" alt=""/>
                                 <strong>Loading...</strong>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="spinnerBox" data-bind="visible: sortSpinner.isVisible() && isPointmapVisible() && (lens() == 'table')">
+                        <div style="position: absolute; top: 0; left: 0; bottom: 0; right: 0; margin: auto; width: 100px; height: 20px; z-index: 10">
+                            <span>
+                                <img src="~/images/icons/spinner/spinner-20-blue.gif" alt=""/>
+                                <strong>Sorting...</strong>
                             </span>
                         </div>
                     </div>
@@ -656,13 +674,17 @@
             </div>
         </div>
 
-        <div class="on-right from-top" style="display: none" data-bind="visible: isPointmapVisible()">
-            @Html.Partial(MVC.FacultyStaff.Views._SearchSideBar)
-        </div>
-        <div class="on-right from-top" style="display: none" data-bind="visible: isHeatmapVisible">
-            @Html.Partial(MVC.FacultyStaff.Views._StatsSideBar)
-        </div>
+        <aside class="on-right from-top" data-fixed-scroll="root" >
+            <div data-fixed-scroll="anchor"></div>
+            <div data-fixed-scroll="content" style="display: none" data-bind="visible: isPointmapVisible">
+                @Html.Partial(MVC.FacultyStaff.Views._SearchSideBar)
+            </div>
+            <div data-fixed-scroll="content" style="display: none" data-bind="visible: isHeatmapVisible">
+                @Html.Partial(MVC.FacultyStaff.Views._StatsSideBar)
+            </div>
+        </aside>
     </form>
+    <div style='clear:both'></div>
 </div>
 
 <div id="tooltipWindow" style="width: 100px; height: 40px"></div>

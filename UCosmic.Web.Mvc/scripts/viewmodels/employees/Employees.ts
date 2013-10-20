@@ -7,6 +7,7 @@
 /// <reference path="../../typings/moment/moment.d.ts" />
 /// <reference path="../../typings/googlemaps/google.maps.d.ts" />
 /// <reference path="../../typings/sammyjs/sammyjs.d.ts" />
+/// <reference path="../../typings/linq/linq.d.ts" />
 /// <reference path="../../app/Routes.ts" />
 /// <reference path="../../app/Spinner.ts" />
 /// <reference path="../activities/ServiceApiModel.d.ts" />
@@ -206,11 +207,13 @@ module ViewModels.Employees {
             },
         ];
 
-        activityTableRows: any[] = [
+        activityTableRows: KnockoutObservableArray<any> = ko.observableArray([
             {
                 placeOfficialName: '',
                 personName: '',
+                activityDescription: '',
                 activityTitle: '',
+                activityTypeIds: [],
                 activityTypes: [{
                     rank: 0,
                     iconName: '',
@@ -218,40 +221,49 @@ module ViewModels.Employees {
                 }],
                 activityDate: ''
             }
-        ];
+        ]);
 
-        peopleTableRows: any[] = [
+
+        peopleTableRows: KnockoutObservableArray<any> = ko.observableArray([
             {
                 personName: '',
                 personEmail: '',
                 personDepartment: '',
+                activityDescription: '',
+                activityTitle: '',
                 placeOfficialName: '',
+                activityTypeIds: [],
                 activityTypes: [{
                     rank: 0,
                     iconName: '',
                     toolTip: ''
                 }],
             }
-        ];
+        ]);
 
         activityColumnSort: any[] = [
-            { name: 'location', order: false },
-            { name: 'name', order: false },
-            { name: 'title', order: false },
-            { name: 'type', order: false },
-            { name: 'date', order: false },
+            { name: 'location', order: true },
+            { name: 'name', order: true },
+            { name: 'title', order: true },
+            { name: 'type', order: true },
+            { name: 'date', order: true },
         ];
 
+        activitySortColumnIndex: number = 0;
+
         peopleColumnSort: any[] = [
-            { name: 'name', order: false },
-            { name: 'department', order: false },
-            { name: 'location', order: false },
-            { name: 'activity', order: false },
-            { name: 'type', order: false },
+            { name: 'name', order: true },
+            { name: 'department', order: true },
+            { name: 'location', order: true },
+            { name: 'activity', order: true },
+            { name: 'type', order: true },
         ];
+
+        peopleSortColumnIndex: number = 0;
 
 
         loadSpinner: App.Spinner;
+        sortSpinner: App.Spinner;
 
         _initialize(institutionInfo: any): void {
             this.sammy = Sammy();
@@ -280,8 +292,9 @@ module ViewModels.Employees {
 
             this.degreesChecked = ko.observable();
             this.tags = ko.observable();
-            
+
             this.loadSpinner = new App.Spinner(new App.SpinnerOptions(200));
+            this.sortSpinner = new App.Spinner(new App.SpinnerOptions(200));
 
             this.globalActivityCountData = null;
             this.placeActivityCountData = null;
@@ -581,9 +594,9 @@ module ViewModels.Employees {
 
                             if (selectedIndex == 0) {
                                 $("#" + departmentDropListId).data("kendoDropDownList").setDataSource(new kendo.data.DataSource());
-                                $("#" + collegeDropListId).data("kendoDropDownList").setDataSource(new kendo.data.DataSource()); 
+                                $("#" + collegeDropListId).data("kendoDropDownList").setDataSource(new kendo.data.DataSource());
 
-                                $("#" + collegeDropListId).data("kendoDropDownList").text("");                  
+                                $("#" + collegeDropListId).data("kendoDropDownList").text("");
                             }
 
                             me.drawPointmap(true);
@@ -692,7 +705,7 @@ module ViewModels.Employees {
                 }
             });
         }
-        
+
         setupRouting(): void {
             this.sammy.get('#/summary', (): void => {
                 this.selectMap('heatmap');
@@ -1560,6 +1573,7 @@ module ViewModels.Employees {
             if (this.pointmapActivityMarkers == null) {
                 this.advancedSearch()
                     .done((results: any): void => {
+                        this.sortActivitiesByColumnIndex(this.activitySortColumnIndex);
                         deferred.resolve(this._getPointmapActivityMarkers(results));
                     })
                     .fail((jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void => {
@@ -1613,6 +1627,7 @@ module ViewModels.Employees {
             }
             this.pointmapActivityMarkers = markers;
 
+
             return this.pointmapActivityMarkers;
         }
 
@@ -1644,6 +1659,7 @@ module ViewModels.Employees {
             if (this.pointmapPeopleMarkers == null) {
                 this.advancedSearch()
                     .done((results: any): void => {
+                        this.sortPeopleByColumnIndex(this.peopleSortColumnIndex);
                         deferred.resolve(this._getPointmapPeopleMarkers(results));
                     })
                     .fail((jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void => {
@@ -1971,10 +1987,10 @@ module ViewModels.Employees {
                 this.drawPointmap(false);
 
                 $("#bib-faculty-staff-search").addClass("current");
-            //} else if (type === "resultstable") {
-            //    $('#resultstableText').css("font-weight", "bold");
-            //    this.isTableVisible(true);
-            //    $("#bib-faculty-staff-search").addClass("current");
+                //} else if (type === "resultstable") {
+                //    $('#resultstableText').css("font-weight", "bold");
+                //    this.isTableVisible(true);
+                //    $("#bib-faculty-staff-search").addClass("current");
             } else if (type === "expert") {
                 $('#expertText').css("font-weight", "bold");
                 this.isExpertVisible(true);
@@ -2124,7 +2140,7 @@ module ViewModels.Employees {
             if (this.fromDate() != null) {
                 fromDate = this.fromDate().toString();
             }
-            
+
             var toDate = null;
             if (this.toDate() != null) {
                 toDate = this.toDate().toString();
@@ -2158,13 +2174,11 @@ module ViewModels.Employees {
                 contentType: 'application/json',
                 dataType: 'json',
                 url: App.Routes.WebApi.FacultyStaff.postSearch(),
-                success: (data: any, textStatus: string, jqXhr: JQueryXHR): void =>
-                {
+                success: (data: any, textStatus: string, jqXhr: JQueryXHR): void => {
                     ko.mapping.fromJS(data, {}, this.activityResults);
                     deferred.resolve(data);
                 },
-                error: (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void =>
-                {
+                error: (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
                     deferred.reject(errorThrown);
                 }
             });
@@ -2173,10 +2187,14 @@ module ViewModels.Employees {
         }
 
         selectLens(lens: string): void {
+            $("#faculty-staff-on-right-map").removeClass("current");
+            $("#faculty-staff-on-right-table").removeClass("current");
             if (lens === 'map') {
                 this.lens('map');
+                $("#faculty-staff-on-right-map").addClass("current");
             } else {
                 this.lens('table');
+                $("#faculty-staff-on-right-table").addClass("current");
             }
         }
 
@@ -2219,50 +2237,226 @@ module ViewModels.Employees {
             }
         }
 
-        sortActivitiesBy(column: string): void {
-            var i = 0;
-            while ((i < this.activityColumnSort.length) &&
-                (this.activityColumnSort[i].name !== column)) {
-                i += 1;
+        handleActivityTableColumnClick(element: any, column: string): void {
+            var colIndex = 0;
+            while ((colIndex < this.activityColumnSort.length) &&
+                (this.activityColumnSort[colIndex].name !== column)) {
+                colIndex += 1;
             }
 
-            if (i < this.activityColumnSort.length) {
-                if (column === 'location') {
-                    if (this.activityColumnSort[i].order) {
-                        this.activityResults.placeResults.sort(function (a, b) {
-                            if (a.officialName() > b.officialName()) return 1;
-                            if (a.officialName() < b.officialName()) return -1;
-                            return 0;
-                        });
-                    } else {
-                        this.activityResults.placeResults.sort(function (a, b) {
-                            if (a.officialName() > b.officialName()) return -1;
-                            if (a.officialName() < b.officialName()) return 1;
-                            return 0;
-                        });
-                    }
-                } else if (column === 'name') {
-                    if (this.activityColumnSort[i].order) {
-                        this.activityResults.placeResults.sort(function (a, b) {
-                            if (a.officialName() > b.officialName()) return 1;
-                            if (a.officialName() < b.officialName()) return -1;
-                            return 0;
-                        });
-                    } else {
-                        this.activityResults.placeResults.sort(function (a, b) {
-                            if (a.officialName() > b.officialName()) return -1;
-                            if (a.officialName() < b.officialName()) return 1;
-                            return 0;
-                        });
-                    }
-                }
-
-                this.activityColumnSort[i].order = !this.activityColumnSort[i].order;
+            if (colIndex < this.activityColumnSort.length) {
+                this.activityColumnSort[colIndex].order = !this.activityColumnSort[colIndex].order;
+                this.sortActivitiesByColumnIndex(colIndex);
             }
         }
 
-        sortPeopleBy(column: string): void {
+        sortActivitiesByColumnIndex(colIndex: number): void {
+            if (colIndex >= this.activityColumnSort.length) return;
+
+            this.sortSpinner.start();
+
+            var activityTypeRanks = ko.toJS(this.activityResults.activityTypeRanks);
+
+            var unsorted = Enumerable.From(this.activityResults.placeResults())
+                .SelectMany(function (placeResult) {
+                    var flatResults = new Array();
+                    for (var i = 0; i < placeResult.results().length; i += 1) {
+                        var flatResult = ko.toJS(placeResult.results()[i]);
+                        flatResult.placeOfficialName = placeResult.officialName();
+                        flatResults.push(flatResult);
+                    }
+                    return flatResults;
+                });
+
+            this.activitySortColumnIndex = colIndex;
+            var sorted = [];
+
+            switch (colIndex) {
+                case 0: // location
+                    if (this.activityColumnSort[colIndex].order) {
+                        sorted = unsorted.OrderBy(function (x) {
+                            return x.placeOfficialName;
+                        }).ToArray();
+                    } else {
+                        sorted = unsorted.OrderByDescending(function (x) {
+                            return x.placeOfficialName;
+                        }).ToArray();
+                    }
+                    break;
+                case 1: // name
+                    if (this.activityColumnSort[colIndex].order) {
+                        sorted = unsorted.OrderBy(function (x) {
+                            return x.personName;
+                        }).ToArray();
+                    } else {
+                        sorted = unsorted.OrderByDescending(function (x) {
+                            return x.personName;
+                        }).ToArray();
+                    }
+                    break;
+                case 2: // title
+                    if (this.activityColumnSort[colIndex].order) {
+                        sorted = unsorted.OrderBy(function (x) {
+                            return x.activityTitle;
+                        }).ToArray();
+                    } else {
+                        sorted = unsorted.OrderByDescending(function (x) {
+                            return x.activityTitle;
+                        }).ToArray();
+                    }
+                    break;
+                case 3: // type
+                    if (this.activityColumnSort[colIndex].order) {
+                        sorted = unsorted.OrderBy(function (y) {
+                            for (var r = 0; r < activityTypeRanks.length; r += 1) {
+                                if (y.activityTypeIds[0] == activityTypeRanks[r].type) {
+                                    return activityTypeRanks[r].rank;
+                                }
+                            }
+                            return 0;
+                        }).ToArray();
+                    } else {
+                        sorted = unsorted.OrderByDescending(function (y) {
+                            for (var r = 0; r < activityTypeRanks.length; r += 1) {
+                                if (y.activityTypeIds[0] == activityTypeRanks[r].type) {
+                                    return activityTypeRanks[r].rank;
+                                }
+                            }
+                            return 0;
+                        }).ToArray();
+                    }
+                    break;
+                case 4: // date
+                    if (this.activityColumnSort[colIndex].order) {
+                        sorted = unsorted.OrderBy(function (x) {
+                            return x.activityDate;
+                        }).ToArray();
+                    } else {
+                        sorted = unsorted.OrderByDescending(function (x) {
+                            return x.activityDate;
+                        }).ToArray();
+                    }
+                    break;
+            }
+
+            this.activityTableRows.removeAll();
+            for (var i = 0; i < sorted.length; i += 1) {
+                this.activityTableRows.push(sorted[i]);
+            }
+
+            this.sortSpinner.stop();
         }
-        
+
+        handlePeopleTableColumnClick(element: any, column: string): void {
+            var colIndex = 0;
+            while ((colIndex < this.peopleColumnSort.length) &&
+                (this.peopleColumnSort[colIndex].name !== column)) {
+                colIndex += 1;
+            }
+
+            if (colIndex < this.peopleColumnSort.length) {
+                this.peopleColumnSort[colIndex].order = !this.peopleColumnSort[colIndex].order;
+                this.sortPeopleByColumnIndex(colIndex);
+                this.sortPeopleByColumnIndex(colIndex);
+            }
+        }
+
+        sortPeopleByColumnIndex(colIndex: number): void {
+            if (colIndex >= this.peopleColumnSort.length) return;
+
+            this.sortSpinner.start();
+
+            var activityTypeRanks = ko.toJS(this.activityResults.activityTypeRanks);
+
+            var unsorted = Enumerable.From(this.activityResults.placeResults())
+                .SelectMany(function (placeResult) {
+                    var flatResults = new Array();
+                    for (var i = 0; i < placeResult.results().length; i += 1) {
+                        var flatResult = ko.toJS(placeResult.results()[i]);
+                        flatResult.placeOfficialName = placeResult.officialName();
+                        flatResults.push(flatResult);
+                    }
+                    return flatResults;
+                });
+
+            this.peopleSortColumnIndex = colIndex;
+            var sorted = [];
+
+            switch (colIndex) {
+                case 0: // name/email
+                    if (this.peopleColumnSort[colIndex].order) {
+                        sorted = unsorted.OrderBy(function (x) {
+                            return x.personName + ' ' + x.personEmail;
+                        }).ToArray();
+                    } else {
+                        sorted = unsorted.OrderByDescending(function (x) {
+                            return x.personName + ' ' + x.personEmail;
+                        }).ToArray();
+                    }
+                    break;
+                case 1: // department
+                    if (this.peopleColumnSort[colIndex].order) {
+                        sorted = unsorted.OrderBy(function (x) {
+                            return x.personDepartment;
+                        }).ToArray();
+                    } else {
+                        sorted = unsorted.OrderByDescending(function (x) {
+                            return x.personDepartment;
+                        }).ToArray();
+                    }
+                    break; 
+                case 2: // location
+                    if (this.peopleColumnSort[colIndex].order) {
+                        sorted = unsorted.OrderBy(function (x) {
+                            return x.placeOfficialName;
+                        }).ToArray();
+                    } else {
+                        sorted = unsorted.OrderByDescending(function (x) {
+                            return x.placeOfficialName;
+                        }).ToArray();
+                    }
+                    break;
+                case 3: // title
+                    if (this.peopleColumnSort[colIndex].order) {
+                        sorted = unsorted.OrderBy(function (x) {
+                            return x.peopleTitle;
+                        }).ToArray();
+                    } else {
+                        sorted = unsorted.OrderByDescending(function (x) {
+                            return x.peopleTitle;
+                        }).ToArray();
+                    }
+                    break;
+                case 4: // type
+                    if (this.peopleColumnSort[colIndex].order) {
+                        sorted = unsorted.OrderBy(function (y) {
+                            for (var r = 0; r < activityTypeRanks.length; r += 1) {
+                                if (y.activityTypeIds[0] == activityTypeRanks[r].type) {
+                                    return activityTypeRanks[r].rank;
+                                }
+                            }
+                            return 0;
+                        }).ToArray();
+                    } else {
+                        sorted = unsorted.OrderByDescending(function (y) {
+                            for (var r = 0; r < activityTypeRanks.length; r += 1) {
+                                if (y.activityTypeIds[0] == activityTypeRanks[r].type) {
+                                    return activityTypeRanks[r].rank;
+                                }
+                            }
+                            return 0;
+                        }).ToArray();
+                    }
+                    break;
+            }
+
+            this.peopleTableRows.removeAll();
+            for (var i = 0; i < sorted.length; i += 1) {
+                this.peopleTableRows.push(sorted[i]);
+            }
+
+            this.sortSpinner.stop();
+        }
+
     }
 }
