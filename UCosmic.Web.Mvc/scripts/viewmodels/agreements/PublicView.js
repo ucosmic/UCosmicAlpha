@@ -148,13 +148,20 @@ var Agreements;
             };
 
             PublicView.prototype._createMap = function () {
-                this._googleMap = new google.maps.Map(document.getElementById("map-canvas"), {
+                google.maps.visualRefresh = true;
+                var options = {
                     mapTypeId: google.maps.MapTypeId.ROADMAP,
                     center: new google.maps.LatLng(0, 0),
                     zoom: 1,
                     draggable: true,
-                    scrollwheel: false
-                });
+                    scrollwheel: false,
+                    streetViewControl: false,
+                    panControl: false,
+                    zoomControlOptions: {
+                        style: google.maps.ZoomControlStyle.SMALL
+                    }
+                };
+                this._googleMap = new google.maps.Map(document.getElementById("map-canvas"), options);
                 var deferred = $.Deferred();
                 google.maps.event.addListenerOnce(this._googleMap, 'idle', function () {
                     deferred.resolve();

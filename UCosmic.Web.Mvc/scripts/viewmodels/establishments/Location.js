@@ -262,6 +262,7 @@ var Establishments;
                     draggable: true,
                     scrollwheel: false
                 };
+                google.maps.visualRefresh = true;
                 this.map = new gm.Map(this.$mapCanvas()[0], mapOptions);
                 this.isMapVisible(true);
 

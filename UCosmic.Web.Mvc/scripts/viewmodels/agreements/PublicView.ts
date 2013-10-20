@@ -165,13 +165,20 @@ module Agreements.ViewModels {
 
         private _googleMap: google.maps.Map;
         private _createMap(): JQueryDeferred<void> {
-            this._googleMap = new google.maps.Map(document.getElementById("map-canvas"), {
+            google.maps.visualRefresh = true;
+            var options: google.maps.MapOptions = {
                 mapTypeId: google.maps.MapTypeId.ROADMAP,
                 center: new google.maps.LatLng(0, 0), // americas on left, australia on right
                 zoom: 1, // zoom out
                 draggable: true, // allow map panning
-                scrollwheel: false // prevent mouse wheel zooming
-            });
+                scrollwheel: false, // prevent mouse wheel zooming
+                streetViewControl: false,
+                panControl: false,
+                zoomControlOptions: {
+                    style: google.maps.ZoomControlStyle.SMALL,
+                },
+            };
+            this._googleMap = new google.maps.Map(document.getElementById("map-canvas"), options);
             var deferred = $.Deferred();
             google.maps.event.addListenerOnce(this._googleMap, 'idle', function () {
                 deferred.resolve();

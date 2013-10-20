@@ -568,10 +568,13 @@ var Agreements;
                 $.each(places, function (i, place) {
                     if (placeType == 'continents' && !place.agreementCount)
                         return;
+                    var title = '{0} - {1} agreement(s)'.format(place.name, place.agreementCount);
+                    if (!placeType)
+                        title = '{0} agreement(s)\r\nClick for more information'.format(place.agreementCount);
                     var options = {
                         map: _this._googleMap,
                         position: Places.Utils.convertToLatLng(place.center),
-                        title: '{0} - {1} agreement(s)'.format(place.name, place.agreementCount),
+                        title: title,
                         clickable: true,
                         cursor: 'pointer'
                     };
@@ -591,17 +594,32 @@ var Agreements;
                     });
                     if (placeType === 'continents') {
                         google.maps.event.addListener(marker, 'click', function (e) {
-                            _this._googleMap.fitBounds(Places.Utils.convertToLatLngBounds(place.boundingBox));
-                            if (place.id < 1) {
-                                _this.continentCode('none');
+                            if (place.agreementCount == 1) {
+                                location.href = _this.settings.detailUrl.format(place.agreementIds[0]);
                             } else {
-                                _this.continentCode(place.continentCode);
+                                _this._googleMap.fitBounds(Places.Utils.convertToLatLngBounds(place.boundingBox));
+                                if (place.id < 1) {
+                                    _this.continentCode('none');
+                                } else {
+                                    _this.continentCode(place.continentCode);
+                                }
                             }
                         });
                     } else if (placeType === 'countries') {
                         google.maps.event.addListener(marker, 'click', function (e) {
-                            if (place.id > 0)
+                            if (place.agreementCount == 1) {
+                                location.href = _this.settings.detailUrl.format(place.agreementIds[0]);
+                            } else if (place.id > 0) {
                                 _this.countryCode(place.countryCode);
+                            }
+                        });
+                    } else if (!placeType) {
+                        google.maps.event.addListener(marker, 'click', function (e) {
+                            if (place.agreementCount == 1) {
+                                location.href = _this.settings.detailUrl.format(place.agreementIds[0]);
+                            } else {
+                                // load the partners
+                            }
                         });
                     }
                 });

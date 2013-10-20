@@ -689,11 +689,13 @@ module Agreements.ViewModels {
             }
             $.each(places, (i: number, place: ApiModels.PlaceWithAgreements): void => {
                 if (placeType == 'continents' && !place.agreementCount) return; // do not render zero on continent
+                var title = '{0} - {1} agreement(s)'.format(place.name, place.agreementCount);
+                if (!placeType)
+                    title = '{0} agreement(s)\r\nClick for more information'.format(place.agreementCount);
                 var options: google.maps.MarkerOptions = {
                     map: this._googleMap,
                     position: Places.Utils.convertToLatLng(place.center),
-                    title: '{0} - {1} agreement(s)'
-                        .format(place.name, place.agreementCount),
+                    title: title,
                     clickable: true,
                     cursor: 'pointer',
                 };
@@ -713,17 +715,39 @@ module Agreements.ViewModels {
                 });
                 if (placeType === 'continents') {
                     google.maps.event.addListener(marker, 'click', (e: google.maps.MouseEvent): void => {
-                        this._googleMap.fitBounds(Places.Utils.convertToLatLngBounds(place.boundingBox));
-                        if (place.id < 1) {
-                            this.continentCode('none'); // select none in continents dropdown menu
-                        } else {
-                            this.continentCode(place.continentCode);
+                        if (place.agreementCount == 1) {
+                            location.href = this.settings.detailUrl.format(place.agreementIds[0]);
+                        }
+                        else {
+                            this._googleMap.fitBounds(Places.Utils.convertToLatLngBounds(place.boundingBox));
+                            if (place.id < 1) {
+                                this.continentCode('none'); // select none in continents dropdown menu
+                            } else {
+                                this.continentCode(place.continentCode);
+                            }
                         }
                     });
                 }
                 else if (placeType === 'countries') {
                     google.maps.event.addListener(marker, 'click', (e: google.maps.MouseEvent): void => {
-                        if (place.id > 0) this.countryCode(place.countryCode);
+                        if (place.agreementCount == 1) {
+                            location.href = this.settings.detailUrl.format(place.agreementIds[0]);
+                        }
+                        else if (place.id > 0) {
+                            this.countryCode(place.countryCode);
+                        }
+                    });
+                }
+                else if (!placeType) {
+                    google.maps.event.addListener(marker, 'click', (e: google.maps.MouseEvent): void => {
+                        //this._googleMap.setCenter(e.latLng);
+                        //this._googleMap.setZoom(12);
+                        if (place.agreementCount == 1) {
+                            location.href = this.settings.detailUrl.format(place.agreementIds[0]);
+                        }
+                        else {
+                            // load the partners
+                        }
                     });
                 }
             });

@@ -302,6 +302,7 @@ module Establishments.ViewModels {
                 draggable: true, // allow map panning
                 scrollwheel: false // prevent mouse wheel zooming
             };
+            google.maps.visualRefresh = true;
             this.map = new gm.Map(this.$mapCanvas()[0], mapOptions); // create map on element
             this.isMapVisible(true);
 
