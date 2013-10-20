@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using AutoMapper;
 using UCosmic.Domain.Agreements;
 using UCosmic.Domain.Places;
@@ -12,6 +13,8 @@ namespace UCosmic.Web.Mvc.Models
         public int EstablishmentId { get; set; }
         public string EstablishmentOfficialName { get; set; }
         public string EstablishmentTranslatedName { get; set; }
+        public string AgreementType { get; set; }
+        public DateTime AgreementStartsOn { get; set; }
         public MapPointModel Center { get; set; }
         public MapBoxModel BoundingBox { get; set; }
         public int? GoogleMapZoomLevel { get; set; }

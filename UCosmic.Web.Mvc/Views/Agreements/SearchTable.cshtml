@@ -188,10 +188,10 @@
                 </div>
             </div>
             <div data-bind="visible: isMapLens, with: map" style="margin: 1em 0; display: none;">
-                <div data-bind="visible: continentCode() == 'any'">
+                <div data-bind="visible: continentCode() == 'any' && countryCode() == 'any'">
                     Click any number below for more information.
                 </div>
-                <div data-bind="visible: continentCode() != 'any'">
+                <div data-bind="visible: continentCode() != 'any' || countryCode() != 'any'">
                     <strong data-bind="text: status.agreementCount">?</strong>
                     <span data-bind="visible: status.agreementCount() == 1" style="display: none;">agreement</span>
                     <span data-bind="visible: status.agreementCount() != 1">agreements</span>
@@ -232,6 +232,24 @@
             </div>*@
             <div id="google_map_canvas" style="height: 500px; cursor: inherit;" data-bind="visible: isMapLens">
             </div>
+            <!-- ko with: map -->
+            <div data-bind="jQuery: '$infoWindow'" style="display: none;">
+                <div style="width: 600px; min-height: 50px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 16px; color: #000; cursor: default; overflow: hidden; padding: 0 0 4px;">
+                    <div style="margin-bottom: 1em;" data-bind="with: infoWindowContent">
+                        <strong data-bind="text: partner().establishmentTranslatedName"></strong>
+                        <span data-bind="visible: partner().establishmentOfficialName" style="font-size: 14px;">(<span data-bind="    text: partner().establishmentOfficialName"></span>)</span>
+                    </div>
+                    <ul data-bind="foreach: infoWindowContent.agreements">
+                        <li>
+                            <div>
+                                <a data-bind="text: agreementType, attr: { href: $parent.settings.detailUrl.format(agreementId), target: $parent.detailPreference }" style="cursor: pointer;"></a>
+                                <span data-bind="text: moment(agreementStartsOn).format('M/D/YYYY')" style="font-size: 14px;"></span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- /ko -->
         </div>
         <aside class="on-right from-top" data-fixed-scroll="root">
             <div data-fixed-scroll="anchor"></div>
@@ -305,12 +323,12 @@
                             </div>
                             <div class="content" data-bind="visible: isMapLens, with: map">
                                 <div class="field">
-                                    <select class="side" data-bind="value: continentCode, options: continentOptions, optionsText: 'name', optionsValue: 'code'">
+                                    <select class="side" data-bind="value: continentCode, options: continentOptions, optionsText: 'name', optionsValue: 'code', event: { change: continentSelected }">
                                         <option value="any">[Loading...]</option>
                                     </select>
                                 </div>
                                 <div class="field">
-                                    <select class="side" data-bind="value: countryCode, options: countryOptions, optionsText: 'name', optionsValue: 'code'">
+                                    <select class="side" data-bind="value: countryCode, options: countryOptions, optionsText: 'name', optionsValue: 'code', event: { change: countrySelected }">
                                         <option value="any">[Loading...]</option>
                                     </select>
                                 </div>

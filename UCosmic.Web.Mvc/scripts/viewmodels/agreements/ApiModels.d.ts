@@ -58,6 +58,8 @@ declare module Agreements.ApiModels {
 
     export interface Participant {
         agreementId: number;
+        agreementType: string;
+        agreementStartsOn: string;
         establishmentId: number;
         isOwner: boolean;
         establishmentOfficialName: string;

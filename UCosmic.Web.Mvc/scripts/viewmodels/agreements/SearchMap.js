@@ -30,7 +30,7 @@ var Agreements;
                 this.zoom = ko.observable(parseInt(sessionStorage.getItem(SearchMap.ZoomSessionKey)) || 1);
                 this.lat = ko.observable(parseInt(sessionStorage.getItem(SearchMap.LatSessionKey)) || SearchMap._defaultMapCenter.lat());
                 this.lng = ko.observable(parseInt(sessionStorage.getItem(SearchMap.LngSessionKey)) || SearchMap._defaultMapCenter.lng());
-                this.detailPreference = ko.observable(sessionStorage.getItem(SearchMap.DetailPrefSessionKey) || '_blank');
+                this.detailPreference = ko.observable(sessionStorage.getItem(SearchMap.DetailPrefSessionKey));
                 this.detailPreferenceChecked = ko.computed({
                     read: function () {
                         return _this.detailPreference() == '_blank';
@@ -52,7 +52,7 @@ var Agreements;
                     sessionStorage.setItem(SearchMap.ZoomSessionKey, _this.zoom().toString());
                     sessionStorage.setItem(SearchMap.LatSessionKey, _this.lat().toString());
                     sessionStorage.setItem(SearchMap.LngSessionKey, _this.lng().toString());
-                    sessionStorage.setItem(SearchMap.DetailPrefSessionKey, _this.detailPreference());
+                    sessionStorage.setItem(SearchMap.DetailPrefSessionKey, _this.detailPreference() || '');
                 }).extend({ throttle: 0 });
                 this.north = ko.observable();
                 this.south = ko.observable();
@@ -115,6 +115,11 @@ var Agreements;
                 }).extend({ throttle: 1 });
                 this._markers = ko.observableArray();
                 this.spinner = new App.Spinner(new App.SpinnerOptions(400, false));
+                this._infoWindows = ko.observableArray();
+                this.infoWindowContent = {
+                    partner: ko.observable({}),
+                    agreements: ko.observableArray([])
+                };
                 this._loadSummary();
                 this._mapCreated = this._createMap();
                 this._loadCountryOptions();
@@ -261,6 +266,14 @@ var Agreements;
                     deferred.resolve();
                 });
                 return deferred;
+            };
+
+            SearchMap.prototype.continentSelected = function () {
+                this.placeId(0);
+            };
+
+            SearchMap.prototype.countrySelected = function () {
+                this.placeId(0);
             };
 
             SearchMap.prototype._runSammy = function () {
@@ -618,6 +631,8 @@ var Agreements;
                                     _this.continentCode('none');
                                 } else {
                                     _this.continentCode(place.continentCode);
+                                    _this.countryCode('any');
+                                    _this.placeId(0);
                                 }
                             }
                         });
@@ -632,12 +647,13 @@ var Agreements;
                                     location.href = url;
                                 }
                             } else if (place.id > 0) {
+                                _this.continentCode('any');
                                 _this.countryCode(place.countryCode);
+                                _this.placeId(0);
                             }
                         });
                     } else if (!placeType) {
                         google.maps.event.addListener(marker, 'click', function (e) {
-                            console.log('click');
                             if (place.agreementCount == 1) {
                                 var url = _this.settings.detailUrl.format(place.agreementIds[0]);
                                 var detailPreference = _this.detailPreference();
@@ -725,7 +741,7 @@ var Agreements;
                     opacity: 0.7,
                     side: side,
                     text: text,
-                    fillColor: 'rgb(70, 70, 70)'
+                    fillColor: 'rgb(11, 11, 11)'
                 };
                 var url = '{0}?{1}'.format(this.settings.graphicsCircleApi, $.param(settings));
                 var icon = {
@@ -759,7 +775,7 @@ var Agreements;
                     var place = Enumerable.From(this._placesResponse()).SingleOrDefault(undefined, function (x) {
                         return x.id == placeId;
                     });
-                    if (!place && !place.agreementCount) {
+                    if (!place || !place.agreementCount) {
                         alert('There are no agreements for place #{0}.'.format(placeId));
                         deferred.reject();
                     } else {
@@ -810,23 +826,52 @@ var Agreements;
                 var scaler = this._getMarkerIconScaler('', this._placesResponse());
                 $.each(uniquePartners, function (i, partner) {
                     // how many agreements for this partner?
-                    var agreementCount = Enumerable.From(allPartners).Where(function (x) {
+                    var agreements = Enumerable.From(allPartners).Where(function (x) {
                         return x.establishmentId == partner.establishmentId;
                     }).Distinct(function (x) {
                         return x.agreementId;
-                    }).Count();
+                    }).ToArray();
 
                     var options = {
                         map: _this._googleMap,
                         position: Places.Utils.convertToLatLng(partner.center),
-                        title: '{0} - {1} agreement(s)'.format(partner.establishmentTranslatedName, agreementCount),
+                        title: '{0} - {1} agreement(s)'.format(partner.establishmentTranslatedName, agreements.length),
                         clickable: true,
                         cursor: 'pointer'
                     };
-                    _this._setMarkerIcon(options, agreementCount.toString(), scaler);
+                    _this._setMarkerIcon(options, agreements.length.toString(), scaler);
                     var marker = new google.maps.Marker(options);
                     _this._markers.push(marker);
+                    google.maps.event.addListener(marker, 'click', function (e) {
+                        if (agreements.length == 1) {
+                            var url = _this.settings.detailUrl.format(partner.agreementId);
+                            var detailPreference = _this.detailPreference();
+                            if (detailPreference == '_blank') {
+                                window.open(url, detailPreference);
+                            } else {
+                                location.href = url;
+                            }
+                        } else {
+                            _this.infoWindowContent.partner(partner);
+                            _this.infoWindowContent.agreements(Enumerable.From(agreements).OrderByDescending(function (x) {
+                                return x.agreementStartsOn;
+                            }).ToArray());
+                            var content = _this.$infoWindow.html();
+                            var options = {
+                                content: $.trim(content)
+                            };
+                            var infoWindow = new google.maps.InfoWindow(options);
+                            _this._clearInfoWindows();
+                            _this._infoWindows.push(infoWindow);
+                            infoWindow.open(_this._googleMap, marker);
+                        }
+                    });
                 });
+
+                var markers = this._markers();
+                if (markers.length == 1) {
+                    google.maps.event.trigger(markers[0], 'click');
+                }
 
                 // update the status
                 this.status.agreementCount(Enumerable.From(allPartners).Distinct(function (x) {
@@ -836,6 +881,15 @@ var Agreements;
                 this.status.countryCount('this area');
 
                 this._updateRoute();
+            };
+
+            SearchMap.prototype._clearInfoWindows = function () {
+                var infoWindows = this._infoWindows();
+                $.each(infoWindows, function (i, infoWindow) {
+                    infoWindow.close();
+                    infoWindow = null;
+                });
+                this._infoWindows([]);
             };
             SearchMap._defaultMapCenter = new google.maps.LatLng(0, 17);
 

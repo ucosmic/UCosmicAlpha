@@ -55,7 +55,7 @@ module Agreements.ViewModels {
         lng: KnockoutObservable<number> = ko.observable(
             parseInt(sessionStorage.getItem(SearchMap.LngSessionKey)) || SearchMap._defaultMapCenter.lng());
         detailPreference: KnockoutObservable<string> = ko.observable(
-            sessionStorage.getItem(SearchMap.DetailPrefSessionKey) || '_blank');
+            sessionStorage.getItem(SearchMap.DetailPrefSessionKey));
         detailPreferenceChecked: KnockoutComputed<boolean> = ko.computed({
             read: (): boolean => { return this.detailPreference() == '_blank' },
             write: (value: boolean): void => { this.detailPreference(value ? '_blank' : ''); },
@@ -84,7 +84,7 @@ module Agreements.ViewModels {
             sessionStorage.setItem(SearchMap.ZoomSessionKey, this.zoom().toString());
             sessionStorage.setItem(SearchMap.LatSessionKey, this.lat().toString());
             sessionStorage.setItem(SearchMap.LngSessionKey, this.lng().toString());
-            sessionStorage.setItem(SearchMap.DetailPrefSessionKey, this.detailPreference());
+            sessionStorage.setItem(SearchMap.DetailPrefSessionKey, this.detailPreference() || '');
         }).extend({ throttle: 0, });
 
         //#endregion
@@ -295,6 +295,14 @@ module Agreements.ViewModels {
                     deferred.resolve();
                 });
             return deferred;
+        }
+
+        continentSelected(): void {
+            this.placeId(0);
+        }
+
+        countrySelected(): void {
+            this.placeId(0);
         }
 
         //private _countryChanged = ko.computed((): void => { this._onCountryChanged(); });
@@ -760,6 +768,8 @@ module Agreements.ViewModels {
                                 this.continentCode('none'); // select none in continents dropdown menu
                             } else {
                                 this.continentCode(place.continentCode);
+                                this.countryCode('any');
+                                this.placeId(0);
                             }
                         }
                     });
@@ -777,13 +787,14 @@ module Agreements.ViewModels {
                             }
                         }
                         else if (place.id > 0) {
+                            this.continentCode('any');
                             this.countryCode(place.countryCode);
+                            this.placeId(0);
                         }
                     });
                 }
                 else if (!placeType) {
                     google.maps.event.addListener(marker, 'click', (e: google.maps.MouseEvent): void => {
-                        console.log('click');
                         if (place.agreementCount == 1) {
                             var url = this.settings.detailUrl.format(place.agreementIds[0]);
                             var detailPreference = this.detailPreference();
@@ -875,7 +886,7 @@ module Agreements.ViewModels {
                 opacity: 0.7,
                 side: side,
                 text: text,
-                fillColor: 'rgb(70, 70, 70)',
+                fillColor: 'rgb(11, 11, 11)',
                 //stroke: false,
             };
             var url = '{0}?{1}'.format(this.settings.graphicsCircleApi, $.param(settings));
@@ -912,7 +923,7 @@ module Agreements.ViewModels {
                     .SingleOrDefault(undefined, function (x: ApiModels.PlaceWithAgreements): boolean {
                         return x.id == placeId;
                     });
-                if (!place && !place.agreementCount) {
+                if (!place || !place.agreementCount) {
                     alert('There are no agreements for place #{0}.'.format(placeId));
                     deferred.reject();
                 }
@@ -972,25 +983,60 @@ module Agreements.ViewModels {
             var scaler = this._getMarkerIconScaler('', this._placesResponse());
             $.each(uniquePartners, (i: number, partner: ApiModels.Participant): void => {
                 // how many agreements for this partner?
-                var agreementCount = Enumerable.From(allPartners)
+                var agreements: ApiModels.Participant[] = Enumerable.From(allPartners)
                     .Where(function (x: ApiModels.Participant): boolean {
                         return x.establishmentId == partner.establishmentId;
                     })
                     .Distinct(function (x: ApiModels.Participant): number {
                         return x.agreementId;
-                    }).Count();
+                    }).ToArray();
 
                 var options: google.maps.MarkerOptions = {
                     map: this._googleMap,
                     position: Places.Utils.convertToLatLng(partner.center),
-                    title: '{0} - {1} agreement(s)'.format(partner.establishmentTranslatedName, agreementCount),
+                    title: '{0} - {1} agreement(s)'.format(partner.establishmentTranslatedName, agreements.length),
                     clickable: true,
                     cursor: 'pointer',
                 };
-                this._setMarkerIcon(options, agreementCount.toString(), scaler);
+                this._setMarkerIcon(options, agreements.length.toString(), scaler);
                 var marker = new google.maps.Marker(options);
                 this._markers.push(marker);
+                google.maps.event.addListener(marker, 'click', (e: google.maps.MouseEvent): void => {
+                    if (agreements.length == 1) {
+                        var url = this.settings.detailUrl.format(partner.agreementId);
+                        var detailPreference = this.detailPreference();
+                        if (detailPreference == '_blank') {
+                            window.open(url, detailPreference);
+                        }
+                        else {
+                            location.href = url;
+                        }
+                    }
+                    else {
+                        this.infoWindowContent.partner(partner);
+                        this.infoWindowContent.agreements(Enumerable.From(agreements)
+                            .OrderByDescending(function (x: ApiModels.Participant): string {
+                                return x.agreementStartsOn;
+                            })
+                            .ToArray());
+                        var content = this.$infoWindow.html();
+                        var options: google.maps.InfoWindowOptions = {
+                            content: $.trim(content),
+                            //maxWidth: 600,
+                        };
+                        var infoWindow = new google.maps.InfoWindow(options);
+                        this._clearInfoWindows();
+                        this._infoWindows.push(infoWindow);
+                        infoWindow.open(this._googleMap, marker);
+                    }
+                });
             });
+
+            var markers = this._markers();
+            if (markers.length == 1) {
+                google.maps.event.trigger(markers[0], 'click');
+            }
+
 
             // update the status
             this.status.agreementCount(Enumerable.From(allPartners)
@@ -1002,6 +1048,22 @@ module Agreements.ViewModels {
 
             this._updateRoute();
         }
+
+        private _clearInfoWindows(): void {
+            var infoWindows = this._infoWindows();
+            $.each(infoWindows, (i: number, infoWindow: google.maps.InfoWindow): void => {
+                infoWindow.close();
+                infoWindow = null;
+            });
+            this._infoWindows([]);
+        }
+
+        private _infoWindows: KnockoutObservableArray<google.maps.InfoWindow> = ko.observableArray();
+        $infoWindow: JQuery;
+        infoWindowContent: any = {
+            partner: ko.observable({}),
+            agreements: ko.observableArray([]),
+        };
 
         //#endregion
     }
