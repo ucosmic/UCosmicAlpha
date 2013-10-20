@@ -784,7 +784,7 @@
       <DependentUpon>PagedSearch.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="scripts\app\Pager.ts" />
-    <TypeScriptCompile Include="scripts\app\Pagination.d.ts" />
+    <None Include="scripts\app\Pagination.d.ts" />
     <Content Include="scripts\app\Pager.js">
       <DependentUpon>Pager.ts</DependentUpon>
     </Content>
@@ -1899,7 +1899,6 @@
     <Content Include="scripts\tinymce\utils\form_utils.js" />
     <Content Include="scripts\tinymce\utils\mctabs.js" />
     <Content Include="scripts\tinymce\utils\validate.js" />
-    <TypeScriptCompile Include="scripts\viewmodels\agreements\AgreementVM.ts" />
     <None Include="scripts\typings\globalize\globalize.d.ts" />
     <None Include="scripts\typings\googlecharts\google.charts.d.ts" />
     <None Include="scripts\typings\googlemaps\google.maps.d.ts" />
@@ -1927,12 +1926,6 @@
     <Content Include="scripts\viewmodels\activities\ActivityEnums.min.js">
       <DependentUpon>ActivityEnums.ts</DependentUpon>
     </Content>
-    <Content Include="scripts\viewmodels\agreements\AgreementVM.js">
-      <DependentUpon>AgreementVM.ts</DependentUpon>
-    </Content>
-    <Content Include="scripts\viewmodels\agreements\AgreementVM.min.js">
-      <DependentUpon>AgreementVM.ts</DependentUpon>
-    </Content>
     <None Include="scripts\viewmodels\my\ServerApiModel.d.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\my\Affiliations.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\establishments\Location.ts" />
@@ -1950,119 +1943,6 @@
       <DependentUpon>Activity.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="scripts\viewmodels\degrees\Degree.ts" />
-    <TypeScriptCompile Include="scripts\viewmodels\agreements\ScrollBody.ts" />
-    <TypeScriptCompile Include="scripts\viewmodels\agreements\Contacts.ts" />
-    <TypeScriptCompile Include="scripts\viewmodels\agreements\BasicInfo.ts" />
-    <TypeScriptCompile Include="scripts\viewmodels\agreements\ApiModels.d.ts" />
-    <Content Include="scripts\viewmodels\agreements\basicInfo.js">
-      <DependentUpon>BasicInfo.ts</DependentUpon>
-    </Content>
-    <Content Include="scripts\viewmodels\agreements\basicInfo.min.js">
-      <DependentUpon>BasicInfo.ts</DependentUpon>
-    </Content>
-    <Content Include="scripts\viewmodels\agreements\contacts.js">
-      <DependentUpon>Contacts.ts</DependentUpon>
-    </Content>
-    <Content Include="scripts\viewmodels\agreements\contacts.min.js">
-      <DependentUpon>Contacts.ts</DependentUpon>
-    </Content>
-    <TypeScriptCompile Include="scripts\viewmodels\agreements\FileAttachments.ts" />
-    <TypeScriptCompile Include="scripts\viewmodels\agreements\DatesStatus.ts" />
-    <TypeScriptCompile Include="scripts\viewmodels\agreements\PublicView.ts" />
-    <TypeScriptCompile Include="scripts\viewmodels\agreements\SearchMap.ts" />
-    <Content Include="scripts\viewmodels\agreements\datesStatus.js">
-      <DependentUpon>DatesStatus.ts</DependentUpon>
-    </Content>
-    <Content Include="scripts\viewmodels\agreements\datesStatus.min.js">
-      <DependentUpon>DatesStatus.ts</DependentUpon>
-    </Content>
-    <TypeScriptCompile Include="scripts\viewmodels\agreements\EstablishmentSearchNav.ts" />
-    <Content Include="scripts\viewmodels\agreements\establishmentSearchNav.js">
-      <DependentUpon>EstablishmentSearchNav.ts</DependentUpon>
-    </Content>
-    <Content Include="scripts\viewmodels\agreements\establishmentSearchNav.min.js">
-      <DependentUpon>EstablishmentSearchNav.ts</DependentUpon>
-    </Content>
-    <Content Include="scripts\viewmodels\agreements\fileAttachments.js">
-      <DependentUpon>FileAttachments.ts</DependentUpon>
-    </Content>
-    <Content Include="scripts\viewmodels\agreements\fileAttachments.min.js">
-      <DependentUpon>FileAttachments.ts</DependentUpon>
-    </Content>
-    <TypeScriptCompile Include="scripts\viewmodels\agreements\Participants.ts" />
-    <Content Include="scripts\viewmodels\agreements\participants.js">
-      <DependentUpon>Participants.ts</DependentUpon>
-    </Content>
-    <Content Include="scripts\viewmodels\agreements\participants.min.js">
-      <DependentUpon>Participants.ts</DependentUpon>
-    </Content>
-    <TypeScriptCompile Include="scripts\viewmodels\agreements\Phones.ts" />
-    <Content Include="scripts\viewmodels\agreements\Phones.js">
-      <DependentUpon>Phones.ts</DependentUpon>
-    </Content>
-    <Content Include="scripts\viewmodels\agreements\Phones.min.js">
-      <DependentUpon>Phones.ts</DependentUpon>
-    </Content>
-    <TypeScriptCompile Include="scripts\viewmodels\agreements\PopulateFiles.ts" />
-    <Content Include="scripts\viewmodels\agreements\populateFiles.js">
-      <DependentUpon>PopulateFiles.ts</DependentUpon>
-    </Content>
-    <Content Include="scripts\viewmodels\agreements\populateFiles.min.js">
-      <DependentUpon>PopulateFiles.ts</DependentUpon>
-    </Content>
-    <Content Include="scripts\viewmodels\agreements\publicView.js">
-      <DependentUpon>PublicView.ts</DependentUpon>
-    </Content>
-    <Content Include="scripts\viewmodels\agreements\publicView.min.js">
-      <DependentUpon>PublicView.ts</DependentUpon>
-    </Content>
-    <Content Include="scripts\viewmodels\agreements\scrollBody.js">
-      <DependentUpon>ScrollBody.ts</DependentUpon>
-    </Content>
-    <Content Include="scripts\viewmodels\agreements\scrollBody.min.js">
-      <DependentUpon>ScrollBody.ts</DependentUpon>
-    </Content>
-    <TypeScriptCompile Include="scripts\viewmodels\agreements\Visibility.ts" />
-    <TypeScriptCompile Include="scripts\viewmodels\agreements\Search.ts" />
-    <Content Include="scripts\viewmodels\agreements\search.js">
-      <DependentUpon>Search.ts</DependentUpon>
-    </Content>
-    <Content Include="scripts\viewmodels\agreements\search.min.js">
-      <DependentUpon>Search.ts</DependentUpon>
-    </Content>
-    <TypeScriptCompile Include="scripts\viewmodels\agreements\SearchResult.ts" />
-    <TypeScriptCompile Include="scripts\viewmodels\agreements\SearchTable.ts" />
-    <TypeScriptCompile Include="scripts\viewmodels\agreements\SearchLenses.ts" />
-    <Content Include="scripts\viewmodels\agreements\SearchLenses.js">
-      <DependentUpon>SearchLenses.ts</DependentUpon>
-    </Content>
-    <Content Include="scripts\viewmodels\agreements\SearchLenses.min.js">
-      <DependentUpon>SearchLenses.ts</DependentUpon>
-    </Content>
-    <Content Include="scripts\viewmodels\agreements\SearchMap.js">
-      <DependentUpon>SearchMap.ts</DependentUpon>
-    </Content>
-    <Content Include="scripts\viewmodels\agreements\SearchMap.min.js">
-      <DependentUpon>SearchMap.ts</DependentUpon>
-    </Content>
-    <Content Include="scripts\viewmodels\agreements\searchResult.js">
-      <DependentUpon>SearchResult.ts</DependentUpon>
-    </Content>
-    <Content Include="scripts\viewmodels\agreements\searchResult.min.js">
-      <DependentUpon>SearchResult.ts</DependentUpon>
-    </Content>
-    <Content Include="scripts\viewmodels\agreements\SearchTable.js">
-      <DependentUpon>SearchTable.ts</DependentUpon>
-    </Content>
-    <Content Include="scripts\viewmodels\agreements\SearchTable.min.js">
-      <DependentUpon>SearchTable.ts</DependentUpon>
-    </Content>
-    <Content Include="scripts\viewmodels\agreements\visibility.js">
-      <DependentUpon>Visibility.ts</DependentUpon>
-    </Content>
-    <Content Include="scripts\viewmodels\agreements\visibility.min.js">
-      <DependentUpon>Visibility.ts</DependentUpon>
-    </Content>
     <Content Include="scripts\viewmodels\degrees\Degree.js">
       <DependentUpon>Degree.ts</DependentUpon>
     </Content>
@@ -2622,6 +2502,7 @@
     <Folder Include="App_Data\binary-data\" />
     <Folder Include="App_Data\mail\" />
     <Folder Include="content\mail\" />
+    <Folder Include="scripts\viewmodels\agreements\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config">
