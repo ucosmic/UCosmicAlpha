@@ -109,8 +109,15 @@ namespace UCosmic.Web.Mvc.ApiControllers
             {
                 // stroke & fill the circle
                 canvasGraphics.SmoothingMode = SmoothingMode.AntiAlias;
-                canvasGraphics.FillEllipse(strokeBrush, 0, 0, 47, 47);
-                canvasGraphics.FillEllipse(fillBrush, 4, 4, 39, 39);
+                if (model.Stroke)
+                {
+                    canvasGraphics.FillEllipse(strokeBrush, 0, 0, 47, 47);
+                    canvasGraphics.FillEllipse(fillBrush, 4, 4, 39, 39);
+                }
+                else
+                {
+                    canvasGraphics.FillEllipse(fillBrush, 0, 0, 48, 48);
+                }
 
                 // text the circle
                 if (!string.IsNullOrWhiteSpace(text))

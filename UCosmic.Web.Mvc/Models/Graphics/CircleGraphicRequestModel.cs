@@ -6,8 +6,10 @@
         {
             Opacity = 1;
             Side = 48;
+            Stroke = true;
         }
 
+        public bool Stroke { get; set; }
         public string Text { get; set; }
         public double Opacity { get; set; }
         public int Side { get; set; }

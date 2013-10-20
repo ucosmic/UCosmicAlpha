@@ -196,7 +196,10 @@
                     <span data-bind="visible: status.agreementCount() == 1" style="display: none;">agreement</span>
                     <span data-bind="visible: status.agreementCount() != 1">agreements</span>
                     with
-                    <strong data-bind="text: status.partnerCount">?</strong> partners in
+                    <strong data-bind="text: status.partnerCount">?</strong>
+                    <span data-bind="visible: status.partnerCount() == 1" style="display: none;">partner</span>
+                    <span data-bind="visible: status.partnerCount() != 1">partners</span>
+                    in
                     <strong data-bind="text: status.countryCount">?</strong>
                 </div>
             </div>

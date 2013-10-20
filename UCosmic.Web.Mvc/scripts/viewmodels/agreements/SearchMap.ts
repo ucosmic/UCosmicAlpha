@@ -297,21 +297,21 @@ module Agreements.ViewModels {
             return deferred;
         }
 
-        private _countryChanged = ko.computed((): void => { this._onCountryChanged(); }).extend({ throttle: 1 });
-        private _onCountryChanged(): void {
-            var countryCode = this.countryCode();
-            var continentCode = this.continentCode();
-            var countryOptions = this.countryOptions();
-            if (countryCode != 'any' && countryCode != 'none') {
-                var country: Places.ApiModels.Country = Enumerable.From(countryOptions)
-                    .SingleOrDefault(undefined, function (x: Places.ApiModels.Country): boolean {
-                        return x.code == countryCode;
-                    });
-                if (country && country.continentCode != continentCode) {
-                    this.continentCode(country.continentCode);
-                }
-            }
-        }
+        //private _countryChanged = ko.computed((): void => { this._onCountryChanged(); });
+        //private _onCountryChanged(): void {
+        //    var countryCode = this.countryCode();
+        //    var continentCode = this.continentCode();
+        //    var countryOptions = this.countryOptions();
+        //    if (countryCode != 'any' && countryCode != 'none') {
+        //        var country: Places.ApiModels.Country = Enumerable.From(countryOptions)
+        //            .SingleOrDefault(undefined, function (x: Places.ApiModels.Country): boolean {
+        //                return x.code == countryCode;
+        //            });
+        //        if (country && country.continentCode != continentCode) {
+        //            this.continentCode(country.continentCode);
+        //        }
+        //    }
+        //} bugs with route when country changes continent
 
         //#endregion
         //#region Sammy Routing
@@ -486,8 +486,8 @@ module Agreements.ViewModels {
             else {
                 this.spinner.start();
                 var partnersReceived = this._requestPartners();
-                $.when(partnersReceived).done((place: ApiModels.PlaceWithAgreements): void => {
-                    this._receivePartners(place);
+                $.when(partnersReceived).done((): void => {
+                    this._receivePartners();
                     this.spinner.stop();
                 });
             }
@@ -736,9 +736,11 @@ module Agreements.ViewModels {
                 });
                 google.maps.event.addListener(marker, 'mouseout', (e: google.maps.MouseEvent): void => {
                     var side = marker.getIcon().size.width;
-                    marker.setOptions({
-                        zIndex: 200 - side,
-                    });
+                    setTimeout((): void => {
+                        marker.setOptions({
+                            zIndex: 200 - side,
+                        });
+                    }, 400);
                 });
                 if (placeType === 'continents') {
                     google.maps.event.addListener(marker, 'click', (e: google.maps.MouseEvent): void => {
@@ -781,6 +783,7 @@ module Agreements.ViewModels {
                 }
                 else if (!placeType) {
                     google.maps.event.addListener(marker, 'click', (e: google.maps.MouseEvent): void => {
+                        console.log('click');
                         if (place.agreementCount == 1) {
                             var url = this.settings.detailUrl.format(place.agreementIds[0]);
                             var detailPreference = this.detailPreference();
@@ -872,6 +875,8 @@ module Agreements.ViewModels {
                 opacity: 0.7,
                 side: side,
                 text: text,
+                fillColor: 'rgb(70, 70, 70)',
+                //stroke: false,
             };
             var url = '{0}?{1}'.format(this.settings.graphicsCircleApi, $.param(settings));
             var icon = {
@@ -888,7 +893,7 @@ module Agreements.ViewModels {
             options.zIndex = 200 - side;
         }
 
-        private _requestPartners(): JQueryDeferred<ApiModels.PlaceWithAgreements> {
+        private _requestPartners(): JQueryDeferred<void> {
             var deferred: JQueryDeferred<ApiModels.PlaceWithAgreements> = $.Deferred();
 
             // need to make sure we have places before we can get partners
@@ -916,7 +921,7 @@ module Agreements.ViewModels {
                     $.get(this.settings.partnersApi, { agreementIds: place.agreementIds, })
                         .done((response: ApiModels.Participant[]): void => {
                             this._partnersResponse = ko.observableArray(response);
-                            deferred.resolve(place);
+                            deferred.resolve();
                         })
                         .fail((xhr: JQueryXHR): void => {
                             App.Failures.message(xhr, 'while trying to load agreement partner data', true)
@@ -928,7 +933,7 @@ module Agreements.ViewModels {
             return deferred;
         }
 
-        private _receivePartners(place: ApiModels.PlaceWithAgreements): void {
+        private _receivePartners(): void {
 
             var allPartners = this._partnersResponse();
 
@@ -943,13 +948,13 @@ module Agreements.ViewModels {
             if (uniquePartners.length == 1) {
                 // try zoom first
                 var partner = uniquePartners[0];
-                this._googleMap.setCenter(Places.Utils.convertToLatLng(partner.center));
                 if (partner.googleMapZoomLevel) {
                     this._googleMap.setZoom(partner.googleMapZoomLevel);
                 }
                 else if (partner.boundingBox && partner.boundingBox.hasValue) {
                     this._googleMap.fitBounds(Places.Utils.convertToLatLngBounds(partner.boundingBox));
                 }
+                this._googleMap.setCenter(Places.Utils.convertToLatLng(partner.center));
             }
             else if (uniquePartners.length > 1) {
                 var bounds = new google.maps.LatLngBounds();
@@ -959,22 +964,41 @@ module Agreements.ViewModels {
                 this._googleMap.fitBounds(bounds);
             }
             else {
-                alert('Found no agreement partners for place #{0}.'.format(place.id));
+                alert('Found no agreement partners for place #{0}.'.format(this.placeId()));
             }
-
-            // update the status
 
             // plot the markers
             this._clearMarkers();
+            var scaler = this._getMarkerIconScaler('', this._placesResponse());
             $.each(uniquePartners, (i: number, partner: ApiModels.Participant): void => {
+                // how many agreements for this partner?
+                var agreementCount = Enumerable.From(allPartners)
+                    .Where(function (x: ApiModels.Participant): boolean {
+                        return x.establishmentId == partner.establishmentId;
+                    })
+                    .Distinct(function (x: ApiModels.Participant): number {
+                        return x.agreementId;
+                    }).Count();
+
                 var options: google.maps.MarkerOptions = {
                     map: this._googleMap,
                     position: Places.Utils.convertToLatLng(partner.center),
-
+                    title: '{0} - {1} agreement(s)'.format(partner.establishmentTranslatedName, agreementCount),
+                    clickable: true,
+                    cursor: 'pointer',
                 };
+                this._setMarkerIcon(options, agreementCount.toString(), scaler);
                 var marker = new google.maps.Marker(options);
                 this._markers.push(marker);
             });
+
+            // update the status
+            this.status.agreementCount(Enumerable.From(allPartners)
+                .Distinct(function (x: ApiModels.Participant): number {
+                    return x.agreementId;
+                }).Count().toString());
+            this.status.partnerCount(uniquePartners.length.toString());
+            this.status.countryCount('this area');
 
             this._updateRoute();
         }
