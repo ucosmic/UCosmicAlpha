@@ -56,6 +56,11 @@ namespace UCosmic.Web.Mvc.Controllers
             Debug.Assert(graphicsCircleApi != null);
             ViewBag.GraphicsCircleApi = graphicsCircleApi;
 
+            var summaryApi = Url.HttpRouteUrl(null, new { controller = "Agreements", action = "GetSummary", domain = "0" });
+            Debug.Assert(summaryApi != null);
+            summaryApi = summaryApi.Replace("0", "{0}");
+            ViewBag.SummaryApi = summaryApi;
+
             var visibility = _queryProcessor.Execute(new MyAgreementsVisibility(User, domain));
             ViewBag.AgreementsVisibility = visibility;
             ViewBag.AgreementsDomain = domain;

@@ -68,6 +68,11 @@ var Agreements;
                 //    }
                 //}
                 //#endregion
+                //#region Summary
+                this.agreementCount = ko.observable('?');
+                this.partnerCount = ko.observable('?');
+                this.countryCount = ko.observable('?');
+                //#endregion
                 //#region Country & Continent Options
                 // initial options show loading message
                 this.countries = ko.observableArray();
@@ -97,6 +102,8 @@ var Agreements;
                     _this._onScopeDirty();
                 }).extend({ throttle: 1 });
                 this._markers = ko.observableArray();
+                this.spinner = new App.Spinner(new App.SpinnerOptions(400, false));
+                this._loadSummary();
                 this._mapCreated = this._createMap();
                 this._loadCountryOptions();
                 this.sammy = this.settings.sammy || Sammy();
@@ -159,6 +166,15 @@ var Agreements;
                 this.south(Number(south.toString().substring(0, maxLength)));
                 this.east(Number(east.toString().substring(0, maxLength)));
                 this.west(Number(west.toString().substring(0, maxLength)));
+            };
+
+            SearchMap.prototype._loadSummary = function () {
+                var _this = this;
+                $.get(this.settings.summaryApi).done(function (response) {
+                    _this.agreementCount(response.agreementCount.toString());
+                    _this.partnerCount(response.partnerCount.toString());
+                    _this.countryCount(response.countryCount.toString());
+                });
             };
 
             SearchMap.prototype._computeCountryOptions = function () {
@@ -360,9 +376,11 @@ var Agreements;
                 } else if (countryCode == 'any') {
                     placeType = 'countries';
                 }
+                this.spinner.start();
                 var responseReceived = this._sendRequest(placeType);
                 $.when(responseReceived).done(function () {
                     _this._receiveResponse(placeType);
+                    _this.spinner.stop();
                     setTimeout(function () {
                         _this._sendRequest('continents');
                         _this._sendRequest('countries');

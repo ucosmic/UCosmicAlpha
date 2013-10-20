@@ -227,6 +227,7 @@
     <Compile Include="Domain\Agreements\Queries\ContactById.cs" />
     <Compile Include="Domain\Agreements\Queries\AgreementViewsByKeyword.cs" />
     <Compile Include="Domain\Agreements\Queries\AgreementsByKeyword.cs" />
+    <Compile Include="Domain\Agreements\Queries\MyAgreementsSummary.cs" />
     <Compile Include="Domain\Agreements\Queries\MyAgreementsVisibility.cs" />
     <Compile Include="Domain\Agreements\Views\AgreementViewProjector.cs" />
     <Compile Include="Domain\Agreements\Queries\MyAgreementVisibility.cs" />

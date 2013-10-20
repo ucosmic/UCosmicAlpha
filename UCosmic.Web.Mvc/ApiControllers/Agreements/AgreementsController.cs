@@ -71,6 +71,14 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return visibility.AsSentenceFragment();
         }
 
+        [GET("{domain}/agreements/summary")]
+        public AgreementsSummary GetSummary(string domain)
+        {
+            var query = new MyAgreementsSummary(User, domain);
+            var summary = _queryProcessor.Execute(query);
+            return summary;
+        }
+
         [GET("agreements/{agreementId:int}/visibility")]
         public string GetVisibility(int agreementId)
         {

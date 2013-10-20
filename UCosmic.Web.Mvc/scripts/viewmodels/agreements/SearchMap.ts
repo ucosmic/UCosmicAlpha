@@ -25,6 +25,7 @@ module Agreements.ViewModels {
         sammy?: Sammy.Application;
         partnerPlacesApi: string;
         graphicsCircleApi: string;
+        summaryApi: string;
     }
 
     export interface SearchMapScope {
@@ -84,6 +85,7 @@ module Agreements.ViewModels {
         //#region Construction & Initialization
 
         constructor(public settings: SearchMapSettings) {
+            this._loadSummary();
             this._mapCreated = this._createMap();
             this._loadCountryOptions();
             this.sammy = this.settings.sammy || Sammy();
@@ -175,6 +177,21 @@ module Agreements.ViewModels {
         //        });
         //    }
         //}
+
+        //#endregion
+        //#region Summary
+
+        agreementCount: KnockoutObservable<string> = ko.observable('?');
+        partnerCount: KnockoutObservable<string> = ko.observable('?');
+        countryCount: KnockoutObservable<string> = ko.observable('?');
+        private _loadSummary(): void {
+            $.get(this.settings.summaryApi)
+                .done((response: any): void => {
+                    this.agreementCount(response.agreementCount.toString());
+                    this.partnerCount(response.partnerCount.toString());
+                    this.countryCount(response.countryCount.toString());
+                });
+        }
 
         //#endregion
         //#region Country & Continent Options
@@ -424,6 +441,7 @@ module Agreements.ViewModels {
         private _countriesResponse: KnockoutObservableArray<ApiModels.PlaceWithAgreements>;
         private _partnersResponse: KnockoutObservableArray<ApiModels.PlaceWithAgreements>;
         private _markers: KnockoutObservableArray<google.maps.Marker> = ko.observableArray();
+        spinner = new App.Spinner(new App.SpinnerOptions(400, false));
 
         private _load(): void {
             var placeType = '';
@@ -435,9 +453,11 @@ module Agreements.ViewModels {
             else if (countryCode == 'any') { // continentCode != 'any', but can be none or Antarctic
                 placeType = 'countries'
             }
+            this.spinner.start();
             var responseReceived = this._sendRequest(placeType);
             $.when(responseReceived).done((): void => {
                 this._receiveResponse(placeType);
+                this.spinner.stop();
                 setTimeout((): void => {
                     this._sendRequest('continents');
                     this._sendRequest('countries');

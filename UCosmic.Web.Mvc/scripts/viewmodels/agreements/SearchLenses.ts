@@ -13,6 +13,7 @@ module Agreements.ViewModels {
         detailUrl: string;
         partnerPlacesApi: string;
         graphicsCircleApi: string;
+        summaryApi: string;
     }
 
     export class SearchLenses {
@@ -49,6 +50,7 @@ module Agreements.ViewModels {
                 sammy: this.sammy,
                 partnerPlacesApi: this.settings.partnerPlacesApi,
                 graphicsCircleApi: this.settings.graphicsCircleApi,
+                summaryApi: this.settings.summaryApi,
             });
 
             this.table.countryCode.subscribe((newValue: string): void => {

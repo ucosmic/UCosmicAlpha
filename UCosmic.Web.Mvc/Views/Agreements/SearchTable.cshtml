@@ -50,7 +50,8 @@
             //activationRoute: 'table',
             detailUrl: '@ViewBag.DetailUrl',
             partnerPlacesApi: '@ViewBag.PartnerPlacesApi'.format('@ViewBag.AgreementsDomain', '{0}'),
-            graphicsCircleApi: '@ViewBag.GraphicsCircleApi'
+            graphicsCircleApi: '@ViewBag.GraphicsCircleApi',
+            summaryApi: '@ViewBag.SummaryApi'.format('@ViewBag.AgreementsDomain'),
         });
         ko.applyBindings(viewModel, viewModel.settings.element);
     </script>
@@ -170,7 +171,22 @@
                 </div>
 
             </div>
-            <div data-bind="visible: isMapLens, with: map" style="margin: 1em 0;">
+            <div data-bind="visible: isMapLens, with: map" style="margin: 1em 0; display: none;">
+                <div class="group" style="height: 30px;">
+                    <div class="on-left" style="font-size: 18px;">
+                        <strong data-bind="text: agreementCount" style="font-size: 24px;">?</strong> agreements with
+                        <strong data-bind="text: partnerCount" style="font-size: 24px;">?</strong> partners in
+                        <strong data-bind="text: countryCount" style="font-size: 24px;">?</strong> countries.
+                    </div>
+                    <div class="on-right">
+                        <div data-bind="visible: spinner.isVisible" style="display: none; margin-top: 8px;">
+                            <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
+                            <strong>Loading search results...</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @*<div data-bind="visible: isMapLens, with: map" style="margin: 1em 0;">
                 <div class="group">
                     <div class="on-left" style="width: 162px;">
                         North: <strong data-bind="text: north"></strong>
@@ -196,7 +212,7 @@
                         Zoom: <strong data-bind="text: mag"></strong>
                     </div>
                 </div>
-            </div>
+            </div>*@
             <div id="google_map_canvas" style="height: 500px; cursor: inherit;" data-bind="visible: isMapLens">
             </div>
         </div>

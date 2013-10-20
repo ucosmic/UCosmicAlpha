@@ -41,7 +41,8 @@ var Agreements;
                     detailUrl: this.settings.detailUrl,
                     sammy: this.sammy,
                     partnerPlacesApi: this.settings.partnerPlacesApi,
-                    graphicsCircleApi: this.settings.graphicsCircleApi
+                    graphicsCircleApi: this.settings.graphicsCircleApi,
+                    summaryApi: this.settings.summaryApi
                 });
 
                 this.table.countryCode.subscribe(function (newValue) {
