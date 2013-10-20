@@ -14,6 +14,7 @@ namespace UCosmic.Web.Mvc.Models
         public string Name { get; set; }
         public string Type { get; set; }
         public int[] AgreementIds { get; set; }
+        public int[] PartnerIds { get; set; }
         public bool IsEarth { get; set; }
         public bool IsContinent { get; set; }
         public bool IsCountry { get; set; }
@@ -21,6 +22,7 @@ namespace UCosmic.Web.Mvc.Models
         public bool IsAdmin2 { get; set; }
         public bool IsAdmin3 { get; set; }
         public int AgreementCount { get { return (AgreementIds == null) ? 0 : AgreementIds.Length; } }
+        public int PartnerCount { get { return (PartnerIds == null) ? 0 : PartnerIds.Length; } }
         //public PlaceApiModel[] Ancestors { get; set; } // eager loading this slows down query
         public MapPointModel Center { get; set; }
         public MapBoxModel BoundingBox { get; set; }

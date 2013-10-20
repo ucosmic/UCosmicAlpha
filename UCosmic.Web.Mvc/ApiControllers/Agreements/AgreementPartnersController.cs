@@ -42,15 +42,16 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [GET("{domain}/partners")]
-        public IEnumerable<AgreementParticipantApiModel> GetPartners(string domain)
+        public IEnumerable<AgreementParticipantApiModel> GetPartners(string domain, [FromUri] IEnumerable<int> agreementIds = null)
         {
             var query = new PartnerParticipantsByOwnerDomain(User, domain)
             {
+                AgreementIds = agreementIds,
                 EagerLoad = new Expression<Func<AgreementParticipant, object>>[]
                 {
                     x => x.Establishment.Location,
                     x => x.Establishment.Names.Select(y => y.TranslationToLanguage),
-                }
+                },
             };
             var partners = _queryProcessor.Execute(query);
 

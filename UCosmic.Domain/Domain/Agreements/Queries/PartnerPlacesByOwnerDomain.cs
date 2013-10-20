@@ -27,9 +27,11 @@ namespace UCosmic.Domain.Agreements
         public AgreementPartnerPlaceResult()
         {
             AgreementIds = new int[0];
+            PartnerIds = new int[0];
         }
 
         public int[] AgreementIds { get; internal set; }
+        public int[] PartnerIds { get; internal set; }
         public int AgreementCount
         {
             get { return AgreementIds == null ? 0 : AgreementIds.Count(); }
@@ -107,6 +109,7 @@ namespace UCosmic.Domain.Agreements
                     .Where(x => x.Value.Any(partnerIds.Contains))
                     .Select(x => x.Key).Distinct().ToArray();
                 partnerPlace.AgreementIds = agreementIds;
+                partnerPlace.PartnerIds = partnerIds;
 
                 // fix (pare down) agreement counts for non-grouped places
                 if (!query.GroupBy.HasValue)

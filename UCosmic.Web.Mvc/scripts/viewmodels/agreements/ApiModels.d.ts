@@ -1,3 +1,4 @@
+/// <reference path="../../typings/knockout/knockout.d.ts" />
 /// <reference path="../places/ApiModels.d.ts" />
 
 declare module Agreements.ApiModels {
@@ -55,6 +56,17 @@ declare module Agreements.ApiModels {
         placeId?: number;
     }
 
+    export interface Participant {
+        agreementId: number;
+        establishmentId: number;
+        isOwner: boolean;
+        establishmentOfficialName: string;
+        establishmentTranslatedName: string;
+        center: Places.ApiModels.Point;
+        boundingBox: Places.ApiModels.Box;
+        googleMapZoomLevel: number;
+    }
+
     export interface PlaceWithAgreements {
         id?: number;
         continentId?: number;
@@ -65,6 +77,8 @@ declare module Agreements.ApiModels {
         type?: string;
         agreementIds?: number[]
         agreementCount?: number;
+        partnerIds?: number[]
+        partnerCount?: number;
         isEarth?: boolean;
         isContinent?: boolean;
         isCountry?: boolean;
@@ -73,5 +87,19 @@ declare module Agreements.ApiModels {
         isAdmin3?: boolean;
         center?: Places.ApiModels.Point;
         boundingBox?: Places.ApiModels.Box;
+    }
+
+    export interface Summary {
+        agreementCount: number;
+        partnerCount: number;
+        countryCount: number;
+    }
+}
+
+declare module Agreements.KoModels {
+    export interface Summary {
+        agreementCount: KnockoutObservable<string>;
+        partnerCount: KnockoutObservable<string>;
+        countryCount: KnockoutObservable<string>;
     }
 }

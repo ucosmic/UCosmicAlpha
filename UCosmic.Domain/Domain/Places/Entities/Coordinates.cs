@@ -2,6 +2,8 @@
 {
     public class Coordinates
     {
+        public static Coordinates Default = new Coordinates(0, -180);
+
         protected Coordinates()
         {
         }

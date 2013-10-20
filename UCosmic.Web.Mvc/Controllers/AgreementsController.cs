@@ -52,6 +52,11 @@ namespace UCosmic.Web.Mvc.Controllers
             partnerPlacesApi = partnerPlacesApi.Replace("0", "{0}").Replace("1", "{1}");
             ViewBag.PartnerPlacesApi = partnerPlacesApi;
 
+            var partnersApi = Url.HttpRouteUrl(null, new { controller = "AgreementPartners", action = "GetPartners", domain = "0" });
+            Debug.Assert(partnersApi != null);
+            partnersApi = partnersApi.Replace("0", "{0}");
+            ViewBag.PartnersApi = partnersApi;
+
             var graphicsCircleApi = Url.HttpRouteUrl(null, new { controller = "Graphics", action = "GetCircle" });
             Debug.Assert(graphicsCircleApi != null);
             ViewBag.GraphicsCircleApi = graphicsCircleApi;

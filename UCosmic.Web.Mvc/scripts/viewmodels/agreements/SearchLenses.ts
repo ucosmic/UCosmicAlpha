@@ -12,6 +12,7 @@ module Agreements.ViewModels {
         activationRoute?: string;
         detailUrl: string;
         partnerPlacesApi: string;
+        partnersApi: string;
         graphicsCircleApi: string;
         summaryApi: string;
     }
@@ -49,6 +50,7 @@ module Agreements.ViewModels {
                 detailUrl: this.settings.detailUrl,
                 sammy: this.sammy,
                 partnerPlacesApi: this.settings.partnerPlacesApi,
+                partnersApi: this.settings.partnersApi,
                 graphicsCircleApi: this.settings.graphicsCircleApi,
                 summaryApi: this.settings.summaryApi,
             });

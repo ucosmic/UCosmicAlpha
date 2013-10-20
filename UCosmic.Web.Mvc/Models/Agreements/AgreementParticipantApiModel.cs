@@ -1,5 +1,7 @@
-﻿using AutoMapper;
+﻿using System.Linq;
+using AutoMapper;
 using UCosmic.Domain.Agreements;
+using UCosmic.Domain.Places;
 
 namespace UCosmic.Web.Mvc.Models
 {
@@ -27,7 +29,13 @@ namespace UCosmic.Web.Mvc.Models
                     .ForMember(d => d.EstablishmentId, o => o.MapFrom(s => s.Establishment.RevisionId))
                     .ForMember(d => d.EstablishmentOfficialName, o => o.MapFrom(s =>
                         s.Establishment.OfficialName == s.Establishment.TranslatedName.Text ? null : s.Establishment.OfficialName))
-                    .ForMember(d => d.Center, o => o.MapFrom(s => s.Establishment.Location.Center))
+                    .ForMember(d => d.Center, o => o.ResolveUsing(s =>
+                    {
+                        if (s.Establishment.Location.Center.HasValue)
+                            return s.Establishment.Location.Center;
+                        var place = s.Establishment.Location.Places.OrderByDescending(x => x.Ancestors.Count).FirstOrDefault(x => x.Center.HasValue);
+                        return place != null ? place.Center : Coordinates.Default;
+                    }))
                     .ForMember(d => d.BoundingBox, o => o.MapFrom(s => s.Establishment.Location.BoundingBox))
                     .ForMember(d => d.GoogleMapZoomLevel, o => o.MapFrom(s => s.Establishment.Location.GoogleMapZoomLevel))
                 ;

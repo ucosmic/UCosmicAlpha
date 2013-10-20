@@ -50,6 +50,7 @@
             //activationRoute: 'table',
             detailUrl: '@ViewBag.DetailUrl',
             partnerPlacesApi: '@ViewBag.PartnerPlacesApi'.format('@ViewBag.AgreementsDomain', '{0}'),
+            partnersApi: '@ViewBag.PartnersApi'.format('@ViewBag.AgreementsDomain', '{0}'),
             graphicsCircleApi: '@ViewBag.GraphicsCircleApi',
             summaryApi: '@ViewBag.SummaryApi'.format('@ViewBag.AgreementsDomain'),
         });
@@ -173,7 +174,7 @@
             </div>
             <div data-bind="visible: isMapLens, with: map" style="margin: 1em 0; display: none;">
                 <div class="group" style="height: 30px;">
-                    <div class="on-left" style="font-size: 20px;">
+                    <div class="on-left" data-bind="with: summary" style="font-size: 20px;">
                         <strong data-bind="text: agreementCount" style="font-size: 24px;">?</strong> agreements with
                         <strong data-bind="text: partnerCount" style="font-size: 24px;">?</strong> partners in
                         <strong data-bind="text: countryCount" style="font-size: 24px;">?</strong> countries.
@@ -186,7 +187,20 @@
                     </div>
                 </div>
             </div>
-            <div data-bind="visible: isMapLens, with: map" style="margin: 1em 0;">
+            <div data-bind="visible: isMapLens, with: map" style="margin: 1em 0; display: none;">
+                <div data-bind="visible: continentCode() == 'any'">
+                    Click any number below for more information.
+                </div>
+                <div data-bind="visible: continentCode() != 'any'">
+                    <strong data-bind="text: status.agreementCount">?</strong>
+                    <span data-bind="visible: agreementCount == 1" style="display: none;">agreement</span>
+                    <span data-bind="visible: agreementCount != 1">agreements</span>
+                    with
+                    <strong data-bind="text: status.partnerCount">?</strong> partners in
+                    <strong data-bind="text: status.countryCount">?</strong>
+                </div>
+            </div>
+            @*<div data-bind="visible: isMapLens, with: map" style="margin: 1em 0;">
                 <div class="group">
                     <div class="on-left" style="width: 162px;">
                         North: <strong data-bind="text: north"></strong>
@@ -212,7 +226,7 @@
                         Zoom: <strong data-bind="text: mag"></strong>
                     </div>
                 </div>
-            </div>
+            </div>*@
             <div id="google_map_canvas" style="height: 500px; cursor: inherit;" data-bind="visible: isMapLens">
             </div>
         </div>
@@ -319,12 +333,12 @@
                                 <span class="text">Map</span>
                             </a>
                         </li>
-                        @*<li class="">
+                        <li class="">
                             <a href="#" class="group">
                                 <div class="arrow"></div>
-                                <span class="text">Tree</span>
+                                <span class="text">Download Spreadsheet</span>
                             </a>
-                        </li>*@
+                        </li>
                     </ul>
                 </nav>
             </div>

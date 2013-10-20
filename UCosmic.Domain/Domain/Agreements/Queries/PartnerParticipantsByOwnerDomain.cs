@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Security.Principal;
@@ -16,6 +17,7 @@ namespace UCosmic.Domain.Agreements
 
         public IPrincipal Principal { get; private set; }
         public string OwnerDomain { get; private set; }
+        public IEnumerable<int> AgreementIds { get; set; }
     }
 
     public class HandlePartnerParticipantsByOwnerDomainQuery : IHandleQueries<PartnerParticipantsByOwnerDomain, AgreementParticipant[]>
@@ -40,6 +42,9 @@ namespace UCosmic.Domain.Agreements
                 .ByOwnerDomain(query.OwnerDomain)
                 .VisibleTo(query.Principal, _queryProcessor)
                 .Select(x => x.Id);
+
+            if (query.AgreementIds != null && query.AgreementIds.Any())
+                agreementIds = agreementIds.Where(x => query.AgreementIds.Contains(x));
 
             var partners = _entities.Query<AgreementParticipant>()
                 .EagerLoad(_entities, query.EagerLoad)
