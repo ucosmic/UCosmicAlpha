@@ -133,21 +133,18 @@ namespace UCosmic.Domain.Agreements
                     ? agreements.Where(x => !x.Participants.Any(y => !y.IsOwner && y.Establishment.Location.Places.Any(z => z.IsContinent)))
                     : agreements.Where(x => !x.Participants.Any(y => !y.IsOwner && y.Establishment.Location.Places.Any(z => z.IsCountry)));
                 unknownAgreements = unknownAgreements.Distinct();
-                if (unknownAgreements.Any())
+                var unknownPlace = new AgreementPartnerPlaceResult
                 {
-                    var unknownPlace = new AgreementPartnerPlaceResult
+                    AgreementIds = unknownAgreements.Select(x => x.Id).ToArray(),
+                    Place = new Place
                     {
-                        AgreementIds = unknownAgreements.Select(x => x.Id).ToArray(),
-                        Place = new Place
-                        {
-                            OfficialName = string.Format("[{0} Unknown]", query.GroupBy.Value == PlaceGroup.Continents ? "Continent" : "Country"),
-                            //OfficialName = "[Continent unknown]",
-                            Center = new Coordinates(0, -180),
-                            BoundingBox = new BoundingBox(5, -175, -5, 175),
-                        },
-                    };
-                    partnerPlaces = partnerPlaces.Concat(new[] { unknownPlace }).ToArray();
-                }
+                        OfficialName = string.Format("[{0} Unknown]", query.GroupBy.Value == PlaceGroup.Continents ? "Continent" : "Country"),
+                        //OfficialName = "[Continent unknown]",
+                        Center = new Coordinates(0, -180),
+                        BoundingBox = new BoundingBox(5, -175, -5, 175),
+                    },
+                };
+                partnerPlaces = partnerPlaces.Concat(new[] { unknownPlace }).ToArray();
             }
 
             // add continents that have zero agreements

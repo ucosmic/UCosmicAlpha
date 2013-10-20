@@ -269,21 +269,21 @@ module Agreements.ViewModels {
             return deferred;
         }
 
-        //private _countryChanged = ko.computed((): void => { this._onCountryChanged(); });
-        //private _onCountryChanged(): void {
-        //    var countryCode = this.countryCode();
-        //    var continentCode = this.continentCode();
-        //    var countryOptions = this.countryOptions();
-        //    if (countryCode != 'any' && countryCode != 'none') {
-        //        var country: Places.ApiModels.Country = Enumerable.From(countryOptions)
-        //            .SingleOrDefault(undefined, function (x: Places.ApiModels.Country): boolean {
-        //                return x.code == countryCode;
-        //            });
-        //        if (country && country.continentCode != continentCode) {
-        //            this.continentCode(country.continentCode);
-        //        }
-        //    }
-        //}
+        private _countryChanged = ko.computed((): void => { this._onCountryChanged(); }).extend({ throttle: 1 });
+        private _onCountryChanged(): void {
+            var countryCode = this.countryCode();
+            var continentCode = this.continentCode();
+            var countryOptions = this.countryOptions();
+            if (countryCode != 'any' && countryCode != 'none') {
+                var country: Places.ApiModels.Country = Enumerable.From(countryOptions)
+                    .SingleOrDefault(undefined, function (x: Places.ApiModels.Country): boolean {
+                        return x.code == countryCode;
+                    });
+                if (country && country.continentCode != continentCode) {
+                    this.continentCode(country.continentCode);
+                }
+            }
+        }
 
         //#endregion
         //#region Sammy Routing
@@ -420,10 +420,11 @@ module Agreements.ViewModels {
         //#endregion
         //#region Navigational Binding
 
-        private _markers: KnockoutObservableArray<google.maps.Marker> = ko.observableArray();
         private _continentsResponse: KnockoutObservableArray<ApiModels.PlaceWithAgreements>;
         private _countriesResponse: KnockoutObservableArray<ApiModels.PlaceWithAgreements>;
         private _partnersResponse: KnockoutObservableArray<ApiModels.PlaceWithAgreements>;
+        private _markers: KnockoutObservableArray<google.maps.Marker> = ko.observableArray();
+
         private _load(): void {
             var placeType = '';
             var continentCode = this.continentCode();
@@ -436,7 +437,12 @@ module Agreements.ViewModels {
             }
             var responseReceived = this._sendRequest(placeType);
             $.when(responseReceived).done((): void => {
-                this._receiveResponse(placeType)
+                this._receiveResponse(placeType);
+                setTimeout((): void => {
+                    this._sendRequest('continents');
+                    this._sendRequest('countries');
+                    this._sendRequest('');
+                }, 0);
             });
         }
 
@@ -455,7 +461,7 @@ module Agreements.ViewModels {
 
             else if ((placeType == 'continents' && !this._continentsResponse) ||
                 (placeType == 'countries' && !this._countriesResponse) ||
-                !placeType) {
+                (!placeType && !this._partnersResponse)) {
                 $.ajax({
                     url: this.settings.partnerPlacesApi.format(placeType)
                 })
@@ -585,15 +591,15 @@ module Agreements.ViewModels {
             else {
                 var countryCode = this.countryCode();
                 var bounds: google.maps.LatLngBounds;
-                //#region zero places, try continent bounds
+                //#region zero places, try country bounds
                 if (!places.length) {
-                    if (continentCode && this._continentsResponse) {
-                        var continent: ApiModels.PlaceWithAgreements = Enumerable.From(this._continentsResponse())
-                            .SingleOrDefault(undefined, function (x: ApiModels.PlaceWithAgreements): boolean {
-                                return x.continentCode == continentCode;
+                    if (countryCode && this.countryOptions) {
+                        var countryOption: Places.ApiModels.Country = Enumerable.From(this.countryOptions())
+                            .SingleOrDefault(undefined, function (x: Places.ApiModels.Country): boolean {
+                                return x.code == countryCode;
                             });
-                        if (continent && continent.boundingBox && continent.boundingBox.hasValue) {
-                            bounds = Places.Utils.convertToLatLngBounds(continent.boundingBox);
+                        if (countryOption && countryOption.box && countryOption.box.hasValue) {
+                            bounds = Places.Utils.convertToLatLngBounds(countryOption.box);
                         }
                     }
                 }
@@ -642,6 +648,25 @@ module Agreements.ViewModels {
                     places = [continent];
                 }
             }
+            var countryCode = this.countryCode();
+            if (!placeType && !places.length && countryCode != 'none') {
+                var country: Places.ApiModels.Country = Enumerable.From(this.countryOptions())
+                    .SingleOrDefault(undefined, function (x: Places.ApiModels.Country): boolean {
+                        return x.code == countryCode;
+                    });
+                if (country) {
+                    places = [{
+                        id: country.id,
+                        agreementCount: 0,
+                        name: country.name,
+                        center: country.center,
+                        boundingBox: country.box,
+                        isCountry: true,
+                        countryCode: country.code,
+                        continentCode: country.continentCode,
+                    }];
+                }
+            }
             $.each(places, (i: number, place: ApiModels.PlaceWithAgreements): void => {
                 if (placeType == 'continents' && !place.agreementCount) return; // do not render zero on continent
                 var options: google.maps.MarkerOptions = {
@@ -657,7 +682,13 @@ module Agreements.ViewModels {
                 this._markers.push(marker);
                 google.maps.event.addListener(marker, 'mouseover', (e: google.maps.MouseEvent): void => {
                     marker.setOptions({
-                        zIndex: 1000,
+                        zIndex: 201,
+                    });
+                });
+                google.maps.event.addListener(marker, 'mouseout', (e: google.maps.MouseEvent): void => {
+                    var side = marker.getIcon().size.width;
+                    marker.setOptions({
+                        zIndex: 200 - side,
                     });
                 });
                 if (placeType === 'continents') {
@@ -686,12 +717,14 @@ module Agreements.ViewModels {
         }
 
         private _getMarkerIconScaler(placeType: string, places: ApiModels.PlaceWithAgreements[]): Scaler {
+            if (!places || !places.length)
+                return new Scaler({ min: 0, max: 1, }, { min: 16, max: 16, });
             var from: Range = { // scale based on the smallest & largest agreement counts
                 min: Enumerable.From(places).Min(function (x) { return x.agreementCount }),
                 max: Enumerable.From(places).Max(function (x) { return x.agreementCount }),
             };
             var into: Range = { min: 24, max: 48 }; // smallest & largest placemarker circles
-            if (!placeType) into = { min: 16, max: 24 };
+            if (!placeType) into = { min: 24, max: 32 };
 
             return new Scaler(from, into);
         }
@@ -703,7 +736,7 @@ module Agreements.ViewModels {
             }
             var halfSide = side / 2;
             var settings = {
-                opacity: 0.75,
+                opacity: 0.7,
                 side: side,
                 text: text,
             };
@@ -719,6 +752,7 @@ module Agreements.ViewModels {
             };
             options.icon = icon;
             options.shape = shape;
+            options.zIndex = 200 - side;
         }
 
         //#endregion

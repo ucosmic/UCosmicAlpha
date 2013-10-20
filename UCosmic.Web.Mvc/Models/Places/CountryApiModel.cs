@@ -13,6 +13,7 @@ namespace UCosmic.Web.Mvc.Models
         public string ContinentCode { get; set; }
         public string ContinentName { get; set; }
         public MapBoxModel Box { get; set; }
+        public MapPointModel Center { get; set; }
     }
 
     public static class CountryApiProfiler

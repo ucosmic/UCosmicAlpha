@@ -25,11 +25,13 @@ declare module Places.ApiModels {
         placeTypeEnglishName: string;
     }
     export interface Country {
+        id?: number;
         code: string;
         name: string;
         continentId?: number;
         continentCode?: string;
         continentName?: string;
+        center?: Point;
         box?: Box;
     }
 }

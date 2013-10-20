@@ -77,6 +77,9 @@ var Agreements;
                 this.continentOptions = ko.computed(function () {
                     return _this._computeContinentOptions();
                 });
+                this._countryChanged = ko.computed(function () {
+                    _this._onCountryChanged();
+                }).extend({ throttle: 1 });
                 this.routeFormat = '#/{0}/continent/{5}/country/{1}/zoom/{2}/latitude/{3}/longitude/{4}/'.format(this.settings.route).replace('{5}', '{0}');
                 this._isActivated = ko.observable(false);
                 this._route = ko.computed(function () {
@@ -93,8 +96,6 @@ var Agreements;
                 this._scopeDirty = ko.computed(function () {
                     _this._onScopeDirty();
                 }).extend({ throttle: 1 });
-                //#endregion
-                //#region Navigational Binding
                 this._markers = ko.observableArray();
                 this._mapCreated = this._createMap();
                 this._loadCountryOptions();
@@ -236,6 +237,20 @@ var Agreements;
                 return deferred;
             };
 
+            SearchMap.prototype._onCountryChanged = function () {
+                var countryCode = this.countryCode();
+                var continentCode = this.continentCode();
+                var countryOptions = this.countryOptions();
+                if (countryCode != 'any' && countryCode != 'none') {
+                    var country = Enumerable.From(countryOptions).SingleOrDefault(undefined, function (x) {
+                        return x.code == countryCode;
+                    });
+                    if (country && country.continentCode != continentCode) {
+                        this.continentCode(country.continentCode);
+                    }
+                }
+            };
+
             SearchMap.prototype._runSammy = function () {
                 // this will run once during construction
                 var viewModel = this;
@@ -348,6 +363,11 @@ var Agreements;
                 var responseReceived = this._sendRequest(placeType);
                 $.when(responseReceived).done(function () {
                     _this._receiveResponse(placeType);
+                    setTimeout(function () {
+                        _this._sendRequest('continents');
+                        _this._sendRequest('countries');
+                        _this._sendRequest('');
+                    }, 0);
                 });
             };
 
@@ -362,7 +382,7 @@ var Agreements;
                             deferred.resolve();
                         });
                     });
-                } else if ((placeType == 'continents' && !this._continentsResponse) || (placeType == 'countries' && !this._countriesResponse) || !placeType) {
+                } else if ((placeType == 'continents' && !this._continentsResponse) || (placeType == 'countries' && !this._countriesResponse) || (!placeType && !this._partnersResponse)) {
                     $.ajax({
                         url: this.settings.partnerPlacesApi.format(placeType)
                     }).done(function (response) {
@@ -463,12 +483,12 @@ var Agreements;
                     var bounds;
 
                     if (!places.length) {
-                        if (continentCode && this._continentsResponse) {
-                            var continent = Enumerable.From(this._continentsResponse()).SingleOrDefault(undefined, function (x) {
-                                return x.continentCode == continentCode;
+                        if (countryCode && this.countryOptions) {
+                            var countryOption = Enumerable.From(this.countryOptions()).SingleOrDefault(undefined, function (x) {
+                                return x.code == countryCode;
                             });
-                            if (continent && continent.boundingBox && continent.boundingBox.hasValue) {
-                                bounds = Places.Utils.convertToLatLngBounds(continent.boundingBox);
+                            if (countryOption && countryOption.box && countryOption.box.hasValue) {
+                                bounds = Places.Utils.convertToLatLngBounds(countryOption.box);
                             }
                         }
                     } else if (places.length == 1) {
@@ -507,6 +527,26 @@ var Agreements;
                         places = [continent];
                     }
                 }
+                var countryCode = this.countryCode();
+                if (!placeType && !places.length && countryCode != 'none') {
+                    var country = Enumerable.From(this.countryOptions()).SingleOrDefault(undefined, function (x) {
+                        return x.code == countryCode;
+                    });
+                    if (country) {
+                        places = [
+                            {
+                                id: country.id,
+                                agreementCount: 0,
+                                name: country.name,
+                                center: country.center,
+                                boundingBox: country.box,
+                                isCountry: true,
+                                countryCode: country.code,
+                                continentCode: country.continentCode
+                            }
+                        ];
+                    }
+                }
                 $.each(places, function (i, place) {
                     if (placeType == 'continents' && !place.agreementCount)
                         return;
@@ -522,7 +562,13 @@ var Agreements;
                     _this._markers.push(marker);
                     google.maps.event.addListener(marker, 'mouseover', function (e) {
                         marker.setOptions({
-                            zIndex: 1000
+                            zIndex: 201
+                        });
+                    });
+                    google.maps.event.addListener(marker, 'mouseout', function (e) {
+                        var side = marker.getIcon().size.width;
+                        marker.setOptions({
+                            zIndex: 200 - side
                         });
                     });
                     if (placeType === 'continents') {
@@ -551,6 +597,8 @@ var Agreements;
             };
 
             SearchMap.prototype._getMarkerIconScaler = function (placeType, places) {
+                if (!places || !places.length)
+                    return new Scaler({ min: 0, max: 1 }, { min: 16, max: 16 });
                 var from = {
                     min: Enumerable.From(places).Min(function (x) {
                         return x.agreementCount;
@@ -561,7 +609,7 @@ var Agreements;
                 };
                 var into = { min: 24, max: 48 };
                 if (!placeType)
-                    into = { min: 16, max: 24 };
+                    into = { min: 24, max: 32 };
 
                 return new Scaler(from, into);
             };
@@ -573,7 +621,7 @@ var Agreements;
                 }
                 var halfSide = side / 2;
                 var settings = {
-                    opacity: 0.75,
+                    opacity: 0.7,
                     side: side,
                     text: text
                 };
@@ -589,6 +637,7 @@ var Agreements;
                 };
                 options.icon = icon;
                 options.shape = shape;
+                options.zIndex = 200 - side;
             };
             SearchMap._defaultMapCenter = new google.maps.LatLng(0, 17);
 
