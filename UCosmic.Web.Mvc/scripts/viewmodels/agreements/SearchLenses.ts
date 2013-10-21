@@ -23,9 +23,14 @@ module Agreements.ViewModels {
         table: SearchTable;
         map: SearchMap;
         lens: KnockoutObservable<string> = ko.observable(
-            sessionStorage.getItem(SearchLenses.LensSessionKey) || 'map');
+            sessionStorage.getItem(SearchLenses.LensSessionKey) || 'table');
 
         static LensSessionKey = 'AgreementSearchLens';
+
+        private _inputChanged: KnockoutComputed<void> = ko.computed((): void => {
+
+            sessionStorage.setItem(SearchLenses.LensSessionKey, this.lens());
+        }).extend({ throttle: 0, });
 
         //#endregion
         //#region Construction & Initialization

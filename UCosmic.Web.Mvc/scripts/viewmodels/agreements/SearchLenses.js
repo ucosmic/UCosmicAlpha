@@ -10,7 +10,10 @@ var Agreements;
             function SearchLenses(settings) {
                 var _this = this;
                 this.settings = settings;
-                this.lens = ko.observable(sessionStorage.getItem(SearchLenses.LensSessionKey) || 'map');
+                this.lens = ko.observable(sessionStorage.getItem(SearchLenses.LensSessionKey) || 'table');
+                this._inputChanged = ko.computed(function () {
+                    sessionStorage.setItem(SearchLenses.LensSessionKey, _this.lens());
+                }).extend({ throttle: 0 });
                 //#endregion
                 //#region Lensing Computeds
                 this.isTableLens = ko.computed(function () {

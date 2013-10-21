@@ -92,10 +92,15 @@ module Agreements.ViewModels {
 
         constructor(public settings: SearchMapSettings) {
             this._loadSummary();
-            this._mapCreated = this._createMap();
+            //this._mapCreated = this._createMap();
             this._loadCountryOptions();
             this.sammy = this.settings.sammy || Sammy();
             this._runSammy();
+
+            this.lat.subscribe((newValue) => {
+                if (newValue) {
+                }
+            });
         }
 
         //#endregion
@@ -104,37 +109,42 @@ module Agreements.ViewModels {
         private _googleMap: google.maps.Map;
         private _mapCreated: JQueryDeferred<void>;
         private _createMap(): JQueryDeferred<void> {
-            google.maps.visualRefresh = true;
-            var element = document.getElementById('google_map_canvas');
-            var options: google.maps.MapOptions = {
-                mapTypeId: google.maps.MapTypeId.ROADMAP,
-                center: new google.maps.LatLng(this.lat(), this.lng()),
-                zoom: this.zoom(), // zoom out
-                draggable: true, // allow map panning
-                scrollwheel: false, // prevent mouse wheel zooming
-                streetViewControl: false,
-                panControl: false,
-                zoomControlOptions: {
-                    style: google.maps.ZoomControlStyle.SMALL,
-                },
-            };
-            this._googleMap = new google.maps.Map(element, options);
-            var deferred = $.Deferred();
-            google.maps.event.addListenerOnce(this._googleMap, 'idle', (): void => {
-                google.maps.event.addListener(this._googleMap, 'center_changed', (): void => {
-                    this._onMapCenterChanged();
-                })
-                google.maps.event.addListener(this._googleMap, 'zoom_changed', (): void => {
-                    this._onMapZoomChanged();
-                })
-                google.maps.event.addListener(this._googleMap, 'bounds_changed', (): void => {
-                    this._onMapBoundsChanged();
-                })
-                google.maps.event.trigger(this._googleMap, 'center_changed');
-                google.maps.event.trigger(this._googleMap, 'zoom_changed');
-                google.maps.event.trigger(this._googleMap, 'bounds_changed');
+            if (!this._googleMap) {
+                google.maps.visualRefresh = true;
+                var element = document.getElementById('google_map_canvas');
+                var options: google.maps.MapOptions = {
+                    mapTypeId: google.maps.MapTypeId.ROADMAP,
+                    center: new google.maps.LatLng(this.lat(), this.lng()),
+                    zoom: this.zoom(), // zoom out
+                    draggable: true, // allow map panning
+                    scrollwheel: false, // prevent mouse wheel zooming
+                    streetViewControl: false,
+                    panControl: false,
+                    zoomControlOptions: {
+                        style: google.maps.ZoomControlStyle.SMALL,
+                    },
+                };
+                this._googleMap = new google.maps.Map(element, options);
+                var deferred = $.Deferred();
+                google.maps.event.addListenerOnce(this._googleMap, 'idle', (): void => {
+                    google.maps.event.addListener(this._googleMap, 'center_changed', (): void => {
+                        this._onMapCenterChanged();
+                    })
+                    google.maps.event.addListener(this._googleMap, 'zoom_changed', (): void => {
+                        this._onMapZoomChanged();
+                    })
+                    google.maps.event.addListener(this._googleMap, 'bounds_changed', (): void => {
+                        this._onMapBoundsChanged();
+                    })
+                    //google.maps.event.trigger(this._googleMap, 'center_changed');
+                    //google.maps.event.trigger(this._googleMap, 'zoom_changed');
+                    //google.maps.event.trigger(this._googleMap, 'bounds_changed');
+                    deferred.resolve();
+                });
+            }
+            else {
                 deferred.resolve();
-            });
+            }
             return deferred;
         }
 
@@ -142,9 +152,9 @@ module Agreements.ViewModels {
         south: KnockoutObservable<number> = ko.observable();
         east: KnockoutObservable<number> = ko.observable();
         west: KnockoutObservable<number> = ko.observable();
-        latitude: KnockoutObservable<number> = ko.observable();
-        longitude: KnockoutObservable<number> = ko.observable();
-        mag: KnockoutObservable<number> = ko.observable();
+        latitude: KnockoutObservable<number> = ko.observable(this.lat());
+        longitude: KnockoutObservable<number> = ko.observable(this.lng());
+        mag: KnockoutObservable<number> = ko.observable(this.zoom());
 
         private _onMapZoomChanged(): void {
             this.mag(this._googleMap.getZoom());
@@ -383,8 +393,12 @@ module Agreements.ViewModels {
             this.lat(parseFloat(lat));
             this.lng(parseFloat(lng));
 
-            if (!this._isActivated())
-                this._isActivated(true);
+            if (!this._isActivated()) {
+                this._mapCreated = this._createMap();
+                $.when(this._mapCreated).then((): void => {
+                    this._isActivated(true);
+                });
+            }
         }
 
         onBeforeActivation(e: Sammy.EventContext): void {
@@ -453,6 +467,7 @@ module Agreements.ViewModels {
                 lastScope.placeId != thisScope.placeId) {
                 this._scopeHistory.push(thisScope);
                 $.when(this._mapCreated).then((): void => {
+                    google.maps.event.trigger(this._googleMap, 'resize');
                     this._load();
                 });
             }

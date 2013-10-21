@@ -58,9 +58,9 @@ var Agreements;
                 this.south = ko.observable();
                 this.east = ko.observable();
                 this.west = ko.observable();
-                this.latitude = ko.observable();
-                this.longitude = ko.observable();
-                this.mag = ko.observable();
+                this.latitude = ko.observable(this.lat());
+                this.longitude = ko.observable(this.lng());
+                this.mag = ko.observable(this.zoom());
                 //private mapViewportChanged = ko.computed((): void => { this._onMapViewportChanged(); }).extend({ throttle: 500 });
                 //private _onMapViewportChanged(): void {
                 //    var mag = this.mag();
@@ -121,44 +121,55 @@ var Agreements;
                     agreements: ko.observableArray([])
                 };
                 this._loadSummary();
-                this._mapCreated = this._createMap();
+
+                //this._mapCreated = this._createMap();
                 this._loadCountryOptions();
                 this.sammy = this.settings.sammy || Sammy();
                 this._runSammy();
+
+                this.lat.subscribe(function (newValue) {
+                    if (newValue) {
+                    }
+                });
             }
             SearchMap.prototype._createMap = function () {
                 var _this = this;
-                google.maps.visualRefresh = true;
-                var element = document.getElementById('google_map_canvas');
-                var options = {
-                    mapTypeId: google.maps.MapTypeId.ROADMAP,
-                    center: new google.maps.LatLng(this.lat(), this.lng()),
-                    zoom: this.zoom(),
-                    draggable: true,
-                    scrollwheel: false,
-                    streetViewControl: false,
-                    panControl: false,
-                    zoomControlOptions: {
-                        style: google.maps.ZoomControlStyle.SMALL
-                    }
-                };
-                this._googleMap = new google.maps.Map(element, options);
-                var deferred = $.Deferred();
-                google.maps.event.addListenerOnce(this._googleMap, 'idle', function () {
-                    google.maps.event.addListener(_this._googleMap, 'center_changed', function () {
-                        _this._onMapCenterChanged();
+                if (!this._googleMap) {
+                    google.maps.visualRefresh = true;
+                    var element = document.getElementById('google_map_canvas');
+                    var options = {
+                        mapTypeId: google.maps.MapTypeId.ROADMAP,
+                        center: new google.maps.LatLng(this.lat(), this.lng()),
+                        zoom: this.zoom(),
+                        draggable: true,
+                        scrollwheel: false,
+                        streetViewControl: false,
+                        panControl: false,
+                        zoomControlOptions: {
+                            style: google.maps.ZoomControlStyle.SMALL
+                        }
+                    };
+                    this._googleMap = new google.maps.Map(element, options);
+                    var deferred = $.Deferred();
+                    google.maps.event.addListenerOnce(this._googleMap, 'idle', function () {
+                        google.maps.event.addListener(_this._googleMap, 'center_changed', function () {
+                            _this._onMapCenterChanged();
+                        });
+                        google.maps.event.addListener(_this._googleMap, 'zoom_changed', function () {
+                            _this._onMapZoomChanged();
+                        });
+                        google.maps.event.addListener(_this._googleMap, 'bounds_changed', function () {
+                            _this._onMapBoundsChanged();
+                        });
+
+                        //google.maps.event.trigger(this._googleMap, 'center_changed');
+                        //google.maps.event.trigger(this._googleMap, 'zoom_changed');
+                        //google.maps.event.trigger(this._googleMap, 'bounds_changed');
+                        deferred.resolve();
                     });
-                    google.maps.event.addListener(_this._googleMap, 'zoom_changed', function () {
-                        _this._onMapZoomChanged();
-                    });
-                    google.maps.event.addListener(_this._googleMap, 'bounds_changed', function () {
-                        _this._onMapBoundsChanged();
-                    });
-                    google.maps.event.trigger(_this._googleMap, 'center_changed');
-                    google.maps.event.trigger(_this._googleMap, 'zoom_changed');
-                    google.maps.event.trigger(_this._googleMap, 'bounds_changed');
+                } else {
                     deferred.resolve();
-                });
+                }
                 return deferred;
             };
 
@@ -308,6 +319,7 @@ var Agreements;
             };
 
             SearchMap.prototype._onRoute = function (e) {
+                var _this = this;
                 var continent = e.params['continent'];
                 var country = e.params['country'];
                 var placeId = e.params['place'];
@@ -322,8 +334,12 @@ var Agreements;
                 this.lat(parseFloat(lat));
                 this.lng(parseFloat(lng));
 
-                if (!this._isActivated())
-                    this._isActivated(true);
+                if (!this._isActivated()) {
+                    this._mapCreated = this._createMap();
+                    $.when(this._mapCreated).then(function () {
+                        _this._isActivated(true);
+                    });
+                }
             };
 
             SearchMap.prototype.onBeforeActivation = function (e) {
@@ -374,6 +390,7 @@ var Agreements;
                 if (!lastScope || lastScope.countryCode != thisScope.countryCode || lastScope.continentCode != thisScope.continentCode || lastScope.placeId != thisScope.placeId) {
                     this._scopeHistory.push(thisScope);
                     $.when(this._mapCreated).then(function () {
+                        google.maps.event.trigger(_this._googleMap, 'resize');
                         _this._load();
                     });
                 }
