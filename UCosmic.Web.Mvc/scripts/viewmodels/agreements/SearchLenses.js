@@ -17,10 +17,10 @@ var Agreements;
                 //#endregion
                 //#region Lensing Computeds
                 this.isTableLens = ko.computed(function () {
-                    return _this.lens() === 'table';
+                    return _this.lens() == 'table';
                 });
                 this.isMapLens = ko.computed(function () {
-                    return _this.lens() === 'map';
+                    return _this.lens() == 'map';
                 });
                 //#endregion
                 //#region Sammy Routing
@@ -49,43 +49,63 @@ var Agreements;
                     summaryApi: this.settings.summaryApi
                 });
 
-                this.table.countryCode.subscribe(function (newValue) {
-                    var mapCountry = _this.map.countryCode();
-                    if (mapCountry != newValue)
-                        _this.map.countryCode(newValue);
-                });
-
-                this.map.countryCode.subscribe(function (newValue) {
-                    var tableCountry = _this.table.countryCode();
-                    if (tableCountry != newValue)
-                        _this.table.countryCode(newValue);
-                });
-
                 this.sammy.run();
                 var initialLocation = this.sammy.getLocation();
                 var lensRoute = '#/{0}/'.format(this.lens());
                 if (initialLocation.indexOf(lensRoute) < 0) {
-                    this.sammy.setLocation(lensRoute);
+                    if (this.isTableLens()) {
+                        this.table.setLocation();
+                        this.table.activate();
+                    } else if (this.isMapLens()) {
+                        this.map.setLocation();
+                        this.map.activate();
+                    }
                 }
             }
             SearchLenses.prototype._runSammy = function () {
                 // this will run once during construction
                 var viewModel = this;
 
+                this.sammy.before(/\#\/table\/(.*)\//, function () {
+                    viewModel.lens('table');
+                });
+
+                this.sammy.before(/\#\/map\/(.*)\//, function () {
+                    viewModel.lens('map');
+                });
+
                 this.sammy.get('#/:lens/', function () {
                     var e = this;
-                    viewModel._onRoute(e);
+                    viewModel.lens(e.params['lens']);
                 });
             };
 
-            SearchLenses.prototype._onRoute = function (e) {
-                var lens = e.params['lens'];
-                this.lens(lens);
-                if (this.isTableLens()) {
-                    this.table.onBeforeActivation(e);
-                } else if (this.isMapLens()) {
-                    this.map.onBeforeActivation(e);
+            //#endregion
+            SearchLenses.prototype.viewTable = function () {
+                if (!this.isTableLens()) {
+                    this.lens('table');
+                    this.map.deactivate();
+                    this.table.countryCode(this.map.countryCode());
+                    this.table.activate();
                 }
+            };
+
+            SearchLenses.prototype.viewMap = function () {
+                if (!this.isMapLens()) {
+                    this.lens('map');
+                    this.table.deactivate();
+                    this.map.countryCode(this.table.countryCode());
+                    this.map.activate();
+                }
+            };
+
+            SearchLenses.prototype.resetFilters = function () {
+                this.table.keyword('');
+                this.table.countryCode('any');
+                this.table.pager.input.pageNumberText('1');
+                this.map.continentCode('any');
+                this.map.countryCode('any');
+                this.map.placeId(0);
             };
             SearchLenses.LensSessionKey = 'AgreementSearchLens';
             return SearchLenses;

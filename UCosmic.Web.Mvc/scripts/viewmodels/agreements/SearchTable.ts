@@ -165,8 +165,7 @@ module Agreements.ViewModels {
             this.sammy.get(
                 this.settings.activationRoute || this.sammy.getLocation(),
                 function (): void {
-                    var e: Sammy.EventContext = this;
-                    viewModel.onBeforeActivation(e);
+                    viewModel.setLocation(); // base activated route on current input filters
                 });
 
             if (!this.settings.sammy && !this.sammy.isRunning())
@@ -191,13 +190,14 @@ module Agreements.ViewModels {
             this.orderBy(sort);
             this.pager.input.pageSizeText(size);
             this.pager.input.pageNumberText(page);
-
-            if (!this._isActivated())
-                this._isActivated(true);
+            this.activate();
         }
 
-        onBeforeActivation(e: Sammy.EventContext): void {
-            this._setLocation(); // base activated route on current input filters
+        activate(): void {
+            if (!this._isActivated()) this._isActivated(true);
+        }
+        deactivate(): void {
+            if (this._isActivated()) this._isActivated(false);
         }
 
         private _route: KnockoutComputed<string> = ko.computed((): string => {
@@ -216,7 +216,7 @@ module Agreements.ViewModels {
             return route;
         }
 
-        private _setLocation(): void {
+        setLocation(): void {
             // only set the href hashtag to trigger sammy when the current route is stale
             var route = this._route();
             if (this.sammy.getLocation().indexOf(route) < 0) {
@@ -306,7 +306,7 @@ module Agreements.ViewModels {
                             }).ToArray();
                         this.pager.apply(response);
                         this.displayPager.apply(response);
-                        this._setLocation();
+                        this.setLocation();
                         deferred.resolve();
                         this.spinner.stop();
                     }

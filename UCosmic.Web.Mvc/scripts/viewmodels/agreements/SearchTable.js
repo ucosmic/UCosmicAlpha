@@ -124,8 +124,7 @@ var Agreements;
 
                 // activate the page route (create default hashtag parameters)
                 this.sammy.get(this.settings.activationRoute || this.sammy.getLocation(), function () {
-                    var e = this;
-                    viewModel.onBeforeActivation(e);
+                    viewModel.setLocation();
                 });
 
                 if (!this.settings.sammy && !this.sammy.isRunning())
@@ -150,13 +149,16 @@ var Agreements;
                 this.orderBy(sort);
                 this.pager.input.pageSizeText(size);
                 this.pager.input.pageNumberText(page);
+                this.activate();
+            };
 
+            SearchTable.prototype.activate = function () {
                 if (!this._isActivated())
                     this._isActivated(true);
             };
-
-            SearchTable.prototype.onBeforeActivation = function (e) {
-                this._setLocation();
+            SearchTable.prototype.deactivate = function () {
+                if (this._isActivated())
+                    this._isActivated(false);
             };
 
             SearchTable.prototype._computeRoute = function () {
@@ -169,7 +171,7 @@ var Agreements;
                 return route;
             };
 
-            SearchTable.prototype._setLocation = function () {
+            SearchTable.prototype.setLocation = function () {
                 // only set the href hashtag to trigger sammy when the current route is stale
                 var route = this._route();
                 if (this.sammy.getLocation().indexOf(route) < 0) {
@@ -238,7 +240,7 @@ var Agreements;
                         }).ToArray();
                         _this.pager.apply(response);
                         _this.displayPager.apply(response);
-                        _this._setLocation();
+                        _this.setLocation();
                         deferred.resolve();
                         _this.spinner.stop();
                     } else {

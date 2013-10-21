@@ -60,21 +60,18 @@ module Agreements.ViewModels {
                 summaryApi: this.settings.summaryApi,
             });
 
-            this.table.countryCode.subscribe((newValue: string): void => {
-                var mapCountry = this.map.countryCode();
-                if (mapCountry != newValue) this.map.countryCode(newValue);
-            });
-
-            this.map.countryCode.subscribe((newValue: string): void => {
-                var tableCountry = this.table.countryCode();
-                if (tableCountry != newValue) this.table.countryCode(newValue);
-            });
-
             this.sammy.run();
             var initialLocation = this.sammy.getLocation();
             var lensRoute = '#/{0}/'.format(this.lens());
             if (initialLocation.indexOf(lensRoute) < 0) {
-                this.sammy.setLocation(lensRoute);
+                if (this.isTableLens()) {
+                    this.table.setLocation();
+                    this.table.activate();
+                }
+                else if (this.isMapLens()) {
+                    this.map.setLocation();
+                    this.map.activate();
+                }
             }
         }
 
@@ -82,11 +79,11 @@ module Agreements.ViewModels {
         //#region Lensing Computeds
 
         isTableLens: KnockoutComputed<boolean> = ko.computed((): boolean => {
-            return this.lens() === 'table';
+            return this.lens() == 'table';
         });
 
         isMapLens: KnockoutComputed<boolean> = ko.computed((): boolean => {
-            return this.lens() === 'map';
+            return this.lens() == 'map';
         });
 
         //#endregion
@@ -98,25 +95,49 @@ module Agreements.ViewModels {
             // this will run once during construction
             var viewModel = this;
 
+            this.sammy.before(/\#\/table\/(.*)\//, function () {
+                viewModel.lens('table');
+            });
+
+            this.sammy.before(/\#\/map\/(.*)\//, function () {
+                viewModel.lens('map');
+            });
+
             this.sammy.get(
                 '#/:lens/',
                 function (): void {
                     var e: Sammy.EventContext = this;
-                    viewModel._onRoute(e);
+                    viewModel.lens(e.params['lens']);
                 });
         }
 
-        private _onRoute(e: Sammy.EventContext): void {
-            var lens = e.params['lens'];
-            this.lens(lens);
-            if (this.isTableLens()) {
-                this.table.onBeforeActivation(e);
-            }
-            else if (this.isMapLens()) {
-                this.map.onBeforeActivation(e);
+        //#endregion
+
+        viewTable(): void {
+            if (!this.isTableLens()) {
+                this.lens('table');
+                this.map.deactivate();
+                this.table.countryCode(this.map.countryCode());
+                this.table.activate();
             }
         }
 
-        //#endregion
+        viewMap(): void {
+            if (!this.isMapLens()) {
+                this.lens('map');
+                this.table.deactivate();
+                this.map.countryCode(this.table.countryCode());
+                this.map.activate();
+            }
+        }
+
+        resetFilters(): void {
+            this.table.keyword('');
+            this.table.countryCode('any');
+            this.table.pager.input.pageNumberText('1');
+            this.map.continentCode('any');
+            this.map.countryCode('any');
+            this.map.placeId(0);
+        }
     }
 }

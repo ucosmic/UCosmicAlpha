@@ -63,9 +63,16 @@
     <form class="group">
         <div class="on-left from-top">
             <header>
-                <h1>
-                    @ViewBag.Title
-                </h1>
+                <div class="group">
+                    <div class="on-left">
+                        <h1>
+                            @ViewBag.Title
+                        </h1>
+                    </div>
+                    <div class="on-right" style="margin-top: 8px;">
+                        <a href="#" class="restore-underline" data-bind="click: resetFilters">Reset search</a>
+                    </div>
+                </div>
             </header>
             <div data-bind="visible: isTableLens, with: table">
                 @* KEYWORD TEXT BOX *@
@@ -175,9 +182,18 @@
             <div data-bind="visible: isMapLens, with: map" style="margin: 1em 0; display: none;">
                 <div class="group" style="height: 30px;">
                     <div class="on-left" data-bind="with: summary" style="font-size: 20px;">
-                        <strong data-bind="text: agreementCount" style="font-size: 24px;">?</strong> agreements with
-                        <strong data-bind="text: partnerCount" style="font-size: 24px;">?</strong> partners in
-                        <strong data-bind="text: countryCount" style="font-size: 24px;">?</strong> countries.
+                        <strong data-bind="text: agreementCount" style="font-size: 24px;">?</strong>
+                        <span data-bind="visible: agreementCount() == 1" style="display: none;">agreement</span>
+                        <span data-bind="visible: agreementCount() != 1">agreements</span>
+                        <span data-bind="visible: agreementCount() != 0">with
+                        <strong data-bind="text: partnerCount" style="font-size: 24px;">?</strong>
+                            <span data-bind="visible: partnerCount() == 1" style="display: none;">partner</span>
+                            <span data-bind="visible: partnerCount() != 1">partners</span>
+                            in
+                        <strong data-bind="text: countryCount" style="font-size: 24px;">?</strong>
+                            <span data-bind="visible: countryCount() == 1" style="display: none;">country.</span>
+                            <span data-bind="visible: countryCount() != 1">countries.</span>
+                        </span>
                     </div>
                     <div class="on-right">
                         <div data-bind="visible: spinner.isVisible" style="display: none; margin-top: 8px;">
@@ -195,10 +211,11 @@
                     <strong data-bind="text: status.agreementCount">?</strong>
                     <span data-bind="visible: status.agreementCount() == 1" style="display: none;">agreement</span>
                     <span data-bind="visible: status.agreementCount() != 1">agreements</span>
-                    with
+                    <span data-bind="visible: status.partnerCount() != 0">with
                     <strong data-bind="text: status.partnerCount">?</strong>
-                    <span data-bind="visible: status.partnerCount() == 1" style="display: none;">partner</span>
-                    <span data-bind="visible: status.partnerCount() != 1">partners</span>
+                        <span data-bind="visible: status.partnerCount() == 1" style="display: none;">partner</span>
+                        <span data-bind="visible: status.partnerCount() != 1">partners</span>
+                    </span>
                     in
                     <strong data-bind="text: status.countryCount">?</strong>
                 </div>
@@ -271,7 +288,14 @@
                         <li class="static square-bottom">
                             @if (User.IsInAnyRole(RoleName.AgreementManagers))
                             {
+@*<div class="group">
+                                    <div class="on-left">*@
                                 <span class="text">Search options</span>
+@*</div>
+                                    <div class="on-right">
+                                        
+                                    </div>
+                                </div>*@
                             }
                             else
                             {
@@ -343,13 +367,13 @@
                     </ul>
                     <ul class="bottom">
                         <li data-bind="css: { current: isTableLens }">
-                            <a href="#/table/" class="group">
+                            <a href="#/table/" class="group" data-bind="click: viewTable">
                                 <div class="arrow"></div>
                                 <span class="text">Table</span>
                             </a>
                         </li>
                         <li data-bind="css: { current: isMapLens }">
-                            <a href="#/map/" class="group">
+                            <a href="#/map/" class="group" data-bind="click: viewMap">
                                 <div class="arrow"></div>
                                 <span class="text">Map</span>
                             </a>

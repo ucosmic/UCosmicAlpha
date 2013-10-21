@@ -71,7 +71,7 @@ var Agreements;
                 //            this.zoom(mag);
                 //            this.lat(lat);
                 //            this.lng(lng);
-                //            this._setLocation();
+                //            this.setLocation();
                 //        });
                 //    }
                 //}
@@ -134,6 +134,7 @@ var Agreements;
             }
             SearchMap.prototype._createMap = function () {
                 var _this = this;
+                var deferred = $.Deferred();
                 if (!this._googleMap) {
                     google.maps.visualRefresh = true;
                     var element = document.getElementById('google_map_canvas');
@@ -150,7 +151,6 @@ var Agreements;
                         }
                     };
                     this._googleMap = new google.maps.Map(element, options);
-                    var deferred = $.Deferred();
                     google.maps.event.addListenerOnce(this._googleMap, 'idle', function () {
                         google.maps.event.addListener(_this._googleMap, 'center_changed', function () {
                             _this._onMapCenterChanged();
@@ -280,6 +280,7 @@ var Agreements;
             };
 
             SearchMap.prototype.continentSelected = function () {
+                this.countryCode('any');
                 this.placeId(0);
             };
 
@@ -306,8 +307,7 @@ var Agreements;
 
                 // activate the page route (create default hashtag parameters)
                 this.sammy.get(this.settings.activationRoute || this.sammy.getLocation(), function () {
-                    var e = this;
-                    viewModel.onBeforeActivation(e);
+                    viewModel.setLocation();
                 });
 
                 if (!this.settings.sammy && !this.sammy.isRunning())
@@ -319,7 +319,6 @@ var Agreements;
             };
 
             SearchMap.prototype._onRoute = function (e) {
-                var _this = this;
                 var continent = e.params['continent'];
                 var country = e.params['country'];
                 var placeId = e.params['place'];
@@ -333,7 +332,11 @@ var Agreements;
                 this.zoom(parseInt(zoom));
                 this.lat(parseFloat(lat));
                 this.lng(parseFloat(lng));
+                this.activate();
+            };
 
+            SearchMap.prototype.activate = function () {
+                var _this = this;
                 if (!this._isActivated()) {
                     this._mapCreated = this._createMap();
                     $.when(this._mapCreated).then(function () {
@@ -341,9 +344,9 @@ var Agreements;
                     });
                 }
             };
-
-            SearchMap.prototype.onBeforeActivation = function (e) {
-                this._setLocation();
+            SearchMap.prototype.deactivate = function () {
+                if (this._isActivated())
+                    this._isActivated(false);
             };
 
             SearchMap.prototype._computeRoute = function () {
@@ -358,14 +361,13 @@ var Agreements;
                 return route;
             };
 
-            SearchMap.prototype._setLocation = function () {
-                var _this = this;
+            SearchMap.prototype.setLocation = function () {
                 // only set the href hashtag to trigger sammy when the current route is stale
                 var route = this._route();
                 if (this.sammy.getLocation().indexOf(route) < 0) {
-                    setTimeout(function () {
-                        _this.sammy.setLocation(route);
-                    }, 1);
+                    //setTimeout((): void => {
+                    this.sammy.setLocation(route);
+                    //}, 1);
                 }
             };
 
@@ -398,6 +400,7 @@ var Agreements;
 
             SearchMap.prototype._load = function () {
                 var _this = this;
+                this.spinner.start();
                 if (!this.placeId()) {
                     var placeType = '';
                     var continentCode = this.continentCode();
@@ -407,22 +410,22 @@ var Agreements;
                     } else if (countryCode == 'any') {
                         placeType = 'countries';
                     }
-                    this.spinner.start();
                     var placesReceived = this._requestPlaces(placeType);
                     $.when(placesReceived).done(function () {
                         _this._receivePlaces(placeType);
-                        _this.spinner.stop();
                         setTimeout(function () {
                             _this._requestPlaces('continents');
                             _this._requestPlaces('countries');
                             _this._requestPlaces('');
                         }, 0);
+                    }).always(function () {
+                        _this.spinner.stop();
                     });
                 } else {
-                    this.spinner.start();
                     var partnersReceived = this._requestPartners();
                     $.when(partnersReceived).done(function () {
                         _this._receivePartners();
+                    }).always(function () {
                         _this.spinner.stop();
                     });
                 }
@@ -607,13 +610,13 @@ var Agreements;
                     if (placeType == 'continents' && !place.agreementCount)
                         return;
                     var title = '{0} - {1} agreement{2}'.format(place.name, place.agreementCount, place.agreementCount == 1 ? '' : 's');
-                    if (!placeType)
+                    if (!placeType && place.agreementCount)
                         title = '{0} agreement{1}\r\nClick for more information'.format(place.agreementCount, place.agreementCount == 1 ? '' : 's');
                     var options = {
                         map: _this._googleMap,
                         position: Places.Utils.convertToLatLng(place.center),
                         title: title,
-                        clickable: true,
+                        clickable: place.agreementCount > 0,
                         cursor: 'pointer'
                     };
                     _this._setMarkerIcon(options, place.agreementCount.toString(), scaler);
@@ -691,7 +694,7 @@ var Agreements;
                 this.lat(this.latitude());
                 this.lng(this.longitude());
                 this.zoom(this.mag());
-                this._setLocation();
+                this.setLocation();
             };
 
             SearchMap.prototype._updateStatus = function (placeType, places) {
@@ -702,6 +705,9 @@ var Agreements;
                     this.status.partnerCount(Enumerable.From(places).Sum(function (x) {
                         return x.partnerCount;
                     }).toString());
+                } else {
+                    this.status.agreementCount('0');
+                    this.status.partnerCount('0');
                 }
                 if (placeType == 'countries') {
                     var continentCode = this.continentCode();
@@ -751,7 +757,7 @@ var Agreements;
             SearchMap.prototype._setMarkerIcon = function (options, text, scaler) {
                 var side = isNaN(parseInt(text)) ? 24 : scaler.scale(parseInt(text));
                 if (text == '0') {
-                    side = 16;
+                    side = 24;
                 }
                 var halfSide = side / 2;
                 var settings = {
@@ -793,8 +799,12 @@ var Agreements;
                         return x.id == placeId;
                     });
                     if (!place || !place.agreementCount) {
-                        alert('There are no agreements for place #{0}.'.format(placeId));
+                        this.status.agreementCount('0');
+                        this.status.partnerCount('0');
+                        this.status.countryCount('this area');
                         deferred.reject();
+                        this.spinner.stop();
+                        //alert('There are no agreements for place #{0}.'.format(placeId));
                     } else {
                         // load the partners
                         $.get(this.settings.partnersApi, { agreementIds: place.agreementIds }).done(function (response) {
@@ -835,7 +845,7 @@ var Agreements;
                     });
                     this._googleMap.fitBounds(bounds);
                 } else {
-                    alert('Found no agreement partners for place #{0}.'.format(this.placeId()));
+                    alert('_receivePartners Found no agreement partners for place #{0}.'.format(this.placeId()));
                 }
 
                 // plot the markers

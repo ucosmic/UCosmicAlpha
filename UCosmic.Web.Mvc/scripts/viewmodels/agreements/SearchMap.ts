@@ -109,6 +109,7 @@ module Agreements.ViewModels {
         private _googleMap: google.maps.Map;
         private _mapCreated: JQueryDeferred<void>;
         private _createMap(): JQueryDeferred<void> {
+            var deferred = $.Deferred();
             if (!this._googleMap) {
                 google.maps.visualRefresh = true;
                 var element = document.getElementById('google_map_canvas');
@@ -125,7 +126,6 @@ module Agreements.ViewModels {
                     },
                 };
                 this._googleMap = new google.maps.Map(element, options);
-                var deferred = $.Deferred();
                 google.maps.event.addListenerOnce(this._googleMap, 'idle', (): void => {
                     google.maps.event.addListener(this._googleMap, 'center_changed', (): void => {
                         this._onMapCenterChanged();
@@ -189,7 +189,7 @@ module Agreements.ViewModels {
         //            this.zoom(mag);
         //            this.lat(lat);
         //            this.lng(lng);
-        //            this._setLocation();
+        //            this.setLocation();
         //        });
         //    }
         //}
@@ -308,28 +308,13 @@ module Agreements.ViewModels {
         }
 
         continentSelected(): void {
+            this.countryCode('any');
             this.placeId(0);
         }
 
         countrySelected(): void {
             this.placeId(0);
         }
-
-        //private _countryChanged = ko.computed((): void => { this._onCountryChanged(); });
-        //private _onCountryChanged(): void {
-        //    var countryCode = this.countryCode();
-        //    var continentCode = this.continentCode();
-        //    var countryOptions = this.countryOptions();
-        //    if (countryCode != 'any' && countryCode != 'none') {
-        //        var country: Places.ApiModels.Country = Enumerable.From(countryOptions)
-        //            .SingleOrDefault(undefined, function (x: Places.ApiModels.Country): boolean {
-        //                return x.code == countryCode;
-        //            });
-        //        if (country && country.continentCode != continentCode) {
-        //            this.continentCode(country.continentCode);
-        //        }
-        //    }
-        //} bugs with route when country changes continent
 
         //#endregion
         //#region Sammy Routing
@@ -366,8 +351,7 @@ module Agreements.ViewModels {
             this.sammy.get(
                 this.settings.activationRoute || this.sammy.getLocation(),
                 function (): void {
-                    var e: Sammy.EventContext = this;
-                    viewModel.onBeforeActivation(e);
+                    viewModel.setLocation();
                 });
 
             if (!this.settings.sammy && !this.sammy.isRunning())
@@ -392,7 +376,10 @@ module Agreements.ViewModels {
             this.zoom(parseInt(zoom));
             this.lat(parseFloat(lat));
             this.lng(parseFloat(lng));
+            this.activate();
+        }
 
+        activate(): void {
             if (!this._isActivated()) {
                 this._mapCreated = this._createMap();
                 $.when(this._mapCreated).then((): void => {
@@ -400,9 +387,8 @@ module Agreements.ViewModels {
                 });
             }
         }
-
-        onBeforeActivation(e: Sammy.EventContext): void {
-            this._setLocation(); // base activated route on current input filters
+        deactivate(): void {
+            if (this._isActivated()) this._isActivated(false);
         }
 
         private _route: KnockoutComputed<string> = ko.computed((): string => {
@@ -422,13 +408,13 @@ module Agreements.ViewModels {
             return route;
         }
 
-        private _setLocation(): void {
+        setLocation(): void {
             // only set the href hashtag to trigger sammy when the current route is stale
             var route = this._route();
             if (this.sammy.getLocation().indexOf(route) < 0) {
-                setTimeout((): void => {
-                    this.sammy.setLocation(route);
-                }, 1);
+                //setTimeout((): void => {
+                this.sammy.setLocation(route);
+                //}, 1);
             }
         }
 
@@ -484,6 +470,7 @@ module Agreements.ViewModels {
         spinner = new App.Spinner(new App.SpinnerOptions(400, false));
 
         private _load(): void {
+            this.spinner.start();
             if (!this.placeId()) {
                 var placeType = '';
                 var continentCode = this.continentCode();
@@ -494,25 +481,27 @@ module Agreements.ViewModels {
                 else if (countryCode == 'any') { // continentCode != 'any', but can be none or Antarctic
                     placeType = 'countries';
                 }
-                this.spinner.start();
                 var placesReceived = this._requestPlaces(placeType);
                 $.when(placesReceived).done((): void => {
                     this._receivePlaces(placeType);
-                    this.spinner.stop();
                     setTimeout((): void => { // pre-load the other data sets
                         this._requestPlaces('continents');
                         this._requestPlaces('countries');
                         this._requestPlaces('');
                     }, 0);
-                });
+                })
+                    .always((): void => {
+                        this.spinner.stop();
+                    });
             }
             else {
-                this.spinner.start();
                 var partnersReceived = this._requestPartners();
                 $.when(partnersReceived).done((): void => {
                     this._receivePartners();
-                    this.spinner.stop();
-                });
+                })
+                    .always((): void => {
+                        this.spinner.stop();
+                    });
             }
         }
 
@@ -741,14 +730,14 @@ module Agreements.ViewModels {
                 if (placeType == 'continents' && !place.agreementCount) return; // do not render zero on continent
                 var title = '{0} - {1} agreement{2}'
                     .format(place.name, place.agreementCount, place.agreementCount == 1 ? '' : 's');
-                if (!placeType)
+                if (!placeType && place.agreementCount)
                     title = '{0} agreement{1}\r\nClick for more information'
                         .format(place.agreementCount, place.agreementCount == 1 ? '' : 's');
                 var options: google.maps.MarkerOptions = {
                     map: this._googleMap,
                     position: Places.Utils.convertToLatLng(place.center),
                     title: title,
-                    clickable: true,
+                    clickable: place.agreementCount > 0,
                     cursor: 'pointer',
                 };
                 this._setMarkerIcon(options, place.agreementCount.toString(), scaler);
@@ -834,7 +823,7 @@ module Agreements.ViewModels {
             this.lat(this.latitude());
             this.lng(this.longitude());
             this.zoom(this.mag());
-            this._setLocation();
+            this.setLocation();
         }
 
         private _updateStatus(placeType: string, places: ApiModels.PlaceWithAgreements[]) {
@@ -847,6 +836,10 @@ module Agreements.ViewModels {
                     .Sum(function (x: ApiModels.PlaceWithAgreements): number {
                         return x.partnerCount;
                     }).toString());
+            }
+            else {
+                this.status.agreementCount('0');
+                this.status.partnerCount('0');
             }
             if (placeType == 'countries') {
                 var continentCode = this.continentCode();
@@ -896,7 +889,7 @@ module Agreements.ViewModels {
         private _setMarkerIcon(options: google.maps.MarkerOptions, text: string, scaler: Scaler): void {
             var side = isNaN(parseInt(text)) ? 24 : scaler.scale(parseInt(text));
             if (text == '0') {
-                side = 16;
+                side = 24;
             }
             var halfSide = side / 2;
             var settings = {
@@ -941,8 +934,12 @@ module Agreements.ViewModels {
                         return x.id == placeId;
                     });
                 if (!place || !place.agreementCount) {
-                    alert('There are no agreements for place #{0}.'.format(placeId));
+                    this.status.agreementCount('0');
+                    this.status.partnerCount('0');
+                    this.status.countryCount('this area');
                     deferred.reject();
+                    this.spinner.stop();
+                    //alert('There are no agreements for place #{0}.'.format(placeId));
                 }
                 else {
                     // load the partners
@@ -992,7 +989,7 @@ module Agreements.ViewModels {
                 this._googleMap.fitBounds(bounds);
             }
             else {
-                alert('Found no agreement partners for place #{0}.'.format(this.placeId()));
+                alert('_receivePartners Found no agreement partners for place #{0}.'.format(this.placeId()));
             }
 
             // plot the markers
