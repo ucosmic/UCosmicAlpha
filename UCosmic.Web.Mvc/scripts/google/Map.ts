@@ -1,12 +1,20 @@
 /// <reference path="../typings/googlemaps/google.maps.d.ts" />
 /// <reference path="../typings/jquery/jquery.d.ts" />
 /// <reference path="../typings/knockout/knockout.d.ts" />
+/// <reference path="../app/App.ts" />
 
 module App.GoogleMaps {
 
     export interface MapSettings {
         autoCreate?: boolean;
         maxPrecision?: number;
+        log?: boolean;
+    }
+
+    export interface MapViewportSettings {
+        center?: google.maps.LatLng;
+        zoom?: number;
+        bounds: google.maps.LatLngBounds;
     }
 
     export class Map {
@@ -29,6 +37,13 @@ module App.GoogleMaps {
         constructor(element: Element, options: google.maps.MapOptions, settings?: MapSettings);
         constructor(elementId: string, options: google.maps.MapOptions, settings?: MapSettings);
         constructor(elementOrId: any, options: google.maps.MapOptions, settings?: MapSettings) {
+
+            // stash the settings and options
+            this._options = options || {};
+            this._settings = settings || {};
+
+            this._log('Constructing google map wrapper instance.');
+
             // did we get an element or an element id?
             if (typeof elementOrId === 'string') {
                 this._element = document.getElementById(elementOrId);
@@ -37,9 +52,7 @@ module App.GoogleMaps {
                 this._element = elementOrId;
             }
 
-            // stash the settings and options
-            this._options = options || {};
-            this._settings = settings || {};
+            this._log('Set map canvas element, id is "{0}".', $(this._element).attr('id'));
 
             // initialize observables
             this.zoom = ko.observable(this._options.zoom || this._options.zoom == 0
@@ -51,10 +64,17 @@ module App.GoogleMaps {
                 ? this._reducePrecision(this._options.center.lng())
                 : Map.defaultCenter.lng());
 
+            this._log('Zoom initialized to {0}.', this.zoom());
+            this._log('Latitude initialized to {0}.', this.lat());
+            this._log('Longitude initialized to {0}.', this.lng());
+
             // automatically create() the map by default, only skip if autoCreate == false.
             if (typeof this._settings.autoCreate === 'undefined' || this._settings.autoCreate) {
+                this._log('Eagerly readying the google map instance.');
                 this.ready();
             }
+
+            this._log('Completed Construction of google map wrapper instance.');
         }
 
         private _element: Element;
@@ -82,9 +102,11 @@ module App.GoogleMaps {
                 this._create();
                 // listen for the map to become idle before resolving the promise
                 google.maps.event.addListenerOnce(this.map, 'idle', (): void => {
+                    this._log('Fired map idle event #0.')
                     this._listenForCenterChange();
                     this._listenForZoomChange();
                     this._listenForBoundsChange();
+                    this._listenForDragging();
                     this._listenForIdled();
                     this._boundsChanged();
                     this._promise.resolve();
@@ -111,6 +133,45 @@ module App.GoogleMaps {
         //#endregion
         //#region Viewport Properties & Events
 
+        setViewport(settings: MapViewportSettings): JQueryPromise<void> {
+
+            var isDirty = false;
+
+            // set zoom if it is present and not current value
+            var zoom = this.map.getZoom();
+            if (Map.isValidZoom(settings.zoom) && settings.zoom != zoom) {
+                this.map.setZoom(settings.zoom);
+                isDirty = true;
+            }
+
+            // set center if it is present and not current value
+            var center = this.map.getCenter();
+            if (settings.center && !Map.areCentersEqual(center, settings.center)) {
+                this.map.setCenter(settings.center);
+                isDirty = true;
+            }
+
+            // set bounds if present, not empty, and not current value
+            var bounds = this.map.getBounds();
+            if (settings.bounds && !Map.isEmptyBounds(settings.bounds) &&
+                !Map.areBoundsEqual(bounds, settings.bounds)) {
+
+                this.map.fitBounds(settings.bounds);
+                isDirty = true;
+            }
+
+            var promise = $.Deferred();
+            if (isDirty) {
+                google.maps.event.addListenerOnce(this.map, 'idle', (): void => {
+                    promise.resolve();
+                });
+            }
+            else {
+                promise.resolve();
+            }
+            return promise;
+        }
+
         //#region Idle
 
         // initial values for lat & lng are based on the options used to create the map
@@ -124,6 +185,7 @@ module App.GoogleMaps {
         private _listenForIdled(): void {
             google.maps.event.addListener(this.map, 'idle', (): void => {
                 this._idled();
+                this._log('Fired map idle event #{0}.', this.idles());
             })
         }
 
@@ -140,8 +202,15 @@ module App.GoogleMaps {
 
         private _listenForZoomChange(): void {
             google.maps.event.addListener(this.map, 'zoom_changed', (): void => {
+                this._log('Firing map zoom_changed event.');
                 this._zoomChanged();
+                this._log('Fired map zoom_changed event.');
             })
+        }
+
+        static isValidZoom(zoom: number): boolean {
+            return typeof zoom !== 'undefined'
+                && !isNaN(zoom) && zoom >= 0;
         }
 
         //#endregion
@@ -159,8 +228,14 @@ module App.GoogleMaps {
 
         private _listenForCenterChange(): void {
             google.maps.event.addListener(this.map, 'center_changed', (): void => {
+                this._log('Firing map center_changed event.');
                 this._centerChanged();
+                this._log('Fired map center_changed event.');
             })
+        }
+
+        static areCentersEqual(center1: google.maps.LatLng, center2: google.maps.LatLng): boolean {
+            return center1.lat() == center2.lat() && center1.lng() == center2.lng();
         }
 
         //#endregion
@@ -183,14 +258,122 @@ module App.GoogleMaps {
 
         private _listenForBoundsChange(): void {
             google.maps.event.addListener(this.map, 'bounds_changed', (): void => {
+                this._log('Firing map bounds_changed event.');
                 this._boundsChanged();
+                this._log('Fired map bounds_changed event.');
+            })
+        }
+
+        static emptyBounds = new google.maps.LatLngBounds(new google.maps.LatLng(1, 180),
+            new google.maps.LatLng(-1, -180));
+
+        static isEmptyBounds(bounds: google.maps.LatLngBounds): boolean {
+            return Map.areBoundsEqual(bounds, Map.emptyBounds);
+        }
+
+        static areBoundsEqual(bounds1: google.maps.LatLngBounds, bounds2: google.maps.LatLngBounds): boolean {
+            var ne1 = bounds1.getNorthEast();
+            var ne2 = bounds2.getNorthEast();
+            var sw1 = bounds1.getSouthWest();
+            var sw2 = bounds2.getSouthWest();
+            return ne1.lat() == ne2.lat() && ne1.lng() == ne2.lng()
+                && sw1.lat() == sw2.lat() && sw1.lng() == sw2.lng();
+        }
+
+        //#endregion
+        //#region Drag
+
+        isDragging: KnockoutObservable<boolean> = ko.observable(false);
+
+        private _draggingChanged(isDragging: boolean): void {
+            this.isDragging(isDragging);
+        }
+
+        private _listenForDragging(): void {
+            google.maps.event.addListener(this.map, 'dragstart', (): void => {
+                this._log('Firing map dragstart event.');
+                this._draggingChanged(true);
+                this._log('Fired map dragstart event.');
+            })
+            google.maps.event.addListener(this.map, 'dragend', (): void => {
+                this._log('Firing map dragend event.');
+                this._draggingChanged(false);
+                this._log('Fired map dragend event.');
             })
         }
 
         //#endregion
 
         //#endregion
-        //#region Helpful Shortcuts
+        //#region Markers
+
+        markers: KnockoutObservableArray<google.maps.Marker> = ko.observableArray([]);
+
+        addMarker(options: google.maps.MarkerOptions): google.maps.Marker {
+            options.map = this.map;
+            var marker = new google.maps.Marker(options);
+            this.markers.push(marker);
+            return marker;
+        }
+
+        clearMarkers(destroy: boolean = true): google.maps.Marker[] {
+            var markers = this.markers().slice(0);
+            $.each(markers, (i: number, marker: google.maps.Marker): void => {
+                marker.setMap(null);
+                if (destroy) marker = null;
+            });
+            this.markers([]);
+            return markers;
+        }
+
+        replaceMarkers(markers: google.maps.Marker[], destroy: boolean = true): google.maps.Marker[] {
+            var removed = this.clearMarkers(destroy);
+            $.each(markers, (i: number, marker: google.maps.Marker): void => {
+                marker.setMap(this.map);
+                this.markers.push(marker);
+            });
+            return removed;
+        }
+
+        //#endregion
+        //#region InfoWindows
+
+        infoWindows: KnockoutObservableArray<google.maps.InfoWindow> = ko.observableArray([]);
+
+        openInfoWindowAtMarker(options: google.maps.InfoWindowOptions, marker: google.maps.Marker): google.maps.InfoWindow {
+            var infoWindow = new google.maps.InfoWindow(options);
+            this.infoWindows.push(infoWindow);
+            infoWindow.open(this.map, marker);
+            return infoWindow;
+        }
+
+        clearInfoWindows(): google.maps.InfoWindow[] {
+            var infoWindows = this.infoWindows().slice(0);
+            $.each(infoWindows, (i: number, infoWindow: google.maps.InfoWindow): void => {
+                infoWindow.close();
+                infoWindow = null;
+            });
+            this.infoWindows([]);
+            return infoWindows;
+        }
+
+        closeInfoWindows(): void {
+            var infoWindows = this.infoWindows();
+            $.each(infoWindows, (i: number, infoWindow: google.maps.InfoWindow): void => {
+                infoWindow.close();
+            });
+        }
+
+        //replaceInfoWindows(infoWindows: google.maps.InfoWindow[]): google.maps.InfoWindow[] {
+        //    var removed = this.removeInfoWindows();
+        //    $.each(infoWindows, (i: number, infoWindow: google.maps.InfoWindow): void => {
+        //        this.openInfoWindow(infoWindow);
+        //    });
+        //    return removed;
+        //}
+
+        //#endregion
+        //#region Helpers
 
         triggerResize(): void {
             google.maps.event.trigger(this.map, 'resize');
@@ -209,6 +392,11 @@ module App.GoogleMaps {
                 }
             }
             return reduced;
+        }
+
+        private _log(message: string, ...args: any[]): void {
+            if (!this._settings.log || !console) return;
+            console.log('MapWrapper: ' + message.format(args));
         }
 
         //#endregion

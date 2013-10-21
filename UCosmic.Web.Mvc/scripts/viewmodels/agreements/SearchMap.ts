@@ -93,7 +93,6 @@ module Agreements.ViewModels {
 
         constructor(public settings: SearchMapSettings) {
             this._loadSummary();
-            //this._mapCreated = this._createMap();
             this._loadCountryOptions();
             this.sammy = this.settings.sammy || Sammy();
             this._runSammy();
@@ -120,95 +119,9 @@ module Agreements.ViewModels {
             },
             { // settings
                 maxPrecision: 8,
+                log: true,
             }
         );
-        //private _googleMap: google.maps.Map;
-        //private _mapCreated: JQueryDeferred<void>;
-        //private _createMap(): JQueryDeferred<void> {
-        //    var deferred = $.Deferred();
-        //    if (!this._googleMap) {
-        //        google.maps.visualRefresh = true;
-        //        var element = document.getElementById('google_map_canvas');
-        //        var options: google.maps.MapOptions = {
-        //            mapTypeId: google.maps.MapTypeId.ROADMAP,
-        //            center: new google.maps.LatLng(this.lat(), this.lng()),
-        //            zoom: this.zoom(), // zoom out
-        //            draggable: true, // allow map panning
-        //            scrollwheel: false, // prevent mouse wheel zooming
-        //            streetViewControl: false,
-        //            panControl: false,
-        //            zoomControlOptions: {
-        //                style: google.maps.ZoomControlStyle.SMALL,
-        //            },
-        //        };
-        //        this._googleMap = new google.maps.Map(element, options);
-        //        google.maps.event.addListenerOnce(this._googleMap, 'idle', (): void => {
-        //            google.maps.event.addListener(this._googleMap, 'center_changed', (): void => {
-        //                this._onMapCenterChanged();
-        //            })
-        //            google.maps.event.addListener(this._googleMap, 'zoom_changed', (): void => {
-        //                this._onMapZoomChanged();
-        //            })
-        //            google.maps.event.addListener(this._googleMap, 'bounds_changed', (): void => {
-        //                this._onMapBoundsChanged();
-        //            })
-        //            //google.maps.event.trigger(this._googleMap, 'center_changed');
-        //            //google.maps.event.trigger(this._googleMap, 'zoom_changed');
-        //            //google.maps.event.trigger(this._googleMap, 'bounds_changed');
-        //            deferred.resolve();
-        //        });
-        //    }
-        //    else {
-        //        deferred.resolve();
-        //    }
-        //    return deferred;
-        //}
-
-        //north: KnockoutObservable<number> = ko.observable();
-        //south: KnockoutObservable<number> = ko.observable();
-        //east: KnockoutObservable<number> = ko.observable();
-        //west: KnockoutObservable<number> = ko.observable();
-        //latitude: KnockoutObservable<number> = ko.observable(this.lat());
-        //longitude: KnockoutObservable<number> = ko.observable(this.lng());
-        //mag: KnockoutObservable<number> = ko.observable(this.zoom());
-
-        //private _onMapZoomChanged(): void {
-        //    this.mag(this._googleMap.getZoom());
-        //}
-
-        //private _onMapCenterChanged(): void {
-        //    var center = this._googleMap.getCenter();
-        //    this.latitude(center.lat());
-        //    this.longitude(center.lng());
-        //}
-
-        //private _onMapBoundsChanged(): void {
-        //    var bounds = this._googleMap.getBounds();
-        //    var north = bounds.getNorthEast().lat();
-        //    var south = bounds.getSouthWest().lat();
-        //    var east = bounds.getNorthEast().lng();
-        //    var west = bounds.getSouthWest().lng();
-        //    var maxLength = 11;
-        //    this.north(Number(north.toString().substring(0, maxLength)));
-        //    this.south(Number(south.toString().substring(0, maxLength)));
-        //    this.east(Number(east.toString().substring(0, maxLength)));
-        //    this.west(Number(west.toString().substring(0, maxLength)));
-        //}
-
-        //private mapViewportChanged = ko.computed((): void => { this._onMapViewportChanged(); }).extend({ throttle: 500 });
-        //private _onMapViewportChanged(): void {
-        //    var mag = this.mag();
-        //    var lat = this.latitude();
-        //    var lng = this.longitude();
-        //    if (this._isActivated && this._isActivated() && mag != this.zoom()) {
-        //        google.maps.event.addListenerOnce(this._googleMap, 'idle', (): void => {
-        //            this.zoom(mag);
-        //            this.lat(lat);
-        //            this.lng(lng);
-        //            this.setLocation();
-        //        });
-        //    }
-        //}
 
         //#endregion
         //#region Summary
@@ -228,6 +141,11 @@ module Agreements.ViewModels {
                 .done((response: ApiModels.Summary): void => {
                     ko.mapping.fromJS(response, {}, this.summary);
                 });
+        }
+        clearFilter(): void {
+            if (this.placeId()) this.placeId(0);
+            else if (this.countryCode() != 'any') this.countryCode('any');
+            else if (this.continentCode() != 'any') this.continentCode('any');
         }
 
         //#endregion
@@ -397,7 +315,6 @@ module Agreements.ViewModels {
 
         activate(): void {
             if (!this._isActivated()) {
-                //this._mapCreated = this._createMap();
                 $.when(this._map.ready()).then((): void => {
                     this._isActivated(true);
                 });
@@ -482,7 +399,7 @@ module Agreements.ViewModels {
         private _countriesResponse: KnockoutObservableArray<ApiModels.PlaceWithAgreements>;
         private _placesResponse: KnockoutObservableArray<ApiModels.PlaceWithAgreements>;
         private _partnersResponse: KnockoutObservableArray<ApiModels.Participant>;
-        private _markers: KnockoutObservableArray<google.maps.Marker> = ko.observableArray();
+        //private _markers: KnockoutObservableArray<google.maps.Marker> = ko.observableArray();
         spinner = new App.Spinner(new App.SpinnerOptions(400, false));
 
         private _load(): void {
@@ -593,35 +510,30 @@ module Agreements.ViewModels {
             }
 
             this._updateStatus(placeType, places);
-            this._clearMarkers();
-            this._setMapViewport(placeType, places);
             this._plotMarkers(placeType, places);
-            this._updateRoute();
+
+            var viewportSettings = this._getMapViewportSettings(placeType, places);
+            this._map.setViewport(viewportSettings).then((): void => {
+                this._updateRoute();
+            });
         }
 
-        private _clearMarkers(): void {
-            var markers = this._markers() || [];
-            for (var i = 0; i < markers.length; i++) {
-                var marker = markers[i];
-                marker.setMap(null);
-                marker = null;
-            }
-            this._markers([]);
-        }
+        private _getMapViewportSettings(placeType: string, places: ApiModels.PlaceWithAgreements[]): App.GoogleMaps.MapViewportSettings {
 
-        private _setMapViewport(placeType: string, places: ApiModels.PlaceWithAgreements[]): void {
+            var settings: App.GoogleMaps.MapViewportSettings = {
+                bounds: new google.maps.LatLngBounds(),
+            };
+
             // zoom map to level 1 in order to view continents
             if (placeType == 'continents') {
-                if (this._map.map.getZoom() != 1) {
-                    this._map.map.setZoom(1);
-                    this._map.map.setCenter(SearchMap._defaultMapCenter);
-                }
+                settings.zoom = 1;
+                settings.center = SearchMap._defaultMapCenter;
             }
 
             // zoom map for countries based on response length
             else if (placeType == 'countries') {
                 var continentCode = this.continentCode();
-                var bounds: google.maps.LatLngBounds;
+                //var bounds: google.maps.LatLngBounds;
                 //#region zero places, try continent bounds
                 if (!places.length) {
                     if (continentCode && this._continentsResponse) {
@@ -630,7 +542,7 @@ module Agreements.ViewModels {
                                 return x.continentCode == continentCode;
                             });
                         if (continent && continent.boundingBox && continent.boundingBox.hasValue) {
-                            bounds = Places.Utils.convertToLatLngBounds(continent.boundingBox);
+                            settings.bounds = Places.Utils.convertToLatLngBounds(continent.boundingBox);
                         }
                     }
                 }
@@ -639,33 +551,24 @@ module Agreements.ViewModels {
                 else if (places.length == 1) {
                     var country = places[0];
                     if (country && country.boundingBox && country.boundingBox.hasValue)
-                        bounds = Places.Utils.convertToLatLngBounds(country.boundingBox);
+                        settings.bounds = Places.Utils.convertToLatLngBounds(country.boundingBox);
                 }
                 //#endregion
                 //#region multiple places, extend bounds
                 else {
-                    bounds = new google.maps.LatLngBounds();
+                    //bounds = new google.maps.LatLngBounds();
                     var latLngs = Enumerable.From(places)
                         .Select(function (x: ApiModels.PlaceWithAgreements): any {
                             return new google.maps.LatLng(x.center.latitude, x.center.longitude);
                         }).ToArray();
                     $.each(latLngs, function (index: number, latLng: google.maps.LatLng): void {
-                        bounds.extend(latLng);
+                        settings.bounds.extend(latLng);
                     });
-                    this._map.map.fitBounds(bounds);
-                }
-                //#endregion
-                if (bounds) {
-                    this._map.map.fitBounds(bounds);
-                }
-                else if (this._map.map.getZoom() != 1) {
-                    this._map.map.setZoom(1);
-                    this._map.map.setCenter(SearchMap._defaultMapCenter);
                 }
             }
             else {
                 var countryCode = this.countryCode();
-                var bounds: google.maps.LatLngBounds;
+                //var bounds: google.maps.LatLngBounds;
                 //#region zero places, try country bounds
                 if (!places.length) {
                     if (countryCode && this.countryOptions) {
@@ -674,7 +577,7 @@ module Agreements.ViewModels {
                                 return x.code == countryCode;
                             });
                         if (countryOption && countryOption.box && countryOption.box.hasValue) {
-                            bounds = Places.Utils.convertToLatLngBounds(countryOption.box);
+                            settings.bounds = Places.Utils.convertToLatLngBounds(countryOption.box);
                         }
                     }
                 }
@@ -683,30 +586,23 @@ module Agreements.ViewModels {
                 else if (places.length == 1) {
                     var country = places[0];
                     if (country && country.boundingBox && country.boundingBox.hasValue)
-                        bounds = Places.Utils.convertToLatLngBounds(country.boundingBox);
+                        settings.bounds = Places.Utils.convertToLatLngBounds(country.boundingBox);
                 }
                 //#endregion
                 //#region multiple places, extend bounds
                 else {
-                    bounds = new google.maps.LatLngBounds();
+                    //bounds = new google.maps.LatLngBounds();
                     var latLngs = Enumerable.From(places)
                         .Select(function (x: ApiModels.PlaceWithAgreements): any {
                             return new google.maps.LatLng(x.center.latitude, x.center.longitude);
                         }).ToArray();
                     $.each(latLngs, function (index: number, latLng: google.maps.LatLng): void {
-                        bounds.extend(latLng);
+                        settings.bounds.extend(latLng);
                     });
-                    this._map.map.fitBounds(bounds);
-                }
-                //#endregion
-                if (bounds) {
-                    this._map.map.fitBounds(bounds);
-                }
-                else if (this._map.map.getZoom() != 1) {
-                    this._map.map.setZoom(1);
-                    this._map.map.setCenter(SearchMap._defaultMapCenter);
                 }
             }
+
+            return settings;
         }
 
         private _plotMarkers(placeType: string, places: ApiModels.PlaceWithAgreements[]) {
@@ -742,6 +638,7 @@ module Agreements.ViewModels {
                     }];
                 }
             }
+            var markers: google.maps.Marker[] = [];
             $.each(places, (i: number, place: ApiModels.PlaceWithAgreements): void => {
                 if (placeType == 'continents' && !place.agreementCount) return; // do not render zero on continent
                 var title = '{0} - {1} agreement{2}'
@@ -750,7 +647,6 @@ module Agreements.ViewModels {
                     title = '{0} agreement{1}\r\nClick for more information'
                         .format(place.agreementCount, place.agreementCount == 1 ? '' : 's');
                 var options: google.maps.MarkerOptions = {
-                    map: this._map.map,
                     position: Places.Utils.convertToLatLng(place.center),
                     title: title,
                     clickable: place.agreementCount > 0,
@@ -758,7 +654,8 @@ module Agreements.ViewModels {
                 };
                 this._setMarkerIcon(options, place.agreementCount.toString(), scaler);
                 var marker = new google.maps.Marker(options);
-                this._markers.push(marker);
+                //this._markers.push(marker);
+                markers.push(marker);
                 google.maps.event.addListener(marker, 'mouseover', (e: google.maps.MouseEvent): void => {
                     marker.setOptions({
                         zIndex: 201,
@@ -785,7 +682,9 @@ module Agreements.ViewModels {
                             }
                         }
                         else {
-                            this._map.map.fitBounds(Places.Utils.convertToLatLngBounds(place.boundingBox));
+                            this._map.setViewport({
+                                bounds: Places.Utils.convertToLatLngBounds(place.boundingBox),
+                            });
                             if (place.id < 1) {
                                 this.continentCode('none'); // select none in continents dropdown menu
                             } else {
@@ -833,6 +732,7 @@ module Agreements.ViewModels {
                     });
                 }
             });
+            this._map.replaceMarkers(markers);
         }
 
         private _updateRoute(): void {
@@ -986,30 +886,33 @@ module Agreements.ViewModels {
                 .ToArray();
 
             // set map viewport
+            var viewportSettings: App.GoogleMaps.MapViewportSettings = {
+                bounds: new google.maps.LatLngBounds(),
+            };
             if (uniquePartners.length == 1) {
                 // try zoom first
                 var partner = uniquePartners[0];
+                viewportSettings.center = Places.Utils.convertToLatLng(partner.center);
                 if (partner.googleMapZoomLevel) {
-                    this._map.map.setZoom(partner.googleMapZoomLevel);
+                    viewportSettings.zoom = partner.googleMapZoomLevel;
                 }
                 else if (partner.boundingBox && partner.boundingBox.hasValue) {
-                    this._map.map.fitBounds(Places.Utils.convertToLatLngBounds(partner.boundingBox));
+                    viewportSettings.bounds = Places.Utils.convertToLatLngBounds(partner.boundingBox);
                 }
-                this._map.map.setCenter(Places.Utils.convertToLatLng(partner.center));
             }
             else if (uniquePartners.length > 1) {
-                var bounds = new google.maps.LatLngBounds();
+                //var bounds = new google.maps.LatLngBounds();
                 $.each(uniquePartners, (i: number, partner: ApiModels.Participant): void => {
-                    bounds.extend(Places.Utils.convertToLatLng(partner.center));
+                    viewportSettings.bounds.extend(Places.Utils.convertToLatLng(partner.center));
                 });
-                this._map.map.fitBounds(bounds);
             }
             else {
-                alert('_receivePartners Found no agreement partners for place #{0}.'.format(this.placeId()));
+                alert('Found no agreement partners for place #{0}.'.format(this.placeId()));
             }
 
             // plot the markers
-            this._clearMarkers();
+            //this._clearMarkers();
+            var markers: google.maps.Marker[] = [];
             var scaler = this._getMarkerIconScaler('', this._placesResponse());
             $.each(uniquePartners, (i: number, partner: ApiModels.Participant): void => {
                 // how many agreements for this partner?
@@ -1022,7 +925,6 @@ module Agreements.ViewModels {
                     }).ToArray();
 
                 var options: google.maps.MarkerOptions = {
-                    map: this._map.map,
                     position: Places.Utils.convertToLatLng(partner.center),
                     title: '{0} - {1} agreement{2}'
                         .format(partner.establishmentTranslatedName, agreements.length, agreements.length == 1 ? '' : 's'),
@@ -1031,7 +933,7 @@ module Agreements.ViewModels {
                 };
                 this._setMarkerIcon(options, agreements.length.toString(), scaler);
                 var marker = new google.maps.Marker(options);
-                this._markers.push(marker);
+                markers.push(marker);
                 google.maps.event.addListener(marker, 'click', (e: google.maps.MouseEvent): void => {
                     if (agreements.length == 1) {
                         var url = this.settings.detailUrl.format(partner.agreementId);
@@ -1053,17 +955,16 @@ module Agreements.ViewModels {
                         var content = this.$infoWindow.html();
                         var options: google.maps.InfoWindowOptions = {
                             content: $.trim(content),
-                            //maxWidth: 600,
                         };
-                        var infoWindow = new google.maps.InfoWindow(options);
-                        this._clearInfoWindows();
-                        this._infoWindows.push(infoWindow);
-                        infoWindow.open(this._map.map, marker);
+                        this._map.clearInfoWindows();
+                        this._map.openInfoWindowAtMarker(options, marker);
                     }
                 });
             });
 
-            var markers = this._markers();
+            this._map.replaceMarkers(markers);
+
+            //var markers = this._markers();
             if (markers.length == 1) {
                 google.maps.event.trigger(markers[0], 'click');
             }
@@ -1077,19 +978,11 @@ module Agreements.ViewModels {
             this.status.partnerCount(uniquePartners.length.toString());
             this.status.countryCount('this area');
 
-            this._updateRoute();
-        }
-
-        private _clearInfoWindows(): void {
-            var infoWindows = this._infoWindows();
-            $.each(infoWindows, (i: number, infoWindow: google.maps.InfoWindow): void => {
-                infoWindow.close();
-                infoWindow = null;
+            this._map.setViewport(viewportSettings).then((): void => {
+                this._updateRoute();
             });
-            this._infoWindows([]);
         }
 
-        private _infoWindows: KnockoutObservableArray<google.maps.InfoWindow> = ko.observableArray();
         $infoWindow: JQuery;
         infoWindowContent: any = {
             partner: ko.observable({}),
