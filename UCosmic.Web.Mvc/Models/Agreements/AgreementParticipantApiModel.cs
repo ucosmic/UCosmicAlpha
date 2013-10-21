@@ -13,6 +13,7 @@ namespace UCosmic.Web.Mvc.Models
         public int EstablishmentId { get; set; }
         public string EstablishmentOfficialName { get; set; }
         public string EstablishmentTranslatedName { get; set; }
+        public string Url { get; set; }
         public string AgreementType { get; set; }
         public DateTime AgreementStartsOn { get; set; }
         public MapPointModel Center { get; set; }
@@ -32,6 +33,7 @@ namespace UCosmic.Web.Mvc.Models
                     .ForMember(d => d.EstablishmentId, o => o.MapFrom(s => s.Establishment.RevisionId))
                     .ForMember(d => d.EstablishmentOfficialName, o => o.MapFrom(s =>
                         s.Establishment.OfficialName == s.Establishment.TranslatedName.Text ? null : s.Establishment.OfficialName))
+                    .ForMember(d => d.Url, o => o.MapFrom(s => s.Establishment.WebsiteUrl))
                     .ForMember(d => d.Center, o => o.ResolveUsing(s =>
                     {
                         if (s.Establishment.Location.Center.HasValue)

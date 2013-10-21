@@ -10,6 +10,7 @@
 /// <reference path="./populateFiles.ts" />
 /// <reference path="../../typings/googlemaps/google.maps.d.ts" />
 /// <reference path="../../typings/linq/linq.d.ts" />
+/// <reference path="ApiModels.d.ts" />
 
 module Agreements.ViewModels {
 
@@ -67,6 +68,14 @@ module Agreements.ViewModels {
                         },
                     };
                     ko.mapping.fromJS(response, mapping, this);
+                    this.participants(Enumerable.From(this.participants())
+                        .OrderBy(function (x: ApiModels.Participant): boolean {
+                            return x.isOwner;
+                        })
+                        .ThenBy(function (x: ApiModels.Participant): string {
+                            return x.establishmentTranslatedName;
+                        })
+                        .ToArray());
                     this.isBound(true);
                     deferred.resolve();
                 });

@@ -7,7 +7,11 @@
         var currentBib = ViewBag.Id == 0 ? "new" : "edit";
     }
     <nav class="bib hide" data-current-bib="@currentBib">
-        @Html.Partial(MVC.Agreements.Views._Bib, new ViewDataDictionary { { "Edit", currentBib == "edit" ? true : (bool?)null } })
+        @Html.Partial(MVC.Agreements.Views._Bib, new ViewDataDictionary
+        {
+            { "Edit", currentBib == "edit" ? true : (bool?)null },
+            { "Show", currentBib == "edit" ? ViewBag.Id : null }
+        })
     </nav>
 }
 @section scripts

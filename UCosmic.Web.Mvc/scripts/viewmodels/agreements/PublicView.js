@@ -12,6 +12,7 @@ var Agreements;
     /// <reference path="./populateFiles.ts" />
     /// <reference path="../../typings/googlemaps/google.maps.d.ts" />
     /// <reference path="../../typings/linq/linq.d.ts" />
+    /// <reference path="ApiModels.d.ts" />
     (function (ViewModels) {
         var PublicView = (function () {
             function PublicView(agreementId, agreementVisibility) {
@@ -141,6 +142,11 @@ var Agreements;
                         }
                     };
                     ko.mapping.fromJS(response, mapping, _this);
+                    _this.participants(Enumerable.From(_this.participants()).OrderBy(function (x) {
+                        return x.isOwner;
+                    }).ThenBy(function (x) {
+                        return x.establishmentTranslatedName;
+                    }).ToArray());
                     _this.isBound(true);
                     deferred.resolve();
                 });

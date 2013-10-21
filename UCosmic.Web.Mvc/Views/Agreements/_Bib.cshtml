@@ -13,16 +13,30 @@
             <a href="@Url.Action(MVC.Agreements.New())">New</a>
         </li>
     }
-    @if (ViewBag.Edit != null)
-    {
-        <li class="edit">
-            <span>Edit</span>
-        </li>
-    }
     @if (ViewBag.Show != null)
     {
         <li class="show">
-            <span>Details</span>
+            @if (ViewBag.Show is int)
+            {
+                <a href="@Url.Action(MVC.Agreements.Show((int)ViewBag.Show))">Details</a>
+            }
+            else
+            {
+                <span>Details</span>
+            }
+        </li>
+    }
+    @if (ViewBag.Edit != null && User.IsInAnyRole(RoleName.AgreementManagers))
+    {
+        <li class="edit">
+            @if (ViewBag.Edit is int)
+            {
+                <a href="@Url.Action(MVC.Agreements.Edit((int)ViewBag.Edit))">Edit</a>
+            }
+            else
+            {
+                <span>Edit</span>
+            }
         </li>
     }
     @if (User.IsInAnyRole(RoleName.AgreementSupervisor))

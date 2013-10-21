@@ -1,10 +1,14 @@
 ﻿@{
-    ViewBag.Title = "Institutional Agreement Details";
+    ViewBag.Title = "Agreement Details";
 }
 @section bib
 {
     <nav class="bib hide" data-current-bib="show">
-        @Html.Partial(MVC.Agreements.Views._Bib, new ViewDataDictionary { { "Show", true } })
+        @Html.Partial(MVC.Agreements.Views._Bib, new ViewDataDictionary
+        {
+            { "Show", true },
+            { "Edit", ViewBag.AgreementId },
+        })
     </nav>
 }
 @section scripts
