@@ -41,44 +41,38 @@
                         <tr>
                             <td>
                                 <a data-bind="attr: { href: detailHref }" title="View this agreement's details" style="display: block; text-decoration: inherit; color: inherit;">
-                                    @* HTML: <a> may only contain inline elements. <div> is a block element. see http://stackoverflow.com/a/1828032/304832 *@
-                                    @*<div data-bind="attr: { title: $root.detailTooltip() }">*@
-                                    <div data-bind="visible: name" >
+                                    <span data-bind="visible: name" style="display: block">
                                         <em data-bind="text: name, visible: name"></em>
-                                    </div>
-                                    @*<span data-bind="html: participantsNames"></span>*@
-                                    <div>
+                                    </span>
+                                    <span  style="display: block">
                                         <span data-bind="foreach: establishmentTranslatedName">
                                             <strong data-bind="text: $data, visible: $data == $parent.establishmentOfficialName()[$index()]">&nbsp;</strong>
                                             <strong data-bind="text: $data, visible: $data != $parent.establishmentOfficialName()[$index()], attr: { title: $parent.establishmentOfficialName()[$index()] }">&nbsp;</strong>
                                             <span data-bind="visible: $data != $parent.establishmentTranslatedName()[$parent.establishmentTranslatedName().length - 1]">|</span>
                                         </span>
-                                    </div>
+                                    </span>
                                     @{
                                         var badgeMargin = ViewBag.AgreementsVisibility == AgreementVisibility.Private ? "2px 0 0;" : "0";
                                     }
-                                    <div style="font-size: 14px; margin: @badgeMargin;">
+                                    <span style="font-size: 14px; margin: @badgeMargin;" style="display: block">
                                         @if (ViewBag.AgreementsVisibility == AgreementVisibility.Private)
                                         {
                                             <span style="font-size: 10px; margin: 0 4px 0 0;" class="badge light-transparent" data-bind="text: status"></span>
                                         }
                                         <span data-bind="text: type" style="vertical-align: middle;">&nbsp;</span>
-                                    </div>
-                                    <div style="font-size: 14px;">
+                                    </span>
+                                    <span style="font-size: 14px;" style="display: block">
                                         <span data-bind="text: startsOnDate" style="vertical-align: middle;">&nbsp;</span>
                                         @if (ViewBag.AgreementsVisibility != AgreementVisibility.Public)
                                         {
                                             <span style="vertical-align: middle;">-</span>
                                             <span data-bind="text: expiresOnDate" style="vertical-align: middle;"></span>
                                         }
-                                    </div>
-                                    @*</div>*@
+                                    </span>
                                 </a>
                             </td>
                             <td>
-                                @*<a data-bind="attr: { href: detailHref }" style="text-decoration: none; color: inherit;">*@
                                 <span data-bind="text: nullDisplayCountryName"></span>
-                                @*</a>*@
                             </td>
                         </tr>
                     </tbody>

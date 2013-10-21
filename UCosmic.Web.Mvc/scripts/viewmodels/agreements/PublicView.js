@@ -9,7 +9,7 @@ var Agreements;
     /// <reference path="../../app/App.ts" />
     /// <reference path="../../typings/moment/moment.d.ts" />
     /// <reference path="../../app/Routes.ts" />
-    /// <reference path="./populateFiles.ts" />
+    /// <reference path="populateFiles.ts" />
     /// <reference path="../../typings/googlemaps/google.maps.d.ts" />
     /// <reference path="../../typings/linq/linq.d.ts" />
     /// <reference path="ApiModels.d.ts" />
@@ -30,67 +30,6 @@ var Agreements;
                 this.startsOn = ko.observable();
                 this.type = ko.observable();
                 this.umbrellaId = ko.observable();
-                //getData(): void {
-                //    $.get(App.Routes.WebApi.Agreements.get(this.agreementId))
-                //        .done((response: any): void => {
-                //            this.content(response.content);
-                //            this.expiresOn(response.expiresOn);
-                //            this.isAutoRenew(response.isAutoRenew);
-                //            this.status(response.status);
-                //            this.isExpirationEstimated(response.isExpirationEstimated);
-                //            this.name(response.name);
-                //            this.notes(response.notes);
-                //            ko.mapping.fromJS(response.participants, {}, this.participants);
-                //            this.startsOn(response.startsOn);
-                //            this.type(response.type);
-                //            this.umbrellaId(response.umbrellaId);
-                //            this.isBound(true);
-                //            //this.partners = response.participants;
-                //        });
-                //    this.fileListPopulator.populate(this.agreementId);
-                //    this.files = this.fileListPopulator.files;
-                //}
-                //#region Name computeds
-                // TODO: do not create view elements in the viewmodel like this. do it with bindings.
-                // see the removed participantsNames computed in searchResult.ts for reference.
-                //participantsNames: KnockoutComputed<string> = ko.computed((): string => {
-                //    var myName = "";
-                //    ko.utils.arrayForEach(this.participants(), (item) => {
-                //        myName += "<div style='margin-bottom:10px'>"
-                //            if (item.establishmentTranslatedName != null && item.establishmentOfficialName != item.establishmentTranslatedName && item.establishmentOfficialName != null) {
-                //            myName += "<strong>" + item.establishmentTranslatedName + "</strong><br /> (" + item.establishmentOfficialName + ")";
-                //        } else if (item.establishmentTranslatedName != null && item.establishmentOfficialName != item.establishmentTranslatedName) {
-                //            myName += "<strong>" + item.establishmentTranslatedName + "</strong>";
-                //        } else {
-                //            myName += "<strong>" + item.establishmentOfficialName + "</strong>";
-                //        }
-                //        myName += "</div>";
-                //    });
-                //    return myName;
-                //});
-                //private _setupNameComputeds(): void {
-                //    // are the official name and translated name the same?
-                //    this.participantsNames = ko.computed((): string => {
-                //        var myName = "";
-                //        ko.utils.arrayForEach(this.participants(), (item) => {
-                //            myName += "<div style='margin-bottom:10px'>"
-                //            if (item.establishmentTranslatedName() != null && item.establishmentOfficialName() != item.establishmentTranslatedName() && item.establishmentOfficialName() != null) {
-                //                myName += "<strong>" + item.establishmentTranslatedName() + "</strong><br /> (" + item.establishmentOfficialName() + ")";
-                //            } else if (item.establishmentTranslatedName() != null && item.establishmentOfficialName() != item.establishmentTranslatedName()) {
-                //                myName += "<strong>" + item.establishmentTranslatedName() + "</strong>";
-                //            } else {
-                //                myName += "<strong>" + item.establishmentOfficialName() + "</strong>";
-                //            }
-                //            myName += "</div>";
-                //        });
-                //        return myName;
-                //    });
-                //}
-                //#endregion
-                //#region Date computeds
-                //startsOnDate: KnockoutComputed<string>;
-                //expiresOnDate: KnockoutComputed<string>;
-                //private _setupDateComputeds(): void {
                 this.startsOnDate = ko.computed(function () {
                     var value = _this.startsOn();
                     var myDate = new Date(value);
@@ -115,21 +54,14 @@ var Agreements;
                 this.agreementId = agreementId;
                 this.agreementVisibility = agreementVisibility || 'Public';
                 this.fileListPopulator = new Agreements.FileListPopulator();
-
                 if (this.agreementId !== 0) {
-                    //this.getData();
                     var dataBound = this._bindData();
-
-                    //this.createMap();
                     var mapCreated = this._createMap();
                     $.when(dataBound, mapCreated).done(function () {
                         _this._bindMap();
                     });
                 }
             }
-            //myUrl = window.location.href.toLowerCase();
-            //partners;
-            //agreementId = { val: 0 }
             PublicView.prototype._bindData = function () {
                 var _this = this;
                 var deferred = $.Deferred();
@@ -246,34 +178,6 @@ var Agreements;
                     }, 100);
             };
 
-            //createMap(): void {
-            //    var self = this;
-            //    function initialize() {
-            //        // /api/agreements/{agreementId}/partners
-            //        //var mapUrl = $('#agreementPartners_api').text();
-            //        //var params = { agreementId: self.agreementId };
-            //        //mapUrl = '{0}'.format(mapUrl, $.param(params));
-            //        //$('#agreementPartners_api').text().format(self.agreementId)
-            //        $.get($('#agreementPartners_api').text().format(self.agreementId))
-            //            .done((response: any): void => {
-            //                var lat = -34.397, long = 150.644, googleMapZoomLevel, mapOptions,
-            //                    map;
-            //                if (response[0].center.hasValue) {
-            //                    lat = response[0].center.latitude;
-            //                    long = response[0].center.longitude;
-            //                }
-            //                googleMapZoomLevel = (response[0].googleMapZoomLevel) ? response[0].googleMapZoomLevel : 8;
-            //                mapOptions = {
-            //                    center: new google.maps.LatLng(lat, long),
-            //                    zoom: googleMapZoomLevel,
-            //                    mapTypeId: google.maps.MapTypeId.ROADMAP
-            //                };
-            //                map = new google.maps.Map(document.getElementById("map-canvas"),
-            //                    mapOptions);
-            //            });
-            //    }
-            //    google.maps.event.addDomListener(window, 'load', initialize);
-            //}
             PublicView.prototype.createMap = function () {
                 var self = this;
                 function initialize() {
@@ -302,23 +206,6 @@ var Agreements;
                         mapMaker: true
                     });
                     map.fitBounds(bounds);
-                    //$.get($('#agreementPartners_api').text().format(self.agreementId))
-                    //    .done((response: any): void => {
-                    //        var lat = -34.397, long = 150.644, googleMapZoomLevel, mapOptions,
-                    //            map;
-                    //        if (response[0].center.hasValue) {
-                    //            lat = response[0].center.latitude;
-                    //            long = response[0].center.longitude;
-                    //        }
-                    //        googleMapZoomLevel = (response[0].googleMapZoomLevel) ? response[0].googleMapZoomLevel : 8;
-                    //        mapOptions = {
-                    //            center: new google.maps.LatLng(lat, long),
-                    //            zoom: googleMapZoomLevel,
-                    //            mapTypeId: google.maps.MapTypeId.ROADMAP
-                    //        };
-                    //        map = new google.maps.Map(document.getElementById("map-canvas"),
-                    //            mapOptions);
-                    //    });
                 }
                 google.maps.event.addDomListener(window, 'load', initialize);
             };

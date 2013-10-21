@@ -32,6 +32,7 @@ module Agreements {
         contactPhones = ko.observableArray();
         phoneTypes = ko.mapping.fromJS([]);
         $phoneTypes: KnockoutObservable<JQuery> = ko.observable();
+        deletedPhones = Array();
 
         selectConstructor = function (name: string, id: string) {
             this.name = name;
@@ -39,16 +40,19 @@ module Agreements {
         }
 
         removePhone(me, e): void {
-            var url = App.Routes.WebApi.Agreements.Contacts.Phones.del(this.agreementId, me.contactId, me.id);
+            if (this.agreementId !== 0) {
+                this.deletedPhones.push(me.id);
+                //var url = App.Routes.WebApi.Agreements.Contacts.Phones.del(this.agreementId, me.contactId, me.id);
 
-            $.ajax({
-                url: url,
-                type: 'DELETE',
-                success: (): void => {
-                    this.contactPhones.remove(me);
-                    $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * 1.1)));
-                }
-            });
+                //$.ajax({
+                //    url: url,
+                //    type: 'DELETE',
+                //    success: (): void => {
+                //        this.contactPhones.remove(me);
+                //        $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * 1.1)));
+                //    }
+                //});
+            }
             this.contactPhones.remove(me);
             e.preventDefault();
             e.stopPropagation();

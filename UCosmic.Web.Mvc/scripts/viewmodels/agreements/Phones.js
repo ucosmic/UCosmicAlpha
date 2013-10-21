@@ -13,6 +13,7 @@ var Agreements;
             this.contactPhones = ko.observableArray();
             this.phoneTypes = ko.mapping.fromJS([]);
             this.$phoneTypes = ko.observable();
+            this.deletedPhones = Array();
             this.selectConstructor = function (name, id) {
                 this.name = name;
                 this.id = id;
@@ -31,17 +32,18 @@ var Agreements;
             this._bindJquery();
         }
         Phones.prototype.removePhone = function (me, e) {
-            var _this = this;
-            var url = App.Routes.WebApi.Agreements.Contacts.Phones.del(this.agreementId, me.contactId, me.id);
-
-            $.ajax({
-                url: url,
-                type: 'DELETE',
-                success: function () {
-                    _this.contactPhones.remove(me);
-                    $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * 1.1)));
-                }
-            });
+            if (this.agreementId !== 0) {
+                this.deletedPhones.push(me.id);
+                //var url = App.Routes.WebApi.Agreements.Contacts.Phones.del(this.agreementId, me.contactId, me.id);
+                //$.ajax({
+                //    url: url,
+                //    type: 'DELETE',
+                //    success: (): void => {
+                //        this.contactPhones.remove(me);
+                //        $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * 1.1)));
+                //    }
+                //});
+            }
             this.contactPhones.remove(me);
             e.preventDefault();
             e.stopPropagation();

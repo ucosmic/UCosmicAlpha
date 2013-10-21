@@ -1,5 +1,5 @@
 /// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
-/// <reference path="./phones.ts" />
+/// <reference path="phones.ts" />
 
 module Agreements {
     export class SelectConstructor {
@@ -223,6 +223,17 @@ module Agreements {
                                 });
                             }
                         }
+                    });
+                    $.each(this.phones.deletedPhones, (i, item: number) => {
+                        var url = App.Routes.WebApi.Agreements.Contacts.Phones.del(this.agreementId, this.contactId(), item);
+
+                        $.ajax({
+                            url: url,
+                            type: 'DELETE',
+                            success: (): void => {
+                                //$("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * 1.1)));
+                            }
+                        });
                     });
                 }
             } else {

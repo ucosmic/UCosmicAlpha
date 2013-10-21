@@ -17,7 +17,7 @@ var Agreements;
     /// <reference path="../places/ApiModels.d.ts" />
     /// <reference path="SearchResult.ts" />
     /// <reference path="ApiModels.d.ts" />
-    /// <reference path="./publicView.ts" />
+    /// <reference path="publicView.ts" />
     (function (ViewModels) {
         var Search = (function (_super) {
             __extends(Search, _super);
@@ -36,7 +36,6 @@ var Agreements;
                 this.sammy = Sammy();
                 this.sammyBeforeRoute = /\#\/page\/(.*)\//;
                 this.sammyGetPageRoute = '#/page/:pageNumber/';
-                //sammyDefaultPageRoute: any = '/agreements/(.*?\..*)[\/]?';
                 this.sammyDefaultPageRoute = '{0}/agreements[\/]?'.format(this.domain);
                 // filtering
                 this.countries = ko.observableArray();
@@ -49,11 +48,6 @@ var Agreements;
                 this.lens = ko.observable();
                 // items page
                 this.$itemsPage = undefined;
-                //sideSwiper = new App.SideSwiper({
-                //    frameWidth: 710,
-                //    speed: 'fast',
-                //    root: '#search'
-                //});
                 this.trail = ko.observableArray([]);
                 // results
                 this.resultsMapping = {
@@ -68,18 +62,9 @@ var Agreements;
                     ignore: ['pageSize', 'pageNumber']
                 };
 
-                //this.publicViewClass = new Agreements.ViewModels.PublicView();
-                //ko.applyBindings(this.publicViewClass, $('#publicView')[0]);
-                //this.domain = window.location.href.toLowerCase();
-                //this.domain = this.domain.substring(this.domain.indexOf("agreements/") + 11);
-                //var domainIndexOf = (this.domain.indexOf("/") > 0) ? this.domain.indexOf("/") : this.domain.length;
-                //this.domain = this.domain.substring(0, domainIndexOf);
-                //this.clickAction = <() => boolean > this.clickAction.bind(this);
                 this._init();
-
                 this.changeLens(this.lenses()[0]);
                 this._requestResults = this._requestResults.bind(this);
-
                 this.prevPage = function () {
                     if (_this.pageNumber() > 1) {
                         var pageNumber = Number(_this.pageNumber()) - 1;
@@ -145,8 +130,6 @@ var Agreements;
 
             Search.prototype._setupSammy = function () {
                 var self = this;
-
-                //self.beforePage(this.sammy());
                 self.sammy.before(self.sammyBeforeRoute, function () {
                     self._beforePage(this);
                 });
@@ -162,7 +145,6 @@ var Agreements;
                     });
                 }
 
-                //this.unlockAnimation();
                 ko.computed(function () {
                     self._requestResults();
                 }).extend({ throttle: 1 });
@@ -213,8 +195,6 @@ var Agreements;
                 this.prevForceDisabled(false);
             };
 
-            //swipeCallback(): void {
-            //}
             Search.prototype._receiveResults = function (js) {
                 if (!js) {
                     ko.mapping.fromJS({
@@ -245,8 +225,6 @@ var Agreements;
                         _this.optionsEnabled(true);
                         _this.$searchResults.children().offset({ top: _this.$searchResults.offset().top });
                     });
-                    //this.deferredFadeInOut = $.Deferred();
-                    //this.deferredFadeInOut2 = $.Deferred();
                 });
                 if (this.$searchResults.is(":visible")) {
                     this.$searchResults.fadeOut(400, function () {
@@ -255,9 +233,6 @@ var Agreements;
                 } else {
                     this.deferredFadeInOut.resolve();
                 }
-
-                //$.when(this.deferredSessionLoaded)
-                //.done(() => {
                 $.get(App.Routes.WebApi.Agreements.Search.get(this.domain), {
                     pageSize: this.pageSize(),
                     pageNumber: this.pageNumber(),
@@ -269,7 +244,6 @@ var Agreements;
                         _this._receiveResults(response);
                     });
                 });
-                //});
             };
 
             // go to add new
@@ -288,9 +262,6 @@ var Agreements;
                 return App.Routes.Mvc.Establishments.show(id);
             };
 
-            //detailTooltip(): string {
-            //    return 'View & edit this agreement\'s details';
-            //}
             Search.prototype._setupPagingDefaults = function () {
                 this.orderBy('country');
                 this.pageSize(10);
@@ -316,12 +287,7 @@ var Agreements;
 
             Search.prototype._applySession = function () {
                 this.keyword(sessionStorage.getItem(Search.KeywordSessionKey) || this.keyword());
-
-                //this.keyword.notifySubscribers;
                 this.pageSize(parseInt(sessionStorage.getItem(Search.PageSizeSessionKey)) || Number(this.pageSize()));
-
-                //this.pageSize(parseInt(window.sessionStorage.getItem('UserSearchPageSize'))
-                //    || Number(this.pageSize()));
                 this.orderBy(sessionStorage.getItem(Search.OrderBySessionKey) || this.orderBy());
                 if (sessionStorage.getItem(Search.CountrySessionKey) !== "undefined") {
                     this.countryCode(sessionStorage.getItem(Search.CountrySessionKey) || this.countryCode());

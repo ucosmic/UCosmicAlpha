@@ -15,7 +15,6 @@ module Agreements {
             this.agreementIsEdit = agreementIsEdit;
             this.spinner = spinner;
             this.establishmentItemViewModel = establishmentItemViewModel;
-            //this.deferredPopFiles = deferredPopFiles;
             this.updateFile = <() => void > this.updateFile.bind(this);
             this.fileVisibilityClicked = <() => boolean > this.fileVisibilityClicked.bind(this);
             this.removeFile = <() => void > this.removeFile.bind(this);
@@ -43,7 +42,6 @@ module Agreements {
         fileDeleteSpinner = new App.Spinner(new App.SpinnerOptions(400));
         $confirmPurgeDialog: JQuery;
         tempFileId = 0;
-        //files = ko.mapping.fromJS([]);
 
         private _$bindKendoFile(): void {
             var saveUrl = "";

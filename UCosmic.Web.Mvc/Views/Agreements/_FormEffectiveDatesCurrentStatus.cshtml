@@ -1,79 +1,79 @@
 ﻿<section id="effective_dates_current_status">
-                <header>
-                    <h2>
-                        Effective Dates & Current Status
-                    </h2>
-                </header>
-                <div class="field-table w690-l190-v500">
-                    <div class="field-row">
-                        <div class="field-column-left">
-                            <div class="field-label-top required">
-                                <label>Start date</label><i>(required, public visibility)</i>
-                            </div>
-                            <div class="field-input-label-top">
-                                <input class="hasDate" type="text" data-bind="value: startDate" placeholder="[Select a start date]"  />
-                            </div>
-                            <div class="field-label-description">If there is no exact start or effective date for this agreement, enter an approximate date.
-                                
-                            </div>
-                        </div>
-                        <div class="field-column-right">
-                            <div class="field-label-top required">
-                                <label>
-                                    Expiration date
-                                </label>
-                                <i>(required, protected visibility)</i>
-                            </div>
-                            <div class="field-input-label-top">
-                                <input class="hasDate" type="text" data-bind="value: expDate" placeholder="[Select an expiration date]"  />
-                            </div>
-                            <div class="field-label-description">The expiration date may determine when you are notified to review this agreement.
-                                
-                            </div>
-                            <script id="templateExpToolTip" type="text/x-kendo-template">
-                                <strong>Expiration date help</strong>
-                                <p> Although many institutional agreements will have expiration dates, some do not. The reason expiration date is required in UCosmic has to do with automatic review features. As long as every agreement has a non-blank expiration date, UCosmic can provide timely notifications when agreements are growing stale and should be reviewed. If there was an agreement with a blank expiration date, UCosmic would not know when to notify you to review it. </p>
-                                <p> To indicate that an agreement does not have an actual expiration date, check the "This expiration date is estimated" checkbox. Choose a date when it would be appropriate to notify administrators that this agreement is growing stale and should be reviewed. Then, enter that date into the expiration date textbox. If you would like to see an alternate solution to these cases, click the "Feedback" button on this page and tell us your idea. </p>
-                            </script>
-                            <div class="field-label-description" id="helpExpDate" style="cursor: pointer; width: 100%; color: blue">
-                                Why is this required 
-                                    <img src="~/images/icons/help/question-mark-24-blue.png" style="width: 16px; position: relative; top: -4px" alt="Help with expiration date" />
-                            </div>
-                            <div>
-                                <label><input style="margin-top: 10px;"  type="checkbox" data-bind="value: isEstimated" />This expiration date is estimated (agreement should be reviewed by this date)</label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="field-row">
-                        <div class="field-column-left">
-                            <div class="field-label-top required">
-                                <label>Auto renew</label>
-                                <i>(protected visibility)</i>
-                            </div>
-                            <div>
-                                <label style="display: block;"><input name="autoRenew" type="radio" value="1" data-bind="checked: autoRenew"/>This agreement is auto-renewable.</label>
-                                <label style="display: block;"><input name="autoRenew" type="radio" value="0" data-bind="checked: autoRenew"/>This agreement is not auto-renewable.</label>
-                                <label style="display: block;"><input name="autoRenew" type="radio" value="2" data-bind="checked: autoRenew"/>Auto renew is unknown or open ended.</label> 
-                            </div>
-                        </div>
-                        <div class="field-column-right">
-                            <div class="field-label-top required">
-                                <label>Current Status</label>
-                                <i>(required, public visibility)</i>
-                            </div>
-                            <div class="field-input-label-top">
-                                <input id="status_options" type="text" placeholder="[None]" 
-                                       data-bind="value: statusOptionSelected, valueUpdate: 'afterkeydown', jqObservableElement: '$statusOptions'" />
-                            </div>
-                            <div data-bind="visible: isCustomStatusAllowed" class="field-label-description">
-                                Select from the drop-down list of pre-existing agreement status or enter a custom one in the text box above.
-                                
-                            </div>
-                            <div data-bind=" visible: !isCustomStatusAllowed()" class="field-label-description">
-                                Select from the drop-down list of pre-existing agreement status.
-                                
-                            </div>
-                        </div>
-                    </div>
+    <header>
+        <h2>
+            Effective Dates & Current Status
+        </h2>
+    </header>
+    <div class="field-table w690-l190-v500">
+        <div class="field-row">
+            <div class="field-column-left">
+                <div class="field-label-top required">
+                    <label>Start date</label><i>(required, public visibility)</i>
                 </div>
-            </section>
+                <div class="field-input-label-top">
+                    <input class="hasDate" type="text" data-bind="value: startDate" placeholder="[Select a start date]"  />
+                </div>
+                <div class="field-label-description">If there is no exact start or effective date for this agreement, enter an approximate date.
+                                
+                </div>
+            </div>
+            <div class="field-column-right">
+                <div class="field-label-top required">
+                    <label>
+                        Expiration date
+                    </label>
+                    <i>(required, protected visibility)</i>
+                </div>
+                <div class="field-input-label-top">
+                    <input class="hasDate" type="text" data-bind="value: expDate" placeholder="[Select an expiration date]"  />
+                </div>
+                <div class="field-label-description">The expiration date may determine when you are notified to review this agreement.
+                                
+                </div>
+                <script id="templateExpToolTip" type="text/x-kendo-template">
+                    <strong>Expiration date help</strong>
+                    <p> Although many institutional agreements will have expiration dates, some do not. The reason expiration date is required in UCosmic has to do with automatic review features. As long as every agreement has a non-blank expiration date, UCosmic can provide timely notifications when agreements are growing stale and should be reviewed. If there was an agreement with a blank expiration date, UCosmic would not know when to notify you to review it. </p>
+                    <p> To indicate that an agreement does not have an actual expiration date, check the "This expiration date is estimated" checkbox. Choose a date when it would be appropriate to notify administrators that this agreement is growing stale and should be reviewed. Then, enter that date into the expiration date textbox. If you would like to see an alternate solution to these cases, click the "Feedback" button on this page and tell us your idea. </p>
+                </script>
+                <div class="field-label-description" id="helpExpDate" style="cursor: pointer; width: 100%; color: blue">
+                    Why is this required 
+                        <img src="~/images/icons/help/question-mark-24-blue.png" style="width: 16px; position: relative; top: -4px" alt="Help with expiration date" />
+                </div>
+                <div>
+                    <label><input style="margin-top: 10px;"  type="checkbox" data-bind="value: isEstimated" />This expiration date is estimated (agreement should be reviewed by this date)</label>
+                </div>
+            </div>
+        </div>
+        <div class="field-row">
+            <div class="field-column-left">
+                <div class="field-label-top required">
+                    <label>Auto renew</label>
+                    <i>(protected visibility)</i>
+                </div>
+                <div>
+                    <label style="display: block;"><input name="autoRenew" type="radio" value="1" data-bind="checked: autoRenew"/>This agreement is auto-renewable.</label>
+                    <label style="display: block;"><input name="autoRenew" type="radio" value="0" data-bind="checked: autoRenew"/>This agreement is not auto-renewable.</label>
+                    <label style="display: block;"><input name="autoRenew" type="radio" value="2" data-bind="checked: autoRenew"/>Auto renew is unknown or open ended.</label> 
+                </div>
+            </div>
+            <div class="field-column-right">
+                <div class="field-label-top required">
+                    <label>Current Status</label>
+                    <i>(required, public visibility)</i>
+                </div>
+                <div class="field-input-label-top">
+                    <input id="status_options" type="text" placeholder="[None]" 
+                            data-bind="value: statusOptionSelected, valueUpdate: 'afterkeydown', jqObservableElement: '$statusOptions'" />
+                </div>
+                <div data-bind="visible: isCustomStatusAllowed" class="field-label-description">
+                    Select from the drop-down list of pre-existing agreement status or enter a custom one in the text box above.
+                                
+                </div>
+                <div data-bind=" visible: !isCustomStatusAllowed()" class="field-label-description">
+                    Select from the drop-down list of pre-existing agreement status.
+                                
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

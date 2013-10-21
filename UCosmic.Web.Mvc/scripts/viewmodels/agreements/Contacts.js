@@ -1,5 +1,5 @@
 /// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
-/// <reference path="./phones.ts" />
+/// <reference path="phones.ts" />
 var Agreements;
 (function (Agreements) {
     var SelectConstructor = (function () {
@@ -213,6 +213,17 @@ var Agreements;
                                 });
                             }
                         }
+                    });
+                    $.each(this.phones.deletedPhones, function (i, item) {
+                        var url = App.Routes.WebApi.Agreements.Contacts.Phones.del(_this.agreementId, _this.contactId(), item);
+
+                        $.ajax({
+                            url: url,
+                            type: 'DELETE',
+                            success: function () {
+                                //$("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * 1.1)));
+                            }
+                        });
                     });
                 }
             } else {

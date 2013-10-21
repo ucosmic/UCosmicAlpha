@@ -28,13 +28,10 @@ var Agreements;
             this.agreementIsEdit = agreementIsEdit;
             this.spinner = spinner;
             this.establishmentItemViewModel = establishmentItemViewModel;
-
-            //this.deferredPopFiles = deferredPopFiles;
             this.updateFile = this.updateFile.bind(this);
             this.fileVisibilityClicked = this.fileVisibilityClicked.bind(this);
             this.removeFile = this.removeFile.bind(this);
         }
-        //files = ko.mapping.fromJS([]);
         FileAttachments.prototype._$bindKendoFile = function () {
             var _this = this;
             var saveUrl = "";

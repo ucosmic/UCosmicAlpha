@@ -11,22 +11,15 @@
 /// <reference path="../../typings/moment/moment.d.ts" />
 /// <reference path="../../typings/sammyjs/sammyjs.d.ts" />
 /// <reference path="../establishments/ApiModels.d.ts" />
-/// <reference path="./scrollBody.ts" />
-/// <reference path="./contacts.ts" />
-/// <reference path="./fileAttachments.ts" />
-/// <reference path="./datesStatus.ts" />
-/// <reference path="./visibility.ts" />
-/// <reference path="./participants.ts" />
-/// <reference path="./populateFiles.ts" />
-/// <reference path="./basicInfo.ts" />
-/// <reference path="./establishmentSearchNav.ts" />
-
-//class SelectConstructor{
-//    constructor(public name: string, public id: string) {
-//        this.name = name;
-//        this.id = id;
-//    }
-//}
+/// <reference path="scrollBody.ts" />
+/// <reference path="contacts.ts" />
+/// <reference path="fileAttachments.ts" />
+/// <reference path="datesStatus.ts" />
+/// <reference path="visibility.ts" />
+/// <reference path="participants.ts" />
+/// <reference path="populateFiles.ts" />
+/// <reference path="basicInfo.ts" />
+/// <reference path="establishmentSearchNav.ts" />
 
 class InstitutionalAgreementEditModel {
     constructor(public agreementId: number) {
@@ -50,7 +43,6 @@ class InstitutionalAgreementEditModel {
         ko.applyBindings(this.contact, $('#contacts')[0]);
 
         this.fileListPopulator = new Agreements.FileListPopulator();
-        //ko.applyBindings(this.populateFiles, $('file_attachments')[0]); 
         this.fileAttachment = new Agreements.FileAttachments(this.agreementId, this.agreementIsEdit,
             this.spinner, this.establishmentSearchNav.establishmentItemViewModel, this.fileListPopulator.files);
         ko.applyBindings(this.fileAttachment, $('#file_attachments')[0]);
@@ -73,10 +65,8 @@ class InstitutionalAgreementEditModel {
                 });
         } else {
             this.percentOffBodyHeight = .2;
-            //this.editOrNewUrl.val = window.location.href.toLowerCase().substring(window.location.href.toLowerCase().indexOf("agreements/") + 11);
-            this.editOrNewUrl.val = agreementId + "/edit/"//this.editOrNewUrl.val.substring(0, this.editOrNewUrl.val.indexOf("/edit") + 5) + "/";
+            this.editOrNewUrl.val = agreementId + "/edit/"
             this.agreementIsEdit(true);
-            //this.agreementId = parseInt(this.editOrNewUrl.val.substring(0, this.editOrNewUrl.val.indexOf("/")));
             this.participants.populateParticipants();
             this.fileListPopulator.populate(this.agreementId, this.deferredPopFiles);
             this.contact.populateContacts();
@@ -113,7 +103,7 @@ class InstitutionalAgreementEditModel {
     fileListPopulator;
 
     percentOffBodyHeight = .6;
-    //jquery defered for setting body height.
+    //jquery deferred for setting body height.
     deferredUAgreements = $.Deferred();
     deferredPopParticipants = $.Deferred();
     deferredPopContacts = $.Deferred();
@@ -121,7 +111,6 @@ class InstitutionalAgreementEditModel {
     deferredPageFadeIn = $.Deferred();
 
     agreementIsEdit = ko.observable();
-    //agreementId = { val: 0 };
 
     //set the path for editing an agreement or new agreement.
     editOrNewUrl = { val: 'new' };
@@ -137,12 +126,7 @@ class InstitutionalAgreementEditModel {
         
     isBound = ko.observable();
     spinner: App.Spinner = new App.Spinner(new App.SpinnerOptions(400, true));
-
-    //agreements.SelectConstructor = function (name: string, id: string) {
-    //    this.name = name;
-    //    this.id = id;
-    //}
-
+    
     //to correctly bind with ko, must set visibility to hidden. this removes the visibility to hidden and 
     //changes it to display none.
     private _hideOtherGroups(): void {
@@ -163,8 +147,6 @@ class InstitutionalAgreementEditModel {
                         var dropdownlist,
                             editor = $("#agreement_content").data("kendoEditor");
 
-
-                        //editor.value(response.content);
                         this.basicInfo.content(response.content);
                         this.datesStatus.expDate(Globalize.format(new Date(response.expiresOn.substring(0, response.expiresOn.lastIndexOf("T"))), 'd'));
                         this.datesStatus.startDate(Globalize.format(new Date(response.startsOn.substring(0, response.startsOn.lastIndexOf("T"))), 'd'));

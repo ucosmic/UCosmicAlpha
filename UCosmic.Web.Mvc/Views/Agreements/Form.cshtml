@@ -31,7 +31,6 @@
         ko.applyBindings(agreementViewModel, $("[data-current-module='agreements']")[0]);
     </script>
 }
-
 <div class="content fixed to-top" id="Loading_page">
     <div class="on-left from-top">
         <header>
@@ -42,7 +41,6 @@
         </header>
     </div>
 </div>
-
 <div class="content fixed to-top" data-current-module="agreements"  style="visibility: hidden">
     <form class="group">
         <div class="on-left from-top">
@@ -59,10 +57,6 @@
             @Html.Partial(MVC.Agreements.Views._FormFileAttachments)
             @Html.Partial(MVC.Agreements.Views._FormOverallVisibility)
 			<!-- /ko -->
-
-
-            
-            
             <footer id="saveAgreement">
                 @* TODO: render these as buttons instead of links with button styles *@
                 <a data-bind="click: saveUpdateAgreement, visible: !agreementIsEdit()" class="button">
@@ -83,7 +77,6 @@
         </aside>
     </form>
 </div>
-
 <div id="establishment_search" class="content fixed to-top" style="visibility: hidden">
     <form class="group" data-bind="submit: requestResults">
         <div class="on-left from-top">
@@ -111,8 +104,6 @@
         </aside>
     </form>
 </div>
-
-
 <div id="add_establishment" class="content fixed to-top" style="visibility: hidden">
     <div data-side-swiper="root" id="establishment_page">
         <div data-side-swiper="deck">
@@ -140,7 +131,6 @@
         </div>
     </div>
 </div>
-
 <div data-bind="jqElement: '$genericAlertDialog'" title="" style="display: none;">
     <div>
         <p class="content">
