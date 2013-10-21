@@ -23,6 +23,8 @@
 
     <script src="~/scripts/app/Pager.js"></script>
 
+    <script src="~/scripts/google/Map.js"></script>
+
     <script src="~/scripts/viewmodels/places/Utils.js"></script>
 
     <script src="~/scripts/viewmodels/agreements/SearchTable.js"></script>
@@ -220,7 +222,7 @@
                     <strong data-bind="text: status.countryCount">?</strong>
                 </div>
             </div>
-            @*<div data-bind="visible: isMapLens, with: map" style="margin: 1em 0;">
+            <div data-bind="visible: isMapLens, with: map._map" style="margin: 1em 0;">
                 <div class="group">
                     <div class="on-left" style="width: 162px;">
                         North: <strong data-bind="text: north"></strong>
@@ -237,16 +239,16 @@
                 </div>
                 <div class="group">
                     <div class="on-left" style="width: 275px;">
-                        Latitude: <strong data-bind="text: latitude"></strong>
+                        Latitude: <strong data-bind="text: lat"></strong>
                     </div>
                     <div class="on-left" style="width: 275px;">
-                        Longitude: <strong data-bind="text: longitude"></strong>
+                        Longitude: <strong data-bind="text: lng"></strong>
                     </div>
                     <div class="on-left" style="width: 100px;">
-                        Zoom: <strong data-bind="text: mag"></strong>
+                        Zoom: <strong data-bind="text: zoom"></strong>
                     </div>
                 </div>
-            </div>*@
+            </div>
             <div id="google_map_canvas" style="height: 500px; cursor: inherit;" data-bind="visible: isMapLens">
             </div>
             <!-- ko with: map -->

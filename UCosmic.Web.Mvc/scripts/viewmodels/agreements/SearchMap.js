@@ -15,6 +15,7 @@ var Agreements;
     /// <reference path="ApiModels.d.ts" />
     /// <reference path="../places/ApiModels.d.ts" />
     /// <reference path="../places/Utils.ts" />
+    /// <reference path="../../google/Map.ts" />
     (function (ViewModels) {
         var SearchMap = (function () {
             //#endregion
@@ -54,13 +55,87 @@ var Agreements;
                     sessionStorage.setItem(SearchMap.LngSessionKey, _this.lng().toString());
                     sessionStorage.setItem(SearchMap.DetailPrefSessionKey, _this.detailPreference() || '');
                 }).extend({ throttle: 0 });
-                this.north = ko.observable();
-                this.south = ko.observable();
-                this.east = ko.observable();
-                this.west = ko.observable();
-                this.latitude = ko.observable(this.lat());
-                this.longitude = ko.observable(this.lng());
-                this.mag = ko.observable(this.zoom());
+                //#endregion
+                //#region Google Map
+                this._map = new App.GoogleMaps.Map('google_map_canvas', {
+                    center: new google.maps.LatLng(this.lat(), this.lng()),
+                    zoom: this.zoom(),
+                    streetViewControl: false,
+                    panControl: false,
+                    zoomControlOptions: {
+                        style: google.maps.ZoomControlStyle.SMALL
+                    }
+                }, {
+                    maxPrecision: 8
+                });
+                //private _googleMap: google.maps.Map;
+                //private _mapCreated: JQueryDeferred<void>;
+                //private _createMap(): JQueryDeferred<void> {
+                //    var deferred = $.Deferred();
+                //    if (!this._googleMap) {
+                //        google.maps.visualRefresh = true;
+                //        var element = document.getElementById('google_map_canvas');
+                //        var options: google.maps.MapOptions = {
+                //            mapTypeId: google.maps.MapTypeId.ROADMAP,
+                //            center: new google.maps.LatLng(this.lat(), this.lng()),
+                //            zoom: this.zoom(), // zoom out
+                //            draggable: true, // allow map panning
+                //            scrollwheel: false, // prevent mouse wheel zooming
+                //            streetViewControl: false,
+                //            panControl: false,
+                //            zoomControlOptions: {
+                //                style: google.maps.ZoomControlStyle.SMALL,
+                //            },
+                //        };
+                //        this._googleMap = new google.maps.Map(element, options);
+                //        google.maps.event.addListenerOnce(this._googleMap, 'idle', (): void => {
+                //            google.maps.event.addListener(this._googleMap, 'center_changed', (): void => {
+                //                this._onMapCenterChanged();
+                //            })
+                //            google.maps.event.addListener(this._googleMap, 'zoom_changed', (): void => {
+                //                this._onMapZoomChanged();
+                //            })
+                //            google.maps.event.addListener(this._googleMap, 'bounds_changed', (): void => {
+                //                this._onMapBoundsChanged();
+                //            })
+                //            //google.maps.event.trigger(this._googleMap, 'center_changed');
+                //            //google.maps.event.trigger(this._googleMap, 'zoom_changed');
+                //            //google.maps.event.trigger(this._googleMap, 'bounds_changed');
+                //            deferred.resolve();
+                //        });
+                //    }
+                //    else {
+                //        deferred.resolve();
+                //    }
+                //    return deferred;
+                //}
+                //north: KnockoutObservable<number> = ko.observable();
+                //south: KnockoutObservable<number> = ko.observable();
+                //east: KnockoutObservable<number> = ko.observable();
+                //west: KnockoutObservable<number> = ko.observable();
+                //latitude: KnockoutObservable<number> = ko.observable(this.lat());
+                //longitude: KnockoutObservable<number> = ko.observable(this.lng());
+                //mag: KnockoutObservable<number> = ko.observable(this.zoom());
+                //private _onMapZoomChanged(): void {
+                //    this.mag(this._googleMap.getZoom());
+                //}
+                //private _onMapCenterChanged(): void {
+                //    var center = this._googleMap.getCenter();
+                //    this.latitude(center.lat());
+                //    this.longitude(center.lng());
+                //}
+                //private _onMapBoundsChanged(): void {
+                //    var bounds = this._googleMap.getBounds();
+                //    var north = bounds.getNorthEast().lat();
+                //    var south = bounds.getSouthWest().lat();
+                //    var east = bounds.getNorthEast().lng();
+                //    var west = bounds.getSouthWest().lng();
+                //    var maxLength = 11;
+                //    this.north(Number(north.toString().substring(0, maxLength)));
+                //    this.south(Number(south.toString().substring(0, maxLength)));
+                //    this.east(Number(east.toString().substring(0, maxLength)));
+                //    this.west(Number(west.toString().substring(0, maxLength)));
+                //}
                 //private mapViewportChanged = ko.computed((): void => { this._onMapViewportChanged(); }).extend({ throttle: 500 });
                 //private _onMapViewportChanged(): void {
                 //    var mag = this.mag();
@@ -132,70 +207,6 @@ var Agreements;
                     }
                 });
             }
-            SearchMap.prototype._createMap = function () {
-                var _this = this;
-                var deferred = $.Deferred();
-                if (!this._googleMap) {
-                    google.maps.visualRefresh = true;
-                    var element = document.getElementById('google_map_canvas');
-                    var options = {
-                        mapTypeId: google.maps.MapTypeId.ROADMAP,
-                        center: new google.maps.LatLng(this.lat(), this.lng()),
-                        zoom: this.zoom(),
-                        draggable: true,
-                        scrollwheel: false,
-                        streetViewControl: false,
-                        panControl: false,
-                        zoomControlOptions: {
-                            style: google.maps.ZoomControlStyle.SMALL
-                        }
-                    };
-                    this._googleMap = new google.maps.Map(element, options);
-                    google.maps.event.addListenerOnce(this._googleMap, 'idle', function () {
-                        google.maps.event.addListener(_this._googleMap, 'center_changed', function () {
-                            _this._onMapCenterChanged();
-                        });
-                        google.maps.event.addListener(_this._googleMap, 'zoom_changed', function () {
-                            _this._onMapZoomChanged();
-                        });
-                        google.maps.event.addListener(_this._googleMap, 'bounds_changed', function () {
-                            _this._onMapBoundsChanged();
-                        });
-
-                        //google.maps.event.trigger(this._googleMap, 'center_changed');
-                        //google.maps.event.trigger(this._googleMap, 'zoom_changed');
-                        //google.maps.event.trigger(this._googleMap, 'bounds_changed');
-                        deferred.resolve();
-                    });
-                } else {
-                    deferred.resolve();
-                }
-                return deferred;
-            };
-
-            SearchMap.prototype._onMapZoomChanged = function () {
-                this.mag(this._googleMap.getZoom());
-            };
-
-            SearchMap.prototype._onMapCenterChanged = function () {
-                var center = this._googleMap.getCenter();
-                this.latitude(center.lat());
-                this.longitude(center.lng());
-            };
-
-            SearchMap.prototype._onMapBoundsChanged = function () {
-                var bounds = this._googleMap.getBounds();
-                var north = bounds.getNorthEast().lat();
-                var south = bounds.getSouthWest().lat();
-                var east = bounds.getNorthEast().lng();
-                var west = bounds.getSouthWest().lng();
-                var maxLength = 11;
-                this.north(Number(north.toString().substring(0, maxLength)));
-                this.south(Number(south.toString().substring(0, maxLength)));
-                this.east(Number(east.toString().substring(0, maxLength)));
-                this.west(Number(west.toString().substring(0, maxLength)));
-            };
-
             SearchMap.prototype._loadSummary = function () {
                 var _this = this;
                 $.get(this.settings.summaryApi).done(function (response) {
@@ -338,8 +349,8 @@ var Agreements;
             SearchMap.prototype.activate = function () {
                 var _this = this;
                 if (!this._isActivated()) {
-                    this._mapCreated = this._createMap();
-                    $.when(this._mapCreated).then(function () {
+                    //this._mapCreated = this._createMap();
+                    $.when(this._map.ready()).then(function () {
                         _this._isActivated(true);
                     });
                 }
@@ -391,8 +402,8 @@ var Agreements;
 
                 if (!lastScope || lastScope.countryCode != thisScope.countryCode || lastScope.continentCode != thisScope.continentCode || lastScope.placeId != thisScope.placeId) {
                     this._scopeHistory.push(thisScope);
-                    $.when(this._mapCreated).then(function () {
-                        google.maps.event.trigger(_this._googleMap, 'resize');
+                    $.when(this._map.ready()).then(function () {
+                        _this._map.triggerResize();
                         _this._load();
                     });
                 }
@@ -499,9 +510,9 @@ var Agreements;
 
             SearchMap.prototype._setMapViewport = function (placeType, places) {
                 if (placeType == 'continents') {
-                    if (this._googleMap.getZoom() != 1) {
-                        this._googleMap.setZoom(1);
-                        this._googleMap.setCenter(SearchMap._defaultMapCenter);
+                    if (this._map.map.getZoom() != 1) {
+                        this._map.map.setZoom(1);
+                        this._map.map.setCenter(SearchMap._defaultMapCenter);
                     }
                 } else if (placeType == 'countries') {
                     var continentCode = this.continentCode();
@@ -528,14 +539,14 @@ var Agreements;
                         $.each(latLngs, function (index, latLng) {
                             bounds.extend(latLng);
                         });
-                        this._googleMap.fitBounds(bounds);
+                        this._map.map.fitBounds(bounds);
                     }
 
                     if (bounds) {
-                        this._googleMap.fitBounds(bounds);
-                    } else if (this._googleMap.getZoom() != 1) {
-                        this._googleMap.setZoom(1);
-                        this._googleMap.setCenter(SearchMap._defaultMapCenter);
+                        this._map.map.fitBounds(bounds);
+                    } else if (this._map.map.getZoom() != 1) {
+                        this._map.map.setZoom(1);
+                        this._map.map.setCenter(SearchMap._defaultMapCenter);
                     }
                 } else {
                     var countryCode = this.countryCode();
@@ -562,14 +573,14 @@ var Agreements;
                         $.each(latLngs, function (index, latLng) {
                             bounds.extend(latLng);
                         });
-                        this._googleMap.fitBounds(bounds);
+                        this._map.map.fitBounds(bounds);
                     }
 
                     if (bounds) {
-                        this._googleMap.fitBounds(bounds);
-                    } else if (this._googleMap.getZoom() != 1) {
-                        this._googleMap.setZoom(1);
-                        this._googleMap.setCenter(SearchMap._defaultMapCenter);
+                        this._map.map.fitBounds(bounds);
+                    } else if (this._map.map.getZoom() != 1) {
+                        this._map.map.setZoom(1);
+                        this._map.map.setCenter(SearchMap._defaultMapCenter);
                     }
                 }
             };
@@ -613,7 +624,7 @@ var Agreements;
                     if (!placeType && place.agreementCount)
                         title = '{0} agreement{1}\r\nClick for more information'.format(place.agreementCount, place.agreementCount == 1 ? '' : 's');
                     var options = {
-                        map: _this._googleMap,
+                        map: _this._map.map,
                         position: Places.Utils.convertToLatLng(place.center),
                         title: title,
                         clickable: place.agreementCount > 0,
@@ -646,7 +657,7 @@ var Agreements;
                                     location.href = url;
                                 }
                             } else {
-                                _this._googleMap.fitBounds(Places.Utils.convertToLatLngBounds(place.boundingBox));
+                                _this._map.map.fitBounds(Places.Utils.convertToLatLngBounds(place.boundingBox));
                                 if (place.id < 1) {
                                     _this.continentCode('none');
                                 } else {
@@ -691,9 +702,9 @@ var Agreements;
             };
 
             SearchMap.prototype._updateRoute = function () {
-                this.lat(this.latitude());
-                this.lng(this.longitude());
-                this.zoom(this.mag());
+                this.lat(this._map.lat());
+                this.lng(this._map.lng());
+                this.zoom(this._map.zoom());
                 this.setLocation();
             };
 
@@ -833,17 +844,17 @@ var Agreements;
                     // try zoom first
                     var partner = uniquePartners[0];
                     if (partner.googleMapZoomLevel) {
-                        this._googleMap.setZoom(partner.googleMapZoomLevel);
+                        this._map.map.setZoom(partner.googleMapZoomLevel);
                     } else if (partner.boundingBox && partner.boundingBox.hasValue) {
-                        this._googleMap.fitBounds(Places.Utils.convertToLatLngBounds(partner.boundingBox));
+                        this._map.map.fitBounds(Places.Utils.convertToLatLngBounds(partner.boundingBox));
                     }
-                    this._googleMap.setCenter(Places.Utils.convertToLatLng(partner.center));
+                    this._map.map.setCenter(Places.Utils.convertToLatLng(partner.center));
                 } else if (uniquePartners.length > 1) {
                     var bounds = new google.maps.LatLngBounds();
                     $.each(uniquePartners, function (i, partner) {
                         bounds.extend(Places.Utils.convertToLatLng(partner.center));
                     });
-                    this._googleMap.fitBounds(bounds);
+                    this._map.map.fitBounds(bounds);
                 } else {
                     alert('_receivePartners Found no agreement partners for place #{0}.'.format(this.placeId()));
                 }
@@ -860,7 +871,7 @@ var Agreements;
                     }).ToArray();
 
                     var options = {
-                        map: _this._googleMap,
+                        map: _this._map.map,
                         position: Places.Utils.convertToLatLng(partner.center),
                         title: '{0} - {1} agreement{2}'.format(partner.establishmentTranslatedName, agreements.length, agreements.length == 1 ? '' : 's'),
                         clickable: true,
@@ -890,7 +901,7 @@ var Agreements;
                             var infoWindow = new google.maps.InfoWindow(options);
                             _this._clearInfoWindows();
                             _this._infoWindows.push(infoWindow);
-                            infoWindow.open(_this._googleMap, marker);
+                            infoWindow.open(_this._map.map, marker);
                         }
                     });
                 });
