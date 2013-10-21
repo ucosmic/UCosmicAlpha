@@ -724,9 +724,11 @@ module Agreements.ViewModels {
             }
             $.each(places, (i: number, place: ApiModels.PlaceWithAgreements): void => {
                 if (placeType == 'continents' && !place.agreementCount) return; // do not render zero on continent
-                var title = '{0} - {1} agreement(s)'.format(place.name, place.agreementCount);
+                var title = '{0} - {1} agreement{2}'
+                    .format(place.name, place.agreementCount, place.agreementCount == 1 ? '' : 's');
                 if (!placeType)
-                    title = '{0} agreement(s)\r\nClick for more information'.format(place.agreementCount);
+                    title = '{0} agreement{1}\r\nClick for more information'
+                        .format(place.agreementCount, place.agreementCount == 1 ? '' : 's');
                 var options: google.maps.MarkerOptions = {
                     map: this._googleMap,
                     position: Places.Utils.convertToLatLng(place.center),
@@ -994,7 +996,8 @@ module Agreements.ViewModels {
                 var options: google.maps.MarkerOptions = {
                     map: this._googleMap,
                     position: Places.Utils.convertToLatLng(partner.center),
-                    title: '{0} - {1} agreement(s)'.format(partner.establishmentTranslatedName, agreements.length),
+                    title: '{0} - {1} agreement{2}'
+                        .format(partner.establishmentTranslatedName, agreements.length, agreements.length == 1 ? '' : 's'),
                     clickable: true,
                     cursor: 'pointer',
                 };
