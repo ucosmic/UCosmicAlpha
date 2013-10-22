@@ -47,14 +47,14 @@ module Agreements.ViewModels {
         placeId: KnockoutObservable<number> = ko.observable(
             parseInt(sessionStorage.getItem(SearchMap.PlaceIdSessionKey) || 0));
 
-        static _defaultMapCenter = new google.maps.LatLng(0, 17)
+        static defaultMapCenter = new google.maps.LatLng(0, 17)
 
         zoom: KnockoutObservable<number> = ko.observable(
             parseInt(sessionStorage.getItem(SearchMap.ZoomSessionKey)) || 1);
         lat: KnockoutObservable<number> = ko.observable(
-            parseInt(sessionStorage.getItem(SearchMap.LatSessionKey)) || SearchMap._defaultMapCenter.lat());
+            parseInt(sessionStorage.getItem(SearchMap.LatSessionKey)) || SearchMap.defaultMapCenter.lat());
         lng: KnockoutObservable<number> = ko.observable(
-            parseInt(sessionStorage.getItem(SearchMap.LngSessionKey)) || SearchMap._defaultMapCenter.lng());
+            parseInt(sessionStorage.getItem(SearchMap.LngSessionKey)) || SearchMap.defaultMapCenter.lng());
         detailPreference: KnockoutObservable<string> = ko.observable(
             sessionStorage.getItem(SearchMap.DetailPrefSessionKey));
         detailPreferenceChecked: KnockoutComputed<boolean> = ko.computed({
@@ -132,7 +132,7 @@ module Agreements.ViewModels {
             },
             { // settings
                 maxPrecision: 8,
-                log: true,
+                //log: true,
             }
             );
 
@@ -649,9 +649,9 @@ module Agreements.ViewModels {
             var markers: google.maps.Marker[] = [];
             $.each(places, (i: number, place: ApiModels.PlaceWithAgreements): void => {
                 if (placeType == 'continents' && !place.agreementCount) return; // do not render zero on continent
-                var title = '{0} - {1} agreement{2}'
+                var title = '{0} - {1} agreement{2}\r\nClick for more information'
                     .format(place.name, place.agreementCount, place.agreementCount == 1 ? '' : 's');
-                if (!placeType && place.agreementCount)
+                if (!placeType)
                     title = '{0} agreement{1}\r\nClick for more information'
                         .format(place.agreementCount, place.agreementCount == 1 ? '' : 's');
                 var options: google.maps.MarkerOptions = {
@@ -663,6 +663,12 @@ module Agreements.ViewModels {
                 this._setMarkerIcon(options, place.agreementCount.toString(), scaler);
                 var marker = new google.maps.Marker(options);
                 markers.push(marker);
+
+                // display partner name in title when only 1 agreement
+                if (place.agreementCount == 1) {
+                    marker.set('ucosmic_agreement_id', place.agreementIds[0]);
+                }
+
                 google.maps.event.addListener(marker, 'mouseover', (e: google.maps.MouseEvent): void => {
                     marker.setOptions({
                         zIndex: 201,
@@ -689,7 +695,7 @@ module Agreements.ViewModels {
                             }
                         }
                         else {
-                            //this._map.setViewport({
+                            //this._map.setViewport({ // TODO: can this be added back?
                             //    bounds: Places.Utils.convertToLatLngBounds(place.boundingBox),
                             //});
                             if (place.id < 1) {
@@ -740,6 +746,40 @@ module Agreements.ViewModels {
                 }
             });
             this._map.replaceMarkers(markers);
+
+            // update titles of markers with agreementCount == 1
+            var singleMarkers = Enumerable.From(markers)
+                .Where(function (x: google.maps.Marker): boolean {
+                    var agreementId = x.get('ucosmic_agreement_id');
+                    return !isNaN(agreementId) && agreementId > 0;
+                })
+                .ToArray();
+            if (singleMarkers.length) {
+                var agreementIds = Enumerable.From(singleMarkers)
+                    .Select(function (x: google.maps.Marker): number {
+                        return parseInt(x.get('ucosmic_agreement_id'));
+                    }).ToArray();
+                // TODO: this is not dry
+                $.get(this.settings.partnersApi, { agreementIds: agreementIds, })
+                    .done((response: ApiModels.Participant[]): void => {
+                        $.each(singleMarkers, (i: number, singleMarker: google.maps.Marker): void => {
+                            var agreementId = parseInt(singleMarker.get('ucosmic_agreement_id'));
+                            // agreement can have many partners
+                            var partners: ApiModels.Participant[] = Enumerable.From(response)
+                                .Where(function (x: ApiModels.Participant): boolean {
+                                    return x.agreementId == agreementId;
+                                }).ToArray();
+                            if (!partners.length) return;
+                            if (!this.placeId()) {
+                                var title = singleMarker.getTitle().replace('\r\nClick for more information', '');
+                                $.each(partners, (i: number, partner: ApiModels.Participant): void => {
+                                    title += '\r\n{0}'.format(partner.establishmentTranslatedName);
+                                });
+                                singleMarker.setTitle(title);
+                            }
+                        });
+                    })
+            }
         }
 
         private _getMapViewportSettings(placeType: string, places: ApiModels.PlaceWithAgreements[]): App.GoogleMaps.MapViewportSettings {
@@ -751,7 +791,7 @@ module Agreements.ViewModels {
             // zoom map to level 1 in order to view continents
             if (placeType == 'continents') {
                 settings.zoom = 1;
-                settings.center = SearchMap._defaultMapCenter;
+                settings.center = SearchMap.defaultMapCenter;
             }
 
             // zoom map for countries based on response length

@@ -138,6 +138,9 @@ module Agreements.ViewModels {
             this.map.continentCode('any');
             this.map.countryCode('any');
             this.map.placeId(0);
+            this.map.zoom(1);
+            this.map.lat(SearchMap.defaultMapCenter.lat());
+            this.map.lng(SearchMap.defaultMapCenter.lng());
         }
     }
 }

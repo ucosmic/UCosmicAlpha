@@ -29,8 +29,8 @@ var Agreements;
                 this.countryCode = ko.observable(sessionStorage.getItem(SearchMap.CountrySessionKey) || 'any');
                 this.placeId = ko.observable(parseInt(sessionStorage.getItem(SearchMap.PlaceIdSessionKey) || 0));
                 this.zoom = ko.observable(parseInt(sessionStorage.getItem(SearchMap.ZoomSessionKey)) || 1);
-                this.lat = ko.observable(parseInt(sessionStorage.getItem(SearchMap.LatSessionKey)) || SearchMap._defaultMapCenter.lat());
-                this.lng = ko.observable(parseInt(sessionStorage.getItem(SearchMap.LngSessionKey)) || SearchMap._defaultMapCenter.lng());
+                this.lat = ko.observable(parseInt(sessionStorage.getItem(SearchMap.LatSessionKey)) || SearchMap.defaultMapCenter.lat());
+                this.lng = ko.observable(parseInt(sessionStorage.getItem(SearchMap.LngSessionKey)) || SearchMap.defaultMapCenter.lng());
                 this.detailPreference = ko.observable(sessionStorage.getItem(SearchMap.DetailPrefSessionKey));
                 this.detailPreferenceChecked = ko.computed({
                     read: function () {
@@ -66,8 +66,7 @@ var Agreements;
                         style: google.maps.ZoomControlStyle.SMALL
                     }
                 }, {
-                    maxPrecision: 8,
-                    log: true
+                    maxPrecision: 8
                 });
                 //#endregion
                 //#region Summary
@@ -550,8 +549,8 @@ else if (this.continentCode() != 'any')
                 $.each(places, function (i, place) {
                     if (placeType == 'continents' && !place.agreementCount)
                         return;
-                    var title = '{0} - {1} agreement{2}'.format(place.name, place.agreementCount, place.agreementCount == 1 ? '' : 's');
-                    if (!placeType && place.agreementCount)
+                    var title = '{0} - {1} agreement{2}\r\nClick for more information'.format(place.name, place.agreementCount, place.agreementCount == 1 ? '' : 's');
+                    if (!placeType)
                         title = '{0} agreement{1}\r\nClick for more information'.format(place.agreementCount, place.agreementCount == 1 ? '' : 's');
                     var options = {
                         position: Places.Utils.convertToLatLng(place.center),
@@ -562,6 +561,11 @@ else if (this.continentCode() != 'any')
                     _this._setMarkerIcon(options, place.agreementCount.toString(), scaler);
                     var marker = new google.maps.Marker(options);
                     markers.push(marker);
+
+                    if (place.agreementCount == 1) {
+                        marker.set('ucosmic_agreement_id', place.agreementIds[0]);
+                    }
+
                     google.maps.event.addListener(marker, 'mouseover', function (e) {
                         marker.setOptions({
                             zIndex: 201
@@ -628,6 +632,38 @@ else if (this.continentCode() != 'any')
                     }
                 });
                 this._map.replaceMarkers(markers);
+
+                // update titles of markers with agreementCount == 1
+                var singleMarkers = Enumerable.From(markers).Where(function (x) {
+                    var agreementId = x.get('ucosmic_agreement_id');
+                    return !isNaN(agreementId) && agreementId > 0;
+                }).ToArray();
+                if (singleMarkers.length) {
+                    var agreementIds = Enumerable.From(singleMarkers).Select(function (x) {
+                        return parseInt(x.get('ucosmic_agreement_id'));
+                    }).ToArray();
+
+                    // TODO: this is not dry
+                    $.get(this.settings.partnersApi, { agreementIds: agreementIds }).done(function (response) {
+                        $.each(singleMarkers, function (i, singleMarker) {
+                            var agreementId = parseInt(singleMarker.get('ucosmic_agreement_id'));
+
+                            // agreement can have many partners
+                            var partners = Enumerable.From(response).Where(function (x) {
+                                return x.agreementId == agreementId;
+                            }).ToArray();
+                            if (!partners.length)
+                                return;
+                            if (!_this.placeId()) {
+                                var title = singleMarker.getTitle().replace('\r\nClick for more information', '');
+                                $.each(partners, function (i, partner) {
+                                    title += '\r\n{0}'.format(partner.establishmentTranslatedName);
+                                });
+                                singleMarker.setTitle(title);
+                            }
+                        });
+                    });
+                }
             };
 
             SearchMap.prototype._getMapViewportSettings = function (placeType, places) {
@@ -637,7 +673,7 @@ else if (this.continentCode() != 'any')
 
                 if (placeType == 'continents') {
                     settings.zoom = 1;
-                    settings.center = SearchMap._defaultMapCenter;
+                    settings.center = SearchMap.defaultMapCenter;
                 } else if (placeType == 'countries') {
                     var continentCode = this.continentCode();
 
@@ -930,7 +966,7 @@ else if (this.continentCode() != 'any')
                         _this._updateRoute();
                     });
             };
-            SearchMap._defaultMapCenter = new google.maps.LatLng(0, 17);
+            SearchMap.defaultMapCenter = new google.maps.LatLng(0, 17);
 
             SearchMap.ContinentSessionKey = 'AgreementSearchContinent';
             SearchMap.CountrySessionKey = 'AgreementSearchCountry2';
