@@ -11,6 +11,7 @@ var App;
                 //#region Idle
                 // initial values for lat & lng are based on the options used to create the map
                 this.idles = ko.observable(0);
+                this._idleCallbacks = [];
                 //#endregion
                 //#region Bounds (North East Soutn West)
                 this.north = ko.observable();
@@ -43,8 +44,13 @@ var App;
 
                 // initialize observables
                 this.zoom = ko.observable(this._options.zoom || this._options.zoom == 0 ? this._options.zoom : 1);
-                this.lat = ko.observable(this._options.center ? this._reducePrecision(this._options.center.lat()) : Map.defaultCenter.lat());
-                this.lng = ko.observable(this._options.center ? this._reducePrecision(this._options.center.lng()) : Map.defaultCenter.lng());
+                this.lat = ko.observable(this._options.center ? Map._reducePrecision(this._options.center.lat(), this._settings.maxPrecision) : Map.defaultCenter.lat());
+                this.lng = ko.observable(this._options.center ? Map._reducePrecision(this._options.center.lng(), this._settings.maxPrecision) : Map.defaultCenter.lng());
+
+                this.lng.subscribe(function (newValue) {
+                    if (newValue) {
+                    }
+                });
 
                 this._log('Zoom initialized to {0}.', this.zoom());
                 this._log('Latitude initialized to {0}.', this.lat());
@@ -108,7 +114,7 @@ var App;
 
                 // set center if it is present and not current value
                 var center = this.map.getCenter();
-                if (settings.center && !Map.areCentersEqual(center, settings.center)) {
+                if (settings.center && !Map.areCentersEqual(center, settings.center, this._settings.maxPrecision)) {
                     this.map.setCenter(settings.center);
                     isDirty = true;
                 }
@@ -131,6 +137,10 @@ var App;
                 return promise;
             };
 
+            Map.prototype.onIdle = function (callback) {
+                this._idleCallbacks.push(callback);
+            };
+
             Map.prototype._idled = function () {
                 var idles = this.idles();
                 this.idles(++idles);
@@ -140,6 +150,9 @@ var App;
                 var _this = this;
                 google.maps.event.addListener(this.map, 'idle', function () {
                     _this._idled();
+                    $.each(_this._idleCallbacks, function (i, callback) {
+                        callback();
+                    });
                     _this._log('Fired map idle event #{0}.', _this.idles());
                 });
             };
@@ -152,7 +165,7 @@ var App;
             Map.prototype._listenForZoomChange = function () {
                 var _this = this;
                 google.maps.event.addListener(this.map, 'zoom_changed', function () {
-                    _this._log('Firing map zoom_changed event.');
+                    //this._log('Firing map zoom_changed event.');
                     _this._zoomChanged();
                     _this._log('Fired map zoom_changed event.');
                 });
@@ -164,37 +177,45 @@ var App;
 
             Map.prototype._centerChanged = function () {
                 var center = this.map.getCenter();
-                this.lat(this._reducePrecision(center.lat()));
-                this.lng(this._reducePrecision(center.lng()));
+                this.lat(Map._reducePrecision(center.lat(), this._settings.maxPrecision));
+                this.lng(Map._reducePrecision(center.lng(), this._settings.maxPrecision));
             };
 
             Map.prototype._listenForCenterChange = function () {
                 var _this = this;
                 google.maps.event.addListener(this.map, 'center_changed', function () {
-                    _this._log('Firing map center_changed event.');
+                    //this._log('Firing map center_changed event.');
                     _this._centerChanged();
                     _this._log('Fired map center_changed event.');
                 });
             };
 
-            Map.areCentersEqual = function (center1, center2) {
-                return center1.lat() == center2.lat() && center1.lng() == center2.lng();
+            Map.areCentersEqual = function (center1, center2, precision) {
+                return Map.areNumbersEqualy(center1.lat(), center2.lat(), precision) && Map.areNumbersEqualy(center1.lng(), center2.lng(), precision);
+            };
+
+            Map.areNumbersEqualy = //39.24683949
+            //39.2468395
+            function (coordinate1, coordinate2, preceision) {
+                coordinate1 = Map._reducePrecision(coordinate1, preceision);
+                coordinate2 = Map._reducePrecision(coordinate2, preceision);
+                return coordinate1 - coordinate2 == 0;
             };
 
             Map.prototype._boundsChanged = function () {
                 var bounds = this.map.getBounds();
                 var northEast = bounds.getNorthEast();
                 var southWest = bounds.getSouthWest();
-                this.north(this._reducePrecision(northEast.lat()));
-                this.east(this._reducePrecision(northEast.lng()));
-                this.south(this._reducePrecision(southWest.lat()));
-                this.west(this._reducePrecision(southWest.lng()));
+                this.north(Map._reducePrecision(northEast.lat(), this._settings.maxPrecision));
+                this.east(Map._reducePrecision(northEast.lng(), this._settings.maxPrecision));
+                this.south(Map._reducePrecision(southWest.lat(), this._settings.maxPrecision));
+                this.west(Map._reducePrecision(southWest.lng(), this._settings.maxPrecision));
             };
 
             Map.prototype._listenForBoundsChange = function () {
                 var _this = this;
                 google.maps.event.addListener(this.map, 'bounds_changed', function () {
-                    _this._log('Firing map bounds_changed event.');
+                    //this._log('Firing map bounds_changed event.');
                     _this._boundsChanged();
                     _this._log('Fired map bounds_changed event.');
                 });
@@ -219,12 +240,12 @@ var App;
             Map.prototype._listenForDragging = function () {
                 var _this = this;
                 google.maps.event.addListener(this.map, 'dragstart', function () {
-                    _this._log('Firing map dragstart event.');
+                    //this._log('Firing map dragstart event.');
                     _this._draggingChanged(true);
                     _this._log('Fired map dragstart event.');
                 });
                 google.maps.event.addListener(this.map, 'dragend', function () {
-                    _this._log('Firing map dragend event.');
+                    //this._log('Firing map dragend event.');
                     _this._draggingChanged(false);
                     _this._log('Fired map dragend event.');
                 });
@@ -297,9 +318,9 @@ var App;
                 google.maps.event.trigger(this.map, 'resize');
             };
 
-            Map.prototype._reducePrecision = function (value) {
+            Map._reducePrecision = function (value, precision) {
+                if (typeof precision === "undefined") { precision = 0; }
                 var reduced = value;
-                var precision = this._settings.maxPrecision;
                 if (precision) {
                     var text = value.toString();
                     var decimal = text.indexOf('.');

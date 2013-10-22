@@ -14,7 +14,7 @@ module App.GoogleMaps {
     export interface MapViewportSettings {
         center?: google.maps.LatLng;
         zoom?: number;
-        bounds: google.maps.LatLngBounds;
+        bounds?: google.maps.LatLngBounds;
     }
 
     export class Map {
@@ -58,11 +58,16 @@ module App.GoogleMaps {
             this.zoom = ko.observable(this._options.zoom || this._options.zoom == 0
                 ? this._options.zoom : 1);
             this.lat = ko.observable(this._options.center
-                ? this._reducePrecision(this._options.center.lat())
+                ? Map._reducePrecision(this._options.center.lat(), this._settings.maxPrecision)
                 : Map.defaultCenter.lat());
             this.lng = ko.observable(this._options.center
-                ? this._reducePrecision(this._options.center.lng())
+                ? Map._reducePrecision(this._options.center.lng(), this._settings.maxPrecision)
                 : Map.defaultCenter.lng());
+
+            this.lng.subscribe((newValue: number): void => {
+                if (newValue) {
+                }
+            });
 
             this._log('Zoom initialized to {0}.', this.zoom());
             this._log('Latitude initialized to {0}.', this.lat());
@@ -146,7 +151,7 @@ module App.GoogleMaps {
 
             // set center if it is present and not current value
             var center = this.map.getCenter();
-            if (settings.center && !Map.areCentersEqual(center, settings.center)) {
+            if (settings.center && !Map.areCentersEqual(center, settings.center, this._settings.maxPrecision)) {
                 this.map.setCenter(settings.center);
                 isDirty = true;
             }
@@ -176,6 +181,11 @@ module App.GoogleMaps {
 
         // initial values for lat & lng are based on the options used to create the map
         idles: KnockoutObservable<number> = ko.observable(0);
+        private _idleCallbacks: { (): void; }[] = [];
+
+        onIdle(callback: () => void): void {
+            this._idleCallbacks.push(callback);
+        }
 
         private _idled(): void {
             var idles = this.idles();
@@ -185,6 +195,9 @@ module App.GoogleMaps {
         private _listenForIdled(): void {
             google.maps.event.addListener(this.map, 'idle', (): void => {
                 this._idled();
+                $.each(this._idleCallbacks, function (i: number, callback: () => void): void {
+                    callback();
+                });
                 this._log('Fired map idle event #{0}.', this.idles());
             })
         }
@@ -202,7 +215,7 @@ module App.GoogleMaps {
 
         private _listenForZoomChange(): void {
             google.maps.event.addListener(this.map, 'zoom_changed', (): void => {
-                this._log('Firing map zoom_changed event.');
+                //this._log('Firing map zoom_changed event.');
                 this._zoomChanged();
                 this._log('Fired map zoom_changed event.');
             })
@@ -222,20 +235,29 @@ module App.GoogleMaps {
 
         private _centerChanged(): void {
             var center = this.map.getCenter();
-            this.lat(this._reducePrecision(center.lat()));
-            this.lng(this._reducePrecision(center.lng()));
+            this.lat(Map._reducePrecision(center.lat(), this._settings.maxPrecision));
+            this.lng(Map._reducePrecision(center.lng(), this._settings.maxPrecision));
         }
 
         private _listenForCenterChange(): void {
             google.maps.event.addListener(this.map, 'center_changed', (): void => {
-                this._log('Firing map center_changed event.');
+                //this._log('Firing map center_changed event.');
                 this._centerChanged();
                 this._log('Fired map center_changed event.');
             })
         }
 
-        static areCentersEqual(center1: google.maps.LatLng, center2: google.maps.LatLng): boolean {
-            return center1.lat() == center2.lat() && center1.lng() == center2.lng();
+        static areCentersEqual(center1: google.maps.LatLng, center2: google.maps.LatLng, precision: number): boolean {
+            return Map.areNumbersEqualy(center1.lat(), center2.lat(), precision)
+                && Map.areNumbersEqualy(center1.lng(), center2.lng(), precision);
+        }
+
+        //39.24683949
+        //39.2468395
+        static areNumbersEqualy(coordinate1: number, coordinate2: number, preceision: number): boolean {
+            coordinate1 = Map._reducePrecision(coordinate1, preceision);
+            coordinate2 = Map._reducePrecision(coordinate2, preceision);
+            return coordinate1 - coordinate2 == 0;
         }
 
         //#endregion
@@ -250,15 +272,15 @@ module App.GoogleMaps {
             var bounds = this.map.getBounds();
             var northEast = bounds.getNorthEast();
             var southWest = bounds.getSouthWest();
-            this.north(this._reducePrecision(northEast.lat()));
-            this.east(this._reducePrecision(northEast.lng()));
-            this.south(this._reducePrecision(southWest.lat()));
-            this.west(this._reducePrecision(southWest.lng()));
+            this.north(Map._reducePrecision(northEast.lat(), this._settings.maxPrecision));
+            this.east(Map._reducePrecision(northEast.lng(), this._settings.maxPrecision));
+            this.south(Map._reducePrecision(southWest.lat(), this._settings.maxPrecision));
+            this.west(Map._reducePrecision(southWest.lng(), this._settings.maxPrecision));
         }
 
         private _listenForBoundsChange(): void {
             google.maps.event.addListener(this.map, 'bounds_changed', (): void => {
-                this._log('Firing map bounds_changed event.');
+                //this._log('Firing map bounds_changed event.');
                 this._boundsChanged();
                 this._log('Fired map bounds_changed event.');
             })
@@ -291,12 +313,12 @@ module App.GoogleMaps {
 
         private _listenForDragging(): void {
             google.maps.event.addListener(this.map, 'dragstart', (): void => {
-                this._log('Firing map dragstart event.');
+                //this._log('Firing map dragstart event.');
                 this._draggingChanged(true);
                 this._log('Fired map dragstart event.');
             })
             google.maps.event.addListener(this.map, 'dragend', (): void => {
-                this._log('Firing map dragend event.');
+                //this._log('Firing map dragend event.');
                 this._draggingChanged(false);
                 this._log('Fired map dragend event.');
             })
@@ -379,9 +401,8 @@ module App.GoogleMaps {
             google.maps.event.trigger(this.map, 'resize');
         }
 
-        private _reducePrecision(value: number): number {
+        private static _reducePrecision(value: number, precision: number = 0): number {
             var reduced = value;
-            var precision = this._settings.maxPrecision;
             if (precision) {
                 var text = value.toString();
                 var decimal = text.indexOf('.');

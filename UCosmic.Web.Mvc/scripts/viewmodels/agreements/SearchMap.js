@@ -107,7 +107,16 @@ var Agreements;
                 this._scopeDirty = ko.computed(function () {
                     _this._onScopeDirty();
                 }).extend({ throttle: 1 });
-                //private _markers: KnockoutObservableArray<google.maps.Marker> = ko.observableArray();
+                //#endregion
+                //#region Query Viewporting
+                this._viewportHistory = ko.observableArray();
+                this._currentViewport = ko.computed(function () {
+                    // this will run once during construction
+                    return _this._computeCurrentViewport();
+                });
+                this._viewportDirty = ko.computed(function () {
+                    _this._onViewportDirty();
+                }).extend({ throttle: 1 });
                 this.spinner = new App.Spinner(new App.SpinnerOptions(400, false));
                 this.infoWindowContent = {
                     partner: ko.observable({}),
@@ -118,11 +127,27 @@ var Agreements;
                 this.sammy = this.settings.sammy || Sammy();
                 this._runSammy();
 
-                this.lat.subscribe(function (newValue) {
-                    if (newValue) {
-                    }
+                this._map.ready().done(function () {
+                    _this._map.onIdle(function () {
+                        var idles = _this._map.idles();
+                        setTimeout(function () {
+                            if (idles == _this._map.idles() && !_this._map.isDragging()) {
+                                if (_this.zoom() != _this._map.zoom() || !SearchMap._areCoordinatesEqualEnough(_this.lat(), _this._map.lat()) || !SearchMap._areCoordinatesEqualEnough(_this.lng(), _this._map.lng())) {
+                                    _this.lat(_this._map.lat());
+                                    _this.lng(_this._map.lng());
+                                    _this.zoom(_this._map.zoom());
+                                    _this.setLocation();
+                                }
+                            }
+                        }, 500);
+                    });
                 });
             }
+            SearchMap._areCoordinatesEqualEnough = function (coord1, coord2) {
+                var diff = Math.abs(coord1 - coord2);
+                return diff < 0.000001;
+            };
+
             SearchMap.prototype._loadSummary = function () {
                 var _this = this;
                 $.get(this.settings.summaryApi).done(function (response) {
@@ -250,6 +275,45 @@ else if (this.continentCode() != 'any')
             };
 
             SearchMap.prototype._onBeforeRoute = function (e) {
+                // prevent the route from changing lat or lng by insignificant digits
+                var newLat = e.params['lat'];
+                var newLng = e.params['lng'];
+                var oldLat = this.lat();
+                var oldLng = this.lng();
+                var allowRoute = true;
+
+                if (this._scopeHistory().length > 1 && this._areFloatsEqualEnough(parseFloat(newLat), oldLat) && this._areFloatsEqualEnough(parseFloat(newLng), oldLng)) {
+                    return false;
+                }
+
+                return allowRoute;
+            };
+
+            SearchMap.prototype._areFloatsEqualEnough = function (value1, value2) {
+                if (value1 == value2)
+                    return true;
+                var string1 = value1.toString();
+                var string2 = value2.toString();
+                var index1 = string1.indexOf('.');
+                var index2 = string2.indexOf('.');
+                if (index1 < 0 || index2 < 0)
+                    return string1 == string2;
+                var int1 = parseInt(string1.substr(0, index1));
+                var int2 = parseInt(string2.substr(0, index2));
+                if (int1 != int2)
+                    return false;
+                var precision1 = parseInt(string1.substr(index1 + 1));
+                var precision2 = parseInt(string2.substr(index2 + 1));
+                if (precision1 < 10000)
+                    return precision1 == precision2;
+
+                while (precision1.toString().length < precision2.toString().length) {
+                    precision1 *= 10;
+                }
+                while (precision2.toString().length < precision1.toString().length) {
+                    precision2 *= 10;
+                }
+                return Math.abs(precision1 - precision2) < 100;
                 return true;
             };
 
@@ -299,9 +363,7 @@ else if (this.continentCode() != 'any')
                 // only set the href hashtag to trigger sammy when the current route is stale
                 var route = this._route();
                 if (this.sammy.getLocation().indexOf(route) < 0) {
-                    //setTimeout((): void => {
                     this.sammy.setLocation(route);
-                    //}, 1);
                 }
             };
 
@@ -328,6 +390,33 @@ else if (this.continentCode() != 'any')
                     $.when(this._map.ready()).then(function () {
                         _this._map.triggerResize();
                         _this._load();
+                    });
+                }
+            };
+
+            SearchMap.prototype._computeCurrentViewport = function () {
+                var viewport = {
+                    zoom: this.zoom(),
+                    center: new google.maps.LatLng(this.lat(), this.lng())
+                };
+                return viewport;
+            };
+
+            SearchMap.prototype._onViewportDirty = function () {
+                var _this = this;
+                if (!this._isActivated())
+                    return;
+
+                var viewportHistory = this._viewportHistory();
+                var lastViewport = viewportHistory.length ? Enumerable.From(viewportHistory).Last() : null;
+                var thisViewport = this._currentViewport();
+
+                if (!lastViewport || lastViewport.zoom != thisViewport.zoom || !SearchMap._areCoordinatesEqualEnough(lastViewport.center.lat(), thisViewport.center.lat() || !SearchMap._areCoordinatesEqualEnough(lastViewport.center.lng(), thisViewport.center.lng()))) {
+                    this._viewportHistory.push(thisViewport);
+                    $.when(this._map.ready()).then(function () {
+                        _this._map.setViewport(thisViewport).then(function () {
+                            _this.setLocation();
+                        });
                     });
                 }
             };
@@ -419,72 +508,10 @@ else if (this.continentCode() != 'any')
                 this._plotMarkers(placeType, places);
 
                 var viewportSettings = this._getMapViewportSettings(placeType, places);
-                this._map.setViewport(viewportSettings).then(function () {
-                    _this._updateRoute();
-                });
-            };
-
-            SearchMap.prototype._getMapViewportSettings = function (placeType, places) {
-                var settings = {
-                    bounds: new google.maps.LatLngBounds()
-                };
-
-                if (placeType == 'continents') {
-                    settings.zoom = 1;
-                    settings.center = SearchMap._defaultMapCenter;
-                } else if (placeType == 'countries') {
-                    var continentCode = this.continentCode();
-
-                    if (!places.length) {
-                        if (continentCode && this._continentsResponse) {
-                            var continent = Enumerable.From(this._continentsResponse()).SingleOrDefault(undefined, function (x) {
-                                return x.continentCode == continentCode;
-                            });
-                            if (continent && continent.boundingBox && continent.boundingBox.hasValue) {
-                                settings.bounds = Places.Utils.convertToLatLngBounds(continent.boundingBox);
-                            }
-                        }
-                    } else if (places.length == 1) {
-                        var country = places[0];
-                        if (country && country.boundingBox && country.boundingBox.hasValue)
-                            settings.bounds = Places.Utils.convertToLatLngBounds(country.boundingBox);
-                    } else {
-                        //bounds = new google.maps.LatLngBounds();
-                        var latLngs = Enumerable.From(places).Select(function (x) {
-                            return new google.maps.LatLng(x.center.latitude, x.center.longitude);
-                        }).ToArray();
-                        $.each(latLngs, function (index, latLng) {
-                            settings.bounds.extend(latLng);
-                        });
-                    }
-                } else {
-                    var countryCode = this.countryCode();
-
-                    if (!places.length) {
-                        if (countryCode && this.countryOptions) {
-                            var countryOption = Enumerable.From(this.countryOptions()).SingleOrDefault(undefined, function (x) {
-                                return x.code == countryCode;
-                            });
-                            if (countryOption && countryOption.box && countryOption.box.hasValue) {
-                                settings.bounds = Places.Utils.convertToLatLngBounds(countryOption.box);
-                            }
-                        }
-                    } else if (places.length == 1) {
-                        var country = places[0];
-                        if (country && country.boundingBox && country.boundingBox.hasValue)
-                            settings.bounds = Places.Utils.convertToLatLngBounds(country.boundingBox);
-                    } else {
-                        //bounds = new google.maps.LatLngBounds();
-                        var latLngs = Enumerable.From(places).Select(function (x) {
-                            return new google.maps.LatLng(x.center.latitude, x.center.longitude);
-                        }).ToArray();
-                        $.each(latLngs, function (index, latLng) {
-                            settings.bounds.extend(latLng);
-                        });
-                    }
-                }
-
-                return settings;
+                if (this._scopeHistory().length > 1)
+                    this._map.setViewport(viewportSettings).then(function () {
+                        _this._updateRoute();
+                    });
             };
 
             SearchMap.prototype._plotMarkers = function (placeType, places) {
@@ -534,8 +561,6 @@ else if (this.continentCode() != 'any')
                     };
                     _this._setMarkerIcon(options, place.agreementCount.toString(), scaler);
                     var marker = new google.maps.Marker(options);
-
-                    //this._markers.push(marker);
                     markers.push(marker);
                     google.maps.event.addListener(marker, 'mouseover', function (e) {
                         marker.setOptions({
@@ -561,9 +586,6 @@ else if (this.continentCode() != 'any')
                                     location.href = url;
                                 }
                             } else {
-                                _this._map.setViewport({
-                                    bounds: Places.Utils.convertToLatLngBounds(place.boundingBox)
-                                });
                                 if (place.id < 1) {
                                     _this.continentCode('none');
                                 } else {
@@ -608,21 +630,99 @@ else if (this.continentCode() != 'any')
                 this._map.replaceMarkers(markers);
             };
 
+            SearchMap.prototype._getMapViewportSettings = function (placeType, places) {
+                var settings = {
+                    bounds: new google.maps.LatLngBounds()
+                };
+
+                if (placeType == 'continents') {
+                    settings.zoom = 1;
+                    settings.center = SearchMap._defaultMapCenter;
+                } else if (placeType == 'countries') {
+                    var continentCode = this.continentCode();
+
+                    if (!places.length) {
+                        if (continentCode && this._continentsResponse) {
+                            var continent = Enumerable.From(this._continentsResponse()).SingleOrDefault(undefined, function (x) {
+                                return x.continentCode == continentCode;
+                            });
+                            if (continent && continent.boundingBox && continent.boundingBox.hasValue) {
+                                settings.bounds = Places.Utils.convertToLatLngBounds(continent.boundingBox);
+                            }
+                        }
+                    } else if (places.length == 1) {
+                        var country = places[0];
+                        if (country && country.boundingBox && country.boundingBox.hasValue)
+                            settings.bounds = Places.Utils.convertToLatLngBounds(country.boundingBox);
+                    } else {
+                        var latLngs = Enumerable.From(places).Select(function (x) {
+                            return new google.maps.LatLng(x.center.latitude, x.center.longitude);
+                        }).ToArray();
+                        $.each(latLngs, function (index, latLng) {
+                            settings.bounds.extend(latLng);
+                        });
+                    }
+                    //#endregion
+                } else {
+                    var countryCode = this.countryCode();
+
+                    if (!places.length) {
+                        if (countryCode && this.countryOptions) {
+                            var countryOption = Enumerable.From(this.countryOptions()).SingleOrDefault(undefined, function (x) {
+                                return x.code == countryCode;
+                            });
+                            if (countryOption && countryOption.box && countryOption.box.hasValue) {
+                                settings.bounds = Places.Utils.convertToLatLngBounds(countryOption.box);
+                            }
+                        }
+                    } else if (places.length == 1) {
+                        var country = places[0];
+                        if (country && country.boundingBox && country.boundingBox.hasValue)
+                            settings.bounds = Places.Utils.convertToLatLngBounds(country.boundingBox);
+                    } else {
+                        var latLngs = Enumerable.From(places).Select(function (x) {
+                            return new google.maps.LatLng(x.center.latitude, x.center.longitude);
+                        }).ToArray();
+                        $.each(latLngs, function (index, latLng) {
+                            settings.bounds.extend(latLng);
+                        });
+                    }
+                    //#endregion
+                }
+
+                return settings;
+            };
+
             SearchMap.prototype._updateRoute = function () {
-                this.lat(this._map.lat());
-                this.lng(this._map.lng());
-                this.zoom(this._map.zoom());
-                this.setLocation();
+                var isDirty = false;
+                if (!this._areFloatsEqualEnough(this.lat(), this._map.lat())) {
+                    this.lat(this._map.lat());
+                    isDirty = true;
+                }
+                if (!this._areFloatsEqualEnough(this.lng(), this._map.lng())) {
+                    this.lng(this._map.lng());
+                    isDirty = true;
+                }
+                if (this.zoom() != this._map.zoom()) {
+                    this.zoom(this._map.zoom());
+                    isDirty = true;
+                }
+                if (isDirty)
+                    this.setLocation();
             };
 
             SearchMap.prototype._updateStatus = function (placeType, places) {
                 if (places && places.length) {
-                    this.status.agreementCount(Enumerable.From(places).Sum(function (x) {
-                        return x.agreementCount;
-                    }).toString());
-                    this.status.partnerCount(Enumerable.From(places).Sum(function (x) {
-                        return x.partnerCount;
-                    }).toString());
+                    this.status.agreementCount(Enumerable.From(places).SelectMany(function (x, i) {
+                        return x.agreementIds;
+                    }).Distinct(function (x) {
+                        return x;
+                    }).Count().toString());
+                    this.status.partnerCount(Enumerable.From(places).SelectMany(function (x, i) {
+                        return x.partnerIds;
+                    }).Distinct(function (x) {
+                        return x;
+                    }).Count().toString());
                 } else {
                     this.status.agreementCount('0');
                     this.status.partnerCount('0');
@@ -761,7 +861,6 @@ else if (this.continentCode() != 'any')
                         viewportSettings.bounds = Places.Utils.convertToLatLngBounds(partner.boundingBox);
                     }
                 } else if (uniquePartners.length > 1) {
-                    //var bounds = new google.maps.LatLngBounds();
                     $.each(uniquePartners, function (i, partner) {
                         viewportSettings.bounds.extend(Places.Utils.convertToLatLng(partner.center));
                     });
@@ -770,7 +869,6 @@ else if (this.continentCode() != 'any')
                 }
 
                 // plot the markers
-                //this._clearMarkers();
                 var markers = [];
                 var scaler = this._getMarkerIconScaler('', this._placesResponse());
                 $.each(uniquePartners, function (i, partner) {
@@ -827,9 +925,10 @@ else if (this.continentCode() != 'any')
                 this.status.partnerCount(uniquePartners.length.toString());
                 this.status.countryCount('this area');
 
-                this._map.setViewport(viewportSettings).then(function () {
-                    _this._updateRoute();
-                });
+                if (this._scopeHistory().length > 1)
+                    this._map.setViewport(viewportSettings).then(function () {
+                        _this._updateRoute();
+                    });
             };
             SearchMap._defaultMapCenter = new google.maps.LatLng(0, 17);
 

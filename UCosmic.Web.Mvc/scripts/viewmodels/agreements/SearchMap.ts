@@ -97,9 +97,22 @@ module Agreements.ViewModels {
             this.sammy = this.settings.sammy || Sammy();
             this._runSammy();
 
-            this.lat.subscribe((newValue) => {
-                if (newValue) {
-                }
+            this._map.ready().done((): void => {
+                this._map.onIdle((): void => {
+                    var idles = this._map.idles();
+                    setTimeout((): void => {
+                        if (idles == this._map.idles() && !this._map.isDragging()) {
+                            if (this.zoom() != this._map.zoom()
+                                || !SearchMap._areCoordinatesEqualEnough(this.lat(), this._map.lat())
+                                || !SearchMap._areCoordinatesEqualEnough(this.lng(), this._map.lng())) {
+                                this.lat(this._map.lat());
+                                this.lng(this._map.lng());
+                                this.zoom(this._map.zoom());
+                                this.setLocation();
+                            }
+                        }
+                    }, 500);
+                });
             });
         }
 
@@ -121,7 +134,12 @@ module Agreements.ViewModels {
                 maxPrecision: 8,
                 log: true,
             }
-        );
+            );
+
+        private static _areCoordinatesEqualEnough(coord1: number, coord2: number): boolean {
+            var diff = Math.abs(coord1 - coord2);
+            return diff < 0.000001;
+        }
 
         //#endregion
         //#region Summary
@@ -293,16 +311,53 @@ module Agreements.ViewModels {
         }
 
         private _onBeforeRoute(e: Sammy.EventContext): boolean {
+            // prevent the route from changing lat or lng by insignificant digits
+            var newLat: string = e.params['lat'];
+            var newLng: string = e.params['lng'];
+            var oldLat = this.lat();
+            var oldLng = this.lng();
+            var allowRoute = true;
+
+            if (this._scopeHistory().length > 1 &&
+                this._areFloatsEqualEnough(parseFloat(newLat), oldLat) &&
+                this._areFloatsEqualEnough(parseFloat(newLng), oldLng)) {
+                return false;
+            }
+
+            return allowRoute;
+        }
+
+        private _areFloatsEqualEnough(value1: number, value2: number): boolean {
+            if (value1 == value2) return true;
+            var string1 = value1.toString();
+            var string2 = value2.toString();
+            var index1 = string1.indexOf('.');
+            var index2 = string2.indexOf('.');
+            if (index1 < 0 || index2 < 0) return string1 == string2;
+            var int1 = parseInt(string1.substr(0, index1));
+            var int2 = parseInt(string2.substr(0, index2));
+            if (int1 != int2) return false;
+            var precision1 = parseInt(string1.substr(index1 + 1));
+            var precision2 = parseInt(string2.substr(index2 + 1));
+            if (precision1 < 10000) return precision1 == precision2;
+            // need to make sure both preceisions have the same number of digits
+            while (precision1.toString().length < precision2.toString().length) {
+                precision1 *= 10;
+            }
+            while (precision2.toString().length < precision1.toString().length) {
+                precision2 *= 10;
+            }
+            return Math.abs(precision1 - precision2) < 100;
             return true;
         }
 
         private _onRoute(e: Sammy.EventContext): void {
-            var continent = e.params['continent'];
-            var country = e.params['country'];
-            var placeId = e.params['place'];
-            var zoom = e.params['zoom'];
-            var lat = e.params['lat'];
-            var lng = e.params['lng'];
+            var continent: string = e.params['continent'];
+            var country: string = e.params['country'];
+            var placeId: string = e.params['place'];
+            var zoom: string = e.params['zoom'];
+            var lat: string = e.params['lat'];
+            var lng: string = e.params['lng'];
 
             this.continentCode(continent);
             this.countryCode(country);
@@ -345,9 +400,7 @@ module Agreements.ViewModels {
             // only set the href hashtag to trigger sammy when the current route is stale
             var route = this._route();
             if (this.sammy.getLocation().indexOf(route) < 0) {
-                //setTimeout((): void => {
                 this.sammy.setLocation(route);
-                //}, 1);
             }
         }
 
@@ -393,13 +446,54 @@ module Agreements.ViewModels {
         }
 
         //#endregion
+        //#region Query Viewporting
+
+        private _viewportHistory: KnockoutObservableArray<App.GoogleMaps.MapViewportSettings> = ko.observableArray();
+        private _currentViewport = ko.computed((): App.GoogleMaps.MapViewportSettings => {
+            // this will run once during construction
+            return this._computeCurrentViewport();
+        });
+
+        private _computeCurrentViewport(): App.GoogleMaps.MapViewportSettings {
+            var viewport: App.GoogleMaps.MapViewportSettings = {
+                zoom: this.zoom(),
+                center: new google.maps.LatLng(this.lat(), this.lng()),
+            };
+            return viewport;
+        }
+
+        private _viewportDirty = ko.computed((): void => {
+            this._onViewportDirty();
+        }).extend({ throttle: 1 });
+
+        private _onViewportDirty(): void {
+            if (!this._isActivated()) return;
+
+            var viewportHistory = this._viewportHistory();
+            var lastViewport: App.GoogleMaps.MapViewportSettings = viewportHistory.length
+                ? Enumerable.From(viewportHistory).Last() : null;
+            var thisViewport = this._currentViewport();
+
+            if (!lastViewport || lastViewport.zoom != thisViewport.zoom ||
+                !SearchMap._areCoordinatesEqualEnough(lastViewport.center.lat(), thisViewport.center.lat() ||
+                    !SearchMap._areCoordinatesEqualEnough(lastViewport.center.lng(), thisViewport.center.lng()))) {
+
+                this._viewportHistory.push(thisViewport);
+                $.when(this._map.ready()).then((): void => {
+                    this._map.setViewport(thisViewport).then((): void => {
+                        this.setLocation();
+                    });
+                });
+            }
+        }
+
+        //#endregion
         //#region Navigational Binding
 
         private _continentsResponse: KnockoutObservableArray<ApiModels.PlaceWithAgreements>;
         private _countriesResponse: KnockoutObservableArray<ApiModels.PlaceWithAgreements>;
         private _placesResponse: KnockoutObservableArray<ApiModels.PlaceWithAgreements>;
         private _partnersResponse: KnockoutObservableArray<ApiModels.Participant>;
-        //private _markers: KnockoutObservableArray<google.maps.Marker> = ko.observableArray();
         spinner = new App.Spinner(new App.SpinnerOptions(400, false));
 
         private _load(): void {
@@ -513,96 +607,10 @@ module Agreements.ViewModels {
             this._plotMarkers(placeType, places);
 
             var viewportSettings = this._getMapViewportSettings(placeType, places);
-            this._map.setViewport(viewportSettings).then((): void => {
-                this._updateRoute();
-            });
-        }
-
-        private _getMapViewportSettings(placeType: string, places: ApiModels.PlaceWithAgreements[]): App.GoogleMaps.MapViewportSettings {
-
-            var settings: App.GoogleMaps.MapViewportSettings = {
-                bounds: new google.maps.LatLngBounds(),
-            };
-
-            // zoom map to level 1 in order to view continents
-            if (placeType == 'continents') {
-                settings.zoom = 1;
-                settings.center = SearchMap._defaultMapCenter;
-            }
-
-            // zoom map for countries based on response length
-            else if (placeType == 'countries') {
-                var continentCode = this.continentCode();
-                //var bounds: google.maps.LatLngBounds;
-                //#region zero places, try continent bounds
-                if (!places.length) {
-                    if (continentCode && this._continentsResponse) {
-                        var continent: ApiModels.PlaceWithAgreements = Enumerable.From(this._continentsResponse())
-                            .SingleOrDefault(undefined, function (x: ApiModels.PlaceWithAgreements): boolean {
-                                return x.continentCode == continentCode;
-                            });
-                        if (continent && continent.boundingBox && continent.boundingBox.hasValue) {
-                            settings.bounds = Places.Utils.convertToLatLngBounds(continent.boundingBox);
-                        }
-                    }
-                }
-                //#endregion
-                //#region one place, try country bounds
-                else if (places.length == 1) {
-                    var country = places[0];
-                    if (country && country.boundingBox && country.boundingBox.hasValue)
-                        settings.bounds = Places.Utils.convertToLatLngBounds(country.boundingBox);
-                }
-                //#endregion
-                //#region multiple places, extend bounds
-                else {
-                    //bounds = new google.maps.LatLngBounds();
-                    var latLngs = Enumerable.From(places)
-                        .Select(function (x: ApiModels.PlaceWithAgreements): any {
-                            return new google.maps.LatLng(x.center.latitude, x.center.longitude);
-                        }).ToArray();
-                    $.each(latLngs, function (index: number, latLng: google.maps.LatLng): void {
-                        settings.bounds.extend(latLng);
-                    });
-                }
-            }
-            else {
-                var countryCode = this.countryCode();
-                //var bounds: google.maps.LatLngBounds;
-                //#region zero places, try country bounds
-                if (!places.length) {
-                    if (countryCode && this.countryOptions) {
-                        var countryOption: Places.ApiModels.Country = Enumerable.From(this.countryOptions())
-                            .SingleOrDefault(undefined, function (x: Places.ApiModels.Country): boolean {
-                                return x.code == countryCode;
-                            });
-                        if (countryOption && countryOption.box && countryOption.box.hasValue) {
-                            settings.bounds = Places.Utils.convertToLatLngBounds(countryOption.box);
-                        }
-                    }
-                }
-                //#endregion
-                //#region one place, try country bounds
-                else if (places.length == 1) {
-                    var country = places[0];
-                    if (country && country.boundingBox && country.boundingBox.hasValue)
-                        settings.bounds = Places.Utils.convertToLatLngBounds(country.boundingBox);
-                }
-                //#endregion
-                //#region multiple places, extend bounds
-                else {
-                    //bounds = new google.maps.LatLngBounds();
-                    var latLngs = Enumerable.From(places)
-                        .Select(function (x: ApiModels.PlaceWithAgreements): any {
-                            return new google.maps.LatLng(x.center.latitude, x.center.longitude);
-                        }).ToArray();
-                    $.each(latLngs, function (index: number, latLng: google.maps.LatLng): void {
-                        settings.bounds.extend(latLng);
-                    });
-                }
-            }
-
-            return settings;
+            if (this._scopeHistory().length > 1)
+                this._map.setViewport(viewportSettings).then((): void => {
+                    this._updateRoute();
+                });
         }
 
         private _plotMarkers(placeType: string, places: ApiModels.PlaceWithAgreements[]) {
@@ -654,7 +662,6 @@ module Agreements.ViewModels {
                 };
                 this._setMarkerIcon(options, place.agreementCount.toString(), scaler);
                 var marker = new google.maps.Marker(options);
-                //this._markers.push(marker);
                 markers.push(marker);
                 google.maps.event.addListener(marker, 'mouseover', (e: google.maps.MouseEvent): void => {
                     marker.setOptions({
@@ -682,9 +689,9 @@ module Agreements.ViewModels {
                             }
                         }
                         else {
-                            this._map.setViewport({
-                                bounds: Places.Utils.convertToLatLngBounds(place.boundingBox),
-                            });
+                            //this._map.setViewport({
+                            //    bounds: Places.Utils.convertToLatLngBounds(place.boundingBox),
+                            //});
                             if (place.id < 1) {
                                 this.continentCode('none'); // select none in continents dropdown menu
                             } else {
@@ -735,23 +742,126 @@ module Agreements.ViewModels {
             this._map.replaceMarkers(markers);
         }
 
+        private _getMapViewportSettings(placeType: string, places: ApiModels.PlaceWithAgreements[]): App.GoogleMaps.MapViewportSettings {
+
+            var settings: App.GoogleMaps.MapViewportSettings = {
+                bounds: new google.maps.LatLngBounds(),
+            };
+
+            // zoom map to level 1 in order to view continents
+            if (placeType == 'continents') {
+                settings.zoom = 1;
+                settings.center = SearchMap._defaultMapCenter;
+            }
+
+            // zoom map for countries based on response length
+            else if (placeType == 'countries') {
+                var continentCode = this.continentCode();
+                //#region zero places, try continent bounds
+                if (!places.length) {
+                    if (continentCode && this._continentsResponse) {
+                        var continent: ApiModels.PlaceWithAgreements = Enumerable.From(this._continentsResponse())
+                            .SingleOrDefault(undefined, function (x: ApiModels.PlaceWithAgreements): boolean {
+                                return x.continentCode == continentCode;
+                            });
+                        if (continent && continent.boundingBox && continent.boundingBox.hasValue) {
+                            settings.bounds = Places.Utils.convertToLatLngBounds(continent.boundingBox);
+                        }
+                    }
+                }
+                //#endregion
+                //#region one place, try country bounds
+                else if (places.length == 1) {
+                    var country = places[0];
+                    if (country && country.boundingBox && country.boundingBox.hasValue)
+                        settings.bounds = Places.Utils.convertToLatLngBounds(country.boundingBox);
+                }
+                //#endregion
+                //#region multiple places, extend bounds
+                else {
+                    var latLngs = Enumerable.From(places)
+                        .Select(function (x: ApiModels.PlaceWithAgreements): any {
+                            return new google.maps.LatLng(x.center.latitude, x.center.longitude);
+                        }).ToArray();
+                    $.each(latLngs, function (index: number, latLng: google.maps.LatLng): void {
+                        settings.bounds.extend(latLng);
+                    });
+                }
+                //#endregion
+            }
+            else {
+                var countryCode = this.countryCode();
+                //#region zero places, try country bounds
+                if (!places.length) {
+                    if (countryCode && this.countryOptions) {
+                        var countryOption: Places.ApiModels.Country = Enumerable.From(this.countryOptions())
+                            .SingleOrDefault(undefined, function (x: Places.ApiModels.Country): boolean {
+                                return x.code == countryCode;
+                            });
+                        if (countryOption && countryOption.box && countryOption.box.hasValue) {
+                            settings.bounds = Places.Utils.convertToLatLngBounds(countryOption.box);
+                        }
+                    }
+                }
+                //#endregion
+                //#region one place, try country bounds
+                else if (places.length == 1) {
+                    var country = places[0];
+                    if (country && country.boundingBox && country.boundingBox.hasValue)
+                        settings.bounds = Places.Utils.convertToLatLngBounds(country.boundingBox);
+                }
+                //#endregion
+                //#region multiple places, extend bounds
+                else {
+                    var latLngs = Enumerable.From(places)
+                        .Select(function (x: ApiModels.PlaceWithAgreements): any {
+                            return new google.maps.LatLng(x.center.latitude, x.center.longitude);
+                        }).ToArray();
+                    $.each(latLngs, function (index: number, latLng: google.maps.LatLng): void {
+                        settings.bounds.extend(latLng);
+                    });
+                }
+                //#endregion
+            }
+
+            return settings;
+        }
+
         private _updateRoute(): void {
-            this.lat(this._map.lat());
-            this.lng(this._map.lng());
-            this.zoom(this._map.zoom());
-            this.setLocation();
+            var isDirty = false;
+            if (!this._areFloatsEqualEnough(this.lat(), this._map.lat())) {
+                this.lat(this._map.lat());
+                isDirty = true;
+            }
+            if (!this._areFloatsEqualEnough(this.lng(), this._map.lng())) {
+                this.lng(this._map.lng());
+                isDirty = true;
+            }
+            if (this.zoom() != this._map.zoom()) {
+                this.zoom(this._map.zoom());
+                isDirty = true;
+            }
+            if (isDirty) this.setLocation();
         }
 
         private _updateStatus(placeType: string, places: ApiModels.PlaceWithAgreements[]) {
             if (places && places.length) {
                 this.status.agreementCount(Enumerable.From(places)
-                    .Sum(function (x: ApiModels.PlaceWithAgreements): number {
-                        return x.agreementCount;
-                    }).toString());
+                    .SelectMany(function (x: ApiModels.PlaceWithAgreements, i: number): number[] {
+                        return x.agreementIds;
+                    })
+                    .Distinct(function (x: number): number {
+                        return x;
+                    })
+                    .Count().toString());
                 this.status.partnerCount(Enumerable.From(places)
-                    .Sum(function (x: ApiModels.PlaceWithAgreements): number {
-                        return x.partnerCount;
-                    }).toString());
+                    .SelectMany(function (x: ApiModels.PlaceWithAgreements, i: number): number[] {
+                        return x.partnerIds;
+                    })
+                    .Distinct(function (x: number): number {
+                        return x;
+                    })
+                    .Count().toString());
             }
             else {
                 this.status.agreementCount('0');
@@ -813,7 +923,6 @@ module Agreements.ViewModels {
                 side: side,
                 text: text,
                 fillColor: 'rgb(11, 11, 11)',
-                //stroke: false,
             };
             var url = '{0}?{1}'.format(this.settings.graphicsCircleApi, $.param(settings));
             var icon = {
@@ -901,7 +1010,6 @@ module Agreements.ViewModels {
                 }
             }
             else if (uniquePartners.length > 1) {
-                //var bounds = new google.maps.LatLngBounds();
                 $.each(uniquePartners, (i: number, partner: ApiModels.Participant): void => {
                     viewportSettings.bounds.extend(Places.Utils.convertToLatLng(partner.center));
                 });
@@ -911,7 +1019,6 @@ module Agreements.ViewModels {
             }
 
             // plot the markers
-            //this._clearMarkers();
             var markers: google.maps.Marker[] = [];
             var scaler = this._getMarkerIconScaler('', this._placesResponse());
             $.each(uniquePartners, (i: number, partner: ApiModels.Participant): void => {
@@ -964,7 +1071,6 @@ module Agreements.ViewModels {
 
             this._map.replaceMarkers(markers);
 
-            //var markers = this._markers();
             if (markers.length == 1) {
                 google.maps.event.trigger(markers[0], 'click');
             }
@@ -978,9 +1084,10 @@ module Agreements.ViewModels {
             this.status.partnerCount(uniquePartners.length.toString());
             this.status.countryCount('this area');
 
-            this._map.setViewport(viewportSettings).then((): void => {
-                this._updateRoute();
-            });
+            if (this._scopeHistory().length > 1)
+                this._map.setViewport(viewportSettings).then((): void => {
+                    this._updateRoute();
+                });
         }
 
         $infoWindow: JQuery;
