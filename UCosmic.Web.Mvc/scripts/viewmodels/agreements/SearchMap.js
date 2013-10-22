@@ -347,6 +347,8 @@ else if (this.continentCode() != 'any')
             SearchMap.prototype.activate = function () {
                 var _this = this;
                 if (!this._isActivated()) {
+                    this._scopeHistory([]);
+                    this._viewportHistory([]);
                     $.when(this._map.ready()).then(function () {
                         _this._isActivated(true);
                     });

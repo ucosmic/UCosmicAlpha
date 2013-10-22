@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -32,24 +33,61 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
         public override Task WriteToStreamAsync(Type type, object value, Stream writeStream, HttpContent content, TransportContext transportContext)
         {
-            //return base.WriteToStreamAsync(type, value, writeStream, content, transportContext);
-            return Task.Factory.StartNew(() => WriteSpreadsheet((PageOfAgreementApiFlatModel)value, writeStream));
+            return Task.Factory.StartNew(() => WriteSpreadsheet(((PageOfAgreementApiFlatModel)value).Items, writeStream));
         }
 
-        private void WriteSpreadsheet(PageOfAgreementApiFlatModel model, Stream stream)
+        private void WriteSpreadsheet(IEnumerable<AgreementApiFlatModel> models, Stream stream)
         {
-            using (ExcelPackage excelPackage = new ExcelPackage())
+            using (var excelPackage = new ExcelPackage())
             {
-                var ws = excelPackage.Workbook.Worksheets.Add("Agreements");
+                var worksheet = excelPackage.Workbook.Worksheets.Add("Agreements");
 
-                var items = model.Items.ToArray();
-                var i = 0;
-                foreach (var item in items)
+                // note that EPPlus uses one-based indexing for cells, not zero-based.
+                // so cell A1 is at row 1 column 1, not row 0 column 0
+                var rowNumber = 1;
+
+                // header row
+                worksheet.Cells[rowNumber, 1].Value = "Type";
+                worksheet.Column(1).Width = 40;
+
+                worksheet.Cells[rowNumber, 2].Value = "Partner(s)";
+                worksheet.Column(2).Width = 40;
+                worksheet.Column(2).Style.WrapText = true;
+
+                worksheet.Cells[rowNumber, 3].Value = "Scope";
+                worksheet.Column(3).Width = 40;
+                worksheet.Column(3).Style.WrapText = true;
+
+                worksheet.Row(rowNumber).Style.Font.Bold = true;
+                worksheet.Cells.Style.VerticalAlignment = 0;
+                ++rowNumber;
+
+                foreach (var model in models)
                 {
-                    var row = ws.Row(i);
-                    ws.Cells[i + 1, 1].Value = "asdf";
-                    ++i;
+                    worksheet.Cells[rowNumber, 1].Value = model.Type;
+
+                    var partners = model.Participants.Where(x => !x.IsOwner).ToArray();
+                    var partnersText = "";
+                    foreach (var partner in partners)
+                    {
+                        partnersText += partner.EstablishmentTranslatedName;
+                        if (partner != partners.Last()) partnersText += "\r\n";
+                    }
+                    worksheet.Cells[rowNumber, 2].Value = partnersText;
+
+                    var scope = model.Participants.Where(x => x.IsOwner).ToArray();
+                    var scopeText = "";
+                    foreach (var participant in scope)
+                    {
+                        scopeText += participant.EstablishmentTranslatedName;
+                        if (participant != scope.Last()) scopeText += "\r\n";
+                    }
+                    worksheet.Cells[rowNumber, 3].Value = scopeText;
+
+                    ++rowNumber;
                 }
+
+                worksheet.View.FreezePanes(2, 1);
 
                 var bytes = excelPackage.GetAsByteArray();
                 stream.Write(bytes, 0, bytes.Length);

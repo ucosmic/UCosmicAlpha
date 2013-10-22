@@ -194,7 +194,10 @@ module Agreements.ViewModels {
         }
 
         activate(): void {
-            if (!this._isActivated()) this._isActivated(true);
+            if (!this._isActivated()) {
+                this._requestHistory([]);
+                this._isActivated(true);
+            }
         }
         deactivate(): void {
             if (this._isActivated()) this._isActivated(false);

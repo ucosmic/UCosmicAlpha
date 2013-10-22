@@ -383,6 +383,8 @@ module Agreements.ViewModels {
 
         activate(): void {
             if (!this._isActivated()) {
+                this._scopeHistory([]);
+                this._viewportHistory([]);
                 $.when(this._map.ready()).then((): void => {
                     this._isActivated(true);
                 });

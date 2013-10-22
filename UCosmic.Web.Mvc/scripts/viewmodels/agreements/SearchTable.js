@@ -153,8 +153,10 @@ var Agreements;
             };
 
             SearchTable.prototype.activate = function () {
-                if (!this._isActivated())
+                if (!this._isActivated()) {
+                    this._requestHistory([]);
                     this._isActivated(true);
+                }
             };
             SearchTable.prototype.deactivate = function () {
                 if (this._isActivated())
