@@ -126,6 +126,17 @@ var Agreements;
                 this.sammy = this.settings.sammy || Sammy();
                 this._runSammy();
 
+                //var HistoryJS: Historyjs = <any>History;
+                //HistoryJS.Adapter.bind(window, 'statechange', function () {
+                //    alert('history adapter fired statechange');
+                //});
+                //if (!HistoryJS.enabled) {
+                //    //...
+                //}
+                //HistoryJS.Adapter.bind(window, 'statechange', () => {
+                //    var State = HistoryJS.getState();
+                //    HistoryJS.log(State.data, State.title, State.url);
+                //});
                 this._map.ready().done(function () {
                     _this._map.onIdle(function () {
                         var idles = _this._map.idles();

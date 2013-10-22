@@ -97,6 +97,19 @@ module Agreements.ViewModels {
             this.sammy = this.settings.sammy || Sammy();
             this._runSammy();
 
+            //var HistoryJS: Historyjs = <any>History;
+            //HistoryJS.Adapter.bind(window, 'statechange', function () {
+            //    alert('history adapter fired statechange');
+            //});
+
+            //if (!HistoryJS.enabled) {
+            //    //...
+            //}
+            //HistoryJS.Adapter.bind(window, 'statechange', () => {
+            //    var State = HistoryJS.getState();
+            //    HistoryJS.log(State.data, State.title, State.url);
+            //});
+
             this._map.ready().done((): void => {
                 this._map.onIdle((): void => {
                     var idles = this._map.idles();

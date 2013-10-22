@@ -807,6 +807,16 @@
     </Content>
     <Content Include="scripts\google\markerwithlabel.js" />
     <Content Include="scripts\google\markerwithlabel_packed.js" />
+    <Content Include="scripts\history.js\amplify.store.js" />
+    <Content Include="scripts\history.js\history.adapter.dojo.js" />
+    <Content Include="scripts\history.js\history.adapter.jquery.js" />
+    <Content Include="scripts\history.js\history.adapter.mootools.js" />
+    <Content Include="scripts\history.js\history.adapter.prototype.js" />
+    <Content Include="scripts\history.js\history.adapter.yui.js" />
+    <Content Include="scripts\history.js\history.adapter.zepto.js" />
+    <Content Include="scripts\history.js\history.html4.js" />
+    <Content Include="scripts\history.js\history.js" />
+    <Content Include="scripts\history.js\json2.js" />
     <Content Include="scripts\jquery\jquery-1.9.1.js" />
     <Content Include="scripts\jquery\jquery-1.9.1.min.js" />
     <Content Include="images\icons\files\doc.png" />
@@ -1921,6 +1931,7 @@
     <None Include="scripts\typings\requirejs\require.d.ts" />
     <None Include="scripts\typings\sammyjs\sammyjs.d.ts" />
     <None Include="scripts\typings\tinymce\tinymce.d.ts" />
+    <Content Include="scripts\typings\history\history.d.ts" />
     <Content Include="scripts\typings\jquery\jquery.d.ts" />
     <Content Include="scripts\typings\knockout\knockout.d.ts" />
     <Content Include="scripts\typings\linq\linq.3.0.3-Beta4.d.ts" />
