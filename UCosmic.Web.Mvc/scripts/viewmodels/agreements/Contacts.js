@@ -638,7 +638,7 @@ var Agreements;
 
         Contacts.prototype.populateContacts = function () {
             var _this = this;
-            $.get(App.Routes.WebApi.Agreements.Contacts.get(this.agreementId), { useTestData: false }).done(function (response) {
+            $.get(App.Routes.WebApi.Agreements.Contacts.get(this.agreementId)).done(function (response) {
                 ko.mapping.fromJS(response, _this.contacts);
                 _this.deferredPopContacts.resolve();
             });

@@ -34,7 +34,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [GET("{agreementId:int}/contacts")]
-        public IEnumerable<AgreementContactApiModel> Get(int agreementId, [FromUri] bool useTestData = false)
+        public IEnumerable<AgreementContactApiModel> Get(int agreementId)
         {
             var entities = _queryProcessor.Execute(new ContactsByAgreementId(User, agreementId)
             {
@@ -47,72 +47,13 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
             var models = Mapper.Map<AgreementContactApiModel[]>(entities);
 
-            #region TestData
-
-            if (useTestData)
-            {
-                models = new[]
-                {
-                    new AgreementContactApiModel
-                    {
-                        Type = "Home Principal", 
-                        Id = 2,
-                        PersonId = 44,
-                        DisplayName = "Arya Stark",
-                        Salutation = "Ms.",
-                        FirstName = "arya",
-                        MiddleName = "middle2",
-                        LastName = "stark",
-                        Suffix = "Sr.",
-                        EmailAddress = "asdf@as.as22",
-                        Title = "job2",
-                        Phones = new[]
-                        {
-                            new AgreementContactPhoneApiModel
-                            {
-                                ContactId = 2, Type = "work", Value = "3213456452",
-                            },
-                            new AgreementContactPhoneApiModel
-                            {
-                                ContactId = 2, Type = "home", Value = "321345",
-                            }
-                        },
-                    },
-                    new AgreementContactApiModel
-                    {
-                        Type = "Home Secondary",
-                        Id = 3,
-                        PersonId = 45,
-                        DisplayName = "Rob Stark",
-                        Salutation = "Mr.",
-                        FirstName = "Rob",
-                        MiddleName = "middle2",
-                        LastName = "stark",
-                        Suffix = "Sr.",
-                        EmailAddress = "111asdf@as.as22",
-                        Title = "job3",
-                        Phones = new[]
-                        {
-                            new AgreementContactPhoneApiModel
-                            {
-                                ContactId = 3, Type = "home", Value = "3213456452111",
-                            },
-                            new AgreementContactPhoneApiModel
-                            {
-                                ContactId = 3, Type = "work", Value = "321345111",
-                            }
-                        },
-                    }
-                };
-            }
-
-            #endregion
+            
 
             return models;
         }
 
         [GET("{agreementId:int}/contacts/{contactId:int}", ControllerPrecedence = 1)]
-        public AgreementContactApiModel Get(int agreementId, int contactId, [FromUri] bool useTestData = false)
+        public AgreementContactApiModel Get(int agreementId, int contactId)
         {
             var entity = _queryProcessor.Execute(new ContactById(User, agreementId, contactId)
             {
@@ -126,39 +67,6 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
             var model = Mapper.Map<AgreementContactApiModel>(entity);
-
-            #region Test Data
-
-            if (useTestData)
-            {
-                model = new AgreementContactApiModel
-                {
-                    Type = "Home Principal",
-                    Id = 2,
-                    PersonId = 44,
-                    DisplayName = "Arya Stark",
-                    Salutation = "Ms.",
-                    FirstName = "arya",
-                    MiddleName = "middle2",
-                    LastName = "stark",
-                    Suffix = "Sr.",
-                    EmailAddress = "asdf@as.as22",
-                    Title = "job2",
-                    Phones = new[]
-                    {
-                        new AgreementContactPhoneApiModel
-                        {
-                            ContactId = 2, Type = "work", Value = "3213456452",
-                        },
-                        new AgreementContactPhoneApiModel
-                        {
-                            ContactId = 2, Type = "home", Value = "321345",
-                        }
-                    },
-                };
-            }
-
-            #endregion
 
             return model;
         }

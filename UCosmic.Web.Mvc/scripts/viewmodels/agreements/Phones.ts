@@ -7,7 +7,7 @@ module Agreements {
 
     export class Phones {
         constructor(agreementId, establishmentItemViewModel, contactId) {
-            this.agreementId = agreementId; 
+            this.agreementId = agreementId;
             this.contactId = contactId;
             this.establishmentItemViewModel = establishmentItemViewModel;
             this.removePhone = <() => void > this.removePhone.bind(this);

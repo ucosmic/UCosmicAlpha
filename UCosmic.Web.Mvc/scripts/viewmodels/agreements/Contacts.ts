@@ -354,30 +354,30 @@ module Agreements {
             if (confirm('Are you sure you want to remove "' +
                 me.firstName() + " " + me.lastName() +
                 '" as a contact from this agreement?')) {
-                    var url = "";
+                var url = "";
 
-                    if (this.agreementIsEdit()) {
-                        url = App.Routes.WebApi.Agreements.Contacts.del(this.agreementId, me.id());
+                if (this.agreementIsEdit()) {
+                    url = App.Routes.WebApi.Agreements.Contacts.del(this.agreementId, me.id());
 
-                        $.ajax({
-                            url: url,
-                            type: 'DELETE',
-                            success: (): void => {
-                                this.contacts.remove(me);
-                                $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * 1.1)));
-                            }
-                        })
+                    $.ajax({
+                        url: url,
+                        type: 'DELETE',
+                        success: (): void => {
+                            this.contacts.remove(me);
+                            $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * 1.1)));
+                        }
+                    })
                     }
             }
             e.preventDefault();
             e.stopPropagation();
             return false;
         }
-        
+
         bindJquery(): void {
             var self = this,
                 kacSelect;
-            
+
             this.$addContactDialog.kendoWindow({
                 width: 950,
                 open: () => {
@@ -501,7 +501,7 @@ module Agreements {
 
             $("#addContactDialog").on("change", ".phoneTypes", function () {
                 var context = ko.dataFor(this);
-                
+
                 //added for weird bug for when adding more than 1 phone number then editing the type.
                 if (context.type != $(this).val() && $(this).val() !== "") {
                     context.type = $(this).val()
@@ -535,42 +535,42 @@ module Agreements {
                 }
             })
         $("#addContactDialog").on("change", ".phoneNumbers", function () {
-            var context = ko.dataFor(this);
+                var context = ko.dataFor(this);
 
-            if (self.agreementIsEdit() && context.value == $(this).val()) {
-                //first do a validation for phone
-                if ($(this).val() == '') {
-                    $("#phoneNumberValidate" + context.id).css("visibility", "visible");
-                } else {
-                    var url = App.Routes.WebApi.Agreements.Contacts.Phones.put(self.agreementId, context.contactId, context.id);
+                if (self.agreementIsEdit() && context.value == $(this).val()) {
+                    //first do a validation for phone
+                    if ($(this).val() == '') {
+                        $("#phoneNumberValidate" + context.id).css("visibility", "visible");
+                    } else {
+                        var url = App.Routes.WebApi.Agreements.Contacts.Phones.put(self.agreementId, context.contactId, context.id);
 
-                    $("#phoneNumberValidate" + context.id).css("visibility", "hidden");
-                    $.ajax({
-                        type: 'PUT',
-                        url: url,
-                        data: context,
-                        success: (response: any, statusText: string, xhr: JQueryXHR): void => {
-                        },
-                        error: (xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
-                            if (xhr.status === 400) { // validation message will be in xhr response text...
-                                this.establishmentItemViewModel.$genericAlertDialog.find('p.content')
-                                    .html(xhr.responseText.replace('\n', '<br /><br />'));
-                                this.establishmentItemViewModel.$genericAlertDialog.dialog({
-                                    title: 'Alert Message',
-                                    dialogClass: 'jquery-ui',
-                                    width: 'auto',
-                                    resizable: false,
-                                    modal: true,
-                                    buttons: {
-                                        'Ok': (): void => { this.establishmentItemViewModel.$genericAlertDialog.dialog('close'); }
-                                    }
-                                });
+                        $("#phoneNumberValidate" + context.id).css("visibility", "hidden");
+                        $.ajax({
+                            type: 'PUT',
+                            url: url,
+                            data: context,
+                            success: (response: any, statusText: string, xhr: JQueryXHR): void => {
+                            },
+                            error: (xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
+                                if (xhr.status === 400) { // validation message will be in xhr response text...
+                                    this.establishmentItemViewModel.$genericAlertDialog.find('p.content')
+                                        .html(xhr.responseText.replace('\n', '<br /><br />'));
+                                    this.establishmentItemViewModel.$genericAlertDialog.dialog({
+                                        title: 'Alert Message',
+                                        dialogClass: 'jquery-ui',
+                                        width: 'auto',
+                                        resizable: false,
+                                        modal: true,
+                                        buttons: {
+                                            'Ok': (): void => { this.establishmentItemViewModel.$genericAlertDialog.dialog('close'); }
+                                        }
+                                    });
+                                }
                             }
-                        }
-                    });
+                        });
+                    }
                 }
-            }
-        })
+            })
         if (this.isCustomContactTypeAllowed) {
                 $("#contactTypeOptions").kendoComboBox({
                     dataTextField: "name",
@@ -646,7 +646,7 @@ module Agreements {
         }
 
         populateContacts(): void {
-            $.get(App.Routes.WebApi.Agreements.Contacts.get(this.agreementId), { useTestData: false })
+            $.get(App.Routes.WebApi.Agreements.Contacts.get(this.agreementId))
                 .done((response: any): void => {
                     ko.mapping.fromJS(response, this.contacts)
                     this.deferredPopContacts.resolve();

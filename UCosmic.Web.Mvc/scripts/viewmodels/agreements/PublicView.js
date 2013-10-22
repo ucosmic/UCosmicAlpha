@@ -61,7 +61,17 @@ var Agreements;
                         _this._bindMap();
                     });
                 }
+                this.files = this.fileListPopulator.files;
+                this.fileListPopulator.populate(this.agreementId);
             }
+            PublicView.prototype.fileHref = function (parent, data) {
+                return '/api/agreements/' + parent.agreementId + '/files/' + data.id() + '/content/';
+            };
+
+            PublicView.prototype.fileDownloadHref = function (parent, data) {
+                return '/api/agreements/' + parent.agreementId + '/files/' + data.id() + '/download/';
+            };
+
             PublicView.prototype._bindData = function () {
                 var _this = this;
                 var deferred = $.Deferred();

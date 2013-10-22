@@ -25,7 +25,7 @@ class InstitutionalAgreementEditModel {
     constructor(public agreementId: number) {
         $("table.data").children("tbody").addClass("searchResults");
         var culture = $("meta[name='accept-language']").attr("content");
-        this.scrollBody = new ScrollBody.Scroll("participants","basic_info",
+        this.scrollBody = new ScrollBody.Scroll("participants", "basic_info",
             "effective_dates_current_status", "contacts", "file_attachments", "overall_visibility", null, null, null,
             null, this.kendoWindowBug);
         this.establishmentSearchNav = new Agreements.EstablishmentSearchNav(this.editOrNewUrl,
@@ -49,7 +49,7 @@ class InstitutionalAgreementEditModel {
         this.datesStatus = new Agreements.DatesStatus(this.basicInfo.isCustomStatusAllowed);
         ko.applyBindings(this.datesStatus, $('#effective_dates_current_status')[0]);
         this.visibility = new Agreements.Visibility();
-        ko.applyBindings(this.visibility, $('#overall_visibility')[0]);     
+        ko.applyBindings(this.visibility, $('#overall_visibility')[0]);
 
         if (this.agreementId === 0) {
             Globalize.culture(culture)
@@ -79,7 +79,7 @@ class InstitutionalAgreementEditModel {
                     $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * this.percentOffBodyHeight)));
                 });
         }
-        
+
         this.isBound(true);
         this.basicInfo.populateUmbrella();
         this.establishmentSearchNav.bindSearch();
@@ -123,10 +123,10 @@ class InstitutionalAgreementEditModel {
     //added this because kendo window after selecting a autocomplte and then clicking the window, 
     //the body would scroll to the top.
     kendoWindowBug = { val: 0 };
-        
+
     isBound = ko.observable();
     spinner: App.Spinner = new App.Spinner(new App.SpinnerOptions(400, true));
-    
+
     //to correctly bind with ko, must set visibility to hidden. this removes the visibility to hidden and 
     //changes it to display none.
     private _hideOtherGroups(): void {
@@ -138,7 +138,7 @@ class InstitutionalAgreementEditModel {
     officialNameDoesNotMatchTranslation = ko.computed(function () {
         return !(this.participants.establishmentOfficialName === this.participants.establishmentTranslatedName);
     });
-    
+
     private _populateAgreementData(): void {
         $.when(this.deferredUAgreements)
             .done(() => {
@@ -201,7 +201,7 @@ class InstitutionalAgreementEditModel {
                     });
             });
     }
-            
+
     private _updateKendoDialog(windowWidth): void {
         $(".k-window").css({
             left: (windowWidth / 2 - ($(".k-window").width() / 2) + 10)
@@ -250,39 +250,39 @@ class InstitutionalAgreementEditModel {
         // create Editor from textarea HTML element
         $("#agreement_content").kendoEditor({
             tools: [
-            "bold",
-            "italic",
-            "underline",
-            "strikethrough",
-            "fontName",
-            "foreColor",
-            "justifyLeft",
-            "justifyCenter",
-            "justifyRight",
-            "justifyFull",
-            "insertUnorderedList",
-            "insertOrderedList",
-            "indent",
-            "outdent",
-            "createLink",
-            "unlink",
-            "insertImage",
-            "subscript",
-            "superscript",
-            "viewHtml",
-            {
-                name: "formatting",
-                items: [
-            { text: "Paragraph", value: "p" },
-            { text: "Quotation", value: "blockquote" },
-            { text: "Heading 2", value: "h2" },
-            { text: "Heading 3", value: "h3" },
-            { text: "Heading 4", value: "h4" },
-            { text: "Heading 5", value: "h5" },
-            { text: "Heading 6", value: "h6" }
-                ],
-                width: "200px"
-            }
+                "bold",
+                "italic",
+                "underline",
+                "strikethrough",
+                "fontName",
+                "foreColor",
+                "justifyLeft",
+                "justifyCenter",
+                "justifyRight",
+                "justifyFull",
+                "insertUnorderedList",
+                "insertOrderedList",
+                "indent",
+                "outdent",
+                "createLink",
+                "unlink",
+                "insertImage",
+                "subscript",
+                "superscript",
+                "viewHtml",
+                {
+                    name: "formatting",
+                    items: [
+                        { text: "Paragraph", value: "p" },
+                        { text: "Quotation", value: "blockquote" },
+                        { text: "Heading 2", value: "h2" },
+                        { text: "Heading 3", value: "h3" },
+                        { text: "Heading 4", value: "h4" },
+                        { text: "Heading 5", value: "h5" },
+                        { text: "Heading 6", value: "h6" }
+                    ],
+                    width: "200px"
+                }
             ]
         });
         this.basicInfo.bindJquery();
@@ -301,14 +301,14 @@ class InstitutionalAgreementEditModel {
             url: eval(url),
             type: 'GET'
         })
-        .done((result) => {
-            this._bindjQueryKendo(result);
-        })
-        .fail(function (xhr) {
-            alert('fail: status = ' + xhr.status + ' ' + xhr.statusText + '; message = "' + xhr.responseText + '"');
-        });
+            .done((result) => {
+                this._bindjQueryKendo(result);
+            })
+            .fail(function (xhr) {
+                alert('fail: status = ' + xhr.status + ' ' + xhr.statusText + '; message = "' + xhr.responseText + '"');
+            });
     }
-            
+
     saveUpdateAgreement(): void {
         var offset;
 
@@ -330,13 +330,13 @@ class InstitutionalAgreementEditModel {
             offset = $("#participants").offset();
             $("#nav_participants").closest("ul").find("li").removeClass("current");
             $("#nav_participants").addClass("current");
-        } 
+        }
         if (offset != undefined) {
             //ie sucks!
             if (!$("body").scrollTop()) {
                 $("html, body").scrollTop(offset.top - 20);
             } else {
-               $("body").scrollTop(offset.top - 20);
+                $("body").scrollTop(offset.top - 20);
             }
         } else {
             var url,
@@ -364,7 +364,7 @@ class InstitutionalAgreementEditModel {
                     center: item.center
                 });
             });
-            if (this.datesStatus.autoRenew()== 0) {
+            if (this.datesStatus.autoRenew() == 0) {
                 myAutoRenew = false;
             } else if (this.datesStatus.autoRenew() == 1) {
                 myAutoRenew = true;
@@ -381,7 +381,7 @@ class InstitutionalAgreementEditModel {
                 visibility: this.visibility.visibility(),
                 isExpirationEstimated: this.datesStatus.isEstimated(),
                 participants: this.participants.participantsExport,
-                umbrellaId: (this.basicInfo.uAgreementSelected() != 0) ? this.basicInfo.uAgreementSelected() : undefined ,
+                umbrellaId: (this.basicInfo.uAgreementSelected() != 0) ? this.basicInfo.uAgreementSelected() : undefined,
                 type: this.basicInfo.typeOptionSelected()
             })
             if (this.agreementIsEdit()) {
@@ -439,7 +439,7 @@ class InstitutionalAgreementEditModel {
                         this.contact.agreementPostContacts(response, statusText, xhr);
                         //change url to edit
                         $LoadingPage.text("Agreement Saved...");
-                        setTimeout(function ()  {
+                        setTimeout(function () {
                             if (xhr != undefined) {
                                 window.location.hash = ""
                                 window.location.href = "/agreements/" + xhr.getResponseHeader('Location').substring(xhr.getResponseHeader('Location').lastIndexOf("/") + 1) + "/edit/"

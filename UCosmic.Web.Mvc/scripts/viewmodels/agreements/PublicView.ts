@@ -29,6 +29,8 @@ module Agreements.ViewModels {
                     this._bindMap();
                 });
             }
+            this.files = this.fileListPopulator.files;
+            this.fileListPopulator.populate(this.agreementId);
         }
         //imported class instances
         fileListPopulator;
@@ -48,6 +50,14 @@ module Agreements.ViewModels {
         startsOn = ko.observable();
         type = ko.observable();
         umbrellaId = ko.observable();
+
+        fileHref(parent, data): string {
+            return '/api/agreements/' + parent.agreementId + '/files/' + data.id() + '/content/';
+        }
+
+        fileDownloadHref(parent, data): string {
+            return '/api/agreements/' + parent.agreementId + '/files/' + data.id() + '/download/';
+        }
 
         private _bindData(): JQueryDeferred<void> {
             var deferred = $.Deferred();

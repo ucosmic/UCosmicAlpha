@@ -47,9 +47,9 @@ module Agreements {
             var saveUrl = "";
 
             if (this.agreementIsEdit()) {
-                    saveUrl = App.Routes.WebApi.Agreements.Files.post(this.agreementId)
+                saveUrl = App.Routes.WebApi.Agreements.Files.post(this.agreementId)
             } else {
-                    saveUrl = App.Routes.WebApi.Uploads.post()
+                saveUrl = App.Routes.WebApi.Uploads.post()
             }
             $("#fileUpload").kendoUpload({
                 multiple: true,
@@ -58,7 +58,7 @@ module Agreements {
                     select: 'Choose a file to upload...'
                 },
                 select: (e: any): void => {
-                    var url, 
+                    var url,
                         data
 
                     //when selecting multiple files, this is only called 1 time, so we need to loop through e.files list

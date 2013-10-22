@@ -4,11 +4,11 @@
 /// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
 /// <reference path="../../app/Routes.ts" />
 module Agreements {
-    export class FileListPopulator{
+    export class FileListPopulator {
         files = ko.mapping.fromJS([]);
         populate(agreementId, deferredPopFiles?): void {
             deferredPopFiles = ((deferredPopFiles) ? deferredPopFiles : $.Deferred());
-            $.get(App.Routes.WebApi.Agreements.Files.get(agreementId), { useTestData: true })
+            $.get(App.Routes.WebApi.Agreements.Files.get(agreementId))
                 .done((response: any): void => {
                     $.each(response, (i, item) => {
                         this.files.push(ko.mapping.fromJS({
