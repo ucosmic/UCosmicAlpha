@@ -12,6 +12,7 @@ namespace UCosmic.Web.Mvc.Models
         public string Keyword { get; set; }
         public string CountryCode { get; set; }
         public string OrderBy { get; set; }
+        public string Accept { get; set; }
     }
 
     public static class AgreementSearchInputProfiler

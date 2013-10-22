@@ -2,6 +2,7 @@
 using System.Web.Http;
 using AttributeRouting.Web.Http.WebHost;
 using Newtonsoft.Json.Serialization;
+using UCosmic.Web.Mvc.ApiControllers;
 using WebApiContrib.Formatting;
 
 namespace UCosmic.Web.Mvc
@@ -15,6 +16,7 @@ namespace UCosmic.Web.Mvc
             config.Formatters.JsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             config.Formatters.Add(new PlainTextFormatter());
             config.Formatters.Add(new FileMediaFormatter());
+            config.Formatters.Add(new AgreementSpreadsheetFormatter());
 
 #if !DEBUG
             config.MessageHandlers.Add(new RequireHttpsMessageHandler());

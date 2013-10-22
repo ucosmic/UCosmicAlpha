@@ -5,6 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Web.Http;
 using AttributeRouting;
 using AttributeRouting.Web.Http;
@@ -39,7 +40,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [GET("{domain}/agreements")]
-        public PageOfAgreementApiFlatModel Get(string domain, [FromUri] AgreementSearchInputModel input)
+        public HttpResponseMessage Get(string domain, [FromUri] AgreementSearchInputModel input)
         {
             //Thread.Sleep(2000);
             if (input.PageSize < 1 || input == null || string.IsNullOrWhiteSpace(domain))
@@ -51,7 +52,29 @@ namespace UCosmic.Web.Mvc.ApiControllers
             var results = _queryProcessor.Execute(query);
 
             var model = Mapper.Map<PageOfAgreementApiFlatModel>(results);
-            return model;
+
+            if ("application/vnd.ms-excel".Equals(input.Accept, StringComparison.OrdinalIgnoreCase))
+            {
+                Request.Headers.Accept.Clear();
+                Request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/vnd.ms-excel"));
+            }
+
+            var response = Request.CreateResponse(HttpStatusCode.OK, model);
+
+            if (Request.Headers.Accept.Contains(new MediaTypeWithQualityHeaderValue("application/vnd.ms-excel"))||
+                "application/vnd.ms-excel".Equals(input.Accept, StringComparison.OrdinalIgnoreCase))
+            {
+                Request.Headers.Accept.Clear();
+                Request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/vnd.ms-excel"));
+                response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.ms-excel");
+                response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
+                {
+                    FileName = "UCosmicAgreementData.xlsx",
+                };
+            }
+
+            return response;
+            //return model;
         }
 
         [GET("agreements/{agreementId:int}")]
