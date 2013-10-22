@@ -132,6 +132,17 @@ module Agreements.ViewModels {
         }
 
         //#endregion
+        //#region Result Filter Pagination
+
+        private _filterChanged = ko.computed((): void => {
+            var keyword = this.keywordThrottled();
+            var pageSize = this.pager.input.pageSize();
+            var countryCode = this.countryCode();
+            //alert('filter changed');
+            this.pager.input.pageNumberText("1");
+        });
+
+        //#endregion
         //#region Sammy Routing
 
         sammy: Sammy.Application;
@@ -261,6 +272,14 @@ module Agreements.ViewModels {
             var lastRequest: SearchTableInput = requestHistory.length
                 ? Enumerable.From(requestHistory).Last() : null;
             var thisRequest = this._currentRequest();
+
+            //// do we know for a fact that the pageNumber is overflowed?
+            //if (this.pager.input.pageCount() != undefined &&
+            //    this.pager.input.pageCount() < thisRequest.pageNumber) {
+
+            //    this.pager.input.pageNumberText("1");
+            //    return;
+            //}
 
             if (!lastRequest || !this._areRequestsAligned(thisRequest, lastRequest)) {
                 this._requestHistory.push(thisRequest);

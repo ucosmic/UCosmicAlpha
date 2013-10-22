@@ -48,6 +48,16 @@ var Agreements;
                 this._countryChanged = ko.computed(function () {
                     _this._onCountryChanged();
                 });
+                //#endregion
+                //#region Result Filter Pagination
+                this._filterChanged = ko.computed(function () {
+                    var keyword = _this.keywordThrottled();
+                    var pageSize = _this.pager.input.pageSize();
+                    var countryCode = _this.countryCode();
+
+                    //alert('filter changed');
+                    _this.pager.input.pageNumberText("1");
+                });
                 this.routeFormat = '#/{0}/country/{4}/sort/{1}/size/{2}/page/{3}/'.format(this.settings.route).replace('{4}', '{0}');
                 this._isActivated = ko.observable(false);
                 this._route = ko.computed(function () {

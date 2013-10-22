@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq.Expressions;
 using System.Linq;
 using AutoMapper;
@@ -69,6 +70,27 @@ namespace UCosmic.Web.Mvc.Models
 
                                 case "status":
                                     orderBy.Add(x => x.Status, direction);
+                                    break;
+
+                                case "partner":
+                                    // establishment translated name is derived as follows:
+                                    // 1.) if the establishment has a non-former-name that is a translation to the current UI culture, use it.
+                                    // 2.) if the establishment has a non-former-name that is a translation to English, use it.
+                                    // 3.) otherwise, use the official name
+                                    orderBy.Add(x => x.Participants.Any(y => !y.IsOwner), direction == OrderByDirection.Ascending ? OrderByDirection.Descending : OrderByDirection.Ascending);
+                                    orderBy.Add(x => x.Participants.Any(y => !y.IsOwner)
+                                        ? x.Participants.FirstOrDefault(y => !y.IsOwner).Establishment.Names.Any(y => !y.IsFormerName && y.TranslationToLanguage != null
+                                            && y.TranslationToLanguage.TwoLetterIsoCode.Equals(CultureInfo.CurrentUICulture.TwoLetterISOLanguageName, StringComparison.OrdinalIgnoreCase))
+                                            ? x.Participants.FirstOrDefault(y => !y.IsOwner).Establishment.Names.FirstOrDefault(y => !y.IsFormerName && y.TranslationToLanguage != null
+                                                && y.TranslationToLanguage.TwoLetterIsoCode.Equals(CultureInfo.CurrentUICulture.TwoLetterISOLanguageName, StringComparison.OrdinalIgnoreCase)).Text
+                                            : x.Participants.FirstOrDefault(y => !y.IsOwner).Establishment.Names.Any(y => !y.IsFormerName && y.TranslationToLanguage != null
+                                                && y.TranslationToLanguage.TwoLetterIsoCode.Equals("en", StringComparison.OrdinalIgnoreCase))
+                                                ? x.Participants.FirstOrDefault(y => !y.IsOwner).Establishment.Names.FirstOrDefault(y => !y.IsFormerName && y.TranslationToLanguage != null
+                                                    && y.TranslationToLanguage.TwoLetterIsoCode.Equals("en", StringComparison.OrdinalIgnoreCase)).Text
+                                                : x.Participants.FirstOrDefault(y => !y.IsOwner).Establishment.OfficialName
+                                        : null
+                                        
+                                        , direction);
                                     break;
 
                                 case "country":
