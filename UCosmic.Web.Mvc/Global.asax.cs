@@ -6,8 +6,6 @@ using System.Web.Optimization;
 using System.Web.Routing;
 using System.Web.SessionState;
 using UCosmic.Domain;
-using UCosmic.Domain.Agreements;
-using UCosmic.Domain.Places;
 
 namespace UCosmic.Web.Mvc
 {
@@ -32,10 +30,6 @@ namespace UCosmic.Web.Mvc
 
             DependencyResolver.Current.GetService<IProcessEvents>().Raise(new ApplicationStarted());
 
-            //DependencyResolver.Current.GetService<PerformSeedAtlanticOceanWork>().Perform(new SeedAtlanticOcean());
-            //DependencyResolver.Current.GetService<PerformLoadPacificOceanToponymsWork>().Perform(new LoadPacificOceanToponyms());
-            //DependencyResolver.Current.GetService<PerformCanonilizeOceansWork>().Perform(new CanonilizeOceans());
-            //DependencyResolver.Current.GetService<PerformComposeRegionsWork>().Perform(new ComposeRegions());
             //DependencyResolver.Current.GetService<PerformMigrateUsfAgreementDataWork>().Perform(new MigrateUsfAgreementData());
         }
 

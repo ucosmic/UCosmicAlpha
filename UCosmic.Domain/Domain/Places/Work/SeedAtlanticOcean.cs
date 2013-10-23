@@ -1,5 +1,4 @@
-﻿#if true
-using System;
+﻿using System;
 using System.Linq;
 using NGeo.GeoNames;
 using NGeo.Yahoo.GeoPlanet;
@@ -83,4 +82,3 @@ namespace UCosmic.Domain.Places
         }
     }
 }
-#endif
