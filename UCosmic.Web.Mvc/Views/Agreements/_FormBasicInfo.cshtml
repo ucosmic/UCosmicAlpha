@@ -10,8 +10,8 @@
                 <label>Umbrella agreement</label><i>(optional, public visibility)</i>
             </div>
             <div class="field-input-label-top">
-                <input id="umbrella_agreements" type="text" placeholder="[None - this is a top-level or standalone agreement]" 
-                        data-bind="value: uAgreementSelected, valueUpdate: 'afterkeydown', jqObservableElement: '$uAgreements'" />
+                <input id="umbrella_agreements" type="text" placeholder="[None - this is a top-level or standalone agreement]"
+                    data-bind="value: uAgreementSelected, valueUpdate: 'afterkeydown', jqObservableElement: '$uAgreements'" />
             </div>
             <div class="field-label-description">Indicate whether this agreement falls under an umbrella or parent agreement..</div>
         </div>
@@ -20,18 +20,18 @@
                 <label>Agreement type</label><i>(required, public visibility)</i>
             </div>
             <div class="field-input-label-top">
-                <input id="type_options" type="text" placeholder="[None]" 
-                        data-bind="value: typeOptionSelected, valueUpdate: 'afterkeydown', jqObservableElement: '$typeOptions'" />
+                <input id="type_options" type="text" placeholder="[None]"
+                    data-bind="value: typeOptionSelected, valueUpdate: 'afterkeydown', jqObservableElement: '$typeOptions'" />
             </div>
             <div data-bind="visible: isCustomTypeAllowed" class="field-label-description">Select from the drop-down list of pre-existing agreement types or enter a custom one in the text box above.</div>
             <div data-bind=" visible: !isCustomTypeAllowed()" class="field-label-description">Select from the drop-down list of pre-existing agreement types.</div>
-        </div> 
+        </div>
         <div class="field-row">
             <div class="field-label-top">
                 <label>Nickname</label><i>(optional, public visibility)</i>
             </div>
             <div>
-                <input type="text" data-bind="value: nickname" placeholder="[Nickname for this agreement]"  />
+                <input type="text" data-bind="value: nickname" placeholder="[Nickname for this agreement]" />
             </div>
             <div class="field-label-description">The nickname will help you locate and identify this agreement in other drop-down menus.</div>
         </div>
@@ -40,7 +40,7 @@
                 <label>Content</label><i>(optional, public visibility)</i>
             </div>
             <div>
-                <textarea rows="3" data-bind="value: content" placeholder="[Content of this agreement]" id="agreement_content"  ></textarea>
+                <textarea rows="3" data-bind="value: content" placeholder="[Content of this agreement]" id="agreement_content"></textarea>
             </div>
             <div class="field-label-description">Optionally enter a description of the content of this agreement.</div>
         </div>
@@ -49,7 +49,7 @@
                 <label>Private Notes</label><i>(optional, private visibility)</i>
             </div>
             <div>
-                <textarea rows="3" id="privateNotes" data-bind="value: privateNotes" placeholder="[Private notes for this agreement]" ></textarea>
+                <textarea rows="3" id="privateNotes" data-bind="value: privateNotes" placeholder="[Private notes for this agreement]"></textarea>
             </div>
             <div class="field-label-description">Optionally enter private notes about this agreement.</div>
         </div>

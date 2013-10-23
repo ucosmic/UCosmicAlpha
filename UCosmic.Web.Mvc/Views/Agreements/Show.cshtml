@@ -14,21 +14,23 @@
 @section scripts
 {
     @Scripts.Render("~/bundles/agreementPublicView")
+
     <script type="text/javascript">
         var viewModel = new Agreements.ViewModels.PublicView(parseInt(@ViewBag.AgreementId), '@ViewBag.AgreementVisibility');
         ko.applyBindings(viewModel, $('#publicView')[0]);
     </script>
+
 }
 
 <div class="content fixed to-top" data-current-module="agreements" id="publicView">
     <div class="group">
-        <div class="on-left from-top" style="width:500px;">
+        <div class="on-left from-top" style="width: 500px;">
             <header>
                 <h1>
                     @ViewBag.Title
                 </h1>
             </header>
-           @Html.Partial(MVC.Agreements.Views._PublicViewContent)
+            @Html.Partial(MVC.Agreements.Views._PublicViewContent)
         </div>
         <div class="on-right from-top" style="width: 450px; height: 400px; background-color: grey; margin-top: 50px;">
             <div style="height: 400px" id="map-canvas"></div>

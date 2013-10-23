@@ -4,28 +4,28 @@
             Contacts
         </h2>
     </header>
-    <div >
+    <div>
         <ul data-bind="foreach: contacts">
             <li>
                 <div class="typed-item2">
                     <a title="Remove this contact" data-bind="click: $root.removeContact"><i class="red minus on-right"></i></a>
                     <a title="Edit this contact" data-bind="click: $root.editAContact"><i class="edit on-right"></i></a>
-                                
+
                     <div class="item">
                         <div>
                             <div>
-                                <strong data-bind="text: type() + ': '"></strong><span data-bind="text: displayName() + ', '"></span>
-                                <a data-bind="attr: {href: 'mailto:' + emailAddress()}, text: emailAddress"></a>
+                                <strong data-bind="text: type() + ': '"></strong><span data-bind="    text: displayName() + ', '"></span>
+                                <a data-bind="attr: { href: 'mailto:' + emailAddress() }, text: emailAddress"></a>
                             </div>
                             <table>
                                 <tr>
-                                    <td data-bind="visible: title() != undefined && title() != ''" >
-                                        <span data-bind="text: title" ></span>, 
+                                    <td data-bind="visible: title() != undefined && title() != ''">
+                                        <span data-bind="text: title"></span>, 
                                     </td>
                                     <td>
-                                        <ul data-bind="foreach: phones"style="margin-left: 10px">
-                                            <li  class="phoneList">
-                                                <span data-bind="text: type() ? type() + ': ' + value(): '[None]: ' + value()"></span>
+                                        <ul data-bind="foreach: phones" style="margin-left: 10px">
+                                            <li class="phoneList">
+                                                <span data-bind="text: type() ? type() + ': ' + value() : value()"></span>
                                             </li>
                                         </ul>
                                     </td>
@@ -52,8 +52,8 @@
                         <i>(required, public visibility)</i>
                     </div>
                     <div class="field-input-label-top">
-                        <input id="contactTypeOptions" type="text" placeholder="[None]" 
-                               data-bind="value: contactTypeOptionSelected, valueUpdate: 'afterkeydown', jqObservableElement: '$contactTypeOptions'" />
+                        <input id="contactTypeOptions" type="text" placeholder="[None]"
+                            data-bind="value: contactTypeOptionSelected, valueUpdate: 'afterkeydown', jqObservableElement: '$contactTypeOptions'" />
                     </div>
                     <div data-bind="visible: isCustomContactTypeAllowed" class="field-label-description">
                         Select from the drop-down list of pre-existing agreement contactType or enter a custom one in the text box above.
@@ -78,9 +78,9 @@
                     <div class="field-label-top">
                         <label>Salutation</label>
                     </div>
-                    <div class="field-input-label-top" >
-                        <input id="contactSalutation" type="text" placeholder="[None]" 
-                               data-bind="value: contactSalutationSelected, valueUpdate: 'afterkeydown', jqObservableElement: '$$contactSalutation'" />
+                    <div class="field-input-label-top">
+                        <input id="contactSalutation" type="text" placeholder="[None]"
+                            data-bind="value: contactSalutationSelected, valueUpdate: 'afterkeydown', jqObservableElement: '$$contactSalutation'" />
                     </div>
                 </div>
                 <div class="field-column-right">
@@ -118,8 +118,8 @@
                         <label>Suffix</label>
                     </div>
                     <div class="field-input-label-top">
-                        <input id="contactSuffix" type="text" placeholder="[None]" 
-                               data-bind="value: contactSuffixSelected, valueUpdate: 'afterkeydown', jqObservableElement: '$$contactSuffix'" />
+                        <input id="contactSuffix" type="text" placeholder="[None]"
+                            data-bind="value: contactSuffixSelected, valueUpdate: 'afterkeydown', jqObservableElement: '$$contactSuffix'" />
                     </div>
                 </div>
                 <div class="field-column-right">
@@ -150,8 +150,8 @@
                                 <label>Phone types</label>
                             </div>
                             <div class="field-input-label-top" style="width: 395px">
-                                <input  class="phoneTypes" type="text" placeholder="[None]" 
-                                       data-bind="value: type, valueUpdate: 'afterkeydown', attr: { id: 'phoneTypes' + $index() }" />
+                                <input class="phoneTypes" type="text" placeholder="[None]"
+                                    data-bind="value: type, valueUpdate: 'afterkeydown', attr: { id: 'phoneTypes' + $index() }" />
                             </div>
                             <a title="Remove this phone" data-bind="click: $root.phones.removePhone"><i class="red minus on-right"></i></a>
                         </div>
@@ -163,7 +163,7 @@
                     <div class="field-label-top">
                         <label>New phone</label>
                     </div>
-                    <div class="field-input-label-top"  style="width: 400px">
+                    <div class="field-input-label-top" style="width: 400px">
                         <input id="contactPhoneTextValue" type="text" data-bind="value: phones.contactPhoneTextValue" />
                     </div>
                     <a title="add phone" data-bind="click: phones.addPhone" class="addLink on-right"><i class="green plus"></i></a>
@@ -178,13 +178,10 @@
                     <i class="green plus"></i>
                     <span class="text">Save Changes</span>
                 </a>
-                <a data-bind="click: clearContact, visible: !contactsIsEdit()" class="link" style="float: left; font-size: 26px; margin-right: 10px;">
-                    <span class="text">Clear</span>
-                </a>
-                <a data-bind="click: cancelContact" class="link" style="float: left; font-size: 26px">
-                    <span class="text">Cancel</span>
-                </a>
-            </footer><br/>
+                <input type="button" class="link" data-bind="click: clearContact, visible: !contactsIsEdit()" value="Clear" style="margin-top: 12px;" />
+                <input type="button" class="link" data-bind="click: cancelContact" value="Cancel" style="margin-top: 12px;" />
+            </footer>
+            <br />
         </div>
     </div>
 </section>

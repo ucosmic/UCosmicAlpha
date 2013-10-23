@@ -76,28 +76,24 @@
         </ul>
     </div>
 
-    @*<div data-bind="html: contacts, visible: contacts() != undefined" style="font-size: 18px;margin-bottom: 1em;">
+    <div data-bind="visible: contacts().length > 0" style="font-size: 18px; margin-bottom: 1em;">
         <ul data-bind="foreach: contacts">
             <li>
-                <div class="typed-item2">
-                    <a title="Remove this contact" data-bind="click: $root.removeContact"><i class="red minus on-right"></i></a>
-                    <a title="Edit this contact" data-bind="click: $root.editAContact"><i class="edit on-right"></i></a>
+                <div>
                     <div class="item">
                         <div>
                             <div>
-                                <strong data-bind="text: type() + ': '"></strong><span data-bind="text: displayName() + ', '"></span>
-                                <a data-bind="attr: {href: 'mailto:' + emailAddress()}, text: emailAddress"></a>
+                                <strong data-bind="text: type() + ': '"></strong><span data-bind="    text: displayName() + ', '"></span>
+                                <a data-bind="attr: { href: 'mailto:' + emailAddress() }, text: emailAddress"></a>
                             </div>
                             <table>
                                 <tr>
-                                    <td data-bind="visible: title() != undefined && title() != ''" >
-                                        <span data-bind="text: title" ></span>, 
+                                    <td data-bind="visible: title() != undefined && title() != ''">
+                                        <span data-bind="text: title"></span>, 
                                     </td>
                                     <td>
-                                        <ul data-bind="foreach: phones"style="margin-left: 10px">
-                                            <li  class="phoneList">
-                                                <span data-bind="text: type() ? type() + ': ' + value(): '[None]: ' + value()"></span>
-                                            </li>
+                                        <ul data-bind="foreach: phones">
+                                            <li data-bind="text: type() ? type() + ': ' + value() : value()" style="margin-right: 4px; margin-top: .5em;"></li>
                                         </ul>
                                     </td>
                                 </tr>
@@ -107,7 +103,7 @@
                 </div>
             </li>
         </ul>
-    </div>*@
+    </div>
 
     @if (ViewBag.AgreementVisibility == AgreementVisibility.Private)
     {

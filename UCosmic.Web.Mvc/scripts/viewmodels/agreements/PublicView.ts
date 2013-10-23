@@ -31,6 +31,7 @@ module Agreements.ViewModels {
             }
             this.files = this.fileListPopulator.files;
             this.fileListPopulator.populate(this.agreementId);
+            this.populateContacts();
         }
         //imported class instances
         fileListPopulator;
@@ -50,6 +51,7 @@ module Agreements.ViewModels {
         startsOn = ko.observable();
         type = ko.observable();
         umbrellaId = ko.observable();
+        contacts = ko.mapping.fromJS([]);
 
         fileHref(parent, data): string {
             return '/api/agreements/' + parent.agreementId + '/files/' + data.id() + '/content/';
@@ -233,6 +235,13 @@ module Agreements.ViewModels {
                 map.fitBounds(bounds);
             }
             google.maps.event.addDomListener(window, 'load', initialize);
+        }
+
+        populateContacts(): void {
+            $.get(App.Routes.WebApi.Agreements.Contacts.get(this.agreementId))
+                .done((response: any): void => {
+                    ko.mapping.fromJS(response, this.contacts)
+                });
         }
     }
 }

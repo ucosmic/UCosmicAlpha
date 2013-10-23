@@ -30,6 +30,7 @@ var Agreements;
                 this.startsOn = ko.observable();
                 this.type = ko.observable();
                 this.umbrellaId = ko.observable();
+                this.contacts = ko.mapping.fromJS([]);
                 this.startsOnDate = ko.computed(function () {
                     var value = _this.startsOn();
                     var myDate = new Date(value);
@@ -63,6 +64,7 @@ var Agreements;
                 }
                 this.files = this.fileListPopulator.files;
                 this.fileListPopulator.populate(this.agreementId);
+                this.populateContacts();
             }
             PublicView.prototype.fileHref = function (parent, data) {
                 return '/api/agreements/' + parent.agreementId + '/files/' + data.id() + '/content/';
@@ -218,6 +220,13 @@ var Agreements;
                     map.fitBounds(bounds);
                 }
                 google.maps.event.addDomListener(window, 'load', initialize);
+            };
+
+            PublicView.prototype.populateContacts = function () {
+                var _this = this;
+                $.get(App.Routes.WebApi.Agreements.Contacts.get(this.agreementId)).done(function (response) {
+                    ko.mapping.fromJS(response, _this.contacts);
+                });
             };
             return PublicView;
         })();

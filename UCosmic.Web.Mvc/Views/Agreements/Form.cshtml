@@ -17,7 +17,8 @@
 @section scripts
 {
 
-         @Scripts.Render("~/bundles/agreements")
+    @Scripts.Render("~/bundles/agreements")
+
     <script type="text/javascript">
         ko.bindingHandlers.stopBinding = {
             init: function () {
@@ -30,6 +31,15 @@
         var agreementViewModel = new InstitutionalAgreementEditModel(@ViewBag.Id);
         ko.applyBindings(agreementViewModel, $("[data-current-module='agreements']")[0]);
     </script>
+
+}
+@section styles
+{
+    <style>
+        .k-button {
+            color: black!important;
+        }
+    </style>
 }
 <div class="content fixed to-top" id="Loading_page">
     <div class="on-left from-top">
@@ -41,7 +51,7 @@
         </header>
     </div>
 </div>
-<div class="content fixed to-top" data-current-module="agreements"  style="visibility: hidden">
+<div class="content fixed to-top" data-current-module="agreements" style="visibility: hidden">
     <form class="group">
         <div class="on-left from-top">
             <header>
@@ -49,14 +59,14 @@
                     @ViewBag.Title
                 </h1>
             </header>
-			<!-- ko stopBinding: true -->
+            <!-- ko stopBinding: true -->
             @Html.Partial(MVC.Agreements.Views._FormParticipants)
             @Html.Partial(MVC.Agreements.Views._FormBasicInfo)
             @Html.Partial(MVC.Agreements.Views._FormEffectiveDatesCurrentStatus)
             @Html.Partial(MVC.Agreements.Views._FormContacts)
             @Html.Partial(MVC.Agreements.Views._FormFileAttachments)
             @Html.Partial(MVC.Agreements.Views._FormOverallVisibility)
-			<!-- /ko -->
+            <!-- /ko -->
             <footer id="saveAgreement">
                 @* TODO: render these as buttons instead of links with button styles *@
                 <a data-bind="click: saveUpdateAgreement, visible: !agreementIsEdit()" class="button">
