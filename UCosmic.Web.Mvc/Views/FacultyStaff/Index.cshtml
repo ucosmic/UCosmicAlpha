@@ -20,7 +20,8 @@
          padding-left: 5px;
         }
 
-        input[type="button"] {
+        input[type="button"]#activitiesButton,
+        input[type="button"]#peopleButton {
             height: 20px;
             width: 70px;
             padding: 0 0 0 0;
@@ -131,15 +132,17 @@
             background-image: url('../../images/icons/maps/arcticOceanHover.png');
         }
 
-        /* Attempt top round corners.  Fail. */
+        /* Attempt top round corners.  Fail. 
         
         nav.side > ul > li:first-child > a > .text,
         nav.side > ul > li:first-child > .text,
-        .navTopSeg {
-            -webkit-border-radius: 8px 8px 0 0;
-            -moz-border-radius: 8px 8px 0 0;
-            border-radius: 8px 8px 0 0;
-        }
+        .navTopSeg  
+        
+        #searchSideTop {
+            -webkit-border-radius: 8px 8px 0 0 !important;
+            -moz-border-radius: 8px 8px 0 0 !important;
+            border-radius: 8px 8px 0 0 !important;
+        } */
 
         /* Begin Kendo UI widget theming */
         
@@ -250,7 +253,35 @@
             padding: 1px 2px 1px 2px;
         }
         
+         #searchReset.content {
+            display: inline !important;	
+            float: right;
+        }
+
+        #searchResetButton.kendoSideWidget {
+            font-size: 10px;
+            width: auto;
+            margin: 1px 5px 1px 5px;
+            padding: 2px 3px;
+            float: right;
+            position: relative;
+            top: -25px;
+            display: inline !important;	
+        }
+
     </style>
+    
+    <!--[if gte IE 8]>
+    <style type="text/css">
+        .kendoSideWidget .k-widget .k-multiselect-wrap .k-input {
+            border-color: #bbbbbb;
+            position: relative;
+            top: 3px;
+            left: 2px;
+        }
+    </style>
+    <![endif]-->
+    
 }
 
 @section scripts
@@ -436,7 +467,7 @@
                             <!-- Caribbean -->
                             <div style="position: absolute; left: 188px; top: 309px; width: 51px">
                                 <div style="width: 100%; text-align: center">
-                                    <img width="51" height="9" src="~/images/icons/maps/caribbean.png" > 
+                                    <img width="72" height="9" src="~/images/icons/maps/caribbean.png" > 
                                 </div>
                             </div>
 
@@ -491,7 +522,7 @@
                             </div>
                     
                             <!-- Caribbean Title Phantom -->
-                            <div id="caribbean" style="position: absolute; left: 188px; top: 317px; width: 51px; height: 9px; z-index: 4" data-bind="click: function(event,item) { customPlaceClick(event,item,'Caribbean Sea'); }">
+                            <div id="caribbean" style="position: absolute; left: 188px; top: 317px; width: 72px; height: 9px; z-index: 4" data-bind="click: function(event,item) { customPlaceClick(event,item,'Caribbean Sea'); }">
                                 <img src="~/images/transparent.png" width="51" height="9"/>
                             </div>
 
@@ -673,7 +704,6 @@
                 </div>
             </div>
         </div>
-
         <aside class="on-right from-top" data-fixed-scroll="root" >
             <div data-fixed-scroll="anchor"></div>
             <div data-fixed-scroll="content" style="display: none" data-bind="visible: isPointmapVisible">
@@ -695,3 +725,9 @@
     <img img data-bind="attr: { src: '/api/my/employee-module-settings/icon/' + $root.getActivityTypeIconName( $data ), title: $root.getActivityTypeToolTip( $data ) }"
         src="" title="" width="24" height="24"/>
 </script>
+
+
+<!-- JQUERY DIALOGS -->
+<div id="noResults" class="dialog" title="No Results">
+    The current search criteria returned no results.
+</div>

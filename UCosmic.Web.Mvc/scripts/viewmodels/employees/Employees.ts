@@ -124,6 +124,10 @@ module ViewModels.Employees {
         initialLocations: any[];        // Bug - To overcome bug in Multiselect.
         selectedLocationValues: any[];
 
+        fromDatePickerId: string;
+        toDatePickerId: string;
+
+
         fromDate: KnockoutObservable<Date>;
         toDate: KnockoutObservable<Date>;
         includeUndated: KnockoutObservable<boolean>;
@@ -178,6 +182,8 @@ module ViewModels.Employees {
 
         degreeCount: KnockoutObservable<number>;
 
+        subscriptions: Array;
+
         /* If you add or remove from this list, also look at _getHeatmapActivityDataTable()
             and _getHeatmapPeopleDataTable() to update the custom place tooltips text. */
         geochartCustomPlaces: any[] = [
@@ -200,7 +206,7 @@ module ViewModels.Employees {
                 name: 'Gulf of Mexico', id: 'gulfOfMexico', activityCount: 0, peopleCount: 0
             },
             {
-                name: 'Caribbean', id: 'caribbean', activityCount: 0, peopleCount: 0
+                name: 'Caribbean Sea', id: 'caribbean', activityCount: 0, peopleCount: 0
             },
             {
                 name: 'Arctic Ocean', id: 'arcticOcean', activityCount: 0, peopleCount: 0
@@ -334,6 +340,8 @@ module ViewModels.Employees {
             ]);
             this.lens = ko.observable('map');
 
+            this.subscriptions = new Array();
+
 
             if (institutionInfo != null) {
 
@@ -374,7 +382,9 @@ module ViewModels.Employees {
             departmentDropListId: string
             ): void {
 
-            this.locationSelectorId = locationSelectorId;
+                this.locationSelectorId = locationSelectorId;
+                this.fromDatePickerId = fromDatePickerId;
+                this.toDatePickerId = toDatePickerId;
 
             /*
                 There appears to be a number of bugs/undocumented behaviors associated
@@ -458,6 +468,7 @@ module ViewModels.Employees {
             //        }
             //    }
             //});
+
 
             $("#" + establishmentDropListId).kendoDropDownList({
                 dataTextField: "officialName",
@@ -653,57 +664,62 @@ module ViewModels.Employees {
         }
 
         setupSubscriptions(): void {
-            //this.from.subscribe((newValue: any): void => { this.dirtyFlag(true); });
-            //this.to.subscribe((newValue: any): void => { this.dirtyFlag(true); });
-            //this.onGoing.subscribe((newValue: any): void => { this.dirtyFlag(true); });
-            //this.institutions.subscribe((newValue: any): void => { this.dirtyFlag(true); });
-            this.selectedPlace.subscribe((newValue: any): void => { this.selectMap('heatmap'); });
-            this.mapRegion.subscribe((newValue: any): void => { this.heatmapOptions["region"] = newValue; });
 
-            this.searchType.subscribe((newValue: any): void => {
+            this.removeSubscriptions();
+
+            this.subscriptions.push(this.selectedPlace.subscribe((newValue: any): void => { this.selectMap('heatmap'); }));
+            this.subscriptions.push(this.mapRegion.subscribe((newValue: any): void => { this.heatmapOptions["region"] = newValue; }));
+
+            this.subscriptions.push(this.searchType.subscribe((newValue: any): void => {
                 this.selectSearchType(newValue);
                 if (this.mapType() === 'pointmap') {
                     this.drawPointmap(true);
                 }
-            });
+            }));
 
             for (var i = 0; i < this.activityTypes().length; i += 1) {
-                this.activityTypes()[i].checked.subscribe((newValue: any): void => {
+                this.subscriptions.push(this.activityTypes()[i].checked.subscribe((newValue: any): void => {
                     if (this.mapType() === 'pointmap') {
                         this.drawPointmap(true);
                     }
-                });
+                }));
             }
 
-            this.degreesChecked.subscribe((newValue: any): void => {
+            this.subscriptions.push(this.degreesChecked.subscribe((newValue: any): void => {
                 if (this.mapType() === 'pointmap') {
                     this.drawPointmap(true);
                 }
-            });
+            }));
 
-            this.tags.subscribe((newValue: any): void => {
+            this.subscriptions.push(this.tags.subscribe((newValue: any): void => {
                 if (this.mapType() === 'pointmap') {
                     this.drawPointmap(true);
                 }
-            });
+            }));
 
-            this.fromDate.subscribe((newValue: any): void => {
+            this.subscriptions.push(this.fromDate.subscribe((newValue: any): void => {
                 if (this.mapType() === 'pointmap') {
                     this.drawPointmap(true);
                 }
-            });
+            }));
 
-            this.toDate.subscribe((newValue: any): void => {
+            this.subscriptions.push(this.toDate.subscribe((newValue: any): void => {
                 if (this.mapType() === 'pointmap') {
                     this.drawPointmap(true);
                 }
-            });
+            }));
 
-            this.includeUndated.subscribe((newValue: any): void => {
+            this.subscriptions.push(this.includeUndated.subscribe((newValue: any): void => {
                 if (this.mapType() === 'pointmap') {
                     this.drawPointmap(true);
                 }
-            });
+            }));
+        }
+
+        removeSubscriptions(): void {
+            for (var i = 0; i < this.subscriptions.length; i += 1) {
+                (<any>this.subscriptions[i]).dispose(); //no longer want notifications
+            }
         }
 
         setupRouting(): void {
@@ -2224,6 +2240,9 @@ module ViewModels.Employees {
                     })
                     .always((): void => {
                         this.loadSpinner.stop();
+                        if (this.activityResults.placeResults().length == 0) {
+                            $("#noResults").dialog();
+                        }
                     });
             } else {
                 this.getPointmapPeopleMarkers(updateMarkers)
@@ -2233,6 +2252,9 @@ module ViewModels.Employees {
                     })
                     .always((): void => {
                         this.loadSpinner.stop();
+                        if (this.activityResults.placeResults().length == 0) {
+                            $("#noResults").dialog();
+                        }
                     });
             }
         }
@@ -2456,6 +2478,43 @@ module ViewModels.Employees {
             }
 
             this.sortSpinner.stop();
+        }
+
+
+        handleReset(item: any, event: any): void {
+
+            this.removeSubscriptions();
+
+            $("#" + this.locationSelectorId).data("kendoMultiSelect").value([]);
+            this.locations.removeAll();
+
+            if ((this.activityTypes() != null) && (this.activityTypes().length > 0)) {
+                for (var i = 0; i < this.activityTypes().length; i += 1) {
+                    this.activityTypes()[i].checked(true);
+                }
+            }
+
+            this.degreesChecked(false);
+
+            this.tags(null);
+
+            $("#" + this.fromDatePickerId).data("kendoDatePicker").value(null);
+            this.fromDate(null);
+
+            $("#" + this.toDatePickerId).data("kendoDatePicker").value(null);
+            this.toDate(null);
+
+            this.includeUndated(true);
+
+            $("#" + this.campusDropListId).data("kendoDropDownList").value(0);
+            $("#" + this.collegeDropListId).data("kendoDropDownList").setDataSource(new kendo.data.DataSource());
+            $("#" + this.collegeDropListId).data("kendoDropDownList").text("");
+            $("#" + this.departmentDropListId).data("kendoDropDownList").setDataSource(new kendo.data.DataSource());
+            $("#" + this.departmentDropListId).data("kendoDropDownList").text("");
+
+            this.drawPointmap(true);
+
+            this.setupSubscriptions();
         }
 
     }

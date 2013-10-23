@@ -1,9 +1,9 @@
 ﻿<nav class="side">
-    <ul class="top">
-        <li class="navTopSeg">
-            <span class="text navTopSeg" style="float:left;">Search For:</span>
-            <div style="float:right;">
-                <input type="button" class="kendoSideWidget" style="font-size: 10px; margin: 1px 5px 1px 5px; padding: 2px 3px;" value="Reset" id="searchResetButton" />
+    <ul>
+        <li class="top">
+            <span class="text" style="float:left;">Search For:</span>
+            <div class="content" id="searchReset">
+                <input type="button" class="kendoSideWidget" value="Reset" id="searchResetButton" data-bind="click: function ( item, event ) { handleReset( item, event );}"/>
             </div>
         </li>
         <li class="static">
@@ -44,7 +44,7 @@
         <li class="static">
             <span class="text">Tags / Keywords</span>
             <div class="content">
-                <div class="kendoSideWidget side"> 
+                <div class="kendoSideWidget"> 
                     <textarea id="tagsTextbox" placeholder="Additional tags/keywords" rows="1" data-bind="value: tags"></textarea>
                 </div>
             </div>
@@ -99,13 +99,17 @@
         </li>
     </ul>
     <ul class="group bottom">
-        <li id="faculty-staff-on-right-map" class="map current"> <a href="#" class="group" value="map" data-bind="click: function ( item, event ) { selectLens( 'map' ) }" /> 
+        <li id="faculty-staff-on-right-map" class="current"> 
+            <a href="#" class="group" value="map" data-bind="click: function (item, event) { selectLens('map') }" /> 
             <div class="arrow"></div>
             <span class="text"> Map </span>
+            </a>
         </li>
-        <li id="faculty-staff-on-right-table" class="table"> <a href="#" class="group" value="table" data-bind="click: function ( item, event ) { selectLens( 'table' ) }" /> 
+        <li id="faculty-staff-on-right-table" class=""> 
+            <a href="#" class="group" value="table" data-bind="click: function (item, event) { selectLens('table') }" /> 
             <div class="arrow"></div>
             <span class="text"> Table </span>
+            </a>
         </li>
     </ul>
 </nav> 

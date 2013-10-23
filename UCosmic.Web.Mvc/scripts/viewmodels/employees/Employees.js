@@ -103,7 +103,7 @@ var ViewModels;
                         peopleCount: 0
                     },
                     {
-                        name: 'Caribbean',
+                        name: 'Caribbean Sea',
                         id: 'caribbean',
                         activityCount: 0,
                         peopleCount: 0
@@ -243,6 +243,8 @@ var ViewModels;
                 ]);
                 this.lens = ko.observable('map');
 
+                this.subscriptions = new Array();
+
                 if (institutionInfo != null) {
                     if (institutionInfo.InstitutionId != null) {
                         this.establishmentId(Number(institutionInfo.InstitutionId));
@@ -271,6 +273,8 @@ var ViewModels;
             FacultyAndStaff.prototype.setupWidgets = function (locationSelectorId, fromDatePickerId, toDatePickerId, establishmentDropListId, campusDropListId, collegeDropListId, departmentDropListId) {
                 var _this = this;
                 this.locationSelectorId = locationSelectorId;
+                this.fromDatePickerId = fromDatePickerId;
+                this.toDatePickerId = toDatePickerId;
 
                 /*
                 There appears to be a number of bugs/undocumented behaviors associated
@@ -546,61 +550,65 @@ var ViewModels;
 
             FacultyAndStaff.prototype.setupSubscriptions = function () {
                 var _this = this;
-                //this.from.subscribe((newValue: any): void => { this.dirtyFlag(true); });
-                //this.to.subscribe((newValue: any): void => { this.dirtyFlag(true); });
-                //this.onGoing.subscribe((newValue: any): void => { this.dirtyFlag(true); });
-                //this.institutions.subscribe((newValue: any): void => { this.dirtyFlag(true); });
-                this.selectedPlace.subscribe(function (newValue) {
-                    _this.selectMap('heatmap');
-                });
-                this.mapRegion.subscribe(function (newValue) {
-                    _this.heatmapOptions["region"] = newValue;
-                });
+                this.removeSubscriptions();
 
-                this.searchType.subscribe(function (newValue) {
+                this.subscriptions.push(this.selectedPlace.subscribe(function (newValue) {
+                    _this.selectMap('heatmap');
+                }));
+                this.subscriptions.push(this.mapRegion.subscribe(function (newValue) {
+                    _this.heatmapOptions["region"] = newValue;
+                }));
+
+                this.subscriptions.push(this.searchType.subscribe(function (newValue) {
                     _this.selectSearchType(newValue);
                     if (_this.mapType() === 'pointmap') {
                         _this.drawPointmap(true);
                     }
-                });
+                }));
 
                 for (var i = 0; i < this.activityTypes().length; i += 1) {
-                    this.activityTypes()[i].checked.subscribe(function (newValue) {
+                    this.subscriptions.push(this.activityTypes()[i].checked.subscribe(function (newValue) {
                         if (_this.mapType() === 'pointmap') {
                             _this.drawPointmap(true);
                         }
-                    });
+                    }));
                 }
 
-                this.degreesChecked.subscribe(function (newValue) {
+                this.subscriptions.push(this.degreesChecked.subscribe(function (newValue) {
                     if (_this.mapType() === 'pointmap') {
                         _this.drawPointmap(true);
                     }
-                });
+                }));
 
-                this.tags.subscribe(function (newValue) {
+                this.subscriptions.push(this.tags.subscribe(function (newValue) {
                     if (_this.mapType() === 'pointmap') {
                         _this.drawPointmap(true);
                     }
-                });
+                }));
 
-                this.fromDate.subscribe(function (newValue) {
+                this.subscriptions.push(this.fromDate.subscribe(function (newValue) {
                     if (_this.mapType() === 'pointmap') {
                         _this.drawPointmap(true);
                     }
-                });
+                }));
 
-                this.toDate.subscribe(function (newValue) {
+                this.subscriptions.push(this.toDate.subscribe(function (newValue) {
                     if (_this.mapType() === 'pointmap') {
                         _this.drawPointmap(true);
                     }
-                });
+                }));
 
-                this.includeUndated.subscribe(function (newValue) {
+                this.subscriptions.push(this.includeUndated.subscribe(function (newValue) {
                     if (_this.mapType() === 'pointmap') {
                         _this.drawPointmap(true);
                     }
-                });
+                }));
+            };
+
+            FacultyAndStaff.prototype.removeSubscriptions = function () {
+                for (var i = 0; i < this.subscriptions.length; i += 1) {
+                    (this.subscriptions[i]).dispose();
+                }
             };
 
             FacultyAndStaff.prototype.setupRouting = function () {
@@ -2017,6 +2025,9 @@ var ViewModels;
                         _this.showPointmapActivityMarkers();
                     }).always(function () {
                         _this.loadSpinner.stop();
+                        if (_this.activityResults.placeResults().length == 0) {
+                            $("#noResults").dialog();
+                        }
                     });
                 } else {
                     this.getPointmapPeopleMarkers(updateMarkers).done(function () {
@@ -2024,6 +2035,9 @@ var ViewModels;
                         _this.showPointmapPeopleMarkers();
                     }).always(function () {
                         _this.loadSpinner.stop();
+                        if (_this.activityResults.placeResults().length == 0) {
+                            $("#noResults").dialog();
+                        }
                     });
                 }
             };
@@ -2245,6 +2259,41 @@ var ViewModels;
                 }
 
                 this.sortSpinner.stop();
+            };
+
+            FacultyAndStaff.prototype.handleReset = function (item, event) {
+                this.removeSubscriptions();
+
+                $("#" + this.locationSelectorId).data("kendoMultiSelect").value([]);
+                this.locations.removeAll();
+
+                if ((this.activityTypes() != null) && (this.activityTypes().length > 0)) {
+                    for (var i = 0; i < this.activityTypes().length; i += 1) {
+                        this.activityTypes()[i].checked(true);
+                    }
+                }
+
+                this.degreesChecked(false);
+
+                this.tags(null);
+
+                $("#" + this.fromDatePickerId).data("kendoDatePicker").value(null);
+                this.fromDate(null);
+
+                $("#" + this.toDatePickerId).data("kendoDatePicker").value(null);
+                this.toDate(null);
+
+                this.includeUndated(true);
+
+                $("#" + this.campusDropListId).data("kendoDropDownList").value(0);
+                $("#" + this.collegeDropListId).data("kendoDropDownList").setDataSource(new kendo.data.DataSource());
+                $("#" + this.collegeDropListId).data("kendoDropDownList").text("");
+                $("#" + this.departmentDropListId).data("kendoDropDownList").setDataSource(new kendo.data.DataSource());
+                $("#" + this.departmentDropListId).data("kendoDropDownList").text("");
+
+                this.drawPointmap(true);
+
+                this.setupSubscriptions();
             };
             return FacultyAndStaff;
         })();
