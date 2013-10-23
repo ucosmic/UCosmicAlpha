@@ -62,6 +62,9 @@ namespace UCosmic.Web.Mvc.Models
                     .ForMember(d => d.CustomName, o => o.MapFrom(s => s.Name))
                     .ForMember(d => d.Extension, o => o.Ignore())
                     .ForMember(d => d.FileMedium, o => o.Ignore())
+                    .ForMember(d => d.Visibility, o => o.MapFrom(s => string.IsNullOrWhiteSpace(s.VisibilityText)
+                        ? AgreementVisibility.Protected.AsSentenceFragment()
+                        : s.Visibility.AsSentenceFragment()))
                 ;
             }
         }
