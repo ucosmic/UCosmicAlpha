@@ -142,7 +142,7 @@ var Agreements;
                     _this._map.onIdle(function () {
                         var idles = _this._map.idles();
                         setTimeout(function () {
-                            if (idles == _this._map.idles() && !_this._map.isDragging()) {
+                            if (idles == _this._map.idles() && !_this._map.isDragging() && _this._isActivated()) {
                                 if (_this.zoom() != _this._map.zoom() || !SearchMap._areCoordinatesEqualEnough(_this.lat(), _this._map.lat()) || !SearchMap._areCoordinatesEqualEnough(_this.lng(), _this._map.lng())) {
                                     _this.lat(_this._map.lat());
                                     _this.lng(_this._map.lng());
@@ -150,10 +150,14 @@ var Agreements;
                                     _this.setLocation();
                                 }
                             }
-                        }, 500);
+                        }, 1000);
                     });
                 });
             }
+            SearchMap.prototype.triggerMapResize = function () {
+                return this._map.triggerResize();
+            };
+
             SearchMap._areCoordinatesEqualEnough = function (coord1, coord2) {
                 var diff = Math.abs(coord1 - coord2);
                 return diff < 0.000001;

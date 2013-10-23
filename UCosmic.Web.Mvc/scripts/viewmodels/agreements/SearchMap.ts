@@ -114,7 +114,7 @@ module Agreements.ViewModels {
                 this._map.onIdle((): void => {
                     var idles = this._map.idles();
                     setTimeout((): void => {
-                        if (idles == this._map.idles() && !this._map.isDragging()) {
+                        if (idles == this._map.idles() && !this._map.isDragging() && this._isActivated()) {
                             if (this.zoom() != this._map.zoom()
                                 || !SearchMap._areCoordinatesEqualEnough(this.lat(), this._map.lat())
                                 || !SearchMap._areCoordinatesEqualEnough(this.lng(), this._map.lng())) {
@@ -124,7 +124,7 @@ module Agreements.ViewModels {
                                 this.setLocation();
                             }
                         }
-                    }, 500);
+                    }, 1000);
                 });
             });
         }
@@ -148,6 +148,10 @@ module Agreements.ViewModels {
                 //log: true,
             }
             );
+
+        triggerMapResize(): JQueryPromise<void> {
+            return this._map.triggerResize();
+        }
 
         private static _areCoordinatesEqualEnough(coord1: number, coord2: number): boolean {
             var diff = Math.abs(coord1 - coord2);

@@ -397,8 +397,13 @@ module App.GoogleMaps {
         //#endregion
         //#region Helpers
 
-        triggerResize(): void {
+        triggerResize(): JQueryPromise<void> {
+            var promise = $.Deferred();
             google.maps.event.trigger(this.map, 'resize');
+            google.maps.event.addListenerOnce(this.map, 'idle', (): void => {
+                promise.resolve();
+            });
+            return promise;
         }
 
         private static _reducePrecision(value: number, precision: number = 0): number {

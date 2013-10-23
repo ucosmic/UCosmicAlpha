@@ -113,6 +113,8 @@ module Agreements.ViewModels {
 
         //#endregion
 
+        private _hasMapBeenResizedOnce = false;
+
         viewTable(): void {
             if (!this.isTableLens()) {
                 this.map.deactivate();
@@ -125,10 +127,20 @@ module Agreements.ViewModels {
         viewMap(): void {
             if (!this.isMapLens()) {
                 this.table.deactivate();
+                this.map.deactivate();
                 this.map.countryCode(this.table.countryCode());
                 this.map.loadViewport = 1;
                 this.lens('map');
-                this.map.activate();
+                if (this._hasMapBeenResizedOnce) {
+                    this.map.activate();
+                }
+                else {
+                    this.map.triggerMapResize()
+                        .done((): void => {
+                            this._hasMapBeenResizedOnce = true;
+                            this.map.activate();
+                        });
+                }
             }
         }
 

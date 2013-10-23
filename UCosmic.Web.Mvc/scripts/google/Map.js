@@ -315,7 +315,12 @@ var App;
             //#endregion
             //#region Helpers
             Map.prototype.triggerResize = function () {
+                var promise = $.Deferred();
                 google.maps.event.trigger(this.map, 'resize');
+                google.maps.event.addListenerOnce(this.map, 'idle', function () {
+                    promise.resolve();
+                });
+                return promise;
             };
 
             Map._reducePrecision = function (value, precision) {

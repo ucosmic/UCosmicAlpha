@@ -25,6 +25,8 @@ var Agreements;
                 //#endregion
                 //#region Sammy Routing
                 this.sammy = Sammy();
+                //#endregion
+                this._hasMapBeenResizedOnce = false;
                 this._runSammy();
                 this.table = new ViewModels.SearchTable({
                     element: undefined,
@@ -80,7 +82,6 @@ var Agreements;
                 });
             };
 
-            //#endregion
             SearchLenses.prototype.viewTable = function () {
                 if (!this.isTableLens()) {
                     this.map.deactivate();
@@ -91,12 +92,21 @@ var Agreements;
             };
 
             SearchLenses.prototype.viewMap = function () {
+                var _this = this;
                 if (!this.isMapLens()) {
                     this.table.deactivate();
+                    this.map.deactivate();
                     this.map.countryCode(this.table.countryCode());
                     this.map.loadViewport = 1;
                     this.lens('map');
-                    this.map.activate();
+                    if (this._hasMapBeenResizedOnce) {
+                        this.map.activate();
+                    } else {
+                        this.map.triggerMapResize().done(function () {
+                            _this._hasMapBeenResizedOnce = true;
+                            _this.map.activate();
+                        });
+                    }
                 }
             };
 
