@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if false
+using System;
 using System.Linq;
 
 namespace UCosmic.Domain.Places
@@ -79,3 +80,4 @@ namespace UCosmic.Domain.Places
         }
     }
 }
+#endif
