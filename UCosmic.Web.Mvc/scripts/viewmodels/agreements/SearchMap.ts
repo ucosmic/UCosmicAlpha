@@ -332,6 +332,7 @@ module Agreements.ViewModels {
             var allowRoute = true;
 
             if (this._scopeHistory().length > 1 &&
+                parseInt(e.params['zoom']) == this.zoom() &&
                 this._areFloatsEqualEnough(parseFloat(newLat), oldLat) &&
                 this._areFloatsEqualEnough(parseFloat(newLng), oldLng)) {
                 return false;
@@ -484,6 +485,9 @@ module Agreements.ViewModels {
         }).extend({ throttle: 1 });
 
         private _onViewportDirty(): void {
+            var zoom = this.zoom();
+            var lat = this.lat();
+            var lng = this.lng();
             if (!this._isActivated() || this.loadViewport) return;
 
             var viewportHistory = this._viewportHistory();
@@ -902,10 +906,10 @@ module Agreements.ViewModels {
             isDirty = isDirty || (this.settings.activationRoute
             && this.sammy.getLocation().indexOf(this.settings.activationRoute) < 0);
             if (isDirty) {
-                this.loadViewport--;
-                if (this.loadViewport < 0) this.loadViewport = 0;
                 this.setLocation();
             }
+            this.loadViewport--;
+            if (this.loadViewport < 0) this.loadViewport = 0;
         }
 
         private _updateStatus(placeType: string, places: ApiModels.PlaceWithAgreements[]) {

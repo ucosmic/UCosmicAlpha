@@ -293,7 +293,7 @@ else if (this.continentCode() != 'any')
                 var oldLng = this.lng();
                 var allowRoute = true;
 
-                if (this._scopeHistory().length > 1 && this._areFloatsEqualEnough(parseFloat(newLat), oldLat) && this._areFloatsEqualEnough(parseFloat(newLng), oldLng)) {
+                if (this._scopeHistory().length > 1 && parseInt(e.params['zoom']) == this.zoom() && this._areFloatsEqualEnough(parseFloat(newLat), oldLat) && this._areFloatsEqualEnough(parseFloat(newLng), oldLng)) {
                     return false;
                 }
 
@@ -419,6 +419,9 @@ else if (this.continentCode() != 'any')
 
             SearchMap.prototype._onViewportDirty = function () {
                 var _this = this;
+                var zoom = this.zoom();
+                var lat = this.lat();
+                var lng = this.lng();
                 if (!this._isActivated() || this.loadViewport)
                     return;
 
@@ -762,11 +765,11 @@ else if (this.continentCode() != 'any')
                 }
                 isDirty = isDirty || (this.settings.activationRoute && this.sammy.getLocation().indexOf(this.settings.activationRoute) < 0);
                 if (isDirty) {
-                    this.loadViewport--;
-                    if (this.loadViewport < 0)
-                        this.loadViewport = 0;
                     this.setLocation();
                 }
+                this.loadViewport--;
+                if (this.loadViewport < 0)
+                    this.loadViewport = 0;
             };
 
             SearchMap.prototype._updateStatus = function (placeType, places) {
