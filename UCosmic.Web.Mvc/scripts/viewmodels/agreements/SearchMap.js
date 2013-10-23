@@ -348,6 +348,8 @@ else if (this.continentCode() != 'any')
             SearchMap.prototype.activate = function () {
                 var _this = this;
                 if (!this._isActivated()) {
+                    if (this._map.map)
+                        this._map.triggerResize();
                     this._scopeHistory([]);
                     this._viewportHistory([]);
                     $.when(this._map.ready()).then(function () {
@@ -522,7 +524,6 @@ else if (this.continentCode() != 'any')
 
                 var viewportSettings = this._getMapViewportSettings(placeType, places);
                 if (this._scopeHistory().length + this.loadViewport > 1) {
-                    this.loadViewport--;
                     this._map.setViewport(viewportSettings).then(function () {
                         _this._updateRoute();
                     });
@@ -759,8 +760,13 @@ else if (this.continentCode() != 'any')
                     this.zoom(this._map.zoom());
                     isDirty = true;
                 }
-                if (isDirty)
+                isDirty = isDirty || (this.settings.activationRoute && this.sammy.getLocation().indexOf(this.settings.activationRoute) < 0);
+                if (isDirty) {
+                    this.loadViewport--;
+                    if (this.loadViewport < 0)
+                        this.loadViewport = 0;
                     this.setLocation();
+                }
             };
 
             SearchMap.prototype._updateStatus = function (placeType, places) {
@@ -978,7 +984,6 @@ else if (this.continentCode() != 'any')
                 this.status.countryCount('this area');
 
                 if (this._scopeHistory().length + this.loadViewport > 1) {
-                    this.loadViewport--;
                     this._map.setViewport(viewportSettings).then(function () {
                         _this._updateRoute();
                     });

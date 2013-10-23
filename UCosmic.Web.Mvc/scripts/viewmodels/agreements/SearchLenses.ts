@@ -115,19 +115,19 @@ module Agreements.ViewModels {
 
         viewTable(): void {
             if (!this.isTableLens()) {
-                this.lens('table');
                 this.map.deactivate();
                 this.table.countryCode(this.map.countryCode());
+                this.lens('table');
                 this.table.activate();
             }
         }
 
         viewMap(): void {
             if (!this.isMapLens()) {
-                this.lens('map');
                 this.table.deactivate();
                 this.map.countryCode(this.table.countryCode());
-                this.map.loadViewport = 2;
+                this.map.loadViewport = 1;
+                this.lens('map');
                 this.map.activate();
             }
         }

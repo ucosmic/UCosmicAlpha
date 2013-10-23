@@ -384,6 +384,7 @@ module Agreements.ViewModels {
         loadViewport: number = 0;
         activate(): void {
             if (!this._isActivated()) {
+                if (this._map.map) this._map.triggerResize();
                 this._scopeHistory([]);
                 this._viewportHistory([]);
                 $.when(this._map.ready()).then((): void => {
@@ -624,7 +625,6 @@ module Agreements.ViewModels {
 
             var viewportSettings = this._getMapViewportSettings(placeType, places);
             if (this._scopeHistory().length + this.loadViewport > 1) {
-                this.loadViewport--;
                 this._map.setViewport(viewportSettings).then((): void => {
                     this._updateRoute();
                 });
@@ -899,7 +899,13 @@ module Agreements.ViewModels {
                 this.zoom(this._map.zoom());
                 isDirty = true;
             }
-            if (isDirty) this.setLocation();
+            isDirty = isDirty || (this.settings.activationRoute
+            && this.sammy.getLocation().indexOf(this.settings.activationRoute) < 0);
+            if (isDirty) {
+                this.loadViewport--;
+                if (this.loadViewport < 0) this.loadViewport = 0;
+                this.setLocation();
+            }
         }
 
         private _updateStatus(placeType: string, places: ApiModels.PlaceWithAgreements[]) {
@@ -1143,7 +1149,6 @@ module Agreements.ViewModels {
             this.status.countryCount('this area');
 
             if (this._scopeHistory().length + this.loadViewport > 1) {
-                this.loadViewport--;
                 this._map.setViewport(viewportSettings).then((): void => {
                     this._updateRoute();
                 });

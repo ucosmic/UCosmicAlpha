@@ -83,19 +83,19 @@ var Agreements;
             //#endregion
             SearchLenses.prototype.viewTable = function () {
                 if (!this.isTableLens()) {
-                    this.lens('table');
                     this.map.deactivate();
                     this.table.countryCode(this.map.countryCode());
+                    this.lens('table');
                     this.table.activate();
                 }
             };
 
             SearchLenses.prototype.viewMap = function () {
                 if (!this.isMapLens()) {
-                    this.lens('map');
                     this.table.deactivate();
                     this.map.countryCode(this.table.countryCode());
-                    this.map.loadViewport = 2;
+                    this.map.loadViewport = 1;
+                    this.lens('map');
                     this.map.activate();
                 }
             };

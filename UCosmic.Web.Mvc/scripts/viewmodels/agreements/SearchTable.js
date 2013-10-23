@@ -254,11 +254,13 @@ var Agreements;
                         _this.displayPager.apply(response);
                         _this.setLocation();
                         deferred.resolve();
-                        _this.spinner.stop();
                     } else {
                         deferred.reject();
                     }
+                }).fail(function (xhr) {
+                    App.Failures.message(xhr, 'while trying to load agreement data, please try again', true);
                 }).always(function () {
+                    _this.spinner.stop();
                     _this._restoreResultOpactity();
                     setTimeout(function () {
                         _this._restoreResultOpactity();

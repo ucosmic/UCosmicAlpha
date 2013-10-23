@@ -330,13 +330,16 @@ module Agreements.ViewModels {
                         this.displayPager.apply(response);
                         this.setLocation();
                         deferred.resolve();
-                        this.spinner.stop();
                     }
                     else {
                         deferred.reject();
                     }
                 })
+                .fail((xhr: JQueryXHR): void => {
+                    App.Failures.message(xhr, 'while trying to load agreement data, please try again', true);
+                })
                 .always((): void => {
+                    this.spinner.stop();
                     this._restoreResultOpactity();
                     setTimeout((): void => {
                         this._restoreResultOpactity();
