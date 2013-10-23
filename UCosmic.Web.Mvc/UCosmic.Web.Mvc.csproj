@@ -738,6 +738,8 @@
     <Content Include="images\icons\download\Navigation Green Up.png" />
     <Content Include="images\icons\files\pdf-16.png" />
     <Content Include="images\icons\files\pdf-32.png" />
+    <Content Include="images\icons\files\pdf-doug.png" />
+    <Content Include="images\icons\files\unknown-doug.png" />
     <Content Include="images\icons\glyphs\glyphicons_071_book.png" />
     <Content Include="images\icons\glyphs\glyphicons_072_bookmark.png" />
     <Content Include="images\icons\glyphs\glyphicons_261_buoy.png" />
