@@ -127,6 +127,7 @@ namespace UCosmic.EntityFramework
             Property(p => p.Name).HasMaxLength(AgreementConstraints.NameMaxLength);
             Property(p => p.Description).IsMaxLength();
             Property(p => p.Content).HasColumnType("ntext");
+            Property(p => p.ContentSearchable).HasMaxLength(8000);
             Property(p => p.Notes).IsMaxLength();
             Property(p => p.Type).IsRequired().HasMaxLength(AgreementConstraints.TypeMaxLength);
             Property(p => p.Status).IsRequired().HasMaxLength(AgreementConstraints.StatusMaxLength);

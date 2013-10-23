@@ -40,7 +40,25 @@ namespace UCosmic.Domain.Agreements
         public bool IsTitleDerived { get; protected internal set; } // TODO, deprecate this
         public string Name { get; protected internal set; }
         public string Description { get; protected internal set; } // TODO, rename this to Content (html wysiwyg)
-        public string Content { get; protected internal set; } // TODO, rename this to Content (html wysiwyg)
+
+        public string Content
+        {
+            get { return _content; }
+            protected internal set
+            {
+                _content = value;
+                ContentSearchable = value;
+                if (!string.IsNullOrWhiteSpace(value))
+                {
+                    var length = value.Length;
+                    if (length > 8000) length = 8000;
+                    ContentSearchable = value.Substring(0, length);
+                }
+            }
+        }
+        private string _content;
+        public string ContentSearchable { get; protected set; }
+
         public string Notes { get; protected internal set; }
         public string Type { get; protected internal set; }
         public bool? IsAutoRenew { get; protected internal set; }
@@ -65,7 +83,7 @@ namespace UCosmic.Domain.Agreements
         public DateTime? UpdatedOnUtc { get; protected internal set; }
         public string UpdatedByPrincipal { get; protected internal set; }
         public byte[] Version { get; protected internal set; }
-        
+
         public override string ToString()
         {
             return string.Format("RevisionId {0}: {1}", Id, Title);
