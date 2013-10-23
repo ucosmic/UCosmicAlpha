@@ -192,6 +192,33 @@ namespace Links
         }
     
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public static class history {
+            private const string URLPATH = "~/scripts/history";
+            public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+            public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+            public static readonly string amplify_store_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/amplify.store.min.js") ? Url("amplify.store.min.js") : Url("amplify.store.js");
+                          
+            public static readonly string history_adapter_dojo_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/history.adapter.dojo.min.js") ? Url("history.adapter.dojo.min.js") : Url("history.adapter.dojo.js");
+                          
+            public static readonly string history_adapter_jquery_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/history.adapter.jquery.min.js") ? Url("history.adapter.jquery.min.js") : Url("history.adapter.jquery.js");
+                          
+            public static readonly string history_adapter_mootools_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/history.adapter.mootools.min.js") ? Url("history.adapter.mootools.min.js") : Url("history.adapter.mootools.js");
+                          
+            public static readonly string history_adapter_prototype_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/history.adapter.prototype.min.js") ? Url("history.adapter.prototype.min.js") : Url("history.adapter.prototype.js");
+                          
+            public static readonly string history_adapter_yui_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/history.adapter.yui.min.js") ? Url("history.adapter.yui.min.js") : Url("history.adapter.yui.js");
+                          
+            public static readonly string history_adapter_zepto_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/history.adapter.zepto.min.js") ? Url("history.adapter.zepto.min.js") : Url("history.adapter.zepto.js");
+                          
+            public static readonly string history_html4_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/history.html4.min.js") ? Url("history.html4.min.js") : Url("history.html4.js");
+                          
+            public static readonly string history_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/history.min.js") ? Url("history.min.js") : Url("history.js");
+                          
+            public static readonly string json2_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/json2.min.js") ? Url("json2.min.js") : Url("json2.js");
+                          
+        }
+    
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public static class jquery {
             private const string URLPATH = "~/scripts/jquery";
             public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
@@ -2665,6 +2692,14 @@ namespace Links
                 public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
                 public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
                 public static readonly string google_maps_d_ts = Url("google.maps.d.ts");
+            }
+        
+            [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+            public static class history {
+                private const string URLPATH = "~/scripts/typings/history";
+                public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+                public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                public static readonly string history_d_ts = Url("history.d.ts");
             }
         
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]

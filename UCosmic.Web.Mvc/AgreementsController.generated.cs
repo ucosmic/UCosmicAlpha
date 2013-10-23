@@ -49,9 +49,9 @@ namespace UCosmic.Web.Mvc.Controllers
         }
         [NonAction]
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public System.Web.Mvc.ViewResult Show()
+        public System.Web.Mvc.ActionResult Show()
         {
-            return new T4MVC_System_Web_Mvc_ViewResult(Area, Name, ActionNames.Show);
+            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Show);
         }
         [NonAction]
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -191,9 +191,9 @@ namespace UCosmic.Web.Mvc.Controllers
             return callInfo;
         }
 
-        public override System.Web.Mvc.ViewResult Show(int agreementId)
+        public override System.Web.Mvc.ActionResult Show(int agreementId)
         {
-            var callInfo = new T4MVC_System_Web_Mvc_ViewResult(Area, Name, ActionNames.Show);
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Show);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "agreementId", agreementId);
             return callInfo;
         }

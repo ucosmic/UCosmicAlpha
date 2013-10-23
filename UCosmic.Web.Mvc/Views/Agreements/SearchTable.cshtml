@@ -391,7 +391,15 @@
                             </a>
                         </li>
                         <li class="">
-                            <a href="#" class="group">
+                            <a class="group" target="_blank" href="@Url.HttpRouteUrl(null, new
+                                {
+                                    controller = "Agreements",
+                                    action = "Get",
+                                    domain = @ViewBag.AgreementsDomain,
+                                    pageSize = 50000, pageNumber = 1,
+                                    accept = "application/vnd.ms-excel",
+                                    orderBy = "country-asc",
+                                })">
                                 <div class="arrow"></div>
                                 <span class="text">Download Spreadsheet</span>
                             </a>

@@ -73,8 +73,11 @@ namespace UCosmic.Web.Mvc.Controllers
         }
 
         [GET("agreements/{agreementId:int}")]
-        public virtual ViewResult Show(int agreementId)
+        public virtual ActionResult Show(int agreementId)
         {
+            var entity = _queryProcessor.Execute(new AgreementById(User, agreementId));
+            if (entity == null) return HttpNotFound();
+
             var agreementPartnersApi = Url.HttpRouteUrl(null, new { controller = "AgreementPartners", action = "GetPartners", agreementId = 0 });
             Debug.Assert(agreementPartnersApi != null);
             agreementPartnersApi = agreementPartnersApi.Replace("0", "{0}");
