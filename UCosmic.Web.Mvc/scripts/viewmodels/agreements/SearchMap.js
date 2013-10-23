@@ -92,6 +92,7 @@ var Agreements;
                 });
                 this.routeFormat = '#/{0}/continent/{6}/country/{1}/place/{2}/zoom/{3}/latitude/{4}/longitude/{5}/'.format(this.settings.route).replace('{6}', '{0}');
                 this._isActivated = ko.observable(false);
+                this.loadViewport = 0;
                 this._route = ko.computed(function () {
                     // this will run once during construction
                     return _this._computeRoute();
@@ -416,7 +417,7 @@ else if (this.continentCode() != 'any')
 
             SearchMap.prototype._onViewportDirty = function () {
                 var _this = this;
-                if (!this._isActivated())
+                if (!this._isActivated() || this.loadViewport)
                     return;
 
                 var viewportHistory = this._viewportHistory();
@@ -520,10 +521,12 @@ else if (this.continentCode() != 'any')
                 this._plotMarkers(placeType, places);
 
                 var viewportSettings = this._getMapViewportSettings(placeType, places);
-                if (this._scopeHistory().length > 1)
+                if (this._scopeHistory().length + this.loadViewport > 1) {
+                    this.loadViewport--;
                     this._map.setViewport(viewportSettings).then(function () {
                         _this._updateRoute();
                     });
+                }
             };
 
             SearchMap.prototype._plotMarkers = function (placeType, places) {
@@ -974,10 +977,12 @@ else if (this.continentCode() != 'any')
                 this.status.partnerCount(uniquePartners.length.toString());
                 this.status.countryCount('this area');
 
-                if (this._scopeHistory().length > 1)
+                if (this._scopeHistory().length + this.loadViewport > 1) {
+                    this.loadViewport--;
                     this._map.setViewport(viewportSettings).then(function () {
                         _this._updateRoute();
                     });
+                }
             };
             SearchMap.defaultMapCenter = new google.maps.LatLng(0, 17);
 

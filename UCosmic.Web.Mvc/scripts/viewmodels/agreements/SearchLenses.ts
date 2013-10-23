@@ -96,11 +96,11 @@ module Agreements.ViewModels {
             var viewModel = this;
 
             this.sammy.before(/\#\/table\/(.*)\//, function () {
-                viewModel.lens('table');
+                viewModel.viewTable();
             });
 
             this.sammy.before(/\#\/map\/(.*)\//, function () {
-                viewModel.lens('map');
+                viewModel.viewMap();
             });
 
             this.sammy.get(
@@ -127,6 +127,7 @@ module Agreements.ViewModels {
                 this.lens('map');
                 this.table.deactivate();
                 this.map.countryCode(this.table.countryCode());
+                this.map.loadViewport = 2;
                 this.map.activate();
             }
         }

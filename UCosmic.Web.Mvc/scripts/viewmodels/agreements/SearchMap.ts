@@ -381,6 +381,7 @@ module Agreements.ViewModels {
             this.activate();
         }
 
+        loadViewport: number = 0;
         activate(): void {
             if (!this._isActivated()) {
                 this._scopeHistory([]);
@@ -482,7 +483,7 @@ module Agreements.ViewModels {
         }).extend({ throttle: 1 });
 
         private _onViewportDirty(): void {
-            if (!this._isActivated()) return;
+            if (!this._isActivated() || this.loadViewport) return;
 
             var viewportHistory = this._viewportHistory();
             var lastViewport: App.GoogleMaps.MapViewportSettings = viewportHistory.length
@@ -622,10 +623,12 @@ module Agreements.ViewModels {
             this._plotMarkers(placeType, places);
 
             var viewportSettings = this._getMapViewportSettings(placeType, places);
-            if (this._scopeHistory().length > 1)
+            if (this._scopeHistory().length + this.loadViewport > 1) {
+                this.loadViewport--;
                 this._map.setViewport(viewportSettings).then((): void => {
                     this._updateRoute();
                 });
+            }
         }
 
         private _plotMarkers(placeType: string, places: ApiModels.PlaceWithAgreements[]) {
@@ -1139,10 +1142,12 @@ module Agreements.ViewModels {
             this.status.partnerCount(uniquePartners.length.toString());
             this.status.countryCount('this area');
 
-            if (this._scopeHistory().length > 1)
+            if (this._scopeHistory().length + this.loadViewport > 1) {
+                this.loadViewport--;
                 this._map.setViewport(viewportSettings).then((): void => {
                     this._updateRoute();
                 });
+            }
         }
 
         $infoWindow: JQuery;
