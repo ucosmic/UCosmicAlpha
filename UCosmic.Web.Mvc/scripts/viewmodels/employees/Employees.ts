@@ -14,35 +14,35 @@
 
 module ViewModels.Employees {
 
-    declare class MarkerWithLabelOptions extends MarkerWithLabel {
-        constructor();
-        crossImage: string;
-        handCursor: string;
-        labelAnchor: any;
-        labelClass: string;
-        labelContent: any;
-        labelInBackground: boolean;
-        labelStyle: any;
-        labelVisible: boolean;
-        optimized: boolean;
-        raiseOnDrag: boolean;
-        position: any;
+    //declare class MarkerWithLabelOptions extends MarkerWithLabel {
+    //    constructor();
+    //    crossImage: string;
+    //    handCursor: string;
+    //    labelAnchor: any;
+    //    labelClass: string;
+    //    labelContent: any;
+    //    labelInBackground: boolean;
+    //    labelStyle: any;
+    //    labelVisible: boolean;
+    //    optimized: boolean;
+    //    raiseOnDrag: boolean;
+    //    position: any;
 
-    }
+    //}
 
-    declare class MarkerWithLabel extends google.maps.Marker {
-        constructor(opts?: any);
-        crossImage: string;
-        handCursor: string;
-        labelAnchor: any;
-        labelClass: string;
-        labelContent: any;
-        labelInBackground: boolean;
-        labelStyle: any;
-        labelVisible: boolean;
-        optimized: boolean;
-        raiseOnDrag: boolean;
-    }
+    //declare class MarkerWithLabel extends google.maps.Marker {
+    //    constructor(opts?: any);
+    //    crossImage: string;
+    //    handCursor: string;
+    //    labelAnchor: any;
+    //    labelClass: string;
+    //    labelContent: any;
+    //    labelInBackground: boolean;
+    //    labelStyle: any;
+    //    labelVisible: boolean;
+    //    optimized: boolean;
+    //    raiseOnDrag: boolean;
+    //}
 
     export class FacultyAndStaffSelect {
         institutions: KnockoutObservableArray<any>;
@@ -1063,9 +1063,6 @@ module ViewModels.Employees {
             return this.heatmapPeopleDataTable;
         }
 
-        /*
-         *
-         */
         getGlobalActivityCounts(): JQueryPromise<any> {
             var deferred: JQueryDeferred<void> = $.Deferred();
 
@@ -1094,9 +1091,6 @@ module ViewModels.Employees {
             return deferred;
         }
 
-        /*
-         *
-         */
         getActivityDataTable(placeOfficialName: string): JQueryPromise<any> {
             var deferred: JQueryDeferred<void> = $.Deferred();
 
@@ -1212,9 +1206,6 @@ module ViewModels.Employees {
             return deferred;
         }
 
-        /*
-        *
-        */
         getPeopleDataTable(placeOfficialName: string): JQueryPromise<any> {
             var deferred: JQueryDeferred<void> = $.Deferred();
 
@@ -1291,9 +1282,6 @@ module ViewModels.Employees {
             return view;
         }
 
-        /*
-         *
-         */
         getActivityTrendDataTable(placeOfficialName: string): JQueryPromise<any> {
             var deferred: JQueryDeferred<void> = $.Deferred();
 
@@ -1468,9 +1456,6 @@ module ViewModels.Employees {
             return dt;
         }
 
-        /*
-         *
-         */
         getDegreeCount(placeOfficialName: string): JQueryPromise<any> {
             var deferred: JQueryDeferred<void> = $.Deferred();
 
@@ -1522,9 +1507,6 @@ module ViewModels.Employees {
             return deferred;
         }
 
-        /*
-         *
-         */
         getDegreePeopleCount(placeOfficialName: string): JQueryPromise<any> {
             var deferred: JQueryDeferred<void> = $.Deferred();
 
@@ -1576,10 +1558,6 @@ module ViewModels.Employees {
             return deferred;
         }
 
-
-        /*
-         *
-         */
         getPointmapActivityMarkers(refresh: boolean): JQueryPromise<any> {
             var deferred: JQueryDeferred<void> = $.Deferred();
             if (refresh) {
@@ -1663,9 +1641,6 @@ module ViewModels.Employees {
             }
         }
 
-        /*
-         *
-         */
         getPointmapPeopleMarkers(refresh: boolean): JQueryPromise<any> {
             var deferred: JQueryDeferred<void> = $.Deferred();
             if (refresh) {
@@ -1880,11 +1855,6 @@ module ViewModels.Employees {
             }
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-        * 
-        */
-        // --------------------------------------------------------------------------------
         selectMap(type: string): void {
 
             this.mapType(type);
@@ -1997,7 +1967,7 @@ module ViewModels.Employees {
 
                 if (this.pointmap == null) {
                     var pointmapElement = $('#pointmap')[0];
-                    this.pointmap = new this.google.maps.Map(pointmapElement, this.pointmapOptions);
+                    this.pointmap = new google.maps.Map(pointmapElement, this.pointmapOptions);
                 }
 
                 this.drawPointmap(false);
@@ -2127,10 +2097,6 @@ module ViewModels.Employees {
             this.selectedPlace(officialName);
         }
 
-        // --------------------------------------------------------------------------------
-        /*
-        */
-        // --------------------------------------------------------------------------------
         advancedSearch(): JQueryDeferred<void> {
             var deferred: JQueryDeferred<void> = $.Deferred();
 
@@ -2289,6 +2255,7 @@ module ViewModels.Employees {
                     }
                     return flatResults;
                 });
+            //this.activityTableRows(unsorted.ToArray());
 
             this.activitySortColumnIndex = colIndex;
             var sorted = [];
@@ -2379,7 +2346,7 @@ module ViewModels.Employees {
             if (colIndex < this.peopleColumnSort.length) {
                 this.peopleColumnSort[colIndex].order = !this.peopleColumnSort[colIndex].order;
                 this.sortPeopleByColumnIndex(colIndex);
-                this.sortPeopleByColumnIndex(colIndex);
+                //this.sortPeopleByColumnIndex(colIndex);
             }
         }
 
@@ -2400,6 +2367,8 @@ module ViewModels.Employees {
                     }
                     return flatResults;
                 });
+
+            //this.peopleTableRows(unsorted.ToArray());
 
             this.peopleSortColumnIndex = colIndex;
             var sorted = [];
@@ -2480,7 +2449,6 @@ module ViewModels.Employees {
             this.sortSpinner.stop();
         }
 
-
         handleReset(item: any, event: any): void {
 
             this.removeSubscriptions();
@@ -2516,6 +2484,5 @@ module ViewModels.Employees {
 
             this.setupSubscriptions();
         }
-
     }
 }

@@ -1,9 +1,3 @@
-var __extends = this.__extends || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
-};
 var ViewModels;
 (function (ViewModels) {
     /// <reference path="../../typings/jquery/jquery.d.ts" />
@@ -20,6 +14,33 @@ var ViewModels;
     /// <reference path="../../app/Spinner.ts" />
     /// <reference path="../activities/ServiceApiModel.d.ts" />
     (function (Employees) {
+        //declare class MarkerWithLabelOptions extends MarkerWithLabel {
+        //    constructor();
+        //    crossImage: string;
+        //    handCursor: string;
+        //    labelAnchor: any;
+        //    labelClass: string;
+        //    labelContent: any;
+        //    labelInBackground: boolean;
+        //    labelStyle: any;
+        //    labelVisible: boolean;
+        //    optimized: boolean;
+        //    raiseOnDrag: boolean;
+        //    position: any;
+        //}
+        //declare class MarkerWithLabel extends google.maps.Marker {
+        //    constructor(opts?: any);
+        //    crossImage: string;
+        //    handCursor: string;
+        //    labelAnchor: any;
+        //    labelClass: string;
+        //    labelContent: any;
+        //    labelInBackground: boolean;
+        //    labelStyle: any;
+        //    labelVisible: boolean;
+        //    optimized: boolean;
+        //    raiseOnDrag: boolean;
+        //}
         var FacultyAndStaffSelect = (function () {
             function FacultyAndStaffSelect() {
             }
@@ -921,9 +942,6 @@ var ViewModels;
                 return this.heatmapPeopleDataTable;
             };
 
-            /*
-            *
-            */
             FacultyAndStaff.prototype.getGlobalActivityCounts = function () {
                 var _this = this;
                 var deferred = $.Deferred();
@@ -952,9 +970,6 @@ var ViewModels;
                 return deferred;
             };
 
-            /*
-            *
-            */
             FacultyAndStaff.prototype.getActivityDataTable = function (placeOfficialName) {
                 var _this = this;
                 var deferred = $.Deferred();
@@ -1063,9 +1078,6 @@ var ViewModels;
                 return deferred;
             };
 
-            /*
-            *
-            */
             FacultyAndStaff.prototype.getPeopleDataTable = function (placeOfficialName) {
                 var _this = this;
                 var deferred = $.Deferred();
@@ -1137,9 +1149,6 @@ var ViewModels;
                 return view;
             };
 
-            /*
-            *
-            */
             FacultyAndStaff.prototype.getActivityTrendDataTable = function (placeOfficialName) {
                 var _this = this;
                 var deferred = $.Deferred();
@@ -1306,9 +1315,6 @@ var ViewModels;
                 return dt;
             };
 
-            /*
-            *
-            */
             FacultyAndStaff.prototype.getDegreeCount = function (placeOfficialName) {
                 var deferred = $.Deferred();
 
@@ -1358,9 +1364,6 @@ var ViewModels;
                 return deferred;
             };
 
-            /*
-            *
-            */
             FacultyAndStaff.prototype.getDegreePeopleCount = function (placeOfficialName) {
                 var deferred = $.Deferred();
 
@@ -1410,9 +1413,6 @@ var ViewModels;
                 return deferred;
             };
 
-            /*
-            *
-            */
             FacultyAndStaff.prototype.getPointmapActivityMarkers = function (refresh) {
                 var _this = this;
                 var deferred = $.Deferred();
@@ -1474,9 +1474,6 @@ var ViewModels;
                 }
             };
 
-            /*
-            *
-            */
             FacultyAndStaff.prototype.getPointmapPeopleMarkers = function (refresh) {
                 var _this = this;
                 var deferred = $.Deferred();
@@ -1677,11 +1674,6 @@ var ViewModels;
                 }
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            *
-            */
-            // --------------------------------------------------------------------------------
             FacultyAndStaff.prototype.selectMap = function (type) {
                 var _this = this;
                 this.mapType(type);
@@ -1786,7 +1778,7 @@ var ViewModels;
 
                     if (this.pointmap == null) {
                         var pointmapElement = $('#pointmap')[0];
-                        this.pointmap = new this.google.maps.Map(pointmapElement, this.pointmapOptions);
+                        this.pointmap = new google.maps.Map(pointmapElement, this.pointmapOptions);
                     }
 
                     this.drawPointmap(false);
@@ -1913,10 +1905,6 @@ var ViewModels;
                 this.selectedPlace(officialName);
             };
 
-            // --------------------------------------------------------------------------------
-            /*
-            */
-            // --------------------------------------------------------------------------------
             FacultyAndStaff.prototype.advancedSearch = function () {
                 var _this = this;
                 var deferred = $.Deferred();
@@ -2072,6 +2060,7 @@ var ViewModels;
                     return flatResults;
                 });
 
+                //this.activityTableRows(unsorted.ToArray());
                 this.activitySortColumnIndex = colIndex;
                 var sorted = [];
 
@@ -2160,7 +2149,7 @@ var ViewModels;
                 if (colIndex < this.peopleColumnSort.length) {
                     this.peopleColumnSort[colIndex].order = !this.peopleColumnSort[colIndex].order;
                     this.sortPeopleByColumnIndex(colIndex);
-                    this.sortPeopleByColumnIndex(colIndex);
+                    //this.sortPeopleByColumnIndex(colIndex);
                 }
             };
 
@@ -2182,6 +2171,7 @@ var ViewModels;
                     return flatResults;
                 });
 
+                //this.peopleTableRows(unsorted.ToArray());
                 this.peopleSortColumnIndex = colIndex;
                 var sorted = [];
 
