@@ -66,8 +66,8 @@ input[type="month"], input[type="time"], input[type="week"], textarea {
     cursor: not-allowed; }
 
 .contactKendoWindow {
-  position: fixed!important;
-  top: 20px!important; }
+  position: fixed !important;
+  top: 20px !important; }
 
 textarea {
   margin: 0;
@@ -235,6 +235,13 @@ a.button > i.green.plus {
   height: 24px;
   margin: -2px 0 0 -2px;
   background-image: url(../../../images/icons/plus/plus-24-green-disc.png); }
+a.button > i.save {
+  display: inline-block;
+  vertical-align: middle;
+  width: 24px;
+  height: 24px;
+  margin: -2px 0 0 -2px;
+  background-image: url(../../../images/icons/save/save-24.png); }
 a.button > i.red.closer {
   display: inline-block;
   vertical-align: middle;
@@ -415,9 +422,9 @@ section {
   margin-bottom: 40px; }
 
 .k-tooltip {
-  opacity: 1!important;
-  background-color: white!important;
-  color: black!important; }
+  opacity: 1 !important;
+  background-color: white !important;
+  color: black !important; }
 
 .k-editor-toolbar {
   white-space: normal; }

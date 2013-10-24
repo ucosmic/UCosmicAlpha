@@ -52,7 +52,7 @@ var Agreements;
                     maxLength: 50
                 }),
                 nickname: this.nickname.extend({
-                    maxLength: 50
+                    maxLength: 100
                 }),
                 content: this.content.extend({
                     maxLength: 5000

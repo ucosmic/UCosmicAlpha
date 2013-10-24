@@ -59,17 +59,19 @@
                 <div>
                     <span style="padding-right: 10px;">
                         @*<a title="View this file" href="#" target="_blank" data-bind="attr: { href: '/api/agreements/' + $root.agreementId + '/files/' + id() + '/content/' }">*@
-                        <a title="View this file" href="#" target="_blank" data-bind="attr: { href: $root.fileHref($parent, $data) }">
+                        <a title="View this file" href="#" target="_blank" data-bind="attr: { href: $root.fileHref($parent, $data) }" style="text-decoration: none;">
                             <img data-bind="visible: customNameExt() == '.doc' || customNameExt() == '.docx'" src="~/images/icons/files/doc.png" height="20" style="margin-right: 4px;" />
                             <img data-bind="visible: customNameExt() == '.pdf'" src="~/images/icons/files/pdf.png" height="20" style="margin-right: 4px;" />
                             <img data-bind="visible: customNameExt() == '.ppt'" src="~/images/icons/files/ppt.png" height="20" style="margin-right: 4px;" />
                             <img data-bind="visible: customNameExt() == '.xls'" src="~/images/icons/files/xls.png" height="20" style="margin-right: 4px;" />
-                            <img data-bind="visible: customNameExt() == '.xvf'" src="~/images/icons/files/unknown.png" height="20" style="margin-right: 4px;" />
-                            <strong data-bind="text: customName, visible: !isEdit()"></strong>
+                            <img data-bind="visible: customNameExt() != '.doc' && customNameExt() != '.pdf' && customNameExt() != '.ppt' && customNameExt() != '.xls'"
+                                src="~/images/icons/files/unknown.png" height="20" style="margin-right: 4px;" />
                         </a>
+                        <a title="View this file" href="#" target="_blank" data-bind="attr: { href: $root.fileHref($parent, $data) }">
+                            <strong data-bind="text: customName, visible: !isEdit()"></strong></a>
                     </span>
                     @*<a title="Download this file" data-bind="attr: { href: '/api/agreements/' + $root.agreementId + '/files/' + id() + '/download/' }">*@
-                    <a title="View this file" href="#" target="_blank" data-bind="attr: { href: $root.fileDownloadHref($parent, $data) }">
+                    <a title="Download this file" href="#" target="_blank" data-bind="attr: { href: $root.fileDownloadHref($parent, $data) }">
                         <img src="~/images/icons/download/green-down-24.png" style="width: 20px; height: 20px;" /></a>
                 </div>
             </li>

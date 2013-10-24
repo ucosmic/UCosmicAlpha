@@ -59,7 +59,7 @@ module Agreements {
                     maxLength: 50
                 }),
                 nickname: this.nickname.extend({
-                    maxLength: 50
+                    maxLength: 100
                 }),
                 content: this.content.extend({
                     maxLength: 5000
@@ -69,8 +69,8 @@ module Agreements {
                 })
             });
         }
-    
-        bindJquery(): void{
+
+        bindJquery(): void {
             if (this.isCustomTypeAllowed) {
                 $("#type_options").kendoComboBox({
                     dataTextField: "name",

@@ -19,7 +19,7 @@ module Agreements.ViewModels {
             if (isNaN(agreementId)) {
                 agreementId = 0;
             }
-            this.agreementId =  agreementId;
+            this.agreementId = agreementId;
             this.agreementVisibility = agreementVisibility || 'Public';
             this.fileListPopulator = new Agreements.FileListPopulator();
             if (this.agreementId !== 0) {
@@ -134,7 +134,7 @@ module Agreements.ViewModels {
                 .Where(function (x) { return !x.isOwner; }).ToArray();
             // collect together all of the plottable partner marker points
             var centers = Enumerable.From(partners)
-                // note that centers.length may not be the same as partners.length
+            // note that centers.length may not be the same as partners.length
                 .Where(function (x) { return x.center && x.center.hasValue; })
                 .Select(function (x) { return x.center; }).ToArray();
             var latLngs = Enumerable.From(centers)
@@ -179,7 +179,7 @@ module Agreements.ViewModels {
                             partner.boundingBox.southWest.longitude),
                         new google.maps.LatLng(partner.boundingBox.northEast.latitude,
                             partner.boundingBox.northEast.longitude)
-                    );
+                        );
                     this._googleMap.fitBounds(bounds);
                     this._googleMap.setCenter(latLngs[0]);
                 }
@@ -201,7 +201,7 @@ module Agreements.ViewModels {
                     this._animateMapZoom(zoom);
                 }, 100);
         }
-        
+
         createMap(): void {
             var self = this;
             function initialize() {

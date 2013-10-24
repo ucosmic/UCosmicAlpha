@@ -214,6 +214,14 @@ a.button {
         margin: -2px 0 0 -2px;
         background-image: url(../../../images/icons/plus/plus-24-green-disc.png);
     }
+    > i.save {
+        display: inline-block;
+        vertical-align: middle;
+        width: 24px;
+        height: 24px;
+        margin: -2px 0 0 -2px;
+        background-image: url(../../../images/icons/save/save-24.png);
+    }
     > i.red.closer {
         display: inline-block;
         vertical-align: middle;

@@ -39,6 +39,14 @@
         .k-button {
             color: black!important;
         }
+
+        .k-editor .k-editor-toolbar-wrap {
+            padding-left: 4px;
+        }
+
+        .k-insertImage {
+            margin-right: 28px!important;
+        }
     </style>
 }
 <div class="content fixed to-top" id="Loading_page">
@@ -71,11 +79,11 @@
                 @* TODO: render these as buttons instead of links with button styles *@
                 <a data-bind="click: saveUpdateAgreement, visible: !agreementIsEdit()" class="button">
                     <i class="green plus"></i>
-                    <span class="text">Save Agreement</span>
+                    <span class="text">Create Agreement</span>
                 </a>
                 <a data-bind="click: saveUpdateAgreement, visible: agreementIsEdit" class="button">
-                    <i class="green plus"></i>
-                    <span class="text">Update Agreement</span>
+                    <i class="save"></i>
+                    <span class="text">Save Changes</span>
                 </a>
             </footer>
         </div>
