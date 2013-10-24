@@ -29,6 +29,7 @@ public static class MVC
     public static UCosmic.Web.Mvc.Controllers.AdminController Admin = new UCosmic.Web.Mvc.Controllers.T4MVC_AdminController();
     public static UCosmic.Web.Mvc.Controllers.AgreementsController Agreements = new UCosmic.Web.Mvc.Controllers.T4MVC_AgreementsController();
     public static UCosmic.Web.Mvc.Controllers.ApiTestController ApiTest = new UCosmic.Web.Mvc.Controllers.T4MVC_ApiTestController();
+    public static UCosmic.Web.Mvc.Controllers.EmployeesController Employees = new UCosmic.Web.Mvc.Controllers.T4MVC_EmployeesController();
     public static UCosmic.Web.Mvc.Controllers.ErrorsController Errors = new UCosmic.Web.Mvc.Controllers.T4MVC_ErrorsController();
     public static UCosmic.Web.Mvc.Controllers.EstablishmentsController Establishments = new UCosmic.Web.Mvc.Controllers.T4MVC_EstablishmentsController();
     public static UCosmic.Web.Mvc.Controllers.FacultyStaffController FacultyStaff = new UCosmic.Web.Mvc.Controllers.T4MVC_FacultyStaffController();
@@ -176,6 +177,10 @@ namespace Links
             private const string URLPATH = "~/scripts/google";
             public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
             public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+            public static readonly string GeoChart_ts = Url("GeoChart.ts");
+            public static readonly string GeoChart_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/GeoChart.min.js") ? Url("GeoChart.min.js") : Url("GeoChart.js");
+                          
+            public static readonly string GeoChart_min_js = Url("GeoChart.min.js");
             public static readonly string jsapi_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/jsapi.min.js") ? Url("jsapi.min.js") : Url("jsapi.js");
                           
             public static readonly string Map_ts = Url("Map.ts");
@@ -2942,6 +2947,10 @@ namespace Links
                 public static readonly string ServerApiModel_d_ts = Url("ServerApiModel.d.ts");
                 public static readonly string ServerApiModel_d_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/ServerApiModel.d.min.js") ? Url("ServerApiModel.d.min.js") : Url("ServerApiModel.d.js");
                               
+                public static readonly string Summary_ts = Url("Summary.ts");
+                public static readonly string Summary_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Summary.min.js") ? Url("Summary.min.js") : Url("Summary.js");
+                              
+                public static readonly string Summary_min_js = Url("Summary.min.js");
             }
         
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -3706,6 +3715,43 @@ namespace Links
         }
     
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public static class geochart {
+            private const string URLPATH = "~/images/geochart";
+            public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+            public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+            [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+            public static class hot {
+                private const string URLPATH = "~/images/geochart/hot";
+                public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+                public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                public static readonly string antarctica_png = Url("antarctica.png");
+                public static readonly string arctic_ocean_png = Url("arctic-ocean.png");
+                public static readonly string atlantic_ocean_png = Url("atlantic-ocean.png");
+                public static readonly string caribbean_sea_png = Url("caribbean-sea.png");
+                public static readonly string gulf_of_mexico_png = Url("gulf-of-mexico.png");
+                public static readonly string indian_ocean_png = Url("indian-ocean.png");
+                public static readonly string pacific_ocean_png = Url("pacific-ocean.png");
+                public static readonly string southern_ocean_png = Url("southern-ocean.png");
+            }
+        
+            [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+            public static class up {
+                private const string URLPATH = "~/images/geochart/up";
+                public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+                public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                public static readonly string antarctica_png = Url("antarctica.png");
+                public static readonly string arctic_ocean_png = Url("arctic-ocean.png");
+                public static readonly string atlantic_ocean_png = Url("atlantic-ocean.png");
+                public static readonly string caribbean_sea_png = Url("caribbean-sea.png");
+                public static readonly string gulf_of_mexico_png = Url("gulf-of-mexico.png");
+                public static readonly string indian_ocean_png = Url("indian-ocean.png");
+                public static readonly string pacific_ocean_png = Url("pacific-ocean.png");
+                public static readonly string southern_ocean_png = Url("southern-ocean.png");
+            }
+        
+        }
+    
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public static class icons {
             private const string URLPATH = "~/images/icons";
             public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
@@ -3762,9 +3808,11 @@ namespace Links
                 public static readonly string docx_png = Url("docx.png");
                 public static readonly string pdf_16_png = Url("pdf-16.png");
                 public static readonly string pdf_32_png = Url("pdf-32.png");
+                public static readonly string pdf_doug_png = Url("pdf-doug.png");
                 public static readonly string pdf_png = Url("pdf.png");
                 public static readonly string ppt_png = Url("ppt.png");
                 public static readonly string pptx_png = Url("pptx.png");
+                public static readonly string unknown_doug_png = Url("unknown-doug.png");
                 public static readonly string unknown_png = Url("unknown.png");
                 public static readonly string xls_png = Url("xls.png");
                 public static readonly string xlsx_png = Url("xlsx.png");

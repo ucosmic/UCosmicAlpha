@@ -338,11 +338,15 @@
     </Compile>
     <Compile Include="Controllers\ActivitiesController.cs" />
     <Compile Include="Controllers\ActivitiesSpikeController.cs" />
+    <Compile Include="Controllers\EmployeesController.cs" />
     <Compile Include="Controllers\FacultyStaffController.cs" />
     <Compile Include="Controllers\RepsController.cs" />
     <Compile Include="Controllers\SamlMetadataController.cs" />
     <Compile Include="Controllers\ApiTestController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
+    <Compile Include="EmployeesController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
     <Compile Include="FacultyStaffController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
@@ -730,6 +734,22 @@
     <Content Include="images\antarctica_283x35.png" />
     <Content Include="images\bg\ui-bg_flat_black_40x100.png" />
     <TypeScriptCompile Include="scripts\google\ToolsOverlay.ts" />
+    <Content Include="images\geochart\hot\antarctica.png" />
+    <Content Include="images\geochart\hot\arctic-ocean.png" />
+    <Content Include="images\geochart\hot\atlantic-ocean.png" />
+    <Content Include="images\geochart\hot\caribbean-sea.png" />
+    <Content Include="images\geochart\hot\gulf-of-mexico.png" />
+    <Content Include="images\geochart\hot\indian-ocean.png" />
+    <Content Include="images\geochart\hot\pacific-ocean.png" />
+    <Content Include="images\geochart\hot\southern-ocean.png" />
+    <Content Include="images\geochart\up\antarctica.png" />
+    <Content Include="images\geochart\up\arctic-ocean.png" />
+    <Content Include="images\geochart\up\atlantic-ocean.png" />
+    <Content Include="images\geochart\up\caribbean-sea.png" />
+    <Content Include="images\geochart\up\gulf-of-mexico.png" />
+    <Content Include="images\geochart\up\indian-ocean.png" />
+    <Content Include="images\geochart\up\pacific-ocean.png" />
+    <Content Include="images\geochart\up\southern-ocean.png" />
     <Content Include="images\icons\cancel\black-cancel-24.png" />
     <Content Include="images\icons\cancel\undo-4-512.jpg" />
     <Content Include="images\icons\download\down128.png" />
@@ -812,6 +832,13 @@
     </Content>
     <Content Include="scripts\app\Spinner.ts" />
     <TypeScriptCompile Include="scripts\google\Map.ts" />
+    <TypeScriptCompile Include="scripts\google\GeoChart.ts" />
+    <Content Include="scripts\google\GeoChart.js">
+      <DependentUpon>GeoChart.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\google\GeoChart.min.js">
+      <DependentUpon>GeoChart.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\google\Map.js">
       <DependentUpon>Map.ts</DependentUpon>
     </Content>
@@ -2119,6 +2146,13 @@
       <DependentUpon>ServerApiModel.d.ts</DependentUpon>
     </Content>
     <None Include="scripts\viewmodels\establishments\ApiModels.d.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\employees\Summary.ts" />
+    <Content Include="scripts\viewmodels\employees\Summary.js">
+      <DependentUpon>Summary.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\employees\Summary.min.js">
+      <DependentUpon>Summary.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\viewmodels\establishments\Location.js">
       <DependentUpon>Location.ts</DependentUpon>
     </Content>
@@ -2510,6 +2544,8 @@
     <Content Include="Views\MyProfile\DegreeForm.cshtml" />
     <Content Include="Views\MyProfile\LanguageExpertiseForm.cshtml" />
     <Content Include="Views\MyProfile\InternationalAffiliationForm.cshtml" />
+    <Content Include="Views\Employees\TenantIndex.cshtml" />
+    <Content Include="Views\Employees\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

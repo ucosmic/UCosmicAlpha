@@ -3,7 +3,7 @@
 /// <reference path="../typings/knockout/knockout.d.ts" />
 /// <reference path="../app/App.ts" />
 
-module App.GoogleMaps {
+module App.GoogleMaps { // TODO: rename to App.Google to keep in line with google visualization stuff
 
     export interface MapSettings {
         autoCreate?: boolean;

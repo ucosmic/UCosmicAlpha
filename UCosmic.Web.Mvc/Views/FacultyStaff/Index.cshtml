@@ -1,4 +1,4 @@
-﻿ @model UCosmic.Web.Mvc.Models.FacultyStaffInstitutionInfoModel
+﻿@model UCosmic.Web.Mvc.Models.FacultyStaffInstitutionInfoModel
 
 @section bib
 {
@@ -10,14 +10,13 @@
 @section styles
 {
     <style>
-
         .field .data-items li {
-            font-size: small; 
+            font-size: small;
             padding-left: 5px;
         }
 
         .static .content .field ul.data-items li div span {
-         padding-left: 5px;
+            padding-left: 5px;
         }
 
         input[type="button"]#activitiesButton,
@@ -44,9 +43,9 @@
             padding: 6px !important;
         }
 
-        .geochartTooltip span {
-            font-weight: bold;
-        }
+            .geochartTooltip span {
+                font-weight: bold;
+            }
 
         .customPlaceText {
             width: 100%;
@@ -87,7 +86,7 @@
             border-color: black;
             color: black;
             background-color: white;
-            z-index: 10
+            z-index: 10;
         }
 
         .googleMarkerLabel {
@@ -103,31 +102,31 @@
         #antarctica:hover {
             background-image: url('../../images/icons/maps/antarcticaLabeledHover.png');
         }
-        
+
         #pacificOcean:hover {
             background-image: url('../../images/icons/maps/pacificOceanHover.png');
         }
-        
+
         #atlanticOcean:hover {
             background-image: url('../../images/icons/maps/atlanticOceanHover.png');
         }
-        
+
         #indianOcean:hover {
             background-image: url('../../images/icons/maps/indianOceanHover.png');
         }
-        
+
         #southernOcean:hover {
             background-image: url('../../images/icons/maps/southernOceanHover.png');
         }
-        
+
         #gulfOfMexico:hover {
             background-image: url('../../images/icons/maps/gulfOfMexicoHover.png');
         }
-        
+
         #caribbean:hover {
             background-image: url('../../images/icons/maps/caribbeanHover.png');
         }
-        
+
         #arcticOcean:hover {
             background-image: url('../../images/icons/maps/arcticOceanHover.png');
         }
@@ -145,13 +144,13 @@
         } */
 
         /* Begin Kendo UI widget theming */
-        
+
         .kendoSideWidget .k-widget .k-multiselect-wrap {
             border-color: #999999;
             border-radius: 0 0 0 0;
             border-style: solid;
             border-width: 0;
-            margin: 0; 
+            margin: 0;
             height: 16px;
             -moz-box-sizing: border-box;
             font-size: 14px;
@@ -161,24 +160,24 @@
         }
 
 
-        .kendoSideWidget .k-widget .k-picker-wrap input.kendoSideWidget,
-        .kendoSideWidget .k-widget .k-dropdown-wrap .k-input,
-        .kendoSideWidget .k-widget .k-multiselect-wrap .k-input,
-        .kendoSideWidget  .k-widget .k-picker-wrap .k-input {
-            border-color: #999999;
-            border-radius: 0 0 0 0;
-            border-style: solid;
-            border-width: 1px;
-            margin: 0; 
-            height: 16px;
-            min-height: 16px;
-            -moz-box-sizing: border-box;
-            font-size: 14px;
-            line-height: 18px;
-            padding: 1px;
-            width: 100%;
-            color: #333333;
-        }
+            .kendoSideWidget .k-widget .k-picker-wrap input.kendoSideWidget,
+            .kendoSideWidget .k-widget .k-dropdown-wrap .k-input,
+            .kendoSideWidget .k-widget .k-multiselect-wrap .k-input,
+            .kendoSideWidget .k-widget .k-picker-wrap .k-input {
+                border-color: #999999;
+                border-radius: 0 0 0 0;
+                border-style: solid;
+                border-width: 1px;
+                margin: 0;
+                height: 16px;
+                min-height: 16px;
+                -moz-box-sizing: border-box;
+                font-size: 14px;
+                line-height: 18px;
+                padding: 1px;
+                width: 100%;
+                color: #333333;
+            }
 
         .kendoSideWidget .k-widget .k-dropdown-wrap .k-input {
             border-color: #bbbbbb;
@@ -208,16 +207,16 @@
 
         .kendoSideWidget .kendoSideDate {
             border-color: #bbbbbb;
-            height: 22px; 
+            height: 22px;
             width: 120px;
         }
-        
+
         .kendoSideWidget textarea#tagsTextbox {
             border-color: #999999;
             border-radius: 0 0 0 0;
             border-style: solid;
             border-width: 1px;
-            margin: 0; 
+            margin: 0;
             height: 24px;
             min-height: 24px;
             -moz-box-sizing: border-box;
@@ -228,33 +227,33 @@
             color: #333333;
         }
 
-        
+
         .kendoSideWidget .k-widget .k-dropdown-wrap {
             min-height: 24px;
             height: 24px;
         }
-        
+
         .kendoSideWidget .k-widget .k-multiselect-wrap {
             min-height: 25px;
             height: 25px;
         }
 
-        .kendoSideWidget .k-widget .k-multiselect-wrap .k-input {
-            border-color: #bbbbbb;
-            position: relative;
-            top: 5px;
-            left: 2px;
-        }
-        
-        .kendoSideWidget .k-widget .k-multiselect-wrap li {
-            float: left;
-            line-height: 18px;
-            margin: 1px 0 1px 1px;
-            padding: 1px 2px 1px 2px;
-        }
-        
-         #searchReset.content {
-            display: inline !important;	
+            .kendoSideWidget .k-widget .k-multiselect-wrap .k-input {
+                border-color: #bbbbbb;
+                position: relative;
+                top: 5px;
+                left: 2px;
+            }
+
+            .kendoSideWidget .k-widget .k-multiselect-wrap li {
+                float: left;
+                line-height: 18px;
+                margin: 1px 0 1px 1px;
+                padding: 1px 2px 1px 2px;
+            }
+
+        #searchReset.content {
+            display: inline !important;
             float: right;
         }
 
@@ -266,11 +265,10 @@
             float: right;
             position: relative;
             top: -25px;
-            display: inline !important;	
+            display: inline !important;
         }
-
     </style>
-    
+
     <!--[if gte IE 8]>
     <style type="text/css">
         .kendoSideWidget .k-widget .k-multiselect-wrap .k-input {
@@ -281,7 +279,7 @@
         }
     </style>
     <![endif]-->
-    
+
 }
 
 @section scripts
@@ -289,8 +287,9 @@
     @Scripts.Render("~/bundles/employees")
 
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-    <script type='text/javascript' src="../../scripts/google/markerwithlabel.js"></script>
- 
+
+    @*<script type='text/javascript' src="../../scripts/google/markerwithlabel.js"></script>*@
+
     <script type="text/javascript">
 
         /* ----- Google API needs to be called outside of JQuery ready(). ----- */
@@ -372,7 +371,8 @@
                     });
             });
         });
-    </script>    
+    </script>
+
 }
 
 <div id="faculty-staff-select" class="content fixed to-top" style="display: none" data-current-module="employees">
@@ -380,7 +380,7 @@
         <header>
             <h1>select institution</h1>
         </header>
-               
+
         <div class="institutionSelectList">
             <ul data-bind="template: { name: 'institutions-template', foreach: institutions.items }"></ul>
         </div>
@@ -395,187 +395,186 @@
     </li>
 </script>
 
-<div id="faculty-staff" class="content fixed to-top" style="display: none" data-current-module="employees"  data-fixed-scroll="root">
+<div id="faculty-staff" class="content fixed to-top" style="display: none" data-current-module="employees" data-fixed-scroll="root">
     <form class="group">
         <div class="on-left from-top">
             <header>
                 <h1 id="pageTitle">Professional Engagement Summary</h1>
             </header>
-               
             <div style="width: 680px; height: 500px">
-            
+
                 <!-- H E A T M A P -->
                 <div style="display: none" data-bind="visible: isHeatmapVisible()">
                     <div style="width: 100%; height: 30px; text-align: right">
                         <span style="float: left" data-bind="click: function(item,event) { expertClickHandler(item,event); }">
                             <span style="margin-right: 2px; margin-top: 2px">Find an Expert</span>
                             <img src='@Url.Content("~/api/my/employee-module-settings/icon/FindAnExpertIcon.svg")' width="28" height="28" alt="Find an Expert"/>
-                        </span>                
+                        </span>
                         <span style="float: right" data-bind="visible: selectedPlace() != null, click: function(item,event) { globalViewClickHandler(item,event); }">
                             <span style="margin-right: 2px; margin-top: 4px;">Return to Global View</span>
                             <img style="padding-top: 2px" src='@Url.Content("~/api/my/employee-module-settings/icon/GlobalViewIcon.png")' alt="Global View"/>
                         </span>
                     </div>
                     <div style="position: relative">
-                    
+
                         <div style="background-color: #ACCCFD; width: 680px; height: 500px"></div>
-                    
+
                         <div style="position: absolute; background-color: transparent; width: 680px; height: 500px; top: 0; left: 0; z-index: 1"
-                             data-bind="visible: !loadSpinner.isVisible() && (mapRegion() === 'world')">
-                        
+                            data-bind="visible: !loadSpinner.isVisible() && (mapRegion() === 'world')">
+
                             <!-- Antarctica -->
-                            <div style="position: absolute; left: 340px; bottom: 0;">                   
-                                <img src="~/images/icons/maps/antarcticaLabeled.png"> 
+                            <div style="position: absolute; left: 340px; bottom: 0;">
+                                <img src="~/images/icons/maps/antarcticaLabeled.png">
                             </div>
-                        
+
                             <!-- Pacific Ocean -->
                             <div style="position: absolute; left: 68px; top: 349px; width: 57px">
                                 <div style="width: 100%; text-align: center">
-                                    <img width="57" height="26" src="~/images/icons/maps/pacificOcean.png"> 
-                                </div>
-                            </div>
-                        
-                            <!-- Atlantic Ocean -->
-                            <div style="position: absolute; left: 236px; top: 271px; width: 57px">
-                                <div style="width: 100%; text-align: center">
-                                    <img width="57" height="26" src="~/images/icons/maps/atlanticOcean.png"> 
-                                </div>
-                            </div>
-                        
-                            <!-- Indian Ocean -->
-                            <div style="position: absolute; left: 456px; top: 381px; width: 57px">
-                                <div style="width: 100%; text-align: center">
-                                    <img width="57" height="26" src="~/images/icons/maps/indianOcean.png"> 
+                                    <img width="57" height="26" src="~/images/icons/maps/pacificOcean.png">
                                 </div>
                             </div>
 
-                         
+                            <!-- Atlantic Ocean -->
+                            <div style="position: absolute; left: 236px; top: 271px; width: 57px">
+                                <div style="width: 100%; text-align: center">
+                                    <img width="57" height="26" src="~/images/icons/maps/atlanticOcean.png">
+                                </div>
+                            </div>
+
+                            <!-- Indian Ocean -->
+                            <div style="position: absolute; left: 456px; top: 381px; width: 57px">
+                                <div style="width: 100%; text-align: center">
+                                    <img width="57" height="26" src="~/images/icons/maps/indianOcean.png">
+                                </div>
+                            </div>
+
+
                             <!-- Southern Ocean -->
                             <div style="position: absolute; left: 267px; top: 441px; width: 57px">
                                 <div style="width: 100%; text-align: center">
-                                    <img width="57" height="26" src="~/images/icons/maps/southernOcean.png"> 
+                                    <img width="57" height="26" src="~/images/icons/maps/southernOcean.png">
                                 </div>
                             </div>
-                          
+
                             <!-- Gulf of Mexico -->
                             @*          <div data-bind="visible: !loadSpinner.isVisible()" style="position: absolute; left: 157px; top: 289px; width: 37px; z-index: 3;">
 		                                    <div style="width: 100%; text-align: center">
 			                                    <img width="37" height="18" src="../../images/buttonGraphics/gulfOfMexico.png"> 
 		                                    </div>
-	                                    </div> *@                     
-                           
+	                                    </div> *@
+
                             <!-- Caribbean -->
                             <div style="position: absolute; left: 188px; top: 309px; width: 51px">
                                 <div style="width: 100%; text-align: center">
-                                    <img width="72" height="9" src="~/images/icons/maps/caribbean.png" > 
+                                    <img width="72" height="9" src="~/images/icons/maps/caribbean.png">
                                 </div>
                             </div>
 
                             <!-- Arctic Ocean -->
                             <div style="position: absolute; left: 319px; top: 23px; width: 57px">
                                 <div style="width: 100%; text-align: center">
-                                    <img width="57" height="26" src="~/images/icons/maps/arcticOcean.png"> 
+                                    <img width="57" height="26" src="~/images/icons/maps/arcticOcean.png">
                                 </div>
-                            </div>             
+                            </div>
                         </div>
 
                         <!-- GeoChart -->
                         <div id="heatmap" style="position: absolute; top: 0; left: 0; z-index: 2"></div>
-                    
+
                         <div data-bind="visible: mapRegion() === 'world'">
                             <!-- Antarctica Title Phantom -->
-                            <div id="antarctica" style="position: absolute; left: 340px; top: 465px; width:285px; z-index: 4" data-bind="click: function(event,item) { customPlaceClick(event,item,'Antarctica'); }">
+                            <div id="antarctica" style="position: absolute; left: 340px; top: 465px; width: 285px; z-index: 4" data-bind="click: function(event,item) { customPlaceClick(event,item,'Antarctica'); }">
                                 <img width="285" height="35" src="~/images/transparent.png">
                             </div>
-                    
+
                             <!-- Pacific Ocean Title Phantom -->
                             <div id="pacificOcean" style="position: absolute; left: 68px; top: 349px; width: 57px; z-index: 4" data-bind="click: function(event,item) { customPlaceClick(event,item,'Pacific Ocean'); }">
-                                <img src="../../images/transparent.png" width="57" height="26"> 
+                                <img src="../../images/transparent.png" width="57" height="26">
                             </div>
-                    
+
                             <!-- Atlantic Ocean Title Phantom -->
                             <div id="atlanticOcean" style="position: absolute; left: 236px; top: 271px; width: 57px; z-index: 4" data-bind="click: function(event,item) { customPlaceClick(event,item,'North Atlantic Ocean'); }">
-                                <img src="../../images/transparent.png" width="57" height="26"/>
+                                <img src="../../images/transparent.png" width="57" height="26" />
                             </div>
-                       
+
                             <!-- Indian Ocean Title Phantom -->
                             <div id="indianOcean" style="position: absolute; left: 456px; top: 381px; width: 57px; z-index: 4" data-bind="click: function(event,item) { customPlaceClick(event,item,'Indian Ocean'); }">
-                                <img src="../../images/transparent.png" width="57" height="26"/>
+                                <img src="../../images/transparent.png" width="57" height="26" />
                             </div>
-                  
+
                             <!-- Southern Ocean Title Phantom -->
                             <div id="southernOcean" style="position: absolute; left: 267px; top: 441px; width: 57px; z-index: 4" data-bind="click: function(event,item) { customPlaceClick(event,item,'Southern Ocean'); }">
-                                <img src="../../images/transparent.png" width="57" height="26"/>
+                                <img src="../../images/transparent.png" width="57" height="26" />
                             </div>
 
                             <!-- Gulf of Mexico-->
                             <div style="position: absolute; left: 157px; top: 289px; width: 37px; height: 18px; z-index: 3"
-                                 data-bind="visible: !loadSpinner.isVisible()">
+                                data-bind="visible: !loadSpinner.isVisible()">
                                 <div style="width: 100%; text-align: center">
-                                    <img width="37" height="18" src="~/images/icons/maps/gulfOfMexico.png" > 
+                                    <img width="37" height="18" src="~/images/icons/maps/gulfOfMexico.png">
                                 </div>
                             </div>
-                    
+
                             <!-- Gulf of Mexico Title Phantom  -->
                             <div id="gulfOfMexico" style="position: absolute; left: 157px; top: 293px; width: 37px; height: 18px; z-index: 4" data-bind="click: function(event,item) { customPlaceClick(event,item,'Gulf of Mexico'); }" valign="top">
-                                <img src="~/images/transparent.png" width="37" height="18"/>
+                                <img src="~/images/transparent.png" width="37" height="18" />
                             </div>
-                    
+
                             <!-- Caribbean Title Phantom -->
                             <div id="caribbean" style="position: absolute; left: 188px; top: 317px; width: 72px; height: 9px; z-index: 4" data-bind="click: function(event,item) { customPlaceClick(event,item,'Caribbean Sea'); }">
-                                <img src="~/images/transparent.png" width="51" height="9"/>
+                                <img src="~/images/transparent.png" width="51" height="9" />
                             </div>
 
 
                             <!-- Arctic Ocean Title Phantom -->
                             <div id="arcticOcean" style="position: absolute; left: 319px; top: 23px; width: 57px; z-index: 4" data-bind="click: function(event,item) { customPlaceClick(event,item,'Arctic Ocean'); }">
-                                <img src="~/images/transparent.png" width="57" height="26"/>
+                                <img src="~/images/transparent.png" width="57" height="26" />
                             </div>
                         </div>
 
                         <!-- Activities/People Buttons -->
                         <div id="" style="position: absolute; margin: 5px; right: 0; top: 0; z-index: 3">
-                            <input type="button" id="activitiesButton" value="Activites" style="float: left" data-bind="click: function(data, event) { selectSearchType('activities'); }"/>
-                            <input type="button" id="peopleButton" value="People" style="float: left; border-left-style: none" data-bind="click: function(data, event) { selectSearchType('people'); }"/>
-                        </div>                     
-                    
+                            <input type="button" id="activitiesButton" value="Activites" style="float: left" data-bind="click: function(data, event) { selectSearchType('activities'); }" />
+                            <input type="button" id="peopleButton" value="People" style="float: left; border-left-style: none" data-bind="click: function(data, event) { selectSearchType('people'); }" />
+                        </div>
+
                         <!-- Spinner -->
                         <div class="spinnerBox" data-bind="visible: loadSpinner.isVisible() && isHeatmapVisible()">
                             <div style="position: absolute; top: 0; left: 0; bottom: 0; right: 0; margin: auto; width: 100px; height: 20px">
                                 <span>
-                                    <img src="~/images/icons/spinner/spinner-20-blue.gif" alt=""/>
+                                    <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
                                     <strong>Loading...</strong>
                                 </span>
                             </div>
                         </div>
                     </div>
                 </div>
-                       
+
                 <!-- P O I N T M A P -->
                 <div id="pointmapDiv" style="position: relative; display: none" data-bind="visible: isPointmapVisible() && (lens() == 'map')">
                     <div id="pointmap" style="position: absolute; top: 0; left: 0; width: 680px; height: 500px"></div>
-                
+
                     <!-- Spinner -->
-                    <div class="spinnerBox" style="position: absolute; top:400px; left: 0; width: 100px; height: 20px" data-bind="visible: loadSpinner.isVisible() && isPointmapVisible() && (lens() == 'map')">
+                    <div class="spinnerBox" style="position: absolute; top: 400px; left: 0; width: 100px; height: 20px" data-bind="visible: loadSpinner.isVisible() && isPointmapVisible() && (lens() == 'map')">
                         <span>
-                            <img src="~/images/icons/spinner/spinner-20-blue.gif" alt=""/>
+                            <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
                             <strong>Loading...</strong>
                         </span>
                     </div>
-                
+
                     <!-- Hidden element to get map marker color from css -->
                     <div id="mapMarkerColor" class="mapMarkerColor" style="display: none"></div>
                 </div>
-          
+
                 <!-- T A B L E S -->
                 <div>
                     <!-- Activities Results -->
-                    <div id="resultstable" style="display: none" data-bind="visible: isPointmapVisible() && (lens() == 'table') && (searchType() == 'activities')">                   
+                    <div id="resultstable" style="display: none" data-bind="visible: isPointmapVisible() && (lens() == 'table') && (searchType() == 'activities')">
                         <div style="width: 665px">
                             <div class="activitySearchResultsColumnHeader" style="width: 11%" data-bind="click: function ( item, event ) { handleActivityTableColumnClick( event, 'location' ) }">Location</div>
                             <div class="activitySearchResultsColumnHeader" style="width: 20%" data-bind="click: function ( item, event ) { handleActivityTableColumnClick( event, 'name' ) }">Last, First Name</div>
                             <div class="activitySearchResultsColumnHeader" style="width: 48%" data-bind="click: function ( item, event ) { handleActivityTableColumnClick( event, 'title' ) }">Activity Title</div>
-                            <div class="activitySearchResultsColumnHeader" style="width: 7%"  data-bind="click: function ( item, event ) { handleActivityTableColumnClick( event, 'type' ) }">Type</div>
+                            <div class="activitySearchResultsColumnHeader" style="width: 7%" data-bind="click: function ( item, event ) { handleActivityTableColumnClick( event, 'type' ) }">Type</div>
                             <div class="activitySearchResultsColumnHeader" style="width: 11%" data-bind="click: function ( item, event ) { handleActivityTableColumnClick( event, 'date' ) }">Date</div>
                         </div>
                         <div style="height: 600px; overflow-y: scroll">
@@ -592,12 +591,12 @@
                             </ul>
                         </div>
                     </div>
-            
+
                     <!-- People Results -->
-                    <div id="people_resultstable" style="display: none" data-bind="visible: isPointmapVisible() && (lens() == 'table') && (searchType() == 'people')">                   
+                    <div id="people_resultstable" style="display: none" data-bind="visible: isPointmapVisible() && (lens() == 'table') && (searchType() == 'people')">
                         <div style="width: 665px">
                             <div class="activitySearchResultsColumnHeader" style="width: 20%" data-bind="click: function ( item, event ) { handlePeopleTableColumnClick( event, 'name' ) }">Name/Email</div>
-                            <div class="activitySearchResultsColumnHeader" style="width: 15%" data-bind="click: function ( item, event ) { handlePeopleTableColumnClick( event, 'department' ) }">Department</div>                   
+                            <div class="activitySearchResultsColumnHeader" style="width: 15%" data-bind="click: function ( item, event ) { handlePeopleTableColumnClick( event, 'department' ) }">Department</div>
                             <div class="activitySearchResultsColumnHeader" style="width: 11%" data-bind="click: function ( item, event ) { handlePeopleTableColumnClick( event, 'location' ) }">Location</div>
                             <div class="activitySearchResultsColumnHeader" style="width: 43.4%" data-bind="click: function ( item, event ) { handlePeopleTableColumnClick( event, 'activity' ) }">Activity</div>
                             <div class="activitySearchResultsColumnHeader" style="width: 7.6%" data-bind="click: function ( item, event ) { handlePeopleTableColumnClick( event, 'type' ) }">Type</div>
@@ -616,12 +615,12 @@
                             </ul>
                         </div>
                     </div>
-                      
+
                     <!-- Spinners -->
                     <div class="spinnerBox" data-bind="visible: loadSpinner.isVisible() && isPointmapVisible() && (lens() == 'table')">
                         <div style="position: absolute; top: 0; left: 0; bottom: 0; right: 0; margin: auto; width: 100px; height: 20px">
                             <span>
-                                <img src="~/images/icons/spinner/spinner-20-blue.gif" alt=""/>
+                                <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
                                 <strong>Loading...</strong>
                             </span>
                         </div>
@@ -629,24 +628,24 @@
                     <div class="spinnerBox" data-bind="visible: sortSpinner.isVisible() && isPointmapVisible() && (lens() == 'table')">
                         <div style="position: absolute; top: 0; left: 0; bottom: 0; right: 0; margin: auto; width: 100px; height: 20px; z-index: 10">
                             <span>
-                                <img src="~/images/icons/spinner/spinner-20-blue.gif" alt=""/>
+                                <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
                                 <strong>Sorting...</strong>
                             </span>
                         </div>
                     </div>
                 </div>
-                      
+
                 <!-- E X P E R T -->
                 <div style="display: none" data-bind="visible: isExpertVisible()">
                     <div id="expert" style="width: 680px; height: 500px">
-                        <img src="~/images/placeholders/ExpertiseMock.png" width="680" height="500" alt=""/>
+                        <img src="~/images/placeholders/ExpertiseMock.png" width="680" height="500" alt="" />
                     </div>
-                
+
                     <!-- Language Expert Results -->
-                    <div id="languageexpert_resultstable" style="display: none" data-bind="">                   
+                    <div id="languageexpert_resultstable" style="display: none" data-bind="">
                         <div style="width: 665px">
                             <div class="activitySearchResultsColumnHeader" style="width: 20%">Language</div>
-                            <div class="activitySearchResultsColumnHeader" style="width: 10%">Last, First Name, Email</div>                   
+                            <div class="activitySearchResultsColumnHeader" style="width: 10%">Last, First Name, Email</div>
                             <div class="activitySearchResultsColumnHeader" style="width: 20%">Department</div>
                             <div class="activitySearchResultsColumnHeader" style="width: 30%">Proficiencies</div>
                             <div class="activitySearchResultsColumnHeader" style="width: 5%">Speaking</div>
@@ -675,12 +674,12 @@
                             </ul>
                         </div>
                     </div>
-                
+
                     <!-- Geographic Expert Results -->
-                    <div id="geographicexpert_resultstable" style="display: none" data-bind="">                   
+                    <div id="geographicexpert_resultstable" style="display: none" data-bind="">
                         <div style="width: 665px">
                             <div class="activitySearchResultsColumnHeader" style="width: 20%">Country/Location</div>
-                            <div class="activitySearchResultsColumnHeader" style="width: 20%">Last, First Name, Email</div>                   
+                            <div class="activitySearchResultsColumnHeader" style="width: 20%">Last, First Name, Email</div>
                             <div class="activitySearchResultsColumnHeader" style="width: 20%">Department</div>
                             <div class="activitySearchResultsColumnHeader" style="width: 40%">Expertise Summary</div>
                         </div>
@@ -704,7 +703,7 @@
                 </div>
             </div>
         </div>
-        <aside class="on-right from-top" data-fixed-scroll="root" >
+        <aside class="on-right from-top" data-fixed-scroll="root">
             <div data-fixed-scroll="anchor"></div>
             <div data-fixed-scroll="content" style="display: none" data-bind="visible: isPointmapVisible">
                 @Html.Partial(MVC.FacultyStaff.Views._SearchSideBar)
@@ -714,7 +713,7 @@
             </div>
         </aside>
     </form>
-    <div style='clear:both'></div>
+    <div style='clear: both'></div>
 </div>
 
 <div id="tooltipWindow" style="width: 100px; height: 40px"></div>
@@ -723,7 +722,7 @@
 
 <script type="text/html" id="activities-types-template">
     <img img data-bind="attr: { src: '/api/my/employee-module-settings/icon/' + $root.getActivityTypeIconName( $data ), title: $root.getActivityTypeToolTip( $data ) }"
-        src="" title="" width="24" height="24"/>
+        src="" title="" width="24" height="24" />
 </script>
 
 
