@@ -1,12 +1,13 @@
 var Employees;
 (function (Employees) {
+    /// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
     /// <reference path="../../app/Spinner.ts" />
     /// <reference path="../../typings/googlecharts/google.charts.d.ts" />
     /// <reference path="../../typings/knockout/knockout.d.ts" />
     /// <reference path="../../typings/linq/linq.d.ts" />
     /// <reference path="../../google/GeoChart.ts" />
     /// <reference path="Server.ts" />
-    /// <reference path="ApiModels.d.ts" />
+    /// <reference path="Models.d.ts" />
     /// <reference path="../../app/App.ts" />
     (function (ViewModels) {
         var ImageSwapper = (function () {
@@ -73,9 +74,20 @@ var Employees;
                 this.arcticOceanSwapper = new ImageSwapper();
                 this.indianOceanSwapper = new ImageSwapper();
                 this.antarcticaSwapper = new ImageSwapper();
+                //#endregion
+                //#region Summaries
+                this.activitiesSummary = {
+                    personCount: ko.observable('?'),
+                    activityCount: ko.observable('?'),
+                    locationCount: ko.observable('?')
+                };
+                this.activitiesSummaryData = new DataCacher(function () {
+                    return _this._loadActivitiesSummary();
+                });
                 // CONSTRUCTOR
                 this.geoChart = new App.Google.GeoChart(document.getElementById(this.settings.geoChartElementId));
                 this._drawGeoChart();
+                this.activitiesSummaryData.ready();
             }
             Summary.loadGoogleVisualization = function () {
                 var _this = this;
@@ -95,11 +107,8 @@ var Employees;
                 var request = {
                     countries: true
                 };
-                var settings = {
-                    data: request
-                };
                 this.geoChartSpinner.start();
-                Employees.Servers.ActivityPlaces(this.settings.tenantDomain, settings).done(function (places) {
+                Employees.Servers.ActivityPlaces(this.settings.tenantDomain, request).done(function (places) {
                     promise.resolve(places);
                 }).fail(function (xhr) {
                     App.Failures.message(xhr, 'while trying to load activity location summary data.', true);
@@ -142,6 +151,19 @@ var Employees;
                         _this.geoChart.draw(dataTable, options);
                     });
                 });
+            };
+
+            Summary.prototype._loadActivitiesSummary = function () {
+                var _this = this;
+                var promise = $.Deferred();
+                Employees.Servers.ActivitiesSummary(this.settings.tenantDomain).done(function (summary) {
+                    ko.mapping.fromJS(summary, {}, _this.activitiesSummary);
+                    promise.resolve(summary);
+                }).fail(function (xhr) {
+                    App.Failures.message(xhr, 'while trying to load activity total summary data.', true);
+                    promise.reject();
+                });
+                return promise;
             };
             Summary._googleVisualizationLoadedPromise = $.Deferred();
             return Summary;

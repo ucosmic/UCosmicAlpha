@@ -2136,7 +2136,7 @@
       <DependentUpon>Degrees.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="scripts\viewmodels\employees\Employees.ts" />
-    <None Include="scripts\viewmodels\employees\ApiModels.d.ts" />
+    <None Include="scripts\viewmodels\employees\Models.d.ts" />
     <Content Include="scripts\viewmodels\employees\Employees.js">
       <DependentUpon>Employees.ts</DependentUpon>
     </Content>

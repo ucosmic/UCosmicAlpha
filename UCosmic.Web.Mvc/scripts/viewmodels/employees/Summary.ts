@@ -1,10 +1,11 @@
+/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
 /// <reference path="../../app/Spinner.ts" />
 /// <reference path="../../typings/googlecharts/google.charts.d.ts" />
 /// <reference path="../../typings/knockout/knockout.d.ts" />
 /// <reference path="../../typings/linq/linq.d.ts" />
 /// <reference path="../../google/GeoChart.ts" />
 /// <reference path="Server.ts" />
-/// <reference path="ApiModels.d.ts" />
+/// <reference path="Models.d.ts" />
 /// <reference path="../../app/App.ts" />
 
 module Employees.ViewModels {
@@ -77,6 +78,7 @@ module Employees.ViewModels {
             // CONSTRUCTOR
             this.geoChart = new App.Google.GeoChart(document.getElementById(this.settings.geoChartElementId));
             this._drawGeoChart();
+            this.activitiesSummaryData.ready();
         }
 
         //#endregion
@@ -95,11 +97,8 @@ module Employees.ViewModels {
             var request: ApiModels.ActivityPlacesInputModel = {
                 countries: true,
             };
-            var settings: JQueryAjaxSettings = {
-                data: request,
-            };
             this.geoChartSpinner.start();
-            Servers.ActivityPlaces(this.settings.tenantDomain, settings)
+            Servers.ActivityPlaces(this.settings.tenantDomain, request)
                 .done((places: ApiModels.ActivityPlaceApiModel[]): void => {
                     promise.resolve(places);
                 })
@@ -159,6 +158,33 @@ module Employees.ViewModels {
         arcticOceanSwapper: ImageSwapper = new ImageSwapper();
         indianOceanSwapper: ImageSwapper = new ImageSwapper();
         antarcticaSwapper: ImageSwapper = new ImageSwapper();
+
+        //#endregion
+        //#region Summaries
+
+        activitiesSummary: KoModels.ActivitiesSummary = {
+            personCount: ko.observable('?'),
+            activityCount: ko.observable('?'),
+            locationCount: ko.observable('?'),
+        };
+        activitiesSummaryData: DataCacher<ApiModels.ActivitiesSummary> = new DataCacher(
+            (): JQueryPromise<ApiModels.ActivitiesSummary> => {
+                return this._loadActivitiesSummary();
+            });
+
+        private _loadActivitiesSummary(): JQueryPromise<ApiModels.ActivitiesSummary> {
+            var promise: JQueryDeferred<ApiModels.ActivitiesSummary> = $.Deferred();
+            Servers.ActivitiesSummary(this.settings.tenantDomain)
+                .done((summary: ApiModels.ActivitiesSummary): void => {
+                    ko.mapping.fromJS(summary, {}, this.activitiesSummary);
+                    promise.resolve(summary);
+                })
+                .fail((xhr: JQueryXHR): void => {
+                    App.Failures.message(xhr, 'while trying to load activity total summary data.', true);
+                    promise.reject();
+                })
+            return promise;
+        }
 
         //#endregion
     }

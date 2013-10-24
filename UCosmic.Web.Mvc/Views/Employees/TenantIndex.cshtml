@@ -38,13 +38,34 @@
                 </h1>
             </header>
 
-            <div class="group" style="height: 30px;">
-                <div class="on-left">
-                </div>
-                <div class="on-right">
-                    <div data-bind="visible: geoChartSpinner.isVisible">
-                        <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
-                        <strong>Loading geographic summary...</strong>
+            <div data-bind="with: activitiesSummary" style="margin: 16px 0; height: 30px; font-size: 20px;">
+                <strong data-bind="text: personCount" style="font-size: 24px;">?</strong>
+                <span data-bind="visible: personCount() == 1" style="display: none;">person</span>
+                <span data-bind="visible: personCount() != 1">people</span>
+                <span data-bind="visible: personCount() > 0">with
+                    @*<span data-bind="visible: personCount() == 1" style="display: none;">has</span>
+                    <span data-bind="visible: personCount() != 1">have</span>*@
+                    <strong data-bind="text: activityCount" style="font-size: 24px;">?</strong>
+                    <span data-bind="visible: activityCount() == 1" style="display: none;">activity</span>
+                    <span data-bind="visible: activityCount() != 1">activities</span>
+                    in
+                        <strong data-bind="text: locationCount" style="font-size: 24px;">?</strong>
+                    <span data-bind="visible: locationCount() == 1" style="display: none;">location.</span>
+                    <span data-bind="visible: locationCount() != 1">locations.</span>
+                </span>
+            </div>
+            <div style="margin: 1em 0; height: 28px;">
+                <div class="group">
+                    <div class="on-left">
+                        <span data-bind="visible: !geoChartSpinner.isVisible()" style="display: none;">
+                            Double click a region to zoom in.
+                        </span>
+                    </div>
+                    <div class="on-right">
+                        <div data-bind="visible: geoChartSpinner.isVisible">
+                            <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
+                            <strong>Loading geographic summary...</strong>
+                        </div>
                     </div>
                 </div>
             </div>
