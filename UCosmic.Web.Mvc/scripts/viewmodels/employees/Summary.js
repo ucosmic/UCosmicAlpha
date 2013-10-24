@@ -1,8 +1,13 @@
 var Employees;
 (function (Employees) {
+    /// <reference path="../../app/Spinner.ts" />
     /// <reference path="../../typings/googlecharts/google.charts.d.ts" />
     /// <reference path="../../typings/knockout/knockout.d.ts" />
+    /// <reference path="../../typings/linq/linq.d.ts" />
     /// <reference path="../../google/GeoChart.ts" />
+    /// <reference path="Server.ts" />
+    /// <reference path="ApiModels.d.ts" />
+    /// <reference path="../../app/App.ts" />
     (function (ViewModels) {
         var ImageSwapper = (function () {
             function ImageSwapper() {
@@ -26,12 +31,38 @@ var Employees;
         })();
         ViewModels.ImageSwapper = ImageSwapper;
 
+        var DataCacher = (function () {
+            function DataCacher(loader) {
+                this.loader = loader;
+                this._promise = $.Deferred();
+            }
+            DataCacher.prototype.ready = function () {
+                var _this = this;
+                if (!this._response) {
+                    this.loader().done(function (data) {
+                        _this._response = data;
+                        _this._promise.resolve(_this._response);
+                    }).fail(function (xhr) {
+                        _this._promise.reject();
+                    });
+                }
+                return this._promise;
+            };
+            return DataCacher;
+        })();
+        ViewModels.DataCacher = DataCacher;
+
         var Summary = (function () {
             //#endregion
             //#region Construction
             function Summary(settings) {
+                var _this = this;
                 this.settings = settings;
+                this.geoChartSpinner = new App.Spinner(new App.SpinnerOptions(400, true));
                 this.isGeoChartReady = ko.observable(false);
+                this.activityPlaceData = new DataCacher(function () {
+                    return _this._loadActivityPlaceData();
+                });
                 //#endregion
                 //#region Extra Text Images
                 this.pacificOceanSwapper = new ImageSwapper();
@@ -43,7 +74,7 @@ var Employees;
                 this.indianOceanSwapper = new ImageSwapper();
                 this.antarcticaSwapper = new ImageSwapper();
                 // CONSTRUCTOR
-                this.geoChart = new App.Google.GeoChart(document.getElementById('google_geochart'));
+                this.geoChart = new App.Google.GeoChart(document.getElementById(this.settings.geoChartElementId));
                 this._drawGeoChart();
             }
             Summary.loadGoogleVisualization = function () {
@@ -58,24 +89,58 @@ var Employees;
                 return this._googleVisualizationLoadedPromise;
             };
 
+            Summary.prototype._loadActivityPlaceData = function () {
+                var _this = this;
+                var promise = $.Deferred();
+                var request = {
+                    countries: true
+                };
+                var settings = {
+                    data: request
+                };
+                this.geoChartSpinner.start();
+                Employees.Servers.ActivityPlaces(this.settings.tenantDomain, settings).done(function (places) {
+                    promise.resolve(places);
+                }).fail(function (xhr) {
+                    App.Failures.message(xhr, 'while trying to load activity location summary data.', true);
+                    promise.reject();
+                }).always(function () {
+                    _this.geoChartSpinner.stop();
+                });
+                return promise;
+            };
+
             Summary.prototype._drawGeoChart = function () {
                 var _this = this;
-                var data = google.visualization.arrayToDataTable([
-                    ['Country', 'Popularity'],
-                    ['Germany', 200],
-                    ['United States', 300],
-                    ['Brazil', 400],
-                    ['Canada', 500],
-                    ['France', 600],
-                    ['RU', 700]
-                ]);
-
+                // options passed when drawing geochart
                 var options = {
-                    backgroundColor: '#acccfd',
-                    keepAspectRatio: false
+                    displayMode: 'regions',
+                    region: 'world',
+                    keepAspectRatio: false,
+                    colorAxis: {
+                        minValue: 1,
+                        colors: ['#dceadc', '#006400']
+                    },
+                    backgroundColor: '#acccfd'
                 };
-                this.geoChart.draw(data, options).done(function () {
+
+                // create data table schema
+                var dataTable = new google.visualization.DataTable();
+                dataTable.addColumn('string', 'Place');
+                dataTable.addColumn('number', 'Total Activities');
+
+                // go ahead and draw the chart with empty data to make sure its ready
+                this.geoChart.draw(dataTable, options).then(function () {
                     _this.isGeoChartReady(true);
+
+                    // now hit the server up for data and redraw
+                    _this.activityPlaceData.ready().done(function (places) {
+                        $.each(places, function (i, dataPoint) {
+                            dataTable.addRow([dataPoint.placeName, dataPoint.activityIds.length]);
+                        });
+
+                        _this.geoChart.draw(dataTable, options);
+                    });
                 });
             };
             Summary._googleVisualizationLoadedPromise = $.Deferred();

@@ -7,14 +7,22 @@
 
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
+    <script type="text/javascript" src="~/scripts/oss/linq.js"></script>
+
     <script type="text/javascript" src="~/scripts/google/GeoChart.js"></script>
+
+    <script type="text/javascript" src="~/scripts/viewmodels/employees/Server.js"></script>
 
     <script type="text/javascript" src="~/scripts/viewmodels/employees/Summary.js"></script>
 
     <script type="text/javascript">
         // Google API needs to be called outside of JQuery ready()
         Employees.ViewModels.Summary.loadGoogleVisualization().done(function () {
-            var viewModel = new Employees.ViewModels.Summary();
+            var viewModel = new Employees.ViewModels.Summary({
+                geoChartElementId: 'google_geochart',
+                tenantDomain: '@ViewBag.EmployeesDomain',
+
+            });
             ko.applyBindings(viewModel, $('[data-current-module=employees]')[0]);
         });
     </script>
@@ -30,8 +38,15 @@
                 </h1>
             </header>
 
-            <div style="height: 30px;">
-                &nbsp;
+            <div class="group" style="height: 30px;">
+                <div class="on-left">
+                </div>
+                <div class="on-right">
+                    <div data-bind="visible: geoChartSpinner.isVisible">
+                        <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
+                        <strong>Loading geographic summary...</strong>
+                    </div>
+                </div>
             </div>
 
             @* GOOGLE CHART *@
@@ -53,7 +68,7 @@
                             <img data-bind="visible: isHover" src="~/images/geochart/hot/gulf-of-mexico.png" alt="Gulf of Mexico" style="display: none;" />
                         </div>
                     </div>
-                    <div data-bind="with: caribbeanSeaSwapper" style="position: absolute; top: 312px; left: 205px;">
+                    <div data-bind="with: caribbeanSeaSwapper" style="position: absolute; top: 311px; left: 205px;">
                         <div data-bind="event: { mouseover: mouseover, mouseout: mouseout }">
                             <img data-bind="visible: isUp" src="~/images/geochart/up/caribbean-sea.png" alt="Caribbean Sea" />
                             <img data-bind="visible: isHover" src="~/images/geochart/hot/caribbean-sea.png" alt="Caribbean Sea" style="display: none;" />

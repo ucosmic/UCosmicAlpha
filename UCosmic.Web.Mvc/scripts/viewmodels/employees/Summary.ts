@@ -1,11 +1,17 @@
+/// <reference path="../../app/Spinner.ts" />
 /// <reference path="../../typings/googlecharts/google.charts.d.ts" />
 /// <reference path="../../typings/knockout/knockout.d.ts" />
+/// <reference path="../../typings/linq/linq.d.ts" />
 /// <reference path="../../google/GeoChart.ts" />
+/// <reference path="Server.ts" />
+/// <reference path="ApiModels.d.ts" />
+/// <reference path="../../app/App.ts" />
 
 module Employees.ViewModels {
 
     export interface SummarySettings {
-        chartElementId: string;
+        geoChartElementId: string;
+        tenantDomain: string;
     }
 
     export class ImageSwapper {
@@ -25,6 +31,26 @@ module Employees.ViewModels {
 
         mouseout(self: ImageSwapper, e: JQueryEventObject): void {
             this._state('up');
+        }
+    }
+
+    export class DataCacher<T> {
+        constructor(public loader: () => JQueryPromise<T>) { }
+
+        private _response: T;
+        private _promise: JQueryDeferred<T> = $.Deferred();
+        ready(): JQueryPromise<T> {
+            if (!this._response) {
+                this.loader()
+                    .done((data: T): void => {
+                        this._response = data;
+                        this._promise.resolve(this._response);
+                    })
+                    .fail((xhr: JQueryXHR): void => {
+                        this._promise.reject();
+                    });
+            }
+            return this._promise;
         }
     }
 
@@ -49,7 +75,7 @@ module Employees.ViewModels {
 
         constructor(public settings: SummarySettings) {
             // CONSTRUCTOR
-            this.geoChart = new App.Google.GeoChart(document.getElementById('google_geochart'));
+            this.geoChart = new App.Google.GeoChart(document.getElementById(this.settings.geoChartElementId));
             this._drawGeoChart();
         }
 
@@ -57,25 +83,68 @@ module Employees.ViewModels {
         //#region Google GeoChart
 
         geoChart: App.Google.GeoChart;
+        geoChartSpinner = new App.Spinner(new App.SpinnerOptions(400, true));
         isGeoChartReady: KnockoutObservable<boolean> = ko.observable(false);
+        activityPlaceData: DataCacher<ApiModels.ActivityPlaceApiModel[]> = new DataCacher(
+            (): JQueryPromise<ApiModels.ActivityPlaceApiModel[]> => {
+                return this._loadActivityPlaceData();
+            });
+
+        private _loadActivityPlaceData(): JQueryPromise<ApiModels.ActivityPlaceApiModel[]> {
+            var promise: JQueryDeferred<ApiModels.ActivityPlaceApiModel[]> = $.Deferred();
+            var request: ApiModels.ActivityPlacesInputModel = {
+                countries: true,
+            };
+            var settings: JQueryAjaxSettings = {
+                data: request,
+            };
+            this.geoChartSpinner.start();
+            Servers.ActivityPlaces(this.settings.tenantDomain, settings)
+                .done((places: ApiModels.ActivityPlaceApiModel[]): void => {
+                    promise.resolve(places);
+                })
+                .fail((xhr: JQueryXHR): void => {
+                    App.Failures.message(xhr, 'while trying to load activity location summary data.', true);
+                    promise.reject();
+                })
+                .always((): void => {
+                    this.geoChartSpinner.stop();
+                });
+            return promise;
+        }
 
         private _drawGeoChart(): void {
-            var data = google.visualization.arrayToDataTable([
-                ['Country', 'Popularity'],
-                ['Germany', 200],
-                ['United States', 300],
-                ['Brazil', 400],
-                ['Canada', 500],
-                ['France', 600],
-                ['RU', 700]
-            ]);
 
+            // options passed when drawing geochart
             var options: google.visualization.GeoChartOptions = {
-                backgroundColor: '#acccfd', // google maps water color is a5bfdd, Doug's bg color is acccfd
+                displayMode: 'regions',
+                region: 'world',
                 keepAspectRatio: false,
+                colorAxis: {
+                    minValue: 1,
+                    colors: ['#dceadc', '#006400', ],
+                },
+                backgroundColor: '#acccfd', // google maps water color is a5bfdd, Doug's bg color is acccfd
             };
-            this.geoChart.draw(data, options).done((): void => {
+
+            // create data table schema
+            var dataTable = new google.visualization.DataTable();
+            dataTable.addColumn('string', 'Place');
+            dataTable.addColumn('number', 'Total Activities');
+
+            // go ahead and draw the chart with empty data to make sure its ready
+            this.geoChart.draw(dataTable, options).then((): void => {
                 this.isGeoChartReady(true);
+
+                // now hit the server up for data and redraw
+                this.activityPlaceData.ready()
+                    .done((places: ApiModels.ActivityPlaceApiModel[]): void => {
+                        $.each(places, (i: number, dataPoint: ApiModels.ActivityPlaceApiModel): void=> {
+                            dataTable.addRow([dataPoint.placeName, dataPoint.activityIds.length]);
+                        });
+
+                        this.geoChart.draw(dataTable, options);
+                    });
             });
         }
 

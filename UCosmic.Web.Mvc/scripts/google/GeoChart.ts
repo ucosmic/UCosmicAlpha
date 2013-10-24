@@ -35,7 +35,7 @@ module App.Google {
         geoChart: google.visualization.GeoChart;
         private _promise = $.Deferred();
 
-        draw(data: any, options: any): JQueryPromise<void> {
+        draw(data: any, options?: any): JQueryPromise<void> {
             // if the chart does not yet exist, construct it and set
             // up a promise for its ready callback
             if (!this.geoChart) {

@@ -311,6 +311,7 @@
     <Compile Include="ApiControllers\Expertise\GeographicExpertiseController.cs" />
     <Compile Include="ApiControllers\Expertise\LanguageExpertiseController.cs" />
     <Compile Include="ApiControllers\FacultyStaff\EmployeeModuleSettingsController.cs" />
+    <Compile Include="ApiControllers\FacultyStaff\EmployeesController.cs" />
     <Compile Include="ApiControllers\FacultyStaff\FacultyStaffController.cs" />
     <Compile Include="ApiControllers\Establishments\EstablishmentCategoriesController.cs" />
     <Compile Include="ApiControllers\Establishments\EstablishmentLocationsController.cs" />
@@ -2135,6 +2136,7 @@
       <DependentUpon>Degrees.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="scripts\viewmodels\employees\Employees.ts" />
+    <None Include="scripts\viewmodels\employees\ApiModels.d.ts" />
     <Content Include="scripts\viewmodels\employees\Employees.js">
       <DependentUpon>Employees.ts</DependentUpon>
     </Content>
@@ -2142,6 +2144,13 @@
       <DependentUpon>Employees.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="scripts\viewmodels\employees\ServerApiModel.d.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\employees\Server.ts" />
+    <Content Include="scripts\viewmodels\employees\Server.js">
+      <DependentUpon>Server.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\employees\Server.min.js">
+      <DependentUpon>Server.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\viewmodels\employees\ServerApiModel.d.js">
       <DependentUpon>ServerApiModel.d.ts</DependentUpon>
     </Content>
