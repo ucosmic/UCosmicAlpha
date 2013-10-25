@@ -284,6 +284,9 @@
     <Compile Include="ActivitiesController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
+    <Compile Include="ActivitiesSpikeController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
     <Compile Include="AdminController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
@@ -334,6 +337,7 @@
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
     <Compile Include="Controllers\ActivitiesController.cs" />
+    <Compile Include="Controllers\ActivitiesSpikeController.cs" />
     <Compile Include="Controllers\FacultyStaffController.cs" />
     <Compile Include="Controllers\RepsController.cs" />
     <Compile Include="Controllers\SamlMetadataController.cs" />
@@ -348,6 +352,7 @@
     <Compile Include="Models\Activities\ActivityApiPutModel.cs" />
     <Compile Include="Models\Activities\ActivityDocumentApiModel.cs" />
     <Compile Include="Models\Activities\ActivityDocumentApiPutModel.cs" />
+    <Compile Include="Models\Activities\ActivityPublicViewModel.cs" />
     <Compile Include="Models\Activities\_Deprecated\_ActivityEditState.cs" />
     <Compile Include="Models\Activities\ActivityEstablishmentApiModel.cs" />
     <Compile Include="Models\Activities\ActivityPlaceApiModel.cs" />
@@ -2487,6 +2492,8 @@
     <Content Include="Views\Agreements\_PublicViewContent.cshtml" />
     <Content Include="Views\Activities\_EditStyles.cshtml" />
     <Content Include="Views\Agreements\SearchTable.cshtml" />
+    <Content Include="Views\ActivitiesSpike\ActivitiesSpike.cshtml" />
+    <Content Include="Views\ActivitiesSpike\_ActivitiesSpikeContent.cshtml" />
     <None Include="Views\ApiTest\Index.cshtml" />
     <Content Include="Views\Agreements\Settings.cshtml" />
     <Content Include="Views\Agreements\_SearchSideBar.cshtml" />

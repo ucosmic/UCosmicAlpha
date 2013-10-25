@@ -1,0 +1,19 @@
+﻿@using UCosmic.Domain.Agreements
+<section id="publicView" data-bind="visible: isBound" style="display: none;">
+
+    @* ACTIVITY TYPE AS H2 *@
+    <header>
+        <h2 data-bind="text: type"></h2>
+        <div>
+            <h3 data-bind="text: name, visible: name" style="line-height: 20px; text-transform: none;"></h3>
+        </div>
+    </header>
+
+    <div style="margin: 1em 0;">
+    </div>
+
+
+    <div style="display: none">
+        @*<span id="agreementPartners_api">@ViewBag.AgreementPartnersApi</span>  for map *@
+    </div>
+</section>

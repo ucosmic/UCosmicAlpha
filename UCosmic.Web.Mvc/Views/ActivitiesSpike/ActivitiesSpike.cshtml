@@ -1,0 +1,43 @@
+﻿@model UCosmic.Web.Mvc.Models.ActivityPublicViewModel
+@{
+    ViewBag.Title = "ActivitiesSpike";
+}
+
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/agreementPublicView")
+
+    <script type="text/javascript">
+        var viewModel = new Agreements.ViewModels.PublicView(parseInt(@ViewBag.AgreementId), '@ViewBag.AgreementVisibility');
+        ko.applyBindings(viewModel, $('#publicView')[0]);
+    </script>
+
+}
+
+<div class="content fixed to-top" data-current-module="agreements" id="publicView">
+    <div class="group">
+        <div class="on-right from-top" style="width: 238px; background-color: grey; margin: 50px 0px 12px 12px; border: solid black 1px;">
+            <div style="height: 238px; width: 238px;" id="map-canvas"></div>
+        </div>
+        <div class="from-top" style="max-width: 950px; ">
+            <header>
+                <h1>
+                    @ViewBag.Title
+                </h1>
+            </header>
+            @Html.Partial(MVC.Agreements.Views._PublicViewContent)
+            <div style="border: solid black 1px;">
+                Lorem ipsum dolor sit amet, veniam fuisset moderatius te quo, commodo delicata concludaturque at ius. Eu ius tota fugit perfecto, libris civibus has an. Duo veniam appetere signiferumque no, electram consequat vituperata ad sea. Et quo quot atomorum corrumpit, nonumy timeam eos in. Soleat vocent tincidunt quo ad, sit ei quem graeco.
+                <br/>
+Nec sint velit cu, te qui nemore placerat facilisis, ad commune delectus evertitur mei. Mea nisl vocibus ex. Cum reprimique theophrastus cu, te offendit fabellas pertinax nec. An ius ferri timeam atomorum, equidem consulatu assentior ut mel. Est quem simul ei, ex probo iusto detracto est.
+                <br/>
+Dicit dicant nam ei, mucius facilis repudiare eu eos, novum laoreet ut sea. Quo ei sonet consectetuer, cu iudico deleniti vel, fugit deserunt id mea. Choro omnesque mei eu, mel no quando eligendi postulant. Movet detraxit pro id, id pro persius copiosae. At eleifend consetetur efficiantur sea, eu mel altera voluptua iudicabit, ad cum hinc putant docendi.
+                <br/>
+Id libris iisque sed. Quod sale nulla ei quo, his no recusabo molestiae. Prima vituperatoribus quo cu, sit doming persequeris at. Honestatis liberavisse sit te, eam mazim facilis apeirian ad. Choro tractatos referrentur sea ne, te nam tota postea. Veritus similique vix ne, vel et ludus suavitate, ad omnis definitionem mea.
+                <br/>
+Sanctus imperdiet no vis, at tota paulo appareat sea, nam vidit atomorum assueverit id. At percipit insolens pro, suas gubergren intellegebat qui ne. Ea quem principes pro, nonumes vocibus an per. Mea omnes gloriatur interpretaris ut, has ex quem utamur patrioque. Duo vidit regione expetendis cu, habeo lorem soluta mei ei.
+            </div>
+        </div>
+    </div>
+</div>

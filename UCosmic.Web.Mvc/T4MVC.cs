@@ -25,6 +25,7 @@ using T4MVC;
 public static class MVC
 {
     public static UCosmic.Web.Mvc.Controllers.ActivitiesController Activities = new UCosmic.Web.Mvc.Controllers.T4MVC_ActivitiesController();
+    public static UCosmic.Web.Mvc.Controllers.ActivitiesSpikeController ActivitiesSpike = new UCosmic.Web.Mvc.Controllers.T4MVC_ActivitiesSpikeController();
     public static UCosmic.Web.Mvc.Controllers.AdminController Admin = new UCosmic.Web.Mvc.Controllers.T4MVC_AdminController();
     public static UCosmic.Web.Mvc.Controllers.AgreementsController Agreements = new UCosmic.Web.Mvc.Controllers.T4MVC_AgreementsController();
     public static UCosmic.Web.Mvc.Controllers.ApiTestController ApiTest = new UCosmic.Web.Mvc.Controllers.T4MVC_ApiTestController();
@@ -3759,6 +3760,8 @@ namespace Links
                 public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
                 public static readonly string doc_png = Url("doc.png");
                 public static readonly string docx_png = Url("docx.png");
+                public static readonly string pdf_16_png = Url("pdf-16.png");
+                public static readonly string pdf_32_png = Url("pdf-32.png");
                 public static readonly string pdf_png = Url("pdf.png");
                 public static readonly string ppt_png = Url("ppt.png");
                 public static readonly string pptx_png = Url("pptx.png");
