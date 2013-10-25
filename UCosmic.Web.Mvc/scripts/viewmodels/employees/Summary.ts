@@ -13,6 +13,7 @@ module Employees.ViewModels {
 
     export interface SummarySettings {
         geoChartElementId: string;
+        geoChartWaterOverlaysElementId?: string;
         geoChartKeepAspectRatio?: boolean;
         tenantDomain: string;
     }
@@ -28,11 +29,11 @@ module Employees.ViewModels {
             return this._state() == 'hover';
         });
 
-        mouseover(self: ImageSwapper, e: JQueryEventObject): void {
+        onMouseEnter(self: ImageSwapper, e: JQueryEventObject): void {
             this._state('hover');
         }
 
-        mouseout(self: ImageSwapper, e: JQueryEventObject): void {
+        onMouseLeave(self: ImageSwapper, e: JQueryEventObject): void {
             this._state('up');
         }
     }
@@ -160,10 +161,89 @@ module Employees.ViewModels {
             return typeof d3 !== 'undefined';
         }
 
+        isD3Undefined = ko.computed((): boolean => {
+            return !Summary._isD3Defined();
+        });
+
+        //private _testSvgInjection2(): void {
+
+        //    // IE8 cannot load the d3 library
+        //    if (!Summary._isD3Defined()) return;
+
+        //    // svg structure is as follows:
+        //    //  svg
+        //    //      > defs
+        //    //      > g
+        //    //          > rect
+        //    //          > g - map
+        //    //          > g - legend
+        //    //          > g - ?
+        //    //          > g - tooltips
+        //    var rootG = d3.select('#google_geochart svg > g');
+        //    var parentG = rootG.append('g')
+        //        .attr('id', 'overlay_root')
+        //    ;
+
+        //    var overlays = $('#google_geochart_overlay_container section');
+        //    $.each(overlays, (i: number, overlay: Element): void => {
+        //        var overlayG = parentG.append('g');
+        //        $.each($(overlay).children(), (i: number, child: any): void => {
+        //            var jChild = $(child);
+        //            var src = jChild.attr('src');
+        //            var x = jChild.css('left');
+        //            var y = jChild.css('top');
+        //            var width = jChild.css('width');
+        //            var height = jChild.css('height');
+        //            var display = jChild.css('display');
+        //            if (jChild.prop('tagName').toUpperCase() == 'IMG') {
+        //                var image = overlayG.append('image')
+        //                    .attr('xlink:href', src)
+        //                    .attr('x', parseInt(x)).attr('y', parseInt(y))
+        //                    .attr('width', width).attr('height', height)
+        //                ;
+        //                if (display && display.toLowerCase() == 'none') {
+        //                    image.attr('style', 'display: none;');
+        //                }
+        //            }
+        //        });
+
+        //        $.each($(overlayG[0][0]).children(), (i: number, child: Element): void => {
+        //            var jChild = $(child);
+        //            var dChild = d3.select(child);
+        //            var display = jChild.css('display');
+        //            var sibling = jChild.siblings('image');
+
+        //            // put mouseleave on the hidden element (it will be the hot one)
+        //            var eventName = display && display.toLowerCase() == 'none'
+        //                ? 'mouseleave' : 'mouseenter';
+        //            dChild.on(eventName, (): void => {
+        //                jChild.hide();
+        //                sibling.show();
+        //            });
+
+        //            // nudge down caribbean
+        //            var src = dChild.attr('xlink:href');
+        //            if (src && src.toLowerCase().indexOf('caribbean') > 0) {
+        //                var oldY = dChild.attr('y');
+        //                var newY = parseInt(oldY) + 5;
+        //                dChild.attr('y', newY);
+        //            }
+        //        });
+        //    });
+
+        //    // now rearrange the g order
+        //    // now use jQuery to rearrange the order of the elements
+        //    $('#google_geochart svg > g > g:last-child')
+        //        .insertAfter('#google_geochart svg > g > g:nth-child(2)')
+        //    //.removeAttr('id')
+        //    ;
+        //}
+
         private _testSvgInjection(): void {
 
             // IE8 cannot load the d3 library
-            if (!Summary._isD3Defined()) return;
+            if (!Summary._isD3Defined() || !this.settings.geoChartWaterOverlaysElementId)
+                return;
 
             // svg structure is as follows:
             //  svg
@@ -174,35 +254,61 @@ module Employees.ViewModels {
             //          > g - legend
             //          > g - ?
             //          > g - tooltips
-            var rootG = d3.select('#google_geochart svg > g');
-            var parentG = rootG.append('g')
-                .attr('id', 'overlay_root')
-            ;
 
-            var overlays = $('#google_geochart_overlay_container section');
+            // use d3 to select the first root g element from the geochart
+            var rootG = d3.select('#{0} svg > g'.format(this.settings.geoChartElementId));
+
+            // append a new g element to the geochart's root g element
+            // all of the overlays will become children of this g element
+            var parentG = rootG.append('g')
+                .attr('id', '{0}_root'.format(this.settings.geoChartWaterOverlaysElementId))
+            ; // note this element's id will be removed later, it is here for testing only
+
+            // iterate over the children of the overlays element
+            // in the markup the overlays is a UL with each overlay as an LI
+            // (however the following code does not take that into account)
+            var container = $('#{0}'.format(this.settings.geoChartWaterOverlaysElementId));
+            container.show(); // need to do this to get positions & dimensions from jQuery
+            var overlays = container.children();
             $.each(overlays, (i: number, overlay: Element): void => {
-                var overlayG = parentG.append('g');
+                // create a new d3 container for this overlay
+                var dOverlay = parentG.append('g');
+                var jOverlay = $(overlay);
                 $.each($(overlay).children(), (i: number, child: any): void => {
                     var jChild = $(child);
-                    var src = jChild.attr('src');
-                    var x = jChild.css('left');
-                    var y = jChild.css('top');
+
+                    // currently this only supports image injection
+                    if (jChild.prop('tagName').toUpperCase() !== 'IMG') return;
+
+                    // need to compute position in case it is defined in a css class
+                    // it is the parent's offset (the overlay's offset) that determines both x and y
+                    var x = jOverlay.position().left;
+                    var y = jOverlay.position().top;
+
+                    // width and height will be accessible when shown
                     var width = jChild.css('width');
                     var height = jChild.css('height');
+                    var src = jChild.attr('src');
                     var display = jChild.css('display');
-                    if (jChild.prop('tagName').toUpperCase() == 'IMG') {
-                        var image = overlayG.append('image')
-                            .attr('xlink:href', src)
-                            .attr('x', parseInt(x)).attr('y', parseInt(y))
-                            .attr('width', width).attr('height', height)
-                        ;
-                        if (display && display.toLowerCase() == 'none') {
-                            image.attr('style', 'display: none;');
-                        }
+
+                    // append a d3 image to the overlay g element
+                    var image = dOverlay.append('image')
+                        .attr('xlink:href', src)
+                        .attr('x', x).attr('y', y)
+                        .attr('width', width).attr('height', height)
+                    ;
+
+                    // hide the hot image in the d3 overlay collection
+                    if (display && display.toLowerCase() == 'none') {
+                        image.attr('style', 'display: none;');
                     }
                 });
 
-                $.each($(overlayG[0][0]).children(), (i: number, child: Element): void => {
+                // TODO: move this to a separate handler
+                // the images are now in the SVG, but they have no mouse events
+                // use d3 to iterate over each svg overlay
+                $.each($(dOverlay[0][0]).children(), (i: number, child: Element): void => {
+                    // the child is an SVG image, and has 1 SVG image sibling
                     var jChild = $(child);
                     var dChild = d3.select(child);
                     var display = jChild.css('display');
@@ -226,11 +332,14 @@ module Employees.ViewModels {
                 });
             });
 
+
+            container.hide(); // no longer need dimensions, hide the HTML overlays
+
             // now rearrange the g order
             // now use jQuery to rearrange the order of the elements
             $('#google_geochart svg > g > g:last-child')
                 .insertAfter('#google_geochart svg > g > g:nth-child(2)')
-            //.removeAttr('id')
+                .removeAttr('id')
             ;
         }
 
