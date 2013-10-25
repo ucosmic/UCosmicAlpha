@@ -1,3 +1,4 @@
+/// <reference path="../../typings/d3/d3.d.ts" />
 /// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
 /// <reference path="../../app/Spinner.ts" />
 /// <reference path="../../typings/googlecharts/google.charts.d.ts" />
@@ -124,6 +125,7 @@ module Employees.ViewModels {
                     colors: ['#dceadc', '#006400', ],
                 },
                 backgroundColor: '#acccfd', // google maps water color is a5bfdd, Doug's bg color is acccfd
+                //backgroundColor: 'transparent', // google maps water color is a5bfdd, Doug's bg color is acccfd
             };
 
             // create data table schema
@@ -134,6 +136,7 @@ module Employees.ViewModels {
             // go ahead and draw the chart with empty data to make sure its ready
             this.geoChart.draw(dataTable, options).then((): void => {
                 this.isGeoChartReady(true);
+                this._testSvgInection();
 
                 // now hit the server up for data and redraw
                 this.activityPlaceData.ready()
@@ -145,6 +148,137 @@ module Employees.ViewModels {
                         this.geoChart.draw(dataTable, options);
                     });
             });
+        }
+
+        //#endregion
+        //#region SVG Injection
+
+        private static _isD3Defined(): boolean {
+            return typeof d3 !== 'undefined';
+        }
+
+        private _testSvgInjection1(): void {
+
+            // IE8 cannot load the d3 library
+            if (!Summary._isD3Defined()) return;
+
+            // svg structure is as follows:
+            //  svg
+            //      > defs
+            //      > g
+            //          > rect
+            //          > g - map
+            //          > g - legend
+            //          > g - ?
+            //          > g - tooltips
+
+            var html = $('#geochart_overlay').html();
+
+            // first use D3 to append a new G element to the SVG with foreign object
+            var parentG = d3.select('#google_geochart svg > g');
+            parentG.append('g').attr('id', 'google_geochart_custom_foreignobject')
+                .append('foreignObject')
+                .append('xhtml:div')
+                .html(html)
+            ;
+
+            // now use jQuery to rearrange the order of the elements
+            $('#google_geochart_custom_foreignobject')
+                .insertAfter('#google_geochart svg > g > g:nth-child(2)')
+            //.removeAttr('id')
+            ;
+        }
+
+        private _testSvgInection(): void {
+
+            // IE8 cannot load the d3 library
+            if (!Summary._isD3Defined()) return;
+
+            var rootG = d3.select('#google_geochart svg > g');
+
+            var parentG = rootG.append('g')
+                .attr('id', 'overlay_root')
+            //.html(html)
+            ;
+
+            var overlays = $('#google_geochart_overlay_container section');
+            $.each(overlays, (i: number, overlay: Element): void => {
+                var overlayG = parentG.append('g');
+                $.each($(overlay).children(), (i: number, child: any): void => {
+                    var jChild = $(child);
+                    var src = jChild.attr('src');
+                    var x = jChild.css('left');
+                    var y = jChild.css('top');
+                    var width = jChild.css('width');
+                    var height = jChild.css('height');
+                    var display = jChild.css('display');
+                    if (jChild.prop('tagName').toUpperCase() == 'IMG') {
+                        var image = overlayG.append('image')
+                            .attr('xlink:href', src)
+                            .attr('x', parseInt(x)).attr('y', parseInt(y))
+                            .attr('width', width).attr('height', height)
+                        ;
+                        if (display && display.toLowerCase() == 'none') {
+                            image.attr('style', 'display: none;');
+                        }
+                    }
+                });
+
+                $.each($(overlayG[0][0]).children(), (i: number, child: Element): void => {
+                    var jChild = $(child);
+                    var dChild = d3.select(child);
+                    var display = jChild.css('display');
+                    var sibling = jChild.siblings('image');
+
+                    // put mouseleave on the hidden element (it will be the hot one)
+                    var eventName = display && display.toLowerCase() == 'none'
+                        ? 'mouseleave' : 'mouseenter';
+                    dChild.on(eventName, (): void => {
+                        jChild.hide();
+                        sibling.show();
+                    });
+                });
+            });
+
+            // now rearrange the g order
+            // now use jQuery to rearrange the order of the elements
+            $('#google_geochart svg > g > g:last-child')
+                .insertAfter('#google_geochart svg > g > g:nth-child(2)')
+            //.removeAttr('id')
+            ;
+
+            //////var gomG = parentG.append('g')
+            //////    .attr('id', 'google_geochart_overlay');
+            //////    //.attr('x', '160').attr('y', '287')
+            //////    //.attr('width', '39px').attr('height', '21px')
+            //////;
+            //////var gom1 = gomG.append('image').attr('id', 'google_geochart_image1')
+            //////    .attr('x', '160').attr('y', '287')
+            //////    .attr('width', '39px').attr('height', '21px')
+            //////    //.attr('data-bind', 'event: { mouseover: gulfOfMexicoSwapper.mouseover, mouseout: gulfOfMexicoSwapper.mouseout }')
+            //////    .attr('xlink:href', 'https://spike.ucosmic.com/images/geochart/up/gulf-of-mexico.png')
+            //////;
+            //////var gom2 = gomG.append('image').attr('id', 'google_geochart_image2')
+            //////    .attr('x', '160').attr('y', '287')
+            //////    .attr('width', '39px').attr('height', '21px')
+            //////    .attr('xlink:href', 'https://spike.ucosmic.com/images/geochart/hot/gulf-of-mexico.png')
+            //////    .attr('style', 'display:none')
+            //////;
+            //////gom1.on('mouseenter', (data: any, index: number): void => {
+            //////    $(gom2[0]).show();
+            //////    $(gom1[0]).hide();
+            //////});
+            //////gom2.on('mouseleave', (data: any, index: number): void => {
+            //////    $(gom1[0]).show();
+            //////    $(gom2[0]).hide();
+            //////});
+
+            //////// now rearrange the g order
+            //////// now use jQuery to rearrange the order of the elements
+            //////$('#google_geochart svg > g > g:last-child')
+            //////    .insertAfter('#google_geochart svg > g > g:nth-child(2)')
+            ////////.removeAttr('id')
+            //////;
         }
 
         //#endregion

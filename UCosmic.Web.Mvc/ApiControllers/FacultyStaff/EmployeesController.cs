@@ -27,7 +27,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         public IEnumerable<ActivityPlaceApiModel> GetActivityPlaces(string domain, [FromUri] ActivityPlacesInputModel input)
         {
             //throw new Exception();
-            //System.Threading.Thread.Sleep(2000);
+            //System.Threading.Thread.Sleep(10000);
 
             // get the tenant id
             var tenant = _queryProcessor.Execute(new EstablishmentByDomain(domain));

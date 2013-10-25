@@ -1,11 +1,19 @@
 ﻿@{
     ViewBag.Title = "Professional Engagement Summary";
 }
-
+@section styles
+{
+    <style>
+    </style>
+}
 @section scripts
 {
 
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+    <!--[if !IE | gt IE 8]><!-->
+    <script type="text/javascript" src="~/scripts/oss/d3.v3.js"></script>
+    <!--<![endif]-->
 
     <script type="text/javascript" src="~/scripts/oss/linq.js"></script>
 
@@ -21,7 +29,6 @@
             var viewModel = new Employees.ViewModels.Summary({
                 geoChartElementId: 'google_geochart',
                 tenantDomain: '@ViewBag.EmployeesDomain',
-
             });
             ko.applyBindings(viewModel, $('[data-current-module=employees]')[0]);
         });
@@ -31,6 +38,7 @@
 
 <div class="content fixed to-top" data-current-module="employees">
     <div class="group">
+        @* LEFT *@
         <div class="on-left from-top">
             <header>
                 <h1>
@@ -38,6 +46,7 @@
                 </h1>
             </header>
 
+            @* TOTALS SUMMARY *@
             <div data-bind="with: activitiesSummary" style="margin: 16px 0; height: 30px; font-size: 20px;">
                 <strong data-bind="text: personCount" style="font-size: 24px;">?</strong>
                 <span data-bind="visible: personCount() == 1" style="display: none;">person</span>
@@ -49,16 +58,17 @@
                     <span data-bind="visible: activityCount() == 1" style="display: none;">activity</span>
                     <span data-bind="visible: activityCount() != 1">activities</span>
                     in
-                        <strong data-bind="text: locationCount" style="font-size: 24px;">?</strong>
+                    <strong data-bind="text: locationCount" style="font-size: 24px;">?</strong>
                     <span data-bind="visible: locationCount() == 1" style="display: none;">location.</span>
                     <span data-bind="visible: locationCount() != 1">locations.</span>
                 </span>
             </div>
+
+            @* CHART INSTRUCTIONS & SPINNER *@
             <div style="margin: 1em 0; height: 28px;">
                 <div class="group">
                     <div class="on-left">
-                        <span data-bind="visible: !geoChartSpinner.isVisible()" style="display: none;">
-                            Double click a region to zoom in.
+                        <span data-bind="visible: !geoChartSpinner.isVisible()" style="display: none;">Double click a region to zoom in.
                         </span>
                     </div>
                     <div class="on-right">
@@ -72,10 +82,26 @@
 
             @* GOOGLE CHART *@
             <div style="position: relative;">
+
+                @*<div style="position: absolute; width: 100%; height: 500px; background-color: #acccfd;"></div>*@
+
+                @* GEOCHART *@
                 <div id="google_geochart" style="width: 100%; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; height: 500px;">
                 </div>
 
                 @* ADDITIONAL CHART LABELS (BODIES OF WATER & ANTARCTICA) *@
+                @*<div id="google_geochart_overlay_container1" style="display: none;">
+                    <g>
+                        <image id="google_geochart_image1" x="160" y="287" width="39px" height="21px" xlink:href="https://spike.ucosmic.com/images/geochart/up/gulf-of-mexico.png" style="display: inline;"></image>
+                        <image id="google_geochart_image2" x="160" y="287" width="39px" height="21px" xlink:href="https://spike.ucosmic.com/images/geochart/hot/gulf-of-mexico.png" style="display: none;"></image>
+                    </g>
+                </div>*@
+                <div id="google_geochart_overlay_container" style="display: none;">
+                    <section>
+                        <img alt="" src="~/images/geochart/up/gulf-of-mexico.png" style="left: 160px; top: 287px; width: 39px; height: 21px;" />
+                        <img alt="" src="~/images/geochart/hot/gulf-of-mexico.png" style="left: 160px; top: 287px; width: 39px; height: 21px; display: none;" />
+                    </section>
+                </div>
                 <div data-bind="visible: isGeoChartReady" style="display: none;">
                     <div data-bind="with: pacificOceanSwapper" style="position: absolute; top: 349px; left: 68px;">
                         <div data-bind="event: { mouseover: mouseover, mouseout: mouseout }">
@@ -83,12 +109,12 @@
                             <img data-bind="visible: isHover" src="~/images/geochart/hot/pacific-ocean.png" alt="Pacific Ocean" style="display: none;" />
                         </div>
                     </div>
-                    <div data-bind="with: gulfOfMexicoSwapper" style="position: absolute; top: 287px; left: 160px;">
+                    @*<div data-bind="with: gulfOfMexicoSwapper" style="position: absolute; top: 287px; left: 160px;">
                         <div data-bind="event: { mouseover: mouseover, mouseout: mouseout }">
                             <img data-bind="visible: isUp" src="~/images/geochart/up/gulf-of-mexico.png" alt="Gulf of Mexico" />
                             <img data-bind="visible: isHover" src="~/images/geochart/hot/gulf-of-mexico.png" alt="Gulf of Mexico" style="display: none;" />
                         </div>
-                    </div>
+                    </div>*@
                     <div data-bind="with: caribbeanSeaSwapper" style="position: absolute; top: 311px; left: 205px;">
                         <div data-bind="event: { mouseover: mouseover, mouseout: mouseout }">
                             <img data-bind="visible: isUp" src="~/images/geochart/up/caribbean-sea.png" alt="Caribbean Sea" />
@@ -126,6 +152,7 @@
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
         <aside class="on-right from-top">

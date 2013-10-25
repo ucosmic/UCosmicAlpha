@@ -805,6 +805,7 @@
     <Content Include="images\transparent.png" />
     <TypeScriptCompile Include="scripts\app\Flasher.ts" />
     <TypeScriptCompile Include="scripts\app\PagedSearch.ts" />
+    <None Include="scripts\oss\D3-LICENSE.txt" />
     <Content Include="scripts\app\Flasher.js">
       <DependentUpon>Flasher.ts</DependentUpon>
     </Content>
@@ -834,6 +835,8 @@
     <Content Include="scripts\app\Spinner.ts" />
     <TypeScriptCompile Include="scripts\google\Map.ts" />
     <TypeScriptCompile Include="scripts\google\GeoChart.ts" />
+    <Content Include="scripts\oss\d3.v3.js" />
+    <Content Include="scripts\oss\d3.v3.min.js" />
     <Content Include="scripts\google\GeoChart.js">
       <DependentUpon>GeoChart.ts</DependentUpon>
     </Content>
@@ -1972,6 +1975,8 @@
     <None Include="scripts\typings\requirejs\require.d.ts" />
     <None Include="scripts\typings\sammyjs\sammyjs.d.ts" />
     <None Include="scripts\typings\tinymce\tinymce.d.ts" />
+    <Content Include="scripts\typings\d3\d3.d.ts" />
+    <Content Include="scripts\typings\d3\d3.superformula.d.ts" />
     <Content Include="scripts\typings\history\history.d.ts" />
     <Content Include="scripts\typings\jquery\jquery.d.ts" />
     <Content Include="scripts\typings\knockout\knockout.d.ts" />
