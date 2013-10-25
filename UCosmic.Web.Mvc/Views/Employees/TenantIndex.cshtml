@@ -3,7 +3,57 @@
 }
 @section styles
 {
+     @* BASELINE POSITIONS FOR HEIGHT=500 AND keepAspectRadio=FALSE *@
     <style>
+        .pacific-ocean {
+            width: 44px;
+            height: 26px;
+            position: absolute;
+            left: 68px;
+            top: 349px;
+        }
+        .gulf-of-mexico {
+            width: 39px;
+            height: 21px;
+            position: absolute;
+            left: 160px;
+            top: 287px;
+        }
+        .caribbean-sea {
+            width: 74px;
+            height: 11px;
+            position: absolute;
+            left: 205px;
+            top: 311px;
+        }
+        .atlantic-ocean {
+            width: 51px;
+            height: 26px;
+            position: absolute;
+            left: 240px;
+            top: 265px;
+        }
+        .southern-ocean {
+            width: 58px;
+            height: 26px;
+            position: absolute;
+            left: 280px;
+            top: 441px;
+        }
+        .arctic-ocean {
+            width: 41px;
+            height: 26px;
+            position: absolute;
+            left: 330px;
+            top: 23px;
+        }
+        .indian-ocean {
+            width: 41px;
+            height: 26px;
+            position: absolute;
+            left: 469px;
+            top: 390px;
+        }
     </style>
 }
 @section scripts
@@ -12,7 +62,9 @@
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
     <!--[if !IE | gt IE 8]><!-->
+
     <script type="text/javascript" src="~/scripts/oss/d3.v3.js"></script>
+
     <!--<![endif]-->
 
     <script type="text/javascript" src="~/scripts/oss/linq.js"></script>
@@ -29,6 +81,7 @@
             var viewModel = new Employees.ViewModels.Summary({
                 geoChartElementId: 'google_geochart',
                 tenantDomain: '@ViewBag.EmployeesDomain',
+                //geoChartKeepAspectRatio: false,
             });
             ko.applyBindings(viewModel, $('[data-current-module=employees]')[0]);
         });
@@ -83,63 +136,79 @@
             @* GOOGLE CHART *@
             <div style="position: relative;">
 
-                @*<div style="position: absolute; width: 100%; height: 500px; background-color: #acccfd;"></div>*@
-
                 @* GEOCHART *@
                 <div id="google_geochart" style="width: 100%; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; height: 500px;">
                 </div>
 
-                @* ADDITIONAL CHART LABELS (BODIES OF WATER & ANTARCTICA) *@
-                @*<div id="google_geochart_overlay_container1" style="display: none;">
-                    <g>
-                        <image id="google_geochart_image1" x="160" y="287" width="39px" height="21px" xlink:href="https://spike.ucosmic.com/images/geochart/up/gulf-of-mexico.png" style="display: inline;"></image>
-                        <image id="google_geochart_image2" x="160" y="287" width="39px" height="21px" xlink:href="https://spike.ucosmic.com/images/geochart/hot/gulf-of-mexico.png" style="display: none;"></image>
-                    </g>
-                </div>*@
+                @* ADDITIONAL CHART LABELS (BODIES OF WATER & ANTARCTICA) FROM LEFT TO RIGHT *@
                 <div id="google_geochart_overlay_container" style="display: none;">
                     <section>
-                        <img alt="" src="~/images/geochart/up/gulf-of-mexico.png" style="left: 160px; top: 287px; width: 39px; height: 21px;" />
-                        <img alt="" src="~/images/geochart/hot/gulf-of-mexico.png" style="left: 160px; top: 287px; width: 39px; height: 21px; display: none;" />
+                        <img alt="" src="~/images/geochart/up/pacific-ocean.png" class="pacific-ocean" />
+                        <img alt="" src="~/images/geochart/hot/pacific-ocean.png" class="pacific-ocean" style="display: none;" />
+                    </section>
+                    <section>
+                        <img alt="" src="~/images/geochart/up/gulf-of-mexico.png" class="gulf-of-mexico" />
+                        <img alt="" src="~/images/geochart/hot/gulf-of-mexico.png" class="gulf-of-mexico" style="display: none;" />
+                    </section>
+                    <section>
+                        <img alt=""  src="~/images/geochart/up/caribbean-sea.png" class="caribbean-sea" />
+                        <img alt="" src="~/images/geochart/hot/caribbean-sea.png" class="caribbean-sea" style="display: none;" />
+                    </section>
+                    <section>
+                        <img alt=""  src="~/images/geochart/up/atlantic-ocean.png" class="atlantic-ocean" />
+                        <img alt="" src="~/images/geochart/hot/atlantic-ocean.png" class="atlantic-ocean" style="display: none;" />
+                    </section>
+                    <section>
+                        <img alt="" src="~/images/geochart/up/southern-ocean.png" style="left: 280px; top: 441px; width: 58px; height: 26px;" />
+                        <img alt="" src="~/images/geochart/hot/southern-ocean.png" style="left: 280px; top: 441px; width: 58px; height: 26px; display: none;" />
+                    </section>
+                    <section>
+                        <img alt="" src="~/images/geochart/up/arctic-ocean.png" style="left: 330px; top: 23px; width: 41px; height: 26px;" />
+                        <img alt="" src="~/images/geochart/hot/arctic-ocean.png" style="left: 330px; top: 23px; width: 41px; height: 26px; display: none;" />
+                    </section>
+                    <section>
+                        <img alt="" src="~/images/geochart/up/indian-ocean.png" style="left: 469px; top: 390px; width: 41px; height: 26px;" />
+                        <img alt="" src="~/images/geochart/hot/indian-ocean.png" style="left: 469px; top: 390px; width: 41px; height: 26px; display: none;" />
                     </section>
                 </div>
-                <div data-bind="visible: isGeoChartReady" style="display: none;">
-                    <div data-bind="with: pacificOceanSwapper" style="position: absolute; top: 349px; left: 68px;">
+                <div data-bind="visible: isGeoChartReady() && typeof d3 === 'undefined'" style="display: none;">
+                    <div data-bind="with: pacificOceanSwapper" class="pacific-ocean">
                         <div data-bind="event: { mouseover: mouseover, mouseout: mouseout }">
                             <img data-bind="visible: isUp" src="~/images/geochart/up/pacific-ocean.png" alt="Pacific Ocean" />
                             <img data-bind="visible: isHover" src="~/images/geochart/hot/pacific-ocean.png" alt="Pacific Ocean" style="display: none;" />
                         </div>
                     </div>
-                    @*<div data-bind="with: gulfOfMexicoSwapper" style="position: absolute; top: 287px; left: 160px;">
+                    <div data-bind="with: gulfOfMexicoSwapper" class="gulf-of-mexico">
                         <div data-bind="event: { mouseover: mouseover, mouseout: mouseout }">
                             <img data-bind="visible: isUp" src="~/images/geochart/up/gulf-of-mexico.png" alt="Gulf of Mexico" />
                             <img data-bind="visible: isHover" src="~/images/geochart/hot/gulf-of-mexico.png" alt="Gulf of Mexico" style="display: none;" />
                         </div>
-                    </div>*@
-                    <div data-bind="with: caribbeanSeaSwapper" style="position: absolute; top: 311px; left: 205px;">
+                    </div>
+                    <div data-bind="with: caribbeanSeaSwapper" class="caribbean-sea">
                         <div data-bind="event: { mouseover: mouseover, mouseout: mouseout }">
                             <img data-bind="visible: isUp" src="~/images/geochart/up/caribbean-sea.png" alt="Caribbean Sea" />
                             <img data-bind="visible: isHover" src="~/images/geochart/hot/caribbean-sea.png" alt="Caribbean Sea" style="display: none;" />
                         </div>
                     </div>
-                    <div data-bind="with: atlanticOceanSwapper" style="position: absolute; top: 265px; left: 240px;">
+                    <div data-bind="with: atlanticOceanSwapper" class="atlantic-ocean">
                         <div data-bind="event: { mouseover: mouseover, mouseout: mouseout }">
                             <img data-bind="visible: isUp" src="~/images/geochart/up/atlantic-ocean.png" alt="Atlantic Ocean" />
                             <img data-bind="visible: isHover" src="~/images/geochart/hot/atlantic-ocean.png" alt="Atlantic Ocean" style="display: none;" />
                         </div>
                     </div>
-                    <div data-bind="with: southernOceanSwapper" style="position: absolute; top: 441px; left: 280px;">
+                    <div data-bind="with: southernOceanSwapper" class="southern-ocean">
                         <div data-bind="event: { mouseover: mouseover, mouseout: mouseout }">
                             <img data-bind="visible: isUp" src="~/images/geochart/up/southern-ocean.png" alt="Southern Ocean" />
                             <img data-bind="visible: isHover" src="~/images/geochart/hot/southern-ocean.png" alt="Southern Ocean" style="display: none;" />
                         </div>
                     </div>
-                    <div data-bind="with: arcticOceanSwapper" style="position: absolute; top: 23px; left: 330px;">
+                    <div data-bind="with: arcticOceanSwapper" class="arctic-ocean">
                         <div data-bind="event: { mouseover: mouseover, mouseout: mouseout }">
                             <img data-bind="visible: isUp" src="~/images/geochart/up/arctic-ocean.png" alt="Arctic Ocean" />
                             <img data-bind="visible: isHover" src="~/images/geochart/hot/arctic-ocean.png" alt="Arctic Ocean" style="display: none;" />
                         </div>
                     </div>
-                    <div data-bind="with: indianOceanSwapper" style="position: absolute; top: 390px; left: 469px;">
+                    <div data-bind="with: indianOceanSwapper" class="indian-ocean">
                         <div data-bind="event: { mouseover: mouseover, mouseout: mouseout }">
                             <img data-bind="visible: isUp" src="~/images/geochart/up/indian-ocean.png" alt="Indian Ocean" />
                             <img data-bind="visible: isHover" src="~/images/geochart/hot/indian-ocean.png" alt="Indian Ocean" style="display: none;" />
