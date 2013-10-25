@@ -56,10 +56,12 @@ var Employees;
 
         var Summary = (function () {
             //#endregion
-            //#region Construction
+            //#region Construction & Initialization
             function Summary(settings) {
                 var _this = this;
                 this.settings = settings;
+                this._bindingsApplied = $.Deferred();
+                this.bindingsApplied = this._bindingsApplied;
                 this.geoChartSpinner = new App.Spinner(new App.SpinnerOptions(400, true));
                 this.isGeoChartReady = ko.observable(false);
                 this.activityPlaceData = new DataCacher(function () {
@@ -90,7 +92,7 @@ var Employees;
                 });
                 // CONSTRUCTOR
                 this.geoChart = new App.Google.GeoChart(document.getElementById(this.settings.geoChartElementId));
-                this._drawGeoChart();
+                this.activityPlaceData.ready();
                 this.activitiesSummaryData.ready();
             }
             Summary.loadGoogleVisualization = function () {
@@ -103,6 +105,18 @@ var Employees;
                     _this._googleVisualizationLoadedPromise.resolve();
                 });
                 return this._googleVisualizationLoadedPromise;
+            };
+
+            Summary.prototype.applyBindings = function () {
+                // did we get an element or an element id?
+                var element = this.settings.element;
+                if (!element) {
+                    element = document.getElementById(this.settings.elementId);
+                }
+                ko.applyBindings(this, element);
+                this._bindingsApplied.resolve();
+
+                this._drawGeoChart();
             };
 
             Summary.prototype._loadActivityPlaceData = function () {
@@ -129,9 +143,8 @@ var Employees;
                 var options = {
                     displayMode: 'regions',
                     region: 'world',
-                    //keepAspectRatio: this.settings.geoChartKeepAspectRatio ? true : false,
-                    //keepAspectRatio: true,
-                    keepAspectRatio: false,
+                    keepAspectRatio: this.settings.geoChartKeepAspectRatio ? true : false,
+                    height: this.settings.geoChartKeepAspectRatio ? 480 : 500,
                     colorAxis: {
                         minValue: 1,
                         colors: ['#dceadc', '#006400']
@@ -147,7 +160,12 @@ var Employees;
                 // go ahead and draw the chart with empty data to make sure its ready
                 this.geoChart.draw(dataTable, options).then(function () {
                     _this.isGeoChartReady(true);
-                    _this._testSvgInjection();
+
+                    // svg injection depends on both the chart being ready
+                    // and bindings having been applied
+                    _this.bindingsApplied.done(function () {
+                        _this._injectGeoChartOverlays();
+                    });
 
                     // now hit the server up for data and redraw
                     _this.activityPlaceData.ready().done(function (places) {
@@ -166,73 +184,7 @@ var Employees;
                 return typeof d3 !== 'undefined';
             };
 
-            //private _testSvgInjection2(): void {
-            //    // IE8 cannot load the d3 library
-            //    if (!Summary._isD3Defined()) return;
-            //    // svg structure is as follows:
-            //    //  svg
-            //    //      > defs
-            //    //      > g
-            //    //          > rect
-            //    //          > g - map
-            //    //          > g - legend
-            //    //          > g - ?
-            //    //          > g - tooltips
-            //    var rootG = d3.select('#google_geochart svg > g');
-            //    var parentG = rootG.append('g')
-            //        .attr('id', 'overlay_root')
-            //    ;
-            //    var overlays = $('#google_geochart_overlay_container section');
-            //    $.each(overlays, (i: number, overlay: Element): void => {
-            //        var overlayG = parentG.append('g');
-            //        $.each($(overlay).children(), (i: number, child: any): void => {
-            //            var jChild = $(child);
-            //            var src = jChild.attr('src');
-            //            var x = jChild.css('left');
-            //            var y = jChild.css('top');
-            //            var width = jChild.css('width');
-            //            var height = jChild.css('height');
-            //            var display = jChild.css('display');
-            //            if (jChild.prop('tagName').toUpperCase() == 'IMG') {
-            //                var image = overlayG.append('image')
-            //                    .attr('xlink:href', src)
-            //                    .attr('x', parseInt(x)).attr('y', parseInt(y))
-            //                    .attr('width', width).attr('height', height)
-            //                ;
-            //                if (display && display.toLowerCase() == 'none') {
-            //                    image.attr('style', 'display: none;');
-            //                }
-            //            }
-            //        });
-            //        $.each($(overlayG[0][0]).children(), (i: number, child: Element): void => {
-            //            var jChild = $(child);
-            //            var dChild = d3.select(child);
-            //            var display = jChild.css('display');
-            //            var sibling = jChild.siblings('image');
-            //            // put mouseleave on the hidden element (it will be the hot one)
-            //            var eventName = display && display.toLowerCase() == 'none'
-            //                ? 'mouseleave' : 'mouseenter';
-            //            dChild.on(eventName, (): void => {
-            //                jChild.hide();
-            //                sibling.show();
-            //            });
-            //            // nudge down caribbean
-            //            var src = dChild.attr('xlink:href');
-            //            if (src && src.toLowerCase().indexOf('caribbean') > 0) {
-            //                var oldY = dChild.attr('y');
-            //                var newY = parseInt(oldY) + 5;
-            //                dChild.attr('y', newY);
-            //            }
-            //        });
-            //    });
-            //    // now rearrange the g order
-            //    // now use jQuery to rearrange the order of the elements
-            //    $('#google_geochart svg > g > g:last-child')
-            //        .insertAfter('#google_geochart svg > g > g:nth-child(2)')
-            //    //.removeAttr('id')
-            //    ;
-            //}
-            Summary.prototype._testSvgInjection = function () {
+            Summary.prototype._injectGeoChartOverlays = function () {
                 if (!Summary._isD3Defined() || !this.settings.geoChartWaterOverlaysElementId)
                     return;
 

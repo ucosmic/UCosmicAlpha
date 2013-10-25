@@ -5,61 +5,79 @@
 {
     @* BASELINE POSITIONS FOR HEIGHT=500 AND keepAspectRadio=FALSE *@
     <style>
-        .pacific-ocean {
+        #google_geochart_water_overlays .pacific-ocean {
             width: 44px;
             height: 26px;
             position: absolute;
             left: 68px;
             top: 349px;
         }
-
-        .gulf-of-mexico {
+        #google_geochart_water_overlays .gulf-of-mexico {
             width: 39px;
             height: 21px;
             position: absolute;
             left: 160px;
             top: 287px;
         }
-
-        .caribbean-sea {
+        #google_geochart_water_overlays .caribbean-sea {
             width: 74px;
             height: 11px;
             position: absolute;
             left: 205px;
             top: 311px;
         }
-
-        .atlantic-ocean {
+        #google_geochart_water_overlays .atlantic-ocean {
             width: 51px;
             height: 26px;
             position: absolute;
             left: 240px;
             top: 265px;
         }
-
-        .southern-ocean {
+        #google_geochart_water_overlays .southern-ocean {
             width: 58px;
             height: 26px;
             position: absolute;
             left: 280px;
             top: 441px;
         }
-
-        .arctic-ocean {
+        #google_geochart_water_overlays .arctic-ocean {
             width: 41px;
             height: 26px;
             position: absolute;
             left: 330px;
             top: 23px;
         }
-
-        .indian-ocean {
+        #google_geochart_water_overlays .indian-ocean {
             width: 41px;
             height: 26px;
             position: absolute;
             left: 469px;
             top: 390px;
         }
+
+    </style>
+
+    @* POSITIONS FOR HEIGHT=480 AND keepAspectRadio=TRUE *@
+    <style>
+        #google_geochart_water_overlays.keep-aspect-ratio-480 .gulf-of-mexico {
+            top: 270px;
+        }
+        #google_geochart_water_overlays.keep-aspect-ratio-480 .caribbean-sea {
+            top: 291px;
+        }
+        #google_geochart_water_overlays.keep-aspect-ratio-480 .atlantic-ocean {
+            left: 248px;
+            top: 245px;
+        }
+        #google_geochart_water_overlays.keep-aspect-ratio-480 .southern-ocean {
+            left: 280px;
+            top: 401px;
+        }
+        #google_geochart_water_overlays.keep-aspect-ratio-480 .indian-ocean {
+            left: 475px;
+            top: 350px;
+        }
+
     </style>
 }
 @section scripts
@@ -85,12 +103,13 @@
         // Google API needs to be called outside of JQuery ready()
         Employees.ViewModels.Summary.loadGoogleVisualization().done(function () {
             var viewModel = new Employees.ViewModels.Summary({
+                element: $('[data-current-module=employees]')[0],
                 geoChartElementId: 'google_geochart',
                 geoChartWaterOverlaysElementId: 'google_geochart_water_overlays',
                 tenantDomain: '@ViewBag.EmployeesDomain',
-                //geoChartKeepAspectRatio: false,
+                geoChartKeepAspectRatio: false,
             });
-            ko.applyBindings(viewModel, $('[data-current-module=employees]')[0]);
+            viewModel.applyBindings();
         });
     </script>
 
@@ -144,42 +163,12 @@
             <div style="position: relative;">
 
                 @* GEOCHART *@
-                <div id="google_geochart" style="width: 100%; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; height: 500px;">
+                <div id="google_geochart" style="width: 100%; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;">
                 </div>
 
                 @* ADDITIONAL CHART LABELS (BODIES OF WATER & ANTARCTICA) FROM LEFT TO RIGHT *@
-                @*                <div id="google_geochart_overlay_container" style="display: none;">
-                    <section>
-                        <img alt="" src="~/images/geochart/up/pacific-ocean.png" class="pacific-ocean" />
-                        <img alt="" src="~/images/geochart/hot/pacific-ocean.png" class="pacific-ocean" style="display: none;" />
-                    </section>
-                    <section>
-                        <img alt="" src="~/images/geochart/up/gulf-of-mexico.png" class="gulf-of-mexico" />
-                        <img alt="" src="~/images/geochart/hot/gulf-of-mexico.png" class="gulf-of-mexico" style="display: none;" />
-                    </section>
-                    <section>
-                        <img alt="" src="~/images/geochart/up/caribbean-sea.png" class="caribbean-sea" />
-                        <img alt="" src="~/images/geochart/hot/caribbean-sea.png" class="caribbean-sea" style="display: none;" />
-                    </section>
-                    <section>
-                        <img alt="" src="~/images/geochart/up/atlantic-ocean.png" class="atlantic-ocean" />
-                        <img alt="" src="~/images/geochart/hot/atlantic-ocean.png" class="atlantic-ocean" style="display: none;" />
-                    </section>
-                    <section>
-                        <img alt="" src="~/images/geochart/up/southern-ocean.png" style="left: 280px; top: 441px; width: 58px; height: 26px;" />
-                        <img alt="" src="~/images/geochart/hot/southern-ocean.png" style="left: 280px; top: 441px; width: 58px; height: 26px; display: none;" />
-                    </section>
-                    <section>
-                        <img alt="" src="~/images/geochart/up/arctic-ocean.png" style="left: 330px; top: 23px; width: 41px; height: 26px;" />
-                        <img alt="" src="~/images/geochart/hot/arctic-ocean.png" style="left: 330px; top: 23px; width: 41px; height: 26px; display: none;" />
-                    </section>
-                    <section>
-                        <img alt="" src="~/images/geochart/up/indian-ocean.png" style="left: 469px; top: 390px; width: 41px; height: 26px;" />
-                        <img alt="" src="~/images/geochart/hot/indian-ocean.png" style="left: 469px; top: 390px; width: 41px; height: 26px; display: none;" />
-                    </section>
-                </div>*@
                 <div id="google_geochart_overlays" data-bind="visible: isGeoChartReady" style="display: none;">
-                    <ul id="google_geochart_water_overlays" data-bind="visible: isD3Undefined">
+                    <ul id="google_geochart_water_overlays" data-bind="visible: isD3Undefined, css: { 'keep-aspect-ratio-480': settings.geoChartKeepAspectRatio }">
                         <li data-bind="with: pacificOceanSwapper" class="pacific-ocean">
                             <img data-bind="visible: isUp, event: { mouseenter: onMouseEnter }" src="~/images/geochart/up/pacific-ocean.png" alt="Pacific Ocean" />
                             <img data-bind="visible: isHover, event: { mouseleave: onMouseLeave }" src="~/images/geochart/hot/pacific-ocean.png" alt="Pacific Ocean" style="display: none;" />
