@@ -22,13 +22,13 @@ using System.Web.Routing;
 using T4MVC;
 namespace UCosmic.Web.Mvc.Controllers
 {
-    public partial class JavaScriptsController
+    public partial class JavaScriptRoutesController
     {
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public JavaScriptsController() { }
+        public JavaScriptRoutesController() { }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        protected JavaScriptsController(Dummy d) { }
+        protected JavaScriptRoutesController(Dummy d) { }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         protected RedirectToRouteResult RedirectToAction(ActionResult result)
@@ -46,13 +46,13 @@ namespace UCosmic.Web.Mvc.Controllers
 
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public JavaScriptsController Actions { get { return MVC.JavaScripts; } }
+        public JavaScriptRoutesController Actions { get { return MVC.JavaScriptRoutes; } }
         [GeneratedCode("T4MVC", "2.0")]
         public readonly string Area = "";
         [GeneratedCode("T4MVC", "2.0")]
-        public readonly string Name = "JavaScripts";
+        public readonly string Name = "JavaScriptRoutes";
         [GeneratedCode("T4MVC", "2.0")]
-        public const string NameConst = "JavaScripts";
+        public const string NameConst = "JavaScriptRoutes";
 
         static readonly ActionNamesClass s_actions = new ActionNamesClass();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -60,13 +60,13 @@ namespace UCosmic.Web.Mvc.Controllers
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public class ActionNamesClass
         {
-            public readonly string Routes = "Routes";
+            public readonly string Employees = "Employees";
         }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public class ActionNameConstants
         {
-            public const string Routes = "Routes";
+            public const string Employees = "Employees";
         }
 
 
@@ -80,20 +80,20 @@ namespace UCosmic.Web.Mvc.Controllers
             public _ViewNamesClass ViewNames { get { return s_ViewNames; } }
             public class _ViewNamesClass
             {
-                public readonly string Routes = "Routes";
+                public readonly string Employees = "Employees";
             }
-            public readonly string Routes = "~/Views/JavaScripts/Routes.cshtml";
+            public readonly string Employees = "~/Views/JavaScriptRoutes/Employees.cshtml";
         }
     }
 
     [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-    public class T4MVC_JavaScriptsController : UCosmic.Web.Mvc.Controllers.JavaScriptsController
+    public class T4MVC_JavaScriptRoutesController : UCosmic.Web.Mvc.Controllers.JavaScriptRoutesController
     {
-        public T4MVC_JavaScriptsController() : base(Dummy.Instance) { }
+        public T4MVC_JavaScriptRoutesController() : base(Dummy.Instance) { }
 
-        public override System.Web.Mvc.PartialViewResult Routes()
+        public override System.Web.Mvc.PartialViewResult Employees()
         {
-            var callInfo = new T4MVC_System_Web_Mvc_PartialViewResult(Area, Name, ActionNames.Routes);
+            var callInfo = new T4MVC_System_Web_Mvc_PartialViewResult(Area, Name, ActionNames.Employees);
             return callInfo;
         }
 

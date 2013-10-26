@@ -310,8 +310,9 @@
     <Compile Include="ApiControllers\Degrees\MyDegreesController.cs" />
     <Compile Include="ApiControllers\Expertise\GeographicExpertiseController.cs" />
     <Compile Include="ApiControllers\Expertise\LanguageExpertiseController.cs" />
-    <Compile Include="Controllers\JavaScriptsController.cs" />
-    <Compile Include="JavaScriptsController.generated.cs">
+    <Compile Include="Controllers\JavaScriptRoutesController.cs" />
+    <Compile Include="Helpers\JavascriptRouteWriter.cs" />
+    <Compile Include="JavaScriptRoutesController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Employees\ActivitiesPlacesInputModel.cs" />
@@ -2572,7 +2573,7 @@
     <Content Include="Views\Employees\TenantIndex.cshtml" />
     <Content Include="Views\Employees\Index.cshtml" />
     <Content Include="Views\Employees\_Bib.cshtml" />
-    <Content Include="Views\JavaScripts\Routes.cshtml" />
+    <Content Include="Views\JavaScriptRoutes\Employees.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

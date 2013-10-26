@@ -1,0 +1,53 @@
+﻿@{ var routeWriter = new JavascriptRouteWriter(); }
+
+@* API ROUTES *@
+var Routes = Routes || {};
+Routes.Api = Routes.Api || {};
+Routes.Api.Employees = Routes.Api.Employees || {};
+Routes.Api.Employees.Activities = Routes.Api.Employees.Activities || {};
+
+@* ACTIVITIES *@
+Routes.Api.Employees.Activities.places = function (domain) {
+    return '@routeWriter.WriteRoute(Url.HttpRouteUrl(null, new
+    {
+        controller = "Employees",
+        action = "GetActivitiesPlaces",
+        domain = routeWriter.Value<string>(0),
+    }))'.format(domain);
+};
+
+Routes.Api.Employees.Activities.summary = function (domain) {
+    return '@routeWriter.WriteRoute(Url.HttpRouteUrl(null, new
+    {
+        controller = "Employees",
+        action = "GetActivitiesSummary",
+        domain = routeWriter.Value<string>(0),
+    }))'.format(domain);
+};
+
+@* SETTINGS *@
+Routes.Api.Employees.Settings = Routes.Api.Employees.Settings || {};
+Routes.Api.Employees.Settings.icon = function (domain, iconName) {
+    return '@routeWriter.WriteRoute(Url.HttpRouteUrl(null, new
+    {
+        controller = "Employees",
+        action = "GetSettingsIcon",
+        domain = routeWriter.Value<string>(0),
+        name = routeWriter.Value<string>(1),
+    }))'.format(domain, iconName);
+};
+
+
+
+@* MVC ROUTES *@
+Routes.Mvc = Routes.Mvc || {};
+Routes.Mvc.Employees = Routes.Mvc.Employees || {};
+Routes.Mvc.Employees.Activities = Routes.Mvc.Employees.Activities || {};
+Routes.Mvc.Employees.Activities.edit = function (activityId) {
+    return '@routeWriter.WriteRoute(Url.RouteUrl(new
+    {
+        controller = "Activities",
+        action = "Edit",
+        activityId = routeWriter.Value<int>(0),
+    }))'.format(activityId);
+};
