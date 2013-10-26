@@ -259,6 +259,7 @@
     <Compile Include="Domain\Establishments\Queries\EstablishmentByDomain.cs" />
     <Compile Include="Domain\Places\Commands\EnsurePlaceHierarchies.cs" />
     <Compile Include="Domain\Places\Commands\CreatePlace.cs" />
+    <Compile Include="Domain\Places\Work\FixDuplicateMexicos.cs" />
     <Compile Include="Domain\Places\Work\RepairPlaceHierarchies.cs" />
     <Compile Include="Domain\Places\Work\CanonilizeOceans.cs" />
     <Compile Include="Domain\Places\Work\ComposeRegions.cs" />

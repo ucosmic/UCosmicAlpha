@@ -33,25 +33,23 @@ namespace UCosmic.Web.Mvc.Controllers
 
             Establishment establishment = null;
 
-            if (!String.IsNullOrEmpty(User.Identity.Name))
+            var tenancy = Request.Tenancy() ?? new Tenancy();
+
+            if (!string.IsNullOrWhiteSpace(tenancy.StyleDomain) && !"default".Equals(tenancy.StyleDomain))
+            {
+                if (tenancy.TenantId.HasValue)
+                {
+                    establishment = _queryProcessor.Execute(new EstablishmentById(tenancy.TenantId.Value));
+                }
+                else if (!String.IsNullOrEmpty(tenancy.StyleDomain) && !"default".Equals(tenancy.StyleDomain))
+                {
+                    establishment = _queryProcessor.Execute(new EstablishmentByEmail(tenancy.StyleDomain));
+                }
+            }
+            else if (!string.IsNullOrEmpty(User.Identity.Name))
             {
                 establishment =
                     _queryProcessor.Execute(new EstablishmentByEmail(User.Identity.Name.GetEmailDomain()));
-            }
-            else
-            {
-                var tenancy = Request.Tenancy();
-                if (tenancy != null)
-                {
-                    if (tenancy.TenantId.HasValue)
-                    {
-                        establishment = _queryProcessor.Execute(new EstablishmentById(tenancy.TenantId.Value));
-                    }
-                    else if (!String.IsNullOrEmpty(tenancy.StyleDomain) && !"default".Equals(tenancy.StyleDomain))
-                    {
-                        establishment = _queryProcessor.Execute(new EstablishmentByEmail(tenancy.StyleDomain));
-                    }
-                }
             }
 
             if (establishment != null)

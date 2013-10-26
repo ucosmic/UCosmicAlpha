@@ -32,6 +32,7 @@ namespace UCosmic.Web.Mvc
 
             //DependencyResolver.Current.GetService<PerformMigrateUsfAgreementDataWork>().Perform(new MigrateUsfAgreementData());
             //DependencyResolver.Current.GetService<PerformDeleteRandomUsfActivitiesWork>().Perform(new DeleteRandomUsfActivities());
+            //DependencyResolver.Current.GetService<PerformFixDuplicateMexicosWork>().Perform(new FixDuplicateMexicos());
         }
 
         protected void Application_PostAuthorizeRequest()
