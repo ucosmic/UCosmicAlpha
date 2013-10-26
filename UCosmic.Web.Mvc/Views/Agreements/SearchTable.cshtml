@@ -331,7 +331,7 @@
                                         }
                                         <option value="type-asc">Sort by agreement type A-Z</option>
                                         <option value="type-desc">Sort by agreement type Z-A</option>
-                                        @if (@ViewBag.AgreementsVisibility != AgreementVisibility.Public)
+                                        @if (@ViewBag.AgreementsVisibility == AgreementVisibility.Private)
                                         {
                                             <option value="status-asc">Sort by agreement status A-Z</option>
                                             <option value="status-desc">Sort by agreement status Z-A</option>
