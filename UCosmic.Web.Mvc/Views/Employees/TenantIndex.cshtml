@@ -68,6 +68,40 @@
             left: 469px;
             top: 390px;
         }
+
+        #google_geochart_datasource_overlay {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            height: 20px;
+            background-color: #fff;
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            border: solid 1px #000;
+            font-family: Arial;
+            font-size: 12px;
+        }
+
+            #google_geochart_datasource_overlay [type=button].active {
+                font-weight: bold;
+            }
+
+            #google_geochart_datasource_overlay [type=button] {
+                border-radius: 0;
+                border: 0;
+                margin: 0;
+                padding: 0 12px;
+                background-color: transparent;
+                color: #000 !important;
+                height: 18px;
+                cursor: pointer;
+            }
+
+                #google_geochart_datasource_overlay [type=button]:first-child {
+                    border-right: solid 1px #000;
+                    padding-right: 10px;
+                }
     </style>
 
     @* POSITIONS FOR HEIGHT=480 AND keepAspectRadio=TRUE *@
@@ -194,8 +228,10 @@
                 <div id="google_geochart" style="width: 100%; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;">
                 </div>
 
-                @* ADDITIONAL CHART LABELS (BODIES OF WATER & ANTARCTICA) FROM LEFT TO RIGHT *@
+                @* CUSTOM OVERLAYS *@
                 <div id="google_geochart_overlays" data-bind="visible: isGeoChartReady" style="display: none;">
+
+                    @* BODY OF WATER DATA VISUALIZERS *@
                     <ul id="google_geochart_water_overlays" data-bind="visible: isD3Undefined, css: { 'keep-aspect-ratio-480': settings.geoChartKeepAspectRatio }">
                         <li data-bind="with: pacificOceanSwapper" class="pacific-ocean">
                             <img data-bind="visible: isUp, event: { mouseenter: onMouseEnter }" src="~/images/geochart/up/pacific-ocean.png" alt="Pacific Ocean" />
@@ -226,12 +262,21 @@
                             <img data-bind="visible: isHover, event: { mouseleave: onMouseLeave }" src="~/images/geochart/hot/indian-ocean.png" alt="Indian Ocean" style="display: none;" />
                         </li>
                     </ul>
+
+                    @* ANTARCTICA VISUALIZER *@
                     <div id="google_geochart_antarctica_overlay" data-bind="with: antarcticaSwapper" style="position: absolute; bottom: 0; left: 340px;">
                         <img data-bind="visible: isUp, event: { mouseenter: onMouseEnter }" src="~/images/geochart/up/antarctica.png" alt="Antarctica" />
                         <img data-bind="visible: isHover, event: { mouseleave: onMouseLeave }" src="~/images/geochart/hot/antarctica.png" alt="Antarctica" style="display: none;" />
                     </div>
+
+                    @* ACTIVITIES | PEOPLE BUTTONS OVERLAY *@
+                    <div id="google_geochart_datasource_overlay" class="group">
+                        <input type="button" value="Activities" class="on-left active" />
+                        <input type="button" value="People" class="on-left" />
+                    </div>
                 </div>
 
+                @* ACTIVITIES | PEOPLE BUTTONS OVERLAY *@
             </div>
         </div>
 
