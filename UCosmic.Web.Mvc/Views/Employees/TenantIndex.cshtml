@@ -1,6 +1,14 @@
 ﻿@{
     ViewBag.Title = "Professional Engagement Summary";
 }
+
+@section bib
+{
+    <nav class="bib hide" data-current-bib="summary">
+        @Html.Partial(MVC.Employees.Views._Bib)
+    </nav>
+}
+
 @section styles
 {
     @* BASELINE POSITIONS FOR HEIGHT=500 AND keepAspectRadio=FALSE *@
@@ -154,12 +162,17 @@
             </div>
 
             @* CHART INSTRUCTIONS & SPINNER *@
-            <div style="margin: 1em 0;">
+            <div style="margin: 1em 0; height: 28px;">
                 <div class="group">
                     <div class="on-left">
-                        <span data-bind="visible: !geoChartSpinner.isVisible()" style="display: none; line-height: 28px;">
-                            Double click a region to zoom in.
-                        </span>
+                        <div data-bind="visible: !geoChartSpinner.isVisible()" style="display: none; line-height: 28px;">
+                            <img src="@Url.HttpRouteUrl(null, new { controller = "Employees", action = "GetSettingsIcon", domain = @ViewBag.EmployeesDomain, name = "global-view" })"
+                                alt="Global view" width="24" height="24" style="" />
+                            @*<img src="~/images/icons/globe/shiny-24.png" alt="Global view" style="" />
+                            <img src="~/images/icons/globe/shiny-24-disabled.png" alt="Return to Global view" style="display: none;opacity: 0.5;" />*@
+                            <strong>Global View:</strong>
+                            <span>double click a region for more information.</span>
+                        </div>
                     </div>
                     <div class="on-right">
                         <div data-bind="visible: geoChartSpinner.isVisible">

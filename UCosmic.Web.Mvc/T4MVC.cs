@@ -1432,6 +1432,10 @@ namespace Links
             private const string URLPATH = "~/scripts/oss";
             public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
             public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+            public static readonly string D3_LICENSE_txt = Url("D3-LICENSE.txt");
+            public static readonly string d3_v3_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/d3.v3.min.js") ? Url("d3.v3.min.js") : Url("d3.v3.js");
+                          
+            public static readonly string d3_v3_min_js = Url("d3.v3.min.js");
             public static readonly string jquery_animate_enhanced_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/jquery.animate-enhanced.min.js") ? Url("jquery.animate-enhanced.min.js") : Url("jquery.animate-enhanced.js");
                           
             public static readonly string jquery_autosize_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/jquery.autosize.min.js") ? Url("jquery.autosize.min.js") : Url("jquery.autosize.js");
@@ -2677,6 +2681,15 @@ namespace Links
             public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
             public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+            public static class d3 {
+                private const string URLPATH = "~/scripts/typings/d3";
+                public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+                public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                public static readonly string d3_d_ts = Url("d3.d.ts");
+                public static readonly string d3_superformula_d_ts = Url("d3.superformula.d.ts");
+            }
+        
+            [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
             public static class globalize {
                 private const string URLPATH = "~/scripts/typings/globalize";
                 public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
@@ -2940,11 +2953,11 @@ namespace Links
                 private const string URLPATH = "~/scripts/viewmodels/employees";
                 public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
                 public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
-                public static readonly string ApiModels_d_ts = Url("ApiModels.d.ts");
                 public static readonly string Employees_ts = Url("Employees.ts");
                 public static readonly string Employees_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Employees.min.js") ? Url("Employees.min.js") : Url("Employees.js");
                               
                 public static readonly string Employees_min_js = Url("Employees.min.js");
+                public static readonly string Models_d_ts = Url("Models.d.ts");
                 public static readonly string Server_ts = Url("Server.ts");
                 public static readonly string Server_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Server.min.js") ? Url("Server.min.js") : Url("Server.js");
                               
@@ -3821,6 +3834,15 @@ namespace Links
                 public static readonly string unknown_png = Url("unknown.png");
                 public static readonly string xls_png = Url("xls.png");
                 public static readonly string xlsx_png = Url("xlsx.png");
+            }
+        
+            [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+            public static class globe {
+                private const string URLPATH = "~/images/icons/globe";
+                public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+                public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                public static readonly string shiny_24_disabled_png = Url("shiny-24-disabled.png");
+                public static readonly string shiny_24_png = Url("shiny-24.png");
             }
         
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]

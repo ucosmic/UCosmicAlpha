@@ -93,9 +93,11 @@ namespace UCosmic.Web.Mvc.Controllers
             public _ViewNamesClass ViewNames { get { return s_ViewNames; } }
             public class _ViewNamesClass
             {
+                public readonly string _Bib = "_Bib";
                 public readonly string Index = "Index";
                 public readonly string TenantIndex = "TenantIndex";
             }
+            public readonly string _Bib = "~/Views/Employees/_Bib.cshtml";
             public readonly string Index = "~/Views/Employees/Index.cshtml";
             public readonly string TenantIndex = "~/Views/Employees/TenantIndex.cshtml";
         }

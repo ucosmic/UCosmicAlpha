@@ -2,9 +2,9 @@
 
 namespace UCosmic.Web.Mvc.Models
 {
-    public class ActivityPlacesInputModel
+    public class ActivitiesPlacesInputModel
     {
-        public ActivityPlacesInputModel()
+        public ActivitiesPlacesInputModel()
         {
             PlaceIds = new int[0];
         }

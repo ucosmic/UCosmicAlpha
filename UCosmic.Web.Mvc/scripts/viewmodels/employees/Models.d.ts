@@ -10,7 +10,7 @@ declare module Employees.ApiModels {
         activityIds: number[];
     }
 
-    export interface ActivityPlacesInputModel {
+    export interface ActivitiesPlacesInputModel {
         countries?: boolean;
         placeIds?: number[];
     }

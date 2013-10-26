@@ -180,130 +180,125 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return response;
         }
 
-        private static readonly object Lock = new object();
-
         [GET("icon/{name}")]
         public HttpResponseMessage GetIcon(string name)
         {
-            lock (Lock)
+            if (string.IsNullOrEmpty(name) || string.IsNullOrWhiteSpace(name))
             {
-                if (string.IsNullOrEmpty(name) || string.IsNullOrWhiteSpace(name))
+                return new HttpResponseMessage(HttpStatusCode.BadRequest);
+            }
+
+            Establishment establishment = null;
+            EmployeeModuleSettings employeeModuleSettings = null;
+
+            var tenancy = Request.Tenancy() ?? new Tenancy();
+
+            if (!string.IsNullOrWhiteSpace(tenancy.StyleDomain) && !"default".Equals(tenancy.StyleDomain))
+            {
+                if (tenancy.TenantId.HasValue)
                 {
-                    return new HttpResponseMessage(HttpStatusCode.BadRequest);
+                    establishment = _queryProcessor.Execute(new EstablishmentById(tenancy.TenantId.Value));
                 }
-
-                Establishment establishment = null;
-                EmployeeModuleSettings employeeModuleSettings = null;
-
-                var tenancy = Request.Tenancy() ?? new Tenancy();
-
-                if (!string.IsNullOrWhiteSpace(tenancy.StyleDomain) && !"default".Equals(tenancy.StyleDomain))
+                else if (!String.IsNullOrEmpty(tenancy.StyleDomain) && !"default".Equals(tenancy.StyleDomain))
                 {
-                    if (tenancy.TenantId.HasValue)
-                    {
-                        establishment = _queryProcessor.Execute(new EstablishmentById(tenancy.TenantId.Value));
-                    }
-                    else if (!String.IsNullOrEmpty(tenancy.StyleDomain) && !"default".Equals(tenancy.StyleDomain))
-                    {
-                        establishment = _queryProcessor.Execute(new EstablishmentByEmail(tenancy.StyleDomain));
-                    }
-                    if (establishment != null)
-                    {
-                        employeeModuleSettings =
-                            _queryProcessor.Execute(new EmployeeModuleSettingsByEstablishmentId(establishment.RevisionId));
-                    }
+                    establishment = _queryProcessor.Execute(new EstablishmentByEmail(tenancy.StyleDomain));
                 }
-                else if (!string.IsNullOrEmpty(User.Identity.Name))
+                if (establishment != null)
                 {
                     employeeModuleSettings =
-                        _queryProcessor.Execute(new EmployeeModuleSettingsByUserName(User.Identity.Name));
+                        _queryProcessor.Execute(new EmployeeModuleSettingsByEstablishmentId(establishment.RevisionId));
                 }
+            }
+            else if (!string.IsNullOrEmpty(User.Identity.Name))
+            {
+                employeeModuleSettings =
+                    _queryProcessor.Execute(new EmployeeModuleSettingsByUserName(User.Identity.Name));
+            }
 
-                if (employeeModuleSettings == null)
-                    return Request.CreateResponse(HttpStatusCode.OK);
+            if (employeeModuleSettings == null)
+                return Request.CreateResponse(HttpStatusCode.OK);
 
-                //if (!String.IsNullOrEmpty(User.Identity.Name))
-                //{
-                //    employeeModuleSettings =
-                //        _queryProcessor.Execute(new EmployeeModuleSettingsByUserName(User.Identity.Name));
-                //}
-                //else
-                //{
-                //    var tenancy = Request.Tenancy();
+            //if (!String.IsNullOrEmpty(User.Identity.Name))
+            //{
+            //    employeeModuleSettings =
+            //        _queryProcessor.Execute(new EmployeeModuleSettingsByUserName(User.Identity.Name));
+            //}
+            //else
+            //{
+            //    var tenancy = Request.Tenancy();
 
-                //    if (tenancy.TenantId.HasValue)
-                //    {
-                //        establishment = _queryProcessor.Execute(new EstablishmentById(tenancy.TenantId.Value));
-                //    }
-                //    else if (!String.IsNullOrEmpty(tenancy.StyleDomain) && !"default".Equals(tenancy.StyleDomain))
-                //    {
-                //        establishment = _queryProcessor.Execute(new EstablishmentByEmail(tenancy.StyleDomain));
-                //    }
+            //    if (tenancy.TenantId.HasValue)
+            //    {
+            //        establishment = _queryProcessor.Execute(new EstablishmentById(tenancy.TenantId.Value));
+            //    }
+            //    else if (!String.IsNullOrEmpty(tenancy.StyleDomain) && !"default".Equals(tenancy.StyleDomain))
+            //    {
+            //        establishment = _queryProcessor.Execute(new EstablishmentByEmail(tenancy.StyleDomain));
+            //    }
 
-                //    if (establishment != null)
-                //    {
-                //        employeeModuleSettings =
-                //            _queryProcessor.Execute(new EmployeeModuleSettingsByEstablishmentId(establishment.RevisionId));
-                //    }
-                //    else
-                //    {
-                //        return new HttpResponseMessage(HttpStatusCode.Unauthorized);
-                //    }
-                //}
+            //    if (establishment != null)
+            //    {
+            //        employeeModuleSettings =
+            //            _queryProcessor.Execute(new EmployeeModuleSettingsByEstablishmentId(establishment.RevisionId));
+            //    }
+            //    else
+            //    {
+            //        return new HttpResponseMessage(HttpStatusCode.Unauthorized);
+            //    }
+            //}
 
-                string filePath;
-                string mimeType;
+            string filePath;
+            string mimeType;
 
-                if (String.Compare(name, employeeModuleSettings.GlobalViewIconName, false, CultureInfo.CurrentCulture) == 0)
+            if (String.Compare(name, employeeModuleSettings.GlobalViewIconName, false, CultureInfo.CurrentCulture) == 0)
+            {
+                filePath = employeeModuleSettings.GlobalViewIconPath + employeeModuleSettings.GlobalViewIconFileName;
+                mimeType = employeeModuleSettings.GlobalViewIconMimeType;
+            }
+            else if (String.Compare(name, employeeModuleSettings.FindAnExpertIconName, false, CultureInfo.CurrentCulture) == 0)
+            {
+                filePath = employeeModuleSettings.FindAnExpertIconPath + employeeModuleSettings.FindAnExpertIconFileName;
+                mimeType = employeeModuleSettings.FindAnExpertIconMimeType;
+            }
+            else
+            {
+                if ((employeeModuleSettings.ActivityTypes != null) &&
+                    (employeeModuleSettings.ActivityTypes.Count >= 0))
                 {
-                    filePath = employeeModuleSettings.GlobalViewIconPath + employeeModuleSettings.GlobalViewIconFileName;
-                    mimeType = employeeModuleSettings.GlobalViewIconMimeType;
-                }
-                else if (String.Compare(name, employeeModuleSettings.FindAnExpertIconName, false, CultureInfo.CurrentCulture) == 0)
-                {
-                    filePath = employeeModuleSettings.FindAnExpertIconPath + employeeModuleSettings.FindAnExpertIconFileName;
-                    mimeType = employeeModuleSettings.FindAnExpertIconMimeType;
-                }
-                else
-                {
-                    if ((employeeModuleSettings.ActivityTypes != null) &&
-                        (employeeModuleSettings.ActivityTypes.Count >= 0))
+                    EmployeeActivityType activityType =
+                        employeeModuleSettings.ActivityTypes.FirstOrDefault(a => a.IconName == name);
+
+                    if (activityType != null)
                     {
-                        EmployeeActivityType activityType =
-                            employeeModuleSettings.ActivityTypes.FirstOrDefault(a => a.IconName == name);
-
-                        if (activityType != null)
-                        {
-                            filePath = activityType.IconPath + activityType.IconFileName;
-                            mimeType = activityType.IconMimeType;
-                        }
-                        else
-                        {
-                            return new HttpResponseMessage(HttpStatusCode.NotImplemented);
-                        }
+                        filePath = activityType.IconPath + activityType.IconFileName;
+                        mimeType = activityType.IconMimeType;
                     }
                     else
                     {
                         return new HttpResponseMessage(HttpStatusCode.NotImplemented);
                     }
                 }
-
-                byte[] content = _binaryStore.Get(filePath);
-                if (content == null)
+                else
                 {
-                    return new HttpResponseMessage(HttpStatusCode.NotFound);
+                    return new HttpResponseMessage(HttpStatusCode.NotImplemented);
                 }
-
-                var stream = new MemoryStream(content);
-                var response = new HttpResponseMessage(HttpStatusCode.OK)
-                {
-                    Content = new StreamContent(stream)
-                };
-
-                response.Content.Headers.ContentType = new MediaTypeHeaderValue(mimeType);
-
-                return response;
             }
+
+            byte[] content = _binaryStore.Get(filePath);
+            if (content == null)
+            {
+                return new HttpResponseMessage(HttpStatusCode.NotFound);
+            }
+
+            var stream = new MemoryStream(content);
+            var response = new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StreamContent(stream)
+            };
+
+            response.Content.Headers.ContentType = new MediaTypeHeaderValue(mimeType);
+
+            return response;
         }
 
 

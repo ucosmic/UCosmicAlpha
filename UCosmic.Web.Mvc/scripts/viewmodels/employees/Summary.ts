@@ -114,7 +114,7 @@ module Employees.ViewModels {
 
         private _loadActivityPlaceData(): JQueryPromise<ApiModels.ActivitiesPlaceApiModel[]> {
             var promise: JQueryDeferred<ApiModels.ActivitiesPlaceApiModel[]> = $.Deferred();
-            var request: ApiModels.ActivityPlacesInputModel = {
+            var request: ApiModels.ActivitiesPlacesInputModel = {
                 countries: true,
             };
             this.geoChartSpinner.start();

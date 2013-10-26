@@ -310,7 +310,7 @@
     <Compile Include="ApiControllers\Degrees\MyDegreesController.cs" />
     <Compile Include="ApiControllers\Expertise\GeographicExpertiseController.cs" />
     <Compile Include="ApiControllers\Expertise\LanguageExpertiseController.cs" />
-    <Compile Include="Models\Employees\ActivityPlacesInputModel.cs" />
+    <Compile Include="Models\Employees\ActivitiesPlacesInputModel.cs" />
     <Compile Include="Models\Employees\ActivitiesPlaceApiModel.cs" />
     <Compile Include="Models\Employees\ActivitiesSummary.cs" />
     <Compile Include="ApiControllers\FacultyStaff\EmployeeModuleSettingsController.cs" />
@@ -764,6 +764,8 @@
     <Content Include="images\icons\files\pdf-32.png" />
     <Content Include="images\icons\files\pdf-doug.png" />
     <Content Include="images\icons\files\unknown-doug.png" />
+    <Content Include="images\icons\globe\shiny-24-disabled.png" />
+    <Content Include="images\icons\globe\shiny-24.png" />
     <Content Include="images\icons\glyphs\glyphicons_071_book.png" />
     <Content Include="images\icons\glyphs\glyphicons_072_bookmark.png" />
     <Content Include="images\icons\glyphs\glyphicons_261_buoy.png" />
@@ -2563,6 +2565,7 @@
     <Content Include="Views\MyProfile\InternationalAffiliationForm.cshtml" />
     <Content Include="Views\Employees\TenantIndex.cshtml" />
     <Content Include="Views\Employees\Index.cshtml" />
+    <Content Include="Views\Employees\_Bib.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

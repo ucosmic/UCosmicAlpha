@@ -2,13 +2,18 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Web.Http;
 using AttributeRouting;
 using AttributeRouting.Web.Http;
 using UCosmic.Domain.Activities;
+using UCosmic.Domain.Employees;
 using UCosmic.Domain.Establishments;
 using UCosmic.Domain.Places;
 using UCosmic.Web.Mvc.Models;
+using System.IO;
+using ImageResizer;
 
 namespace UCosmic.Web.Mvc.ApiControllers
 {
@@ -17,15 +22,17 @@ namespace UCosmic.Web.Mvc.ApiControllers
     {
         private readonly IProcessQueries _queryProcessor;
         private readonly IQueryEntities _queryEntities;
+        private readonly IStoreBinaryData _binaryData;
 
-        public EmployeesController(IProcessQueries queryProcessor, IQueryEntities queryEntities)
+        public EmployeesController(IProcessQueries queryProcessor, IQueryEntities queryEntities, IStoreBinaryData binaryData)
         {
             _queryProcessor = queryProcessor;
             _queryEntities = queryEntities;
+            _binaryData = binaryData;
         }
 
         [GET("{domain}/activities/places")]
-        public IEnumerable<ActivitiesPlaceApiModel> GetActivityPlaces(string domain, [FromUri] ActivityPlacesInputModel input)
+        public IEnumerable<ActivitiesPlaceApiModel> GetActivityPlaces(string domain, [FromUri] ActivitiesPlacesInputModel input)
         {
             //throw new Exception();
             //System.Threading.Thread.Sleep(10000);
@@ -132,6 +139,67 @@ namespace UCosmic.Web.Mvc.ApiControllers
             };
 
             return model;
+        }
+
+        [CacheHttpGet(Duration = 3600)]
+        [GET("{domain}/settings/icons/{name}")]
+        public HttpResponseMessage GetSettingsIcon(string domain, string name)
+        {
+            //throw new Exception();
+            //System.Threading.Thread.Sleep(2000);
+
+            if (!"global-view".Equals(name, StringComparison.OrdinalIgnoreCase) &&
+                !"find-expert".Equals(name, StringComparison.OrdinalIgnoreCase))
+
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
+
+            var pathAndMime = new { Path = "", Mime = "" };
+
+            var tenant = _queryProcessor.Execute(new EstablishmentByDomain(domain));
+            if (tenant != null)
+            {
+                var tenantId = tenant.RevisionId;
+                var settings = _queryProcessor.Execute(new EmployeeModuleSettingsByEstablishmentId(tenantId));
+                if (settings != null)
+                {
+                    if ("global-view".Equals(name, StringComparison.OrdinalIgnoreCase) && !string.IsNullOrWhiteSpace(settings.GlobalViewIconName))
+                    {
+                        pathAndMime = new
+                        {
+                            Path = string.Format("{0}{1}", settings.GlobalViewIconPath, settings.GlobalViewIconFileName),
+                            Mime = settings.GlobalViewIconMimeType,
+                        };
+                    }
+                    else if ("find-expert".Equals(name, StringComparison.OrdinalIgnoreCase) && !string.IsNullOrWhiteSpace(settings.FindAnExpertIconFileName))
+                    {
+                        pathAndMime = new
+                        {
+                            Path = string.Format("{0}{1}", settings.FindAnExpertIconPath, settings.FindAnExpertIconFileName),
+                            Mime = settings.FindAnExpertIconMimeType,
+                        };
+                    }
+                }
+            }
+
+            var response = new HttpResponseMessage(HttpStatusCode.OK);
+            if (!string.IsNullOrWhiteSpace(pathAndMime.Path) && !string.IsNullOrWhiteSpace(pathAndMime.Mime))
+            {
+                var content = _binaryData.Get(pathAndMime.Path);
+                if (content == null)
+                    return new HttpResponseMessage(HttpStatusCode.NotFound);
+
+                response.Content = new ByteArrayContent(content);
+                response.Content.Headers.ContentType = new MediaTypeHeaderValue(pathAndMime.Mime);
+                return response;
+            }
+            var stream = new MemoryStream(); // do not dispose, StreamContent will dispose internally
+            var relativePath = string.Format("~/{0}", Links.images.icons.globe.shiny_24_png);
+            ImageBuilder.Current.Build(relativePath, stream, new ResizeSettings());
+            stream.Position = 0;
+            response.Content = new StreamContent(stream);
+            var defaultMime = new MediaTypeHeaderValue("image/png");
+            response.Content.Headers.ContentType = defaultMime;
+            return response;
         }
     }
 }

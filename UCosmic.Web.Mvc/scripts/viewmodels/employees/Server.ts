@@ -4,7 +4,7 @@
 
 module Employees.Servers {
 
-    export function ActivityPlaces(tenantDomain: any, data: ApiModels.ActivityPlacesInputModel, settings?: JQueryAjaxSettings): JQueryPromise<ApiModels.ActivitiesPlaceApiModel[]> {
+    export function ActivityPlaces(tenantDomain: any, data: ApiModels.ActivitiesPlacesInputModel, settings?: JQueryAjaxSettings): JQueryPromise<ApiModels.ActivitiesPlaceApiModel[]> {
         var promise: JQueryDeferred<ApiModels.ActivitiesPlaceApiModel[]> = $.Deferred();
         settings = settings || {};
         settings.url = '/api/{0}/activities/places/'.format(tenantDomain);
