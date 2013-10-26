@@ -31,8 +31,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
             _binaryData = binaryData;
         }
 
-        [GET("{domain}/activities/places")]
-        public IEnumerable<ActivitiesPlaceApiModel> GetActivityPlaces(string domain, [FromUri] ActivitiesPlacesInputModel input)
+        [GET("{domain}/employees/activities/places")]
+        public IEnumerable<ActivitiesPlaceApiModel> GetActivitiesPlaces(string domain, [FromUri] ActivitiesPlacesInputModel input)
         {
             //throw new Exception();
             //System.Threading.Thread.Sleep(10000);
@@ -106,7 +106,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return models;
         }
 
-        [GET("{domain}/activities/summary")]
+        [GET("{domain}/employees/activities/summary")]
         public ActivitiesSummary GetActivitiesSummary(string domain)
         {
             //throw new Exception();
@@ -142,7 +142,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [CacheHttpGet(Duration = 3600)]
-        [GET("{domain}/settings/icons/{name}")]
+        [GET("{domain}/employees/settings/icons/{name}")]
         public HttpResponseMessage GetSettingsIcon(string domain, string name)
         {
             //throw new Exception();

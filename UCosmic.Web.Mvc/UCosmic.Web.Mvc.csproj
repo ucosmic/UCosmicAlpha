@@ -310,6 +310,10 @@
     <Compile Include="ApiControllers\Degrees\MyDegreesController.cs" />
     <Compile Include="ApiControllers\Expertise\GeographicExpertiseController.cs" />
     <Compile Include="ApiControllers\Expertise\LanguageExpertiseController.cs" />
+    <Compile Include="Controllers\JavaScriptsController.cs" />
+    <Compile Include="JavaScriptsController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Employees\ActivitiesPlacesInputModel.cs" />
     <Compile Include="Models\Employees\ActivitiesPlaceApiModel.cs" />
     <Compile Include="Models\Employees\ActivitiesSummary.cs" />
@@ -811,6 +815,7 @@
     <TypeScriptCompile Include="scripts\app\Flasher.ts" />
     <TypeScriptCompile Include="scripts\app\PagedSearch.ts" />
     <None Include="scripts\oss\D3-LICENSE.txt" />
+    <None Include="scripts\app\Routes.d.ts" />
     <Content Include="scripts\app\Flasher.js">
       <DependentUpon>Flasher.ts</DependentUpon>
     </Content>
@@ -2155,6 +2160,7 @@
     </Content>
     <TypeScriptCompile Include="scripts\viewmodels\employees\ServerApiModel.d.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\employees\Server.ts" />
+    <None Include="scripts\viewmodels\employees\Routes.d.ts" />
     <Content Include="scripts\viewmodels\employees\Server.js">
       <DependentUpon>Server.ts</DependentUpon>
     </Content>
@@ -2566,6 +2572,7 @@
     <Content Include="Views\Employees\TenantIndex.cshtml" />
     <Content Include="Views\Employees\Index.cshtml" />
     <Content Include="Views\Employees\_Bib.cshtml" />
+    <Content Include="Views\JavaScripts\Routes.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -35,6 +35,7 @@ public static class MVC
     public static UCosmic.Web.Mvc.Controllers.FacultyStaffController FacultyStaff = new UCosmic.Web.Mvc.Controllers.T4MVC_FacultyStaffController();
     public static UCosmic.Web.Mvc.Controllers.HomeController Home = new UCosmic.Web.Mvc.Controllers.T4MVC_HomeController();
     public static UCosmic.Web.Mvc.Controllers.IdentityController Identity = new UCosmic.Web.Mvc.Controllers.T4MVC_IdentityController();
+    public static UCosmic.Web.Mvc.Controllers.JavaScriptsController JavaScripts = new UCosmic.Web.Mvc.Controllers.T4MVC_JavaScriptsController();
     public static UCosmic.Web.Mvc.Controllers.MyProfileController MyProfile = new UCosmic.Web.Mvc.Controllers.T4MVC_MyProfileController();
     public static UCosmic.Web.Mvc.Controllers.RepsController Reps = new UCosmic.Web.Mvc.Controllers.T4MVC_RepsController();
     public static UCosmic.Web.Mvc.Controllers.SamlMetadataController SamlMetadata = new UCosmic.Web.Mvc.Controllers.T4MVC_SamlMetadataController();
@@ -158,6 +159,7 @@ namespace Links
                           
             public static readonly string Pager_min_js = Url("Pager.min.js");
             public static readonly string Pagination_d_ts = Url("Pagination.d.ts");
+            public static readonly string Routes_d_ts = Url("Routes.d.ts");
             public static readonly string Routes_ts = Url("Routes.ts");
             public static readonly string Routes_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Routes.min.js") ? Url("Routes.min.js") : Url("Routes.js");
                           
@@ -2958,6 +2960,7 @@ namespace Links
                               
                 public static readonly string Employees_min_js = Url("Employees.min.js");
                 public static readonly string Models_d_ts = Url("Models.d.ts");
+                public static readonly string Routes_d_ts = Url("Routes.d.ts");
                 public static readonly string Server_ts = Url("Server.ts");
                 public static readonly string Server_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Server.min.js") ? Url("Server.min.js") : Url("Server.js");
                               

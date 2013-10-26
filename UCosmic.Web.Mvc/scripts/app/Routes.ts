@@ -1,6 +1,10 @@
 /// <reference path="../typings/jquery/jquery.d.ts" />
 /// <reference path="App.ts" />
  
+// DO NOT CREATE ANY NEW ROUTES HERE, THIS FILE IS FROZEN.
+// WE NOW GENERATE ROUTES FROM SERVER_SIDE MVC ACTIONS
+// USING @Url.HttpRouteUrl. SEE OTHER ROUTE FILES FOR MORE.
+
 module App.Routes {
 
     export var applicationPath: string = '/';
