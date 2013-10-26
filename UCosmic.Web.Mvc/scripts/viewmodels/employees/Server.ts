@@ -4,13 +4,13 @@
 
 module Employees.Servers {
 
-    export function ActivityPlaces(tenantDomain: any, data: ApiModels.ActivityPlacesInputModel, settings?: JQueryAjaxSettings): JQueryPromise<ApiModels.ActivityPlaceApiModel[]> {
-        var promise: JQueryDeferred<ApiModels.ActivityPlaceApiModel[]> = $.Deferred();
+    export function ActivityPlaces(tenantDomain: any, data: ApiModels.ActivityPlacesInputModel, settings?: JQueryAjaxSettings): JQueryPromise<ApiModels.ActivitiesPlaceApiModel[]> {
+        var promise: JQueryDeferred<ApiModels.ActivitiesPlaceApiModel[]> = $.Deferred();
         settings = settings || {};
         settings.url = '/api/{0}/activities/places/'.format(tenantDomain);
         if (data) settings.data = data;
         $.ajax(settings)
-            .done((response: ApiModels.ActivityPlaceApiModel[]): void => {
+            .done((response: ApiModels.ActivitiesPlaceApiModel[]): void => {
                 promise.resolve(response);
             })
             .fail((): void => {

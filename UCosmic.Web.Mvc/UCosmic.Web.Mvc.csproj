@@ -310,6 +310,9 @@
     <Compile Include="ApiControllers\Degrees\MyDegreesController.cs" />
     <Compile Include="ApiControllers\Expertise\GeographicExpertiseController.cs" />
     <Compile Include="ApiControllers\Expertise\LanguageExpertiseController.cs" />
+    <Compile Include="Models\Employees\ActivityPlacesInputModel.cs" />
+    <Compile Include="Models\Employees\ActivitiesPlaceApiModel.cs" />
+    <Compile Include="Models\Employees\ActivitiesSummary.cs" />
     <Compile Include="ApiControllers\FacultyStaff\EmployeeModuleSettingsController.cs" />
     <Compile Include="ApiControllers\FacultyStaff\EmployeesController.cs" />
     <Compile Include="ApiControllers\FacultyStaff\FacultyStaffController.cs" />

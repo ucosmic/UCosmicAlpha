@@ -107,19 +107,19 @@ module Employees.ViewModels {
         geoChart: App.Google.GeoChart;
         geoChartSpinner = new App.Spinner(new App.SpinnerOptions(400, true));
         isGeoChartReady: KnockoutObservable<boolean> = ko.observable(false);
-        activityPlaceData: DataCacher<ApiModels.ActivityPlaceApiModel[]> = new DataCacher(
-            (): JQueryPromise<ApiModels.ActivityPlaceApiModel[]> => {
+        activityPlaceData: DataCacher<ApiModels.ActivitiesPlaceApiModel[]> = new DataCacher(
+            (): JQueryPromise<ApiModels.ActivitiesPlaceApiModel[]> => {
                 return this._loadActivityPlaceData();
             });
 
-        private _loadActivityPlaceData(): JQueryPromise<ApiModels.ActivityPlaceApiModel[]> {
-            var promise: JQueryDeferred<ApiModels.ActivityPlaceApiModel[]> = $.Deferred();
+        private _loadActivityPlaceData(): JQueryPromise<ApiModels.ActivitiesPlaceApiModel[]> {
+            var promise: JQueryDeferred<ApiModels.ActivitiesPlaceApiModel[]> = $.Deferred();
             var request: ApiModels.ActivityPlacesInputModel = {
                 countries: true,
             };
             this.geoChartSpinner.start();
             Servers.ActivityPlaces(this.settings.tenantDomain, request)
-                .done((places: ApiModels.ActivityPlaceApiModel[]): void => {
+                .done((places: ApiModels.ActivitiesPlaceApiModel[]): void => {
                     promise.resolve(places);
                 })
                 .fail((xhr: JQueryXHR): void => {
@@ -165,8 +165,8 @@ module Employees.ViewModels {
 
                 // now hit the server up for data and redraw
                 this.activityPlaceData.ready()
-                    .done((places: ApiModels.ActivityPlaceApiModel[]): void => {
-                        $.each(places, (i: number, dataPoint: ApiModels.ActivityPlaceApiModel): void=> {
+                    .done((places: ApiModels.ActivitiesPlaceApiModel[]): void => {
+                        $.each(places, (i: number, dataPoint: ApiModels.ActivitiesPlaceApiModel): void=> {
                             dataTable.addRow([dataPoint.placeName, dataPoint.activityIds.length]);
                         });
 

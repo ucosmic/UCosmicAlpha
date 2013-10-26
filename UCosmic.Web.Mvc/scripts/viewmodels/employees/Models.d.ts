@@ -2,7 +2,7 @@
 
 declare module Employees.ApiModels {
 
-    export interface ActivityPlaceApiModel {
+    export interface ActivitiesPlaceApiModel {
         placeId: number;
         placeName: string;
         isCountry: boolean;

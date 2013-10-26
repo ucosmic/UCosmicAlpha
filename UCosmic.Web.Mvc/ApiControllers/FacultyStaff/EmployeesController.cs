@@ -8,6 +8,7 @@ using AttributeRouting.Web.Http;
 using UCosmic.Domain.Activities;
 using UCosmic.Domain.Establishments;
 using UCosmic.Domain.Places;
+using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc.ApiControllers
 {
@@ -24,7 +25,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [GET("{domain}/activities/places")]
-        public IEnumerable<ActivityPlaceApiModel> GetActivityPlaces(string domain, [FromUri] ActivityPlacesInputModel input)
+        public IEnumerable<ActivitiesPlaceApiModel> GetActivityPlaces(string domain, [FromUri] ActivityPlacesInputModel input)
         {
             //throw new Exception();
             //System.Threading.Thread.Sleep(10000);
@@ -76,7 +77,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 places = places.Union(byId);
             }
 
-            var models = places.Select(place => new ActivityPlaceApiModel
+            var models = places.Select(place => new ActivitiesPlaceApiModel
             {
                 PlaceId = place.RevisionId,
                 PlaceName = place.OfficialName,
@@ -131,38 +132,6 @@ namespace UCosmic.Web.Mvc.ApiControllers
             };
 
             return model;
-        }
-
-        public class ActivitiesSummary
-        {
-            public int PersonCount { get; set; }
-            public int ActivityCount { get; set; }
-            public int LocationCount { get; set; }
-        }
-
-        public class ActivityPlaceApiModel
-        {
-            public ActivityPlaceApiModel()
-            {
-                ActivityIds = new int[0];
-            }
-
-            public int PlaceId { get; set; }
-            public string PlaceName { get; set; }
-            public bool IsCountry { get; set; }
-            public string CountryCode { get; set; }
-            public IEnumerable<int> ActivityIds { get; set; }
-        }
-
-        public class ActivityPlacesInputModel
-        {
-            public ActivityPlacesInputModel()
-            {
-                PlaceIds = new int[0];
-            }
-
-            public bool? Countries { get; set; }
-            public IEnumerable<int> PlaceIds { get; set; }
         }
     }
 }
