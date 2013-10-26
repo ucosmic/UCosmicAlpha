@@ -402,10 +402,10 @@
                             <img src="@Url.HttpRouteUrl(null, new { controller = "EmployeeModuleSettings", action = "GetIcon", name = "FindAnExpertIcon.svg" })"
                                 alt="Find an Expert" width="28" height="28" />
                         </span>
-                        <span style="float: right" data-bind="visible: selectedPlace() != null, click: function(item,event) { globalViewClickHandler(item,event); }">
-                            <span style="margin-right: 2px; margin-top: 4px;">Return to Global View</span>
+                        <span style="float: right; cursor: pointer;" data-bind="visible: selectedPlace() != null, click: function(item,event) { globalViewClickHandler(item,event); }">
+                            <span style="margin-right: 2px; margin-top: 4px; cursor: pointer;">Return to Global View</span>
                             <img src="@Url.HttpRouteUrl(null, new { controller = "EmployeeModuleSettings", action = "GetIcon", name = "GlobalViewIcon.png" })"
-                                alt="Global View" style="padding-top: 2px" />
+                                alt="Global View" style="padding-top: 2px; cursor: pointer;" />
                         </span>
                     </div>
                     <div style="position: relative">
