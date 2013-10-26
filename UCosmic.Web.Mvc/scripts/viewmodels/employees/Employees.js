@@ -2059,8 +2059,10 @@ var ViewModels;
                     }
                     return flatResults;
                 });
+                this.activityTableRows(unsorted.ToArray());
+                this.sortSpinner.stop();
+                return;
 
-                //this.activityTableRows(unsorted.ToArray());
                 this.activitySortColumnIndex = colIndex;
                 var sorted = [];
 
@@ -2171,7 +2173,10 @@ var ViewModels;
                     return flatResults;
                 });
 
-                //this.peopleTableRows(unsorted.ToArray());
+                this.peopleTableRows(unsorted.ToArray());
+                this.sortSpinner.stop();
+                return;
+
                 this.peopleSortColumnIndex = colIndex;
                 var sorted = [];
 

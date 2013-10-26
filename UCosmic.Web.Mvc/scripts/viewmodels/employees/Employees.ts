@@ -2255,7 +2255,9 @@ module ViewModels.Employees {
                     }
                     return flatResults;
                 });
-            //this.activityTableRows(unsorted.ToArray());
+            this.activityTableRows(unsorted.ToArray());
+            this.sortSpinner.stop();
+            return; // temporarily disable sorting
 
             this.activitySortColumnIndex = colIndex;
             var sorted = [];
@@ -2368,7 +2370,9 @@ module ViewModels.Employees {
                     return flatResults;
                 });
 
-            //this.peopleTableRows(unsorted.ToArray());
+            this.peopleTableRows(unsorted.ToArray());
+            this.sortSpinner.stop();
+            return; // temporarily disable sorting
 
             this.peopleSortColumnIndex = colIndex;
             var sorted = [];
