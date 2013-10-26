@@ -12,6 +12,7 @@
             left: 68px;
             top: 349px;
         }
+
         #google_geochart_water_overlays .gulf-of-mexico {
             width: 39px;
             height: 21px;
@@ -19,6 +20,7 @@
             left: 160px;
             top: 287px;
         }
+
         #google_geochart_water_overlays .caribbean-sea {
             width: 74px;
             height: 11px;
@@ -26,6 +28,7 @@
             left: 205px;
             top: 311px;
         }
+
         #google_geochart_water_overlays .atlantic-ocean {
             width: 51px;
             height: 26px;
@@ -33,6 +36,7 @@
             left: 240px;
             top: 265px;
         }
+
         #google_geochart_water_overlays .southern-ocean {
             width: 58px;
             height: 26px;
@@ -40,6 +44,7 @@
             left: 280px;
             top: 441px;
         }
+
         #google_geochart_water_overlays .arctic-ocean {
             width: 41px;
             height: 26px;
@@ -47,6 +52,7 @@
             left: 330px;
             top: 23px;
         }
+
         #google_geochart_water_overlays .indian-ocean {
             width: 41px;
             height: 26px;
@@ -54,7 +60,6 @@
             left: 469px;
             top: 390px;
         }
-
     </style>
 
     @* POSITIONS FOR HEIGHT=480 AND keepAspectRadio=TRUE *@
@@ -62,22 +67,25 @@
         #google_geochart_water_overlays.keep-aspect-ratio-480 .gulf-of-mexico {
             top: 270px;
         }
+
         #google_geochart_water_overlays.keep-aspect-ratio-480 .caribbean-sea {
             top: 291px;
         }
+
         #google_geochart_water_overlays.keep-aspect-ratio-480 .atlantic-ocean {
             left: 248px;
             top: 245px;
         }
+
         #google_geochart_water_overlays.keep-aspect-ratio-480 .southern-ocean {
             left: 280px;
             top: 401px;
         }
+
         #google_geochart_water_overlays.keep-aspect-ratio-480 .indian-ocean {
             left: 475px;
             top: 350px;
         }
-
     </style>
 }
 @section scripts
@@ -116,9 +124,11 @@
 }
 
 <div class="content fixed to-top" data-current-module="employees">
-    <div class="group">
+    <form class="group">
         @* LEFT *@
         <div class="on-left from-top">
+
+            @* HEADER *@
             <header>
                 <h1>
                     @ViewBag.Title
@@ -130,7 +140,7 @@
                 <strong data-bind="text: personCount" style="font-size: 24px;">?</strong>
                 <span data-bind="visible: personCount() == 1" style="display: none;">person</span>
                 <span data-bind="visible: personCount() != 1">people</span>
-                <span data-bind="visible: personCount() > 0">with
+                <span data-bind="visible: personCount() > 0" style="display: none;">with
                     @*<span data-bind="visible: personCount() == 1" style="display: none;">has</span>
                     <span data-bind="visible: personCount() != 1">have</span>*@
                     <strong data-bind="text: activityCount" style="font-size: 24px;">?</strong>
@@ -144,10 +154,11 @@
             </div>
 
             @* CHART INSTRUCTIONS & SPINNER *@
-            <div style="margin: 1em 0; height: 28px;">
+            <div style="margin: 1em 0;">
                 <div class="group">
                     <div class="on-left">
-                        <span data-bind="visible: !geoChartSpinner.isVisible()" style="display: none;">Double click a region to zoom in.
+                        <span data-bind="visible: !geoChartSpinner.isVisible()" style="display: none; line-height: 28px;">
+                            Double click a region to zoom in.
                         </span>
                     </div>
                     <div class="on-right">
@@ -206,7 +217,9 @@
 
             </div>
         </div>
+
+        @* RIGHT *@
         <aside class="on-right from-top">
         </aside>
-    </div>
+    </form>
 </div>

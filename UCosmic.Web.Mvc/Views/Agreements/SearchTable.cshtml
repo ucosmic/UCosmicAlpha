@@ -67,7 +67,10 @@
 
 <div class="content fixed to-top" data-current-module="agreements">
     <form class="group">
+        @* LEFT *@
         <div class="on-left from-top">
+
+            @* HEADER *@
             <header>
                 <div class="group">
                     <div class="on-left">
@@ -80,6 +83,8 @@
                     </div>
                 </div>
             </header>
+
+            @* TABLE LENS *@
             <div data-bind="visible: isTableLens, with: table">
                 @* KEYWORD TEXT BOX *@
                 <div class="field" style="margin-bottom: 0;">
@@ -185,18 +190,20 @@
                 </div>
 
             </div>
+
+            @* MAP LENS GLOBAL TOTALS SUMMARY *@
             <div data-bind="visible: isMapLens, with: map" style="margin: 1em 0; display: none;">
                 <div class="group" style="height: 30px;">
                     <div class="on-left" data-bind="with: summary" style="font-size: 20px;">
                         <strong data-bind="text: agreementCount" style="font-size: 24px;">?</strong>
                         <span data-bind="visible: agreementCount() == 1" style="display: none;">agreement</span>
                         <span data-bind="visible: agreementCount() != 1">agreements</span>
-                        <span data-bind="visible: agreementCount() != 0">with
-                        <strong data-bind="text: partnerCount" style="font-size: 24px;">?</strong>
+                        <span data-bind="visible: agreementCount() > 0" style="display: none;">with
+                            <strong data-bind="text: partnerCount" style="font-size: 24px;">?</strong>
                             <span data-bind="visible: partnerCount() == 1" style="display: none;">partner</span>
                             <span data-bind="visible: partnerCount() != 1">partners</span>
                             in
-                        <strong data-bind="text: countryCount" style="font-size: 24px;">?</strong>
+                            <strong data-bind="text: countryCount" style="font-size: 24px;">?</strong>
                             <span data-bind="visible: countryCount() == 1" style="display: none;">country.</span>
                             <span data-bind="visible: countryCount() != 1">countries.</span>
                         </span>
@@ -209,6 +216,8 @@
                     </div>
                 </div>
             </div>
+
+            @* MAP LENS CONTEXTUAL TOTALS SUMMARY *@
             <div data-bind="visible: isMapLens, with: map" style="margin: 1em 0; display: none;">
                 <div data-bind="visible: continentCode() == 'any' && countryCode() == 'any'" style="line-height: 28px;">
                     Click any number below for more information.
@@ -218,7 +227,7 @@
                     <span data-bind="visible: status.agreementCount() == 1" style="display: none;">agreement</span>
                     <span data-bind="visible: status.agreementCount() != 1">agreements</span>
                     <span data-bind="visible: status.partnerCount() != 0">with
-                    <strong data-bind="text: status.partnerCount">?</strong>
+                        <strong data-bind="text: status.partnerCount">?</strong>
                         <span data-bind="visible: status.partnerCount() == 1" style="display: none;">partner</span>
                         <span data-bind="visible: status.partnerCount() != 1">partners</span>
                     </span>
@@ -278,6 +287,8 @@
             </div>
             <!-- /ko -->
         </div>
+
+        @* RIGHT *@
         <aside class="on-right from-top" data-fixed-scroll="root">
             <div data-fixed-scroll="anchor"></div>
             <div data-fixed-scroll="content">
@@ -396,7 +407,8 @@
                                     controller = "Agreements",
                                     action = "Get",
                                     domain = @ViewBag.AgreementsDomain,
-                                    pageSize = 50000, pageNumber = 1,
+                                    pageSize = 50000,
+                                    pageNumber = 1,
                                     accept = "application/vnd.ms-excel",
                                     orderBy = "country-asc",
                                 })">
