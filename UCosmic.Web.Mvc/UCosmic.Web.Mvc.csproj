@@ -399,6 +399,8 @@
     <Compile Include="Models\Degrees\DegreeSearchInputModel.cs" />
     <Compile Include="Models\Employees\FacultyStaffSearchApiModel.cs" />
     <Compile Include="Models\Employees\FacultyStaffSummaryApiModel.cs" />
+    <Compile Include="Models\Employees\PeoplePlaceApiModel.cs" />
+    <Compile Include="Models\Employees\PeoplePlacesInputModel.cs" />
     <Compile Include="Models\Establishments\EstablishmentChildrenSearchInputModel.cs" />
     <Compile Include="Models\Establishments\EstablishmentNameSearchInputModel.cs" />
     <Compile Include="Models\InternationalAffiliationApiModel.cs" />
@@ -822,6 +824,13 @@
     </Content>
     <Content Include="scripts\app\Flasher.min.js">
       <DependentUpon>Flasher.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="scripts\app\HistoryJS.ts" />
+    <Content Include="scripts\app\HistoryJS.js">
+      <DependentUpon>HistoryJS.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\app\HistoryJS.min.js">
+      <DependentUpon>HistoryJS.ts</DependentUpon>
     </Content>
     <Content Include="scripts\app\PagedSearch.js">
       <DependentUpon>PagedSearch.ts</DependentUpon>

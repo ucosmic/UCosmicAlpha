@@ -1,3 +1,5 @@
+/// <reference path="../../app/HistoryJS.ts" />
+/// <reference path="../../typings/history/history.d.ts" />
 /// <reference path="../../typings/d3/d3.d.ts" />
 /// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
 /// <reference path="../../app/Spinner.ts" />
@@ -18,6 +20,17 @@ module Employees.ViewModels {
         geoChartWaterOverlaysElementId?: string;
         geoChartKeepAspectRatio?: boolean;
         tenantDomain: string;
+    }
+
+    export interface SummaryRouteState {
+        pivot: DataGraphPivot; // enum during build, int at runtime
+    }
+
+    export enum DataGraphPivot {
+        unknown = 0,
+        people = 1,
+        activities = 2,
+        degress = 3,
     }
 
     export class ImageSwapper {
@@ -71,19 +84,22 @@ module Employees.ViewModels {
             google.load('visualization', '1', { 'packages': ['corechart', 'geochart'] });
 
             google.setOnLoadCallback((): void => {
-                this._googleVisualizationLoadedPromise.resolve();
+                Summary._googleVisualizationLoadedPromise.resolve();
             });
-            return this._googleVisualizationLoadedPromise;
+            return Summary._googleVisualizationLoadedPromise;
         }
 
         //#endregion
         //#region Construction & Initialization
 
         constructor(public settings: SummarySettings) {
-            // CONSTRUCTOR
-            this.geoChart = new App.Google.GeoChart(document.getElementById(this.settings.geoChartElementId));
-            this.activityPlaceData.ready();
+            HistoryJS.Adapter.bind(window, 'statechange', (): void => { this._onRouteChanged(); });
+            // begin loading data
+            this.activitiesPlaceData.ready();
             this.activitiesSummaryData.ready();
+            this.bindingsApplied.done((): void => {
+                this._applyState();
+            });
         }
 
         private _bindingsApplied: JQueryDeferred<void> = $.Deferred();
@@ -97,28 +113,101 @@ module Employees.ViewModels {
             }
             ko.applyBindings(this, element);
             this._bindingsApplied.resolve();
+        }
 
+        //#endregion
+        //#region UI Observables
+        //#region Pivot
+
+        private static _pivotDefault = DataGraphPivot.activities;
+        private static _pivotKey = 'EmployeeSummaryPivot';
+        pivot: KnockoutObservable<DataGraphPivot> = ko.observable(
+            parseInt(sessionStorage.getItem(Summary._pivotKey)) || Summary._pivotDefault);
+
+        private _pivotChanged = ko.computed((): void => { this._onPivotChanged(); });
+        private _onPivotChanged(): void {
+            // compare value with what is stored in the session
+            var value = <number>this.pivot();
+            var old = parseInt(sessionStorage.getItem(Summary._pivotKey)) || 0;
+
+            // don't do anything unless the value has changed
+            if (value !== old) {
+                // save the new value to session storage
+                sessionStorage.setItem(Summary._pivotKey, value.toString());
+            }
+        }
+
+        pivotPeople(): void {
+            this.pivot(DataGraphPivot.people);
+        }
+
+        pivotActivities(): void {
+            this.pivot(DataGraphPivot.activities);
+        }
+
+        isPivot(pivot: DataGraphPivot): boolean {
+            return this.pivot() == pivot;
+        }
+
+        isPivotPeople = ko.computed((): boolean => {
+            return this.pivot() == DataGraphPivot.people;
+        });
+
+        isPivotActivities = ko.computed((): boolean => {
+            return this.pivot() == DataGraphPivot.activities;
+        });
+
+        //#endregion
+        //#endregion
+        //#region Routing
+
+        routeState = ko.computed((): SummaryRouteState => {
+            return {
+                pivot: this.pivot(),
+            };
+        });
+
+        private _routeStateChanged = ko.computed((): void => {
+            this._onRouteStateChanged();
+        }).extend({ throttle: 1 });
+
+        private _onRouteStateChanged() {
+            var routeState = this.routeState();
+            var historyState = HistoryJS.getState();
+            if (!historyState.data.pivot) {
+                HistoryJS.replaceState(routeState, document.title, '?' + $.param(routeState));
+            }
+            else {
+                HistoryJS.pushState(routeState, document.title, '?' + $.param(routeState));
+            }
+        }
+
+        private _onRouteChanged() {
+            var state = HistoryJS.getState();
+            var data: SummaryRouteState = state.data;
+            this.pivot(data.pivot);
+            this._applyState();
+        }
+
+        private _applyState(): void {
             this._drawGeoChart();
         }
 
         //#endregion
-        //#region Google GeoChart
+        //#region Pivot Data
 
-        geoChart: App.Google.GeoChart;
-        geoChartSpinner = new App.Spinner(new App.SpinnerOptions(400, true));
-        isGeoChartReady: KnockoutObservable<boolean> = ko.observable(false);
-        activityPlaceData: DataCacher<ApiModels.ActivitiesPlaceApiModel[]> = new DataCacher(
+        activitiesPlaceData: DataCacher<ApiModels.ActivitiesPlaceApiModel[]> = new DataCacher(
             (): JQueryPromise<ApiModels.ActivitiesPlaceApiModel[]> => {
-                return this._loadActivityPlaceData();
+                return this._loadActivitiesPlaceData();
             });
 
-        private _loadActivityPlaceData(): JQueryPromise<ApiModels.ActivitiesPlaceApiModel[]> {
+        private _loadActivitiesPlaceData(): JQueryPromise<ApiModels.ActivitiesPlaceApiModel[]> {
             var promise: JQueryDeferred<ApiModels.ActivitiesPlaceApiModel[]> = $.Deferred();
             var request: ApiModels.ActivitiesPlacesInputModel = {
                 countries: true,
             };
             this.geoChartSpinner.start();
-            Servers.ActivityPlaces(this.settings.tenantDomain, request)
+            Servers.ActivitiesPlaces(this.settings.tenantDomain, request)
                 .done((places: ApiModels.ActivitiesPlaceApiModel[]): void => {
                     promise.resolve(places);
                 })
@@ -131,6 +220,39 @@ module Employees.ViewModels {
                 });
             return promise;
         }
+
+        peoplePlaceData: DataCacher<ApiModels.PeoplePlaceApiModel[]> = new DataCacher(
+            (): JQueryPromise<ApiModels.PeoplePlaceApiModel[]> => {
+                return this._loadPeoplePlaceData();
+            });
+
+        private _loadPeoplePlaceData(): JQueryPromise<ApiModels.PeoplePlaceApiModel[]> {
+            var promise: JQueryDeferred<ApiModels.PeoplePlaceApiModel[]> = $.Deferred();
+            var request: ApiModels.PeoplePlacesInputModel = {
+                countries: true,
+            };
+            this.geoChartSpinner.start();
+            Servers.PeoplePlaces(this.settings.tenantDomain, request)
+                .done((places: ApiModels.PeoplePlaceApiModel[]): void => {
+                    promise.resolve(places);
+                })
+                .fail((xhr: JQueryXHR): void => {
+                    App.Failures.message(xhr, 'while trying to load employee location summary data.', true);
+                    promise.reject();
+                })
+                .always((): void => {
+                    this.geoChartSpinner.stop();
+                });
+            return promise;
+        }
+
+        //#endregion
+        //#region Google GeoChart
+
+        geoChart: App.Google.GeoChart = new App.Google.GeoChart(
+            document.getElementById(this.settings.geoChartElementId));
+        geoChartSpinner = new App.Spinner(new App.SpinnerOptions(400, true));
+        isGeoChartReady: KnockoutObservable<boolean> = ko.observable(false);
 
         private _drawGeoChart(): void {
 
@@ -151,7 +273,7 @@ module Employees.ViewModels {
             // create data table schema
             var dataTable = new google.visualization.DataTable();
             dataTable.addColumn('string', 'Place');
-            dataTable.addColumn('number', 'Total Activities');
+            dataTable.addColumn('number', 'Total {0}'.format(this.isPivotPeople() ? 'People' : 'Activities'));
 
             // go ahead and draw the chart with empty data to make sure its ready
             this.geoChart.draw(dataTable, options).then((): void => {
@@ -164,14 +286,26 @@ module Employees.ViewModels {
                 });
 
                 // now hit the server up for data and redraw
-                this.activityPlaceData.ready()
-                    .done((places: ApiModels.ActivitiesPlaceApiModel[]): void => {
-                        $.each(places, (i: number, dataPoint: ApiModels.ActivitiesPlaceApiModel): void=> {
-                            dataTable.addRow([dataPoint.placeName, dataPoint.activityIds.length]);
-                        });
+                if (this.isPivotPeople()) {
+                    this.peoplePlaceData.ready()
+                        .done((places: ApiModels.PeoplePlaceApiModel[]): void => {
+                            $.each(places, (i: number, dataPoint: ApiModels.PeoplePlaceApiModel): void=> {
+                                dataTable.addRow([dataPoint.placeName, dataPoint.personIds.length]);
+                            });
 
-                        this.geoChart.draw(dataTable, options);
-                    });
+                            this.geoChart.draw(dataTable, options);
+                        });
+                }
+                else {
+                    this.activitiesPlaceData.ready()
+                        .done((places: ApiModels.ActivitiesPlaceApiModel[]): void => {
+                            $.each(places, (i: number, dataPoint: ApiModels.ActivitiesPlaceApiModel): void=> {
+                                dataTable.addRow([dataPoint.placeName, dataPoint.activityIds.length]);
+                            });
+
+                            this.geoChart.draw(dataTable, options);
+                        });
+                }
             });
         }
 
@@ -291,7 +425,7 @@ module Employees.ViewModels {
         }
 
         //#endregion
-        //#region Extra Text Images
+        //#region Overlay Hotspot Image Swappers
 
         pacificOceanSwapper: ImageSwapper = new ImageSwapper();
         gulfOfMexicoSwapper: ImageSwapper = new ImageSwapper();

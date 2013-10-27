@@ -48,8 +48,8 @@ declare module google {
             addRow(cellObject: DataObjectCell): number;
             addRow(cellArray?: any[]): number;
             addRows(count: number): number;
-            addRows(array: DataObjectCell[][]);
-            addRows(array: any[]);
+            addRows(array: DataObjectCell[][]): number;
+            addRows(array: any[]): number;
         }
 
         //https://google-developers.appspot.com/chart/interactive/docs/gallery/geochart

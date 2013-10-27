@@ -91,16 +91,17 @@
                 border-radius: 0;
                 border: 0;
                 margin: 0;
-                padding: 0 12px;
+                padding: 0;
                 background-color: transparent;
                 color: #000 !important;
                 height: 18px;
+                width: 70px;
                 cursor: pointer;
+                text-align: center;
             }
 
                 #google_geochart_datasource_overlay [type=button]:first-child {
                     border-right: solid 1px #000;
-                    padding-right: 10px;
                 }
     </style>
 
@@ -140,6 +141,14 @@
     <script type="text/javascript" src="~/scripts/oss/d3.v3.js"></script>
 
     <!--<![endif]-->
+
+    <script src="~/scripts/history/history.js"></script>
+
+    <script src="~/scripts/history/history.html4.js"></script>
+
+    <script src="~/scripts/history/history.adapter.jquery.js"></script>
+
+    <script src="~/scripts/app/HistoryJS.js"></script>
 
     <script type="text/javascript" src="~/scripts/oss/linq.js"></script>
 
@@ -223,6 +232,8 @@
 
             @* GOOGLE CHART *@
             <div style="position: relative;">
+                
+                <div style="position: absolute; width: 100%; height: 480px; background-color: #acccfd;"></div>
 
                 @* GEOCHART *@
                 <div id="google_geochart" style="width: 100%; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;">
@@ -271,8 +282,8 @@
 
                     @* ACTIVITIES | PEOPLE BUTTONS OVERLAY *@
                     <div id="google_geochart_datasource_overlay" class="group">
-                        <input type="button" value="Activities" class="on-left active" />
-                        <input type="button" value="People" class="on-left" />
+                        <input type="button" value="Activities" class="on-left" data-bind="click: pivotActivities, css: { active: isPivotActivities }" />
+                        <input type="button" value="People" class="on-left" data-bind="click: pivotPeople, css: { active: isPivotPeople }" />
                     </div>
                 </div>
 

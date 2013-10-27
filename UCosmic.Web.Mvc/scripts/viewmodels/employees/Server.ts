@@ -6,7 +6,7 @@
 
 module Employees.Servers {
 
-    export function ActivityPlaces(tenantDomain: any, data: ApiModels.ActivitiesPlacesInputModel, settings?: JQueryAjaxSettings): JQueryPromise<ApiModels.ActivitiesPlaceApiModel[]> {
+    export function ActivitiesPlaces(tenantDomain: any, data: ApiModels.ActivitiesPlacesInputModel, settings?: JQueryAjaxSettings): JQueryPromise<ApiModels.ActivitiesPlaceApiModel[]> {
         var promise: JQueryDeferred<ApiModels.ActivitiesPlaceApiModel[]> = $.Deferred();
         settings = settings || {};
         settings.url = Routes.Api.Employees.Activities.places(tenantDomain);
@@ -15,8 +15,8 @@ module Employees.Servers {
             .done((response: ApiModels.ActivitiesPlaceApiModel[]): void => {
                 promise.resolve(response);
             })
-            .fail((): void => {
-                promise.reject();
+            .fail((xhr: JQueryXHR): void => {
+                promise.reject(xhr);
             });
         return promise;
     }
@@ -29,8 +29,23 @@ module Employees.Servers {
             .done((response: ApiModels.ActivitiesSummary): void => {
                 promise.resolve(response);
             })
-            .fail((): void => {
-                promise.reject();
+            .fail((xhr: JQueryXHR): void => {
+                promise.reject(xhr);
+            });
+        return promise;
+    }
+
+    export function PeoplePlaces(tenantDomain: any, data: ApiModels.PeoplePlacesInputModel, settings?: JQueryAjaxSettings): JQueryPromise<ApiModels.PeoplePlaceApiModel[]> {
+        var promise: JQueryDeferred<ApiModels.PeoplePlaceApiModel[]> = $.Deferred();
+        settings = settings || {};
+        settings.url = Routes.Api.Employees.People.places(tenantDomain);
+        if (data) settings.data = data;
+        $.ajax(settings)
+            .done((response: ApiModels.PeoplePlaceApiModel[]): void => {
+                promise.resolve(response);
+            })
+            .fail((xhr: JQueryXHR): void => {
+                promise.reject(xhr);
             });
         return promise;
     }

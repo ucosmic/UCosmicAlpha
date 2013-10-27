@@ -15,6 +15,19 @@ declare module Employees.ApiModels {
         placeIds?: number[];
     }
 
+    export interface PeoplePlaceApiModel {
+        placeId: number;
+        placeName: string;
+        isCountry: boolean;
+        countryCode: string;
+        personIds: number[];
+    }
+
+    export interface PeoplePlacesInputModel {
+        countries?: boolean;
+        placeIds?: number[];
+    }
+
     export interface ActivitiesSummary {
         personCount: number;
         activityCount: number;

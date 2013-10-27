@@ -2,12 +2,17 @@ declare module Employees.ApiRoutes {
 
     export interface Employees {
         Activities: Activities;
+        People: People;
         Settings: Settings;
     }
 
     export interface Activities {
         places(domain: string): string;
         summary(domain: string): string;
+    }
+
+    export interface People {
+        places(domain: string): string;
     }
 
     export interface Settings {
