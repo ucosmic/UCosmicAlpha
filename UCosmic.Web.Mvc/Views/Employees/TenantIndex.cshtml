@@ -13,7 +13,7 @@
 {
     @* BASELINE POSITIONS FOR HEIGHT=500 AND keepAspectRadio=FALSE *@
     <style>
-        #google_geochart_water_overlays .pacific-ocean {
+        .google-geogchart-overlays .pacific-ocean {
             width: 44px;
             height: 26px;
             position: absolute;
@@ -21,7 +21,7 @@
             top: 349px;
         }
 
-        #google_geochart_water_overlays .gulf-of-mexico {
+        .google-geogchart-overlays .gulf-of-mexico {
             width: 39px;
             height: 21px;
             position: absolute;
@@ -29,7 +29,7 @@
             top: 287px;
         }
 
-        #google_geochart_water_overlays .caribbean-sea {
+        .google-geogchart-overlays .caribbean-sea {
             width: 74px;
             height: 11px;
             position: absolute;
@@ -37,7 +37,7 @@
             top: 311px;
         }
 
-        #google_geochart_water_overlays .atlantic-ocean {
+        .google-geogchart-overlays .atlantic-ocean {
             width: 51px;
             height: 26px;
             position: absolute;
@@ -45,7 +45,7 @@
             top: 265px;
         }
 
-        #google_geochart_water_overlays .southern-ocean {
+        .google-geogchart-overlays .southern-ocean {
             width: 58px;
             height: 26px;
             position: absolute;
@@ -53,7 +53,7 @@
             top: 441px;
         }
 
-        #google_geochart_water_overlays .arctic-ocean {
+        .google-geogchart-overlays .arctic-ocean {
             width: 41px;
             height: 26px;
             position: absolute;
@@ -61,7 +61,7 @@
             top: 23px;
         }
 
-        #google_geochart_water_overlays .indian-ocean {
+        .google-geogchart-overlays .indian-ocean {
             width: 41px;
             height: 26px;
             position: absolute;
@@ -103,29 +103,42 @@
                 #google_geochart_datasource_overlay [type=button]:first-child {
                     border-right: solid 1px #000;
                 }
+
+        .ui-tooltip.geochart {
+            border-radius: 3px;
+            border: solid 1px #ccc;
+            max-width: 150px;
+            height: 48px;
+            font-family: Arial;
+            font-size: 13px;
+            box-shadow: 1px 1px 1px 0 #999;
+        }
+        .ui-tooltip.geochart .ui-tooltip-content {
+            padding: 8px;
+        }
     </style>
 
     @* POSITIONS FOR HEIGHT=480 AND keepAspectRadio=TRUE *@
     <style>
-        #google_geochart_water_overlays.keep-aspect-ratio-480 .gulf-of-mexico {
+        .google-geogchart-overlays .keep-aspect-ratio-480 .gulf-of-mexico {
             top: 270px;
         }
 
-        #google_geochart_water_overlays.keep-aspect-ratio-480 .caribbean-sea {
+        .google-geogchart-overlays .keep-aspect-ratio-480 .caribbean-sea {
             top: 291px;
         }
 
-        #google_geochart_water_overlays.keep-aspect-ratio-480 .atlantic-ocean {
+        .google-geogchart-overlays .keep-aspect-ratio-480 .atlantic-ocean {
             left: 248px;
             top: 245px;
         }
 
-        #google_geochart_water_overlays.keep-aspect-ratio-480 .southern-ocean {
+        .google-geogchart-overlays .keep-aspect-ratio-480 .southern-ocean {
             left: 280px;
             top: 401px;
         }
 
-        #google_geochart_water_overlays.keep-aspect-ratio-480 .indian-ocean {
+        .google-geogchart-overlays .keep-aspect-ratio-480 .indian-ocean {
             left: 475px;
             top: 350px;
         }
@@ -169,8 +182,9 @@
                     element: $('[data-current-module=employees]')[0],
                     geoChartElementId: 'google_geochart',
                     geoChartWaterOverlaysElementId: 'google_geochart_water_overlays',
+                    geoChartOverlayPhantomsElementId: 'google_geochart_phantoms',
                     tenantDomain: '@ViewBag.EmployeesDomain',
-                    geoChartKeepAspectRatio: false,
+                    geoChartKeepAspectRatio: true,
                 });
                 viewModel.applyBindings();
             });
@@ -233,14 +247,14 @@
             @* GOOGLE CHART *@
             <div style="position: relative;">
                 
-                <div style="position: absolute; width: 100%; height: 480px; background-color: #acccfd;"></div>
+                <div style="position: absolute; width: 100%; height: 480px; background-color: #acccfd;" data-bind="style: { height: settings.geoChartKeepAspectRatio ? '480px' : '500px' }"></div>
 
                 @* GEOCHART *@
                 <div id="google_geochart" style="width: 100%; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;">
                 </div>
 
                 @* CUSTOM OVERLAYS *@
-                <div id="google_geochart_overlays" data-bind="visible: isGeoChartReady" style="display: none;">
+                <div id="google_geochart_overlays" data-bind="visible: isGeoChartReady" class="google-geogchart-overlays" style="display: none;">
 
                     @* BODY OF WATER DATA VISUALIZERS *@
                     <ul id="google_geochart_water_overlays" data-bind="visible: isD3Undefined, css: { 'keep-aspect-ratio-480': settings.geoChartKeepAspectRatio }">
@@ -287,7 +301,39 @@
                     </div>
                 </div>
 
-                @* ACTIVITIES | PEOPLE BUTTONS OVERLAY *@
+                @* PHANTOM OVERLAYS *@
+                <div id="google_geochart_phantoms" data-xbind="visible: isGeoChartReady" class="google-geogchart-overlays" style="xdisplay: none;">
+
+                    @* BODY OF WATER DATA VISUALIZERS *@
+                    <ul id="google_geochart_water_phantoms" data-bind="css: { 'keep-aspect-ratio-480': settings.geoChartKeepAspectRatio }">
+                        <li data-bind="with: pacificOceanTooltipper" class="pacific-ocean">
+                            <img data-xbind="event: { mouseenter: onMouseEnter, mouseleave: onMouseLeave }" src="~/images/transparent.png" alt="" />
+                        </li>
+                        <li data-bind="with: gulfOfMexicoTooltipper" class="gulf-of-mexico">
+                            <img data-xbind="event: { mouseenter: onMouseEnter, mouseleave: onMouseLeave }" src="~/images/transparent.png" alt="" />
+                        </li>
+                        @*<li data-bind="with: caribbeanSeaSwapper" class="caribbean-sea">
+                            <img data-bind="visible: isUp, event: { mouseenter: onMouseEnter }" src="~/images/geochart/up/caribbean-sea.png" alt="Caribbean Sea" />
+                            <img data-bind="visible: isHover, event: { mouseleave: onMouseLeave }" src="~/images/geochart/hot/caribbean-sea.png" alt="Caribbean Sea" style="display: none;" />
+                        </li>
+                        <li data-bind="with: atlanticOceanSwapper" class="atlantic-ocean">
+                            <img data-bind="visible: isUp, event: { mouseenter: onMouseEnter }" src="~/images/geochart/up/atlantic-ocean.png" alt="Atlantic Ocean" />
+                            <img data-bind="visible: isHover, event: { mouseleave: onMouseLeave }" src="~/images/geochart/hot/atlantic-ocean.png" alt="Atlantic Ocean" style="display: none;" />
+                        </li>
+                        <li data-bind="with: southernOceanSwapper" class="southern-ocean">
+                            <img data-bind="visible: isUp, event: { mouseenter: onMouseEnter }" src="~/images/geochart/up/southern-ocean.png" alt="Southern Ocean" />
+                            <img data-bind="visible: isHover, event: { mouseleave: onMouseLeave }" src="~/images/geochart/hot/southern-ocean.png" alt="Southern Ocean" style="display: none;" />
+                        </li>
+                        <li data-bind="with: arcticOceanSwapper" class="arctic-ocean">
+                            <img data-bind="visible: isUp, event: { mouseenter: onMouseEnter }" src="~/images/geochart/up/arctic-ocean.png" alt="Arctic Ocean" />
+                            <img data-bind="visible: isHover, event: { mouseleave: onMouseLeave }" src="~/images/geochart/hot/arctic-ocean.png" alt="Arctic Ocean" style="display: none;" />
+                        </li>
+                        <li data-bind="with: indianOceanSwapper" class="indian-ocean">
+                            <img data-bind="visible: isUp, event: { mouseenter: onMouseEnter }" src="~/images/geochart/up/indian-ocean.png" alt="Indian Ocean" />
+                            <img data-bind="visible: isHover, event: { mouseleave: onMouseLeave }" src="~/images/geochart/hot/indian-ocean.png" alt="Indian Ocean" style="display: none;" />
+                        </li>*@
+                    </ul>
+                </div>
             </div>
         </div>
 

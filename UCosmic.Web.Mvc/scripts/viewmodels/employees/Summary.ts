@@ -1,3 +1,5 @@
+/// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
+/// <reference path="../../typings/kendo/kendo.all.d.ts" />
 /// <reference path="../../app/HistoryJS.ts" />
 /// <reference path="../../typings/history/history.d.ts" />
 /// <reference path="../../typings/d3/d3.d.ts" />
@@ -18,6 +20,7 @@ module Employees.ViewModels {
         elementId?: string;
         geoChartElementId: string;
         geoChartWaterOverlaysElementId?: string;
+        geoChartOverlayPhantomsElementId?: string;
         geoChartKeepAspectRatio?: boolean;
         tenantDomain: string;
     }
@@ -433,12 +436,12 @@ module Employees.ViewModels {
                     var sibling = jChild.siblings('image');
 
                     // put mouseleave on the hidden element (it will be the hot one)
-                    var eventName = display && display.toLowerCase() == 'none'
-                        ? 'mouseleave' : 'mouseenter';
-                    dChild.on(eventName, (): void => {
-                        jChild.hide();
-                        sibling.show();
-                    });
+                    //var eventName = display && display.toLowerCase() == 'none'
+                    //    ? 'mouseleave' : 'mouseenter';
+                    //dChild.on(eventName, (): void => {
+                    //    jChild.hide();
+                    //    sibling.show();
+                    //});
 
                     // nudge down caribbean
                     var src = dChild.attr('xlink:href');
@@ -462,6 +465,47 @@ module Employees.ViewModels {
         }
 
         //#endregion
+        //#region Tooltips
+
+        private _tooltips: KnockoutObservableArray<any>;
+        private _initTooltips = ko.computed((): void => { this._onInitTooktips(); });
+        private _onInitTooktips(): void {
+            var bindingsApplied = this.areBindingsApplied();
+            if (bindingsApplied && !this._tooltips) {
+                this._tooltips = ko.observableArray();
+                var jTarget = $('#{0} .pacific-ocean'
+                    .format(this.settings.geoChartOverlayPhantomsElementId));
+                jTarget.tooltip({
+                    content: 'tooltipping',
+                    items: '*',
+                    track: true,
+                    show: false,
+                    hide: false,
+                    tooltipClass: 'geochart',
+                    position: {
+                        my: 'left+15 bottom-15',
+                        within: '#{0}'.format(this.settings.geoChartElementId),
+                    },
+                });
+
+                jTarget = $('#{0} .gulf-of-mexico'
+                    .format(this.settings.geoChartOverlayPhantomsElementId));
+                jTarget.tooltip({
+                    content: 'tooltipping',
+                    items: '*',
+                    track: true,
+                    show: false,
+                    hide: false,
+                    tooltipClass: 'geochart',
+                    position: {
+                        my: 'right-15 bottom-15',
+                        within: '#{0}'.format(this.settings.geoChartElementId),
+                    },
+                });
+            }
+        }
+
+        //#endregion
         //#region Overlay Hotspot Image Swappers
 
         pacificOceanSwapper: ImageSwapper = new ImageSwapper();
@@ -472,6 +516,15 @@ module Employees.ViewModels {
         arcticOceanSwapper: ImageSwapper = new ImageSwapper();
         indianOceanSwapper: ImageSwapper = new ImageSwapper();
         antarcticaSwapper: ImageSwapper = new ImageSwapper();
+
+        pacificOceanTooltipper: ImageSwapper = new ImageSwapper();
+        gulfOfMexicoTooltipper: ImageSwapper = new ImageSwapper();
+        caribbeanSeaTooltipper: ImageSwapper = new ImageSwapper();
+        atlanticOceanTooltipper: ImageSwapper = new ImageSwapper();
+        southernOceanTooltipper: ImageSwapper = new ImageSwapper();
+        arcticOceanTooltipper: ImageSwapper = new ImageSwapper();
+        indianOceanTooltipper: ImageSwapper = new ImageSwapper();
+        antarcticaTooltipper: ImageSwapper = new ImageSwapper();
 
         //#endregion
         //#region Summaries

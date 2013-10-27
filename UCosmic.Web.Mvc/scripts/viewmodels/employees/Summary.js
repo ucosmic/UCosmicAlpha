@@ -1,5 +1,7 @@
 var Employees;
 (function (Employees) {
+    /// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
+    /// <reference path="../../typings/kendo/kendo.all.d.ts" />
     /// <reference path="../../app/HistoryJS.ts" />
     /// <reference path="../../typings/history/history.d.ts" />
     /// <reference path="../../typings/d3/d3.d.ts" />
@@ -110,6 +112,9 @@ var Employees;
                 this.isD3Undefined = ko.computed(function () {
                     return !Summary._isD3Defined();
                 });
+                this._initTooltips = ko.computed(function () {
+                    _this._onInitTooktips();
+                });
                 //#endregion
                 //#region Overlay Hotspot Image Swappers
                 this.pacificOceanSwapper = new ImageSwapper();
@@ -120,6 +125,14 @@ var Employees;
                 this.arcticOceanSwapper = new ImageSwapper();
                 this.indianOceanSwapper = new ImageSwapper();
                 this.antarcticaSwapper = new ImageSwapper();
+                this.pacificOceanTooltipper = new ImageSwapper();
+                this.gulfOfMexicoTooltipper = new ImageSwapper();
+                this.caribbeanSeaTooltipper = new ImageSwapper();
+                this.atlanticOceanTooltipper = new ImageSwapper();
+                this.southernOceanTooltipper = new ImageSwapper();
+                this.arcticOceanTooltipper = new ImageSwapper();
+                this.indianOceanTooltipper = new ImageSwapper();
+                this.antarcticaTooltipper = new ImageSwapper();
                 //#endregion
                 //#region Summaries
                 this.activitiesSummary = {
@@ -397,12 +410,12 @@ var Employees;
                         var sibling = jChild.siblings('image');
 
                         // put mouseleave on the hidden element (it will be the hot one)
-                        var eventName = display && display.toLowerCase() == 'none' ? 'mouseleave' : 'mouseenter';
-                        dChild.on(eventName, function () {
-                            jChild.hide();
-                            sibling.show();
-                        });
-
+                        //var eventName = display && display.toLowerCase() == 'none'
+                        //    ? 'mouseleave' : 'mouseenter';
+                        //dChild.on(eventName, (): void => {
+                        //    jChild.hide();
+                        //    sibling.show();
+                        //});
                         // nudge down caribbean
                         var src = dChild.attr('xlink:href');
                         if (src && src.toLowerCase().indexOf('caribbean') > 0) {
@@ -418,6 +431,40 @@ var Employees;
                 // now rearrange the g order
                 // now use jQuery to rearrange the order of the elements
                 $('#google_geochart svg > g > g:last-child').insertAfter('#google_geochart svg > g > g:nth-child(2)');
+            };
+
+            Summary.prototype._onInitTooktips = function () {
+                var bindingsApplied = this.areBindingsApplied();
+                if (bindingsApplied && !this._tooltips) {
+                    this._tooltips = ko.observableArray();
+                    var jTarget = $('#{0} .pacific-ocean'.format(this.settings.geoChartOverlayPhantomsElementId));
+                    jTarget.tooltip({
+                        content: 'tooltipping',
+                        items: '*',
+                        track: true,
+                        show: false,
+                        hide: false,
+                        tooltipClass: 'geochart',
+                        position: {
+                            my: 'left+15 bottom-15',
+                            within: '#{0}'.format(this.settings.geoChartElementId)
+                        }
+                    });
+
+                    jTarget = $('#{0} .gulf-of-mexico'.format(this.settings.geoChartOverlayPhantomsElementId));
+                    jTarget.tooltip({
+                        content: 'tooltipping',
+                        items: '*',
+                        track: true,
+                        show: false,
+                        hide: false,
+                        tooltipClass: 'geochart',
+                        position: {
+                            my: 'right-15 bottom-15',
+                            within: '#{0}'.format(this.settings.geoChartElementId)
+                        }
+                    });
+                }
             };
 
             Summary.prototype._loadActivitiesSummary = function () {

@@ -10,6 +10,7 @@ namespace UCosmic.Web.Mvc.Controllers
         [GET("employees.js", AppendTrailingSlash = false)]
         public virtual PartialViewResult Employees()
         {
+            Response.ContentType = "application/javascript";
             return PartialView();
         }
     }
