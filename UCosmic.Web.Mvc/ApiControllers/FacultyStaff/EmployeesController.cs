@@ -31,6 +31,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             _binaryData = binaryData;
         }
 
+        [CacheHttpGet(Duration = 3600)]
         [GET("{domain}/employees/activities/places")]
         public IEnumerable<ActivitiesPlaceApiModel> GetActivitiesPlaces(string domain, [FromUri] ActivitiesPlacesInputModel input)
         {
@@ -106,6 +107,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return models;
         }
 
+        [CacheHttpGet(Duration = 3600)]
         [GET("{domain}/employees/people/places")]
         public IEnumerable<PeoplePlaceApiModel> GetPeoplePlaces(string domain, [FromUri] PeoplePlacesInputModel input)
         {
@@ -181,6 +183,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return models;
         }
 
+        [CacheHttpGet(Duration = 3600)]
         [GET("{domain}/employees/activities/summary")]
         public ActivitiesSummary GetActivitiesSummary(string domain)
         {

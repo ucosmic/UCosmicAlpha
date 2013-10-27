@@ -83,7 +83,7 @@ module Employees.ViewModels {
             // viewmodel. additionally, https://www.google.com/jsapi script must be present
             google.load('visualization', '1', { 'packages': ['corechart', 'geochart'] });
 
-            google.setOnLoadCallback((): void => {
+            google.setOnLoadCallback((): void => { // when the packages are loaded
                 Summary._googleVisualizationLoadedPromise.resolve();
             });
             return Summary._googleVisualizationLoadedPromise;
@@ -93,10 +93,14 @@ module Employees.ViewModels {
         //#region Construction & Initialization
 
         constructor(public settings: SummarySettings) {
+            // bind history.js to statechange events
             HistoryJS.Adapter.bind(window, 'statechange', (): void => { this._onRouteChanged(); });
+
             // begin loading data
-            this.activitiesPlaceData.ready();
             this.activitiesSummaryData.ready();
+            this._initGeoChart();
+
+            // need to fire this once because route changes before history is bound
             this.bindingsApplied.done((): void => {
                 this._applyState();
             });
@@ -104,6 +108,7 @@ module Employees.ViewModels {
 
         private _bindingsApplied: JQueryDeferred<void> = $.Deferred();
         bindingsApplied: JQueryPromise<void> = this._bindingsApplied;
+        areBindingsApplied: KnockoutObservable<boolean> = ko.observable(false);
 
         applyBindings(): void {
             // did we get an element or an element id?
@@ -112,6 +117,7 @@ module Employees.ViewModels {
                 element = document.getElementById(this.settings.elementId);
             }
             ko.applyBindings(this, element);
+            this.areBindingsApplied(true);
             this._bindingsApplied.resolve();
         }
 
@@ -254,14 +260,13 @@ module Employees.ViewModels {
         geoChartSpinner = new App.Spinner(new App.SpinnerOptions(400, true));
         isGeoChartReady: KnockoutObservable<boolean> = ko.observable(false);
 
-        private _drawGeoChart(): void {
-
+        private static _geoChartOptions(settings: SummarySettings): google.visualization.GeoChartOptions {
             // options passed when drawing geochart
             var options: google.visualization.GeoChartOptions = {
                 displayMode: 'regions',
                 region: 'world',
-                keepAspectRatio: this.settings.geoChartKeepAspectRatio ? true : false,
-                height: this.settings.geoChartKeepAspectRatio ? 480 : 500,
+                keepAspectRatio: settings.geoChartKeepAspectRatio ? true : false,
+                height: settings.geoChartKeepAspectRatio ? 480 : 500,
                 colorAxis: {
                     minValue: 1,
                     colors: ['#dceadc', '#006400', ],
@@ -269,23 +274,51 @@ module Employees.ViewModels {
                 backgroundColor: '#acccfd', // google maps water color is a5bfdd, Doug's bg color is acccfd
                 //backgroundColor: 'transparent',
             };
+            return options;
+        }
 
+        private _newGeoChartDataTable(): google.visualization.DataTable {
             // create data table schema
             var dataTable = new google.visualization.DataTable();
             dataTable.addColumn('string', 'Place');
-            dataTable.addColumn('number', 'Total {0}'.format(this.isPivotPeople() ? 'People' : 'Activities'));
+            dataTable.addColumn('number', 'Total {0}'
+                .format(this.isPivotPeople() ? 'People' : 'Activities'));
+            return dataTable;
+        }
 
-            // go ahead and draw the chart with empty data to make sure its ready
-            this.geoChart.draw(dataTable, options).then((): void => {
-                this.isGeoChartReady(true);
+        private _initGeoChart(): JQueryPromise<void> {
+            // just draw the geochart to make sure something is displayed
+            // need to make sure we wait until it's done though before drying to draw again
+            var promise = $.Deferred();
 
-                // svg injection depends on both the chart being ready
-                // and bindings having been applied
-                this.bindingsApplied.done((): void=> {
-                    this._injectGeoChartOverlays();
+            if (!this.isGeoChartReady()) {
+                var dataTable = this._newGeoChartDataTable();
+                var options = Summary._geoChartOptions(this.settings);
+                this.geoChart.draw(dataTable, options).then((): void => {
+                    // svg injection depends on the chart being ready,
+                    // and bindings having been applied, and the
+                    // overlays being visible
+                    if (!this.isGeoChartReady()) {
+                        this.isGeoChartReady(true); // call this before overlaying to ensure positions
+                        this.bindingsApplied.done((): void=> {
+                            this._injectGeoChartOverlays();
+                        });
+                    }
+                    promise.resolve();
                 });
+            }
+            else {
+                promise.resolve();
+            }
+            return promise;
+        }
 
-                // now hit the server up for data and redraw
+        private _drawGeoChart(): void {
+            var options = Summary._geoChartOptions(this.settings);
+            var dataTable = this._newGeoChartDataTable();
+
+            // hit the server up for data and redraw
+            this._initGeoChart().then((): void => {
                 if (this.isPivotPeople()) {
                     this.peoplePlaceData.ready()
                         .done((places: ApiModels.PeoplePlaceApiModel[]): void => {
@@ -326,12 +359,16 @@ module Employees.ViewModels {
             if (!Summary._isD3Defined() || !this.settings.geoChartWaterOverlaysElementId)
                 return;
 
+            // overlay may already be drawn
+            if ($('#{0}_root'.format(this.settings.geoChartWaterOverlaysElementId)).length) return;
+
             // svg structure is as follows:
             //  svg
             //      > defs
             //      > g
             //          > rect
             //          > g - map
+            //              <----- inject new node here
             //          > g - legend
             //          > g - ?
             //          > g - tooltips
@@ -420,7 +457,7 @@ module Employees.ViewModels {
             // now use jQuery to rearrange the order of the elements
             $('#google_geochart svg > g > g:last-child')
                 .insertAfter('#google_geochart svg > g > g:nth-child(2)')
-                .removeAttr('id')
+            //.removeAttr('id')
             ;
         }
 

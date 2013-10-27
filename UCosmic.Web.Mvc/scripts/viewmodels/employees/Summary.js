@@ -72,6 +72,7 @@ var Employees;
                 this.settings = settings;
                 this._bindingsApplied = $.Deferred();
                 this.bindingsApplied = this._bindingsApplied;
+                this.areBindingsApplied = ko.observable(false);
                 this.pivot = ko.observable(parseInt(sessionStorage.getItem(Summary._pivotKey)) || Summary._pivotDefault);
                 this._pivotChanged = ko.computed(function () {
                     _this._onPivotChanged();
@@ -129,13 +130,16 @@ var Employees;
                 this.activitiesSummaryData = new DataCacher(function () {
                     return _this._loadActivitiesSummary();
                 });
+                // bind history.js to statechange events
                 HistoryJS.Adapter.bind(window, 'statechange', function () {
                     _this._onRouteChanged();
                 });
 
                 // begin loading data
-                this.activitiesPlaceData.ready();
                 this.activitiesSummaryData.ready();
+                this._initGeoChart();
+
+                // need to fire this once because route changes before history is bound
                 this.bindingsApplied.done(function () {
                     _this._applyState();
                 });
@@ -158,6 +162,7 @@ var Employees;
                     element = document.getElementById(this.settings.elementId);
                 }
                 ko.applyBindings(this, element);
+                this.areBindingsApplied(true);
                 this._bindingsApplied.resolve();
             };
 
@@ -241,36 +246,61 @@ var Employees;
                 return promise;
             };
 
-            Summary.prototype._drawGeoChart = function () {
-                var _this = this;
+            Summary._geoChartOptions = function (settings) {
                 // options passed when drawing geochart
                 var options = {
                     displayMode: 'regions',
                     region: 'world',
-                    keepAspectRatio: this.settings.geoChartKeepAspectRatio ? true : false,
-                    height: this.settings.geoChartKeepAspectRatio ? 480 : 500,
+                    keepAspectRatio: settings.geoChartKeepAspectRatio ? true : false,
+                    height: settings.geoChartKeepAspectRatio ? 480 : 500,
                     colorAxis: {
                         minValue: 1,
                         colors: ['#dceadc', '#006400']
                     },
                     backgroundColor: '#acccfd'
                 };
+                return options;
+            };
 
+            Summary.prototype._newGeoChartDataTable = function () {
                 // create data table schema
                 var dataTable = new google.visualization.DataTable();
                 dataTable.addColumn('string', 'Place');
                 dataTable.addColumn('number', 'Total {0}'.format(this.isPivotPeople() ? 'People' : 'Activities'));
+                return dataTable;
+            };
 
-                // go ahead and draw the chart with empty data to make sure its ready
-                this.geoChart.draw(dataTable, options).then(function () {
-                    _this.isGeoChartReady(true);
+            Summary.prototype._initGeoChart = function () {
+                var _this = this;
+                // just draw the geochart to make sure something is displayed
+                // need to make sure we wait until it's done though before drying to draw again
+                var promise = $.Deferred();
 
-                    // svg injection depends on both the chart being ready
-                    // and bindings having been applied
-                    _this.bindingsApplied.done(function () {
-                        _this._injectGeoChartOverlays();
+                if (!this.isGeoChartReady()) {
+                    var dataTable = this._newGeoChartDataTable();
+                    var options = Summary._geoChartOptions(this.settings);
+                    this.geoChart.draw(dataTable, options).then(function () {
+                        if (!_this.isGeoChartReady()) {
+                            _this.isGeoChartReady(true);
+                            _this.bindingsApplied.done(function () {
+                                _this._injectGeoChartOverlays();
+                            });
+                        }
+                        promise.resolve();
                     });
+                } else {
+                    promise.resolve();
+                }
+                return promise;
+            };
 
+            Summary.prototype._drawGeoChart = function () {
+                var _this = this;
+                var options = Summary._geoChartOptions(this.settings);
+                var dataTable = this._newGeoChartDataTable();
+
+                // hit the server up for data and redraw
+                this._initGeoChart().then(function () {
                     if (_this.isPivotPeople()) {
                         _this.peoplePlaceData.ready().done(function (places) {
                             $.each(places, function (i, dataPoint) {
@@ -301,12 +331,16 @@ var Employees;
                 if (!Summary._isD3Defined() || !this.settings.geoChartWaterOverlaysElementId)
                     return;
 
+                if ($('#{0}_root'.format(this.settings.geoChartWaterOverlaysElementId)).length)
+                    return;
+
                 // svg structure is as follows:
                 //  svg
                 //      > defs
                 //      > g
                 //          > rect
                 //          > g - map
+                //              <----- inject new node here
                 //          > g - legend
                 //          > g - ?
                 //          > g - tooltips
@@ -383,7 +417,7 @@ var Employees;
 
                 // now rearrange the g order
                 // now use jQuery to rearrange the order of the elements
-                $('#google_geochart svg > g > g:last-child').insertAfter('#google_geochart svg > g > g:nth-child(2)').removeAttr('id');
+                $('#google_geochart svg > g > g:last-child').insertAfter('#google_geochart svg > g > g:nth-child(2)');
             };
 
             Summary.prototype._loadActivitiesSummary = function () {

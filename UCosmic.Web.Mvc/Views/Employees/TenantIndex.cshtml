@@ -138,7 +138,7 @@
 
     <!--[if !IE | gt IE 8]><!-->
 
-    <script type="text/javascript" src="~/scripts/oss/d3.v3.js"></script>
+        <script type="text/javascript" src="~/scripts/oss/d3.v3.js"></script>
 
     <!--<![endif]-->
 
@@ -163,17 +163,17 @@
     <script type="text/javascript" src="~/scripts/viewmodels/employees/Summary.js"></script>
 
     <script type="text/javascript">
-        // Google API needs to be called outside of JQuery ready()
-        Employees.ViewModels.Summary.loadGoogleVisualization().done(function () {
-            var viewModel = new Employees.ViewModels.Summary({
-                element: $('[data-current-module=employees]')[0],
-                geoChartElementId: 'google_geochart',
-                geoChartWaterOverlaysElementId: 'google_geochart_water_overlays',
-                tenantDomain: '@ViewBag.EmployeesDomain',
-                geoChartKeepAspectRatio: false,
+            // Google API needs to be called outside of JQuery ready()
+            Employees.ViewModels.Summary.loadGoogleVisualization().done(function() {
+                var viewModel = new Employees.ViewModels.Summary({
+                    element: $('[data-current-module=employees]')[0],
+                    geoChartElementId: 'google_geochart',
+                    geoChartWaterOverlaysElementId: 'google_geochart_water_overlays',
+                    tenantDomain: '@ViewBag.EmployeesDomain',
+                    geoChartKeepAspectRatio: false,
+                });
+                viewModel.applyBindings();
             });
-            viewModel.applyBindings();
-        });
     </script>
 
 }
