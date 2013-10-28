@@ -37,6 +37,10 @@
             top: 311px;
         }
 
+        .google-geogchart-overlays .for-svg .caribbean-sea {
+            top: 316px;
+        }
+
         .google-geogchart-overlays .atlantic-ocean {
             width: 51px;
             height: 26px;
@@ -126,6 +130,10 @@
 
         .google-geogchart-overlays .keep-aspect-ratio-480 .caribbean-sea {
             top: 291px;
+        }
+
+        .google-geogchart-overlays .keep-aspect-ratio-480.for-svg .caribbean-sea {
+            top: 296px;
         }
 
         .google-geogchart-overlays .keep-aspect-ratio-480 .atlantic-ocean {
@@ -257,7 +265,7 @@
                 <div id="google_geochart_overlays" data-bind="visible: isGeoChartReady" class="google-geogchart-overlays" style="display: none;">
 
                     @* BODY OF WATER DATA VISUALIZERS *@
-                    <ul id="google_geochart_water_overlays" data-bind="visible: isD3Undefined, css: { 'keep-aspect-ratio-480': settings.geoChartKeepAspectRatio }">
+                    <ul id="google_geochart_water_overlays" data-bind="visible: isD3Undefined, css: { 'keep-aspect-ratio-480': settings.geoChartKeepAspectRatio, 'for-svg': isD3Defined }">
                         <li data-bind="with: pacificOceanSwapper" class="pacific-ocean">
                             <img data-bind="visible: isUp, event: { mouseenter: onMouseEnter }" src="~/images/geochart/up/pacific-ocean.png" alt="Pacific Ocean" />
                             <img data-bind="visible: isHover, event: { mouseleave: onMouseLeave }" src="~/images/geochart/hot/pacific-ocean.png" alt="Pacific Ocean" style="display: none;" />
@@ -302,36 +310,31 @@
                 </div>
 
                 @* PHANTOM OVERLAYS *@
-                <div id="google_geochart_phantoms" data-xbind="visible: isGeoChartReady" class="google-geogchart-overlays" style="xdisplay: none;">
+                <div id="google_geochart_phantoms" class="google-geogchart-overlays">
 
                     @* BODY OF WATER DATA VISUALIZERS *@
-                    <ul id="google_geochart_water_phantoms" data-bind="css: { 'keep-aspect-ratio-480': settings.geoChartKeepAspectRatio }">
-                        <li data-bind="with: pacificOceanTooltipper" class="pacific-ocean">
-                            <img data-xbind="event: { mouseenter: onMouseEnter, mouseleave: onMouseLeave }" src="~/images/transparent.png" alt="" />
+                    <ul id="google_geochart_water_phantoms" data-bind="css: { 'keep-aspect-ratio-480': settings.geoChartKeepAspectRatio, 'for-svg': isD3Defined }">
+                        <li class="pacific-ocean">
+                            <img data-bind="" src="~/images/transparent.png" alt="" />
                         </li>
-                        <li data-bind="with: gulfOfMexicoTooltipper" class="gulf-of-mexico">
-                            <img data-xbind="event: { mouseenter: onMouseEnter, mouseleave: onMouseLeave }" src="~/images/transparent.png" alt="" />
+                        <li class="gulf-of-mexico">
+                            <img src="~/images/transparent.png" alt="" />
                         </li>
-                        @*<li data-bind="with: caribbeanSeaSwapper" class="caribbean-sea">
-                            <img data-bind="visible: isUp, event: { mouseenter: onMouseEnter }" src="~/images/geochart/up/caribbean-sea.png" alt="Caribbean Sea" />
-                            <img data-bind="visible: isHover, event: { mouseleave: onMouseLeave }" src="~/images/geochart/hot/caribbean-sea.png" alt="Caribbean Sea" style="display: none;" />
+                        <li class="caribbean-sea">
+                            <img src="~/images/transparent.png" alt="" />
                         </li>
-                        <li data-bind="with: atlanticOceanSwapper" class="atlantic-ocean">
-                            <img data-bind="visible: isUp, event: { mouseenter: onMouseEnter }" src="~/images/geochart/up/atlantic-ocean.png" alt="Atlantic Ocean" />
-                            <img data-bind="visible: isHover, event: { mouseleave: onMouseLeave }" src="~/images/geochart/hot/atlantic-ocean.png" alt="Atlantic Ocean" style="display: none;" />
+                        <li class="atlantic-ocean">
+                            <img src="~/images/transparent.png" alt="" />
                         </li>
-                        <li data-bind="with: southernOceanSwapper" class="southern-ocean">
-                            <img data-bind="visible: isUp, event: { mouseenter: onMouseEnter }" src="~/images/geochart/up/southern-ocean.png" alt="Southern Ocean" />
-                            <img data-bind="visible: isHover, event: { mouseleave: onMouseLeave }" src="~/images/geochart/hot/southern-ocean.png" alt="Southern Ocean" style="display: none;" />
+                        <li class="southern-ocean">
+                            <img src="~/images/transparent.png" alt="" />
                         </li>
-                        <li data-bind="with: arcticOceanSwapper" class="arctic-ocean">
-                            <img data-bind="visible: isUp, event: { mouseenter: onMouseEnter }" src="~/images/geochart/up/arctic-ocean.png" alt="Arctic Ocean" />
-                            <img data-bind="visible: isHover, event: { mouseleave: onMouseLeave }" src="~/images/geochart/hot/arctic-ocean.png" alt="Arctic Ocean" style="display: none;" />
+                        <li class="arctic-ocean">
+                            <img src="~/images/transparent.png" alt="" />
                         </li>
-                        <li data-bind="with: indianOceanSwapper" class="indian-ocean">
-                            <img data-bind="visible: isUp, event: { mouseenter: onMouseEnter }" src="~/images/geochart/up/indian-ocean.png" alt="Indian Ocean" />
-                            <img data-bind="visible: isHover, event: { mouseleave: onMouseLeave }" src="~/images/geochart/hot/indian-ocean.png" alt="Indian Ocean" style="display: none;" />
-                        </li>*@
+                        <li class="indian-ocean">
+                            <img src="~/images/transparent.png" alt="" />
+                        </li>
                     </ul>
                 </div>
             </div>

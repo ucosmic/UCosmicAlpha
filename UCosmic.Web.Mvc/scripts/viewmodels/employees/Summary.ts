@@ -304,7 +304,7 @@ module Employees.ViewModels {
                     if (!this.isGeoChartReady()) {
                         this.isGeoChartReady(true); // call this before overlaying to ensure positions
                         this.bindingsApplied.done((): void=> {
-                            this._injectGeoChartOverlays();
+                            this._svgInjectWaterOverlays();
                         });
                     }
                     promise.resolve();
@@ -352,11 +352,15 @@ module Employees.ViewModels {
             return typeof d3 !== 'undefined';
         }
 
+        isD3Defined = ko.computed((): boolean => {
+            return Summary._isD3Defined();
+        });
+
         isD3Undefined = ko.computed((): boolean => {
             return !Summary._isD3Defined();
         });
 
-        private _injectGeoChartOverlays(): void {
+        private _svgInjectWaterOverlays(): void {
 
             // IE8 cannot load the d3 library
             if (!Summary._isD3Defined() || !this.settings.geoChartWaterOverlaysElementId)
@@ -377,91 +381,90 @@ module Employees.ViewModels {
             //          > g - tooltips
 
             // use d3 to select the first root g element from the geochart
-            var rootG = d3.select('#{0} svg > g'.format(this.settings.geoChartElementId));
+            var dGoogleG = d3.select('#{0} svg > g'.format(this.settings.geoChartElementId));
 
             // append a new g element to the geochart's root g element
             // all of the overlays will become children of this g element
-            var parentG = rootG.append('g')
+            var dInjectRoot = dGoogleG.append('g')
                 .attr('id', '{0}_root'.format(this.settings.geoChartWaterOverlaysElementId))
             ; // note this element's id will be removed later, it is here for testing only
 
             // iterate over the children of the overlays element
             // in the markup the overlays is a UL with each overlay as an LI
             // (however the following code does not take that into account)
-            var container = $('#{0}'.format(this.settings.geoChartWaterOverlaysElementId));
-            container.show(); // need to do this to get positions & dimensions from jQuery
-            var overlays = container.children();
-            $.each(overlays, (i: number, overlay: Element): void => {
-                // create a new d3 container for this overlay
-                var dOverlay = parentG.append('g');
-                var jOverlay = $(overlay);
-                $.each($(overlay).children(), (i: number, child: any): void => {
-                    var jChild = $(child);
-
-                    // currently this only supports image injection
-                    if (jChild.prop('tagName').toUpperCase() !== 'IMG') return;
-
-                    // need to compute position in case it is defined in a css class
-                    // it is the parent's offset (the overlay's offset) that determines both x and y
-                    var x = jOverlay.position().left;
-                    var y = jOverlay.position().top;
-
-                    // width and height will be accessible when shown
-                    var width = jChild.css('width');
-                    var height = jChild.css('height');
-                    var src = jChild.attr('src');
-                    var display = jChild.css('display');
-
-                    // append a d3 image to the overlay g element
-                    var image = dOverlay.append('image')
-                        .attr('xlink:href', src)
-                        .attr('x', x).attr('y', y)
-                        .attr('width', width).attr('height', height)
-                    ;
-
-                    // hide the hot image in the d3 overlay collection
-                    if (display && display.toLowerCase() == 'none') {
-                        image.attr('style', 'display: none;');
-                    }
-                });
-
-                // TODO: move this to a separate handler
-                // the images are now in the SVG, but they have no mouse events
-                // use d3 to iterate over each svg overlay
-                $.each($(dOverlay[0][0]).children(), (i: number, child: Element): void => {
-                    // the child is an SVG image, and has 1 SVG image sibling
-                    var jChild = $(child);
-                    var dChild = d3.select(child);
-                    var display = jChild.css('display');
-                    var sibling = jChild.siblings('image');
-
-                    // put mouseleave on the hidden element (it will be the hot one)
-                    //var eventName = display && display.toLowerCase() == 'none'
-                    //    ? 'mouseleave' : 'mouseenter';
-                    //dChild.on(eventName, (): void => {
-                    //    jChild.hide();
-                    //    sibling.show();
-                    //});
-
-                    // nudge down caribbean
-                    var src = dChild.attr('xlink:href');
-                    if (src && src.toLowerCase().indexOf('caribbean') > 0) {
-                        var oldY = dChild.attr('y');
-                        var newY = parseInt(oldY) + 5;
-                        dChild.attr('y', newY);
-                    }
-                });
+            var jContainer = $('#{0}'.format(this.settings.geoChartWaterOverlaysElementId));
+            jContainer.show(); // need to do this to get positions & dimensions from jQuery
+            var jOverlays = jContainer.children();
+            $.each(jOverlays, (i: number, overlay: Element): void => {
+                this._svgInjectWaterOverlay(dInjectRoot, overlay);
             });
 
+            jContainer.hide(); // no longer need dimensions, hide the HTML overlays
 
-            container.hide(); // no longer need dimensions, hide the HTML overlays
+            //this._svgApplyWaterOverlayHovers();
 
             // now rearrange the g order
             // now use jQuery to rearrange the order of the elements
             $('#google_geochart svg > g > g:last-child')
                 .insertAfter('#google_geochart svg > g > g:nth-child(2)')
-            //.removeAttr('id')
             ;
+        }
+
+        private _svgInjectWaterOverlay(root: D3.Selection, overlay: Element): D3.Selection {
+            // create a new d3 container for this overlay
+            var jOverlay = $(overlay);
+            var dOverlay = root.append('g').attr('class', jOverlay.attr('class'));
+            $.each($(overlay).children(), (i: number, child: any): void => {
+                var jChild = $(child);
+
+                // currently this only supports image injection
+                if (jChild.prop('tagName').toUpperCase() !== 'IMG') return;
+
+                // need to compute position in case it is defined in a css class
+                // it is the parent's offset (the overlay's offset) that determines both x and y
+                var x = jOverlay.position().left;
+                var y = jOverlay.position().top;
+
+                // width and height will be accessible when shown
+                var width = jChild.css('width');
+                var height = jChild.css('height');
+                var src = jChild.attr('src');
+                var display = jChild.css('display');
+
+                // append a d3 image to the overlay g element
+                var image = dOverlay.append('image')
+                    .attr('xlink:href', src)
+                    .attr('x', x).attr('y', y)
+                    .attr('width', width).attr('height', height)
+                ;
+
+                // hide the hot image in the d3 overlay collection & add classes to both images
+                if (display && display.toLowerCase() == 'none') {
+                    image.attr('class', 'hover').attr('style', 'display: none;');
+                }
+                else {
+                    image.attr('class', 'no-hover');
+                }
+            });
+
+            this._svgApplyWaterOverlayHover(dOverlay);
+
+            return dOverlay;
+        }
+
+        private _svgApplyWaterOverlayHover(dOverlay: D3.Selection): void {
+            // find the phantom for this overlay
+            var jOverlay = $('#{0} .{1}'
+                .format(this.settings.geoChartOverlayPhantomsElementId, dOverlay.attr('class')));
+            // listen to the phantom
+            jOverlay.on('mouseenter', (): void => {
+                dOverlay.select('image.hover').style('display', '');
+                dOverlay.select('image.no-hover').style('display', 'none');
+            });
+            jOverlay.on('mouseleave', (): void => {
+                dOverlay.select('image.no-hover').style('display', '');
+                dOverlay.select('image.hover').style('display', 'none');
+            });
         }
 
         //#endregion
@@ -508,6 +511,16 @@ module Employees.ViewModels {
         //#endregion
         //#region Overlay Hotspot Image Swappers
 
+        private static _waterOverlayClassNames: string[] = [
+            'pacific-ocean',
+            'gulf-of-mexico',
+            'caribbean-sea',
+            'atlantic-ocean',
+            'southern-ocean',
+            'arctic-ocean',
+            'indian-ocean',
+        ];
+
         pacificOceanSwapper: ImageSwapper = new ImageSwapper();
         gulfOfMexicoSwapper: ImageSwapper = new ImageSwapper();
         caribbeanSeaSwapper: ImageSwapper = new ImageSwapper();
@@ -516,15 +529,6 @@ module Employees.ViewModels {
         arcticOceanSwapper: ImageSwapper = new ImageSwapper();
         indianOceanSwapper: ImageSwapper = new ImageSwapper();
         antarcticaSwapper: ImageSwapper = new ImageSwapper();
-
-        pacificOceanTooltipper: ImageSwapper = new ImageSwapper();
-        gulfOfMexicoTooltipper: ImageSwapper = new ImageSwapper();
-        caribbeanSeaTooltipper: ImageSwapper = new ImageSwapper();
-        atlanticOceanTooltipper: ImageSwapper = new ImageSwapper();
-        southernOceanTooltipper: ImageSwapper = new ImageSwapper();
-        arcticOceanTooltipper: ImageSwapper = new ImageSwapper();
-        indianOceanTooltipper: ImageSwapper = new ImageSwapper();
-        antarcticaTooltipper: ImageSwapper = new ImageSwapper();
 
         //#endregion
         //#region Summaries
