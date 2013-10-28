@@ -201,12 +201,13 @@
                 element: $('[data-current-module=employees]')[0],
                 geoChartElementId: 'google_geochart',
                 geoChartWaterOverlaysElementId: 'google_geochart_water_overlays',
+                geoChartAntarcticaOverlayElementId: 'google_geochart_antarctica_overlay',
                 geoChartOverlayPhantomsElementId: 'google_geochart_phantoms',
                 tenantDomain: '@ViewBag.EmployeesDomain',
-                    geoChartKeepAspectRatio: true,
-                });
-                viewModel.applyBindings();
+                geoChartKeepAspectRatio: true,
             });
+            viewModel.applyBindings();
+        });
     </script>
 
 }
@@ -311,6 +312,16 @@
                     <div id="google_geochart_antarctica_overlay" data-bind="with: antarcticaSwapper" style="position: absolute; bottom: 0; left: 340px;">
                         <img data-bind="visible: isUp, event: { mouseenter: onMouseEnter }" src="~/images/geochart/up/antarctica.png" alt="Antarctica" />
                         <img data-bind="visible: isHover, event: { mouseleave: onMouseLeave }" src="~/images/geochart/hot/antarctica.png" alt="Antarctica" style="display: none;" />
+                        <div class="tooltip" style="display: none;">
+                            <div class="title">
+                                <strong>Antarctica</strong>
+                            </div>
+                            <div class="total">
+                                <span data-bind="visible: $parent.isPivotPeople()">Total People:</span>
+                                <span data-bind="visible: $parent.isPivotActivities()">Total Activities:</span>
+                                <strong>6</strong>
+                            </div>
+                        </div>
                     </div>
 
                     @* ACTIVITIES | PEOPLE BUTTONS OVERLAY *@
@@ -328,7 +339,7 @@
                         <li class="pacific-ocean">
                             <img data-bind="" src="~/images/transparent.png" alt="" />
                             <div class="tooltip" style="display: none;">
-                                <div class="place-name">
+                                <div class="title">
                                     <strong>Pacific Ocean</strong>
                                 </div>
                                 <div class="total">
@@ -341,7 +352,7 @@
                         <li class="gulf-of-mexico">
                             <img src="~/images/transparent.png" alt="" />
                             <div class="tooltip" style="display: none;">
-                                <div class="place-name">
+                                <div class="title">
                                     <strong>Gulf of Mexico</strong>
                                 </div>
                                 <div class="total">
@@ -354,7 +365,7 @@
                         <li class="caribbean-sea">
                             <img src="~/images/transparent.png" alt="" />
                             <div class="tooltip" style="display: none;">
-                                <div class="place-name">
+                                <div class="title">
                                     <strong>Caribbean Sea</strong>
                                 </div>
                                 <div class="total">
@@ -367,7 +378,7 @@
                         <li class="atlantic-ocean">
                             <img src="~/images/transparent.png" alt="" />
                             <div class="tooltip" style="display: none;">
-                                <div class="place-name">
+                                <div class="title">
                                     <strong>Atlantic Ocean</strong>
                                 </div>
                                 <div class="total">
@@ -380,7 +391,7 @@
                         <li class="southern-ocean">
                             <img src="~/images/transparent.png" alt="" />
                             <div class="tooltip" style="display: none;">
-                                <div class="place-name">
+                                <div class="title">
                                     <strong>Southern Ocean</strong>
                                 </div>
                                 <div class="total">
@@ -393,7 +404,7 @@
                         <li class="arctic-ocean">
                             <img src="~/images/transparent.png" alt="" />
                             <div class="tooltip" style="display: none;">
-                                <div class="place-name">
+                                <div class="title">
                                     <strong>Arctic Ocean</strong>
                                 </div>
                                 <div class="total">
@@ -406,7 +417,7 @@
                         <li class="indian-ocean">
                             <img src="~/images/transparent.png" alt="" />
                             <div class="tooltip" style="display: none;">
-                                <div class="place-name">
+                                <div class="title">
                                     <strong>Indian Ocean</strong>
                                 </div>
                                 <div class="total">

@@ -20,6 +20,7 @@ module Employees.ViewModels {
         elementId?: string;
         geoChartElementId: string;
         geoChartWaterOverlaysElementId?: string;
+        geoChartAntarcticaOverlayElementId?: string;
         geoChartOverlayPhantomsElementId?: string;
         geoChartKeepAspectRatio?: boolean;
         tenantDomain: string;
@@ -262,7 +263,6 @@ module Employees.ViewModels {
             document.getElementById(this.settings.geoChartElementId));
         geoChartSpinner = new App.Spinner(new App.SpinnerOptions(400, true));
         isGeoChartReady: KnockoutObservable<boolean> = ko.observable(false);
-        isGeoChartDataBound: KnockoutObservable<boolean> = ko.observable(false);
 
         private static _geoChartOptions(settings: SummarySettings): google.visualization.GeoChartOptions {
             // options passed when drawing geochart
@@ -320,7 +320,6 @@ module Employees.ViewModels {
         private _drawGeoChart(): void {
             var options = Summary._geoChartOptions(this.settings);
             var dataTable = this._newGeoChartDataTable();
-            this.isGeoChartDataBound(false);
 
             // hit the server up for data and redraw
             this._initGeoChart().then((): void => {
@@ -332,7 +331,7 @@ module Employees.ViewModels {
                             });
 
                             this.geoChart.draw(dataTable, options).then((): void => {
-                                this.isGeoChartDataBound(true);
+                                this._createOverlayTooltips();
                             });
                         });
                 }
@@ -344,7 +343,7 @@ module Employees.ViewModels {
                             });
 
                             this.geoChart.draw(dataTable, options).then((): void => {
-                                this.isGeoChartDataBound(true);
+                                this._createOverlayTooltips();
                             });
                         });
                 }
@@ -477,15 +476,11 @@ module Employees.ViewModels {
         //#region Tooltips
 
         private _tooltips: KnockoutObservableArray<JQuery> = ko.observableArray();
-        private _initTooltips = ko.computed((): void => { this._onInitTooltips(); });
-        private _onInitTooltips(): void {
-            var bindingsApplied = this.areBindingsApplied();
-            var isGeoChartDataBound = this.isGeoChartDataBound();
+        private _createOverlayTooltips(): void {
             var tooltips = this._tooltips();
-            if (!bindingsApplied) return;
 
-            // remove tooltips when chart is not databound
-            if (!isGeoChartDataBound && tooltips.length) {
+            // remove tooltips when they already exist
+            if (tooltips.length) {
                 // destroy all of the tooltips
                 $.each(this._tooltips(), (i: number, tooltip: JQuery): void => {
                     tooltip.tooltip('destroy');
@@ -493,40 +488,49 @@ module Employees.ViewModels {
                 this._tooltips([]);
             }
 
-            if (isGeoChartDataBound && !tooltips.length) {
-                var targetContainerId = this.isD3Defined()
-                    ? this.settings.geoChartOverlayPhantomsElementId
-                    : this.settings.geoChartWaterOverlaysElementId;
-                $.each(Summary._waterOverlayClassNames, (i: number, className: string): void => {
-                    var jTarget = $('#{0} .{1}'.format(targetContainerId, className));
-                    var jTooltip = $('#{0} .{1} .tooltip'
-                        .format(this.settings.geoChartOverlayPhantomsElementId, className));
-                    var tooltipContent = jTooltip.html() || 'tooltipping';
-                    jTarget.tooltip({
-                        content: tooltipContent,
-                        items: '*',
-                        track: true,
-                        show: false,
-                        hide: false,
-                        tooltipClass: 'geochart',
-                        position: {
-                            my: 'right-15 bottom-15',
-                            of: '.ui-tooltip-content',
-                            within: '#{0}'.format(this.settings.geoChartElementId),
-                        },
-                        create: function (e: any, ui: any) {
-                            //alert('created');
-                        },
-                        open: function (e: any, ui: any) {
-                            // get the width of the tooltip
-                            var width = ui.tooltip.find('.ui-tooltip-content').outerWidth();
-                            // set the width of the container
-                            ui.tooltip.css({ width: '{0}px'.format(width) });
-                        },
-                    });
-                    this._tooltips.push(jTarget);
-                });
-            }
+            var targetContainerId = this.isD3Defined()
+                ? this.settings.geoChartOverlayPhantomsElementId
+                : this.settings.geoChartWaterOverlaysElementId;
+            $.each(Summary._waterOverlayClassNames, (i: number, className: string): void => {
+                var target = $('#{0} .{1}'.format(targetContainerId, className));
+                var tooltip = $('#{0} .{1} .tooltip'
+                    .format(this.settings.geoChartOverlayPhantomsElementId, className));
+                var content = tooltip.html() || 'tooltip';
+                this._createOverlayTooltip(target, content);
+                this._tooltips.push(target);
+            });
+
+            // antarctica tooltip is in overlays container
+            var target = $('#{0}'.format(this.settings.geoChartAntarcticaOverlayElementId));
+            var tooltip = $('#{0} .tooltip'
+                .format(this.settings.geoChartAntarcticaOverlayElementId));
+            var content = tooltip.html();
+            this._createOverlayTooltip(target, content);
+        }
+
+        private _createOverlayTooltip(target: JQuery, content: string): void {
+            target.tooltip({
+                content: content || 'tooltip content goes here',
+                items: '*',
+                track: true,
+                show: false,
+                hide: false,
+                tooltipClass: 'geochart',
+                position: {
+                    my: 'right-15 bottom-15',
+                    of: '.ui-tooltip-content',
+                    within: '#{0}'.format(this.settings.geoChartElementId),
+                },
+                create: function (e: any, ui: any) {
+                    //alert('created');
+                },
+                open: function (e: any, ui: any) {
+                    // get the width of the tooltip
+                    var width = ui.tooltip.find('.ui-tooltip-content').outerWidth();
+                    // set the width of the container
+                    ui.tooltip.css({ width: '{0}px'.format(width) });
+                },
+            });
         }
 
         //#endregion

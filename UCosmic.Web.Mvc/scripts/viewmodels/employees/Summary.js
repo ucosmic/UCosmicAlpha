@@ -109,7 +109,6 @@ var Employees;
                 this.geoChart = new App.Google.GeoChart(document.getElementById(this.settings.geoChartElementId));
                 this.geoChartSpinner = new App.Spinner(new App.SpinnerOptions(400, true));
                 this.isGeoChartReady = ko.observable(false);
-                this.isGeoChartDataBound = ko.observable(false);
                 this.isD3Defined = ko.computed(function () {
                     return Summary._isD3Defined();
                 });
@@ -119,9 +118,6 @@ var Employees;
                 //#endregion
                 //#region Tooltips
                 this._tooltips = ko.observableArray();
-                this._initTooltips = ko.computed(function () {
-                    _this._onInitTooltips();
-                });
                 this.pacificOceanSwapper = new ImageSwapper();
                 this.gulfOfMexicoSwapper = new ImageSwapper();
                 this.caribbeanSeaSwapper = new ImageSwapper();
@@ -308,7 +304,6 @@ var Employees;
                 var _this = this;
                 var options = Summary._geoChartOptions(this.settings);
                 var dataTable = this._newGeoChartDataTable();
-                this.isGeoChartDataBound(false);
 
                 // hit the server up for data and redraw
                 this._initGeoChart().then(function () {
@@ -319,7 +314,7 @@ var Employees;
                             });
 
                             _this.geoChart.draw(dataTable, options).then(function () {
-                                _this.isGeoChartDataBound(true);
+                                _this._createOverlayTooltips();
                             });
                         });
                     } else {
@@ -329,7 +324,7 @@ var Employees;
                             });
 
                             _this.geoChart.draw(dataTable, options).then(function () {
-                                _this.isGeoChartDataBound(true);
+                                _this._createOverlayTooltips();
                             });
                         });
                     }
@@ -436,15 +431,11 @@ var Employees;
                 });
             };
 
-            Summary.prototype._onInitTooltips = function () {
+            Summary.prototype._createOverlayTooltips = function () {
                 var _this = this;
-                var bindingsApplied = this.areBindingsApplied();
-                var isGeoChartDataBound = this.isGeoChartDataBound();
                 var tooltips = this._tooltips();
-                if (!bindingsApplied)
-                    return;
 
-                if (!isGeoChartDataBound && tooltips.length) {
+                if (tooltips.length) {
                     // destroy all of the tooltips
                     $.each(this._tooltips(), function (i, tooltip) {
                         tooltip.tooltip('destroy');
@@ -452,38 +443,46 @@ var Employees;
                     this._tooltips([]);
                 }
 
-                if (isGeoChartDataBound && !tooltips.length) {
-                    var targetContainerId = this.isD3Defined() ? this.settings.geoChartOverlayPhantomsElementId : this.settings.geoChartWaterOverlaysElementId;
-                    $.each(Summary._waterOverlayClassNames, function (i, className) {
-                        var jTarget = $('#{0} .{1}'.format(targetContainerId, className));
-                        var jTooltip = $('#{0} .{1} .tooltip'.format(_this.settings.geoChartOverlayPhantomsElementId, className));
-                        var tooltipContent = jTooltip.html() || 'tooltipping';
-                        jTarget.tooltip({
-                            content: tooltipContent,
-                            items: '*',
-                            track: true,
-                            show: false,
-                            hide: false,
-                            tooltipClass: 'geochart',
-                            position: {
-                                my: 'right-15 bottom-15',
-                                of: '.ui-tooltip-content',
-                                within: '#{0}'.format(_this.settings.geoChartElementId)
-                            },
-                            create: function (e, ui) {
-                                //alert('created');
-                            },
-                            open: function (e, ui) {
-                                // get the width of the tooltip
-                                var width = ui.tooltip.find('.ui-tooltip-content').outerWidth();
+                var targetContainerId = this.isD3Defined() ? this.settings.geoChartOverlayPhantomsElementId : this.settings.geoChartWaterOverlaysElementId;
+                $.each(Summary._waterOverlayClassNames, function (i, className) {
+                    var target = $('#{0} .{1}'.format(targetContainerId, className));
+                    var tooltip = $('#{0} .{1} .tooltip'.format(_this.settings.geoChartOverlayPhantomsElementId, className));
+                    var content = tooltip.html() || 'tooltip';
+                    _this._createOverlayTooltip(target, content);
+                    _this._tooltips.push(target);
+                });
 
-                                // set the width of the container
-                                ui.tooltip.css({ width: '{0}px'.format(width) });
-                            }
-                        });
-                        _this._tooltips.push(jTarget);
-                    });
-                }
+                // antarctica tooltip is in overlays container
+                var target = $('#{0}'.format(this.settings.geoChartAntarcticaOverlayElementId));
+                var tooltip = $('#{0} .tooltip'.format(this.settings.geoChartAntarcticaOverlayElementId));
+                var content = tooltip.html();
+                this._createOverlayTooltip(target, content);
+            };
+
+            Summary.prototype._createOverlayTooltip = function (target, content) {
+                target.tooltip({
+                    content: content || 'tooltip content goes here',
+                    items: '*',
+                    track: true,
+                    show: false,
+                    hide: false,
+                    tooltipClass: 'geochart',
+                    position: {
+                        my: 'right-15 bottom-15',
+                        of: '.ui-tooltip-content',
+                        within: '#{0}'.format(this.settings.geoChartElementId)
+                    },
+                    create: function (e, ui) {
+                        //alert('created');
+                    },
+                    open: function (e, ui) {
+                        // get the width of the tooltip
+                        var width = ui.tooltip.find('.ui-tooltip-content').outerWidth();
+
+                        // set the width of the container
+                        ui.tooltip.css({ width: '{0}px'.format(width) });
+                    }
+                });
             };
 
             Summary.prototype._loadActivitiesSummary = function () {
