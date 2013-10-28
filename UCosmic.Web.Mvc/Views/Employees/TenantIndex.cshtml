@@ -109,17 +109,28 @@
                 }
 
         .ui-tooltip.geochart {
-            border-radius: 3px;
-            border: solid 1px #ccc;
-            max-width: 150px;
-            height: 48px;
+            max-width: 300px;
             font-family: Arial;
             font-size: 13px;
-            box-shadow: 1px 1px 1px 0 #999;
+            background-color: transparent;
+            background-image: none;
+            border-radius: 0;
+            border: 0;
         }
-        .ui-tooltip.geochart .ui-tooltip-content {
-            padding: 8px;
-        }
+
+            .ui-tooltip.geochart .ui-tooltip-content {
+                display: inline-block;
+                border-radius: 0;
+                border: solid 1px #ccc;
+                padding: 7px;
+                background-color: #fff;
+                box-shadow: 1px 1px 1px 0 #999;
+            }
+
+                .ui-tooltip.geochart .ui-tooltip-content .total {
+                    margin-top: 4px;
+                    padding-bottom: 1px;
+                }
     </style>
 
     @* POSITIONS FOR HEIGHT=480 AND keepAspectRadio=TRUE *@
@@ -159,7 +170,7 @@
 
     <!--[if !IE | gt IE 8]><!-->
 
-        <script type="text/javascript" src="~/scripts/oss/d3.v3.js"></script>
+    <script type="text/javascript" src="~/scripts/oss/d3.v3.js"></script>
 
     <!--<![endif]-->
 
@@ -184,14 +195,14 @@
     <script type="text/javascript" src="~/scripts/viewmodels/employees/Summary.js"></script>
 
     <script type="text/javascript">
-            // Google API needs to be called outside of JQuery ready()
-            Employees.ViewModels.Summary.loadGoogleVisualization().done(function() {
-                var viewModel = new Employees.ViewModels.Summary({
-                    element: $('[data-current-module=employees]')[0],
-                    geoChartElementId: 'google_geochart',
-                    geoChartWaterOverlaysElementId: 'google_geochart_water_overlays',
-                    geoChartOverlayPhantomsElementId: 'google_geochart_phantoms',
-                    tenantDomain: '@ViewBag.EmployeesDomain',
+        // Google API needs to be called outside of JQuery ready()
+        Employees.ViewModels.Summary.loadGoogleVisualization().done(function () {
+            var viewModel = new Employees.ViewModels.Summary({
+                element: $('[data-current-module=employees]')[0],
+                geoChartElementId: 'google_geochart',
+                geoChartWaterOverlaysElementId: 'google_geochart_water_overlays',
+                geoChartOverlayPhantomsElementId: 'google_geochart_phantoms',
+                tenantDomain: '@ViewBag.EmployeesDomain',
                     geoChartKeepAspectRatio: true,
                 });
                 viewModel.applyBindings();
@@ -246,7 +257,7 @@
                     <div class="on-right">
                         <div data-bind="visible: geoChartSpinner.isVisible">
                             <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
-                            <strong>Loading geographic summary...</strong>
+                            <strong>Loading summary data...</strong>
                         </div>
                     </div>
                 </div>
@@ -254,7 +265,7 @@
 
             @* GOOGLE CHART *@
             <div style="position: relative;">
-                
+
                 <div style="position: absolute; width: 100%; height: 480px; background-color: #acccfd;" data-bind="style: { height: settings.geoChartKeepAspectRatio ? '480px' : '500px' }"></div>
 
                 @* GEOCHART *@
@@ -316,24 +327,94 @@
                     <ul id="google_geochart_water_phantoms" data-bind="css: { 'keep-aspect-ratio-480': settings.geoChartKeepAspectRatio, 'for-svg': isD3Defined }">
                         <li class="pacific-ocean">
                             <img data-bind="" src="~/images/transparent.png" alt="" />
+                            <div class="tooltip" style="display: none;">
+                                <div class="place-name">
+                                    <strong>Pacific Ocean</strong>
+                                </div>
+                                <div class="total">
+                                    <span data-bind="visible: isPivotPeople">Total People:</span>
+                                    <span data-bind="visible: isPivotActivities">Total Activities:</span>
+                                    <strong>6</strong>
+                                </div>
+                            </div>
                         </li>
                         <li class="gulf-of-mexico">
                             <img src="~/images/transparent.png" alt="" />
+                            <div class="tooltip" style="display: none;">
+                                <div class="place-name">
+                                    <strong>Gulf of Mexico</strong>
+                                </div>
+                                <div class="total">
+                                    <span data-bind="visible: isPivotPeople">Total People:</span>
+                                    <span data-bind="visible: isPivotActivities">Total Activities:</span>
+                                    <strong>6</strong>
+                                </div>
+                            </div>
                         </li>
                         <li class="caribbean-sea">
                             <img src="~/images/transparent.png" alt="" />
+                            <div class="tooltip" style="display: none;">
+                                <div class="place-name">
+                                    <strong>Caribbean Sea</strong>
+                                </div>
+                                <div class="total">
+                                    <span data-bind="visible: isPivotPeople">Total People:</span>
+                                    <span data-bind="visible: isPivotActivities">Total Activities:</span>
+                                    <strong>6</strong>
+                                </div>
+                            </div>
                         </li>
                         <li class="atlantic-ocean">
                             <img src="~/images/transparent.png" alt="" />
+                            <div class="tooltip" style="display: none;">
+                                <div class="place-name">
+                                    <strong>Atlantic Ocean</strong>
+                                </div>
+                                <div class="total">
+                                    <span data-bind="visible: isPivotPeople">Total People:</span>
+                                    <span data-bind="visible: isPivotActivities">Total Activities:</span>
+                                    <strong>6</strong>
+                                </div>
+                            </div>
                         </li>
                         <li class="southern-ocean">
                             <img src="~/images/transparent.png" alt="" />
+                            <div class="tooltip" style="display: none;">
+                                <div class="place-name">
+                                    <strong>Southern Ocean</strong>
+                                </div>
+                                <div class="total">
+                                    <span data-bind="visible: isPivotPeople">Total People:</span>
+                                    <span data-bind="visible: isPivotActivities">Total Activities:</span>
+                                    <strong>6</strong>
+                                </div>
+                            </div>
                         </li>
                         <li class="arctic-ocean">
                             <img src="~/images/transparent.png" alt="" />
+                            <div class="tooltip" style="display: none;">
+                                <div class="place-name">
+                                    <strong>Arctic Ocean</strong>
+                                </div>
+                                <div class="total">
+                                    <span data-bind="visible: isPivotPeople">Total People:</span>
+                                    <span data-bind="visible: isPivotActivities">Total Activities:</span>
+                                    <strong>6</strong>
+                                </div>
+                            </div>
                         </li>
                         <li class="indian-ocean">
                             <img src="~/images/transparent.png" alt="" />
+                            <div class="tooltip" style="display: none;">
+                                <div class="place-name">
+                                    <strong>Indian Ocean</strong>
+                                </div>
+                                <div class="total">
+                                    <span data-bind="visible: isPivotPeople">Total People:</span>
+                                    <span data-bind="visible: isPivotActivities">Total Activities:</span>
+                                    <strong>6</strong>
+                                </div>
+                            </div>
                         </li>
                     </ul>
                 </div>

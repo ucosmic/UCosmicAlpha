@@ -109,14 +109,18 @@ var Employees;
                 this.geoChart = new App.Google.GeoChart(document.getElementById(this.settings.geoChartElementId));
                 this.geoChartSpinner = new App.Spinner(new App.SpinnerOptions(400, true));
                 this.isGeoChartReady = ko.observable(false);
+                this.isGeoChartDataBound = ko.observable(false);
                 this.isD3Defined = ko.computed(function () {
                     return Summary._isD3Defined();
                 });
                 this.isD3Undefined = ko.computed(function () {
                     return !Summary._isD3Defined();
                 });
+                //#endregion
+                //#region Tooltips
+                this._tooltips = ko.observableArray();
                 this._initTooltips = ko.computed(function () {
-                    _this._onInitTooktips();
+                    _this._onInitTooltips();
                 });
                 this.pacificOceanSwapper = new ImageSwapper();
                 this.gulfOfMexicoSwapper = new ImageSwapper();
@@ -304,6 +308,7 @@ var Employees;
                 var _this = this;
                 var options = Summary._geoChartOptions(this.settings);
                 var dataTable = this._newGeoChartDataTable();
+                this.isGeoChartDataBound(false);
 
                 // hit the server up for data and redraw
                 this._initGeoChart().then(function () {
@@ -313,7 +318,9 @@ var Employees;
                                 dataTable.addRow([dataPoint.placeName, dataPoint.personIds.length]);
                             });
 
-                            _this.geoChart.draw(dataTable, options);
+                            _this.geoChart.draw(dataTable, options).then(function () {
+                                _this.isGeoChartDataBound(true);
+                            });
                         });
                     } else {
                         _this.activitiesPlaceData.ready().done(function (places) {
@@ -321,7 +328,9 @@ var Employees;
                                 dataTable.addRow([dataPoint.placeName, dataPoint.activityIds.length]);
                             });
 
-                            _this.geoChart.draw(dataTable, options);
+                            _this.geoChart.draw(dataTable, options).then(function () {
+                                _this.isGeoChartDataBound(true);
+                            });
                         });
                     }
                 });
@@ -427,36 +436,52 @@ var Employees;
                 });
             };
 
-            Summary.prototype._onInitTooktips = function () {
+            Summary.prototype._onInitTooltips = function () {
+                var _this = this;
                 var bindingsApplied = this.areBindingsApplied();
-                if (bindingsApplied && !this._tooltips) {
-                    this._tooltips = ko.observableArray();
-                    var jTarget = $('#{0} .pacific-ocean'.format(this.settings.geoChartOverlayPhantomsElementId));
-                    jTarget.tooltip({
-                        content: 'tooltipping',
-                        items: '*',
-                        track: true,
-                        show: false,
-                        hide: false,
-                        tooltipClass: 'geochart',
-                        position: {
-                            my: 'left+15 bottom-15',
-                            within: '#{0}'.format(this.settings.geoChartElementId)
-                        }
-                    });
+                var isGeoChartDataBound = this.isGeoChartDataBound();
+                var tooltips = this._tooltips();
+                if (!bindingsApplied)
+                    return;
 
-                    jTarget = $('#{0} .gulf-of-mexico'.format(this.settings.geoChartOverlayPhantomsElementId));
-                    jTarget.tooltip({
-                        content: 'tooltipping',
-                        items: '*',
-                        track: true,
-                        show: false,
-                        hide: false,
-                        tooltipClass: 'geochart',
-                        position: {
-                            my: 'right-15 bottom-15',
-                            within: '#{0}'.format(this.settings.geoChartElementId)
-                        }
+                if (!isGeoChartDataBound && tooltips.length) {
+                    // destroy all of the tooltips
+                    $.each(this._tooltips(), function (i, tooltip) {
+                        tooltip.tooltip('destroy');
+                    });
+                    this._tooltips([]);
+                }
+
+                if (isGeoChartDataBound && !tooltips.length) {
+                    var targetContainerId = this.isD3Defined() ? this.settings.geoChartOverlayPhantomsElementId : this.settings.geoChartWaterOverlaysElementId;
+                    $.each(Summary._waterOverlayClassNames, function (i, className) {
+                        var jTarget = $('#{0} .{1}'.format(targetContainerId, className));
+                        var jTooltip = $('#{0} .{1} .tooltip'.format(_this.settings.geoChartOverlayPhantomsElementId, className));
+                        var tooltipContent = jTooltip.html() || 'tooltipping';
+                        jTarget.tooltip({
+                            content: tooltipContent,
+                            items: '*',
+                            track: true,
+                            show: false,
+                            hide: false,
+                            tooltipClass: 'geochart',
+                            position: {
+                                my: 'right-15 bottom-15',
+                                of: '.ui-tooltip-content',
+                                within: '#{0}'.format(_this.settings.geoChartElementId)
+                            },
+                            create: function (e, ui) {
+                                //alert('created');
+                            },
+                            open: function (e, ui) {
+                                // get the width of the tooltip
+                                var width = ui.tooltip.find('.ui-tooltip-content').outerWidth();
+
+                                // set the width of the container
+                                ui.tooltip.css({ width: '{0}px'.format(width) });
+                            }
+                        });
+                        _this._tooltips.push(jTarget);
                     });
                 }
             };

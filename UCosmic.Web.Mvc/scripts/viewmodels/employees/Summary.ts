@@ -262,6 +262,7 @@ module Employees.ViewModels {
             document.getElementById(this.settings.geoChartElementId));
         geoChartSpinner = new App.Spinner(new App.SpinnerOptions(400, true));
         isGeoChartReady: KnockoutObservable<boolean> = ko.observable(false);
+        isGeoChartDataBound: KnockoutObservable<boolean> = ko.observable(false);
 
         private static _geoChartOptions(settings: SummarySettings): google.visualization.GeoChartOptions {
             // options passed when drawing geochart
@@ -319,6 +320,7 @@ module Employees.ViewModels {
         private _drawGeoChart(): void {
             var options = Summary._geoChartOptions(this.settings);
             var dataTable = this._newGeoChartDataTable();
+            this.isGeoChartDataBound(false);
 
             // hit the server up for data and redraw
             this._initGeoChart().then((): void => {
@@ -329,7 +331,9 @@ module Employees.ViewModels {
                                 dataTable.addRow([dataPoint.placeName, dataPoint.personIds.length]);
                             });
 
-                            this.geoChart.draw(dataTable, options);
+                            this.geoChart.draw(dataTable, options).then((): void => {
+                                this.isGeoChartDataBound(true);
+                            });
                         });
                 }
                 else {
@@ -339,7 +343,9 @@ module Employees.ViewModels {
                                 dataTable.addRow([dataPoint.placeName, dataPoint.activityIds.length]);
                             });
 
-                            this.geoChart.draw(dataTable, options);
+                            this.geoChart.draw(dataTable, options).then((): void => {
+                                this.isGeoChartDataBound(true);
+                            });
                         });
                 }
             });
@@ -470,40 +476,55 @@ module Employees.ViewModels {
         //#endregion
         //#region Tooltips
 
-        private _tooltips: KnockoutObservableArray<any>;
-        private _initTooltips = ko.computed((): void => { this._onInitTooktips(); });
-        private _onInitTooktips(): void {
+        private _tooltips: KnockoutObservableArray<JQuery> = ko.observableArray();
+        private _initTooltips = ko.computed((): void => { this._onInitTooltips(); });
+        private _onInitTooltips(): void {
             var bindingsApplied = this.areBindingsApplied();
-            if (bindingsApplied && !this._tooltips) {
-                this._tooltips = ko.observableArray();
-                var jTarget = $('#{0} .pacific-ocean'
-                    .format(this.settings.geoChartOverlayPhantomsElementId));
-                jTarget.tooltip({
-                    content: 'tooltipping',
-                    items: '*',
-                    track: true,
-                    show: false,
-                    hide: false,
-                    tooltipClass: 'geochart',
-                    position: {
-                        my: 'left+15 bottom-15',
-                        within: '#{0}'.format(this.settings.geoChartElementId),
-                    },
-                });
+            var isGeoChartDataBound = this.isGeoChartDataBound();
+            var tooltips = this._tooltips();
+            if (!bindingsApplied) return;
 
-                jTarget = $('#{0} .gulf-of-mexico'
-                    .format(this.settings.geoChartOverlayPhantomsElementId));
-                jTarget.tooltip({
-                    content: 'tooltipping',
-                    items: '*',
-                    track: true,
-                    show: false,
-                    hide: false,
-                    tooltipClass: 'geochart',
-                    position: {
-                        my: 'right-15 bottom-15',
-                        within: '#{0}'.format(this.settings.geoChartElementId),
-                    },
+            // remove tooltips when chart is not databound
+            if (!isGeoChartDataBound && tooltips.length) {
+                // destroy all of the tooltips
+                $.each(this._tooltips(), (i: number, tooltip: JQuery): void => {
+                    tooltip.tooltip('destroy');
+                });
+                this._tooltips([]);
+            }
+
+            if (isGeoChartDataBound && !tooltips.length) {
+                var targetContainerId = this.isD3Defined()
+                    ? this.settings.geoChartOverlayPhantomsElementId
+                    : this.settings.geoChartWaterOverlaysElementId;
+                $.each(Summary._waterOverlayClassNames, (i: number, className: string): void => {
+                    var jTarget = $('#{0} .{1}'.format(targetContainerId, className));
+                    var jTooltip = $('#{0} .{1} .tooltip'
+                        .format(this.settings.geoChartOverlayPhantomsElementId, className));
+                    var tooltipContent = jTooltip.html() || 'tooltipping';
+                    jTarget.tooltip({
+                        content: tooltipContent,
+                        items: '*',
+                        track: true,
+                        show: false,
+                        hide: false,
+                        tooltipClass: 'geochart',
+                        position: {
+                            my: 'right-15 bottom-15',
+                            of: '.ui-tooltip-content',
+                            within: '#{0}'.format(this.settings.geoChartElementId),
+                        },
+                        create: function (e: any, ui: any) {
+                            //alert('created');
+                        },
+                        open: function (e: any, ui: any) {
+                            // get the width of the tooltip
+                            var width = ui.tooltip.find('.ui-tooltip-content').outerWidth();
+                            // set the width of the container
+                            ui.tooltip.css({ width: '{0}px'.format(width) });
+                        },
+                    });
+                    this._tooltips.push(jTarget);
                 });
             }
         }
