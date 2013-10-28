@@ -85,7 +85,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 places = places.Union(byId);
             }
 
-            var models = places.Select(place => new ActivitiesPlaceApiModel
+            var models = places.Distinct().Select(place => new ActivitiesPlaceApiModel
             {
                 PlaceId = place.RevisionId,
                 PlaceName = place.OfficialName,
@@ -161,7 +161,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 places = places.Union(byId);
             }
 
-            var models = places.Select(place => new PeoplePlaceApiModel
+            var models = places.Distinct().Select(place => new PeoplePlaceApiModel
             {
                 PlaceId = place.RevisionId,
                 PlaceName = place.OfficialName,

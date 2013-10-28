@@ -118,6 +118,14 @@ var Employees;
                 //#endregion
                 //#region Tooltips
                 this._tooltips = ko.observableArray();
+                this.pacificOceanTotal = ko.observable(0);
+                this.gulfOfMexicoTotal = ko.observable(0);
+                this.caribbeanSeaTotal = ko.observable(0);
+                this.atlanticOceanTotal = ko.observable(0);
+                this.southernOceanTotal = ko.observable(0);
+                this.arcticOceanTotal = ko.observable(0);
+                this.indianOceanTotal = ko.observable(0);
+                this.antarcticaTotal = ko.observable(0);
                 this.pacificOceanSwapper = new ImageSwapper();
                 this.gulfOfMexicoSwapper = new ImageSwapper();
                 this.caribbeanSeaSwapper = new ImageSwapper();
@@ -220,7 +228,8 @@ var Employees;
                 var _this = this;
                 var promise = $.Deferred();
                 var request = {
-                    countries: true
+                    countries: true,
+                    placeIds: Summary._overlayPlaceIds
                 };
                 this.geoChartSpinner.start();
                 Employees.Servers.ActivitiesPlaces(this.settings.tenantDomain, request).done(function (places) {
@@ -238,7 +247,8 @@ var Employees;
                 var _this = this;
                 var promise = $.Deferred();
                 var request = {
-                    countries: true
+                    countries: true,
+                    placeIds: Summary._overlayPlaceIds
                 };
                 this.geoChartSpinner.start();
                 Employees.Servers.PeoplePlaces(this.settings.tenantDomain, request).done(function (places) {
@@ -314,6 +324,7 @@ var Employees;
                             });
 
                             _this.geoChart.draw(dataTable, options).then(function () {
+                                _this._applyPeopleOverlayTotals(places);
                                 _this._createOverlayTooltips();
                             });
                         });
@@ -324,6 +335,7 @@ var Employees;
                             });
 
                             _this.geoChart.draw(dataTable, options).then(function () {
+                                _this._applyActivitiesOverlayTotals(places);
                                 _this._createOverlayTooltips();
                             });
                         });
@@ -485,6 +497,46 @@ var Employees;
                 });
             };
 
+            Summary.prototype._applyActivitiesOverlayTotals = function (places) {
+                this.pacificOceanTotal(this._getActivitiesOverlayTotal(places, 0));
+                this.gulfOfMexicoTotal(this._getActivitiesOverlayTotal(places, 1));
+                this.caribbeanSeaTotal(this._getActivitiesOverlayTotal(places, 2));
+                this.atlanticOceanTotal(this._getActivitiesOverlayTotal(places, 3));
+                this.southernOceanTotal(this._getActivitiesOverlayTotal(places, 4));
+                this.arcticOceanTotal(this._getActivitiesOverlayTotal(places, 5));
+                this.indianOceanTotal(this._getActivitiesOverlayTotal(places, 6));
+                this.antarcticaTotal(this._getActivitiesOverlayTotal(places, 7));
+            };
+
+            Summary.prototype._getActivitiesOverlayTotal = function (places, index) {
+                var total = Enumerable.From(places).Where(function (x) {
+                    return x.placeId == Summary._overlayPlaceIds[index];
+                }).Sum(function (x) {
+                    return x.activityIds.length;
+                });
+                return total || 0;
+            };
+
+            Summary.prototype._applyPeopleOverlayTotals = function (places) {
+                this.pacificOceanTotal(this._getPeopleOverlayTotal(places, 0));
+                this.gulfOfMexicoTotal(this._getPeopleOverlayTotal(places, 1));
+                this.caribbeanSeaTotal(this._getPeopleOverlayTotal(places, 2));
+                this.atlanticOceanTotal(this._getPeopleOverlayTotal(places, 3));
+                this.southernOceanTotal(this._getPeopleOverlayTotal(places, 4));
+                this.arcticOceanTotal(this._getPeopleOverlayTotal(places, 5));
+                this.indianOceanTotal(this._getPeopleOverlayTotal(places, 6));
+                this.antarcticaTotal(this._getPeopleOverlayTotal(places, 7));
+            };
+
+            Summary.prototype._getPeopleOverlayTotal = function (places, index) {
+                var total = Enumerable.From(places).Where(function (x) {
+                    return x.placeId == Summary._overlayPlaceIds[index];
+                }).Sum(function (x) {
+                    return x.personIds.length;
+                });
+                return total || 0;
+            };
+
             Summary.prototype._loadActivitiesSummary = function () {
                 var _this = this;
                 var promise = $.Deferred();
@@ -510,6 +562,28 @@ var Employees;
                 'southern-ocean',
                 'arctic-ocean',
                 'indian-ocean'
+            ];
+
+            Summary._overlayPlaceNames = [
+                'Pacific Ocean',
+                'Gulf of Mexico',
+                'Caribbean Sea',
+                'Atlantic Ocean',
+                'Southern Ocean',
+                'Arctic Ocean',
+                'Indian Ocean',
+                'Antarctica'
+            ];
+
+            Summary._overlayPlaceIds = [
+                7872,
+                7859,
+                7845,
+                8296,
+                7833,
+                7837,
+                7863,
+                17
             ];
             return Summary;
         })();

@@ -215,6 +215,7 @@ module Employees.ViewModels {
             var promise: JQueryDeferred<ApiModels.ActivitiesPlaceApiModel[]> = $.Deferred();
             var request: ApiModels.ActivitiesPlacesInputModel = {
                 countries: true,
+                placeIds: Summary._overlayPlaceIds,
             };
             this.geoChartSpinner.start();
             Servers.ActivitiesPlaces(this.settings.tenantDomain, request)
@@ -240,6 +241,7 @@ module Employees.ViewModels {
             var promise: JQueryDeferred<ApiModels.PeoplePlaceApiModel[]> = $.Deferred();
             var request: ApiModels.PeoplePlacesInputModel = {
                 countries: true,
+                placeIds: Summary._overlayPlaceIds,
             };
             this.geoChartSpinner.start();
             Servers.PeoplePlaces(this.settings.tenantDomain, request)
@@ -331,6 +333,7 @@ module Employees.ViewModels {
                             });
 
                             this.geoChart.draw(dataTable, options).then((): void => {
+                                this._applyPeopleOverlayTotals(places);
                                 this._createOverlayTooltips();
                             });
                         });
@@ -343,6 +346,7 @@ module Employees.ViewModels {
                             });
 
                             this.geoChart.draw(dataTable, options).then((): void => {
+                                this._applyActivitiesOverlayTotals(places);
                                 this._createOverlayTooltips();
                             });
                         });
@@ -534,7 +538,7 @@ module Employees.ViewModels {
         }
 
         //#endregion
-        //#region Overlay Hotspot Image Swappers
+        //#region Overlay Utilities
 
         private static _waterOverlayClassNames: string[] = [
             'pacific-ocean',
@@ -545,6 +549,81 @@ module Employees.ViewModels {
             'arctic-ocean',
             'indian-ocean',
         ];
+
+        private static _overlayPlaceNames: string[] = [
+            'Pacific Ocean',
+            'Gulf of Mexico',
+            'Caribbean Sea',
+            'Atlantic Ocean',
+            'Southern Ocean',
+            'Arctic Ocean',
+            'Indian Ocean',
+            'Antarctica',
+        ];
+
+        private static _overlayPlaceIds: number[] = [
+            7872, // Pacific Ocean
+            7859, // Gulf of Mexico
+            7845, // Caribbean Sea
+            8296, // Atlantic Ocean
+            7833, // Southern Ocean
+            7837, // Arctic Ocean
+            7863, // Indian Ocean
+            17, // Antarctica
+        ];
+
+        private _applyActivitiesOverlayTotals(places: ApiModels.ActivitiesPlaceApiModel[]): void {
+            this.pacificOceanTotal(this._getActivitiesOverlayTotal(places, 0));
+            this.gulfOfMexicoTotal(this._getActivitiesOverlayTotal(places, 1));
+            this.caribbeanSeaTotal(this._getActivitiesOverlayTotal(places, 2));
+            this.atlanticOceanTotal(this._getActivitiesOverlayTotal(places, 3));
+            this.southernOceanTotal(this._getActivitiesOverlayTotal(places, 4));
+            this.arcticOceanTotal(this._getActivitiesOverlayTotal(places, 5));
+            this.indianOceanTotal(this._getActivitiesOverlayTotal(places, 6));
+            this.antarcticaTotal(this._getActivitiesOverlayTotal(places, 7));
+        }
+
+        private _getActivitiesOverlayTotal(places: ApiModels.ActivitiesPlaceApiModel[], index: number): number {
+            var total = Enumerable.From(places)
+                .Where(function (x: ApiModels.ActivitiesPlaceApiModel): boolean {
+                    return x.placeId == Summary._overlayPlaceIds[index];
+                })
+                .Sum(function (x: ApiModels.ActivitiesPlaceApiModel): number {
+                    return x.activityIds.length;
+                });
+            return total || 0;
+        }
+
+        private _applyPeopleOverlayTotals(places: ApiModels.PeoplePlaceApiModel[]): void {
+            this.pacificOceanTotal(this._getPeopleOverlayTotal(places, 0));
+            this.gulfOfMexicoTotal(this._getPeopleOverlayTotal(places, 1));
+            this.caribbeanSeaTotal(this._getPeopleOverlayTotal(places, 2));
+            this.atlanticOceanTotal(this._getPeopleOverlayTotal(places, 3));
+            this.southernOceanTotal(this._getPeopleOverlayTotal(places, 4));
+            this.arcticOceanTotal(this._getPeopleOverlayTotal(places, 5));
+            this.indianOceanTotal(this._getPeopleOverlayTotal(places, 6));
+            this.antarcticaTotal(this._getPeopleOverlayTotal(places, 7));
+        }
+
+        private _getPeopleOverlayTotal(places: ApiModels.PeoplePlaceApiModel[], index: number): number {
+            var total = Enumerable.From(places)
+                .Where(function (x: ApiModels.PeoplePlaceApiModel): boolean {
+                    return x.placeId == Summary._overlayPlaceIds[index];
+                })
+                .Sum(function (x: ApiModels.PeoplePlaceApiModel): number {
+                    return x.personIds.length;
+                });
+            return total || 0;
+        }
+
+        pacificOceanTotal: KnockoutObservable<number> = ko.observable(0);
+        gulfOfMexicoTotal: KnockoutObservable<number> = ko.observable(0);
+        caribbeanSeaTotal: KnockoutObservable<number> = ko.observable(0);
+        atlanticOceanTotal: KnockoutObservable<number> = ko.observable(0);
+        southernOceanTotal: KnockoutObservable<number> = ko.observable(0);
+        arcticOceanTotal: KnockoutObservable<number> = ko.observable(0);
+        indianOceanTotal: KnockoutObservable<number> = ko.observable(0);
+        antarcticaTotal: KnockoutObservable<number> = ko.observable(0);
 
         pacificOceanSwapper: ImageSwapper = new ImageSwapper();
         gulfOfMexicoSwapper: ImageSwapper = new ImageSwapper();
