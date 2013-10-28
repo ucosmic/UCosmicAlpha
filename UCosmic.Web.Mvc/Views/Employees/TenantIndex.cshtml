@@ -11,9 +11,72 @@
 
 @section styles
 {
+    <link rel="stylesheet" type="text/css" href="~/styles/sass/sheets/employees/summary.css" />
+
     @* BASELINE POSITIONS FOR HEIGHT=500 AND keepAspectRadio=FALSE *@
     <style>
-        .google-geogchart-overlays .pacific-ocean {
+        #xgeochart_box .overlays .places.for-svg .ui .pacific-ocean img {
+            width: 44px;
+            height: 26px;
+        }
+
+        #xgeochart_box .overlays .places.for-svg .ui .gulf-of-mexico img {
+            width: 39px;
+            height: 21px;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        #xgeochart_box .overlays .places.for-svg .data .gulf-of-mexico {
+            top: 287px;
+        }
+
+        #xgeochart_box .overlays .places.for-svg .ui .gulf-of-mexico {
+            top: 286px;
+        }
+
+        #xgeochart_box.keep-aspect-ratio-480 .overlays .places.for-svg .data .gulf-of-mexico {
+            top: 270px;
+        }
+
+        #xgeochart_box.keep-aspect-ratio-480 .overlays .places.for-svg .ui .gulf-of-mexico {
+            top: 269px;
+        }
+
+        #xgeochart_box .overlays .places .caribbean-sea {
+            width: 74px;
+            height: 11px;
+            position: absolute;
+            left: 205px;
+            top: 311px;
+        }
+
+        #xgeochart_box .overlays .places.for-svg .ui .caribbean-sea img {
+            width: 74px;
+            height: 11px;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        #xgeochart_box .overlays .places.for-svg .data .caribbean-sea {
+            top: 318px;
+        }
+
+        #xgeochart_box .overlays .places.for-svg .ui .caribbean-sea {
+            top: 317px;
+        }
+
+        #xgeochart_box.keep-aspect-ratio-480 .overlays .places.for-svg .data .caribbean-sea {
+            top: 296px;
+        }
+
+        #xgeochart_box.keep-aspect-ratio-480 .overlays .places.for-svg .ui .caribbean-sea {
+            top: 295px;
+        }
+
+        /*.google-geogchart-overlays .pacific-ocean {
             width: 44px;
             height: 26px;
             position: absolute;
@@ -71,9 +134,9 @@
             position: absolute;
             left: 469px;
             top: 390px;
-        }
+        }*/
 
-        #google_geochart_datasource_overlay {
+        /*#google_geochart_datasource_overlay {
             position: absolute;
             top: 5px;
             right: 5px;
@@ -106,9 +169,10 @@
 
                 #google_geochart_datasource_overlay [type=button]:first-child {
                     border-right: solid 1px #000;
-                }
+                }*/
 
-        .ui-tooltip.geochart {
+        /*.ui-tooltip.geochart {
+            position: absolute;
             max-width: 300px;
             font-family: Arial;
             font-size: 13px;
@@ -130,10 +194,9 @@
                 .ui-tooltip.geochart .ui-tooltip-content .total {
                     margin-top: 4px;
                     padding-bottom: 1px;
-                }
+                }*/
     </style>
 
-    @* POSITIONS FOR HEIGHT=480 AND keepAspectRadio=TRUE *@
     <style>
         .google-geogchart-overlays .keep-aspect-ratio-480 .gulf-of-mexico {
             top: 270px;
@@ -199,11 +262,16 @@
         Employees.ViewModels.Summary.loadGoogleVisualization().done(function () {
             var viewModel = new Employees.ViewModels.Summary({
                 element: $('[data-current-module=employees]')[0],
+                tenantDomain: '@ViewBag.EmployeesDomain',
+                chart: {
+                    boxElementId: 'geochart_box',
+                    googleElementId: 'google_geochart',
+                    transparentImgSrc: '@Url.Content("~/images/transparent.png")',
+                },
                 geoChartElementId: 'google_geochart',
                 geoChartWaterOverlaysElementId: 'google_geochart_water_overlays',
                 geoChartAntarcticaOverlayElementId: 'google_geochart_antarctica_overlay',
                 geoChartOverlayPhantomsElementId: 'google_geochart_phantoms',
-                tenantDomain: '@ViewBag.EmployeesDomain',
                 geoChartKeepAspectRatio: true,
             });
             viewModel.applyBindings();
@@ -258,26 +326,92 @@
                     <div class="on-right">
                         <div data-bind="visible: geoChartSpinner.isVisible">
                             <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
-                            <strong>Loading summary data...</strong>
+                            <strong>Crunching the numbers...</strong>
                         </div>
                     </div>
                 </div>
             </div>
 
             @* GOOGLE CHART *@
-            <div style="position: relative;">
+            <div id="geochart_box" data-bind="css: { 'keep-aspect-ratio-480': settings.geoChartKeepAspectRatio }">
 
-                <div style="position: absolute; width: 100%; height: 480px; background-color: #acccfd;" data-bind="style: { height: settings.geoChartKeepAspectRatio ? '480px' : '500px' }"></div>
+                @* GEOCHART & BACKGROUND IMAGE *@
+                <div class="chart-bg"></div>
+                <div id="google_geochart"></div>
 
-                @* GEOCHART *@
-                <div id="google_geochart" style="width: 100%; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;">
+                @* CUSTOM OVERLAYS VERSION 2 *@
+                <div class="overlays">
+
+                    @* ACTIVITIES | PEOPLE BUTTONS OVERLAY *@
+                    <div class="data-pivoter group" data-bind="visible: isGeoChartReady">
+                        <input type="button" value="Activities" class="on-left" data-bind="click: pivotActivities, css: { active: isPivotActivities }" />
+                        <input type="button" value="People" class="on-left" data-bind="click: pivotPeople, css: { active: isPivotPeople }" />
+                    </div>
+
+                    <div class="places" data-bind="css: { 'for-svg': isD3Defined }">
+                        <ul class="data">
+                            <li class="pacific-ocean" title="Pacific Ocean" data-place-id="7872">
+                                <img src="~/images/geochart/up/pacific-ocean.png" alt="" class="no-hover" />
+                                <img src="~/images/geochart/hot/pacific-ocean.png" alt="" class="hover" style="display: none;" />
+                            </li>
+                            <li class="gulf-of-mexico" title="Gulf of Mexico" data-place-id="7859">
+                                <img src="~/images/geochart/up/gulf-of-mexico.png" alt="" class="no-hover" />
+                                <img src="~/images/geochart/hot/gulf-of-mexico.png" alt="" class="hover" style="display: none;" />
+                            </li>
+                            <li class="caribbean-sea" title="Caribbean Sea" data-place-id="7845">
+                                <img src="~/images/geochart/up/caribbean-sea.png" alt="" class="no-hover" />
+                                <img src="~/images/geochart/hot/caribbean-sea.png" alt="" class="hover" style="display: none;" />
+                            </li>
+                            <li class="atlantic-ocean" title="Atlantic Ocean" data-place-id="8296">
+                                <img src="~/images/geochart/up/atlantic-ocean.png" alt="" class="no-hover" />
+                                <img src="~/images/geochart/hot/atlantic-ocean.png" alt="" class="hover" style="display: none;" />
+                            </li>
+                            <li class="southern-ocean" title="Southern Ocean" data-place-id="7833">
+                                <img src="~/images/geochart/up/southern-ocean.png" alt="" class="no-hover" />
+                                <img src="~/images/geochart/hot/southern-ocean.png" alt="" class="hover" style="display: none;" />
+                            </li>
+                            <li class="arctic-ocean" title="Arctic Ocean" data-place-id="7837">
+                                <img src="~/images/geochart/up/arctic-ocean.png" alt="" class="no-hover" />
+                                <img src="~/images/geochart/hot/arctic-ocean.png" alt="" class="hover" style="display: none;" />
+                            </li>
+                            <li class="indian-ocean" title="Indian Ocean" data-place-id="7863">
+                                <img src="~/images/geochart/up/indian-ocean.png" alt="" class="no-hover" />
+                                <img src="~/images/geochart/hot/indian-ocean.png" alt="" class="hover" style="display: none;" />
+                            </li>
+                            <li class="antarctica" title="Antarctica" data-place-id="17">
+                                <img src="~/images/geochart/up/antarctica.png" alt="" class="no-hover" />
+                                <img src="~/images/geochart/hot/antarctica.png" alt="" class="hover" style="display: none;" />
+                            </li>
+                        </ul>
+
+                        <ul class="ui" data-bind="foreach: placeOverlays, visible: isGeoChartReady">
+                            <li data-bind="attr: { 'class': className }">
+                                <div class="hit" data-bind="with: imageSwapper">
+                                    <img data-bind="attr: { src: src }, event: { mouseenter: onMouseEnter, mouseleave: onMouseLeave }"
+                                        alt="" src="~/images/transparent.png" />
+                                </div>
+                                <div class="tooltip" style="display: none;">
+                                    <div class="title">
+                                        <strong data-bind="text: title"></strong>
+                                    </div>
+                                    <div class="total">
+                                        <span data-bind="visible: $parent.isPivotPeople()">Total People:</span>
+                                        <span data-bind="visible: $parent.isPivotActivities()">Total Activities:</span>
+                                        <strong data-bind="text: total">0</strong>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+
+                    </div>
                 </div>
+
 
                 @* CUSTOM OVERLAYS *@
                 <div id="google_geochart_overlays" data-bind="visible: isGeoChartReady" class="google-geogchart-overlays" style="display: none;">
 
                     @* BODY OF WATER DATA VISUALIZERS *@
-                    <ul id="google_geochart_water_overlays" data-bind="visible: isD3Undefined, css: { 'keep-aspect-ratio-480': settings.geoChartKeepAspectRatio, 'for-svg': isD3Defined }">
+                    @*<ul id="google_geochart_water_overlays" data-bind="visible: isD3Undefined, css: { 'keep-aspect-ratio-480': settings.geoChartKeepAspectRatio, 'for-svg': isD3Defined }">
                         <li data-bind="with: pacificOceanSwapper" class="pacific-ocean">
                             <img data-bind="visible: isUp, event: { mouseenter: onMouseEnter }" src="~/images/geochart/up/pacific-ocean.png" alt="Pacific Ocean" />
                             <img data-bind="visible: isHover, event: { mouseleave: onMouseLeave }" src="~/images/geochart/hot/pacific-ocean.png" alt="Pacific Ocean" style="display: none;" />
@@ -306,10 +440,10 @@
                             <img data-bind="visible: isUp, event: { mouseenter: onMouseEnter }" src="~/images/geochart/up/indian-ocean.png" alt="Indian Ocean" />
                             <img data-bind="visible: isHover, event: { mouseleave: onMouseLeave }" src="~/images/geochart/hot/indian-ocean.png" alt="Indian Ocean" style="display: none;" />
                         </li>
-                    </ul>
+                    </ul>*@
 
                     @* ANTARCTICA VISUALIZER *@
-                    <div id="google_geochart_antarctica_overlay" data-bind="with: antarcticaSwapper" style="position: absolute; bottom: 0; left: 340px;">
+                    @*<div id="google_geochart_antarctica_overlay" data-bind="with: antarcticaSwapper" style="position: absolute; bottom: 0; left: 340px;">
                         <img data-bind="visible: isUp, event: { mouseenter: onMouseEnter }" src="~/images/geochart/up/antarctica.png" alt="Antarctica" />
                         <img data-bind="visible: isHover, event: { mouseleave: onMouseLeave }" src="~/images/geochart/hot/antarctica.png" alt="Antarctica" style="display: none;" />
                         <div class="tooltip" style="display: none;">
@@ -319,23 +453,17 @@
                             <div class="total">
                                 <span data-bind="visible: $parent.isPivotPeople()">Total People:</span>
                                 <span data-bind="visible: $parent.isPivotActivities()">Total Activities:</span>
-                                    <strong data-bind="text: $parent.antarcticaTotal()">0</strong>
+                                <strong data-bind="text: $parent.antarcticaTotal()">0</strong>
                             </div>
                         </div>
-                    </div>
-
-                    @* ACTIVITIES | PEOPLE BUTTONS OVERLAY *@
-                    <div id="google_geochart_datasource_overlay" class="group">
-                        <input type="button" value="Activities" class="on-left" data-bind="click: pivotActivities, css: { active: isPivotActivities }" />
-                        <input type="button" value="People" class="on-left" data-bind="click: pivotPeople, css: { active: isPivotPeople }" />
-                    </div>
+                    </div>*@
                 </div>
 
                 @* PHANTOM OVERLAYS *@
                 <div id="google_geochart_phantoms" class="google-geogchart-overlays">
 
                     @* BODY OF WATER DATA VISUALIZERS *@
-                    <ul id="google_geochart_water_phantoms" data-bind="css: { 'keep-aspect-ratio-480': settings.geoChartKeepAspectRatio, 'for-svg': isD3Defined }">
+                    @*<ul id="google_geochart_water_phantoms" data-bind="css: { 'keep-aspect-ratio-480': settings.geoChartKeepAspectRatio, 'for-svg': isD3Defined }">
                         <li class="pacific-ocean">
                             <img data-bind="" src="~/images/transparent.png" alt="" />
                             <div class="tooltip" style="display: none;">
@@ -427,8 +555,14 @@
                                 </div>
                             </div>
                         </li>
-                    </ul>
+                    </ul>*@
                 </div>
+
+                @* ACTIVITIES | PEOPLE BUTTONS OVERLAY *@
+                @*<div id="google_geochart_datasource_overlay" class="group">
+                    <input type="button" value="Activities" class="on-left" data-bind="click: pivotActivities, css: { active: isPivotActivities }" />
+                    <input type="button" value="People" class="on-left" data-bind="click: pivotPeople, css: { active: isPivotPeople }" />
+                </div>*@
             </div>
         </div>
 

@@ -1,0 +1,220 @@
+﻿@import '../../../sass/bootstrap';
+
+#geochart_box {
+    position: relative;
+
+    .chart-bg {
+        position: absolute;
+        width: 100%;
+        height: 500px;
+        background-color: #acccfd;
+    }
+
+    .overlays {
+        .data-pivoter {
+            @include border-box;
+            border: solid 1px #000;
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            height: 20px;
+            background-color: #fff;
+            font-family: Arial;
+            font-size: 12px;
+
+            [type=button] {
+                @include border-radius(0);
+                border: 0;
+                margin: 0;
+                padding: 0;
+                background-color: transparent;
+                color: #000 !important;
+                height: 18px;
+                width: 70px;
+                cursor: pointer;
+                text-align: center;
+
+                &.active {
+                    font-weight: bold;
+                }
+
+                &:first-child {
+                    border-right: solid 1px #000;
+                }
+            }
+        }
+
+        .places {
+            li.pacific-ocean {
+                left: 68px;
+                top: 349px;
+                $width: 44px;
+                $height: 26px;
+                width: $width;
+                height: $height;
+                img {
+                    width: $width;
+                    height: $height;
+                }
+            }
+            li.gulf-of-mexico {
+                left: 160px;
+                top: 285px;
+                $width: 39px;
+                $height: 21px;
+                width: $width;
+                height: $height;
+                img {
+                    width: $width;
+                    height: $height;
+                }
+            }
+            li.caribbean-sea {
+                left: 203px;
+                top: 317px;
+                $width: 74px;
+                $height: 11px;
+                width: $width;
+                height: $height;
+                img {
+                    width: $width;
+                    height: $height;
+                }
+            }
+            li.atlantic-ocean {
+                left: 240px;
+                top: 265px;
+                $width: 51px;
+                $height: 26px;
+                width: $width;
+                height: $height;
+                img {
+                    width: $width;
+                    height: $height;
+                }
+            }
+            li.southern-ocean {
+                left: 280px;
+                top: 441px;
+                $width: 58px;
+                $height: 26px;
+                width: $width;
+                height: $height;
+                img {
+                    width: $width;
+                    height: $height;
+                }
+            }
+            li.arctic-ocean {
+                left: 330px;
+                top: 23px;
+                $width: 41px;
+                $height: 26px;
+                width: $width;
+                height: $height;
+                img {
+                    width: $width;
+                    height: $height;
+                }
+            }
+            li.indian-ocean {
+                left: 469px;
+                top: 390px;
+                $width: 41px;
+                $height: 26px;
+                width: $width;
+                height: $height;
+                img {
+                    width: $width;
+                    height: $height;
+                }
+            }
+            li.antarctica {
+                left: 340px;
+                bottom: 0;
+                $width: 285px;
+                $height: 35px;
+                width: $width;
+                height: $height;
+                img {
+                    width: $width;
+                    height: $height;
+                }
+            }
+            ul.data {
+                display: none;
+                li {
+                    position: absolute;
+                }
+            }
+            ul.ui {
+                li {
+                    position: absolute;
+                    border: solid 0 #000;
+                    line-height: 0;
+                    > * {
+                        position: absolute;
+                    }
+                    .hit img {
+                        position: absolute;
+                        border: solid 0 red; 
+                    }
+                }
+            }
+        }
+    }
+
+    &.keep-aspect-ratio-480 {
+        .chart-bg {
+            height: 480px;
+        }
+
+        .overlays {
+            .places {
+                li.gulf-of-mexico {
+                    top: 270px;
+                }
+                li.caribbean-sea {
+                    top: 296px;
+                }
+                li.atlantic-ocean {
+                    left: 248px;
+                    top: 245px;
+                }
+                li.southern-ocean {
+                    left: 280px;
+                    top: 401px;
+                }
+                li.indian-ocean {
+                    left: 475px;
+                    top: 350px;
+                }
+            }
+        }
+    }
+}
+
+.ui-tooltip.geochart {
+    position: absolute;
+    max-width: 300px;
+    font-family: Arial;
+    font-size: 13px;
+    background-color: transparent;
+    background-image: none;
+    border-radius: 0;
+    border: 0;
+
+    .ui-tooltip-content {
+        display: inline-block;
+        border-radius: 0;
+        border: solid 1px #ccc;
+        padding: 7px;
+        background-color: #fff;
+        box-shadow: 1px 1px 1px 0 #999;
+
+        .total {
+            margin-top: 4px;
+            padding-bottom: 1px;
+        }
+    }
+}

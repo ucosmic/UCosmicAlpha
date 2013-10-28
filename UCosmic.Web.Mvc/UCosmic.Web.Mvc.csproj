@@ -384,7 +384,7 @@
     <Compile Include="Helpers\ImageResizer.cs" />
     <Compile Include="Helpers\MimeMapper.cs" />
     <Compile Include="Helpers\NonHtmlOutputCacheAttribute.cs" />
-    <Compile Include="Helpers\OfflineDevelopmentExtensions.cs" />
+    <Compile Include="Helpers\CshtmlDevelopmentExtensions.cs" />
     <Compile Include="Helpers\WebApiExtensions.cs" />
     <Compile Include="Models\Activities\_Deprecated\_ActivityPutEditApiModel.cs" />
     <Compile Include="Models\Agreements\AgreementApiModel.cs" />
@@ -2368,6 +2368,9 @@
     <Content Include="images\icons\spinner\spinner-20-blue.gif" />
     <Content Include="images\icons\logo\user-voice-24-filled.png" />
     <Content Include="styles\reset.css" />
+    <Content Include="styles\sass\sheets\employees\summary.css">
+      <DependentUpon>summary.scss</DependentUpon>
+    </Content>
     <Content Include="styles\sass\sheets\maps.css">
       <DependentUpon>maps.scss</DependentUpon>
     </Content>
@@ -2377,6 +2380,12 @@
     <Content Include="styles\tenants\uwi.edu\layout.scss" />
     <Content Include="styles\tenants\uwi.edu\_brand.scss" />
     <Content Include="styles\tenants\uwi.edu\_values.scss" />
+    <Content Include="styles\sass\sheets\employees\summary.scss">
+      <Compile>True</Compile>
+      <Minify>True</Minify>
+      <CompileStyle>Nested</CompileStyle>
+      <DebugInfo>False</DebugInfo>
+    </Content>
     <None Include="styles\tenants\testshib.org\banner-logo.png" />
     <None Include="styles\tenants\testshib.org\designs.css">
       <DependentUpon>designs.scss</DependentUpon>

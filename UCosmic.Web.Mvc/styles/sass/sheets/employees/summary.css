@@ -1,0 +1,151 @@
+/* main sass bootstrap */
+/* suny brand values */
+#geochart_box {
+  position: relative; }
+  #geochart_box .chart-bg {
+    position: absolute;
+    width: 100%;
+    height: 500px;
+    background-color: #acccfd; }
+  #geochart_box .overlays .data-pivoter {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    border: solid 1px #000;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    height: 20px;
+    background-color: #fff;
+    font-family: Arial;
+    font-size: 12px; }
+    #geochart_box .overlays .data-pivoter [type=button] {
+      -moz-border-radius: 0;
+      -webkit-border-radius: 0;
+      border-radius: 0;
+      border: 0;
+      margin: 0;
+      padding: 0;
+      background-color: transparent;
+      color: #000 !important;
+      height: 18px;
+      width: 70px;
+      cursor: pointer;
+      text-align: center; }
+      #geochart_box .overlays .data-pivoter [type=button].active {
+        font-weight: bold; }
+      #geochart_box .overlays .data-pivoter [type=button]:first-child {
+        border-right: solid 1px #000; }
+  #geochart_box .overlays .places li.pacific-ocean {
+    left: 68px;
+    top: 349px;
+    width: 44px;
+    height: 26px; }
+    #geochart_box .overlays .places li.pacific-ocean img {
+      width: 44px;
+      height: 26px; }
+  #geochart_box .overlays .places li.gulf-of-mexico {
+    left: 160px;
+    top: 285px;
+    width: 39px;
+    height: 21px; }
+    #geochart_box .overlays .places li.gulf-of-mexico img {
+      width: 39px;
+      height: 21px; }
+  #geochart_box .overlays .places li.caribbean-sea {
+    left: 203px;
+    top: 317px;
+    width: 74px;
+    height: 11px; }
+    #geochart_box .overlays .places li.caribbean-sea img {
+      width: 74px;
+      height: 11px; }
+  #geochart_box .overlays .places li.atlantic-ocean {
+    left: 240px;
+    top: 265px;
+    width: 51px;
+    height: 26px; }
+    #geochart_box .overlays .places li.atlantic-ocean img {
+      width: 51px;
+      height: 26px; }
+  #geochart_box .overlays .places li.southern-ocean {
+    left: 280px;
+    top: 441px;
+    width: 58px;
+    height: 26px; }
+    #geochart_box .overlays .places li.southern-ocean img {
+      width: 58px;
+      height: 26px; }
+  #geochart_box .overlays .places li.arctic-ocean {
+    left: 330px;
+    top: 23px;
+    width: 41px;
+    height: 26px; }
+    #geochart_box .overlays .places li.arctic-ocean img {
+      width: 41px;
+      height: 26px; }
+  #geochart_box .overlays .places li.indian-ocean {
+    left: 469px;
+    top: 390px;
+    width: 41px;
+    height: 26px; }
+    #geochart_box .overlays .places li.indian-ocean img {
+      width: 41px;
+      height: 26px; }
+  #geochart_box .overlays .places li.antarctica {
+    left: 340px;
+    bottom: 0;
+    width: 285px;
+    height: 35px; }
+    #geochart_box .overlays .places li.antarctica img {
+      width: 285px;
+      height: 35px; }
+  #geochart_box .overlays .places ul.data {
+    display: none; }
+    #geochart_box .overlays .places ul.data li {
+      position: absolute; }
+  #geochart_box .overlays .places ul.ui li {
+    position: absolute;
+    border: solid 0 #000;
+    line-height: 0; }
+    #geochart_box .overlays .places ul.ui li > * {
+      position: absolute; }
+    #geochart_box .overlays .places ul.ui li .hit img {
+      position: absolute;
+      border: solid 0 red; }
+  #geochart_box.keep-aspect-ratio-480 .chart-bg {
+    height: 480px; }
+  #geochart_box.keep-aspect-ratio-480 .overlays .places li.gulf-of-mexico {
+    top: 270px; }
+  #geochart_box.keep-aspect-ratio-480 .overlays .places li.caribbean-sea {
+    top: 296px; }
+  #geochart_box.keep-aspect-ratio-480 .overlays .places li.atlantic-ocean {
+    left: 248px;
+    top: 245px; }
+  #geochart_box.keep-aspect-ratio-480 .overlays .places li.southern-ocean {
+    left: 280px;
+    top: 401px; }
+  #geochart_box.keep-aspect-ratio-480 .overlays .places li.indian-ocean {
+    left: 475px;
+    top: 350px; }
+
+.ui-tooltip.geochart {
+  position: absolute;
+  max-width: 300px;
+  font-family: Arial;
+  font-size: 13px;
+  background-color: transparent;
+  background-image: none;
+  border-radius: 0;
+  border: 0; }
+  .ui-tooltip.geochart .ui-tooltip-content {
+    display: inline-block;
+    border-radius: 0;
+    border: solid 1px #ccc;
+    padding: 7px;
+    background-color: #fff;
+    box-shadow: 1px 1px 1px 0 #999; }
+    .ui-tooltip.geochart .ui-tooltip-content .total {
+      margin-top: 4px;
+      padding-bottom: 1px; }
+

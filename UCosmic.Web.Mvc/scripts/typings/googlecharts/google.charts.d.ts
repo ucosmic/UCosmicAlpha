@@ -5,7 +5,22 @@ declare module google {
     function setOnLoadCallback(handler: () => void): void;
 
     module visualization {
-        function arrayToDataTable(data: any[]): DataTable;
+
+        // https://developers.google.com/chart/interactive/docs/reference#DataTable
+
+        export interface DataTableColumnDescription {
+            type?: string;
+            label?: string;
+            id?: string;
+            role?: string;
+            pattern?: string;
+        }
+
+        export interface DataObjectCell {
+            v?: any;
+            f?: string;
+            p?: any;
+        }
 
         export interface DataObjectColumn {
             type: string;
@@ -26,21 +41,6 @@ declare module google {
             p: any;
         }
 
-        export interface DataObjectCell {
-            v?: any;
-            f?: any;
-            p?: any;
-        }
-
-        export interface DataTableColumnDescription {
-            type?: string;
-            label?: string;
-            id?: string;
-            role?: string;
-            pattern?: string;
-        }
-
-        // https://developers.google.com/chart/interactive/docs/reference#DataTable
         export class DataTable {
             constructor(data?: any, version?: any);
             addColumn(type: string, label?: string, id?: string): number;
@@ -52,10 +52,12 @@ declare module google {
             addRows(array: any[]): number;
         }
 
+        function arrayToDataTable(data: any[]): DataTable;
+
         //https://google-developers.appspot.com/chart/interactive/docs/gallery/geochart
         export class GeoChart {
             constructor(element: Element);
-            draw(chart: DataTable, options: GeoChartOptions);
+            draw(chart: DataTable, options: GeoChartOptions): void;
         }
         export interface GeoChartOptions {
             backgroundColor?: any;
@@ -111,9 +113,9 @@ declare module google {
             trigger?: string;
         }
 
-        export class events {
-            static addListener(chart: any, eventName: string, callback: Function);
-            static addListener(chart: any, eventName: string, callback: () => any);
+        module events {
+            function addListener(chart: any, eventName: string, callback: Function): any;
+            function addListener(chart: any, eventName: string, callback: () => any): any;
         }
     }
 }

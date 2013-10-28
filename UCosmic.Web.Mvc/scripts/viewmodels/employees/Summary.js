@@ -24,22 +24,29 @@ var Employees;
         var DataGraphPivot = ViewModels.DataGraphPivot;
 
         var ImageSwapper = (function () {
-            function ImageSwapper() {
+            function ImageSwapper(noHoverSrc, hoverSrc) {
                 var _this = this;
-                this._state = ko.observable('up');
-                this.isUp = ko.computed(function () {
-                    return _this._state() == 'up';
+                this.hoverSrc = ko.observable('');
+                this.noHoverSrc = ko.observable('');
+                this._state = ko.observable('none');
+                this.isNoHover = ko.computed(function () {
+                    return _this._state() == 'none';
                 });
                 this.isHover = ko.computed(function () {
                     return _this._state() == 'hover';
                 });
+                this.src = ko.computed(function () {
+                    return _this.isHover() ? _this.hoverSrc() : _this.noHoverSrc();
+                });
+                this.noHoverSrc(noHoverSrc || '');
+                this.hoverSrc(hoverSrc || '');
             }
             ImageSwapper.prototype.onMouseEnter = function (self, e) {
                 this._state('hover');
             };
 
             ImageSwapper.prototype.onMouseLeave = function (self, e) {
-                this._state('up');
+                this._state('none');
             };
             return ImageSwapper;
         })();
@@ -144,6 +151,9 @@ var Employees;
                 this.activitiesSummaryData = new DataCacher(function () {
                     return _this._loadActivitiesSummary();
                 });
+                // parse the place overlays
+                this._parsePlaceOverlays();
+
                 // bind history.js to statechange events
                 HistoryJS.Adapter.bind(window, 'statechange', function () {
                     _this._onRouteChanged();
@@ -299,7 +309,8 @@ var Employees;
                         if (!_this.isGeoChartReady()) {
                             _this.isGeoChartReady(true);
                             _this.bindingsApplied.done(function () {
-                                _this._svgInjectWaterOverlays();
+                                //this._svgInjectWaterOverlays();
+                                _this._svgInjectPlaceOverlays();
                             });
                         }
                         promise.resolve();
@@ -324,8 +335,11 @@ var Employees;
                             });
 
                             _this.geoChart.draw(dataTable, options).then(function () {
-                                _this._applyPeopleOverlayTotals(places);
-                                _this._createOverlayTooltips();
+                                //this._applyPeopleOverlayTotals(places);
+                                _this._applyPeopleOverlayTotals2(places);
+
+                                //this._createOverlayTooltips();
+                                _this._createOverlayTooltips2();
                             });
                         });
                     } else {
@@ -335,11 +349,33 @@ var Employees;
                             });
 
                             _this.geoChart.draw(dataTable, options).then(function () {
-                                _this._applyActivitiesOverlayTotals(places);
-                                _this._createOverlayTooltips();
+                                //this._applyActivitiesOverlayTotals(places);
+                                _this._applyActivitiesOverlayTotals2(places);
+
+                                //this._createOverlayTooltips();
+                                _this._createOverlayTooltips2();
                             });
                         });
                     }
+                });
+            };
+
+            Summary.prototype._parsePlaceOverlays = function () {
+                var _this = this;
+                if (this.placeOverlays)
+                    return;
+                this.placeOverlays = ko.observableArray();
+                var overlays = $('#{0} .overlays .places .data'.format(this.settings.chart.boxElementId)).children();
+                $.each(overlays, function (i, overlay) {
+                    var jOverlay = $(overlay);
+                    var iOverlay = {
+                        total: ko.observable(0),
+                        placeId: parseInt(jOverlay.data('place-id')),
+                        title: jOverlay.attr('title'),
+                        className: jOverlay.attr('class'),
+                        imageSwapper: new ImageSwapper(jOverlay.find('img.no-hover').first().attr('src'), jOverlay.find('img.hover').first().attr('src'))
+                    };
+                    _this.placeOverlays.push(iOverlay);
                 });
             };
 
@@ -349,12 +385,14 @@ var Employees;
                 return typeof d3 !== 'undefined';
             };
 
-            Summary.prototype._svgInjectWaterOverlays = function () {
+            Summary.prototype._svgInjectPlaceOverlays = function () {
                 var _this = this;
-                if (!Summary._isD3Defined() || !this.settings.geoChartWaterOverlaysElementId)
+                if (!Summary._isD3Defined() || !this.settings.chart.googleElementId || !this.settings.chart.boxElementId)
                     return;
 
-                if ($('#{0}_root'.format(this.settings.geoChartWaterOverlaysElementId)).length)
+                // overlay may already be drawn
+                var dInjectRootElementId = '{0}_place_overlays_root'.format(this.settings.chart.googleElementId);
+                if ($('#{0}'.format(dInjectRootElementId)).length)
                     return;
 
                 // svg structure is as follows:
@@ -368,78 +406,151 @@ var Employees;
                 //          > g - ?
                 //          > g - tooltips
                 // use d3 to select the first root g element from the geochart
-                var dGoogleG = d3.select('#{0} svg > g'.format(this.settings.geoChartElementId));
+                var dGoogleG = d3.select('#{0} svg > g'.format(this.settings.chart.googleElementId));
 
-                // append a new g element to the geochart's root g element
                 // all of the overlays will become children of this g element
-                var dInjectRoot = dGoogleG.append('g').attr('id', '{0}_root'.format(this.settings.geoChartWaterOverlaysElementId));
+                var dInjectRoot = dGoogleG.append('g').attr('id', dInjectRootElementId);
 
-                // iterate over the children of the overlays element
-                // in the markup the overlays is a UL with each overlay as an LI
-                // (however the following code does not take that into account)
-                var jContainer = $('#{0}'.format(this.settings.geoChartWaterOverlaysElementId));
+                // iterate over the parsed place overlays
+                // first, need to show the data root in order to get valid positions
+                var jContainer = $('#{0} .overlays .places .data'.format(this.settings.chart.boxElementId));
                 jContainer.show();
-                var jOverlays = jContainer.children();
-                $.each(jOverlays, function (i, overlay) {
-                    _this._svgInjectWaterOverlay(dInjectRoot, overlay);
+
+                var overlays = this.placeOverlays();
+                $.each(overlays, function (i, overlay) {
+                    _this._svgInjectPlaceOverlay(dInjectRoot, overlay);
                 });
 
                 jContainer.hide();
 
-                //this._svgApplyWaterOverlayHovers();
-                // now rearrange the g order
                 // now use jQuery to rearrange the order of the elements
-                $('#google_geochart svg > g > g:last-child').insertAfter('#google_geochart svg > g > g:nth-child(2)');
+                $('#{0} svg > g > g:last-child'.format(this.settings.chart.googleElementId)).insertAfter('#{0} svg > g > g:nth-child(2)'.format(this.settings.chart.googleElementId));
             };
 
-            Summary.prototype._svgInjectWaterOverlay = function (root, overlay) {
-                // create a new d3 container for this overlay
-                var jOverlay = $(overlay);
-                var dOverlay = root.append('g').attr('class', jOverlay.attr('class'));
-                $.each($(overlay).children(), function (i, child) {
-                    var jChild = $(child);
+            //private _svgInjectWaterOverlays(): void {
+            //    // IE8 cannot load the d3 library
+            //    if (!Summary._isD3Defined() || !this.settings.geoChartWaterOverlaysElementId)
+            //        return;
+            //    // overlay may already be drawn
+            //    if ($('#{0}_root'.format(this.settings.geoChartWaterOverlaysElementId)).length) return;
+            //    // svg structure is as follows:
+            //    //  svg
+            //    //      > defs
+            //    //      > g
+            //    //          > rect
+            //    //          > g - map
+            //    //              <----- inject new node here
+            //    //          > g - legend
+            //    //          > g - ?
+            //    //          > g - tooltips
+            //    // use d3 to select the first root g element from the geochart
+            //    var dGoogleG = d3.select('#{0} svg > g'.format(this.settings.geoChartElementId));
+            //    // append a new g element to the geochart's root g element
+            //    // all of the overlays will become children of this g element
+            //    var dInjectRoot = dGoogleG.append('g')
+            //        .attr('id', '{0}_root'.format(this.settings.geoChartWaterOverlaysElementId))
+            //    ; // note this element's id will be removed later, it is here for testing only
+            //    // iterate over the children of the overlays element
+            //    // in the markup the overlays is a UL with each overlay as an LI
+            //    // (however the following code does not take that into account)
+            //    var jContainer = $('#{0}'.format(this.settings.geoChartWaterOverlaysElementId));
+            //    jContainer.show(); // need to do this to get positions & dimensions from jQuery
+            //    var jOverlays = jContainer.children();
+            //    $.each(jOverlays, (i: number, overlay: Element): void => {
+            //        this._svgInjectWaterOverlay(dInjectRoot, overlay);
+            //    });
+            //    jContainer.hide(); // no longer need dimensions, hide the HTML overlays
+            //    //this._svgApplyWaterOverlayHovers();
+            //    // now rearrange the g order
+            //    // now use jQuery to rearrange the order of the elements
+            //    $('#google_geochart svg > g > g:last-child')
+            //        .insertAfter('#google_geochart svg > g > g:nth-child(2)')
+            //    ;
+            //}
+            //private _svgInjectWaterOverlay(root: D3.Selection, overlay: Element): D3.Selection {
+            //    // create a new d3 container for this overlay
+            //    var jOverlay = $(overlay);
+            //    var dOverlay = root.append('g').attr('class', jOverlay.attr('class'));
+            //    $.each($(overlay).children(), (i: number, child: any): void => {
+            //        var jChild = $(child);
+            //        // currently this only supports image injection
+            //        if (jChild.prop('tagName').toUpperCase() !== 'IMG') return;
+            //        // need to compute position in case it is defined in a css class
+            //        // it is the parent's offset (the overlay's offset) that determines both x and y
+            //        var x = jOverlay.position().left;
+            //        var y = jOverlay.position().top;
+            //        // width and height will be accessible when shown
+            //        var width = jChild.css('width');
+            //        var height = jChild.css('height');
+            //        var src = jChild.attr('src');
+            //        var display = jChild.css('display');
+            //        // append a d3 image to the overlay g element
+            //        var image = dOverlay.append('image')
+            //            .attr('xlink:href', src)
+            //            .attr('x', x).attr('y', y)
+            //            .attr('width', width).attr('height', height)
+            //        ;
+            //        // hide the hot image in the d3 overlay collection & add classes to both images
+            //        if (display && display.toLowerCase() == 'none') {
+            //            image.attr('class', 'hover').attr('style', 'display: none;');
+            //        }
+            //        else {
+            //            image.attr('class', 'no-hover');
+            //        }
+            //    });
+            //    this._svgApplyWaterOverlayHover(dOverlay);
+            //    return dOverlay;
+            //}
+            Summary.prototype._svgInjectPlaceOverlay = function (root, overlay) {
+                //// create a new d3 container for this overlay
+                var jOverlay = $('#{0} .overlays .places .data .{1}'.format(this.settings.chart.boxElementId, overlay.className));
+                var dOverlay = root.append('g').attr('class', overlay.className);
 
-                    if (jChild.prop('tagName').toUpperCase() !== 'IMG')
-                        return;
+                // compute position based on data element positions
+                var x = jOverlay.position().left;
+                var y = jOverlay.position().top;
+                var width = jOverlay.outerWidth();
+                var height = jOverlay.outerHeight();
 
-                    // need to compute position in case it is defined in a css class
-                    // it is the parent's offset (the overlay's offset) that determines both x and y
-                    var x = jOverlay.position().left;
-                    var y = jOverlay.position().top;
+                // append a no-hover d3 image to the overlay g element
+                var noHoverImage = dOverlay.append('image').attr('xlink:href', overlay.imageSwapper.noHoverSrc()).attr('x', x).attr('y', y).attr('width', width).attr('height', height).attr('class', 'no-hover');
 
-                    // width and height will be accessible when shown
-                    var width = jChild.css('width');
-                    var height = jChild.css('height');
-                    var src = jChild.attr('src');
-                    var display = jChild.css('display');
+                // append a hover d3 image to the overlay g element
+                var hoverImage = dOverlay.append('image').attr('xlink:href', overlay.imageSwapper.hoverSrc()).attr('x', x).attr('y', y).attr('width', width).attr('height', height).attr('class', 'hover').attr('style', 'display: none;');
 
-                    // append a d3 image to the overlay g element
-                    var image = dOverlay.append('image').attr('xlink:href', src).attr('x', x).attr('y', y).attr('width', width).attr('height', height);
-
-                    if (display && display.toLowerCase() == 'none') {
-                        image.attr('class', 'hover').attr('style', 'display: none;');
-                    } else {
-                        image.attr('class', 'no-hover');
-                    }
-                });
-
-                this._svgApplyWaterOverlayHover(dOverlay);
+                this._svgApplyPlaceOverlayHover(overlay, noHoverImage, hoverImage);
 
                 return dOverlay;
             };
 
-            Summary.prototype._svgApplyWaterOverlayHover = function (dOverlay) {
-                // find the phantom for this overlay
-                var jOverlay = $('#{0} .{1}'.format(this.settings.geoChartOverlayPhantomsElementId, dOverlay.attr('class')));
+            //private _svgApplyWaterOverlayHover(dOverlay: D3.Selection): void {
+            //    // find the phantom for this overlay
+            //    var jOverlay = $('#{0} .{1}'
+            //        .format(this.settings.geoChartOverlayPhantomsElementId, dOverlay.attr('class')));
+            //    // listen to the phantom
+            //    jOverlay.on('mouseenter', (): void => {
+            //        dOverlay.select('image.hover').style('display', '');
+            //        dOverlay.select('image.no-hover').style('display', 'none');
+            //    });
+            //    jOverlay.on('mouseleave', (): void => {
+            //        dOverlay.select('image.no-hover').style('display', '');
+            //        dOverlay.select('image.hover').style('display', 'none');
+            //    });
+            //}
+            Summary.prototype._svgApplyPlaceOverlayHover = function (overlay, noHover, hover) {
+                // make the ui images transparent
+                overlay.imageSwapper.hoverSrc(this.settings.chart.transparentImgSrc);
+                overlay.imageSwapper.noHoverSrc(this.settings.chart.transparentImgSrc);
 
-                // listen to the phantom
-                jOverlay.on('mouseenter', function () {
-                    dOverlay.select('image.hover').style('display', '');
-                    dOverlay.select('image.no-hover').style('display', 'none');
-                });
-                jOverlay.on('mouseleave', function () {
-                    dOverlay.select('image.no-hover').style('display', '');
-                    dOverlay.select('image.hover').style('display', 'none');
+                // enable svg image hover swaps
+                overlay.imageSwapper.isHover.subscribe(function (newValue) {
+                    if (newValue) {
+                        hover.attr('style', '');
+                        noHover.attr('style', 'display:none');
+                    } else {
+                        noHover.attr('style', '');
+                        hover.attr('style', 'display:none');
+                    }
                 });
             };
 
@@ -471,6 +582,46 @@ var Employees;
                 this._createOverlayTooltip(target, content);
             };
 
+            Summary.prototype._createOverlayTooltips2 = function () {
+                var _this = this;
+                var tooltips = this._tooltips();
+
+                if (tooltips.length) {
+                    // destroy all of the tooltips
+                    $.each(this._tooltips(), function (i, tooltip) {
+                        tooltip.tooltip('destroy');
+                    });
+                    this._tooltips([]);
+                }
+
+                var overlays = this.placeOverlays();
+                $.each(overlays, function (i, overlay) {
+                    // the tooltips are in the place ui
+                    var jOverlay = $('#{0} .overlays .places .ui .{1}'.format(_this.settings.chart.boxElementId, overlay.className));
+                    var tooltip = jOverlay.find('.tooltip');
+                    var content = tooltip.html() || 'tooltip';
+                    _this._createOverlayTooltip2(jOverlay, content);
+                    _this._tooltips.push(jOverlay);
+                });
+                //var targetContainerId = this.isD3Defined()
+                //    ? this.settings.geoChartOverlayPhantomsElementId
+                //    : this.settings.geoChartWaterOverlaysElementId;
+                //$.each(Summary._waterOverlayClassNames, (i: number, className: string): void => {
+                //    var target = $('#{0} .{1}'.format(targetContainerId, className));
+                //    var tooltip = $('#{0} .{1} .tooltip'
+                //        .format(this.settings.geoChartOverlayPhantomsElementId, className));
+                //    var content = tooltip.html() || 'tooltip';
+                //    this._createOverlayTooltip(target, content);
+                //    this._tooltips.push(target);
+                //});
+                //// antarctica tooltip is in overlays container
+                //var target = $('#{0}'.format(this.settings.geoChartAntarcticaOverlayElementId));
+                //var tooltip = $('#{0} .tooltip'
+                //    .format(this.settings.geoChartAntarcticaOverlayElementId));
+                //var content = tooltip.html();
+                //this._createOverlayTooltip(target, content);
+            };
+
             Summary.prototype._createOverlayTooltip = function (target, content) {
                 target.tooltip({
                     content: content || 'tooltip content goes here',
@@ -486,6 +637,29 @@ var Employees;
                     },
                     create: function (e, ui) {
                         //alert('created');
+                    },
+                    open: function (e, ui) {
+                        // get the width of the tooltip
+                        var width = ui.tooltip.find('.ui-tooltip-content').outerWidth();
+
+                        // set the width of the container
+                        ui.tooltip.css({ width: '{0}px'.format(width) });
+                    }
+                });
+            };
+
+            Summary.prototype._createOverlayTooltip2 = function (target, content) {
+                target.tooltip({
+                    content: content || 'tooltip content goes here',
+                    items: '*',
+                    track: true,
+                    show: false,
+                    hide: false,
+                    tooltipClass: 'geochart',
+                    position: {
+                        my: 'right-15 bottom-15',
+                        of: '.ui-tooltip-content',
+                        within: '#{0}'.format(this.settings.chart.googleElementId)
                     },
                     open: function (e, ui) {
                         // get the width of the tooltip
@@ -517,6 +691,18 @@ var Employees;
                 return total || 0;
             };
 
+            Summary.prototype._applyActivitiesOverlayTotals2 = function (places) {
+                var placeOverlays = this.placeOverlays();
+                $.each(placeOverlays, function (i, overlay) {
+                    var total = Enumerable.From(places).Where(function (x) {
+                        return x.placeId == overlay.placeId;
+                    }).Sum(function (x) {
+                        return x.activityIds.length;
+                    });
+                    overlay.total(total);
+                });
+            };
+
             Summary.prototype._applyPeopleOverlayTotals = function (places) {
                 this.pacificOceanTotal(this._getPeopleOverlayTotal(places, 0));
                 this.gulfOfMexicoTotal(this._getPeopleOverlayTotal(places, 1));
@@ -526,6 +712,18 @@ var Employees;
                 this.arcticOceanTotal(this._getPeopleOverlayTotal(places, 5));
                 this.indianOceanTotal(this._getPeopleOverlayTotal(places, 6));
                 this.antarcticaTotal(this._getPeopleOverlayTotal(places, 7));
+            };
+
+            Summary.prototype._applyPeopleOverlayTotals2 = function (places) {
+                var placeOverlays = this.placeOverlays();
+                $.each(placeOverlays, function (i, overlay) {
+                    var total = Enumerable.From(places).Where(function (x) {
+                        return x.placeId == overlay.placeId;
+                    }).Sum(function (x) {
+                        return x.personIds.length;
+                    });
+                    overlay.total(total);
+                });
             };
 
             Summary.prototype._getPeopleOverlayTotal = function (places, index) {
