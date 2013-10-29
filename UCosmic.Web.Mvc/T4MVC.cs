@@ -150,6 +150,10 @@ namespace Links
             public static readonly string Flasher_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Flasher.min.js") ? Url("Flasher.min.js") : Url("Flasher.js");
                           
             public static readonly string Flasher_min_js = Url("Flasher.min.js");
+            public static readonly string HistoryJS_ts = Url("HistoryJS.ts");
+            public static readonly string HistoryJS_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/HistoryJS.min.js") ? Url("HistoryJS.min.js") : Url("HistoryJS.js");
+                          
+            public static readonly string HistoryJS_min_js = Url("HistoryJS.min.js");
             public static readonly string PagedSearch_ts = Url("PagedSearch.ts");
             public static readonly string PagedSearch_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/PagedSearch.min.js") ? Url("PagedSearch.min.js") : Url("PagedSearch.js");
                           
@@ -3525,6 +3529,16 @@ namespace Links
                 public static readonly string _layout_content_scss = Url("_layout-content.scss");
                 public static readonly string _layout_footer_scss = Url("_layout-footer.scss");
                 public static readonly string _layout_scss = Url("_layout.scss");
+                [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+                public static class employees {
+                    private const string URLPATH = "~/styles/sass/sheets/employees";
+                    public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+                    public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                    public static readonly string summary_scss = Url("summary.scss");
+                    public static readonly string summary_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/summary.min.css") ? Url("summary.min.css") : Url("summary.css");
+                         
+                }
+            
                 public static readonly string maps_scss = Url("maps.scss");
                 public static readonly string maps_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/maps.min.css") ? Url("maps.min.css") : Url("maps.css");
                      

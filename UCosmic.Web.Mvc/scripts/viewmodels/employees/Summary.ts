@@ -16,14 +16,8 @@
 module Employees.ViewModels {
 
     export interface SummarySettings {
-        element: Element;
-        elementId?: string;
-        geoChartElementId: string;
-        geoChartWaterOverlaysElementId?: string;
-        geoChartAntarcticaOverlayElementId?: string;
-        geoChartOverlayPhantomsElementId?: string;
-        geoChartKeepAspectRatio?: boolean;
         tenantDomain: string;
+        element: Element;
         chart: SummaryGeoChartSettings;
     }
 
@@ -31,6 +25,7 @@ module Employees.ViewModels {
         boxElementId: string;
         googleElementId: string;
         transparentImgSrc: string;
+        keepAspectRatio?: boolean;
     }
 
     export interface SummaryGeoChartPlaceOverlay {
@@ -148,10 +143,9 @@ module Employees.ViewModels {
         applyBindings(): void {
             // did we get an element or an element id?
             var element = this.settings.element;
-            if (!element) {
-                element = document.getElementById(this.settings.elementId);
+            if (element) {
+                ko.applyBindings(this, element);
             }
-            ko.applyBindings(this, element);
             this.areBindingsApplied(true);
             this._bindingsApplied.resolve();
         }
@@ -246,7 +240,7 @@ module Employees.ViewModels {
             var promise: JQueryDeferred<ApiModels.ActivitiesPlaceApiModel[]> = $.Deferred();
             var request: ApiModels.ActivitiesPlacesInputModel = {
                 countries: true,
-                placeIds: Summary._overlayPlaceIds,
+                placeIds: this._getOverlayPlaceIds(),
             };
             this.geoChartSpinner.start();
             Servers.ActivitiesPlaces(this.settings.tenantDomain, request)
@@ -272,7 +266,7 @@ module Employees.ViewModels {
             var promise: JQueryDeferred<ApiModels.PeoplePlaceApiModel[]> = $.Deferred();
             var request: ApiModels.PeoplePlacesInputModel = {
                 countries: true,
-                placeIds: Summary._overlayPlaceIds,
+                placeIds: this._getOverlayPlaceIds(),
             };
             this.geoChartSpinner.start();
             Servers.PeoplePlaces(this.settings.tenantDomain, request)
@@ -293,7 +287,7 @@ module Employees.ViewModels {
         //#region Google GeoChart
 
         geoChart: App.Google.GeoChart = new App.Google.GeoChart(
-            document.getElementById(this.settings.geoChartElementId));
+            document.getElementById(this.settings.chart.googleElementId));
         geoChartSpinner = new App.Spinner(new App.SpinnerOptions(400, true));
         isGeoChartReady: KnockoutObservable<boolean> = ko.observable(false);
 
@@ -302,8 +296,8 @@ module Employees.ViewModels {
             var options: google.visualization.GeoChartOptions = {
                 displayMode: 'regions',
                 region: 'world',
-                keepAspectRatio: settings.geoChartKeepAspectRatio ? true : false,
-                height: settings.geoChartKeepAspectRatio ? 480 : 500,
+                keepAspectRatio: settings.chart.keepAspectRatio ? true : false,
+                height: settings.chart.keepAspectRatio ? 480 : 500,
                 colorAxis: {
                     minValue: 1,
                     colors: ['#dceadc', '#006400', ],
@@ -338,7 +332,6 @@ module Employees.ViewModels {
                     if (!this.isGeoChartReady()) {
                         this.isGeoChartReady(true); // call this before overlaying to ensure positions
                         this.bindingsApplied.done((): void=> {
-                            //this._svgInjectWaterOverlays();
                             this._svgInjectPlaceOverlays();
                         });
                     }
@@ -365,10 +358,8 @@ module Employees.ViewModels {
                             });
 
                             this.geoChart.draw(dataTable, options).then((): void => {
-                                //this._applyPeopleOverlayTotals(places);
-                                this._applyPeopleOverlayTotals2(places);
-                                //this._createOverlayTooltips();
-                                this._createOverlayTooltips2();
+                                this._applyPeopleOverlayTotals(places);
+                                this._createOverlayTooltips();
                             });
                         });
                 }
@@ -380,10 +371,8 @@ module Employees.ViewModels {
                             });
 
                             this.geoChart.draw(dataTable, options).then((): void => {
-                                //this._applyActivitiesOverlayTotals(places);
-                                this._applyActivitiesOverlayTotals2(places);
-                                //this._createOverlayTooltips();
-                                this._createOverlayTooltips2();
+                                this._applyActivitiesOverlayTotals(places);
+                                this._createOverlayTooltips();
                             });
                         });
                 }
@@ -413,6 +402,15 @@ module Employees.ViewModels {
                 };
                 this.placeOverlays.push(iOverlay);
             });
+        }
+
+        private _getOverlayPlaceIds(): number[] {
+            var placeIds: number[] = Enumerable.From(this.placeOverlays())
+                .Select(function (x: SummaryGeoChartPlaceOverlay): number {
+                    return x.placeId;
+                })
+                .ToArray();
+            return placeIds;
         }
 
         //#endregion
@@ -484,100 +482,8 @@ module Employees.ViewModels {
             ;
         }
 
-        //private _svgInjectWaterOverlays(): void {
-
-        //    // IE8 cannot load the d3 library
-        //    if (!Summary._isD3Defined() || !this.settings.geoChartWaterOverlaysElementId)
-        //        return;
-
-        //    // overlay may already be drawn
-        //    if ($('#{0}_root'.format(this.settings.geoChartWaterOverlaysElementId)).length) return;
-
-        //    // svg structure is as follows:
-        //    //  svg
-        //    //      > defs
-        //    //      > g
-        //    //          > rect
-        //    //          > g - map
-        //    //              <----- inject new node here
-        //    //          > g - legend
-        //    //          > g - ?
-        //    //          > g - tooltips
-
-        //    // use d3 to select the first root g element from the geochart
-        //    var dGoogleG = d3.select('#{0} svg > g'.format(this.settings.geoChartElementId));
-
-        //    // append a new g element to the geochart's root g element
-        //    // all of the overlays will become children of this g element
-        //    var dInjectRoot = dGoogleG.append('g')
-        //        .attr('id', '{0}_root'.format(this.settings.geoChartWaterOverlaysElementId))
-        //    ; // note this element's id will be removed later, it is here for testing only
-
-        //    // iterate over the children of the overlays element
-        //    // in the markup the overlays is a UL with each overlay as an LI
-        //    // (however the following code does not take that into account)
-        //    var jContainer = $('#{0}'.format(this.settings.geoChartWaterOverlaysElementId));
-        //    jContainer.show(); // need to do this to get positions & dimensions from jQuery
-        //    var jOverlays = jContainer.children();
-        //    $.each(jOverlays, (i: number, overlay: Element): void => {
-        //        this._svgInjectWaterOverlay(dInjectRoot, overlay);
-        //    });
-
-        //    jContainer.hide(); // no longer need dimensions, hide the HTML overlays
-
-        //    //this._svgApplyWaterOverlayHovers();
-
-        //    // now rearrange the g order
-        //    // now use jQuery to rearrange the order of the elements
-        //    $('#google_geochart svg > g > g:last-child')
-        //        .insertAfter('#google_geochart svg > g > g:nth-child(2)')
-        //    ;
-        //}
-
-        //private _svgInjectWaterOverlay(root: D3.Selection, overlay: Element): D3.Selection {
-        //    // create a new d3 container for this overlay
-        //    var jOverlay = $(overlay);
-        //    var dOverlay = root.append('g').attr('class', jOverlay.attr('class'));
-        //    $.each($(overlay).children(), (i: number, child: any): void => {
-        //        var jChild = $(child);
-
-        //        // currently this only supports image injection
-        //        if (jChild.prop('tagName').toUpperCase() !== 'IMG') return;
-
-        //        // need to compute position in case it is defined in a css class
-        //        // it is the parent's offset (the overlay's offset) that determines both x and y
-        //        var x = jOverlay.position().left;
-        //        var y = jOverlay.position().top;
-
-        //        // width and height will be accessible when shown
-        //        var width = jChild.css('width');
-        //        var height = jChild.css('height');
-        //        var src = jChild.attr('src');
-        //        var display = jChild.css('display');
-
-        //        // append a d3 image to the overlay g element
-        //        var image = dOverlay.append('image')
-        //            .attr('xlink:href', src)
-        //            .attr('x', x).attr('y', y)
-        //            .attr('width', width).attr('height', height)
-        //        ;
-
-        //        // hide the hot image in the d3 overlay collection & add classes to both images
-        //        if (display && display.toLowerCase() == 'none') {
-        //            image.attr('class', 'hover').attr('style', 'display: none;');
-        //        }
-        //        else {
-        //            image.attr('class', 'no-hover');
-        //        }
-        //    });
-
-        //    this._svgApplyWaterOverlayHover(dOverlay);
-
-        //    return dOverlay;
-        //}
-
         private _svgInjectPlaceOverlay(root: D3.Selection, overlay: SummaryGeoChartPlaceOverlay): D3.Selection {
-            //// create a new d3 container for this overlay
+            // create a new d3 container for this overlay
             var jOverlay = $('#{0} .overlays .places .data .{1}'
                 .format(this.settings.chart.boxElementId, overlay.className));
             var dOverlay = root.append('g').attr('class', overlay.className);
@@ -609,21 +515,6 @@ module Employees.ViewModels {
             return dOverlay;
         }
 
-        //private _svgApplyWaterOverlayHover(dOverlay: D3.Selection): void {
-        //    // find the phantom for this overlay
-        //    var jOverlay = $('#{0} .{1}'
-        //        .format(this.settings.geoChartOverlayPhantomsElementId, dOverlay.attr('class')));
-        //    // listen to the phantom
-        //    jOverlay.on('mouseenter', (): void => {
-        //        dOverlay.select('image.hover').style('display', '');
-        //        dOverlay.select('image.no-hover').style('display', 'none');
-        //    });
-        //    jOverlay.on('mouseleave', (): void => {
-        //        dOverlay.select('image.no-hover').style('display', '');
-        //        dOverlay.select('image.hover').style('display', 'none');
-        //    });
-        //}
-
         private _svgApplyPlaceOverlayHover(overlay: SummaryGeoChartPlaceOverlay, noHover: D3.Selection, hover: D3.Selection): void {
             // make the ui images transparent
             overlay.imageSwapper.hoverSrc(this.settings.chart.transparentImgSrc);
@@ -646,39 +537,8 @@ module Employees.ViewModels {
         //#region Tooltips
 
         private _tooltips: KnockoutObservableArray<JQuery> = ko.observableArray();
+
         private _createOverlayTooltips(): void {
-            var tooltips = this._tooltips();
-
-            // remove tooltips when they already exist
-            if (tooltips.length) {
-                // destroy all of the tooltips
-                $.each(this._tooltips(), (i: number, tooltip: JQuery): void => {
-                    tooltip.tooltip('destroy');
-                });
-                this._tooltips([]);
-            }
-
-            var targetContainerId = this.isD3Defined()
-                ? this.settings.geoChartOverlayPhantomsElementId
-                : this.settings.geoChartWaterOverlaysElementId;
-            $.each(Summary._waterOverlayClassNames, (i: number, className: string): void => {
-                var target = $('#{0} .{1}'.format(targetContainerId, className));
-                var tooltip = $('#{0} .{1} .tooltip'
-                    .format(this.settings.geoChartOverlayPhantomsElementId, className));
-                var content = tooltip.html() || 'tooltip';
-                this._createOverlayTooltip(target, content);
-                this._tooltips.push(target);
-            });
-
-            // antarctica tooltip is in overlays container
-            var target = $('#{0}'.format(this.settings.geoChartAntarcticaOverlayElementId));
-            var tooltip = $('#{0} .tooltip'
-                .format(this.settings.geoChartAntarcticaOverlayElementId));
-            var content = tooltip.html();
-            this._createOverlayTooltip(target, content);
-        }
-
-        private _createOverlayTooltips2(): void {
             var tooltips = this._tooltips();
 
             // remove tooltips when they already exist
@@ -697,57 +557,12 @@ module Employees.ViewModels {
                     .format(this.settings.chart.boxElementId, overlay.className));
                 var tooltip = jOverlay.find('.tooltip');
                 var content = tooltip.html() || 'tooltip';
-                this._createOverlayTooltip2(jOverlay, content);
+                this._createOverlayTooltip(jOverlay, content);
                 this._tooltips.push(jOverlay);
             });
-
-
-            //var targetContainerId = this.isD3Defined()
-            //    ? this.settings.geoChartOverlayPhantomsElementId
-            //    : this.settings.geoChartWaterOverlaysElementId;
-            //$.each(Summary._waterOverlayClassNames, (i: number, className: string): void => {
-            //    var target = $('#{0} .{1}'.format(targetContainerId, className));
-            //    var tooltip = $('#{0} .{1} .tooltip'
-            //        .format(this.settings.geoChartOverlayPhantomsElementId, className));
-            //    var content = tooltip.html() || 'tooltip';
-            //    this._createOverlayTooltip(target, content);
-            //    this._tooltips.push(target);
-            //});
-
-            //// antarctica tooltip is in overlays container
-            //var target = $('#{0}'.format(this.settings.geoChartAntarcticaOverlayElementId));
-            //var tooltip = $('#{0} .tooltip'
-            //    .format(this.settings.geoChartAntarcticaOverlayElementId));
-            //var content = tooltip.html();
-            //this._createOverlayTooltip(target, content);
         }
 
         private _createOverlayTooltip(target: JQuery, content: string): void {
-            target.tooltip({
-                content: content || 'tooltip content goes here',
-                items: '*',
-                track: true,
-                show: false,
-                hide: false,
-                tooltipClass: 'geochart',
-                position: {
-                    my: 'right-15 bottom-15',
-                    of: '.ui-tooltip-content',
-                    within: '#{0}'.format(this.settings.geoChartElementId),
-                },
-                create: function (e: any, ui: any) {
-                    //alert('created');
-                },
-                open: function (e: any, ui: any) {
-                    // get the width of the tooltip
-                    var width = ui.tooltip.find('.ui-tooltip-content').outerWidth();
-                    // set the width of the container
-                    ui.tooltip.css({ width: '{0}px'.format(width) });
-                },
-            });
-        }
-
-        private _createOverlayTooltip2(target: JQuery, content: string): void {
             target.tooltip({
                 content: content || 'tooltip content goes here',
                 items: '*',
@@ -769,64 +584,7 @@ module Employees.ViewModels {
             });
         }
 
-        //#endregion
-        //#region Overlay Utilities
-
-        private static _waterOverlayClassNames: string[] = [
-            'pacific-ocean',
-            'gulf-of-mexico',
-            'caribbean-sea',
-            'atlantic-ocean',
-            'southern-ocean',
-            'arctic-ocean',
-            'indian-ocean',
-        ];
-
-        private static _overlayPlaceNames: string[] = [
-            'Pacific Ocean',
-            'Gulf of Mexico',
-            'Caribbean Sea',
-            'Atlantic Ocean',
-            'Southern Ocean',
-            'Arctic Ocean',
-            'Indian Ocean',
-            'Antarctica',
-        ];
-
-        private static _overlayPlaceIds: number[] = [
-            7872, // Pacific Ocean
-            7859, // Gulf of Mexico
-            7845, // Caribbean Sea
-            8296, // Atlantic Ocean
-            7833, // Southern Ocean
-            7837, // Arctic Ocean
-            7863, // Indian Ocean
-            17, // Antarctica
-        ];
-
         private _applyActivitiesOverlayTotals(places: ApiModels.ActivitiesPlaceApiModel[]): void {
-            this.pacificOceanTotal(this._getActivitiesOverlayTotal(places, 0));
-            this.gulfOfMexicoTotal(this._getActivitiesOverlayTotal(places, 1));
-            this.caribbeanSeaTotal(this._getActivitiesOverlayTotal(places, 2));
-            this.atlanticOceanTotal(this._getActivitiesOverlayTotal(places, 3));
-            this.southernOceanTotal(this._getActivitiesOverlayTotal(places, 4));
-            this.arcticOceanTotal(this._getActivitiesOverlayTotal(places, 5));
-            this.indianOceanTotal(this._getActivitiesOverlayTotal(places, 6));
-            this.antarcticaTotal(this._getActivitiesOverlayTotal(places, 7));
-        }
-
-        private _getActivitiesOverlayTotal(places: ApiModels.ActivitiesPlaceApiModel[], index: number): number {
-            var total = Enumerable.From(places)
-                .Where(function (x: ApiModels.ActivitiesPlaceApiModel): boolean {
-                    return x.placeId == Summary._overlayPlaceIds[index];
-                })
-                .Sum(function (x: ApiModels.ActivitiesPlaceApiModel): number {
-                    return x.activityIds.length;
-                });
-            return total || 0;
-        }
-
-        private _applyActivitiesOverlayTotals2(places: ApiModels.ActivitiesPlaceApiModel[]): void {
             var placeOverlays = this.placeOverlays();
             $.each(placeOverlays, (i: number, overlay: SummaryGeoChartPlaceOverlay): void => {
                 var total = Enumerable.From(places)
@@ -841,17 +599,6 @@ module Employees.ViewModels {
         }
 
         private _applyPeopleOverlayTotals(places: ApiModels.PeoplePlaceApiModel[]): void {
-            this.pacificOceanTotal(this._getPeopleOverlayTotal(places, 0));
-            this.gulfOfMexicoTotal(this._getPeopleOverlayTotal(places, 1));
-            this.caribbeanSeaTotal(this._getPeopleOverlayTotal(places, 2));
-            this.atlanticOceanTotal(this._getPeopleOverlayTotal(places, 3));
-            this.southernOceanTotal(this._getPeopleOverlayTotal(places, 4));
-            this.arcticOceanTotal(this._getPeopleOverlayTotal(places, 5));
-            this.indianOceanTotal(this._getPeopleOverlayTotal(places, 6));
-            this.antarcticaTotal(this._getPeopleOverlayTotal(places, 7));
-        }
-
-        private _applyPeopleOverlayTotals2(places: ApiModels.PeoplePlaceApiModel[]): void {
             var placeOverlays = this.placeOverlays();
             $.each(placeOverlays, (i: number, overlay: SummaryGeoChartPlaceOverlay): void => {
                 var total = Enumerable.From(places)
@@ -864,35 +611,6 @@ module Employees.ViewModels {
                 overlay.total(total);
             });
         }
-
-        private _getPeopleOverlayTotal(places: ApiModels.PeoplePlaceApiModel[], index: number): number {
-            var total = Enumerable.From(places)
-                .Where(function (x: ApiModels.PeoplePlaceApiModel): boolean {
-                    return x.placeId == Summary._overlayPlaceIds[index];
-                })
-                .Sum(function (x: ApiModels.PeoplePlaceApiModel): number {
-                    return x.personIds.length;
-                });
-            return total || 0;
-        }
-
-        pacificOceanTotal: KnockoutObservable<number> = ko.observable(0);
-        gulfOfMexicoTotal: KnockoutObservable<number> = ko.observable(0);
-        caribbeanSeaTotal: KnockoutObservable<number> = ko.observable(0);
-        atlanticOceanTotal: KnockoutObservable<number> = ko.observable(0);
-        southernOceanTotal: KnockoutObservable<number> = ko.observable(0);
-        arcticOceanTotal: KnockoutObservable<number> = ko.observable(0);
-        indianOceanTotal: KnockoutObservable<number> = ko.observable(0);
-        antarcticaTotal: KnockoutObservable<number> = ko.observable(0);
-
-        pacificOceanSwapper: ImageSwapper = new ImageSwapper();
-        gulfOfMexicoSwapper: ImageSwapper = new ImageSwapper();
-        caribbeanSeaSwapper: ImageSwapper = new ImageSwapper();
-        atlanticOceanSwapper: ImageSwapper = new ImageSwapper();
-        southernOceanSwapper: ImageSwapper = new ImageSwapper();
-        arcticOceanSwapper: ImageSwapper = new ImageSwapper();
-        indianOceanSwapper: ImageSwapper = new ImageSwapper();
-        antarcticaSwapper: ImageSwapper = new ImageSwapper();
 
         //#endregion
         //#region Summaries
