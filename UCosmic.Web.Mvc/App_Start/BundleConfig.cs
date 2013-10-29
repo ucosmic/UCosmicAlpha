@@ -208,6 +208,7 @@ namespace UCosmic.Web.Mvc
                 "lehigh.edu",
                 "usf.edu",
                 "uwm.edu",
+                "westernu.ca",
             };
 #if DEBUG
             tenants = tenants.Concat(new[] { "testshib.org" }).ToArray();
