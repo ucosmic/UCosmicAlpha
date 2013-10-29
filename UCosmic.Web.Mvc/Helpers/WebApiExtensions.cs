@@ -61,8 +61,8 @@ namespace UCosmic.Web.Mvc
             if (indexOfDot < 1) return octetStream;
             var extension = Path.GetExtension(fileName);
 
-            return MimeMaps.Any(x => x.Key.Equals(extension, StringComparison.OrdinalIgnoreCase))
-                ? MimeMaps.Single(x => x.Key.Equals(extension, StringComparison.OrdinalIgnoreCase)).Value
+            return MimeMaps.Any(x => string.Format(".{0}", x.Key).Equals(extension, StringComparison.OrdinalIgnoreCase))
+                ? MimeMaps.Single(x => string.Format(".{0}", x.Key).Equals(extension, StringComparison.OrdinalIgnoreCase)).Value
                 : octetStream;
         }
     }
