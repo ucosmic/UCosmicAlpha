@@ -1,0 +1,77 @@
+/* uwm variable values */
+
+$branded-badge-dark1-bg-color: $uwm-accent-charcoal;
+$branded-badge-dark1-text-color: #fff;
+
+$nav-my-bg-color: $uwm-brand-gold;
+$nav-my-link-border-color: #000;
+$nav-my-link-color: #000;
+$nav-my-link-hover-bg-color: #000;
+$nav-my-link-hover-text-color: $uwm-brand-gold;
+$nav-my-email-link-color: #eee; /* NOTE: this may be no longer used */
+
+$nav-modules-current-text-color: #000;
+$nav-modules-text-color: #000;
+$nav-modules-text-shadow-x: 1px;
+$nav-modules-text-shadow-y: 1px;
+$nav-modules-text-shadow-blur: 3px;
+$nav-modules-text-shadow-color: rgba(99, 99, 99, .5);
+
+$nav-modules-inset-shadow-x: 0;
+$nav-modules-inset-shadow-y: -1px;
+$nav-modules-inset-shadow-blur: 5px;
+$nav-modules-inset-shadow-spread: 0;
+$nav-modules-inset-shadow-color: rgba(33, 33, 33, 0.2);
+
+$nav-modules-default-opacity: .9;
+$nav-modules-hover-opacity: .95;
+$nav-modules-current-opacity: 1;
+
+$banner-height: 100px;
+$banner-outer-bg: transparent;
+$banner-bg-color: #fff;
+$nav-modules-bg-color: $uwm-brand-gold;
+$nav-module-bg-color: #fff;
+$nav-modules-bg-lighter: #eee;
+
+$flasher-border: 0 none;
+$flasher-bg-color: rgba(0, 0, 0, 1);
+$flasher-bg-color-ie: #000000;
+$flasher-text-color: #fff;
+$flasher-close-icon: $closer-white-24;
+
+$nav-bib-bg-color: #000;
+$nav-bib-link-text-color: #fff;
+$nav-bib-link-hover-text-color: #000;
+$nav-bib-link-hover-bg-color: $uwm-brand-gold;
+$nav-bib-current-bg-color: #fff;
+$nav-bib-current-text-color: #333;
+
+$footer-bg-color: #000;
+$footer-text-color: #fff;
+$footer-link-text-color: #fff;
+$footer-link-border-color: #fff;
+
+$heading-text-color: #000;
+$external-link-color: #2786C2;
+$main-link-color: #2786C2;
+$default-hilite-bg-color: #ffa;
+$row-hilite-bg-color: $default-hilite-bg-color;
+
+$typed-item-bg-color: #000;
+$typed-item-text-color: #fff;
+
+$table-header-bg-color: #000;
+$table-header-text-color: #fff;
+$table-row-even-bg-color: #ddd;
+
+$sidebar-default-bg-color: #ddd;
+$sidebar-default-text-color: #000;
+$sidebar-hover-bg-color: $uwm-brand-gold;
+$sidebar-hover-text-color: #000;
+$sidebar-current-bg-color: $uwm-brand-gold;
+$sidebar-current-text-color: #000;
+$sidebar-content-text-color: $uwm-logo-gold;
+
+$button-bg-color: #000;
+$button-text-color: #fff;
