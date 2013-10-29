@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Http;
@@ -41,6 +42,39 @@ namespace UCosmic.Web.Mvc.ApiControllers
             _entities = entities;
             //_viewManager = viewManager;
             _activityProjector = activityProjector;
+        }
+
+        [GET("tenants-with-activities")]
+        public HttpResponseMessage GetTenantsWithActivities()
+        {
+            var publishedText = ActivityMode.Public.AsSentenceFragment();
+            var activities = _entities.Query<Activity>()
+                .Where(x => x.Person.Affiliations.Any(y => y.IsDefault))
+                .Where(x => x.ModeText == publishedText && x.Original == null)
+                .Select(x => x.Person.Affiliations.FirstOrDefault(y => y.IsDefault).Establishment)
+                .Distinct()
+            ;
+            var degrees = _entities.Query<Degree>()
+                .Where(x => x.Person.Affiliations.Any(y => y.IsDefault))
+                .Select(x => x.Person.Affiliations.FirstOrDefault(y => y.IsDefault).Establishment)
+                .Distinct()
+            ;
+            var queryable = activities.Union(degrees).ToArray();
+            var models = queryable.Select(x => new
+            {
+                Id = x.RevisionId,
+                x.OfficialName,
+                OfficialUrl = x.WebsiteUrl,
+                StyleDomain = x.WebsiteUrl.StartsWith("www.", StringComparison.OrdinalIgnoreCase)
+                    ? x.WebsiteUrl.Substring(4) : x.WebsiteUrl,
+            });
+            var model = new
+            {
+                Items = models,
+            };
+
+            var response = Request.CreateResponse(HttpStatusCode.OK, model);
+            return response;
         }
 
         private int[] GetPlaceIds(int placeId)

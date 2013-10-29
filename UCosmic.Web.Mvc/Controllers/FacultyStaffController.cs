@@ -14,9 +14,9 @@ namespace UCosmic.Web.Mvc.Controllers
     public partial class FacultyStaffController : Controller
     {
         private readonly IProcessQueries _queryProcessor;
-        private readonly ICommandEntities _entities;
+        private readonly IQueryEntities _entities;
 
-        public FacultyStaffController(IProcessQueries queryProcessor, ICommandEntities entities)
+        public FacultyStaffController(IProcessQueries queryProcessor, IQueryEntities entities)
         {
             _queryProcessor = queryProcessor;
             _entities = entities;
@@ -64,9 +64,9 @@ namespace UCosmic.Web.Mvc.Controllers
                 model.InstitutionOfficialName = rootEstablishment.OfficialName;
 
                 var campusEstablishmentType =
-                    _entities.Get<EstablishmentType>().Single(t => t.EnglishName == "University Campus");
+                    _entities.Query<EstablishmentType>().Single(t => t.EnglishName == "University Campus");
 
-                model.InstitutionHasCampuses = _entities.Get<Establishment>()
+                model.InstitutionHasCampuses = _entities.Query<Establishment>()
                                                         .Any(
                                                             e =>
                                                             (e.Parent.RevisionId == model.InstitutionId) &&

@@ -42,24 +42,39 @@ var ViewModels;
         //    raiseOnDrag: boolean;
         //}
         var FacultyAndStaffSelect = (function () {
-            function FacultyAndStaffSelect() {
+            function FacultyAndStaffSelect(tenantizeUrlFormat) {
+                this.tenantizeUrlFormat = tenantizeUrlFormat;
             }
             FacultyAndStaffSelect.prototype.load = function () {
                 var _this = this;
                 var deferred = $.Deferred();
 
                 //this.loadSpinner.start();
+                //$.ajax({
+                //    type: "GET",
+                //    async: true,
+                //    dataType: 'json',
+                //   url: App.Routes.WebApi.Establishments.get(),
+                //    data: {
+                //        pageNumber: 1,
+                //        pageSize: App.Constants.int32Max,
+                //        typeEnglishNames: ['University', 'University System'],
+                //        orderBy: 'name-asc'
+                //    },
+                //    success: (data: any, textStatus: string, jqXhr: JQueryXHR): void => {
+                //        this.institutions = ko.mapping.fromJS(data);
+                //        deferred.resolve();
+                //    },
+                //    error: (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
+                //        deferred.reject(errorThrown);
+                //    },
+                //    complete: (jqXhr: JQueryXHR, textStatus: string): void => {
+                //        //this.loadSpinner.stop();
+                //    }
+                //});
                 $.ajax({
                     type: "GET",
-                    async: true,
-                    dataType: 'json',
-                    url: App.Routes.WebApi.Establishments.get(),
-                    data: {
-                        pageNumber: 1,
-                        pageSize: App.Constants.int32Max,
-                        typeEnglishNames: ['University', 'University System'],
-                        orderBy: 'name-asc'
-                    },
+                    url: '/api/faculty-staff/tenants-with-activities/',
                     success: function (data, textStatus, jqXhr) {
                         _this.institutions = ko.mapping.fromJS(data);
                         deferred.resolve();
@@ -72,11 +87,16 @@ var ViewModels;
                     }
                 });
 
+                //deferred.resolve();
                 return deferred;
             };
 
             FacultyAndStaffSelect.prototype.selectInstitutionUrl = function (institutionId) {
                 return App.Routes.Mvc.FacultyStaff.Institution.select(institutionId);
+            };
+
+            FacultyAndStaffSelect.prototype.selectInstitutionUrl2 = function (domain) {
+                return this.tenantizeUrlFormat.replace('tenant_domain', domain);
             };
             return FacultyAndStaffSelect;
         })();

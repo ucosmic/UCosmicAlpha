@@ -47,20 +47,38 @@ module ViewModels.Employees {
     export class FacultyAndStaffSelect {
         institutions: KnockoutObservableArray<any>;
 
+        constructor(public tenantizeUrlFormat: string) {
+        }
+
         load(): JQueryPromise<any> {
             var deferred: JQueryDeferred<void> = $.Deferred();
             //this.loadSpinner.start();
+            //$.ajax({
+            //    type: "GET",
+            //    async: true,
+            //    dataType: 'json',
+            //   url: App.Routes.WebApi.Establishments.get(),
+            //    data: {
+            //        pageNumber: 1,
+            //        pageSize: App.Constants.int32Max,
+            //        typeEnglishNames: ['University', 'University System'],
+            //        orderBy: 'name-asc'
+            //    },
+            //    success: (data: any, textStatus: string, jqXhr: JQueryXHR): void => {
+            //        this.institutions = ko.mapping.fromJS(data);
+            //        deferred.resolve();
+            //    },
+            //    error: (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
+            //        deferred.reject(errorThrown);
+            //    },
+            //    complete: (jqXhr: JQueryXHR, textStatus: string): void => {
+            //        //this.loadSpinner.stop();
+            //    }
+            //});
+
             $.ajax({
                 type: "GET",
-                async: true,
-                dataType: 'json',
-                url: App.Routes.WebApi.Establishments.get(),
-                data: {
-                    pageNumber: 1,
-                    pageSize: App.Constants.int32Max,
-                    typeEnglishNames: ['University', 'University System'],
-                    orderBy: 'name-asc'
-                },
+                url: '/api/faculty-staff/tenants-with-activities/',
                 success: (data: any, textStatus: string, jqXhr: JQueryXHR): void => {
                     this.institutions = ko.mapping.fromJS(data);
                     deferred.resolve();
@@ -73,11 +91,16 @@ module ViewModels.Employees {
                 }
             });
 
+            //deferred.resolve();
             return deferred;
         }
 
         selectInstitutionUrl(institutionId: number): string {
             return App.Routes.Mvc.FacultyStaff.Institution.select(institutionId);
+        }
+
+        selectInstitutionUrl2(domain: string): string {
+            return this.tenantizeUrlFormat.replace('tenant_domain', domain);
         }
     }
 
