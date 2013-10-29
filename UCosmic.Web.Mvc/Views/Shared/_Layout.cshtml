@@ -2,7 +2,7 @@
 @{
     var tenancy = Request.Tenancy();
     var styleDomain = tenancy != null ? tenancy.StyleDomain : "default";
-    var hasStyleDomain = !string.IsNullOrWhiteSpace(styleDomain);
+    var hasStyleDomain = !string.IsNullOrWhiteSpace(styleDomain) && !"default".Equals(styleDomain, StringComparison.OrdinalIgnoreCase);
 }
 @using UCosmic.Web.Mvc.Models
 <html>
