@@ -2381,6 +2381,19 @@
     <Content Include="styles\sass\sheets\maps.css">
       <DependentUpon>maps.scss</DependentUpon>
     </Content>
+    <Content Include="styles\tenants\napier.ac.uk\banner-logo.png" />
+    <Content Include="styles\tenants\napier.ac.uk\designs.css">
+      <DependentUpon>designs.scss</DependentUpon>
+    </Content>
+    <Content Include="styles\tenants\napier.ac.uk\forms.css">
+      <DependentUpon>forms.scss</DependentUpon>
+    </Content>
+    <Content Include="styles\tenants\napier.ac.uk\ie8.css">
+      <DependentUpon>ie8.scss</DependentUpon>
+    </Content>
+    <Content Include="styles\tenants\napier.ac.uk\layout.css">
+      <DependentUpon>layout.scss</DependentUpon>
+    </Content>
     <Content Include="styles\tenants\westernu.ca\banner-logo.png" />
     <Content Include="styles\tenants\westernu.ca\designs.css">
       <DependentUpon>designs.scss</DependentUpon>
@@ -2431,6 +2444,12 @@
     <Content Include="styles\tenants\westernu.ca\layout.scss" />
     <Content Include="styles\tenants\westernu.ca\_brand.scss" />
     <Content Include="styles\tenants\westernu.ca\_values.scss" />
+    <Content Include="styles\tenants\napier.ac.uk\_brand.scss" />
+    <Content Include="styles\tenants\napier.ac.uk\_values.scss" />
+    <Content Include="styles\tenants\napier.ac.uk\designs.scss" />
+    <Content Include="styles\tenants\napier.ac.uk\forms.scss" />
+    <Content Include="styles\tenants\napier.ac.uk\ie8.scss" />
+    <Content Include="styles\tenants\napier.ac.uk\layout.scss" />
     <None Include="styles\tenants\testshib.org\banner-logo.png" />
     <None Include="styles\tenants\testshib.org\designs.css">
       <DependentUpon>designs.scss</DependentUpon>
