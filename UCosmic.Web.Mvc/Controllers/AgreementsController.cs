@@ -1,4 +1,6 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
+using System.Linq;
 using System.Web.Mvc;
 using AttributeRouting.Web.Mvc;
 using UCosmic.Domain.Agreements;
@@ -11,10 +13,12 @@ namespace UCosmic.Web.Mvc.Controllers
     public partial class AgreementsController : Controller
     {
         private readonly IProcessQueries _queryProcessor;
+        private readonly IQueryEntities _entities;
 
-        public AgreementsController(IProcessQueries queryProcessor)
+        public AgreementsController(IProcessQueries queryProcessor, IQueryEntities entities)
         {
             _queryProcessor = queryProcessor;
+            _entities = entities;
         }
 
         [GET("agreements")]
@@ -36,7 +40,33 @@ namespace UCosmic.Web.Mvc.Controllers
                 }
             }
 
-            return View(MVC.Agreements.Views.Owners);
+            var publicText = AgreementVisibility.Public.AsSentenceFragment();
+            var ownersQueryable = _entities.Query<Agreement>()
+                .Where(x => x.VisibilityText == publicText)
+                .SelectMany(x => x.Participants)
+                .Where(x => x.IsOwner)
+                .Select(x => x.Establishment)
+                .Where(x => x.IsMember)
+                .Distinct()
+            ;
+            var ancestorsQueryable = _entities.Query<Establishment>()
+                .Where(x => x.Offspring.Any(y => ownersQueryable.Select(z => z.RevisionId).Contains(y.OffspringId)))
+                .Distinct()
+            ;
+            var owners = ownersQueryable.Union(ancestorsQueryable).ToArray();
+
+            var models = owners.Select(x => new AgreementOwningTenant
+            {
+                Id = x.RevisionId,
+                ParentId = x.Parent != null ? x.Parent.RevisionId : (int?)null,
+                OfficialName = x.OfficialName,
+                WebsiteUrl = x.WebsiteUrl,
+                StyleDomain = x.WebsiteUrl.StartsWith("www.", StringComparison.OrdinalIgnoreCase)
+                    ? x.WebsiteUrl.Substring(4) : x.WebsiteUrl,
+
+            }).ToArray();
+
+            return View(MVC.Agreements.Views.Owners, models);
         }
 
         [GET("{domain}/agreements")]

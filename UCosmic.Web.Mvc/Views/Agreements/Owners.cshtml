@@ -1,5 +1,7 @@
-﻿@{
-    ViewBag.Title = "TODO: Agreement owners page";
+﻿@using UCosmic.Web.Mvc.Models
+@model IEnumerable<UCosmic.Web.Mvc.Models.AgreementOwningTenant>
+@{
+    ViewBag.Title = "Agreements - Select an Institution";
 }
 
 @section bib
@@ -11,11 +13,42 @@
 
 <div class="content fixed" data-current-module="agreements">
     <header>
-        <h1>@ViewBag.Title</h1>
+        <h1>Select an Institution</h1>
     </header>
-    <section>
-        <header>
-            <h2 data-bind="text: isWorking">Second heading</h2>
-        </header>
-    </section>
+    <p>
+        <strong>How does UCosmic decide which agreements to show me?</strong>
+        <br />
+        UCosmic usually uses the logo displayed on the site to decide which agreements to show you.
+        When you see the <em>UCosmic Consortium</em> logo, UCosmic cannot figure out which agreements you want to see.
+        In those cases, UCosmic will try to show you the agreements for your home institution based on your username / email address. 
+        When you are not signed in and you can see the <em>UCosmic Consortium</em> logo, UCosmic gives up and displays this page instead.
+    </p>
+    <p>
+        <strong>Click a link below to view agreements for that institution.</strong>
+        Institutions not listed here do not have any agreements in UCosmic.
+    </p>
+    <ul>
+        @foreach (var item in Model.Where(x => !x.ParentId.HasValue))
+        {
+            <li style="font-size: 20px; margin-bottom: 1em;">
+                <a href="@Url.Action(MVC.Tenancy.Tenant(item.StyleDomain, Url.Action(MVC.Agreements.Index())))">
+                    @item.OfficialName
+                </a>
+                @if (Model.Any(x => x.ParentId == item.Id))
+                {
+                    var parentId = item.Id;
+                    <ul style="margin-left: 20px; margin-top: 0.5em;">
+                        @foreach (var child in Model.Where(x => x.ParentId == parentId))
+                        {
+                            <li style="margin-bottom: 0.5em;">
+                                <a href="@Url.Action(MVC.Tenancy.Tenant(child.StyleDomain, Url.Action(MVC.Agreements.TenantIndex(child.StyleDomain))))">
+                                    @child.OfficialName
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                }
+            </li>
+        }
+    </ul>
 </div>

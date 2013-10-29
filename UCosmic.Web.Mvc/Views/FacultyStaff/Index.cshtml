@@ -366,31 +366,27 @@
 
 }
 
-<div id="faculty-staff-select" class="content fixed to-top" style="display: none" data-current-module="employees">
-    <div class="group">
-        <div class="on-left from-top">
-            <header>
-                <h1>Select an Institution</h1>
-            </header>
-            <p>
-                <strong>How does UCosmic decide which Faculty & Staff page to show me?</strong>
-                <br />
-                UCosmic usually uses the logo displayed on the site to decide which Faculty &amp; Staff page to show you.
-                When you see the <em>UCosmic Consortium</em> logo, UCosmic cannot figure out which Faculty &amp; Staff page you want to see.
-                In those cases, UCosmic will try to show you the Faculty &amp; Staff page for your home institution based on your username / email address. 
-                When you are not signed in and you can see the <em>UCosmic Consortium</em> logo, UCosmic gives up and displays this page instead.
-            </p>
-            <p>
-                <strong>Click a link below to view the Faculty &amp; Staff page for that institution.</strong>
-                Institutions not listed here do not have any Faculty &amp; Staff degrees or published activities.
-            </p>
-            @*<div class="institutionSelectList">
-                <ul data-bind="template: { name: 'institutions-template', foreach: institutions.items }"></ul>
-            </div>*@
-            <div>
-                <ul data-bind="template: { name: 'institutions-template', foreach: institutions.items }"></ul>
-            </div>
-        </div>
+<div id="faculty-staff-select" class="content fixed" style="display: none" data-current-module="employees">
+    <header>
+        <h1>Select an Institution</h1>
+    </header>
+    <p>
+        <strong>How does UCosmic decide which Faculty & Staff page to show me?</strong>
+        <br />
+        UCosmic usually uses the logo displayed on the site to decide which Faculty &amp; Staff page to show you.
+        When you see the <em>UCosmic Consortium</em> logo, UCosmic cannot figure out which Faculty &amp; Staff page you want to see.
+        In those cases, UCosmic will try to show you the Faculty &amp; Staff page for your home institution based on your username / email address. 
+        When you are not signed in and you can see the <em>UCosmic Consortium</em> logo, UCosmic gives up and displays this page instead.
+    </p>
+    <p>
+        <strong>Click a link below to view the Faculty &amp; Staff page for that institution.</strong>
+        Institutions not listed here do not have any Faculty &amp; Staff degrees or published activities.
+    </p>
+    @*<div class="institutionSelectList">
+        <ul data-bind="template: { name: 'institutions-template', foreach: institutions.items }"></ul>
+    </div>*@
+    <div>
+        <ul data-bind="template: { name: 'institutions-template', foreach: institutions.items }"></ul>
     </div>
 </div>
 
