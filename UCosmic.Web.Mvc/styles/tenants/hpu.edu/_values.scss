@@ -1,0 +1,77 @@
+/* hpu variable values */
+
+$branded-badge-dark1-bg-color: $hpu-brand-blue;
+$branded-badge-dark1-text-color: #fff;
+
+$nav-my-bg-color: $hpu-brand-blue;
+$nav-my-link-border-color: #fff;
+$nav-my-link-color: #fff;
+$nav-my-link-hover-bg-color: #fff;
+$nav-my-link-hover-text-color: $hpu-brand-blue;
+$nav-my-email-link-color: #eee; /* NOTE: this may be no longer used */
+
+$nav-modules-current-text-color: #000;
+$nav-modules-text-color: #000;
+$nav-modules-text-shadow-x: 1px;
+$nav-modules-text-shadow-y: 1px;
+$nav-modules-text-shadow-blur: 3px;
+$nav-modules-text-shadow-color: rgba(99, 99, 99, .5);
+
+$nav-modules-inset-shadow-x: 0;
+$nav-modules-inset-shadow-y: -1px;
+$nav-modules-inset-shadow-blur: 5px;
+$nav-modules-inset-shadow-spread: 0;
+$nav-modules-inset-shadow-color: rgba(33, 33, 33, 0.2);
+
+$nav-modules-default-opacity: .9;
+$nav-modules-hover-opacity: .95;
+$nav-modules-current-opacity: 1;
+
+$banner-height: 100px;
+$banner-outer-bg: transparent;
+$banner-bg-color: #fff;
+$nav-modules-bg-color: $nav-my-bg-color;
+$nav-module-bg-color: #fff;
+$nav-modules-bg-lighter: #eee;
+
+$flasher-border: 0 none;
+$flasher-bg-color: rgba(0, 0, 0, 1);
+$flasher-bg-color-ie: #000000;
+$flasher-text-color: #fff;
+$flasher-close-icon: $closer-white-24;
+
+$nav-bib-bg-color: $hpu-brand-seagreen;
+$nav-bib-link-text-color: #fff;
+$nav-bib-link-hover-text-color: #fff;
+$nav-bib-link-hover-bg-color: $hpu-brand-blue;
+$nav-bib-current-bg-color: #fff;
+$nav-bib-current-text-color: $hpu-brand-blue;
+
+$footer-bg-color: $hpu-brand-blue;
+$footer-text-color: #fff;
+$footer-link-text-color: #fff;
+$footer-link-border-color: #fff;
+
+$heading-text-color: $hpu-brand-blue;
+$external-link-color: #036;
+$main-link-color: #036;
+$default-hilite-bg-color: #ffa;
+$row-hilite-bg-color: $default-hilite-bg-color;
+
+$typed-item-bg-color: $hpu-brand-blue;
+$typed-item-text-color: #fff;
+
+$table-header-bg-color: $hpu-brand-blue;
+$table-header-text-color: #fff;
+$table-row-even-bg-color: #ddd;
+
+$sidebar-default-bg-color: #ddd;
+$sidebar-default-text-color: $hpu-brand-blue;
+$sidebar-hover-bg-color: $hpu-brand-blue;
+$sidebar-hover-text-color: #fff;
+$sidebar-current-bg-color: $hpu-brand-blue;
+$sidebar-current-text-color: #fff;
+$sidebar-content-text-color: $hpu-brand-seagreen;
+
+$button-bg-color: $hpu-brand-blue;
+$button-text-color: #fff;
