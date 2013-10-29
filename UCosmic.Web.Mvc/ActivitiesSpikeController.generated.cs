@@ -95,9 +95,11 @@ namespace UCosmic.Web.Mvc.Controllers
             public class _ViewNamesClass
             {
                 public readonly string _ActivitiesSpikeContent = "_ActivitiesSpikeContent";
+                public readonly string _Bib = "_Bib";
                 public readonly string ActivitiesSpike = "ActivitiesSpike";
             }
             public readonly string _ActivitiesSpikeContent = "~/Views/ActivitiesSpike/_ActivitiesSpikeContent.cshtml";
+            public readonly string _Bib = "~/Views/ActivitiesSpike/_Bib.cshtml";
             public readonly string ActivitiesSpike = "~/Views/ActivitiesSpike/ActivitiesSpike.cshtml";
         }
     }

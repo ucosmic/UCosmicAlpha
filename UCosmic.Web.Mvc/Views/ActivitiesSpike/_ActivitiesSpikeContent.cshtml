@@ -1,18 +1,62 @@
 ﻿@using UCosmic.Domain.Agreements
-<section id="publicView" data-bind="visible: isBound" style="display: none;">
+<section id="publicView" data-bind="visible: isBound, with: activity" style="display: none;">
 
     @* ACTIVITY TYPE AS H2 *@
     <header>
-        <h2 data-bind="text: type"></h2>
-        <div>
-            <h3 data-bind="text: name, visible: name" style="line-height: 20px; text-transform: none;"></h3>
-        </div>
+        <h2 data-bind="text: Title"></h2>
     </header>
+    <div style="font-size: 18px;">
+        @*places*@
+        <ul style="margin: 1em 0;" data-bind="foreach: Places">
+            <li data-bind="text: PlaceName"></li>
+        </ul>
 
-    <div style="margin: 1em 0;">
+        @*types*@
+        <ul style="margin: 1em 0;" data-bind="foreach: Types">
+            <li data-bind="text: Text"></li>
+        </ul>
+
+        @*Dates*@
+        <div style="margin: 1em 0;">
+            <span data-bind="text: StartsOn"></span>
+            <span style="padding: 0 4px 0 4px;">-</span>
+            <span data-bind="text: EndsOn, visible: !OnGoing()"></span>
+            <span data-bind="visible: OnGoing">On Going</span>
+        </div>
+
+        @*funding*@
+        <div style="margin: 1em 0;" data-bind="visible: IsExternallyFunded && IsInternallyFunded">
+            This activity is externally and internally funded.
+        </div>
+        <div style="margin: 1em 0;" data-bind="visible: !IsExternallyFunded() && IsInternallyFunded">
+            This activity is internally funded.
+        </div>
+        <div style="margin: 1em 0;" data-bind="visible: IsExternallyFunded && !IsInternallyFunded()">
+            This activity is externally funded.
+        </div>
+
+        @*description*@
+        <div style="margin: 1em 0;" data-bind="html: Content">
+        </div>
+
+        @*tags*@
+        <ul style="margin: 1em 0;" data-bind="foreach: Tags">
+            <li data-bind="text: Text"></li>
+        </ul>
+
+        @*documents*@
+        <ul style="margin: 1em 0;" data-bind="foreach: Documents">
+            <li>
+                <a data-bind="text: FileName, attr: { href: DocumentId, title: Title }"></a>
+            </li>
+        </ul>
+
+        @*lastUpdated*@
+        <div style="margin: 1em 0; font-size: 12px; color: gray; position: relative; bottom: 0px;">
+            Last updated:
+            <span data-bind="text: UpdatedOnUtc" style="padding-left: 4px;"></span>
+        </div>
     </div>
-
-
     <div style="display: none">
         @*<span id="agreementPartners_api">@ViewBag.AgreementPartnersApi</span>  for map *@
     </div>

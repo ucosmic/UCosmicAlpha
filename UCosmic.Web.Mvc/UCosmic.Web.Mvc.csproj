@@ -2004,6 +2004,13 @@
     <Content Include="scripts\typings\linq\linq.d.ts" />
     <Content Include="scripts\typings\linq\linq.jquery.d.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\activities\ActivityEnums.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\activities\ActivitiesSpike.ts" />
+    <Content Include="scripts\viewmodels\activities\ActivitiesSpike.js">
+      <DependentUpon>ActivitiesSpike.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\activities\ActivitiesSpike.min.js">
+      <DependentUpon>ActivitiesSpike.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\viewmodels\activities\ActivityEnums.js">
       <DependentUpon>ActivityEnums.ts</DependentUpon>
     </Content>
@@ -2574,6 +2581,7 @@
     <Content Include="Views\Agreements\SearchTable.cshtml" />
     <Content Include="Views\ActivitiesSpike\ActivitiesSpike.cshtml" />
     <Content Include="Views\ActivitiesSpike\_ActivitiesSpikeContent.cshtml" />
+    <Content Include="Views\ActivitiesSpike\_Bib.cshtml" />
     <None Include="Views\ApiTest\Index.cshtml" />
     <Content Include="Views\Agreements\Settings.cshtml" />
     <Content Include="Views\Agreements\_SearchSideBar.cshtml" />
