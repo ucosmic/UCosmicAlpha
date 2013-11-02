@@ -187,6 +187,15 @@ namespace UCosmic.Web.Mvc
             bundles.Add(new ScriptBundle("~/bundles/employees").Include(
                 "~/scripts/oss/linq.js",
                 "~/scripts/viewmodels/employees/Employees.js"));
+            bundles.Add(new ScriptBundle("~/bundles/employees/summary").Include(
+                "~/scripts/history/history.js",
+                "~/scripts/history/history.html4.js",
+                "~/scripts/history/history.adapter.jquery.js",
+                "~/scripts/app/HistoryJS.js",
+                "~/scripts/oss/linq.js",
+                "~/scripts/google/GeoChart.js",
+                "~/scripts/viewmodels/employees/Server.js",
+                "~/scripts/viewmodels/employees/Summary.js"));
 
             // user search page
             bundles.Add(new ScriptBundle("~/bundles/users").Include(

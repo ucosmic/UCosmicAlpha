@@ -75,7 +75,7 @@ var Employees;
 
         var Summary = (function () {
             //#endregion
-            //#region Construction & Initialization
+            //#region Construction & Binding
             function Summary(settings) {
                 var _this = this;
                 this.settings = settings;
@@ -105,6 +105,7 @@ var Employees;
                 }).extend({ throttle: 1 });
                 //#endregion
                 //#region Pivot Data
+                this.hasPivotData = ko.observable(false);
                 this.activitiesPlaceData = new DataCacher(function () {
                     return _this._loadActivitiesPlaceData();
                 });
@@ -219,6 +220,7 @@ var Employees;
 
             Summary.prototype._loadActivitiesPlaceData = function () {
                 var _this = this;
+                // calling .ready() on activitiesPlaceData invokes this
                 var promise = $.Deferred();
                 var request = {
                     countries: true,
@@ -226,6 +228,7 @@ var Employees;
                 };
                 this.geoChartSpinner.start();
                 Employees.Servers.ActivitiesPlaces(this.settings.tenantDomain, request).done(function (places) {
+                    _this.hasPivotData(places && places.length > 0);
                     promise.resolve(places);
                 }).fail(function (xhr) {
                     App.Failures.message(xhr, 'while trying to load activity location summary data.', true);
@@ -238,6 +241,7 @@ var Employees;
 
             Summary.prototype._loadPeoplePlaceData = function () {
                 var _this = this;
+                // calling .ready() on peoplePlaceData invokes this
                 var promise = $.Deferred();
                 var request = {
                     countries: true,
@@ -245,6 +249,7 @@ var Employees;
                 };
                 this.geoChartSpinner.start();
                 Employees.Servers.PeoplePlaces(this.settings.tenantDomain, request).done(function (places) {
+                    _this.hasPivotData(places && places.length > 0);
                     promise.resolve(places);
                 }).fail(function (xhr) {
                     App.Failures.message(xhr, 'while trying to load employee location summary data.', true);

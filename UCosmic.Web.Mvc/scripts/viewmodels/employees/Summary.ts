@@ -117,7 +117,7 @@ module Employees.ViewModels {
         }
 
         //#endregion
-        //#region Construction & Initialization
+        //#region Construction & Binding
 
         constructor(public settings: SummarySettings) {
             // parse the place overlays
@@ -231,12 +231,15 @@ module Employees.ViewModels {
         //#endregion
         //#region Pivot Data
 
+        hasPivotData: KnockoutObservable<boolean> = ko.observable(false);
+
         activitiesPlaceData: DataCacher<ApiModels.ActivitiesPlaceApiModel[]> = new DataCacher(
             (): JQueryPromise<ApiModels.ActivitiesPlaceApiModel[]> => {
                 return this._loadActivitiesPlaceData();
             });
 
         private _loadActivitiesPlaceData(): JQueryPromise<ApiModels.ActivitiesPlaceApiModel[]> {
+            // calling .ready() on activitiesPlaceData invokes this
             var promise: JQueryDeferred<ApiModels.ActivitiesPlaceApiModel[]> = $.Deferred();
             var request: ApiModels.ActivitiesPlacesInputModel = {
                 countries: true,
@@ -245,6 +248,7 @@ module Employees.ViewModels {
             this.geoChartSpinner.start();
             Servers.ActivitiesPlaces(this.settings.tenantDomain, request)
                 .done((places: ApiModels.ActivitiesPlaceApiModel[]): void => {
+                    this.hasPivotData(places && places.length > 0);
                     promise.resolve(places);
                 })
                 .fail((xhr: JQueryXHR): void => {
@@ -263,6 +267,7 @@ module Employees.ViewModels {
             });
 
         private _loadPeoplePlaceData(): JQueryPromise<ApiModels.PeoplePlaceApiModel[]> {
+            // calling .ready() on peoplePlaceData invokes this
             var promise: JQueryDeferred<ApiModels.PeoplePlaceApiModel[]> = $.Deferred();
             var request: ApiModels.PeoplePlacesInputModel = {
                 countries: true,
@@ -271,6 +276,7 @@ module Employees.ViewModels {
             this.geoChartSpinner.start();
             Servers.PeoplePlaces(this.settings.tenantDomain, request)
                 .done((places: ApiModels.PeoplePlaceApiModel[]): void => {
+                    this.hasPivotData(places && places.length > 0);
                     promise.resolve(places);
                 })
                 .fail((xhr: JQueryXHR): void => {

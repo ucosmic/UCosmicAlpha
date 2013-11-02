@@ -16,35 +16,29 @@
 }
 @section scripts
 {
+    @* need this for the google visualization packages *@
 
-    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script src="https://www.google.com/jsapi"></script>
 
+    @* IE8 cannot handle D3 or SVG's in general *@
     <!--[if !IE | gt IE 8]><!-->
 
-    <script type="text/javascript" src="~/scripts/oss/d3.v3.js"></script>
+    <script src="~/scripts/oss/d3.v3.js"></script>
 
     <!--<![endif]-->
 
-    <script src="~/scripts/history/history.js"></script>
+    @* employee API routes come from CSHTML file *@
 
-    <script src="~/scripts/history/history.html4.js"></script>
+    <script>
+        @{Html.RenderPartial(MVC.JavaScriptRoutes.Views.Employees);}
+    </script>
 
-    <script src="~/scripts/history/history.adapter.jquery.js"></script>
+    @* load historyjs, linqjs, viewmodel, & other supporting scripts *@
+    @Scripts.Render("~/bundles/employees/summary")
 
-    <script src="~/scripts/app/HistoryJS.js"></script>
+    @* Google API needs to be called outside of JQuery ready() *@
 
-    <script type="text/javascript" src="~/scripts/oss/linq.js"></script>
-
-    <script type="text/javascript" src="@Url.Action(MVC.JavaScriptRoutes.Employees())"></script>
-
-    <script type="text/javascript" src="~/scripts/google/GeoChart.js"></script>
-
-    <script type="text/javascript" src="~/scripts/viewmodels/employees/Server.js"></script>
-
-    <script type="text/javascript" src="~/scripts/viewmodels/employees/Summary.js"></script>
-
-    <script type="text/javascript">
-        // Google API needs to be called outside of JQuery ready()
+    <script>
         Employees.ViewModels.Summary.loadGoogleVisualization().done(function () {
             var viewModel = new Employees.ViewModels.Summary({
                 tenantDomain: '@ViewBag.EmployeesDomain',
@@ -96,13 +90,14 @@
             <div style="margin: 1em 0; height: 28px;">
                 <div class="group">
                     <div class="on-left">
-                        <div data-bind="visible: !geoChartSpinner.isVisible()" style="display: none; line-height: 28px;">
+                        <div data-bind="visible: !geoChartSpinner.isVisible() && hasPivotData()" style="display: none; line-height: 28px;">
                             <img src="@Url.HttpRouteUrl(null, new { controller = "Employees", action = "GetSettingsIcon", domain = @ViewBag.EmployeesDomain, name = "global-view" })"
                                 alt="Global view" width="24" height="24" style="" />
-                            @*<img src="~/images/icons/globe/shiny-24.png" alt="Global view" style="" />
-                            <img src="~/images/icons/globe/shiny-24-disabled.png" alt="Return to Global view" style="display: none;opacity: 0.5;" />*@
                             <strong>Global View:</strong>
                             <span>double click a region for more information.</span>
+                        </div>
+                        <div data-bind="visible: !geoChartSpinner.isVisible() && !hasPivotData()" style="display: none; line-height: 28px;">
+                            There are no international faculty or staff relationships to summarize.
                         </div>
                     </div>
                     <div class="on-right">
