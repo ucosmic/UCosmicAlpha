@@ -268,26 +268,23 @@ module Employees.ViewModels {
             // this runs whenever an observable component of routeState changes
             // and will run at least once when the page loads, since it is a computed
             // there are 4 main scenarios we want to handle here:
-            // 1.) when the route state matches the url state, do nothing
+            // 1.) when the route state matches the url state, update the historyjs state
             // 2.) when we have incomplete url state, replace current url based on route state
             // 3.) when historyjs state is empty and url state is complete, we have a url
             //     that should override the current route state values
             // 4.) all other cases mean user interaction, and should push a new url
             var routeState = this.routeState(); // the new state we want in the URL
-            var historyState = HistoryJS.getState().data; // state saved by historyjs
             var urlState = this._getUrlState(); // actual state based on current URL
-
-            // when the route state is the same as the url state, url does not need to be changed
-            if (SummaryRouteState.areEqual(routeState, urlState)) return;
+            var areBindingsApplied = this.areBindingsApplied();
 
             // when the url state is missing something (or everything), replace it with route data
-            if (SummaryRouteState.isIncomplete(urlState)) {
+            if (SummaryRouteState.isIncomplete(urlState) || SummaryRouteState.areEqual(routeState, urlState)) {
                 HistoryJS.replaceState(routeState, '', '?' + $.param(routeState));
             }
 
             // by now url state is not equal but is not incomplete either
             // since we have it, update the route values with the url values
-            else if (SummaryRouteState.isEmpty(historyState)) {
+            else if (!areBindingsApplied) {
                 this._updateState(urlState);
             }
             else {

@@ -298,21 +298,18 @@ var Employees;
                 // this runs whenever an observable component of routeState changes
                 // and will run at least once when the page loads, since it is a computed
                 // there are 4 main scenarios we want to handle here:
-                // 1.) when the route state matches the url state, do nothing
+                // 1.) when the route state matches the url state, update the historyjs state
                 // 2.) when we have incomplete url state, replace current url based on route state
                 // 3.) when historyjs state is empty and url state is complete, we have a url
                 //     that should override the current route state values
                 // 4.) all other cases mean user interaction, and should push a new url
                 var routeState = this.routeState();
-                var historyState = HistoryJS.getState().data;
                 var urlState = this._getUrlState();
+                var areBindingsApplied = this.areBindingsApplied();
 
-                if (SummaryRouteState.areEqual(routeState, urlState))
-                    return;
-
-                if (SummaryRouteState.isIncomplete(urlState)) {
+                if (SummaryRouteState.isIncomplete(urlState) || SummaryRouteState.areEqual(routeState, urlState)) {
                     HistoryJS.replaceState(routeState, '', '?' + $.param(routeState));
-                } else if (SummaryRouteState.isEmpty(historyState)) {
+                } else if (!areBindingsApplied) {
                     this._updateState(urlState);
                 } else {
                     HistoryJS.pushState(routeState, '', '?' + $.param(routeState));

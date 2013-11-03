@@ -91,10 +91,15 @@
                 <div class="group">
                     <div class="on-left">
                         <div data-bind="visible: !geoChartSpinner.isVisible() && hasPivotData()" style="display: none; line-height: 28px;">
-                            <img src="@Url.HttpRouteUrl(null, new { controller = "Employees", action = "GetSettingsIcon", domain = @ViewBag.EmployeesDomain, name = "global-view" })"
-                                alt="Global view" width="24" height="24" style="" />
-                            <strong>Global View:</strong>
-                            <span>click a location for more information.</span>
+                            <div data-bind="visible: hasNoPlaceId">
+                                <img src="@Url.HttpRouteUrl(null, new { controller = "Employees", action = "GetSettingsIcon", domain = @ViewBag.EmployeesDomain, name = "global-view" })"
+                                     alt="Global view" width="24" height="24" style="" />
+                                <strong>Global View:</strong>
+                                <span>click a location for more information.</span>
+                            </div>
+                            <div data-bind="visible: hasPlaceId">
+                                place info
+                            </div>
                         </div>
                         <div data-bind="visible: !geoChartSpinner.isVisible() && !hasPivotData()" style="display: none; line-height: 28px;">
                             There are no international faculty or staff relationships to summarize.

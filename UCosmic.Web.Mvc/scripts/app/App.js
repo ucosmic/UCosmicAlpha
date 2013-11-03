@@ -175,12 +175,6 @@ else
         App.Obtruder.obtrude(document);
     });
 
-    //export function getQueryStringValueByName(name: string): string {
-    //    name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
-    //    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-    //        results = regex.exec(location.search);
-    //    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-    //}
     function deparam(params, coerce) {
         if (typeof coerce === "undefined") { coerce = false; }
         // https://github.com/cowboy/jquery-bbq/blob/master/jquery.ba-bbq.js
