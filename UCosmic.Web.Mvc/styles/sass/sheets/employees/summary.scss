@@ -218,3 +218,16 @@
         }
     }
 }
+
+a.global-view {
+    display: inline-block;
+    line-height: 28px;
+    &:link, &:visited, &:hover,  &:active {
+        text-decoration: none !important;
+        color: #000 !important;
+        opacity: 0.5;
+    }
+    &:hover {
+        opacity: 0.9;
+    }
+}

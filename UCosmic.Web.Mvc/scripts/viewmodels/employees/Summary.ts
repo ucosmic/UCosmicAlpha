@@ -377,8 +377,8 @@ module Employees.ViewModels {
             return searchTarget ? searchTarget.cached : undefined;
         }
 
-        private _getPlaceById(placeId: number): ApiModels.EmployeesPivotPlaceApiModel {
-            var searchTarget = this._getPlacesForEnumeration();
+        private _getPlaceById(placeId: number, searchTarget?: ApiModels.EmployeesPivotPlaceApiModel[]): ApiModels.EmployeesPivotPlaceApiModel {
+            searchTarget = searchTarget || this._getPlacesForEnumeration();
             if (!searchTarget) return undefined;
             var place: ApiModels.EmployeesPivotPlaceApiModel = Enumerable.From(searchTarget)
                 .FirstOrDefault(undefined, function (x: ApiModels.EmployeesPivotPlaceApiModel): boolean {
@@ -388,8 +388,8 @@ module Employees.ViewModels {
             return place;
         }
 
-        private _getPlaceByName(placeName: string): ApiModels.EmployeesPivotPlaceApiModel {
-            var searchTarget = this._getPlacesForEnumeration();
+        private _getPlaceByName(placeName: string, searchTarget?: ApiModels.EmployeesPivotPlaceApiModel[]): ApiModels.EmployeesPivotPlaceApiModel {
+            searchTarget = searchTarget || this._getPlacesForEnumeration();
             if (!searchTarget) return undefined;
             var place: ApiModels.EmployeesPivotPlaceApiModel = Enumerable.From(searchTarget)
                 .FirstOrDefault(undefined, function (x: ApiModels.EmployeesPivotPlaceApiModel): boolean {
@@ -798,7 +798,7 @@ module Employees.ViewModels {
 
         //#endregion
         //#region Summaries
-
+        //#region Top Summary
         activitiesSummary: KoModels.ActivitiesSummary = {
             personCount: ko.observable('?'),
             activityCount: ko.observable('?'),
@@ -823,6 +823,48 @@ module Employees.ViewModels {
             return promise;
         }
 
+        //#endregion
+        //#region Selected Place Summary
+
+        selectedPlaceSummary: KoModels.ActivitiesSummary = {
+            personCount: ko.observable('?'),
+            activityCount: ko.observable('?'),
+            locationCount: ko.observable('?'),
+        };
+
+        private _placeSelected = ko.computed((): void => { this._onPlaceSelected(); });
+
+        private _onPlaceSelected(): void {
+            var placeId = this.placeId();
+            var areBindingsApplied = this.areBindingsApplied();
+            if (placeId != 1 && areBindingsApplied) {
+                $.when(this.activitiesPlaceData.ready(), this.peoplePlaceData.ready()).then((): void => {
+                    var peoplePlace = <ApiModels.PeoplePlaceApiModel>this._getPlaceById(placeId, this.peoplePlaceData.cached);
+                    var activitiesPlace = <ApiModels.ActivitiesPlaceApiModel>this._getPlaceById(placeId, this.activitiesPlaceData.cached);
+                    var place: ApiModels.EmployeesPivotPlaceApiModel = peoplePlace || activitiesPlace;
+                    if (peoplePlace && peoplePlace.placeName) {
+                        this.selectedPlaceSummary.personCount(peoplePlace.personIds.length.toString());
+                    }
+                    if (activitiesPlace && activitiesPlace.placeName) {
+                        this.selectedPlaceSummary.activityCount(activitiesPlace.activityIds.length.toString());
+                    }
+                    if (place && place.placeName) {
+                        this.selectedPlaceSummary.locationCount(place.placeName);
+                    }
+                });
+            }
+            else if (areBindingsApplied) {
+                this.selectedPlaceSummary.personCount('?');
+                this.selectedPlaceSummary.activityCount('?');
+                this.selectedPlaceSummary.locationCount('?');
+            }
+        }
+
+        clearPlaceSelection(): void {
+            this.placeId(1);
+        }
+
+        //#endregion
         //#endregion
     }
 }

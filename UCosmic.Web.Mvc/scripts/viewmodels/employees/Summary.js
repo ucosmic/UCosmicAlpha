@@ -205,6 +205,7 @@ var Employees;
                 this._tooltips = ko.observableArray();
                 //#endregion
                 //#region Summaries
+                //#region Top Summary
                 this.activitiesSummary = {
                     personCount: ko.observable('?'),
                     activityCount: ko.observable('?'),
@@ -212,6 +213,16 @@ var Employees;
                 };
                 this.activitiesSummaryData = new DataCacher(function () {
                     return _this._loadActivitiesSummary();
+                });
+                //#endregion
+                //#region Selected Place Summary
+                this.selectedPlaceSummary = {
+                    personCount: ko.observable('?'),
+                    activityCount: ko.observable('?'),
+                    locationCount: ko.observable('?')
+                };
+                this._placeSelected = ko.computed(function () {
+                    _this._onPlaceSelected();
                 });
                 // parse the place overlays
                 this._parsePlaceOverlays();
@@ -380,8 +391,8 @@ var Employees;
                 return searchTarget ? searchTarget.cached : undefined;
             };
 
-            Summary.prototype._getPlaceById = function (placeId) {
-                var searchTarget = this._getPlacesForEnumeration();
+            Summary.prototype._getPlaceById = function (placeId, searchTarget) {
+                searchTarget = searchTarget || this._getPlacesForEnumeration();
                 if (!searchTarget)
                     return undefined;
                 var place = Enumerable.From(searchTarget).FirstOrDefault(undefined, function (x) {
@@ -391,8 +402,8 @@ var Employees;
                 return place;
             };
 
-            Summary.prototype._getPlaceByName = function (placeName) {
-                var searchTarget = this._getPlacesForEnumeration();
+            Summary.prototype._getPlaceByName = function (placeName, searchTarget) {
+                searchTarget = searchTarget || this._getPlacesForEnumeration();
                 if (!searchTarget)
                     return undefined;
                 var place = Enumerable.From(searchTarget).FirstOrDefault(undefined, function (x) {
@@ -711,6 +722,36 @@ var Employees;
                     promise.reject();
                 });
                 return promise;
+            };
+
+            Summary.prototype._onPlaceSelected = function () {
+                var _this = this;
+                var placeId = this.placeId();
+                var areBindingsApplied = this.areBindingsApplied();
+                if (placeId != 1 && areBindingsApplied) {
+                    $.when(this.activitiesPlaceData.ready(), this.peoplePlaceData.ready()).then(function () {
+                        var peoplePlace = _this._getPlaceById(placeId, _this.peoplePlaceData.cached);
+                        var activitiesPlace = _this._getPlaceById(placeId, _this.activitiesPlaceData.cached);
+                        var place = peoplePlace || activitiesPlace;
+                        if (peoplePlace && peoplePlace.placeName) {
+                            _this.selectedPlaceSummary.personCount(peoplePlace.personIds.length.toString());
+                        }
+                        if (activitiesPlace && activitiesPlace.placeName) {
+                            _this.selectedPlaceSummary.activityCount(activitiesPlace.activityIds.length.toString());
+                        }
+                        if (place && place.placeName) {
+                            _this.selectedPlaceSummary.locationCount(place.placeName);
+                        }
+                    });
+                } else if (areBindingsApplied) {
+                    this.selectedPlaceSummary.personCount('?');
+                    this.selectedPlaceSummary.activityCount('?');
+                    this.selectedPlaceSummary.locationCount('?');
+                }
+            };
+
+            Summary.prototype.clearPlaceSelection = function () {
+                this.placeId(1);
             };
             Summary._googleVisualizationLoadedPromise = $.Deferred();
 

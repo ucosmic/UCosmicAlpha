@@ -149,3 +149,13 @@
       margin-top: 4px;
       padding-bottom: 1px; }
 
+a.global-view {
+  display: inline-block;
+  line-height: 28px; }
+  a.global-view:link, a.global-view:visited, a.global-view:hover, a.global-view:active {
+    text-decoration: none !important;
+    color: #000 !important;
+    opacity: 0.5; }
+  a.global-view:hover {
+    opacity: 0.9; }
+
