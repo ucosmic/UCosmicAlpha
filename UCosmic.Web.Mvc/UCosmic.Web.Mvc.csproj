@@ -398,6 +398,8 @@
     <Compile Include="Models\Agreements\AgreementSearchInputModel.cs" />
     <Compile Include="Models\Degrees\DegreeApiModel.cs" />
     <Compile Include="Models\Degrees\DegreeSearchInputModel.cs" />
+    <Compile Include="Models\Employees\EmployeesPlaceApiModel.cs" />
+    <Compile Include="Models\Employees\EmployeesPlacesInputModel.cs" />
     <Compile Include="Models\Employees\FacultyStaffSearchApiModel.cs" />
     <Compile Include="Models\Employees\FacultyStaffSummaryApiModel.cs" />
     <Compile Include="Models\Employees\PeoplePlaceApiModel.cs" />

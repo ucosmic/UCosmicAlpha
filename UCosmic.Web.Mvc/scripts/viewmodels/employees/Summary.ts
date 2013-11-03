@@ -313,49 +313,77 @@ module Employees.ViewModels {
 
         hasPivotData: KnockoutObservable<boolean> = ko.observable(false);
 
-        activitiesPlaceData: DataCacher<ApiModels.ActivitiesPlaceApiModel[]> = new DataCacher(
-            (): JQueryPromise<ApiModels.ActivitiesPlaceApiModel[]> => {
-                return this._loadActivitiesPlaceData();
+        //activitiesPlaceData: DataCacher<ApiModels.ActivitiesPlaceApiModel[]> = new DataCacher(
+        //    (): JQueryPromise<ApiModels.ActivitiesPlaceApiModel[]> => {
+        //        return this._loadActivitiesPlaceData();
+        //    });
+
+        //private _loadActivitiesPlaceData(): JQueryPromise<ApiModels.ActivitiesPlaceApiModel[]> {
+        //    // calling .ready() on activitiesPlaceData invokes this
+        //    var promise: JQueryDeferred<ApiModels.ActivitiesPlaceApiModel[]> = $.Deferred();
+        //    var request: ApiModels.ActivitiesPlacesInputModel = {
+        //        countries: true,
+        //        placeIds: this._getOverlayPlaceIds(),
+        //    };
+        //    this.geoChartSpinner.start();
+        //    Servers.ActivitiesPlaces(this.settings.tenantDomain, request)
+        //        .done((places: ApiModels.ActivitiesPlaceApiModel[]): void => {
+        //            this.hasPivotData(places && places.length > 0);
+        //            promise.resolve(places);
+        //        })
+        //        .fail((xhr: JQueryXHR): void => {
+        //            App.Failures.message(xhr, 'while trying to load activity location summary data.', true);
+        //            promise.reject();
+        //        })
+        //        .always((): void => {
+        //            this.geoChartSpinner.stop();
+        //        });
+        //    return promise;
+        //}
+
+        //peoplePlaceData: DataCacher<ApiModels.PeoplePlaceApiModel[]> = new DataCacher(
+        //    (): JQueryPromise<ApiModels.PeoplePlaceApiModel[]> => {
+        //        return this._loadPeoplePlaceData();
+        //    });
+
+        //private _loadPeoplePlaceData(): JQueryPromise<ApiModels.PeoplePlaceApiModel[]> {
+        //    // calling .ready() on peoplePlaceData invokes this
+        //    var promise: JQueryDeferred<ApiModels.PeoplePlaceApiModel[]> = $.Deferred();
+        //    var request: ApiModels.PeoplePlacesInputModel = {
+        //        countries: true,
+        //        placeIds: this._getOverlayPlaceIds(),
+        //    };
+        //    this.geoChartSpinner.start();
+        //    Servers.PeoplePlaces(this.settings.tenantDomain, request)
+        //        .done((places: ApiModels.PeoplePlaceApiModel[]): void => {
+        //            this.hasPivotData(places && places.length > 0);
+        //            promise.resolve(places);
+        //        })
+        //        .fail((xhr: JQueryXHR): void => {
+        //            App.Failures.message(xhr, 'while trying to load employee location summary data.', true);
+        //            promise.reject();
+        //        })
+        //        .always((): void => {
+        //            this.geoChartSpinner.stop();
+        //        });
+        //    return promise;
+        //}
+
+        placeData: DataCacher<ApiModels.EmployeesPlaceApiModel[]> = new DataCacher(
+            (): JQueryPromise<ApiModels.EmployeesPlaceApiModel[]> => {
+                return this._loadPlaceData();
             });
 
-        private _loadActivitiesPlaceData(): JQueryPromise<ApiModels.ActivitiesPlaceApiModel[]> {
-            // calling .ready() on activitiesPlaceData invokes this
-            var promise: JQueryDeferred<ApiModels.ActivitiesPlaceApiModel[]> = $.Deferred();
-            var request: ApiModels.ActivitiesPlacesInputModel = {
+        private _loadPlaceData(): JQueryPromise<ApiModels.EmployeesPlaceApiModel[]> {
+            // calling .ready() on placeData invokes this
+            var promise: JQueryDeferred<ApiModels.EmployeesPlaceApiModel[]> = $.Deferred();
+            var request: ApiModels.EmployeesPlacesInputModel = {
                 countries: true,
                 placeIds: this._getOverlayPlaceIds(),
             };
             this.geoChartSpinner.start();
-            Servers.ActivitiesPlaces(this.settings.tenantDomain, request)
-                .done((places: ApiModels.ActivitiesPlaceApiModel[]): void => {
-                    this.hasPivotData(places && places.length > 0);
-                    promise.resolve(places);
-                })
-                .fail((xhr: JQueryXHR): void => {
-                    App.Failures.message(xhr, 'while trying to load activity location summary data.', true);
-                    promise.reject();
-                })
-                .always((): void => {
-                    this.geoChartSpinner.stop();
-                });
-            return promise;
-        }
-
-        peoplePlaceData: DataCacher<ApiModels.PeoplePlaceApiModel[]> = new DataCacher(
-            (): JQueryPromise<ApiModels.PeoplePlaceApiModel[]> => {
-                return this._loadPeoplePlaceData();
-            });
-
-        private _loadPeoplePlaceData(): JQueryPromise<ApiModels.PeoplePlaceApiModel[]> {
-            // calling .ready() on peoplePlaceData invokes this
-            var promise: JQueryDeferred<ApiModels.PeoplePlaceApiModel[]> = $.Deferred();
-            var request: ApiModels.PeoplePlacesInputModel = {
-                countries: true,
-                placeIds: this._getOverlayPlaceIds(),
-            };
-            this.geoChartSpinner.start();
-            Servers.PeoplePlaces(this.settings.tenantDomain, request)
-                .done((places: ApiModels.PeoplePlaceApiModel[]): void => {
+            Servers.EmployeesPlaces(this.settings.tenantDomain, request)
+                .done((places: ApiModels.EmployeesPlaceApiModel[]): void => {
                     this.hasPivotData(places && places.length > 0);
                     promise.resolve(places);
                 })
@@ -369,30 +397,26 @@ module Employees.ViewModels {
             return promise;
         }
 
-        private _getPlacesForEnumeration(): ApiModels.EmployeesPivotPlaceApiModel[] {
-            var searchTarget: DataCacher<ApiModels.EmployeesPivotPlaceApiModel[]> = this.isPivotActivities()
-                ? <DataCacher<ApiModels.EmployeesPivotPlaceApiModel[]>>this.activitiesPlaceData
-                : this.peoplePlaceData;
+        //private _getPlacesForEnumeration(): ApiModels.EmployeesPlaceApiModel[] {
+        //    var searchTarget: DataCacher<ApiModels.EmployeesPivotPlaceApiModel[]> = this.isPivotActivities()
+        //        ? <DataCacher<ApiModels.EmployeesPivotPlaceApiModel[]>>this.activitiesPlaceData
+        //        : this.peoplePlaceData;
 
-            return searchTarget ? searchTarget.cached : undefined;
-        }
+        //    return searchTarget ? searchTarget.cached : undefined;
+        //}
 
-        private _getPlaceById(placeId: number, searchTarget?: ApiModels.EmployeesPivotPlaceApiModel[]): ApiModels.EmployeesPivotPlaceApiModel {
-            searchTarget = searchTarget || this._getPlacesForEnumeration();
-            if (!searchTarget) return undefined;
-            var place: ApiModels.EmployeesPivotPlaceApiModel = Enumerable.From(searchTarget)
-                .FirstOrDefault(undefined, function (x: ApiModels.EmployeesPivotPlaceApiModel): boolean {
+        private _getPlaceById(placeId: number): ApiModels.EmployeesPlaceApiModel {
+            var place: ApiModels.EmployeesPlaceApiModel = Enumerable.From(this.placeData.cached)
+                .FirstOrDefault(undefined, function (x: ApiModels.EmployeesPlaceApiModel): boolean {
                     return x.placeId == placeId;
                 });
 
             return place;
         }
 
-        private _getPlaceByName(placeName: string, searchTarget?: ApiModels.EmployeesPivotPlaceApiModel[]): ApiModels.EmployeesPivotPlaceApiModel {
-            searchTarget = searchTarget || this._getPlacesForEnumeration();
-            if (!searchTarget) return undefined;
-            var place: ApiModels.EmployeesPivotPlaceApiModel = Enumerable.From(searchTarget)
-                .FirstOrDefault(undefined, function (x: ApiModels.EmployeesPivotPlaceApiModel): boolean {
+        private _getPlaceByName(placeName: string): ApiModels.EmployeesPlaceApiModel {
+            var place: ApiModels.EmployeesPlaceApiModel = Enumerable.From(this.placeData.cached)
+                .FirstOrDefault(undefined, function (x: ApiModels.EmployeesPlaceApiModel): boolean {
                     return x.placeName == placeName;
                 });
 
@@ -461,14 +485,14 @@ module Employees.ViewModels {
 
         private _drawGeoChart(): void {
             // the data may not yet be loaded, and if not, going to redraw after it is loaded
-            var cachedData = this._getPlacesForEnumeration();
+            var cachedData = this.placeData.cached;
             var needsRedraw = !cachedData;
 
             // decide which part of the map to select
             var placeId = this.placeId();
             var place = this._getPlaceById(placeId);
             this._geoChartOptions.region = !placeId || placeId == 1 || !place || !place.countryCode
-            ? 'world' : place.countryCode;
+                ? 'world' : place.countryCode;
 
             // change aspect ratio based on placeId
             this._geoChartOptions.keepAspectRatio = placeId && placeId > 1 && place && place.countryCode ? false :
@@ -476,48 +500,66 @@ module Employees.ViewModels {
 
             // hit the server up for data and redraw
             this._initGeoChart().then((): void => {
-                if (this.isPivotPeople()) {
-                    this.peoplePlaceData.ready()
-                        .done((places: ApiModels.PeoplePlaceApiModel[]): void => {
-                            if (needsRedraw) {
-                                this._drawGeoChart();
-                                return;
-                            }
-                            this._geoChartDataTable.removeRows(0, this._geoChartDataTable.getNumberOfRows());
+                this.placeData.ready().done((places: ApiModels.EmployeesPlaceApiModel[]): void => {
+                    if (needsRedraw) {
+                        this._drawGeoChart();
+                        return;
+                    }
+                    var isPivotPeople = this.isPivotPeople();
+                    this._geoChartDataTable.setColumnLabel(1, 'Total {0}'.format(isPivotPeople ? 'People' : 'Activities'));
+                    this._geoChartDataTable.removeRows(0, this._geoChartDataTable.getNumberOfRows());
+                    $.each(places, (i: number, dataPoint: ApiModels.EmployeesPlaceApiModel): void => {
+                        var total = isPivotPeople ? dataPoint.activityPersonIds.length : dataPoint.activityIds.length;
+                        this._geoChartDataTable.addRow([dataPoint.placeName, total]);
+                    });
+                    this.geoChart.draw(this._geoChartDataTable, this._geoChartOptions).then((): void => {
+                        setTimeout((): void => { this._svgInjectPlaceOverlays(); }, 0);
+                        this._applyPlaceOverlayTotals(places);
+                        this._createOverlayTooltips();
+                    });
+                });
+                //if (this.isPivotPeople()) {
+                //    this.peoplePlaceData.ready()
+                //        .done((places: ApiModels.PeoplePlaceApiModel[]): void => {
+                //            if (needsRedraw) {
+                //                this._drawGeoChart();
+                //                return;
+                //            }
+                //            this._geoChartDataTable.removeRows(0, this._geoChartDataTable.getNumberOfRows());
 
-                            $.each(places, (i: number, dataPoint: ApiModels.PeoplePlaceApiModel): void=> {
-                                this._geoChartDataTable.addRow([dataPoint.placeName, dataPoint.personIds.length]);
-                            });
+                //            $.each(places, (i: number, dataPoint: ApiModels.PeoplePlaceApiModel): void => {
+                //                this._geoChartDataTable.addRow([dataPoint.placeName, dataPoint.personIds.length]);
+                //            });
 
-                            this.geoChart.draw(this._geoChartDataTable, this._geoChartOptions).then((): void => {
-                                setTimeout((): void => { this._svgInjectPlaceOverlays(); }, 0);
-                                this._geoChartDataTable.setColumnLabel(1, 'Total {0}'.format(this.isPivotPeople() ? 'People' : 'Activities'));
-                                this._applyPeopleOverlayTotals(places);
-                                this._createOverlayTooltips();
-                            });
-                        });
-                }
-                else {
-                    this.activitiesPlaceData.ready()
-                        .done((places: ApiModels.ActivitiesPlaceApiModel[]): void => {
-                            if (needsRedraw) {
-                                this._drawGeoChart();
-                                return;
-                            }
-                            this._geoChartDataTable.removeRows(0, this._geoChartDataTable.getNumberOfRows());
+                //            this.geoChart.draw(this._geoChartDataTable, this._geoChartOptions).then((): void => {
+                //                setTimeout((): void => { this._svgInjectPlaceOverlays(); }, 0);
+                //                this._geoChartDataTable.setColumnLabel(1, 'Total {0}'.format(this.isPivotPeople() ? 'People' : 'Activities'));
+                //                this._applyPeopleOverlayTotals(places);
+                //                this._createOverlayTooltips();
+                //            });
+                //        });
+                //}
+                //else {
+                //    this.activitiesPlaceData.ready()
+                //        .done((places: ApiModels.ActivitiesPlaceApiModel[]): void => {
+                //            if (needsRedraw) {
+                //                this._drawGeoChart();
+                //                return;
+                //            }
+                //            this._geoChartDataTable.removeRows(0, this._geoChartDataTable.getNumberOfRows());
 
-                            $.each(places, (i: number, dataPoint: ApiModels.ActivitiesPlaceApiModel): void=> {
-                                this._geoChartDataTable.addRow([dataPoint.placeName, dataPoint.activityIds.length]);
-                            });
+                //            $.each(places, (i: number, dataPoint: ApiModels.ActivitiesPlaceApiModel): void=> {
+                //                this._geoChartDataTable.addRow([dataPoint.placeName, dataPoint.activityIds.length]);
+                //            });
 
-                            this.geoChart.draw(this._geoChartDataTable, this._geoChartOptions).then((): void => {
-                                setTimeout((): void => { this._svgInjectPlaceOverlays(); }, 0);
-                                this._geoChartDataTable.setColumnLabel(1, 'Total {0}'.format(this.isPivotPeople() ? 'People' : 'Activities'));
-                                this._applyActivitiesOverlayTotals(places);
-                                this._createOverlayTooltips();
-                            });
-                        });
-                }
+                //            this.geoChart.draw(this._geoChartDataTable, this._geoChartOptions).then((): void => {
+                //                setTimeout((): void => { this._svgInjectPlaceOverlays(); }, 0);
+                //                this._geoChartDataTable.setColumnLabel(1, 'Total {0}'.format(this.isPivotPeople() ? 'People' : 'Activities'));
+                //                this._applyActivitiesOverlayTotals(places);
+                //                this._createOverlayTooltips();
+                //            });
+                //        });
+                //}
             });
         }
 
@@ -768,29 +810,44 @@ module Employees.ViewModels {
             });
         }
 
-        private _applyActivitiesOverlayTotals(places: ApiModels.ActivitiesPlaceApiModel[]): void {
-            var placeOverlays = this.placeOverlays();
-            $.each(placeOverlays, (i: number, overlay: SummaryGeoChartPlaceOverlay): void => {
-                var total = Enumerable.From(places)
-                    .Where(function (x: ApiModels.ActivitiesPlaceApiModel): boolean {
-                        return x.placeId == overlay.placeId;
-                    })
-                    .Sum(function (x: ApiModels.ActivitiesPlaceApiModel): number {
-                        return x.activityIds.length;
-                    });
-                overlay.total(total);
-            });
-        }
+        //private _applyActivitiesOverlayTotals(places: ApiModels.ActivitiesPlaceApiModel[]): void {
+        //    var placeOverlays = this.placeOverlays();
+        //    $.each(placeOverlays, (i: number, overlay: SummaryGeoChartPlaceOverlay): void => {
+        //        var total = Enumerable.From(places)
+        //            .Where(function (x: ApiModels.ActivitiesPlaceApiModel): boolean {
+        //                return x.placeId == overlay.placeId;
+        //            })
+        //            .Sum(function (x: ApiModels.ActivitiesPlaceApiModel): number {
+        //                return x.activityIds.length;
+        //            });
+        //        overlay.total(total);
+        //    });
+        //}
 
-        private _applyPeopleOverlayTotals(places: ApiModels.PeoplePlaceApiModel[]): void {
+        //private _applyPeopleOverlayTotals(places: ApiModels.PeoplePlaceApiModel[]): void {
+        //    var placeOverlays = this.placeOverlays();
+        //    $.each(placeOverlays, (i: number, overlay: SummaryGeoChartPlaceOverlay): void => {
+        //        var total = Enumerable.From(places)
+        //            .Where(function (x: ApiModels.PeoplePlaceApiModel): boolean {
+        //                return x.placeId == overlay.placeId;
+        //            })
+        //            .Sum(function (x: ApiModels.PeoplePlaceApiModel): number {
+        //                return x.personIds.length;
+        //            });
+        //        overlay.total(total);
+        //    });
+        //}
+
+        private _applyPlaceOverlayTotals(places: ApiModels.EmployeesPlaceApiModel[]): void {
+            var isPivotPeople = this.isPivotPeople();
             var placeOverlays = this.placeOverlays();
             $.each(placeOverlays, (i: number, overlay: SummaryGeoChartPlaceOverlay): void => {
                 var total = Enumerable.From(places)
-                    .Where(function (x: ApiModels.PeoplePlaceApiModel): boolean {
+                    .Where(function (x: ApiModels.EmployeesPlaceApiModel): boolean {
                         return x.placeId == overlay.placeId;
                     })
-                    .Sum(function (x: ApiModels.PeoplePlaceApiModel): number {
-                        return x.personIds.length;
+                    .Sum(function (x: ApiModels.EmployeesPlaceApiModel): number {
+                        return isPivotPeople ? x.activityPersonIds.length : x.activityIds.length;
                     });
                 overlay.total(total);
             });
@@ -838,19 +895,11 @@ module Employees.ViewModels {
             var placeId = this.placeId();
             var areBindingsApplied = this.areBindingsApplied();
             if (placeId != 1 && areBindingsApplied) {
-                $.when(this.activitiesPlaceData.ready(), this.peoplePlaceData.ready()).then((): void => {
-                    var peoplePlace = <ApiModels.PeoplePlaceApiModel>this._getPlaceById(placeId, this.peoplePlaceData.cached);
-                    var activitiesPlace = <ApiModels.ActivitiesPlaceApiModel>this._getPlaceById(placeId, this.activitiesPlaceData.cached);
-                    var place: ApiModels.EmployeesPivotPlaceApiModel = peoplePlace || activitiesPlace;
-                    if (peoplePlace && peoplePlace.placeName) {
-                        this.selectedPlaceSummary.personCount(peoplePlace.personIds.length.toString());
-                    }
-                    if (activitiesPlace && activitiesPlace.placeName) {
-                        this.selectedPlaceSummary.activityCount(activitiesPlace.activityIds.length.toString());
-                    }
-                    if (place && place.placeName) {
-                        this.selectedPlaceSummary.locationCount(place.placeName);
-                    }
+                $.when(this.placeData.ready()).then((): void => {
+                    var place: ApiModels.EmployeesPlaceApiModel = this._getPlaceById(placeId);
+                    this.selectedPlaceSummary.personCount(place.activityPersonIds.length.toString());
+                    this.selectedPlaceSummary.activityCount(place.activityIds.length.toString());
+                    this.selectedPlaceSummary.locationCount(place.placeName);
                 });
             }
             else if (areBindingsApplied) {

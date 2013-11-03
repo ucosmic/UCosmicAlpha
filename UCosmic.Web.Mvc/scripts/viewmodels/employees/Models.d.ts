@@ -2,27 +2,41 @@
 
 declare module Employees.ApiModels {
 
-    export interface EmployeesPivotPlaceApiModel {
+    export interface EmployeesPlaceApiModel {
         placeId: number;
         placeName: string;
         isCountry: boolean;
         countryCode: string;
-    }
-
-    export interface ActivitiesPlaceApiModel extends EmployeesPivotPlaceApiModel {
         activityIds: number[];
+        activityPersonIds: number[];
     }
 
-    export interface ActivitiesPlacesInputModel {
-        countries?: boolean;
-        placeIds?: number[];
-    }
+    //export interface EmployeesPivotPlaceApiModel {
+    //    placeId: number;
+    //    placeName: string;
+    //    isCountry: boolean;
+    //    countryCode: string;
+    //}
 
-    export interface PeoplePlaceApiModel extends EmployeesPivotPlaceApiModel {
-        personIds: number[];
-    }
+    //export interface ActivitiesPlaceApiModel extends EmployeesPivotPlaceApiModel {
+    //    activityIds: number[];
+    //}
 
-    export interface PeoplePlacesInputModel {
+    //export interface ActivitiesPlacesInputModel {
+    //    countries?: boolean;
+    //    placeIds?: number[];
+    //}
+
+    //export interface PeoplePlaceApiModel extends EmployeesPivotPlaceApiModel {
+    //    personIds: number[];
+    //}
+
+    //export interface PeoplePlacesInputModel {
+    //    countries?: boolean;
+    //    placeIds?: number[];
+    //}
+
+    export interface EmployeesPlacesInputModel {
         countries?: boolean;
         placeIds?: number[];
     }
