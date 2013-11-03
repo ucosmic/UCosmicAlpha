@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using SimpleInjector;
 using UCosmic.Domain.Activities;
+using UCosmic.Domain.Employees;
 using UCosmic.Domain.Places;
 
 namespace UCosmic.Work
@@ -20,6 +21,7 @@ namespace UCosmic.Work
         private readonly IDictionary<IDefineWork, IEnumerable<dynamic>> _workforce =
             new Dictionary<IDefineWork, IEnumerable<dynamic>>
             {
+                { new ProjectEmployeesPlacesViews(), null },
                 { new ProjectActivityViews(), null },
                 { new RepairPlaceHierarchies(), null },
             };
