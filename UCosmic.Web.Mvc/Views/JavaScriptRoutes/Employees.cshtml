@@ -3,9 +3,10 @@
 @* API ROUTES *@
 var Routes = Routes || {};
 Routes.Api = Routes.Api || {};
-Routes.Api.Employees = Routes.Api.Employees || {};
 
 @* EMPLOYEES *@
+Routes.Api.Employees = Routes.Api.Employees || {};
+
 Routes.Api.Employees.places = function (domain) {
     return '@routeWriter.WriteRoute(Url.HttpRouteUrl(null, new
     {
@@ -17,14 +18,6 @@ Routes.Api.Employees.places = function (domain) {
 
 @* ACTIVITIES *@
 Routes.Api.Employees.Activities = Routes.Api.Employees.Activities || {};
-@*Routes.Api.Employees.Activities.places = function (domain) {
-    return '@routeWriter.WriteRoute(Url.HttpRouteUrl(null, new
-    {
-        controller = "Employees",
-        action = "GetActivitiesPlaces",
-        domain = routeWriter.Value<string>(0),
-    }))'.format(domain);
-};*@
 
 Routes.Api.Employees.Activities.summary = function (domain) {
     return '@routeWriter.WriteRoute(Url.HttpRouteUrl(null, new
@@ -35,19 +28,9 @@ Routes.Api.Employees.Activities.summary = function (domain) {
     }))'.format(domain);
 };
 
-@* PEOPLE
-Routes.Api.Employees.People = Routes.Api.Employees.People || {};
-Routes.Api.Employees.People.places = function (domain) {
-    return '@routeWriter.WriteRoute(Url.HttpRouteUrl(null, new
-    {
-        controller = "Employees",
-        action = "GetPeoplePlaces",
-        domain = routeWriter.Value<string>(0),
-    }))'.format(domain);
-}; *@
-
 @* SETTINGS *@
 Routes.Api.Employees.Settings = Routes.Api.Employees.Settings || {};
+
 Routes.Api.Employees.Settings.icon = function (domain, iconName) {
     return '@routeWriter.WriteRoute(Url.HttpRouteUrl(null, new
     {

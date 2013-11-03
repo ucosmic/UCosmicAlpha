@@ -316,8 +316,6 @@
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Agreements\AgreementOwningTenant.cs" />
-    <Compile Include="Models\Employees\ActivitiesPlacesInputModel.cs" />
-    <Compile Include="Models\Employees\ActivitiesPlaceApiModel.cs" />
     <Compile Include="Models\Employees\ActivitiesSummary.cs" />
     <Compile Include="ApiControllers\FacultyStaff\EmployeeModuleSettingsController.cs" />
     <Compile Include="ApiControllers\FacultyStaff\EmployeesController.cs" />
@@ -402,8 +400,6 @@
     <Compile Include="Models\Employees\EmployeesPlacesInputModel.cs" />
     <Compile Include="Models\Employees\FacultyStaffSearchApiModel.cs" />
     <Compile Include="Models\Employees\FacultyStaffSummaryApiModel.cs" />
-    <Compile Include="Models\Employees\PeoplePlaceApiModel.cs" />
-    <Compile Include="Models\Employees\PeoplePlacesInputModel.cs" />
     <Compile Include="Models\Establishments\EstablishmentChildrenSearchInputModel.cs" />
     <Compile Include="Models\Establishments\EstablishmentNameSearchInputModel.cs" />
     <Compile Include="Models\InternationalAffiliationApiModel.cs" />

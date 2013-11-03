@@ -90,7 +90,7 @@
             <div style="margin: 1em 0; height: 28px;">
                 <div class="group">
                     <div class="on-left">
-                        <div data-bind="visible: !geoChartSpinner.isVisible() && hasPivotData()" style="display: none;">
+                        <div data-bind="visible: !geoChartSpinner.isVisible() && hasPlaceData()" style="display: none;">
                             <div data-bind="visible: hasNoPlaceId" class="group" style="line-height: 28px;">
                                 Click a location for more information.
                             </div>
@@ -111,7 +111,7 @@
                                 </span>
                             </div>
                         </div>
-                        <div data-bind="visible: !geoChartSpinner.isVisible() && !hasPivotData()" style="display: none; line-height: 28px;">
+                        <div data-bind="visible: !geoChartSpinner.isVisible() && !hasPlaceData()" style="display: none; line-height: 28px;">
                             There are no international faculty or staff relationships to summarize.
                         </div>
                     </div>
@@ -120,12 +120,12 @@
                             <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
                             <strong>Crunching the numbers...</strong>
                         </div>
-                        <div data-bind="visible: !geoChartSpinner.isVisible() && hasPivotData() && hasNoPlaceId()" style="display: none;">
+                        <div data-bind="visible: !geoChartSpinner.isVisible() && hasPlaceData() && hasNoPlaceId()" style="display: none;">
                             <strong>Global View</strong>
                             <img src="@Url.HttpRouteUrl(null, new { controller = "Employees", action = "GetSettingsIcon", domain = @ViewBag.EmployeesDomain, name = "global-view" })"
                                 alt="Global view" width="24" height="24" style="" />
                         </div>
-                        <div data-bind="visible: !geoChartSpinner.isVisible() && hasPivotData() && hasPlaceId()" style="display: none;">
+                        <div data-bind="visible: !geoChartSpinner.isVisible() && hasPlaceData() && hasPlaceId()" style="display: none;">
                             <a href="#" data-bind="click: clearPlaceSelection" class="global-view">
                                 <strong>Return to Global View</strong>
                                 <img src="@Url.HttpRouteUrl(null, new { controller = "Employees", action = "GetSettingsIcon", domain = @ViewBag.EmployeesDomain, name = "global-view" })"
