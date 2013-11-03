@@ -2,11 +2,14 @@
 
 declare module Employees.ApiModels {
 
-    export interface ActivitiesPlaceApiModel {
+    export interface EmployeesPivotPlaceApiModel {
         placeId: number;
         placeName: string;
         isCountry: boolean;
         countryCode: string;
+    }
+
+    export interface ActivitiesPlaceApiModel extends EmployeesPivotPlaceApiModel {
         activityIds: number[];
     }
 
@@ -15,11 +18,7 @@ declare module Employees.ApiModels {
         placeIds?: number[];
     }
 
-    export interface PeoplePlaceApiModel {
-        placeId: number;
-        placeName: string;
-        isCountry: boolean;
-        countryCode: string;
+    export interface PeoplePlaceApiModel extends EmployeesPivotPlaceApiModel {
         personIds: number[];
     }
 

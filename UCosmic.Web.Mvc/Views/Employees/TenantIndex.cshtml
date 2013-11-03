@@ -94,7 +94,7 @@
                             <img src="@Url.HttpRouteUrl(null, new { controller = "Employees", action = "GetSettingsIcon", domain = @ViewBag.EmployeesDomain, name = "global-view" })"
                                 alt="Global view" width="24" height="24" style="" />
                             <strong>Global View:</strong>
-                            <span>double click a region for more information.</span>
+                            <span>click a location for more information.</span>
                         </div>
                         <div data-bind="visible: !geoChartSpinner.isVisible() && !hasPivotData()" style="display: none; line-height: 28px;">
                             There are no international faculty or staff relationships to summarize.
@@ -165,10 +165,12 @@
                         </ul>
 
                         @* PLACE UI *@
-                        <ul class="ui" data-bind="foreach: placeOverlays, visible: isGeoChartReady">
+                        <ul class="ui" data-bind="foreach: placeOverlays, visible: arePlaceOverlaysVisible">
                             <li data-bind="attr: { 'class': className }">
                                 <div class="hit" data-bind="with: imageSwapper">
-                                    <img data-bind="attr: { src: src }, event: { mouseenter: onMouseEnter, mouseleave: onMouseLeave }"
+                                    <img data-bind="attr: { src: src }, event: { mouseenter: onMouseEnter, mouseleave: onMouseLeave }, visible: $root.isD3Undefined()"
+                                        alt="" src="~/images/transparent.png" />
+                                    <img data-bind="event: { mouseenter: onMouseEnter, mouseleave: onMouseLeave }, visible: $root.isD3Defined()"
                                         alt="" src="~/images/transparent.png" />
                                 </div>
                                 <div class="tooltip" style="display: none;">
@@ -183,7 +185,6 @@
                                 </div>
                             </li>
                         </ul>
-
                     </div>
                 </div>
             </div>

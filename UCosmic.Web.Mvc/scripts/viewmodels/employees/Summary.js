@@ -15,6 +15,39 @@ var Employees;
     /// <reference path="Models.d.ts" />
     /// <reference path="../../app/App.ts" />
     (function (ViewModels) {
+        var SummaryRouteState = (function () {
+            function SummaryRouteState() {
+            }
+            SummaryRouteState.areEqual = function (first, second) {
+                if (!first && !second)
+                    return true;
+                if (!first && second)
+                    return false;
+                if (first && !second)
+                    return false;
+                var areEqual = true;
+                if (first.pivot != second.pivot)
+                    areEqual = false;
+                if (first.placeId != second.placeId)
+                    areEqual = false;
+                return areEqual;
+            };
+
+            SummaryRouteState.isEmpty = function (state) {
+                if (!state)
+                    return true;
+                return !state.pivot && !state.placeId;
+            };
+
+            SummaryRouteState.isIncomplete = function (state) {
+                if (!state)
+                    return true;
+                return !state.pivot || !state.placeId;
+            };
+            return SummaryRouteState;
+        })();
+        ViewModels.SummaryRouteState = SummaryRouteState;
+
         (function (DataGraphPivot) {
             DataGraphPivot[DataGraphPivot["unknown"] = 0] = "unknown";
             DataGraphPivot[DataGraphPivot["people"] = 1] = "people";
@@ -59,10 +92,10 @@ var Employees;
             }
             DataCacher.prototype.ready = function () {
                 var _this = this;
-                if (!this._response) {
+                if (!this.cached) {
                     this.loader().done(function (data) {
-                        _this._response = data;
-                        _this._promise.resolve(_this._response);
+                        _this.cached = data;
+                        _this._promise.resolve(_this.cached);
                     }).fail(function (xhr) {
                         _this._promise.reject();
                     });
@@ -92,12 +125,21 @@ var Employees;
                 this.isPivotActivities = ko.computed(function () {
                     return _this.pivot() == DataGraphPivot.activities;
                 });
-                //#endregion
-                //#endregion
-                //#region Routing
+                this.placeId = ko.observable(parseInt(sessionStorage.getItem(Summary._placeIdKey)) || Summary._placeIdDefault);
+                this._placeIdChanged = ko.computed(function () {
+                    _this._onPlaceIdChanged();
+                });
+                this.hasPlaceId = ko.computed(function () {
+                    var placeId = _this.placeId();
+                    return (placeId && placeId > 1);
+                });
+                this.hasNoPlaceId = ko.computed(function () {
+                    return !_this.hasPlaceId();
+                });
                 this.routeState = ko.computed(function () {
                     return {
-                        pivot: _this.pivot()
+                        pivot: _this.pivot(),
+                        placeId: _this.placeId()
                     };
                 });
                 this._routeStateChanged = ko.computed(function () {
@@ -117,6 +159,41 @@ var Employees;
                 this.geoChart = new App.Google.GeoChart(document.getElementById(this.settings.chart.googleElementId));
                 this.geoChartSpinner = new App.Spinner(new App.SpinnerOptions(400, true));
                 this.isGeoChartReady = ko.observable(false);
+                this._geoChartDataTable = this._newGeoChartDataTable();
+                this._geoChartOptions = {
+                    // options passed when drawing geochart
+                    displayMode: 'regions',
+                    region: 'world',
+                    keepAspectRatio: this.settings.chart.keepAspectRatio ? true : false,
+                    height: this.settings.chart.keepAspectRatio ? 480 : 500,
+                    colorAxis: {
+                        minValue: 1,
+                        colors: ['#dceadc', '#006400']
+                    },
+                    backgroundColor: '#acccfd'
+                };
+                this.arePlaceOverlaysVisible = ko.computed(function () {
+                    var placeId = _this.placeId();
+                    var isGeoChartReady = _this.isGeoChartReady();
+                    if (!isGeoChartReady)
+                        return false;
+                    var areVisible = (typeof placeId === 'undefined' || placeId == null || isNaN(placeId) || placeId == 1 || placeId == 0) && isGeoChartReady;
+
+                    if (Summary._isD3Defined() && _this.settings.chart.googleElementId) {
+                        // overlay may already be drawn
+                        var dInjectRootElementId = '{0}_place_overlays_root'.format(_this.settings.chart.googleElementId);
+                        var dInjectRootSelection = d3.select('#{0}'.format(dInjectRootElementId));
+                        if (dInjectRootSelection.length) {
+                            if (areVisible) {
+                                dInjectRootSelection.attr('style', '');
+                            } else {
+                                dInjectRootSelection.attr('style', 'display: none;');
+                            }
+                        }
+                    }
+
+                    return areVisible;
+                });
                 this.isD3Defined = ko.computed(function () {
                     return Summary._isD3Defined();
                 });
@@ -197,21 +274,61 @@ var Employees;
                 return this.pivot() == pivot;
             };
 
+            Summary.prototype._onPlaceIdChanged = function () {
+                // compare value with what is stored in the session
+                var value = this.placeId();
+                var old = parseInt(sessionStorage.getItem(Summary._placeIdKey)) || undefined;
+
+                if (value !== old) {
+                    // save the new value to session storage
+                    sessionStorage.setItem(Summary._placeIdKey, value.toString());
+                }
+            };
+
+            //#endregion
+            //#endregion
+            //#region Routing
+            Summary.prototype._getUrlState = function () {
+                var params = location.search.indexOf('?') == 0 ? location.search.substr(1) : location.search;
+                var state = App.deparam(params, true);
+                return state;
+            };
+
             Summary.prototype._onRouteStateChanged = function () {
+                // this runs whenever an observable component of routeState changes
+                // and will run at least once when the page loads, since it is a computed
+                // there are 4 main scenarios we want to handle here:
+                // 1.) when the route state matches the url state, do nothing
+                // 2.) when we have incomplete url state, replace current url based on route state
+                // 3.) when historyjs state is empty and url state is complete, we have a url
+                //     that should override the current route state values
+                // 4.) all other cases mean user interaction, and should push a new url
                 var routeState = this.routeState();
-                var historyState = HistoryJS.getState();
-                if (!historyState.data.pivot) {
-                    HistoryJS.replaceState(routeState, document.title, '?' + $.param(routeState));
+                var historyState = HistoryJS.getState().data;
+                var urlState = this._getUrlState();
+
+                if (SummaryRouteState.areEqual(routeState, urlState))
+                    return;
+
+                if (SummaryRouteState.isIncomplete(urlState)) {
+                    HistoryJS.replaceState(routeState, '', '?' + $.param(routeState));
+                } else if (SummaryRouteState.isEmpty(historyState)) {
+                    this._updateState(urlState);
                 } else {
-                    HistoryJS.pushState(routeState, document.title, '?' + $.param(routeState));
+                    HistoryJS.pushState(routeState, '', '?' + $.param(routeState));
                 }
             };
 
             Summary.prototype._onRouteChanged = function () {
-                var state = HistoryJS.getState();
-                var data = state.data;
-                this.pivot(data.pivot);
+                // this runs whenever historyjs detects a statechange event
+                var urlState = this._getUrlState();
+                this._updateState(urlState);
                 this._applyState();
+            };
+
+            Summary.prototype._updateState = function (state) {
+                this.pivot(state.pivot);
+                this.placeId(state.placeId);
             };
 
             Summary.prototype._applyState = function () {
@@ -260,27 +377,39 @@ var Employees;
                 return promise;
             };
 
-            Summary._geoChartOptions = function (settings) {
-                // options passed when drawing geochart
-                var options = {
-                    displayMode: 'regions',
-                    region: 'world',
-                    keepAspectRatio: settings.chart.keepAspectRatio ? true : false,
-                    height: settings.chart.keepAspectRatio ? 480 : 500,
-                    colorAxis: {
-                        minValue: 1,
-                        colors: ['#dceadc', '#006400']
-                    },
-                    backgroundColor: '#acccfd'
-                };
-                return options;
+            Summary.prototype._getPlacesForEnumeration = function () {
+                var searchTarget = this.isPivotActivities() ? this.activitiesPlaceData : this.peoplePlaceData;
+
+                return searchTarget ? searchTarget.cached : undefined;
+            };
+
+            Summary.prototype._getPlaceById = function (placeId) {
+                var searchTarget = this._getPlacesForEnumeration();
+                if (!searchTarget)
+                    return undefined;
+                var place = Enumerable.From(searchTarget).FirstOrDefault(undefined, function (x) {
+                    return x.placeId == placeId;
+                });
+
+                return place;
+            };
+
+            Summary.prototype._getPlaceByName = function (placeName) {
+                var searchTarget = this._getPlacesForEnumeration();
+                if (!searchTarget)
+                    return undefined;
+                var place = Enumerable.From(searchTarget).FirstOrDefault(undefined, function (x) {
+                    return x.placeName == placeName;
+                });
+
+                return place;
             };
 
             Summary.prototype._newGeoChartDataTable = function () {
                 // create data table schema
                 var dataTable = new google.visualization.DataTable();
                 dataTable.addColumn('string', 'Place');
-                dataTable.addColumn('number', 'Total {0}'.format(this.isPivotPeople() ? 'People' : 'Activities'));
+                dataTable.addColumn('number', 'Total');
                 return dataTable;
             };
 
@@ -291,13 +420,17 @@ var Employees;
                 var promise = $.Deferred();
 
                 if (!this.isGeoChartReady()) {
-                    var dataTable = this._newGeoChartDataTable();
-                    var options = Summary._geoChartOptions(this.settings);
-                    this.geoChart.draw(dataTable, options).then(function () {
+                    this.geoChart.draw(this._geoChartDataTable, this._geoChartOptions).then(function () {
                         if (!_this.isGeoChartReady()) {
                             _this.isGeoChartReady(true);
                             _this.bindingsApplied.done(function () {
                                 _this._svgInjectPlaceOverlays();
+                                google.visualization.events.addListener(_this.geoChart.geoChart, 'select', function () {
+                                    _this._onGeoChartSelect();
+                                });
+                                google.visualization.events.addListener(_this.geoChart.geoChart, 'regionClick', function (e) {
+                                    _this._onGeoChartRegionClick(e);
+                                });
                             });
                         }
                         promise.resolve();
@@ -310,35 +443,82 @@ var Employees;
 
             Summary.prototype._drawGeoChart = function () {
                 var _this = this;
-                var options = Summary._geoChartOptions(this.settings);
-                var dataTable = this._newGeoChartDataTable();
+                // the data may not yet be loaded, and if not, going to redraw after it is loaded
+                var cachedData = this._getPlacesForEnumeration();
+                var needsRedraw = !cachedData;
+
+                // decide which part of the map to select
+                var placeId = this.placeId();
+                var place = this._getPlaceById(placeId);
+                this._geoChartOptions.region = !placeId || placeId == 1 || !place || !place.countryCode ? 'world' : place.countryCode;
+
+                // change aspect ratio based on placeId
+                this._geoChartOptions.keepAspectRatio = placeId && placeId > 1 && place && place.countryCode ? false : this.settings.chart.keepAspectRatio ? true : false;
 
                 // hit the server up for data and redraw
                 this._initGeoChart().then(function () {
                     if (_this.isPivotPeople()) {
                         _this.peoplePlaceData.ready().done(function (places) {
+                            if (needsRedraw) {
+                                _this._drawGeoChart();
+                                return;
+                            }
+                            _this._geoChartDataTable.removeRows(0, _this._geoChartDataTable.getNumberOfRows());
+
                             $.each(places, function (i, dataPoint) {
-                                dataTable.addRow([dataPoint.placeName, dataPoint.personIds.length]);
+                                _this._geoChartDataTable.addRow([dataPoint.placeName, dataPoint.personIds.length]);
                             });
 
-                            _this.geoChart.draw(dataTable, options).then(function () {
+                            _this.geoChart.draw(_this._geoChartDataTable, _this._geoChartOptions).then(function () {
+                                setTimeout(function () {
+                                    _this._svgInjectPlaceOverlays();
+                                }, 0);
+                                _this._geoChartDataTable.setColumnLabel(1, 'Total {0}'.format(_this.isPivotPeople() ? 'People' : 'Activities'));
                                 _this._applyPeopleOverlayTotals(places);
                                 _this._createOverlayTooltips();
                             });
                         });
                     } else {
                         _this.activitiesPlaceData.ready().done(function (places) {
+                            if (needsRedraw) {
+                                _this._drawGeoChart();
+                                return;
+                            }
+                            _this._geoChartDataTable.removeRows(0, _this._geoChartDataTable.getNumberOfRows());
+
                             $.each(places, function (i, dataPoint) {
-                                dataTable.addRow([dataPoint.placeName, dataPoint.activityIds.length]);
+                                _this._geoChartDataTable.addRow([dataPoint.placeName, dataPoint.activityIds.length]);
                             });
 
-                            _this.geoChart.draw(dataTable, options).then(function () {
+                            _this.geoChart.draw(_this._geoChartDataTable, _this._geoChartOptions).then(function () {
+                                setTimeout(function () {
+                                    _this._svgInjectPlaceOverlays();
+                                }, 0);
+                                _this._geoChartDataTable.setColumnLabel(1, 'Total {0}'.format(_this.isPivotPeople() ? 'People' : 'Activities'));
                                 _this._applyActivitiesOverlayTotals(places);
                                 _this._createOverlayTooltips();
                             });
                         });
                     }
                 });
+            };
+
+            Summary.prototype._onGeoChartSelect = function () {
+                var selection = this.geoChart.geoChart.getSelection();
+                if (selection && selection.length) {
+                    var rowIndex = selection[0].row;
+
+                    // first column of the data table has the place name (country name)
+                    var placeName = this._geoChartDataTable.getFormattedValue(rowIndex, 0);
+                    var place = this._getPlaceByName(placeName);
+                    if (place) {
+                        this.placeId(place.placeId);
+                    }
+                }
+            };
+
+            Summary.prototype._onGeoChartRegionClick = function (e) {
+                // this will fire even when the country clicked has total === zero
             };
 
             Summary.prototype._parsePlaceOverlays = function () {
@@ -398,6 +578,9 @@ var Employees;
 
                 // all of the overlays will become children of this g element
                 var dInjectRoot = dGoogleG.append('g').attr('id', dInjectRootElementId);
+                var areOverlaysVisible = this.arePlaceOverlaysVisible();
+                if (!areOverlaysVisible)
+                    dInjectRoot.attr('style', 'display: none;');
 
                 // iterate over the parsed place overlays
                 // first, need to show the data root in order to get valid positions
@@ -438,10 +621,6 @@ var Employees;
             };
 
             Summary.prototype._svgApplyPlaceOverlayHover = function (overlay, noHover, hover) {
-                // make the ui images transparent
-                overlay.imageSwapper.hoverSrc(this.settings.chart.transparentImgSrc);
-                overlay.imageSwapper.noHoverSrc(this.settings.chart.transparentImgSrc);
-
                 // enable svg image hover swaps
                 overlay.imageSwapper.isHover.subscribe(function (newValue) {
                     if (newValue) {
@@ -540,6 +719,9 @@ var Employees;
 
             Summary._pivotDefault = DataGraphPivot.activities;
             Summary._pivotKey = 'EmployeeSummaryPivot';
+
+            Summary._placeIdDefault = 1;
+            Summary._placeIdKey = 'EmployeeSummaryPlaceId';
             return Summary;
         })();
         ViewModels.Summary = Summary;

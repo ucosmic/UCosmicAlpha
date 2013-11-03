@@ -174,4 +174,69 @@ else
     $(function () {
         App.Obtruder.obtrude(document);
     });
+
+    //export function getQueryStringValueByName(name: string): string {
+    //    name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+    //    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+    //        results = regex.exec(location.search);
+    //    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    //}
+    function deparam(params, coerce) {
+        if (typeof coerce === "undefined") { coerce = false; }
+        // https://github.com/cowboy/jquery-bbq/blob/master/jquery.ba-bbq.js
+        var obj = {}, coerce_types = { 'true': !0, 'false': !1, 'null': null };
+        var decode = decodeURIComponent;
+
+        // Iterate over all name=value pairs.
+        $.each(params.replace(/\+/g, ' ').split('&'), function (j, v) {
+            var param = v.split('='), key = decode(param[0]), val, cur = obj, i = 0, keys = key.split(']['), keys_last = keys.length - 1;
+
+            if (/\[/.test(keys[0]) && /\]$/.test(keys[keys_last])) {
+                // Remove the trailing ] from the last keys part.
+                keys[keys_last] = keys[keys_last].replace(/\]$/, '');
+
+                // Split first keys part into two parts on the [ and add them back onto
+                // the beginning of the keys array.
+                keys = keys.shift().split('[').concat(keys);
+
+                keys_last = keys.length - 1;
+            } else {
+                // Basic 'foo' style key.
+                keys_last = 0;
+            }
+
+            if (param.length === 2) {
+                val = decode(param[1]);
+
+                if (coerce) {
+                    val = val && !isNaN(val) ? +val : val === 'undefined' ? undefined : coerce_types[val] !== undefined ? coerce_types[val] : val;
+                }
+
+                if (keys_last) {
+                    for (; i <= keys_last; i++) {
+                        key = keys[i] === '' ? cur.length : keys[i];
+                        cur = cur[key] = i < keys_last ? cur[key] || (keys[i + 1] && isNaN(Number(keys[i + 1])) ? {} : []) : val;
+                    }
+                } else {
+                    if ($.isArray(obj[key])) {
+                        // val is already an array, so push on the next value.
+                        obj[key].push(val);
+                    } else if (obj[key] !== undefined) {
+                        // val isn't an array, but since a second value has been specified,
+                        // convert val into an array.
+                        obj[key] = [obj[key], val];
+                    } else {
+                        // val is a scalar.
+                        obj[key] = val;
+                    }
+                }
+            } else if (key) {
+                // No value was defined, so set something meaningful.
+                obj[key] = coerce ? undefined : '';
+            }
+        });
+
+        return obj;
+    }
+    App.deparam = deparam;
 })(App || (App = {}));

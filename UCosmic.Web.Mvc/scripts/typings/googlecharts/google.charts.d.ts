@@ -41,6 +41,19 @@ declare module google {
             p: any;
         }
 
+        export interface DataTableCellFilter {
+            column: number;
+        }
+
+        export interface DataTableCellValueFilter extends DataTableCellFilter {
+            value: any;
+        }
+
+        export interface DataTableCellRangeFilter extends DataTableCellFilter {
+            minValue?: any;
+            maxValue?: any;
+        }
+
         export class DataTable {
             constructor(data?: any, version?: any);
             addColumn(type: string, label?: string, id?: string): number;
@@ -50,14 +63,28 @@ declare module google {
             addRows(count: number): number;
             addRows(array: DataObjectCell[][]): number;
             addRows(array: any[]): number;
+            getFilteredRows(filters: DataTableCellFilter[]): number[];
+            getFormattedValue(rowIndex: number, columnIndex: number);
+            getNumberOfColumns(): number;
+            getNumberOfRows(): number;
+            removeRow(rowIndex: number): void;
+            removeRows(rowIndex: number, numberOfRows: number): void;
+            setColumnLabel(columnIndex: number, label: string): void;
         }
 
         function arrayToDataTable(data: any[]): DataTable;
+
+        export interface VisualizationSelectionArray {
+            column?: number;
+            row?: number;
+        }
 
         //https://google-developers.appspot.com/chart/interactive/docs/gallery/geochart
         export class GeoChart {
             constructor(element: Element);
             draw(chart: DataTable, options: GeoChartOptions): void;
+            getSelection(): GeoChartSelection[];
+            setSelection(selection: VisualizationSelectionArray[]): void;
         }
         export interface GeoChartOptions {
             backgroundColor?: any;
@@ -112,10 +139,16 @@ declare module google {
             textStyle?: GeoChartTextStyle;
             trigger?: string;
         }
+        export interface GeoChartRegionClickEvent {
+            region: string;
+        }
+        export interface GeoChartSelection {
+            row: number;
+        }
 
         module events {
             function addListener(chart: any, eventName: string, callback: Function): any;
-            function addListener(chart: any, eventName: string, callback: () => any): any;
+            function addListener(chart: any, eventName: string, callback: (...args: any[]) => void): any;
         }
     }
 }

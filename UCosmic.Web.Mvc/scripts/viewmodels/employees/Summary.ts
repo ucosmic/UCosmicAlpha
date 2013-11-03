@@ -36,8 +36,29 @@ module Employees.ViewModels {
         imageSwapper: ImageSwapper;
     }
 
-    export interface SummaryRouteState {
+    export class SummaryRouteState {
         pivot: DataGraphPivot; // enum during build, int at runtime
+        placeId: number;
+
+        static areEqual(first: SummaryRouteState, second: SummaryRouteState): boolean {
+            if (!first && !second) return true;
+            if (!first && second) return false;
+            if (first && !second) return false;
+            var areEqual = true;
+            if (first.pivot != second.pivot) areEqual = false;
+            if (first.placeId != second.placeId) areEqual = false;
+            return areEqual;
+        }
+
+        static isEmpty(state: SummaryRouteState): boolean {
+            if (!state) return true;
+            return !state.pivot && !state.placeId;
+        }
+
+        static isIncomplete(state: SummaryRouteState): boolean {
+            if (!state) return true;
+            return !state.pivot || !state.placeId;
+        }
     }
 
     export enum DataGraphPivot {
@@ -83,14 +104,14 @@ module Employees.ViewModels {
     export class DataCacher<T> {
         constructor(public loader: () => JQueryPromise<T>) { }
 
-        private _response: T;
+        cached: T;
         private _promise: JQueryDeferred<T> = $.Deferred();
         ready(): JQueryPromise<T> {
-            if (!this._response) {
+            if (!this.cached) {
                 this.loader()
                     .done((data: T): void => {
-                        this._response = data;
-                        this._promise.resolve(this._response);
+                        this.cached = data;
+                        this._promise.resolve(this.cached);
                     })
                     .fail((xhr: JQueryXHR): void => {
                         this._promise.reject();
@@ -193,12 +214,49 @@ module Employees.ViewModels {
         });
 
         //#endregion
+        //#region PlaceId
+
+        private static _placeIdDefault = 1;
+        private static _placeIdKey = 'EmployeeSummaryPlaceId';
+        placeId: KnockoutObservable<number> = ko.observable(
+            parseInt(sessionStorage.getItem(Summary._placeIdKey)) || Summary._placeIdDefault);
+
+        private _placeIdChanged = ko.computed((): void => { this._onPlaceIdChanged(); });
+        private _onPlaceIdChanged(): void {
+            // compare value with what is stored in the session
+            var value = <number>this.placeId();
+            var old = parseInt(sessionStorage.getItem(Summary._placeIdKey)) || undefined;
+
+            // don't do anything unless the value has changed
+            if (value !== old) {
+                // save the new value to session storage
+                sessionStorage.setItem(Summary._placeIdKey, value.toString());
+            }
+        }
+
+        hasPlaceId = ko.computed((): boolean => {
+            var placeId = this.placeId();
+            return (placeId && placeId > 1);
+        });
+        hasNoPlaceId = ko.computed((): boolean => {
+            return !this.hasPlaceId();
+        });
+
+        //#endregion
         //#endregion
         //#region Routing
+
+        private _getUrlState(): SummaryRouteState {
+            var params = location.search.indexOf('?') == 0
+                ? location.search.substr(1) : location.search;
+            var state: SummaryRouteState = App.deparam(params, true);
+            return state;
+        }
 
         routeState = ko.computed((): SummaryRouteState => {
             return {
                 pivot: this.pivot(),
+                placeId: this.placeId(),
             };
         });
 
@@ -206,22 +264,47 @@ module Employees.ViewModels {
             this._onRouteStateChanged();
         }).extend({ throttle: 1 });
 
-        private _onRouteStateChanged() {
-            var routeState = this.routeState();
-            var historyState = HistoryJS.getState();
-            if (!historyState.data.pivot) {
-                HistoryJS.replaceState(routeState, document.title, '?' + $.param(routeState));
+        private _onRouteStateChanged(): void {
+            // this runs whenever an observable component of routeState changes
+            // and will run at least once when the page loads, since it is a computed
+            // there are 4 main scenarios we want to handle here:
+            // 1.) when the route state matches the url state, do nothing
+            // 2.) when we have incomplete url state, replace current url based on route state
+            // 3.) when historyjs state is empty and url state is complete, we have a url
+            //     that should override the current route state values
+            // 4.) all other cases mean user interaction, and should push a new url
+            var routeState = this.routeState(); // the new state we want in the URL
+            var historyState = HistoryJS.getState().data; // state saved by historyjs
+            var urlState = this._getUrlState(); // actual state based on current URL
+
+            // when the route state is the same as the url state, url does not need to be changed
+            if (SummaryRouteState.areEqual(routeState, urlState)) return;
+
+            // when the url state is missing something (or everything), replace it with route data
+            if (SummaryRouteState.isIncomplete(urlState)) {
+                HistoryJS.replaceState(routeState, '', '?' + $.param(routeState));
+            }
+
+            // by now url state is not equal but is not incomplete either
+            // since we have it, update the route values with the url values
+            else if (SummaryRouteState.isEmpty(historyState)) {
+                this._updateState(urlState);
             }
             else {
-                HistoryJS.pushState(routeState, document.title, '?' + $.param(routeState));
+                HistoryJS.pushState(routeState, '', '?' + $.param(routeState));
             }
         }
 
-        private _onRouteChanged() {
-            var state = HistoryJS.getState();
-            var data: SummaryRouteState = state.data;
-            this.pivot(data.pivot);
+        private _onRouteChanged(): void {
+            // this runs whenever historyjs detects a statechange event
+            var urlState = this._getUrlState(); // actual state based on current URL
+            this._updateState(urlState);
             this._applyState();
+        }
+
+        private _updateState(state: SummaryRouteState): void {
+            this.pivot(state.pivot);
+            this.placeId(state.placeId);
         }
 
         private _applyState(): void {
@@ -289,6 +372,36 @@ module Employees.ViewModels {
             return promise;
         }
 
+        private _getPlacesForEnumeration(): ApiModels.EmployeesPivotPlaceApiModel[] {
+            var searchTarget: DataCacher<ApiModels.EmployeesPivotPlaceApiModel[]> = this.isPivotActivities()
+                ? <DataCacher<ApiModels.EmployeesPivotPlaceApiModel[]>>this.activitiesPlaceData
+                : this.peoplePlaceData;
+
+            return searchTarget ? searchTarget.cached : undefined;
+        }
+
+        private _getPlaceById(placeId: number): ApiModels.EmployeesPivotPlaceApiModel {
+            var searchTarget = this._getPlacesForEnumeration();
+            if (!searchTarget) return undefined;
+            var place: ApiModels.EmployeesPivotPlaceApiModel = Enumerable.From(searchTarget)
+                .FirstOrDefault(undefined, function (x: ApiModels.EmployeesPivotPlaceApiModel): boolean {
+                    return x.placeId == placeId;
+                });
+
+            return place;
+        }
+
+        private _getPlaceByName(placeName: string): ApiModels.EmployeesPivotPlaceApiModel {
+            var searchTarget = this._getPlacesForEnumeration();
+            if (!searchTarget) return undefined;
+            var place: ApiModels.EmployeesPivotPlaceApiModel = Enumerable.From(searchTarget)
+                .FirstOrDefault(undefined, function (x: ApiModels.EmployeesPivotPlaceApiModel): boolean {
+                    return x.placeName == placeName;
+                });
+
+            return place;
+        }
+
         //#endregion
         //#region Google GeoChart
 
@@ -296,30 +409,27 @@ module Employees.ViewModels {
             document.getElementById(this.settings.chart.googleElementId));
         geoChartSpinner = new App.Spinner(new App.SpinnerOptions(400, true));
         isGeoChartReady: KnockoutObservable<boolean> = ko.observable(false);
+        private _geoChartDataTable: google.visualization.DataTable = this._newGeoChartDataTable();
 
-        private static _geoChartOptions(settings: SummarySettings): google.visualization.GeoChartOptions {
+        private _geoChartOptions: google.visualization.GeoChartOptions = {
             // options passed when drawing geochart
-            var options: google.visualization.GeoChartOptions = {
-                displayMode: 'regions',
-                region: 'world',
-                keepAspectRatio: settings.chart.keepAspectRatio ? true : false,
-                height: settings.chart.keepAspectRatio ? 480 : 500,
-                colorAxis: {
-                    minValue: 1,
-                    colors: ['#dceadc', '#006400', ],
-                },
-                backgroundColor: '#acccfd', // google maps water color is a5bfdd, Doug's bg color is acccfd
-                //backgroundColor: 'transparent',
-            };
-            return options;
-        }
+            displayMode: 'regions',
+            region: 'world',
+            keepAspectRatio: this.settings.chart.keepAspectRatio ? true : false,
+            height: this.settings.chart.keepAspectRatio ? 480 : 500,
+            colorAxis: {
+                minValue: 1,
+                colors: ['#dceadc', '#006400', ],
+            },
+            backgroundColor: '#acccfd', // google maps water color is a5bfdd, Doug's bg color is acccfd
+            //backgroundColor: 'transparent',
+        };
 
         private _newGeoChartDataTable(): google.visualization.DataTable {
             // create data table schema
             var dataTable = new google.visualization.DataTable();
             dataTable.addColumn('string', 'Place');
-            dataTable.addColumn('number', 'Total {0}'
-                .format(this.isPivotPeople() ? 'People' : 'Activities'));
+            dataTable.addColumn('number', 'Total');
             return dataTable;
         }
 
@@ -329,9 +439,7 @@ module Employees.ViewModels {
             var promise = $.Deferred();
 
             if (!this.isGeoChartReady()) {
-                var dataTable = this._newGeoChartDataTable();
-                var options = Summary._geoChartOptions(this.settings);
-                this.geoChart.draw(dataTable, options).then((): void => {
+                this.geoChart.draw(this._geoChartDataTable, this._geoChartOptions).then((): void => {
                     // svg injection depends on the chart being ready,
                     // and bindings having been applied, and the
                     // overlays being visible
@@ -339,6 +447,10 @@ module Employees.ViewModels {
                         this.isGeoChartReady(true); // call this before overlaying to ensure positions
                         this.bindingsApplied.done((): void=> {
                             this._svgInjectPlaceOverlays();
+                            google.visualization.events.addListener(this.geoChart.geoChart, 'select',
+                                (): void => { this._onGeoChartSelect(); });
+                            google.visualization.events.addListener(this.geoChart.geoChart, 'regionClick',
+                                (e: google.visualization.GeoChartRegionClickEvent): void => { this._onGeoChartRegionClick(e); });
                         });
                     }
                     promise.resolve();
@@ -351,19 +463,38 @@ module Employees.ViewModels {
         }
 
         private _drawGeoChart(): void {
-            var options = Summary._geoChartOptions(this.settings);
-            var dataTable = this._newGeoChartDataTable();
+            // the data may not yet be loaded, and if not, going to redraw after it is loaded
+            var cachedData = this._getPlacesForEnumeration();
+            var needsRedraw = !cachedData;
+
+            // decide which part of the map to select
+            var placeId = this.placeId();
+            var place = this._getPlaceById(placeId);
+            this._geoChartOptions.region = !placeId || placeId == 1 || !place || !place.countryCode
+            ? 'world' : place.countryCode;
+
+            // change aspect ratio based on placeId
+            this._geoChartOptions.keepAspectRatio = placeId && placeId > 1 && place && place.countryCode ? false :
+            this.settings.chart.keepAspectRatio ? true : false;
 
             // hit the server up for data and redraw
             this._initGeoChart().then((): void => {
                 if (this.isPivotPeople()) {
                     this.peoplePlaceData.ready()
                         .done((places: ApiModels.PeoplePlaceApiModel[]): void => {
+                            if (needsRedraw) {
+                                this._drawGeoChart();
+                                return;
+                            }
+                            this._geoChartDataTable.removeRows(0, this._geoChartDataTable.getNumberOfRows());
+
                             $.each(places, (i: number, dataPoint: ApiModels.PeoplePlaceApiModel): void=> {
-                                dataTable.addRow([dataPoint.placeName, dataPoint.personIds.length]);
+                                this._geoChartDataTable.addRow([dataPoint.placeName, dataPoint.personIds.length]);
                             });
 
-                            this.geoChart.draw(dataTable, options).then((): void => {
+                            this.geoChart.draw(this._geoChartDataTable, this._geoChartOptions).then((): void => {
+                                setTimeout((): void => { this._svgInjectPlaceOverlays(); }, 0);
+                                this._geoChartDataTable.setColumnLabel(1, 'Total {0}'.format(this.isPivotPeople() ? 'People' : 'Activities'));
                                 this._applyPeopleOverlayTotals(places);
                                 this._createOverlayTooltips();
                             });
@@ -372,11 +503,19 @@ module Employees.ViewModels {
                 else {
                     this.activitiesPlaceData.ready()
                         .done((places: ApiModels.ActivitiesPlaceApiModel[]): void => {
+                            if (needsRedraw) {
+                                this._drawGeoChart();
+                                return;
+                            }
+                            this._geoChartDataTable.removeRows(0, this._geoChartDataTable.getNumberOfRows());
+
                             $.each(places, (i: number, dataPoint: ApiModels.ActivitiesPlaceApiModel): void=> {
-                                dataTable.addRow([dataPoint.placeName, dataPoint.activityIds.length]);
+                                this._geoChartDataTable.addRow([dataPoint.placeName, dataPoint.activityIds.length]);
                             });
 
-                            this.geoChart.draw(dataTable, options).then((): void => {
+                            this.geoChart.draw(this._geoChartDataTable, this._geoChartOptions).then((): void => {
+                                setTimeout((): void => { this._svgInjectPlaceOverlays(); }, 0);
+                                this._geoChartDataTable.setColumnLabel(1, 'Total {0}'.format(this.isPivotPeople() ? 'People' : 'Activities'));
                                 this._applyActivitiesOverlayTotals(places);
                                 this._createOverlayTooltips();
                             });
@@ -385,10 +524,53 @@ module Employees.ViewModels {
             });
         }
 
+        private _onGeoChartSelect(): void {
+            var selection = this.geoChart.geoChart.getSelection(); // expect single item in array with row index
+            if (selection && selection.length) { // just to make sure
+                var rowIndex = selection[0].row; // get the row index of corresponding data table item selected
+                // first column of the data table has the place name (country name)
+                var placeName = this._geoChartDataTable.getFormattedValue(rowIndex, 0);
+                var place = this._getPlaceByName(placeName);
+                if (place) {
+                    this.placeId(place.placeId);
+                }
+            }
+        }
+
+        private _onGeoChartRegionClick(e: google.visualization.GeoChartRegionClickEvent): void {
+            // this will fire even when the country clicked has total === zero
+        }
+
         //#endregion
         //#region Place Overlays
 
         placeOverlays: KnockoutObservableArray<SummaryGeoChartPlaceOverlay>;
+
+        arePlaceOverlaysVisible = ko.computed((): boolean => {
+            var placeId = this.placeId();
+            var isGeoChartReady = this.isGeoChartReady();
+            if (!isGeoChartReady) return false;
+            var areVisible = (typeof placeId === 'undefined' || placeId == null || isNaN(placeId) || placeId == 1 || placeId == 0)
+                && isGeoChartReady;
+
+            // hide the svg overlays if applicable
+            if (Summary._isD3Defined() && this.settings.chart.googleElementId) {
+                // overlay may already be drawn
+                var dInjectRootElementId = '{0}_place_overlays_root'
+                    .format(this.settings.chart.googleElementId);
+                var dInjectRootSelection = d3.select('#{0}'.format(dInjectRootElementId));
+                if (dInjectRootSelection.length) {
+                    if (areVisible) {
+                        dInjectRootSelection.attr('style', '');
+                    }
+                    else {
+                        dInjectRootSelection.attr('style', 'display: none;');
+                    }
+                }
+            }
+
+            return areVisible;
+        });
 
         private _parsePlaceOverlays(): void {
             if (this.placeOverlays) return;
@@ -466,6 +648,9 @@ module Employees.ViewModels {
             var dInjectRoot = dGoogleG.append('g')
                 .attr('id', dInjectRootElementId)
             ;
+            var areOverlaysVisible = this.arePlaceOverlaysVisible();
+            if (!areOverlaysVisible)
+                dInjectRoot.attr('style', 'display: none;');
 
             // iterate over the parsed place overlays
             // first, need to show the data root in order to get valid positions
@@ -522,10 +707,6 @@ module Employees.ViewModels {
         }
 
         private _svgApplyPlaceOverlayHover(overlay: SummaryGeoChartPlaceOverlay, noHover: D3.Selection, hover: D3.Selection): void {
-            // make the ui images transparent
-            overlay.imageSwapper.hoverSrc(this.settings.chart.transparentImgSrc);
-            overlay.imageSwapper.noHoverSrc(this.settings.chart.transparentImgSrc);
-
             // enable svg image hover swaps
             overlay.imageSwapper.isHover.subscribe((newValue: boolean): void => {
                 if (newValue) {
