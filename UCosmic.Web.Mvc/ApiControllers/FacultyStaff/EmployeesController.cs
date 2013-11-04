@@ -10,10 +10,10 @@ using AttributeRouting.Web.Http;
 using UCosmic.Domain.Activities;
 using UCosmic.Domain.Employees;
 using UCosmic.Domain.Establishments;
-using UCosmic.Domain.Places;
 using UCosmic.Web.Mvc.Models;
 using System.IO;
 using ImageResizer;
+using AutoMapper;
 
 namespace UCosmic.Web.Mvc.ApiControllers
 {
@@ -23,103 +23,13 @@ namespace UCosmic.Web.Mvc.ApiControllers
         private readonly IProcessQueries _queryProcessor;
         private readonly IQueryEntities _queryEntities;
         private readonly IStoreBinaryData _binaryData;
-        private readonly EmployeesPlacesViewProjector _employeesPlacesViews;
 
-        public EmployeesController(IProcessQueries queryProcessor, IQueryEntities queryEntities, IStoreBinaryData binaryData, EmployeesPlacesViewProjector employeesPlacesViews)
+        public EmployeesController(IProcessQueries queryProcessor, IQueryEntities queryEntities, IStoreBinaryData binaryData)
         {
             _queryProcessor = queryProcessor;
             _queryEntities = queryEntities;
             _binaryData = binaryData;
-            _employeesPlacesViews = employeesPlacesViews;
         }
-
-        ////[CacheHttpGet(Duration = 3600)]
-        //[GET("{domain}/employees/places1")]
-        //public IEnumerable<EmployeesPlaceApiModel> GetPlaces1(string domain, [FromUri] EmployeesPlacesInputModel input)
-        //{
-        //    //throw new Exception();
-        //    //System.Threading.Thread.Sleep(10000);
-
-        //    // get the tenant id
-        //    var tenant = _queryProcessor.Execute(new EstablishmentByDomain(domain));
-        //    if (tenant == null) throw new HttpResponseException(HttpStatusCode.NotFound);
-        //    var tenantId = tenant.RevisionId;
-
-        //    var publishedText = ActivityMode.Public.AsSentenceFragment();
-        //    var activities = _queryEntities.Query<Activity>()
-        //        .Where(x => x.Person.Affiliations.Any(y => y.IsDefault) // make sure person's default affiliation is not null
-        //            &&
-        //            (   // person's default affiliation is with or underneath the tenant domain being queried
-        //                x.Person.Affiliations.FirstOrDefault(y => y.IsDefault).EstablishmentId == tenantId
-        //                ||
-        //                x.Person.Affiliations.FirstOrDefault(y => y.IsDefault).Establishment.Ancestors.Any(y => y.AncestorId == tenantId)
-        //            )
-        //        )
-        //        .Where(x => x.Original == null && x.ModeText == publishedText) // published, non-work-copy
-        //        .Select(x => x.Values.FirstOrDefault(y => y.ModeText == publishedText))
-        //    ;
-        //    activities = _queryEntities.EagerLoad(activities, x => x.Locations.Select(y => y.Place.Ancestors));
-        //    activities = _queryEntities.EagerLoad(activities, x => x.Activity);
-
-        //    var places = Enumerable.Empty<Place>().AsQueryable(); // hack an empty places queryable
-        //    if (input.Countries.HasValue && input.Countries.Value)
-        //    {
-        //        var countries = activities.SelectMany(x => x.Locations.Select(y => y.Place)) // get all places from locations collection
-        //            .Select(x => x.IsCountry // if the location is a country, select it
-        //                ? x
-        //                : x.Ancestors.Any(y => y.Ancestor.IsCountry) // otherwise select the location's parent country when one exists
-        //                    ? x.Ancestors.FirstOrDefault(y => y.Ancestor.IsCountry).Ancestor
-        //                    : null
-        //            )
-        //            .Where(x => x != null)
-        //        ;
-        //        countries = _queryEntities.EagerLoad(countries, x => x.GeoPlanetPlace);
-        //        places = places.Union(countries).Distinct();
-        //    }
-        //    if (input.PlaceIds != null && input.PlaceIds.Any())
-        //    {
-        //        var byId = activities.SelectMany(x => x.Locations.Select(y => y.Place)) // get all places from locations collection
-        //            .Select(x => input.PlaceIds.Contains(x.RevisionId) // if the location is the place, select it
-        //                ? x
-        //                : x.Ancestors.Any(y => input.PlaceIds.Contains(y.AncestorId)) // otherwise select the location's parent when one matches
-        //                    ? x.Ancestors.FirstOrDefault(y => input.PlaceIds.Contains(y.AncestorId)).Ancestor
-        //                    : null
-        //            )
-        //            .Where(x => x != null)
-        //        ;
-        //        byId = _queryEntities.EagerLoad(byId, x => x.Ancestors.Select(y => y.Ancestor.GeoPlanetPlace));
-        //        places = places.Union(byId).Distinct();
-        //    }
-
-        //    var placesArray = places.ToArray();
-        //    var activitiesArray = activities.ToArray();
-
-        //    var models = placesArray.Select(place => new EmployeesPlaceApiModel
-        //    {
-        //        PlaceId = place.RevisionId,
-        //        PlaceName = place.OfficialName,
-        //        IsCountry = place.IsCountry,
-        //        CountryCode = place.IsCountry && place.GeoPlanetPlace != null
-        //            ? place.GeoPlanetPlace.Country.Code
-        //            : place.Ancestors.Any(node => node.Ancestor.IsCountry && node.Ancestor.GeoPlanetPlace != null)
-        //                ? place.Ancestors.First(node => node.Ancestor.IsCountry && node.Ancestor.GeoPlanetPlace != null)
-        //                    .Ancestor.GeoPlanetPlace.Country.Code
-        //                : null,
-        //        ActivityPersonIds = activitiesArray
-        //            .Where(activity =>
-        //                activity.Locations.Any(location => location.PlaceId == place.RevisionId) ||
-        //                activity.Locations.Any(location => location.Place.Ancestors.Any(node => node.AncestorId == place.RevisionId)))
-        //            .Select(activity => activity.Activity.PersonId).Distinct(),
-        //        ActivityIds = activitiesArray
-        //            .Where(activity =>
-        //                activity.Locations.Any(location => location.PlaceId == place.RevisionId) ||
-        //                activity.Locations.Any(location => location.Place.Ancestors.Any(node => node.AncestorId == place.RevisionId)))
-        //            .Select(activity => activity.ActivityId).Distinct(),
-        //    })
-        //    .ToArray();
-
-        //    return models;
-        //}
 
         [CacheHttpGet(Duration = 60)]
         [GET("{domain}/employees/places")]
@@ -128,33 +38,13 @@ namespace UCosmic.Web.Mvc.ApiControllers
             //throw new Exception();
             //System.Threading.Thread.Sleep(10000);
 
-            var view = _employeesPlacesViews.Get(domain).ToArray();
-
-            var places = Enumerable.Empty<EmployeesPlacesView>().AsQueryable(); // hack an empty places queryable
-            if (input.Countries.HasValue && input.Countries.Value)
+            var query = new EmployeesPlacesViews(domain)
             {
-                var countries = view.Where(x => x.IsCountry);
-                places = places.Union(countries).Distinct();
-            }
-            if (input.PlaceIds != null && input.PlaceIds.Any())
-            {
-                var byId = view.Where(x => input.PlaceIds.Contains(x.PlaceId));
-                places = places.Union(byId).Distinct();
-            }
-
-            var placesArray = places.ToArray();
-
-            var models = placesArray.Select(place => new EmployeesPlaceApiModel
-            {
-                PlaceId = place.PlaceId,
-                PlaceName = place.PlaceName,
-                IsCountry = place.IsCountry,
-                CountryCode = place.CountryCode,
-                ActivityPersonIds = place.ActivityPersonIds,
-                ActivityIds = place.ActivityIds,
-            })
-            .ToArray();
-
+                Countries = input.Countries,
+                PlaceIds = input.PlaceIds,
+            };
+            var views = _queryProcessor.Execute(query);
+            var models = Mapper.Map<EmployeesPlaceApiModel[]>(views);
             return models;
         }
 

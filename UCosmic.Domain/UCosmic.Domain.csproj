@@ -254,6 +254,7 @@
     <Compile Include="Domain\Agreements\Work\MigrateUsfAgreementData.cs" />
     <Compile Include="Domain\Agreements\_Internal\QueryAgreementParticipants.cs" />
     <Compile Include="Domain\Agreements\_Internal\QueryAgreementContacts.cs" />
+    <Compile Include="Domain\Employees\Queries\EmployeesPlacesViews.cs" />
     <Compile Include="Domain\Employees\Views\EmployeesPlacesView.cs" />
     <Compile Include="Domain\Employees\Views\EmployeesPlacesViewProjector.cs" />
     <Compile Include="Domain\Employees\Work\ProjectEmployeesPlacesViews.cs" />

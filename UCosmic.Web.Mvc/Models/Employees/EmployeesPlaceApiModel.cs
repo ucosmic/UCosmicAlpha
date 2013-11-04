@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using AutoMapper;
+using UCosmic.Domain.Employees;
 
 namespace UCosmic.Web.Mvc.Models
 {
@@ -6,8 +8,8 @@ namespace UCosmic.Web.Mvc.Models
     {
         public EmployeesPlaceApiModel()
         {
-            ActivityPersonIds = new int[0];
-            ActivityIds = new int[0];
+            ActivityPersonIds = new List<int>();
+            ActivityIds = new List<int>();
         }
 
         public int PlaceId { get; set; }
@@ -16,5 +18,16 @@ namespace UCosmic.Web.Mvc.Models
         public string CountryCode { get; set; }
         public IEnumerable<int> ActivityPersonIds { get; set; }
         public IEnumerable<int> ActivityIds { get; set; }
+    }
+
+    public static class EmployeesPlaceApiProfiler
+    {
+        public class ViewToModel : Profile
+        {
+            protected override void Configure()
+            {
+                CreateMap<EmployeesPlacesView, EmployeesPlaceApiModel>();
+            }
+        }
     }
 }
