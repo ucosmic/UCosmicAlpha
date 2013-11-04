@@ -21,7 +21,7 @@ var Employees;
         }
         Servers.EmployeesPlaces = EmployeesPlaces;
 
-        function ActivitiesSummary(tenantDomain, settings) {
+        function ActivityCounts(tenantDomain, settings) {
             var promise = $.Deferred();
             settings = settings || {};
             settings.url = Routes.Api.Employees.Activities.summary(tenantDomain);
@@ -32,7 +32,7 @@ var Employees;
             });
             return promise;
         }
-        Servers.ActivitiesSummary = ActivitiesSummary;
+        Servers.ActivityCounts = ActivityCounts;
     })(Employees.Servers || (Employees.Servers = {}));
     var Servers = Employees.Servers;
 })(Employees || (Employees = {}));

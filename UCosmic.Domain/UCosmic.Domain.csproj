@@ -254,7 +254,7 @@
     <Compile Include="Domain\Agreements\Work\MigrateUsfAgreementData.cs" />
     <Compile Include="Domain\Agreements\_Internal\QueryAgreementParticipants.cs" />
     <Compile Include="Domain\Agreements\_Internal\QueryAgreementContacts.cs" />
-    <Compile Include="Domain\Employees\Queries\EmployeeActivityCountsView.cs" />
+    <Compile Include="Domain\Employees\Queries\EmployeeActivityCountsViewByEstablishment.cs" />
     <Compile Include="Domain\Employees\Queries\EmployeePlaceViews.cs" />
     <Compile Include="Domain\Employees\Views\EmployeeActivityCountsViewProjector.cs" />
     <Compile Include="Domain\Employees\Views\EmployeeActivityCountsViewBuilder.cs" />

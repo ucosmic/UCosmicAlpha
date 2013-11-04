@@ -148,7 +148,7 @@ module Employees.ViewModels {
             HistoryJS.Adapter.bind(window, 'statechange', (): void => { this._onRouteChanged(); });
 
             // begin loading data
-            this.activitiesSummaryData.ready();
+            this.activityCountsData.ready();
             this._initGeoChart();
 
             // need to fire this once because route changes before history is bound
@@ -722,21 +722,21 @@ module Employees.ViewModels {
         //#endregion
         //#region Summaries
         //#region Top Summary
-        activitiesSummary: KoModels.ActivitiesSummary = {
+        activityTotals: KoModels.EmployeeActivityCounts = {
             personCount: ko.observable('?'),
             activityCount: ko.observable('?'),
             locationCount: ko.observable('?'),
         };
-        activitiesSummaryData: DataCacher<ApiModels.ActivitiesSummary> = new DataCacher(
-            (): JQueryPromise<ApiModels.ActivitiesSummary> => {
-                return this._loadActivitiesSummary();
+        activityCountsData: DataCacher<ApiModels.EmployeeActivityCounts> = new DataCacher(
+            (): JQueryPromise<ApiModels.EmployeeActivityCounts> => {
+                return this._loadActivityCounts();
             });
 
-        private _loadActivitiesSummary(): JQueryPromise<ApiModels.ActivitiesSummary> {
-            var promise: JQueryDeferred<ApiModels.ActivitiesSummary> = $.Deferred();
-            Servers.ActivitiesSummary(this.settings.tenantDomain)
-                .done((summary: ApiModels.ActivitiesSummary): void => {
-                    ko.mapping.fromJS(summary, {}, this.activitiesSummary);
+        private _loadActivityCounts(): JQueryPromise<ApiModels.EmployeeActivityCounts> {
+            var promise: JQueryDeferred<ApiModels.EmployeeActivityCounts> = $.Deferred();
+            Servers.ActivityCounts(this.settings.tenantDomain)
+                .done((summary: ApiModels.EmployeeActivityCounts): void => {
+                    ko.mapping.fromJS(summary, {}, this.activityTotals);
                     promise.resolve(summary);
                 })
                 .fail((xhr: JQueryXHR): void => {
@@ -749,7 +749,7 @@ module Employees.ViewModels {
         //#endregion
         //#region Selected Place Summary
 
-        selectedPlaceSummary: KoModels.ActivitiesSummary = {
+        selectedPlaceSummary: KoModels.EmployeeActivityCounts = {
             personCount: ko.observable('?'),
             activityCount: ko.observable('?'),
             locationCount: ko.observable('?'),

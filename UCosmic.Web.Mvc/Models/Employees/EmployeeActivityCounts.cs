@@ -1,6 +1,6 @@
 ﻿namespace UCosmic.Web.Mvc.Models
 {
-    public class ActivitiesSummary
+    public class EmployeeActivityCounts
     {
         public int PersonCount { get; set; }
         public int ActivityCount { get; set; }

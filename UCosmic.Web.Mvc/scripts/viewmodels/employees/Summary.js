@@ -203,13 +203,13 @@ var Employees;
                 //#endregion
                 //#region Summaries
                 //#region Top Summary
-                this.activitiesSummary = {
+                this.activityTotals = {
                     personCount: ko.observable('?'),
                     activityCount: ko.observable('?'),
                     locationCount: ko.observable('?')
                 };
-                this.activitiesSummaryData = new DataCacher(function () {
-                    return _this._loadActivitiesSummary();
+                this.activityCountsData = new DataCacher(function () {
+                    return _this._loadActivityCounts();
                 });
                 //#endregion
                 //#region Selected Place Summary
@@ -230,7 +230,7 @@ var Employees;
                 });
 
                 // begin loading data
-                this.activitiesSummaryData.ready();
+                this.activityCountsData.ready();
                 this._initGeoChart();
 
                 // need to fire this once because route changes before history is bound
@@ -641,11 +641,11 @@ var Employees;
                 });
             };
 
-            Summary.prototype._loadActivitiesSummary = function () {
+            Summary.prototype._loadActivityCounts = function () {
                 var _this = this;
                 var promise = $.Deferred();
-                Employees.Servers.ActivitiesSummary(this.settings.tenantDomain).done(function (summary) {
-                    ko.mapping.fromJS(summary, {}, _this.activitiesSummary);
+                Employees.Servers.ActivityCounts(this.settings.tenantDomain).done(function (summary) {
+                    ko.mapping.fromJS(summary, {}, _this.activityTotals);
                     promise.resolve(summary);
                 }).fail(function (xhr) {
                     App.Failures.message(xhr, 'while trying to load activity total summary data.', true);

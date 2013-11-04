@@ -16,7 +16,7 @@ declare module Employees.ApiModels {
         placeIds?: number[];
     }
 
-    export interface ActivitiesSummary {
+    export interface EmployeeActivityCounts {
         personCount: number;
         activityCount: number;
         locationCount: number;
@@ -25,7 +25,7 @@ declare module Employees.ApiModels {
 
 declare module Employees.KoModels {
 
-    export interface ActivitiesSummary {
+    export interface EmployeeActivityCounts {
         personCount: KnockoutObservable<string>;
         activityCount: KnockoutObservable<string>;
         locationCount: KnockoutObservable<string>;

@@ -23,7 +23,7 @@ Routes.Api.Employees.Activities.summary = function (domain) {
     return '@routeWriter.WriteRoute(Url.HttpRouteUrl(null, new
     {
         controller = "Employees",
-        action = "GetActivitiesSummary",
+        action = "GetActivityCounts",
         domain = routeWriter.Value<string>(0),
     }))'.format(domain);
 };

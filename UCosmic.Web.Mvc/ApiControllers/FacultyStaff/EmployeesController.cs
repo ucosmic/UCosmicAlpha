@@ -48,45 +48,9 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return models;
         }
 
-        //[CacheHttpGet(Duration = 3600)]
-        //[GET("{domain}/employees/activities/summary")]
-        //public ActivitiesSummary GetActivitiesSummary1(string domain)
-        //{
-        //    //throw new Exception();
-        //    //System.Threading.Thread.Sleep(5000);
-
-        //    // get the tenant id
-        //    var tenant = _queryProcessor.Execute(new EstablishmentByDomain(domain));
-        //    if (tenant == null) throw new HttpResponseException(HttpStatusCode.NotFound);
-        //    var tenantId = tenant.RevisionId;
-
-        //    var publishedText = ActivityMode.Public.AsSentenceFragment();
-        //    var activities = _queryEntities.Query<Activity>()
-        //        .Where(x => x.Person.Affiliations.Any(y => y.IsDefault) // make sure person's default affiliation is not null
-        //            &&
-        //            (   // person's default affiliation is with or underneath the tenant domain being queried
-        //                x.Person.Affiliations.FirstOrDefault(y => y.IsDefault).EstablishmentId == tenantId
-        //                ||
-        //                x.Person.Affiliations.FirstOrDefault(y => y.IsDefault).Establishment.Ancestors.Any(y => y.AncestorId == tenantId)
-        //            )
-        //        )
-        //        .Where(x => x.Original == null && x.ModeText == publishedText) // published, non-work-copy
-        //        .Select(x => x.Values.FirstOrDefault(y => y.ModeText == publishedText))
-        //    ;
-
-        //    var model = new ActivitiesSummary
-        //    {
-        //        ActivityCount = activities.Count(),
-        //        PersonCount = activities.Select(x => x.Activity.PersonId).Distinct().Count(),
-        //        LocationCount = activities.SelectMany(x => x.Locations).Select(x => x.PlaceId).Distinct().Count(),
-        //    };
-
-        //    return model;
-        //}
-
         [CacheHttpGet(Duration = 60)]
         [GET("{domain}/employees/activities/counts")]
-        public ActivitiesSummary GetActivitiesSummary(string domain)
+        public EmployeeActivityCounts GetActivityCounts(string domain)
         {
             //throw new Exception();
             //System.Threading.Thread.Sleep(5000);
@@ -100,7 +64,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                     view.EstablishmentId = establishment.RevisionId;
             }
 
-            var model = new ActivitiesSummary
+            var model = new EmployeeActivityCounts
             {
                 ActivityCount = view.ActivityCount,
                 PersonCount = view.PersonCount,

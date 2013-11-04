@@ -21,12 +21,12 @@ module Employees.Servers {
         return promise;
     }
 
-    export function ActivitiesSummary(tenantDomain: any, settings?: JQueryAjaxSettings): JQueryPromise<ApiModels.ActivitiesSummary> {
-        var promise: JQueryDeferred<ApiModels.ActivitiesSummary> = $.Deferred();
+    export function ActivityCounts(tenantDomain: any, settings?: JQueryAjaxSettings): JQueryPromise<ApiModels.EmployeeActivityCounts> {
+        var promise: JQueryDeferred<ApiModels.EmployeeActivityCounts> = $.Deferred();
         settings = settings || {};
         settings.url = Routes.Api.Employees.Activities.summary(tenantDomain);
         $.ajax(settings)
-            .done((response: ApiModels.ActivitiesSummary): void => {
+            .done((response: ApiModels.EmployeeActivityCounts): void => {
                 promise.resolve(response);
             })
             .fail((xhr: JQueryXHR): void => {

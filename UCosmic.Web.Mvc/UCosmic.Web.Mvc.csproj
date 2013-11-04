@@ -316,7 +316,7 @@
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Agreements\AgreementOwningTenant.cs" />
-    <Compile Include="Models\Employees\ActivitiesSummary.cs" />
+    <Compile Include="Models\Employees\EmployeeActivityCounts.cs" />
     <Compile Include="ApiControllers\FacultyStaff\EmployeeModuleSettingsController.cs" />
     <Compile Include="ApiControllers\FacultyStaff\EmployeesController.cs" />
     <Compile Include="ApiControllers\FacultyStaff\FacultyStaffController.cs" />
