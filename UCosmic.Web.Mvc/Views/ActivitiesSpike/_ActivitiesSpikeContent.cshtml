@@ -1,61 +1,91 @@
-﻿@using UCosmic.Domain.Agreements
-<section id="publicView" data-bind="visible: isBound, with: activity" style="display: none;">
+﻿@model UCosmic.Web.Mvc.Models.ActivityPublicViewModel
+<section id="publicView">
 
     @* ACTIVITY TYPE AS H2 *@
     <header>
-        <h2 data-bind="text: Title"></h2>
+        <h2>@Model.Title</h2>
     </header>
     <div style="font-size: 18px;">
-        @*places*@
-        <ul style="margin: 1em 0;" data-bind="foreach: Places">
-            <li data-bind="text: PlaceName"></li>
+        @* PLACES *@
+        <ul style="margin: 1em 0;">
+            @foreach (var place in Model.Places)
+            {
+                <li>@place.PlaceName</li>
+            }
         </ul>
 
-        @*types*@
-        <ul style="margin: 1em 0;" data-bind="foreach: Types">
-            <li data-bind="text: Text"></li>
-        </ul>
+        @* TYPES *@
+        @if (Model.Types != null && Model.Types.Any())
+        {
+            <ul style="margin: 1em 0;" data-bind="foreach: Types">
+                @foreach (var type in Model.Types)
+                {
+                    <li>
 
-        @*Dates*@
+                        <img src="@Url.HttpRouteUrl(null, new { controller = "EmployeeModuleSettings", action = "GetIcon", typeId = type.TypeId })" alt="" />
+                        <span>@type.Text</span>
+                    </li> 
+                }
+            </ul> 
+        }
+
+@* DATES *@
         <div style="margin: 1em 0;">
-            <span data-bind="text: StartsOn"></span>
+            <span>@Model.StartsOn.ToString(Model.StartsFormat)</span>
             <span style="padding: 0 4px 0 4px;">-</span>
-            <span data-bind="text: EndsOn, visible: !OnGoing()"></span>
-            <span data-bind="visible: OnGoing">On Going</span>
+            @if (Model.OnGoing == false)
+            {
+                <span>@Model.EndsOn.ToString(Model.EndsFormat)</span>
+            }
+            else
+            {
+                <span>On Going</span>
+            }
         </div>
 
-        @*funding*@
-        <div style="margin: 1em 0;" data-bind="visible: IsExternallyFunded && IsInternallyFunded">
-            This activity is externally and internally funded.
-        </div>
-        <div style="margin: 1em 0;" data-bind="visible: !IsExternallyFunded() && IsInternallyFunded">
-            This activity is internally funded.
-        </div>
-        <div style="margin: 1em 0;" data-bind="visible: IsExternallyFunded && !IsInternallyFunded()">
-            This activity is externally funded.
+        @* FUNDING *@
+        @if (Model.IsExternallyFunded == true && Model.IsInternallyFunded == true)
+        {
+            <div style="margin: 1em 0;" data-bind="visible: IsExternallyFunded && IsInternallyFunded">
+                This activity is externally and internally funded.
+            </div>
+        }
+        else if (Model.IsExternallyFunded != true && Model.IsInternallyFunded == true)
+        {
+            <div style="margin: 1em 0;" data-bind="visible: !IsExternallyFunded() && IsInternallyFunded">
+                This activity is internally funded.
+            </div>
+        }
+        else if (Model.IsExternallyFunded == true && Model.IsInternallyFunded != true)
+        {
+            <div style="margin: 1em 0;" data-bind="visible: IsExternallyFunded && !IsInternallyFunded()">
+                This activity is externally funded.
+            </div>
+        }
+
+@* DESCRIPTION *@
+        <div style="margin: 1em 0;">
+            @Model.Content
         </div>
 
-        @*description*@
-        <div style="margin: 1em 0;" data-bind="html: Content">
-        </div>
-
-        @*tags*@
-        <ul style="margin: 1em 0;" data-bind="foreach: Tags">
-            <li data-bind="text: Text"></li>
+        @* TAGS *@
+        <ul class="tag-list" style="display: inline-block;">
+            @foreach (var tag in Model.Tags)
+            {
+                <li style="width: auto; float: left; list-style: none; margin-right: 8px">@tag.Text</li>
+            }
         </ul>
 
-        @*documents*@
-        <ul style="margin: 1em 0;" data-bind="foreach: Documents">
-            <li>
-                <a data-bind="text: FileName, attr: { href: DocumentId, title: Title }"></a>
-            </li>
+        @* DOCUMENTS *@
+        <ul style="margin: 1em 0; display: block;" data-bind="foreach: Documents">
+            @foreach (var document in Model.Documents)
+            {
+                <li>
+                    <a href="/api/activities/@document.DocumentId/documents" title="@document.Title">@document.FileName</a>
+                </li>
+            }
         </ul>
 
-        @*lastUpdated*@
-        <div style="margin: 1em 0; font-size: 12px; color: gray; position: relative; bottom: 0px;">
-            Last updated:
-            <span data-bind="text: UpdatedOnUtc" style="padding-left: 4px;"></span>
-        </div>
     </div>
     <div style="display: none">
         @*<span id="agreementPartners_api">@ViewBag.AgreementPartnersApi</span>  for map *@

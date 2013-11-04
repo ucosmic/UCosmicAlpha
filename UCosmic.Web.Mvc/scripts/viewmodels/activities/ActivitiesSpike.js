@@ -8,6 +8,16 @@ var Activities;
             function PublicView(data) {
                 this.isBound = ko.observable(false);
                 var mapping = {
+                    //how to create a property with knockout mapping
+                    //create: function (options) {
+                    //    //customize at the root level.
+                    //    var innerModel = ko.mapping.fromJS(options.data);
+                    //    innerModel.typeIconUrl = ko.observable('Hello World');
+                    //    ko.computed(function () {
+                    //        return App.flasher.text();
+                    //    })
+                    //    return innerModel;
+                    //},
                     'StartsOn': {
                         create: function (options) {
                             var value = options.data.substr(6);
