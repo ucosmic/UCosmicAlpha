@@ -128,12 +128,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             //throw new Exception();
             //System.Threading.Thread.Sleep(10000);
 
-            // get the tenant id
-            var tenant = _queryProcessor.Execute(new EstablishmentByDomain(domain));
-            if (tenant == null) throw new HttpResponseException(HttpStatusCode.NotFound);
-            var tenantId = tenant.RevisionId;
-
-            var view = _employeesPlacesViews.Get(tenantId, TimeSpan.FromSeconds(5)).ToArray();
+            var view = _employeesPlacesViews.Get(domain).ToArray();
 
             var places = Enumerable.Empty<EmployeesPlacesView>().AsQueryable(); // hack an empty places queryable
             if (input.Countries.HasValue && input.Countries.Value)

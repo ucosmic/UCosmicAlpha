@@ -31,6 +31,7 @@ namespace UCosmic.Cqrs
                     SaveChanges();
                     return default(TView);
                 }
+                if (string.IsNullOrWhiteSpace(entity.Value)) return default(TView);
                 var value = JsonConvert.DeserializeObject<TView>(entity.Value);
                 return value;
             }
