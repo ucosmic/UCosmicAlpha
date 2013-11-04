@@ -4,14 +4,14 @@ using System.Linq;
 
 namespace UCosmic.Domain.Employees
 {
-    public class EmployeesPlacesViews : IDefineQuery<EmployeesPlacesView[]>
+    public class EmployeePlaceViews : IDefineQuery<EmployeePlacesView[]>
     {
-        public EmployeesPlacesViews(int establishmentId)
+        public EmployeePlaceViews(int establishmentId)
         {
             EstablishmentId = establishmentId;
         }
 
-        public EmployeesPlacesViews(string domain)
+        public EmployeePlaceViews(string domain)
         {
             Domain = domain;
         }
@@ -22,16 +22,16 @@ namespace UCosmic.Domain.Employees
         public IEnumerable<int> PlaceIds { get; set; }
     }
 
-    public class HandleEmployeesPlacesViewsQuery : IHandleQueries<EmployeesPlacesViews, EmployeesPlacesView[]>
+    public class HandleEmployeePlaceViewsQuery : IHandleQueries<EmployeePlaceViews, EmployeePlacesView[]>
     {
-        private readonly EmployeesPlacesViewProjector _projector;
+        private readonly EmployeePlacesViewProjector _projector;
 
-        public HandleEmployeesPlacesViewsQuery(EmployeesPlacesViewProjector projector)
+        public HandleEmployeePlaceViewsQuery(EmployeePlacesViewProjector projector)
         {
             _projector = projector;
         }
 
-        public EmployeesPlacesView[] Handle(EmployeesPlacesViews query)
+        public EmployeePlacesView[] Handle(EmployeePlaceViews query)
         {
             if (query == null) throw new ArgumentNullException("query");
 
@@ -39,7 +39,7 @@ namespace UCosmic.Domain.Employees
                 ? _projector.Get(query.EstablishmentId.Value)
                 : _projector.Get(query.Domain);
 
-            var places = Enumerable.Empty<EmployeesPlacesView>().AsQueryable(); // hack an empty places queryable
+            var places = Enumerable.Empty<EmployeePlacesView>().AsQueryable(); // hack an empty places queryable
 
             if (viewEnumerable == null)
                 return places.ToArray();

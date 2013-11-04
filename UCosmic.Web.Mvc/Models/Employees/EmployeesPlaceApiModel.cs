@@ -26,7 +26,7 @@ namespace UCosmic.Web.Mvc.Models
         {
             protected override void Configure()
             {
-                CreateMap<EmployeesPlacesView, EmployeesPlaceApiModel>();
+                CreateMap<EmployeePlacesView, EmployeesPlaceApiModel>();
             }
         }
     }

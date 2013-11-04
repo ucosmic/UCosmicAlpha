@@ -2,120 +2,42 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Threading;
 using UCosmic.Domain.Activities;
 using UCosmic.Domain.Degrees;
-using UCosmic.Domain.Establishments;
 using UCosmic.Domain.Places;
 
 namespace UCosmic.Domain.Employees
 {
-    public class EmployeesPlacesViewProjector
+    public class EmployeePlacesViewBuilder
     {
-        private static readonly ReaderWriterLockSlim Lock = new ReaderWriterLockSlim();
         private readonly IQueryEntities _entities;
-        private readonly IProcessQueries _queries;
-        private readonly IManageViews _views;
 
-        public EmployeesPlacesViewProjector(IQueryEntities entities
-            , IProcessQueries queries
-            , IManageViews views
-        )
+        public EmployeePlacesViewBuilder(IQueryEntities entities)
         {
             _entities = entities;
-            _queries = queries;
-            _views = views;
         }
 
-        public IEnumerable<EmployeesPlacesView> Get(string domain)
-        {
-            var establishment = _queries.Execute(new EstablishmentByDomain(domain));
-            return establishment != null
-                ? Get(establishment.RevisionId)
-                : Enumerable.Empty<EmployeesPlacesView>();
-        }
-
-        public IEnumerable<EmployeesPlacesView> Get(int establishmentId)
-        {
-            Lock.EnterReadLock();
-            try
-            {
-                var view = _views.Get<IEnumerable<EmployeesPlacesView>>(establishmentId);
-                return view ?? Enumerable.Empty<EmployeesPlacesView>();
-            }
-            finally
-            {
-                Lock.ExitReadLock();
-            }
-        }
-
-        internal void Build()
+        internal IEnumerable<int> GetEstablishmentIdsWithData()
         {
             var publishedText = ActivityMode.Public.AsSentenceFragment();
-            var activities = _entities.Query<Activity>()
+            var establishmentsWithActivities = _entities.Query<Activity>()
                 .Where(x => x.Original == null && x.ModeText == publishedText && x.Person.Affiliations.Any(y => y.IsDefault))
                 .Select(x => x.Person.Affiliations.FirstOrDefault(y => y.IsDefault).Establishment)
                 .Distinct()
             ;
-            var degrees = _entities.Query<Degree>()
+            var establishmentsWithDegrees = _entities.Query<Degree>()
                 .Where(x => x.Person.Affiliations.Any(y => y.IsDefault))
                 .Select(x => x.Person.Affiliations.FirstOrDefault(y => y.IsDefault).Establishment)
                 .Distinct()
             ;
-            var withEmployees = activities.Union(degrees).Select(x => new { x.RevisionId, x.WebsiteUrl }).ToArray();
-            foreach (var establishment in withEmployees)
-            {
-                if (!string.IsNullOrWhiteSpace(establishment.WebsiteUrl))
-                {
-                    var domain = establishment.WebsiteUrl.StartsWith("www.", StringComparison.OrdinalIgnoreCase)
-                        ? establishment.WebsiteUrl.Substring(4)
-                        : establishment.WebsiteUrl;
-                    Build(domain, establishment.RevisionId);
-                }
-                else
-                {
-                    Build(establishment.RevisionId);
-                }
-            }
-        }
+            var establishmentIdsWithEmployeeData = establishmentsWithActivities.Union(establishmentsWithDegrees)
+                .Select(x => x.RevisionId)
+            ;
 
-        internal void Build(string domain, int? establishmentId = null)
-        {
-            var buildForId = establishmentId.HasValue ? establishmentId.Value : 0;
-            if (buildForId == 0)
-            {
-                var establishment = _queries.Execute(new EstablishmentByDomain(domain));
-                if (establishment != null) buildForId = establishment.RevisionId;
-                if (buildForId == 0) return;
-            }
-            var employeesPlacesViews = GetEmployeesPlacesViews(buildForId);
-            Lock.EnterWriteLock();
-            try
-            {
-                _views.Set<IEnumerable<EmployeesPlacesView>>(employeesPlacesViews, buildForId);
-                _views.Set<IEnumerable<EmployeesPlacesView>>(employeesPlacesViews, domain);
-            }
-            finally
-            {
-                Lock.ExitWriteLock();
-            }
-        }
+            return establishmentIdsWithEmployeeData;
+        } 
 
-        internal void Build(int establishmentId)
-        {
-            var employeesPlacesViews = GetEmployeesPlacesViews(establishmentId);
-            Lock.EnterWriteLock();
-            try
-            {
-                _views.Set<IEnumerable<EmployeesPlacesView>>(employeesPlacesViews, establishmentId);
-            }
-            finally
-            {
-                Lock.ExitWriteLock();
-            }
-        }
-
-        private EmployeesPlacesView[] GetEmployeesPlacesViews(int establishmentId)
+        internal EmployeePlacesView[] Build(int establishmentId)
         {
             var publishedText = ActivityMode.Public.AsSentenceFragment();
             var activitiesEagerLoad = new Expression<Func<ActivityValues, object>>[]
@@ -166,7 +88,7 @@ namespace UCosmic.Domain.Employees
             var placesArray = places.Distinct().ToArray();
             var activitiesArray = activities.ToArray();
 
-            var views = placesArray.Select(place => new EmployeesPlacesView
+            var views = placesArray.Select(place => new EmployeePlacesView
             {
                 PlaceId = place.RevisionId,
                 PlaceName = place.OfficialName,
