@@ -46,7 +46,6 @@
                 chart: {
                     boxElementId: 'geochart_box',
                     googleElementId: 'google_geochart',
-                    transparentImgSrc: '@Url.Content("~/images/transparent.png")',
                     keepAspectRatio: true,
                 },
             });
@@ -140,9 +139,10 @@
             @* GEOCHART *@
             <div id="geochart_box" data-bind="css: { 'keep-aspect-ratio-480': settings.chart.keepAspectRatio }">
 
-                @* GOOGLE ELEMENT & BACKGROUND IMAGE *@
-                <div class="chart-bg"></div>
+                @* GOOGLE ELEMENT + BACKGROUND & FOREGROUND *@
+                <div class="chart-bg">&nbsp;</div>
                 <div id="google_geochart"></div>
+                @*<div class="chart-bg" data-bind="visible: isPlaceOverlaySelected" style="display: none;">&nbsp;</div>*@
 
                 @* CUSTOM CHART OVERLAYS *@
                 <div class="overlays">
@@ -195,8 +195,8 @@
                         @* PLACE UI *@
                         <ul class="ui" data-bind="foreach: placeOverlays, visible: arePlaceOverlaysVisible">
                             <li data-bind="attr: { 'class': className }">
-                                <div class="hit" data-bind="with: imageSwapper">
-                                    <img data-bind="attr: { src: src }, event: { mouseenter: onMouseEnter, mouseleave: onMouseLeave }, visible: $root.isD3Undefined()"
+                                <div class="hit" data-bind="click: function (item, e) { $parent.clickPlaceOverlay(item, e); }, with: imageSwapper">
+                                    <img data-bind="event: { mouseenter: onMouseEnter, mouseleave: onMouseLeave }, visible: $root.isD3Undefined(), attr: { src: src }"
                                         alt="" src="~/images/transparent.png" />
                                     <img data-bind="event: { mouseenter: onMouseEnter, mouseleave: onMouseLeave }, visible: $root.isD3Defined()"
                                         alt="" src="~/images/transparent.png" />

@@ -6,7 +6,11 @@
     position: absolute;
     width: 100%;
     height: 500px;
-    background-color: #acccfd; }
+    background-color: #acccfd;
+    top: 0;
+    left: 0; }
+  #geochart_box #google_geochart {
+    overflow: hidden; }
   #geochart_box .overlays .data-pivoter {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;

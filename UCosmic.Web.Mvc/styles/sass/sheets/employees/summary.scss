@@ -8,6 +8,12 @@
         width: 100%;
         height: 500px;
         background-color: #acccfd;
+        top: 0;
+        left: 0;
+    }
+
+    #google_geochart {
+        overflow: hidden;
     }
 
     .overlays {

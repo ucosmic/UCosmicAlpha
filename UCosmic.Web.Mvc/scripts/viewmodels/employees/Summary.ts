@@ -24,7 +24,6 @@ module Employees.ViewModels {
     export interface SummaryGeoChartSettings {
         boxElementId: string;
         googleElementId: string;
-        transparentImgSrc: string;
         keepAspectRatio?: boolean;
     }
 
@@ -249,6 +248,9 @@ module Employees.ViewModels {
         private _getUrlState(): SummaryRouteState {
             var params = location.search.indexOf('?') == 0
                 ? location.search.substr(1) : location.search;
+            if (!Summary._isD3Defined()) {
+                params = location.hash.indexOf('#?') == 0 ? location.hash.substr(2) : '';
+            }
             var state: SummaryRouteState = App.deparam(params, true);
             return state;
         }
@@ -428,7 +430,7 @@ module Employees.ViewModels {
             var placeId = this.placeId();
             var place = this._getPlaceById(placeId);
             this._geoChartOptions.region = !placeId || placeId == 1 || !place || !place.countryCode
-                ? 'world' : place.countryCode;
+            ? 'world' : place.countryCode;
 
             // change aspect ratio based on placeId
             this._geoChartOptions.keepAspectRatio = placeId && placeId > 1 && place && place.countryCode ? false :
@@ -482,8 +484,9 @@ module Employees.ViewModels {
         arePlaceOverlaysVisible = ko.computed((): boolean => {
             var placeId = this.placeId();
             var isGeoChartReady = this.isGeoChartReady();
+            var isPlaceOverlaySelected = this.isPlaceOverlaySelected ? this.isPlaceOverlaySelected() : false;
             if (!isGeoChartReady) return false;
-            var areVisible = (typeof placeId === 'undefined' || placeId == null || isNaN(placeId) || placeId == 1 || placeId == 0)
+            var areVisible = (placeId == 1 || isPlaceOverlaySelected)
                 && isGeoChartReady;
 
             // hide the svg overlays if applicable
@@ -533,6 +536,35 @@ module Employees.ViewModels {
                 .ToArray();
             return placeIds;
         }
+
+        clickPlaceOverlay(overlay: SummaryGeoChartPlaceOverlay, e: JQueryEventObject): void {
+            var place = this._getPlaceById(overlay.placeId);
+            if (place) {
+                if (!place.activityPersonIds.length) {
+                    return;
+                }
+                this.placeId(place.placeId);
+                //$('#{0}'.format(this.settings.chart.googleElementId)).hide();
+            }
+        }
+
+        isPlaceOverlaySelected = ko.computed((): boolean => {
+            var placeId = this.placeId();
+            var areBindingsApplied = this.areBindingsApplied();
+            var placeOverlays = this.placeOverlays ? this.placeOverlays() : undefined;
+            if (!areBindingsApplied || !placeOverlays) return false;
+
+            var isOverlaySelected = false;
+            var overlay = Enumerable.From(placeOverlays)
+                .SingleOrDefault(undefined, function (x: SummaryGeoChartPlaceOverlay): boolean {
+                    return x.placeId == placeId;
+                });
+            if (overlay) {
+                isOverlaySelected = true;
+            }
+
+            return isOverlaySelected;
+        });
 
         //#endregion
         //#region SVG Injection
@@ -642,6 +674,15 @@ module Employees.ViewModels {
         private _svgApplyPlaceOverlayHover(overlay: SummaryGeoChartPlaceOverlay, noHover: D3.Selection, hover: D3.Selection): void {
             // enable svg image hover swaps
             overlay.imageSwapper.isHover.subscribe((newValue: boolean): void => {
+
+                // is this the selected overlay?
+                var placeId = this.placeId();
+                if (placeId == overlay.placeId) {
+                    hover.attr('style', '');
+                    noHover.attr('style', 'display:none');
+                    return;
+                }
+
                 if (newValue) {
                     hover.attr('style', '');
                     noHover.attr('style', 'display:none');
@@ -649,6 +690,15 @@ module Employees.ViewModels {
                 else {
                     noHover.attr('style', '');
                     hover.attr('style', 'display:none');
+                }
+            });
+
+            this.placeId.subscribe((newValue: number): void => {
+                var placeId = this.placeId();
+                if (placeId != overlay.placeId) {
+                    noHover.attr('style', '');
+                    hover.attr('style', 'display:none');
+                    return;
                 }
             });
         }

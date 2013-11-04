@@ -172,9 +172,10 @@ var Employees;
                 this.arePlaceOverlaysVisible = ko.computed(function () {
                     var placeId = _this.placeId();
                     var isGeoChartReady = _this.isGeoChartReady();
+                    var isPlaceOverlaySelected = _this.isPlaceOverlaySelected ? _this.isPlaceOverlaySelected() : false;
                     if (!isGeoChartReady)
                         return false;
-                    var areVisible = (typeof placeId === 'undefined' || placeId == null || isNaN(placeId) || placeId == 1 || placeId == 0) && isGeoChartReady;
+                    var areVisible = (placeId == 1 || isPlaceOverlaySelected) && isGeoChartReady;
 
                     if (Summary._isD3Defined() && _this.settings.chart.googleElementId) {
                         // overlay may already be drawn
@@ -190,6 +191,23 @@ var Employees;
                     }
 
                     return areVisible;
+                });
+                this.isPlaceOverlaySelected = ko.computed(function () {
+                    var placeId = _this.placeId();
+                    var areBindingsApplied = _this.areBindingsApplied();
+                    var placeOverlays = _this.placeOverlays ? _this.placeOverlays() : undefined;
+                    if (!areBindingsApplied || !placeOverlays)
+                        return false;
+
+                    var isOverlaySelected = false;
+                    var overlay = Enumerable.From(placeOverlays).SingleOrDefault(undefined, function (x) {
+                        return x.placeId == placeId;
+                    });
+                    if (overlay) {
+                        isOverlaySelected = true;
+                    }
+
+                    return isOverlaySelected;
                 });
                 this.isD3Defined = ko.computed(function () {
                     return Summary._isD3Defined();
@@ -298,6 +316,9 @@ var Employees;
             //#region Routing
             Summary.prototype._getUrlState = function () {
                 var params = location.search.indexOf('?') == 0 ? location.search.substr(1) : location.search;
+                if (!Summary._isD3Defined()) {
+                    params = location.hash.indexOf('#?') == 0 ? location.hash.substr(2) : '';
+                }
                 var state = App.deparam(params, true);
                 return state;
             };
@@ -496,6 +517,17 @@ var Employees;
                 return placeIds;
             };
 
+            Summary.prototype.clickPlaceOverlay = function (overlay, e) {
+                var place = this._getPlaceById(overlay.placeId);
+                if (place) {
+                    if (!place.activityPersonIds.length) {
+                        return;
+                    }
+                    this.placeId(place.placeId);
+                    //$('#{0}'.format(this.settings.chart.googleElementId)).hide();
+                }
+            };
+
             Summary._isD3Defined = //#endregion
             //#region SVG Injection
             function () {
@@ -570,14 +602,32 @@ var Employees;
             };
 
             Summary.prototype._svgApplyPlaceOverlayHover = function (overlay, noHover, hover) {
+                var _this = this;
                 // enable svg image hover swaps
                 overlay.imageSwapper.isHover.subscribe(function (newValue) {
+                    // is this the selected overlay?
+                    var placeId = _this.placeId();
+                    if (placeId == overlay.placeId) {
+                        hover.attr('style', '');
+                        noHover.attr('style', 'display:none');
+                        return;
+                    }
+
                     if (newValue) {
                         hover.attr('style', '');
                         noHover.attr('style', 'display:none');
                     } else {
                         noHover.attr('style', '');
                         hover.attr('style', 'display:none');
+                    }
+                });
+
+                this.placeId.subscribe(function (newValue) {
+                    var placeId = _this.placeId();
+                    if (placeId != overlay.placeId) {
+                        noHover.attr('style', '');
+                        hover.attr('style', 'display:none');
+                        return;
                     }
                 });
             };
