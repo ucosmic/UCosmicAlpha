@@ -3,8 +3,8 @@ var App;
     /// <reference path="../typings/googlecharts/google.charts.d.ts" />
     /// <reference path="../typings/jquery/jquery.d.ts" />
     (function (Google) {
-        var ColumnChart = (function () {
-            function ColumnChart(elementOrId) {
+        var LineChart = (function () {
+            function LineChart(elementOrId) {
                 this._promise = $.Deferred();
                 if (typeof elementOrId === 'string') {
                     this.element = document.getElementById(elementOrId);
@@ -12,21 +12,21 @@ var App;
                     this.element = elementOrId;
                 }
             }
-            ColumnChart.prototype.draw = function (data, options) {
+            LineChart.prototype.draw = function (data, options) {
                 var _this = this;
-                if (!this.columnChart) {
-                    this.columnChart = new google.visualization.ColumnChart(this.element);
+                if (!this.lineChart) {
+                    this.lineChart = new google.visualization.LineChart(this.element);
                 }
 
-                this.columnChart.draw(data, options);
+                this.lineChart.draw(data, options);
 
-                google.visualization.events.addListener(this.columnChart, ColumnChart.eventName.ready, function () {
+                google.visualization.events.addListener(this.lineChart, LineChart.eventName.ready, function () {
                     _this._promise.resolve();
                 });
 
                 return this._promise;
             };
-            ColumnChart.eventName = {
+            LineChart.eventName = {
                 animationfinish: 'animationfinish',
                 error: 'error',
                 onmouseover: 'onmouseover',
@@ -34,9 +34,9 @@ var App;
                 ready: 'ready',
                 select: 'select'
             };
-            return ColumnChart;
+            return LineChart;
         })();
-        Google.ColumnChart = ColumnChart;
+        Google.LineChart = LineChart;
     })(App.Google || (App.Google = {}));
     var Google = App.Google;
 })(App || (App = {}));

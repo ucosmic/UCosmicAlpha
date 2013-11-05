@@ -17,6 +17,7 @@ declare module Employees.ApiModels {
         activityIds: number[];
         activityPersonIds: number[];
         activityTypes?: EmployeeActivityTypeCount[];
+        years?: EmployeeActivityYearCount[];
     }
 
     export interface EmployeeActivityTypeCount {
@@ -25,6 +26,12 @@ declare module Employees.ApiModels {
         rank?: number;
         hasIcon: boolean;
         iconSrc?: string;
+        activityIds: number[];
+        activityPersonIds: number[];
+    }
+
+    export interface EmployeeActivityYearCount {
+        year: number;
         activityIds: number[];
         activityPersonIds: number[];
     }

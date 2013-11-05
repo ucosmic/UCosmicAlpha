@@ -15,6 +15,7 @@
         public string CountryCode { get; set; }
         public int[] ActivityPersonIds { get; set; }
         public int[] ActivityIds { get; set; }
-        public EmployeePlaceActivityTypesView[] ActivityTypes { get; set; }
+        public EmployeePlaceActivityTypeView[] ActivityTypes { get; set; }
+        public EmployeePlaceActivityYearView[] Years { get; set; }
     }
 }

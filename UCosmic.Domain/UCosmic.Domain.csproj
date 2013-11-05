@@ -258,7 +258,8 @@
     <Compile Include="Domain\Employees\Queries\EmployeePlaceViews.cs" />
     <Compile Include="Domain\Employees\Views\EmployeeActivityCountsViewProjector.cs" />
     <Compile Include="Domain\Employees\Views\EmployeeActivityCountsViewBuilder.cs" />
-    <Compile Include="Domain\Employees\Views\EmployeePlaceActivityTypesView.cs" />
+    <Compile Include="Domain\Employees\Views\EmployeePlaceActivityTypeView.cs" />
+    <Compile Include="Domain\Employees\Views\EmployeePlaceActivityYearView.cs" />
     <Compile Include="Domain\Employees\Views\EmployeePlacesViewBuilder.cs" />
     <Compile Include="Domain\Employees\Views\EmployeePlacesView.cs" />
     <Compile Include="Domain\Employees\Views\EmployeePlacesViewProjector.cs" />

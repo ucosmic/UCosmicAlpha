@@ -12,6 +12,7 @@ var Employees;
     /// <reference path="../../typings/linq/linq.d.ts" />
     /// <reference path="../../google/GeoChart.ts" />
     /// <reference path="../../google/ColumnChart.ts" />
+    /// <reference path="../../google/LineChart.ts" />
     /// <reference path="Server.ts" />
     /// <reference path="Models.d.ts" />
     /// <reference path="../../app/App.ts" />
@@ -190,6 +191,11 @@ var Employees;
                 this.isActivityTypeChartReady = ko.observable(false);
                 this._activityTypeChartDataTable = this._newActivityTypeChartDataTable();
                 this.activityTypes = ko.observableArray();
+                //#endregion
+                //#region Activity Year Chart
+                this.activityYearChart = new App.Google.LineChart(document.getElementById(this.settings.activityYearsChart.googleElementId));
+                this.isActivityYearChartReady = ko.observable(false);
+                this._activityYearChartDataTable = this._newActivityYearChartDataTable();
                 this.arePlaceOverlaysVisible = ko.computed(function () {
                     var placeId = _this.placeId();
                     var isGeoChartReady = _this.isGeoChartReady();
@@ -251,6 +257,7 @@ var Employees;
                 this.activityCountsData.ready();
                 this._initGeoChart();
                 this._initActivityTypeChart();
+                this._initActivityYearChart();
 
                 // need to fire this once because route changes before history is bound
                 this.bindingsApplied.done(function () {
@@ -361,6 +368,7 @@ var Employees;
             Summary.prototype._applyState = function () {
                 this._drawGeoChart();
                 this._drawActivityTypeChart();
+                this._drawActivityYearChart();
             };
 
             Summary.prototype._loadPlaceData = function () {
@@ -556,6 +564,9 @@ var Employees;
 
             Summary.prototype._getActivityTypeChartOptions = function () {
                 var options = {
+                    animation: {
+                        duration: 250
+                    },
                     hAxis: {
                         textPosition: 'none'
                     },
@@ -668,6 +679,106 @@ var Employees;
                     return x;
                 }).ToArray();
                 return activityTypes;
+            };
+
+            Summary.prototype._getActivityYearChartOptions = function () {
+                var options = {
+                    animation: {
+                        duration: 250
+                    },
+                    vAxis: {
+                        minValue: 0
+                    },
+                    chartArea: {
+                        top: 8,
+                        left: 40,
+                        width: '85%',
+                        height: '60%'
+                    },
+                    legend: { position: 'none' },
+                    colors: ['green']
+                };
+
+                return options;
+            };
+
+            Summary.prototype._newActivityYearChartDataTable = function () {
+                // create data table schema
+                var dataTable = new google.visualization.DataTable();
+                dataTable.addColumn('string', 'Year');
+                dataTable.addColumn('number', 'Count');
+                return dataTable;
+            };
+
+            Summary.prototype._initActivityYearChart = function () {
+                var _this = this;
+                var promise = $.Deferred();
+
+                if (!this.isActivityYearChartReady()) {
+                    this.activityYearChart.draw(this._activityYearChartDataTable, this._getActivityYearChartOptions()).then(function () {
+                        if (!_this.isActivityYearChartReady()) {
+                            _this.isActivityYearChartReady(true);
+                            _this.bindingsApplied.done(function () {
+                            });
+                        }
+                        promise.resolve();
+                    });
+                } else {
+                    promise.resolve();
+                }
+                return promise;
+            };
+
+            Summary.prototype._drawActivityYearChart = function () {
+                var _this = this;
+                // the data may not yet be loaded, and if not, going to redraw after it is loaded
+                var cachedData = this.placeData.cached;
+                var needsRedraw = !cachedData;
+
+                //// decide which part of the map to select
+                var placeId = this.placeId();
+
+                // hit the server up for data and redraw
+                this._initActivityYearChart().then(function () {
+                    _this.placeData.ready().done(function (places) {
+                        if (needsRedraw) {
+                            _this._drawActivityYearChart();
+                            return;
+                        }
+                        var isPivotPeople = _this.isPivotPeople();
+                        _this._activityYearChartDataTable.removeRows(0, _this._activityYearChartDataTable.getNumberOfRows());
+                        var activityYears = _this._getActivityYears();
+                        $.each(activityYears, function (i, dataPoint) {
+                            var total = isPivotPeople ? dataPoint.activityPersonIds.length : dataPoint.activityIds.length;
+                            _this._activityYearChartDataTable.addRow([dataPoint.year.toString(), total]);
+                        });
+                        _this.activityYearChart.draw(_this._activityYearChartDataTable, _this._getActivityYearChartOptions()).then(function () {
+                        });
+                    });
+                });
+            };
+
+            Summary.prototype._getActivityYears = function () {
+                var placeId = this.placeId();
+                if (placeId == 1)
+                    placeId = null;
+                var places = this.placeData.cached;
+                var currentYear = new Date().getFullYear();
+                var minYear = currentYear - 10;
+                var activityYears = Enumerable.From(places).Where(function (x) {
+                    if (placeId == null)
+                        return !x.placeId;
+                    return x.placeId == placeId;
+                }).SelectMany(function (x) {
+                    return x.years;
+                }).Distinct(function (x) {
+                    return x.year;
+                }).OrderBy(function (x) {
+                    return x.year;
+                }).Where(function (x) {
+                    return x.year >= minYear && x.year <= currentYear;
+                }).ToArray();
+                return activityYears;
             };
 
             Summary.prototype._parsePlaceOverlays = function () {

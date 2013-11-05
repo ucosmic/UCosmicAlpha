@@ -1,8 +1,8 @@
 ﻿namespace UCosmic.Domain.Employees
 {
-    public class EmployeePlaceActivityTypesView
+    public class EmployeePlaceActivityTypeView
     {
-        public EmployeePlaceActivityTypesView()
+        public EmployeePlaceActivityTypeView()
         {
             ActivityPersonIds = new int[0];
             ActivityIds = new int[0];

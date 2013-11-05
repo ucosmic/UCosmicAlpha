@@ -239,9 +239,11 @@ a.global-view {
 }
 
 .summary-sidebar {
-    margin-top: 28px;
+    margin-top: 20px;
 
     #activity_type_chart_box {
+
+        margin: 1em 0 2em;;
 
         .heading {
             .title {
@@ -291,6 +293,37 @@ a.global-view {
                         opacity: 1;
                     }
                 }
+            }
+        }
+    }
+
+    #activity_year_chart_box {
+
+        margin: 1em 0 2em;
+
+        .heading {
+            .title {
+                font-weight: bold;
+            }
+            .pivot-buttons {
+                font-size: 12px;
+                font-family: Arial;
+                line-height: 20px;
+                height: 20px;
+                vertical-align: middle;
+                a {
+                    vertical-align: middle;
+                }
+            }
+        }
+
+        .place {
+            margin-top: 4px;
+            position: relative;
+            z-index: 1;
+            .text {
+                font-size: 12px;
+                font-family: Arial;
             }
         }
     }

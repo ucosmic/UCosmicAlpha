@@ -52,6 +52,10 @@
                     boxElementId: 'activity_type_chart_box',
                     googleElementId: 'google_activity_type_chart',
                 },
+                activityYearsChart: {
+                    boxElementId: 'activity_year_chart_box',
+                    googleElementId: 'google_activity_year_chart',
+                },
             });
             viewModel.applyBindings();
         });
@@ -261,6 +265,36 @@
                             </li>
                         </ul>
                     </div>
+                </div>
+
+                @* ACTIVITY YEARS COLUMN CHART & ICONS *@
+                <div id="activity_year_chart_box" data-bind="visible: areBindingsApplied" style="display: none;">
+                    <div class="heading group">
+                        <div class="title on-left">
+                            <strong data-bind="visible: isPivotActivities">Activities Trend</strong>
+                            <strong data-bind="visible: isPivotPeople">People Trend</strong>
+                        </div>
+                        <div class="pivot-buttons on-right">
+                            <a href="#" data-bind="visible: isPivotActivities, click: pivotPeople">See People</a>
+                            <a href="#" data-bind="visible: isPivotPeople, click: pivotActivities">See Activities</a>
+                        </div>
+                    </div>
+                    <div class="place">
+                        <div data-bind="visible: hasNoPlaceId">
+                            <div class="group">
+                                <div class="on-left">
+                                    <span class="light-transparent badge" data-bind="visible: hasNoPlaceId">Everywhere</span>
+                                </div>
+                                <div class="on-right">
+                                    <span class="text">Click the map for more info</span>
+                                </div>
+                            </div>
+                        </div>
+                        <span data-bind="visible: hasPlaceId">in
+                            <span class="light-transparent badge" data-bind="text: selectedPlaceSummary.locationCount">?</span>
+                        </span>
+                    </div>
+                    <div id="google_activity_year_chart"></div>
                 </div>
             </div>
         </aside>

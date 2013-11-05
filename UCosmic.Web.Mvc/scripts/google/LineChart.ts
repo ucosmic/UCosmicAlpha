@@ -3,15 +3,15 @@
 
 module App.Google {
 
-    export interface ColumnChartEventName {
+    export interface LineChartEventName {
         error: string;
         ready: string;
         select: string;
     }
 
-    export class ColumnChart {
+    export class LineChart {
 
-        static eventName: ColumnChartEventName = {
+        static eventName: LineChartEventName = {
             animationfinish: 'animationfinish',
             error: 'error',
             onmouseover: 'onmouseover',
@@ -33,21 +33,21 @@ module App.Google {
         }
 
         element: Element;
-        columnChart: google.visualization.ColumnChart;
+        lineChart: google.visualization.LineChart;
         private _promise = $.Deferred();
 
-        draw(data: google.visualization.DataTable, options?: google.visualization.ColumnChartOptions): JQueryPromise<void>;
-        draw(data: google.visualization.DataView, options?: google.visualization.ColumnChartOptions): JQueryPromise<void>;
-        draw(data: any, options?: google.visualization.ColumnChartOptions): JQueryPromise<void> {
+        draw(data: google.visualization.DataTable, options?: google.visualization.LineChartOptions): JQueryPromise<void>;
+        draw(data: google.visualization.DataView, options?: google.visualization.LineChartOptions): JQueryPromise<void>;
+        draw(data: any, options?: google.visualization.LineChartOptions): JQueryPromise<void> {
             // if the chart does not yet exist, construct it and set
             // up a promise for its ready callback
-            if (!this.columnChart) {
-                this.columnChart = new google.visualization.ColumnChart(this.element);
+            if (!this.lineChart) {
+                this.lineChart = new google.visualization.LineChart(this.element);
             }
 
-            this.columnChart.draw(data, options);
+            this.lineChart.draw(data, options);
 
-            google.visualization.events.addListener(this.columnChart, ColumnChart.eventName.ready, (): void => {
+            google.visualization.events.addListener(this.lineChart, LineChart.eventName.ready, (): void => {
                 this._promise.resolve();
             });
 

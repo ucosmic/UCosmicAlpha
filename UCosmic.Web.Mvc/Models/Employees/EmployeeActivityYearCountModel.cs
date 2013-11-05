@@ -4,29 +4,26 @@ using UCosmic.Domain.Employees;
 
 namespace UCosmic.Web.Mvc.Models
 {
-    public class EmployeeActivityTypeCountModel
+    public class EmployeeActivityYearCountModel
     {
-        public EmployeeActivityTypeCountModel()
+        public EmployeeActivityYearCountModel()
         {
             ActivityPersonIds = new List<int>();
             ActivityIds = new List<int>();
         }
 
-        public int ActivityTypeId { get; set; }
-        public string Text { get; set; }
-        public int Rank { get; set; }
-        public bool HasIcon { get; set; }
+        public int Year { get; set; }
         public IEnumerable<int> ActivityPersonIds { get; set; }
         public IEnumerable<int> ActivityIds { get; set; }
     }
 
-    public static class EmployeeActivityTypeCountProfiler
+    public static class EmployeeActivityYearCountProfiler
     {
         public class ViewToModel : Profile
         {
             protected override void Configure()
             {
-                CreateMap<EmployeePlaceActivityTypeView, EmployeeActivityTypeCountModel>();
+                CreateMap<EmployeePlaceActivityYearView, EmployeeActivityYearCountModel>();
             }
         }
     }

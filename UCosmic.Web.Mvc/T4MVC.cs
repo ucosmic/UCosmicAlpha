@@ -193,6 +193,10 @@ namespace Links
             public static readonly string GeoChart_min_js = Url("GeoChart.min.js");
             public static readonly string jsapi_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/jsapi.min.js") ? Url("jsapi.min.js") : Url("jsapi.js");
                           
+            public static readonly string LineChart_ts = Url("LineChart.ts");
+            public static readonly string LineChart_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/LineChart.min.js") ? Url("LineChart.min.js") : Url("LineChart.js");
+                          
+            public static readonly string LineChart_min_js = Url("LineChart.min.js");
             public static readonly string Map_ts = Url("Map.ts");
             public static readonly string Map_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Map.min.js") ? Url("Map.min.js") : Url("Map.js");
                           

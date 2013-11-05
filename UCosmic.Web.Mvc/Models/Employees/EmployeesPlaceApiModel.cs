@@ -20,6 +20,7 @@ namespace UCosmic.Web.Mvc.Models
         public IEnumerable<int> ActivityPersonIds { get; set; }
         public IEnumerable<int> ActivityIds { get; set; }
         public IEnumerable<EmployeeActivityTypeCountModel> ActivityTypes { get; set; }
+        public IEnumerable<EmployeeActivityYearCountModel> Years { get; set; }
     }
 
     public static class EmployeesPlaceApiProfiler

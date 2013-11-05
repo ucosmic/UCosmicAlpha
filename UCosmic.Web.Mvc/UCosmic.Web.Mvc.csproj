@@ -397,6 +397,7 @@
     <Compile Include="Models\Degrees\DegreeApiModel.cs" />
     <Compile Include="Models\Degrees\DegreeSearchInputModel.cs" />
     <Compile Include="Models\Employees\EmployeeActivityTypeCountModel.cs" />
+    <Compile Include="Models\Employees\EmployeeActivityYearCountModel.cs" />
     <Compile Include="Models\Employees\EmployeesPlaceApiModel.cs" />
     <Compile Include="Models\Employees\EmployeesPlacesInputModel.cs" />
     <Compile Include="Models\Employees\FacultyStaffSearchApiModel.cs" />
@@ -861,6 +862,13 @@
     </Content>
     <Content Include="scripts\google\ColumnChart.min.js">
       <DependentUpon>ColumnChart.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="scripts\google\LineChart.ts" />
+    <Content Include="scripts\google\LineChart.js">
+      <DependentUpon>LineChart.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\google\LineChart.min.js">
+      <DependentUpon>LineChart.ts</DependentUpon>
     </Content>
     <Content Include="scripts\oss\d3.v3.js" />
     <Content Include="scripts\oss\d3.v3.min.js" />

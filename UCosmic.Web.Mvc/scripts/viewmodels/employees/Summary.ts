@@ -10,6 +10,7 @@
 /// <reference path="../../typings/linq/linq.d.ts" />
 /// <reference path="../../google/GeoChart.ts" />
 /// <reference path="../../google/ColumnChart.ts" />
+/// <reference path="../../google/LineChart.ts" />
 /// <reference path="Server.ts" />
 /// <reference path="Models.d.ts" />
 /// <reference path="../../app/App.ts" />
@@ -21,6 +22,7 @@ module Employees.ViewModels {
         element: Element;
         geoChart: SummaryGeoChartSettings;
         activityTypesChart: SummaryActivityTypeChartSettings;
+        activityYearsChart: SummaryActivityYearChartSettings;
     }
 
     export interface SummaryGeoChartSettings {
@@ -30,6 +32,11 @@ module Employees.ViewModels {
     }
 
     export interface SummaryActivityTypeChartSettings {
+        boxElementId: string;
+        googleElementId: string;
+    }
+
+    export interface SummaryActivityYearChartSettings {
         boxElementId: string;
         googleElementId: string;
     }
@@ -159,6 +166,7 @@ module Employees.ViewModels {
             this.activityCountsData.ready();
             this._initGeoChart();
             this._initActivityTypeChart();
+            this._initActivityYearChart();
 
             // need to fire this once because route changes before history is bound
             this.bindingsApplied.done((): void => {
@@ -319,6 +327,7 @@ module Employees.ViewModels {
         private _applyState(): void {
             this._drawGeoChart();
             this._drawActivityTypeChart();
+            this._drawActivityYearChart();
         }
 
         //#endregion
@@ -580,6 +589,9 @@ module Employees.ViewModels {
 
         private _getActivityTypeChartOptions(): google.visualization.ColumnChartOptions {
             var options: google.visualization.ColumnChartOptions = {
+                animation: {
+                    duration: 250,
+                },
                 hAxis: {
                     textPosition: 'none'
                 },
@@ -698,6 +710,119 @@ module Employees.ViewModels {
                 })
                 .ToArray();
             return activityTypes;
+        }
+
+        //#endregion
+        //#region Activity Year Chart
+
+        activityYearChart: App.Google.LineChart = new App.Google.LineChart(
+            document.getElementById(this.settings.activityYearsChart.googleElementId));
+        isActivityYearChartReady: KnockoutObservable<boolean> = ko.observable(false);
+        private _activityYearChartDataTable: google.visualization.DataTable = this._newActivityYearChartDataTable();
+
+        private _getActivityYearChartOptions(): google.visualization.LineChartOptions {
+            var options: google.visualization.LineChartOptions = {
+                animation: {
+                    duration: 250,
+                },
+                vAxis: {
+                    minValue: 0,
+                },
+                chartArea: {
+                    top: 8,
+                    left: 40,
+                    width: '85%',
+                    height: '60%'
+                },
+                legend: { position: 'none' },
+                colors: ['green'],
+            };
+
+            return options;
+        }
+
+        private _newActivityYearChartDataTable(): google.visualization.DataTable {
+            // create data table schema
+            var dataTable = new google.visualization.DataTable();
+            dataTable.addColumn('string', 'Year');
+            dataTable.addColumn('number', 'Count');
+            return dataTable;
+        }
+
+        private _initActivityYearChart(): JQueryPromise<void> {
+            var promise = $.Deferred();
+
+            if (!this.isActivityYearChartReady()) {
+                this.activityYearChart.draw(this._activityYearChartDataTable, this._getActivityYearChartOptions())
+                    .then((): void => {
+                        if (!this.isActivityYearChartReady()) {
+                            this.isActivityYearChartReady(true);
+                            this.bindingsApplied.done((): void=> {
+                            });
+                        }
+                        promise.resolve();
+                    });
+            }
+            else {
+                promise.resolve();
+            }
+            return promise;
+        }
+
+        private _drawActivityYearChart(): void {
+            // the data may not yet be loaded, and if not, going to redraw after it is loaded
+            var cachedData = this.placeData.cached;
+            var needsRedraw = !cachedData;
+
+            //// decide which part of the map to select
+            var placeId = this.placeId();
+
+            // hit the server up for data and redraw
+            this._initActivityYearChart().then((): void => {
+                this.placeData.ready().done((places: ApiModels.EmployeesPlaceApiModel[]): void => {
+                    if (needsRedraw) {
+                        this._drawActivityYearChart();
+                        return;
+                    }
+                    var isPivotPeople = this.isPivotPeople();
+                    this._activityYearChartDataTable.removeRows(0, this._activityYearChartDataTable.getNumberOfRows());
+                    var activityYears = this._getActivityYears();
+                    $.each(activityYears, (i: number, dataPoint: ApiModels.EmployeeActivityYearCount): void => {
+                        var total = isPivotPeople ? dataPoint.activityPersonIds.length : dataPoint.activityIds.length;
+                        this._activityYearChartDataTable.addRow([dataPoint.year.toString(), total]);
+                    });
+                    this.activityYearChart.draw(this._activityYearChartDataTable, this._getActivityYearChartOptions())
+                        .then((): void => {
+                        });
+                });
+            });
+        }
+
+        private _getActivityYears(): ApiModels.EmployeeActivityYearCount[] {
+            var placeId = this.placeId();
+            if (placeId == 1) placeId = null;
+            var places = this.placeData.cached;
+            var currentYear = new Date().getFullYear();
+            var minYear = currentYear - 10;
+            var activityYears: ApiModels.EmployeeActivityYearCount[] = Enumerable.From(places)
+                .Where(function (x: ApiModels.EmployeesPlaceApiModel): boolean {
+                    if (placeId == null) return !x.placeId;
+                    return x.placeId == placeId;
+                })
+                .SelectMany(function (x: ApiModels.EmployeesPlaceApiModel): ApiModels.EmployeeActivityYearCount[] {
+                    return x.years;
+                })
+                .Distinct(function (x: ApiModels.EmployeeActivityYearCount): number {
+                    return x.year;
+                })
+                .OrderBy(function (x: ApiModels.EmployeeActivityYearCount): number {
+                    return x.year;
+                })
+                .Where(function (x: ApiModels.EmployeeActivityYearCount): boolean {
+                    return x.year >= minYear && x.year <= currentYear;
+                })
+                .ToArray();
+            return activityYears;
         }
 
         //#endregion
