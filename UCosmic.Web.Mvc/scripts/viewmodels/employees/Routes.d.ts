@@ -12,6 +12,11 @@ declare module Employees.ApiRoutes {
 
     export interface Settings {
         icon(domain: string, iconName: string): string;
+        ActivityTypes: SettingsActivityTypes;
+    }
+
+    export interface SettingsActivityTypes {
+        icon(typeId: number): string;
     }
 }
 

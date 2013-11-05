@@ -41,6 +41,18 @@ Routes.Api.Employees.Settings.icon = function (domain, iconName) {
     }))'.format(domain, iconName);
 };
 
+@* SETTINGS ACTIVITY TYPES *@
+Routes.Api.Employees.Settings.ActivityTypes = Routes.Api.Employees.Settings.ActivityTypes || {};
+
+Routes.Api.Employees.Settings.ActivityTypes.icon = function (activityTypeId) {
+    return '@routeWriter.WriteRoute(Url.HttpRouteUrl(null, new
+    {
+        controller = "Employees",
+        action = "GetSettingsActivityTypeIcon",
+        typeId = routeWriter.Value<int>(0),
+    }))'.format(activityTypeId);
+};
+
 
 
 @* MVC ROUTES *@

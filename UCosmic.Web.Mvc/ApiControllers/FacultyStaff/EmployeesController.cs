@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -131,6 +133,31 @@ namespace UCosmic.Web.Mvc.ApiControllers
             response.Content = new StreamContent(stream);
             var defaultMime = new MediaTypeHeaderValue("image/png");
             response.Content.Headers.ContentType = defaultMime;
+            return response;
+        }
+
+        [CacheHttpGet(Duration = 3600)]
+        [GET("employees/settings/activity-types/{typeId:int}/icon")]
+        public HttpResponseMessage GetSettingsActivityTypeIcon(int typeId)
+        {
+            //throw new Exception();
+            //System.Threading.Thread.Sleep(2000);
+
+            var activityType = _entities.Query<EmployeeActivityType>()
+                .SingleOrDefault(x => x.Id == typeId);
+            if (activityType == null)
+                return Request.CreateResponse(HttpStatusCode.NotFound);
+
+            var path = string.Format("{0}{1}", activityType.IconPath, activityType.IconFileName);
+            var mime = activityType.IconMimeType;
+
+            var binaryContent = _binaryData.Get(path);
+            if (binaryContent == null || binaryContent.Length < 1)
+                return new HttpResponseMessage(HttpStatusCode.NotFound);
+
+            var response = new HttpResponseMessage(HttpStatusCode.OK);
+            response.Content = new ByteArrayContent(binaryContent);
+            response.Content.Headers.ContentType = new MediaTypeHeaderValue(mime);
             return response;
         }
     }

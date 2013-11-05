@@ -62,7 +62,7 @@
 <div class="content fixed to-top" data-current-module="employees">
     <form class="group">
         @* LEFT *@
-        <div class="on-left from-top" style="width: 680px;">
+        <div class="on-left from-top">
 
             @* HEADER *@
             <header>
@@ -122,7 +122,7 @@
                     <div class="on-right" style="line-height: 28px;">
                         <div data-bind="visible: geoChartSpinner.isVisible">
                             <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
-                            <strong>Loading geographic summary data...</strong>
+                            <strong>Loading faculty &amp; staff summary data...</strong>
                         </div>
                         <div data-bind="visible: !geoChartSpinner.isVisible() && hasPlaceData() && hasNoPlaceId()" style="display: none;">
                             <strong>Global View</strong>
@@ -223,10 +223,29 @@
         </div>
 
         @* RIGHT *@
-        <aside class="on-right from-top" style="width: 270px;">
-            <div id="activity_type_chart_box" style="width: 100%; margin-top: 28px;">
-                <div id="google_activity_type_chart" style="width: 100%; height: 140px;"></div>
-                <div style="height: 30px; border: solid 1px red;"></div>
+        <aside class="on-right from-top">
+            <div class="summary-sidebar">
+
+                @* ACTIVITY TYPES COLUMN CHART & ICONS *@
+                <div id="activity_type_chart_box" data-bind="visible: activityTypes().length" style="display: none;">
+                    <div>
+                        <strong data-bind="visible: isPivotActivities">Activity counts by type</strong>
+                        <strong data-bind="visible: isPivotPeople">Person counts by type of activity</strong>
+                    </div>
+                    <div style="margin-top: 4px; position: relative; z-index: 100;">
+                        <span data-bind="visible: hasNoPlaceId" class="light-transparent badge">Everywhere</span>
+                        <span data-bind="visible: hasPlaceId">in
+                            <span class="light-transparent badge" data-bind="text: selectedPlaceSummary.locationCount">?</span></span>
+                    </div>
+                    <div id="google_activity_type_chart"></div>
+                    <div>
+                        <ul class="group icons" data-bind="foreach: activityTypes">
+                            <li>
+                                <img data-bind="attr: { src: iconSrc, title: text, alt: text }" alt="" src="~/images/transparent.png" />
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </aside>
     </form>

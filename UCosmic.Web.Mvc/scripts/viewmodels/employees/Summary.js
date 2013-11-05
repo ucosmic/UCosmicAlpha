@@ -663,6 +663,9 @@ var Employees;
                     return x.activityTypeId;
                 }).OrderBy(function (x) {
                     return x.rank;
+                }).Select(function (x) {
+                    x.iconSrc = Routes.Api.Employees.Settings.ActivityTypes.icon(x.activityTypeId);
+                    return x;
                 }).ToArray();
                 return activityTypes;
             };

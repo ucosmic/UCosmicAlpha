@@ -237,3 +237,30 @@ a.global-view {
         opacity: 0.9;
     }
 }
+
+.summary-sidebar {
+    margin-top: 28px;
+
+    #activity_type_chart_box {
+
+        #google_activity_type_chart {
+            margin-top: -8px;
+            height: 140px;
+        }
+
+        ul.icons {
+            position: relative;
+            margin-top: -12px;
+            margin-left: 10px;
+            li {
+                width: 50px;
+                float: left;
+                text-align: center;
+                img {
+                    width: 32px;
+                    height: 32px;
+                }
+            }
+        }
+    }
+}

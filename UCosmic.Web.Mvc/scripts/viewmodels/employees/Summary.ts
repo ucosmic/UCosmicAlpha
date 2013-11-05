@@ -683,7 +683,7 @@ module Employees.ViewModels {
                     if (placeId == null) return !x.placeId;
                     return x.placeId == placeId;
                 })
-                .SelectMany(function (x: ApiModels.EmployeesPlaceApiModel): ApiModels.EmployeeActivityTypeCount[]{
+                .SelectMany(function (x: ApiModels.EmployeesPlaceApiModel): ApiModels.EmployeeActivityTypeCount[] {
                     return x.activityTypes;
                 })
                 .Distinct(function (x: ApiModels.EmployeeActivityTypeCount): number {
@@ -691,6 +691,10 @@ module Employees.ViewModels {
                 })
                 .OrderBy(function (x: ApiModels.EmployeeActivityTypeCount): number {
                     return x.rank;
+                })
+                .Select(function (x: ApiModels.EmployeeActivityTypeCount): ApiModels.EmployeeActivityTypeCount {
+                    x.iconSrc = Routes.Api.Employees.Settings.ActivityTypes.icon(x.activityTypeId);
+                    return x;
                 })
                 .ToArray();
             return activityTypes;

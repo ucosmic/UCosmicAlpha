@@ -163,3 +163,20 @@ a.global-view {
   a.global-view:hover {
     opacity: 0.9; }
 
+.summary-sidebar {
+  margin-top: 28px; }
+  .summary-sidebar #activity_type_chart_box #google_activity_type_chart {
+    margin-top: -8px;
+    height: 140px; }
+  .summary-sidebar #activity_type_chart_box ul.icons {
+    position: relative;
+    margin-top: -12px;
+    margin-left: 10px; }
+    .summary-sidebar #activity_type_chart_box ul.icons li {
+      width: 50px;
+      float: left;
+      text-align: center; }
+      .summary-sidebar #activity_type_chart_box ul.icons li img {
+        width: 32px;
+        height: 32px; }
+

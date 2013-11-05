@@ -24,6 +24,7 @@ declare module Employees.ApiModels {
         text?: string;
         rank?: number;
         hasIcon: boolean;
+        iconSrc?: string;
         activityIds: number[];
         activityPersonIds: number[];
     }
