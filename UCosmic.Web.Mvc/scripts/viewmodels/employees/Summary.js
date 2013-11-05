@@ -11,6 +11,7 @@ var Employees;
     /// <reference path="../../typings/knockout/knockout.d.ts" />
     /// <reference path="../../typings/linq/linq.d.ts" />
     /// <reference path="../../google/GeoChart.ts" />
+    /// <reference path="../../google/ColumnChart.ts" />
     /// <reference path="Server.ts" />
     /// <reference path="Models.d.ts" />
     /// <reference path="../../app/App.ts" />
@@ -89,10 +90,12 @@ var Employees;
             function DataCacher(loader) {
                 this.loader = loader;
                 this._promise = $.Deferred();
+                this._isLoading = false;
             }
             DataCacher.prototype.ready = function () {
                 var _this = this;
-                if (!this.cached) {
+                if (!this._isLoading) {
+                    this._isLoading = true;
                     this.loader().done(function (data) {
                         _this.cached = data;
                         _this._promise.resolve(_this.cached);
@@ -147,28 +150,46 @@ var Employees;
                 }).extend({ throttle: 1 });
                 //#endregion
                 //#region Pivot Data
+                //#region Places
                 this.hasPlaceData = ko.observable(false);
                 this.placeData = new DataCacher(function () {
                     return _this._loadPlaceData();
                 });
                 //#endregion
+                //#endregion
+                //#region Summaries
+                //#region Top Summary
+                this.activityTotals = {
+                    personCount: ko.observable('?'),
+                    activityCount: ko.observable('?'),
+                    locationCount: ko.observable('?')
+                };
+                this.activityCountsData = new DataCacher(function () {
+                    return _this._loadActivityCounts();
+                });
+                //#endregion
+                //#region Selected Place Summary
+                this.selectedPlaceSummary = {
+                    personCount: ko.observable('?'),
+                    activityCount: ko.observable('?'),
+                    locationCount: ko.observable('?')
+                };
+                this._placeSelected = ko.computed(function () {
+                    _this._onPlaceSelected();
+                });
+                //#endregion
+                //#endregion
                 //#region Google GeoChart
-                this.geoChart = new App.Google.GeoChart(document.getElementById(this.settings.chart.googleElementId));
+                this.geoChart = new App.Google.GeoChart(document.getElementById(this.settings.geoChart.googleElementId));
                 this.geoChartSpinner = new App.Spinner(new App.SpinnerOptions(400, true));
                 this.isGeoChartReady = ko.observable(false);
                 this._geoChartDataTable = this._newGeoChartDataTable();
-                this._geoChartOptions = {
-                    // options passed when drawing geochart
-                    displayMode: 'regions',
-                    region: 'world',
-                    keepAspectRatio: this.settings.chart.keepAspectRatio ? true : false,
-                    height: this.settings.chart.keepAspectRatio ? 480 : 500,
-                    colorAxis: {
-                        minValue: 1,
-                        colors: ['#dceadc', '#006400']
-                    },
-                    backgroundColor: '#acccfd'
-                };
+                //#endregion
+                //#region Activity Type Chart
+                this.activityTypeChart = new App.Google.ColumnChart(document.getElementById(this.settings.activityTypesChart.googleElementId));
+                this.isActivityTypeChartReady = ko.observable(false);
+                this._activityTypeChartDataTable = this._newActivityTypeChartDataTable();
+                this.activityTypes = ko.observableArray();
                 this.arePlaceOverlaysVisible = ko.computed(function () {
                     var placeId = _this.placeId();
                     var isGeoChartReady = _this.isGeoChartReady();
@@ -177,9 +198,9 @@ var Employees;
                         return false;
                     var areVisible = (placeId == 1 || isPlaceOverlaySelected) && isGeoChartReady;
 
-                    if (Summary._isD3Defined() && _this.settings.chart.googleElementId) {
+                    if (Summary._isD3Defined() && _this.settings.geoChart.googleElementId) {
                         // overlay may already be drawn
-                        var dInjectRootElementId = '{0}_place_overlays_root'.format(_this.settings.chart.googleElementId);
+                        var dInjectRootElementId = '{0}_place_overlays_root'.format(_this.settings.geoChart.googleElementId);
                         var dInjectRootSelection = d3.select('#{0}'.format(dInjectRootElementId));
                         if (dInjectRootSelection.length) {
                             if (areVisible) {
@@ -218,27 +239,6 @@ var Employees;
                 //#endregion
                 //#region Tooltips
                 this._tooltips = ko.observableArray();
-                //#endregion
-                //#region Summaries
-                //#region Top Summary
-                this.activityTotals = {
-                    personCount: ko.observable('?'),
-                    activityCount: ko.observable('?'),
-                    locationCount: ko.observable('?')
-                };
-                this.activityCountsData = new DataCacher(function () {
-                    return _this._loadActivityCounts();
-                });
-                //#endregion
-                //#region Selected Place Summary
-                this.selectedPlaceSummary = {
-                    personCount: ko.observable('?'),
-                    activityCount: ko.observable('?'),
-                    locationCount: ko.observable('?')
-                };
-                this._placeSelected = ko.computed(function () {
-                    _this._onPlaceSelected();
-                });
                 // parse the place overlays
                 this._parsePlaceOverlays();
 
@@ -250,6 +250,7 @@ var Employees;
                 // begin loading data
                 this.activityCountsData.ready();
                 this._initGeoChart();
+                this._initActivityTypeChart();
 
                 // need to fire this once because route changes before history is bound
                 this.bindingsApplied.done(function () {
@@ -359,6 +360,7 @@ var Employees;
 
             Summary.prototype._applyState = function () {
                 this._drawGeoChart();
+                this._drawActivityTypeChart();
             };
 
             Summary.prototype._loadPlaceData = function () {
@@ -367,7 +369,8 @@ var Employees;
                 var promise = $.Deferred();
                 var request = {
                     countries: true,
-                    placeIds: this._getOverlayPlaceIds()
+                    placeIds: this._getOverlayPlaceIds(),
+                    placeAgnostic: true
                 };
                 this.geoChartSpinner.start();
                 Employees.Servers.EmployeesPlaces(this.settings.tenantDomain, request).done(function (places) {
@@ -396,299 +399,6 @@ var Employees;
                 });
 
                 return place;
-            };
-
-            Summary.prototype._newGeoChartDataTable = function () {
-                // create data table schema
-                var dataTable = new google.visualization.DataTable();
-                dataTable.addColumn('string', 'Place');
-                dataTable.addColumn('number', 'Total');
-                return dataTable;
-            };
-
-            Summary.prototype._initGeoChart = function () {
-                var _this = this;
-                // just draw the geochart to make sure something is displayed
-                // need to make sure we wait until it's done though before drying to draw again
-                var promise = $.Deferred();
-
-                if (!this.isGeoChartReady()) {
-                    this.geoChart.draw(this._geoChartDataTable, this._geoChartOptions).then(function () {
-                        if (!_this.isGeoChartReady()) {
-                            _this.isGeoChartReady(true);
-                            _this.bindingsApplied.done(function () {
-                                _this._svgInjectPlaceOverlays();
-                                google.visualization.events.addListener(_this.geoChart.geoChart, 'select', function () {
-                                    _this._onGeoChartSelect();
-                                });
-                                google.visualization.events.addListener(_this.geoChart.geoChart, 'regionClick', function (e) {
-                                    _this._onGeoChartRegionClick(e);
-                                });
-                            });
-                        }
-                        promise.resolve();
-                    });
-                } else {
-                    promise.resolve();
-                }
-                return promise;
-            };
-
-            Summary.prototype._drawGeoChart = function () {
-                var _this = this;
-                // the data may not yet be loaded, and if not, going to redraw after it is loaded
-                var cachedData = this.placeData.cached;
-                var needsRedraw = !cachedData;
-
-                // decide which part of the map to select
-                var placeId = this.placeId();
-                var place = this._getPlaceById(placeId);
-                this._geoChartOptions.region = !placeId || placeId == 1 || !place || !place.countryCode ? 'world' : place.countryCode;
-
-                // change aspect ratio based on placeId
-                this._geoChartOptions.keepAspectRatio = placeId && placeId > 1 && place && place.countryCode ? false : this.settings.chart.keepAspectRatio ? true : false;
-
-                // hit the server up for data and redraw
-                this._initGeoChart().then(function () {
-                    _this.placeData.ready().done(function (places) {
-                        if (needsRedraw) {
-                            _this._drawGeoChart();
-                            return;
-                        }
-                        var isPivotPeople = _this.isPivotPeople();
-                        _this._geoChartDataTable.setColumnLabel(1, 'Total {0}'.format(isPivotPeople ? 'People' : 'Activities'));
-                        _this._geoChartDataTable.removeRows(0, _this._geoChartDataTable.getNumberOfRows());
-                        $.each(places, function (i, dataPoint) {
-                            var total = isPivotPeople ? dataPoint.activityPersonIds.length : dataPoint.activityIds.length;
-                            _this._geoChartDataTable.addRow([dataPoint.placeName, total]);
-                        });
-                        _this.geoChart.draw(_this._geoChartDataTable, _this._geoChartOptions).then(function () {
-                            setTimeout(function () {
-                                _this._svgInjectPlaceOverlays();
-                            }, 0);
-                            _this._applyPlaceOverlayTotals(places);
-                            _this._createOverlayTooltips();
-                        });
-                    });
-                });
-            };
-
-            Summary.prototype._onGeoChartSelect = function () {
-                var selection = this.geoChart.geoChart.getSelection();
-                if (selection && selection.length) {
-                    var rowIndex = selection[0].row;
-
-                    // first column of the data table has the place name (country name)
-                    var placeName = this._geoChartDataTable.getFormattedValue(rowIndex, 0);
-                    var place = this._getPlaceByName(placeName);
-                    if (place) {
-                        this.placeId(place.placeId);
-                    }
-                }
-            };
-
-            Summary.prototype._onGeoChartRegionClick = function (e) {
-                // this will fire even when the country clicked has total === zero
-            };
-
-            Summary.prototype._parsePlaceOverlays = function () {
-                var _this = this;
-                if (this.placeOverlays)
-                    return;
-                this.placeOverlays = ko.observableArray();
-                var overlays = $('#{0} .overlays .places .data'.format(this.settings.chart.boxElementId)).children();
-                $.each(overlays, function (i, overlay) {
-                    var jOverlay = $(overlay);
-                    var iOverlay = {
-                        total: ko.observable(0),
-                        placeId: parseInt(jOverlay.data('place-id')),
-                        title: jOverlay.attr('title'),
-                        className: jOverlay.attr('class'),
-                        imageSwapper: new ImageSwapper(jOverlay.find('img.no-hover').first().attr('src'), jOverlay.find('img.hover').first().attr('src'))
-                    };
-                    _this.placeOverlays.push(iOverlay);
-                });
-            };
-
-            Summary.prototype._getOverlayPlaceIds = function () {
-                var placeIds = Enumerable.From(this.placeOverlays()).Select(function (x) {
-                    return x.placeId;
-                }).ToArray();
-                return placeIds;
-            };
-
-            Summary.prototype.clickPlaceOverlay = function (overlay, e) {
-                var place = this._getPlaceById(overlay.placeId);
-                if (place) {
-                    if (!place.activityPersonIds.length) {
-                        return;
-                    }
-                    this.placeId(place.placeId);
-                    //$('#{0}'.format(this.settings.chart.googleElementId)).hide();
-                }
-            };
-
-            Summary._isD3Defined = //#endregion
-            //#region SVG Injection
-            function () {
-                return typeof d3 !== 'undefined';
-            };
-
-            Summary.prototype._svgInjectPlaceOverlays = function () {
-                var _this = this;
-                if (!Summary._isD3Defined() || !this.settings.chart.googleElementId || !this.settings.chart.boxElementId)
-                    return;
-
-                // overlay may already be drawn
-                var dInjectRootElementId = '{0}_place_overlays_root'.format(this.settings.chart.googleElementId);
-                if ($('#{0}'.format(dInjectRootElementId)).length)
-                    return;
-
-                // svg structure is as follows:
-                //  svg
-                //      > defs
-                //      > g
-                //          > rect
-                //          > g - map
-                //              <----- inject new node here
-                //          > g - legend
-                //          > g - ?
-                //          > g - tooltips
-                // use d3 to select the first root g element from the geochart
-                var dGoogleG = d3.select('#{0} svg > g'.format(this.settings.chart.googleElementId));
-
-                // all of the overlays will become children of this g element
-                var dInjectRoot = dGoogleG.append('g').attr('id', dInjectRootElementId);
-                var areOverlaysVisible = this.arePlaceOverlaysVisible();
-                if (!areOverlaysVisible)
-                    dInjectRoot.attr('style', 'display: none;');
-
-                // iterate over the parsed place overlays
-                // first, need to show the data root in order to get valid positions
-                var jContainer = $('#{0} .overlays .places .data'.format(this.settings.chart.boxElementId));
-                jContainer.show();
-
-                var overlays = this.placeOverlays();
-                $.each(overlays, function (i, overlay) {
-                    _this._svgInjectPlaceOverlay(dInjectRoot, overlay);
-                });
-
-                jContainer.hide();
-
-                // now use jQuery to rearrange the order of the elements
-                $('#{0} svg > g > g:last-child'.format(this.settings.chart.googleElementId)).insertAfter('#{0} svg > g > g:nth-child(2)'.format(this.settings.chart.googleElementId));
-            };
-
-            Summary.prototype._svgInjectPlaceOverlay = function (root, overlay) {
-                // create a new d3 container for this overlay
-                var jOverlay = $('#{0} .overlays .places .data .{1}'.format(this.settings.chart.boxElementId, overlay.className));
-                var dOverlay = root.append('g').attr('class', overlay.className);
-
-                // compute position based on data element positions
-                var x = jOverlay.position().left;
-                var y = jOverlay.position().top;
-                var width = jOverlay.outerWidth();
-                var height = jOverlay.outerHeight();
-
-                // append a no-hover d3 image to the overlay g element
-                var noHoverImage = dOverlay.append('image').attr('xlink:href', overlay.imageSwapper.noHoverSrc()).attr('x', x).attr('y', y).attr('width', width).attr('height', height).attr('class', 'no-hover');
-
-                // append a hover d3 image to the overlay g element
-                var hoverImage = dOverlay.append('image').attr('xlink:href', overlay.imageSwapper.hoverSrc()).attr('x', x).attr('y', y).attr('width', width).attr('height', height).attr('class', 'hover').attr('style', 'display: none;');
-
-                this._svgApplyPlaceOverlayHover(overlay, noHoverImage, hoverImage);
-
-                return dOverlay;
-            };
-
-            Summary.prototype._svgApplyPlaceOverlayHover = function (overlay, noHover, hover) {
-                var _this = this;
-                // enable svg image hover swaps
-                overlay.imageSwapper.isHover.subscribe(function (newValue) {
-                    // is this the selected overlay?
-                    var placeId = _this.placeId();
-                    if (placeId == overlay.placeId) {
-                        hover.attr('style', '');
-                        noHover.attr('style', 'display:none');
-                        return;
-                    }
-
-                    if (newValue) {
-                        hover.attr('style', '');
-                        noHover.attr('style', 'display:none');
-                    } else {
-                        noHover.attr('style', '');
-                        hover.attr('style', 'display:none');
-                    }
-                });
-
-                this.placeId.subscribe(function (newValue) {
-                    var placeId = _this.placeId();
-                    if (placeId != overlay.placeId) {
-                        noHover.attr('style', '');
-                        hover.attr('style', 'display:none');
-                        return;
-                    }
-                });
-            };
-
-            Summary.prototype._createOverlayTooltips = function () {
-                var _this = this;
-                var tooltips = this._tooltips();
-
-                if (tooltips.length) {
-                    // destroy all of the tooltips
-                    $.each(this._tooltips(), function (i, tooltip) {
-                        tooltip.tooltip('destroy');
-                    });
-                    this._tooltips([]);
-                }
-
-                var overlays = this.placeOverlays();
-                $.each(overlays, function (i, overlay) {
-                    // the tooltips are in the place ui
-                    var jOverlay = $('#{0} .overlays .places .ui .{1}'.format(_this.settings.chart.boxElementId, overlay.className));
-                    var tooltip = jOverlay.find('.tooltip');
-                    var content = tooltip.html() || 'tooltip';
-                    _this._createOverlayTooltip(jOverlay, content);
-                    _this._tooltips.push(jOverlay);
-                });
-            };
-
-            Summary.prototype._createOverlayTooltip = function (target, content) {
-                target.tooltip({
-                    content: content || 'tooltip content goes here',
-                    items: '*',
-                    track: true,
-                    show: false,
-                    hide: false,
-                    tooltipClass: 'geochart',
-                    position: {
-                        my: 'right-15 bottom-15',
-                        of: '.ui-tooltip-content',
-                        within: '#{0}'.format(this.settings.chart.googleElementId)
-                    },
-                    open: function (e, ui) {
-                        // get the width of the tooltip
-                        var width = ui.tooltip.find('.ui-tooltip-content').outerWidth();
-
-                        // set the width of the container
-                        ui.tooltip.css({ width: '{0}px'.format(width) });
-                    }
-                });
-            };
-
-            Summary.prototype._applyPlaceOverlayTotals = function (places) {
-                var isPivotPeople = this.isPivotPeople();
-                var placeOverlays = this.placeOverlays();
-                $.each(placeOverlays, function (i, overlay) {
-                    var total = Enumerable.From(places).Where(function (x) {
-                        return x.placeId == overlay.placeId;
-                    }).Sum(function (x) {
-                        return isPivotPeople ? x.activityPersonIds.length : x.activityIds.length;
-                    });
-                    overlay.total(total);
-                });
             };
 
             Summary.prototype._loadActivityCounts = function () {
@@ -724,6 +434,443 @@ var Employees;
 
             Summary.prototype.clearPlaceSelection = function () {
                 this.placeId(1);
+            };
+
+            Summary.prototype._getGeoChartOptions = function (overrides) {
+                var options = {
+                    // options passed when drawing geochart
+                    displayMode: 'regions',
+                    region: 'world',
+                    keepAspectRatio: this.settings.geoChart.keepAspectRatio ? true : false,
+                    height: this.settings.geoChart.keepAspectRatio ? 480 : 500,
+                    colorAxis: {
+                        minValue: 1,
+                        colors: ['#dceadc', '#006400']
+                    },
+                    backgroundColor: '#acccfd'
+                };
+
+                if (overrides && overrides.region)
+                    options.region = overrides.region;
+                if (overrides && (overrides.keepAspectRatio || overrides.keepAspectRatio == false))
+                    options.keepAspectRatio = overrides.keepAspectRatio;
+
+                return options;
+            };
+
+            Summary.prototype._newGeoChartDataTable = function () {
+                // create data table schema
+                var dataTable = new google.visualization.DataTable();
+                dataTable.addColumn('string', 'Place');
+                dataTable.addColumn('number', 'Total');
+                return dataTable;
+            };
+
+            Summary.prototype._initGeoChart = function () {
+                var _this = this;
+                // just draw the geochart to make sure something is displayed
+                // need to make sure we wait until it's done though before drying to draw again
+                var promise = $.Deferred();
+
+                if (!this.isGeoChartReady()) {
+                    this.geoChart.draw(this._geoChartDataTable, this._getGeoChartOptions()).then(function () {
+                        if (!_this.isGeoChartReady()) {
+                            _this.isGeoChartReady(true);
+                            _this.bindingsApplied.done(function () {
+                                _this._svgInjectPlaceOverlays();
+                                google.visualization.events.addListener(_this.geoChart.geoChart, 'select', function () {
+                                    _this._onGeoChartSelect();
+                                });
+                                google.visualization.events.addListener(_this.geoChart.geoChart, 'regionClick', function (e) {
+                                    _this._onGeoChartRegionClick(e);
+                                });
+                            });
+                        }
+                        promise.resolve();
+                    });
+                } else {
+                    promise.resolve();
+                }
+                return promise;
+            };
+
+            Summary.prototype._drawGeoChart = function () {
+                var _this = this;
+                // the data may not yet be loaded, and if not, going to redraw after it is loaded
+                var cachedData = this.placeData.cached;
+                var needsRedraw = !cachedData;
+
+                // decide which part of the map to select
+                var placeId = this.placeId();
+                var place = this._getPlaceById(placeId);
+                var optionOverrides = this._getGeoChartOptions();
+                optionOverrides.region = !placeId || placeId == 1 || !place || !place.countryCode ? 'world' : place.countryCode;
+
+                // change aspect ratio based on placeId
+                optionOverrides.keepAspectRatio = placeId && placeId > 1 && place && place.countryCode ? false : this.settings.geoChart.keepAspectRatio ? true : false;
+
+                // hit the server up for data and redraw
+                this._initGeoChart().then(function () {
+                    _this.placeData.ready().done(function (places) {
+                        if (needsRedraw) {
+                            _this._drawGeoChart();
+                            return;
+                        }
+                        var isPivotPeople = _this.isPivotPeople();
+                        _this._geoChartDataTable.setColumnLabel(1, 'Total {0}'.format(isPivotPeople ? 'People' : 'Activities'));
+                        _this._geoChartDataTable.removeRows(0, _this._geoChartDataTable.getNumberOfRows());
+                        $.each(places, function (i, dataPoint) {
+                            if (!dataPoint.placeId)
+                                return;
+                            var total = isPivotPeople ? dataPoint.activityPersonIds.length : dataPoint.activityIds.length;
+                            _this._geoChartDataTable.addRow([dataPoint.placeName, total]);
+                        });
+                        _this.geoChart.draw(_this._geoChartDataTable, _this._getGeoChartOptions(optionOverrides)).then(function () {
+                            setTimeout(function () {
+                                _this._svgInjectPlaceOverlays();
+                            }, 0);
+                            _this._applyPlaceOverlayTotals(places);
+                            _this._createOverlayTooltips();
+                        });
+                    });
+                });
+            };
+
+            Summary.prototype._onGeoChartSelect = function () {
+                var selection = this.geoChart.geoChart.getSelection();
+                if (selection && selection.length) {
+                    var rowIndex = selection[0].row;
+
+                    // first column of the data table has the place name (country name)
+                    var placeName = this._geoChartDataTable.getFormattedValue(rowIndex, 0);
+                    var place = this._getPlaceByName(placeName);
+                    if (place) {
+                        this.placeId(place.placeId);
+                    }
+                }
+            };
+
+            Summary.prototype._onGeoChartRegionClick = function (e) {
+                // this will fire even when the country clicked has total === zero
+            };
+
+            Summary.prototype._getActivityTypeChartOptions = function () {
+                var options = {
+                    hAxis: {
+                        textPosition: 'none'
+                    },
+                    vAxis: {
+                        textPosition: 'none'
+                    },
+                    chartArea: {
+                        top: 16,
+                        left: 10,
+                        width: '100%',
+                        height: '75%'
+                    },
+                    legend: { position: 'none' },
+                    isStacked: true,
+                    series: [
+                        {
+                            type: 'bars',
+                            color: 'green'
+                        },
+                        {
+                            type: 'line',
+                            color: 'black',
+                            lineWidth: 0,
+                            pointSize: 0,
+                            visibleInLegend: false
+                        }
+                    ]
+                };
+
+                return options;
+            };
+
+            Summary.prototype._newActivityTypeChartDataTable = function () {
+                // create data table schema
+                var dataTable = new google.visualization.DataTable();
+                dataTable.addColumn('string', 'Activity Type');
+                dataTable.addColumn('number', 'Count');
+                dataTable.addColumn({ type: 'number', role: 'annotation' });
+                return dataTable;
+            };
+
+            Summary.prototype._initActivityTypeChart = function () {
+                var _this = this;
+                var promise = $.Deferred();
+
+                if (!this.isActivityTypeChartReady()) {
+                    this.activityTypeChart.draw(this._activityTypeChartDataTable, this._getActivityTypeChartOptions()).then(function () {
+                        if (!_this.isActivityTypeChartReady()) {
+                            _this.isActivityTypeChartReady(true);
+                            _this.bindingsApplied.done(function () {
+                            });
+                        }
+                        promise.resolve();
+                    });
+                } else {
+                    promise.resolve();
+                }
+                return promise;
+            };
+
+            Summary.prototype._drawActivityTypeChart = function () {
+                var _this = this;
+                // the data may not yet be loaded, and if not, going to redraw after it is loaded
+                var cachedData = this.placeData.cached;
+                var needsRedraw = !cachedData;
+
+                //// decide which part of the map to select
+                var placeId = this.placeId();
+
+                // hit the server up for data and redraw
+                this._initActivityTypeChart().then(function () {
+                    _this.placeData.ready().done(function (places) {
+                        if (needsRedraw) {
+                            _this._drawActivityTypeChart();
+                            return;
+                        }
+                        var isPivotPeople = _this.isPivotPeople();
+                        _this._activityTypeChartDataTable.removeRows(0, _this._activityTypeChartDataTable.getNumberOfRows());
+                        var activityTypes = _this._getActivityTypes();
+                        _this.activityTypes(activityTypes);
+                        $.each(activityTypes, function (i, dataPoint) {
+                            var total = isPivotPeople ? dataPoint.activityPersonIds.length : dataPoint.activityIds.length;
+                            _this._activityTypeChartDataTable.addRow([dataPoint.text, total, total]);
+                        });
+                        var dataView = new google.visualization.DataView(_this._activityTypeChartDataTable);
+                        dataView.setColumns([0, 1, 1, 2]);
+                        _this.activityTypeChart.draw(dataView, _this._getActivityTypeChartOptions()).then(function () {
+                        });
+                    });
+                });
+            };
+
+            Summary.prototype._getActivityTypes = function () {
+                var placeId = this.placeId();
+                if (placeId == 1)
+                    placeId = null;
+                var places = this.placeData.cached;
+                var activityTypes = Enumerable.From(places).Where(function (x) {
+                    if (placeId == null)
+                        return !x.placeId;
+                    return x.placeId == placeId;
+                }).SelectMany(function (x) {
+                    return x.activityTypes;
+                }).Distinct(function (x) {
+                    return x.activityTypeId;
+                }).OrderBy(function (x) {
+                    return x.rank;
+                }).ToArray();
+                return activityTypes;
+            };
+
+            Summary.prototype._parsePlaceOverlays = function () {
+                var _this = this;
+                if (this.placeOverlays)
+                    return;
+                this.placeOverlays = ko.observableArray();
+                var overlays = $('#{0} .overlays .places .data'.format(this.settings.geoChart.boxElementId)).children();
+                $.each(overlays, function (i, overlay) {
+                    var jOverlay = $(overlay);
+                    var iOverlay = {
+                        total: ko.observable(0),
+                        placeId: parseInt(jOverlay.data('place-id')),
+                        title: jOverlay.attr('title'),
+                        className: jOverlay.attr('class'),
+                        imageSwapper: new ImageSwapper(jOverlay.find('img.no-hover').first().attr('src'), jOverlay.find('img.hover').first().attr('src'))
+                    };
+                    _this.placeOverlays.push(iOverlay);
+                });
+            };
+
+            Summary.prototype._getOverlayPlaceIds = function () {
+                var placeIds = Enumerable.From(this.placeOverlays()).Select(function (x) {
+                    return x.placeId;
+                }).ToArray();
+                return placeIds;
+            };
+
+            Summary.prototype.clickPlaceOverlay = function (overlay, e) {
+                var place = this._getPlaceById(overlay.placeId);
+                if (place) {
+                    if (!place.activityPersonIds.length) {
+                        return;
+                    }
+                    this.placeId(place.placeId);
+                }
+            };
+
+            Summary._isD3Defined = //#endregion
+            //#region SVG Injection
+            function () {
+                return typeof d3 !== 'undefined';
+            };
+
+            Summary.prototype._svgInjectPlaceOverlays = function () {
+                var _this = this;
+                if (!Summary._isD3Defined() || !this.settings.geoChart.googleElementId || !this.settings.geoChart.boxElementId)
+                    return;
+
+                // overlay may already be drawn
+                var dInjectRootElementId = '{0}_place_overlays_root'.format(this.settings.geoChart.googleElementId);
+                if ($('#{0}'.format(dInjectRootElementId)).length)
+                    return;
+
+                // svg structure is as follows:
+                //  svg
+                //      > defs
+                //      > g
+                //          > rect
+                //          > g - map
+                //              <----- inject new node here
+                //          > g - legend
+                //          > g - ?
+                //          > g - tooltips
+                // use d3 to select the first root g element from the geochart
+                var dGoogleG = d3.select('#{0} svg > g'.format(this.settings.geoChart.googleElementId));
+
+                // all of the overlays will become children of this g element
+                var dInjectRoot = dGoogleG.append('g').attr('id', dInjectRootElementId);
+                var areOverlaysVisible = this.arePlaceOverlaysVisible();
+                if (!areOverlaysVisible)
+                    dInjectRoot.attr('style', 'display: none;');
+
+                // iterate over the parsed place overlays
+                // first, need to show the data root in order to get valid positions
+                var jContainer = $('#{0} .overlays .places .data'.format(this.settings.geoChart.boxElementId));
+                jContainer.show();
+
+                var overlays = this.placeOverlays();
+                $.each(overlays, function (i, overlay) {
+                    _this._svgInjectPlaceOverlay(dInjectRoot, overlay);
+                });
+
+                jContainer.hide();
+
+                // now use jQuery to rearrange the order of the elements
+                $('#{0} svg > g > g:last-child'.format(this.settings.geoChart.googleElementId)).insertAfter('#{0} svg > g > g:nth-child(2)'.format(this.settings.geoChart.googleElementId));
+            };
+
+            Summary.prototype._svgInjectPlaceOverlay = function (root, overlay) {
+                // create a new d3 container for this overlay
+                var jOverlay = $('#{0} .overlays .places .data .{1}'.format(this.settings.geoChart.boxElementId, overlay.className));
+                var dOverlay = root.append('g').attr('class', overlay.className);
+
+                // compute position based on data element positions
+                var x = jOverlay.position().left;
+                var y = jOverlay.position().top;
+                var width = jOverlay.outerWidth();
+                var height = jOverlay.outerHeight();
+
+                // append a no-hover d3 image to the overlay g element
+                var noHoverImage = dOverlay.append('image').attr('xlink:href', overlay.imageSwapper.noHoverSrc()).attr('x', x).attr('y', y).attr('width', width).attr('height', height).attr('class', 'no-hover');
+
+                // append a hover d3 image to the overlay g element
+                var hoverImage = dOverlay.append('image').attr('xlink:href', overlay.imageSwapper.hoverSrc()).attr('x', x).attr('y', y).attr('width', width).attr('height', height).attr('class', 'hover').attr('style', 'display: none;');
+
+                if (overlay.placeId == this.placeId()) {
+                    hoverImage.attr('style', '');
+                    noHoverImage.attr('style', 'display: none;');
+                }
+
+                this._svgApplyPlaceOverlayHover(overlay, noHoverImage, hoverImage);
+
+                return dOverlay;
+            };
+
+            Summary.prototype._svgApplyPlaceOverlayHover = function (overlay, noHover, hover) {
+                var _this = this;
+                // enable svg image hover swaps
+                overlay.imageSwapper.isHover.subscribe(function (newValue) {
+                    // is this the selected overlay?
+                    var placeId = _this.placeId();
+                    if (placeId == overlay.placeId) {
+                        hover.attr('style', '');
+                        noHover.attr('style', 'display:none');
+                        return;
+                    }
+
+                    if (newValue) {
+                        hover.attr('style', '');
+                        noHover.attr('style', 'display:none');
+                    } else {
+                        noHover.attr('style', '');
+                        hover.attr('style', 'display:none');
+                    }
+                });
+
+                this.placeId.subscribe(function (newValue) {
+                    var placeId = _this.placeId();
+                    if (placeId == overlay.placeId) {
+                        hover.attr('style', '');
+                        noHover.attr('style', 'display:none');
+                    } else {
+                        noHover.attr('style', '');
+                        hover.attr('style', 'display:none');
+                    }
+                });
+            };
+
+            Summary.prototype._createOverlayTooltips = function () {
+                var _this = this;
+                var tooltips = this._tooltips();
+
+                if (tooltips.length) {
+                    // destroy all of the tooltips
+                    $.each(this._tooltips(), function (i, tooltip) {
+                        tooltip.tooltip('destroy');
+                    });
+                    this._tooltips([]);
+                }
+
+                var overlays = this.placeOverlays();
+                $.each(overlays, function (i, overlay) {
+                    // the tooltips are in the place ui
+                    var jOverlay = $('#{0} .overlays .places .ui .{1}'.format(_this.settings.geoChart.boxElementId, overlay.className));
+                    var tooltip = jOverlay.find('.tooltip');
+                    var content = tooltip.html() || 'tooltip';
+                    _this._createOverlayTooltip(jOverlay, content);
+                    _this._tooltips.push(jOverlay);
+                });
+            };
+
+            Summary.prototype._createOverlayTooltip = function (target, content) {
+                target.tooltip({
+                    content: content || 'tooltip content goes here',
+                    items: '*',
+                    track: true,
+                    show: false,
+                    hide: false,
+                    tooltipClass: 'geochart',
+                    position: {
+                        my: 'right-15 bottom-15',
+                        of: '.ui-tooltip-content',
+                        within: '#{0}'.format(this.settings.geoChart.googleElementId)
+                    },
+                    open: function (e, ui) {
+                        // get the width of the tooltip
+                        var width = ui.tooltip.find('.ui-tooltip-content').outerWidth();
+
+                        // set the width of the container
+                        ui.tooltip.css({ width: '{0}px'.format(width) });
+                    }
+                });
+            };
+
+            Summary.prototype._applyPlaceOverlayTotals = function (places) {
+                var isPivotPeople = this.isPivotPeople();
+                var placeOverlays = this.placeOverlays();
+                $.each(placeOverlays, function (i, overlay) {
+                    var total = Enumerable.From(places).Where(function (x) {
+                        return x.placeId == overlay.placeId;
+                    }).Sum(function (x) {
+                        return isPivotPeople ? x.activityPersonIds.length : x.activityIds.length;
+                    });
+                    overlay.total(total);
+                });
             };
             Summary._googleVisualizationLoadedPromise = $.Deferred();
 

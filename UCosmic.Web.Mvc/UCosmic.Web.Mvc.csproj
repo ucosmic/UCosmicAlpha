@@ -396,6 +396,7 @@
     <Compile Include="Models\Agreements\AgreementSearchInputModel.cs" />
     <Compile Include="Models\Degrees\DegreeApiModel.cs" />
     <Compile Include="Models\Degrees\DegreeSearchInputModel.cs" />
+    <Compile Include="Models\Employees\EmployeeActivityTypeCountModel.cs" />
     <Compile Include="Models\Employees\EmployeesPlaceApiModel.cs" />
     <Compile Include="Models\Employees\EmployeesPlacesInputModel.cs" />
     <Compile Include="Models\Employees\FacultyStaffSearchApiModel.cs" />
@@ -854,6 +855,13 @@
     <Content Include="scripts\app\Spinner.ts" />
     <TypeScriptCompile Include="scripts\google\Map.ts" />
     <TypeScriptCompile Include="scripts\google\GeoChart.ts" />
+    <TypeScriptCompile Include="scripts\google\ColumnChart.ts" />
+    <Content Include="scripts\google\ColumnChart.js">
+      <DependentUpon>ColumnChart.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\google\ColumnChart.min.js">
+      <DependentUpon>ColumnChart.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\oss\d3.v3.js" />
     <Content Include="scripts\oss\d3.v3.min.js" />
     <Content Include="scripts\google\GeoChart.js">

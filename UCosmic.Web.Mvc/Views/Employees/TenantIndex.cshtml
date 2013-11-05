@@ -43,10 +43,14 @@
             var viewModel = new Employees.ViewModels.Summary({
                 tenantDomain: '@ViewBag.EmployeesDomain',
                 element: $('[data-current-module=employees]')[0],
-                chart: {
+                geoChart: {
                     boxElementId: 'geochart_box',
                     googleElementId: 'google_geochart',
                     keepAspectRatio: true,
+                },
+                activityTypesChart: {
+                    boxElementId: 'activity_type_chart_box',
+                    googleElementId: 'google_activity_type_chart',
                 },
             });
             viewModel.applyBindings();
@@ -58,7 +62,7 @@
 <div class="content fixed to-top" data-current-module="employees">
     <form class="group">
         @* LEFT *@
-        <div class="on-left from-top">
+        <div class="on-left from-top" style="width: 680px;">
 
             @* HEADER *@
             <header>
@@ -137,7 +141,7 @@
             </div>
 
             @* GEOCHART *@
-            <div id="geochart_box" data-bind="css: { 'keep-aspect-ratio-480': settings.chart.keepAspectRatio }">
+            <div id="geochart_box" data-bind="css: { 'keep-aspect-ratio-480': settings.geoChart.keepAspectRatio }">
 
                 @* GOOGLE ELEMENT + BACKGROUND & FOREGROUND *@
                 <div class="chart-bg">&nbsp;</div>
@@ -219,7 +223,11 @@
         </div>
 
         @* RIGHT *@
-        <aside class="on-right from-top">
+        <aside class="on-right from-top" style="width: 270px;">
+            <div id="activity_type_chart_box" style="width: 100%; margin-top: 28px;">
+                <div id="google_activity_type_chart" style="width: 100%; height: 140px;"></div>
+                <div style="height: 30px; border: solid 1px red;"></div>
+            </div>
         </aside>
     </form>
 </div>

@@ -194,6 +194,7 @@ namespace UCosmic.Web.Mvc
                 "~/scripts/app/HistoryJS.js",
                 "~/scripts/oss/linq.js",
                 "~/scripts/google/GeoChart.js",
+                "~/scripts/google/ColumnChart.js",
                 "~/scripts/viewmodels/employees/Server.js",
                 "~/scripts/viewmodels/employees/Summary.js"));
 

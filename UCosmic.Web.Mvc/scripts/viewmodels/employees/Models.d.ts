@@ -2,18 +2,30 @@
 
 declare module Employees.ApiModels {
 
-    export interface EmployeesPlaceApiModel {
-        placeId: number;
+    export interface EmployeesPlacesInputModel {
+        countries?: boolean;
+        placeIds?: number[];
+        placeAgnostic?: boolean;
+    }
+
+    export interface EmployeesPlaceApiModel { // TODO: refactor name, should not have Model at end
+        establishmentId: number;
+        placeId?: number;
         placeName: string;
         isCountry: boolean;
         countryCode: string;
         activityIds: number[];
         activityPersonIds: number[];
+        activityTypes?: EmployeeActivityTypeCount[];
     }
 
-    export interface EmployeesPlacesInputModel {
-        countries?: boolean;
-        placeIds?: number[];
+    export interface EmployeeActivityTypeCount {
+        activityTypeId: number;
+        text?: string;
+        rank?: number;
+        hasIcon: boolean;
+        activityIds: number[];
+        activityPersonIds: number[];
     }
 
     export interface EmployeeActivityCounts {

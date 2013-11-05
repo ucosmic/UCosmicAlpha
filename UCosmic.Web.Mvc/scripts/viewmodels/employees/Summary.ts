@@ -9,6 +9,7 @@
 /// <reference path="../../typings/knockout/knockout.d.ts" />
 /// <reference path="../../typings/linq/linq.d.ts" />
 /// <reference path="../../google/GeoChart.ts" />
+/// <reference path="../../google/ColumnChart.ts" />
 /// <reference path="Server.ts" />
 /// <reference path="Models.d.ts" />
 /// <reference path="../../app/App.ts" />
@@ -18,13 +19,19 @@ module Employees.ViewModels {
     export interface SummarySettings {
         tenantDomain: string;
         element: Element;
-        chart: SummaryGeoChartSettings;
+        geoChart: SummaryGeoChartSettings;
+        activityTypesChart: SummaryActivityTypeChartSettings;
     }
 
     export interface SummaryGeoChartSettings {
         boxElementId: string;
         googleElementId: string;
         keepAspectRatio?: boolean;
+    }
+
+    export interface SummaryActivityTypeChartSettings {
+        boxElementId: string;
+        googleElementId: string;
     }
 
     export interface SummaryGeoChartPlaceOverlay {
@@ -105,8 +112,10 @@ module Employees.ViewModels {
 
         cached: T;
         private _promise: JQueryDeferred<T> = $.Deferred();
+        private _isLoading = false;
         ready(): JQueryPromise<T> {
-            if (!this.cached) {
+            if (!this._isLoading) {
+                this._isLoading = true;
                 this.loader()
                     .done((data: T): void => {
                         this.cached = data;
@@ -149,6 +158,7 @@ module Employees.ViewModels {
             // begin loading data
             this.activityCountsData.ready();
             this._initGeoChart();
+            this._initActivityTypeChart();
 
             // need to fire this once because route changes before history is bound
             this.bindingsApplied.done((): void => {
@@ -308,10 +318,12 @@ module Employees.ViewModels {
 
         private _applyState(): void {
             this._drawGeoChart();
+            this._drawActivityTypeChart();
         }
 
         //#endregion
         //#region Pivot Data
+        //#region Places
 
         hasPlaceData: KnockoutObservable<boolean> = ko.observable(false);
 
@@ -326,6 +338,7 @@ module Employees.ViewModels {
             var request: ApiModels.EmployeesPlacesInputModel = {
                 countries: true,
                 placeIds: this._getOverlayPlaceIds(),
+                placeAgnostic: true,
             };
             this.geoChartSpinner.start();
             Servers.EmployeesPlaces(this.settings.tenantDomain, request)
@@ -362,413 +375,6 @@ module Employees.ViewModels {
         }
 
         //#endregion
-        //#region Google GeoChart
-
-        geoChart: App.Google.GeoChart = new App.Google.GeoChart(
-            document.getElementById(this.settings.chart.googleElementId));
-        geoChartSpinner = new App.Spinner(new App.SpinnerOptions(400, true));
-        isGeoChartReady: KnockoutObservable<boolean> = ko.observable(false);
-        private _geoChartDataTable: google.visualization.DataTable = this._newGeoChartDataTable();
-
-        private _geoChartOptions: google.visualization.GeoChartOptions = {
-            // options passed when drawing geochart
-            displayMode: 'regions',
-            region: 'world',
-            keepAspectRatio: this.settings.chart.keepAspectRatio ? true : false,
-            height: this.settings.chart.keepAspectRatio ? 480 : 500,
-            colorAxis: {
-                minValue: 1,
-                colors: ['#dceadc', '#006400', ],
-            },
-            backgroundColor: '#acccfd', // google maps water color is a5bfdd, Doug's bg color is acccfd
-            //backgroundColor: 'transparent',
-        };
-
-        private _newGeoChartDataTable(): google.visualization.DataTable {
-            // create data table schema
-            var dataTable = new google.visualization.DataTable();
-            dataTable.addColumn('string', 'Place');
-            dataTable.addColumn('number', 'Total');
-            return dataTable;
-        }
-
-        private _initGeoChart(): JQueryPromise<void> {
-            // just draw the geochart to make sure something is displayed
-            // need to make sure we wait until it's done though before drying to draw again
-            var promise = $.Deferred();
-
-            if (!this.isGeoChartReady()) {
-                this.geoChart.draw(this._geoChartDataTable, this._geoChartOptions).then((): void => {
-                    // svg injection depends on the chart being ready,
-                    // and bindings having been applied, and the
-                    // overlays being visible
-                    if (!this.isGeoChartReady()) {
-                        this.isGeoChartReady(true); // call this before overlaying to ensure positions
-                        this.bindingsApplied.done((): void=> {
-                            this._svgInjectPlaceOverlays();
-                            google.visualization.events.addListener(this.geoChart.geoChart, 'select',
-                                (): void => { this._onGeoChartSelect(); });
-                            google.visualization.events.addListener(this.geoChart.geoChart, 'regionClick',
-                                (e: google.visualization.GeoChartRegionClickEvent): void => { this._onGeoChartRegionClick(e); });
-                        });
-                    }
-                    promise.resolve();
-                });
-            }
-            else {
-                promise.resolve();
-            }
-            return promise;
-        }
-
-        private _drawGeoChart(): void {
-            // the data may not yet be loaded, and if not, going to redraw after it is loaded
-            var cachedData = this.placeData.cached;
-            var needsRedraw = !cachedData;
-
-            // decide which part of the map to select
-            var placeId = this.placeId();
-            var place = this._getPlaceById(placeId);
-            this._geoChartOptions.region = !placeId || placeId == 1 || !place || !place.countryCode
-            ? 'world' : place.countryCode;
-
-            // change aspect ratio based on placeId
-            this._geoChartOptions.keepAspectRatio = placeId && placeId > 1 && place && place.countryCode ? false :
-            this.settings.chart.keepAspectRatio ? true : false;
-
-            // hit the server up for data and redraw
-            this._initGeoChart().then((): void => {
-                this.placeData.ready().done((places: ApiModels.EmployeesPlaceApiModel[]): void => {
-                    if (needsRedraw) {
-                        this._drawGeoChart();
-                        return;
-                    }
-                    var isPivotPeople = this.isPivotPeople();
-                    this._geoChartDataTable.setColumnLabel(1, 'Total {0}'.format(isPivotPeople ? 'People' : 'Activities'));
-                    this._geoChartDataTable.removeRows(0, this._geoChartDataTable.getNumberOfRows());
-                    $.each(places, (i: number, dataPoint: ApiModels.EmployeesPlaceApiModel): void => {
-                        var total = isPivotPeople ? dataPoint.activityPersonIds.length : dataPoint.activityIds.length;
-                        this._geoChartDataTable.addRow([dataPoint.placeName, total]);
-                    });
-                    this.geoChart.draw(this._geoChartDataTable, this._geoChartOptions).then((): void => {
-                        setTimeout((): void => { this._svgInjectPlaceOverlays(); }, 0);
-                        this._applyPlaceOverlayTotals(places);
-                        this._createOverlayTooltips();
-                    });
-                });
-            });
-        }
-
-        private _onGeoChartSelect(): void {
-            var selection = this.geoChart.geoChart.getSelection(); // expect single item in array with row index
-            if (selection && selection.length) { // just to make sure
-                var rowIndex = selection[0].row; // get the row index of corresponding data table item selected
-                // first column of the data table has the place name (country name)
-                var placeName = this._geoChartDataTable.getFormattedValue(rowIndex, 0);
-                var place = this._getPlaceByName(placeName);
-                if (place) {
-                    this.placeId(place.placeId);
-                }
-            }
-        }
-
-        private _onGeoChartRegionClick(e: google.visualization.GeoChartRegionClickEvent): void {
-            // this will fire even when the country clicked has total === zero
-        }
-
-        //#endregion
-        //#region Place Overlays
-
-        placeOverlays: KnockoutObservableArray<SummaryGeoChartPlaceOverlay>;
-
-        arePlaceOverlaysVisible = ko.computed((): boolean => {
-            var placeId = this.placeId();
-            var isGeoChartReady = this.isGeoChartReady();
-            var isPlaceOverlaySelected = this.isPlaceOverlaySelected ? this.isPlaceOverlaySelected() : false;
-            if (!isGeoChartReady) return false;
-            var areVisible = (placeId == 1 || isPlaceOverlaySelected)
-                && isGeoChartReady;
-
-            // hide the svg overlays if applicable
-            if (Summary._isD3Defined() && this.settings.chart.googleElementId) {
-                // overlay may already be drawn
-                var dInjectRootElementId = '{0}_place_overlays_root'
-                    .format(this.settings.chart.googleElementId);
-                var dInjectRootSelection = d3.select('#{0}'.format(dInjectRootElementId));
-                if (dInjectRootSelection.length) {
-                    if (areVisible) {
-                        dInjectRootSelection.attr('style', '');
-                    }
-                    else {
-                        dInjectRootSelection.attr('style', 'display: none;');
-                    }
-                }
-            }
-
-            return areVisible;
-        });
-
-        private _parsePlaceOverlays(): void {
-            if (this.placeOverlays) return;
-            this.placeOverlays = ko.observableArray();
-            var overlays = $('#{0} .overlays .places .data'
-                .format(this.settings.chart.boxElementId)).children();
-            $.each(overlays, (i: number, overlay: Element): void => {
-                var jOverlay = $(overlay);
-                var iOverlay: SummaryGeoChartPlaceOverlay = {
-                    total: ko.observable(0),
-                    placeId: parseInt(jOverlay.data('place-id')),
-                    title: jOverlay.attr('title'),
-                    className: jOverlay.attr('class'),
-                    imageSwapper: new ImageSwapper(
-                        jOverlay.find('img.no-hover').first().attr('src'),
-                        jOverlay.find('img.hover').first().attr('src')),
-                };
-                this.placeOverlays.push(iOverlay);
-            });
-        }
-
-        private _getOverlayPlaceIds(): number[] {
-            var placeIds: number[] = Enumerable.From(this.placeOverlays())
-                .Select(function (x: SummaryGeoChartPlaceOverlay): number {
-                    return x.placeId;
-                })
-                .ToArray();
-            return placeIds;
-        }
-
-        clickPlaceOverlay(overlay: SummaryGeoChartPlaceOverlay, e: JQueryEventObject): void {
-            var place = this._getPlaceById(overlay.placeId);
-            if (place) {
-                if (!place.activityPersonIds.length) {
-                    return;
-                }
-                this.placeId(place.placeId);
-                //$('#{0}'.format(this.settings.chart.googleElementId)).hide();
-            }
-        }
-
-        isPlaceOverlaySelected = ko.computed((): boolean => {
-            var placeId = this.placeId();
-            var areBindingsApplied = this.areBindingsApplied();
-            var placeOverlays = this.placeOverlays ? this.placeOverlays() : undefined;
-            if (!areBindingsApplied || !placeOverlays) return false;
-
-            var isOverlaySelected = false;
-            var overlay = Enumerable.From(placeOverlays)
-                .SingleOrDefault(undefined, function (x: SummaryGeoChartPlaceOverlay): boolean {
-                    return x.placeId == placeId;
-                });
-            if (overlay) {
-                isOverlaySelected = true;
-            }
-
-            return isOverlaySelected;
-        });
-
-        //#endregion
-        //#region SVG Injection
-
-        private static _isD3Defined(): boolean {
-            return typeof d3 !== 'undefined';
-        }
-
-        isD3Defined = ko.computed((): boolean => {
-            return Summary._isD3Defined();
-        });
-
-        isD3Undefined = ko.computed((): boolean => {
-            return !Summary._isD3Defined();
-        });
-
-        private _svgInjectPlaceOverlays(): void {
-            // IE8 cannot load the d3 library
-            if (!Summary._isD3Defined() ||
-                !this.settings.chart.googleElementId ||
-                !this.settings.chart.boxElementId)
-
-                return;
-
-            // overlay may already be drawn
-            var dInjectRootElementId = '{0}_place_overlays_root'
-                .format(this.settings.chart.googleElementId);
-            if ($('#{0}'.format(dInjectRootElementId)).length)
-                return;
-
-            // svg structure is as follows:
-            //  svg
-            //      > defs
-            //      > g
-            //          > rect
-            //          > g - map
-            //              <----- inject new node here
-            //          > g - legend
-            //          > g - ?
-            //          > g - tooltips
-
-            // use d3 to select the first root g element from the geochart
-            var dGoogleG = d3.select('#{0} svg > g'.format(this.settings.chart.googleElementId));
-
-            // all of the overlays will become children of this g element
-            var dInjectRoot = dGoogleG.append('g')
-                .attr('id', dInjectRootElementId)
-            ;
-            var areOverlaysVisible = this.arePlaceOverlaysVisible();
-            if (!areOverlaysVisible)
-                dInjectRoot.attr('style', 'display: none;');
-
-            // iterate over the parsed place overlays
-            // first, need to show the data root in order to get valid positions
-            var jContainer = $('#{0} .overlays .places .data'
-                .format(this.settings.chart.boxElementId));
-            jContainer.show(); // need to do this to get positions & dimensions from jQuery
-
-            var overlays = this.placeOverlays();
-            $.each(overlays, (i: number, overlay: SummaryGeoChartPlaceOverlay): void => {
-                this._svgInjectPlaceOverlay(dInjectRoot, overlay);
-            });
-
-            jContainer.hide(); // no longer need dimensions, hide the HTML overlays
-
-            // now use jQuery to rearrange the order of the elements
-            $('#{0} svg > g > g:last-child'
-                .format(this.settings.chart.googleElementId))
-                .insertAfter('#{0} svg > g > g:nth-child(2)'
-                    .format(this.settings.chart.googleElementId))
-            ;
-        }
-
-        private _svgInjectPlaceOverlay(root: D3.Selection, overlay: SummaryGeoChartPlaceOverlay): D3.Selection {
-            // create a new d3 container for this overlay
-            var jOverlay = $('#{0} .overlays .places .data .{1}'
-                .format(this.settings.chart.boxElementId, overlay.className));
-            var dOverlay = root.append('g').attr('class', overlay.className);
-
-            // compute position based on data element positions
-            var x = jOverlay.position().left;
-            var y = jOverlay.position().top;
-            var width = jOverlay.outerWidth();
-            var height = jOverlay.outerHeight();
-
-            // append a no-hover d3 image to the overlay g element
-            var noHoverImage = dOverlay.append('image')
-                .attr('xlink:href', overlay.imageSwapper.noHoverSrc())
-                .attr('x', x).attr('y', y)
-                .attr('width', width).attr('height', height)
-                .attr('class', 'no-hover')
-            ;
-
-            // append a hover d3 image to the overlay g element
-            var hoverImage = dOverlay.append('image')
-                .attr('xlink:href', overlay.imageSwapper.hoverSrc())
-                .attr('x', x).attr('y', y)
-                .attr('width', width).attr('height', height)
-                .attr('class', 'hover').attr('style', 'display: none;')
-            ;
-
-            this._svgApplyPlaceOverlayHover(overlay, noHoverImage, hoverImage);
-
-            return dOverlay;
-        }
-
-        private _svgApplyPlaceOverlayHover(overlay: SummaryGeoChartPlaceOverlay, noHover: D3.Selection, hover: D3.Selection): void {
-            // enable svg image hover swaps
-            overlay.imageSwapper.isHover.subscribe((newValue: boolean): void => {
-
-                // is this the selected overlay?
-                var placeId = this.placeId();
-                if (placeId == overlay.placeId) {
-                    hover.attr('style', '');
-                    noHover.attr('style', 'display:none');
-                    return;
-                }
-
-                if (newValue) {
-                    hover.attr('style', '');
-                    noHover.attr('style', 'display:none');
-                }
-                else {
-                    noHover.attr('style', '');
-                    hover.attr('style', 'display:none');
-                }
-            });
-
-            this.placeId.subscribe((newValue: number): void => {
-                var placeId = this.placeId();
-                if (placeId != overlay.placeId) {
-                    noHover.attr('style', '');
-                    hover.attr('style', 'display:none');
-                    return;
-                }
-            });
-        }
-
-        //#endregion
-        //#region Tooltips
-
-        private _tooltips: KnockoutObservableArray<JQuery> = ko.observableArray();
-
-        private _createOverlayTooltips(): void {
-            var tooltips = this._tooltips();
-
-            // remove tooltips when they already exist
-            if (tooltips.length) {
-                // destroy all of the tooltips
-                $.each(this._tooltips(), (i: number, tooltip: JQuery): void => {
-                    tooltip.tooltip('destroy');
-                });
-                this._tooltips([]);
-            }
-
-            var overlays = this.placeOverlays();
-            $.each(overlays, (i: number, overlay: SummaryGeoChartPlaceOverlay): void => {
-                // the tooltips are in the place ui
-                var jOverlay = $('#{0} .overlays .places .ui .{1}'
-                    .format(this.settings.chart.boxElementId, overlay.className));
-                var tooltip = jOverlay.find('.tooltip');
-                var content = tooltip.html() || 'tooltip';
-                this._createOverlayTooltip(jOverlay, content);
-                this._tooltips.push(jOverlay);
-            });
-        }
-
-        private _createOverlayTooltip(target: JQuery, content: string): void {
-            target.tooltip({
-                content: content || 'tooltip content goes here',
-                items: '*',
-                track: true,
-                show: false,
-                hide: false,
-                tooltipClass: 'geochart',
-                position: {
-                    my: 'right-15 bottom-15',
-                    of: '.ui-tooltip-content',
-                    within: '#{0}'.format(this.settings.chart.googleElementId),
-                },
-                open: function (e: any, ui: any) {
-                    // get the width of the tooltip
-                    var width = ui.tooltip.find('.ui-tooltip-content').outerWidth();
-                    // set the width of the container
-                    ui.tooltip.css({ width: '{0}px'.format(width) });
-                },
-            });
-        }
-
-        private _applyPlaceOverlayTotals(places: ApiModels.EmployeesPlaceApiModel[]): void {
-            var isPivotPeople = this.isPivotPeople();
-            var placeOverlays = this.placeOverlays();
-            $.each(placeOverlays, (i: number, overlay: SummaryGeoChartPlaceOverlay): void => {
-                var total = Enumerable.From(places)
-                    .Where(function (x: ApiModels.EmployeesPlaceApiModel): boolean {
-                        return x.placeId == overlay.placeId;
-                    })
-                    .Sum(function (x: ApiModels.EmployeesPlaceApiModel): number {
-                        return isPivotPeople ? x.activityPersonIds.length : x.activityIds.length;
-                    });
-                overlay.total(total);
-            });
-        }
-
         //#endregion
         //#region Summaries
         //#region Top Summary
@@ -830,6 +436,566 @@ module Employees.ViewModels {
         }
 
         //#endregion
+        //#endregion
+        //#region Google GeoChart
+
+        geoChart: App.Google.GeoChart = new App.Google.GeoChart(
+            document.getElementById(this.settings.geoChart.googleElementId));
+        geoChartSpinner = new App.Spinner(new App.SpinnerOptions(400, true));
+        isGeoChartReady: KnockoutObservable<boolean> = ko.observable(false);
+        private _geoChartDataTable: google.visualization.DataTable = this._newGeoChartDataTable();
+
+        private _getGeoChartOptions(overrides?: google.visualization.GeoChartOptions): google.visualization.GeoChartOptions {
+            var options: google.visualization.GeoChartOptions = {
+                // options passed when drawing geochart
+                displayMode: 'regions',
+                region: 'world',
+                keepAspectRatio: this.settings.geoChart.keepAspectRatio ? true : false,
+                height: this.settings.geoChart.keepAspectRatio ? 480 : 500,
+                colorAxis: {
+                    minValue: 1,
+                    colors: ['#dceadc', '#006400', ],
+                },
+                backgroundColor: '#acccfd', // google maps water color is a5bfdd, Doug's bg color is acccfd
+                //backgroundColor: 'transparent',
+            };
+
+            if (overrides && overrides.region)
+                options.region = overrides.region;
+            if (overrides && (overrides.keepAspectRatio || overrides.keepAspectRatio == false))
+                options.keepAspectRatio = overrides.keepAspectRatio;
+
+            return options;
+        }
+
+        private _newGeoChartDataTable(): google.visualization.DataTable {
+            // create data table schema
+            var dataTable = new google.visualization.DataTable();
+            dataTable.addColumn('string', 'Place');
+            dataTable.addColumn('number', 'Total');
+            return dataTable;
+        }
+
+        private _initGeoChart(): JQueryPromise<void> {
+            // just draw the geochart to make sure something is displayed
+            // need to make sure we wait until it's done though before drying to draw again
+            var promise = $.Deferred();
+
+            if (!this.isGeoChartReady()) {
+                this.geoChart.draw(this._geoChartDataTable, this._getGeoChartOptions())
+                    .then((): void => {
+                        // svg injection depends on the chart being ready,
+                        // and bindings having been applied, and the
+                        // overlays being visible
+                        if (!this.isGeoChartReady()) {
+                            this.isGeoChartReady(true); // call this before overlaying to ensure positions
+                            this.bindingsApplied.done((): void=> {
+                                this._svgInjectPlaceOverlays();
+                                google.visualization.events.addListener(
+                                    this.geoChart.geoChart, 'select',
+                                    (): void => { this._onGeoChartSelect(); });
+                                google.visualization.events.addListener(this.geoChart.geoChart,
+                                    'regionClick',
+                                    (e: google.visualization.GeoChartRegionClickEvent): void => {
+                                        this._onGeoChartRegionClick(e);
+                                    }
+                                    );
+                            });
+                        }
+                        promise.resolve();
+                    });
+            }
+            else {
+                promise.resolve();
+            }
+            return promise;
+        }
+
+        private _drawGeoChart(): void {
+            // the data may not yet be loaded, and if not, going to redraw after it is loaded
+            var cachedData = this.placeData.cached;
+            var needsRedraw = !cachedData;
+
+            // decide which part of the map to select
+            var placeId = this.placeId();
+            var place = this._getPlaceById(placeId);
+            var optionOverrides = this._getGeoChartOptions();
+            optionOverrides.region = !placeId || placeId == 1 || !place || !place.countryCode
+            ? 'world' : place.countryCode;
+
+            // change aspect ratio based on placeId
+            optionOverrides.keepAspectRatio = placeId && placeId > 1 && place && place.countryCode ? false :
+            this.settings.geoChart.keepAspectRatio ? true : false;
+
+            // hit the server up for data and redraw
+            this._initGeoChart().then((): void => {
+                this.placeData.ready().done((places: ApiModels.EmployeesPlaceApiModel[]): void => {
+                    if (needsRedraw) {
+                        this._drawGeoChart();
+                        return;
+                    }
+                    var isPivotPeople = this.isPivotPeople();
+                    this._geoChartDataTable.setColumnLabel(1, 'Total {0}'.format(isPivotPeople ? 'People' : 'Activities'));
+                    this._geoChartDataTable.removeRows(0, this._geoChartDataTable.getNumberOfRows());
+                    $.each(places, (i: number, dataPoint: ApiModels.EmployeesPlaceApiModel): void => {
+                        // do not count the agnostic place
+                        if (!dataPoint.placeId) return;
+                        var total = isPivotPeople ? dataPoint.activityPersonIds.length : dataPoint.activityIds.length;
+                        this._geoChartDataTable.addRow([dataPoint.placeName, total]);
+                    });
+                    this.geoChart.draw(this._geoChartDataTable, this._getGeoChartOptions(optionOverrides))
+                        .then((): void => {
+                            setTimeout((): void => { this._svgInjectPlaceOverlays(); }, 0);
+                            this._applyPlaceOverlayTotals(places);
+                            this._createOverlayTooltips();
+                        });
+                });
+            });
+        }
+
+        private _onGeoChartSelect(): void {
+            var selection = this.geoChart.geoChart.getSelection(); // expect single item in array with row index
+            if (selection && selection.length) { // just to make sure
+                var rowIndex = selection[0].row; // get the row index of corresponding data table item selected
+                // first column of the data table has the place name (country name)
+                var placeName = this._geoChartDataTable.getFormattedValue(rowIndex, 0);
+                var place = this._getPlaceByName(placeName);
+                if (place) {
+                    this.placeId(place.placeId);
+                }
+            }
+        }
+
+        private _onGeoChartRegionClick(e: google.visualization.GeoChartRegionClickEvent): void {
+            // this will fire even when the country clicked has total === zero
+        }
+
+        //#endregion
+        //#region Activity Type Chart
+
+        activityTypeChart: App.Google.ColumnChart = new App.Google.ColumnChart(
+            document.getElementById(this.settings.activityTypesChart.googleElementId));
+        isActivityTypeChartReady: KnockoutObservable<boolean> = ko.observable(false);
+        private _activityTypeChartDataTable: google.visualization.DataTable = this._newActivityTypeChartDataTable();
+
+        private _getActivityTypeChartOptions(): google.visualization.ColumnChartOptions {
+            var options: google.visualization.ColumnChartOptions = {
+                hAxis: {
+                    textPosition: 'none'
+                },
+                vAxis: {
+                    textPosition: 'none'
+                },
+                chartArea: {
+                    top: 16,
+                    left: 10,
+                    width: '100%',
+                    height: '75%'
+                },
+                legend: { position: 'none' },
+                isStacked: true,
+                series: [
+                    {
+                        type: 'bars',
+                        color: 'green'
+                    },
+                    {
+                        type: 'line',
+                        color: 'black',
+                        lineWidth: 0,
+                        pointSize: 0,
+                        visibleInLegend: false
+                    }
+                ]
+            };
+
+            return options;
+        }
+
+        private _newActivityTypeChartDataTable(): google.visualization.DataTable {
+            // create data table schema
+            var dataTable = new google.visualization.DataTable();
+            dataTable.addColumn('string', 'Activity Type');
+            dataTable.addColumn('number', 'Count');
+            dataTable.addColumn({ type: 'number', role: 'annotation' });
+            return dataTable;
+        }
+
+        private _initActivityTypeChart(): JQueryPromise<void> {
+            var promise = $.Deferred();
+
+            if (!this.isActivityTypeChartReady()) {
+                this.activityTypeChart.draw(this._activityTypeChartDataTable, this._getActivityTypeChartOptions())
+                    .then((): void => {
+                        if (!this.isActivityTypeChartReady()) {
+                            this.isActivityTypeChartReady(true);
+                            this.bindingsApplied.done((): void=> {
+                            });
+                        }
+                        promise.resolve();
+                    });
+            }
+            else {
+                promise.resolve();
+            }
+            return promise;
+        }
+
+        private _drawActivityTypeChart(): void {
+            // the data may not yet be loaded, and if not, going to redraw after it is loaded
+            var cachedData = this.placeData.cached;
+            var needsRedraw = !cachedData;
+
+            //// decide which part of the map to select
+            var placeId = this.placeId();
+
+            // hit the server up for data and redraw
+            this._initActivityTypeChart().then((): void => {
+                this.placeData.ready().done((places: ApiModels.EmployeesPlaceApiModel[]): void => {
+                    if (needsRedraw) {
+                        this._drawActivityTypeChart();
+                        return;
+                    }
+                    var isPivotPeople = this.isPivotPeople();
+                    this._activityTypeChartDataTable.removeRows(0, this._activityTypeChartDataTable.getNumberOfRows());
+                    var activityTypes = this._getActivityTypes();
+                    this.activityTypes(activityTypes);
+                    $.each(activityTypes, (i: number, dataPoint: ApiModels.EmployeeActivityTypeCount): void => {
+                        var total = isPivotPeople ? dataPoint.activityPersonIds.length : dataPoint.activityIds.length;
+                        this._activityTypeChartDataTable.addRow([dataPoint.text, total, total]);
+                    });
+                    var dataView = new google.visualization.DataView(this._activityTypeChartDataTable);
+                    dataView.setColumns([0, 1, 1, 2]);
+                    this.activityTypeChart.draw(dataView, this._getActivityTypeChartOptions())
+                        .then((): void => {
+                        });
+                });
+            });
+        }
+
+        activityTypes: KnockoutObservableArray<ApiModels.EmployeeActivityTypeCount> = ko.observableArray();
+        private _getActivityTypes(): ApiModels.EmployeeActivityTypeCount[] {
+            var placeId = this.placeId();
+            if (placeId == 1) placeId = null;
+            var places = this.placeData.cached;
+            var activityTypes: ApiModels.EmployeeActivityTypeCount[] = Enumerable.From(places)
+                .Where(function (x: ApiModels.EmployeesPlaceApiModel): boolean {
+                    if (placeId == null) return !x.placeId;
+                    return x.placeId == placeId;
+                })
+                .SelectMany(function (x: ApiModels.EmployeesPlaceApiModel): ApiModels.EmployeeActivityTypeCount[]{
+                    return x.activityTypes;
+                })
+                .Distinct(function (x: ApiModels.EmployeeActivityTypeCount): number {
+                    return x.activityTypeId;
+                })
+                .OrderBy(function (x: ApiModels.EmployeeActivityTypeCount): number {
+                    return x.rank;
+                })
+                .ToArray();
+            return activityTypes;
+        }
+
+        //#endregion
+        //#region Place Overlays
+
+        placeOverlays: KnockoutObservableArray<SummaryGeoChartPlaceOverlay>;
+
+        arePlaceOverlaysVisible = ko.computed((): boolean => {
+            var placeId = this.placeId();
+            var isGeoChartReady = this.isGeoChartReady();
+            var isPlaceOverlaySelected = this.isPlaceOverlaySelected ? this.isPlaceOverlaySelected() : false;
+            if (!isGeoChartReady) return false;
+            var areVisible = (placeId == 1 || isPlaceOverlaySelected)
+                && isGeoChartReady;
+
+            // hide the svg overlays if applicable
+            if (Summary._isD3Defined() && this.settings.geoChart.googleElementId) {
+                // overlay may already be drawn
+                var dInjectRootElementId = '{0}_place_overlays_root'
+                    .format(this.settings.geoChart.googleElementId);
+                var dInjectRootSelection = d3.select('#{0}'.format(dInjectRootElementId));
+                if (dInjectRootSelection.length) {
+                    if (areVisible) {
+                        dInjectRootSelection.attr('style', '');
+                    }
+                    else {
+                        dInjectRootSelection.attr('style', 'display: none;');
+                    }
+                }
+            }
+
+            return areVisible;
+        });
+
+        private _parsePlaceOverlays(): void {
+            if (this.placeOverlays) return;
+            this.placeOverlays = ko.observableArray();
+            var overlays = $('#{0} .overlays .places .data'
+                .format(this.settings.geoChart.boxElementId)).children();
+            $.each(overlays, (i: number, overlay: Element): void => {
+                var jOverlay = $(overlay);
+                var iOverlay: SummaryGeoChartPlaceOverlay = {
+                    total: ko.observable(0),
+                    placeId: parseInt(jOverlay.data('place-id')),
+                    title: jOverlay.attr('title'),
+                    className: jOverlay.attr('class'),
+                    imageSwapper: new ImageSwapper(
+                        jOverlay.find('img.no-hover').first().attr('src'),
+                        jOverlay.find('img.hover').first().attr('src')),
+                };
+                this.placeOverlays.push(iOverlay);
+            });
+        }
+
+        private _getOverlayPlaceIds(): number[] {
+            var placeIds: number[] = Enumerable.From(this.placeOverlays())
+                .Select(function (x: SummaryGeoChartPlaceOverlay): number {
+                    return x.placeId;
+                })
+                .ToArray();
+            return placeIds;
+        }
+
+        clickPlaceOverlay(overlay: SummaryGeoChartPlaceOverlay, e: JQueryEventObject): void {
+            var place = this._getPlaceById(overlay.placeId);
+            if (place) {
+                if (!place.activityPersonIds.length) {
+                    return;
+                }
+                this.placeId(place.placeId);
+            }
+        }
+
+        isPlaceOverlaySelected = ko.computed((): boolean => {
+            var placeId = this.placeId();
+            var areBindingsApplied = this.areBindingsApplied();
+            var placeOverlays = this.placeOverlays ? this.placeOverlays() : undefined;
+            if (!areBindingsApplied || !placeOverlays) return false;
+
+            var isOverlaySelected = false;
+            var overlay = Enumerable.From(placeOverlays)
+                .SingleOrDefault(undefined, function (x: SummaryGeoChartPlaceOverlay): boolean {
+                    return x.placeId == placeId;
+                });
+            if (overlay) {
+                isOverlaySelected = true;
+            }
+
+            return isOverlaySelected;
+        });
+
+        //#endregion
+        //#region SVG Injection
+
+        private static _isD3Defined(): boolean {
+            return typeof d3 !== 'undefined';
+        }
+
+        isD3Defined = ko.computed((): boolean => {
+            return Summary._isD3Defined();
+        });
+
+        isD3Undefined = ko.computed((): boolean => {
+            return !Summary._isD3Defined();
+        });
+
+        private _svgInjectPlaceOverlays(): void {
+            // IE8 cannot load the d3 library
+            if (!Summary._isD3Defined() ||
+                !this.settings.geoChart.googleElementId ||
+                !this.settings.geoChart.boxElementId)
+
+                return;
+
+            // overlay may already be drawn
+            var dInjectRootElementId = '{0}_place_overlays_root'
+                .format(this.settings.geoChart.googleElementId);
+            if ($('#{0}'.format(dInjectRootElementId)).length)
+                return;
+
+            // svg structure is as follows:
+            //  svg
+            //      > defs
+            //      > g
+            //          > rect
+            //          > g - map
+            //              <----- inject new node here
+            //          > g - legend
+            //          > g - ?
+            //          > g - tooltips
+
+            // use d3 to select the first root g element from the geochart
+            var dGoogleG = d3.select('#{0} svg > g'.format(this.settings.geoChart.googleElementId));
+
+            // all of the overlays will become children of this g element
+            var dInjectRoot = dGoogleG.append('g')
+                .attr('id', dInjectRootElementId)
+            ;
+            var areOverlaysVisible = this.arePlaceOverlaysVisible();
+            if (!areOverlaysVisible)
+                dInjectRoot.attr('style', 'display: none;');
+
+            // iterate over the parsed place overlays
+            // first, need to show the data root in order to get valid positions
+            var jContainer = $('#{0} .overlays .places .data'
+                .format(this.settings.geoChart.boxElementId));
+            jContainer.show(); // need to do this to get positions & dimensions from jQuery
+
+            var overlays = this.placeOverlays();
+            $.each(overlays, (i: number, overlay: SummaryGeoChartPlaceOverlay): void => {
+                this._svgInjectPlaceOverlay(dInjectRoot, overlay);
+            });
+
+            jContainer.hide(); // no longer need dimensions, hide the HTML overlays
+
+            // now use jQuery to rearrange the order of the elements
+            $('#{0} svg > g > g:last-child'
+                .format(this.settings.geoChart.googleElementId))
+                .insertAfter('#{0} svg > g > g:nth-child(2)'
+                    .format(this.settings.geoChart.googleElementId))
+            ;
+        }
+
+        private _svgInjectPlaceOverlay(root: D3.Selection, overlay: SummaryGeoChartPlaceOverlay): D3.Selection {
+            // create a new d3 container for this overlay
+            var jOverlay = $('#{0} .overlays .places .data .{1}'
+                .format(this.settings.geoChart.boxElementId, overlay.className));
+            var dOverlay = root.append('g').attr('class', overlay.className);
+
+            // compute position based on data element positions
+            var x = jOverlay.position().left;
+            var y = jOverlay.position().top;
+            var width = jOverlay.outerWidth();
+            var height = jOverlay.outerHeight();
+
+            // append a no-hover d3 image to the overlay g element
+            var noHoverImage = dOverlay.append('image')
+                .attr('xlink:href', overlay.imageSwapper.noHoverSrc())
+                .attr('x', x).attr('y', y)
+                .attr('width', width).attr('height', height)
+                .attr('class', 'no-hover')
+            ;
+
+            // append a hover d3 image to the overlay g element
+            var hoverImage = dOverlay.append('image')
+                .attr('xlink:href', overlay.imageSwapper.hoverSrc())
+                .attr('x', x).attr('y', y)
+                .attr('width', width).attr('height', height)
+                .attr('class', 'hover').attr('style', 'display: none;')
+            ;
+
+            if (overlay.placeId == this.placeId()) {
+                hoverImage.attr('style', '');
+                noHoverImage.attr('style', 'display: none;');
+            }
+
+            this._svgApplyPlaceOverlayHover(overlay, noHoverImage, hoverImage);
+
+            return dOverlay;
+        }
+
+        private _svgApplyPlaceOverlayHover(overlay: SummaryGeoChartPlaceOverlay, noHover: D3.Selection, hover: D3.Selection): void {
+            // enable svg image hover swaps
+            overlay.imageSwapper.isHover.subscribe((newValue: boolean): void => {
+
+                // is this the selected overlay?
+                var placeId = this.placeId();
+                if (placeId == overlay.placeId) {
+                    hover.attr('style', '');
+                    noHover.attr('style', 'display:none');
+                    return;
+                }
+
+                if (newValue) {
+                    hover.attr('style', '');
+                    noHover.attr('style', 'display:none');
+                }
+                else {
+                    noHover.attr('style', '');
+                    hover.attr('style', 'display:none');
+                }
+            });
+
+            this.placeId.subscribe((newValue: number): void => {
+                var placeId = this.placeId();
+                if (placeId == overlay.placeId) {
+                    hover.attr('style', '');
+                    noHover.attr('style', 'display:none');
+                }
+                else {
+                    noHover.attr('style', '');
+                    hover.attr('style', 'display:none');
+                }
+            });
+        }
+
+        //#endregion
+        //#region Tooltips
+
+        private _tooltips: KnockoutObservableArray<JQuery> = ko.observableArray();
+
+        private _createOverlayTooltips(): void {
+            var tooltips = this._tooltips();
+
+            // remove tooltips when they already exist
+            if (tooltips.length) {
+                // destroy all of the tooltips
+                $.each(this._tooltips(), (i: number, tooltip: JQuery): void => {
+                    tooltip.tooltip('destroy');
+                });
+                this._tooltips([]);
+            }
+
+            var overlays = this.placeOverlays();
+            $.each(overlays, (i: number, overlay: SummaryGeoChartPlaceOverlay): void => {
+                // the tooltips are in the place ui
+                var jOverlay = $('#{0} .overlays .places .ui .{1}'
+                    .format(this.settings.geoChart.boxElementId, overlay.className));
+                var tooltip = jOverlay.find('.tooltip');
+                var content = tooltip.html() || 'tooltip';
+                this._createOverlayTooltip(jOverlay, content);
+                this._tooltips.push(jOverlay);
+            });
+        }
+
+        private _createOverlayTooltip(target: JQuery, content: string): void {
+            target.tooltip({
+                content: content || 'tooltip content goes here',
+                items: '*',
+                track: true,
+                show: false,
+                hide: false,
+                tooltipClass: 'geochart',
+                position: {
+                    my: 'right-15 bottom-15',
+                    of: '.ui-tooltip-content',
+                    within: '#{0}'.format(this.settings.geoChart.googleElementId),
+                },
+                open: function (e: any, ui: any) {
+                    // get the width of the tooltip
+                    var width = ui.tooltip.find('.ui-tooltip-content').outerWidth();
+                    // set the width of the container
+                    ui.tooltip.css({ width: '{0}px'.format(width) });
+                },
+            });
+        }
+
+        private _applyPlaceOverlayTotals(places: ApiModels.EmployeesPlaceApiModel[]): void {
+            var isPivotPeople = this.isPivotPeople();
+            var placeOverlays = this.placeOverlays();
+            $.each(placeOverlays, (i: number, overlay: SummaryGeoChartPlaceOverlay): void => {
+                var total = Enumerable.From(places)
+                    .Where(function (x: ApiModels.EmployeesPlaceApiModel): boolean {
+                        return x.placeId == overlay.placeId;
+                    })
+                    .Sum(function (x: ApiModels.EmployeesPlaceApiModel): number {
+                        return isPivotPeople ? x.activityPersonIds.length : x.activityIds.length;
+                    });
+                overlay.total(total);
+            });
+        }
+
         //#endregion
     }
 }

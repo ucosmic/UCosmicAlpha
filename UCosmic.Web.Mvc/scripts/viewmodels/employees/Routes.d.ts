@@ -7,7 +7,7 @@ declare module Employees.ApiRoutes {
     }
 
     export interface Activities {
-        summary(domain: string): string;
+        counts(domain: string): string;
     }
 
     export interface Settings {

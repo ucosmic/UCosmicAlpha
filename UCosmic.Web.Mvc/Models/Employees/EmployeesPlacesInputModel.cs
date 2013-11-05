@@ -9,7 +9,8 @@ namespace UCosmic.Web.Mvc.Models
             PlaceIds = new int[0];
         }
 
-        public bool? Countries { get; set; }
+        public bool Countries { get; set; }
         public IEnumerable<int> PlaceIds { get; set; }
+        public bool PlaceAgnostic { get; set; }
     }
 }

@@ -1,19 +1,17 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Web.Http;
 using AttributeRouting;
 using AttributeRouting.Web.Http;
-using UCosmic.Domain.Activities;
+using AutoMapper;
+using ImageResizer;
 using UCosmic.Domain.Employees;
 using UCosmic.Domain.Establishments;
 using UCosmic.Web.Mvc.Models;
-using System.IO;
-using ImageResizer;
-using AutoMapper;
 
 namespace UCosmic.Web.Mvc.ApiControllers
 {
@@ -21,13 +19,13 @@ namespace UCosmic.Web.Mvc.ApiControllers
     public class EmployeesController : ApiController
     {
         private readonly IProcessQueries _queryProcessor;
-        private readonly IQueryEntities _queryEntities;
+        private readonly IQueryEntities _entities;
         private readonly IStoreBinaryData _binaryData;
 
-        public EmployeesController(IProcessQueries queryProcessor, IQueryEntities queryEntities, IStoreBinaryData binaryData)
+        public EmployeesController(IProcessQueries queryProcessor, IQueryEntities entities, IStoreBinaryData binaryData)
         {
             _queryProcessor = queryProcessor;
-            _queryEntities = queryEntities;
+            _entities = entities;
             _binaryData = binaryData;
         }
 
@@ -42,6 +40,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             {
                 Countries = input.Countries,
                 PlaceIds = input.PlaceIds,
+                PlaceAgnostic = input.PlaceAgnostic,
             };
             var views = _queryProcessor.Execute(query);
             var models = Mapper.Map<EmployeesPlaceApiModel[]>(views);

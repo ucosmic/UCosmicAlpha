@@ -11,10 +11,12 @@ namespace UCosmic.Domain.Employees
     public class EmployeePlacesViewBuilder
     {
         private readonly IQueryEntities _entities;
+        private readonly IProcessQueries _queryProcessor;
 
-        public EmployeePlacesViewBuilder(IQueryEntities entities)
+        public EmployeePlacesViewBuilder(IQueryEntities entities, IProcessQueries queryProcessor)
         {
             _entities = entities;
+            _queryProcessor = queryProcessor;
         }
 
         internal IEnumerable<int> GetEstablishmentIdsWithData()
@@ -44,6 +46,7 @@ namespace UCosmic.Domain.Employees
             {
                 x => x.Activity,
                 x => x.Locations.Select(y => y.Place.Ancestors),
+                x => x.Types,
             };
             var activities = _entities.Query<Activity>()
                 .Where(x =>
@@ -88,31 +91,84 @@ namespace UCosmic.Domain.Employees
             var placesArray = places.Distinct().ToArray();
             var activitiesArray = activities.ToArray();
 
-            var views = placesArray.Select(place => new EmployeePlacesView
+            var settings = _queryProcessor.Execute(new EmployeeModuleSettingsByEstablishmentId(establishmentId)
             {
-                PlaceId = place.RevisionId,
-                PlaceName = place.OfficialName,
-                IsCountry = place.IsCountry,
-                CountryCode = place.IsCountry && place.GeoPlanetPlace != null
-                    ? place.GeoPlanetPlace.Country.Code
-                    : place.Ancestors.Any(node => node.Ancestor.IsCountry && node.Ancestor.GeoPlanetPlace != null)
-                        ? place.Ancestors.First(node => node.Ancestor.IsCountry && node.Ancestor.GeoPlanetPlace != null)
-                            .Ancestor.GeoPlanetPlace.Country.Code
-                        : null,
-                ActivityPersonIds = activitiesArray
-                    .Where(activity =>
-                        activity.Locations.Any(location => location.PlaceId == place.RevisionId) ||
-                        activity.Locations.Any(location => location.Place.Ancestors.Any(node => node.AncestorId == place.RevisionId)))
-                    .Select(activity => activity.Activity.PersonId).Distinct().ToArray(),
-                ActivityIds = activitiesArray
-                    .Where(activity =>
-                        activity.Locations.Any(location => location.PlaceId == place.RevisionId) ||
-                        activity.Locations.Any(location => location.Place.Ancestors.Any(node => node.AncestorId == place.RevisionId)))
-                    .Select(activity => activity.ActivityId).Distinct().ToArray(),
-            })
-            .ToArray();
+                EagerLoad = new Expression<Func<EmployeeModuleSettings, object>>[]
+                {
+                    x => x.ActivityTypes,
+                },
+            });
+            var activityTypes = settings != null && settings.ActivityTypes.Any()
+                ? settings.ActivityTypes.ToArray() : null;
 
-            return views;
+            var views = placesArray.Select(place =>
+            {
+                var activitiesInPlace = activitiesArray
+                    .Where(activity =>
+                        activity.Locations.Any(location => location.PlaceId == place.RevisionId) ||
+                        activity.Locations.Any(location => location.Place.Ancestors.Any(node => node.AncestorId == place.RevisionId)))
+                    .ToArray();
+                var view = new EmployeePlacesView
+                {
+                    EstablishmentId = establishmentId,
+                    PlaceId = place.RevisionId,
+                    PlaceName = place.OfficialName,
+                    IsCountry = place.IsCountry,
+                    CountryCode = place.IsCountry && place.GeoPlanetPlace != null
+                        ? place.GeoPlanetPlace.Country.Code
+                        : place.Ancestors.Any(node => node.Ancestor.IsCountry && node.Ancestor.GeoPlanetPlace != null)
+                            ? place.Ancestors.First(node => node.Ancestor.IsCountry && node.Ancestor.GeoPlanetPlace != null)
+                                .Ancestor.GeoPlanetPlace.Country.Code
+                            : null,
+                    ActivityPersonIds = activitiesInPlace
+                        .Select(activity => activity.Activity.PersonId).Distinct().ToArray(),
+                    ActivityIds = activitiesInPlace
+                        .Select(activity => activity.ActivityId).Distinct().ToArray(),
+                    ActivityTypes = activityTypes != null
+                        ? activityTypes.Select(x =>
+                            new EmployeePlaceActivityTypesView
+                            {
+                                HasIcon = !string.IsNullOrWhiteSpace(x.IconPath),
+                                ActivityTypeId = x.Id,
+                                Text = x.Type,
+                                Rank = x.Rank,
+                                ActivityPersonIds = activitiesInPlace
+                                    .Where(activity => activity.Types.Any(type => type.TypeId == x.Id))
+                                    .Select(activity => activity.Activity.PersonId).Distinct().ToArray(),
+                                ActivityIds = activitiesInPlace
+                                    .Where(activity => activity.Types.Any(type => type.TypeId == x.Id))
+                                    .Select(activity => activity.ActivityId).Distinct().ToArray(),
+                            }).ToArray()
+                        : null,
+                };
+                return view;
+            })
+            .ToList();
+
+            views.Add(new EmployeePlacesView
+            {
+                EstablishmentId = establishmentId,
+                ActivityIds = activitiesArray.Select(x => x.ActivityId).Distinct().ToArray(),
+                ActivityPersonIds = activitiesArray.Select(x => x.Activity.PersonId).Distinct().ToArray(),
+                ActivityTypes = activityTypes != null
+                    ? activityTypes.Select(x => 
+                        new EmployeePlaceActivityTypesView
+                        {
+                            HasIcon = !string.IsNullOrWhiteSpace(x.IconPath),
+                            ActivityTypeId = x.Id,
+                            Text = x.Type,
+                            Rank = x.Rank,
+                            ActivityPersonIds = activitiesArray
+                                .Where(activity => activity.Types.Any(type => type.TypeId == x.Id))
+                                .Select(activity => activity.Activity.PersonId).Distinct().ToArray(),
+                            ActivityIds = activitiesArray
+                                .Where(activity => activity.Types.Any(type => type.TypeId == x.Id))
+                                .Select(activity => activity.ActivityId).Distinct().ToArray(),
+                        }).ToArray()
+                    : null
+            });
+
+            return views.ToArray();
         }
     }
 }

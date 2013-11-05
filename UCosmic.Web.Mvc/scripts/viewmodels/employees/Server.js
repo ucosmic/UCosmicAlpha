@@ -24,7 +24,7 @@ var Employees;
         function ActivityCounts(tenantDomain, settings) {
             var promise = $.Deferred();
             settings = settings || {};
-            settings.url = Routes.Api.Employees.Activities.summary(tenantDomain);
+            settings.url = Routes.Api.Employees.Activities.counts(tenantDomain);
             $.ajax(settings).done(function (response) {
                 promise.resolve(response);
             }).fail(function (xhr) {

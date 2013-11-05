@@ -24,7 +24,7 @@ module Employees.Servers {
     export function ActivityCounts(tenantDomain: any, settings?: JQueryAjaxSettings): JQueryPromise<ApiModels.EmployeeActivityCounts> {
         var promise: JQueryDeferred<ApiModels.EmployeeActivityCounts> = $.Deferred();
         settings = settings || {};
-        settings.url = Routes.Api.Employees.Activities.summary(tenantDomain);
+        settings.url = Routes.Api.Employees.Activities.counts(tenantDomain);
         $.ajax(settings)
             .done((response: ApiModels.EmployeeActivityCounts): void => {
                 promise.resolve(response);

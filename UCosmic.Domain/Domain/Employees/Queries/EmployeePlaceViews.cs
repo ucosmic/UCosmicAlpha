@@ -18,8 +18,9 @@ namespace UCosmic.Domain.Employees
 
         public int? EstablishmentId { get; private set; }
         public string Domain { get; private set; }
-        public bool? Countries { get; set; }
+        public bool Countries { get; set; }
         public IEnumerable<int> PlaceIds { get; set; }
+        public bool PlaceAgnostic { get; set; }
     }
 
     public class HandleEmployeePlaceViewsQuery : IHandleQueries<EmployeePlaceViews, EmployeePlacesView[]>
@@ -46,7 +47,7 @@ namespace UCosmic.Domain.Employees
 
             var view = viewEnumerable.ToArray();
 
-            if (query.Countries.HasValue && query.Countries.Value)
+            if (query.Countries)
             {
                 var countries = view.Where(x => x.IsCountry);
                 places = places.Union(countries).Distinct();
@@ -54,8 +55,13 @@ namespace UCosmic.Domain.Employees
 
             if (query.PlaceIds != null && query.PlaceIds.Any())
             {
-                var byId = view.Where(x => query.PlaceIds.Contains(x.PlaceId));
+                var byId = view.Where(x => x.PlaceId.HasValue && query.PlaceIds.Contains(x.PlaceId.Value));
                 places = places.Union(byId).Distinct();
+            }
+
+            if (query.PlaceAgnostic)
+            {
+                places = places.Union(view.Where(x => !x.PlaceId.HasValue));
             }
 
             return places.ToArray();
