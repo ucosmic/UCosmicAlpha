@@ -1,35 +1,11 @@
-﻿@model UCosmic.Web.Mvc.Models.ActivityPublicViewModel
+﻿@using UCosmic.Web.Mvc.ApiControllers
+@model UCosmic.Web.Mvc.Models.ActivityPublicViewModel
+
 <section id="publicView">
 
-    @* ACTIVITY TYPE AS H2 *@
-    <header>
-        <h2>@Model.Title</h2>
-    </header>
     <div style="font-size: 18px;">
-        @* PLACES *@
-        <ul style="margin: 1em 0;">
-            @foreach (var place in Model.Places)
-            {
-                <li>@place.PlaceName</li>
-            }
-        </ul>
 
-        @* TYPES *@
-        @if (Model.Types != null && Model.Types.Any())
-        {
-            <ul style="margin: 1em 0;" data-bind="foreach: Types">
-                @foreach (var type in Model.Types)
-                {
-                    <li>
-
-                        <img src="@Url.HttpRouteUrl(null, new { controller = "EmployeeModuleSettings", action = "GetIcon", typeId = type.TypeId })" alt="" />
-                        <span>@type.Text</span>
-                    </li> 
-                }
-            </ul> 
-        }
-
-@* DATES *@
+        @* DATES *@
         <div style="margin: 1em 0;">
             <span>@Model.StartsOn.ToString(Model.StartsFormat)</span>
             <span style="padding: 0 4px 0 4px;">-</span>
@@ -43,7 +19,39 @@
             }
         </div>
 
-        @* FUNDING *@
+        @* DESCRIPTION *@
+        <div style="margin: 1em 0; line-height: 24px;">
+            @Model.Content
+        </div>
+
+        @* PLACES *@
+        <div style="margin: 1em 0;">
+            <ul class="add-comma">
+                @foreach (var place in Model.Places)
+                {
+                    <li class="same-line">@place.PlaceName</li>
+                }
+            </ul>
+        </div>
+
+        @* TYPES *@
+        @if (Model.Types != null && Model.Types.Any())
+        {
+            <div style="margin: 1em 0;">
+                <ul>
+                    @foreach (var type in Model.Types)
+                    {
+                        <li style="margin-bottom: .5em;">
+                            <span style="display: inline-block; width: 32px; text-align: center;">
+                                <img height="20" src="@Url.HttpRouteUrl(null, new { controller = "EmployeeModuleSettings", action = "GetIcon", typeId = type.TypeId })" alt="" />
+                            </span>
+                            <span>@type.Text</span></li> 
+                    }
+                </ul>
+            </div> 
+        }
+
+@* FUNDING *@
         @if (Model.IsExternallyFunded == true && Model.IsInternallyFunded == true)
         {
             <div style="margin: 1em 0;" data-bind="visible: IsExternallyFunded && IsInternallyFunded">
@@ -62,31 +70,34 @@
                 This activity is externally funded.
             </div>
         }
-
-@* DESCRIPTION *@
+        
+@* TAGS *@
         <div style="margin: 1em 0;">
-            @Model.Content
+            <ul class="tag-list add-comma">
+                @foreach (var tag in Model.Tags)
+                {
+                    <li class="same-line">@tag.Text</li>
+                }
+            </ul>
         </div>
 
-        @* TAGS *@
-        <ul class="tag-list" style="display: inline-block;">
-            @foreach (var tag in Model.Tags)
-            {
-                <li style="width: auto; float: left; list-style: none; margin-right: 8px">@tag.Text</li>
-            }
-        </ul>
-
         @* DOCUMENTS *@
-        <ul style="margin: 1em 0; display: block;" data-bind="foreach: Documents">
-            @foreach (var document in Model.Documents)
-            {
-                <li>
-                    <a href="/api/activities/@document.DocumentId/documents" title="@document.Title">@document.FileName</a>
-                </li>
-            }
-        </ul>
-
+        <div style="margin: 1em 0;">
+            <ul data-bind="foreach: Documents">
+                @foreach (var document in Model.Documents)
+                {
+@*<li class="same-line">
+                        <a href="/api/activities/@document.DocumentId/documents" title="@document.Title">@document.FileName</a></li>*@
+                    <li style="margin-bottom: .5em;">
+                        <span style="display: inline-block; width: 32px; text-align: center;">
+                            <img height="20" src="@Url.HttpRouteUrl(null, new { controller = "ActivityDocuments", action = "GetThumbnail", documentId = document.DocumentId, model = new UCosmic.Web.Mvc.Models.ImageResizeRequestModel() { MaxHeight = 20, MaxWidth = 30 } })" alt="" />
+                        </span>
+                        <a href="/api/activities/@document.DocumentId/documents" title="@document.Title">@document.Title</a></li> 
+                }
+            </ul>
+        </div>
     </div>
+
     <div style="display: none">
         @*<span id="agreementPartners_api">@ViewBag.AgreementPartnersApi</span>  for map *@
     </div>

@@ -1,61 +1,27 @@
 var Activities;
 (function (Activities) {
-    /// <reference path="../../typings/knockout/knockout.d.ts" />
-    /// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
-    /// <reference path="../../typings/moment/moment.d.ts" />
+    /// <reference path="../../typings/googlemaps/google.maps.d.ts" />
+    /// <reference path="../../app/App.ts" />
+    /// <reference path="../../google/Map.ts" />
     (function (ViewModels) {
         var PublicView = (function () {
-            function PublicView(data) {
-                this.isBound = ko.observable(false);
-                var mapping = {
-                    //how to create a property with knockout mapping
-                    //create: function (options) {
-                    //    //customize at the root level.
-                    //    var innerModel = ko.mapping.fromJS(options.data);
-                    //    innerModel.typeIconUrl = ko.observable('Hello World');
-                    //    ko.computed(function () {
-                    //        return App.flasher.text();
-                    //    })
-                    //    return innerModel;
-                    //},
-                    'StartsOn': {
-                        create: function (options) {
-                            var value = options.data.substr(6);
-                            var myDate = new Date(parseInt(value));
-                            if (myDate.getFullYear() < 1500) {
-                                return "unknown";
-                            }
-                            return (moment(myDate)).format('M/D/YYYY');
-                        }
-                    },
-                    'EndsOn': {
-                        create: function (options) {
-                            var value = options.data.substr(6);
-                            var myDate = new Date(parseInt(value));
-                            if (myDate.getFullYear() < 1500) {
-                                return "unknown";
-                            }
-                            return (moment(myDate)).format('M/D/YYYY');
-                        }
-                    },
-                    'UpdatedOnUtc': {
-                        create: function (options) {
-                            var value = options.data.substr(6);
-                            var myDate = new Date(parseInt(value));
-                            if (myDate.getFullYear() < 1500) {
-                                return "unknown";
-                            }
-                            return (moment(myDate)).format('M/D/YYYY');
-                        }
-                    },
-                    'DocumentId': {
-                        create: function (options) {
-                            return "/api/activities/" + options.data + "/documents";
-                        }
+            function PublicView() {
+                this.lat = 15;
+                this.lng = 6;
+                this.zoom = -1;
+                this._map = new App.GoogleMaps.Map('map-canvas', {
+                    center: new google.maps.LatLng(this.lat, this.lng),
+                    zoom: this.zoom,
+                    streetViewControl: false,
+                    panControl: false,
+                    draggable: false,
+                    disableDefaultUI: true,
+                    zoomControlOptions: {
+                        style: google.maps.ZoomControlStyle.SMALL
                     }
-                };
-                this.activity = ko.mapping.fromJS(data, mapping);
-                this.isBound(true);
+                }, {
+                    maxPrecision: 8
+                });
             }
             return PublicView;
         })();

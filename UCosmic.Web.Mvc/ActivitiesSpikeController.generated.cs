@@ -25,9 +25,6 @@ namespace UCosmic.Web.Mvc.Controllers
     public partial class ActivitiesSpikeController
     {
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public ActivitiesSpikeController() { }
-
-        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         protected ActivitiesSpikeController(Dummy d) { }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]

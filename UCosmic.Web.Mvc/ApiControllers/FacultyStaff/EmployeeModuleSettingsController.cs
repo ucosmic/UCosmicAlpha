@@ -22,11 +22,13 @@ namespace UCosmic.Web.Mvc.ApiControllers
     {
         private readonly IProcessQueries _queryProcessor;
         private readonly IStoreBinaryData _binaryStore;
+        private readonly IQueryEntities _entities;
 
-        public EmployeeModuleSettingsController(IProcessQueries queryProcessor, IStoreBinaryData binaryStore)
+        public EmployeeModuleSettingsController(IProcessQueries queryProcessor, IStoreBinaryData binaryStore, IQueryEntities entities)
         {
             _queryProcessor = queryProcessor;
             _binaryStore = binaryStore;
+            _entities = entities;
         }
 
         [GET("faculty-ranks")]
@@ -103,10 +105,47 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return models;
         }
 
-        [CacheHttpGet(Duration = 3600)]
         [GET("activity-types/{typeId:int}/icon")]
         public HttpResponseMessage GetIcon(int typeId)
         {
+            lock (Lock)
+            {
+                var type = _entities.Query<EmployeeActivityType>().SingleOrDefault(x => x.Id == typeId);
+                if (type == null)
+                {
+                    throw new HttpRequestException(HttpStatusCode.NotFound.ToString());
+                }
+
+                var filePath = type.IconPath + type.IconFileName;
+                var mimeType = type.IconMimeType;
+
+                byte[] content = _binaryStore.Get(filePath);
+                if (content == null)
+                {
+                    return new HttpResponseMessage(HttpStatusCode.NotFound);
+                }
+
+                var stream = new MemoryStream(content);
+                var response = new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StreamContent(stream)
+                };
+
+                response.Content.Headers.ContentType = new MediaTypeHeaderValue(mimeType);
+
+                return response;
+            }
+        }
+
+        private static readonly object Lock = new object();
+        
+        [CacheHttpGet(Duration = 3600)]
+        //[GET("activity-types/{typeId:int}/icon")]
+        public HttpResponseMessage GetIcon1(int typeId)
+        {
+            lock (Lock)
+            {
+             
             Establishment establishment = null;
             EmployeeModuleSettings employeeModuleSettings = null;
 
@@ -178,6 +217,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
             response.Content.Headers.ContentType = new MediaTypeHeaderValue(mimeType);
 
             return response;
+
+            }
         }
 
         [GET("icon/{name}")]

@@ -148,10 +148,8 @@ namespace UCosmic.Web.Mvc
                 "~/scripts/viewmodels/activities/Activity.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/ActivityPublicView").Include(
-                "~/scripts/google/ToolsOverlay.js",
-                "~/scripts/viewmodels/activities/ActivitiesSpike.js",
-                "~/scripts/oss/linq.js",
-                "~/scripts/oss/moment.js"));
+                "~/scripts/google/Map.js",
+                "~/scripts/viewmodels/activities/ActivitiesSpike.js"));
 
             // geographic expertise
             bundles.Add(new ScriptBundle("~/bundles/geographicExpertises").Include(
