@@ -165,6 +165,23 @@ a.global-view {
 
 .summary-sidebar {
   margin-top: 28px; }
+  .summary-sidebar #activity_type_chart_box .heading .title {
+    font-weight: bold; }
+  .summary-sidebar #activity_type_chart_box .heading .pivot-buttons {
+    font-size: 12px;
+    font-family: Arial;
+    line-height: 20px;
+    height: 20px;
+    vertical-align: middle; }
+    .summary-sidebar #activity_type_chart_box .heading .pivot-buttons a {
+      vertical-align: middle; }
+  .summary-sidebar #activity_type_chart_box .place {
+    margin-top: 4px;
+    position: relative;
+    z-index: 1; }
+    .summary-sidebar #activity_type_chart_box .place .text {
+      font-size: 12px;
+      font-family: Arial; }
   .summary-sidebar #activity_type_chart_box #google_activity_type_chart {
     margin-top: -8px;
     height: 140px; }
@@ -177,6 +194,13 @@ a.global-view {
       float: left;
       text-align: center; }
       .summary-sidebar #activity_type_chart_box ul.icons li img {
+        -webkit-transition: opacity 250ms;
+        -moz-transition: opacity 250ms;
+        -o-transition: opacity 250ms;
+        transition: opacity 250ms;
         width: 32px;
-        height: 32px; }
+        height: 32px;
+        opacity: 0.7; }
+        .summary-sidebar #activity_type_chart_box ul.icons li img:hover {
+          opacity: 1; }
 

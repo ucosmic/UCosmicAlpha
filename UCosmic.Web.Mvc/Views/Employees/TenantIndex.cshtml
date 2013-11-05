@@ -228,14 +228,30 @@
 
                 @* ACTIVITY TYPES COLUMN CHART & ICONS *@
                 <div id="activity_type_chart_box" data-bind="visible: activityTypes().length" style="display: none;">
-                    <div>
-                        <strong data-bind="visible: isPivotActivities">Activity counts by type</strong>
-                        <strong data-bind="visible: isPivotPeople">Person counts by type of activity</strong>
+                    <div class="heading group">
+                        <div class="title on-left">
+                            <strong data-bind="visible: isPivotActivities">Activities by type</strong>
+                            <strong data-bind="visible: isPivotPeople">People by activity type</strong>
+                        </div>
+                        <div class="pivot-buttons on-right">
+                            <a href="#" data-bind="visible: isPivotActivities, click: pivotPeople">See People</a>
+                            <a href="#" data-bind="visible: isPivotPeople, click: pivotActivities">See Activities</a>
+                        </div>
                     </div>
-                    <div style="margin-top: 4px; position: relative; z-index: 100;">
-                        <span data-bind="visible: hasNoPlaceId" class="light-transparent badge">Everywhere</span>
+                    <div class="place">
+                        <div data-bind="visible: hasNoPlaceId">
+                            <div class="group">
+                                <div class="on-left">
+                                    <span class="light-transparent badge" data-bind="visible: hasNoPlaceId">Everywhere</span>
+                                </div>
+                                <div class="on-right">
+                                    <span class="text">Click the map for more info</span>
+                                </div>
+                            </div>
+                        </div>
                         <span data-bind="visible: hasPlaceId">in
-                            <span class="light-transparent badge" data-bind="text: selectedPlaceSummary.locationCount">?</span></span>
+                            <span class="light-transparent badge" data-bind="text: selectedPlaceSummary.locationCount">?</span>
+                        </span>
                     </div>
                     <div id="google_activity_type_chart"></div>
                     <div>

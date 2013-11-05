@@ -243,6 +243,32 @@ a.global-view {
 
     #activity_type_chart_box {
 
+        .heading {
+            .title {
+                font-weight: bold;
+            }
+            .pivot-buttons {
+                font-size: 12px;
+                font-family: Arial;
+                line-height: 20px;
+                height: 20px;
+                vertical-align: middle;
+                a {
+                    vertical-align: middle;
+                }
+            }
+        }
+
+        .place {
+            margin-top: 4px;
+            position: relative;
+            z-index: 1;
+            .text {
+                font-size: 12px;
+                font-family: Arial;
+            }
+        }
+
         #google_activity_type_chart {
             margin-top: -8px;
             height: 140px;
@@ -257,8 +283,13 @@ a.global-view {
                 float: left;
                 text-align: center;
                 img {
+                    @include transition(opacity, 250ms);
                     width: 32px;
                     height: 32px;
+                    opacity: 0.7;
+                    &:hover {
+                        opacity: 1;
+                    }
                 }
             }
         }
