@@ -61,7 +61,7 @@ namespace UCosmic.Domain.Employees
 
             if (query.PlaceAgnostic)
             {
-                places = places.Union(view.Where(x => !x.PlaceId.HasValue));
+                places = places.Union(view.Where(x => !x.PlaceId.HasValue && x.ActivityIds.Any()));
             }
 
             return places.ToArray();

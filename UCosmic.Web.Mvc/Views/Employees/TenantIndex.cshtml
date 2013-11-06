@@ -268,7 +268,7 @@
                 </div>
 
                 @* ACTIVITY YEARS COLUMN CHART & ICONS *@
-                <div id="activity_year_chart_box" data-bind="visible: areBindingsApplied() && isActivityTypeChartReady()" style="display: none;">
+                <div id="activity_year_chart_box" data-bind="visible: areBindingsApplied() && isActivityTypeChartReady() && hasPlaceData()" style="display: none;">
                     <div class="heading group">
                         <div class="title on-left">
                             <strong data-bind="visible: isPivotActivities">Activities Trend</strong>
