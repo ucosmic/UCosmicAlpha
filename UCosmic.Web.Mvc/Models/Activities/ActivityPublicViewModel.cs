@@ -23,7 +23,7 @@ namespace UCosmic.Web.Mvc.Models
         public bool? OnGoing { get; set; }
         public bool? IsExternallyFunded { get; set; }
         public bool? IsInternallyFunded { get; set; }
-        public string UpdatedByPrincipal { get; set; }
+        //public string UpdatedByPrincipal { get; set; }
         //public DateTime UpdatedOnUtc { get; set; }
         public ActivityTypeViewModel[] Types { get; set; }
         public ActivityPlaceViewModel[] Places { get; set; }
@@ -41,14 +41,6 @@ namespace UCosmic.Web.Mvc.Models
         //    get { return StartsOn.ToString(EndsFormat); }
         //}
 
-    }
-
-    public class ActivityTypeViewModel
-    {
-        //public int ActivityId { get; set; }
-        public int TypeId { get; set; }
-        public string Text { get; set; }
-        //public int Rank { get; set; }
     }
 
     public class ActivityPlaceViewModel
@@ -82,5 +74,47 @@ namespace UCosmic.Web.Mvc.Models
         //    get { return Path.GetExtension(FileName); }
         //}
 
+    }
+    public static class ActivityPublicViewProfiler
+    {
+        public class EntityToModel : Profile
+        {
+            protected override void Configure()
+            {
+                CreateMap<ActivityValues, ActivityPublicViewModel>()
+                    .ForMember(d => d.IsExternallyFunded, o => o.MapFrom(s => s.WasExternallyFunded))
+                    .ForMember(d => d.IsInternallyFunded, o => o.MapFrom(s => s.WasInternallyFunded)) 
+                    .ForMember(d => d.Places, o => o.MapFrom(s => s.Locations))
+                ;
+            }
+        }
+
+        public class TagsEntityToModel : Profile
+        {
+            protected override void Configure()
+            {
+                CreateMap<ActivityTag, ActivityTagViewModel>();
+            }
+        }
+
+        public class DocumentsEntityToModel : Profile
+        {
+            protected override void Configure()
+            {
+                CreateMap<ActivityDocument, ActivityDocumentViewModel>()
+                    .ForMember(d => d.DocumentId, o => o.MapFrom(s => s.RevisionId))
+                ;
+            }
+        }
+        
+        public class PlacesEntityToModel : Profile
+        {
+            protected override void Configure()
+            {
+                CreateMap<ActivityLocation, ActivityPlaceViewModel>()
+                    .ForMember(d => d.PlaceName, o => o.MapFrom(s => s.Place.OfficialName))
+                ;
+            }
+        }
     }
 }

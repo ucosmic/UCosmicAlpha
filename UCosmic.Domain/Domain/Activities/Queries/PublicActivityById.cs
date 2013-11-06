@@ -5,84 +5,37 @@ using System.Security.Principal;
 
 namespace UCosmic.Domain.Activities
 {
-    public class PublicActivityById : BaseEntityQuery<PublicActivity>, IDefineQuery<PublicActivity>
+    public class PublicActivityById : BaseEntityQuery<ActivityValues>, IDefineQuery<ActivityValues>
     {
-        //public PublicActivityById(IPrincipal principal, int activityId)
-        //{
-        //    if (principal == null) throw new ArgumentNullException("principal");
-        //    Principal = principal;
-        //    ActivityId = activityId;
-        //}
-
-        public PublicActivityById(int activityId)
+        public PublicActivityById(IPrincipal principal, int activityId)
         {
+            if (principal == null) throw new ArgumentNullException("principal");
+            Principal = principal;
             ActivityId = activityId;
         }
 
-        //public IPrincipal Principal { get; private set; }
+        public IPrincipal Principal { get; private set; }
         public int ActivityId { get; private set; }
     }
 
-    public class HandlePublicActivityByIdQuery : IHandleQueries<PublicActivityById, PublicActivity>
+    public class HandlePublicActivityByIdQuery : IHandleQueries<PublicActivityById, ActivityValues>
     {
         private readonly IQueryEntities _entities;
-        private readonly IProcessQueries _queryProcessor;
 
-        public HandlePublicActivityByIdQuery(IQueryEntities entities, IProcessQueries queryProcessor)
+        public HandlePublicActivityByIdQuery(IQueryEntities entities)
         {
             _entities = entities;
-            _queryProcessor = queryProcessor;
         }
 
-        public PublicActivity Handle(PublicActivityById query)
+        public ActivityValues Handle(PublicActivityById query)
         {
             if (query == null) throw new ArgumentNullException("query");
 
-            var queryable = _entities.Query<PublicActivity>()
+            var publicText = ActivityMode.Public.AsSentenceFragment();
+            var result = _entities.Query<ActivityValues>()
                 .EagerLoad(_entities, query.EagerLoad)
+                .SingleOrDefault(x => x.ActivityId == query.ActivityId && x.ModeText == publicText && x.Activity.ModeText == publicText)
             ;
-
-            // when principal is provided, make sure this activity is visible
-            //if (query.Principal != null)
-            //{
-            //    var publicText = ActivityMode.Public.AsSentenceFragment();
-
-            //    // allow module managers to see their tenancy's activities regardless of whether it is published
-            //    if (query.Principal.IsInRole(RoleName.EmployeeProfileManager))
-            //    {
-            //        var ownedTenantIds = _queryProcessor.Execute(new MyOwnedTenantIds(query.Principal));
-
-            //        queryable = queryable.Where(x => // restrict to activities where
-            //            (x.ModeText == publicText && x.Original == null) // the activity is published
-            //            ||  // or
-            //            (   // the activity is not published but the person who owns it is under user's tenancy
-            //                x.Person.Affiliations.Count(y => y.IsDefault) == 1 &&
-            //                ownedTenantIds.Contains(x.Person.Affiliations.FirstOrDefault(y => y.IsDefault).EstablishmentId)
-            //            )
-            //        );
-            //    }
-
-            //    // allow activity owners to see their own activities
-            //    else if (query.Principal.Identity.IsAuthenticated)
-            //    {
-            //        queryable = queryable.Where(x => // restrict to activities where
-            //            (x.ModeText == publicText && x.Original == null) // the activity is published
-            //            ||  // or
-            //            (   // the activity is owned by the user
-            //                x.Person.User != null &&
-            //                x.Person.User.Name.Equals(query.Principal.Identity.Name, StringComparison.OrdinalIgnoreCase)
-            //            )
-            //        );
-            //    }
-
-            //    // everyone else can only see public activities
-            //    else
-            //    {
-            //        queryable = queryable.Published();
-            //    }
-            //}
-
-            var result = queryable.PublicById(query.ActivityId);
             return result;
         }
     }

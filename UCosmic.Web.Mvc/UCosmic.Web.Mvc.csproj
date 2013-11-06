@@ -315,6 +315,7 @@
     <Compile Include="JavaScriptRoutesController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Activities\ActivityTypeViewModel.cs" />
     <Compile Include="Models\Agreements\AgreementOwningTenant.cs" />
     <Compile Include="Models\Employees\EmployeeActivityCounts.cs" />
     <Compile Include="ApiControllers\FacultyStaff\EmployeeModuleSettingsController.cs" />

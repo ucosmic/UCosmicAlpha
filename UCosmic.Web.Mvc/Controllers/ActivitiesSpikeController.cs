@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq.Expressions;
+using System.Linq;
 using System.Net;
 using System.Web.Http;
 using System.Web.Mvc;
@@ -29,11 +30,20 @@ namespace UCosmic.Web.Mvc.Controllers
             var model = new ActivityPublicViewModel();
 
 
-            //model = _queryProcessor.Execute(new ActivityById(activityId));
-            //var entity = _queryProcessor.Execute(new PublicActivityById(activityId));
-            //if (entity == null) throw new HttpResponseException(HttpStatusCode.NotFound);
+            //var entity2 = _queryProcessor.Execute(new ActivityById(User, activityId));
+            var entity = _queryProcessor.Execute(new PublicActivityById(User, activityId)
+            {
+                EagerLoad = new Expression<Func<ActivityValues, object>>[]
+                {
+                    x => x.Types.Select(y => y.Type),
+                    x => x.Locations.Select(y => y.Place),
+                    x => x.Tags,
+                    x => x.Documents
+                }
+            });
+            if (entity == null) return HttpNotFound();
 
-            //model = Mapper.Map<ActivityPublicViewModel>(entity);
+            model = Mapper.Map<ActivityPublicViewModel>(entity);
 
 
 
@@ -49,7 +59,7 @@ namespace UCosmic.Web.Mvc.Controllers
                     OnGoing = true,
                     IsExternallyFunded = true,
                     IsInternallyFunded = true,
-                    UpdatedByPrincipal = "yes",
+                    //UpdatedByPrincipal = "yes",
                     //UpdatedOnUtc = new DateTime(1985, 12, 14),
                     Types = new ActivityTypeViewModel[]
                     {
@@ -128,7 +138,7 @@ namespace UCosmic.Web.Mvc.Controllers
                     OnGoing = false,
                     IsExternallyFunded = false,
                     IsInternallyFunded = true,
-                    UpdatedByPrincipal = "no",
+                    //UpdatedByPrincipal = "no",
                     //UpdatedOnUtc = new DateTime(1985, 12, 14),
                     Types = new ActivityTypeViewModel[]
                     {
@@ -208,7 +218,7 @@ namespace UCosmic.Web.Mvc.Controllers
                     OnGoing = true,
                     IsExternallyFunded = true,
                     IsInternallyFunded = false,
-                    UpdatedByPrincipal = "maybe",
+                    //UpdatedByPrincipal = "maybe",
                     //UpdatedOnUtc = new DateTime(1985, 12, 14),
                     Types = new ActivityTypeViewModel[]
                     {
