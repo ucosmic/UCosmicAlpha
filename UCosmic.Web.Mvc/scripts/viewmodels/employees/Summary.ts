@@ -730,8 +730,8 @@ module Employees.ViewModels {
                 },
                 chartArea: {
                     top: 8,
-                    left: 40,
-                    width: '85%',
+                    left: 0,
+                    width: '100%',
                     height: '60%'
                 },
                 legend: { position: 'none' },

@@ -87,7 +87,8 @@ namespace UCosmic.Domain.Employees
                 .Distinct()
             ;
 
-            var places = directCountries.Union(ancestorCountries).Union(directNonCountries).Union(ancestorNonCountries);
+            var agnosticPlace = new[] { new Place() }.AsQueryable();
+            var places = agnosticPlace.Union(directCountries).Union(ancestorCountries).Union(directNonCountries).Union(ancestorNonCountries);
             var placesArray = places.Distinct().ToArray();
             var activitiesArray = activities.ToArray();
 
@@ -114,23 +115,27 @@ namespace UCosmic.Domain.Employees
 
             var views = placesArray.Select(place =>
             {
-                var activitiesInPlace = activitiesArray
-                    .Where(activity =>
-                        activity.Locations.Any(location => location.PlaceId == place.RevisionId) ||
-                        activity.Locations.Any(location => location.Place.Ancestors.Any(node => node.AncestorId == place.RevisionId)))
-                    .ToArray();
+                var activitiesInPlace = place.RevisionId != 0
+                    ? activitiesArray
+                        .Where(activity =>
+                            activity.Locations.Any(location => location.PlaceId == place.RevisionId) ||
+                            activity.Locations.Any(location => location.Place.Ancestors.Any(node => node.AncestorId == place.RevisionId)))
+                        .ToArray()
+                    : activitiesArray;
                 var view = new EmployeePlacesView
                 {
                     EstablishmentId = establishmentId,
-                    PlaceId = place.RevisionId,
+                    PlaceId = place.RevisionId != 0 ? place.RevisionId : (int?)null,
                     PlaceName = place.OfficialName,
                     IsCountry = place.IsCountry,
-                    CountryCode = place.IsCountry && place.GeoPlanetPlace != null
-                        ? place.GeoPlanetPlace.Country.Code
-                        : place.Ancestors.Any(node => node.Ancestor.IsCountry && node.Ancestor.GeoPlanetPlace != null)
-                            ? place.Ancestors.First(node => node.Ancestor.IsCountry && node.Ancestor.GeoPlanetPlace != null)
-                                .Ancestor.GeoPlanetPlace.Country.Code
-                            : null,
+                    CountryCode = place.RevisionId != 0
+                        ? place.IsCountry && place.GeoPlanetPlace != null
+                            ? place.GeoPlanetPlace.Country.Code
+                            : place.Ancestors.Any(node => node.Ancestor.IsCountry && node.Ancestor.GeoPlanetPlace != null)
+                                ? place.Ancestors.First(node => node.Ancestor.IsCountry && node.Ancestor.GeoPlanetPlace != null)
+                                    .Ancestor.GeoPlanetPlace.Country.Code
+                                : null
+                        : null,
                     ActivityPersonIds = activitiesInPlace
                         .Select(activity => activity.Activity.PersonId).Distinct().ToArray(),
                     ActivityIds = activitiesInPlace
@@ -153,25 +158,22 @@ namespace UCosmic.Domain.Employees
                         : null,
                     Years = years.Select(year =>
                     {
-                        // for this year, need both activityid's and personid's.
-                        // first let's get the activities for this year.
-                        // an activity is counted in this year if it started in this year,
-                        // or if it ended in this year.
-                        // an activity is also included if it started before this year,
-                        // unless it ended before this year.
                         var yearActivities = activitiesInPlace.Where(activity =>
-                            (activity.StartsOn.HasValue || activity.EndsOn.HasValue)
+                            (activity.StartsOn.HasValue || activity.EndsOn.HasValue) // exclude undated activities
                             &&
                             (
+                                // activities may occur within a particular year (or day)
                                 (activity.StartsOn.HasValue && activity.StartsOn.Value.Year == year) ||
                                 (activity.EndsOn.HasValue && activity.EndsOn.Value.Year == year) ||
-                                (activity.StartsOn.HasValue && activity.StartsOn.Value.Year <= year && (!activity.EndsOn.HasValue || activity.EndsOn.Value.Year >= year))
+
+                                // onging activities imply future years
+                                (activity.StartsOn.HasValue && activity.StartsOn.Value.Year < year && activity.OnGoing.HasValue && activity.OnGoing.Value) ||
+
+                                // non-ongoing activities get cut off
+                                (activity.StartsOn.HasValue && activity.StartsOn.Value.Year < year && activity.EndsOn.HasValue && activity.EndsOn.Value.Year > year)
                             )
                         )
                         .ToArray();
-
-                        var startsOnValues = yearActivities.Select(x => x.StartsOn.HasValue ? x.StartsOn.Value.Year : (int?)null).Distinct().OrderByDescending(x => x).ToArray();
-                        var endsOnValues = yearActivities.Select(x => x.EndsOn.HasValue ? x.EndsOn.Value.Year : (int?)null).Distinct().OrderByDescending(x => x).ToArray();
 
                         var activityIds = yearActivities.Select(activity => activity.ActivityId).Distinct().ToArray();
                         var activityPersonIds = yearActivities.Select(activity => activity.Activity.PersonId).Distinct().ToArray();
@@ -185,63 +187,9 @@ namespace UCosmic.Domain.Employees
                 };
                 return view;
             })
-            .ToList();
+            .ToArray();
 
-            views.Insert(0, new EmployeePlacesView
-            {
-                EstablishmentId = establishmentId,
-                ActivityIds = activitiesArray.Select(x => x.ActivityId).Distinct().ToArray(),
-                ActivityPersonIds = activitiesArray.Select(x => x.Activity.PersonId).Distinct().ToArray(),
-                ActivityTypes = activityTypes != null
-                    ? activityTypes.Select(x => 
-                        new EmployeePlaceActivityTypeView
-                        {
-                            HasIcon = !string.IsNullOrWhiteSpace(x.IconPath),
-                            ActivityTypeId = x.Id,
-                            Text = x.Type,
-                            Rank = x.Rank,
-                            ActivityPersonIds = activitiesArray
-                                .Where(activity => activity.Types.Any(type => type.TypeId == x.Id))
-                                .Select(activity => activity.Activity.PersonId).Distinct().ToArray(),
-                            ActivityIds = activitiesArray
-                                .Where(activity => activity.Types.Any(type => type.TypeId == x.Id))
-                                .Select(activity => activity.ActivityId).Distinct().ToArray(),
-                        }).ToArray()
-                    : null,
-                Years = years.Select(year =>
-                {
-                    // for this year, need both activityid's and personid's.
-                    // first let's get the activities for this year.
-                    // an activity is counted in this year if it started in this year,
-                    // or if it ended in this year.
-                    // an activity is also included if it started before this year,
-                    // unless it ended before this year.
-                    var yearActivities = activitiesArray.Where(activity =>
-                        (activity.StartsOn.HasValue || activity.EndsOn.HasValue)
-                        &&
-                        (
-                            (activity.StartsOn.HasValue && activity.StartsOn.Value.Year == year) ||
-                            (activity.EndsOn.HasValue && activity.EndsOn.Value.Year == year) ||
-                            (activity.StartsOn.HasValue && activity.StartsOn.Value.Year <= year && (!activity.EndsOn.HasValue || activity.EndsOn.Value.Year >= year))
-                        )
-                    )
-                    .Distinct().ToArray();
-
-                    var startsOnValues = yearActivities.Select(x => x.StartsOn.HasValue ? x.StartsOn.Value.Year : (int?)null).Distinct().OrderByDescending(x => x).ToArray();
-                    var endsOnValues = yearActivities.Select(x => x.EndsOn.HasValue ? x.EndsOn.Value.Year : (int?)null).Distinct().OrderByDescending(x => x).ToArray();
-
-                    var activityIds = yearActivities.Select(activity => activity.ActivityId).Distinct().ToArray();
-                    var activityPersonIds = yearActivities.Select(activity => activity.Activity.PersonId).Distinct().ToArray();
-                    return new EmployeePlaceActivityYearView
-                    {
-                        Year = year,
-                        ActivityIds = activityIds,
-                        ActivityPersonIds = activityPersonIds,
-                    };
-                }).ToArray(),
-            });
-
-            return views.ToArray();
+            return views;
         }
     }
 }

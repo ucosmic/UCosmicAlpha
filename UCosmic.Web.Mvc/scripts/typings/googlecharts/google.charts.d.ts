@@ -19,7 +19,7 @@ declare module google {
             addRows(array: DataObjectCell[][]): number;
             addRows(array: any[]): number;
             getFilteredRows(filters: DataTableCellFilter[]): number[];
-            getFormattedValue(rowIndex: number, columnIndex: number);
+            getFormattedValue(rowIndex: number, columnIndex: number): string;
             getNumberOfColumns(): number;
             getNumberOfRows(): number;
             removeRow(rowIndex: number): void;
