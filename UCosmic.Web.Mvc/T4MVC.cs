@@ -2712,11 +2712,11 @@ namespace Links
             }
         
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-            public static class googlecharts {
-                private const string URLPATH = "~/scripts/typings/googlecharts";
+            public static class google_visualization {
+                private const string URLPATH = "~/scripts/typings/google.visualization";
                 public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
                 public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
-                public static readonly string google_charts_d_ts = Url("google.charts.d.ts");
+                public static readonly string google_visualization_d_ts = Url("google.visualization.d.ts");
             }
         
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]

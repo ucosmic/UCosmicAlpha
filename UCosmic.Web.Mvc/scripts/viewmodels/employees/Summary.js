@@ -7,7 +7,7 @@ var Employees;
     /// <reference path="../../typings/d3/d3.d.ts" />
     /// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
     /// <reference path="../../app/Spinner.ts" />
-    /// <reference path="../../typings/googlecharts/google.charts.d.ts" />
+    /// <reference path="../../typings/google.visualization/google.visualization.d.ts" />
     /// <reference path="../../typings/knockout/knockout.d.ts" />
     /// <reference path="../../typings/linq/linq.d.ts" />
     /// <reference path="../../google/GeoChart.ts" />

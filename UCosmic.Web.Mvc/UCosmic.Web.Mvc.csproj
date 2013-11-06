@@ -1997,7 +1997,6 @@
     <Content Include="scripts\tinymce\utils\mctabs.js" />
     <Content Include="scripts\tinymce\utils\validate.js" />
     <None Include="scripts\typings\globalize\globalize.d.ts" />
-    <None Include="scripts\typings\googlecharts\google.charts.d.ts" />
     <None Include="scripts\typings\googlemaps\google.maps.d.ts" />
     <None Include="scripts\typings\jquery.plugins\jquery.autosize.d.ts" />
     <None Include="scripts\typings\jquery.plugins\jquery.placeholder.d.ts" />
@@ -2013,6 +2012,7 @@
     <None Include="scripts\typings\tinymce\tinymce.d.ts" />
     <Content Include="scripts\typings\d3\d3.d.ts" />
     <Content Include="scripts\typings\d3\d3.superformula.d.ts" />
+    <Content Include="scripts\typings\google.visualization\google.visualization.d.ts" />
     <Content Include="scripts\typings\history\history.d.ts" />
     <Content Include="scripts\typings\jquery\jquery.d.ts" />
     <Content Include="scripts\typings\knockout\knockout.d.ts" />

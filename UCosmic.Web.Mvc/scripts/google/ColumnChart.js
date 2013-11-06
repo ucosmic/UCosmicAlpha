@@ -1,6 +1,6 @@
 var App;
 (function (App) {
-    /// <reference path="../typings/googlecharts/google.charts.d.ts" />
+    /// <reference path="../typings/google.visualization/google.visualization.d.ts" />
     /// <reference path="../typings/jquery/jquery.d.ts" />
     (function (Google) {
         var ColumnChart = (function () {
