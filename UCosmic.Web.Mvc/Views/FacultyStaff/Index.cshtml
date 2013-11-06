@@ -595,7 +595,9 @@
                                     <div style="width: 100%; padding-top: 4px; padding-bottom: 4px; border-bottom-style: solid; border-bottom-color: black; border-bottom-width: 1px;">
                                         <div class="activitySearchResultsRow" style="width: 11%" data-bind="text: placeOfficialName"></div>
                                         <div class="activitySearchResultsRow" style="width: 20%" data-bind="text: personName"></div>
-                                        <div class="activitySearchResultsRow" style="width: 48%" data-bind="text: activityTitle, attr: { title: activityDescription }"></div>
+                                        <div class="activitySearchResultsRow" style="width: 48%" data-xbind="text: activityTitle, attr: { title: activityDescription }">
+                                            <a data-bind="text: activityTitle, attr: { href: '/activitiesspike/' + activityId }" href="#" target="_blank"></a>
+                                        </div>
                                         <div class="activitySearchResultsRow" style="width: 7.6%; text-align: center;" data-bind="template: { name: 'activities-types-template', foreach: activityTypeIds }"></div>
                                         <div class="activitySearchResultsRow" style="width: 10.4%" data-bind="text: activityDate"></div>
                                     </div>

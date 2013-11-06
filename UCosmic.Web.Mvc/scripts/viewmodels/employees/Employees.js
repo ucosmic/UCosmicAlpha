@@ -158,6 +158,7 @@ var ViewModels;
                 ];
                 this.activityTableRows = ko.observableArray([
                     {
+                        activityId: undefined,
                         placeOfficialName: '',
                         personName: '',
                         activityDescription: '',

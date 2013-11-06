@@ -103,9 +103,15 @@ namespace UCosmic.Domain.Employees
                 ? settings.ActivityTypes.ToArray() : null;
 
             // get all applicable years for activities
-            var minYear = activities.Where(x => x.StartsOn.HasValue).Min(x => x.StartsOn.Value.Year);
-            var maxStartYear = activities.Where(x => x.StartsOn.HasValue).Max(x => x.StartsOn.Value.Year);
-            var maxEndsYear = activities.Where(x => x.EndsOn.HasValue).Max(x => x.EndsOn.Value.Year);
+            //var minYear = activities.Select(x => x.StartsOn.HasValue ? x.StartsOn.Value.Year : int.MaxValue).Min();
+            //var minYear = activities.Where(x => x.StartsOn.HasValue).Select(x => x.StartsOn.Value).Min(x => x.Year);
+            //var maxStartYear = activities.Select(x => x.StartsOn.HasValue ? x.StartsOn.Value.Year : int.MinValue).Max();
+            //var maxEndsYear = activities.Select(x => x.EndsOn.HasValue ? x.EndsOn.Value.Year : int.MinValue).Max();
+            //var maxStartYear = activities.Where(x => x.StartsOn.HasValue).Select(x => x.StartsOn.Value).Max(x => x.Year);
+            //var maxEndsYear = activities.Where(x => x.EndsOn.HasValue).Select(x => x.EndsOn.Value).Max(x => x.Year);
+            var minYear = 1973;
+            var maxStartYear = 2017;
+            var maxEndsYear = 2017;
             if (maxStartYear > maxEndsYear)
                 maxEndsYear = maxStartYear;
             var years = new List<int>();

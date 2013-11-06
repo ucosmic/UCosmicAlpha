@@ -238,6 +238,7 @@ module ViewModels.Employees {
 
         activityTableRows: KnockoutObservableArray<any> = ko.observableArray([
             {
+                activityId: undefined,
                 placeOfficialName: '',
                 personName: '',
                 activityDescription: '',
