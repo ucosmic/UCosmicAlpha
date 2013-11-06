@@ -38,6 +38,11 @@ namespace UCosmic.Domain.Activities
             return allowNull ? queryable.SingleOrDefault(a => a.RevisionId == id) : queryable.Single(a => a.RevisionId == id);
         }
 
+        internal static PublicActivity PublicById(this IQueryable<PublicActivity> queryable, int id, bool allowNull = true)
+        {
+            return allowNull ? queryable.SingleOrDefault(a => a.RevisionId == id) : queryable.Single(a => a.RevisionId == id);
+        }
+
         internal static IQueryable<Activity> WithTenant(this IQueryable<Activity> queryable, object tenant)
         {
             var tenantId = tenant as int?;
