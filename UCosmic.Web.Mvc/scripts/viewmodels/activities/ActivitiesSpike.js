@@ -15,10 +15,8 @@ var Activities;
                     streetViewControl: false,
                     panControl: false,
                     draggable: false,
-                    disableDefaultUI: true,
-                    zoomControlOptions: {
-                        style: google.maps.ZoomControlStyle.SMALL
-                    }
+                    zoomControl: false,
+                    disableDefaultUI: true
                 }, {
                     maxPrecision: 8
                 });

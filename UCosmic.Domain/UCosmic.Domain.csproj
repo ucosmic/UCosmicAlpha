@@ -164,7 +164,6 @@
     <Compile Include="Domain\Activities\Entities\ActivityTag.cs" />
     <Compile Include="Domain\Activities\Entities\ActivityTagDomainType.cs" />
     <Compile Include="Domain\Activities\Entities\ActivityValues.cs" />
-    <Compile Include="Domain\Activities\Entities\PublicActivity.cs" />
     <Compile Include="Domain\Activities\Events\ActivityChanged.cs" />
     <Compile Include="Domain\Activities\Events\ActivityCreated.cs" />
     <Compile Include="Domain\Activities\Events\ActivityDeleted.cs" />

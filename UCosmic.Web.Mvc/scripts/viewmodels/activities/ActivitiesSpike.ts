@@ -19,10 +19,8 @@ module Activities.ViewModels {
                 streetViewControl: false,
                 panControl: false,
                 draggable: false,
+                zoomControl: false,
                 disableDefaultUI: true,
-                zoomControlOptions: {
-                    style: google.maps.ZoomControlStyle.SMALL,
-                },
             },
             { // settings
                 maxPrecision: 8,

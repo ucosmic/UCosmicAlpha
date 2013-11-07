@@ -3,19 +3,50 @@
 
 <section id="publicView">
 
-    <div style="font-size: 18px;">
+    <div style="font-size: 16px;">
 
-        @* DATES *@
+        @* TYPES *@
+        @if (Model.Types != null && Model.Types.Any())
+        {
+            <div style="float: right;">
+                <ul>
+                    @foreach (var type in Model.Types)
+                    {
+                        <li style="margin-right: .5em;" class="same-line">
+                            <span style="display: inline-block; width: 32px; text-align: center;">
+                                <img title="@type.Text" height="20" src="@Url.HttpRouteUrl(null, new { controller = "EmployeeModuleSettings", action = "GetIcon", typeId = type.TypeId })" alt="" />
+                            </span>
+                        </li> 
+                    }
+                </ul>
+            </div> 
+        }
+        
+@* DATES *@
         <div style="margin: 1em 0;">
-            <span>@Model.StartsOn.ToString(Model.StartsFormat)</span>
-            <span style="padding: 0 4px 0 4px;">-</span>
-            @if (Model.OnGoing == false)
+            @if (Model.StartsOn.HasValue)
             {
-                <span>@Model.EndsOn.ToString(Model.EndsFormat)</span>
+                <span>@Model.StartsOn.Value.ToString(Model.StartsFormat ?? "MM/dd/yyyy")</span>
             }
-            else
+            @if (Model.EndsOn.HasValue)
             {
+                if (Model.StartsOn.HasValue)
+                {
+                <span style="padding: 0 4px 0 4px;">-</span>
+                }
+                <span>@Model.EndsOn.Value.ToString(Model.EndsFormat ?? "MM/dd/yyyy")</span>
+            }
+            @if (Model.OnGoing.HasValue && Model.OnGoing.Value)
+            {
+                if (Model.StartsOn.HasValue)
+                {
+                <span style="padding: 0 4px 0 4px;">-</span>
+                }
                 <span>On Going</span>
+            }
+            @if (!Model.StartsOn.HasValue && !Model.EndsOn.HasValue && (!Model.OnGoing.HasValue || !Model.OnGoing.Value))
+            {
+                <span>[Undated]</span>
             }
         </div>
 
@@ -24,34 +55,7 @@
             @Model.Content
         </div>
 
-        @* PLACES *@
-        <div style="margin: 1em 0;">
-            <ul class="add-comma">
-                @foreach (var place in Model.Places)
-                {
-                    <li class="same-line">@place.PlaceName</li>
-                }
-            </ul>
-        </div>
-
-        @* TYPES *@
-        @if (Model.Types != null && Model.Types.Any())
-        {
-            <div style="margin: 1em 0;">
-                <ul>
-                    @foreach (var type in Model.Types)
-                    {
-                        <li style="margin-bottom: .5em;">
-                            <span style="display: inline-block; width: 32px; text-align: center;">
-                                <img height="20" src="@Url.HttpRouteUrl(null, new { controller = "EmployeeModuleSettings", action = "GetIcon", typeId = type.TypeId })" alt="" />
-                            </span>
-                            <span>@type.Text</span></li> 
-                    }
-                </ul>
-            </div> 
-        }
-
-@* FUNDING *@
+        @* FUNDING *@
         @if (Model.IsExternallyFunded == true && Model.IsInternallyFunded == true)
         {
             <div style="margin: 1em 0;" data-bind="visible: IsExternallyFunded && IsInternallyFunded">
@@ -72,11 +76,17 @@
         }
         
 @* TAGS *@
-        <div style="margin: 1em 0;">
-            <ul class="tag-list add-comma">
+        <div style="margin: 1.5em 0;">
+            <ul style="display: inline-block;">
                 @foreach (var tag in Model.Tags)
                 {
-                    <li class="same-line">@tag.Text</li>
+                    <li class="same-line">
+                        <a href='' style="text-decoration: none; color: inherit;">
+                            <span style="padding: 4px; margin-right: 4px; background-color: #eee; border: solid 1px #ddd;">
+                                @tag.Text
+                            </span>
+                        </a>
+                    </li>
                 }
             </ul>
         </div>

@@ -315,6 +315,9 @@
     <Compile Include="JavaScriptRoutesController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Activities\ActivityDocumentViewModel.cs" />
+    <Compile Include="Models\Activities\ActivityPlaceViewModel.cs" />
+    <Compile Include="Models\Activities\ActivityTagViewModel.cs" />
     <Compile Include="Models\Activities\ActivityTypeViewModel.cs" />
     <Compile Include="Models\Agreements\AgreementOwningTenant.cs" />
     <Compile Include="Models\Employees\EmployeeActivityCounts.cs" />
@@ -2674,6 +2677,7 @@
     <Content Include="Views\ActivitiesSpike\ActivitiesSpike.cshtml" />
     <Content Include="Views\ActivitiesSpike\_ActivitiesSpikeContent.cshtml" />
     <Content Include="Views\ActivitiesSpike\_Bib.cshtml" />
+    <Content Include="Views\ActivitiesSpike\_ActivitiesSpikeSide.cshtml" />
     <None Include="Views\ApiTest\Index.cshtml" />
     <Content Include="Views\Agreements\Settings.cshtml" />
     <Content Include="Views\Agreements\_SearchSideBar.cshtml" />
