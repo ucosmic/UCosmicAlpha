@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using UCosmic.Domain.Activities;
 using UCosmic.Domain.Degrees;
+using UCosmic.Domain.Establishments;
 using UCosmic.Domain.Places;
 
 namespace UCosmic.Domain.Employees
@@ -12,6 +13,8 @@ namespace UCosmic.Domain.Employees
     {
         private readonly IQueryEntities _entities;
         private readonly IProcessQueries _queryProcessor;
+        private static readonly string PublishedText = ActivityMode.Public.AsSentenceFragment();
+        private static readonly string EstablishmentText = ActivityTagDomainType.Establishment.AsSentenceFragment();
 
         public EmployeePlacesViewBuilder(IQueryEntities entities, IProcessQueries queryProcessor)
         {
@@ -21,9 +24,8 @@ namespace UCosmic.Domain.Employees
 
         internal IEnumerable<int> GetEstablishmentIdsWithData()
         {
-            var publishedText = ActivityMode.Public.AsSentenceFragment();
             var establishmentsWithActivities = _entities.Query<Activity>()
-                .Where(x => x.Original == null && x.ModeText == publishedText && x.Person.Affiliations.Any(y => y.IsDefault))
+                .Where(x => x.Original == null && x.ModeText == PublishedText && x.Person.Affiliations.Any(y => y.IsDefault))
                 .Select(x => x.Person.Affiliations.FirstOrDefault(y => y.IsDefault).Establishment)
                 .Distinct()
             ;
@@ -37,20 +39,21 @@ namespace UCosmic.Domain.Employees
             ;
 
             return establishmentIdsWithEmployeeData;
-        } 
+        }
 
         internal EmployeePlacesView[] Build(int establishmentId)
         {
-            var publishedText = ActivityMode.Public.AsSentenceFragment();
             var activitiesEagerLoad = new Expression<Func<ActivityValues, object>>[]
             {
                 x => x.Activity,
                 x => x.Locations.Select(y => y.Place.Ancestors),
                 x => x.Types,
             };
+
+            // get all public activities for this establishment and all of its offspring establishments
             var activities = _entities.Query<Activity>()
                 .Where(x =>
-                    x.Original == null && x.ModeText == publishedText && // published, non-work-copy
+                    x.Original == null && x.ModeText == PublishedText && // published, non-work-copy
                     x.Person.Affiliations.Any(y => y.IsDefault) // make sure person's default affiliation is not null
                     &&
                     (   // person's default affiliation is with or underneath the tenant domain being queried
@@ -59,38 +62,83 @@ namespace UCosmic.Domain.Employees
                         x.Person.Affiliations.FirstOrDefault(y => y.IsDefault).Establishment.Ancestors.Any(y => y.AncestorId == establishmentId)
                     )
                 )
-                .Select(x => x.Values.FirstOrDefault(y => y.ModeText == publishedText))
+                .Select(x => x.Values.FirstOrDefault(y => y.ModeText == PublishedText))
                 .EagerLoad(_entities, activitiesEagerLoad)
             ;
 
+
             var countriesEagerLoad = new Expression<Func<Place, object>>[] { x => x.GeoPlanetPlace, };
-            var directCountries = activities.SelectMany(x => x.Locations.Select(y => y.Place)) // get all countries from locations collection
+            Expression<Func<ActivityValues, IEnumerable<Place>>> activityLocationPlaces = x => x.Locations.Select(y => y.Place);
+            Expression<Func<ActivityValues, IEnumerable<Place>>> activityLocationPlaceAncestors = x => x.Locations.SelectMany(y => y.Place.Ancestors.Select(z => z.Ancestor));
+
+            // TODO: this still does not account for activites tagged with a place.
+            var establishmentPlaces = _entities.Query<EstablishmentLocation>()
+                .EagerLoad(_entities, new Expression<Func<EstablishmentLocation, object>>[]
+                {
+                    x => x.Places,
+                })
+                .Where(l => activities.SelectMany(a => a.Tags.Where(t => t.DomainTypeText == EstablishmentText)
+                    .Select(t => t.DomainKey.HasValue ? t.DomainKey.Value : 0)).Contains(l.RevisionId))
+                    .Select(x => new
+                    {
+                        EstablishmentId = x.RevisionId,
+                        x.Places,
+                    });
+            var places = new[] { new Place() }.AsQueryable();
+
+            // we query out country places separately from the others because the eager load is different for them
+            // based on the view we are projecting into. namely, the CountryCode is identified in different parts of the aggregate.
+            // we union the locations that are countries, locations whose parents are countries, and locations that are indirect countries
+            var directCountries = activities.SelectMany(activityLocationPlaces)
                 .EagerLoad(_entities, countriesEagerLoad)
                 .Where(x => x.IsCountry)
                 .Distinct()
             ;
-            var ancestorCountries = activities.SelectMany(x => x.Locations.SelectMany(y => y.Place.Ancestors.Select(z => z.Ancestor))) // get all countries from locations collection
+            var ancestorCountries = activities.SelectMany(activityLocationPlaceAncestors)
                 .EagerLoad(_entities, countriesEagerLoad)
                 .Where(x => x.IsCountry)
                 .Distinct()
             ;
+            //var regionCountries = activities.SelectMany(activityLocationPlaces)
+            //    .EagerLoad(_entities, countriesEagerLoad)
+            //    .Where(x => x.IsRegion).SelectMany(x => x.Components).Where(x => x.IsCountry)
+            //    .Distinct()
+            //;
+            var establishmentCountries = establishmentPlaces
+                .SelectMany(x => x.Places)
+                .EagerLoad(_entities, countriesEagerLoad)
+                .Where(x => x.IsCountry)
+                .Distinct()
+            ;
+            places = places.Union(directCountries).Union(ancestorCountries).Union(establishmentCountries);
 
             var nonCountriesEagerLoad = new Expression<Func<Place, object>>[] { x => x.Ancestors.Select(y => y.Ancestor.GeoPlanetPlace), };
-            var directNonCountries = activities.SelectMany(x => x.Locations.Select(y => y.Place)) // get all countries from locations collection
+            var directNonCountries = activities.SelectMany(activityLocationPlaces) // get all countries from locations collection
                 .EagerLoad(_entities, nonCountriesEagerLoad)
                 .Where(x => !x.IsCountry)
                 .Distinct()
             ;
-            var ancestorNonCountries = activities.SelectMany(x => x.Locations.SelectMany(y => y.Place.Ancestors.Select(z => z.Ancestor))) // get all countries from locations collection
+            var ancestorNonCountries = activities.SelectMany(activityLocationPlaceAncestors) // get all countries from locations collection
                 .EagerLoad(_entities, nonCountriesEagerLoad)
                 .Where(x => !x.IsCountry)
                 .Distinct()
             ;
+            //var regionNonCountries = activities.SelectMany(activityLocationPlaces)
+            //    .EagerLoad(_entities, nonCountriesEagerLoad)
+            //    .Where(x => x.IsRegion).SelectMany(x => x.Components).Where(x => !x.IsCountry)
+            //    .Distinct()
+            //;
+            var establishmentNonCountries = establishmentPlaces
+                .SelectMany(x => x.Places)
+                .EagerLoad(_entities, nonCountriesEagerLoad)
+                .Where(x => !x.IsCountry)
+                .Distinct()
+            ;
+            places = places.Union(directNonCountries).Union(ancestorNonCountries).Union(establishmentNonCountries);
 
-            var agnosticPlace = new[] { new Place() }.AsQueryable();
-            var places = agnosticPlace.Union(directCountries).Union(ancestorCountries).Union(directNonCountries).Union(ancestorNonCountries);
             var placesArray = places.Distinct().ToArray();
             var activitiesArray = activities.ToArray();
+            var establishmentPlacesArray = establishmentPlaces.ToArray();
 
             var settings = _queryProcessor.Execute(new EmployeeModuleSettingsByEstablishmentId(establishmentId)
             {
@@ -123,7 +171,14 @@ namespace UCosmic.Domain.Employees
                     ? activitiesArray
                         .Where(activity =>
                             activity.Locations.Any(location => location.PlaceId == place.RevisionId) ||
-                            activity.Locations.Any(location => location.Place.Ancestors.Any(node => node.AncestorId == place.RevisionId)))
+                            activity.Locations.Any(location => location.Place.Ancestors.Any(node => node.AncestorId == place.RevisionId)) ||
+                            //activity.Locations.Any(location => location.Place.IsRegion &&
+                            //    (location.Place.Components.Any(c => c.RevisionId == place.RevisionId) ||
+                            //    location.Place.Components.Any(c => c.Ancestors.Any(node => node.AncestorId == place.RevisionId)))) ||
+                            activity.Tags.Any(tag => tag.DomainTypeText == EstablishmentText && tag.DomainKey.HasValue &&
+                                establishmentPlacesArray.Any(e => e.EstablishmentId == tag.DomainKey.Value &&
+                                    e.Places.Select(p => p.RevisionId).Contains(place.RevisionId)))
+                        )
                         .ToArray()
                     : activitiesArray;
                 var view = new EmployeePlacesView
