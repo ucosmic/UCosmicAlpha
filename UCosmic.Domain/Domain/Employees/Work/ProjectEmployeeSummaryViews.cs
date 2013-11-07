@@ -58,13 +58,16 @@ namespace UCosmic.Domain.Employees
                 reportBuilder.Report(ex.Message);
                 reportBuilder.Report(ex.StackTrace);
                 _exceptionLogger.Log(ex);
-            }
-            finally
-            {
                 if (!_mailSent)
                     reportBuilder.Send(_mailSender);
                 _mailSent = true;
             }
+            //finally // do not want to receive emails indicating success every 10 minutes
+            //{
+            //    if (!_mailSent)
+            //        reportBuilder.Send(_mailSender);
+            //    _mailSent = true;
+            //}
         }
     }
 }
