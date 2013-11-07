@@ -429,3 +429,12 @@ ul.selectableListItems li:hover {
   background-color: #502d0e;
   color: #eeeeee; }
 
+.charts-color-gradient-lo {
+  color: #ded7d2; }
+
+.charts-color-gradient-hi {
+  color: #502d0e; }
+
+.charts-color-dark {
+  color: #502d0e; }
+

@@ -196,6 +196,7 @@ var Employees;
                 this.activityYearChart = new App.Google.LineChart(document.getElementById(this.settings.activityYearsChart.googleElementId));
                 this.isActivityYearChartReady = ko.observable(false);
                 this._activityYearChartDataTable = this._newActivityYearChartDataTable();
+                this.activityYears = ko.observableArray();
                 this.arePlaceOverlaysVisible = ko.computed(function () {
                     var placeId = _this.placeId();
                     var isGeoChartReady = _this.isGeoChartReady();
@@ -445,6 +446,10 @@ var Employees;
             };
 
             Summary.prototype._getGeoChartOptions = function (overrides) {
+                if (!this._geoChartGradientLo)
+                    this._geoChartGradientLo = $('<div class="charts-color-gradient-lo" />').hide().appendTo('body').css('color') || '#ccc';
+                if (!this._geoChartGradientHi)
+                    this._geoChartGradientHi = $('<div class="charts-color-gradient-hi" />').hide().appendTo('body').css('color') || '#333';
                 var options = {
                     // options passed when drawing geochart
                     displayMode: 'regions',
@@ -453,7 +458,7 @@ var Employees;
                     height: this.settings.geoChart.keepAspectRatio ? 480 : 500,
                     colorAxis: {
                         minValue: 1,
-                        colors: ['#dceadc', '#006400']
+                        colors: [this._geoChartGradientLo, this._geoChartGradientHi]
                     },
                     backgroundColor: '#acccfd'
                 };
@@ -562,6 +567,12 @@ var Employees;
                 // this will fire even when the country clicked has total === zero
             };
 
+            Summary.prototype._getChartDataColor = function () {
+                if (!this._chartDataColor)
+                    this._chartDataColor = $('<div class="charts-color-dark" />').hide().appendTo('body').css('color') || '#333';
+                return this._chartDataColor;
+            };
+
             Summary.prototype._getActivityTypeChartOptions = function () {
                 var options = {
                     animation: {
@@ -584,7 +595,7 @@ var Employees;
                     series: [
                         {
                             type: 'bars',
-                            color: 'green'
+                            color: this._getChartDataColor()
                         },
                         {
                             type: 'line',
@@ -696,7 +707,7 @@ var Employees;
                         height: '60%'
                     },
                     legend: { position: 'none' },
-                    colors: ['green']
+                    colors: [this._getChartDataColor()]
                 };
 
                 return options;
@@ -748,6 +759,7 @@ var Employees;
                         var isPivotPeople = _this.isPivotPeople();
                         _this._activityYearChartDataTable.removeRows(0, _this._activityYearChartDataTable.getNumberOfRows());
                         var activityYears = _this._getActivityYears();
+                        _this.activityYears(activityYears);
                         $.each(activityYears, function (i, dataPoint) {
                             var total = isPivotPeople ? dataPoint.activityPersonIds.length : dataPoint.activityIds.length;
                             _this._activityYearChartDataTable.addRow([dataPoint.year.toString(), total]);

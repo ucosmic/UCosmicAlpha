@@ -164,6 +164,8 @@ namespace UCosmic.Domain.Employees
             if (minYear > 0 && maxEndsYear >= minYear)
                 for (var i = minYear; i <= maxEndsYear; i++)
                     years.Add(i);
+            years.Add(years.Min() - 1);
+            years.Add(years.Max() + 1);
 
             var views = placesArray.Select(place =>
             {
@@ -172,9 +174,9 @@ namespace UCosmic.Domain.Employees
                         .Where(activity =>
                             activity.Locations.Any(location => location.PlaceId == place.RevisionId) ||
                             activity.Locations.Any(location => location.Place.Ancestors.Any(node => node.AncestorId == place.RevisionId)) ||
-                            //activity.Locations.Any(location => location.Place.IsRegion &&
-                            //    (location.Place.Components.Any(c => c.RevisionId == place.RevisionId) ||
-                            //    location.Place.Components.Any(c => c.Ancestors.Any(node => node.AncestorId == place.RevisionId)))) ||
+                                //activity.Locations.Any(location => location.Place.IsRegion &&
+                                //    (location.Place.Components.Any(c => c.RevisionId == place.RevisionId) ||
+                                //    location.Place.Components.Any(c => c.Ancestors.Any(node => node.AncestorId == place.RevisionId)))) ||
                             activity.Tags.Any(tag => tag.DomainTypeText == EstablishmentText && tag.DomainKey.HasValue &&
                                 establishmentPlacesArray.Any(e => e.EstablishmentId == tag.DomainKey.Value &&
                                     e.Places.Select(p => p.RevisionId).Contains(place.RevisionId)))
@@ -242,7 +244,7 @@ namespace UCosmic.Domain.Employees
                             ActivityIds = activityIds,
                             ActivityPersonIds = activityPersonIds,
                         };
-                    }).ToArray(),
+                    }).Where(x => x != null).ToArray(),
                 };
                 return view;
             })

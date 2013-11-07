@@ -452,9 +452,17 @@ module Employees.ViewModels {
             document.getElementById(this.settings.geoChart.googleElementId));
         geoChartSpinner = new App.Spinner(new App.SpinnerOptions(400, true));
         isGeoChartReady: KnockoutObservable<boolean> = ko.observable(false);
+        _geoChartGradientLo: string;
+        _geoChartGradientHi: string;
         private _geoChartDataTable: google.visualization.DataTable = this._newGeoChartDataTable();
 
         private _getGeoChartOptions(overrides?: google.visualization.GeoChartOptions): google.visualization.GeoChartOptions {
+            if (!this._geoChartGradientLo)
+                this._geoChartGradientLo = $('<div class="charts-color-gradient-lo" />')
+                    .hide().appendTo('body').css('color') || '#ccc';
+            if (!this._geoChartGradientHi)
+                this._geoChartGradientHi = $('<div class="charts-color-gradient-hi" />')
+                    .hide().appendTo('body').css('color') || '#333';
             var options: google.visualization.GeoChartOptions = {
                 // options passed when drawing geochart
                 displayMode: 'regions',
@@ -463,7 +471,7 @@ module Employees.ViewModels {
                 height: this.settings.geoChart.keepAspectRatio ? 480 : 500,
                 colorAxis: {
                     minValue: 1,
-                    colors: ['#dceadc', '#006400', ],
+                    colors: [this._geoChartGradientLo, this._geoChartGradientHi, ],
                 },
                 backgroundColor: '#acccfd', // google maps water color is a5bfdd, Doug's bg color is acccfd
                 //backgroundColor: 'transparent',
@@ -585,6 +593,15 @@ module Employees.ViewModels {
         activityTypeChart: App.Google.ColumnChart = new App.Google.ColumnChart(
             document.getElementById(this.settings.activityTypesChart.googleElementId));
         isActivityTypeChartReady: KnockoutObservable<boolean> = ko.observable(false);
+
+        _chartDataColor: string;
+        private _getChartDataColor(): string {
+            if (!this._chartDataColor)
+                this._chartDataColor = $('<div class="charts-color-dark" />')
+                    .hide().appendTo('body').css('color') || '#333';
+            return this._chartDataColor;
+        }
+
         private _activityTypeChartDataTable: google.visualization.DataTable = this._newActivityTypeChartDataTable();
 
         private _getActivityTypeChartOptions(): google.visualization.ColumnChartOptions {
@@ -609,7 +626,7 @@ module Employees.ViewModels {
                 series: [
                     {
                         type: 'bars',
-                        color: 'green'
+                        color: this._getChartDataColor(),
                     },
                     {
                         type: 'line',
@@ -735,7 +752,7 @@ module Employees.ViewModels {
                     height: '60%'
                 },
                 legend: { position: 'none' },
-                colors: ['green'],
+                colors: [this._getChartDataColor()],
             };
 
             return options;
@@ -787,6 +804,7 @@ module Employees.ViewModels {
                     var isPivotPeople = this.isPivotPeople();
                     this._activityYearChartDataTable.removeRows(0, this._activityYearChartDataTable.getNumberOfRows());
                     var activityYears = this._getActivityYears();
+                    this.activityYears(activityYears);
                     $.each(activityYears, (i: number, dataPoint: ApiModels.EmployeeActivityYearCount): void => {
                         var total = isPivotPeople ? dataPoint.activityPersonIds.length : dataPoint.activityIds.length;
                         this._activityYearChartDataTable.addRow([dataPoint.year.toString(), total]);
@@ -798,6 +816,7 @@ module Employees.ViewModels {
             });
         }
 
+        activityYears: KnockoutObservableArray<ApiModels.EmployeeActivityYearCount> = ko.observableArray();
         private _getActivityYears(): ApiModels.EmployeeActivityYearCount[] {
             var placeId = this.placeId();
             if (placeId == 1) placeId = null;
