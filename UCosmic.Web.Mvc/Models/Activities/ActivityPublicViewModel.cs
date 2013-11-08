@@ -27,7 +27,9 @@ namespace UCosmic.Web.Mvc.Models
         public ActivityTypeViewModel[] Types { get; set; }
         public ActivityPlaceViewModel[] Places { get; set; }
         public ActivityTagViewModel[] Tags { get; set; }
-        public ActivityDocumentApiModel[] Documents { get; set; }
+        public ActivityDocumentViewModel[] Documents { get; set; }
+        //public FacultyStaffResult Faculty { get; set; }
+        public ActivityPersonViewModel Person { get; set; }
     }
 
     public static class ActivityPublicViewProfiler
@@ -41,6 +43,7 @@ namespace UCosmic.Web.Mvc.Models
                     .ForMember(d => d.IsInternallyFunded, o => o.MapFrom(s => s.WasInternallyFunded)) 
                     .ForMember(d => d.Places, o => o.MapFrom(s => s.Locations))
                     .ForMember(d => d.Content, o => o.MapFrom(s => new HtmlString(s.Content)))
+                    .ForMember(d => d.Person, o => o.MapFrom(s => s.Activity.Person))
                 ;
             }
         }

@@ -1,12 +1,13 @@
 /// <reference path="../../typings/googlemaps/google.maps.d.ts" />
 /// <reference path="../../app/App.ts" />
 /// <reference path="../../google/Map.ts" />
+var activityData;
 module Activities.ViewModels {
 
 
     export class PublicView {
         constructor() {
-
+            this.addMarkers();
         }
         lat = 15;
         lng = 6;
@@ -24,8 +25,26 @@ module Activities.ViewModels {
             },
             { // settings
                 maxPrecision: 8,
-                //log: true,
             }
             );
+        private addMarkers() {
+            var markers: google.maps.Marker[] = [];
+            $.each(activityData.Places, (i: number, place: any): void => {
+                if (place.PlaceCenter.HasValue) {
+                    var options: google.maps.MarkerOptions = {
+                        position: new google.maps.LatLng(place.PlaceCenter.Latitude, place.PlaceCenter.Longitude),
+                        icon: {
+                            url: "/images/icons/maps/mapPimple.png",
+                            opacity
+                        },
+                        title: "test",
+                        zIndex: 200,
+                    };
+                    var marker = new google.maps.Marker(options);
+                    markers.push(marker)
+                }
+            });
+            this._map.replaceMarkers(markers);
+        }
     }
 }

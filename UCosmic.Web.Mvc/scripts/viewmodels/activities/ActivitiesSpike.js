@@ -1,8 +1,9 @@
+/// <reference path="../../typings/googlemaps/google.maps.d.ts" />
+/// <reference path="../../app/App.ts" />
+/// <reference path="../../google/Map.ts" />
+var activityData;
 var Activities;
 (function (Activities) {
-    /// <reference path="../../typings/googlemaps/google.maps.d.ts" />
-    /// <reference path="../../app/App.ts" />
-    /// <reference path="../../google/Map.ts" />
     (function (ViewModels) {
         var PublicView = (function () {
             function PublicView() {
@@ -20,7 +21,26 @@ var Activities;
                 }, {
                     maxPrecision: 8
                 });
+                this.addMarkers();
             }
+            PublicView.prototype.addMarkers = function () {
+                var markers = [];
+                $.each(activityData.Places, function (i, place) {
+                    if (place.PlaceCenter.HasValue) {
+                        var options = {
+                            position: new google.maps.LatLng(place.PlaceCenter.Latitude, place.PlaceCenter.Longitude),
+                            icon: {
+                                url: "/images/icons/maps/mapPimple.png"
+                            },
+                            title: "test",
+                            zIndex: 200
+                        };
+                        var marker = new google.maps.Marker(options);
+                        markers.push(marker);
+                    }
+                });
+                this._map.replaceMarkers(markers);
+            };
             return PublicView;
         })();
         ViewModels.PublicView = PublicView;

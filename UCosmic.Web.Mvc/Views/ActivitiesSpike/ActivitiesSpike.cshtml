@@ -10,17 +10,16 @@
 }
 @section scripts
 {
+
+    <script type="text/javascript">
+        var activityData = @Html.Raw(Json.Encode(Model));
+    </script>
+
     @Scripts.Render("~/bundles/activityPublicView")
 
     <script type="text/javascript">
-
-        //var activityData = @Html.Raw(Json.Encode(Model));
-
         var viewModel = new Activities.ViewModels.PublicView();
-
-        //ko.applyBindings(viewModel, $('#publicView')[0]);
     </script>
-
 }
 @section styles
 {

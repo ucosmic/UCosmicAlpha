@@ -14,7 +14,7 @@
                     {
                         <li style="margin-right: .5em;" class="same-line">
                             <span style="display: inline-block; width: 32px; text-align: center;">
-                                <img title="@type.Text" height="20" src="@Url.HttpRouteUrl(null, new { controller = "EmployeeModuleSettings", action = "GetIcon", typeId = type.TypeId })" alt="" />
+                                <img title="@type.Text" height="24" src="@Url.HttpRouteUrl(null, new { controller = "EmployeeModuleSettings", action = "GetIcon", typeId = type.TypeId })" alt="" />
                             </span>
                         </li> 
                     }
@@ -23,7 +23,7 @@
         }
         
 @* DATES *@
-        <div style="margin: 1em 0;">
+        <div style="margin: 1em 0; font-size: 20px; line-height: 24px;">
             @if (Model.StartsOn.HasValue)
             {
                 <span>@Model.StartsOn.Value.ToString(Model.StartsFormat ?? "MM/dd/yyyy")</span>
@@ -81,7 +81,7 @@
                 @foreach (var tag in Model.Tags)
                 {
                     <li class="same-line">
-                        <a href='' style="text-decoration: none; color: inherit;">
+                        <a href='~/facultystaff/#/search/keyword/@tag.Text' style="text-decoration: none; color: inherit;">
                             <span style="padding: 4px; margin-right: 4px; background-color: #eee; border: solid 1px #ddd;">
                                 @tag.Text
                             </span>

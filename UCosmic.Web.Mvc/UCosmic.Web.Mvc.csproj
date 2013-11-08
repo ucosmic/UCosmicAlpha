@@ -316,6 +316,7 @@
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Activities\ActivityDocumentViewModel.cs" />
+    <Compile Include="Models\Activities\ActivityPersonViewModel.cs" />
     <Compile Include="Models\Activities\ActivityPlaceViewModel.cs" />
     <Compile Include="Models\Activities\ActivityTagViewModel.cs" />
     <Compile Include="Models\Activities\ActivityTypeViewModel.cs" />

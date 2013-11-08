@@ -39,8 +39,10 @@ namespace UCosmic.Web.Mvc.Controllers
                     x => x.Types.Select(y => y.Type),
                     x => x.Locations.Select(y => y.Place),
                     x => x.Tags,
-                    x => x.Documents
+                    x => x.Documents,
+                    x => x.Activity.Person.Emails,
                 }
+
             });
             if (entity == null) return HttpNotFound();
 
