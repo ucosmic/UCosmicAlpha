@@ -6,7 +6,7 @@ namespace UCosmic.Domain.People
     {
         protected bool Equals(Affiliation other)
         {
-            return  EstablishmentId == other.EstablishmentId &&
+            return EstablishmentId == other.EstablishmentId &&
                     string.Equals(JobTitles, other.JobTitles) &&
                     IsDefault.Equals(other.IsDefault) &&
                     IsAcknowledged.Equals(other.IsAcknowledged) &&
@@ -27,7 +27,7 @@ namespace UCosmic.Domain.People
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             //if (obj.GetType() != this.GetType()) return false;
-            return Equals((Affiliation) obj);
+            return Equals((Affiliation)obj);
         }
 
         public override int GetHashCode()
@@ -35,19 +35,19 @@ namespace UCosmic.Domain.People
             unchecked
             {
                 int hashCode = EstablishmentId;
-                hashCode = (hashCode*397) ^ (JobTitles != null ? JobTitles.GetHashCode() : 0);
-                hashCode = (hashCode*397) ^ IsDefault.GetHashCode();
-                hashCode = (hashCode*397) ^ IsAcknowledged.GetHashCode();
-                hashCode = (hashCode*397) ^ IsClaimingStudent.GetHashCode();
-                hashCode = (hashCode*397) ^ IsClaimingEmployee.GetHashCode();
-                hashCode = (hashCode*397) ^ IsClaimingInternationalOffice.GetHashCode();
-                hashCode = (hashCode*397) ^ IsClaimingAdministrator.GetHashCode();
-                hashCode = (hashCode*397) ^ IsClaimingFaculty.GetHashCode();
-                hashCode = (hashCode*397) ^ IsClaimingStaff.GetHashCode();
-                hashCode = (hashCode*397) ^ CampusId.GetHashCode();
-                hashCode = (hashCode*397) ^ CollegeId.GetHashCode();
-                hashCode = (hashCode*397) ^ DepartmentId.GetHashCode();
-                hashCode = (hashCode*397) ^ FacultyRankId.GetHashCode();
+                hashCode = (hashCode * 397) ^ (JobTitles != null ? JobTitles.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ IsDefault.GetHashCode();
+                hashCode = (hashCode * 397) ^ IsAcknowledged.GetHashCode();
+                hashCode = (hashCode * 397) ^ IsClaimingStudent.GetHashCode();
+                hashCode = (hashCode * 397) ^ IsClaimingEmployee.GetHashCode();
+                hashCode = (hashCode * 397) ^ IsClaimingInternationalOffice.GetHashCode();
+                hashCode = (hashCode * 397) ^ IsClaimingAdministrator.GetHashCode();
+                hashCode = (hashCode * 397) ^ IsClaimingFaculty.GetHashCode();
+                hashCode = (hashCode * 397) ^ IsClaimingStaff.GetHashCode();
+                hashCode = (hashCode * 397) ^ CampusId.GetHashCode();
+                hashCode = (hashCode * 397) ^ CollegeId.GetHashCode();
+                hashCode = (hashCode * 397) ^ DepartmentId.GetHashCode();
+                hashCode = (hashCode * 397) ^ FacultyRankId.GetHashCode();
                 return hashCode;
             }
         }

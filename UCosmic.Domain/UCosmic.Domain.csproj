@@ -270,6 +270,7 @@
     <Compile Include="Domain\Employees\_Internal\EmployeeConsts.cs" />
     <Compile Include="Domain\Establishments\Queries\EstablishmentByDomain.cs" />
     <Compile Include="Domain\Activities\Queries\ActivitiesByPersonId.cs" />
+    <Compile Include="Domain\People\Work\CreateVerticalAffiliations.cs" />
     <Compile Include="Domain\Places\Commands\EnsurePlaceHierarchies.cs" />
     <Compile Include="Domain\Places\Commands\CreatePlace.cs" />
     <Compile Include="Domain\Places\Work\FixDuplicateMexicos.cs" />
@@ -285,7 +286,7 @@
     <Compile Include="Domain\_Etc\EntityRanker.cs" />
     <Compile Include="Domain\Establishments\Queries\EstablishmentNamesByKeyword.cs" />
     <Compile Include="Domain\Establishments\Queries\EstablishmentsWithPeopleWithActivities.cs" />
-    <Compile Include="Domain\People\Entities\PersonExtensions.cs" />
+    <Compile Include="Domain\People\_Internal\PersonExtensions.cs" />
     <Compile Include="Domain\People\Queries\PeopleSearch.cs" />
     <Compile Include="Domain\People\Queries\PeopleWithActivitiesCountByTypeIdEstablishmentId.cs" />
     <Compile Include="Domain\People\Queries\PeopleWithDegreesCountByPlaceIdsEstablishmentId.cs" />
