@@ -30,8 +30,6 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             var model = new ActivityPublicViewModel();
 
-
-            //var entity2 = _queryProcessor.Execute(new ActivityById(User, activityId));
             var entity = _queryProcessor.Execute(new PublicActivityById(User, activityId)
             {
                 EagerLoad = new Expression<Func<ActivityValues, object>>[]

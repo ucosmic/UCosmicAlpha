@@ -4,11 +4,12 @@
 var activityData;
 module Activities.ViewModels {
 
-
     export class PublicView {
+
         constructor() {
             this.addMarkers();
         }
+
         lat = 15;
         lng = 6;
         zoom = -1;

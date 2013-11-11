@@ -5,13 +5,13 @@
 
     <div style="font-size: 14px;">
         @* Person *@
-        <div style="float: right">
+        <div style="float: right; height: 48px; padding-top: 6px;">
             <div>@Model.Person.DisplayName</div>
             <div>@Model.Person.JobTitle</div>
             <div>@Model.Person.EmailAddress</div>
         </div>
-        <div style="float: left">
-            <img src="@Model.Person.PhotoUrl" height="48" width="48" style="border: solid 1px black"/>
+        <div style="float: left; margin-bottom: .5em;">
+            <img src="@Url.HttpRouteUrl(null, new { controller = "People", action = "GetPhoto", Id = Model.Person.PersonId })" height="48" width="48"/>
         </div>
 
         @* MAP *@

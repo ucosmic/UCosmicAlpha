@@ -11,12 +11,10 @@ namespace UCosmic.Web.Mvc.Models
 {
     public class ActivityPublicViewModel
     {
-
         public ActivityMode Mode { get; set; }
         public int ActivityId { get; set; }
         public string Title { get; set; }
         public HtmlString Content { get; set; }
-        // couldn't make this optional because I couldn't use ToString to format the date
         public DateTime? StartsOn { get; set; }
         public DateTime? EndsOn { get; set; }
         public string StartsFormat { get; set; }
@@ -28,7 +26,6 @@ namespace UCosmic.Web.Mvc.Models
         public ActivityPlaceViewModel[] Places { get; set; }
         public ActivityTagViewModel[] Tags { get; set; }
         public ActivityDocumentViewModel[] Documents { get; set; }
-        //public FacultyStaffResult Faculty { get; set; }
         public ActivityPersonViewModel Person { get; set; }
     }
 
@@ -40,7 +37,7 @@ namespace UCosmic.Web.Mvc.Models
             {
                 CreateMap<ActivityValues, ActivityPublicViewModel>()
                     .ForMember(d => d.IsExternallyFunded, o => o.MapFrom(s => s.WasExternallyFunded))
-                    .ForMember(d => d.IsInternallyFunded, o => o.MapFrom(s => s.WasInternallyFunded)) 
+                    .ForMember(d => d.IsInternallyFunded, o => o.MapFrom(s => s.WasInternallyFunded))
                     .ForMember(d => d.Places, o => o.MapFrom(s => s.Locations))
                     .ForMember(d => d.Content, o => o.MapFrom(s => new HtmlString(s.Content)))
                     .ForMember(d => d.Person, o => o.MapFrom(s => s.Activity.Person))
