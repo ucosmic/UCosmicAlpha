@@ -25,31 +25,32 @@ namespace UCosmic.Web.Mvc.Controllers
             _entities = entities;
         }
 
-        [GET("activitiesspike/{activityId:int}")]
-        public virtual ActionResult ActivitiesSpike(int activityId)
-        {
-            var model = new ActivityPublicViewModel();
+        //[GET("activitiesspike/{activityId:int}")]
+        //public virtual ActionResult ActivitiesSpike(int activityId)
+        //{
+        //    var model = new ActivityPublicViewModel();
 
-            var entity = _queryProcessor.Execute(new PublicActivityById(User, activityId)
-            {
-                EagerLoad = new Expression<Func<ActivityValues, object>>[]
-                {
-                    x => x.Types.Select(y => y.Type),
-                    x => x.Locations.Select(y => y.Place),
-                    x => x.Tags,
-                    x => x.Documents,
-                    x => x.Activity.Person.Emails,
-                }
+        //    var entity = _queryProcessor.Execute(new PublicActivityById(User, activityId)
+        //    {
+        //        EagerLoad = new Expression<Func<ActivityValues, object>>[]
+        //        {
+        //            x => x.Types.Select(y => y.Type),
+        //            x => x.Locations.Select(y => y.Place),
+        //            x => x.Tags,
+        //            x => x.Documents,
+        //            x => x.Activity.Person.Emails,
+        //        }
 
-            });
-            if (entity == null) return HttpNotFound();
+        //    });
+        //    if (entity == null) return HttpNotFound();
 
-            model = Mapper.Map<ActivityPublicViewModel>(entity);
+        //    model = Mapper.Map<ActivityPublicViewModel>(entity);
 
-            //model.Content = new HtmlString("<p>Permian/Triassic (P/Tr) Boundary Global Even....<p>");
-
-            return View(model);
-        }
+        //    //model.Content = new HtmlString("<p>Permian/Triassic (P/Tr) Boundary Global Even....<p>");
+        //    //model.Person.EmailAddress = "aReallyLongEmail@aReallyLongDomain.usf.edu";
+        //    //model.Person.DisplayName = "aReally Long DISPLAY name";
+        //    return View(model);
+        //}
 
     }
 }

@@ -1,0 +1,51 @@
+﻿@{
+    ViewBag.Title = "Institutional Agreement";
+}
+@section bib
+{
+    @{
+        var currentBib = ViewBag.Id == 0 ? "new" : "edit";
+    }
+    <nav class="bib hide" data-current-bib="@currentBib">
+        @Html.Partial(MVC.Agreements.Views._Bib, new ViewDataDictionary
+        {
+            { "Edit", currentBib == "edit" ? true : (bool?)null },
+            { "Show", currentBib == "edit" ? ViewBag.Id : null }
+        })
+    </nav>
+}
+@section scripts
+{
+
+
+
+    <script type="text/javascript">
+    </script>
+
+}
+@section styles
+{
+    <style>
+        
+    </style>
+}
+<div class="content fixed to-top" data-current-module="agreements" style="visibility: hidden">
+    <form class="group">
+        <div class="on-left from-top">
+            <header>
+                <h1>
+                    @ViewBag.Title
+                </h1>
+            </header>
+            @Html.Partial(MVC.People.Views._Card)
+            @Html.Partial(MVC.People.Views._Content)
+        </div>
+        <aside class="on-right from-top" data-fixed-scroll="root">
+            <div data-fixed-scroll="anchor"></div>
+            <div data-fixed-scroll="content">
+                @Html.Partial(MVC.People.Views._SidebarNav)
+            </div>
+        </aside>
+    </form>
+</div>
+

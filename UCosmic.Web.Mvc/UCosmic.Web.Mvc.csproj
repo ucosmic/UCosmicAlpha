@@ -311,6 +311,7 @@
     <Compile Include="ApiControllers\Expertise\GeographicExpertiseController.cs" />
     <Compile Include="ApiControllers\Expertise\LanguageExpertiseController.cs" />
     <Compile Include="Controllers\JavaScriptRoutesController.cs" />
+    <Compile Include="Controllers\PeopleController.cs" />
     <Compile Include="Helpers\JavascriptRouteWriter.cs" />
     <Compile Include="JavaScriptRoutesController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
@@ -419,6 +420,7 @@
     <Compile Include="Models\My\MyProfileApiModel.cs" />
     <Compile Include="Models\My\MyAffiliationsSearchInputModel.cs" />
     <Compile Include="Models\People\PeopleSearchInputModel.cs" />
+    <Compile Include="Models\People\PersonViewModel.cs" />
     <Compile Include="Models\People\PersonApiModel.cs" />
     <Compile Include="Models\Users\RoleSearchInputModel.cs" />
     <Compile Include="Models\Users\RoleApiModel.cs" />
@@ -502,6 +504,9 @@
     <Compile Include="Models\_Etc\UserVoiceLinkModel.cs" />
     <Compile Include="Models\_Etc\ValidationResultApiModel.cs" />
     <Compile Include="MyProfileController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PeopleController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -2675,10 +2680,10 @@
     <Content Include="Views\Agreements\_PublicViewContent.cshtml" />
     <Content Include="Views\Activities\_EditStyles.cshtml" />
     <Content Include="Views\Agreements\SearchTable.cshtml" />
-    <Content Include="Views\ActivitiesSpike\ActivitiesSpike.cshtml" />
-    <Content Include="Views\ActivitiesSpike\_ActivitiesSpikeContent.cshtml" />
-    <Content Include="Views\ActivitiesSpike\_Bib.cshtml" />
-    <Content Include="Views\ActivitiesSpike\_ActivitiesSpikeSide.cshtml" />
+    <Content Include="Views\Activities\ActivitiesSpike.cshtml" />
+    <Content Include="Views\Activities\_ActivitiesSpikeContent.cshtml" />
+    <Content Include="Views\Activities\_Bib.cshtml" />
+    <Content Include="Views\Activities\_ActivitiesSpikeSide.cshtml" />
     <None Include="Views\ApiTest\Index.cshtml" />
     <Content Include="Views\Agreements\Settings.cshtml" />
     <Content Include="Views\Agreements\_SearchSideBar.cshtml" />
@@ -2697,6 +2702,11 @@
     <Content Include="Views\Employees\Index.cshtml" />
     <Content Include="Views\Employees\_Bib.cshtml" />
     <Content Include="Views\JavaScriptRoutes\Employees.cshtml" />
+    <Content Include="Views\People\Index.cshtml" />
+    <Content Include="Views\People\_Bib.cshtml" />
+    <Content Include="Views\People\_SidebarNav.cshtml" />
+    <Content Include="Views\People\_Content.cshtml" />
+    <Content Include="Views\People\_Card.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -2842,6 +2852,7 @@
     <Folder Include="App_Data\binary-data\" />
     <Folder Include="App_Data\mail\" />
     <Folder Include="content\mail\" />
+    <Folder Include="Views\ActivitiesSpike\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config">

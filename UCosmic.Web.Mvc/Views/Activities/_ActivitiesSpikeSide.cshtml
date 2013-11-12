@@ -1,0 +1,44 @@
+﻿@using UCosmic.Web.Mvc.ApiControllers
+@model UCosmic.Web.Mvc.Models.ActivityPublicViewModel
+
+<aside id="publicView">
+
+    <div style="font-size: 16px;">
+        @* Person *@
+        <table style="margin-bottom: .5em">
+            <tr>
+                <td style="vertical-align: bottom;">
+                    <a href='/people/@Model.Person.PersonId' style="text-decoration: none; cursor: pointer; color: inherit;">
+                        <img src="@Url.HttpRouteUrl(null, new { controller = "People", action = "GetPhoto", Id = Model.Person.PersonId })" style="max-width: 52px;  margin-right: .5em" height="48" />
+                    </a>
+                </td>
+                <td >
+                    <a href='/people/@Model.Person.PersonId' style="text-decoration: none; cursor: pointer; color: inherit;">  
+                        <div  style="font-size:20px; line-height: 24px;">@Model.Person.DisplayName</div>
+                    </a>
+                    <div>@Model.Person.JobTitle</div>
+                    <a style="-ms-word-break: break-all; word-break: break-all;" href="mailto:@Model.Person.EmailAddress" target="_top">@Model.Person.EmailAddress</a>
+                </td>
+            </tr>
+        </table>
+
+        @* MAP *@
+        <div style="height: 200px; width: 280px;" id="map-canvas"></div>
+
+        @* PLACES *@
+        <div style="margin: 1em 0;">
+            <ul style="display: inline-block;">
+                @foreach (var place in Model.Places)
+                {
+                    <li class="same-line">
+                        <a href='~/facultystaff/#/search/country/@place.PlaceName' style="text-decoration: none; color: inherit;">
+                            <span class="badge light-transparent">
+                                @place.PlaceName
+                            </span>
+                        </a>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+</aside>

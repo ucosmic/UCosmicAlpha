@@ -47,6 +47,12 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Edit);
         }
+        [NonAction]
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public System.Web.Mvc.ActionResult ActivitiesSpike()
+        {
+            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.ActivitiesSpike);
+        }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public ActivitiesController Actions { get { return MVC.Activities; } }
@@ -66,6 +72,7 @@ namespace UCosmic.Web.Mvc.Controllers
             public readonly string Get = "Get";
             public readonly string Create = "Create";
             public readonly string Edit = "Edit";
+            public readonly string ActivitiesSpike = "ActivitiesSpike";
         }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -74,6 +81,7 @@ namespace UCosmic.Web.Mvc.Controllers
             public const string Get = "Get";
             public const string Create = "Create";
             public const string Edit = "Edit";
+            public const string ActivitiesSpike = "ActivitiesSpike";
         }
 
 
@@ -82,6 +90,14 @@ namespace UCosmic.Web.Mvc.Controllers
         public ActionParamsClass_Edit EditParams { get { return s_params_Edit; } }
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public class ActionParamsClass_Edit
+        {
+            public readonly string activityId = "activityId";
+        }
+        static readonly ActionParamsClass_ActivitiesSpike s_params_ActivitiesSpike = new ActionParamsClass_ActivitiesSpike();
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public ActionParamsClass_ActivitiesSpike ActivitiesSpikeParams { get { return s_params_ActivitiesSpike; } }
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public class ActionParamsClass_ActivitiesSpike
         {
             public readonly string activityId = "activityId";
         }
@@ -95,10 +111,18 @@ namespace UCosmic.Web.Mvc.Controllers
             public _ViewNamesClass ViewNames { get { return s_ViewNames; } }
             public class _ViewNamesClass
             {
+                public readonly string _ActivitiesSpikeContent = "_ActivitiesSpikeContent";
+                public readonly string _ActivitiesSpikeSide = "_ActivitiesSpikeSide";
+                public readonly string _Bib = "_Bib";
                 public readonly string _EditStyles = "_EditStyles";
+                public readonly string ActivitiesSpike = "ActivitiesSpike";
                 public readonly string Edit = "Edit";
             }
+            public readonly string _ActivitiesSpikeContent = "~/Views/Activities/_ActivitiesSpikeContent.cshtml";
+            public readonly string _ActivitiesSpikeSide = "~/Views/Activities/_ActivitiesSpikeSide.cshtml";
+            public readonly string _Bib = "~/Views/Activities/_Bib.cshtml";
             public readonly string _EditStyles = "~/Views/Activities/_EditStyles.cshtml";
+            public readonly string ActivitiesSpike = "~/Views/Activities/ActivitiesSpike.cshtml";
             public readonly string Edit = "~/Views/Activities/Edit.cshtml";
         }
     }
@@ -123,6 +147,13 @@ namespace UCosmic.Web.Mvc.Controllers
         public override System.Web.Mvc.ActionResult Edit(int activityId)
         {
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Edit);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "activityId", activityId);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.ActionResult ActivitiesSpike(int activityId)
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.ActivitiesSpike);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "activityId", activityId);
             return callInfo;
         }

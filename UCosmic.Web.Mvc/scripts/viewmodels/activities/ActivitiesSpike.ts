@@ -36,7 +36,6 @@ module Activities.ViewModels {
                         position: new google.maps.LatLng(place.PlaceCenter.Latitude, place.PlaceCenter.Longitude),
                         icon: {
                             url: "/images/icons/maps/mapPimple.png",
-                            opacity
                         },
                         title: "test",
                         zIndex: 200,

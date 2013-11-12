@@ -269,6 +269,7 @@
     <Compile Include="Domain\Employees\Work\DeleteRandomUsfActivities.cs" />
     <Compile Include="Domain\Employees\_Internal\EmployeeConsts.cs" />
     <Compile Include="Domain\Establishments\Queries\EstablishmentByDomain.cs" />
+    <Compile Include="Domain\People\Queries\PersonViewModelById.cs" />
     <Compile Include="Domain\Places\Commands\EnsurePlaceHierarchies.cs" />
     <Compile Include="Domain\Places\Commands\CreatePlace.cs" />
     <Compile Include="Domain\Places\Work\FixDuplicateMexicos.cs" />

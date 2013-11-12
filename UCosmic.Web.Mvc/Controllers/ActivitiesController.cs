@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq.Expressions;
+using System.Linq;
 using System.Web.Mvc;
 using AttributeRouting.Web.Mvc;
+using AutoMapper;
 using UCosmic.Domain.Activities;
+using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc.Controllers
 {
@@ -143,6 +146,33 @@ namespace UCosmic.Web.Mvc.Controllers
             Debug.Assert(documentIcon != null);
             documentIcon = documentIcon.Replace("0", "{0}").Replace("1", "{1}");
             ViewBag.DocumentIconApi = documentIcon;
+        }
+
+        [GET("activities/{activityId:int}")]
+        public virtual ActionResult ActivitiesSpike(int activityId)
+        {
+            var model = new ActivityPublicViewModel();
+
+            var entity = _queryProcessor.Execute(new PublicActivityById(User, activityId)
+            {
+                EagerLoad = new Expression<Func<ActivityValues, object>>[]
+                {
+                    x => x.Types.Select(y => y.Type),
+                    x => x.Locations.Select(y => y.Place),
+                    x => x.Tags,
+                    x => x.Documents,
+                    x => x.Activity.Person.Emails,
+                }
+
+            });
+            if (entity == null) return HttpNotFound();
+
+            model = Mapper.Map<ActivityPublicViewModel>(entity);
+
+            //model.Content = new HtmlString("<p>Permian/Triassic (P/Tr) Boundary Global Even....<p>");
+            //model.Person.EmailAddress = "aReallyLongEmail@aReallyLongDomain.usf.edu";
+            //model.Person.DisplayName = "aReally Long DISPLAY name";
+            return View(model);
         }
     }
 }

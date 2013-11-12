@@ -22,10 +22,10 @@ using System.Web.Routing;
 using T4MVC;
 namespace UCosmic.Web.Mvc.Controllers
 {
-    public partial class ActivitiesSpikeController
+    public partial class PeopleController
     {
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        protected ActivitiesSpikeController(Dummy d) { }
+        protected PeopleController(Dummy d) { }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         protected RedirectToRouteResult RedirectToAction(ActionResult result)
@@ -41,15 +41,21 @@ namespace UCosmic.Web.Mvc.Controllers
             return RedirectToRoutePermanent(callInfo.RouteValueDictionary);
         }
 
+        [NonAction]
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public System.Web.Mvc.ActionResult Index()
+        {
+            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Index);
+        }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public ActivitiesSpikeController Actions { get { return MVC.ActivitiesSpike; } }
+        public PeopleController Actions { get { return MVC.People; } }
         [GeneratedCode("T4MVC", "2.0")]
         public readonly string Area = "";
         [GeneratedCode("T4MVC", "2.0")]
-        public readonly string Name = "ActivitiesSpike";
+        public readonly string Name = "People";
         [GeneratedCode("T4MVC", "2.0")]
-        public const string NameConst = "ActivitiesSpike";
+        public const string NameConst = "People";
 
         static readonly ActionNamesClass s_actions = new ActionNamesClass();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -57,14 +63,24 @@ namespace UCosmic.Web.Mvc.Controllers
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public class ActionNamesClass
         {
+            public readonly string Index = "Index";
         }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public class ActionNameConstants
         {
+            public const string Index = "Index";
         }
 
 
+        static readonly ActionParamsClass_Index s_params_Index = new ActionParamsClass_Index();
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public ActionParamsClass_Index IndexParams { get { return s_params_Index; } }
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public class ActionParamsClass_Index
+        {
+            public readonly string personId = "personId";
+        }
         static readonly ViewsClass s_views = new ViewsClass();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public ViewsClass Views { get { return s_views; } }
@@ -75,14 +91,31 @@ namespace UCosmic.Web.Mvc.Controllers
             public _ViewNamesClass ViewNames { get { return s_ViewNames; } }
             public class _ViewNamesClass
             {
+                public readonly string _Bib = "_Bib";
+                public readonly string _Card = "_Card";
+                public readonly string _Content = "_Content";
+                public readonly string _SidebarNav = "_SidebarNav";
+                public readonly string Index = "Index";
             }
+            public readonly string _Bib = "~/Views/People/_Bib.cshtml";
+            public readonly string _Card = "~/Views/People/_Card.cshtml";
+            public readonly string _Content = "~/Views/People/_Content.cshtml";
+            public readonly string _SidebarNav = "~/Views/People/_SidebarNav.cshtml";
+            public readonly string Index = "~/Views/People/Index.cshtml";
         }
     }
 
     [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-    public class T4MVC_ActivitiesSpikeController : UCosmic.Web.Mvc.Controllers.ActivitiesSpikeController
+    public class T4MVC_PeopleController : UCosmic.Web.Mvc.Controllers.PeopleController
     {
-        public T4MVC_ActivitiesSpikeController() : base(Dummy.Instance) { }
+        public T4MVC_PeopleController() : base(Dummy.Instance) { }
+
+        public override System.Web.Mvc.ActionResult Index(int personId)
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Index);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "personId", personId);
+            return callInfo;
+        }
 
     }
 }
