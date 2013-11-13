@@ -1,15 +1,22 @@
 ﻿@using UCosmic.Web.Mvc.ApiControllers
 @model UCosmic.Web.Mvc.Models.PersonViewModel
 
-<section id="publicView">
+<section id="card">
 
-    <div style="font-size: 16px;">
-
-
-        @* SOMETHING *@
-        <div style="margin: 1em 0; line-height: 24px;">
-            @*@Model.Content*@
-        </div>
+    <div style="font-size: 20px;">
+        @* Person *@
+        <table style="margin-bottom: .5em">
+            <tr>
+                <td style="vertical-align: bottom;">
+                    <img src="@Url.HttpRouteUrl(null, new { controller = "People", action = "GetPhoto", Id = Model.PersonId })" style="max-width: 100px;  margin-right: 1em" height="108" />
+                </td>
+                <td>
+                    <div style="font-size: 24px; line-height: 28px;">@Model.DisplayName</div>
+                    <div>@Model.JobTitles</div>
+                    <a style="-ms-word-break: break-all; word-break: break-all;" href="mailto:@Model.EmailAddress" target="_top">@Model.EmailAddress</a>
+                </td>
+            </tr>
+        </table>
 
     </div>
 </section>

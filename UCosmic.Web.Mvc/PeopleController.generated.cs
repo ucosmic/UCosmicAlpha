@@ -47,6 +47,18 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Index);
         }
+        [NonAction]
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public System.Web.Mvc.ActionResult GetCard()
+        {
+            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.GetCard);
+        }
+        [NonAction]
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public System.Web.Mvc.ActionResult Activities()
+        {
+            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Activities);
+        }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public PeopleController Actions { get { return MVC.People; } }
@@ -64,12 +76,16 @@ namespace UCosmic.Web.Mvc.Controllers
         public class ActionNamesClass
         {
             public readonly string Index = "Index";
+            public readonly string GetCard = "GetCard";
+            public readonly string Activities = "Activities";
         }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public class ActionNameConstants
         {
             public const string Index = "Index";
+            public const string GetCard = "GetCard";
+            public const string Activities = "Activities";
         }
 
 
@@ -78,6 +94,22 @@ namespace UCosmic.Web.Mvc.Controllers
         public ActionParamsClass_Index IndexParams { get { return s_params_Index; } }
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public class ActionParamsClass_Index
+        {
+            public readonly string personId = "personId";
+        }
+        static readonly ActionParamsClass_GetCard s_params_GetCard = new ActionParamsClass_GetCard();
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public ActionParamsClass_GetCard GetCardParams { get { return s_params_GetCard; } }
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public class ActionParamsClass_GetCard
+        {
+            public readonly string personId = "personId";
+        }
+        static readonly ActionParamsClass_Activities s_params_Activities = new ActionParamsClass_Activities();
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public ActionParamsClass_Activities ActivitiesParams { get { return s_params_Activities; } }
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public class ActionParamsClass_Activities
         {
             public readonly string personId = "personId";
         }
@@ -95,12 +127,14 @@ namespace UCosmic.Web.Mvc.Controllers
                 public readonly string _Card = "_Card";
                 public readonly string _Content = "_Content";
                 public readonly string _SidebarNav = "_SidebarNav";
+                public readonly string Activities = "Activities";
                 public readonly string Index = "Index";
             }
             public readonly string _Bib = "~/Views/People/_Bib.cshtml";
             public readonly string _Card = "~/Views/People/_Card.cshtml";
             public readonly string _Content = "~/Views/People/_Content.cshtml";
             public readonly string _SidebarNav = "~/Views/People/_SidebarNav.cshtml";
+            public readonly string Activities = "~/Views/People/Activities.cshtml";
             public readonly string Index = "~/Views/People/Index.cshtml";
         }
     }
@@ -113,6 +147,20 @@ namespace UCosmic.Web.Mvc.Controllers
         public override System.Web.Mvc.ActionResult Index(int personId)
         {
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Index);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "personId", personId);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.ActionResult GetCard(int personId)
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.GetCard);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "personId", personId);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.ActionResult Activities(int personId)
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Activities);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "personId", personId);
             return callInfo;
         }

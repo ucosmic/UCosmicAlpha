@@ -26,17 +26,14 @@ namespace UCosmic.Web.Mvc.Controllers
         public virtual ActionResult Index(int personId)
         {
 
-            var model = new PersonViewModel();
+            //var model = new PersonViewModel();
 
             //var entity = _queryProcessor.Execute(new PersonViewModelById(User, personId)
             //{
             //    EagerLoad = new Expression<Func<Person, object>>[]
             //    {
-            //        //x => x.Types.Select(y => y.Type),
-            //        //x => x.Locations.Select(y => y.Place),
-            //        //x => x.Tags,
-            //        //x => x.Documents,
-            //        //x => x.Activity.Person.Emails,
+            //        x => x.Affiliations,
+            //        x => x.Emails,
             //    }
 
             //});
@@ -47,8 +44,58 @@ namespace UCosmic.Web.Mvc.Controllers
             //model.Content = new HtmlString("<p>Permian/Triassic (P/Tr) Boundary Global Even....<p>");
             //model.Person.EmailAddress = "aReallyLongEmail@aReallyLongDomain.usf.edu";
             //model.Person.DisplayName = "aReally Long DISPLAY name";
-            return View(model);
+            return View();
         }
 
+        [GET("people/{personId:int}/card")]
+        [ChildActionOnly]
+        public virtual ActionResult GetCard(int personId)
+        {
+
+
+            var entity = _queryProcessor.Execute(new PersonById(personId)
+            {
+                EagerLoad = new Expression<Func<Person, object>>[]
+                {
+                    x => x.Affiliations,
+                    x => x.Emails,
+                }
+
+            });
+            if (entity == null) return HttpNotFound();
+
+            var model = Mapper.Map<PersonViewModel>(entity);
+
+            //model.Content = new HtmlString("<p>Permian/Triassic (P/Tr) Boundary Global Even....<p>");
+            //model.Person.EmailAddress = "aReallyLongEmail@aReallyLongDomain.usf.edu";
+            //model.Person.DisplayName = "aReally Long DISPLAY name";
+            return PartialView(MVC.People.Views._Card, model);
+        }
+
+        [GET("people/{personId:int}/activities")]
+        public virtual ActionResult Activities(int personId)
+        {
+            //I may want to make a personactivitiesviewmodel that contains a list of activities
+
+            var model = new PersonViewModel();
+
+            var entity = _queryProcessor.Execute(new PersonById(personId)
+            {
+                EagerLoad = new Expression<Func<Person, object>>[]
+                {
+                    x => x.DefaultAffiliation.JobTitles,
+                    x => x.Emails,
+                }
+
+            });
+            if (entity == null) return HttpNotFound();
+
+            model = Mapper.Map<PersonViewModel>(entity);
+
+            //model.Content = new HtmlString("<p>Permian/Triassic (P/Tr) Boundary Global Even....<p>");
+            //model.Person.EmailAddress = "aReallyLongEmail@aReallyLongDomain.usf.edu";
+            //model.Person.DisplayName = "aReally Long DISPLAY name";
+            return View(model);
+        }
     }
 }

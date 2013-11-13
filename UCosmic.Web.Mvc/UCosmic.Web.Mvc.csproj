@@ -419,6 +419,7 @@
     <Compile Include="Models\My\MyAffiliationApiModel.cs" />
     <Compile Include="Models\My\MyProfileApiModel.cs" />
     <Compile Include="Models\My\MyAffiliationsSearchInputModel.cs" />
+    <Compile Include="Models\People\PersonActivitiesViewModel.cs" />
     <Compile Include="Models\People\PeopleSearchInputModel.cs" />
     <Compile Include="Models\People\PersonViewModel.cs" />
     <Compile Include="Models\People\PersonApiModel.cs" />
@@ -2707,6 +2708,7 @@
     <Content Include="Views\People\_SidebarNav.cshtml" />
     <Content Include="Views\People\_Content.cshtml" />
     <Content Include="Views\People\_Card.cshtml" />
+    <Content Include="Views\People\Activities.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
