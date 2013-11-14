@@ -2706,9 +2706,10 @@
     <Content Include="Views\People\Index.cshtml" />
     <Content Include="Views\People\_Bib.cshtml" />
     <Content Include="Views\People\_SidebarNav.cshtml" />
-    <Content Include="Views\People\_Content.cshtml" />
+    <Content Include="Views\People\_Profile.cshtml" />
     <Content Include="Views\People\_Card.cshtml" />
     <Content Include="Views\People\Activities.cshtml" />
+    <Content Include="Views\People\_Activities.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

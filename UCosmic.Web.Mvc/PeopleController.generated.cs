@@ -59,6 +59,12 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Activities);
         }
+        [NonAction]
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public System.Web.Mvc.ActionResult GetActivities()
+        {
+            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.GetActivities);
+        }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public PeopleController Actions { get { return MVC.People; } }
@@ -78,6 +84,7 @@ namespace UCosmic.Web.Mvc.Controllers
             public readonly string Index = "Index";
             public readonly string GetCard = "GetCard";
             public readonly string Activities = "Activities";
+            public readonly string GetActivities = "GetActivities";
         }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -86,6 +93,7 @@ namespace UCosmic.Web.Mvc.Controllers
             public const string Index = "Index";
             public const string GetCard = "GetCard";
             public const string Activities = "Activities";
+            public const string GetActivities = "GetActivities";
         }
 
 
@@ -113,6 +121,14 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             public readonly string personId = "personId";
         }
+        static readonly ActionParamsClass_GetActivities s_params_GetActivities = new ActionParamsClass_GetActivities();
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public ActionParamsClass_GetActivities GetActivitiesParams { get { return s_params_GetActivities; } }
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public class ActionParamsClass_GetActivities
+        {
+            public readonly string personId = "personId";
+        }
         static readonly ViewsClass s_views = new ViewsClass();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public ViewsClass Views { get { return s_views; } }
@@ -123,16 +139,18 @@ namespace UCosmic.Web.Mvc.Controllers
             public _ViewNamesClass ViewNames { get { return s_ViewNames; } }
             public class _ViewNamesClass
             {
+                public readonly string _Activities = "_Activities";
                 public readonly string _Bib = "_Bib";
                 public readonly string _Card = "_Card";
-                public readonly string _Content = "_Content";
+                public readonly string _Profile = "_Profile";
                 public readonly string _SidebarNav = "_SidebarNav";
                 public readonly string Activities = "Activities";
                 public readonly string Index = "Index";
             }
+            public readonly string _Activities = "~/Views/People/_Activities.cshtml";
             public readonly string _Bib = "~/Views/People/_Bib.cshtml";
             public readonly string _Card = "~/Views/People/_Card.cshtml";
-            public readonly string _Content = "~/Views/People/_Content.cshtml";
+            public readonly string _Profile = "~/Views/People/_Profile.cshtml";
             public readonly string _SidebarNav = "~/Views/People/_SidebarNav.cshtml";
             public readonly string Activities = "~/Views/People/Activities.cshtml";
             public readonly string Index = "~/Views/People/Index.cshtml";
@@ -161,6 +179,13 @@ namespace UCosmic.Web.Mvc.Controllers
         public override System.Web.Mvc.ActionResult Activities(int personId)
         {
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Activities);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "personId", personId);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.ActionResult GetActivities(int personId)
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.GetActivities);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "personId", personId);
             return callInfo;
         }

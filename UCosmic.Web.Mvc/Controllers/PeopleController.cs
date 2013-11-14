@@ -8,6 +8,7 @@ using UCosmic.Web.Mvc.Models;
 using UCosmic.Domain.People;
 using System.Linq.Expressions;
 using AutoMapper;
+using UCosmic.Domain.Activities;
 
 namespace UCosmic.Web.Mvc.Controllers
 {
@@ -25,25 +26,7 @@ namespace UCosmic.Web.Mvc.Controllers
         [GET("people/{personId:int}")]
         public virtual ActionResult Index(int personId)
         {
-
-            //var model = new PersonViewModel();
-
-            //var entity = _queryProcessor.Execute(new PersonViewModelById(User, personId)
-            //{
-            //    EagerLoad = new Expression<Func<Person, object>>[]
-            //    {
-            //        x => x.Affiliations,
-            //        x => x.Emails,
-            //    }
-
-            //});
-            //if (entity == null) return HttpNotFound();
-
-            //model = Mapper.Map<PersonViewModel>(entity);
-
-            //model.Content = new HtmlString("<p>Permian/Triassic (P/Tr) Boundary Global Even....<p>");
-            //model.Person.EmailAddress = "aReallyLongEmail@aReallyLongDomain.usf.edu";
-            //model.Person.DisplayName = "aReally Long DISPLAY name";
+            ViewBag.personId = personId;
             return View();
         }
 
@@ -51,8 +34,6 @@ namespace UCosmic.Web.Mvc.Controllers
         [ChildActionOnly]
         public virtual ActionResult GetCard(int personId)
         {
-
-
             var entity = _queryProcessor.Execute(new PersonById(personId)
             {
                 EagerLoad = new Expression<Func<Person, object>>[]
@@ -66,36 +47,41 @@ namespace UCosmic.Web.Mvc.Controllers
 
             var model = Mapper.Map<PersonViewModel>(entity);
 
-            //model.Content = new HtmlString("<p>Permian/Triassic (P/Tr) Boundary Global Even....<p>");
-            //model.Person.EmailAddress = "aReallyLongEmail@aReallyLongDomain.usf.edu";
-            //model.Person.DisplayName = "aReally Long DISPLAY name";
             return PartialView(MVC.People.Views._Card, model);
         }
 
         [GET("people/{personId:int}/activities")]
         public virtual ActionResult Activities(int personId)
         {
+            ViewBag.personId = personId;
+            return View();
+        }
+
+        [GET("people/{personId:int}/activities")]
+        [ChildActionOnly]
+        public virtual ActionResult GetActivities(int personId)
+        {
             //I may want to make a personactivitiesviewmodel that contains a list of activities
 
-            var model = new PersonViewModel();
+            //var model = new PersonActivitiesViewModel();
 
-            var entity = _queryProcessor.Execute(new PersonById(personId)
+            var entity = _queryProcessor.Execute(new ActivitiesByPersonId(User, personId)
             {
-                EagerLoad = new Expression<Func<Person, object>>[]
+                EagerLoad = new Expression<Func<ActivityValues, object>>[]
                 {
-                    x => x.DefaultAffiliation.JobTitles,
-                    x => x.Emails,
+                    //x => x.DefaultAffiliation.JobTitles,
+                    //x => x.Emails,
                 }
 
             });
             if (entity == null) return HttpNotFound();
 
-            model = Mapper.Map<PersonViewModel>(entity);
+            var model = Mapper.Map<IEnumerable<ActivityPublicViewModel>>(entity);
 
             //model.Content = new HtmlString("<p>Permian/Triassic (P/Tr) Boundary Global Even....<p>");
             //model.Person.EmailAddress = "aReallyLongEmail@aReallyLongDomain.usf.edu";
             //model.Person.DisplayName = "aReally Long DISPLAY name";
-            return View(model);
+            return PartialView(MVC.People.Views._Activities, model);
         }
     }
 }

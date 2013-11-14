@@ -1,25 +1,31 @@
 ﻿<nav class="side">
     <ul>
-        <li class="current" id="nav_activities">
-            <a href="#" class="group" >
+        <li class="current" id="nav_profile">
+            <a href="/people/@ViewBag.personId" class="group" >
+                <span class="arrow"></span>
+                <span class="text">Profile</span>
+            </a>
+        </li>
+        <li id="nav_activities">
+            <a href="/people/@ViewBag.personId/activities" class="group" >
                 <span class="arrow"></span>
                 <span class="text">Activities</span>
             </a>
         </li>
         <li id="nav_education">
-            <a href="#" class="group">
+            <a href="/people/@ViewBag.personId/education" class="group">
                 <span class="arrow"></span>
                 <span class="text">Education</span>
             </a>
         </li>
-        <li  id="nav_global_expertise">
-            <a href="#" class="group">
+        <li id="nav_global_expertise">
+            <a href="/people/@ViewBag.personId/global-expertise" class="group">
                 <span class="arrow"></span>
                 <span class="text">Global Expertise</span>
             </a>
         </li>
         <li id="nav_language_expertise">
-            <a href="#" class="group">
+            <a href="/people/@ViewBag.personId/language-expertise" class="group">
                 <span class="arrow"></span>
                 <span class="text">Language Expertise</span>
             </a>

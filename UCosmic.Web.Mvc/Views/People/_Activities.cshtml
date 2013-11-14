@@ -1,0 +1,34 @@
+﻿@using UCosmic.Web.Mvc.ApiControllers
+@model IEnumerable<UCosmic.Web.Mvc.Models.ActivityPublicViewModel>
+
+<section id="card">
+
+    <div style="font-size: 20px;">
+        @* Person *@
+        @if (Model != null && Model.Any())
+        {
+            <div>
+                <ul>
+                    @foreach (var activity in Model)
+                    {
+                        <li style="margin-right: .5em;">
+                            <a href="/activities/@activity.ActivityId" style="text-decoration: none; display: block; cursor: pointer; color: inherit;">
+                                <div style="width: 460px; float: left">
+                                    @activity.Title
+                                </div>
+                                <div style="float: right">
+                                    @activity.StartsOn
+                                </div>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        }
+        else
+        {
+            <div>No Activities</div>
+        }
+
+    </div>
+</section>

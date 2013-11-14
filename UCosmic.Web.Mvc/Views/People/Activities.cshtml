@@ -1,6 +1,5 @@
-﻿@model UCosmic.Web.Mvc.Models.PersonViewModel
-@{
-    ViewBag.Title = "Activities for: " + Model.DisplayName;
+﻿@{
+    ViewBag.Title = "UCosmic Profile";
 }
 @section bib
 {
@@ -28,11 +27,11 @@
         <div class="on-left from-top">
             <header>
                 <h1>
-                    Ucosmic Activities
+                    UCosmic Activities
                 </h1>
             </header>
-            @Html.Partial(MVC.People.Views._Card)
-            @Html.Partial(MVC.People.Views._Content)
+            @Html.Action(MVC.People.GetCard())
+            @Html.Action(MVC.People.GetActivities())
         </div>
         <aside class="on-right from-top" data-fixed-scroll="root">
             <div data-fixed-scroll="anchor"></div>
