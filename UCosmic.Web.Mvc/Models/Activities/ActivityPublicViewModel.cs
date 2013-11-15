@@ -29,6 +29,10 @@ namespace UCosmic.Web.Mvc.Models
         public ActivityPersonViewModel Person { get; set; }
     }
 
+    public class PageOfActivityPublicViewModel : PageOf<ActivityPublicViewModel>
+    {
+    }
+
     public static class ActivityPublicViewProfiler
     {
         public class EntityToModel : Profile
@@ -42,6 +46,14 @@ namespace UCosmic.Web.Mvc.Models
                     .ForMember(d => d.Content, o => o.MapFrom(s => new HtmlString(s.Content)))
                     .ForMember(d => d.Person, o => o.MapFrom(s => s.Activity.Person))
                 ;
+            }
+        }
+
+        public class PageQueryResultToPageOfItems : Profile
+        {
+            protected override void Configure()
+            {
+                CreateMap<PagedQueryResult<ActivityValues>, PageOfActivityPublicViewModel>();
             }
         }
     }

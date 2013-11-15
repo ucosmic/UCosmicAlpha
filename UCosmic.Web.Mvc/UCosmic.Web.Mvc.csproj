@@ -419,7 +419,7 @@
     <Compile Include="Models\My\MyAffiliationApiModel.cs" />
     <Compile Include="Models\My\MyProfileApiModel.cs" />
     <Compile Include="Models\My\MyAffiliationsSearchInputModel.cs" />
-    <Compile Include="Models\People\PersonActivitiesViewModel.cs" />
+    <Compile Include="Models\Activities\ActivityPublicInputModel.cs" />
     <Compile Include="Models\People\PeopleSearchInputModel.cs" />
     <Compile Include="Models\People\PersonViewModel.cs" />
     <Compile Include="Models\People\PersonApiModel.cs" />

@@ -1,34 +1,147 @@
 ﻿@using UCosmic.Web.Mvc.ApiControllers
-@model IEnumerable<UCosmic.Web.Mvc.Models.ActivityPublicViewModel>
+@model UCosmic.Web.Mvc.Models.PageOfActivityPublicViewModel
 
-<section id="card">
+<section id="card"  class="content fixed to-top">
 
-    <div style="font-size: 20px;">
-        @* Person *@
-        @if (Model != null && Model.Any())
+    <div>
+        @* KEYWORD TEXT BOX *@
+        <div class="field" style="margin-bottom: 0;">
+            <input type="search" placeholder="Find an activity by title." />
+        </div>
+
+        @* ACTIVITIES *@
+
+        @* PAGER STATUS & LOADING SPINNER *@
+        <div class="group" style="margin: 1em 0;">
+            @if (Model != null && Model.Items.Any())
+            {
+                <div class="on-left" style="height: 24px;">
+                    <div>
+                        <strong>Showing <span>@Model.FirstNumber</span>
+                            @if (@Model.PageCount > 0)
+                            {
+                                <span>- <span>@Model.LastNumber</span></span>
+                            }
+                            of <span>@Model.PageCount</span></strong>
+                        @if (@Model.PageCount > 0)
+                        {
+                            <span>(page
+                                <select data-bind="value: $parent.pager.input.pageNumberText, options: $parent.pager.input.pageNumberOptions"
+                                    style="padding: 0; margin: 0; line-height: 16px; height: auto;">
+                                    @for (int i = 0; i < Model.PageCount; i++)
+                                    {
+                                        <option value="@(i + 1)">@(i + 1)</option>   
+                                    }
+                                </select>
+                                of <span>@Model.PageCount</span>)</span>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+        @if (Model != null && Model.Items.Any())
         {
+            @* RESULTS *@
             <div>
-                <ul>
-                    @foreach (var activity in Model)
-                    {
-                        <li style="margin-right: .5em;">
-                            <a href="/activities/@activity.ActivityId" style="text-decoration: none; display: block; cursor: pointer; color: inherit;">
-                                <div style="width: 460px; float: left">
-                                    @activity.Title
-                                </div>
-                                <div style="float: right">
-                                    @activity.StartsOn
-                                </div>
-                            </a>
-                        </li>
-                    }
-                </ul>
+                @* TABLE *@
+                <div>
+                    <table class="data">
+                        <colgroup>
+                            <col/>
+                            <col style="width: 50%;" />
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>
+                                    Location
+                                </th>
+                                <th>
+                                    Activity Title
+                                </th>
+                                <th>
+                                    Type
+                                </th>
+                                <th>
+                                    Date
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="searchResults">
+                            @foreach (var activity in Model.Items)
+                            {
+                                <tr>
+                                    <td>
+                                        <a href="/activities/@activity.ActivityId" style="text-decoration: none; display: block; cursor: pointer; color: inherit;">
+                                            <ul style="display: inline-block;">
+                                                @foreach (var place in activity.Places)
+                                                {
+                                                    <li class="same-line">
+                                                        <a href='~/facultystaff/#/search/country/@place.PlaceName' style="text-decoration: none; color: inherit;">
+                                                            <span class="badge light-transparent">
+                                                                @place.PlaceName
+                                                            </span>
+                                                        </a>
+                                                    </li>
+                                                }
+                                            </ul>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        @activity.Title
+                                    </td>
+                                    <td>
+                                        <ul style="display: inline-block;">
+                                            @foreach (var type in activity.Types)
+                                            {
+                                                <li style="margin-right: .5em;" class="same-line">
+                                                    <span style="display: inline-block; width: 32px; text-align: center;">
+                                                        <img title="@type.Text" height="24" src="@Url.HttpRouteUrl(null, new { controller = "EmployeeModuleSettings", action = "GetIcon", typeId = type.TypeId })" alt="" />
+                                                    </span>
+                                                </li> 
+                                            }
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        @if (activity.StartsOn.HasValue)
+                                        {
+                                            <span>@activity.StartsOn.Value.ToString(activity.StartsFormat ?? "MM/dd/yyyy")</span>
+                                        }
+                                        @if (activity.EndsOn.HasValue)
+                                        {
+                                            if (activity.StartsOn.HasValue)
+                                            {
+                                            <span style="padding: 0 4px 0 4px;">-</span>
+                                            }
+                                            <span>@activity.EndsOn.Value.ToString(activity.EndsFormat ?? "MM/dd/yyyy")</span>
+                                        }
+                                        @if (activity.OnGoing.HasValue && activity.OnGoing.Value)
+                                        {
+                                            if (activity.StartsOn.HasValue)
+                                            {
+                                            <span style="padding: 0 4px 0 4px;">-</span>
+                                            }
+                                            <span>On Going</span>
+                                        }
+                                        @if (!activity.StartsOn.HasValue && !activity.EndsOn.HasValue && (!activity.OnGoing.HasValue || !activity.OnGoing.Value))
+                                        {
+                                            <span>[Undated]</span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </div>
         }
         else
         {
-            <div>No Activities</div>
+@* ZERO RESULTS MESSAGE *@
+            <p>
+                There are no results that match your search terms.
+            </p>
         }
+        
 
     </div>
 </section>
