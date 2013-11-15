@@ -144,6 +144,7 @@ namespace UCosmic.Web.Mvc.Controllers
                 public readonly string _Bib = "_Bib";
                 public readonly string _Card = "_Card";
                 public readonly string _Profile = "_Profile";
+                public readonly string _SearchSidebarNav = "_SearchSidebarNav";
                 public readonly string _SidebarNav = "_SidebarNav";
                 public readonly string Activities = "Activities";
                 public readonly string Index = "Index";
@@ -152,6 +153,7 @@ namespace UCosmic.Web.Mvc.Controllers
             public readonly string _Bib = "~/Views/People/_Bib.cshtml";
             public readonly string _Card = "~/Views/People/_Card.cshtml";
             public readonly string _Profile = "~/Views/People/_Profile.cshtml";
+            public readonly string _SearchSidebarNav = "~/Views/People/_SearchSidebarNav.cshtml";
             public readonly string _SidebarNav = "~/Views/People/_SidebarNav.cshtml";
             public readonly string Activities = "~/Views/People/Activities.cshtml";
             public readonly string Index = "~/Views/People/Index.cshtml";

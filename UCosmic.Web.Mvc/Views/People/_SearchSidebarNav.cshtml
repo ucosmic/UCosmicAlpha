@@ -1,0 +1,82 @@
+﻿@* RIGHT *@
+        <nav class="side">
+            <ul class="top">
+                <li class="static square-bottom" style="margin-bottom: 0px;">
+                    <div class="group no-link" >
+                        <span class="arrow"></span>
+                        <span class="text">Search Options</span>
+                    </div>
+                </li>
+                <li class="static square-bottom">
+                    <div class="content">
+                        <div class="field">
+                            <select class="side" data-bind="options: countries, optionsCaption: '[All countries]', optionsText: 'name', optionsValue: 'code', value: countryCode, enable: optionsEnabled">
+                                <option>[Loading...]</option>
+                            </select>
+                            <input type="hidden" data-bind="value: countryCode" />
+                        </div>
+                        <div class="field">
+                            <select class="side" data-bind="value: orderBy, enable: optionsEnabled">
+                                <option value="type-asc">Sort by activity title A-Z</option>
+                                <option value="type-desc">Sort by activity title Z-A</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <select class="side" data-bind="value: pageSize, enable: optionsEnabled">
+                                <option value="10">Show 10 results per page</option>
+                                <option value="20">Show 20 results per page</option>
+                                <option value="50">Show 50 results per page</option>
+                                <option value="100">Show 100 results per page</option>
+                                <option value="250">Show 250 results per page</option>
+                            </select>
+                        </div>
+                        <div class="field" style="display: none;">
+                            <select class="side" data-bind="value: lens">
+                                <option value="table">Table</option>
+                                <option value="list">List</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <button class="link" data-bind="click: prevPage, enable: prevEnabled">&lt;&lt; Previous</button>
+                            |
+                            <button class="link" data-bind="click: nextPage, enable: nextEnabled">Next &gt;&gt;</button>
+                            <input type="hidden" value="1" data-bind="value: pageNumber" />
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <ul class="bottom">
+                <li id="nav_profile">
+                    <a href="/people/@ViewBag.personId" class="group" >
+                        <span class="arrow"></span>
+                        <span class="text">Profile</span>
+                    </a>
+                </li>
+                <li class="current" id="nav_activities">
+                    <a href="/people/@ViewBag.personId/activities" class="group" >
+                        <span class="arrow"></span>
+                        <span class="text">Activities</span>
+                    </a>
+                </li>
+                <li id="nav_education">
+                    <a href="/people/@ViewBag.personId/education" class="group">
+                        <span class="arrow"></span>
+                        <span class="text">Education</span>
+                    </a>
+                </li>
+                <li id="nav_global_expertise">
+                    <a href="/people/@ViewBag.personId/global-expertise" class="group">
+                        <span class="arrow"></span>
+                        <span class="text">Global Expertise</span>
+                    </a>
+                </li>
+                <li id="nav_language_expertise">
+                    <a href="/people/@ViewBag.personId/language-expertise" class="group">
+                        <span class="arrow"></span>
+                        <span class="text">Language Expertise</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+

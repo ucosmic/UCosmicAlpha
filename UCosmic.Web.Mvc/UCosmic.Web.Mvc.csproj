@@ -2710,6 +2710,7 @@
     <Content Include="Views\People\_Card.cshtml" />
     <Content Include="Views\People\Activities.cshtml" />
     <Content Include="Views\People\_Activities.cshtml" />
+    <Content Include="Views\People\_SearchSidebarNav.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

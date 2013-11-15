@@ -6,7 +6,7 @@
     <div>
         @* KEYWORD TEXT BOX *@
         <div class="field" style="margin-bottom: 0;">
-            <input type="search" placeholder="Find an activity by title." />
+            <input type="search" placeholder="Find an activity by title, country, or keyword." />
         </div>
 
         @* ACTIVITIES *@
@@ -47,8 +47,10 @@
                 <div>
                     <table class="data">
                         <colgroup>
-                            <col/>
-                            <col style="width: 50%;" />
+                            <col style="vertical-align: top; width: 21%"/>
+                            <col style="vertical-align: top;width: 45%;" />
+                            <col style="vertical-align: top; width: 18%"/>
+                            <col style="vertical-align: top;"/>
                         </colgroup>
                         <thead>
                             <tr>
@@ -71,7 +73,6 @@
                             {
                                 <tr>
                                     <td>
-                                        <a href="/activities/@activity.ActivityId" style="text-decoration: none; display: block; cursor: pointer; color: inherit;">
                                             <ul style="display: inline-block;">
                                                 @foreach (var place in activity.Places)
                                                 {
@@ -84,16 +85,17 @@
                                                     </li>
                                                 }
                                             </ul>
-                                        </a>
                                     </td>
                                     <td>
-                                        @activity.Title
+                                        <a href="/activities/@activity.ActivityId" style="text-decoration: none; display: block; cursor: pointer; color: inherit;">
+                                            @activity.Title
+                                        </a>
                                     </td>
                                     <td>
                                         <ul style="display: inline-block;">
                                             @foreach (var type in activity.Types)
                                             {
-                                                <li style="margin-right: .5em;" class="same-line">
+                                                <li class="same-line">
                                                     <span style="display: inline-block; width: 32px; text-align: center;">
                                                         <img title="@type.Text" height="24" src="@Url.HttpRouteUrl(null, new { controller = "EmployeeModuleSettings", action = "GetIcon", typeId = type.TypeId })" alt="" />
                                                     </span>
@@ -110,7 +112,7 @@
                                         {
                                             if (activity.StartsOn.HasValue)
                                             {
-                                            <span style="padding: 0 4px 0 4px;">-</span>
+                                                <span style="padding: 0 4px 0 4px;">-</span>
                                             }
                                             <span>@activity.EndsOn.Value.ToString(activity.EndsFormat ?? "MM/dd/yyyy")</span>
                                         }

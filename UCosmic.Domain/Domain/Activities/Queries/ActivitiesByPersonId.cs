@@ -46,29 +46,20 @@ namespace UCosmic.Domain.Activities
 
             //// when the query's country code is empty string, match all agreements regardless of country.
             //// when the query's country code is null, match agreements with partners that have no known country
-            if (query.CountryCode == null)
-            {
-                //queryable = queryable.Where(x => !x.Participants.Any(y => !y.IsOwner && y.Establishment.Location.Places.Any(z => z.IsCountry)));
-            }
-            //when the country code is specified, match agreements with partners located in the country
-            else if (!string.IsNullOrWhiteSpace(query.CountryCode))
+            if (!string.IsNullOrWhiteSpace(query.CountryCode))
             {
                 //view = view.Where(x => x.Participants.Any(p => query.CountryCode.Equals(p.CountryCode, ordinalIgnoreCase)));
                 //queryable = queryable.Where(x => x.Participants.Any(y => !y.IsOwner && y.Establishment.Location.Places.Any(z => z.IsCountry && z.GeoPlanetPlace != null && query.CountryCode.Equals(z.GeoPlanetPlace.Country.Code, StringComparison.OrdinalIgnoreCase))));
+                queryable = queryable.Where(x => x.Locations.Any(y => y.Place.IsCountry && y.Place.GeoPlanetPlace != null && query.CountryCode.Equals(y.Place.GeoPlanetPlace.Country.Code, StringComparison.OrdinalIgnoreCase)));
             }
 
             if (!string.IsNullOrWhiteSpace(query.Keyword))
             {
-                //queryable = queryable.Where(x => (x.Name != null && x.Name.Contains(query.Keyword))
-                //    || x.Participants.Any(y => y.Establishment.Location.Places.Any(z =>
-                //        z.IsCountry && z.OfficialName.Contains(query.Keyword)))
-                //    || x.Participants.Any(y => y.Establishment.Names.Any(z => z.Text.Contains(query.Keyword)
-                //        || (z.AsciiEquivalent != null && z.AsciiEquivalent.Contains(query.Keyword))))
-                //    || x.Participants.Any(y => y.Establishment.Names.Any(z => z.Text.Contains(query.Keyword)
-                //        || (z.AsciiEquivalent != null && z.AsciiEquivalent.Contains(query.Keyword))))
-                //    || x.Participants.Any(y => y.Establishment.Urls.Any(z => z.Value.Contains(query.Keyword)))
-                //    || x.Type.Contains(query.Keyword)
-                //);
+                queryable = queryable.Where(x => (x.Title != null && x.Title.Contains(query.Keyword))
+                    || x.Locations.Any(y => y.Place.IsCountry && y.Place.OfficialName.Contains(query.Keyword))
+                    || x.Tags.Any(y => y.Text.Contains(query.Keyword))
+                    || x.Types.Any(y => y.Type.Type.Contains(query.Keyword))
+                );
             }
 
             queryable = queryable.OrderBy(query.OrderBy);

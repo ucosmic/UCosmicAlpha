@@ -6,6 +6,7 @@ namespace UCosmic.Web.Mvc.Models
     public class ActivityPublicInputModel : BaseSearchInputModel
     {
         public string CountryCode { get; set; }
+        public string Keyword { get; set; }
     }
 
     public static class ActivityPublicInputProfiler
@@ -19,7 +20,7 @@ namespace UCosmic.Web.Mvc.Models
                     .ForMember(d => d.Principal, o => o.Ignore())
                     .ForMember(d => d.PersonId, o => o.Ignore())
                     .ForMember(d => d.OrderBy, o => o.Ignore())
-                    .ForMember(d => d.Keyword, o => o.Ignore())
+                    //.ForMember(d => d.Keyword, o => o.Ignore())
 
                     // map the country code
                     .ForMember(d => d.CountryCode, o => o.ResolveUsing(s =>

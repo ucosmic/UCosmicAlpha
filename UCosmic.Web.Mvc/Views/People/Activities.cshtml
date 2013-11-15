@@ -19,10 +19,23 @@
 @section styles
 {
     <style>
-        
+        body table.data td {
+            border: solid 1px #fff;
+            padding: 4px;
+            vertical-align: top;
+        }
+        .same-line {
+            width: auto;
+            float: left;
+            list-style: none;
+            margin-right: 8px;
+        }
+        .same-line:last-child {
+            margin-right: 0px;
+        }
     </style>
 }
-<div class="content fixed to-top" data-current-module="faculty">
+<div class="content fixed to-top" data-current-module="employees">
     <form class="group">
         <div class="on-left from-top">
             <header>
@@ -36,7 +49,7 @@
         <aside class="on-right from-top" data-fixed-scroll="root">
             <div data-fixed-scroll="anchor"></div>
             <div data-fixed-scroll="content">
-                @Html.Partial(MVC.People.Views._SidebarNav)
+                @Html.Partial(MVC.People.Views._SearchSidebarNav)
             </div>
         </aside>
     </form>
