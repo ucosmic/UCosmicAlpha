@@ -32,7 +32,6 @@ namespace UCosmic.Web.Mvc.Models
                         return "any".Equals(s.CountryCode, StringComparison.OrdinalIgnoreCase) || string.IsNullOrWhiteSpace(s.CountryCode)
                             ? string.Empty : s.CountryCode;
                     }))
-
                     ;
             }
         }

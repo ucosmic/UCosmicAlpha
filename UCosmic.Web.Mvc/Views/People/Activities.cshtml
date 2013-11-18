@@ -49,6 +49,9 @@
         <aside class="on-right from-top" data-fixed-scroll="root">
             <div data-fixed-scroll="anchor"></div>
             <div data-fixed-scroll="content">
+                @*since I need the model here as well as in getActivities, maybe I should pass the madel into here then pass it like here:
+                http://stackoverflow.com/questions/3822546/using-html-renderpartial-in-ascx-files
+                http://stackoverflow.com/questions/8724847/asp-net-mvc-pass-partial-data-model-to-partial-view*@
                 @Html.Partial(MVC.People.Views._SearchSidebarNav)
             </div>
         </aside>

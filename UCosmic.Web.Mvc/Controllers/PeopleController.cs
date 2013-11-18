@@ -61,19 +61,12 @@ namespace UCosmic.Web.Mvc.Controllers
         [ChildActionOnly]
         public virtual ActionResult GetActivities(int personId, ActivityPublicInputModel input)
         {
-            //I may want to make a personactivitiesviewmodel that contains a list of activities
-
-            //var model = new PersonActivitiesViewModel();
-
             var query = new ActivitiesByPersonId(User, personId);
             Mapper.Map(input, query);
             var entities = _queryProcessor.Execute(query);
 
             var model = Mapper.Map<PageOfActivityPublicViewModel>(entities);
 
-            //model.Content = new HtmlString("<p>Permian/Triassic (P/Tr) Boundary Global Even....<p>");
-            //model.Person.EmailAddress = "aReallyLongEmail@aReallyLongDomain.usf.edu";
-            //model.Person.DisplayName = "aReally Long DISPLAY name";
             return PartialView(MVC.People.Views._Activities, model);
         }
     }

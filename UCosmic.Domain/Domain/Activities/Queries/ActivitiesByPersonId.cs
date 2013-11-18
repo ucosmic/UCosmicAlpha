@@ -40,7 +40,6 @@ namespace UCosmic.Domain.Activities
 
             var publicText = ActivityMode.Public.AsSentenceFragment();
             var queryable = _entities.Query<ActivityValues>()
-                //.EagerLoad(_entities, query.EagerLoad)
                 .Where(x => x.Activity.PersonId == query.PersonId && x.ModeText == publicText && x.Activity.ModeText == publicText && x.Activity.Original == null)
             ;
 
@@ -48,8 +47,6 @@ namespace UCosmic.Domain.Activities
             //// when the query's country code is null, match agreements with partners that have no known country
             if (!string.IsNullOrWhiteSpace(query.CountryCode))
             {
-                //view = view.Where(x => x.Participants.Any(p => query.CountryCode.Equals(p.CountryCode, ordinalIgnoreCase)));
-                //queryable = queryable.Where(x => x.Participants.Any(y => !y.IsOwner && y.Establishment.Location.Places.Any(z => z.IsCountry && z.GeoPlanetPlace != null && query.CountryCode.Equals(z.GeoPlanetPlace.Country.Code, StringComparison.OrdinalIgnoreCase))));
                 queryable = queryable.Where(x => x.Locations.Any(y => y.Place.IsCountry && y.Place.GeoPlanetPlace != null && query.CountryCode.Equals(y.Place.GeoPlanetPlace.Country.Code, StringComparison.OrdinalIgnoreCase)));
             }
 
@@ -63,7 +60,7 @@ namespace UCosmic.Domain.Activities
             }
 
             queryable = queryable.OrderBy(query.OrderBy);
-            
+
             var result = new PagedQueryResult<ActivityValues>(queryable, query.PageSize, query.PageNumber);
             return result;
         }

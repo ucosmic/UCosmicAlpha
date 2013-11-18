@@ -1,15 +1,13 @@
 ﻿@using UCosmic.Web.Mvc.ApiControllers
 @model UCosmic.Web.Mvc.Models.PageOfActivityPublicViewModel
 
-<section id="card"  class="content fixed to-top">
-
+@* ACTIVITIES *@
+<section class="content fixed to-top">
     <div>
         @* KEYWORD TEXT BOX *@
         <div class="field" style="margin-bottom: 0;">
             <input type="search" placeholder="Find an activity by title, country, or keyword." />
         </div>
-
-        @* ACTIVITIES *@
 
         @* PAGER STATUS & LOADING SPINNER *@
         <div class="group" style="margin: 1em 0;">
@@ -41,16 +39,16 @@
         </div>
         @if (Model != null && Model.Items.Any())
         {
-            @* RESULTS *@
+@* RESULTS *@
             <div>
                 @* TABLE *@
                 <div>
                     <table class="data">
                         <colgroup>
-                            <col style="vertical-align: top; width: 21%"/>
-                            <col style="vertical-align: top;width: 45%;" />
-                            <col style="vertical-align: top; width: 18%"/>
-                            <col style="vertical-align: top;"/>
+                            <col style="vertical-align: top; width: 21%" />
+                            <col style="vertical-align: top; width: 45%;" />
+                            <col style="vertical-align: top; width: 18%" />
+                            <col style="vertical-align: top;" />
                         </colgroup>
                         <thead>
                             <tr>
@@ -73,18 +71,18 @@
                             {
                                 <tr>
                                     <td>
-                                            <ul style="display: inline-block;">
-                                                @foreach (var place in activity.Places)
-                                                {
-                                                    <li class="same-line">
-                                                        <a href='~/facultystaff/#/search/country/@place.PlaceName' style="text-decoration: none; color: inherit;">
-                                                            <span class="badge light-transparent">
-                                                                @place.PlaceName
-                                                            </span>
-                                                        </a>
-                                                    </li>
-                                                }
-                                            </ul>
+                                        <ul style="display: inline-block;">
+                                            @foreach (var place in activity.Places)
+                                            {
+                                                <li class="same-line">
+                                                    <a href='~/facultystaff/#/search/country/@place.PlaceName' style="text-decoration: none; color: inherit;">
+                                                        <span class="badge light-transparent">
+                                                            @place.PlaceName
+                                                        </span>
+                                                    </a>
+                                                </li>
+                                            }
+                                        </ul>
                                     </td>
                                     <td>
                                         <a href="/activities/@activity.ActivityId" style="text-decoration: none; display: block; cursor: pointer; color: inherit;">
@@ -112,7 +110,7 @@
                                         {
                                             if (activity.StartsOn.HasValue)
                                             {
-                                                <span style="padding: 0 4px 0 4px;">-</span>
+                                            <span style="padding: 0 4px 0 4px;">-</span>
                                             }
                                             <span>@activity.EndsOn.Value.ToString(activity.EndsFormat ?? "MM/dd/yyyy")</span>
                                         }
@@ -143,7 +141,7 @@
                 There are no results that match your search terms.
             </p>
         }
-        
+
 
     </div>
 </section>
