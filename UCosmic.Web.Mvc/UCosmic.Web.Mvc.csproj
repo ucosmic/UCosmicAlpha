@@ -2274,6 +2274,13 @@
     <None Include="scripts\viewmodels\places\ApiModels.d.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\places\Utils.ts" />
     <None Include="scripts\viewmodels\languages\ApiModels.d.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\People\Activities.ts" />
+    <Content Include="scripts\viewmodels\People\Activities.js">
+      <DependentUpon>Activities.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\People\Activities.min.js">
+      <DependentUpon>Activities.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\viewmodels\places\Utils.js">
       <DependentUpon>Utils.ts</DependentUpon>
     </Content>

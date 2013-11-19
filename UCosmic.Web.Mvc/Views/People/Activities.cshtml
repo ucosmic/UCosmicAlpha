@@ -1,4 +1,6 @@
-﻿@{
+﻿@using UCosmic.Web.Mvc.ApiControllers
+@model UCosmic.Web.Mvc.Models.PageOfActivityPublicViewModel
+@{
     ViewBag.Title = "UCosmic Profile";
 }
 @section bib
@@ -10,9 +12,15 @@
 @section scripts
 {
 
+    <script type="text/javascript">
+        var modelData = @Html.Raw(Json.Encode(Model));
+    </script>
 
+    @Scripts.Render("~/bundles/people/activities")
 
     <script type="text/javascript">
+        var viewModel = new People.ViewModels.ActivityInputModel();
+        ko.applyBindings(viewModel, $('#main')[0]);
     </script>
 
 }
@@ -24,27 +32,31 @@
             padding: 4px;
             vertical-align: top;
         }
+
         .same-line {
             width: auto;
             float: left;
             list-style: none;
             margin-right: 8px;
         }
-        .same-line:last-child {
-            margin-right: 0px;
-        }
+
+            .same-line:last-child {
+                margin-right: 0px;
+            }
     </style>
 }
 <div class="content fixed to-top" data-current-module="employees">
-    <form class="group">
+    <form class="group" method="GET" action="@Url.Action(MVC.People.Activities())" data-bind="jQuery: '$form'">
         <div class="on-left from-top">
             <header>
                 <h1>
                     UCosmic Activities
+                    <input type="submit" value="search" />
                 </h1>
             </header>
             @Html.Action(MVC.People.GetCard())
-            @Html.Action(MVC.People.GetActivities())
+            @*@Html.Action(MVC.People.GetActivities())*@
+            @Html.Partial(MVC.People.Views._Activities, Model)
         </div>
         <aside class="on-right from-top" data-fixed-scroll="root">
             <div data-fixed-scroll="anchor"></div>
@@ -52,7 +64,7 @@
                 @*since I need the model here as well as in getActivities, maybe I should pass the madel into here then pass it like here:
                 http://stackoverflow.com/questions/3822546/using-html-renderpartial-in-ascx-files
                 http://stackoverflow.com/questions/8724847/asp-net-mvc-pass-partial-data-model-to-partial-view*@
-                @Html.Partial(MVC.People.Views._SearchSidebarNav)
+                @Html.Partial(MVC.People.Views._SearchSidebarNav, Model)
             </div>
         </aside>
     </form>

@@ -59,12 +59,6 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Activities);
         }
-        [NonAction]
-        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public System.Web.Mvc.ActionResult GetActivities()
-        {
-            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.GetActivities);
-        }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public PeopleController Actions { get { return MVC.People; } }
@@ -84,7 +78,6 @@ namespace UCosmic.Web.Mvc.Controllers
             public readonly string Index = "Index";
             public readonly string GetCard = "GetCard";
             public readonly string Activities = "Activities";
-            public readonly string GetActivities = "GetActivities";
         }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -93,7 +86,6 @@ namespace UCosmic.Web.Mvc.Controllers
             public const string Index = "Index";
             public const string GetCard = "GetCard";
             public const string Activities = "Activities";
-            public const string GetActivities = "GetActivities";
         }
 
 
@@ -118,14 +110,6 @@ namespace UCosmic.Web.Mvc.Controllers
         public ActionParamsClass_Activities ActivitiesParams { get { return s_params_Activities; } }
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public class ActionParamsClass_Activities
-        {
-            public readonly string personId = "personId";
-        }
-        static readonly ActionParamsClass_GetActivities s_params_GetActivities = new ActionParamsClass_GetActivities();
-        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public ActionParamsClass_GetActivities GetActivitiesParams { get { return s_params_GetActivities; } }
-        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public class ActionParamsClass_GetActivities
         {
             public readonly string personId = "personId";
             public readonly string input = "input";
@@ -179,16 +163,9 @@ namespace UCosmic.Web.Mvc.Controllers
             return callInfo;
         }
 
-        public override System.Web.Mvc.ActionResult Activities(int personId)
+        public override System.Web.Mvc.ActionResult Activities(int personId, UCosmic.Web.Mvc.Models.ActivityPublicInputModel input)
         {
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Activities);
-            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "personId", personId);
-            return callInfo;
-        }
-
-        public override System.Web.Mvc.ActionResult GetActivities(int personId, UCosmic.Web.Mvc.Models.ActivityPublicInputModel input)
-        {
-            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.GetActivities);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "personId", personId);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "input", input);
             return callInfo;

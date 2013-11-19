@@ -1,5 +1,5 @@
-﻿@*@using UCosmic.Web.Mvc.ApiControllers
-@model UCosmic.Web.Mvc.Models.PageOfActivityPublicViewModel*@
+﻿@using UCosmic.Web.Mvc.ApiControllers
+@model UCosmic.Web.Mvc.Models.PageOfActivityPublicViewModel
 @* RIGHT *@
 <nav class="side">
     <ul class="top">
@@ -11,20 +11,20 @@
         </li>
         <li class="static square-bottom">
             <div class="content">
-                <div class="field">
+                @*<div class="field">
                     <select class="side" data-bind="options: countries, optionsCaption: '[All countries]', optionsText: 'name', optionsValue: 'code', value: countryCode, enable: optionsEnabled">
                         <option>[Loading...]</option>
                     </select>
                     <input type="hidden" data-bind="value: countryCode" />
-                </div>
+                </div>*@
                 <div class="field">
-                    <select class="side" data-bind="value: orderBy, enable: optionsEnabled">
+                    <select class="side" name="orderBy" data-bind="value: orderBy">
                         <option value="type-asc">Sort by activity title A-Z</option>
                         <option value="type-desc">Sort by activity title Z-A</option>
                     </select>
                 </div>
                 <div class="field">
-                    <select class="side" data-bind="value: pageSize, enable: optionsEnabled">
+                    <select name="pageSize" class="side" data-bind="value: pageSize">
                         <option value="10">Show 10 results per page</option>
                         <option value="20">Show 20 results per page</option>
                         <option value="50">Show 50 results per page</option>
@@ -33,13 +33,12 @@
                     </select>
                 </div>
                 <div class="field" style="display: none;">
-                    <select class="side" data-bind="value: lens">
+                    <select class="side">
                         <option value="table">Table</option>
                         <option value="list">List</option>
                     </select>
                 </div>
                 <div class="field">
-                    @*<a href="?pageindex=@(Model.PageIndex-1)">&lt;&lt; Previous</a>*@
                     <button class="link" data-bind="click: prevPage, enable: prevEnabled">&lt;&lt; Previous</button>
                     |
                     <button class="link" data-bind="click: nextPage, enable: nextEnabled">Next &gt;&gt;</button>
