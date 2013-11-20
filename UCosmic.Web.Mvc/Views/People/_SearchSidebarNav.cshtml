@@ -11,20 +11,21 @@
         </li>
         <li class="static square-bottom">
             <div class="content">
-                @*<div class="field">
-                    <select class="side" data-bind="options: countries, optionsCaption: '[All countries]', optionsText: 'name', optionsValue: 'code', value: countryCode, enable: optionsEnabled">
+                <div class="field">
+                    <select class="side" data-bind="options: countries, optionsCaption: '[All countries]', optionsText: 'name',
+    optionsValue: 'code', value: countryCode, enabled: optionsEnabled" name="countryCode">
                         <option>[Loading...]</option>
                     </select>
-                    <input type="hidden" data-bind="value: countryCode" />
-                </div>*@
+                    @*<input type="hidden" data-bind="value: countryCode" />*@
+                </div>
                 <div class="field">
-                    <select class="side" name="orderBy" data-bind="value: orderBy">
-                        <option value="type-asc">Sort by activity title A-Z</option>
-                        <option value="type-desc">Sort by activity title Z-A</option>
+                    <select class="side" name="orderBy" data-bind="value: orderBy, enabled: optionsEnabled">
+                        <option value="title-asc">Sort by activity title A-Z</option>
+                        <option value="title-desc">Sort by activity title Z-A</option>
                     </select>
                 </div>
                 <div class="field">
-                    <select name="pageSize" class="side" data-bind="value: pageSize">
+                    <select name="pageSize" class="side" data-bind="value: pageSize, enabled: optionsEnabled">
                         <option value="10">Show 10 results per page</option>
                         <option value="20">Show 20 results per page</option>
                         <option value="50">Show 50 results per page</option>
@@ -39,9 +40,9 @@
                     </select>
                 </div>
                 <div class="field">
-                    <button class="link" data-bind="click: prevPage, enable: prevEnabled">&lt;&lt; Previous</button>
+                    <button class="link" data-bind="click: prevPage, enable: prevEnabled" disabled="disabled">&lt;&lt; Previous</button>
                     |
-                    <button class="link" data-bind="click: nextPage, enable: nextEnabled">Next &gt;&gt;</button>
+                    <button class="link" data-bind="click: nextPage, enable: nextEnabled" disabled="disabled">Next &gt;&gt;</button>
                     <input type="hidden" value="1" data-bind="value: pageNumber" />
                 </div>
             </div>

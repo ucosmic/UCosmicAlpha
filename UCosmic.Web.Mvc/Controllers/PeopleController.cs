@@ -61,7 +61,9 @@ namespace UCosmic.Web.Mvc.Controllers
             var entities = _queryProcessor.Execute(query);
 
             var model = Mapper.Map<PageOfActivityPublicViewModel>(entities);
-
+            ViewBag.keyword = input.Keyword;
+            ViewBag.personId = personId;
+            ViewBag.countryCode = input.CountryCode;
             return View(model);
         }
 

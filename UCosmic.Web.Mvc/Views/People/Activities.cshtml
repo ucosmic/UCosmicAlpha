@@ -14,6 +14,8 @@
 
     <script type="text/javascript">
         var modelData = @Html.Raw(Json.Encode(Model));
+        modelData.Keyword = "@ViewBag.keyword";
+        modelData.CountryCode = "@ViewBag.countryCode";
     </script>
 
     @Scripts.Render("~/bundles/people/activities")
@@ -51,19 +53,14 @@
             <header>
                 <h1>
                     UCosmic Activities
-                    <input type="submit" value="search" />
                 </h1>
             </header>
             @Html.Action(MVC.People.GetCard())
-            @*@Html.Action(MVC.People.GetActivities())*@
             @Html.Partial(MVC.People.Views._Activities, Model)
         </div>
         <aside class="on-right from-top" data-fixed-scroll="root">
             <div data-fixed-scroll="anchor"></div>
             <div data-fixed-scroll="content">
-                @*since I need the model here as well as in getActivities, maybe I should pass the madel into here then pass it like here:
-                http://stackoverflow.com/questions/3822546/using-html-renderpartial-in-ascx-files
-                http://stackoverflow.com/questions/8724847/asp-net-mvc-pass-partial-data-model-to-partial-view*@
                 @Html.Partial(MVC.People.Views._SearchSidebarNav, Model)
             </div>
         </aside>

@@ -6,7 +6,8 @@
     <div>
         @* KEYWORD TEXT BOX *@
         <div class="field" style="margin-bottom: 0;">
-            <input type="search" placeholder="Find an activity by title, country, or keyword." name="keyword" />
+            <input type="search" data-bind="value: keyword" placeholder="Find an activity by title, country, or keyword." name="keyword" style="width:588px; margin-right: 12px"/>
+                    <input type="submit" value="Search" title="Click here or press the enter key to search." />
         </div>
 
         @* PAGER STATUS & LOADING SPINNER *@
