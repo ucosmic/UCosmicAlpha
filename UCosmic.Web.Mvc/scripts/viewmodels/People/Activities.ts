@@ -17,10 +17,15 @@ module People.ViewModels {
             if (this.pageNumber() == 1) {
                 this.prevEnabled(false);
             }
+            this.pageNumber.subscribe(function (newValue) {
+                if (this.hasInitialized) {
+                    this.search();
+                }
+            }, this);
             this.orderBy.subscribe(function (newValue) {
                 if (this.hasInitialized) {
                     this.search();
-                }                
+                }
             }, this);
             this.pageSize.subscribe(function (newValue) {
                 if (this.hasInitialized) {
@@ -45,26 +50,26 @@ module People.ViewModels {
         countryCode: KnockoutObservable<string> = ko.observable();
         prevEnabled = ko.observable(true);
         nextEnabled = ko.observable(true);
-        orderBy = ko.observable();
+        orderBy = ko.observable(modelData.OrderBy);
 
         nextPage(model, event): void {
             event.preventDefault();
-            this.pageNumber(this.pageNumber() + 1);
+            this.pageNumber((parseInt(this.pageNumber()) + 1).toString());
             this.search();
         }
 
         prevPage(model, event): void {
             event.preventDefault();
-            this.pageNumber(this.pageNumber() - 1);
+            this.pageNumber((parseInt(this.pageNumber()) - 1).toString());
             this.search();
         }
-        
 
-        search(): void{
+
+        search(): void {
             this.$form.submit();
         }
         hasInitialized = false;
-        
+
         // countries dropdown
         private _setupCountryDropDown(): void {
             ko.computed((): void => {

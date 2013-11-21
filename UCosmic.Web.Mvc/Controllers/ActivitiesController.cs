@@ -149,7 +149,7 @@ namespace UCosmic.Web.Mvc.Controllers
         }
 
         [GET("activities/{activityId:int}")]
-        public virtual ActionResult ActivitiesSpike(int activityId)
+        public virtual ActionResult Details(int activityId)
         {
             var model = new ActivityPublicViewModel();
 

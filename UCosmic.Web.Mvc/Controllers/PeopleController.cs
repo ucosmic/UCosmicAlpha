@@ -64,6 +64,7 @@ namespace UCosmic.Web.Mvc.Controllers
             ViewBag.keyword = input.Keyword;
             ViewBag.personId = personId;
             ViewBag.countryCode = input.CountryCode;
+            ViewBag.orderBy = input.OrderBy;
             return View(model);
         }
 

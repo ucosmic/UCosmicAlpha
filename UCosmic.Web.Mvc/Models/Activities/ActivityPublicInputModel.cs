@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
 using AutoMapper;
 using UCosmic.Domain.Activities;
 namespace UCosmic.Web.Mvc.Models
@@ -7,6 +9,7 @@ namespace UCosmic.Web.Mvc.Models
     {
         public string CountryCode { get; set; }
         public string Keyword { get; set; }
+        public string OrderBy { get; set; }
     }
 
     public static class ActivityPublicInputProfiler
@@ -31,6 +34,55 @@ namespace UCosmic.Web.Mvc.Models
                         // a country code value of "" implies finding all results regardless of country code
                         return "any".Equals(s.CountryCode, StringComparison.OrdinalIgnoreCase) || string.IsNullOrWhiteSpace(s.CountryCode)
                             ? string.Empty : s.CountryCode;
+                    }))
+                    // map the order by
+                    
+                    .ForMember(d => d.OrderBy, o => o.ResolveUsing(s =>
+                    {
+                        var orderBy = new Dictionary<Expression<Func<ActivityValues, object>>, OrderByDirection>();
+                        if (string.IsNullOrWhiteSpace(s.OrderBy))
+                        {
+                            orderBy.Add(e => e.Title, OrderByDirection.Ascending);
+                        }
+                        else if (s.OrderBy.Contains("-"))
+                        {
+                            var columnAndDirection = s.OrderBy.Split(new[] { '-' });
+                            var column = columnAndDirection[0];
+                            var direction = "desc".Equals(columnAndDirection[1], StringComparison.OrdinalIgnoreCase)
+                                ? OrderByDirection.Descending : OrderByDirection.Ascending;
+
+                            switch (column.ToLower())
+                            {
+                                case "title":
+                                    orderBy.Add(x => x.Title, direction);
+                                    break;
+                                case "type":
+                                    orderBy.Add(x => x.Types, direction);
+                                    break;
+
+                                //case "country":
+                                    //orderBy.Add(x => x.Activity.);
+
+                                    //orderBy.Add(x => (x.Locations.Add(x => x.Locations, direction)), direction);
+                                    
+
+                                    //orderBy.Add(x => x.Locations,);
+                                        
+                                    //(y => y.Establishment.Location, direction), direction);
+                                    //// put agreements without partners or without known partner countries at the bottom
+                                    ////orderBy.Add(x => x.Participants.Any(y => !y.IsOwner && y.Establishment.Location.Places.Any(z => z.IsCountry)), OrderByDirection.Descending);
+
+                                    //// ordering by partner country, first narrow to partner participants
+                                    //orderBy.Add(x => x.Participants.Where(y => !y.IsOwner)
+                                    //    // of those, get a list of the partner country names
+                                    //    .SelectMany(y => y.Establishment.Location.Places.Where(z => z.IsCountry).Select(z => z.OfficialName))
+                                    //    // sort the country names alphabetically A-Z then take the first
+                                    //    .OrderBy(y => y).FirstOrDefault(), direction);
+                                    //break;
+                            }
+                        }
+
+                        return orderBy;
                     }))
                     ;
             }

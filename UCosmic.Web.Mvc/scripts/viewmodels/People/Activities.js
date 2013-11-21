@@ -18,7 +18,7 @@ var People;
                 this.countryCode = ko.observable();
                 this.prevEnabled = ko.observable(true);
                 this.nextEnabled = ko.observable(true);
-                this.orderBy = ko.observable();
+                this.orderBy = ko.observable(modelData.OrderBy);
                 this.hasInitialized = false;
                 this.optionsEnabled = ko.observable(false);
                 this._setupCountryDropDown();
@@ -28,6 +28,11 @@ var People;
                 if (this.pageNumber() == 1) {
                     this.prevEnabled(false);
                 }
+                this.pageNumber.subscribe(function (newValue) {
+                    if (this.hasInitialized) {
+                        this.search();
+                    }
+                }, this);
                 this.orderBy.subscribe(function (newValue) {
                     if (this.hasInitialized) {
                         this.search();
@@ -48,13 +53,13 @@ var People;
             }
             ActivityInputModel.prototype.nextPage = function (model, event) {
                 event.preventDefault();
-                this.pageNumber(this.pageNumber() + 1);
+                this.pageNumber((parseInt(this.pageNumber()) + 1).toString());
                 this.search();
             };
 
             ActivityInputModel.prototype.prevPage = function (model, event) {
                 event.preventDefault();
-                this.pageNumber(this.pageNumber() - 1);
+                this.pageNumber((parseInt(this.pageNumber()) - 1).toString());
                 this.search();
             };
 

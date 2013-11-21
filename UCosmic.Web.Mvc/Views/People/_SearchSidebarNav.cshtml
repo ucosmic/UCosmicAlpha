@@ -13,7 +13,8 @@
             <div class="content">
                 <div class="field">
                     <select class="side" data-bind="options: countries, optionsCaption: '[All countries]', optionsText: 'name',
-    optionsValue: 'code', value: countryCode, enabled: optionsEnabled" name="countryCode">
+    optionsValue: 'code', value: countryCode, enabled: optionsEnabled"
+                        name="countryCode">
                         <option>[Loading...]</option>
                     </select>
                     @*<input type="hidden" data-bind="value: countryCode" />*@
@@ -22,6 +23,10 @@
                     <select class="side" name="orderBy" data-bind="value: orderBy, enabled: optionsEnabled">
                         <option value="title-asc">Sort by activity title A-Z</option>
                         <option value="title-desc">Sort by activity title Z-A</option>
+                        <option value="country-asc">Sort by country A-Z</option>
+                        <option value="country-desc">Sort by country Z-A</option>
+                        <option value="type-asc">Sort by agreement type A-Z</option>
+                        <option value="type-desc">Sort by agreement type Z-A</option>
                     </select>
                 </div>
                 <div class="field">

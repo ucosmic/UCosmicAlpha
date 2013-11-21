@@ -2688,7 +2688,7 @@
     <Content Include="Views\Agreements\_PublicViewContent.cshtml" />
     <Content Include="Views\Activities\_EditStyles.cshtml" />
     <Content Include="Views\Agreements\SearchTable.cshtml" />
-    <Content Include="Views\Activities\ActivitiesSpike.cshtml" />
+    <Content Include="Views\Activities\Details.cshtml" />
     <Content Include="Views\Activities\_ActivitiesSpikeContent.cshtml" />
     <Content Include="Views\Activities\_Bib.cshtml" />
     <Content Include="Views\Activities\_ActivitiesSpikeSide.cshtml" />
