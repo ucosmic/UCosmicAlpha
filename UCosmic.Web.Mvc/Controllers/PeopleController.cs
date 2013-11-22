@@ -53,9 +53,6 @@ namespace UCosmic.Web.Mvc.Controllers
         [GET("people/{personId:int}/activities")]
         public virtual ActionResult Activities(int personId, ActivityPublicInputModel input)
         {
-            //ViewBag.personId = personId;
-            //return View();
-
             var query = new ActivitiesByPersonId(User, personId);
             Mapper.Map(input, query);
             var entities = _queryProcessor.Execute(query);
@@ -68,17 +65,5 @@ namespace UCosmic.Web.Mvc.Controllers
             return View(model);
         }
 
-        //[GET("people/{personId:int}/activities")]
-        //[ChildActionOnly]
-        //public virtual ActionResult GetActivities(int personId, ActivityPublicInputModel input)
-        //{
-        //    var query = new ActivitiesByPersonId(User, personId);
-        //    Mapper.Map(input, query);
-        //    var entities = _queryProcessor.Execute(query);
-
-        //    var model = Mapper.Map<PageOfActivityPublicViewModel>(entities);
-
-        //    return PartialView(MVC.People.Views._Activities, model);
-        //}
     }
 }

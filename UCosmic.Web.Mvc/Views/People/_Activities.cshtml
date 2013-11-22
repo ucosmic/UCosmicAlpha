@@ -72,39 +72,12 @@
                             {
                                 <tr>
                                     <td>
-                                        @*<div class="comma-list">
-                                            @foreach (var place in activity.Places)
-                                            {
-                                                <span>
-                                                    @place.PlaceName
-                                                </span>
-                                            }
-                                        </div>*@
                                         <ul style="display: inline-block;">
                                             @foreach (var place in activity.Places)
                                             {
                                                 <li class="comma-list"><span>@place.PlaceName</span></li>
                                             }
                                         </ul>
-                                        @*<table style="border: none;">
-                                            <tr>
-                                                @for (var i = 0; i < activity.Places.Length; i++)
-                                                {
-                                                    <td style="border: none; margin: 2px; padding: 2px;" >
-                                                        <a href='~/facultystaff/#/search/country/@activity.Places[i].PlaceName' style="text-decoration: none; color: inherit;padding-bottom: 2px; ">
-                                                            <span class="badge light-transparent">
-                                                                @activity.Places[i].PlaceName
-                                                            </span>
-                                                        </a>
-                                                    </td> 
-                                                    if ((i+1) % 2 == 0)
-                                                    {
-                                                        @Html.Raw("</tr>");
-                                                        @Html.Raw("<tr>");
-                                                    }
-                                                }
-                                            </tr>
-                                        </table>*@
                                     </td>
                                     <td>
                                         <a href="@Url.Action(MVC.Activities.Details(activity.ActivityId))" >
@@ -112,26 +85,8 @@
                                         </a>
                                     </td>
                                     <td>
-                                        @* <ul style="display: inline-block;">
-                                            @foreach (var type in activity.Types)
-                                            {
-                                                <li class="same-line">
-                                                    <span style="display: inline-block; width: 32px; text-align: center;">
-                                                        <img title="@type.Text" height="24" src="@Url.HttpRouteUrl(null, new { controller = "EmployeeModuleSettings", action = "GetIcon", typeId = type.TypeId })" alt="" />
-                                                    </span>
-                                                </li> 
-                                            }
-                                        </ul>*@
                                         <table style="border: none;">
                                             <tr>
-                                                @*@foreach (var type in activity.Types)
-                                                {
-                                                    <td style="border: none; margin: 0px; padding: 0px;" >
-                                                        <span style="display: inline-block; width: 32px; text-align: center;">
-                                                            <img title="@type.Text" height="24" src="@Url.HttpRouteUrl(null, new { controller = "EmployeeModuleSettings", action = "GetIcon", typeId = type.TypeId })" alt="" />
-                                                        </span>
-                                                    </td> 
-                                                }*@
                                                 @for (var i = 0; i < activity.Types.Length; i++)
                                                 {
                                                     <td style="border: none; margin: 2px; padding: 2px;">
@@ -139,7 +94,8 @@
                                                             <img title="@activity.Types[i].Text" height="24" src="@Url.HttpRouteUrl(null, new { controller = "EmployeeModuleSettings", action = "GetIcon", typeId = activity.Types[i].TypeId })" alt="" />
                                                         </span>
                                                     </td> 
-                                                    if ((i + 1) % 3 == 0)
+                                                    //How many columns per row
+                                                    if ((i + 1) % 2 == 0)
                                                     {
                                                     @Html.Raw("</tr>");
                                                     @Html.Raw("<tr>");

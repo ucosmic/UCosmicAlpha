@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Linq;
 using AutoMapper;
 using UCosmic.Domain.Activities;
+using System.Collections;
 namespace UCosmic.Web.Mvc.Models
 {
     public class ActivityPublicInputModel : BaseSearchInputModel
@@ -14,6 +16,14 @@ namespace UCosmic.Web.Mvc.Models
 
     public static class ActivityPublicInputProfiler
     {
+
+        //private static IOrderedEnumerable<T> Order<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, string ascending)
+        //{
+        // public static IOrderedEnumerable<TSource> OrderBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, string isAscending)
+        //{
+        //    return isAscending == "asc" ? source.OrderBy(keySelector) : source.OrderByDescending(keySelector);
+        //}
+
         public class ModelToQuery : Profile
         {
             protected override void Configure()
@@ -36,7 +46,7 @@ namespace UCosmic.Web.Mvc.Models
                             ? string.Empty : s.CountryCode;
                     }))
                     // map the order by
-                    
+
                     .ForMember(d => d.OrderBy, o => o.ResolveUsing(s =>
                     {
                         var orderBy = new Dictionary<Expression<Func<ActivityValues, object>>, OrderByDirection>();
@@ -57,28 +67,30 @@ namespace UCosmic.Web.Mvc.Models
                                     orderBy.Add(x => x.Title, direction);
                                     break;
                                 case "type":
-                                    orderBy.Add(x => x.Types, direction);
+                                    if (columnAndDirection[1] == "desc")
+                                    {
+                                        orderBy.Add(x => x.Types.Select(y => y.Type.Type)
+                                            .OrderByDescending(y => y).FirstOrDefault(), direction);
+                                    }
+                                    else
+                                    {
+                                        orderBy.Add(x => x.Types.Select(y => y.Type.Type)
+                                            .OrderBy(y => y).FirstOrDefault(), direction);
+                                    }
                                     break;
 
-                                //case "country":
-                                    //orderBy.Add(x => x.Activity.);
-
-                                    //orderBy.Add(x => (x.Locations.Add(x => x.Locations, direction)), direction);
-                                    
-
-                                    //orderBy.Add(x => x.Locations,);
-                                        
-                                    //(y => y.Establishment.Location, direction), direction);
-                                    //// put agreements without partners or without known partner countries at the bottom
-                                    ////orderBy.Add(x => x.Participants.Any(y => !y.IsOwner && y.Establishment.Location.Places.Any(z => z.IsCountry)), OrderByDirection.Descending);
-
-                                    //// ordering by partner country, first narrow to partner participants
-                                    //orderBy.Add(x => x.Participants.Where(y => !y.IsOwner)
-                                    //    // of those, get a list of the partner country names
-                                    //    .SelectMany(y => y.Establishment.Location.Places.Where(z => z.IsCountry).Select(z => z.OfficialName))
-                                    //    // sort the country names alphabetically A-Z then take the first
-                                    //    .OrderBy(y => y).FirstOrDefault(), direction);
-                                    //break;
+                                case "country":
+                                    if (columnAndDirection[1] == "desc")
+                                    {
+                                        orderBy.Add(x => x.Locations.Select(y => y.Place.OfficialName)
+                                            .OrderByDescending(y => y).FirstOrDefault(), direction);
+                                    }
+                                    else
+                                    {
+                                        orderBy.Add(x => x.Locations.Select(y => y.Place.OfficialName)
+                                            .OrderBy(y => y).FirstOrDefault(), direction);
+                                    }
+                                    break;
                             }
                         }
 
