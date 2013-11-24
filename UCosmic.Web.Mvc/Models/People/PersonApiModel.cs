@@ -17,6 +17,8 @@ namespace UCosmic.Web.Mvc.Models
         public string MiddleName { get; set; }
         public string LastName { get; set; }
         public string Suffix { get; set; }
+        public bool IsActive { get; set; }
+        public string Gender { get; set; }
         public string DefaultEmailAddress { get; set; }
     }
 
@@ -24,14 +26,15 @@ namespace UCosmic.Web.Mvc.Models
 
     public static class PersonApiModelProfiler
     {
-        public static readonly IEnumerable<Expression<Func<Person, object>>> EagerLoads =
+        internal static readonly IEnumerable<Expression<Func<Person, object>>> EagerLoads =
             new Expression<Func<Person, object>>[]
             {
                 x => x.Emails,
                 x => x.User,
+                x => x.Affiliations,
             };
 
-        public class EntityToModelProfile : Profile
+        public class EntityToModel : Profile
         {
             protected override void Configure()
             {
@@ -40,11 +43,13 @@ namespace UCosmic.Web.Mvc.Models
                     .ForMember(d => d.UserId, o => o.MapFrom(s => s.User == null ? (int?)null : s.User.RevisionId))
                     .ForMember(d => d.DefaultEmailAddress, o => o.MapFrom(s =>
                         (s.DefaultEmail != null) ? s.DefaultEmail.Value : null))
+                    //.ForMember(d => d.DefaultTitle, o => o.MapFrom(s =>
+                    //    s.Affiliations.Any(x => x.IsDefault) ? s.Affiliations.FirstOrDefault(x => x.IsDefault).JobTitles : null))
                 ;
             }
         }
 
-        public class ModelToGenerateDisplayNameProfile : Profile
+        public class ModelToGenerateDisplayName : Profile
         {
             protected override void Configure()
             {
@@ -52,7 +57,18 @@ namespace UCosmic.Web.Mvc.Models
             }
         }
 
-        public class PagedQueryResultToPageOfItemsProfile : Profile
+        public class ModelToUpdateCommand : Profile
+        {
+            protected override void Configure()
+            {
+                CreateMap<PersonApiModel, UpdatePerson>()
+                    .ForMember(d => d.Principal, o => o.Ignore())
+                    .ForMember(d => d.PersonId, o => o.Ignore())
+                ;
+            }
+        }
+
+        public class PagedQueryResultToPageOfItems : Profile
         {
             protected override void Configure()
             {

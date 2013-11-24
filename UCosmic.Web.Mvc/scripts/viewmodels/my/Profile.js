@@ -1,48 +1,415 @@
-var ViewModels;
-(function (ViewModels) {
-    /// <reference path="../../typings/jquery/jquery.d.ts" />
-    /// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
-    /// <reference path="../../typings/knockout/knockout.d.ts" />
-    /// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
-    /// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
-    /// <reference path="../../typings/kendo/kendo.all.d.ts" />
-    /// <reference path="../../typings/sammyjs/sammyjs.d.ts" />
-    /// <reference path="../../app/Routes.ts" />
-    /// <reference path="../../app/Spinner.ts" />
-    /// <reference path="../../app/Flasher.ts" />
-    /// <reference path="ServerApiModel.d.ts" />
-    /// <reference path="../employees/ServerApiModel.d.ts" />
-    /// <reference path="../activities/Activities.ts" />
-    /// <reference path="../geographicExpertises/GeographicExpertises.ts" />
-    /// <reference path="../languageExpertises/LanguageExpertises.ts" />
-    /// <reference path="../degrees/Degrees.ts" />
-    /// <reference path="../internationalAffiliations/InternationalAffiliations.ts" />
-    (function (My) {
-        var Affiliation = (function () {
-            function Affiliation() {
-                this.id = ko.observable();
-                this.establishmentId = ko.observable();
-                this.establishment = ko.observable();
-                this.jobTitles = ko.observable();
-                this.isDefault = ko.observable(false);
-                this.isAcknowledged = ko.observable(false);
-                this.isClaimingStudent = ko.observable(false);
-                this.isClaimingEmployee = ko.observable(false);
-                this.isClaimingInternationalOffice = ko.observable(false);
-                this.isClaimingAdministrator = ko.observable(false);
-                this.isClaimingFaculty = ko.observable(false);
-                this.isClaimingStaff = ko.observable(false);
-                this.campusId = ko.observable(null);
-                this.collegeId = ko.observable(null);
-                this.departmentId = ko.observable(null);
-                this.facultyRankId = ko.observable(null);
+/// <reference path="../../typings/jquery/jquery.d.ts" />
+/// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
+/// <reference path="../../typings/knockout/knockout.d.ts" />
+/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
+/// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
+/// <reference path="../../typings/kendo/kendo.all.d.ts" />
+/// <reference path="../../typings/sammyjs/sammyjs.d.ts" />
+/// <reference path="../../app/Routes.ts" />
+/// <reference path="../../app/Spinner.ts" />
+/// <reference path="../../app/Flasher.ts" />
+/// <reference path="ServerApiModel.d.ts" />
+/// <reference path="../employees/ServerApiModel.d.ts" />
+/// <reference path="../activities/Activities.ts" />
+/// <reference path="../geographicExpertises/GeographicExpertises.ts" />
+/// <reference path="../languageExpertises/LanguageExpertises.ts" />
+/// <reference path="../degrees/Degrees.ts" />
+/// <reference path="../internationalAffiliations/InternationalAffiliations.ts" />
+/// <reference path="../../app/Routes.d.ts" />
+/// <reference path="../../app/DataCacher.ts" />
+/// <reference path="../../app/Models.d.ts" />
+/// <reference path="../establishments/ApiModels.d.ts" />
+/// <reference path="../establishments/Server.ts" />
+/// <reference path="../employees/Models.d.ts" />
+/// <reference path="../employees/Server.ts" />
+/// <reference path="../people/Server.ts" />
+/// <reference path="../people/Models.d.ts" />
+/// <reference path="../../app/FormSelect.ts" />
+var RootViewModels = ViewModels;
+
+var People;
+(function (People) {
+    (function (ViewModels) {
+        var AffiliatedEstablishmentEditor = (function () {
+            function AffiliatedEstablishmentEditor(owner, options, establishment) {
+                var _this = this;
+                this.owner = owner;
+                this.select = new App.FormSelect({ kendoOptions: {} });
+                var caption = this._getOptionsCaption(options);
+                var selectOptions = this._getSelectOptions(options);
+
+                this.select.caption(caption);
+                this.select.options(selectOptions.slice(0));
+                this.select.value(establishment ? establishment.id : undefined);
+
+                this.select.value.subscribe(function (newValue) {
+                    _this._onSelectedValueChanged(newValue);
+                });
             }
+            AffiliatedEstablishmentEditor.prototype._getOptionsCaption = function (options) {
+                var _this = this;
+                // the option label for the first dropdown is different because it is required
+                // this is the first editor all options' parentId's are equal to default establishment
+                var isFirst = Enumerable.From(options).All(function (x) {
+                    return x.parentId == _this.owner.owner.defaultAffiliation.establishmentId;
+                });
+                var caption = isFirst ? '[Select main affiliation]' : '[Select sub-affiliation or leave empty]';
+                return caption;
+            };
+
+            AffiliatedEstablishmentEditor.prototype._getSelectOptions = function (options) {
+                // convert options from array of establishments to text/value pair array
+                var selectOptions = Enumerable.From(options).Select(function (x) {
+                    return {
+                        text: x.contextName || x.officialName,
+                        value: x.id
+                    };
+                }).ToArray();
+                return selectOptions;
+            };
+
+            AffiliatedEstablishmentEditor.prototype._onSelectedValueChanged = function (newValue) {
+                var siblingEditors = this.owner.establishmentEditors();
+                if (newValue) {
+                    this.owner.bindEstablishmentEditors(newValue);
+                } else {
+                    // need to find most granular that is still selected
+                    var index = Enumerable.From(siblingEditors).IndexOf(this);
+                    var ancestors = siblingEditors.slice(0, index).reverse();
+                    var ancestor = Enumerable.From(ancestors).FirstOrDefault(undefined, function (x) {
+                        return x.select.value() && x.select.value() > 0;
+                    });
+                    if (ancestor) {
+                        this.owner.bindEstablishmentEditors(ancestor.select.value());
+                    } else {
+                        this.owner.bindEstablishmentEditors(this.owner.owner.defaultAffiliation.establishmentId);
+                    }
+                }
+            };
+            return AffiliatedEstablishmentEditor;
+        })();
+        ViewModels.AffiliatedEstablishmentEditor = AffiliatedEstablishmentEditor;
+
+        var Affiliation = (function () {
+            function Affiliation(owner, dataOrPersonId) {
+                var _this = this;
+                //#region Observable Interface Implementation
+                this.affiliationId = ko.observable();
+                this.personId = ko.observable();
+                this.establishmentId = ko.observable();
+                this.isDefault = ko.observable();
+                this.jobTitles = ko.observable();
+                this.facultyRank = ko.observable();
+                this.establishments = ko.observableArray();
+                this.hideValidationMessages = ko.observable(true);
+                //#endregion
+                //#region Data Mutation
+                this.saveSpinner = new App.Spinner({ delay: 200 });
+                this.purgeSpinner = new App.Spinner();
+                //#endregion
+                //#region Cascading Establishments
+                this.establishmentEditors = ko.observableArray();
+                this.firstEstablishmentId = ko.computed(function () {
+                    var establishmentEditors = _this.establishmentEditors();
+                    if (establishmentEditors.length) {
+                        var firstEstablishmentEditor = establishmentEditors[0];
+                        var value = firstEstablishmentEditor.select.value();
+                        return value;
+                    }
+                    return -1;
+                });
+                this.lastEstablishmentId = ko.computed(function () {
+                    var establishmentEditors = _this.establishmentEditors();
+                    if (establishmentEditors.length) {
+                        var lastEstablishmentEditor = Enumerable.From(establishmentEditors).LastOrDefault(undefined, function (x) {
+                            return x.select.value() && x.select.value() > 0;
+                        });
+                        if (lastEstablishmentEditor)
+                            return lastEstablishmentEditor.select.value();
+                    }
+                    return -1;
+                });
+                //#endregion
+                //#region Faculty Rank DropDown
+                this.facultyRankSelect = new App.FormSelect({ kendoOptions: {} });
+                this.hasFacultyRanks = ko.observable(false);
+                //#endregion
+                //#region Postition Title Text
+                this.jobTitlesHtml = ko.computed(function () {
+                    return _this._computeJobTitles();
+                });
+                this.owner = owner;
+                if (isNaN(dataOrPersonId)) {
+                    this.data = dataOrPersonId;
+                }
+                if (this.data) {
+                    ko.mapping.fromJS(this.data, {}, this);
+                    this.isEditing = ko.observable(false);
+                } else {
+                    this.personId(dataOrPersonId);
+                    this.isEditing = ko.observable(true);
+                }
+
+                // wait for faculty rank data and then bind to select options
+                setTimeout(function () {
+                    _this._loadFacultyRankOptions();
+                }, 0);
+                this._initValidation();
+            }
+            Affiliation.prototype.edit = function () {
+                this.bindEstablishmentEditors(this.establishmentId());
+                this.isEditing(true);
+            };
+
+            Affiliation.prototype.cancel = function () {
+                var affiliationId = this.affiliationId();
+                if (!affiliationId) {
+                    this.owner.editableAffiliations.remove(this);
+                    return;
+                }
+
+                ko.mapping.fromJS(this.data, {}, this);
+
+                // restore faculty rank to its previous value
+                var selectedFacultyRank = this.facultyRank();
+                if (selectedFacultyRank)
+                    this.facultyRankSelect.value(selectedFacultyRank.facultyRankId());
+                this.isEditing(false);
+            };
+
+            Affiliation.prototype._initValidation = function () {
+                var _this = this;
+                // job titles cannot exceed 500 characters
+                this.jobTitles.extend({
+                    maxLength: {
+                        message: 'Position Title(s) cannot contain more than 500 characters.',
+                        params: 500
+                    }
+                });
+
+                // the first establishment editor cannot be empty
+                this.firstEstablishmentId.extend({
+                    required: {
+                        message: 'At least one main affiliation is required.'
+                    }
+                });
+
+                // cannot have duplicate affiliations
+                this.lastEstablishmentId.extend({
+                    validation: {
+                        validator: function (value) {
+                            if (value < 1)
+                                return true;
+                            var duplicateSiblingAffiliation = Enumerable.From(_this.owner.editableAffiliations()).FirstOrDefault(undefined, function (x) {
+                                return x !== _this && x.establishmentId() == value;
+                            });
+                            return typeof duplicateSiblingAffiliation === 'undefined';
+                        },
+                        message: 'You already have another affiliation with this organizational unit.'
+                    }
+                });
+
+                ko.validation.group(this);
+            };
+
+            Affiliation.prototype.save = function () {
+                var _this = this;
+                if (!this.isValid()) {
+                    this.hideValidationMessages(false);
+                    this.errors.showAllMessages();
+                    return;
+                }
+
+                this.hideValidationMessages(true);
+                var data = {
+                    establishmentId: this.lastEstablishmentId(),
+                    facultyRankId: this.facultyRankSelect.value(),
+                    jobTitles: this.jobTitles()
+                };
+                this.saveSpinner.start();
+                People.Servers.PutAffiliation(data, this.establishmentId() || data.establishmentId).done(function () {
+                    _this.owner.affiliationData.reload();
+                }).fail(function (xhr) {
+                    App.Failures.message(xhr, 'while trying to save your affiliation', true);
+                    _this.saveSpinner.stop();
+                });
+            };
+
+            Affiliation.prototype.purge = function () {
+                var _this = this;
+                this.purgeSpinner.start();
+                if (this.owner.$confirmDeleteAffiliation && this.owner.$confirmDeleteAffiliation.length) {
+                    this.owner.$confirmDeleteAffiliation.dialog({
+                        dialogClass: 'jquery-ui',
+                        width: 'auto',
+                        resizable: false,
+                        modal: true,
+                        buttons: [
+                            {
+                                text: 'Yes, confirm delete',
+                                click: function () {
+                                    _this.owner.$confirmDeleteAffiliation.dialog('close');
+                                    _this.purgeSpinner.start(true);
+                                    _this._purge();
+                                },
+                                'data-css-link': true,
+                                'data-confirm-delete-link': true
+                            },
+                            {
+                                text: 'No, cancel delete',
+                                click: function () {
+                                    _this.owner.$confirmDeleteAffiliation.dialog('close');
+                                },
+                                'data-css-link': true
+                            }
+                        ],
+                        close: function () {
+                            _this.purgeSpinner.stop();
+                        }
+                    });
+                } else {
+                    if (confirm('Are you sure you want to delete this affiliation?')) {
+                        this._purge();
+                    } else {
+                        this.purgeSpinner.stop();
+                    }
+                }
+            };
+
+            Affiliation.prototype._purge = function () {
+                var _this = this;
+                People.Servers.DeleteAffiliation(this.establishmentId()).done(function () {
+                    _this.owner.affiliationData.reload();
+                }).fail(function (xhr) {
+                    App.Failures.message(xhr, 'while trying to delete your affiliation', true);
+                    _this.purgeSpinner.stop();
+                });
+            };
+
+            Affiliation.prototype.bindEstablishmentEditors = function (establishmentId) {
+                var _this = this;
+                // can't bind the editors until the default affiliation's offspring are loaded
+                this.owner.establishmentData.ready().done(function (offspring) {
+                    _this._bindEstablishmentEditors(establishmentId, offspring);
+                });
+            };
+
+            Affiliation.prototype._bindEstablishmentEditors = function (establishmentId, offspring) {
+                this.establishmentEditors([]);
+
+                // the establishmentId passed as an argument represents the most granular establishment
+                // create it first, then walk up using parentId's until the default establishment is reached
+                var currentEstablishmentId = establishmentId;
+                while (currentEstablishmentId && currentEstablishmentId != this.owner.defaultAffiliation.establishmentId) {
+                    var currentEstablishment = this._bindEstablishmentEditor(currentEstablishmentId, offspring);
+                    currentEstablishmentId = currentEstablishment.parentId;
+                }
+
+                // the above loop only renders from the most granular selected establishment and its ancestors
+                // if there are more granular unselected options, need to render them as last binding
+                this._bindEstablishmentEditor(establishmentId, offspring, true);
+            };
+
+            Affiliation.prototype._bindEstablishmentEditor = function (establishmentId, offspring, isLast) {
+                if (typeof isLast === "undefined") { isLast = false; }
+                // first try to find the establishment api model
+                var establishment = this._getEstablishmentById(establishmentId, offspring);
+
+                // when establishment exists and this IS NOT the last binding, get establishment's siblings
+                // when establishment exists and this IS the last binding, get establishment's children
+                // when establishment is undefined, get default affiliation establishment's children
+                var options = this._getEstablishmentEditorOptions(establishment ? !isLast ? establishment.parentId : establishment.id : this.owner.defaultAffiliation.establishmentId, offspring);
+
+                if (options.length) {
+                    // when this is the last binding, do not pass the establishment
+                    var editor = new AffiliatedEstablishmentEditor(this, options, !isLast ? establishment : undefined);
+
+                    if (!isLast) {
+                        this.establishmentEditors.unshift(editor);
+                    } else {
+                        this.establishmentEditors.push(editor);
+                    }
+                    this.owner.load().done(function () {
+                        editor.select.applyKendo();
+                    });
+                }
+                return establishment;
+            };
+
+            Affiliation.prototype._getEstablishmentById = function (establishmentId, offspring) {
+                // will be undefined when establishmentId == defaultAffiliation.establishmentId
+                var establishment = Enumerable.From(offspring).SingleOrDefault(undefined, function (x) {
+                    return x.id == establishmentId;
+                });
+                return establishment;
+            };
+
+            Affiliation.prototype._getEstablishmentEditorOptions = function (parentId, offspring) {
+                var options = Enumerable.From(offspring).Where(function (x) {
+                    return x.parentId == parentId;
+                }).OrderBy(function (x) {
+                    return x.rank;
+                }).ThenBy(function (x) {
+                    return x.contextName || x.officialName;
+                }).ToArray();
+                return options;
+            };
+
+            Affiliation.prototype._loadFacultyRankOptions = function () {
+                var _this = this;
+                // the employee module settings data needs to be loaded
+                // so that we can get the faculty rank options (if there are any)
+                this.owner.employeeSettingsData.ready().done(function (settings) {
+                    _this._bindFacultyRankOptions(settings);
+                });
+            };
+
+            Affiliation.prototype._bindFacultyRankOptions = function (settings) {
+                var _this = this;
+                if (settings && settings.facultyRanks && settings.facultyRanks.length) {
+                    this.hasFacultyRanks(true);
+                    var options = this._getFacultyRankSelectOptions(settings);
+                    this.facultyRankSelect.caption('[None]');
+                    this.facultyRankSelect.options(options);
+                    var facultyRank = this.facultyRank();
+                    if (facultyRank)
+                        this.facultyRankSelect.value(facultyRank.facultyRankId());
+                    this.owner.load().done(function () {
+                        _this.facultyRankSelect.applyKendo();
+                    });
+                }
+            };
+
+            Affiliation.prototype._getFacultyRankSelectOptions = function (settings) {
+                // sort by rank && convert to text/value pair for select options binding
+                var options = Enumerable.From(settings.facultyRanks).OrderBy(function (x) {
+                    return x.rank;
+                }).Select(function (x) {
+                    var selectOption = {
+                        text: x.text,
+                        value: x.facultyRankId
+                    };
+                    return selectOption;
+                }).ToArray();
+                return options;
+            };
+
+            Affiliation.prototype._computeJobTitles = function () {
+                var jobTitles = this.jobTitles();
+                jobTitles = jobTitles || '';
+                jobTitles = jobTitles.replace(/\n/g, '<br />');
+                return jobTitles;
+            };
             return Affiliation;
         })();
-        My.Affiliation = Affiliation;
+        ViewModels.Affiliation = Affiliation;
 
         var Profile = (function () {
-            function Profile() {
+            //#endregion
+            //#region Construction
+            function Profile(personId) {
+                var _this = this;
+                //#region Properties
                 this._sammy = Sammy();
                 this._activitiesViewModel = null;
                 this._geographicExpertisesViewModel = null;
@@ -52,8 +419,8 @@ var ViewModels;
                 this.hasPhoto = ko.observable();
                 this.photoUploadError = ko.observable();
                 this.photoSrc = ko.observable(App.Routes.WebApi.My.Photo.get({ maxSide: 128, refresh: new Date().toUTCString() }));
-                this.photoUploadSpinner = new App.Spinner(new App.SpinnerOptions(400));
-                this.photoDeleteSpinner = new App.Spinner(new App.SpinnerOptions(400));
+                this.photoUploadSpinner = new App.Spinner({ delay: 400 });
+                this.photoDeleteSpinner = new App.Spinner({ delay: 400 });
                 this.isDisplayNameDerived = ko.observable();
                 this.displayName = ko.observable();
                 this._userDisplayName = '';
@@ -63,11 +430,13 @@ var ViewModels;
                 this.middleName = ko.observable();
                 this.lastName = ko.observable();
                 this.suffix = ko.observable();
-                this.facultyRanks = ko.observableArray();
-                this.facultyRankId = ko.observable(null);
+                //isFacultyRankEditable: () => boolean;
+                //isFacultyRankVisible: () => boolean;
+                //facultyRankText: () => string;
+                //facultyRanks: KnockoutObservableArray<RootViewModels.Employees.IServerFacultyRankApiModel> = ko.observableArray();
+                //facultyRankId: KnockoutObservable<any> = ko.observable(null);
                 this.defaultEstablishmentHasCampuses = ko.observable(false);
                 this.preferredTitle = ko.observable();
-                this.affiliations = ko.observableArray();
                 this.gender = ko.observable();
                 this.isActive = ko.observable();
                 this.$photo = ko.observable();
@@ -75,47 +444,116 @@ var ViewModels;
                 this.$nameSalutation = ko.observable();
                 this.$nameSuffix = ko.observable();
                 this.editMode = ko.observable(false);
-                this.saveSpinner = new App.Spinner(new App.SpinnerOptions(200));
+                this.saveSpinner = new App.Spinner({ delay: 200 });
                 this.startInEdit = ko.observable(false);
                 this.startTabName = ko.observable("Activities");
-                this._initialize();
-                //this._setupRouting();
-                //this._setupValidation();
-                //this._setupKendoWidgets();
-                //this._setupDisplayNameDerivation();
-                //this._setupCardComputeds();
-                //this._sammy.run('#/activities');
+                this.editableAffiliations = ko.observableArray();
+                this.affiliationsSpinner = new App.Spinner({ delay: 400, runImmediately: true });
+                this.isEditingAffiliation = ko.computed(function () {
+                    var editableAffiliations = _this.editableAffiliations();
+                    var editingAffiliation = Enumerable.From(editableAffiliations).FirstOrDefault(undefined, function (x) {
+                        return x.isEditing();
+                    });
+                    return typeof editingAffiliation !== 'undefined';
+                });
+                this.affiliationData = new App.DataCacher(function () {
+                    return _this._loadAffiliationData();
+                });
+                this.establishmentData = new App.DataCacher(function () {
+                    return _this._loadEstablishmentData();
+                });
+                this.employeeSettingsData = new App.DataCacher(function () {
+                    return _this._loadEmployeeSettingsData();
+                });
+                this.personId2 = personId;
+
+                // go ahead and load affiliations
+                this.affiliationData.ready();
             }
-            Profile.prototype._initialize = function () {
+            Profile.prototype._loadAffiliationData = function () {
+                var _this = this;
+                var promise = $.Deferred();
+
+                // get this person's affiliations from the server
+                People.Servers.GetAffiliationsByPerson().done(function (affiliations) {
+                    // default affiliation does not need to be observable
+                    _this.defaultAffiliation = Enumerable.From(affiliations).Single(function (x) {
+                        return x.isDefault;
+                    });
+                    _this.preferredTitle(_this.defaultAffiliation.jobTitles);
+
+                    // the default affiliation is not editable, filter it out
+                    var editableAffiliations = Enumerable.From(affiliations).Except([_this.defaultAffiliation]).OrderBy(function (x) {
+                        return x.affiliationId;
+                    }).ToArray();
+
+                    // map editable affiliations into observable array of Affiliation viewmodels
+                    ko.mapping.fromJS(editableAffiliations, {
+                        create: function (options) {
+                            return new Affiliation(_this, options.data);
+                        }
+                    }, _this.editableAffiliations);
+
+                    _this.establishmentData.ready();
+                    _this.employeeSettingsData.ready();
+                    _this.affiliationsSpinner.stop();
+                    promise.resolve(affiliations);
+                });
+                return promise;
+            };
+
+            Profile.prototype._loadEstablishmentData = function () {
+                var promise = $.Deferred();
+                Establishments.Servers.GetOffspring(this.defaultAffiliation.establishmentId).done(function (offspring) {
+                    promise.resolve(offspring);
+                });
+                return promise;
+            };
+
+            Profile.prototype._loadEmployeeSettingsData = function () {
+                var promise = $.Deferred();
+                Employees.Servers.GetSettingsByPerson().done(function (settings) {
+                    promise.resolve(settings);
+                });
+                return promise;
+            };
+
+            Profile.prototype.addAffiliation = function () {
+                var affiliation = new Affiliation(this, this.personId);
+                this.editableAffiliations.push(affiliation);
+                affiliation.bindEstablishmentEditors(undefined);
             };
 
             Profile.prototype.load = function (startTab) {
+                if (typeof startTab === "undefined") { startTab = ''; }
                 var _this = this;
-                var deferred = $.Deferred();
+                if (this._loadPromise)
+                    return this._loadPromise;
+                this._loadPromise = $.Deferred();
 
                 // start both requests at the same time
-                var facultyRanksPact = $.Deferred();
-                $.get(App.Routes.WebApi.Employees.ModuleSettings.FacultyRanks.get()).done(function (data, textStatus, jqXHR) {
-                    facultyRanksPact.resolve(data);
-                }).fail(function (jqXHR, textStatus, errorThrown) {
-                    facultyRanksPact.reject(jqXHR, textStatus, errorThrown);
-                });
-
+                //var facultyRanksPact = $.Deferred();
+                //$.get(App.Routes.WebApi.Employees.ModuleSettings.FacultyRanks.get())
+                //    .done((data: RootViewModels.Employees.IServerFacultyRankApiModel[], textStatus: string, jqXHR: JQueryXHR): void => {
+                //        facultyRanksPact.resolve(data);
+                //    })
+                //    .fail((jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void => {
+                //        facultyRanksPact.reject(jqXHR, textStatus, errorThrown);
+                //    });
                 var viewModelPact = $.Deferred();
-                $.get(App.Routes.WebApi.My.Profile.get()).done(function (data, textStatus, jqXHR) {
+                $.get('/api/user/person').done(function (data, textStatus, jqXHR) {
                     viewModelPact.resolve(data);
                 }).fail(function (jqXHR, textStatus, errorThrown) {
                     viewModelPact.reject(jqXHR, textStatus, errorThrown);
                 });
 
                 // only process after both requests have been resolved
-                $.when(facultyRanksPact, viewModelPact).done(function (facultyRanks, viewModel) {
-                    _this.facultyRanks(facultyRanks);
-                    if (facultyRanks.length == 0) {
-                        _this.facultyRankId(null);
-                    }
-
-                    ko.mapping.fromJS(viewModel, { ignore: "personId" }, _this);
+                viewModelPact.done(function (viewModel) {
+                    //this.facultyRanks(facultyRanks); // populate the faculty ranks menu
+                    //if (facultyRanks.length == 0) {
+                    //    this.facultyRankId(null);
+                    //}
+                    ko.mapping.fromJS(viewModel, { ignore: "id" }, _this);
                     _this.personId = viewModel.personId;
 
                     _this._originalValues = viewModel;
@@ -125,7 +563,7 @@ var ViewModels;
                     //    this._isInitialized = true; // bindings have been applied
                     //    this.$facultyRanks().kendoDropDownList(); // kendoui dropdown for faculty ranks
                     //}
-                    _this._reloadAffiliations();
+                    //this._reloadAffiliations();
                     _this._setupValidation();
                     _this._setupKendoWidgets();
                     _this._setupDisplayNameDerivation();
@@ -146,12 +584,12 @@ var ViewModels;
                         }
                     }
 
-                    deferred.resolve();
+                    _this._loadPromise.resolve();
                 }).fail(function (xhr, textStatus, errorThrown) {
-                    deferred.reject(xhr, textStatus, errorThrown);
+                    _this._loadPromise.reject(xhr, textStatus, errorThrown);
                 });
 
-                return deferred;
+                return this._loadPromise;
             };
 
             Profile.prototype._startTab = function (tabName) {
@@ -173,7 +611,7 @@ var ViewModels;
                     }
                 } else if (tabName === "geographic-expertise") {
                     if (this._geographicExpertisesViewModel == null) {
-                        this._geographicExpertisesViewModel = new ViewModels.GeographicExpertises.GeographicExpertiseList(this.personId);
+                        this._geographicExpertisesViewModel = new RootViewModels.GeographicExpertises.GeographicExpertiseList(this.personId);
                         this._geographicExpertisesViewModel.load().done(function () {
                             ko.applyBindings(_this._geographicExpertisesViewModel, $("#geographic-expertises")[0]);
                         }).fail(function (jqXhr, textStatus, errorThrown) {
@@ -185,7 +623,7 @@ var ViewModels;
                     }
                 } else if (tabName === "language-expertise") {
                     if (this._languageExpertisesViewModel == null) {
-                        this._languageExpertisesViewModel = new ViewModels.LanguageExpertises.LanguageExpertiseList(this.personId);
+                        this._languageExpertisesViewModel = new RootViewModels.LanguageExpertises.LanguageExpertiseList(this.personId);
                         this._languageExpertisesViewModel.load().done(function () {
                             ko.applyBindings(_this._languageExpertisesViewModel, $("#language-expertises")[0]);
                         }).fail(function (jqXhr, textStatus, errorThrown) {
@@ -197,7 +635,7 @@ var ViewModels;
                     }
                 } else if (tabName === "formal-education") {
                     if (this._degreesViewModel == null) {
-                        this._degreesViewModel = new ViewModels.Degrees.DegreeList(this.personId);
+                        this._degreesViewModel = new RootViewModels.Degrees.DegreeList(this.personId);
                         this._degreesViewModel.load().done(function () {
                             ko.applyBindings(_this._degreesViewModel, $("#degrees")[0]);
                         }).fail(function (jqXhr, textStatus, errorThrown) {
@@ -209,7 +647,7 @@ var ViewModels;
                     }
                 } else if (tabName === "affiliations") {
                     if (this._internationalAffiliationsViewModel == null) {
-                        this._internationalAffiliationsViewModel = new ViewModels.InternationalAffiliations.InternationalAffiliationList(this.personId);
+                        this._internationalAffiliationsViewModel = new RootViewModels.InternationalAffiliations.InternationalAffiliationList(this.personId);
                         this._internationalAffiliationsViewModel.load().done(function () {
                             ko.applyBindings(_this._internationalAffiliationsViewModel, $("#international-affiliations")[0]);
                         }).fail(function (jqXhr, textStatus, errorThrown) {
@@ -274,14 +712,20 @@ var ViewModels;
                     var apiModel = ko.mapping.toJS(this);
 
                     this.saveSpinner.start();
+
+                    var affiliationPutModel = {
+                        jobTitles: this.preferredTitle()
+                    };
+                    People.Servers.PutAffiliation(affiliationPutModel, this.defaultAffiliation.establishmentId);
+
                     $.ajax({
-                        url: App.Routes.WebApi.My.Profile.put(),
+                        //url: App.Routes.WebApi.My.Profile.put(),
+                        url: '/api/user/person',
                         type: 'PUT',
                         data: apiModel
                     }).done(function (responseText, statusText, xhr) {
                         App.flasher.flash(responseText);
                         _this.stopEditing();
-                        _this._initialize();
                     }).fail(function () {
                         //alert('a PUT API call failed :(');
                     }).always(function () {
@@ -554,428 +998,6 @@ var ViewModels;
                 this.isActiveText = ko.computed(function () {
                     return _this.isActive() ? 'Active' : 'Inactive';
                 });
-
-                // do not display faculty rank editor for tenants that do not have
-                // employee module settings or faculty rank options
-                this.isFacultyRankEditable = ko.computed(function () {
-                    return _this.facultyRanks() && _this.facultyRanks().length > 0;
-                });
-
-                if (this.facultyRankId() != null) {
-                    this.facultyRankText = ko.computed(function () {
-                        var id = _this.facultyRankId();
-                        for (var i = 0; i < _this.facultyRanks().length; i++) {
-                            var facultyRank = _this.facultyRanks()[i];
-                            if (id === facultyRank.id) {
-                                return facultyRank.rank;
-                            }
-                        }
-                        return undefined;
-                    });
-                } else {
-                    this.facultyRankText = undefined;
-                }
-
-                // do not display faculty rank on the form card when it is not set
-                // or when it is set to other
-                this.isFacultyRankVisible = ko.computed(function () {
-                    return _this.isFacultyRankEditable() && _this.facultyRankId() && _this.facultyRankText() && _this.facultyRankText().toLowerCase() !== 'other';
-                });
-            };
-
-            // --------------------------------------------------------------------------------
-            /*
-            *  Affiliations
-            */
-            // --------------------------------------------------------------------------------
-            Profile.prototype._reloadAffiliations = function () {
-                var _this = this;
-                $.ajax({
-                    async: true,
-                    url: App.Routes.WebApi.My.Affiliations.get(),
-                    data: { isDefault: false },
-                    type: 'GET'
-                }).done(function (data, statusText, xhr) {
-                    ko.mapping.fromJS(data, {}, _this.affiliations);
-                }).fail(function (xhr, statusText, errorThrown) {
-                    App.Failures.message(xhr, 'while trying to load your affiliations', true);
-                });
-            };
-
-            Profile.prototype.editAffiliation = function (data, event) {
-                var me = this;
-
-                /* Get default affiliation */
-                var defaultAffiliation = null;
-                $.ajax({
-                    type: 'GET',
-                    url: App.Routes.WebApi.My.Affiliations.getDefault(),
-                    async: false
-                }).done(function (response) {
-                    defaultAffiliation = response;
-                }).fail(function (xhr) {
-                    App.Failures.message(xhr, 'while trying to determine your default affiliation', true);
-                });
-                if (!defaultAffiliation)
-                    return;
-
-                $("#editAffiliationDepartmentDropList").kendoDropDownList({
-                    dataTextField: "officialName",
-                    dataValueField: "id",
-                    change: function (e) {
-                        //var item = this.dataItem[e.sender.selectedIndex];
-                    },
-                    dataBound: function (e) {
-                        if ((this.selectedIndex != null) && (this.selectedIndex != -1)) {
-                            var item = this.dataItem(this.selectedIndex);
-                            if (item == null) {
-                                this.text("");
-                                $("#editAffiliationDepartmenDiv").hide();
-                            } else {
-                                $("#editAffiliationDepartmenDiv").show();
-                            }
-                        } else {
-                            $("#editAffiliationDepartmenDiv").hide();
-                        }
-                    }
-                });
-
-                var collegeDropListDataSource = null;
-
-                if (!this.defaultEstablishmentHasCampuses()) {
-                    collegeDropListDataSource = new kendo.data.DataSource({
-                        transport: {
-                            read: {
-                                url: App.Routes.WebApi.Establishments.getChildren(defaultAffiliation.establishmentId),
-                                data: { orderBy: ['rank-asc', 'name-asc'] }
-                            }
-                        }
-                    });
-                }
-
-                $("#editAffiliationCollegeDropList").kendoDropDownList({
-                    dataTextField: "officialName",
-                    dataValueField: "id",
-                    dataSource: collegeDropListDataSource,
-                    change: function (e) {
-                        var selectedIndex = e.sender.selectedIndex;
-                        if (selectedIndex != -1) {
-                            var item = this.dataItem(selectedIndex);
-                            if (item != null) {
-                                var dataSource = new kendo.data.DataSource({
-                                    transport: {
-                                        read: {
-                                            url: App.Routes.WebApi.Establishments.getChildren(item.id),
-                                            data: { orderBy: ['rank-asc', 'name-asc'] }
-                                        }
-                                    }
-                                });
-
-                                $("#editAffiliationDepartmentDropList").data("kendoDropDownList").setDataSource(dataSource);
-                            }
-                        }
-                    },
-                    dataBound: function (e) {
-                        if ((this.selectedIndex != null) && (this.selectedIndex != -1)) {
-                            var item = this.dataItem(this.selectedIndex);
-                            if (item != null) {
-                                var collegeId = item.id;
-                                if (collegeId != null) {
-                                    var dataSource = new kendo.data.DataSource({
-                                        transport: {
-                                            read: {
-                                                url: App.Routes.WebApi.Establishments.getChildren(collegeId),
-                                                data: { orderBy: ['rank-asc', 'name-asc'] }
-                                            }
-                                        }
-                                    });
-
-                                    $("#editAffiliationDepartmentDropList").data("kendoDropDownList").setDataSource(dataSource);
-                                }
-                            }
-                        }
-                    }
-                });
-
-                if (this.defaultEstablishmentHasCampuses()) {
-                    $("#editAffiliationCampusDropList").kendoDropDownList({
-                        dataTextField: "officialName",
-                        dataValueField: "id",
-                        dataSource: new kendo.data.DataSource({
-                            transport: {
-                                read: {
-                                    url: App.Routes.WebApi.Establishments.getChildren(defaultAffiliation.establishmentId),
-                                    data: { orderBy: ['rank-asc', 'name-asc'] }
-                                }
-                            }
-                        }),
-                        change: function (e) {
-                            var selectedIndex = e.sender.selectedIndex;
-                            if ((selectedIndex != null) && (selectedIndex != -1)) {
-                                var item = this.dataItem(selectedIndex);
-                                if (item != null) {
-                                    var dataSource = new kendo.data.DataSource({
-                                        transport: {
-                                            read: {
-                                                url: App.Routes.WebApi.Establishments.getChildren(item.id),
-                                                data: { orderBy: ['rank-asc', 'name-asc'] }
-                                            }
-                                        }
-                                    });
-
-                                    $("#editAffiliationCollegeDropList").data("kendoDropDownList").setDataSource(dataSource);
-                                }
-                            }
-                        },
-                        dataBound: function (e) {
-                            if ((this.selectedIndex != null) && (this.selectedIndex != -1)) {
-                                var item = this.dataItem(this.selectedIndex);
-                                if (item != null) {
-                                    var campusId = item.id;
-                                    if (campusId != null) {
-                                        var dataSource = new kendo.data.DataSource({
-                                            transport: {
-                                                read: {
-                                                    url: App.Routes.WebApi.Establishments.getChildren(campusId),
-                                                    data: { orderBy: ['rank-asc', 'name-asc'] }
-                                                }
-                                            }
-                                        });
-
-                                        $("#editAffiliationCollegeDropList").data("kendoDropDownList").setDataSource(dataSource);
-                                    }
-                                } else {
-                                    $("#editAffiliationCollegeDropList").data("kendoDropDownList").setDataSource(null);
-                                }
-                            }
-                        }
-                    });
-                }
-
-                if ((this.facultyRanks() != null) && (this.facultyRanks().length > 0)) {
-                    $("#editAffiliationFacultyRankDropList").kendoDropDownList({
-                        dataTextField: "rank",
-                        dataValueField: "id",
-                        dataSource: new kendo.data.DataSource({
-                            transport: {
-                                read: {
-                                    url: App.Routes.WebApi.Employees.ModuleSettings.FacultyRanks.get()
-                                }
-                            }
-                        })
-                    });
-                }
-
-                var dialogHeight = 300;
-                dialogHeight -= this.defaultEstablishmentHasCampuses() ? 0 : 40;
-                dialogHeight -= (this.facultyRanks() != null) && (this.facultyRanks().length > 0) ? 0 : 40;
-
-                $("#editAffiliationDialog").dialog({
-                    dialogClass: "no-close",
-                    title: (data == null) ? "Create Affiliation" : "Edit Affiliation",
-                    width: 750,
-                    height: dialogHeight,
-                    resizable: false,
-                    draggable: true,
-                    modal: true,
-                    buttons: [
-                        {
-                            text: "Save",
-                            click: function (item, event) {
-                                me.saveAffiliation((data == null) ? null : data.id(), defaultAffiliation.establishmentId);
-                            }
-                        },
-                        {
-                            text: "Cancel",
-                            click: function () {
-                                $("#editAffiliationDialog").dialog("close");
-                            }
-                        }
-                    ],
-                    open: function (event, ui) {
-                        if (data != null) {
-                            var deleteButton = { text: "Delete", click: function (item, event) {
-                                    me.deleteAffiliation(data.id());
-                                } };
-                            var buttons = $(this).dialog('option', 'buttons');
-                            buttons.push(deleteButton);
-                            $(this).dialog('option', 'buttons', buttons);
-
-                            if (me.defaultEstablishmentHasCampuses() && data.campusId() != null) {
-                                $("#editAffiliationCampusDropList").data("kendoDropDownList").value(data.campusId());
-                            }
-                            if (data.collegeId() != null) {
-                                $("#editAffiliationCollegeDropList").data("kendoDropDownList").value(data.collegeId());
-                            }
-                            if (data.departmentId() != null) {
-                                $("#editAffiliationDepartmentDropList").data("kendoDropDownList").value(data.departmentId());
-                            }
-                            if (me.isFacultyRankVisible() && data.facultyRankId() != null) {
-                                $("#editAffiliationFacultyRankDropList").data("kendoDropDownList").value(data.facultyRankId());
-                            }
-                        }
-                    }
-                });
-            };
-
-            Profile.prototype.GetDropListSelectedItem = function (dropListId) {
-                var item = null;
-
-                var dropList = $("#" + dropListId).data("kendoDropDownList");
-                if (dropList != null) {
-                    var selectedIndex = dropList.selectedIndex;
-                    if ((selectedIndex != null) && (selectedIndex != -1)) {
-                        item = dropList.dataItem(selectedIndex);
-                    }
-                }
-
-                return item;
-            };
-
-            Profile.prototype.saveAffiliation = function (affiliationId, establishmentId) {
-                var me = this;
-                var campusId1 = null;
-                var collegeId1 = null;
-                var departmentId1 = null;
-                var facultyRankId1 = null;
-
-                if (this.defaultEstablishmentHasCampuses()) {
-                    var item1 = me.GetDropListSelectedItem("editAffiliationCampusDropList");
-                    if (item1 != null) {
-                        campusId1 = item1.id;
-                    }
-                }
-
-                item1 = me.GetDropListSelectedItem("editAffiliationCollegeDropList");
-                if (item1 != null) {
-                    collegeId1 = item1.id;
-                }
-
-                item1 = me.GetDropListSelectedItem("editAffiliationDepartmentDropList");
-                if (item1 != null) {
-                    departmentId1 = item1.id;
-                }
-
-                if ((this.facultyRanks() != null) && (this.facultyRanks().length > 0)) {
-                    item1 = me.GetDropListSelectedItem("editAffiliationFacultyRankDropList");
-                    if (item1 != null) {
-                        facultyRankId1 = item1.id;
-                    }
-                }
-
-                var affiliation = {
-                    id: affiliationId,
-                    personId: me.personId,
-                    establishmentId: establishmentId,
-                    campusId: campusId1,
-                    collegeId: collegeId1,
-                    departmentId: departmentId1,
-                    facultyRankId: facultyRankId1
-                };
-
-                var model = ko.mapping.toJS(affiliation);
-
-                $.ajax({
-                    async: false,
-                    url: (affiliationId == null) ? App.Routes.WebApi.My.Affiliations.post() : App.Routes.WebApi.My.Affiliations.put(model.id),
-                    type: (affiliationId == null) ? 'POST' : 'PUT',
-                    data: model
-                }).done(function (responseText, statusText, xhr) {
-                    if (statusText === "success") {
-                        $("#editAffiliationDialog").dialog("close");
-
-                        //debugger;
-                        //var tab = $("#tabstrip").data("kendoTabStrip").select()[0];
-                        //var tabName = tab.innerText; // IE
-                        //if (tabName == null) tabName = tab.textContent; // FF
-                        //tabName = me.tabTitleToName(tabName);
-                        //location.href = App.Routes.Mvc.My.Profile.post(true,tabName);
-                        //location.href = App.Routes.Mvc.My.Profile.get();
-                        me._reloadAffiliations();
-                    } else {
-                        $("#affiliationErrorDialog").dialog({
-                            title: xhr.statusText,
-                            width: 400,
-                            height: 250,
-                            modal: true,
-                            resizable: false,
-                            draggable: false,
-                            buttons: {
-                                Ok: function () {
-                                    $("#affiliationErrorDialog").dialog("close");
-                                }
-                            },
-                            open: function (event, ui) {
-                                $("#affiliationErrorDialogMessage").text(xhr.responseText);
-                            }
-                        });
-                    }
-                }).fail(function (xhr, statusText, errorThrown) {
-                    $("#editAffiliationDialog").dialog("close");
-                    var info = xhr.responseText && xhr.responseText.length < 1000 ? xhr.responseText : 'An unexpected error occurred, please try again. If you continue to experience this issue, use the Feedback & Support link on this page to report it.';
-                    alert(info);
-                });
-            };
-
-            Profile.prototype.deleteAffiliation = function (affiliationId) {
-                var me = this;
-                $("#confirmAffiliationDeleteDialog").dialog({
-                    width: 300,
-                    height: 200,
-                    modal: true,
-                    resizable: false,
-                    draggable: false,
-                    buttons: {
-                        "Delete": function () {
-                            $(this).dialog("close");
-
-                            var affiliation = {
-                                id: affiliationId,
-                                personId: me.personId,
-                                establishmentId: null,
-                                campusId: null,
-                                collegeId: null,
-                                departmentId: null,
-                                facultyRankId: null
-                            };
-
-                            var model = ko.mapping.toJS(affiliation);
-
-                            $.ajax({
-                                type: "DELETE",
-                                url: App.Routes.WebApi.My.Affiliations.del(model.id)
-                            }).done(function (data, statusText, xhr) {
-                                if (statusText !== "success") {
-                                    $("#affiliationErrorDialog").dialog({
-                                        title: xhr.statusText,
-                                        width: 400,
-                                        height: 250,
-                                        modal: true,
-                                        resizable: false,
-                                        draggable: false,
-                                        buttons: {
-                                            Ok: function () {
-                                                $("#affiliationErrorDialog").dialog("close");
-                                            }
-                                        },
-                                        open: function (event, ui) {
-                                            $("#affiliationErrorDialogMessage").text(xhr.responseText);
-                                        }
-                                    });
-                                }
-
-                                $("#editAffiliationDialog").dialog("close");
-                                me._reloadAffiliations();
-                            }).fail(function (xhr, statusText, errorThrown) {
-                                alert(xhr.responseText);
-                                $("#editAffiliationDialog").dialog("close");
-                            });
-                        },
-                        "Cancel": function () {
-                            $(this).dialog("close");
-                        }
-                    }
-                });
             };
 
             Profile.prototype.deleteProfile = function (data, event) {
@@ -1012,7 +1034,7 @@ var ViewModels;
             Profile.photoUploadUnexpectedErrorMessage = 'UCosmic experienced an unexpected error managing your photo, please try again. If you continue to experience this issue, please use the Feedback & Support link on this page to report it.';
             return Profile;
         })();
-        My.Profile = Profile;
-    })(ViewModels.My || (ViewModels.My = {}));
-    var My = ViewModels.My;
-})(ViewModels || (ViewModels = {}));
+        ViewModels.Profile = Profile;
+    })(People.ViewModels || (People.ViewModels = {}));
+    var ViewModels = People.ViewModels;
+})(People || (People = {}));

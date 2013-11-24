@@ -36,7 +36,7 @@ namespace UCosmic.Domain.Establishments
             set { _uCosmicCode = value == null ? null : value.Trim(); }
         }
 
-        public string ExternalId { get; set; }
+        //public string ExternalId { get; set; }
 
         internal bool NoCommit { get; set; }
     }
@@ -100,19 +100,16 @@ namespace UCosmic.Domain.Establishments
     {
         private readonly ICommandEntities _entities;
         private readonly IHandleCommands<UpdateEstablishmentHierarchy> _updateHierarchy;
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IProcessEvents _eventProcessor;
+        private readonly ITriggerEvent<EstablishmentChanged> _eventTrigger;
 
         public HandleUpdateEstablishmentCommand(ICommandEntities entities
             , IHandleCommands<UpdateEstablishmentHierarchy> updateHierarchy
-            , IUnitOfWork unitOfWork
-            , IProcessEvents eventProcessor
+            , ITriggerEvent<EstablishmentChanged> eventTrigger
         )
         {
             _entities = entities;
             _updateHierarchy = updateHierarchy;
-            _unitOfWork = unitOfWork;
-            _eventProcessor = eventProcessor;
+            _eventTrigger = eventTrigger;
         }
 
         public void Handle(UpdateEstablishment command)
@@ -151,7 +148,7 @@ namespace UCosmic.Domain.Establishments
                     command.TypeId,
                     command.CeebCode,
                     command.UCosmicCode,
-                    command.ExternalId
+                    //command.ExternalId
                 }),
                 PreviousState = entity.ToJsonAudit(),
             };
@@ -165,7 +162,7 @@ namespace UCosmic.Domain.Establishments
             }
             entity.CollegeBoardDesignatedIndicator = command.CeebCode;
             entity.UCosmicCode = command.UCosmicCode;
-            entity.ExternalId = command.ExternalId;
+            //entity.ExternalId = command.ExternalId;
 
             // update parent
             if (parentChanged)
@@ -181,8 +178,8 @@ namespace UCosmic.Domain.Establishments
             _updateHierarchy.Handle(new UpdateEstablishmentHierarchy(entity));
 
             if (command.NoCommit) return;
-            _unitOfWork.SaveChanges();
-            _eventProcessor.Raise(new EstablishmentChanged());
+            _entities.SaveChanges();
+            _eventTrigger.Raise(new EstablishmentChanged());
         }
     }
 }

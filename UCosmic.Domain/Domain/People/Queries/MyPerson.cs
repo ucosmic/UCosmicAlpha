@@ -7,6 +7,7 @@ namespace UCosmic.Domain.People
     {
         public MyPerson(IPrincipal principal)
         {
+            if (principal == null) throw new ArgumentNullException("principal");
             Principal = principal;
         }
 

@@ -19,10 +19,12 @@ namespace UCosmic.Domain.Establishments
 
         public IPrincipal Principal { get; private set; }
         public int Id { get; internal set; }
-        public int OwnerId { get; set; }
+        public int? OwnerId { get; set; }
+        internal Establishment Owner { get; set; }
         public string Text { get; set; }
         public bool IsOfficialName { get; set; }
         public bool IsFormerName { get; set; }
+        public bool IsContextName { get; set; }
         public string LanguageCode { get; set; }
 
         internal bool NoCommit { get; set; }
@@ -35,9 +37,13 @@ namespace UCosmic.Domain.Establishments
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
+            When(x => x.Owner == null, () =>
+                RuleFor(x => x.OwnerId.HasValue).Equal(true).WithMessage("Establishment Name owner id must be provided.")
+            );
+
             // owner id must exist in the database when in valid range
-            When(x => x.OwnerId > 0, () =>
-                RuleFor(x => x.OwnerId)
+            When(x => x.OwnerId.HasValue, () =>
+                RuleFor(x => x.OwnerId.Value)
                     .MustFindEstablishmentById(entities)
                         .WithMessage(MustFindEstablishmentById.FailMessageFormat, x => x.OwnerId)
             );
@@ -50,6 +56,7 @@ namespace UCosmic.Domain.Establishments
                     .WithMessage(MustNotExceedStringLength.FailMessageFormat,
                         x => "Establishment name", x => EstablishmentNameConstraints.TextMaxLength, x => x.Text.Length)
                 .MustBeUniqueEstablishmentNameText(entities)
+                    .Unless(x => x.IsContextName, ApplyConditionTo.CurrentValidator)
                     .WithMessage(MustBeUniqueEstablishmentNameText<object>.FailMessageFormat, x => x.Text)
             ;
 
@@ -65,19 +72,16 @@ namespace UCosmic.Domain.Establishments
     {
         private readonly ICommandEntities _entities;
         private readonly IHandleCommands<UpdateEstablishmentName> _updateHandler;
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IProcessEvents _eventProcessor;
+        private readonly ITriggerEvent<EstablishmentChanged> _eventTrigger;
 
         public HandleCreateEstablishmentNameCommand(ICommandEntities entities
             , IHandleCommands<UpdateEstablishmentName> updateHandler
-            , IUnitOfWork unitOfWork
-            , IProcessEvents eventProcessor
+            , ITriggerEvent<EstablishmentChanged> eventTrigger
         )
         {
             _entities = entities;
             _updateHandler = updateHandler;
-            _unitOfWork = unitOfWork;
-            _eventProcessor = eventProcessor;
+            _eventTrigger = eventTrigger;
         }
 
         public void Handle(CreateEstablishmentName command)
@@ -85,12 +89,12 @@ namespace UCosmic.Domain.Establishments
             if (command == null) throw new ArgumentNullException("command");
 
             // load owner
-            var establishment = _entities.Get<Establishment>()
+            var establishment = command.Owner ?? _entities.Get<Establishment>()
                 .EagerLoad(_entities, new Expression<Func<Establishment, object>>[]
                 {
                     x => x.Names.Select(y => y.TranslationToLanguage),
                 })
-                .Single(x => x.RevisionId == command.OwnerId)
+                .Single(x => x.RevisionId == command.OwnerId.Value)
             ;
 
             // update previous official name and owner when changing official name
@@ -125,6 +129,7 @@ namespace UCosmic.Domain.Establishments
                 TranslationToLanguage = language,
                 IsOfficialName = command.IsOfficialName,
                 IsFormerName = command.IsFormerName,
+                IsContextName = command.IsContextName,
             };
             establishment.Names.Add(establishmentName);
             establishmentName.ForEstablishment = establishment;
@@ -136,23 +141,25 @@ namespace UCosmic.Domain.Establishments
                 Name = command.GetType().FullName,
                 Value = JsonConvert.SerializeObject(new
                 {
-                    command.OwnerId,
+                    OwnerId = command.Owner != null ? command.Owner.RevisionId : command.OwnerId,
                     command.Text,
                     command.IsFormerName,
                     command.IsOfficialName,
+                    command.IsContextName,
                     command.LanguageCode,
                 }),
                 NewState = establishmentName.ToJsonAudit(),
             };
 
             _entities.Create(audit);
-            _entities.Update(establishment);
+            if (establishment.RevisionId != default(int))
+                _entities.Update(establishment);
             command.CreatedEntity = establishmentName;
             if (command.NoCommit) return;
 
-            _unitOfWork.SaveChanges();
+            _entities.SaveChanges();
             command.Id = establishmentName.RevisionId;
-            _eventProcessor.Raise(new EstablishmentChanged());
+            _eventTrigger.Raise(new EstablishmentChanged());
         }
     }
 }

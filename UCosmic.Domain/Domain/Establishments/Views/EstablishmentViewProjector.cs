@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 
 namespace UCosmic.Domain.Establishments
 {
-    public class EstablishmentViewProjector : IHandleEvents<ApplicationStarted>, IHandleEvents<EstablishmentChanged>
+    public class EstablishmentViewProjector : BaseEventHandler<EstablishmentChanged>, IHandleEvent<ApplicationStarted>
     {
         private static readonly object UpdateLock = new object();
         private static bool _isUpdating;
@@ -55,12 +55,12 @@ namespace UCosmic.Domain.Establishments
                 : UpdateView();
         }
 
-        public void Handle(ApplicationStarted @event)
+        public override void Handle(EstablishmentChanged e)
         {
             UpdateView(true);
         }
 
-        public void Handle(EstablishmentChanged @event)
+        public void Handle(ApplicationStarted e)
         {
             UpdateView(true);
         }

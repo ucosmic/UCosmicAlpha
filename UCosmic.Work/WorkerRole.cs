@@ -7,7 +7,6 @@ using System.Threading;
 using Microsoft.WindowsAzure.ServiceRuntime;
 using SimpleInjector;
 using UCosmic.CompositionRoot;
-using UCosmic.Domain.Activities;
 using UCosmic.Domain.Employees;
 using UCosmic.Domain.Places;
 
@@ -54,7 +53,6 @@ namespace UCosmic.Work
             new Dictionary<IDefineWork, IEnumerable<dynamic>>
             {
                 { new ProjectEmployeeSummaryViews(), null },
-                { new ProjectActivityViews(), null },
                 { new RepairPlaceHierarchies(), null },
             };
 

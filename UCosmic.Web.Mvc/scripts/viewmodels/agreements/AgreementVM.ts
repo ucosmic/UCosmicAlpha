@@ -1,4 +1,3 @@
-/// <reference path="../../app/Spinner.ts" />
 /// <reference path="../../typings/knockout/knockout.d.ts" />
 /// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
 /// <reference path="../../typings/globalize/globalize.d.ts" />
@@ -128,7 +127,7 @@ class InstitutionalAgreementEditModel {
     kendoWindowBug = { val: 0 };
 
     isBound = ko.observable();
-    spinner: App.Spinner = new App.Spinner(new App.SpinnerOptions(400, true));
+    spinner: App.Spinner = new App.Spinner({ delay: 400, runImmediately: true, });
 
     //to correctly bind with ko, must set visibility to hidden. this removes the visibility to hidden and 
     //changes it to display none.

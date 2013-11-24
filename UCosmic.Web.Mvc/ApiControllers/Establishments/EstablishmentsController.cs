@@ -80,6 +80,15 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return models;
         }
 
+        [GET("{establishmentId:int}/offspring")]
+        public IEnumerable<EstablishmentApiScalarModel> GetOffspring(int establishmentId)
+        {
+            var query = new EstablishmentOffspring(establishmentId);
+            var entities = _queryProcessor.Execute(query);
+            var models = Mapper.Map<EstablishmentApiScalarModel[]>(entities);
+            return models;
+        }
+
         [POST("")]
         public HttpResponseMessage Post(EstablishmentPostModel model)
         {
@@ -108,7 +117,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             {
                 controller = "Establishments",
                 action = "Get",
-                establishmentId = command.CreatedEstablishmentId,
+                establishmentId = command.Created.RevisionId,
             });
             Debug.Assert(url != null);
             response.Headers.Location = new Uri(url);

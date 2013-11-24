@@ -42,7 +42,6 @@ namespace UCosmic.Domain.Identity
 
                 // principal must be authorized to grant roles
                 .MustBeInAnyRole(RoleName.RoleGrantors)
-                    .WithMessage(MustBeInAnyRole.FailMessageFormat, x => x.Principal.Identity.Name, x => x.GetType().Name)
             ;
 
             RuleFor(x => x.UserId)

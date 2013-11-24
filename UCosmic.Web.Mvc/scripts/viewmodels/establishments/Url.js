@@ -73,9 +73,9 @@ var Establishments;
                 this.$valueElement = undefined;
                 this.$confirmPurgeDialog = undefined;
                 // spinners
-                this.saveSpinner = new App.Spinner(new App.SpinnerOptions(0, false));
-                this.purgeSpinner = new App.Spinner(new App.SpinnerOptions(0, false));
-                this.valueValidationSpinner = new App.Spinner(new App.SpinnerOptions(0, false));
+                this.saveSpinner = new App.Spinner();
+                this.purgeSpinner = new App.Spinner();
+                this.valueValidationSpinner = new App.Spinner();
                 // private fields
                 this.saveEditorClicked = false;
                 this.owner = owner;

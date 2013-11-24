@@ -150,11 +150,11 @@
                 this.originalValues = ko.observable();
                 this._isInitialized = ko.observable(false);
                 this.$genericAlertDialog = undefined;
-                this.createSpinner = new App.Spinner(new App.SpinnerOptions(0));
-                this.validatingSpinner = new App.Spinner(new App.SpinnerOptions(200));
+                this.createSpinner = new App.Spinner();
+                this.validatingSpinner = new App.Spinner({ delay: 200 });
                 this.categories = ko.observableArray();
-                this.typeIdSaveSpinner = new App.Spinner(new App.SpinnerOptions(200));
-                this.typeIdValidatingSpinner = new App.Spinner(new App.SpinnerOptions(200));
+                this.typeIdSaveSpinner = new App.Spinner({ delay: 200 });
+                this.typeIdValidatingSpinner = new App.Spinner({ delay: 200 });
                 this.typeId = ko.observable();
                 this.typeText = ko.observable('[Loading...]');
                 this.ceebCode = ko.observable();
@@ -167,13 +167,13 @@
                 this.languages = ko.observableArray();
                 this.names = ko.observableArray();
                 this.editingName = ko.observable(0);
-                this.namesSpinner = new App.Spinner(new App.SpinnerOptions(0, true));
+                this.namesSpinner = new App.Spinner({ runImmediately: true });
                 //#endregion
                 //#region URLs
                 // observables, computeds, & variables
                 this.urls = ko.observableArray();
                 this.editingUrl = ko.observable(0);
-                this.urlsSpinner = new App.Spinner(new App.SpinnerOptions(0, true));
+                this.urlsSpinner = new App.Spinner({ runImmediately: true });
                 this.sideSwiper = new App.SideSwiper({
                     frameWidth: 980,
                     speed: 'fast',
@@ -184,8 +184,8 @@
                 this._findingParent = false;
                 this.parentEstablishment = ko.observable();
                 this.parentId = ko.observable();
-                this.parentIdSaveSpinner = new App.Spinner(new App.SpinnerOptions(200));
-                this.parentIdValidatingSpinner = new App.Spinner(new App.SpinnerOptions(200));
+                this.parentIdSaveSpinner = new App.Spinner({ delay: 200 });
+                this.parentIdValidatingSpinner = new App.Spinner({ delay: 200 });
                 // initialize the aggregate id
                 this.id = id || 0;
                 doSetupSammy = (doSetupSammy === false) ? false : true;

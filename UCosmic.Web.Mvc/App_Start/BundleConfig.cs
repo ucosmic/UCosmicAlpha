@@ -134,7 +134,7 @@ namespace UCosmic.Web.Mvc
                 "~/scripts/viewmodels/people/EmailAddresses.js"));
 
             // my personal profile page
-            bundles.Add(new ScriptBundle("~/bundles/my/profile").Include(
+            bundles.Add(new ScriptBundle("~/bundles/person").Include(
                 "~/scripts/viewmodels/my/Profile.js"));
 
             // activities
@@ -190,6 +190,8 @@ namespace UCosmic.Web.Mvc
                 "~/scripts/history/history.html4.js",
                 "~/scripts/history/history.adapter.jquery.js",
                 "~/scripts/app/HistoryJS.js",
+                "~/scripts/app/ImageSwapper.js",
+                "~/scripts/app/DataCacher.js",
                 "~/scripts/oss/linq.js",
                 "~/scripts/google/GeoChart.js",
                 "~/scripts/google/ColumnChart.js",

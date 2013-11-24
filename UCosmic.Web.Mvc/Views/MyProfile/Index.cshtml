@@ -29,24 +29,45 @@
             text-overflow: ellipsis;
         }
     </style>
+    <link rel="stylesheet" href="~/styles/sass/sheets/people/my-profile.css" />
 }
 
 @section scripts
 {
-    @Scripts.Render("~/bundles/my/profile")
+
+    <script>
+        @{Html.RenderPartial(MVC.JavaScriptRoutes.Views.Establishments);}
+        @{Html.RenderPartial(MVC.JavaScriptRoutes.Views.Employees);}
+        @{Html.RenderPartial(MVC.JavaScriptRoutes.Views.People);}
+    </script>
+
+    <script src="~/scripts/oss/linq.js"></script>
+
+    <script src="~/scripts/app/DataCacher.js"></script>
+
+    <script src="~/scripts/app/FormSelect.js"></script>
+
+    <script src="~/scripts/viewmodels/establishments/Server.js"></script>
+
+    <script src="~/scripts/viewmodels/employees/Server.js"></script>
+
+    <script src="~/scripts/viewmodels/people/Server.js"></script>
+
     @Scripts.Render("~/bundles/activities")
     @Scripts.Render("~/bundles/geographicExpertises")
     @Scripts.Render("~/bundles/languageExpertises")
     @*@Scripts.Render("~/bundles/internationalAffiliations")*@
     @Scripts.Render("~/bundles/degrees")
+    @Scripts.Render("~/bundles/person")
 
     <script type="text/javascript">
 
         $(function () {
-            var profileViewModel = new ViewModels.My.Profile();
+            var profileViewModel = new People.ViewModels.Profile('@ViewBag.PersonId');
             profileViewModel.load('@ViewBag.Tab')
                 .done(function () {
                     ko.applyBindings(profileViewModel, $('#my_profile')[0]);
+                    //profileViewModel.startEditing();
 
                     /* KendoUI TabStrip Bug? - .select(0) does not produce a select event */
                     //if ( '@ViewBag.Tab' === '' ) {
@@ -105,13 +126,13 @@
                                                 </div>
                                             }
                                         </div>
-                                        <div class="on-left faculty">
+                                        @*<div class="on-left faculty">
                                             <span class="branded-dark1 badge" style="display: none;" data-bind="text: facultyRankText, visible: isFacultyRankVisible"></span>
                                             <!--<div class="appointments" data-bind="multilineText: administrativeAppointments">
                                                     <br />
                                                     <br />
                                                 </div>-->
-                                        </div>
+                                        </div>*@
                                         <div class="on-right" style="display: none" data-bind="visible: !isActive()">
                                             <span style="color: #cc0000">Your profile is currently inactive and is excluded from public view. </span>
                                             <br />

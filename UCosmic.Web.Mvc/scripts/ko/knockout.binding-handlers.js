@@ -29,6 +29,13 @@ ko.bindingHandlers.jqObservableElement = {
     }
 };
 
+ko.bindingHandlers.jQueryObservable = {
+    update: function (element, valueAccessor, allBindingsAccessor, viewModel) {
+        var name = ko.utils.unwrapObservable(valueAccessor());
+        viewModel[name]($(element));
+    }
+};
+
 ko.bindingHandlers.multilineText = {
     init: function () {
         return { 'controlsDescendantBindings': true };

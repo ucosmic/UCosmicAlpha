@@ -1,0 +1,85 @@
+﻿ul.affiliations {
+
+    > li {
+        border-bottom: solid 1px #999;
+        padding-bottom: 12px;
+        margin-top: 12px;
+
+        &:first-child {
+            margin-top: 0;
+        }
+    }
+
+    .establishment {
+        display: block;
+
+        .node-cursor {
+            font-family: Verdana;
+            font-size: 10px;
+            color: #999;
+            vertical-align: middle;
+        }
+    }
+
+    .establishment-1, .establishment-2 {
+        margin-left: 0;
+    }
+    .establishment-3 {
+        margin-left: 20px;
+    }
+    .establishment-4 {
+        margin-left: 40px;
+    }
+    .establishment-5 {
+        margin-left: 60px;
+    }
+    .establishment-6 {
+        margin-left: 80px;
+    }
+}
+
+a.with-img {
+    text-decoration: none !important;
+    &:link, &:visited {
+        .text {
+            text-decoration: underline;
+        }
+    }
+    &:hover {
+        .text {
+            text-decoration: none;
+        }
+    }
+}
+
+input[type=button].save.link {
+    background-image: url('../../../../images/icons/save/save-24.png');
+    background-repeat: no-repeat;
+    background-position: 0 4px;
+    margin-right: 12px;
+    padding: 0 16px;
+    padding-left: 32px;
+    line-height: 16px;
+    height: 32px;
+    border-radius: 0;
+    border-right: solid 1px #ccc;
+}
+
+body .ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset button[data-confirm-delete-link=true] {
+    background-color: transparent;
+    background-image: url('../../../../images/icons/minus/minus-24-white-on-red.png');
+    background-repeat: no-repeat;
+    background-position: 0 4px;
+    margin-right: 12px;
+    padding: 0 16px;
+    padding-left: 32px;
+    line-height: 16px;
+    height: 32px;
+    border-radius: 0;
+    border-right: solid 1px #ccc;
+
+    span.ui-button-text {
+        line-height: 16px;
+        height: 16px;
+    }
+}

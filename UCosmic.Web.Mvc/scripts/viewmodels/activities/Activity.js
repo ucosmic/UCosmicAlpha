@@ -48,7 +48,7 @@ var Activities;
                 //#endregion
                 //#region Subscriptions
                 this.isSaving = ko.observable(false);
-                this.saveSpinner = new App.Spinner(new App.SpinnerOptions(200));
+                this.saveSpinner = new App.Spinner({ delay: 200 });
                 this._isDirty = ko.observable(false);
                 this._descriptionIsDirtyCurrent = 0;
                 this._isAutoSaving = false;

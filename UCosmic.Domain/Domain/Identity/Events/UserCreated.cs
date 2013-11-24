@@ -1,35 +1,19 @@
 ﻿using System;
 using System.Security.Principal;
-using System.Threading;
 
 namespace UCosmic.Domain.Identity
 {
-    public class UserCreated : BaseEvent
+    public class UserCreated : IDefineEvent
     {
-        public EventWaitHandle Signal { get; set; }
-        public int UserId { get; set; }
-
-        public UserCreated(IPrincipal principal,int userId)
+        public UserCreated(IPrincipal principal)
         {
+            if (principal == null) throw new ArgumentNullException("principal");
             Principal = principal;
-            UserId = userId;
-            Signal = new EventWaitHandle(false, EventResetMode.AutoReset);
         }
 
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposing)
-            {
-                return;
-            }
-            
-            if (Signal != null) { Signal.Dispose(); }
-        }
+        public IPrincipal Principal { get; private set; }
+        public int UserId { get; set; }
+        public int PersonId { get; set; }
+        public int TenantId { get; set; }
     }
 }

@@ -21,7 +21,8 @@ namespace UCosmic.Domain.Establishments
         }
 
         public IPrincipal Principal { get; private set; }
-        public int Id { get; internal set; }
+        public int? Id { get; internal set; }
+        internal EstablishmentLocation Entity { get; set; }
 
         public double? CenterLatitude { get; set; }
         public double? CenterLongitude { get; set; }
@@ -41,13 +42,18 @@ namespace UCosmic.Domain.Establishments
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
+            When(x => x.Entity == null, () =>
+                RuleFor(x => x.Id.HasValue).Equal(true).WithMessage("Establishment Location owner id must be provided.")
+            );
+
             // id must be within valid range and exist in the database
-            RuleFor(x => x.Id)
-                .GreaterThanOrEqualTo(1)
-                    .WithMessage(MustBePositivePrimaryKey.FailMessageFormat, x => "Establishment id", x => x.Id)
-                .MustFindEstablishmentById(entities)
-                    .WithMessage(MustFindEstablishmentById.FailMessageFormat, x => x.Id)
-            ;
+            When(x => x.Id.HasValue, () =>
+                RuleFor(x => x.Id.Value)
+                    .GreaterThanOrEqualTo(1)
+                        .WithMessage(MustBePositivePrimaryKey.FailMessageFormat, x => "Establishment id", x => x.Id)
+                    .MustFindEstablishmentById(entities)
+                        .WithMessage(MustFindEstablishmentById.FailMessageFormat, x => x.Id)
+            );
 
             // text of the establishment name is required, has max length, and must be unique
             RuleFor(x => x.Principal)
@@ -66,17 +72,14 @@ namespace UCosmic.Domain.Establishments
     public class HandleUpdateEstablishmentLocationCommand : IHandleCommands<UpdateEstablishmentLocation>
     {
         private readonly ICommandEntities _entities;
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IProcessEvents _eventProcessor;
+        private readonly ITriggerEvent<EstablishmentChanged> _eventTrigger;
 
         public HandleUpdateEstablishmentLocationCommand(ICommandEntities entities
-            , IUnitOfWork unitOfWork
-            , IProcessEvents eventProcessor
+            , ITriggerEvent<EstablishmentChanged> eventTrigger
         )
         {
             _entities = entities;
-            _unitOfWork = unitOfWork;
-            _eventProcessor = eventProcessor;
+            _eventTrigger = eventTrigger;
         }
 
         public void Handle(UpdateEstablishmentLocation command)
@@ -84,12 +87,12 @@ namespace UCosmic.Domain.Establishments
             if (command == null) throw new ArgumentNullException("command");
 
             // load target
-            var entity = _entities.Get<EstablishmentLocation>()
+            var entity = command.Entity ?? _entities.Get<EstablishmentLocation>()
                 .EagerLoad(_entities, new Expression<Func<EstablishmentLocation, object>>[]
                 {
                     x => x.Places,
                 })
-                .Single(x => x.RevisionId == command.Id);
+                .Single(x => x.RevisionId == command.Id.Value);
 
             // load place
             var commandPlaces = new List<Place>();
@@ -125,7 +128,7 @@ namespace UCosmic.Domain.Establishments
                 Name = command.GetType().FullName,
                 Value = JsonConvert.SerializeObject(new
                 {
-                    command.Id,
+                    Id = command.Entity != null ? command.Entity.RevisionId : command.Id,
                     command.CenterLatitude,
                     command.CenterLongitude,
                     command.BoxNorthEastLatitude,
@@ -151,11 +154,12 @@ namespace UCosmic.Domain.Establishments
 
             audit.NewState = entity.ToJsonAudit();
             _entities.Create(audit);
-            _entities.Update(entity);
+            if (entity.RevisionId != default(int))
+                _entities.Update(entity);
 
             if (command.NoCommit) return;
-            _unitOfWork.SaveChanges();
-            _eventProcessor.Raise(new EstablishmentChanged());
+            _entities.SaveChanges();
+            _eventTrigger.Raise(new EstablishmentChanged());
         }
     }
 }

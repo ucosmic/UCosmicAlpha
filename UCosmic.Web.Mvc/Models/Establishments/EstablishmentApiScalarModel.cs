@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Linq;
+using AutoMapper;
 using UCosmic.Domain.Establishments;
 
 namespace UCosmic.Web.Mvc.Models
@@ -7,11 +8,13 @@ namespace UCosmic.Web.Mvc.Models
     {
         public int Id { get; set; }
         public int? ParentId { get; set; }
+        public int? Rank { get; set; }
         public int TypeId { get; set; }
         public string UCosmicCode { get; set; }
-        public string ExternalId { get; set; }
+        //public string ExternalId { get; set; }
         public string CeebCode { get; set; }
         public string OfficialName { get; set; }
+        public string ContextName { get; set; }
     }
 
     public static class EstablishmentApiScalarProfiler
@@ -25,6 +28,9 @@ namespace UCosmic.Web.Mvc.Models
                     .ForMember(d => d.ParentId, o => o.MapFrom(s => s.Parent != null ? s.Parent.RevisionId : (int?)null))
                     .ForMember(d => d.TypeId, o => o.MapFrom(s => s.Type.RevisionId))
                     .ForMember(d => d.CeebCode, o => o.MapFrom(s => s.CollegeBoardDesignatedIndicator))
+                    .ForMember(d => d.Rank, o => o.MapFrom(s => s.VerticalRank))
+                    .ForMember(d => d.ContextName, o => o.MapFrom(s =>
+                        s.Names.Any(x => x.IsContextName && !x.IsFormerName) ? s.Names.FirstOrDefault(x => x.IsContextName && !x.IsFormerName).Text : null))
                 ;
             }
         }
@@ -48,8 +54,8 @@ namespace UCosmic.Web.Mvc.Models
                     .ForMember(d => d.OfficialName, o => o.Ignore())
                     .ForMember(d => d.OfficialUrl, o => o.Ignore())
                     .ForMember(d => d.Location, o => o.Ignore())
-                    .ForMember(d => d.CreatedEstablishmentId, o => o.Ignore())
-                    .ForMember(d => d.VerticalRank, o => o.Ignore())
+                    .ForMember(d => d.Created, o => o.Ignore())
+                    .ForMember(d => d.Rank, o => o.Ignore())
                 ;
             }
         }

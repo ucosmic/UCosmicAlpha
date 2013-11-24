@@ -53,7 +53,7 @@ module App {
         throttledKeyword: KnockoutComputed<string>;
 
         // spinner component
-        spinner: Spinner = new Spinner(new SpinnerOptions(400, true));
+        spinner: Spinner = new Spinner({ delay: 400, runImmediately: true, });
 
         constructor () {
 

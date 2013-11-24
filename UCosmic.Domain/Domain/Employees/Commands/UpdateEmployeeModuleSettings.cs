@@ -64,7 +64,7 @@ namespace UCosmic.Domain.Employees
         {
             if (command == null) { throw new ArgumentNullException("command"); }
 
-            var settings = _entities.Get<EmployeeModuleSettings>().SingleOrDefault(p => p.Id == command.Id);
+            var settings = _entities.Get<EmployeeModuleSettings>().SingleOrDefault(p => p.EstablishmentId == command.Id);
             if (settings == null)
             {
                 throw new InvalidOperationException(string.Format(

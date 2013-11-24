@@ -38,8 +38,8 @@ module Agreements {
         fileFileExtension: KnockoutObservable<string> = ko.observable();
         fileFileName: KnockoutObservable<string> = ko.observable();
         fileSrc: KnockoutObservable<string> = ko.observable();
-        fileUploadSpinner = new App.Spinner(new App.SpinnerOptions(400));
-        fileDeleteSpinner = new App.Spinner(new App.SpinnerOptions(400));
+        fileUploadSpinner = new App.Spinner({ delay: 400, });
+        fileDeleteSpinner = new App.Spinner({ delay: 400, });
         $confirmPurgeDialog: JQuery;
         tempFileId = 0;
 

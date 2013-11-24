@@ -1,4 +1,4 @@
-declare module ViewModels.My {
+declare module People.ApiModels {
     export interface IServerProfileApiModel {
         hasPhoto: boolean;
         isActive: boolean;

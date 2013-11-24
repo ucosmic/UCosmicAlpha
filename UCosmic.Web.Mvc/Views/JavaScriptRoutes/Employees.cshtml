@@ -31,6 +31,22 @@ Routes.Api.Employees.Activities.counts = function (domain) {
 @* SETTINGS *@
 Routes.Api.Employees.Settings = Routes.Api.Employees.Settings || {};
 
+Routes.Api.Employees.Settings.byPerson = function (personId) {
+    if (!personId) {
+        return '@routeWriter.WriteRoute(Url.HttpRouteUrl(null, new
+            {
+                controller = "EmployeeSettings",
+                action = "GetByPerson",
+            }))';
+    }
+    return '@routeWriter.WriteRoute(Url.HttpRouteUrl(null, new
+    {
+        controller = "EmployeeSettings",
+        action = "GetByPerson",
+        personId = routeWriter.Value<int>(0),
+    }))'.format(personId);
+};
+
 Routes.Api.Employees.Settings.icon = function (domain, iconName) {
     return '@routeWriter.WriteRoute(Url.HttpRouteUrl(null, new
     {

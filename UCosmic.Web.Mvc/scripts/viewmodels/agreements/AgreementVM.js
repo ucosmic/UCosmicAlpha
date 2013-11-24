@@ -1,4 +1,3 @@
-/// <reference path="../../app/Spinner.ts" />
 /// <reference path="../../typings/knockout/knockout.d.ts" />
 /// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
 /// <reference path="../../typings/globalize/globalize.d.ts" />
@@ -43,7 +42,7 @@ var InstitutionalAgreementEditModel = (function () {
         //the body would scroll to the top.
         this.kendoWindowBug = { val: 0 };
         this.isBound = ko.observable();
-        this.spinner = new App.Spinner(new App.SpinnerOptions(400, true));
+        this.spinner = new App.Spinner({ delay: 400, runImmediately: true });
         this.officialNameDoesNotMatchTranslation = ko.computed(function () {
             return !(this.participants.establishmentOfficialName === this.participants.establishmentTranslatedName);
         });

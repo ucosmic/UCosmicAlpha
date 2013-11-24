@@ -22,9 +22,7 @@ namespace UCosmic.Work
         private readonly IDictionary<IDefineWork, IEnumerable<dynamic>> _workforce =
             new Dictionary<IDefineWork, IEnumerable<dynamic>>
             {
-                { new CreateVerticalAffiliations(), null },
                 { new ProjectEmployeeSummaryViews(), null },
-                { new ProjectActivityViews(), null },
                 { new RepairPlaceHierarchies(), null },
             };
 

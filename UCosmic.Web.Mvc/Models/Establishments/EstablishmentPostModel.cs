@@ -23,8 +23,8 @@ namespace UCosmic.Web.Mvc.Models
             {
                 CreateMap<EstablishmentPostModel, CreateEstablishment>()
                     .ForMember(d => d.Principal, o => o.Ignore())
-                    .ForMember(d => d.CreatedEstablishmentId, o => o.Ignore())
-                    .ForMember(d => d.VerticalRank, o => o.Ignore())
+                    .ForMember(d => d.Created, o => o.Ignore())
+                    .ForMember(d => d.Rank, o => o.Ignore())
                 ;
             }
         }

@@ -1,0 +1,59 @@
+ul.affiliations > li {
+  border-bottom: solid 1px #999;
+  padding-bottom: 12px;
+  margin-top: 12px; }
+  ul.affiliations > li:first-child {
+    margin-top: 0; }
+ul.affiliations .establishment {
+  display: block; }
+  ul.affiliations .establishment .node-cursor {
+    font-family: Verdana;
+    font-size: 10px;
+    color: #999;
+    vertical-align: middle; }
+ul.affiliations .establishment-1, ul.affiliations .establishment-2 {
+  margin-left: 0; }
+ul.affiliations .establishment-3 {
+  margin-left: 20px; }
+ul.affiliations .establishment-4 {
+  margin-left: 40px; }
+ul.affiliations .establishment-5 {
+  margin-left: 60px; }
+ul.affiliations .establishment-6 {
+  margin-left: 80px; }
+
+a.with-img {
+  text-decoration: none !important; }
+  a.with-img:link .text, a.with-img:visited .text {
+    text-decoration: underline; }
+  a.with-img:hover .text {
+    text-decoration: none; }
+
+input[type=button].save.link {
+  background-image: url("../../../../images/icons/save/save-24.png");
+  background-repeat: no-repeat;
+  background-position: 0 4px;
+  margin-right: 12px;
+  padding: 0 16px;
+  padding-left: 32px;
+  line-height: 16px;
+  height: 32px;
+  border-radius: 0;
+  border-right: solid 1px #ccc; }
+
+body .ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset button[data-confirm-delete-link=true] {
+  background-color: transparent;
+  background-image: url("../../../../images/icons/minus/minus-24-white-on-red.png");
+  background-repeat: no-repeat;
+  background-position: 0 4px;
+  margin-right: 12px;
+  padding: 0 16px;
+  padding-left: 32px;
+  line-height: 16px;
+  height: 32px;
+  border-radius: 0;
+  border-right: solid 1px #ccc; }
+  body .ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset button[data-confirm-delete-link=true] span.ui-button-text {
+    line-height: 16px;
+    height: 16px; }
+

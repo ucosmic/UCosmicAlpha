@@ -51,7 +51,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
         [CacheHttpGet(Duration = 60)]
         [GET("{domain}/employees/activities/counts")]
-        public EmployeeActivityCounts GetActivityCounts(string domain)
+        public EmployeeActivityCountsModel GetActivityCounts(string domain)
         {
             //throw new Exception();
             //System.Threading.Thread.Sleep(5000);
@@ -65,7 +65,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                     view.EstablishmentId = establishment.RevisionId;
             }
 
-            var model = new EmployeeActivityCounts
+            var model = new EmployeeActivityCountsModel
             {
                 ActivityCount = view.ActivityCount,
                 PersonCount = view.PersonCount,

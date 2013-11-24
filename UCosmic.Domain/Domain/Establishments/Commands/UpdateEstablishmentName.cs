@@ -22,6 +22,7 @@ namespace UCosmic.Domain.Establishments
         public string Text { get; set; }
         public bool IsOfficialName { get; set; }
         public bool IsFormerName { get; set; }
+        public bool IsContextName { get; set; }
         public string LanguageCode { get; set; }
         internal bool NoCommit { get; set; }
     }
@@ -48,6 +49,7 @@ namespace UCosmic.Domain.Establishments
                     .WithMessage(MustNotExceedStringLength.FailMessageFormat,
                         x => "Establishment name", x => EstablishmentNameConstraints.TextMaxLength, x => x.Text.Length)
                 .MustBeUniqueEstablishmentNameText(entities, x => x.Id)
+                    .Unless(x => x.IsContextName, ApplyConditionTo.CurrentValidator)
                     .WithMessage(MustBeUniqueEstablishmentNameText<object>.FailMessageFormat, x => x.Text)
             ;
 
@@ -62,17 +64,14 @@ namespace UCosmic.Domain.Establishments
     public class HandleUpdateEstablishmentNameCommand : IHandleCommands<UpdateEstablishmentName>
     {
         private readonly ICommandEntities _entities;
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IProcessEvents _eventProcessor;
+        private readonly ITriggerEvent<EstablishmentChanged> _eventTrigger;
 
         public HandleUpdateEstablishmentNameCommand(ICommandEntities entities
-            , IUnitOfWork unitOfWork
-            , IProcessEvents eventProcessor
+            , ITriggerEvent<EstablishmentChanged> eventTrigger
         )
         {
             _entities = entities;
-            _unitOfWork = unitOfWork;
-            _eventProcessor = eventProcessor;
+            _eventTrigger = eventTrigger;
         }
 
         public void Handle(UpdateEstablishmentName command)
@@ -149,8 +148,8 @@ namespace UCosmic.Domain.Establishments
             _entities.Update(establishmentName);
 
             if (command.NoCommit) return;
-            _unitOfWork.SaveChanges();
-            _eventProcessor.Raise(new EstablishmentChanged());
+            _entities.SaveChanges();
+            _eventTrigger.Raise(new EstablishmentChanged());
         }
     }
 }

@@ -19,7 +19,7 @@ var App;
             this.orderBy = ko.observable();
             this.keyword = ko.observable($('input[type=hidden][data-bind="value: keyword"]').val());
             // spinner component
-            this.spinner = new App.Spinner(new App.SpinnerOptions(400, true));
+            this.spinner = new App.Spinner({ delay: 400, runImmediately: true });
             // paging computeds
             this.pageCount = ko.computed(function () {
                 return Math.ceil(_this.itemTotal() / _this.pageSize());

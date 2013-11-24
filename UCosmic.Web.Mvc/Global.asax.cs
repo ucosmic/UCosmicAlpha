@@ -28,11 +28,7 @@ namespace UCosmic.Web.Mvc
             AreaRegistration.RegisterAllAreas();
             MvcHandler.DisableMvcResponseHeader = true;
 
-            DependencyResolver.Current.GetService<IProcessEvents>().Raise(new ApplicationStarted());
-
-            //DependencyResolver.Current.GetService<PerformMigrateUsfAgreementDataWork>().Perform(new MigrateUsfAgreementData());
-            //DependencyResolver.Current.GetService<PerformDeleteRandomUsfActivitiesWork>().Perform(new DeleteRandomUsfActivities());
-            //DependencyResolver.Current.GetService<PerformFixDuplicateMexicosWork>().Perform(new FixDuplicateMexicos());
+            DependencyResolver.Current.GetService<ITriggerEvent<ApplicationStarted>>().Raise(new ApplicationStarted());
         }
 
         protected void Application_PostAuthorizeRequest()

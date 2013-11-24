@@ -14,6 +14,7 @@ namespace UCosmic.Domain.Establishments
 
         public bool IsFormerName { get; protected internal set; }
         public bool IsOfficialName { get; protected internal set; }
+        public bool IsContextName { get; protected internal set; }
 
         public string Text
         {
@@ -57,6 +58,7 @@ namespace UCosmic.Domain.Establishments
                 entity.Text,
                 entity.IsOfficialName,
                 entity.IsFormerName,
+                entity.IsContextName,
             });
             return state;
         }

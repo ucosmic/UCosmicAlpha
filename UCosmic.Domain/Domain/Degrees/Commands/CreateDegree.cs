@@ -50,8 +50,6 @@ namespace UCosmic.Domain.Degrees
             {
                 RuleFor(x => x.Principal)
                     .MustBeInAnyRole(RoleName.EmployeeProfileManager)
-                        .WithMessage(MustBeInAnyRole.FailMessageFormat,
-                                x => x.Principal.Identity.Name, x => x.GetType().Name)
                 ;
 
                 RuleFor(x => x.PersonId.Value)

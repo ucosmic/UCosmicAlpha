@@ -153,8 +153,11 @@
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="BinaryData\AzureBlobBinaryDataStorage.cs" />
+    <Compile Include="Cqrs\HandleEventAsynchronouslyDecorator.cs" />
+    <Compile Include="Cqrs\MultipleDispatchEventTrigger.cs" />
     <Compile Include="Cqrs\RetryCommandDecorator.cs" />
     <Compile Include="Cqrs\RetryQueryDecorator.cs" />
+    <Compile Include="SeedData\PrivateSqlSeeder.cs" />
     <Compile Include="_Extensions\BinaryDataStorageExtensions.cs" />
     <Compile Include="BinaryData\IisFileSystemBinaryDataStorage.cs" />
     <Compile Include="BinaryData\RootComposer.cs" />
@@ -165,11 +168,11 @@
     <Compile Include="Configuration\ConnectionStringName.cs" />
     <Compile Include="Cqrs\AzureCacheViewManager.cs" />
     <Compile Include="Cache\IProvideCache.cs" />
-    <Compile Include="Cqrs\HandleEventAsynchronouslyDecorator.cs" />
+    <Compile Include="_Deprecatable\HandleEventAsynchronouslyDecorator.cs" />
     <Compile Include="Cache\RootComposer.cs" />
-    <Compile Include="Cqrs\SimpleInjectorAsynchronousEventProcessor.cs" />
+    <Compile Include="_Deprecatable\SimpleInjectorAsynchronousEventProcessor.cs" />
     <Compile Include="Cqrs\RootComposer.cs" />
-    <Compile Include="Cqrs\SimpleInjectorSynchronousEventProcessor.cs" />
+    <Compile Include="_Deprecatable\SimpleInjectorSynchronousEventProcessor.cs" />
     <Compile Include="Cqrs\SimpleInjectorQueryProcessor.cs" />
     <Compile Include="Cryptography\AesExtensions.cs" />
     <Compile Include="Cqrs\JsonView.cs" />
@@ -227,11 +230,10 @@
     <Compile Include="SeedData\CountryAndAdmin1ByGeoPlanetEntitySeeder.cs" />
     <Compile Include="SeedData\DegreeSeeder.cs" />
     <Compile Include="SeedData\ExternalFileEntitySeeder.cs" />
-    <Compile Include="SeedData\EmployeeEntitySeeder.cs" />
+    <Compile Include="SeedData\EmployeeModuleEntitySeeder.cs" />
     <Compile Include="SeedData\ImageEntitySeeder.cs" />
     <Compile Include="SeedData\LoadableFileEntitySeeder.cs" />
     <Compile Include="SeedData\RegionsByGeoServicesEntitySeeder.cs" />
-    <Compile Include="SeedData\SensativeSqlSeeder.cs" />
     <Compile Include="SeedData\UserEntitySeeder.cs" />
     <Compile Include="SeedData\WaterBodiesByGeoServicesEntitySeeder.cs" />
     <Compile Include="WebApi\HttpClient.cs" />
@@ -311,8 +313,6 @@
     <None Include="SeedData\SeedMediaFiles\10EC87BD-3A95-439D-807A-0F57C3F89C8A.xls" />
     <None Include="SeedData\SeedMediaFiles\1322FF22-E863-435E-929E-765EB95FB460.ppt" />
     <None Include="SeedData\SeedMediaFiles\817DB81E-53FC-47E1-A1DE-B8C108C7ACD6.pdf" />
-    <None Include="SeedData\SeedMediaFiles\USFDepartmentList.json" />
-    <None Include="SeedData\SeedMediaFiles\USFSampleFacultyProfile.json" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\UCosmic.Domain\UCosmic.Domain.csproj">

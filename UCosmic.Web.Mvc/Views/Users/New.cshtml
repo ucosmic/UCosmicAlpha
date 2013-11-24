@@ -32,7 +32,31 @@
                 </h1>
             </header>
             <div>
-                <section class="fieldset">
+                <section data-bind="visible: !isWarned()" style="padding: 10px; background-color: #ffffba; border: solid 1px #222; display: none;">
+                    <header>
+                        <h2>
+                            <span style="color: #c00;">Warning</span>
+                        </h2>
+                    </header>
+                    <div>
+                        <p>
+                            Please do not yet use this page unless you have been advised to, it is currently still experimental and may behave unexpectedly.
+                            You do not need to create user accounts here for users to be able to sign on. User accounts are created automatically when users
+                            sign on. The purpose of this form is to create user accounts so that you can pre-populate data which users can then assume control
+                            of when they finally do sign on for the first time.
+                        </p>
+                        <p>
+                            If your institution has a Shibboleth Single-Sign-On integration, you must know the EPPN, including scope, that will be returned
+                            from Shibboleth IdP responses when the user signs on. If you are unsure what this EPPN will be, or do not know whether your
+                            institution has an SSO integration, please <strong>do not use this form.</strong>
+                        </p>
+                        <p>
+                            Otherwise, if you are aware of the risks and wish to proceed creating a user account,
+                            <button class="link" data-bind="click: acceptWarning">click here to proceed</button>.
+                        </p>
+                    </div>
+                </section>
+                <section data-bind="visible: isWarned" class="fieldset">
                     <header>
                         <h2>
                             <span>Username</span>
@@ -48,11 +72,11 @@
             <div style="margin-bottom: 10px" data-bind="visible: errorMessage">
                 <span class="field-validation-error" data-bind="text: errorMessage"></span>
             </div>
-            <div>
+            <div data-bind="visible: isWarned">
                 <input type="submit" value="Create" />
                 <span data-bind="visible: saveSpinner.isVisible">
                     <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
-                    <span style="font-weight: bold"> Please wait while user is created...</span>
+                    <span style="font-weight: bold">Please wait while user is created...</span>
                 </span>
             </div>
         </div>

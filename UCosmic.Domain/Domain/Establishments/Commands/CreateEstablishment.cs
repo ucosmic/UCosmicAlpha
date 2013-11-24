@@ -20,6 +20,7 @@ namespace UCosmic.Domain.Establishments
 
         public IPrincipal Principal { get; private set; }
         public int? ParentId { get; set; }
+        internal Establishment Parent { get; set; }
         public int TypeId { get; set; }
         public CreateEstablishmentName OfficialName { get; set; }
         public CreateEstablishmentUrl OfficialUrl { get; set; }
@@ -36,19 +37,19 @@ namespace UCosmic.Domain.Establishments
             set { _uCosmicCode = value == null ? null : value.Trim(); }
         }
 
-        public string ExternalId { get; set; }
+        //public string ExternalId { get; set; }
 
-        public int CreatedEstablishmentId { get; internal set; }
+        public Establishment Created { get; internal set; }
 
-        public int? VerticalRank { get; set; }
+        public int? Rank { get; set; }
+
+        internal bool NoCommit { get; set; }
+        internal bool NoHierarchy { get; set; }
     }
 
     public class ValidateCreateEstablishmentCommand : AbstractValidator<CreateEstablishment>
     {
-        public ValidateCreateEstablishmentCommand(IQueryEntities entities
-            , IValidator<CreateEstablishmentName> officialNameValidator
-            , IValidator<CreateEstablishmentUrl> officialUrlValidator
-        )
+        public ValidateCreateEstablishmentCommand(IQueryEntities entities)
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
@@ -56,8 +57,6 @@ namespace UCosmic.Domain.Establishments
             RuleFor(x => x.OfficialName)
                 .NotNull()
                     .WithMessage("Establishment must have an official name.")
-                .Must(x => officialNameValidator.Validate(x).IsValid)
-                    .WithMessage("Establishment official name failed one or more validation rules.")
             ;
 
             // parent id must exist when passed
@@ -90,33 +89,24 @@ namespace UCosmic.Domain.Establishments
                     .MustBeUniqueUCosmicCode(entities)
                         .WithMessage(MustBeUniqueUCosmicCode<object>.FailMessageFormat, x => x.UCosmicCode)
             );
-
-            // when the establishment name is official, it cannot be a former / defunct name
-            When(x => x.OfficialUrl != null && !string.IsNullOrWhiteSpace(x.OfficialUrl.Value), () =>
-                RuleFor(x => x.OfficialUrl)
-                    .Must(x => officialUrlValidator.Validate(x).IsValid)
-                        .WithMessage("Establishment official URL failed one or more validation rules.")
-            );
         }
     }
 
-    public class HandleCreateEstablishmentCommand: IHandleCommands<CreateEstablishment>
+    public class HandleCreateEstablishmentCommand : IHandleCommands<CreateEstablishment>
     {
         private readonly ICommandEntities _entities;
         private readonly IHandleCommands<CreateEstablishmentName> _createName;
         private readonly IHandleCommands<CreateEstablishmentUrl> _createUrl;
         private readonly IHandleCommands<UpdateEstablishmentLocation> _updateLocation;
         private readonly IHandleCommands<UpdateEstablishmentHierarchy> _updateHierarchy;
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IProcessEvents _eventProcessor;
+        private readonly ITriggerEvent<EstablishmentChanged> _eventTrigger;
 
         public HandleCreateEstablishmentCommand(ICommandEntities entities
             , IHandleCommands<CreateEstablishmentName> createName
             , IHandleCommands<CreateEstablishmentUrl> createUrl
             , IHandleCommands<UpdateEstablishmentLocation> updateLocation
             , IHandleCommands<UpdateEstablishmentHierarchy> updateHierarchy
-            , IUnitOfWork unitOfWork
-            , IProcessEvents eventProcessor
+            , ITriggerEvent<EstablishmentChanged> eventTrigger
         )
         {
             _entities = entities;
@@ -124,8 +114,7 @@ namespace UCosmic.Domain.Establishments
             _createUrl = createUrl;
             _updateLocation = updateLocation;
             _updateHierarchy = updateHierarchy;
-            _unitOfWork = unitOfWork;
-            _eventProcessor = eventProcessor;
+            _eventTrigger = eventTrigger;
         }
 
         public void Handle(CreateEstablishment command)
@@ -133,25 +122,25 @@ namespace UCosmic.Domain.Establishments
             if (command == null) throw new ArgumentNullException("command");
 
             var hasOfficialUrl = command.OfficialUrl != null && !string.IsNullOrWhiteSpace(command.OfficialUrl.Value);
-            var establishmentType = _entities.Get<EstablishmentType>()
-                .Single(x => x.RevisionId == command.TypeId);
+            var hasLocation = command.Location != null;
 
-            var establishmentParent = command.ParentId.HasValue
-                ? _entities.Get<Establishment>().Single(x => x.RevisionId == command.ParentId)
-                : null;
+            var establishmentParent = command.Parent
+                ?? (command.ParentId.HasValue
+                    ? _entities.Get<Establishment>().Single(x => x.RevisionId == command.ParentId)
+                    : null);
 
             // create initial establishment
             var establishment = new Establishment
             {
                 Parent = establishmentParent,
-                Type = establishmentType,
+                TypeId = command.TypeId,
                 OfficialName = command.OfficialName.Text,
                 WebsiteUrl = hasOfficialUrl ? command.OfficialUrl.Value : null,
                 Location = new EstablishmentLocation(),
                 CollegeBoardDesignatedIndicator = command.CeebCode,
                 UCosmicCode = command.UCosmicCode,
-                ExternalId = command.ExternalId,
-                VerticalRank = command.VerticalRank
+                //ExternalId = command.ExternalId,
+                VerticalRank = command.Rank
             };
 
             // log audit
@@ -165,55 +154,62 @@ namespace UCosmic.Domain.Establishments
                     command.TypeId,
                     command.CeebCode,
                     command.UCosmicCode,
-                    command.ExternalId,
+                    //command.ExternalId,
                     OfficialName = command.OfficialName.Text,
                     OfficialNameLanguageCode = command.OfficialName.LanguageCode,
                     OfficialUrl = hasOfficialUrl ? command.OfficialUrl.Value : null,
-                    command.Location.CenterLatitude,
-                    command.Location.CenterLongitude,
-                    command.Location.BoxNorthEastLatitude,
-                    command.Location.BoxNorthEastLongitude,
-                    command.Location.BoxSouthWestLatitude,
-                    command.Location.BoxSouthWestLongitude,
-                    command.Location.PlaceId
-                    
+                    CenterLatitude = command.Location != null ? command.Location.CenterLatitude : null,
+                    CenterLongitude = command.Location != null ? command.Location.CenterLongitude : null,
+                    BoxNorthEastLatitude = command.Location != null ? command.Location.BoxNorthEastLatitude : null,
+                    BoxNorthEastLongitude = command.Location != null ? command.Location.BoxNorthEastLongitude : null,
+                    BoxSouthWestLatitude = command.Location != null ? command.Location.BoxSouthWestLatitude : null,
+                    BoxSouthWestLongitude = command.Location != null ? command.Location.BoxSouthWestLongitude : null,
+                    PlaceId = command.Location != null ? command.Location.PlaceId : null,
                 }),
                 NewState = establishment.ToJsonAudit(),
             };
             _entities.Create(audit);
             _entities.Create(establishment);
-            _unitOfWork.SaveChanges();
-            command.CreatedEstablishmentId = establishment.RevisionId;
+            command.Created = establishment;
 
             // create official name
-            command.OfficialName.OwnerId = establishment.RevisionId;
+            command.OfficialName.OwnerId = null;
+            command.OfficialName.Owner = establishment;
             command.OfficialName.NoCommit = true;
             _createName.Handle(command.OfficialName);
 
             // create official URL
             if (hasOfficialUrl)
             {
-                command.OfficialUrl.OwnerId = establishment.RevisionId;
+                command.OfficialUrl.OwnerId = null;
+                command.OfficialUrl.Owner = establishment;
                 command.OfficialUrl.NoCommit = true;
                 _createUrl.Handle(command.OfficialUrl);
             }
 
             // update location
-            command.Location.Id = establishment.RevisionId;
-            command.Location.NoCommit = true;
-            _updateLocation.Handle(command.Location);
+            if (hasLocation)
+            {
+                command.Location.Id = null;
+                command.Location.Entity = establishment.Location;
+                command.Location.NoCommit = true;
+                _updateLocation.Handle(command.Location);
+            }
 
             // update hierarchy
-            _updateHierarchy.Handle(new UpdateEstablishmentHierarchy(establishment));
+            if (!command.NoHierarchy)
+                _updateHierarchy.Handle(new UpdateEstablishmentHierarchy(establishment));
 
             // commit
-            _unitOfWork.SaveChanges();
+            if (command.NoCommit) return;
+
+            _entities.SaveChanges();
             command.OfficialName.Id = command.OfficialName.CreatedEntity.RevisionId;
             if (hasOfficialUrl)
             {
                 command.OfficialUrl.Id = command.OfficialUrl.CreatedEntity.RevisionId;
             }
-            _eventProcessor.Raise(new EstablishmentChanged());
+            _eventTrigger.Raise(new EstablishmentChanged());
         }
     }
 }

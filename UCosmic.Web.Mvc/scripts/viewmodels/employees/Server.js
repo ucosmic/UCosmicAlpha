@@ -6,7 +6,7 @@ var Employees;
     /// <reference path="Routes.d.ts" />
     /// <reference path="Models.d.ts" />
     (function (Servers) {
-        function EmployeesPlaces(tenantDomain, data, settings) {
+        function GetEmployeesPlaces(tenantDomain, data, settings) {
             var promise = $.Deferred();
             settings = settings || {};
             settings.url = Routes.Api.Employees.places(tenantDomain);
@@ -19,9 +19,9 @@ var Employees;
             });
             return promise;
         }
-        Servers.EmployeesPlaces = EmployeesPlaces;
+        Servers.GetEmployeesPlaces = GetEmployeesPlaces;
 
-        function ActivityCounts(tenantDomain, settings) {
+        function GetActivityCounts(tenantDomain, settings) {
             var promise = $.Deferred();
             settings = settings || {};
             settings.url = Routes.Api.Employees.Activities.counts(tenantDomain);
@@ -32,7 +32,24 @@ var Employees;
             });
             return promise;
         }
-        Servers.ActivityCounts = ActivityCounts;
+        Servers.GetActivityCounts = GetActivityCounts;
+
+        function GetSettingsByPerson(personId, settings) {
+            if (typeof personId === "undefined") { personId = 0; }
+            var promise = $.Deferred();
+            settings = settings || {};
+            settings.url = Routes.Api.Employees.Settings.byPerson(personId);
+            $.ajax(settings).done(function (response) {
+                promise.resolve(response);
+            }).fail(function (xhr) {
+                if (xhr.status === 404)
+                    promise.resolve(null);
+else
+                    promise.reject(xhr);
+            });
+            return promise;
+        }
+        Servers.GetSettingsByPerson = GetSettingsByPerson;
     })(Employees.Servers || (Employees.Servers = {}));
     var Servers = Employees.Servers;
 })(Employees || (Employees = {}));

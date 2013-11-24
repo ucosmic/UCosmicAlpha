@@ -11,6 +11,7 @@ declare module Employees.ApiRoutes {
     }
 
     export interface Settings {
+        byPerson(personId?: number): string;
         icon(domain: string, iconName: string): string;
         ActivityTypes: SettingsActivityTypes;
     }

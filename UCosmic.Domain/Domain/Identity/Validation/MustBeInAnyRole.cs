@@ -7,12 +7,12 @@ namespace UCosmic.Domain.Identity
 {
     public class MustBeInAnyRole : PropertyValidator
     {
-        public const string FailMessageFormat = "User '{0}' is not authorized to perform the '{1}' action.";
+        private const string FailMessageFormat = "User '{UserName}' is not authorized to perform the '{CommandName}' action.";
 
         private readonly string[] _roles;
 
         internal MustBeInAnyRole(string[] roles)
-            : base(FailMessageFormat.Replace("{0}", "{PropertyValue}"))
+            : base(FailMessageFormat)
         {
             if (roles == null) throw new ArgumentNullException("roles");
             _roles = roles;
@@ -20,14 +20,17 @@ namespace UCosmic.Domain.Identity
 
         protected override bool IsValid(PropertyValidatorContext context)
         {
-            if (!(context.PropertyValue is IPrincipal))
-                throw new NotSupportedException(string.Format(
-                    "The {0} PropertyValidator can only operate on IPrincipal properties", GetType().Name));
+            var principal = (IPrincipal)context.PropertyValue;
 
-            context.MessageFormatter.AppendArgument("PropertyValue", context.PropertyValue);
-            var value = (IPrincipal)context.PropertyValue;
+            var isInAnyRole = principal.IsInAnyRole(_roles);
 
-            return value.IsInAnyRole(_roles);
+            if (!isInAnyRole)
+            {
+                context.MessageFormatter.AppendArgument("UserName", principal.Identity.Name);
+                context.MessageFormatter.AppendArgument("CommandName", context.Instance.GetType().Name);
+            }
+
+            return isInAnyRole;
         }
     }
 

@@ -373,35 +373,6 @@ module App.Routes {
 
         export module My {
 
-            export module Profile {
-                export function get (): string {
-                    return makeUrl('my/profile');
-                }
-                export function put(): string {
-                    return get();
-                }
-            }
-
-            export module Affiliations {
-                export function get (affiliationId?: number): string {
-                    var url = 'my/affiliations';
-                    if (affiliationId) url += '/' + affiliationId;
-                    return makeUrl(url);
-                }
-                export function getDefault (): string {
-                    return makeUrl('my/affiliations/default');
-                }
-                export function post(): string {
-                    return get();
-                }
-                export function put(affiliationId: number): string {
-                    return get(affiliationId);
-                }
-                export function del(affiliationId: number): string {
-                    return get(affiliationId);
-                }
-            }
-
             export module Photo {
                 export function get (params?: any): string {
                     var url = post();
@@ -681,15 +652,15 @@ module App.Routes {
         export module My {
             export module Profile {
                 export function get (tab?: string) {
-                    var url = makeUrl('my/profile');
+                    var url = makeUrl('person');
                     // Workaround until we figure out how to go from ?tab to #/
                     //if (tab != null) {
-                    //    url = makeUrlWithParams( 'my/profile' ) + "tab=" + tab;
+                    //    url = makeUrlWithParams( 'person' ) + "tab=" + tab;
                     //}
                     return url;
                 }
                 export function post(startEditing: boolean, startTabName: string) {
-                    var url = makeUrlWithParams('my/profile') + "startEditing=" + startEditing + "&startTabName=" + startTabName;
+                    var url = makeUrlWithParams('person') + "startEditing=" + startEditing + "&startTabName=" + startTabName;
                     return url;
                 }
             }

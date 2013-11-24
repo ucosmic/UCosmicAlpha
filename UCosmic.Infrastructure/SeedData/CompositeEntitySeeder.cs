@@ -4,7 +4,7 @@
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly CoreSqlSeeder _coreSqlSeeder;
-        private readonly SensativeSqlSeeder _sensativeSqlSeeder;
+        private readonly PrivateSqlSeeder _privateSqlSeeder;
         //private readonly LanguageEntitySeeder _languageEntitySeeder;
         //private readonly LanguageSqlSeeder _languageSqlSeeder;
         //private readonly CountryAndAdmin1ByGeoPlanetEntitySeeder _countryAndAdmin1ByGeoPlanetEntitySeeder;
@@ -19,8 +19,6 @@
         private readonly AgreementEntitySeeder _agreementEntitySeeder;
         private readonly AgreementSettingsEntitySeeder _agreementSettingsEntitySeeder;
         private readonly EmployeeModuleSettingsEntitySeeder _employeeModuleSettingsEntitySeeder;
-        private readonly EmployeeEntitySeeder _employeeEntitySeeder;
-        private readonly AffiliationEntitySeeder _myAffiliationEntitySeeder;
         private readonly ActivityEntitySeeder _activityEntitySeeder;
         private readonly DegreeEntitySeeder _degreeEntitySeeder;
         private readonly GeographicExpertiseEntitySeeder _geographicExpertiseEntitySeeder;
@@ -29,7 +27,7 @@
 
         public CompositeEntitySeeder(IUnitOfWork unitOfWork
             , CoreSqlSeeder coreSqlSeeder
-            , SensativeSqlSeeder sensativeSqlSeeder
+            , PrivateSqlSeeder privateSqlSeeder
             //, LanguageEntitySeeder languageEntitySeeder // this or CoreSqlSeeder
             //, LanguageSqlSeeder languageSqlSeeder // this or CoreSqlSeeder
             //, CountryAndAdmin1ByGeoPlanetEntitySeeder countryAndAdmin1ByGeoPlanetEntitySeeder // this or CoreSqlSeeder
@@ -44,8 +42,6 @@
             , AgreementEntitySeeder agreementEntitySeeder
             , AgreementSettingsEntitySeeder agreementSettingsEntitySeeder
             , EmployeeModuleSettingsEntitySeeder employeeModuleSettingsEntitySeeder
-            , AffiliationEntitySeeder myAffiliationEntitySeeder
-            , EmployeeEntitySeeder employeeEntitySeeder
             , ActivityEntitySeeder activityEntitySeeder
             , DegreeEntitySeeder degreeEntitySeeder
             , GeographicExpertiseEntitySeeder geographicExpertiseEntitySeeder
@@ -55,7 +51,7 @@
         {
             _unitOfWork = unitOfWork;
             _coreSqlSeeder = coreSqlSeeder;
-            _sensativeSqlSeeder = sensativeSqlSeeder;
+            _privateSqlSeeder = privateSqlSeeder;
             //_languageSqlSeeder = languageSqlSeeder; // this or CoreSqlSeeder
             //_languageEntitySeeder = languageEntitySeeder; // this or CoreSqlSeeder
             //_countryAndAdmin1ByGeoPlanetEntitySeeder = countryAndAdmin1ByGeoPlanetEntitySeeder; // this or CoreSqlSeeder
@@ -64,14 +60,12 @@
             _roleEntitySeeder = roleEntitySeeder;
             _establishmentEntitySeeder = establishmentEntitySeeder;
             _employeeModuleSettingsEntitySeeder = employeeModuleSettingsEntitySeeder;
-            _employeeEntitySeeder = employeeEntitySeeder;
             _emailTemplateEntitySeeder = emailTemplateEntitySeeder;
             _personEntitySeeder = personEntitySeeder;
             _userEntitySeeder = userEntitySeeder;
             _memberEntitySeeder = memberEntitySeeder;
             _agreementEntitySeeder = agreementEntitySeeder;
             _agreementSettingsEntitySeeder = agreementSettingsEntitySeeder;
-            _myAffiliationEntitySeeder = myAffiliationEntitySeeder;
             _activityEntitySeeder = activityEntitySeeder;
             _degreeEntitySeeder = degreeEntitySeeder;
             _geographicExpertiseEntitySeeder = geographicExpertiseEntitySeeder;
@@ -99,15 +93,13 @@
             _memberEntitySeeder.Seed();
             _agreementEntitySeeder.Seed();
             _agreementSettingsEntitySeeder.Seed();
-            _myAffiliationEntitySeeder.Seed();
-            _employeeEntitySeeder.Seed();
             _activityEntitySeeder.Seed();
             _degreeEntitySeeder.Seed();
             _geographicExpertiseEntitySeeder.Seed();
             _languageExpertiseEntitySeeder.Seed();
             _internationAffiliationEntitySeeder.Seed();
 
-            _sensativeSqlSeeder.Seed();
+            _privateSqlSeeder.Seed();
 
             _unitOfWork.SaveChanges();
         }

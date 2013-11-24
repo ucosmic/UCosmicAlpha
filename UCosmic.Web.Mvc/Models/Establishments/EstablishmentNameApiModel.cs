@@ -10,6 +10,7 @@ namespace UCosmic.Web.Mvc.Models
         public string Text { get; set; }
         public bool IsOfficialName { get; set; }
         public bool IsFormerName { get; set; }
+        public bool IsContextName { get; set; }
         public string LanguageName { get; set; }
         public string LanguageCode { get; set; }
     }

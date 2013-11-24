@@ -995,6 +995,7 @@ declare module kendo.ui {
     class DropDownList extends kendo.ui.Widget {
         element: JQuery;
         wrapper: JQuery;
+        popup: any;
         constructor(element: Element, options?: DropDownListOptions);
         options: DropDownListOptions;
         dataSource: kendo.data.DataSource;
@@ -1006,6 +1007,8 @@ declare module kendo.ui {
         refresh(): void;
         search(word: string): void;
         select(li: any): number;
+        span: JQuery;
+        ul: JQuery;
         setDataSource(dataSource: kendo.data.DataSource): void;
         text(): string;
         text(text: string): void;

@@ -2,7 +2,6 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using Newtonsoft.Json;
-using UCosmic.Domain.Employees;
 using UCosmic.Domain.Establishments;
 using UCosmic.Domain.Files;
 using UCosmic.Domain.Identity;
@@ -37,38 +36,9 @@ namespace UCosmic.Domain.People
         public virtual ICollection<Affiliation> Affiliations { get; protected set; }
 
         public virtual User User { get; protected internal set; }
-        public virtual Employee Employee { get; protected internal set; }
         public virtual ICollection<EmailMessage> Messages { get; protected set; }
 
         public EmailAddress DefaultEmail { get { return Emails.SingleOrDefault(x => x.IsDefault); } }
-
-        //public EmailAddress GetEmail(string value)
-        //{
-        //    if (Emails == null || !Emails.Any()) return null;
-        //    return Emails.SingleOrDefault(x => x.Value.Equals(value, StringComparison.OrdinalIgnoreCase));
-        //}
-
-        //public EmailAddress AddEmail(string value)
-        //{
-        //    // email may already exist
-        //    var email = Emails.SingleOrDefault(x => x.Value.Equals(value, StringComparison.OrdinalIgnoreCase));
-        //    if (email != null) return email;
-
-        //    // create email
-        //    email = new EmailAddress
-        //    {
-        //        // if person does not already have a default email, this is it
-        //        IsDefault = (Emails.Count(a => a.IsDefault) == 0),
-        //        Value = value,
-        //        Person = this,
-        //        Number = Emails.NextNumber(),
-        //    };
-
-        //    // add & return email
-        //    Emails.Add(email);
-
-        //    return email;
-        //}
 
         /* Deprecated */
         public Affiliation AffiliateWith(Establishment establishment)
@@ -77,7 +47,7 @@ namespace UCosmic.Domain.People
 
             // affiliation may already exist
             var affiliation = currentAffiliations
-                .SingleOrDefault(a => a.Establishment == establishment);
+                .SingleOrDefault(a => a.Establishment.Equals(establishment));
             if (affiliation != null) return affiliation;
 
             // create affiliation

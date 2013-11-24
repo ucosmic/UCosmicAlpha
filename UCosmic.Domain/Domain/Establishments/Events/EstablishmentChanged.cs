@@ -1,6 +1,6 @@
 ﻿namespace UCosmic.Domain.Establishments
 {
-    public class EstablishmentChanged : BaseEvent
+    public class EstablishmentChanged : IDefineEvent
     {
     }
 }

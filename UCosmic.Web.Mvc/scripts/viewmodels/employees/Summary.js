@@ -16,6 +16,8 @@ var Employees;
     /// <reference path="Server.ts" />
     /// <reference path="Models.d.ts" />
     /// <reference path="../../app/App.ts" />
+    /// <reference path="../../app/DataCacher.ts" />
+    /// <reference path="../../app/ImageSwapper.ts" />
     (function (ViewModels) {
         var SummaryRouteState = (function () {
             function SummaryRouteState() {
@@ -57,58 +59,6 @@ var Employees;
             DataGraphPivot[DataGraphPivot["degress"] = 3] = "degress";
         })(ViewModels.DataGraphPivot || (ViewModels.DataGraphPivot = {}));
         var DataGraphPivot = ViewModels.DataGraphPivot;
-
-        var ImageSwapper = (function () {
-            function ImageSwapper(noHoverSrc, hoverSrc) {
-                var _this = this;
-                this.hoverSrc = ko.observable('');
-                this.noHoverSrc = ko.observable('');
-                this._state = ko.observable('none');
-                this.isNoHover = ko.computed(function () {
-                    return _this._state() == 'none';
-                });
-                this.isHover = ko.computed(function () {
-                    return _this._state() == 'hover';
-                });
-                this.src = ko.computed(function () {
-                    return _this.isHover() ? _this.hoverSrc() : _this.noHoverSrc();
-                });
-                this.noHoverSrc(noHoverSrc || '');
-                this.hoverSrc(hoverSrc || '');
-            }
-            ImageSwapper.prototype.onMouseEnter = function (self, e) {
-                this._state('hover');
-            };
-
-            ImageSwapper.prototype.onMouseLeave = function (self, e) {
-                this._state('none');
-            };
-            return ImageSwapper;
-        })();
-        ViewModels.ImageSwapper = ImageSwapper;
-
-        var DataCacher = (function () {
-            function DataCacher(loader) {
-                this.loader = loader;
-                this._promise = $.Deferred();
-                this._isLoading = false;
-            }
-            DataCacher.prototype.ready = function () {
-                var _this = this;
-                if (!this._isLoading) {
-                    this._isLoading = true;
-                    this.loader().done(function (data) {
-                        _this.cached = data;
-                        _this._promise.resolve(_this.cached);
-                    }).fail(function (xhr) {
-                        _this._promise.reject();
-                    });
-                }
-                return this._promise;
-            };
-            return DataCacher;
-        })();
-        ViewModels.DataCacher = DataCacher;
 
         var Summary = (function () {
             //#endregion
@@ -153,7 +103,7 @@ var Employees;
                 //#region Pivot Data
                 //#region Places
                 this.hasPlaceData = ko.observable(false);
-                this.placeData = new DataCacher(function () {
+                this.placeData = new App.DataCacher(function () {
                     return _this._loadPlaceData();
                 });
                 //#endregion
@@ -165,7 +115,7 @@ var Employees;
                     activityCount: ko.observable('?'),
                     locationCount: ko.observable('?')
                 };
-                this.activityCountsData = new DataCacher(function () {
+                this.activityCountsData = new App.DataCacher(function () {
                     return _this._loadActivityCounts();
                 });
                 //#endregion
@@ -182,7 +132,7 @@ var Employees;
                 //#endregion
                 //#region Google GeoChart
                 this.geoChart = new App.Google.GeoChart(document.getElementById(this.settings.geoChart.googleElementId));
-                this.geoChartSpinner = new App.Spinner(new App.SpinnerOptions(400, true));
+                this.geoChartSpinner = new App.Spinner({ delay: 400, runImmediately: true });
                 this.isGeoChartReady = ko.observable(false);
                 this._geoChartDataTable = this._newGeoChartDataTable();
                 //#endregion
@@ -382,7 +332,7 @@ var Employees;
                     placeAgnostic: true
                 };
                 this.geoChartSpinner.start();
-                Employees.Servers.EmployeesPlaces(this.settings.tenantDomain, request).done(function (places) {
+                Employees.Servers.GetEmployeesPlaces(this.settings.tenantDomain, request).done(function (places) {
                     _this.hasPlaceData(places && places.length > 0);
                     promise.resolve(places);
                 }).fail(function (xhr) {
@@ -413,7 +363,7 @@ var Employees;
             Summary.prototype._loadActivityCounts = function () {
                 var _this = this;
                 var promise = $.Deferred();
-                Employees.Servers.ActivityCounts(this.settings.tenantDomain).done(function (summary) {
+                Employees.Servers.GetActivityCounts(this.settings.tenantDomain).done(function (summary) {
                     ko.mapping.fromJS(summary, {}, _this.activityTotals);
                     promise.resolve(summary);
                 }).fail(function (xhr) {
@@ -806,7 +756,7 @@ var Employees;
                         placeId: parseInt(jOverlay.data('place-id')),
                         title: jOverlay.attr('title'),
                         className: jOverlay.attr('class'),
-                        imageSwapper: new ImageSwapper(jOverlay.find('img.no-hover').first().attr('src'), jOverlay.find('img.hover').first().attr('src'))
+                        imageSwapper: new App.ImageSwapper(jOverlay.find('img.no-hover').first().attr('src'), jOverlay.find('img.hover').first().attr('src'))
                     };
                     _this.placeOverlays.push(iOverlay);
                 });

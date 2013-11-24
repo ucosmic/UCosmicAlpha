@@ -18,7 +18,7 @@ namespace UCosmic.EntityFramework
             // Establishment * <---> 1 EstablishmentType
             HasRequired(d => d.Type)
                 .WithMany()
-                .Map(d => d.MapKey("TypeId"))
+                .HasForeignKey(d => d.TypeId)
                 .WillCascadeOnDelete(false); // do not delete establishment if type is deleted
 
             // has many alternate names
@@ -223,6 +223,23 @@ namespace UCosmic.EntityFramework
             ToTable(typeof(EstablishmentUrl).Name, DbSchemaName.Establishments);
 
             Property(p => p.Value).IsRequired().HasMaxLength(EstablishmentUrlConstraints.ValueMaxLength);
+        }
+    }
+
+    public class EstablishmentCustomIdOrm : EntityTypeConfiguration<EstablishmentCustomId>
+    {
+        public EstablishmentCustomIdOrm()
+        {
+            ToTable(typeof(EstablishmentCustomId).Name, DbSchemaName.Establishments);
+
+            HasKey(x => new {x.EstablishmentId, x.Value});
+
+            HasRequired(d => d.Owner)
+                .WithMany(p => p.CustomIds)
+                .HasForeignKey(d => d.EstablishmentId)
+                .WillCascadeOnDelete(true);
+
+            Property(p => p.Value).HasMaxLength(EstablishmentCustomIdConstraints.ValueMaxLength);
         }
     }
 

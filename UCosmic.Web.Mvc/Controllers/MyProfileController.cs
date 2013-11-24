@@ -1,5 +1,6 @@
 ﻿using System.Web.Mvc;
 using AttributeRouting.Web.Mvc;
+using UCosmic.Domain.People;
 
 namespace UCosmic.Web.Mvc.Controllers
 {
@@ -13,10 +14,13 @@ namespace UCosmic.Web.Mvc.Controllers
         }
 
         [Authorize]
-        [GET("my")]
-        [GET("my/profile", ActionPrecedence = 1)]
+        //[GET("my")]
+        //[GET("my/profile", ActionPrecedence = 2)]
+        [GET("person", ActionPrecedence = 1)]
         public virtual ActionResult Index(string tab)
         {
+            var person = _queryProcessor.Execute(new MyPerson(User));
+            ViewBag.PersonId = person.RevisionId;
             ViewBag.Tab = tab;
             return View();
         }

@@ -30,15 +30,15 @@ module Establishments.ViewModels {
                     .validateCeebCode(vm.id);
                 this._isAwaitingResponse = true;
                 $.post(route, vm.serializeData())
-                .always((): void => {
-                    this._isAwaitingResponse = false;
-                })
-                .done((): void => {
-                    callback(true);
-                })
-                .fail((xhr: JQueryXHR): void => {
-                    callback({ isValid: false, message: xhr.responseText });
-                });
+                    .always((): void => {
+                        this._isAwaitingResponse = false;
+                    })
+                    .done((): void => {
+                        callback(true);
+                    })
+                    .fail((xhr: JQueryXHR): void => {
+                        callback({ isValid: false, message: xhr.responseText });
+                    });
             }
             else if (!this._isAwaitingResponse || this._isOk(vm)) {
                 callback(true);
@@ -76,15 +76,15 @@ module Establishments.ViewModels {
                     .validateUCosmicCode(vm.id);
                 this._isAwaitingResponse = true;
                 $.post(route, vm.serializeData())
-                .always((): void => {
-                    this._isAwaitingResponse = false;
-                })
-                .done((): void => {
-                    callback(true);
-                })
-                .fail((xhr: JQueryXHR): void => {
-                    callback({ isValid: false, message: xhr.responseText });
-                });
+                    .always((): void => {
+                        this._isAwaitingResponse = false;
+                    })
+                    .done((): void => {
+                        callback(true);
+                    })
+                    .fail((xhr: JQueryXHR): void => {
+                        callback({ isValid: false, message: xhr.responseText });
+                    });
             }
             else if (!this._isAwaitingResponse || this._isOk(vm)) {
                 callback(true);
@@ -122,15 +122,15 @@ module Establishments.ViewModels {
                     .validateParentId(vm.id);
                 this._isAwaitingResponse = true;
                 $.post(route, vm.serializeData())
-                .always((): void => {
-                    this._isAwaitingResponse = false;
-                })
-                .done((): void => {
-                    callback(true);
-                })
-                .fail((xhr: JQueryXHR): void => {
-                    callback({ isValid: false, message: xhr.responseText });
-                });
+                    .always((): void => {
+                        this._isAwaitingResponse = false;
+                    })
+                    .done((): void => {
+                        callback(true);
+                    })
+                    .fail((xhr: JQueryXHR): void => {
+                        callback({ isValid: false, message: xhr.responseText });
+                    });
             }
             else if (!this._isAwaitingResponse || this._isOk(vm)) {
                 callback(true);
@@ -165,11 +165,11 @@ module Establishments.ViewModels {
         private _isInitialized: KnockoutObservable<boolean> = ko.observable(false);
         $genericAlertDialog: JQuery = undefined;
         location: Location;
-        createSpinner = new App.Spinner(new App.SpinnerOptions(0));
-        validatingSpinner = new App.Spinner(new App.SpinnerOptions(200));
+        createSpinner = new App.Spinner();
+        validatingSpinner = new App.Spinner({ delay: 200, });
         categories: KnockoutObservableArray<any> = ko.observableArray();
-        typeIdSaveSpinner = new App.Spinner(new App.SpinnerOptions(200));
-        typeIdValidatingSpinner = new App.Spinner(new App.SpinnerOptions(200));
+        typeIdSaveSpinner = new App.Spinner({ delay: 200, });
+        typeIdValidatingSpinner = new App.Spinner({ delay: 200, });
         isTypeIdSaveDisabled: KnockoutComputed<boolean>;
         typeId: KnockoutObservable<number> = ko.observable();
         typeText: KnockoutObservable<string> = ko.observable('[Loading...]');
@@ -297,10 +297,10 @@ module Establishments.ViewModels {
         editingName: KnockoutObservable<number> = ko.observable(0);
         canAddName: KnockoutComputed<boolean>;
         private _namesMapping: any;
-        namesSpinner = new App.Spinner(new App.SpinnerOptions(0, true));
+        namesSpinner = new App.Spinner({ runImmediately: true, });
 
         // methods
-        requestNames(callback?: (response?: ApiModels.Name[]) => void ): void {
+        requestNames(callback?: (response?: ApiModels.Name[]) => void): void {
             this.namesSpinner.start();
             $.get(App.Routes.WebApi.Establishments.Names.get(this.id))
                 .done((response: ApiModels.Name[]): void => {
@@ -375,10 +375,10 @@ module Establishments.ViewModels {
         editingUrl: KnockoutObservable<number> = ko.observable(0);
         canAddUrl: KnockoutComputed<boolean>;
         private _urlsMapping: any;
-        urlsSpinner = new App.Spinner(new App.SpinnerOptions(0, true));
+        urlsSpinner = new App.Spinner({ runImmediately: true, });
 
         // methods
-        requestUrls(callback?: (response?: ApiModels.Url[]) => void ): void {
+        requestUrls(callback?: (response?: ApiModels.Url[]) => void): void {
             this.urlsSpinner.start();
             $.get(App.Routes.WebApi.Establishments.Urls.get(this.id))
                 .done((response: ApiModels.Url[]): void => {
@@ -469,28 +469,28 @@ module Establishments.ViewModels {
                     data.location = location.serializeData();
                     this.createSpinner.start();
                     $.post(url, data)
-                    .done((response: any, statusText: string, xhr: JQueryXHR): void => {
-                        // redirect to show
-                        window.location.href = App.Routes.Mvc.Establishments
-                            .created({ location: xhr.getResponseHeader('Location') });
-                    })
-                    .fail((xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
-                        this.createSpinner.stop();
-                        if (xhr.status === 400) { // validation message will be in xhr response text...
-                            this.$genericAlertDialog.find('p.content')
-                                .html(xhr.responseText.replace('\n', '<br /><br />'));
-                            this.$genericAlertDialog.dialog({
-                                title: 'Alert Message',
-                                dialogClass: 'jquery-ui',
-                                width: 'auto',
-                                resizable: false,
-                                modal: true,
-                                buttons: {
-                                    'Ok': (): void => { this.$genericAlertDialog.dialog('close'); }
-                                }
-                            });
-                        }
-                    });
+                        .done((response: any, statusText: string, xhr: JQueryXHR): void => {
+                            // redirect to show
+                            window.location.href = App.Routes.Mvc.Establishments
+                                .created({ location: xhr.getResponseHeader('Location') });
+                        })
+                        .fail((xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
+                            this.createSpinner.stop();
+                            if (xhr.status === 400) { // validation message will be in xhr response text...
+                                this.$genericAlertDialog.find('p.content')
+                                    .html(xhr.responseText.replace('\n', '<br /><br />'));
+                                this.$genericAlertDialog.dialog({
+                                    title: 'Alert Message',
+                                    dialogClass: 'jquery-ui',
+                                    width: 'auto',
+                                    resizable: false,
+                                    modal: true,
+                                    buttons: {
+                                        'Ok': (): void => { this.$genericAlertDialog.dialog('close'); }
+                                    }
+                                });
+                            }
+                        });
                 }
             }
 
@@ -567,14 +567,14 @@ module Establishments.ViewModels {
                     type: 'PUT',
                     data: data
                 })
-                .always((): void => {
-                    this.typeIdSaveSpinner.stop();
-                })
-                .done((response: string, statusText: string, xhr: JQueryXHR): void => {
-                    App.flasher.flash(response);
-                    this.typeIdSaveSpinner.stop();
-                    this.clickToCancelTypeIdEdit();
-                });
+                    .always((): void => {
+                        this.typeIdSaveSpinner.stop();
+                    })
+                    .done((response: string, statusText: string, xhr: JQueryXHR): void => {
+                        App.flasher.flash(response);
+                        this.typeIdSaveSpinner.stop();
+                        this.clickToCancelTypeIdEdit();
+                    });
             }
         }
 
@@ -595,8 +595,8 @@ module Establishments.ViewModels {
         parentEstablishment: KnockoutObservable<any> = ko.observable();
         parentId: KnockoutObservable<number> = ko.observable();
         private _parentScrollTop: number;
-        parentIdSaveSpinner = new App.Spinner(new App.SpinnerOptions(200));
-        parentIdValidatingSpinner = new App.Spinner(new App.SpinnerOptions(200));
+        parentIdSaveSpinner = new App.Spinner({ delay: 200, });
+        parentIdValidatingSpinner = new App.Spinner({ delay: 200, });
 
         private _setupSammy(): void {
             var self = this;
@@ -685,12 +685,12 @@ module Establishments.ViewModels {
                 else {
                     var url = App.Routes.WebApi.Establishments.get();
                     $.get(url, { id: newValue })
-                    .done((response: any): void => {
-                        if (response && response.items && response.items.length) {
-                            var parent = response.items[0];
-                            this.parentEstablishment(new SearchResult(parent, this.parentSearch));
-                        }
-                    });
+                        .done((response: any): void => {
+                            if (response && response.items && response.items.length) {
+                                var parent = response.items[0];
+                                this.parentEstablishment(new SearchResult(parent, this.parentSearch));
+                            }
+                        });
                 }
             });
 
@@ -735,16 +735,16 @@ module Establishments.ViewModels {
                     type: 'PUT',
                     data: data
                 })
-                .always((): void => {
-                    this.parentIdSaveSpinner.stop();
-                })
-                .done((response: string, statusText: string, xhr: JQueryXHR): void => {
-                    App.flasher.flash(response);
-                    this.parentIdSaveSpinner.stop();
-                    var originalValues = this.originalValues();
-                    originalValues.parentId = data.parentId;
-                    this.originalValues(originalValues);
-                });
+                    .always((): void => {
+                        this.parentIdSaveSpinner.stop();
+                    })
+                    .done((response: string, statusText: string, xhr: JQueryXHR): void => {
+                        App.flasher.flash(response);
+                        this.parentIdSaveSpinner.stop();
+                        var originalValues = this.originalValues();
+                        originalValues.parentId = data.parentId;
+                        this.originalValues(originalValues);
+                    });
             }
         }
     }

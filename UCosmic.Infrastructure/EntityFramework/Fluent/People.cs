@@ -16,13 +16,6 @@ namespace UCosmic.EntityFramework
                 .WillCascadeOnDelete(false)
             ;
 
-            // has zero or one employee
-            HasOptional(p => p.Employee)
-                .WithRequired(d => d.Person)
-                .Map(m => m.MapKey("PersonId"))
-                .WillCascadeOnDelete(true)
-            ;
-
             // has zero or one photo
             HasOptional(d => d.Photo)
                 .WithOptionalDependent()
@@ -118,13 +111,6 @@ namespace UCosmic.EntityFramework
         {
             ToTable(typeof(Affiliation).Name, DbSchemaName.People);
 
-            //Property(p => p.PersonId).IsRequired();
-            //Property(p => p.EstablishmentId).IsRequired();
-
-            //HasKey(p => new { p.PersonId,
-            //                  p.EstablishmentId
-            //                });
-
             HasRequired(d => d.Establishment)
                 .WithMany()
                 .HasForeignKey(d => d.EstablishmentId);
@@ -133,24 +119,11 @@ namespace UCosmic.EntityFramework
                 .WithMany(p => p.Affiliations)
                 .HasForeignKey(d => d.PersonId);
 
-            HasOptional(d => d.Campus)
+            HasOptional(d => d.FacultyRank)
                 .WithMany()
-                .HasForeignKey(d => d.CampusId);
+                .HasForeignKey(d => d.FacultyRankId);
 
-            HasOptional(d => d.College)
-                .WithMany()
-                .HasForeignKey(d => d.CollegeId);
-
-            HasOptional(d => d.Department)
-                .WithMany()
-                .HasForeignKey(d => d.DepartmentId);
-
-            Property(p => p.JobTitles).HasMaxLength(500);
-
-            Property(p => p.CampusId).IsOptional();
-            Property(p => p.CollegeId).IsOptional();
-            Property(p => p.DepartmentId).IsOptional();
-            Property(p => p.FacultyRankId).IsOptional();
+            Property(p => p.JobTitles).HasMaxLength(AffiliationConstraints.JobTitlesMaxLength);
         }
     }
 }

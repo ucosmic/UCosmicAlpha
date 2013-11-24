@@ -33,12 +33,13 @@ var ViewModels;
         //}
         //new UserNameValidator();
         var User = (function () {
-            //isValidating: KnockoutComputed<boolean>;
             function User() {
                 this.id = ko.observable();
                 this.name = ko.observable();
-                this.saveSpinner = new App.Spinner(new App.SpinnerOptions(200));
+                this.saveSpinner = new App.Spinner({ delay: 200 });
                 this.errorMessage = ko.observable();
+                //isValidating: KnockoutComputed<boolean>;
+                this.isWarned = ko.observable(sessionStorage.getItem('UserCreateFormIsWarned') || false);
                 this.name.extend({
                     required: {
                         message: 'Username is required.'
@@ -52,6 +53,11 @@ var ViewModels;
                 //});
                 ko.validation.group(this);
             }
+            User.prototype.acceptWarning = function () {
+                this.isWarned(true);
+                sessionStorage.setItem('UserCreateFormIsWarned', this.isWarned().toString());
+            };
+
             User.prototype.save = function () {
                 var _this = this;
                 if (!this.isValid()) {

@@ -3,6 +3,10 @@
     public class EmployeeActivityType: Entity
     {
         public int Id { get; set; }
+
+        public int? EstablishmentId { get; protected internal set; }
+        public virtual EmployeeModuleSettings Settings { get; protected set; }
+
         public string Type { get; set; }
         public int Rank { get; set; }
         public string CssColor { get; set; }

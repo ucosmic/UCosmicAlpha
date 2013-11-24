@@ -52,8 +52,8 @@ module Establishments.ViewModels {
         showAdmin3Input: KnockoutComputed<boolean>;
         places:  KnockoutObservableArray<Places.ApiModels.Place> = ko.observableArray();
         subAdmins:  KnockoutObservableArray<Places.ApiModels.Place> = ko.observableArray();
-        loadSpinner = new App.Spinner(new App.SpinnerOptions(400));
-        saveSpinner = new App.Spinner(new App.SpinnerOptions(400));
+        loadSpinner = new App.Spinner({ delay: 400, });
+        saveSpinner = new App.Spinner({ delay: 400, });
         $dataLoadingDialog: JQuery;
         isEditable: () => boolean;
         isEditIconVisible: () => boolean;

@@ -41,6 +41,18 @@ declare module Employees.ApiModels {
         activityCount: number;
         locationCount: number;
     }
+
+    export interface EmployeeSettings {
+        establishmentId?: number;
+        facultyRanks?: EmployeeSettingsFacultyRank[];
+    }
+
+    export interface EmployeeSettingsFacultyRank {
+        facultyRankId: number;
+        establishmentId: number;
+        text: string;
+        rank: number;
+    }
 }
 
 declare module Employees.KoModels {
@@ -51,5 +63,11 @@ declare module Employees.KoModels {
         locationCount: KnockoutObservable<string>;
     }
 
+    export interface EmployeeSettingsFacultyRank {
+        facultyRankId: KnockoutObservable<number>;
+        establishmentId: KnockoutObservable<number>;
+        text: KnockoutObservable<string>;
+        rank: KnockoutObservable<number>;
+    }
 }
 

@@ -4,22 +4,21 @@ namespace UCosmic.Domain.People
 {
     public class AffiliationByPrimaryKey : BaseEntityQuery<Affiliation>, IDefineQuery<Affiliation>
     {
-        // do not pass entities to command objects, use scalars
-        public int PersonId { get; private set; }
-        public int EstablishmentId { get; private set; }
-
         public AffiliationByPrimaryKey(int personId, int establishmentId)
         {
             PersonId = personId;
             EstablishmentId = establishmentId;
         }
+
+        public int PersonId { get; private set; }
+        public int EstablishmentId { get; private set; }
     }
 
-    public class HandleAffiliationByPersonEstablishmentQuery : IHandleQueries<AffiliationByPrimaryKey, Affiliation>
+    public class HandleAffiliationByPrimaryKeyQuery : IHandleQueries<AffiliationByPrimaryKey, Affiliation>
     {
         private readonly IQueryEntities _entities;
 
-        public HandleAffiliationByPersonEstablishmentQuery(IQueryEntities entities)
+        public HandleAffiliationByPrimaryKeyQuery(IQueryEntities entities)
         {
             _entities = entities;
         }

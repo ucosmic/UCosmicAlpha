@@ -22,12 +22,14 @@ namespace UCosmic.Domain.Establishments
             Ancestors = new Collection<EstablishmentNode>();
             Children = new Collection<Establishment>();
             Offspring = new Collection<EstablishmentNode>();
+            CustomIds = new Collection<EstablishmentCustomId>();
             // ReSharper restore DoNotCallOverridableMethodsInConstructor
         }
 
         public string OfficialName { get; protected internal set; }
         public virtual ICollection<EstablishmentName> Names { get; protected set; }
         public int? VerticalRank { get; protected internal set; } // Used for ordering Establishments in lists.
+        public virtual ICollection<EstablishmentCustomId> CustomIds { get; protected set; }
 
         public EstablishmentName TranslateNameTo(string languageIsoCode)
         {
@@ -66,6 +68,7 @@ namespace UCosmic.Domain.Establishments
         public virtual ICollection<EstablishmentEmailDomain> EmailDomains { get; protected set; }
         //public virtual ICollection<Affiliation> Affiliates { get; protected internal set; }
 
+        public int TypeId { get; protected internal set; }
         public virtual EstablishmentType Type { get; protected internal set; }
         public bool IsInstitution
         {
@@ -95,7 +98,7 @@ namespace UCosmic.Domain.Establishments
             var state = JsonConvert.SerializeObject(new
             {
                 Id = entity.RevisionId,
-                TypeId = entity.Type.RevisionId,
+                entity.TypeId,
                 ParentId = entity.Parent != null ? entity.Parent.RevisionId : (int?)null,
                 entity.OfficialName,
                 entity.WebsiteUrl,

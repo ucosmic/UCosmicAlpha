@@ -66,7 +66,7 @@ var Agreements;
                 });
                 //#endregion
                 //#region API Requests
-                this.spinner = new App.Spinner(new App.SpinnerOptions(400, true));
+                this.spinner = new App.Spinner({ delay: 400, runImmediately: true });
                 this._requestHistory = ko.observableArray();
                 this._currentRequest = ko.computed(function () {
                     // this will run once during construction

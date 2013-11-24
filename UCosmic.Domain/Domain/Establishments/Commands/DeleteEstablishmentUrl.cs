@@ -50,13 +50,13 @@ namespace UCosmic.Domain.Establishments
     {
         private readonly ICommandEntities _entities;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IProcessEvents _eventProcessor;
+        private readonly ITriggerEvent<EstablishmentChanged> _eventTrigger;
 
-        public HandleDeleteEstablishmentUrlCommand(ICommandEntities entities, IUnitOfWork unitOfWork, IProcessEvents eventProcessor)
+        public HandleDeleteEstablishmentUrlCommand(ICommandEntities entities, IUnitOfWork unitOfWork, ITriggerEvent<EstablishmentChanged> eventTrigger)
         {
             _entities = entities;
             _unitOfWork = unitOfWork;
-            _eventProcessor = eventProcessor;
+            _eventTrigger = eventTrigger;
         }
 
         public void Handle(DeleteEstablishmentUrl command)
@@ -88,7 +88,7 @@ namespace UCosmic.Domain.Establishments
             _entities.Create(audit);
             _entities.Purge(establishmentUrl);
             _unitOfWork.SaveChanges();
-            _eventProcessor.Raise(new EstablishmentChanged());
+            _eventTrigger.Raise(new EstablishmentChanged());
         }
     }
 }

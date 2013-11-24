@@ -308,8 +308,10 @@
     <Compile Include="ApiControllers\Agreements\MediaTypeFormatters\AgreementSpreadsheetFormatter.cs" />
     <Compile Include="ApiControllers\Degrees\DegreesController.cs" />
     <Compile Include="ApiControllers\Degrees\MyDegreesController.cs" />
+    <Compile Include="ApiControllers\Employees\EmployeeSettingsController.cs" />
     <Compile Include="ApiControllers\Expertise\GeographicExpertiseController.cs" />
     <Compile Include="ApiControllers\Expertise\LanguageExpertiseController.cs" />
+    <Compile Include="ApiControllers\People\AffiliationsController.cs" />
     <Compile Include="Controllers\JavaScriptRoutesController.cs" />
     <Compile Include="Controllers\PeopleController.cs" />
     <Compile Include="Helpers\JavascriptRouteWriter.cs" />
@@ -322,7 +324,8 @@
     <Compile Include="Models\Activities\ActivityTagViewModel.cs" />
     <Compile Include="Models\Activities\ActivityTypeViewModel.cs" />
     <Compile Include="Models\Agreements\AgreementOwningTenant.cs" />
-    <Compile Include="Models\Employees\EmployeeActivityCounts.cs" />
+    <Compile Include="Models\Employees\EmployeeSettingsFacultyRankApiModel.cs" />
+    <Compile Include="Models\Employees\EmployeeActivityCountsModel.cs" />
     <Compile Include="ApiControllers\FacultyStaff\EmployeeModuleSettingsController.cs" />
     <Compile Include="ApiControllers\FacultyStaff\EmployeesController.cs" />
     <Compile Include="ApiControllers\FacultyStaff\FacultyStaffController.cs" />
@@ -334,9 +337,9 @@
     <Compile Include="ApiControllers\FacultyStaff\InternationalAffiliationController.cs" />
     <Compile Include="ApiControllers\Languages\LanguagesController.cs" />
     <Compile Include="ApiControllers\My\MyPhotoController.cs" />
-    <Compile Include="ApiControllers\My\MyAffiliationsController.cs" />
-    <Compile Include="ApiControllers\My\MyProfileController.cs" />
-    <Compile Include="ApiControllers\My\ProfileElementsController.cs" />
+    <Compile Include="ApiControllers\_Deprecatable\MyAffiliationsController.cs" />
+    <Compile Include="ApiControllers\_Deprecatable\MyProfileController.cs" />
+    <Compile Include="ApiControllers\_Deprecatable\ProfileElementsController.cs" />
     <Compile Include="ApiControllers\Identity\GrantsController.cs" />
     <Compile Include="ApiControllers\Identity\IdentityController.cs" />
     <Compile Include="ApiControllers\Identity\RolesController.cs" />
@@ -404,6 +407,7 @@
     <Compile Include="Models\Degrees\DegreeSearchInputModel.cs" />
     <Compile Include="Models\Employees\EmployeeActivityTypeCountModel.cs" />
     <Compile Include="Models\Employees\EmployeeActivityYearCountModel.cs" />
+    <Compile Include="Models\Employees\EmployeeSettingsApiModel.cs" />
     <Compile Include="Models\Employees\EmployeesPlaceApiModel.cs" />
     <Compile Include="Models\Employees\EmployeesPlacesInputModel.cs" />
     <Compile Include="Models\Employees\FacultyStaffSearchApiModel.cs" />
@@ -416,9 +420,9 @@
     <Compile Include="Models\LanguageExpertiseApiModel.cs" />
     <Compile Include="Models\Agreements\AgreementParticipantApiModel.cs" />
     <Compile Include="Models\GeographicExpertiseApiModel.cs" />
-    <Compile Include="Models\My\MyAffiliationApiModel.cs" />
-    <Compile Include="Models\My\MyProfileApiModel.cs" />
-    <Compile Include="Models\My\MyAffiliationsSearchInputModel.cs" />
+    <Compile Include="Models\People\AffiliatedEstablishmentApiModel.cs" />
+    <Compile Include="Models\People\AffiliationApiModel.cs" />
+    <Compile Include="Models\People\AffiliationPutModel.cs" />
     <Compile Include="Models\Activities\ActivityPublicInputModel.cs" />
     <Compile Include="Models\People\PeopleSearchInputModel.cs" />
     <Compile Include="Models\People\PersonViewModel.cs" />
@@ -810,7 +814,9 @@
     <Content Include="images\icons\maps\pacificOceanHover.png" />
     <Content Include="images\icons\maps\southernOcean.png" />
     <Content Include="images\icons\maps\southernOceanHover.png" />
+    <Content Include="images\icons\minus\minus-24-white-on-red.png" />
     <Content Include="images\icons\print\print-24-black.png" />
+    <Content Include="images\icons\save\save-20.png" />
     <Content Include="images\icons\save\Save-24.png" />
     <Content Include="images\icons\save\Save-256.png" />
     <Content Include="images\icons\search\search-24-black.png" />
@@ -831,6 +837,13 @@
     <TypeScriptCompile Include="scripts\app\PagedSearch.ts" />
     <None Include="scripts\oss\D3-LICENSE.txt" />
     <None Include="scripts\app\Routes.d.ts" />
+    <TypeScriptCompile Include="scripts\app\DataCacher.ts" />
+    <Content Include="scripts\app\DataCacher.js">
+      <DependentUpon>DataCacher.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\app\DataCacher.min.js">
+      <DependentUpon>DataCacher.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\app\Flasher.js">
       <DependentUpon>Flasher.ts</DependentUpon>
     </Content>
@@ -838,12 +851,27 @@
       <DependentUpon>Flasher.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="scripts\app\HistoryJS.ts" />
+    <TypeScriptCompile Include="scripts\app\FormSelect.ts" />
+    <Content Include="scripts\app\FormSelect.js">
+      <DependentUpon>FormSelect.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\app\FormSelect.min.js">
+      <DependentUpon>FormSelect.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\app\HistoryJS.js">
       <DependentUpon>HistoryJS.ts</DependentUpon>
     </Content>
     <Content Include="scripts\app\HistoryJS.min.js">
       <DependentUpon>HistoryJS.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="scripts\app\ImageSwapper.ts" />
+    <Content Include="scripts\app\ImageSwapper.js">
+      <DependentUpon>ImageSwapper.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\app\ImageSwapper.min.js">
+      <DependentUpon>ImageSwapper.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\app\Models.d.ts" />
     <Content Include="scripts\app\PagedSearch.js">
       <DependentUpon>PagedSearch.ts</DependentUpon>
     </Content>
@@ -2231,6 +2259,14 @@
     <TypeScriptCompile Include="scripts\viewmodels\geographicExpertises\GeographicExpertises.ts" />
     <None Include="scripts\viewmodels\degrees\ServiceApiModel.d.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\geographicExpertises\GeographicExpertise.ts" />
+    <Content Include="scripts\viewmodels\establishments\Routes.d.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\establishments\Server.ts" />
+    <Content Include="scripts\viewmodels\establishments\Server.js">
+      <DependentUpon>Server.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\establishments\Server.min.js">
+      <DependentUpon>Server.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\viewmodels\geographicExpertises\GeographicExpertise.js">
       <DependentUpon>GeographicExpertise.ts</DependentUpon>
     </Content>
@@ -2274,12 +2310,28 @@
     <None Include="scripts\viewmodels\places\ApiModels.d.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\places\Utils.ts" />
     <None Include="scripts\viewmodels\languages\ApiModels.d.ts" />
-    <TypeScriptCompile Include="scripts\viewmodels\People\Activities.ts" />
-    <Content Include="scripts\viewmodels\People\Activities.js">
+    <TypeScriptCompile Include="scripts\viewmodels\people\Activities.ts" />
+    <Content Include="scripts\viewmodels\people\Activities.js">
       <DependentUpon>Activities.ts</DependentUpon>
     </Content>
-    <Content Include="scripts\viewmodels\People\Activities.min.js">
+    <TypeScriptCompile Include="scripts\viewmodels\my\Profile_dcref.ts" />
+    <Content Include="scripts\viewmodels\my\Profile_dcref.js">
+      <DependentUpon>Profile_dcref.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\people\Activities.min.js">
       <DependentUpon>Activities.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\my\Profile_dcref.min.js">
+      <DependentUpon>Profile_dcref.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\people\Models.d.ts" />
+    <Content Include="scripts\viewmodels\people\Routes.d.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\people\Server.ts" />
+    <Content Include="scripts\viewmodels\people\Server.js">
+      <DependentUpon>Server.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\people\Server.min.js">
+      <DependentUpon>Server.ts</DependentUpon>
     </Content>
     <Content Include="scripts\viewmodels\places\Utils.js">
       <DependentUpon>Utils.ts</DependentUpon>
@@ -2414,6 +2466,9 @@
     <Content Include="styles\sass\sheets\maps.css">
       <DependentUpon>maps.scss</DependentUpon>
     </Content>
+    <Content Include="styles\sass\sheets\people\my-profile.css">
+      <DependentUpon>my-profile.scss</DependentUpon>
+    </Content>
     <Content Include="styles\tenants\hpu.edu\banner-logo.png" />
     <Content Include="styles\tenants\hpu.edu\designs.css">
       <DependentUpon>designs.scss</DependentUpon>
@@ -2502,6 +2557,12 @@
     <Content Include="styles\tenants\hpu.edu\forms.scss" />
     <Content Include="styles\tenants\hpu.edu\ie8.scss" />
     <Content Include="styles\tenants\hpu.edu\layout.scss" />
+    <Content Include="styles\sass\sheets\people\my-profile.scss">
+      <Compile>True</Compile>
+      <Minify>True</Minify>
+      <CompileStyle>Nested</CompileStyle>
+      <DebugInfo>False</DebugInfo>
+    </Content>
     <None Include="styles\tenants\testshib.org\banner-logo.png" />
     <None Include="styles\tenants\testshib.org\designs.css">
       <DependentUpon>designs.scss</DependentUpon>
@@ -2712,6 +2773,8 @@
     <Content Include="Views\JavaScriptRoutes\Employees.cshtml" />
     <Content Include="Views\People\Index.cshtml" />
     <Content Include="Views\People\_Bib.cshtml" />
+    <Content Include="Views\JavaScriptRoutes\People.cshtml" />
+    <Content Include="Views\JavaScriptRoutes\Establishments.cshtml" />
     <Content Include="Views\People\_SidebarNav.cshtml" />
     <Content Include="Views\People\_Profile.cshtml" />
     <Content Include="Views\People\_Card.cshtml" />

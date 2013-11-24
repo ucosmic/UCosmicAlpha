@@ -38,12 +38,19 @@ module ViewModels.Users {
         id: KnockoutObservable<number> = ko.observable();
         name: KnockoutObservable<string> = ko.observable();
 
-        saveSpinner = new App.Spinner(new App.SpinnerOptions(200));
+        saveSpinner = new App.Spinner({ delay: 200, });
         errorMessage: KnockoutObservable<string> = ko.observable();
 
         isValid: () => boolean;
         errors: KnockoutValidationErrors;
         //isValidating: KnockoutComputed<boolean>;
+
+        isWarned: KnockoutObservable<boolean> = ko.observable(sessionStorage.getItem('UserCreateFormIsWarned') || false);
+
+        acceptWarning(): void {
+            this.isWarned(true);
+            sessionStorage.setItem('UserCreateFormIsWarned', this.isWarned().toString());
+        }
 
         constructor() {
 

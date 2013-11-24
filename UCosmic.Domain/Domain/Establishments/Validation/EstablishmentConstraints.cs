@@ -16,4 +16,9 @@
     {
         public const int ValueMaxLength = 200;
     }
+
+    public static class EstablishmentCustomIdConstraints
+    {
+        public const int ValueMaxLength = 30;
+    }
 }

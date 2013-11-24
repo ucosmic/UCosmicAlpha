@@ -454,45 +454,6 @@ var App;
             var Agreements = WebApi.Agreements;
 
             (function (My) {
-                (function (Profile) {
-                    function get() {
-                        return makeUrl('my/profile');
-                    }
-                    Profile.get = get;
-                    function put() {
-                        return get();
-                    }
-                    Profile.put = put;
-                })(My.Profile || (My.Profile = {}));
-                var Profile = My.Profile;
-
-                (function (Affiliations) {
-                    function get(affiliationId) {
-                        var url = 'my/affiliations';
-                        if (affiliationId)
-                            url += '/' + affiliationId;
-                        return makeUrl(url);
-                    }
-                    Affiliations.get = get;
-                    function getDefault() {
-                        return makeUrl('my/affiliations/default');
-                    }
-                    Affiliations.getDefault = getDefault;
-                    function post() {
-                        return get();
-                    }
-                    Affiliations.post = post;
-                    function put(affiliationId) {
-                        return get(affiliationId);
-                    }
-                    Affiliations.put = put;
-                    function del(affiliationId) {
-                        return get(affiliationId);
-                    }
-                    Affiliations.del = del;
-                })(My.Affiliations || (My.Affiliations = {}));
-                var Affiliations = My.Affiliations;
-
                 (function (Photo) {
                     function get(params) {
                         var url = post();
@@ -866,17 +827,17 @@ var App;
             (function (My) {
                 (function (Profile) {
                     function get(tab) {
-                        var url = makeUrl('my/profile');
+                        var url = makeUrl('person');
 
                         // Workaround until we figure out how to go from ?tab to #/
                         //if (tab != null) {
-                        //    url = makeUrlWithParams( 'my/profile' ) + "tab=" + tab;
+                        //    url = makeUrlWithParams( 'person' ) + "tab=" + tab;
                         //}
                         return url;
                     }
                     Profile.get = get;
                     function post(startEditing, startTabName) {
-                        var url = makeUrlWithParams('my/profile') + "startEditing=" + startEditing + "&startTabName=" + startTabName;
+                        var url = makeUrlWithParams('person') + "startEditing=" + startEditing + "&startTabName=" + startTabName;
                         return url;
                     }
                     Profile.post = post;

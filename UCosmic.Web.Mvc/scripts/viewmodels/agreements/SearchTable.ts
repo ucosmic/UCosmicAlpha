@@ -241,7 +241,7 @@ module Agreements.ViewModels {
         //#endregion
         //#region API Requests
 
-        spinner = new App.Spinner(new App.SpinnerOptions(400, true));
+        spinner = new App.Spinner({ delay: 400, runImmediately: true, });
         $results: JQuery;
         private _requestHistory: KnockoutObservableArray<SearchTableInput> = ko.observableArray();
         private _currentRequest: KnockoutComputed<SearchTableInput> = ko.computed((): SearchTableInput => {

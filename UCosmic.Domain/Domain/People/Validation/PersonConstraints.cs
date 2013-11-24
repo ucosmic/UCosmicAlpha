@@ -18,4 +18,9 @@
     {
         public const int ValueMaxLength = 256;
     }
+
+    public static class AffiliationConstraints
+    {
+        public const int JobTitlesMaxLength = 500;
+    }
 }

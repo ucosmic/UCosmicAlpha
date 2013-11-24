@@ -147,14 +147,27 @@ namespace Links
             public static readonly string App_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/App.min.js") ? Url("App.min.js") : Url("App.js");
                           
             public static readonly string App_min_js = Url("App.min.js");
+            public static readonly string DataCacher_ts = Url("DataCacher.ts");
+            public static readonly string DataCacher_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/DataCacher.min.js") ? Url("DataCacher.min.js") : Url("DataCacher.js");
+                          
+            public static readonly string DataCacher_min_js = Url("DataCacher.min.js");
             public static readonly string Flasher_ts = Url("Flasher.ts");
             public static readonly string Flasher_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Flasher.min.js") ? Url("Flasher.min.js") : Url("Flasher.js");
                           
             public static readonly string Flasher_min_js = Url("Flasher.min.js");
+            public static readonly string FormSelect_ts = Url("FormSelect.ts");
+            public static readonly string FormSelect_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/FormSelect.min.js") ? Url("FormSelect.min.js") : Url("FormSelect.js");
+                          
+            public static readonly string FormSelect_min_js = Url("FormSelect.min.js");
             public static readonly string HistoryJS_ts = Url("HistoryJS.ts");
             public static readonly string HistoryJS_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/HistoryJS.min.js") ? Url("HistoryJS.min.js") : Url("HistoryJS.js");
                           
             public static readonly string HistoryJS_min_js = Url("HistoryJS.min.js");
+            public static readonly string ImageSwapper_ts = Url("ImageSwapper.ts");
+            public static readonly string ImageSwapper_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/ImageSwapper.min.js") ? Url("ImageSwapper.min.js") : Url("ImageSwapper.js");
+                          
+            public static readonly string ImageSwapper_min_js = Url("ImageSwapper.min.js");
+            public static readonly string Models_d_ts = Url("Models.d.ts");
             public static readonly string PagedSearch_ts = Url("PagedSearch.ts");
             public static readonly string PagedSearch_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/PagedSearch.min.js") ? Url("PagedSearch.min.js") : Url("PagedSearch.js");
                           
@@ -3009,6 +3022,7 @@ namespace Links
                 public static readonly string Name_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Name.min.js") ? Url("Name.min.js") : Url("Name.js");
                               
                 public static readonly string Name_min_js = Url("Name.min.js");
+                public static readonly string Routes_d_ts = Url("Routes.d.ts");
                 public static readonly string Search_ts = Url("Search.ts");
                 public static readonly string Search_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Search.min.js") ? Url("Search.min.js") : Url("Search.js");
                               
@@ -3017,6 +3031,10 @@ namespace Links
                 public static readonly string SearchResult_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/SearchResult.min.js") ? Url("SearchResult.min.js") : Url("SearchResult.js");
                               
                 public static readonly string SearchResult_min_js = Url("SearchResult.min.js");
+                public static readonly string Server_ts = Url("Server.ts");
+                public static readonly string Server_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Server.min.js") ? Url("Server.min.js") : Url("Server.js");
+                              
+                public static readonly string Server_min_js = Url("Server.min.js");
                 public static readonly string Url_ts = Url("Url.ts");
                 public static readonly string Url_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Url.min.js") ? Url("Url.min.js") : Url("Url.js");
                               
@@ -3093,18 +3111,28 @@ namespace Links
                 public static readonly string Profile_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Profile.min.js") ? Url("Profile.min.js") : Url("Profile.js");
                               
                 public static readonly string Profile_min_js = Url("Profile.min.js");
+                public static readonly string Profile_dcref_ts = Url("Profile_dcref.ts");
+                public static readonly string Profile_dcref_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Profile_dcref.min.js") ? Url("Profile_dcref.min.js") : Url("Profile_dcref.js");
+                              
+                public static readonly string Profile_dcref_min_js = Url("Profile_dcref.min.js");
                 public static readonly string ServerApiModel_d_ts = Url("ServerApiModel.d.ts");
             }
         
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-            public static class People {
-                private const string URLPATH = "~/scripts/viewmodels/People";
+            public static class people {
+                private const string URLPATH = "~/scripts/viewmodels/people";
                 public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
                 public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
                 public static readonly string Activities_ts = Url("Activities.ts");
                 public static readonly string Activities_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Activities.min.js") ? Url("Activities.min.js") : Url("Activities.js");
                               
                 public static readonly string Activities_min_js = Url("Activities.min.js");
+                public static readonly string Models_d_ts = Url("Models.d.ts");
+                public static readonly string Routes_d_ts = Url("Routes.d.ts");
+                public static readonly string Server_ts = Url("Server.ts");
+                public static readonly string Server_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Server.min.js") ? Url("Server.min.js") : Url("Server.js");
+                              
+                public static readonly string Server_min_js = Url("Server.min.js");
             }
         
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -3566,6 +3594,16 @@ namespace Links
                 public static readonly string maps_scss = Url("maps.scss");
                 public static readonly string maps_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/maps.min.css") ? Url("maps.min.css") : Url("maps.css");
                      
+                [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+                public static class people {
+                    private const string URLPATH = "~/styles/sass/sheets/people";
+                    public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+                    public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                    public static readonly string my_profile_scss = Url("my-profile.scss");
+                    public static readonly string my_profile_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/my-profile.min.css") ? Url("my-profile.min.css") : Url("my-profile.css");
+                         
+                }
+            
             }
         
         }
@@ -4040,6 +4078,7 @@ namespace Links
                 public static readonly string minus_16_red_on_white_png = Url("minus-16-red-on-white.png");
                 public static readonly string minus_20_red_png = Url("minus-20-red.png");
                 public static readonly string minus_24_red_png = Url("minus-24-red.png");
+                public static readonly string minus_24_white_on_red_png = Url("minus-24-white-on-red.png");
             }
         
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -4066,6 +4105,7 @@ namespace Links
                 private const string URLPATH = "~/images/icons/save";
                 public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
                 public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                public static readonly string save_20_png = Url("save-20.png");
                 public static readonly string Save_24_png = Url("Save-24.png");
                 public static readonly string Save_256_png = Url("Save-256.png");
             }

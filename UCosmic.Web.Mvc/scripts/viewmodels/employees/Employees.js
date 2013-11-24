@@ -240,8 +240,8 @@ var ViewModels;
                 this.degreesChecked = ko.observable();
                 this.tags = ko.observable();
 
-                this.loadSpinner = new App.Spinner(new App.SpinnerOptions(200));
-                this.sortSpinner = new App.Spinner(new App.SpinnerOptions(200));
+                this.loadSpinner = new App.Spinner({ delay: 200 });
+                this.sortSpinner = new App.Spinner({ delay: 200 });
 
                 this.globalActivityCountData = null;
                 this.placeActivityCountData = null;

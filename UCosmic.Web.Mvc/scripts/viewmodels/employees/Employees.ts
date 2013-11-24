@@ -323,8 +323,8 @@ module ViewModels.Employees {
             this.degreesChecked = ko.observable();
             this.tags = ko.observable();
 
-            this.loadSpinner = new App.Spinner(new App.SpinnerOptions(200));
-            this.sortSpinner = new App.Spinner(new App.SpinnerOptions(200));
+            this.loadSpinner = new App.Spinner({ delay: 200, });
+            this.sortSpinner = new App.Spinner({ delay: 200, });
 
             this.globalActivityCountData = null;
             this.placeActivityCountData = null;
@@ -406,9 +406,9 @@ module ViewModels.Employees {
             departmentDropListId: string
             ): void {
 
-                this.locationSelectorId = locationSelectorId;
-                this.fromDatePickerId = fromDatePickerId;
-                this.toDatePickerId = toDatePickerId;
+            this.locationSelectorId = locationSelectorId;
+            this.fromDatePickerId = fromDatePickerId;
+            this.toDatePickerId = toDatePickerId;
 
             /*
                 There appears to be a number of bugs/undocumented behaviors associated
@@ -2423,7 +2423,7 @@ module ViewModels.Employees {
                             return x.personDepartment;
                         }).ToArray();
                     }
-                    break; 
+                    break;
                 case 2: // location
                     if (this.peopleColumnSort[colIndex].order) {
                         sorted = unsorted.OrderBy(function (x) {

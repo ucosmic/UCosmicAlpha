@@ -85,9 +85,9 @@ module Establishments.ViewModels {
         isTextValidatableAsync: KnockoutComputed<boolean>;
 
         // spinners
-        saveSpinner = new App.Spinner(new App.SpinnerOptions(0, false));
-        purgeSpinner = new App.Spinner(new App.SpinnerOptions(0, false));
-        textValidationSpinner = new App.Spinner(new App.SpinnerOptions(0, false));
+        saveSpinner = new App.Spinner();
+        purgeSpinner = new App.Spinner();
+        textValidationSpinner = new App.Spinner();
 
         // private fields
         private saveEditorClicked: boolean = false;

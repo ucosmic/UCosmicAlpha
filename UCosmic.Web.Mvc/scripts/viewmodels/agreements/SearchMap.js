@@ -117,7 +117,7 @@ var Agreements;
                 this._viewportDirty = ko.computed(function () {
                     _this._onViewportDirty();
                 }).extend({ throttle: 1 });
-                this.spinner = new App.Spinner(new App.SpinnerOptions(400, false));
+                this.spinner = new App.Spinner({ delay: 400 });
                 this.infoWindowContent = {
                     partner: ko.observable({}),
                     agreements: ko.observableArray([])

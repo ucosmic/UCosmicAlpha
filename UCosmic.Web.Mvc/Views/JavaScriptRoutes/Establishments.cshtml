@@ -1,0 +1,17 @@
+﻿@{ var routeWriter = new JavascriptRouteWriter(); }
+
+@* API ROUTES *@
+var Routes = Routes || {};
+Routes.Api = Routes.Api || {};
+
+@* ESTABLISHMENTS *@
+Routes.Api.Establishments = Routes.Api.Establishments || {};
+
+Routes.Api.Establishments.offspring = function (ancestorId) {
+    return '@routeWriter.WriteRoute(Url.HttpRouteUrl(null, new
+    {
+        controller = "Establishments",
+        action = "GetOffspring",
+        establishmentId = routeWriter.Value<int>(0),
+    }))'.format(ancestorId);
+};

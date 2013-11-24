@@ -35,17 +35,14 @@ namespace UCosmic.Cqrs
         internal static void RegisterEventProcessing(this Container container)
         {
             // events are in the domain project
-            var assemblies = new[] { Assembly.GetAssembly(typeof(IHandleEvents<>)) };
+            var assemblies = new[] { Assembly.GetAssembly(typeof(IHandleEvent<>)) };
 
-            //container.RegisterSingle<SimpleInjectorSynchronousEventProcessor>();
-            //container.Register<IProcessEvents>(container.GetInstance<SimpleInjectorSynchronousEventProcessor>);
-            container.RegisterSingle<SimpleInjectorAsynchronousEventProcessor>();
-            container.Register<IProcessEvents>(container.GetInstance<SimpleInjectorAsynchronousEventProcessor>);
-            container.RegisterManyForOpenGeneric(typeof(IHandleEvents<>), container.RegisterAll, assemblies);
+            container.RegisterManyForOpenGeneric(typeof(IHandleEvent<>), container.RegisterAll, assemblies);
             container.RegisterDecorator(
-                typeof(IHandleEvents<>),
+                typeof(IHandleEvent<>),
                 typeof(HandleEventAsynchronouslyDecorator<>)
             );
+            container.RegisterSingleOpenGeneric(typeof(ITriggerEvent<>), typeof(MultipleDispatchEventTrigger<>));
         }
 
         internal static void RegisterCommandHandling(this Container container)

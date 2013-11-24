@@ -519,7 +519,7 @@ module Agreements.ViewModels {
         private _countriesResponse: KnockoutObservableArray<ApiModels.PlaceWithAgreements>;
         private _placesResponse: KnockoutObservableArray<ApiModels.PlaceWithAgreements>;
         private _partnersResponse: KnockoutObservableArray<ApiModels.Participant>;
-        spinner = new App.Spinner(new App.SpinnerOptions(400, false));
+        spinner = new App.Spinner({ delay: 400, });
 
         private _load(): void {
             this.spinner.start();

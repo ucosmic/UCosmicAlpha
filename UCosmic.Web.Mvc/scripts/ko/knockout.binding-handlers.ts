@@ -7,6 +7,7 @@ interface KnockoutBindingHandlers {
     jqElement: KnockoutBindingHandler;
     jQuery: KnockoutBindingHandler;
     jqObservableElement: KnockoutBindingHandler;
+    jQueryObservable: KnockoutBindingHandler;
     multilineText: KnockoutBindingHandler;
     slideDownVisible: KnockoutBindingHandler;
     fadeVisible: KnockoutBindingHandler;
@@ -21,7 +22,7 @@ ko.bindingHandlers.element = {
     }
 };
 
-ko.bindingHandlers.jqElement = {
+ko.bindingHandlers.jqElement = { // TODO: deprecate this, replaced by jQuery binding handler
     update: function (element: Element, valueAccessor: () => any,
         allBindingsAccessor: () => any, viewModel: any): void {
         var name = ko.utils.unwrapObservable(valueAccessor());
@@ -38,6 +39,14 @@ ko.bindingHandlers.jQuery = {
 };
 
 ko.bindingHandlers.jqObservableElement = {
+    update: function (element: Element, valueAccessor: () => any,
+        allBindingsAccessor: () => any, viewModel: any): void {
+        var name = ko.utils.unwrapObservable(valueAccessor());
+        viewModel[name]($(element));
+    }
+};
+
+ko.bindingHandlers.jQueryObservable = {
     update: function (element: Element, valueAccessor: () => any,
         allBindingsAccessor: () => any, viewModel: any): void {
         var name = ko.utils.unwrapObservable(valueAccessor());

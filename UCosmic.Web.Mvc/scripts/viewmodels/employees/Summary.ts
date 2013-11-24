@@ -14,6 +14,8 @@
 /// <reference path="Server.ts" />
 /// <reference path="Models.d.ts" />
 /// <reference path="../../app/App.ts" />
+/// <reference path="../../app/DataCacher.ts" />
+/// <reference path="../../app/ImageSwapper.ts" />
 
 module Employees.ViewModels {
 
@@ -46,7 +48,7 @@ module Employees.ViewModels {
         title: string;
         className: string;
         total: KnockoutObservable<number>;
-        imageSwapper: ImageSwapper;
+        imageSwapper: App.ImageSwapper;
     }
 
     export class SummaryRouteState {
@@ -79,61 +81,6 @@ module Employees.ViewModels {
         people = 1,
         activities = 2,
         degress = 3,
-    }
-
-    export class ImageSwapper {
-
-        hoverSrc: KnockoutObservable<string> = ko.observable('');
-        noHoverSrc: KnockoutObservable<string> = ko.observable('');
-
-        constructor(noHoverSrc?: string, hoverSrc?: string) {
-            this.noHoverSrc(noHoverSrc || '');
-            this.hoverSrc(hoverSrc || '');
-        }
-
-        private _state: KnockoutObservable<string> = ko.observable('none');
-
-        isNoHover = ko.computed((): boolean => {
-            return this._state() == 'none';
-        });
-
-        isHover = ko.computed((): boolean => {
-            return this._state() == 'hover';
-        });
-
-        src = ko.computed((): string => {
-            return this.isHover() ? this.hoverSrc() : this.noHoverSrc();
-        });
-
-        onMouseEnter(self: ImageSwapper, e: JQueryEventObject): void {
-            this._state('hover');
-        }
-
-        onMouseLeave(self: ImageSwapper, e: JQueryEventObject): void {
-            this._state('none');
-        }
-    }
-
-    export class DataCacher<T> {
-        constructor(public loader: () => JQueryPromise<T>) { }
-
-        cached: T;
-        private _promise: JQueryDeferred<T> = $.Deferred();
-        private _isLoading = false;
-        ready(): JQueryPromise<T> {
-            if (!this._isLoading) {
-                this._isLoading = true;
-                this.loader()
-                    .done((data: T): void => {
-                        this.cached = data;
-                        this._promise.resolve(this.cached);
-                    })
-                    .fail((xhr: JQueryXHR): void => {
-                        this._promise.reject();
-                    });
-            }
-            return this._promise;
-        }
     }
 
     export class Summary {
@@ -336,7 +283,7 @@ module Employees.ViewModels {
 
         hasPlaceData: KnockoutObservable<boolean> = ko.observable(false);
 
-        placeData: DataCacher<ApiModels.EmployeesPlaceApiModel[]> = new DataCacher(
+        placeData: App.DataCacher<ApiModels.EmployeesPlaceApiModel[]> = new App.DataCacher(
             (): JQueryPromise<ApiModels.EmployeesPlaceApiModel[]> => {
                 return this._loadPlaceData();
             });
@@ -350,7 +297,7 @@ module Employees.ViewModels {
                 placeAgnostic: true,
             };
             this.geoChartSpinner.start();
-            Servers.EmployeesPlaces(this.settings.tenantDomain, request)
+            Servers.GetEmployeesPlaces(this.settings.tenantDomain, request)
                 .done((places: ApiModels.EmployeesPlaceApiModel[]): void => {
                     this.hasPlaceData(places && places.length > 0);
                     promise.resolve(places);
@@ -392,14 +339,14 @@ module Employees.ViewModels {
             activityCount: ko.observable('?'),
             locationCount: ko.observable('?'),
         };
-        activityCountsData: DataCacher<ApiModels.EmployeeActivityCounts> = new DataCacher(
+        activityCountsData: App.DataCacher<ApiModels.EmployeeActivityCounts> = new App.DataCacher(
             (): JQueryPromise<ApiModels.EmployeeActivityCounts> => {
                 return this._loadActivityCounts();
             });
 
         private _loadActivityCounts(): JQueryPromise<ApiModels.EmployeeActivityCounts> {
             var promise: JQueryDeferred<ApiModels.EmployeeActivityCounts> = $.Deferred();
-            Servers.ActivityCounts(this.settings.tenantDomain)
+            Servers.GetActivityCounts(this.settings.tenantDomain)
                 .done((summary: ApiModels.EmployeeActivityCounts): void => {
                     ko.mapping.fromJS(summary, {}, this.activityTotals);
                     promise.resolve(summary);
@@ -450,7 +397,7 @@ module Employees.ViewModels {
 
         geoChart: App.Google.GeoChart = new App.Google.GeoChart(
             document.getElementById(this.settings.geoChart.googleElementId));
-        geoChartSpinner = new App.Spinner(new App.SpinnerOptions(400, true));
+        geoChartSpinner = new App.Spinner({ delay: 400, runImmediately: true, });
         isGeoChartReady: KnockoutObservable<boolean> = ko.observable(false);
         _geoChartGradientLo: string;
         _geoChartGradientHi: string;
@@ -888,7 +835,7 @@ module Employees.ViewModels {
                     placeId: parseInt(jOverlay.data('place-id')),
                     title: jOverlay.attr('title'),
                     className: jOverlay.attr('class'),
-                    imageSwapper: new ImageSwapper(
+                    imageSwapper: new App.ImageSwapper(
                         jOverlay.find('img.no-hover').first().attr('src'),
                         jOverlay.find('img.hover').first().attr('src')),
                 };

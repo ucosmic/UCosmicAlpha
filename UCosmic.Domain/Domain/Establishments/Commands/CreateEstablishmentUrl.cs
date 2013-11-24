@@ -18,7 +18,8 @@ namespace UCosmic.Domain.Establishments
 
         public IPrincipal Principal { get; private set; }
         public int Id { get; internal set; }
-        public int OwnerId { get; set; }
+        public int? OwnerId { get; set; }
+        internal Establishment Owner { get; set; }
         public string Value { get; set; }
         public bool IsOfficialUrl { get; set; }
         public bool IsFormerUrl { get; set; }
@@ -33,9 +34,13 @@ namespace UCosmic.Domain.Establishments
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
+            When(x => x.Owner == null, () =>
+                RuleFor(x => x.OwnerId.HasValue).Equal(true).WithMessage("Establishment URL owner id must be provided.")
+            );
+
             // owner id must exist in the database when in valid range
-            When(x => x.OwnerId > 0, () =>
-                RuleFor(x => x.OwnerId)
+            When(x => x.OwnerId.HasValue, () =>
+                RuleFor(x => x.OwnerId.Value)
                     .MustFindEstablishmentById(entities)
                         .WithMessage(MustFindEstablishmentById.FailMessageFormat, x => x.OwnerId)
             );
@@ -67,19 +72,16 @@ namespace UCosmic.Domain.Establishments
     {
         private readonly ICommandEntities _entities;
         private readonly IHandleCommands<UpdateEstablishmentUrl> _updateHandler;
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IProcessEvents _eventProcessor;
+        private readonly ITriggerEvent<EstablishmentChanged> _eventTrigger;
 
         public HandleCreateEstablishmentUrlCommand(ICommandEntities entities
             , IHandleCommands<UpdateEstablishmentUrl> updateHandler
-            , IUnitOfWork unitOfWork
-            , IProcessEvents eventProcessor
+            , ITriggerEvent<EstablishmentChanged> eventTrigger
         )
         {
             _entities = entities;
             _updateHandler = updateHandler;
-            _unitOfWork = unitOfWork;
-            _eventProcessor = eventProcessor;
+            _eventTrigger = eventTrigger;
         }
 
         public void Handle(CreateEstablishmentUrl command)
@@ -87,12 +89,12 @@ namespace UCosmic.Domain.Establishments
             if (command == null) throw new ArgumentNullException("command");
 
             // load owner
-            var establishment = _entities.Get<Establishment>()
+            var establishment = command.Owner ?? _entities.Get<Establishment>()
                 .EagerLoad(_entities, new Expression<Func<Establishment, object>>[]
                 {
                     x => x.Urls,
                 })
-                .Single(x => x.RevisionId == command.OwnerId)
+                .Single(x => x.RevisionId == command.OwnerId.Value)
             ;
 
             // update previous official URL and owner when changing official URL
@@ -131,7 +133,7 @@ namespace UCosmic.Domain.Establishments
                 Name = command.GetType().FullName,
                 Value = JsonConvert.SerializeObject(new
                 {
-                    command.OwnerId,
+                    OwnerId = command.Owner != null ? command.Owner.RevisionId : command.OwnerId,
                     command.Value,
                     command.IsFormerUrl,
                     command.IsOfficialUrl,
@@ -139,13 +141,14 @@ namespace UCosmic.Domain.Establishments
                 NewState = establishmentUrl.ToJsonAudit(),
             };
             _entities.Create(audit);
-            _entities.Update(establishment);
+            if (establishment.RevisionId != default(int))
+                _entities.Update(establishment);
             command.CreatedEntity = establishmentUrl;
             if (command.NoCommit) return;
 
-            _unitOfWork.SaveChanges();
+            _entities.SaveChanges();
             command.Id = establishmentUrl.RevisionId;
-            _eventProcessor.Raise(new EstablishmentChanged());
+            _eventTrigger.Raise(new EstablishmentChanged());
         }
     }
 }

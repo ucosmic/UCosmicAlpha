@@ -51,7 +51,6 @@ namespace UCosmic.Domain.Identity
 
                 // principal must be authorized to create user
                 .MustBeInAnyRole(RoleName.UserManagers)
-                    .WithMessage(MustBeInAnyRole.FailMessageFormat, x => x.Principal.Identity.Name, x => x.GetType().Name)
             ;
 
             RuleFor(x => x.Name)
@@ -120,23 +119,20 @@ namespace UCosmic.Domain.Identity
     public class HandleCreateUserCommand : IHandleCommands<CreateUser>
     {
         private readonly ICommandEntities _entities;
-        private readonly IUnitOfWork _unitOfWork;
         private readonly IHandleCommands<CreatePerson> _createPerson;
-        private readonly IProcessEvents _eventProcessor;
-        private readonly ILogExceptions _exceptionLogger;
+        private readonly IHandleCommands<CreateEmailAddress> _createEmailAddress;
+        private readonly ITriggerEvent<UserCreated> _eventTrigger;
 
         public HandleCreateUserCommand(ICommandEntities entities
-            , IUnitOfWork unitOfWork
             , IHandleCommands<CreatePerson> createPerson
-            , IProcessEvents eventProcessor
-            , ILogExceptions exceptionLogger
+            , IHandleCommands<CreateEmailAddress> createEmailAddress
+            , ITriggerEvent<UserCreated> eventTrigger
         )
         {
             _entities = entities;
-            _unitOfWork = unitOfWork;
-            _eventProcessor = eventProcessor;
             _createPerson = createPerson;
-            _exceptionLogger = exceptionLogger;
+            _createEmailAddress = createEmailAddress;
+            _eventTrigger = eventTrigger;
         }
 
         public void Handle(CreateUser command)
@@ -147,11 +143,8 @@ namespace UCosmic.Domain.Identity
             var emailDomain = command.Name.GetEmailDomain();
             var establishmentToAffiliate =
                 _entities.Get<Establishment>()
-                         .Single(
-                             x =>
-                             x.EmailDomains.Any(y => y.Value.Equals(emailDomain, StringComparison.OrdinalIgnoreCase)));
+                .Single(x => x.EmailDomains.Any(y => y.Value.Equals(emailDomain, StringComparison.OrdinalIgnoreCase)));
 
-            
             // default person to the one provided by another internal command
             var person = command.Person;
             if (person == null && command.PersonId.HasValue)
@@ -170,6 +163,15 @@ namespace UCosmic.Domain.Identity
                 _createPerson.Handle(createPersonCommand);
                 person = createPersonCommand.CreatedPerson;
             }
+
+            var createEmailCommand = new CreateEmailAddress(command.Name, person)
+            {
+                NoCommit = true,
+                IsConfirmed = true,
+                IsFromSaml = false,
+                IsDefault = true,
+            };
+            _createEmailAddress.Handle(createEmailCommand);
 
             var affiliation = new Affiliation
             {
@@ -203,29 +205,17 @@ namespace UCosmic.Domain.Identity
 
             _entities.Create(audit);
             _entities.Create(user);
-            _unitOfWork.SaveChanges();
+            _entities.SaveChanges();
 
             command.CreatedUserId = user.RevisionId;
 
-            var userCreatedEvent = new UserCreated(command.Principal, command.CreatedUserId);
-            _eventProcessor.Raise(userCreatedEvent);
-
-            /*
-             * It is possible that some classes that handle UserCreated events
-             * may take a relatively long time to complete.  Because this event
-             * is actually spawned in a different Task, for this instance, we
-             * want to make sure all actions complete before we consider a User
-             * created.
-             */
-            const int createdUserEventTimeoutMs = 360000;
-            try
+            var userCreated = new UserCreated(command.Principal)
             {
-                userCreatedEvent.Signal.WaitOne(createdUserEventTimeoutMs);
-            }
-            catch (Exception ex)
-            {
-                _exceptionLogger.Log(ex);
-            }
+                UserId = user.RevisionId,
+                PersonId = person.RevisionId,
+                TenantId = affiliation.EstablishmentId,
+            };
+            _eventTrigger.Raise(userCreated);
         }
     }
 }

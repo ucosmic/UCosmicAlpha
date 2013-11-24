@@ -81,9 +81,9 @@ module Establishments.ViewModels {
         valueHref: KnockoutComputed<string>;
 
         // spinners
-        saveSpinner = new App.Spinner(new App.SpinnerOptions(0, false));
-        purgeSpinner = new App.Spinner(new App.SpinnerOptions(0, false));
-        valueValidationSpinner = new App.Spinner(new App.SpinnerOptions(0, false));
+        saveSpinner = new App.Spinner();
+        purgeSpinner = new App.Spinner();
+        valueValidationSpinner = new App.Spinner();
 
         // private fields
         private saveEditorClicked: boolean = false;

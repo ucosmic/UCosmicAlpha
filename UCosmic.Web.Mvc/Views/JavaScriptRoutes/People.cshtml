@@ -1,0 +1,45 @@
+﻿@{ var routeWriter = new JavascriptRouteWriter(); }
+
+@* API ROUTES *@
+var Routes = Routes || {};
+Routes.Api = Routes.Api || {};
+
+@* PEOPLE *@
+Routes.Api.People = Routes.Api.People || {};
+
+@* AFFILIATIONS *@
+Routes.Api.People.Affiliations = Routes.Api.People.Affiliations || {};
+
+Routes.Api.People.Affiliations.plural = function (personId) {
+    if (!personId) {
+        return '@routeWriter.WriteRoute(Url.HttpRouteUrl(null, new
+        {
+            controller = "Affiliations",
+            action = "Get",
+        }))';
+    }
+    return '@routeWriter.WriteRoute(Url.HttpRouteUrl(null, new
+    {
+        controller = "Affiliations",
+        action = "Get",
+        personId = routeWriter.Value<int>(0),
+    }))'.format(personId);
+};
+
+Routes.Api.People.Affiliations.single = function (establishmentId, personId) {
+    if (!personId) {
+        return '@routeWriter.WriteRoute(Url.HttpRouteUrl(null, new
+            {
+                controller = "Affiliations",
+                action = "Put",
+                establishmentId = routeWriter.Value<int>(0),
+            }))'.format(establishmentId);
+    }
+    return '@routeWriter.WriteRoute(Url.HttpRouteUrl(null, new
+        {
+            controller = "Affiliations",
+            action = "Put",
+            personId = routeWriter.Value<int>(0),
+            establishmentId = routeWriter.Value<int>(1),
+        }))'.format(personId, establishmentId);
+};

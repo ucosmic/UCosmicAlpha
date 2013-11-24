@@ -44,7 +44,6 @@ namespace UCosmic.Domain.Agreements
                 .MustNotHaveEmptyIdentityName()
                     .WithMessage(MustNotHaveEmptyIdentityName.FailMessage)
                 .MustBeInAnyRole(RoleName.AgreementManagers)
-                    .WithMessage(MustBeInAnyRole.FailMessageFormat, x => x.Principal.Identity.Name, x => x.GetType().Name)
             ;
 
             // when umbrella id has value

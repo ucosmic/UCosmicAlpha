@@ -33,7 +33,6 @@ namespace UCosmic.Domain.People
                 .MustNotBeSamePerson(entities, x => x.Id)
                     .WithMessage(MustNotBeSamePerson<object>.FailMessageFormat, x => x.Principal.Identity.Name)
                 .MustBeInAnyRole(RoleName.EmployeeProfileManager)
-                    .WithMessage(MustBeInAnyRole.FailMessageFormat, x => x.Principal.Identity.Name)
             ;
 
             RuleFor(x => x.Id)

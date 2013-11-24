@@ -229,7 +229,7 @@ module Activities.ViewModels {
         //#region Subscriptions
 
         isSaving: KnockoutObservable<boolean> = ko.observable(false);
-        saveSpinner = new App.Spinner(new App.SpinnerOptions(200));
+        saveSpinner = new App.Spinner({ delay: 200, });
         private _isDirty: KnockoutObservable<boolean> = ko.observable(false);
 
         private _bindSubscriptions(): void {

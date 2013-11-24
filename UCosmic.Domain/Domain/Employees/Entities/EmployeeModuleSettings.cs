@@ -19,27 +19,18 @@ namespace UCosmic.Domain.Employees
             OfferFundingQuestions = true;
             InternationalPedigreeTitle = "International Pedigree";
             ReportsDefaultYearRange = 10;
-
-            //GlobalViewIconFileName = EmployeeConsts.DefaultGlobalViewIconGuid;
-            //GlobalViewIconMimeType = "image/png";
-            //GlobalViewIconName = "GlobalViewIcon.png";
-            //GlobalViewIconPath = string.Format("{0}/{1}/", EmployeeConsts.SettingsBinaryStoreBasePath,
-            //                                          EmployeeConsts.IconsBinaryStorePath);
-
-            //FindAnExpertIconFileName = EmployeeConsts.DefaultFindAnExpertIconGuid;
-            //FindAnExpertIconMimeType = "image/svg+xml";
-            //FindAnExpertIconName = "FindAnExpertIcon.svg";
-            //FindAnExpertIconPath = string.Format("{0}/{1}/", EmployeeConsts.SettingsBinaryStoreBasePath,
-            //                                          EmployeeConsts.IconsBinaryStorePath);
         }
 
-        public int Id { get; set; }
+        // EstablishmentId is the primary key
+        public int EstablishmentId { get; protected set; }
+        public virtual Establishment Establishment { get; protected internal set; }
+
         public virtual ICollection<EmployeeFacultyRank> FacultyRanks { get; protected internal set; }
         public virtual ICollection<EmployeeActivityType> ActivityTypes { get; protected internal set; }
         public bool NotifyAdminOnUpdate { get; protected internal set; }
         public virtual ICollection<Person> NotifyAdmins { get; protected internal set; }
         public string PersonalInfoAnchorText { get; protected internal set; }
-        public virtual Establishment Establishment { get; protected internal set; }
+
         public bool OfferCountry { get; protected internal set; }
         public bool OfferActivityType { get; protected internal set; }
         public bool OfferFundingQuestions { get; protected internal set; }
