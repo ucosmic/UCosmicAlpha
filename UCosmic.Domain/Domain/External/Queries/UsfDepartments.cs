@@ -35,7 +35,7 @@ namespace UCosmic.Domain.External
             var reportBuilder = query.ReportBuilder ?? new WorkReportBuilder("Get USF Departments Data");
 
             reportBuilder.Report("Getting USF CAS ticket");
-            var ticket = _queryProcessor.Execute(new UsfCasTicket(query.Service));
+            var ticket = _queryProcessor.Execute(new UsfCasTicket(query.Service) { ReportBuilder = reportBuilder });
             var serviceUrl = query.Service.DepartmentsUrl;
             if (string.IsNullOrWhiteSpace(ticket) || string.IsNullOrWhiteSpace(serviceUrl)) return null;
 
