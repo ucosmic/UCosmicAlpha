@@ -28,7 +28,7 @@ namespace UCosmic.Domain.Activities
     public class HandleActivitiesByPersonIdQuery : IHandleQueries<ActivitiesByPersonId, PagedQueryResult<ActivityValues>>
     {
         private readonly IQueryEntities _entities;
-
+        private static readonly string PublicText = ActivityMode.Public.AsSentenceFragment();
         public HandleActivitiesByPersonIdQuery(IQueryEntities entities)
         {
             _entities = entities;
@@ -38,9 +38,8 @@ namespace UCosmic.Domain.Activities
         {
             if (query == null) throw new ArgumentNullException("query");
 
-            var publicText = ActivityMode.Public.AsSentenceFragment();
             var queryable = _entities.Query<ActivityValues>()
-                .Where(x => x.Activity.PersonId == query.PersonId && x.ModeText == publicText && x.Activity.ModeText == publicText && x.Activity.Original == null)
+                .Where(x => x.Activity.PersonId == query.PersonId && x.ModeText == PublicText && x.Activity.ModeText == PublicText && x.Activity.Original == null)
             ;
 
             //// when the query's country code is empty string, match all agreements regardless of country.
@@ -53,7 +52,7 @@ namespace UCosmic.Domain.Activities
             if (!string.IsNullOrWhiteSpace(query.Keyword))
             {
                 queryable = queryable.Where(x => (x.Title != null && x.Title.Contains(query.Keyword))
-                    || x.Locations.Any(y => y.Place.IsCountry && y.Place.OfficialName.Contains(query.Keyword))
+                    || x.Locations.Any(y => y.Place.OfficialName.Contains(query.Keyword))
                     || x.Tags.Any(y => y.Text.Contains(query.Keyword))
                     || x.Types.Any(y => y.Type.Type.Contains(query.Keyword))
                 );

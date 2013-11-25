@@ -16,14 +16,6 @@ namespace UCosmic.Web.Mvc.Models
 
     public static class ActivityPublicInputProfiler
     {
-
-        //private static IOrderedEnumerable<T> Order<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, string ascending)
-        //{
-        // public static IOrderedEnumerable<TSource> OrderBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, string isAscending)
-        //{
-        //    return isAscending == "asc" ? source.OrderBy(keySelector) : source.OrderByDescending(keySelector);
-        //}
-
         public class ModelToQuery : Profile
         {
             protected override void Configure()
@@ -33,8 +25,6 @@ namespace UCosmic.Web.Mvc.Models
                     .ForMember(d => d.Principal, o => o.Ignore())
                     .ForMember(d => d.PersonId, o => o.Ignore())
                     .ForMember(d => d.OrderBy, o => o.Ignore())
-                    //.ForMember(d => d.Keyword, o => o.Ignore())
-
                     // map the country code
                     .ForMember(d => d.CountryCode, o => o.ResolveUsing(s =>
                     {
@@ -46,7 +36,6 @@ namespace UCosmic.Web.Mvc.Models
                             ? string.Empty : s.CountryCode;
                     }))
                     // map the order by
-
                     .ForMember(d => d.OrderBy, o => o.ResolveUsing(s =>
                     {
                         var orderBy = new Dictionary<Expression<Func<ActivityValues, object>>, OrderByDirection>();
@@ -67,29 +56,12 @@ namespace UCosmic.Web.Mvc.Models
                                     orderBy.Add(x => x.Title, direction);
                                     break;
                                 case "type":
-                                    if (columnAndDirection[1] == "desc")
-                                    {
-                                        orderBy.Add(x => x.Types.Select(y => y.Type.Type)
-                                            .OrderByDescending(y => y).FirstOrDefault(), direction);
-                                    }
-                                    else
-                                    {
-                                        orderBy.Add(x => x.Types.Select(y => y.Type.Type)
-                                            .OrderBy(y => y).FirstOrDefault(), direction);
-                                    }
+                                    orderBy.Add(x => x.Types.Select(y => y.Type.Type)
+                                        .OrderBy(y => y).FirstOrDefault(), direction);
                                     break;
-
-                                case "country":
-                                    if (columnAndDirection[1] == "desc")
-                                    {
-                                        orderBy.Add(x => x.Locations.Select(y => y.Place.OfficialName)
-                                            .OrderByDescending(y => y).FirstOrDefault(), direction);
-                                    }
-                                    else
-                                    {
-                                        orderBy.Add(x => x.Locations.Select(y => y.Place.OfficialName)
-                                            .OrderBy(y => y).FirstOrDefault(), direction);
-                                    }
+                                case "location":
+                                    orderBy.Add(x => x.Locations.Select(y => y.Place.OfficialName)
+                                        .OrderBy(y => y).FirstOrDefault(), direction);
                                     break;
                             }
                         }

@@ -38,6 +38,11 @@ body {
                 }
             }
         }
+        table.no-data tbody tr:nth-child(even) {
+            td {
+                background-color: transparent;
+            }
+        }
         .searchResults{
             //tr * {
             //    cursor: pointer!important;

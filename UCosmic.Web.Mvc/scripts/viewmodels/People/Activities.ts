@@ -40,8 +40,6 @@ module People.ViewModels {
                 }
             }, this);
         }
-
-
         $form: JQuery;
         pageSize = ko.observable(modelData.PageSize);
         pageNumber = ko.observable((modelData.PageNumber != null) ? modelData.PageNumber : 1);

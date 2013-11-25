@@ -23,6 +23,8 @@ body table.data {
     cursor: pointer; }
   body table.data tbody tr.hover-hilite:hover td {
     background-color: #ffffaa; }
+  body table.data table.no-data tbody tr:nth-child(even) td {
+    background-color: transparent; }
   body table.data .searchResults tr:hover td {
     background-color: #ffffaa; }
 body table.activity {

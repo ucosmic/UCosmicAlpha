@@ -325,6 +325,7 @@
     <Compile Include="Models\Activities\ActivityTypeViewModel.cs" />
     <Compile Include="Models\Agreements\AgreementOwningTenant.cs" />
     <Compile Include="Models\Employees\EmployeeSettingsFacultyRankApiModel.cs" />
+    <Compile Include="Models\Degrees\DegreePublicViewModel.cs" />
     <Compile Include="Models\Employees\EmployeeActivityCountsModel.cs" />
     <Compile Include="ApiControllers\FacultyStaff\EmployeeModuleSettingsController.cs" />
     <Compile Include="ApiControllers\FacultyStaff\EmployeesController.cs" />
@@ -2781,6 +2782,8 @@
     <Content Include="Views\People\Activities.cshtml" />
     <Content Include="Views\People\_Activities.cshtml" />
     <Content Include="Views\People\_SearchSidebarNav.cshtml" />
+    <Content Include="Views\People\Degrees.cshtml" />
+    <Content Include="Views\People\_Degrees.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

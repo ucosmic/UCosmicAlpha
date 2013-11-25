@@ -9,6 +9,7 @@ using UCosmic.Domain.People;
 using System.Linq.Expressions;
 using AutoMapper;
 using UCosmic.Domain.Activities;
+using UCosmic.Domain.Degrees;
 
 namespace UCosmic.Web.Mvc.Controllers
 {
@@ -65,5 +66,15 @@ namespace UCosmic.Web.Mvc.Controllers
             return View(model);
         }
 
+        [GET("people/{personId:int}/degrees")]
+        public virtual ActionResult Degrees(int personId)
+        {
+
+            var entity = _queryProcessor.Execute(new DegreesByPersonId(personId));
+
+
+            var model = Mapper.Map<DegreePublicViewModel>(entity);
+            return View(model);
+        }
     }
 }
