@@ -131,7 +131,7 @@ namespace UCosmic.Work
         private IEnumerable<ScheduledJob> LoadSchedule()
         {
             var json = LoadIntermediateSchedule();
-            var intermediate = JsonConvert.DeserializeObject<dynamic[]>(json);
+            var intermediate = JsonConvert.DeserializeObject<IntermediateSchedule[]>(json);
 
             // only populate if there are job in the intermediate schedule
             if (string.IsNullOrWhiteSpace(json) || intermediate == null || !intermediate.Any())
@@ -140,7 +140,7 @@ namespace UCosmic.Work
             var schedule = intermediate
                 .Select(x => new ScheduledJob
                 {
-                    Job = JsonConvert.DeserializeObject(x.Job.ToString(), Type.GetType(x.Type.ToString())),
+                    Job = (IDefineWork)JsonConvert.DeserializeObject(x.Job, Type.GetType(x.Type)),
                     OnUtc = x.OnUtc,
                 })
                 .ToArray();
@@ -152,11 +152,13 @@ namespace UCosmic.Work
         {
             // serialize to intermediate array
             var intermediate = schedule
-                .Select(x => new
+                .Select(x => new IntermediateSchedule
                 {
-                    Type = x.Job.GetType(),
+                    Type =
+                        string.Format("{0}, {1}", x.Job.GetType().FullName,
+                            x.Job.GetType().Assembly.GetName().Name),
                     Job = JsonConvert.SerializeObject(x.Job),
-                    x.OnUtc,
+                    OnUtc = x.OnUtc,
                 })
                 .ToArray();
 
@@ -178,6 +180,13 @@ namespace UCosmic.Work
         private static ScheduledJob GetScheduledJob(IEnumerable<ScheduledJob> schedule, IDefineWork job)
         {
             return schedule.SingleOrDefault(x => x.Job.GetType() == job.GetType());
+        }
+
+        private class IntermediateSchedule
+        {
+            public string Type { get; set; }
+            public string Job { get; set; }
+            public DateTime OnUtc { get; set; }
         }
 
         private class ScheduledJob

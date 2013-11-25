@@ -26,11 +26,15 @@ namespace UCosmic.Work
             // ReSharper disable FunctionNeverReturns
             _renewalThread = new Thread(() =>
             {
-                while (true)
+                try
                 {
-                    Thread.Sleep(TimeSpan.FromSeconds(40.0));
-                    blob.RenewLease(AccessCondition.GenerateLeaseCondition(LeaseId));
+                    while (true)
+                    {
+                        Thread.Sleep(TimeSpan.FromSeconds(40.0));
+                        blob.RenewLease(AccessCondition.GenerateLeaseCondition(LeaseId));
+                    }
                 }
+                catch (ThreadAbortException) { }
             });
             // ReSharper restore FunctionNeverReturns
             _renewalThread.Start();

@@ -18,7 +18,7 @@ namespace UCosmic.Work
 
         public override bool OnStart()
         {
-            // Set the maximum number of concurrent connections 
+            // Set the maximum number of concurrent connections
             ServicePointManager.DefaultConnectionLimit = 12;
 
             // For information on handling configuration changes

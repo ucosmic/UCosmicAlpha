@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ServiceDefinition name="UCosmic.Azure" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceDefinition" schemaVersion="2013-03.2.0">
+<ServiceDefinition name="UCosmic.Azure" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceDefinition" schemaVersion="2013-10.2.2">
   <WebRole name="UCosmic.Web.Mvc" vmsize="ExtraSmall">
     <Runtime executionContext="elevated" />
     <Startup>
@@ -24,16 +24,14 @@
       <Import moduleName="RemoteAccess" />
       <Import moduleName="RemoteForwarder" />
     </Imports>
-    <ConfigurationSettings>
-    </ConfigurationSettings>
+    <ConfigurationSettings></ConfigurationSettings>
     <Certificates>
       <Certificate name="star.ucosmic.com" storeLocation="LocalMachine" storeName="My" />
       <Certificate name="azureconfig" storeLocation="LocalMachine" storeName="My" />
       <Certificate name="saml.ucosmic.com" storeLocation="LocalMachine" storeName="My" />
       <Certificate name="saml.ucosmic.dev" storeLocation="LocalMachine" storeName="My" />
     </Certificates>
-    <LocalResources>
-    </LocalResources>
+    <LocalResources></LocalResources>
   </WebRole>
   <WorkerRole name="UCosmic.Work" vmsize="ExtraSmall">
     <Runtime executionContext="elevated" />
