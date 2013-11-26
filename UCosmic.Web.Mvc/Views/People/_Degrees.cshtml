@@ -19,7 +19,7 @@
                                 {
                                     <li class="comma-list"><span>@degree.Institution.OfficialName</span></li>   
                                 }
-                                @if (degree.FieldOfStudy != null && !degree.FieldOfStudy.IsNullOrWhiteSpace())
+                                @if (!string.IsNullOrEmpty(degree.FieldOfStudy))
                                 {
                                     <li class="comma-list"><span>@degree.FieldOfStudy</span></li>
                                 }
