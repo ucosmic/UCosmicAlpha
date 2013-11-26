@@ -1,5 +1,5 @@
 ﻿@using UCosmic.Web.Mvc.ApiControllers
-@model UCosmic.Web.Mvc.Models.DegreePublicViewModel
+@model UCosmic.Web.Mvc.Models.PageOfDegreePublicViewModel
 @{
     ViewBag.Title = "UCosmic Profile";
 }
@@ -12,54 +12,24 @@
 @section scripts
 {
 
-    <script type="text/javascript">
-        var modelData = @Html.Raw(Json.Encode(Model));
-        modelData.Keyword = "@ViewBag.keyword";
-        modelData.CountryCode = "@ViewBag.countryCode";
-        modelData.OrderBy = "@ViewBag.orderBy";
-    </script>
-
-    @Scripts.Render("~/bundles/people/activities")
-
-    <script type="text/javascript">
-        var viewModel = new People.ViewModels.ActivityInputModel();
-        ko.applyBindings(viewModel, $('#main')[0]);
-    </script>
+    
 
 }
 @section styles
 {
     <style>
-        body table.data td {
-            border: solid 1px #fff;
-            padding: 4px;
-            vertical-align: top;
-        }
-
-        .same-line {
-            width: auto;
-            display: inline-block;
-            white-space: nowrap;
-            float: left;
-            list-style: none;
-            margin-right: 8px;
-        }
-
-            .same-line:last-child {
-                margin-right: 0px;
-            }
 
         .comma-list {
             display: inline;
         }
 
-            .comma-list:after {
-                content: ', ';
-            }
+        .comma-list:after {
+            content: ', ';
+        }
 
-            .comma-list:last-child:after {
-                content: '';
-            }
+        .comma-list:last-child:after {
+            content: '';
+        }
     </style>
 }
 <div class="content fixed to-top" data-current-module="employees">
@@ -76,7 +46,7 @@
         <aside class="on-right from-top" data-fixed-scroll="root">
             <div data-fixed-scroll="anchor"></div>
             <div data-fixed-scroll="content">
-                @Html.Partial(MVC.People.Views._SearchSidebarNav, Model)
+                @Html.Partial(MVC.People.Views._SidebarNav, Model)
             </div>
         </aside>
     </form>

@@ -67,13 +67,13 @@ namespace UCosmic.Web.Mvc.Controllers
         }
 
         [GET("people/{personId:int}/degrees")]
-        public virtual ActionResult Degrees(int personId)
+        public virtual ActionResult Degrees(int personId, DegreeSearchInputModel input)
         {
+            var query = new DegreesByPersonId(personId);
+            Mapper.Map(input, query);
+            var entities = _queryProcessor.Execute(query);
 
-            var entity = _queryProcessor.Execute(new DegreesByPersonId(personId));
-
-
-            var model = Mapper.Map<DegreePublicViewModel>(entity);
+            var model = Mapper.Map<PageOfDegreePublicViewModel>(entities);
             return View(model);
         }
     }

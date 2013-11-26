@@ -18,4 +18,27 @@ namespace UCosmic.Web.Mvc.Models
         public Establishment Institution { get; set; }
     }
 
+    public class PageOfDegreePublicViewModel : PageOf<DegreePublicViewModel>
+    {
+    }
+
+    public static class DegreePublicViewProfiler
+    {
+        public class EntityToModel : Profile
+        {
+            protected override void Configure()
+            {
+                CreateMap<Degree, DegreePublicViewModel>();
+            }
+        }
+
+        public class PageQueryResultToPageOfItems : Profile
+        {
+            protected override void Configure()
+            {
+                CreateMap<PagedQueryResult<Degree>, PageOfDegreePublicViewModel>();
+            }
+        }
+    }
+
 }

@@ -104,26 +104,19 @@
                                             </tr>
                                         </table>
                                     </td>
-                                    <td>
+                                    <td >
                                         @if (activity.StartsOn.HasValue)
                                         {
-                                            <span>@activity.StartsOn.Value.ToString(activity.StartsFormat ?? "MM/dd/yyyy")</span>
+                                            <span style="white-space: nowrap" >@activity.StartsOn.Value.ToString(activity.StartsFormat ?? "MM/dd/yyyy")
+                                                @if (activity.EndsOn.HasValue || (activity.OnGoing.HasValue && activity.OnGoing.Value))
+                                                {
+                                                    @Html.Raw(" - ");
+                                                }
+                                            </span><br />
                                         }
                                         @if (activity.EndsOn.HasValue)
                                         {
-                                            if (activity.StartsOn.HasValue)
-                                            {
-                                            <span style="padding: 0 4px 0 4px;">-</span>
-                                            }
                                             <span>@activity.EndsOn.Value.ToString(activity.EndsFormat ?? "MM/dd/yyyy")</span>
-                                        }
-                                        @if (activity.OnGoing.HasValue && activity.OnGoing.Value)
-                                        {
-                                            if (activity.StartsOn.HasValue)
-                                            {
-                                            <span style="padding: 0 4px 0 4px;">-</span>
-                                            }
-                                            <span>On Going</span>
                                         }
                                         @if (!activity.StartsOn.HasValue && !activity.EndsOn.HasValue && (!activity.OnGoing.HasValue || !activity.OnGoing.Value))
                                         {

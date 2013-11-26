@@ -129,6 +129,7 @@ namespace UCosmic.Web.Mvc.Controllers
         public class ActionParamsClass_Degrees
         {
             public readonly string personId = "personId";
+            public readonly string input = "input";
         }
         static readonly ViewsClass s_views = new ViewsClass();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -191,10 +192,11 @@ namespace UCosmic.Web.Mvc.Controllers
             return callInfo;
         }
 
-        public override System.Web.Mvc.ActionResult Degrees(int personId)
+        public override System.Web.Mvc.ActionResult Degrees(int personId, UCosmic.Web.Mvc.Models.DegreeSearchInputModel input)
         {
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Degrees);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "personId", personId);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "input", input);
             return callInfo;
         }
 

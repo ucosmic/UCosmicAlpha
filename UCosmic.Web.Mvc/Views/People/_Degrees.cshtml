@@ -1,147 +1,43 @@
 ﻿@using UCosmic.Web.Mvc.ApiControllers
-@model UCosmic.Web.Mvc.Models.PageOfActivityPublicViewModel
+@model UCosmic.Web.Mvc.Models.PageOfDegreePublicViewModel
 
-@* ACTIVITIES *@
+@* DEGREES *@
 <section class="content fixed to-top">
     <div>
-        @* KEYWORD TEXT BOX *@
-        <div class="field" style="margin-bottom: 0;">
-            <input type="search" data-bind="value: keyword" placeholder="Find an activity by title, country, or keyword." name="keyword" style="width: 588px; margin-right: 12px" />
-            <input type="submit" value="Search" title="Click here or press the enter key to search." />
-        </div>
 
-        @* PAGER STATUS & LOADING SPINNER *@
-        <div class="group" style="margin: 1em 0;">
-            @if (Model != null && Model.Items.Any())
-            {
-                <div class="on-left" style="height: 24px;">
-                    <div>
-                        <strong>Showing <span>@Model.FirstNumber</span>
-                            @if (@Model.PageCount > 0)
-                            {
-                                <span>- <span>@Model.LastNumber</span></span>
-                            }
-                            of <span>@Model.ItemTotal</span></strong>
-                        @if (@Model.PageCount > 0)
-                        {
-                            <span>(page
-                                <select name="pageNumber" data-bind="value: pageNumber"
-                                    style="padding: 0; margin: 0; line-height: 16px; height: auto;">
-                                    @for (int i = 0; i < Model.PageCount; i++)
-                                    {
-                                        <option value="@(i + 1)">@(i + 1)</option>   
-                                    }
-                                </select>
-                                of <span>@Model.PageCount</span>)</span>
-                        }
-                    </div>
-                </div>
-            }
-        </div>
         @if (Model != null && Model.Items.Any())
         {
 @* RESULTS *@
             <div>
-                @* TABLE *@
-                <div>
-                    <table class="data">
-                        <colgroup>
-                            <col style="vertical-align: top;" />
-                            <col style="vertical-align: top;" />
-                            <col style="vertical-align: top;" />
-                            <col style="vertical-align: top;" />
-                        </colgroup>
-                        <thead>
-                            <tr>
-                                <th>
-                                    Location
-                                </th>
-                                <th>
-                                    Title
-                                </th>
-                                <th>
-                                    Type
-                                </th>
-                                <th>
-                                    Date
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody class="searchResults">
-                            @foreach (var activity in Model.Items)
-                            {
-                                <tr>
-                                    <td>
-                                        <ul style="display: inline-block;">
-                                            @foreach (var place in activity.Places)
-                                            {
-                                                <li class="comma-list"><span>@place.PlaceName</span></li>
-                                            }
-                                        </ul>
-                                    </td>
-                                    <td>
-                                        <a href="@Url.Action(MVC.Activities.Details(activity.ActivityId))" >
-                                            @activity.Title
-                                        </a>
-                                    </td>
-                                    <td>
-                                        <table style="border: none;" class="no-data">
-                                            <tr>
-                                                @for (var i = 0; i < activity.Types.Length; i++)
-                                                {
-                                                    <td style="border: none; margin: 2px; padding: 2px;">
-                                                        <span style="display: inline-block; width: 32px; text-align: center;">
-                                                            <img title="@activity.Types[i].Text" height="24" src="@Url.HttpRouteUrl(null, new { controller = "EmployeeModuleSettings", action = "GetIcon", typeId = activity.Types[i].TypeId })" alt="" />
-                                                        </span>
-                                                    </td> 
-                                                    //How many columns per row
-                                                    if ((i + 1) % 2 == 0)
-                                                    {
-                                                    @Html.Raw("</tr>");
-                                                    @Html.Raw("<tr>");
-                                                    }
-                                                }
-                                            </tr>
-                                        </table>
-                                    </td>
-                                    <td>
-                                        @if (activity.StartsOn.HasValue)
-                                        {
-                                            <span>@activity.StartsOn.Value.ToString(activity.StartsFormat ?? "MM/dd/yyyy")</span>
-                                        }
-                                        @if (activity.EndsOn.HasValue)
-                                        {
-                                            if (activity.StartsOn.HasValue)
-                                            {
-                                            <span style="padding: 0 4px 0 4px;">-</span>
-                                            }
-                                            <span>@activity.EndsOn.Value.ToString(activity.EndsFormat ?? "MM/dd/yyyy")</span>
-                                        }
-                                        @if (activity.OnGoing.HasValue && activity.OnGoing.Value)
-                                        {
-                                            if (activity.StartsOn.HasValue)
-                                            {
-                                            <span style="padding: 0 4px 0 4px;">-</span>
-                                            }
-                                            <span>On Going</span>
-                                        }
-                                        @if (!activity.StartsOn.HasValue && !activity.EndsOn.HasValue && (!activity.OnGoing.HasValue || !activity.OnGoing.Value))
-                                        {
-                                            <span>[Undated]</span>
-                                        }
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
+                <ul style="font-size: 20px;">
+                    @foreach (var degree in Model.Items)
+                    {
+                        <li style="margin-bottom: 1em;">
+                            <strong style="display: block;">@degree.Title</strong>
+                            <ul style="display: inline-block;">
+                                @if (degree.Institution != null && degree.Institution.OfficialName != string.Empty)
+                                {
+                                    <li class="comma-list"><span>@degree.Institution.OfficialName</span></li>   
+                                }
+                                @if (degree.FieldOfStudy != null && !degree.FieldOfStudy.IsNullOrWhiteSpace())
+                                {
+                                    <li class="comma-list"><span>@degree.FieldOfStudy</span></li>
+                                }
+                                @if (degree.YearAwarded != null)
+                                {
+                                    <li class="comma-list"><span>@degree.YearAwarded</span></li>
+                                }
+                            </ul>
+                        </li>
+                    }
+                </ul>
             </div>
         }
         else
         {
 @* ZERO RESULTS MESSAGE *@
             <p>
-                There are no results that match your search terms.
+                This person has no known international degrees.
             </p>
         }
 
