@@ -2784,6 +2784,7 @@
     <Content Include="Views\People\_SearchSidebarNav.cshtml" />
     <Content Include="Views\People\Degrees.cshtml" />
     <Content Include="Views\People\_Degrees.cshtml" />
+    <Content Include="Views\People\_Affiliations.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -2926,9 +2927,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\binary-data\" />
-    <Folder Include="App_Data\mail\" />
     <Folder Include="content\mail\" />
+    <Folder Include="Helpers\App_Data\binary-data\" />
+    <Folder Include="Helpers\App_Data\mail\" />
     <Folder Include="Views\ActivitiesSpike\" />
   </ItemGroup>
   <ItemGroup>
