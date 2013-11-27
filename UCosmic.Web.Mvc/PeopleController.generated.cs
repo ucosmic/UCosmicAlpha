@@ -65,6 +65,12 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Degrees);
         }
+        [NonAction]
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public System.Web.Mvc.ActionResult GetAffiliations()
+        {
+            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.GetAffiliations);
+        }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public PeopleController Actions { get { return MVC.People; } }
@@ -85,6 +91,7 @@ namespace UCosmic.Web.Mvc.Controllers
             public readonly string GetCard = "GetCard";
             public readonly string Activities = "Activities";
             public readonly string Degrees = "Degrees";
+            public readonly string GetAffiliations = "GetAffiliations";
         }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -94,6 +101,7 @@ namespace UCosmic.Web.Mvc.Controllers
             public const string GetCard = "GetCard";
             public const string Activities = "Activities";
             public const string Degrees = "Degrees";
+            public const string GetAffiliations = "GetAffiliations";
         }
 
 
@@ -130,6 +138,14 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             public readonly string personId = "personId";
             public readonly string input = "input";
+        }
+        static readonly ActionParamsClass_GetAffiliations s_params_GetAffiliations = new ActionParamsClass_GetAffiliations();
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public ActionParamsClass_GetAffiliations GetAffiliationsParams { get { return s_params_GetAffiliations; } }
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public class ActionParamsClass_GetAffiliations
+        {
+            public readonly string personId = "personId";
         }
         static readonly ViewsClass s_views = new ViewsClass();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -199,6 +215,13 @@ namespace UCosmic.Web.Mvc.Controllers
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Degrees);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "personId", personId);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "input", input);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.ActionResult GetAffiliations(int personId)
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.GetAffiliations);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "personId", personId);
             return callInfo;
         }
 

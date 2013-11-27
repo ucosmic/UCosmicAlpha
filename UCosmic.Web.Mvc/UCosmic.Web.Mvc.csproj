@@ -425,6 +425,7 @@
     <Compile Include="Models\People\AffiliationApiModel.cs" />
     <Compile Include="Models\People\AffiliationPutModel.cs" />
     <Compile Include="Models\Activities\ActivityPublicInputModel.cs" />
+    <Compile Include="Models\People\AffiliationsViewModel.cs" />
     <Compile Include="Models\People\PeopleSearchInputModel.cs" />
     <Compile Include="Models\People\PersonViewModel.cs" />
     <Compile Include="Models\People\PersonApiModel.cs" />
@@ -2927,9 +2928,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="App_Data\binary-data\" />
+    <Folder Include="App_Data\mail\" />
     <Folder Include="content\mail\" />
-    <Folder Include="Helpers\App_Data\binary-data\" />
-    <Folder Include="Helpers\App_Data\mail\" />
     <Folder Include="Views\ActivitiesSpike\" />
   </ItemGroup>
   <ItemGroup>
