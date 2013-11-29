@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Policy;
 using System.Web;
 using System.Web.Mvc;
 using AttributeRouting.Web.Mvc;
@@ -81,32 +82,100 @@ namespace UCosmic.Web.Mvc.Controllers
         [ChildActionOnly]
         public virtual ActionResult GetAffiliations(int personId)
         {
-            var query = new AffiliationsByPerson(User, personId);
+            var query = new AffiliationsByPerson(User, personId)
+            {
+                EagerLoad = new Expression<Func<Affiliation, object>>[]
+                {
+                    x => x.Establishment.Ancestors,
+                }
+            };
             var entities = _queryProcessor.Execute(query);
-            entities = _queryProcessor.Execute(query)
-                .Where( x => x.IsDefault != true)
-                //.SelectMany(x => x.Establishment.Ancestors)
-                ;
-            var entities2 = _queryProcessor.Execute(query)
-                .Where(x => x.IsDefault != true)
-                .SelectMany(x => x.Establishment.Ancestors)
-                ;
+            //entities = _queryProcessor.Execute(query)
+            //    .Where(x => x.IsDefault != true)
+            //    //.SelectMany(x => x.Establishment.Ancestors)
+            //    ;
+            //var entities2 = _queryProcessor.Execute(query)
+            //    .Where(x => x.IsDefault != true)
+            //    .SelectMany(x => x.Establishment.Ancestors)
+            //    ;
             //select the ancestors then union with the affiliations establishments
             //try 6 and 
 
-            // questions. if a person is associated with suny, but this is a top level establishment with no ancestors, would we show this? 
-            // So if a guy's default affiliation is uc -> department of Science, we would not show this in his public profie? Would he have to
-            // put it again for it to show up?
 
+            //move this to affiliationsview model
+            var test = entities.First(x => !x.IsDefault).Establishment.Ancestors.Select(y => y.Ancestor)
+                .Select(y => y.Names.Any(z => z.IsContextName && !z.IsFormerName)
+                    // ReSharper disable PossibleNullReferenceException
+                    ? y.Names.FirstOrDefault(z => z.IsContextName && !z.IsFormerName).Text
+                    // ReSharper restore PossibleNullReferenceException
+                    : y.OfficialName).ToArray();
             var models = entities.Select(x => new AffiliationViewModel
             {
-                
+                AncestorNames = x.Establishment.Ancestors.Select(y => y.Ancestor)
+                    .Select(y => y.Names.Any(z => z.IsContextName && !z.IsFormerName)
+                        // ReSharper disable PossibleNullReferenceException
+                        ? y.Names.FirstOrDefault(z => z.IsContextName && !z.IsFormerName).Text
+                        // ReSharper restore PossibleNullReferenceException
+                        : y.OfficialName)
             });
-            
+            //move this to affiliationsview model
+            //var models = entities.Select(x => new AffiliationViewModel
+            //{
+            //    AncestorNames = x.Establishment.Ancestors
+            //    .Select(y => y.Ancestor)
+            //        //.Select(y => new
+            //        //{ 
+            //        //    results = y.Names.Any(z => z.IsContextName && !z.IsFormerName)
+            //        //    // ReSharper disable PossibleNullReferenceException
+            //        //    ? y.Names.FirstOrDefault(z => z.IsContextName && !z.IsFormerName).Text
+            //        //    // ReSharper restore PossibleNullReferenceException
+            //        //    : y.OfficialName
+            //        //})
+            //        .Select(y => y.Names.Any(z => z.IsContextName && !z.IsFormerName)
+            //            // ReSharper disable PossibleNullReferenceException
+            //            ? y.Names.FirstOrDefault(z => z.IsContextName && !z.IsFormerName).Text
+            //            // ReSharper restore PossibleNullReferenceException
+            //            : y.OfficialName)
+            //        .ToList()
+            //        .Select(obj => obj).ToArray()
+            //});
+            //var models = entities.Select(x => new AffiliationViewModel
+            //{
+            //    AncestorNames = x.Establishment.Ancestors.Select(y => y.Ancestor)
+            //        .Select(y => y.Names.Any(z => z.IsContextName && !z.IsFormerName)
+            //            // ReSharper disable PossibleNullReferenceException
+            //            ? y.Names.FirstOrDefault(z => z.IsContextName && !z.IsFormerName).Text
+            //            // ReSharper restore PossibleNullReferenceException
+            //            : y.OfficialName)
+            //        .ToArray()
+
+            //});
+            //var entities = _entities.Query<Affiliation>()
+            //     .Where(x => x.PersonId == personId)
+            //     .SelectMany(x => x.Establishment.Names.)
+            // ;
+
+
+            //var models = entities
+            //    .Select(x => new
+            //    {
+            //        AncestorNames = x.Establishment.Ancestors.Select(y => y.Ancestor)
+            //            .Select(y => y.Names.Any(z => z.IsContextName && !z.IsFormerName)
+            //                // ReSharper disable PossibleNullReferenceException
+            //                ? y.Names.FirstOrDefault(z => z.IsContextName && !z.IsFormerName).Text
+            //                // ReSharper restore PossibleNullReferenceException
+            //                : y.OfficialName)
+            //    })
+            //    .ToList()
+            //    .Select(obj => new AffiliationViewModel
+            //    {
+            //        AncestorNames = obj.AncestorNames.ToArray()
+            //    })
+            //    ;
 
 
 
-            
+
             //var ownersQueryable = _entities.Query<Agreement>()
             //     .Where(x => x.VisibilityText == publicText)
             //     .SelectMany(x => x.Participants)
@@ -134,11 +203,11 @@ namespace UCosmic.Web.Mvc.Controllers
 
             //Mapper.Map(input, query);
 
-            //var model = Mapper.Map<AffiliationViewModel>(entities);
+            var model = Mapper.Map<AffiliationViewModel[]>(entities);
 
             //var model = Mapper.Map<AffiliationViewModel>(entity);
 
-            return PartialView(MVC.People.Views._Affiliations, models);
+            return PartialView(MVC.People.Views._Affiliations, model);
         }
     }
 }

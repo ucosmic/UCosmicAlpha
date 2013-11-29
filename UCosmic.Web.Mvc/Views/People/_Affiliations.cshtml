@@ -1,10 +1,12 @@
 ﻿@using UCosmic.Web.Mvc.ApiControllers
-@model UCosmic.Web.Mvc.Models.AffiliationViewModel
+@model UCosmic.Web.Mvc.Models.AffiliationViewModel[]
 
 @* DEGREES *@
 <section class="content fixed to-top">
     <div>
-
+        @{
+            var test = 0;
+        }
         @*@if (Model != null && Model.Any())
         {
             <div>
