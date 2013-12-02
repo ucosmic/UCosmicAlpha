@@ -4,30 +4,19 @@
 @* DEGREES *@
 <section class="content fixed to-top">
     <div>
-        @{
-            var test = 0;
-        }
-        @*@if (Model != null && Model.Any())
+        @if (Model != null && Model.Any())
         {
             <div>
                 <ul style="font-size: 20px;">
-                    @foreach (var degree in Model)
+                    @foreach (var affiliations in Model)
                     {
                         <li style="margin-bottom: 1em;">
-                            <strong style="display: block;">@degree.Title</strong>
                             <ul style="display: inline-block;">
-                                @if (degree.Institution != null && degree.Institution.OfficialName != string.Empty)
-                                {
-                                    <li class="comma-list"><span>@degree.Institution.OfficialName</span></li>   
-                                }
-                                @if (!string.IsNullOrEmpty(degree.FieldOfStudy))
-                                {
-                                    <li class="comma-list"><span>@degree.FieldOfStudy</span></li>
-                                }
-                                @if (degree.YearAwarded != null)
-                                {
-                                    <li class="comma-list"><span>@degree.YearAwarded</span></li>
-                                }
+                                <li class="comma-list"><strong>@affiliations.EstablishmentName</strong></li>  
+                                @foreach (var ancestorNames in affiliations.AncestorNames)
+                                      {
+                                          <li class="comma-list"><span>@ancestorNames</span></li>   
+                                      }
                             </ul>
                         </li>
                     }
@@ -36,11 +25,11 @@
         }
         else
         {
-@* ZERO RESULTS MESSAGE 
+@* ZERO RESULTS MESSAGE *@
             <p>
                 This person has no known international degrees.
             </p>
-        }*@
+        }
 
 
     </div>

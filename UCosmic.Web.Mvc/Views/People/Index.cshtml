@@ -19,7 +19,18 @@
 @section styles
 {
     <style>
-        
+
+        .comma-list {
+            display: inline;
+        }
+
+            .comma-list:after {
+                content: ', ';
+            }
+
+            .comma-list:last-child:after {
+                content: '';
+            }
     </style>
 }
 <div class="content fixed to-top" data-current-module="faculty">
