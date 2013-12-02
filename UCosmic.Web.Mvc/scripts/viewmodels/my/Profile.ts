@@ -669,7 +669,7 @@ module People.ViewModels {
                     //}
 
                     ko.mapping.fromJS(viewModel, { ignore: "id" }, this); // populate the scalars
-                    this.personId = viewModel.personId;
+                    this.personId = viewModel.id;
 
                     this._originalValues = viewModel;
 

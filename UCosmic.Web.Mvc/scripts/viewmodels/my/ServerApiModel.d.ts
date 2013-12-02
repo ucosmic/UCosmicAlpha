@@ -3,7 +3,8 @@ declare module People.ApiModels {
         hasPhoto: boolean;
         isActive: boolean;
         isDisplayNameDerived: boolean;
-        personId: number;
+        personId: number; // TODO: move this
+        id: number;
         displayName: string;
         firstName: string;
         middleName: string;

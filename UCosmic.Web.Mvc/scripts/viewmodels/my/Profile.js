@@ -554,7 +554,7 @@ var People;
                     //    this.facultyRankId(null);
                     //}
                     ko.mapping.fromJS(viewModel, { ignore: "id" }, _this);
-                    _this.personId = viewModel.personId;
+                    _this.personId = viewModel.id;
 
                     _this._originalValues = viewModel;
 
