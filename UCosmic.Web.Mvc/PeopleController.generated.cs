@@ -71,6 +71,12 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.GetAffiliations);
         }
+        [NonAction]
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public System.Web.Mvc.ActionResult Languages()
+        {
+            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Languages);
+        }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public PeopleController Actions { get { return MVC.People; } }
@@ -92,6 +98,7 @@ namespace UCosmic.Web.Mvc.Controllers
             public readonly string Activities = "Activities";
             public readonly string Degrees = "Degrees";
             public readonly string GetAffiliations = "GetAffiliations";
+            public readonly string Languages = "Languages";
         }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -102,6 +109,7 @@ namespace UCosmic.Web.Mvc.Controllers
             public const string Activities = "Activities";
             public const string Degrees = "Degrees";
             public const string GetAffiliations = "GetAffiliations";
+            public const string Languages = "Languages";
         }
 
 
@@ -147,6 +155,14 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             public readonly string personId = "personId";
         }
+        static readonly ActionParamsClass_Languages s_params_Languages = new ActionParamsClass_Languages();
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public ActionParamsClass_Languages LanguagesParams { get { return s_params_Languages; } }
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public class ActionParamsClass_Languages
+        {
+            public readonly string personId = "personId";
+        }
         static readonly ViewsClass s_views = new ViewsClass();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public ViewsClass Views { get { return s_views; } }
@@ -162,24 +178,28 @@ namespace UCosmic.Web.Mvc.Controllers
                 public readonly string _Bib = "_Bib";
                 public readonly string _Card = "_Card";
                 public readonly string _Degrees = "_Degrees";
+                public readonly string _Languages = "_Languages";
                 public readonly string _Profile = "_Profile";
                 public readonly string _SearchSidebarNav = "_SearchSidebarNav";
                 public readonly string _SidebarNav = "_SidebarNav";
                 public readonly string Activities = "Activities";
                 public readonly string Degrees = "Degrees";
                 public readonly string Index = "Index";
+                public readonly string Languages = "Languages";
             }
             public readonly string _Activities = "~/Views/People/_Activities.cshtml";
             public readonly string _Affiliations = "~/Views/People/_Affiliations.cshtml";
             public readonly string _Bib = "~/Views/People/_Bib.cshtml";
             public readonly string _Card = "~/Views/People/_Card.cshtml";
             public readonly string _Degrees = "~/Views/People/_Degrees.cshtml";
+            public readonly string _Languages = "~/Views/People/_Languages.cshtml";
             public readonly string _Profile = "~/Views/People/_Profile.cshtml";
             public readonly string _SearchSidebarNav = "~/Views/People/_SearchSidebarNav.cshtml";
             public readonly string _SidebarNav = "~/Views/People/_SidebarNav.cshtml";
             public readonly string Activities = "~/Views/People/Activities.cshtml";
             public readonly string Degrees = "~/Views/People/Degrees.cshtml";
             public readonly string Index = "~/Views/People/Index.cshtml";
+            public readonly string Languages = "~/Views/People/Languages.cshtml";
         }
     }
 
@@ -221,6 +241,13 @@ namespace UCosmic.Web.Mvc.Controllers
         public override System.Web.Mvc.ActionResult GetAffiliations(int personId)
         {
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.GetAffiliations);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "personId", personId);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.ActionResult Languages(int personId)
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Languages);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "personId", personId);
             return callInfo;
         }

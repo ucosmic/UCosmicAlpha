@@ -33,7 +33,7 @@
     </style>
 }
 <div class="content fixed to-top" data-current-module="employees">
-    <form class="group" method="GET" action="@Url.Action(MVC.People.Activities())" data-bind="jQuery: '$form'">
+    <div class="group">
         <div class="on-left from-top">
             <header>
                 <h1>
@@ -49,6 +49,6 @@
                 @Html.Partial(MVC.People.Views._SidebarNav, Model)
             </div>
         </aside>
-    </form>
+    </div>
 </div>
 

@@ -2786,6 +2786,8 @@
     <Content Include="Views\People\Degrees.cshtml" />
     <Content Include="Views\People\_Degrees.cshtml" />
     <Content Include="Views\People\_Affiliations.cshtml" />
+    <Content Include="Views\People\Languages.cshtml" />
+    <Content Include="Views\People\_Languages.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

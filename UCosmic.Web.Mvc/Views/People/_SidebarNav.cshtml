@@ -1,37 +1,47 @@
 ﻿@* RIGHT *@
-        <nav class="side">
-            <ul>
-                <li class="current" id="nav_profile">
-                    <a href="/people/@ViewBag.personId" class="group" >
-                        <span class="arrow"></span>
-                        <span class="text">Profile</span>
-                    </a>
-                </li>
-                <li id="nav_activities">
-                    <a href="/people/@ViewBag.personId/activities" class="group" >
-                        <span class="arrow"></span>
-                        <span class="text">Activities</span>
-                    </a>
-                </li>
-                <li id="nav_education">
-                    <a href="/people/@ViewBag.personId/degrees" class="group">
-                        <span class="arrow"></span>
-                        <span class="text">Education</span>
-                    </a>
-                </li>
-                <li id="nav_global_expertise">
-                    <a href="/people/@ViewBag.personId/global-expertise" class="group">
-                        <span class="arrow"></span>
-                        <span class="text">Global Expertise</span>
-                    </a>
-                </li>
-                <li id="nav_language_expertise">
-                    <a href="/people/@ViewBag.personId/language-expertise" class="group">
-                        <span class="arrow"></span>
-                        <span class="text">Language Expertise</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
+<nav class="side">
+    <ul>
+        <li class="@if(ViewBag.currentPage == "profile")
+    {
+        @Html.Raw("current");
+    }" id="nav_profile">
+            <a href="/people/@ViewBag.personId" class="group">
+                <span class="arrow"></span>
+                <span class="text">Profile</span>
+            </a>
+        </li>
+        <li id="nav_activities">
+            <a href="/people/@ViewBag.personId/activities" class="group">
+                <span class="arrow"></span>
+                <span class="text">Activities</span>
+            </a>
+        </li>
+        <li class="@if(ViewBag.currentPage == "degrees")
+    {
+        @Html.Raw("current");
+    }" id="nav_education">
+            <a href="/people/@ViewBag.personId/degrees" class="group">
+                <span class="arrow"></span>
+                <span class="text">Education</span>
+            </a>
+        </li>
+        <li id="nav_global_expertise">
+            <a href="/people/@ViewBag.personId/global-expertise" class="group">
+                <span class="arrow"></span>
+                <span class="text">Global Expertise</span>
+            </a>
+        </li>
+        <li class="@if (ViewBag.currentPage == "languages")
+                   {
+                       @Html.Raw("current")
+                       ;
+                   } id=" nav_language_expertise">
+            <a href="/people/@ViewBag.personId/language-expertise" class="group">
+                <span class="arrow"></span>
+                <span class="text">Language Expertise</span>
+            </a>
+        </li>
+    </ul>
+</nav>
 
 

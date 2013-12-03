@@ -11,6 +11,7 @@ using System.Linq.Expressions;
 using AutoMapper;
 using UCosmic.Domain.Activities;
 using UCosmic.Domain.Degrees;
+using UCosmic.Domain.LanguageExpertise;
 
 namespace UCosmic.Web.Mvc.Controllers
 {
@@ -29,6 +30,7 @@ namespace UCosmic.Web.Mvc.Controllers
         public virtual ActionResult Index(int personId)
         {
             ViewBag.personId = personId;
+            ViewBag.currentPage = "profile";
             return View();
         }
 
@@ -75,6 +77,8 @@ namespace UCosmic.Web.Mvc.Controllers
             var entities = _queryProcessor.Execute(query);
 
             var model = Mapper.Map<PageOfDegreePublicViewModel>(entities);
+            ViewBag.currentPage = "degrees";
+            ViewBag.personId = personId;
             return View(model);
         }
 
@@ -91,9 +95,22 @@ namespace UCosmic.Web.Mvc.Controllers
             };
             var entities = _queryProcessor.Execute(query);
 
-            var model = Mapper.Map<AffiliationViewModel[]>(entities);
+            var model = Mapper.Map<AffiliationViewModel[]>(entities.Where(x => !x.IsDefault));
 
             return PartialView(MVC.People.Views._Affiliations, model);
+        }
+
+        [GET("people/{personId:int}/language-expertise")]
+        public virtual ActionResult Languages(int personId)
+        {
+            var query = new LanguageExpertiseById(personId);
+            //Mapper.Map(input, query);
+            var entities = _queryProcessor.Execute(query);
+
+            var model = Mapper.Map<LanguageExpertiseApiModel[]>(entities);
+            ViewBag.currentPage = "languages";
+            ViewBag.personId = personId;
+            return View(model);
         }
     }
 }

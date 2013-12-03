@@ -15,7 +15,7 @@ namespace UCosmic.Web.Mvc.Models
         public IEnumerable<string> AncestorNames { get; set; }
         public int EstablishmentId { get; set; }
         public string EstablishmentName { get; set; }
-
+        public string FacultyRank { get; set; }
         public string JobTitles { get; set; }
     }
     public static class AffiliationViewProfiler
@@ -33,14 +33,13 @@ namespace UCosmic.Web.Mvc.Models
                         : y.OfficialName)
                     .Skip(1)
                     .Reverse()))
-                    .ForMember(d => d.EstablishmentName, o => o.MapFrom(s => (!s.IsDefault) ? s.Establishment.Names.Any(z => z.IsContextName && !z.IsFormerName) 
+                    .ForMember(d => d.EstablishmentName, o => o.MapFrom(s => (!s.IsDefault) ? s.Establishment.Names.Any(z => z.IsContextName && !z.IsFormerName)
                         ? s.Establishment.Names.FirstOrDefault(z => z.IsContextName && !z.IsFormerName).Text
                         : s.Establishment.OfficialName
                         : null
-                        ));
-
-                    //.ForMember(d => d.EmailAddress, o => o.MapFrom(s => s.Emails.Any(x => x.IsDefault) ? s.Emails.FirstOrDefault(x => x.IsDefault).Value : null))
-                    //.ForMember(d => d.JobTitles, o => o.MapFrom(s => s.DefaultAffiliation.IsDefault ? s.DefaultAffiliation.JobTitles : null))
+                        ))
+                   .ForMember(d => d.FacultyRank, o => o.MapFrom(s => s.FacultyRank.Rank))
+                //.ForMember(d => d.JobTitles, o => o.MapFrom(s => s.DefaultAffiliation.IsDefault ? s.DefaultAffiliation.JobTitles : null))
                 ;
             }
         }

@@ -3,34 +3,40 @@
 
 @* DEGREES *@
 <section class="content fixed to-top">
-    <div>
-        @if (Model != null && Model.Any())
-        {
-            <div>
-                <ul style="font-size: 20px;">
-                    @foreach (var affiliations in Model)
+    <h2 style="font-size: 24px;  padding-bottom: 1em;">Affiliations</h2>
+    @if (Model != null && Model.Any())
+    {
+        <div>
+            <ul style="font-size: 20px;">
+                @foreach (var affiliations in Model)
+                {
+                    if (affiliations.EstablishmentName != null)
                     {
                         <li style="margin-bottom: 1em;">
-                            <ul style="display: inline-block;">
-                                <li class="comma-list"><strong>@affiliations.EstablishmentName</strong></li>  
+                            @if (affiliations.FacultyRank != "Other")
+                            {
+                                <strong>@affiliations.FacultyRank</strong>
+                            }
+                            <strong>@affiliations.JobTitles</strong>
+                            <ul >
+                                <li >@affiliations.EstablishmentName</li>
+
                                 @foreach (var ancestorNames in affiliations.AncestorNames)
-                                      {
-                                          <li class="comma-list"><span>@ancestorNames</span></li>   
-                                      }
+                                {
+                                    <li ><span>@ancestorNames</span></li>
+                                }
                             </ul>
                         </li>
                     }
-                </ul>
-            </div>
-        }
-        else
-        {
-@* ZERO RESULTS MESSAGE *@
-            <p>
-                This person has no known international degrees.
-            </p>
-        }
-
-
-    </div>
+                }
+            </ul>
+        </div>
+    }
+    else
+    {
+        @* ZERO RESULTS MESSAGE *@
+        <p>
+            This person has no known affiliations.
+        </p>
+    }
 </section>
