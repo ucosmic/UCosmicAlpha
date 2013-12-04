@@ -1,42 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
 <webessentials version="1.9">
   <settings>
-    <CoffeeScriptGenerateJsFile>True</CoffeeScriptGenerateJsFile>
-    <CoffeeScriptMinify>True</CoffeeScriptMinify>
-    <CoffeeScriptShowPreviewWindow>True</CoffeeScriptShowPreviewWindow>
-    <CoffeeScriptWrapClosure>True</CoffeeScriptWrapClosure>
-    <CssEnableMinification>True</CssEnableMinification>
+    <CoffeeScriptCompileOnBuild>false</CoffeeScriptCompileOnBuild>
+    <CoffeeScriptCompileToLocation />
+    <CoffeeScriptEnableCompiler>false</CoffeeScriptEnableCompiler>
+    <CoffeeScriptGenerateJsFile>true</CoffeeScriptGenerateJsFile>
+    <CoffeeScriptMinify>true</CoffeeScriptMinify>
+    <CoffeeScriptShowPreviewWindow>true</CoffeeScriptShowPreviewWindow>
+    <CoffeeScriptWrapClosure>true</CoffeeScriptWrapClosure>
+    <CssEnableGzipping>false</CssEnableGzipping>
+    <CssEnableMinification>true</CssEnableMinification>
     <CssErrorLocation>1</CssErrorLocation>
-    <CssShowBrowserTooltip>True</CssShowBrowserTooltip>
-    <CssShowUnsupported>True</CssShowUnsupported>
-    <CssSyncVendorValues>True</CssSyncVendorValues>
+    <CssPreserveRelativePathsOnMinify>false</CssPreserveRelativePathsOnMinify>
+    <CssShowBrowserTooltip>true</CssShowBrowserTooltip>
+    <CssShowInitialInherit>true</CssShowInitialInherit>
+    <CssShowUnsupported>true</CssShowUnsupported>
+    <CssSyncVendorValues>true</CssSyncVendorValues>
+    <CSSValidateOverQualifiedSelector>false</CSSValidateOverQualifiedSelector>
+    <CssValidateStarSelector>false</CssValidateStarSelector>
+    <CssValidateZeroUnit>false</CssValidateZeroUnit>
     <EnableBrowserLinkMenu>true</EnableBrowserLinkMenu>
     <EnableEnterFormat>true</EnableEnterFormat>
     <JavaScriptEnableGzipping>false</JavaScriptEnableGzipping>
     <JavaScriptEnableMinification>true</JavaScriptEnableMinification>
     <JavaScriptGenerateSourceMaps>false</JavaScriptGenerateSourceMaps>
-    <JsHint_bitwise>True</JsHint_bitwise>
-    <JsHint_browser>True</JsHint_browser>
-    <JsHint_debug>True</JsHint_debug>
-    <JsHint_devel>True</JsHint_devel>
-    <JsHint_eqeqeq>True</JsHint_eqeqeq>
-    <JsHint_expr>True</JsHint_expr>
+    <JsHint_asi>false</JsHint_asi>
+    <JsHint_bitwise>true</JsHint_bitwise>
+    <JsHint_boss>false</JsHint_boss>
+    <JsHint_browser>true</JsHint_browser>
+    <JsHint_camelcase>false</JsHint_camelcase>
+    <JsHint_couch>false</JsHint_couch>
+    <JsHint_curly>false</JsHint_curly>
+    <JsHint_debug>true</JsHint_debug>
+    <JsHint_devel>true</JsHint_devel>
+    <JsHint_dojo>false</JsHint_dojo>
+    <JsHint_eqeqeq>true</JsHint_eqeqeq>
+    <JsHint_eqnull>false</JsHint_eqnull>
+    <JsHint_esnext>false</JsHint_esnext>
+    <JsHint_evil>false</JsHint_evil>
+    <JsHint_expr>true</JsHint_expr>
+    <JsHint_forin>false</JsHint_forin>
+    <JsHint_funcscope>false</JsHint_funcscope>
+    <JsHint_globalstrict>false</JsHint_globalstrict>
     <JsHint_ignoreFiles>kendo.*; globalize.*</JsHint_ignoreFiles>
-    <JsHint_jquery>True</JsHint_jquery>
-    <JsHint_laxbreak>True</JsHint_laxbreak>
-    <JsHint_laxcomma>True</JsHint_laxcomma>
+    <JsHint_immed>false</JsHint_immed>
+    <JsHint_indent>-1</JsHint_indent>
+    <JsHint_iterator>false</JsHint_iterator>
+    <JsHint_jquery>true</JsHint_jquery>
+    <JsHint_lastsemic>false</JsHint_lastsemic>
+    <JsHint_latedef>false</JsHint_latedef>
+    <JsHint_laxbreak>true</JsHint_laxbreak>
+    <JsHint_laxcomma>true</JsHint_laxcomma>
+    <JsHint_loopfunc>false</JsHint_loopfunc>
     <JsHint_maxerr>50</JsHint_maxerr>
-    <JsHint_regexdash>True</JsHint_regexdash>
-    <JsHint_smarttabs>True</JsHint_smarttabs>
-    <JsHint_undef>True</JsHint_undef>
-    <JsHint_unused>True</JsHint_unused>
-    <JsHintEnable>True</JsHintEnable>
+    <JsHint_mootools>false</JsHint_mootools>
+    <JsHint_multistr>false</JsHint_multistr>
+    <JsHint_newcap>false</JsHint_newcap>
+    <JsHint_noarg>false</JsHint_noarg>
+    <JsHint_node>false</JsHint_node>
+    <JsHint_noempty>false</JsHint_noempty>
+    <JsHint_nonew>false</JsHint_nonew>
+    <JsHint_nonstandard>false</JsHint_nonstandard>
+    <JsHint_onecase>false</JsHint_onecase>
+    <JsHint_plusplus>false</JsHint_plusplus>
+    <JsHint_proto>false</JsHint_proto>
+    <JsHint_prototypejs>false</JsHint_prototypejs>
+    <JsHint_quotmark>false</JsHint_quotmark>
+    <JsHint_regexdash>true</JsHint_regexdash>
+    <JsHint_regexp>false</JsHint_regexp>
+    <JsHint_rhino>false</JsHint_rhino>
+    <JsHint_scripturl>false</JsHint_scripturl>
+    <JsHint_shadow>false</JsHint_shadow>
+    <JsHint_smarttabs>true</JsHint_smarttabs>
+    <JsHint_strict>false</JsHint_strict>
+    <JsHint_sub>false</JsHint_sub>
+    <JsHint_supernew>false</JsHint_supernew>
+    <JsHint_trailing>false</JsHint_trailing>
+    <JsHint_undef>true</JsHint_undef>
+    <JsHint_unused>true</JsHint_unused>
+    <JsHint_validthis>false</JsHint_validthis>
+    <JsHint_worker>false</JsHint_worker>
+    <JsHint_wsh>false</JsHint_wsh>
+    <JsHintEnable>true</JsHintEnable>
     <JsHintErrorLocation>2</JsHintErrorLocation>
+    <JsHintRunOnBuild>false</JsHintRunOnBuild>
     <KeepImportantComments>false</KeepImportantComments>
     <LessGenerateCssFile>True</LessGenerateCssFile>
     <LessMinify>True</LessMinify>
     <LessShowPreviewWindow>True</LessShowPreviewWindow>
+    <MarkdownAutoHyperlinks>false</MarkdownAutoHyperlinks>
+    <MarkdownAutoNewLine>false</MarkdownAutoNewLine>
+    <MarkdownCompileToLocation />
+    <MarkdownEnableCompiler>false</MarkdownEnableCompiler>
+    <MarkdownEncodeProblemUrlCharacters>false</MarkdownEncodeProblemUrlCharacters>
+    <MarkdownGenerateXHTML>false</MarkdownGenerateXHTML>
+    <MarkdownLinkEmails>false</MarkdownLinkEmails>
+    <MarkdownShowPreviewWindow>false</MarkdownShowPreviewWindow>
+    <MarkdownStrictBoldItalic>false</MarkdownStrictBoldItalic>
     <PixelPushing_OnByDefault>True</PixelPushing_OnByDefault>
     <UnusedCss_IgnorePatterns>bootstrap*; reset.css; normalize.css; jquery*; toastr*; foundation*; animate*; inuit*; elements*; ratchet*; hint*; flat-ui*; 960*; skeleton*</UnusedCss_IgnorePatterns>
+    <ValidateVendorSpecifics>true</ValidateVendorSpecifics>
   </settings>
 </webessentials>
