@@ -1,7 +1,3 @@
-/// <reference path="../typings/googlemaps/google.maps.d.ts" />
-/// <reference path="../typings/knockout/knockout.d.ts" />
-/// <reference path="../typings/jquery/jquery.d.ts" />
-/// <reference path="../typings/jqueryui/jqueryui.d.ts" />
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -10,6 +6,10 @@ var __extends = this.__extends || function (d, b) {
 };
 var App;
 (function (App) {
+    /// <reference path="../typings/googlemaps/google.maps.d.ts" />
+    /// <reference path="../typings/knockout/knockout.d.ts" />
+    /// <reference path="../typings/jquery/jquery.d.ts" />
+    /// <reference path="../typings/jqueryui/jqueryui.d.ts" />
     (function (GoogleMaps) {
         var gm = google.maps;
 
@@ -232,3 +232,4 @@ else
     })(App.GoogleMaps || (App.GoogleMaps = {}));
     var GoogleMaps = App.GoogleMaps;
 })(App || (App = {}));
+//# sourceMappingURL=ToolsOverlay.js.map

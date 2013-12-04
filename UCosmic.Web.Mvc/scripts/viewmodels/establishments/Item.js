@@ -1,4 +1,4 @@
-﻿var Establishments;
+var Establishments;
 (function (Establishments) {
     /// <reference path="../../typings/jquery/jquery.d.ts" />
     /// <reference path="../../typings/knockout/knockout.d.ts" />
@@ -693,3 +693,4 @@ else
     })(Establishments.ViewModels || (Establishments.ViewModels = {}));
     var ViewModels = Establishments.ViewModels;
 })(Establishments || (Establishments = {}));
+//# sourceMappingURL=Item.js.map

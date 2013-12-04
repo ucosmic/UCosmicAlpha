@@ -55,17 +55,17 @@ module ViewModels.Users {
                 data: queryParameters,
                 cache: false
             })
-            .done((response: any[], statusText: string, xhr: JQueryXHR): void => {
-                deferred.resolve(response, statusText, xhr);
-            })
-            .fail((xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
-                deferred.reject(xhr, statusText, errorThrown);
-            })
-            .always((): void => {
-                this.spinner.stop();
-                this.nextForceDisabled(false);
-                this.prevForceDisabled(false);
-            });
+                .done((response: any[], statusText: string, xhr: JQueryXHR): void => {
+                    deferred.resolve(response, statusText, xhr);
+                })
+                .fail((xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
+                    deferred.reject(xhr, statusText, errorThrown);
+                })
+                .always((): void => {
+                    this.spinner.stop();
+                    this.nextForceDisabled(false);
+                    this.prevForceDisabled(false);
+                });
             return deferred;
         }
 
@@ -91,12 +91,12 @@ module ViewModels.Users {
                     return;
 
                 this._pullResults()
-                .done((response: any[]): void => {
-                    this._loadResults(response);
-                })
-                .fail((): void => {
-                    //alert('failed to get users :(');
-                });
+                    .done((response: any[]): void => {
+                        this._loadResults(response);
+                    })
+                    .fail((): void => {
+                        //alert('failed to get users :(');
+                    });
             }).extend({ throttle: 250 });
         }
 

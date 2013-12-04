@@ -3,6 +3,7 @@
 /// <reference path="../../app/App.ts" />
 /// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
 /// <reference path="../../app/Routes.ts" />
+
 module Agreements {
     export class FileListPopulator {
         files = ko.mapping.fromJS([]);

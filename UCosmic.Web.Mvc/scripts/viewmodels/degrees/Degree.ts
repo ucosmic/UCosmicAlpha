@@ -4,14 +4,13 @@
 /// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
 /// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
 /// <reference path="../../typings/kendo/kendo.all.d.ts" />
-/// <reference path="../../typings/tinymce/tinymce.d.ts" />
-/// <reference path="../../typings/moment/moment.d.ts" />
+/// <reference path="../../app/App.ts" />
 /// <reference path="../../app/Routes.ts" />
-/// <reference path="../degrees/ServiceApiModel.d.ts" />
+/// <reference path="ServiceApiModel.d.ts" />
 
 module ViewModels.Degrees {
 
-    export class Degree implements Service.ApiModels.Degree.IObservableDegree {
+    export class Degree implements Service.ApiModels.Degree.IObservableDegree, KnockoutValidationGroup {
         /* True if any field changes. */
         dirtyFlag: KnockoutObservable<boolean> = ko.observable( false );
 

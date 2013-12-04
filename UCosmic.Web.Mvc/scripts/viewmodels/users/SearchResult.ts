@@ -27,15 +27,15 @@ module ViewModels.Users {
                     .validateGrant(vm.id(), vm.selectedRoleOption());
                 this._isAwaitingResponse = true;
                 $.post(route)
-                .always((): void => {
-                    this._isAwaitingResponse = false;
-                })
-                .done((): void => {
-                    callback(true);
-                })
-                .fail((xhr: JQueryXHR): void => {
-                    callback({ isValid: false, message: xhr.responseText });
-                });
+                    .always((): void => {
+                        this._isAwaitingResponse = false;
+                    })
+                    .done((): void => {
+                        callback(true);
+                    })
+                    .fail((xhr: JQueryXHR): void => {
+                        callback({ isValid: false, message: xhr.responseText });
+                    });
             }
         }
         constructor() {
@@ -60,15 +60,15 @@ module ViewModels.Users {
                     .validateRevoke(vm.id(), vm.roleToRevoke());
                 this._isAwaitingResponse = true;
                 $.post(route)
-                .always((): void => {
-                    this._isAwaitingResponse = false;
-                })
-                .done((): void => {
-                    callback(true);
-                })
-                .fail((xhr: JQueryXHR): void => {
-                    callback({ isValid: false, message: xhr.responseText });
-                });
+                    .always((): void => {
+                        this._isAwaitingResponse = false;
+                    })
+                    .done((): void => {
+                        callback(true);
+                    })
+                    .fail((xhr: JQueryXHR): void => {
+                        callback({ isValid: false, message: xhr.responseText });
+                    });
             }
         }
         constructor() {
@@ -198,15 +198,15 @@ module ViewModels.Users {
                 orderBy: 'name-asc'
             };
             $.get(App.Routes.WebApi.Identity.Roles.get(), queryParameters)
-            .done((response: any[], statusText: string, xhr: JQueryXHR): void => {
-                deferred.resolve(response, statusText, xhr);
-            })
-            .fail((xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
-                deferred.reject(xhr, statusText, errorThrown);
-            })
-            .always((): void => {
-                this.roleSpinner.stop();
-            });
+                .done((response: any[], statusText: string, xhr: JQueryXHR): void => {
+                    deferred.resolve(response, statusText, xhr);
+                })
+                .fail((xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
+                    deferred.reject(xhr, statusText, errorThrown);
+                })
+                .always((): void => {
+                    this.roleSpinner.stop();
+                });
             return deferred;
         }
 
@@ -233,8 +233,8 @@ module ViewModels.Users {
                     dataTextField: 'name',
                     dataValueField: 'id',
                     template: '#if (data.id) {# <div><strong>${ data.name }</strong></div>\r\n' +
-                        '#} else {#<div>${ data.name }</div>\r\n #}#' +
-                        '#if (data.description) {# <div><small>${ data.description }</small></div> #}#'
+                    '#} else {#<div>${ data.name }</div>\r\n #}#' +
+                    '#if (data.description) {# <div><small>${ data.description }</small></div> #}#'
 
                 });
             }
@@ -266,15 +266,15 @@ module ViewModels.Users {
             this.roleSpinner.start();
             var deferred = $.Deferred();
             $.get(App.Routes.WebApi.Identity.Users.Roles.get(this.id()))
-            .done((response: any[], statusText: string, xhr: JQueryXHR): void => {
-                deferred.resolve(response, statusText, xhr);
-            })
-            .fail((xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
-                deferred.reject(xhr, statusText, errorThrown);
-            })
-            .always((): void => {
-                this.roleSpinner.stop();
-            });
+                .done((response: any[], statusText: string, xhr: JQueryXHR): void => {
+                    deferred.resolve(response, statusText, xhr);
+                })
+                .fail((xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
+                    deferred.reject(xhr, statusText, errorThrown);
+                })
+                .always((): void => {
+                    this.roleSpinner.stop();
+                });
             return deferred;
         }
 
@@ -298,9 +298,9 @@ module ViewModels.Users {
         showRoleEditor(): void {
             this.isEditingRoles(true);
             this._pullRoleOptions()
-            .done((response: any[]): void => {
-                this._loadRoleOptions(response);
-            });
+                .done((response: any[]): void => {
+                    this._loadRoleOptions(response);
+                });
         }
         hideRoleEditor(): void {
             this.roleToRevoke(undefined);
@@ -327,25 +327,25 @@ module ViewModels.Users {
                 url: url,
                 type: 'PUT'
             })
-            .done((response: string, textStatus: string, xhr: JQueryXHR): void => {
-                App.flasher.flash(response);
-                this.roleOptions.remove((item: any): boolean => {
-                    return item.id() == this.selectedRoleOption();
-                });
-                this.pullRoleGrants()
-                .done((response: any[]): void => {
-                    this.loadRoleGrants(response);
-                    this._pullRoleOptions()
-                    .done((response: any[]): void => {
-                        this._loadRoleOptions(response);
+                .done((response: string, textStatus: string, xhr: JQueryXHR): void => {
+                    App.flasher.flash(response);
+                    this.roleOptions.remove((item: any): boolean => {
+                        return item.id() == this.selectedRoleOption();
                     });
+                    this.pullRoleGrants()
+                        .done((response: any[]): void => {
+                            this.loadRoleGrants(response);
+                            this._pullRoleOptions()
+                                .done((response: any[]): void => {
+                                    this._loadRoleOptions(response);
+                                });
+                        });
+                })
+                .fail((xhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
+                    this.isGrantError(true);
+                    this.grantErrorText('An unexpected error occurred while trying to grant access.');
+                    this.roleSpinner.stop();
                 });
-            })
-            .fail((xhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
-                this.isGrantError(true);
-                this.grantErrorText('An unexpected error occurred while trying to grant access.');
-                this.roleSpinner.stop();
-            });
         }
 
         revokeRole(roleId: number): void {
@@ -369,23 +369,23 @@ module ViewModels.Users {
                 url: url,
                 type: 'DELETE'
             })
-            .done((response: string, textStatus: string, xhr: JQueryXHR): void => {
-                App.flasher.flash(response);
-                this.roleToRevoke(undefined);
-                this.pullRoleGrants()
-                .done((response: any[]): void => {
-                    this.loadRoleGrants(response);
-                    this._pullRoleOptions()
-                    .done((response: any[]): void => {
-                        this._loadRoleOptions(response);
-                    });
+                .done((response: string, textStatus: string, xhr: JQueryXHR): void => {
+                    App.flasher.flash(response);
+                    this.roleToRevoke(undefined);
+                    this.pullRoleGrants()
+                        .done((response: any[]): void => {
+                            this.loadRoleGrants(response);
+                            this._pullRoleOptions()
+                                .done((response: any[]): void => {
+                                    this._loadRoleOptions(response);
+                                });
+                        });
+                })
+                .fail((xhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
+                    this.isRevokeError(true);
+                    this.grantErrorText('An unexpected error occurred while trying to revoke access.');
+                    this.roleSpinner.stop();
                 });
-            })
-            .fail((xhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
-                this.isRevokeError(true);
-                this.grantErrorText('An unexpected error occurred while trying to revoke access.');
-                this.roleSpinner.stop();
-            });
         }
 
         dismissError(): void {
@@ -397,7 +397,7 @@ module ViewModels.Users {
 
         deleteUser(): void {
             var me = this;
-            $( "#confirmUserDeleteDialog" ).dialog( {
+            $("#confirmUserDeleteDialog").dialog({
                 width: 300,
                 height: 200,
                 modal: true,
@@ -405,30 +405,30 @@ module ViewModels.Users {
                 draggable: false,
                 buttons: {
                     "Delete": function () {
-                        $.ajax( {
+                        $.ajax({
                             async: false,
                             type: "DELETE",
-                            url: App.Routes.WebApi.Identity.Users.del( me.id() ),
-                            success: function ( data: any, statusText: string, jqXHR: JQueryXHR ) {
-                                if ( statusText !== "success" ) {
-                                    alert( jqXHR.statusText );
+                            url: App.Routes.WebApi.Identity.Users.del(me.id()),
+                            success: function (data: any, statusText: string, jqXHR: JQueryXHR) {
+                                if (statusText !== "success") {
+                                    alert(jqXHR.statusText);
                                 }
                             },
-                            error: function ( jqXHR, statusText, errorThrown ) {                               
-                                alert( statusText );
+                            error: function (jqXHR, statusText, errorThrown) {
+                                alert(statusText);
                             },
-                            complete:  function( jqXHR, statusText ) {
-                                $( "#confirmUserDeleteDialog" ).dialog( "close" );
+                            complete: function (jqXHR, statusText) {
+                                $("#confirmUserDeleteDialog").dialog("close");
                                 window.location.reload();
                             }
-                        } );
+                        });
                     },
 
                     "Cancel": function () {
-                        $( "#confirmUserDeleteDialog" ).dialog( "close" );
+                        $("#confirmUserDeleteDialog").dialog("close");
                     }
                 }
-            } );
+            });
         }
     }
 

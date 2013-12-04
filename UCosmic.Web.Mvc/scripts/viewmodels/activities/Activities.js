@@ -192,3 +192,4 @@ var Activities;
     })(Activities.ViewModels || (Activities.ViewModels = {}));
     var ViewModels = Activities.ViewModels;
 })(Activities || (Activities = {}));
+//# sourceMappingURL=Activities.js.map

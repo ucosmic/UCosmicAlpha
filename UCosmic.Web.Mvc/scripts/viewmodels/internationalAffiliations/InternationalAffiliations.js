@@ -122,3 +122,4 @@ var ViewModels;
     })(ViewModels.InternationalAffiliations || (ViewModels.InternationalAffiliations = {}));
     var InternationalAffiliations = ViewModels.InternationalAffiliations;
 })(ViewModels || (ViewModels = {}));
+//# sourceMappingURL=InternationalAffiliations.js.map

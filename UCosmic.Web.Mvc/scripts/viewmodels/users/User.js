@@ -123,3 +123,4 @@ var ViewModels;
     })(ViewModels.Users || (ViewModels.Users = {}));
     var Users = ViewModels.Users;
 })(ViewModels || (ViewModels = {}));
+//# sourceMappingURL=User.js.map

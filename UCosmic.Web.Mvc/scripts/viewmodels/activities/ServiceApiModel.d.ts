@@ -1,4 +1,4 @@
-﻿/// <reference path="ActivityEnums.ts" />
+/// <reference path="ActivityEnums.ts" />
 /// <reference path="../../typings/knockout/knockout.d.ts" />
 
 declare module Activities.ApiModels {

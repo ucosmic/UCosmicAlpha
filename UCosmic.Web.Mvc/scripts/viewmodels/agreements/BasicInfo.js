@@ -86,3 +86,4 @@ var Agreements;
     })();
     Agreements.BasicInfo = BasicInfo;
 })(Agreements || (Agreements = {}));
+//# sourceMappingURL=BasicInfo.js.map

@@ -55,3 +55,4 @@ var Agreements;
     })(Agreements.ViewModels || (Agreements.ViewModels = {}));
     var ViewModels = Agreements.ViewModels;
 })(Agreements || (Agreements = {}));
+//# sourceMappingURL=SearchResult.js.map

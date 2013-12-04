@@ -8,7 +8,6 @@
 /// <reference path="../../typings/moment/moment.d.ts" />
 /// <reference path="../../app/Routes.ts" />
 
-
 module ViewModels.InternationalAffiliations {
 
     export class InternationalAffiliation {

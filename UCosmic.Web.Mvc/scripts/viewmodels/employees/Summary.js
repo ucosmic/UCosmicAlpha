@@ -1,4 +1,4 @@
-var Employees;
+﻿var Employees;
 (function (Employees) {
     /// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
     /// <reference path="../../typings/kendo/kendo.all.d.ts" />
@@ -961,3 +961,4 @@ var Employees;
     })(Employees.ViewModels || (Employees.ViewModels = {}));
     var ViewModels = Employees.ViewModels;
 })(Employees || (Employees = {}));
+//# sourceMappingURL=Summary.js.map

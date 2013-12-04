@@ -4,6 +4,7 @@
 /// <reference path="../../typings/globalize/globalize.d.ts" />
 /// <reference path="../../typings/jquery/jquery.d.ts" />
 /// <reference path="../../typings/kendo/kendo.all.d.ts" />
+
 module Agreements {
 
     export class DatesStatus {

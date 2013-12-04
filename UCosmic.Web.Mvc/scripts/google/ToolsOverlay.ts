@@ -3,14 +3,6 @@
 /// <reference path="../typings/jquery/jquery.d.ts" />
 /// <reference path="../typings/jqueryui/jqueryui.d.ts" />
 
-interface KnockoutObservableGoogleMapsToolsOverlay extends KnockoutObservableBase {
-    (): App.GoogleMaps.ToolsOverlay;
-    (value: App.GoogleMaps.ToolsOverlay): void;
-
-    subscribe(callback: (newValue: App.GoogleMaps.ToolsOverlay) => void, target?:any, topic?: string): KnockoutSubscription;
-    notifySubscribers(valueToWrite: App.GoogleMaps.ToolsOverlay, topic?: string);
-}
-
 module App.GoogleMaps {
 
     import gm = google.maps

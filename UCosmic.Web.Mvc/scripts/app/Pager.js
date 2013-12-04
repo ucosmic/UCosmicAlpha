@@ -117,3 +117,4 @@ var App;
     })();
     App.PagerStatus = PagerStatus;
 })(App || (App = {}));
+//# sourceMappingURL=Pager.js.map

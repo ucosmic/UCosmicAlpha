@@ -439,3 +439,4 @@ var ViewModels;
     })(ViewModels.Users || (ViewModels.Users = {}));
     var Users = ViewModels.Users;
 })(ViewModels || (ViewModels = {}));
+//# sourceMappingURL=SearchResult.js.map

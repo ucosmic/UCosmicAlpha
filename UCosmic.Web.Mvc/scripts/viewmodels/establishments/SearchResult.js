@@ -110,3 +110,4 @@ var Establishments;
     })(Establishments.ViewModels || (Establishments.ViewModels = {}));
     var ViewModels = Establishments.ViewModels;
 })(Establishments || (Establishments = {}));
+//# sourceMappingURL=SearchResult.js.map

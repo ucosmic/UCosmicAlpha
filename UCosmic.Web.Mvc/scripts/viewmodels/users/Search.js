@@ -228,3 +228,4 @@ else
     })(ViewModels.Users || (ViewModels.Users = {}));
     var Users = ViewModels.Users;
 })(ViewModels || (ViewModels = {}));
+//# sourceMappingURL=Search.js.map

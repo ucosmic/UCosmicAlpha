@@ -1,4 +1,4 @@
-﻿interface TinyMceStatic
+interface TinyMceStatic
 {
     init(parm?: any): void;
     DOM: any;

@@ -53,3 +53,4 @@ else
     })();
     App.Spinner = Spinner;
 })(App || (App = {}));
+//# sourceMappingURL=Spinner.js.map

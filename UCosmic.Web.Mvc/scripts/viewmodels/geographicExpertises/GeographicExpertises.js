@@ -105,3 +105,4 @@ var ViewModels;
     })(ViewModels.GeographicExpertises || (ViewModels.GeographicExpertises = {}));
     var GeographicExpertises = ViewModels.GeographicExpertises;
 })(ViewModels || (ViewModels = {}));
+//# sourceMappingURL=GeographicExpertises.js.map

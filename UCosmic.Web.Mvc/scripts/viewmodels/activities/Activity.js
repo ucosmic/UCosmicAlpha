@@ -1183,3 +1183,4 @@ else if (newValue > 100)
     })(Activities.ViewModels || (Activities.ViewModels = {}));
     var ViewModels = Activities.ViewModels;
 })(Activities || (Activities = {}));
+//# sourceMappingURL=Activity.js.map

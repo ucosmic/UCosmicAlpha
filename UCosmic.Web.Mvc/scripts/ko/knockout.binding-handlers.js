@@ -227,3 +227,4 @@ else
         }
     };
 })(jQuery));
+//# sourceMappingURL=knockout.binding-handlers.js.map

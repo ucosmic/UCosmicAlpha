@@ -14,7 +14,7 @@ module Establishments.ViewModels {
         ownerId: number;
         map: google.maps.Map;
         mapZoom: KnockoutObservable<number> = ko.observable(1);
-        mapTools: KnockoutObservableGoogleMapsToolsOverlay = ko.observable();
+        mapTools: KnockoutObservable<App.GoogleMaps.ToolsOverlay> = ko.observable();
         toolsMarkerLat: KnockoutComputed<number>;
         toolsMarkerLng: KnockoutComputed<number>;
         $mapCanvas: KnockoutObservable<JQuery> = ko.observable();

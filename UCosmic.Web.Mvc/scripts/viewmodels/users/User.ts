@@ -71,26 +71,25 @@ module ViewModels.Users {
 
         save(): boolean {
 
-            if ( !this.isValid() ) { // validate
+            if (!this.isValid()) { // validate
                 this.errors.showAllMessages();
                 return false;
             }
 
             this.saveSpinner.start();
 
-            $.ajax( {
+            $.ajax({
                 type: "POST",
                 async: false,
-                url: App.Routes.WebApi.Identity.Users.validateName( this.id() ),
+                url: App.Routes.WebApi.Identity.Users.validateName(this.id()),
                 data: { name: this.name() },
-                success: ( data: any, textStatus: string, jqXhr: JQueryXHR ): void => 
-                    { this.errorMessage(null); },
-                error: ( jqXhr: JQueryXHR, textStatus: string, errorThrown: string ): void =>
-                    { this.errorMessage(jqXhr.responseText); },
-            } );
+                success: (data: any, textStatus: string, jqXhr: JQueryXHR): void =>
+                { this.errorMessage(null); },
+                error: (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void =>
+                { this.errorMessage(jqXhr.responseText); },
+            });
 
-            if (this.errorMessage() != null)
-            {
+            if (this.errorMessage() != null) {
                 this.saveSpinner.stop();
                 return;
             }
@@ -114,21 +113,21 @@ module ViewModels.Users {
             //    this.errorMessage('An unexpected error occurred while trying to create this user.');
             //});
 
-            $.ajax( {
+            $.ajax({
                 type: "POST",
                 async: true,
                 url: App.Routes.WebApi.Identity.Users.post(),
                 data: { name: this.name() },
-                success: ( data: any, textStatus: string, jqXhr: JQueryXHR ): void => {
-                        window.location.href = App.Routes.Mvc.Identity.Users.created({ location: jqXhr.getResponseHeader('Location') });
-                    },
-                error: ( jqXhr: JQueryXHR, textStatus: string, errorThrown: string ): void => {
-                        this.errorMessage('An unexpected error occurred while trying to create this user.');
-                    },
-                complete: ( jqXhr: JQueryXHR, textStatus: string ): void => {
-                        this.saveSpinner.stop();
-                    }
-            } );
+                success: (data: any, textStatus: string, jqXhr: JQueryXHR): void => {
+                    window.location.href = App.Routes.Mvc.Identity.Users.created({ location: jqXhr.getResponseHeader('Location') });
+                },
+                error: (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
+                    this.errorMessage('An unexpected error occurred while trying to create this user.');
+                },
+                complete: (jqXhr: JQueryXHR, textStatus: string): void => {
+                    this.saveSpinner.stop();
+                }
+            });
         }
     }
 }

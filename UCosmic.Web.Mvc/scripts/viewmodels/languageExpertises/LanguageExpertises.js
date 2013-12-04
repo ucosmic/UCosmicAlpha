@@ -105,3 +105,4 @@ var ViewModels;
     })(ViewModels.LanguageExpertises || (ViewModels.LanguageExpertises = {}));
     var LanguageExpertises = ViewModels.LanguageExpertises;
 })(ViewModels || (ViewModels = {}));
+//# sourceMappingURL=LanguageExpertises.js.map

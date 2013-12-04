@@ -8,6 +8,7 @@
 /// <reference path="../establishments/Search.ts" />
 /// <reference path="../establishments/Name.ts" />
 /// <reference path="../establishments/Item.ts" />
+
 module Agreements {
 
     export class InstitutionalAgreementParticipantModel {

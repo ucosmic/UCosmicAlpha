@@ -1,4 +1,4 @@
-var ViewModels;
+﻿var ViewModels;
 (function (ViewModels) {
     /// <reference path="../../typings/jquery/jquery.d.ts" />
     /// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
@@ -2317,3 +2317,4 @@ var ViewModels;
     })(ViewModels.Employees || (ViewModels.Employees = {}));
     var Employees = ViewModels.Employees;
 })(ViewModels || (ViewModels = {}));
+//# sourceMappingURL=Employees.js.map

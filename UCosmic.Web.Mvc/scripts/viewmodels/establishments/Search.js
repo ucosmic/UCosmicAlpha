@@ -260,3 +260,4 @@ var Establishments;
     })(Establishments.ViewModels || (Establishments.ViewModels = {}));
     var ViewModels = Establishments.ViewModels;
 })(Establishments || (Establishments = {}));
+//# sourceMappingURL=Search.js.map

@@ -1,5 +1,4 @@
 /// <reference path="../../typings/jquery/jquery.d.ts" />
-// Module
 var ScrollBody;
 (function (ScrollBody) {
     var Scroll = (function () {
@@ -117,3 +116,4 @@ var ScrollBody;
     })();
     ScrollBody.Scroll = Scroll;
 })(ScrollBody || (ScrollBody = {}));
+//# sourceMappingURL=ScrollBody.js.map

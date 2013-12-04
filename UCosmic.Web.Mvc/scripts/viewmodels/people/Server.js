@@ -1,4 +1,4 @@
-var People;
+﻿var People;
 (function (People) {
     /// <reference path="../../typings/jquery/jquery.d.ts" />
     /// <reference path="../../app/App.ts" />
@@ -54,3 +54,4 @@ var People;
     })(People.Servers || (People.Servers = {}));
     var Servers = People.Servers;
 })(People || (People = {}));
+//# sourceMappingURL=Server.js.map

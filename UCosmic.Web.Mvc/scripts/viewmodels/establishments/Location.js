@@ -550,3 +550,4 @@ else if (this.continentId())
     })(Establishments.ViewModels || (Establishments.ViewModels = {}));
     var ViewModels = Establishments.ViewModels;
 })(Establishments || (Establishments = {}));
+//# sourceMappingURL=Location.js.map

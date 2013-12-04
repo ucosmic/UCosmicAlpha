@@ -1,4 +1,4 @@
-/// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
+﻿/// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
 /// <reference path="../../typings/kendo/kendo.all.d.ts" />
 /// <reference path="../../app/HistoryJS.ts" />
 /// <reference path="../../typings/history/history.d.ts" />

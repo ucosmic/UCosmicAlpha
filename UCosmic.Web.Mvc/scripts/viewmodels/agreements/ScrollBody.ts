@@ -1,6 +1,5 @@
 /// <reference path="../../typings/jquery/jquery.d.ts" />
 
-// Module
 module ScrollBody {
 
     export class Scroll {

@@ -21,3 +21,4 @@ var Establishments;
     })(Establishments.Servers || (Establishments.Servers = {}));
     var Servers = Establishments.Servers;
 })(Establishments || (Establishments = {}));
+//# sourceMappingURL=Server.js.map

@@ -31,3 +31,4 @@ var App;
     })();
     App.ImageSwapper = ImageSwapper;
 })(App || (App = {}));
+//# sourceMappingURL=ImageSwapper.js.map

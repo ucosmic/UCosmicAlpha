@@ -1,10 +1,7 @@
-/// <reference path="../../typings/jquery/jquery.d.ts" />
-/// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
+﻿/// <reference path="../../typings/jquery/jquery.d.ts" />
 /// <reference path="../../typings/knockout/knockout.d.ts" />
-/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
-/// <reference path="../../app/App.ts" />
-/// <reference path="../../app/Routes.ts" />
 /// <reference path="../places/ApiModels.d.ts" />
+/// <reference path="../../app/Routes.ts" />
 var modelData;
 var People;
 (function (People) {
@@ -95,3 +92,4 @@ var People;
     })(People.ViewModels || (People.ViewModels = {}));
     var ViewModels = People.ViewModels;
 })(People || (People = {}));
+//# sourceMappingURL=Activities.js.map

@@ -100,10 +100,10 @@ ko.bindingHandlers.fadeVisible = {
     }
 };
 
-(function($) {
+(function ($) {
     var instances_by_id = {} // needed for referencing instances during updates.
-      , init_queue = $.Deferred() // jQuery deferred object used for creating TinyMCE instances synchronously
-      , init_queue_next = init_queue;
+        , init_queue = $.Deferred() // jQuery deferred object used for creating TinyMCE instances synchronously
+        , init_queue_next = init_queue;
     init_queue.resolve();
     ko.bindingHandlers.tinymce = {
         init: function (element, valueAccessor, allBindingsAccessor, context) {

@@ -38,3 +38,4 @@ var App;
     })(App.Google || (App.Google = {}));
     var Google = App.Google;
 })(App || (App = {}));
+//# sourceMappingURL=GeoChart.js.map

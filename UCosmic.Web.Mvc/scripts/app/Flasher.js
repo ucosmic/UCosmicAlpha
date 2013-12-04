@@ -100,3 +100,4 @@ var App;
     })();
     App.FlasherProxy = FlasherProxy;
 })(App || (App = {}));
+//# sourceMappingURL=Flasher.js.map

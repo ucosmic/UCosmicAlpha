@@ -25,11 +25,6 @@ declare module Service.ApiModels.Degree {
         institutionId: KnockoutObservable<any>;
         institutionOfficialName: KnockoutObservable<string>;
         institutionCountryOfficialName: KnockoutObservable<string>;
-
-        /* Knockout-Validation */
-        errors: KnockoutValidationErrors;
-        isValid: () => boolean;
-        isAnyMessageShown: () => boolean;
     }
 
     export interface IDegreeCountries {
