@@ -5,6 +5,10 @@ namespace UCosmic.Domain.LanguageExpertise
 {
     public class LanguageExpertisesByPersonId : BaseEntitiesQuery<LanguageExpertise>, IDefineQuery<PagedQueryResult<LanguageExpertise>>
     {
+        public LanguageExpertisesByPersonId(int personId)
+        {
+            PersonId = personId;
+        }
         public int PersonId { get; set; }
         public int PageSize { get; set; }
         public int PageNumber { get; set; }

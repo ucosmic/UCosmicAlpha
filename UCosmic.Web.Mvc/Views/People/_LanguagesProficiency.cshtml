@@ -1,0 +1,22 @@
+﻿@using UCosmic.Web.Mvc.ApiControllers
+@model int
+@if (Model == 1)
+{
+    <span>Elementary Proficiency</span>
+}
+else if (Model == 2)
+{
+    <span>Limited Working Proficiency</span>
+}
+else if (Model == 3)
+{
+    <span>General Professional Proficiency</span>
+}
+else if (Model == 4)
+{
+    <span>Advanced Professional Proficiency</span>
+}
+else
+{
+    <span>Functionally Native Proficiency</span>
+}

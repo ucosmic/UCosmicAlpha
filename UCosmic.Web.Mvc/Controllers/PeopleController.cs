@@ -103,11 +103,13 @@ namespace UCosmic.Web.Mvc.Controllers
         [GET("people/{personId:int}/language-expertise")]
         public virtual ActionResult Languages(int personId)
         {
-            var query = new LanguageExpertiseById(personId);
+            var query = new LanguageExpertisesByPersonId(personId);
             //Mapper.Map(input, query);
+            
             var entities = _queryProcessor.Execute(query);
 
             var model = Mapper.Map<LanguageExpertiseApiModel[]>(entities);
+            //model.Where(x => x.ListeningProficiency == 1).
             ViewBag.currentPage = "languages";
             ViewBag.personId = personId;
             return View(model);

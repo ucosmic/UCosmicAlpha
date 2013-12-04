@@ -10,25 +10,46 @@
             @* RESULTS *@
             <div>
                 <ul style="font-size: 20px;">
-                    @foreach (var language in Model)
+                                        @foreach (var language in Model)
                     {
-                        @*<li style="margin-bottom: 1em;">
-                                <strong style="display: block;">@degree.Title</strong>
-                                <ul style="display: inline-block;">
-                                    @if (degree.Institution != null && degree.Institution.OfficialName != string.Empty)
+                        <li style="margin-bottom: 1em;">
+                            <strong>@language.LanguageName</strong>
+                            @if (!string.IsNullOrEmpty(language.Dialect))
+                            {
+                                <span> - @language.Dialect</span>
+                            }
+                                <ul>
+                                    @if (language.SpeakingProficiency > 0)
                                     {
-                                        <li class="comma-list"><span>@degree.Institution.OfficialName</span></li>
+                                        <li>
+                                            Speaking -
+                                            @Html.Partial(MVC.People.Views._LanguagesProficiency, language.SpeakingProficiency)
+                                        </li>
                                     }
-                                    @if (!string.IsNullOrEmpty(degree.FieldOfStudy))
+                                    @if (language.ListeningProficiency > 0)
                                     {
-                                        <li class="comma-list"><span>@degree.FieldOfStudy</span></li>
+                                        <li>
+                                            Listening -
+                                            @Html.Partial(MVC.People.Views._LanguagesProficiency, language.ListeningProficiency)
+                                        </li>
                                     }
-                                    @if (degree.YearAwarded != null)
+                                    @if (language.ReadingProficiency > 0)
                                     {
-                                        <li class="comma-list"><span>@degree.YearAwarded</span></li>
+                                        <li>
+                                            Reading -
+                                            @Html.Partial(MVC.People.Views._LanguagesProficiency, language.ReadingProficiency)
+                                        </li>
                                     }
+                                    @if (language.WritingProficiency > 0)
+                                    {
+                                        <li>
+                                            Writing -
+                                            @Html.Partial(MVC.People.Views._LanguagesProficiency, language.WritingProficiency)
+                                        </li>
+                                    }
+                                    
                                 </ul>
-                            </li>*@
+                            </li>
                     }
                 </ul>
             </div>

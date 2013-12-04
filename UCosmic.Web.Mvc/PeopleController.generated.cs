@@ -179,6 +179,7 @@ namespace UCosmic.Web.Mvc.Controllers
                 public readonly string _Card = "_Card";
                 public readonly string _Degrees = "_Degrees";
                 public readonly string _Languages = "_Languages";
+                public readonly string _LanguagesProficiency = "_LanguagesProficiency";
                 public readonly string _Profile = "_Profile";
                 public readonly string _SearchSidebarNav = "_SearchSidebarNav";
                 public readonly string _SidebarNav = "_SidebarNav";
@@ -193,6 +194,7 @@ namespace UCosmic.Web.Mvc.Controllers
             public readonly string _Card = "~/Views/People/_Card.cshtml";
             public readonly string _Degrees = "~/Views/People/_Degrees.cshtml";
             public readonly string _Languages = "~/Views/People/_Languages.cshtml";
+            public readonly string _LanguagesProficiency = "~/Views/People/_LanguagesProficiency.cshtml";
             public readonly string _Profile = "~/Views/People/_Profile.cshtml";
             public readonly string _SearchSidebarNav = "~/Views/People/_SearchSidebarNav.cshtml";
             public readonly string _SidebarNav = "~/Views/People/_SidebarNav.cshtml";
