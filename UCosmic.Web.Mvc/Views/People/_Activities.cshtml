@@ -110,7 +110,7 @@
                                             <span style="white-space: nowrap" >@activity.StartsOn.Value.ToString(activity.StartsFormat ?? "MM/dd/yyyy")
                                                 @if (activity.EndsOn.HasValue || (activity.OnGoing.HasValue && activity.OnGoing.Value))
                                                 {
-                                                    @Html.Raw(" - ");
+                                                    <text> - </text>
                                                 }
                                             </span><br />
                                         }

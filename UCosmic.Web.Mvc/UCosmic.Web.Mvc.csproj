@@ -356,7 +356,6 @@
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
     <Compile Include="Controllers\ActivitiesController.cs" />
-    <Compile Include="Controllers\ActivitiesSpikeController.cs" />
     <Compile Include="Controllers\EmployeesController.cs" />
     <Compile Include="Controllers\FacultyStaffController.cs" />
     <Compile Include="Controllers\RepsController.cs" />
@@ -419,6 +418,7 @@
     <Compile Include="Models\InternationalAffiliationApiModel.cs" />
     <Compile Include="Models\Agreements\AgreementContactPhoneApiModel.cs" />
     <Compile Include="Models\Graphics\CircleGraphicRequestModel.cs" />
+    <Compile Include="Models\LanguageExpertiseViewModel.cs" />
     <Compile Include="Models\LanguageExpertiseApiModel.cs" />
     <Compile Include="Models\Agreements\AgreementParticipantApiModel.cs" />
     <Compile Include="Models\GeographicExpertiseApiModel.cs" />
@@ -2108,15 +2108,15 @@
     <TypeScriptCompile Include="scripts\typings\linq\linq.d.ts" />
     <TypeScriptCompile Include="scripts\typings\linq\linq.jquery.d.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\activities\ActivityEnums.ts" />
-    <TypeScriptCompile Include="scripts\viewmodels\activities\ActivitiesSpike.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\activities\ActivitiesViewModel.ts" />
     <Content Include="scripts\viewmodels\activities\Activities.min.js">
       <DependentUpon>Activities.js</DependentUpon>
     </Content>
     <Content Include="scripts\viewmodels\activities\ActivitiesSpike.js">
-      <DependentUpon>ActivitiesSpike.ts</DependentUpon>
+      <DependentUpon>ActivitiesViewModel.ts</DependentUpon>
     </Content>
     <Content Include="scripts\viewmodels\activities\ActivitiesSpike.min.js">
-      <DependentUpon>ActivitiesSpike.js</DependentUpon>
+      <DependentUpon>ActivitiesViewModel.ts</DependentUpon>
     </Content>
     <Content Include="scripts\viewmodels\activities\Activity.min.js">
       <DependentUpon>Activity.js</DependentUpon>
@@ -2302,6 +2302,7 @@
     <Content Include="scripts\viewmodels\establishments\Location.js">
       <DependentUpon>Location.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="scripts\viewmodels\people\Languages.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\my\Profile.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\representatives\RepModuleSettings.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\geographicExpertises\GeographicExpertises.ts" />
@@ -2937,9 +2938,9 @@
     <Content Include="Views\Activities\_EditStyles.cshtml" />
     <Content Include="Views\Agreements\SearchTable.cshtml" />
     <Content Include="Views\Activities\Details.cshtml" />
-    <Content Include="Views\Activities\_ActivitiesSpikeContent.cshtml" />
+    <Content Include="Views\Activities\_ActivitiesContent.cshtml" />
     <Content Include="Views\Activities\_Bib.cshtml" />
-    <Content Include="Views\Activities\_ActivitiesSpikeSide.cshtml" />
+    <Content Include="Views\Activities\_ActivitiesSide.cshtml" />
     <None Include="Views\ApiTest\Index.cshtml" />
     <Content Include="Views\Agreements\Settings.cshtml" />
     <Content Include="Views\Agreements\_SearchSideBar.cshtml" />

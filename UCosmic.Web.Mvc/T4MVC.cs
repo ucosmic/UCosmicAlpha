@@ -25,7 +25,6 @@ using T4MVC;
 public static class MVC
 {
     public static UCosmic.Web.Mvc.Controllers.ActivitiesController Activities = new UCosmic.Web.Mvc.Controllers.T4MVC_ActivitiesController();
-    public static UCosmic.Web.Mvc.Controllers.ActivitiesSpikeController ActivitiesSpike = new UCosmic.Web.Mvc.Controllers.T4MVC_ActivitiesSpikeController();
     public static UCosmic.Web.Mvc.Controllers.AdminController Admin = new UCosmic.Web.Mvc.Controllers.T4MVC_AdminController();
     public static UCosmic.Web.Mvc.Controllers.AgreementsController Agreements = new UCosmic.Web.Mvc.Controllers.T4MVC_AgreementsController();
     public static UCosmic.Web.Mvc.Controllers.ApiTestController ApiTest = new UCosmic.Web.Mvc.Controllers.T4MVC_ApiTestController();
@@ -42,6 +41,7 @@ public static class MVC
     public static UCosmic.Web.Mvc.Controllers.SamlMetadataController SamlMetadata = new UCosmic.Web.Mvc.Controllers.T4MVC_SamlMetadataController();
     public static UCosmic.Web.Mvc.Controllers.TenancyController Tenancy = new UCosmic.Web.Mvc.Controllers.T4MVC_TenancyController();
     public static UCosmic.Web.Mvc.Controllers.UsersController Users = new UCosmic.Web.Mvc.Controllers.T4MVC_UsersController();
+    public static T4MVC.ActivitiesSpikeController ActivitiesSpike = new T4MVC.ActivitiesSpikeController();
     public static T4MVC.SharedController Shared = new T4MVC.SharedController();
 }
 
@@ -2876,8 +2876,7 @@ namespace Links
                 public static readonly string Activities_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Activities.min.js") ? Url("Activities.min.js") : Url("Activities.js");
                               
                 public static readonly string Activities_min_js = Url("Activities.min.js");
-                public static readonly string Activities_js_map = Url("Activities.js.map");
-                public static readonly string ActivitiesSpike_ts = Url("ActivitiesSpike.ts");
+                public static readonly string ActivitiesViewModel_ts = Url("ActivitiesViewModel.ts");
                 public static readonly string ActivitiesSpike_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/ActivitiesSpike.min.js") ? Url("ActivitiesSpike.min.js") : Url("ActivitiesSpike.js");
                               
                 public static readonly string ActivitiesSpike_min_js = Url("ActivitiesSpike.min.js");
@@ -3166,7 +3165,7 @@ namespace Links
                 public static readonly string Activities_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Activities.min.js") ? Url("Activities.min.js") : Url("Activities.js");
                               
                 public static readonly string Activities_min_js = Url("Activities.min.js");
-                public static readonly string Activities_js_map = Url("Activities.js.map");
+                public static readonly string Languages_ts = Url("Languages.ts");
                 public static readonly string Models_d_ts = Url("Models.d.ts");
                 public static readonly string Routes_d_ts = Url("Routes.d.ts");
                 public static readonly string Server_ts = Url("Server.ts");

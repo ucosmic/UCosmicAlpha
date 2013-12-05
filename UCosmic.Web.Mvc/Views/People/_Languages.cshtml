@@ -1,5 +1,5 @@
-﻿@using UCosmic.Web.Mvc.ApiControllers
-@model UCosmic.Web.Mvc.Models.LanguageExpertiseApiModel[]
+﻿@using System.Runtime.CompilerServices
+@model IEnumerable<UCosmic.Web.Mvc.Models.LanguageExpertiseViewModel>
 
 @* DEGREES *@
 <section class="content fixed to-top">
@@ -10,46 +10,67 @@
             @* RESULTS *@
             <div>
                 <ul style="font-size: 20px;">
-                                        @foreach (var language in Model)
+                    @foreach (var language in Model)
                     {
                         <li style="margin-bottom: 1em;">
-                            <strong>@language.LanguageName</strong>
-                            @if (!string.IsNullOrEmpty(language.Dialect))
+                            @if (language.LanguageName != null)
                             {
-                                <span> - @language.Dialect</span>
+                                if (language.Dialect != null)
+                                {
+                                    <strong>@language.LanguageName</strong><text>,</text>
+                                    <strong>@language.Dialect</strong>
+
+
+                                }
+                                else
+                                {
+                                    <strong>@language.LanguageName</strong>
+                                }
                             }
-                                <ul>
-                                    @if (language.SpeakingProficiency > 0)
-                                    {
-                                        <li>
-                                            Speaking -
-                                            @Html.Partial(MVC.People.Views._LanguagesProficiency, language.SpeakingProficiency)
-                                        </li>
-                                    }
-                                    @if (language.ListeningProficiency > 0)
-                                    {
-                                        <li>
-                                            Listening -
-                                            @Html.Partial(MVC.People.Views._LanguagesProficiency, language.ListeningProficiency)
-                                        </li>
-                                    }
-                                    @if (language.ReadingProficiency > 0)
-                                    {
-                                        <li>
-                                            Reading -
-                                            @Html.Partial(MVC.People.Views._LanguagesProficiency, language.ReadingProficiency)
-                                        </li>
-                                    }
-                                    @if (language.WritingProficiency > 0)
-                                    {
-                                        <li>
-                                            Writing -
-                                            @Html.Partial(MVC.People.Views._LanguagesProficiency, language.WritingProficiency)
-                                        </li>
-                                    }
-                                    
-                                </ul>
-                            </li>
+                            else
+                            {
+                                if (language.Dialect != null)
+                                {
+                                    <strong>@language.Other</strong><text>,</text>
+                                    <strong>@language.Dialect</strong>
+                                }
+                                else
+                                {
+                                    <strong>@language.Other</strong>
+                                }
+                            }
+                            <ul>
+                                @if (language.SpeakingProficiency > 0)
+                                {
+                                    <li>
+                                        Speaking -
+                                        @Html.Partial(MVC.People.Views._LanguagesProficiency, language.SpeakingProficiency)
+                                    </li>
+                                }
+                                @if (language.ListeningProficiency > 0)
+                                {
+                                    <li>
+                                        Listening -
+                                        @Html.Partial(MVC.People.Views._LanguagesProficiency, language.ListeningProficiency)
+                                    </li>
+                                }
+                                @if (language.ReadingProficiency > 0)
+                                {
+                                    <li>
+                                        Reading -
+                                        @Html.Partial(MVC.People.Views._LanguagesProficiency, language.ReadingProficiency)
+                                    </li>
+                                }
+                                @if (language.WritingProficiency > 0)
+                                {
+                                    <li>
+                                        Writing -
+                                        @Html.Partial(MVC.People.Views._LanguagesProficiency, language.WritingProficiency)
+                                    </li>
+                                }
+
+                            </ul>
+                        </li>
                     }
                 </ul>
             </div>

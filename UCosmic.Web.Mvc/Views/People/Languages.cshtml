@@ -1,54 +1,63 @@
 ﻿@using UCosmic.Web.Mvc.ApiControllers
-@model UCosmic.Web.Mvc.Models.LanguageExpertiseApiModel[]
-    @{
-        ViewBag.Title = "UCosmic Profile";
-    }
-    @section bib
+@model UCosmic.Web.Mvc.Models.LanguageExpertiseViewModel[]
+@{
+    ViewBag.Title = "UCosmic Profile";
+}
+@section bib
 {
-        <nav class="bib hide" data-current-bib="faculty">
-            @Html.Partial(MVC.Activities.Views._Bib)
-        </nav>
-    }
-    @section scripts
+    <nav class="bib hide" data-current-bib="faculty">
+        @Html.Partial(MVC.Activities.Views._Bib)
+    </nav>
+}
+{@section scripts
 {
+    <script type="text/javascript">
+        var modelData = @Html.Raw(Json.Encode(Model));
+    </script>
 
+    @Scripts.Render("~/bundles/people/languages")
 
+    <script type="text/javascript">
+        var viewModel = new People.ViewModels.LanguagesViewModel(modelData);
+        ko.applyBindings(viewModel, $('#main')[0]);
+    </script>
 
-    }
-    @section styles
+}
+}
+@section styles
 {
-        <style>
-            .comma-list {
-                display: inline;
+    <style>
+        .comma-list {
+            display: inline;
+        }
+
+            .comma-list:after {
+                content: ', ';
             }
 
-                .comma-list:after {
-                    content: ', ';
-                }
-
-                .comma-list:last-child:after {
-                    content: '';
-                }
-        </style>
-    }
-    <div class="content fixed to-top" data-current-module="employees">
-        <div class="group">
-            <div class="on-left from-top">
-                <header>
-                    <h1>
-                        International Activities
-                    </h1>
-                </header>
-                @Html.Action(MVC.People.GetCard())
-                @Html.Partial(MVC.People.Views._Languages, Model)
-            </div>
-            <aside class="on-right from-top" data-fixed-scroll="root">
-                <div data-fixed-scroll="anchor"></div>
-                <div data-fixed-scroll="content">
-                    @Html.Partial(MVC.People.Views._SidebarNav, Model)
-                </div>
-            </aside>
+            .comma-list:last-child:after {
+                content: '';
+            }
+    </style>
+}
+<div class="content fixed to-top" data-current-module="employees">
+    <div class="group">
+        <div class="on-left from-top">
+            <header>
+                <h1>
+                    International Activities
+                </h1>
+            </header>
+            @Html.Action(MVC.People.GetCard())
+            @Html.Partial(MVC.People.Views._Languages, Model)
         </div>
+        <aside class="on-right from-top" data-fixed-scroll="root">
+            <div data-fixed-scroll="anchor"></div>
+            <div data-fixed-scroll="content">
+                @Html.Partial(MVC.People.Views._SidebarNav, Model)
+            </div>
+        </aside>
     </div>
+</div>
 
 

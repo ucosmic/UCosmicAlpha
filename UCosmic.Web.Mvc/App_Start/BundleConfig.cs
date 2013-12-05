@@ -149,7 +149,7 @@ namespace UCosmic.Web.Mvc
 
             bundles.Add(new ScriptBundle("~/bundles/ActivityPublicView").Include(
                 "~/scripts/google/Map.js",
-                "~/scripts/viewmodels/activities/ActivitiesSpike.js"));
+                "~/scripts/viewmodels/activities/ActivitiesViewMdoel.js"));
 
             // geographic expertise
             bundles.Add(new ScriptBundle("~/bundles/geographicExpertises").Include(
@@ -200,6 +200,8 @@ namespace UCosmic.Web.Mvc
                 "~/scripts/viewmodels/employees/Summary.js"));
             bundles.Add(new ScriptBundle("~/bundles/people/activities").Include(
                 "~/scripts/viewmodels/people/activities.js"));
+            bundles.Add(new ScriptBundle("~/bundles/people/languages").Include(
+                "~/scripts/viewmodels/people/languages.js"));
 
             // user search page
             bundles.Add(new ScriptBundle("~/bundles/users").Include(

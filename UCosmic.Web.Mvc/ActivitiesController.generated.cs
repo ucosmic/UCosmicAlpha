@@ -111,15 +111,15 @@ namespace UCosmic.Web.Mvc.Controllers
             public _ViewNamesClass ViewNames { get { return s_ViewNames; } }
             public class _ViewNamesClass
             {
-                public readonly string _ActivitiesSpikeContent = "_ActivitiesSpikeContent";
-                public readonly string _ActivitiesSpikeSide = "_ActivitiesSpikeSide";
+                public readonly string _ActivitiesContent = "_ActivitiesContent";
+                public readonly string _ActivitiesSide = "_ActivitiesSide";
                 public readonly string _Bib = "_Bib";
                 public readonly string _EditStyles = "_EditStyles";
                 public readonly string Details = "Details";
                 public readonly string Edit = "Edit";
             }
-            public readonly string _ActivitiesSpikeContent = "~/Views/Activities/_ActivitiesSpikeContent.cshtml";
-            public readonly string _ActivitiesSpikeSide = "~/Views/Activities/_ActivitiesSpikeSide.cshtml";
+            public readonly string _ActivitiesContent = "~/Views/Activities/_ActivitiesContent.cshtml";
+            public readonly string _ActivitiesSide = "~/Views/Activities/_ActivitiesSide.cshtml";
             public readonly string _Bib = "~/Views/Activities/_Bib.cshtml";
             public readonly string _EditStyles = "~/Views/Activities/_EditStyles.cshtml";
             public readonly string Details = "~/Views/Activities/Details.cshtml";
