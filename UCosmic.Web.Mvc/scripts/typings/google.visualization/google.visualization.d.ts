@@ -353,6 +353,12 @@ declare module google {
             width?: number;
         }
 
+        // https://google-developers.appspot.com/chart/interactive/docs/gallery/barchart
+        export class BarChart {
+            constructor(element: Element);
+            draw(data: DataTable, options: any): void;
+        }
+
         //#endregion
         //#region Events
 

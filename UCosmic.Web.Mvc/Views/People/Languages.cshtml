@@ -15,10 +15,11 @@
         var modelData = @Html.Raw(Json.Encode(Model));
     </script>
 
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     @Scripts.Render("~/bundles/people/languages")
 
     <script type="text/javascript">
-        var viewModel = new People.ViewModels.LanguagesViewModel(modelData);
+        var viewModel = new People.ViewModels.LanguageViewModel(modelData);
         ko.applyBindings(viewModel, $('#main')[0]);
     </script>
 
@@ -50,6 +51,8 @@
             </header>
             @Html.Action(MVC.People.GetCard())
             @Html.Partial(MVC.People.Views._Languages, Model)
+            <div id="chart_div" style="width: 900px; height: 500px;"></div>
+
         </div>
         <aside class="on-right from-top" data-fixed-scroll="root">
             <div data-fixed-scroll="anchor"></div>

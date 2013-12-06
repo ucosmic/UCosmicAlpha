@@ -201,6 +201,7 @@ namespace UCosmic.Web.Mvc
             bundles.Add(new ScriptBundle("~/bundles/people/activities").Include(
                 "~/scripts/viewmodels/people/activities.js"));
             bundles.Add(new ScriptBundle("~/bundles/people/languages").Include(
+                "~/scripts/google/BarChart.js",
                 "~/scripts/viewmodels/people/languages.js"));
 
             // user search page
