@@ -1,16 +1,3 @@
-/// <reference path="../../app/Spinner.ts" />
-/// <reference path="../../typings/knockout/knockout.d.ts" />
-/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
-/// <reference path="../../typings/globalize/globalize.d.ts" />
-/// <reference path="../../typings/jquery/jquery.d.ts" />
-/// <reference path="../../app/App.ts" />
-/// <reference path="../../typings/moment/moment.d.ts" />
-/// <reference path="../../app/Routes.ts" />
-/// <reference path="populateFiles.ts" />
-/// <reference path="../../typings/googlemaps/google.maps.d.ts" />
-/// <reference path="../../typings/linq/linq.d.ts" />
-/// <reference path="ApiModels.d.ts" />
-
 module Agreements.ViewModels {
 
     export class PublicView {

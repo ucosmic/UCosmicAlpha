@@ -1,18 +1,8 @@
-/// <reference path="../../typings/jquery/jquery.d.ts" />
-/// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
-/// <reference path="../../typings/knockout/knockout.d.ts" />
-/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
-/// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
-/// <reference path="../../typings/kendo/kendo.all.d.ts" />
-/// <reference path="../../app/App.ts" />
-/// <reference path="../../app/Routes.ts" />
-/// <reference path="ServiceApiModel.d.ts" />
 var ViewModels;
 (function (ViewModels) {
     (function (Degrees) {
         var Degree = (function () {
             function Degree(educationId) {
-                /* True if any field changes. */
                 this.dirtyFlag = ko.observable(false);
                 this._initialize(educationId);
             }
@@ -131,7 +121,6 @@ var ViewModels;
                         }
                     });
 
-                    // only process after all requests have been resolved
                     $.when(dataPact).done(function (data) {
                         ko.mapping.fromJS(data, {}, _this);
 
@@ -146,12 +135,10 @@ var ViewModels;
 
             Degree.prototype.save = function (viewModel, event) {
                 if (!this.isValid()) {
-                    // TBD - need dialog here.
                     this.errors.showAllMessages();
                     return;
                 }
 
-                /* If there is no year, return as null, not 0 */
                 if (this.yearAwarded() != null) {
                     var yearAwaredStr = this.yearAwarded().toString();
                     yearAwaredStr = $.trim(yearAwaredStr);
@@ -160,7 +147,6 @@ var ViewModels;
                     }
                 }
 
-                /* If there is no institution, return institutionId as null, not 0 */
                 this.checkInstitutionForNull();
 
                 var mapSource = {
@@ -214,7 +200,6 @@ var ViewModels;
                         }
                     });
                 } else {
-                    //location.href = App.Routes.Mvc.My.Profile.get() + '#/formal-education';
                     history.back();
                 }
             };

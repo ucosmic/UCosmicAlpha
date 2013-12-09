@@ -1,7 +1,3 @@
-/// <reference path="../typings/jquery/jquery.d.ts" />
-/// <reference path="../typings/knockout/knockout.d.ts" />
-/// <reference path="../typings/tinymce/tinymce.d.ts" />
-
 ko.bindingHandlers.element = {
     update: function (element, valueAccessor, allBindingsAccessor, viewModel) {
         var name = ko.utils.unwrapObservable(valueAccessor());
@@ -58,7 +54,6 @@ ko.bindingHandlers.slideDownVisible = {
         if (value && !$(element).is(':visible')) {
             $(element).slideDown('fast');
         } else if (!value) {
-            // element may still be animating
             if ($(element).is(':animated')) {
                 $(element).hide();
             } else {
@@ -100,7 +95,6 @@ ko.bindingHandlers.fadeVisible = {
             }
 
             options.setup = function (ed) {
-                //handle edits made in the editor. Updates after an undo point is reached.
                 ed.onChange.add(function (ed, l) {
                     if (ko.isWriteableObservable(modelValue)) {
                         modelValue(l.content);
@@ -140,14 +134,12 @@ ko.bindingHandlers.fadeVisible = {
                     }
                 });
 
-                //This is required if you want the HTML Edit Source button to work correctly
                 ed.onBeforeSetContent.add(function (editor, l) {
                     if (ko.isWriteableObservable(modelValue)) {
                         modelValue(l.content);
                     }
                 });
 
-                // The paste event for the mouse paste fix.
                 ed.onPaste.add(function (ed, evt) {
                     var doc = ed.getDoc();
 
@@ -158,7 +150,6 @@ ko.bindingHandlers.fadeVisible = {
                     }
                 });
 
-                // Make sure observable is updated when leaving editor.
                 ed.onInit.add(function (ed, evt) {
                     var doc = ed.getDoc();
                     tinymce.dom.Event.add(doc, 'blur', function (e) {
@@ -169,7 +160,6 @@ ko.bindingHandlers.fadeVisible = {
                 });
             };
 
-            //handle destroying an editor
             ko.utils.domNodeDisposal.addDisposeCallback(element, function () {
                 $(element).parent().find("span.mceEditor,div.mceEditor").each(function (i, node) {
                     var tid = node.id.replace(/_parent$/, '');
@@ -177,7 +167,6 @@ ko.bindingHandlers.fadeVisible = {
                     if (ed) {
                         ed.remove();
 
-                        // remove referenced instance if possible.
                         if (instances_by_id[tid]) {
                             delete instances_by_id[tid];
                         }
@@ -185,12 +174,10 @@ ko.bindingHandlers.fadeVisible = {
                 });
             });
 
-            // TinyMCE attaches to the element by DOM id, so we need to make one for the element if it doesn't have one already.
             if (!element.id) {
                 element.id = tinyMCE.DOM.uniqueId();
             }
 
-            // create each tinyMCE instance synchronously. This addresses an issue when working with foreach bindings
             init_queue_next = init_queue_next.pipe(function () {
                 var defer = $.Deferred();
                 var init_options = $.extend({}, options, {
@@ -213,24 +200,12 @@ ko.bindingHandlers.fadeVisible = {
                 return defer.promise();
             });
             el.val(value);
-            //$(element).tinymce(options);
-            //setTimeout(function () { $(element).tinymce(options); }, 0);
-            //el.html(value);
         },
         update: function (element, valueAccessor, allBindingsAccessor, context) {
             var el = $(element);
             var value = ko.utils.unwrapObservable(valueAccessor());
             var id = el.attr('id');
 
-            //handle programmatic updates to the observable
-            // also makes sure it doesn't update it if it's the same.
-            // otherwise, it will reload the instance, causing the cursor to jump.
-            //if (id !== undefined) {
-            //    var content = tinyMCE.getInstanceById(id).getContent({ format: 'raw' })
-            //    if (content !== value) {
-            //        el.html(value);
-            //    }
-            //}
             if (id !== undefined && id !== '' && instances_by_id.hasOwnProperty(id)) {
                 var content = instances_by_id[id].getContent({ format: 'raw' });
                 if (content !== value || content !== el.val()) {

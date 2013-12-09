@@ -1,5 +1,3 @@
-/// <reference path="../places/ApiModels.d.ts" />
-
 declare module Establishments.ApiModels {
 
     export interface FlatEstablishment {

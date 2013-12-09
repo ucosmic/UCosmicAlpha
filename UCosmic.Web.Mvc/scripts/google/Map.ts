@@ -1,8 +1,3 @@
-/// <reference path="../typings/googlemaps/google.maps.d.ts" />
-/// <reference path="../typings/jquery/jquery.d.ts" />
-/// <reference path="../typings/knockout/knockout.d.ts" />
-/// <reference path="../app/App.ts" />
-
 module App.GoogleMaps { // TODO: rename to App.Google to keep in line with google visualization stuff
 
     export interface MapSettings {

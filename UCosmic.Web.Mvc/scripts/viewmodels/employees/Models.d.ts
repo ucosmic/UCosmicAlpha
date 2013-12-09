@@ -1,5 +1,3 @@
-/// <reference path="../../typings/knockout/knockout.d.ts" />
-
 declare module Employees.ApiModels {
 
     export interface EmployeesPlacesInputModel {

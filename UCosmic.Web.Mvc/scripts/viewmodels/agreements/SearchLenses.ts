@@ -1,7 +1,3 @@
-/// <reference path="../../typings/knockout/knockout.d.ts" />
-/// <reference path="SearchTable.ts" />
-/// <reference path="SearchMap.ts" />
-
 module Agreements.ViewModels {
 
     export interface SearchLensSettings {

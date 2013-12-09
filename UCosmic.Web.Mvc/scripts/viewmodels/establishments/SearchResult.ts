@@ -1,9 +1,3 @@
-/// <reference path="../../typings/jquery/jquery.d.ts" />
-/// <reference path="../../typings/knockout/knockout.d.ts" />
-/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
-/// <reference path="Search.ts" />
-/// <reference path="ApiModels.d.ts" />
-
 module Establishments.ViewModels {
 
     export class SearchResult {

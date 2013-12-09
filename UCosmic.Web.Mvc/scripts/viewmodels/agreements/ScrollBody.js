@@ -1,9 +1,7 @@
-/// <reference path="../../typings/jquery/jquery.d.ts" />
 var ScrollBody;
 (function (ScrollBody) {
     var Scroll = (function () {
         function Scroll(section1, section2, section3, section4, section5, section6, section7, section8, section9, section10, kendoWindowBug) {
-            //scroll based on top position
             this.scrollMyBody = function (position) {
                 var $body;
 
@@ -13,7 +11,6 @@ var ScrollBody;
                     $("body").scrollTop(position);
                 }
             };
-            //scroll based on side nav
             this.goToSection = function (location, data, event) {
                 var offset = $("#" + location).offset();
                 if (!$("body").scrollTop()) {
@@ -61,7 +58,6 @@ var ScrollBody;
             var _this = this;
             var self = this;
 
-            //bind scroll to side nav
             $(window).scroll(function () {
                 if (_this.kendoWindowBug.val != 0) {
                     _this.scrollMyBody(_this.kendoWindowBug.val);

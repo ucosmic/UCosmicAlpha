@@ -1,10 +1,5 @@
-/// <reference path="../typings/jquery/jquery.d.ts" />
-/// <reference path="App.ts" />
 var App;
 (function (App) {
-    // DO NOT CREATE ANY NEW ROUTES HERE, THIS FILE IS FROZEN.
-    // WE NOW GENERATE ROUTES FROM SERVER_SIDE MVC ACTIONS
-    // USING @Url.HttpRouteUrl. SEE OTHER ROUTE FILES FOR MORE.
     (function (Routes) {
         Routes.applicationPath = '/';
 
@@ -696,22 +691,6 @@ var App;
             })(WebApi.InternationalAffiliations || (WebApi.InternationalAffiliations = {}));
             var InternationalAffiliations = WebApi.InternationalAffiliations;
 
-            //export module Degrees {
-            //    export function get (degreeId?: number): string {
-            //        var url = 'degrees';
-            //        if (degreeId) url += '/' + degreeId;
-            //        return makeUrl(url);
-            //    }
-            //    export function post(): string {
-            //        return get();
-            //    }
-            //    export function put(degreeId: number): string {
-            //        return get(degreeId);
-            //    }
-            //    export function del(degreeId: number): string {
-            //        return get(degreeId);
-            //    }
-            //}
             (function (Affiliations) {
                 function get(affiliationId) {
                     var url = makeUrl('affiliations');
@@ -829,10 +808,6 @@ var App;
                     function get(tab) {
                         var url = makeUrl('person');
 
-                        // Workaround until we figure out how to go from ?tab to #/
-                        //if (tab != null) {
-                        //    url = makeUrlWithParams( 'person' ) + "tab=" + tab;
-                        //}
                         return url;
                     }
                     Profile.get = get;

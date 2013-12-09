@@ -1,9 +1,3 @@
-/// <reference path="../typings/jquery/jquery.d.ts" />
-/// <reference path="../typings/knockout/knockout.d.ts" />
-/// <reference path="../typings/linq/linq.d.ts" />
-/// <reference path="../typings/kendo/kendo.all.d.ts" />
-/// <reference path="Models.d.ts" />
-
 module App {
 
     export interface FormSelectSettings<T> {

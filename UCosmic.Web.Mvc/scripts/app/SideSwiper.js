@@ -1,4 +1,3 @@
-/// <reference path="../typings/jquery/jquery.d.ts" />
 var App;
 (function (App) {
     var defaults = {
@@ -25,22 +24,17 @@ var App;
                 $nextFrame = $nextFrame.next(otherFrameSelector);
             }
 
-            // display the next/right frame since its parent's overflow will obscure it
             $nextFrame.css({ left: 0 });
             $nextFrame.show();
             $nextFrame.animate({ left: negativeFrameWidth }, this.settings.speed, function () {
                 $nextFrame.css({ left: 0 });
             });
 
-            // the left frame is now on
             $nextFrame.attr('data-side-swiper', 'on').data('side-swiper', 'on');
 
-            // reduce the left margin of the left frame to slide the right frame into view
             $currentFrame.animate({ left: negativeFrameWidth }, this.settings.speed, function () {
-                // after the left frame has slid out of view, hide it
                 $currentFrame.hide().css({ left: 0 }).attr('data-side-swiper', 'off').data('side-swiper', 'off');
 
-                // invoke callback if one was passed
                 if (callback)
                     callback();
             });
@@ -59,12 +53,9 @@ var App;
                 $currentFrame.css({ position: 'relative' });
             });
 
-            // reset the left frame to a negative left margin
             $prevFrame.css({ left: negativeFrameWidth }).attr('data-side-swiper', 'on').data('side-swiper', 'on').show().animate({ left: 0 }, this.settings.speed, function () {
-                // after the right frame  is slid out of view, hide it
                 $currentFrame.hide().attr('data-side-swiper', 'off').data('side-swiper', 'off');
 
-                // invoke callback if one was passed
                 if (callback)
                     callback();
             });

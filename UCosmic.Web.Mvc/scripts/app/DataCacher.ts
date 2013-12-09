@@ -1,5 +1,3 @@
-/// <reference path="../typings/jquery/jquery.d.ts" />
-
 module App {
     export class DataCacher<T> {
         constructor(public loader: () => JQueryPromise<T>) { }

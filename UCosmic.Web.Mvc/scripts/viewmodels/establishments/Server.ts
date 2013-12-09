@@ -1,9 +1,3 @@
-/// <reference path="../../typings/jquery/jquery.d.ts" />
-/// <reference path="../../app/App.ts" />
-/// <reference path="../../app/Routes.d.ts" />
-/// <reference path="ApiModels.d.ts" />
-/// <reference path="Routes.d.ts" />
-
 module Establishments.Servers {
 
     export function Single(establishmentId: number, settings?: JQueryAjaxSettings): JQueryPromise<ApiModels.ScalarEstablishment> {

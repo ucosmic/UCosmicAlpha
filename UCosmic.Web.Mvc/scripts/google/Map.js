@@ -1,40 +1,23 @@
-/// <reference path="../typings/googlemaps/google.maps.d.ts" />
-/// <reference path="../typings/jquery/jquery.d.ts" />
-/// <reference path="../typings/knockout/knockout.d.ts" />
-/// <reference path="../app/App.ts" />
 var App;
 (function (App) {
     (function (GoogleMaps) {
         var Map = (function () {
             function Map(elementOrId, options, settings) {
                 this._promise = $.Deferred();
-                //#region Idle
-                // initial values for lat & lng are based on the options used to create the map
                 this.idles = ko.observable(0);
                 this._idleCallbacks = [];
-                //#endregion
-                //#region Bounds (North East Soutn West)
                 this.north = ko.observable();
                 this.south = ko.observable();
                 this.east = ko.observable();
                 this.west = ko.observable();
-                //#endregion
-                //#region Drag
                 this.isDragging = ko.observable(false);
-                //#endregion
-                //#endregion
-                //#region Markers
                 this.markers = ko.observableArray([]);
-                //#endregion
-                //#region InfoWindows
                 this.infoWindows = ko.observableArray([]);
-                // stash the settings and options
                 this._options = options || {};
                 this._settings = settings || {};
 
                 this._log('Constructing google map wrapper instance.');
 
-                // did we get an element or an element id?
                 if (typeof elementOrId === 'string') {
                     this._element = document.getElementById(elementOrId);
                 } else {
@@ -43,7 +26,6 @@ var App;
 
                 this._log('Set map canvas element, id is "{0}".', $(this._element).attr('id'));
 
-                // initialize observables
                 this.zoom = ko.observable(this._options.zoom || this._options.zoom == 0 ? this._options.zoom : 1);
                 this.lat = ko.observable(this._options.center ? Map._reducePrecision(this._options.center.lat(), this._settings.maxPrecision) : Map.defaultCenter.lat());
                 this.lng = ko.observable(this._options.center ? Map._reducePrecision(this._options.center.lng(), this._settings.maxPrecision) : Map.defaultCenter.lng());
@@ -57,7 +39,6 @@ var App;
                 this._log('Latitude initialized to {0}.', this.lat());
                 this._log('Longitude initialized to {0}.', this.lng());
 
-                // automatically create() the map by default, only skip if autoCreate == false.
                 if (typeof this._settings.autoCreate === 'undefined' || this._settings.autoCreate) {
                     this._log('Eagerly readying the google map instance.');
                     this.ready();
@@ -67,12 +48,9 @@ var App;
             }
             Map.prototype.ready = function () {
                 var _this = this;
-                // if the map does not yet exist, construct it and set
-                // up a promise for its first idle event.
                 if (!this.map) {
                     this._create();
 
-                    // listen for the map to become idle before resolving the promise
                     google.maps.event.addListenerOnce(this.map, 'idle', function () {
                         _this._log('Fired map idle event #0.');
                         _this._listenForCenterChange();
@@ -87,10 +65,8 @@ var App;
                 return this._promise;
             };
             Map.prototype._create = function () {
-                // first set up the options
                 var options = this._options;
 
-                // center, zoom, and mapTypeId are required
                 if (!options.center)
                     options.center = Map.defaultCenter;
                 if (!options.zoom)
@@ -98,34 +74,27 @@ var App;
                 if (!options.mapTypeId)
                     options.mapTypeId = google.maps.MapTypeId.ROADMAP;
 
-                // default scrollwheel to false if not specified
                 if (!options.scrollwheel)
                     options.scrollwheel = false;
 
-                // construct the map to kick off initialization
                 this.map = new google.maps.Map(this._element, options);
             };
 
-            //#endregion
-            //#region Viewport Properties & Events
             Map.prototype.setViewport = function (settings) {
                 var isDirty = false;
 
-                // set zoom if it is present and not current value
                 var zoom = this.map.getZoom();
                 if (Map.isValidZoom(settings.zoom) && settings.zoom != zoom) {
                     this.map.setZoom(settings.zoom);
                     isDirty = true;
                 }
 
-                // set center if it is present and not current value
                 var center = this.map.getCenter();
                 if (settings.center && !Map.areCentersEqual(center, settings.center, this._settings.maxPrecision)) {
                     this.map.setCenter(settings.center);
                     isDirty = true;
                 }
 
-                // set bounds if present, not empty, and not current value
                 var bounds = this.map.getBounds();
                 if (settings.bounds && !Map.isEmptyBounds(settings.bounds) && !Map.areBoundsEqual(bounds, settings.bounds)) {
                     this.map.fitBounds(settings.bounds);
@@ -171,7 +140,6 @@ var App;
             Map.prototype._listenForZoomChange = function () {
                 var _this = this;
                 google.maps.event.addListener(this.map, 'zoom_changed', function () {
-                    //this._log('Firing map zoom_changed event.');
                     _this._zoomChanged();
                     _this._log('Fired map zoom_changed event.');
                 });
@@ -190,7 +158,6 @@ var App;
             Map.prototype._listenForCenterChange = function () {
                 var _this = this;
                 google.maps.event.addListener(this.map, 'center_changed', function () {
-                    //this._log('Firing map center_changed event.');
                     _this._centerChanged();
                     _this._log('Fired map center_changed event.');
                 });
@@ -200,8 +167,6 @@ var App;
                 return Map.areNumbersEqualy(center1.lat(), center2.lat(), precision) && Map.areNumbersEqualy(center1.lng(), center2.lng(), precision);
             };
 
-            //39.24683949
-            //39.2468395
             Map.areNumbersEqualy = function (coordinate1, coordinate2, preceision) {
                 coordinate1 = Map._reducePrecision(coordinate1, preceision);
                 coordinate2 = Map._reducePrecision(coordinate2, preceision);
@@ -221,7 +186,6 @@ var App;
             Map.prototype._listenForBoundsChange = function () {
                 var _this = this;
                 google.maps.event.addListener(this.map, 'bounds_changed', function () {
-                    //this._log('Firing map bounds_changed event.');
                     _this._boundsChanged();
                     _this._log('Fired map bounds_changed event.');
                 });
@@ -246,12 +210,10 @@ var App;
             Map.prototype._listenForDragging = function () {
                 var _this = this;
                 google.maps.event.addListener(this.map, 'dragstart', function () {
-                    //this._log('Firing map dragstart event.');
                     _this._draggingChanged(true);
                     _this._log('Fired map dragstart event.');
                 });
                 google.maps.event.addListener(this.map, 'dragend', function () {
-                    //this._log('Firing map dragend event.');
                     _this._draggingChanged(false);
                     _this._log('Fired map dragend event.');
                 });
@@ -311,15 +273,6 @@ var App;
                 });
             };
 
-            //replaceInfoWindows(infoWindows: google.maps.InfoWindow[]): google.maps.InfoWindow[] {
-            //    var removed = this.removeInfoWindows();
-            //    $.each(infoWindows, (i: number, infoWindow: google.maps.InfoWindow): void => {
-            //        this.openInfoWindow(infoWindow);
-            //    });
-            //    return removed;
-            //}
-            //#endregion
-            //#region Helpers
             Map.prototype.triggerResize = function () {
                 var promise = $.Deferred();
                 google.maps.event.trigger(this.map, 'resize');

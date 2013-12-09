@@ -1,7 +1,3 @@
-/// <reference path="../../typings/googlemaps/google.maps.d.ts" />
-/// <reference path="../../app/App.ts" />
-/// <reference path="../../google/Map.ts" />
-
 module Activities.ViewModels {
 
     export class PublicView {

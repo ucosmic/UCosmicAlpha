@@ -1,26 +1,18 @@
-/// <reference path="../typings/jquery/jquery.d.ts" />
-/// <reference path="../typings/knockout/knockout.d.ts" />
-/// <reference path="Spinner.ts" />
 var App;
 (function (App) {
     var PagedSearch = (function () {
         function PagedSearch() {
             var _this = this;
-            // paging observables
             this.pageSize = ko.observable();
             this.pageNumber = ko.observable();
             this.transitionedPageNumber = ko.observable();
             this.itemTotal = ko.observable();
             this.nextForceDisabled = ko.observable(false);
             this.prevForceDisabled = ko.observable(false);
-            // results
             this.items = ko.observableArray();
-            // filtering
             this.orderBy = ko.observable();
             this.keyword = ko.observable($('input[type=hidden][data-bind="value: keyword"]').val());
-            // spinner component
             this.spinner = new App.Spinner({ delay: 400, runImmediately: true });
-            // paging computeds
             this.pageCount = ko.computed(function () {
                 return Math.ceil(_this.itemTotal() / _this.pageSize());
             });
@@ -48,13 +40,11 @@ var App;
                 return _this.pageNumber() > 1 && !_this.prevForceDisabled();
             });
 
-            // paging subscriptions
             this.pageCount.subscribe(function (newValue) {
                 if (_this.pageNumber() && _this.pageNumber() > newValue)
                     _this.pageNumber(1);
             });
 
-            // result computeds
             this.hasItems = ko.computed(function () {
                 return _this.items() && _this.items().length > 0;
             });
@@ -71,10 +61,8 @@ var App;
                 return _this.hasItems() && !_this.spinner.isVisible();
             });
 
-            // filtering computeds
             this.throttledKeyword = ko.computed(this.keyword).extend({ throttle: 400 });
         }
-        // paging methods
         PagedSearch.prototype.nextPage = function () {
             if (this.nextEnabled()) {
                 var pageNumber = Number(this.pageNumber()) + 1;

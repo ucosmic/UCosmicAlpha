@@ -1,6 +1,3 @@
-/// <reference path="../typings/google.visualization/google.visualization.d.ts" />
-/// <reference path="../typings/jquery/jquery.d.ts" />
-
 module App.Google {
 
     export interface LineChartEventName {

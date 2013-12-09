@@ -1,7 +1,3 @@
-/// <reference path="../../typings/knockout/knockout.d.ts" />
-/// <reference path="../../typings/googlemaps/google.maps.d.ts" />
-/// <reference path="ApiModels.d.ts" />
-
 import gm = google.maps;
 
 module Places.Utils {

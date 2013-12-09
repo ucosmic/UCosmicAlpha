@@ -1,10 +1,3 @@
-/// <reference path="../../google/ToolsOverlay.ts" />
-/// <reference path="../../app/Routes.ts" />
-/// <reference path="../../app/Flasher.ts" />
-/// <reference path="../../app/Spinner.ts" />
-/// <reference path="../places/ApiModels.d.ts" />
-/// <reference path="../places/Utils.ts" />
-/// <reference path="ApiModels.d.ts" />
 var Establishments;
 (function (Establishments) {
     (function (ViewModels) {
@@ -57,25 +50,17 @@ var Establishments;
                 });
 
                 this.isEditable = ko.computed(function () {
-                    // may be a bad name for this property
-                    // this only returns true for the edit page, returns false for add page
                     return _this.ownerId && _this.ownerId !== 0;
                 });
 
                 this.isEditIconVisible = ko.computed(function () {
-                    // whether or not to display edit icon to user
-                    // should never show on add page, because is always editable
-                    // should only display on edit page to make isEditing() === true
                     return _this.isEditable() && !_this.isEditing();
                 });
 
                 this.isEditing.subscribe(function (newValue) {
-                    // when edit mode is changed, show or hide marker tool overlay
                     if (newValue) {
-                        // show map marker tool
                         _this.mapTools().showMarkerTools();
                     } else if (_this.isEditable()) {
-                        // always display for add page, but hide for edit page
                         _this.mapTools().hideMarkerTools();
                     }
                 });
@@ -93,7 +78,6 @@ var Establishments;
                         _this.initMap();
                 });
 
-                // continents section
                 ko.computed(function () {
                     $.get(App.Routes.WebApi.Places.get(), { isContinent: true }).done(function (response) {
                         _this.continents(response);
@@ -107,7 +91,6 @@ var Establishments;
                     return continent ? continent.officialName : '[Unknown]';
                 });
 
-                // countries dropdown
                 this.countryOptionsCaption = ko.computed(function () {
                     return _this.countries().length > 0 ? '[Unspecified]' : '[Loading...]';
                 });
@@ -129,12 +112,9 @@ var Establishments;
                     return country ? country.officialName : '[Unknown]';
                 });
                 this.countryId.subscribe(function (newValue) {
-                    // when this value is set before the countries menu is loaded,
-                    // it will be reset to undefined.
                     if (newValue && _this.countries().length == 0)
-                        _this._countryId = newValue; // stash the value to set it after menu loads
+                        _this._countryId = newValue;
 
-                    // scope the menu to the selected country
                     if (newValue && _this.countries().length > 0) {
                         var country = Places.Utils.getPlaceById(_this.countries(), newValue);
                         if (country) {
@@ -146,14 +126,11 @@ var Establishments;
                                 }, 1000);
                             }
 
-                            // cascade the continent
                             _this.continentId(country.parentId);
 
-                            // load admin1 options
                             _this.loadAdmin1s(country.id);
                         }
                     } else if (!newValue && _this.countries().length > 0) {
-                        // when changing to unspecified, zoom out menu
                         _this.map.setCenter(new gm.LatLng(0, 0));
                         if (_this.allowCountryFitBounds) {
                             _this.map.setZoom(1);
@@ -166,7 +143,6 @@ var Establishments;
                     }
                 });
 
-                // admin1 dropdown
                 this.admin1OptionsCaption = ko.computed(function () {
                     return !_this.admin1sLoading() ? '[Unspecified]' : '[Loading...]';
                 }).extend({ throttle: 400 });
@@ -174,15 +150,12 @@ var Establishments;
                     return _this.countryId() && (_this.admin1s().length > 0 || _this.admin1sLoading());
                 });
                 this.admin1Id.subscribe(function (newValue) {
-                    // when this value is set before the admin1 menu is loaded,
-                    // it will be reset to undefined.
                     if (newValue && _this.admin1s().length == 0)
-                        _this._admin1Id = newValue; // stash the value to set it after menu loads
+                        _this._admin1Id = newValue;
 
                     if (newValue && _this.admin1s().length > 0) {
                         var admin1 = Places.Utils.getPlaceById(_this.admin1s(), newValue);
                         if (admin1) {
-                            // load admin2 options
                             _this.loadAdmin2s(admin1.id);
                         } else {
                             _this._admin1Id = newValue;
@@ -198,7 +171,6 @@ var Establishments;
                     return admin1 ? admin1.officialName : '[Unknown]';
                 });
 
-                // admin2 dropdown
                 this.admin2OptionsCaption = ko.computed(function () {
                     return !_this.admin2sLoading() ? '[Unspecified]' : '[Loading...]';
                 }).extend({ throttle: 400 });
@@ -206,15 +178,12 @@ var Establishments;
                     return _this.countryId() && _this.admin1Id() && (_this.admin2s().length > 0 || _this.admin2sLoading());
                 });
                 this.admin2Id.subscribe(function (newValue) {
-                    // when this value is set before the admin2 menu is loaded,
-                    // it will be reset to undefined.
                     if (newValue && _this.admin2s().length == 0)
-                        _this._admin2Id = newValue; // stash the value to set it after menu loads
+                        _this._admin2Id = newValue;
 
                     if (newValue && _this.admin2s().length > 0) {
                         var admin2 = Places.Utils.getPlaceById(_this.admin2s(), newValue);
                         if (admin2) {
-                            // load admin3 options
                             _this.loadAdmin3s(admin2.id);
                         } else {
                             _this._admin2Id = newValue;
@@ -230,7 +199,6 @@ var Establishments;
                     return admin2 ? admin2.officialName : '[Unknown]';
                 });
 
-                // admin3 dropdown
                 this.admin3OptionsCaption = ko.computed(function () {
                     return !_this.admin3sLoading() ? '[Unspecified]' : '[Loading...]';
                 }).extend({ throttle: 400 });
@@ -238,10 +206,8 @@ var Establishments;
                     return _this.countryId() && _this.admin1Id() && _this.admin2Id() && (_this.admin3s().length > 0 || _this.admin3sLoading());
                 });
                 this.admin3Id.subscribe(function (newValue) {
-                    // when this value is set before the admin3 menu is loaded,
-                    // it will be reset to undefined.
                     if (newValue && _this.admin3s().length == 0)
-                        _this._admin3Id = newValue; // stash the value to set it after menu loads
+                        _this._admin3Id = newValue;
 
                     if (newValue && _this.admin3s().length > 0) {
                         var admin3 = Places.Utils.getPlaceById(_this.admin3s(), newValue);
@@ -264,7 +230,6 @@ var Establishments;
                 var _this = this;
                 var me = this;
 
-                // do everything necessary to initialize the google map
                 var mapOptions = {
                     mapTypeId: gm.MapTypeId.ROADMAP,
                     center: new gm.LatLng(0, 0),
@@ -273,24 +238,22 @@ var Establishments;
                     scrollwheel: false
                 };
                 google.maps.visualRefresh = true;
-                this.map = new gm.Map(this.$mapCanvas()[0], mapOptions); // create map on element
+                this.map = new gm.Map(this.$mapCanvas()[0], mapOptions);
                 this.isMapVisible(true);
 
                 gm.event.addListenerOnce(this.map, 'idle', function () {
                     _this.mapTools(new App.GoogleMaps.ToolsOverlay(_this.map));
-                    _this.mapTools().hideMarkerTools(); // initially hide the marker tools
+                    _this.mapTools().hideMarkerTools();
 
                     gm.event.addListener(_this.map, 'zoom_changed', function () {
-                        // track the map zoom
                         _this.mapZoom(_this.map.getZoom());
                     });
                 });
 
-                // tools overlay marker
                 this.$mapCanvas().on('marker_destroyed', function () {
                     var center = _this.map.getCenter();
                     var zoom = _this.map.getZoom();
-                    _this.countryId(undefined); // reset location info
+                    _this.countryId(undefined);
                     _this.continentId(undefined);
                     _this.admin1Id(undefined);
                     _this.admin2Id(undefined);
@@ -312,7 +275,6 @@ var Establishments;
                     }).always(function () {
                         _this.loadSpinner.stop();
                     }).fail(function (arg1, arg2, arg3, arg4, arg5) {
-                        //alert('update call fail :(');
                     });
                 });
 
@@ -335,13 +297,11 @@ var Establishments;
             };
 
             Location.prototype.loadMapZoom = function (response) {
-                // zoom map to reveal location
                 if (response.googleMapZoomLevel && response.center && response.center.hasValue)
                     this.map.setZoom(response.googleMapZoomLevel);
                 else if (response.box.hasValue)
                     this.map.fitBounds(Places.Utils.convertToLatLngBounds(response.box));
 
-                // map may have no center but bounding box and zoom
                 if (response.googleMapZoomLevel && response.googleMapZoomLevel > 1)
                     this.map.setZoom(response.googleMapZoomLevel);
                 if (response.googleMapZoomLevel || response.box.hasValue)
@@ -349,7 +309,6 @@ var Establishments;
             };
 
             Location.prototype.loadMapMarker = function (response) {
-                // place marker and set map center
                 if (response.center.hasValue) {
                     var latLng = Places.Utils.convertToLatLng(response.center);
                     this.mapTools().placeMarker(latLng);
@@ -358,36 +317,30 @@ var Establishments;
             };
 
             Location.prototype.fillPlacesHierarchy = function (places) {
-                // make places array observable
                 this.places(places);
 
-                // populate continent menu
                 var continent = Places.Utils.getContinent(places);
                 if (continent)
                     this.continentId(continent.id);
 
-                // populate country menu
                 var country = Places.Utils.getCountry(places);
                 if (country)
                     this.countryId(country.id);
                 else
                     this.countryId(undefined);
 
-                // populate admin1 menu
                 var admin1 = Places.Utils.getAdmin1(places);
                 if (admin1)
                     this.admin1Id(admin1.id);
                 else
                     this.admin1Id(undefined);
 
-                // populate admin2 menu
                 var admin2 = Places.Utils.getAdmin2(places);
                 if (admin2)
                     this.admin2Id(admin2.id);
                 else
                     this.admin2Id(undefined);
 
-                // populate admin3 menu
                 var admin3 = Places.Utils.getAdmin3(places);
                 if (admin3)
                     this.admin3Id(admin3.id);
@@ -403,7 +356,6 @@ var Establishments;
 
             Location.prototype.loadAdmin1s = function (countryId) {
                 var _this = this;
-                //this.admin1s([]);
                 var admin1Url = App.Routes.WebApi.Places.get();
                 this.admin1sLoading(true);
                 $.ajax({
@@ -421,7 +373,6 @@ var Establishments;
 
             Location.prototype.loadAdmin2s = function (admin1Id) {
                 var _this = this;
-                //this.admin2s([]);
                 var admin2Url = App.Routes.WebApi.Places.get();
                 this.admin2sLoading(true);
                 $.ajax({
@@ -439,7 +390,6 @@ var Establishments;
 
             Location.prototype.loadAdmin3s = function (admin2Id) {
                 var _this = this;
-                //this.admin3s([]);
                 var admin3Url = App.Routes.WebApi.Places.get();
                 this.admin3sLoading(true);
                 $.ajax({
@@ -467,7 +417,6 @@ var Establishments;
                 var _this = this;
                 var me = this;
 
-                // shouldn't be able to click this button for add form, guarding anyway
                 if (!this.ownerId)
                     return;
 
@@ -482,7 +431,6 @@ var Establishments;
                     App.flasher.flash(response);
                     _this.isEditing(false);
                 }).fail(function (arg1, arg2, arg3) {
-                    //alert('fail :(');
                 });
             };
 
@@ -494,7 +442,6 @@ var Establishments;
                         longitude: centerLng
                     };
 
-                // center the map on the lat/lng before getting bounds
                 if (center)
                     this.map.setCenter(Places.Utils.convertToLatLng(center));
 
@@ -537,18 +484,14 @@ var Establishments;
                 var _this = this;
                 this.isEditing(false);
 
-                // shouldn't be able to click this button for add form, guarding anyway
                 if (!this.ownerId)
                     return;
 
-                // restore initial values
                 this.isLoaded(false);
                 $.get(App.Routes.WebApi.Establishments.Locations.get(this.ownerId)).done(function (response) {
-                    // reset zoom
                     _this.map.setZoom(1);
                     _this.loadMapZoom(response);
 
-                    // reset marker
                     _this.mapTools().destroyMarker();
                     _this.loadMapMarker(response);
 

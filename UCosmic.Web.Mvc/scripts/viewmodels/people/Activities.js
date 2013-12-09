@@ -1,8 +1,4 @@
-﻿/// <reference path="../../typings/jquery/jquery.d.ts" />
-/// <reference path="../../typings/knockout/knockout.d.ts" />
-/// <reference path="../places/ApiModels.d.ts" />
-/// <reference path="../../app/Routes.ts" />
-var modelData;
+﻿var modelData;
 var People;
 (function (People) {
     (function (ViewModels) {
@@ -64,22 +60,19 @@ var People;
                 this.$form.submit();
             };
 
-            // countries dropdown
             ActivityInputModel.prototype._setupCountryDropDown = function () {
                 var _this = this;
                 ko.computed(function () {
-                    // populate countryCode based on last value when paging backwards
                     var lastCountryCode = $('input[type=hidden][data-bind="value: countryCode"]').val();
 
                     $.get(App.Routes.WebApi.Countries.get()).done(function (response) {
-                        // setup empty value
                         var emptyValue = {
                             code: '-1',
                             name: '[Without country]'
                         };
                         response.splice(response.length, 0, emptyValue);
 
-                        _this.countries(response); // push into observable array
+                        _this.countries(response);
 
                         _this.countryCode(modelData.CountryCode);
                         _this.hasInitialized = true;

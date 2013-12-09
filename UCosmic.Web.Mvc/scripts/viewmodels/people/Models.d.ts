@@ -1,6 +1,3 @@
-/// <reference path="../employees/Employees.ts" />
-/// <reference path="../../typings/knockout/knockout.d.ts" />
-
 declare module People.ApiModels {
 
     export interface Affiliation {

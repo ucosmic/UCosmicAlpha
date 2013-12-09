@@ -1,13 +1,7 @@
-/// <reference path="../../typings/knockout/knockout.d.ts" />
-/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
-/// <reference path="../../typings/jquery/jquery.d.ts" />
-/// <reference path="../../app/Routes.ts" />
-/// <reference path="../../typings/kendo/kendo.all.d.ts" />
 var Agreements;
 (function (Agreements) {
     var Phones = (function () {
         function Phones(agreementId, establishmentItemViewModel, contactId) {
-            //phone vars
             this.contactPhoneTextValue = ko.observable("");
             this.contactPhoneType = ko.observable();
             this.contactPhones = ko.observableArray();
@@ -34,15 +28,6 @@ var Agreements;
         Phones.prototype.removePhone = function (me, e) {
             if (this.agreementId !== 0) {
                 this.deletedPhones.push(me.id);
-                //var url = App.Routes.WebApi.Agreements.Contacts.Phones.del(this.agreementId, me.contactId, me.id);
-                //$.ajax({
-                //    url: url,
-                //    type: 'DELETE',
-                //    success: (): void => {
-                //        this.contactPhones.remove(me);
-                //        $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * 1.1)));
-                //    }
-                //});
             }
             this.contactPhones.remove(me);
             e.preventDefault();

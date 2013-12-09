@@ -1,30 +1,10 @@
-/// <reference path="../../typings/googlemaps/google.maps.d.ts" />
-/// <reference path="../../typings/jquery/jquery.d.ts" />
-/// <reference path="../../typings/sammyjs/sammyjs.d.ts" />
-/// <reference path="../../typings/knockout/knockout.d.ts" />
-/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
-/// <reference path="../../typings/linq/linq.d.ts" />
-/// <reference path="../../typings/moment/moment.d.ts" />
-/// <reference path="../../app/App.ts" />
-/// <reference path="../../app/Routes.ts" />
-/// <reference path="../../app/Spinner.ts" />
-/// <reference path="../../app/Pagination.d.ts" />
-/// <reference path="../../app/Pager.ts" />
-/// <reference path="ApiModels.d.ts" />
-/// <reference path="../places/ApiModels.d.ts" />
-/// <reference path="../places/Utils.ts" />
-/// <reference path="../../google/Map.ts" />
 var Agreements;
 (function (Agreements) {
     (function (ViewModels) {
         var SearchMap = (function () {
-            //#endregion
-            //#region Construction & Initialization
             function SearchMap(settings) {
                 var _this = this;
                 this.settings = settings;
-                //#region Search Filter Inputs
-                // instead of throttling, both this and the options are observed
                 this.continentCode = ko.observable(sessionStorage.getItem(SearchMap.ContinentSessionKey) || 'any');
                 this.countryCode = ko.observable(sessionStorage.getItem(SearchMap.CountrySessionKey) || 'any');
                 this.placeId = ko.observable(parseInt(sessionStorage.getItem(SearchMap.PlaceIdSessionKey) || 0));
@@ -40,7 +20,6 @@ var Agreements;
                         _this.detailPreference(value ? '_blank' : '');
                     }
                 });
-                // automatically save the search inputs to session when they change
                 this._inputChanged = ko.computed(function () {
                     if (_this.countryCode() == undefined)
                         _this.countryCode('any');
@@ -55,8 +34,6 @@ var Agreements;
                     sessionStorage.setItem(SearchMap.LngSessionKey, _this.lng().toString());
                     sessionStorage.setItem(SearchMap.DetailPrefSessionKey, _this.detailPreference() || '');
                 }).extend({ throttle: 0 });
-                //#endregion
-                //#region Google Map
                 this._map = new App.GoogleMaps.Map('google_map_canvas', {
                     center: new google.maps.LatLng(this.lat(), this.lng()),
                     zoom: this.zoom(),
@@ -68,8 +45,6 @@ var Agreements;
                 }, {
                     maxPrecision: 8
                 });
-                //#endregion
-                //#region Summary
                 this.status = {
                     agreementCount: ko.observable('?'),
                     partnerCount: ko.observable('?'),
@@ -80,9 +55,6 @@ var Agreements;
                     partnerCount: ko.observable('?'),
                     countryCount: ko.observable('?')
                 };
-                //#endregion
-                //#region Country & Continent Options
-                // initial options show loading message
                 this.countries = ko.observableArray();
                 this.countryOptions = ko.computed(function () {
                     return _this._computeCountryOptions();
@@ -94,24 +66,17 @@ var Agreements;
                 this._isActivated = ko.observable(false);
                 this.loadViewport = 0;
                 this._route = ko.computed(function () {
-                    // this will run once during construction
                     return _this._computeRoute();
                 });
-                //#endregion
-                //#region Query Scoping
                 this._scopeHistory = ko.observableArray();
                 this._currentScope = ko.computed(function () {
-                    // this will run once during construction
                     return _this._computeCurrentScope();
                 });
                 this._scopeDirty = ko.computed(function () {
                     _this._onScopeDirty();
                 }).extend({ throttle: 1 });
-                //#endregion
-                //#region Query Viewporting
                 this._viewportHistory = ko.observableArray();
                 this._currentViewport = ko.computed(function () {
-                    // this will run once during construction
                     return _this._computeCurrentViewport();
                 });
                 this._viewportDirty = ko.computed(function () {
@@ -127,17 +92,6 @@ var Agreements;
                 this.sammy = this.settings.sammy || Sammy();
                 this._runSammy();
 
-                //var HistoryJS: Historyjs = <any>History;
-                //HistoryJS.Adapter.bind(window, 'statechange', function () {
-                //    alert('history adapter fired statechange');
-                //});
-                //if (!HistoryJS.enabled) {
-                //    //...
-                //}
-                //HistoryJS.Adapter.bind(window, 'statechange', () => {
-                //    var State = HistoryJS.getState();
-                //    HistoryJS.log(State.data, State.title, State.url);
-                //});
                 this._map.ready().done(function () {
                     _this._map.onIdle(function () {
                         var idles = _this._map.idles();
@@ -239,11 +193,8 @@ var Agreements;
 
             SearchMap.prototype._loadCountryOptions = function () {
                 var _this = this;
-                // this will run once during construction
-                // this will run before sammy and applyBindings...
                 var deferred = $.Deferred();
                 $.get(App.Routes.WebApi.Countries.get()).done(function (response) {
-                    // ...but this will run after sammy and applyBindings
                     _this.countries(response);
                     deferred.resolve();
                 });
@@ -260,23 +211,19 @@ var Agreements;
             };
 
             SearchMap.prototype._runSammy = function () {
-                // this will run once during construction
                 var viewModel = this;
 
-                // sammy will run the first route that it matches
                 var beforeRegex = new RegExp('\\{0}'.format(this.routeFormat.format('(.*)', '(.*)', '(.*)', '(.*)', '(.*)', '(.*)').replace(/\//g, '\\/')));
                 this.sammy.before(beforeRegex, function () {
                     var e = this;
                     return viewModel._onBeforeRoute(e);
                 });
 
-                // do this when we already have hashtag parameters in the page
                 this.sammy.get(this.routeFormat.format(':continent', ':country', ':place', ':zoom', ':lat', ':lng'), function () {
                     var e = this;
                     viewModel._onRoute(e);
                 });
 
-                // activate the page route (create default hashtag parameters)
                 this.sammy.get(this.settings.activationRoute || this.sammy.getLocation(), function () {
                     viewModel.setLocation();
                 });
@@ -286,7 +233,6 @@ var Agreements;
             };
 
             SearchMap.prototype._onBeforeRoute = function (e) {
-                // prevent the route from changing lat or lng by insignificant digits
                 var newLat = e.params['lat'];
                 var newLng = e.params['lng'];
                 var oldLat = this.lat();
@@ -363,7 +309,6 @@ var Agreements;
             };
 
             SearchMap.prototype._computeRoute = function () {
-                // build what the route should be, based on current filter inputs
                 var continentCode = this.continentCode();
                 var countryCode = this.countryCode();
                 var placeId = this.placeId();
@@ -375,7 +320,6 @@ var Agreements;
             };
 
             SearchMap.prototype.setLocation = function () {
-                // only set the href hashtag to trigger sammy when the current route is stale
                 var route = this._route();
                 if (this.sammy.getLocation().indexOf(route) < 0) {
                     this.sammy.setLocation(route);
@@ -476,7 +420,6 @@ var Agreements;
                 var _this = this;
                 var deferred = $.Deferred();
 
-                // load continents before countries
                 if (placeType == 'countries' && !this._continentsResponse) {
                     var continentsReceived = this._requestPlaces('continents');
                     $.when(continentsReceived).then(function () {
@@ -581,7 +524,6 @@ var Agreements;
                     var marker = new google.maps.Marker(options);
                     markers.push(marker);
 
-                    // display partner name in title when only 1 agreement
                     if (place.agreementCount == 1) {
                         marker.set('ucosmic_agreement_id', place.agreementIds[0]);
                     }
@@ -610,11 +552,8 @@ var Agreements;
                                     location.href = url;
                                 }
                             } else {
-                                //this._map.setViewport({ // TODO: can this be added back?
-                                //    bounds: Places.Utils.convertToLatLngBounds(place.boundingBox),
-                                //});
                                 if (place.id < 1) {
-                                    _this.continentCode('none'); // select none in continents dropdown menu
+                                    _this.continentCode('none');
                                 } else {
                                     _this.continentCode(place.continentCode);
                                     _this.countryCode('any');
@@ -656,7 +595,6 @@ var Agreements;
                 });
                 this._map.replaceMarkers(markers);
 
-                // update titles of markers with agreementCount == 1
                 var singleMarkers = Enumerable.From(markers).Where(function (x) {
                     var agreementId = x.get('ucosmic_agreement_id');
                     return !isNaN(agreementId) && agreementId > 0;
@@ -666,12 +604,10 @@ var Agreements;
                         return parseInt(x.get('ucosmic_agreement_id'));
                     }).ToArray();
 
-                    // TODO: this is not dry
                     $.get(this.settings.partnersApi, { agreementIds: agreementIds }).done(function (response) {
                         $.each(singleMarkers, function (i, singleMarker) {
                             var agreementId = parseInt(singleMarker.get('ucosmic_agreement_id'));
 
-                            // agreement can have many partners
                             var partners = Enumerable.From(response).Where(function (x) {
                                 return x.agreementId == agreementId;
                             }).ToArray();
@@ -694,14 +630,12 @@ var Agreements;
                     bounds: new google.maps.LatLngBounds()
                 };
 
-                // zoom map to level 1 in order to view continents
                 if (placeType == 'continents') {
                     settings.zoom = 1;
                     settings.center = SearchMap.defaultMapCenter;
                 } else if (placeType == 'countries') {
                     var continentCode = this.continentCode();
 
-                    //#region zero places, try continent bounds
                     if (!places.length) {
                         if (continentCode && this._continentsResponse) {
                             var continent = Enumerable.From(this._continentsResponse()).SingleOrDefault(undefined, function (x) {
@@ -723,11 +657,9 @@ var Agreements;
                             settings.bounds.extend(latLng);
                         });
                     }
-                    //#endregion
                 } else {
                     var countryCode = this.countryCode();
 
-                    //#region zero places, try country bounds
                     if (!places.length) {
                         if (countryCode && this.countryOptions) {
                             var countryOption = Enumerable.From(this.countryOptions()).SingleOrDefault(undefined, function (x) {
@@ -749,7 +681,6 @@ var Agreements;
                             settings.bounds.extend(latLng);
                         });
                     }
-                    //#endregion
                 }
 
                 return settings;
@@ -870,7 +801,6 @@ var Agreements;
                 var _this = this;
                 var deferred = $.Deferred();
 
-                // need to make sure we have places before we can get partners
                 if (!this._placesResponse) {
                     var placesReceived = this._requestPlaces('');
                     $.when(placesReceived).then(function () {
@@ -879,7 +809,6 @@ var Agreements;
                         });
                     });
                 } else {
-                    // need to request the agreementIds for the current place
                     var placeId = this.placeId();
                     var place = Enumerable.From(this._placesResponse()).SingleOrDefault(undefined, function (x) {
                         return x.id == placeId;
@@ -890,9 +819,7 @@ var Agreements;
                         this.status.countryCount('this area');
                         deferred.reject();
                         this.spinner.stop();
-                        //alert('There are no agreements for place #{0}.'.format(placeId));
                     } else {
-                        // load the partners
                         $.get(this.settings.partnersApi, { agreementIds: place.agreementIds }).done(function (response) {
                             _this._partnersResponse = ko.observableArray(response);
                             deferred.resolve();
@@ -910,17 +837,14 @@ var Agreements;
                 var _this = this;
                 var allPartners = this._partnersResponse();
 
-                // how many different partners are there?
                 var uniquePartners = Enumerable.From(allPartners).Distinct(function (x) {
                     return x.establishmentId;
                 }).ToArray();
 
-                // set map viewport
                 var viewportSettings = {
                     bounds: new google.maps.LatLngBounds()
                 };
                 if (uniquePartners.length == 1) {
-                    // try zoom first
                     var partner = uniquePartners[0];
                     viewportSettings.center = Places.Utils.convertToLatLng(partner.center);
                     if (partner.googleMapZoomLevel) {
@@ -936,11 +860,9 @@ var Agreements;
                     alert('Found no agreement partners for place #{0}.'.format(this.placeId()));
                 }
 
-                // plot the markers
                 var markers = [];
                 var scaler = this._getMarkerIconScaler('', this._placesResponse());
                 $.each(uniquePartners, function (i, partner) {
-                    // how many agreements for this partner?
                     var agreements = Enumerable.From(allPartners).Where(function (x) {
                         return x.establishmentId == partner.establishmentId;
                     }).Distinct(function (x) {
@@ -986,7 +908,6 @@ var Agreements;
                     google.maps.event.trigger(markers[0], 'click');
                 }
 
-                // update the status
                 this.status.agreementCount(Enumerable.From(allPartners).Distinct(function (x) {
                     return x.agreementId;
                 }).Count().toString());
@@ -1022,12 +943,10 @@ var Agreements;
                 var fromRange = this.from.max - this.from.min;
                 var intoRange = this.into.max - this.into.min;
                 if (fromRange) {
-                    // compute the percentage above min for the point
                     var factor = (point - this.from.min) / fromRange;
 
-                    // multiply the percentage by the range going into
                     var emphasis = Math.round(factor * intoRange);
-                    scaled += emphasis; // scale up from min to min + emphasis
+                    scaled += emphasis;
                 }
                 if (scaled < this.into.min)
                     scaled = this.into.min;

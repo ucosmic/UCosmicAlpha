@@ -1,6 +1,3 @@
-/// <reference path="../typings/knockout/knockout.d.ts" />
-/// <reference path="Pagination.d.ts" />
-
 module App {
     export class Pager<T> {
 

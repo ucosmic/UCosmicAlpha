@@ -1,8 +1,3 @@
-/// <reference path="../typings/googlemaps/google.maps.d.ts" />
-/// <reference path="../typings/knockout/knockout.d.ts" />
-/// <reference path="../typings/jquery/jquery.d.ts" />
-/// <reference path="../typings/jqueryui/jqueryui.d.ts" />
-
 module App.GoogleMaps {
 
     import gm = google.maps

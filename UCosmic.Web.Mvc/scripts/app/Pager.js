@@ -1,5 +1,3 @@
-/// <reference path="../typings/knockout/knockout.d.ts" />
-/// <reference path="Pagination.d.ts" />
 var App;
 (function (App) {
     var Pager = (function () {
@@ -50,11 +48,9 @@ var App;
                 return options;
             });
             this._pageNumberChanged = ko.computed(function () {
-                // changes when applyBindings happens and after options data is loaded
                 var pageNumber = _this.pageNumber();
                 var options = _this.pageNumberOptions();
 
-                // keep pageNumber as an option so that we don't lose it when options change
                 if (options.length == 1 && options[0] != pageNumber)
                     options[0] = pageNumber;
             });

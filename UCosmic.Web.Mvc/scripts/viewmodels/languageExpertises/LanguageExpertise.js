@@ -1,18 +1,8 @@
-/// <reference path="../../typings/jquery/jquery.d.ts" />
-/// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
-/// <reference path="../../typings/knockout/knockout.d.ts" />
-/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
-/// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
-/// <reference path="../../typings/kendo/kendo.all.d.ts" />
-/// <reference path="../../typings/tinymce/tinymce.d.ts" />
-/// <reference path="../../typings/moment/moment.d.ts" />
-/// <reference path="../../app/Routes.ts" />
 var ViewModels;
 (function (ViewModels) {
     (function (LanguageExpertises) {
         var LanguageExpertise = (function () {
             function LanguageExpertise(expertiseId) {
-                /* True if any field changes. */
                 this.dirtyFlag = ko.observable(false);
                 this.isOther = ko.observable(false);
                 this._initialize(expertiseId);
@@ -43,8 +33,6 @@ var ViewModels;
                     }
                 });
 
-                /* For some reason, setting the value in the droplist creation above to 0,
-                does not set the item to "Other" */
                 this.languageDroplist = $("#" + languageInputId).data("kendoDropDownList");
                 if (this.languageId() == null) {
                     this.languageDroplist.select(function (dataItem) {
@@ -86,22 +74,8 @@ var ViewModels;
             };
 
             LanguageExpertise.prototype.setupValidation = function () {
-                //ko.validation.rules['otherRequired'] = {
-                //    validator: (val: any, otherVal: any): boolean => {
-                //        debugger;
-                //        var selectedIndex = this.languageDroplist.select();
-                //        var selectedName = this.languageList[selectedIndex].name;
-                //        if (selectedName !== "Other") {
-                //            return true;
-                //        }
-                //        return (this.other !== null) && (this.other.length > 0);
-                //    },
-                //    message: 'Please provide the other language.'
-                //};
-                //ko.validation.registerExtenders();
                 this.languageId.extend({ notEqual: 0 });
 
-                //this.other.extend({ otherRequired: true });
                 ko.validation.group(this);
             };
 
@@ -203,7 +177,6 @@ var ViewModels;
 
             LanguageExpertise.prototype.save = function (viewModel, event) {
                 if (!this.isValid()) {
-                    // TBD - need dialog here.
                     this.errors.showAllMessages();
                     return;
                 }

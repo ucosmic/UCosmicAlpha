@@ -1,6 +1,3 @@
-/// <reference path="../typings/jquery/jquery.d.ts" />
-/// <reference path="../typings/jquery.plugins/jquery.autosize.d.ts" />
-/// <reference path="../typings/jquery.plugins/jquery.placeholder.d.ts" />
 if (!String.prototype.format) {
     String.prototype.format = function () {
         var formatted = this;
@@ -14,12 +11,10 @@ if (!String.prototype.format) {
 
 var App;
 (function (App) {
-    // react to unexpected situations
     (function (Failures) {
         function message(xhr, reason, autoAlert) {
             if (typeof reason === "undefined") { reason = ''; }
             if (typeof autoAlert === "undefined") { autoAlert = false; }
-            // do not report error if user clicked on link or browser control
             if (xhr)
                 if (xhr.readyState === 0 || xhr.status === 0)
                     return null;
@@ -41,12 +36,10 @@ var App;
     })(App.Constants || (App.Constants = {}));
     var Constants = App.Constants;
 
-    // track & get/set window scroll position
     var WindowScroller = (function () {
         function WindowScroller() {
         }
         WindowScroller.init = function () {
-            // track the scroll top in a hidden field
             var trackTop = function () {
                 var windowScrollTop = $(window).scrollTop();
                 $(WindowScroller.scrollTopTrackerId).val(windowScrollTop);
@@ -74,7 +67,6 @@ var App;
         App.WindowScroller.init();
     });
 
-    // fix sidebar elements when scrolling vertically
     var SidebarFixedScroller = (function () {
         function SidebarFixedScroller() {
         }
@@ -86,9 +78,6 @@ var App;
                     if (windowScrollTop > anchorOffsetTop) {
                         $content.css({
                             position: 'fixed',
-                            // this was commented out on 2013.08.16 by tim because it caused display
-                            // issues with the agreement form sidbar. re-added by dan on 2013.10.12
-                            // by updating contentWidth when it is initialized as zero.
                             width: contentWidth
                         });
                         if ($content.height() > $window.height())
@@ -119,7 +108,6 @@ var App;
         SidebarFixedScroller.init();
     });
 
-    // unobtrusive behaviors
     (function (Obtruders) {
         function autosize(selector) {
             if ($.fn.autosize)
@@ -150,7 +138,6 @@ var App;
     })(App.Obtruders || (App.Obtruders = {}));
     var Obtruders = App.Obtruders;
 
-    // unobtrusive behavior applicator
     var Obtruder = (function () {
         function Obtruder() {
         }
@@ -159,12 +146,10 @@ var App;
             obtruders = obtruders || App.Obtruders;
             for (obtruder in obtruders) {
                 if (obtruders.hasOwnProperty(obtruder)) {
-                    // apply an unobtrusive behavior
                     if (typeof obtruders[obtruder] === 'function') {
                         obtruders[obtruder].apply(this, Array.prototype.slice.call(arguments, 0, 1) || document);
                     }
 
-                    // apply all unobtrusive behaviors in set
                     if (typeof obtruders[obtruder] === 'object') {
                         App.Obtruder.obtrude(selector, obtruders[obtruder]);
                     }
@@ -180,37 +165,27 @@ var App;
 
     function deparam(params, coerce) {
         if (typeof coerce === "undefined") { coerce = false; }
-        // https://github.com/cowboy/jquery-bbq/blob/master/jquery.ba-bbq.js
         var obj = {}, coerce_types = { 'true': !0, 'false': !1, 'null': null };
         var decode = decodeURIComponent;
 
-        // Iterate over all name=value pairs.
         $.each(params.replace(/\+/g, ' ').split('&'), function (j, v) {
             var param = v.split('='), key = decode(param[0]), val, cur = obj, i = 0, keys = key.split(']['), keys_last = keys.length - 1;
 
-            // If the first keys part contains [ and the last ends with ], then []
-            // are correctly balanced.
             if (/\[/.test(keys[0]) && /\]$/.test(keys[keys_last])) {
-                // Remove the trailing ] from the last keys part.
                 keys[keys_last] = keys[keys_last].replace(/\]$/, '');
 
-                // Split first keys part into two parts on the [ and add them back onto
-                // the beginning of the keys array.
                 keys = keys.shift().split('[').concat(keys);
 
                 keys_last = keys.length - 1;
             } else {
-                // Basic 'foo' style key.
                 keys_last = 0;
             }
 
-            // Are we dealing with a name=value pair, or just a name?
             if (param.length === 2) {
                 val = decode(param[1]);
 
-                // Coerce values.
                 if (coerce) {
-                    val = val && !isNaN(val) ? +val : val === 'undefined' ? undefined : coerce_types[val] !== undefined ? coerce_types[val] : val; // string
+                    val = val && !isNaN(val) ? +val : val === 'undefined' ? undefined : coerce_types[val] !== undefined ? coerce_types[val] : val;
                 }
 
                 if (keys_last) {
@@ -219,22 +194,15 @@ var App;
                         cur = cur[key] = i < keys_last ? cur[key] || (keys[i + 1] && isNaN(Number(keys[i + 1])) ? {} : []) : val;
                     }
                 } else {
-                    // Simple key, even simpler rules, since only scalars and shallow
-                    // arrays are allowed.
                     if ($.isArray(obj[key])) {
-                        // val is already an array, so push on the next value.
                         obj[key].push(val);
                     } else if (obj[key] !== undefined) {
-                        // val isn't an array, but since a second value has been specified,
-                        // convert val into an array.
                         obj[key] = [obj[key], val];
                     } else {
-                        // val is a scalar.
                         obj[key] = val;
                     }
                 }
             } else if (key) {
-                // No value was defined, so set something meaningful.
                 obj[key] = coerce ? undefined : '';
             }
         });

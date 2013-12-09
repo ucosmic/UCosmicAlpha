@@ -1,14 +1,3 @@
-/// <reference path="../../typings/jquery/jquery.d.ts" />
-/// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
-/// <reference path="../../typings/knockout/knockout.d.ts" />
-/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
-/// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
-/// <reference path="../../typings/sammyjs/sammyjs.d.ts" />
-/// <reference path="../../typings/kendo/kendo.all.d.ts" />
-/// <reference path="../../app/Routes.ts" />
-/// <reference path="../../app/Flasher.ts" />
-/// <reference path="../../app/PagedSearch.ts" />
-/// <reference path="SearchResult.ts" />
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -92,7 +81,6 @@ var ViewModels;
                     _this._pullResults().done(function (response) {
                         _this._loadResults(response);
                     }).fail(function () {
-                        //alert('failed to get users :(');
                     });
                 }).extend({ throttle: 250 });
             };
@@ -102,11 +90,9 @@ var ViewModels;
                 var self = this;
 
                 this.sammy.before(/\#\/page\/(.*)/, function () {
-                    // do not allow route navigation when pagination buttons are forced disabled
                     if (self.nextForceDisabled() || self.prevForceDisabled())
                         return false;
 
-                    // detect back / forward buttons
                     if (self._history().length > 1) {
                         var toPath = this.path;
                         for (var i = 0; i < self._history().length; i++) {
@@ -130,7 +116,6 @@ var ViewModels;
                     document.title = 'Users (Page #' + self.pageNumber() + ')';
                 });
 
-                // this causes the hash to default to page 1
                 this.sammy.get('/users[\/]?', function () {
                     _this.sammy.setLocation(_this.getPageHash(1));
                 });
@@ -194,7 +179,6 @@ var ViewModels;
                 if (isEnabled) {
                     var pageNumber = Number(this.pageNumber()) + pageDelta;
                     if (pageNumber > 0 && pageNumber <= this.pageCount()) {
-                        // detect forward or back button
                         if (this._history().length > 1) {
                             var toPath = location.pathname + this.getPageHash(pageNumber);
                             var i = (pageDelta < 0) ? 0 : this._history().length - 1;
@@ -207,7 +191,6 @@ var ViewModels;
                             for (; i < this._history().length && i >= 0; iMove()) {
                                 var existingPath = this._history()[i];
                                 if (toPath === existingPath) {
-                                    // fake a forward or back button click
                                     var historyDelta = i - this._historyIndex;
                                     history.go(historyDelta);
                                     this._historyIndex = i;

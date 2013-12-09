@@ -1,9 +1,3 @@
-/// <reference path="../../typings/moment/moment.d.ts" />
-/// <reference path="../../typings/jquery/jquery.d.ts" />
-/// <reference path="../../typings/knockout/knockout.d.ts" />
-/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
-/// <reference path="Search.ts" />
-/// <reference path="ApiModels.d.ts" />
 var Agreements;
 (function (Agreements) {
     (function (ViewModels) {
@@ -13,7 +7,6 @@ var Agreements;
                 this.detailHref = ko.computed(function () {
                     return "/agreements/" + _this.id();
                 });
-                // show alternate text when country is undefined
                 this.nullDisplayCountryName = ko.computed(function () {
                     return _this.countryNames() || '[Unknown]';
                 });
@@ -41,11 +34,9 @@ var Agreements;
                 this._pullData(values);
             }
             SearchResult.prototype._pullData = function (values) {
-                // map input model to observables
                 ko.mapping.fromJS(values, {}, this);
             };
 
-            // navigate to detail page
             SearchResult.prototype.clickAction = function (viewModel, e) {
                 return this._owner.clickAction(viewModel, e);
             };

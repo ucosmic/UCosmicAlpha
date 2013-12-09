@@ -1,25 +1,4 @@
-﻿/// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
-/// <reference path="../../typings/kendo/kendo.all.d.ts" />
-/// <reference path="../../app/HistoryJS.ts" />
-/// <reference path="../../typings/history/history.d.ts" />
-/// <reference path="../../typings/d3/d3.d.ts" />
-/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
-/// <reference path="../../app/Spinner.ts" />
-/// <reference path="../../typings/google.visualization/google.visualization.d.ts" />
-/// <reference path="../../typings/knockout/knockout.d.ts" />
-/// <reference path="../../typings/linq/linq.d.ts" />
-/// <reference path="../../google/GeoChart.ts" />
-/// <reference path="../../google/ColumnChart.ts" />
-/// <reference path="../../google/LineChart.ts" />
-/// <reference path="../establishments/Server.ts" />
-/// <reference path="../establishments/ApiModels.d.ts" />
-/// <reference path="Server.ts" />
-/// <reference path="Models.d.ts" />
-/// <reference path="../../app/App.ts" />
-/// <reference path="../../app/Models.d.ts" />
-/// <reference path="../../app/DataCacher.ts" />
-/// <reference path="../../app/ImageSwapper.ts" />
-var Employees;
+﻿var Employees;
 (function (Employees) {
     (function (ViewModels) {
         var SummaryRouteState = (function () {
@@ -66,8 +45,6 @@ var Employees;
         var DataGraphPivot = ViewModels.DataGraphPivot;
 
         var Summary = (function () {
-            //#endregion
-            //#region Construction & Binding
             function Summary(settings) {
                 var _this = this;
                 this.settings = settings;
@@ -116,15 +93,10 @@ var Employees;
                 this._routeStateChanged = ko.computed(function () {
                     _this._onRouteStateChanged();
                 }).extend({ throttle: 1 });
-                //#endregion
-                //#region Pivot Data
-                //#region Places
                 this.hasPlaceData = ko.observable(false);
                 this.placeData = new App.DataCacher(function () {
                     return _this._loadPlaceData();
                 });
-                //#endregion
-                //#region Tenancy
                 this.hasTenancyData = ko.observable(false);
                 this.selectedTenant = ko.observable(this.settings.tenantId);
                 this.tenancyData = new App.DataCacher(function () {
@@ -143,10 +115,6 @@ var Employees;
                     });
                 });
                 this.tenantOptions = ko.observableArray();
-                //#endregion
-                //#endregion
-                //#region Summaries
-                //#region Top Summary
                 this.activityTotals = {
                     personCount: ko.observable('?'),
                     activityCount: ko.observable('?'),
@@ -155,8 +123,6 @@ var Employees;
                 this.activityCountsData = new App.DataCacher(function () {
                     return _this._loadActivityCounts();
                 });
-                //#endregion
-                //#region Selected Place Summary
                 this.selectedPlaceSummary = {
                     personCount: ko.observable('?'),
                     activityCount: ko.observable('?'),
@@ -165,21 +131,14 @@ var Employees;
                 this._placeSelected = ko.computed(function () {
                     _this._onPlaceSelected();
                 });
-                //#endregion
-                //#endregion
-                //#region Google GeoChart
                 this.geoChart = new App.Google.GeoChart(document.getElementById(this.settings.geoChart.googleElementId));
                 this.geoChartSpinner = new App.Spinner({ delay: 400, runImmediately: true });
                 this.isGeoChartReady = ko.observable(false);
                 this._geoChartDataTable = this._newGeoChartDataTable();
-                //#endregion
-                //#region Activity Type Chart
                 this.activityTypeChart = new App.Google.ColumnChart(document.getElementById(this.settings.activityTypesChart.googleElementId));
                 this.isActivityTypeChartReady = ko.observable(false);
                 this._activityTypeChartDataTable = this._newActivityTypeChartDataTable();
                 this.activityTypes = ko.observableArray();
-                //#endregion
-                //#region Activity Year Chart
                 this.activityYearChart = new App.Google.LineChart(document.getElementById(this.settings.activityYearsChart.googleElementId));
                 this.isActivityYearChartReady = ko.observable(false);
                 this._activityYearChartDataTable = this._newActivityYearChartDataTable();
@@ -192,9 +151,7 @@ var Employees;
                         return false;
                     var areVisible = (placeId == 1 || isPlaceOverlaySelected) && isGeoChartReady;
 
-                    // hide the svg overlays if applicable
                     if (Summary._isD3Defined() && _this.settings.geoChart.googleElementId) {
-                        // overlay may already be drawn
                         var dInjectRootElementId = '{0}_place_overlays_root'.format(_this.settings.geoChart.googleElementId);
                         var dInjectRootSelection = d3.select('#{0}'.format(dInjectRootElementId));
                         if (dInjectRootSelection.length) {
@@ -231,25 +188,18 @@ var Employees;
                 this.isD3Undefined = ko.computed(function () {
                     return !Summary._isD3Defined();
                 });
-                //#endregion
-                //#region Tooltips
                 this._tooltips = ko.observableArray();
-                // parse the place overlays
                 this._parsePlaceOverlays();
 
-                // bind history.js to statechange events
                 HistoryJS.Adapter.bind(window, 'statechange', function () {
                     _this._onRouteChanged();
                 });
 
-                // initialize charts
                 this._initGeoChart();
                 this._initActivityTypeChart();
                 this._initActivityYearChart();
             }
             Summary.loadGoogleVisualization = function () {
-                // this is necessary to load all of the google visualization API's used by this
-                // viewmodel. additionally, https://www.google.com/jsapi script must be present
                 google.load('visualization', '1', { 'packages': ['corechart', 'geochart'] });
 
                 google.setOnLoadCallback(function () {
@@ -259,7 +209,6 @@ var Employees;
             };
 
             Summary.prototype.applyBindings = function () {
-                // did we get an element or an element id?
                 var element = this.settings.element;
                 if (element) {
                     ko.applyBindings(this, element);
@@ -269,13 +218,10 @@ var Employees;
             };
 
             Summary.prototype._onPivotChanged = function () {
-                // compare value with what is stored in the session
                 var value = this.pivot();
                 var old = parseInt(sessionStorage.getItem(Summary._pivotKey)) || 0;
 
-                // don't do anything unless the value has changed
                 if (value !== old) {
-                    // save the new value to session storage
                     sessionStorage.setItem(Summary._pivotKey, value.toString());
                 }
             };
@@ -293,32 +239,23 @@ var Employees;
             };
 
             Summary.prototype._onPlaceIdChanged = function () {
-                // compare value with what is stored in the session
                 var value = this.placeId();
                 var old = parseInt(sessionStorage.getItem(Summary._placeIdKey)) || undefined;
 
-                // don't do anything unless the value has changed
                 if (value !== old) {
-                    // save the new value to session storage
                     sessionStorage.setItem(Summary._placeIdKey, value.toString());
                 }
             };
 
             Summary.prototype._onEstablishmentIdChanged = function () {
-                // compare value with what is stored in the session
                 var value = this.establishmentId();
                 var old = parseInt(sessionStorage.getItem(Summary._establishmentIdKey)) || undefined;
 
-                // don't do anything unless the value has changed
                 if (value !== old) {
-                    // save the new value to session storage
                     sessionStorage.setItem(Summary._establishmentIdKey, value.toString());
                 }
             };
 
-            //#endregion
-            //#endregion
-            //#region Routing
             Summary.prototype._getUrlState = function () {
                 var params = location.search.indexOf('?') == 0 ? location.search.substr(1) : location.search;
                 if (!Summary._isD3Defined()) {
@@ -333,24 +270,13 @@ var Employees;
                 var routeState = this.routeState();
                 var urlState = this._getUrlState();
 
-                // we need to make sure the establishmentId is applicable before applying route state
                 var areBindingsApplied = this.areBindingsApplied();
                 if (!areBindingsApplied)
                     return;
                 this.tenancyData.ready().done(function (establishments) {
-                    routeState = _this.routeState(); // the new state we want in the URL
-                    urlState = _this._getUrlState(); // actual state based on current URL
+                    routeState = _this.routeState();
+                    urlState = _this._getUrlState();
 
-                    // this runs whenever an observable component of routeState changes
-                    // and will run at least once when the page loads, since it is a computed
-                    // there are 4 main scenarios we want to handle here:
-                    // 1.) when the route state matches the url state, update the historyjs state
-                    // 2.) when we have incomplete url state, replace current url based on route state
-                    // 3.) when historyjs state is empty and url state is complete, we have a url
-                    //     that should override the current route state values
-                    // 4.) all other cases mean user interaction, and should push a new url
-                    ///var areBindingsApplied = this.areBindingsApplied();
-                    // when the url state is missing something (or everything), replace it with route data
                     if (SummaryRouteState.isIncomplete(urlState) || SummaryRouteState.areEqual(routeState, urlState)) {
                         HistoryJS.replaceState(routeState, '', '?' + $.param(routeState));
                     } else {
@@ -360,7 +286,6 @@ var Employees;
             };
 
             Summary.prototype._onRouteChanged = function () {
-                // this runs whenever historyjs detects a statechange event
                 var urlState = this._getUrlState();
                 this._updateState(urlState);
                 this._applyState();
@@ -382,7 +307,6 @@ var Employees;
 
             Summary.prototype._loadPlaceData = function () {
                 var _this = this;
-                // calling .ready() on placeData invokes this
                 var promise = $.Deferred();
                 var request = {
                     countries: true,
@@ -420,7 +344,6 @@ var Employees;
 
             Summary.prototype._loadTenancyData = function () {
                 var _this = this;
-                // calling .ready() on tenancyData invokes this
                 var deferred = $.Deferred();
                 $.when(Establishments.Servers.Single(this.settings.tenantId), Establishments.Servers.GetChildren(this.settings.tenantId)).done(function (parentData, childData) {
                     childData = childData || [];
@@ -492,7 +415,6 @@ var Employees;
                 if (!this._geoChartGradientHi)
                     this._geoChartGradientHi = $('<div class="charts-color-gradient-hi" />').hide().appendTo('body').css('color') || '#333';
                 var options = {
-                    // options passed when drawing geochart
                     displayMode: 'regions',
                     region: 'world',
                     keepAspectRatio: this.settings.geoChart.keepAspectRatio ? true : false,
@@ -513,7 +435,6 @@ var Employees;
             };
 
             Summary.prototype._newGeoChartDataTable = function () {
-                // create data table schema
                 var dataTable = new google.visualization.DataTable();
                 dataTable.addColumn('string', 'Place');
                 dataTable.addColumn('number', 'Total');
@@ -522,17 +443,12 @@ var Employees;
 
             Summary.prototype._initGeoChart = function () {
                 var _this = this;
-                // just draw the geochart to make sure something is displayed
-                // need to make sure we wait until it's done though before drying to draw again
                 var promise = $.Deferred();
 
                 if (!this.isGeoChartReady()) {
                     this.geoChart.draw(this._geoChartDataTable, this._getGeoChartOptions()).then(function () {
-                        // svg injection depends on the chart being ready,
-                        // and bindings having been applied, and the
-                        // overlays being visible
                         if (!_this.isGeoChartReady()) {
-                            _this.isGeoChartReady(true); // call this before overlaying to ensure positions
+                            _this.isGeoChartReady(true);
                             _this.bindingsApplied.done(function () {
                                 _this._svgInjectPlaceOverlays();
                                 google.visualization.events.addListener(_this.geoChart.geoChart, 'select', function () {
@@ -553,20 +469,16 @@ var Employees;
 
             Summary.prototype._drawGeoChart = function () {
                 var _this = this;
-                // the data may not yet be loaded, and if not, going to redraw after it is loaded
                 var cachedData = this.placeData.cached;
                 var needsRedraw = !cachedData;
 
-                // decide which part of the map to select
                 var placeId = this.placeId();
                 var place = this._getPlaceById(placeId);
                 var optionOverrides = this._getGeoChartOptions();
                 optionOverrides.region = !placeId || placeId == 1 || !place || !place.countryCode ? 'world' : place.countryCode;
 
-                // change aspect ratio based on placeId
                 optionOverrides.keepAspectRatio = placeId && placeId > 1 && place && place.countryCode ? false : this.settings.geoChart.keepAspectRatio ? true : false;
 
-                // hit the server up for data and redraw
                 this._initGeoChart().then(function () {
                     _this.placeData.ready().done(function (places) {
                         if (needsRedraw) {
@@ -577,7 +489,6 @@ var Employees;
                         _this._geoChartDataTable.setColumnLabel(1, 'Total {0}'.format(isPivotPeople ? 'People' : 'Activities'));
                         _this._geoChartDataTable.removeRows(0, _this._geoChartDataTable.getNumberOfRows());
                         $.each(places, function (i, dataPoint) {
-                            // do not count the agnostic place
                             if (!dataPoint.placeId)
                                 return;
                             var total = isPivotPeople ? dataPoint.activityPersonIds.length : dataPoint.activityIds.length;
@@ -599,7 +510,6 @@ var Employees;
                 if (selection && selection.length) {
                     var rowIndex = selection[0].row;
 
-                    // first column of the data table has the place name (country name)
                     var placeName = this._geoChartDataTable.getFormattedValue(rowIndex, 0);
                     var place = this._getPlaceByName(placeName);
                     if (place) {
@@ -609,7 +519,6 @@ var Employees;
             };
 
             Summary.prototype._onGeoChartRegionClick = function (e) {
-                // this will fire even when the country clicked has total === zero
             };
 
             Summary.prototype._getChartDataColor = function () {
@@ -656,7 +565,6 @@ var Employees;
             };
 
             Summary.prototype._newActivityTypeChartDataTable = function () {
-                // create data table schema
                 var dataTable = new google.visualization.DataTable();
                 dataTable.addColumn('string', 'Activity Type');
                 dataTable.addColumn('number', 'Count');
@@ -685,14 +593,11 @@ var Employees;
 
             Summary.prototype._drawActivityTypeChart = function () {
                 var _this = this;
-                // the data may not yet be loaded, and if not, going to redraw after it is loaded
                 var cachedData = this.placeData.cached;
                 var needsRedraw = !cachedData;
 
-                //// decide which part of the map to select
                 var placeId = this.placeId();
 
-                // hit the server up for data and redraw
                 this._initActivityTypeChart().then(function () {
                     _this.placeData.ready().done(function (places) {
                         if (needsRedraw) {
@@ -759,7 +664,6 @@ var Employees;
             };
 
             Summary.prototype._newActivityYearChartDataTable = function () {
-                // create data table schema
                 var dataTable = new google.visualization.DataTable();
                 dataTable.addColumn('string', 'Year');
                 dataTable.addColumn('number', 'Count');
@@ -787,14 +691,11 @@ var Employees;
 
             Summary.prototype._drawActivityYearChart = function () {
                 var _this = this;
-                // the data may not yet be loaded, and if not, going to redraw after it is loaded
                 var cachedData = this.placeData.cached;
                 var needsRedraw = !cachedData;
 
-                //// decide which part of the map to select
                 var placeId = this.placeId();
 
-                // hit the server up for data and redraw
                 this._initActivityYearChart().then(function () {
                     _this.placeData.ready().done(function (places) {
                         if (needsRedraw) {
@@ -874,73 +775,50 @@ var Employees;
                 }
             };
 
-            //#endregion
-            //#region SVG Injection
             Summary._isD3Defined = function () {
                 return typeof d3 !== 'undefined';
             };
 
             Summary.prototype._svgInjectPlaceOverlays = function () {
                 var _this = this;
-                // IE8 cannot load the d3 library
                 if (!Summary._isD3Defined() || !this.settings.geoChart.googleElementId || !this.settings.geoChart.boxElementId)
                     return;
 
-                // overlay may already be drawn
                 var dInjectRootElementId = '{0}_place_overlays_root'.format(this.settings.geoChart.googleElementId);
                 if ($('#{0}'.format(dInjectRootElementId)).length)
                     return;
 
-                // svg structure is as follows:
-                //  svg
-                //      > defs
-                //      > g
-                //          > rect
-                //          > g - map
-                //              <----- inject new node here
-                //          > g - legend
-                //          > g - ?
-                //          > g - tooltips
-                // use d3 to select the first root g element from the geochart
                 var dGoogleG = d3.select('#{0} svg > g'.format(this.settings.geoChart.googleElementId));
 
-                // all of the overlays will become children of this g element
                 var dInjectRoot = dGoogleG.append('g').attr('id', dInjectRootElementId);
                 var areOverlaysVisible = this.arePlaceOverlaysVisible();
                 if (!areOverlaysVisible)
                     dInjectRoot.attr('style', 'display: none;');
 
-                // iterate over the parsed place overlays
-                // first, need to show the data root in order to get valid positions
                 var jContainer = $('#{0} .overlays .places .data'.format(this.settings.geoChart.boxElementId));
-                jContainer.show(); // need to do this to get positions & dimensions from jQuery
+                jContainer.show();
 
                 var overlays = this.placeOverlays();
                 $.each(overlays, function (i, overlay) {
                     _this._svgInjectPlaceOverlay(dInjectRoot, overlay);
                 });
 
-                jContainer.hide(); // no longer need dimensions, hide the HTML overlays
+                jContainer.hide();
 
-                // now use jQuery to rearrange the order of the elements
                 $('#{0} svg > g > g:last-child'.format(this.settings.geoChart.googleElementId)).insertAfter('#{0} svg > g > g:nth-child(2)'.format(this.settings.geoChart.googleElementId));
             };
 
             Summary.prototype._svgInjectPlaceOverlay = function (root, overlay) {
-                // create a new d3 container for this overlay
                 var jOverlay = $('#{0} .overlays .places .data .{1}'.format(this.settings.geoChart.boxElementId, overlay.className));
                 var dOverlay = root.append('g').attr('class', overlay.className);
 
-                // compute position based on data element positions
                 var x = jOverlay.position().left;
                 var y = jOverlay.position().top;
                 var width = jOverlay.outerWidth();
                 var height = jOverlay.outerHeight();
 
-                // append a no-hover d3 image to the overlay g element
                 var noHoverImage = dOverlay.append('image').attr('xlink:href', overlay.imageSwapper.noHoverSrc()).attr('x', x).attr('y', y).attr('width', width).attr('height', height).attr('class', 'no-hover');
 
-                // append a hover d3 image to the overlay g element
                 var hoverImage = dOverlay.append('image').attr('xlink:href', overlay.imageSwapper.hoverSrc()).attr('x', x).attr('y', y).attr('width', width).attr('height', height).attr('class', 'hover').attr('style', 'display: none;');
 
                 if (overlay.placeId == this.placeId()) {
@@ -955,9 +833,7 @@ var Employees;
 
             Summary.prototype._svgApplyPlaceOverlayHover = function (overlay, noHover, hover) {
                 var _this = this;
-                // enable svg image hover swaps
                 overlay.imageSwapper.isHover.subscribe(function (newValue) {
-                    // is this the selected overlay?
                     var placeId = _this.placeId();
                     if (placeId == overlay.placeId) {
                         hover.attr('style', '');
@@ -990,9 +866,7 @@ var Employees;
                 var _this = this;
                 var tooltips = this._tooltips();
 
-                // remove tooltips when they already exist
                 if (tooltips.length) {
-                    // destroy all of the tooltips
                     $.each(this._tooltips(), function (i, tooltip) {
                         tooltip.tooltip('destroy');
                     });
@@ -1001,7 +875,6 @@ var Employees;
 
                 var overlays = this.placeOverlays();
                 $.each(overlays, function (i, overlay) {
-                    // the tooltips are in the place ui
                     var jOverlay = $('#{0} .overlays .places .ui .{1}'.format(_this.settings.geoChart.boxElementId, overlay.className));
                     var tooltip = jOverlay.find('.tooltip');
                     var content = tooltip.html() || 'tooltip';
@@ -1024,10 +897,8 @@ var Employees;
                         within: '#{0}'.format(this.settings.geoChart.googleElementId)
                     },
                     open: function (e, ui) {
-                        // get the width of the tooltip
                         var width = ui.tooltip.find('.ui-tooltip-content').outerWidth();
 
-                        // set the width of the container
                         ui.tooltip.css({ width: '{0}px'.format(width) });
                     }
                 });

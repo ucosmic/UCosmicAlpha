@@ -1,18 +1,8 @@
-/// <reference path="../../typings/jquery/jquery.d.ts" />
-/// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
-/// <reference path="../../typings/knockout/knockout.d.ts" />
-/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
-/// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
-/// <reference path="../../typings/kendo/kendo.all.d.ts" />
-/// <reference path="../../typings/tinymce/tinymce.d.ts" />
-/// <reference path="../../typings/moment/moment.d.ts" />
-/// <reference path="../../app/Routes.ts" />
 var ViewModels;
 (function (ViewModels) {
     (function (InternationalAffiliations) {
         var InternationalAffiliation = (function () {
             function InternationalAffiliation(affiliationId) {
-                /* True if any field changes. */
                 this.dirtyFlag = ko.observable(false);
                 this.initialLocations = [];
                 this.selectedLocationValues = [];
@@ -33,22 +23,6 @@ var ViewModels;
                 var _this = this;
                 this.locationSelectorId = locationSelectorId;
 
-                /*
-                There appears to be a number of bugs/undocumented behaviors associated
-                with the KendoUI Multiselect when using a dataSource that gets data
-                from service via ajax.
-                
-                1) The control will query the service as soon as focus us obtained.  Event
-                with minLength at three, it will query the server with no keyword
-                and the service will return ALL Places (quite large).  See note in
-                GraphicExpertiseEdit.cshtml on how this problem was circumvented.
-                (Note: autoBind: false did NOT fix this problem.)
-                
-                2) Setting the initial values (dataItems) does not work as expected when
-                we started using the ajax datasource.  To solve the problem, we use
-                the initial Places AS the datasource and then change the datasource
-                later to the ajax service.
-                */
                 var me = this;
                 $("#" + locationSelectorId).kendoMultiSelect({
                     autoBind: true,
@@ -159,7 +133,6 @@ var ViewModels;
                         }
                     });
 
-                    // only process after all requests have been resolved
                     $.when(dataPact).done(function (data) {
                         ko.mapping.fromJS(data, {}, _this);
 
@@ -183,7 +156,6 @@ var ViewModels;
 
             InternationalAffiliation.prototype.save = function (viewModel, event) {
                 if (!this.isValid()) {
-                    // TBD - need dialog here.
                     this.errors.showAllMessages();
                     return;
                 }

@@ -1,14 +1,3 @@
-/// <reference path="../../typings/jquery/jquery.d.ts" />
-/// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
-/// <reference path="../../typings/knockout/knockout.d.ts" />
-/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
-/// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
-/// <reference path="../../app/Routes.ts" />
-/// <reference path="../../app/Flasher.ts" />
-/// <reference path="../../app/Spinner.ts" />
-/// <reference path="Item.ts" />
-/// <reference path="ApiModels.d.ts" />
-
 module Establishments.ServerModels {
     export class Name implements ApiModels.Name {
 

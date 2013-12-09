@@ -1,15 +1,7 @@
-/// <reference path="../../app/Flasher.ts" />
-/// <reference path="../../app/Spinner.ts" />
-/// <reference path="../../app/Routes.ts" />
-/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
-/// <reference path="../../typings/kendo/kendo.all.d.ts" />
-/// <reference path="../../typings/knockout/knockout.d.ts" />
-/// <reference path="../../typings/jquery/jquery.d.ts" />
 var Agreements;
 (function (Agreements) {
     var FileAttachments = (function () {
         function FileAttachments(agreementId, agreementIsEdit, spinner, establishmentItemViewModel, files) {
-            //file vars
             this.$file = ko.observable();
             this.hasFile = ko.observable();
             this.isFileExtensionInvalid = ko.observable(false);
@@ -85,15 +77,13 @@ var Agreements;
                         };
                     }
                     if (!e.isDefaultPrevented()) {
-                        _this.fileUploadSpinner.start(); // display async wait message
+                        _this.fileUploadSpinner.start();
                     }
                 },
                 complete: function () {
-                    _this.fileUploadSpinner.stop(); // hide async wait message
+                    _this.fileUploadSpinner.stop();
                 },
                 success: function (e) {
-                    // this event is triggered by both upload and remove requests
-                    // ignore remove operations because they don't actually do anything
                     if (e.operation == 'upload') {
                         var myId;
 
@@ -127,7 +117,6 @@ var Agreements;
                     }
                 },
                 error: function (e) {
-                    // kendo response is as json string, not js object
                     var fileName, fileExtension;
 
                     if (e.files && e.files.length > 0) {
@@ -152,8 +141,6 @@ var Agreements;
         FileAttachments.prototype.removeFile = function (me, e) {
             var _this = this;
             if (confirm('Are you sure you want to remove this file from this agreement?')) {
-                // all files will have a guid in create, none will have a guid in edit agreement
-                // so do a check for agreementId - if it is undefined(for now 0)
                 var url = "";
 
                 if (this.agreementIsEdit()) {
@@ -240,7 +227,6 @@ var Agreements;
 
         FileAttachments.prototype.fileVisibilityClicked = function (me, e) {
             var _this = this;
-            //add e.target.textContent for double click firing.
             if (this.agreementIsEdit() && e.target.textContent == "") {
                 var data = ko.mapping.toJS({
                     agreementId: this.agreementId,
@@ -280,7 +266,6 @@ var Agreements;
             return true;
         };
 
-        //post files
         FileAttachments.prototype.postMe = function (data, url) {
             var _this = this;
             $.post(url, data).done(function (response, statusText, xhr) {
@@ -303,7 +288,6 @@ var Agreements;
             });
         };
 
-        //part of save agreement
         FileAttachments.prototype.agreementPostFiles = function (response, statusText, xhr) {
             var _this = this;
             var tempUrl = App.Routes.WebApi.Agreements.Files.post(this.agreementId), data;

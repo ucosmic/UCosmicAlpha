@@ -1,19 +1,3 @@
-/// <reference path="../../typings/jquery/jquery.d.ts" />
-/// <reference path="../../typings/knockout/knockout.d.ts" />
-/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
-/// <reference path="../../typings/googlemaps/google.maps.d.ts" />
-/// <reference path="../../google/ToolsOverlay.ts" />
-/// <reference path="../../app/App.ts" />
-/// <reference path="../../app/SideSwiper.ts" />
-/// <reference path="../../app/Routes.ts" />
-/// <reference path="../../app/Spinner.ts" />
-/// <reference path="../languages/ApiModels.d.ts" />
-/// <reference path="Name.ts" />
-/// <reference path="Url.ts" />
-/// <reference path="Location.ts" />
-/// <reference path="Search.ts" />
-/// <reference path="SearchResult.ts" />
-/// <reference path="ApiModels.d.ts" />
 var Establishments;
 (function (Establishments) {
     (function (ViewModels) {
@@ -145,7 +129,6 @@ var Establishments;
         var Item = (function () {
             function Item(id, doSetupSammy) {
                 var _this = this;
-                // fields
                 this.id = 0;
                 this.originalValues = ko.observable();
                 this._isInitialized = ko.observable(false);
@@ -162,15 +145,10 @@ var Establishments;
                 this.isEditingTypeId = ko.observable(undefined);
                 this.isValidationSummaryVisible = ko.observable(false);
                 this.flasherProxy = new App.FlasherProxy();
-                //#region Names
-                // observables, computeds, & variables
                 this.languages = ko.observableArray();
                 this.names = ko.observableArray();
                 this.editingName = ko.observable(0);
                 this.namesSpinner = new App.Spinner({ runImmediately: true });
-                //#endregion
-                //#region URLs
-                // observables, computeds, & variables
                 this.urls = ko.observableArray();
                 this.editingUrl = ko.observable(0);
                 this.urlsSpinner = new App.Spinner({ runImmediately: true });
@@ -184,7 +162,6 @@ var Establishments;
                 this.parentId = ko.observable();
                 this.parentIdSaveSpinner = new App.Spinner({ delay: 200 });
                 this.parentIdValidatingSpinner = new App.Spinner({ delay: 200 });
-                // initialize the aggregate id
                 this.id = id || 0;
                 doSetupSammy = (doSetupSammy === false) ? false : true;
 
@@ -219,7 +196,6 @@ var Establishments;
                         _this.ceebCode($.trim(_this.ceebCode()));
                 });
                 this.ceebCode.extend({
-                    //throttle: 5000,
                     validEstablishmentCeebCode: this
                 });
 
@@ -240,7 +216,6 @@ var Establishments;
                     validEstablishmentParentId: this
                 });
 
-                // load the scalars
                 var categoriesPact = $.Deferred();
                 $.get(App.Routes.WebApi.Establishments.Categories.get()).done(function (data, textStatus, jqXHR) {
                     categoriesPact.resolve(data);
@@ -250,8 +225,7 @@ var Establishments;
 
                 var viewModelPact = this._loadScalars();
 
-                $.when(categoriesPact, viewModelPact).done(// all requests succeeded
-                function (categories, viewModel) {
+                $.when(categoriesPact, viewModelPact).done(function (categories, viewModel) {
                     ko.mapping.fromJS(categories, {}, _this.categories);
 
                     _this._pullScalars(viewModel);
@@ -262,21 +236,16 @@ var Establishments;
                     }
 
                     if (!_this._isInitialized()) {
-                        _this._isInitialized(true); // bindings have been applied
+                        _this._isInitialized(true);
                     }
-                }); //,
+                });
 
-                // one of the responses failed (never called more than once, even on multifailures)
-                //(xhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
-                //    //alert('a GET API call failed :(');
-                //});
                 ko.validation.group(this);
                 if (doSetupSammy) {
                     this._setupSammy();
                 }
                 this._setupParentComputeds();
             }
-            // methods
             Item.prototype.requestNames = function (callback) {
                 var _this = this;
                 this.namesSpinner.start();
@@ -309,19 +278,17 @@ var Establishments;
 
             Item.prototype._initNamesComputeds = function () {
                 var _this = this;
-                // languages dropdowns
                 ko.computed(function () {
                     $.getJSON(App.Routes.WebApi.Languages.get()).done(function (response) {
                         var emptyValue = {
                             code: undefined,
                             name: '[Language Neutral]'
                         };
-                        response.splice(0, 0, emptyValue); // add null option
-                        _this.languages(response); // set the options dropdown
+                        response.splice(0, 0, emptyValue);
+                        _this.languages(response);
                     });
                 }).extend({ throttle: 1 });
 
-                // set up names mapping
                 this._namesMapping = {
                     create: function (options) {
                         return new Establishments.ViewModels.Name(options.data, _this);
@@ -332,7 +299,6 @@ var Establishments;
                     return !_this.namesSpinner.isVisible() && _this.editingName() === 0 && _this.id !== 0;
                 });
 
-                // request names
                 ko.computed(function () {
                     if (_this.id)
                         _this.requestNames();
@@ -344,7 +310,6 @@ var Establishments;
                 }).extend({ throttle: 1 });
             };
 
-            // methods
             Item.prototype.requestUrls = function (callback) {
                 var _this = this;
                 this.urlsSpinner.start();
@@ -373,7 +338,6 @@ var Establishments;
 
             Item.prototype._initUrlsComputeds = function () {
                 var _this = this;
-                // set up URLs mapping
                 this._urlsMapping = {
                     create: function (options) {
                         return new Establishments.ViewModels.Url(options.data, _this);
@@ -384,7 +348,6 @@ var Establishments;
                     return !_this.urlsSpinner.isVisible() && _this.editingUrl() === 0 && _this.id !== 0;
                 });
 
-                // request URLs
                 ko.computed(function () {
                     if (_this.id)
                         _this.requestUrls();
@@ -396,19 +359,16 @@ var Establishments;
                 }).extend({ throttle: 1 });
             };
 
-            //#endregion
             Item.prototype.submitToCreate = function (formElement) {
                 var _this = this;
                 if (!this.id || this.id === 0) {
                     var me = this;
                     this.validatingSpinner.start();
 
-                    // reference the single name and url
                     var officialName = this.names()[0];
                     var officialUrl = this.urls()[0];
                     var location = this.location;
 
-                    // wait for async validation to stop
                     if (officialName.text.isValidating() || officialUrl.value.isValidating() || this.ceebCode.isValidating() || this.uCosmicCode.isValidating()) {
                         setTimeout(function () {
                             var waitResult = _this.submitToCreate(formElement);
@@ -417,7 +377,6 @@ var Establishments;
                         return false;
                     }
 
-                    // check validity
                     this.isValidationSummaryVisible(true);
                     if (!this.isValid()) {
                         this.errors.showAllMessages();
@@ -437,7 +396,6 @@ var Establishments;
                         data.location = location.serializeData();
                         this.createSpinner.start();
                         $.post(url, data).done(function (response, statusText, xhr) {
-                            // redirect to show
                             window.location.href = App.Routes.Mvc.Establishments.created({ location: xhr.getResponseHeader('Location') });
                         }).fail(function (xhr, statusText, errorThrown) {
                             _this.createSpinner.stop();
@@ -472,7 +430,6 @@ var Establishments;
                 return data;
             };
 
-            // hit /api/establishments/{id} for scalar values
             Item.prototype._loadScalars = function () {
                 var deferred = $.Deferred();
                 if (this.id) {
@@ -487,7 +444,6 @@ var Establishments;
                 return deferred;
             };
 
-            // populate scalar value observables from api values
             Item.prototype._pullScalars = function (response) {
                 this.originalValues(response);
                 if (response) {
@@ -497,18 +453,15 @@ var Establishments;
                 }
             };
 
-            // hide read-only UI and allow form input for typeId & institution codes
             Item.prototype.clickToEditTypeId = function () {
                 this.isEditingTypeId(true);
             };
 
-            // save typeId & institution codes
             Item.prototype.clickToSaveTypeId = function () {
                 var _this = this;
                 if (!this.id)
                     return;
 
-                // wait for async validators to finish
                 if (this.ceebCode.isValidating() || this.uCosmicCode.isValidating()) {
                     this.typeIdValidatingSpinner.start();
                     window.setTimeout(function () {
@@ -540,7 +493,6 @@ var Establishments;
                 }
             };
 
-            // restore original values when cancelling edit of typeId & institution codes
             Item.prototype.clickToCancelTypeIdEdit = function () {
                 var _this = this;
                 this.isEditingTypeId(false);
@@ -650,13 +602,11 @@ var Establishments;
                 this.parentId(this.originalValues().parentId);
             };
 
-            // save typeId & institution codes
             Item.prototype.clickToSaveParentId = function () {
                 var _this = this;
                 if (!this.id)
                     return;
 
-                // wait for async validator to finish
                 if (this.parentId.isValidating()) {
                     this.parentIdValidatingSpinner.start();
                     window.setTimeout(function () {

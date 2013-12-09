@@ -1,26 +1,4 @@
-﻿/// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
-/// <reference path="../../typings/kendo/kendo.all.d.ts" />
-/// <reference path="../../app/HistoryJS.ts" />
-/// <reference path="../../typings/history/history.d.ts" />
-/// <reference path="../../typings/d3/d3.d.ts" />
-/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
-/// <reference path="../../app/Spinner.ts" />
-/// <reference path="../../typings/google.visualization/google.visualization.d.ts" />
-/// <reference path="../../typings/knockout/knockout.d.ts" />
-/// <reference path="../../typings/linq/linq.d.ts" />
-/// <reference path="../../google/GeoChart.ts" />
-/// <reference path="../../google/ColumnChart.ts" />
-/// <reference path="../../google/LineChart.ts" />
-/// <reference path="../establishments/Server.ts" />
-/// <reference path="../establishments/ApiModels.d.ts" />
-/// <reference path="Server.ts" />
-/// <reference path="Models.d.ts" />
-/// <reference path="../../app/App.ts" />
-/// <reference path="../../app/Models.d.ts" />
-/// <reference path="../../app/DataCacher.ts" />
-/// <reference path="../../app/ImageSwapper.ts" />
-
-module Employees.ViewModels {
+﻿module Employees.ViewModels {
 
     export interface SummarySettings {
         tenantId: number;

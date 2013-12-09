@@ -1,33 +1,4 @@
-﻿/// <reference path="../../typings/jquery/jquery.d.ts" />
-/// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
-/// <reference path="../../typings/knockout/knockout.d.ts" />
-/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
-/// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
-/// <reference path="../../typings/kendo/kendo.all.d.ts" />
-/// <reference path="../../typings/sammyjs/sammyjs.d.ts" />
-/// <reference path="../../app/Routes.ts" />
-/// <reference path="../../app/Spinner.ts" />
-/// <reference path="../../app/Flasher.ts" />
-/// <reference path="ServerApiModel.d.ts" />
-/// <reference path="../employees/ServerApiModel.d.ts" />
-/// <reference path="../activities/Activities.ts" />
-/// <reference path="../geographicExpertises/GeographicExpertises.ts" />
-/// <reference path="../languageExpertises/LanguageExpertises.ts" />
-/// <reference path="../degrees/Degrees.ts" />
-/// <reference path="../internationalAffiliations/InternationalAffiliations.ts" />
-
-/// <reference path="../../app/Routes.d.ts" />
-/// <reference path="../../app/DataCacher.ts" />
-/// <reference path="../../app/Models.d.ts" />
-/// <reference path="../establishments/ApiModels.d.ts" />
-/// <reference path="../establishments/Server.ts" />
-/// <reference path="../employees/Models.d.ts" />
-/// <reference path="../employees/Server.ts" />
-/// <reference path="../people/Server.ts" />
-/// <reference path="../people/Models.d.ts" />
-/// <reference path="../../app/FormSelect.ts" />
-
-import RootViewModels = ViewModels;
+﻿import RootViewModels = ViewModels;
 
 module People.ViewModels {
 

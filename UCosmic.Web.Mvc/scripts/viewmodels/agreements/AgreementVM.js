@@ -1,43 +1,20 @@
-/// <reference path="../../typings/knockout/knockout.d.ts" />
-/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
-/// <reference path="../../typings/globalize/globalize.d.ts" />
-/// <reference path="../../typings/kendo/kendo.all.d.ts" />
-/// <reference path="../../typings/jquery/jquery.d.ts" />
-/// <reference path="../../app/App.ts" />
-/// <reference path="../../app/Routes.ts" />
-/// <reference path="../../app/Spinner.ts" />
-/// <reference path="../../typings/sammyjs/sammyjs.d.ts" />
-/// <reference path="../establishments/ApiModels.d.ts" />
-/// <reference path="scrollBody.ts" />
-/// <reference path="contacts.ts" />
-/// <reference path="fileAttachments.ts" />
-/// <reference path="datesStatus.ts" />
-/// <reference path="visibility.ts" />
-/// <reference path="participants.ts" />
-/// <reference path="populateFiles.ts" />
-/// <reference path="basicInfo.ts" />
-/// <reference path="establishmentSearchNav.ts" />
 var InstitutionalAgreementEditModel = (function () {
     function InstitutionalAgreementEditModel(agreementId) {
         var _this = this;
         this.agreementId = agreementId;
         this.percentOffBodyHeight = .6;
-        //jquery deferred for setting body height.
         this.deferredUAgreements = $.Deferred();
         this.deferredPopParticipants = $.Deferred();
         this.deferredPopContacts = $.Deferred();
         this.deferredPopFiles = $.Deferred();
         this.deferredPageFadeIn = $.Deferred();
         this.agreementIsEdit = ko.observable();
-        //set the path for editing an agreement or new agreement.
         this.editOrNewUrl = { val: 'new' };
         this.trail = ko.observableArray([]);
         this.nextForceDisabled = ko.observable(false);
         this.prevForceDisabled = ko.observable(false);
         this.pageNumber = ko.observable();
         this.$genericAlertDialog = undefined;
-        //added this because kendo window after selecting a autocomplte and then clicking the window,
-        //the body would scroll to the top.
         this.kendoWindowBug = { val: 0 };
         this.isBound = ko.observable();
         this.spinner = new App.Spinner({ delay: 400, runImmediately: true });
@@ -90,7 +67,6 @@ var InstitutionalAgreementEditModel = (function () {
             $.when(this.deferredPopContacts, this.deferredPopFiles, this.deferredPopParticipants, this.deferredPageFadeIn).done(function () {
                 _this._updateKendoDialog($(window).width());
                 $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * _this.percentOffBodyHeight)));
-                //this._bindjQueryKendo();
             });
         }
 
@@ -98,14 +74,11 @@ var InstitutionalAgreementEditModel = (function () {
         this.basicInfo.populateUmbrella();
         this.establishmentSearchNav.bindSearch();
 
-        //this._getSettings();
         $(window).resize(function () {
             _this._updateKendoDialog($(window).width());
         });
         this._hideOtherGroups();
     }
-    //to correctly bind with ko, must set visibility to hidden. this removes the visibility to hidden and
-    //changes it to display none.
     InstitutionalAgreementEditModel.prototype._hideOtherGroups = function () {
         $("[data-current-module='agreements']").css("visibility", "").hide();
         $("#establishment_search").css("visibility", "").hide();
@@ -211,7 +184,6 @@ var InstitutionalAgreementEditModel = (function () {
         $(".hasDate").each(function (index, item) {
             $(item).kendoDatePicker({
                 value: new Date($(item).val()),
-                //have to use change event for ko validation-change does a double call so need to check for null
                 change: function (e) {
                     if (this.value() != null) {
                         $(e.sender.element).val(Globalize.format(this.value(), 'd'));
@@ -230,7 +202,6 @@ var InstitutionalAgreementEditModel = (function () {
             top: '20px'
         });
 
-        // create Editor from textarea HTML element
         $("#agreement_content").kendoEditor({
             tools: [
                 "bold",
@@ -272,7 +243,6 @@ var InstitutionalAgreementEditModel = (function () {
         this.scrollBody.bindJquery();
     };
 
-    //get settings for agreements.
     InstitutionalAgreementEditModel.prototype._getSettings = function () {
         var _this = this;
         var url = 'App.Routes.WebApi.Agreements.Settings.get()', agreementSettingsGet;
@@ -291,7 +261,6 @@ var InstitutionalAgreementEditModel = (function () {
         var _this = this;
         var offset;
 
-        // validate in this order to put scroll in right place
         if (!this.datesStatus.validateEffectiveDatesCurrentStatus.isValid()) {
             offset = $("#effective_dates_current_status").offset();
             this.datesStatus.validateEffectiveDatesCurrentStatus.errors.showAllMessages(true);
@@ -311,7 +280,6 @@ var InstitutionalAgreementEditModel = (function () {
             $("#nav_participants").addClass("current");
         }
         if (offset != undefined) {
-            //ie sucks!
             if (!$("body").scrollTop()) {
                 $("html, body").scrollTop(offset.top - 20);
             } else {
@@ -322,7 +290,6 @@ var InstitutionalAgreementEditModel = (function () {
 
             this.spinner.start();
 
-            //ie sucks!
             if (!$("body").scrollTop()) {
                 $("html, body").scrollTop(0);
             } else {
@@ -413,7 +380,6 @@ var InstitutionalAgreementEditModel = (function () {
                     _this.fileAttachment.agreementPostFiles(response, statusText, xhr);
                     _this.contact.agreementPostContacts(response, statusText, xhr);
 
-                    //change url to edit
                     $LoadingPage.text("Agreement Saved...");
                     setTimeout(function () {
                         if (xhr != undefined) {

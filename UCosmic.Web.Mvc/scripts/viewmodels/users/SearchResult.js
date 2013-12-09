@@ -1,14 +1,3 @@
-/// <reference path="../../typings/jquery/jquery.d.ts" />
-/// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
-/// <reference path="../../typings/knockout/knockout.d.ts" />
-/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
-/// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
-/// <reference path="../../typings/sammyjs/sammyjs.d.ts" />
-/// <reference path="../../typings/kendo/kendo.all.d.ts" />
-/// <reference path="../../app/Routes.ts" />
-/// <reference path="../../app/Flasher.ts" />
-/// <reference path="../../app/PagedSearch.ts" />
-/// <reference path="Search.ts" />
 var ViewModels;
 (function (ViewModels) {
     (function (Users) {
@@ -91,7 +80,6 @@ var ViewModels;
                 this.isEditingRoles = ko.observable(false);
                 this._owner = owner;
 
-                // map api data to observables
                 var userMapping = {
                     roles: {
                         create: function (options) {
@@ -133,7 +121,6 @@ var ViewModels;
                     return _this.roleSpinner.isVisible() || !_this.selectedRoleOption();
                 });
                 this.selectedRoleOption.subscribe(function (newValue) {
-                    // make sure this is an int, not a string
                     if (newValue && typeof (newValue) === 'string') {
                         _this.selectedRoleOption(parseInt(newValue));
                     }
@@ -406,7 +393,6 @@ var ViewModels;
             function RoleGrant(values, owner) {
                 this._owner = owner;
 
-                // map api data to observables
                 ko.mapping.fromJS(values, {}, this);
             }
             RoleGrant.prototype.revokeRole = function () {

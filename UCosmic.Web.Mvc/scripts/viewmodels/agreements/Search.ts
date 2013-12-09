@@ -1,16 +1,3 @@
-/// <reference path="../../typings/jquery/jquery.d.ts" />
-/// <reference path="../../typings/knockout/knockout.d.ts" />
-/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
-/// <reference path="../../typings/sammyjs/sammyjs.d.ts" />
-/// <reference path="../../app/App.ts" />
-/// <reference path="../../app/PagedSearch.ts" />
-/// <reference path="../../app/SideSwiper.ts" />
-/// <reference path="../../app/Routes.ts" />
-/// <reference path="../places/ApiModels.d.ts" />
-/// <reference path="SearchResult.ts" />
-/// <reference path="ApiModels.d.ts" />
-/// <reference path="publicView.ts" />
-
 module Agreements.ViewModels {
 
     export interface Lens {

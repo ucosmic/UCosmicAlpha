@@ -1,20 +1,3 @@
-/// <reference path="../../typings/googlemaps/google.maps.d.ts" />
-/// <reference path="../../typings/jquery/jquery.d.ts" />
-/// <reference path="../../typings/sammyjs/sammyjs.d.ts" />
-/// <reference path="../../typings/knockout/knockout.d.ts" />
-/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
-/// <reference path="../../typings/linq/linq.d.ts" />
-/// <reference path="../../typings/moment/moment.d.ts" />
-/// <reference path="../../app/App.ts" />
-/// <reference path="../../app/Routes.ts" />
-/// <reference path="../../app/Spinner.ts" />
-/// <reference path="../../app/Pagination.d.ts" />
-/// <reference path="../../app/Pager.ts" />
-/// <reference path="ApiModels.d.ts" />
-/// <reference path="../places/ApiModels.d.ts" />
-/// <reference path="../places/Utils.ts" />
-/// <reference path="../../google/Map.ts" />
-
 module Agreements.ViewModels {
 
     export interface SearchMapSettings {

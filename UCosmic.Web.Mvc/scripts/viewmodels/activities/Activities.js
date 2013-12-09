@@ -1,14 +1,3 @@
-/// <reference path="../../typings/jquery/jquery.d.ts" />
-/// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
-/// <reference path="../../typings/knockout/knockout.d.ts" />
-/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
-/// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
-/// <reference path="../../typings/kendo/kendo.all.d.ts" />
-/// <reference path="../../typings/linq/linq.d.ts" />
-/// <reference path="../../app/Routes.ts" />
-/// <reference path="../../typings/moment/moment.d.ts" />
-/// <reference path="ActivityEnums.ts" />
-/// <reference path="ServiceApiModel.d.ts" />
 var Activities;
 (function (Activities) {
     (function (ViewModels) {
@@ -51,7 +40,6 @@ var Activities;
             function ActivityListItem(data, owner) {
                 var _this = this;
                 this.mode = ko.observable();
-                //#region Computeds
                 this.editUrl = ko.computed(function () {
                     var activityId = _this.activityId();
                     return $('#activity_edit').text().format(activityId);
@@ -77,7 +65,6 @@ var Activities;
                 });
                 this._owner = owner;
 
-                // make sure types are ordered by rank
                 if (data.types && data.types.length)
                     data.types = Enumerable.From(data.types).OrderBy(function (x) {
                         return x.rank;
@@ -86,7 +73,6 @@ var Activities;
                 var mapping = {};
                 ko.mapping.fromJS(data, mapping, this);
             }
-            //#endregion
             ActivityListItem.prototype.typeText = function (index) {
                 var types = this.types();
                 var typeText = types[index].text();

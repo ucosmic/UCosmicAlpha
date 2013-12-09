@@ -1,12 +1,7 @@
-/// <reference path="../../typings/knockout/knockout.d.ts" />
-/// <reference path="SearchTable.ts" />
-/// <reference path="SearchMap.ts" />
 var Agreements;
 (function (Agreements) {
     (function (ViewModels) {
         var SearchLenses = (function () {
-            //#endregion
-            //#region Construction & Initialization
             function SearchLenses(settings) {
                 var _this = this;
                 this.settings = settings;
@@ -14,18 +9,13 @@ var Agreements;
                 this._inputChanged = ko.computed(function () {
                     sessionStorage.setItem(SearchLenses.LensSessionKey, _this.lens());
                 }).extend({ throttle: 0 });
-                //#endregion
-                //#region Lensing Computeds
                 this.isTableLens = ko.computed(function () {
                     return _this.lens() == 'table';
                 });
                 this.isMapLens = ko.computed(function () {
                     return _this.lens() == 'map';
                 });
-                //#endregion
-                //#region Sammy Routing
                 this.sammy = Sammy();
-                //#endregion
                 this._hasMapBeenResizedOnce = false;
                 this._runSammy();
                 this.table = new Agreements.ViewModels.SearchTable({
@@ -65,7 +55,6 @@ var Agreements;
                 }
             }
             SearchLenses.prototype._runSammy = function () {
-                // this will run once during construction
                 var viewModel = this;
 
                 this.sammy.before(/\#\/table\/(.*)\//, function () {

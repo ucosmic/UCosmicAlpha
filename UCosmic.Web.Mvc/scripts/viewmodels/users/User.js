@@ -1,44 +1,12 @@
-/// <reference path="../../typings/jquery/jquery.d.ts" />
-/// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
-/// <reference path="../../app/Routes.ts" />
-/// <reference path="../../app/Spinner.ts" />
 var ViewModels;
 (function (ViewModels) {
     (function (Users) {
-        //class UserNameValidator implements KnockoutValidationAsyncRuleDefinition {
-        //    private _ruleName: string = 'validUserName';
-        //    private _isAwaitingResponse: boolean = false;
-        //    async: boolean = true;
-        //    message: string = 'error';
-        //    validator(val: string, vm: User, callback: KnockoutValidationAsyncCallback) {
-        //        if (!this._isAwaitingResponse) {
-        //            var route = App.Routes.WebApi.Identity.Users.validateName(vm.id());
-        //            this._isAwaitingResponse = true;
-        //            $.post(route, { name: vm.name() })
-        //            .always((): void => {
-        //                this._isAwaitingResponse = false;
-        //            })
-        //            .done((): void => {
-        //                callback(true);
-        //            })
-        //            .fail((xhr: JQueryXHR): void => {
-        //                callback({ isValid: false, message: xhr.responseText });
-        //            });
-        //        }
-        //    }
-        //    constructor() {
-        //        ko.validation.rules[this._ruleName] = this;
-        //        ko.validation.addExtender(this._ruleName);
-        //    }
-        //}
-        //new UserNameValidator();
         var User = (function () {
             function User() {
                 this.id = ko.observable();
                 this.name = ko.observable();
                 this.saveSpinner = new App.Spinner({ delay: 200 });
                 this.errorMessage = ko.observable();
-                //isValidating: KnockoutComputed<boolean>;
                 this.isWarned = ko.observable(sessionStorage.getItem('UserCreateFormIsWarned') || false);
                 this.name.extend({
                     required: {
@@ -48,9 +16,6 @@ var ViewModels;
                     validUserName: this
                 });
 
-                //this.isValidating = ko.computed((): boolean => {
-                //    return this.name.isValidating();
-                //});
                 ko.validation.group(this);
             }
             User.prototype.acceptWarning = function () {
@@ -85,22 +50,6 @@ var ViewModels;
                     return;
                 }
 
-                //if (this.isValidating()) {
-                //    setTimeout((): boolean => { this.save(); }, 50);
-                //    return false;
-                //}
-                //var url = App.Routes.WebApi.Identity.Users.post();
-                //var data = {
-                //    name: this.name()
-                //};
-                //$.post(url, data)
-                //.done((response: string, statusText: string, xhr: JQueryXHR): void => {
-                //    // redirect to search
-                //    window.location.href = App.Routes.Mvc.Identity.Users.created({ location: xhr.getResponseHeader('Location') });
-                //})
-                //.fail((xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
-                //    this.errorMessage('An unexpected error occurred while trying to create this user.');
-                //});
                 $.ajax({
                     type: "POST",
                     async: true,

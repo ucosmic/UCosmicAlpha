@@ -1,9 +1,4 @@
-﻿/// <reference path="../../typings/jquery/jquery.d.ts" />
-/// <reference path="../../typings/knockout/knockout.d.ts" />
-/// <reference path="../places/ApiModels.d.ts" />
-/// <reference path="../../app/Routes.ts" />
-
-var modelData;
+﻿var modelData;
 module People.ViewModels {
 
     export class ActivityInputModel {

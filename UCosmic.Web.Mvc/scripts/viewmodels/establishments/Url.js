@@ -1,13 +1,3 @@
-/// <reference path="../../typings/jquery/jquery.d.ts" />
-/// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
-/// <reference path="../../typings/knockout/knockout.d.ts" />
-/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
-/// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
-/// <reference path="../../app/Routes.ts" />
-/// <reference path="../../app/Flasher.ts" />
-/// <reference path="../../app/Spinner.ts" />
-/// <reference path="Item.ts" />
-/// <reference path="ApiModels.d.ts" />
 var Establishments;
 (function (Establishments) {
     (function (ServerModels) {
@@ -62,42 +52,33 @@ var Establishments;
         var Url = (function () {
             function Url(js, owner) {
                 var _this = this;
-                // api observables
                 this.id = ko.observable();
                 this.ownerId = ko.observable();
                 this.value = ko.observable();
                 this.isOfficialUrl = ko.observable();
                 this.isFormerUrl = ko.observable();
-                // other observables
                 this.editMode = ko.observable();
                 this.$valueElement = undefined;
                 this.$confirmPurgeDialog = undefined;
-                // spinners
                 this.saveSpinner = new App.Spinner();
                 this.purgeSpinner = new App.Spinner();
                 this.valueValidationSpinner = new App.Spinner();
-                // private fields
                 this.saveEditorClicked = false;
                 this.owner = owner;
 
-                // when adding new URL, js is not defined
                 if (!js)
                     js = new Establishments.ServerModels.Url(this.owner.id);
                 if (js.id === 0)
                     js.ownerId = this.owner.id;
 
-                // hold onto original values so they can be reset on cancel
                 this.originalValues = js;
 
-                // map api properties to observables
                 ko.mapping.fromJS(js, {}, this);
 
-                // view computeds
                 this.isOfficialUrlEnabled = ko.computed(function () {
                     return !_this.originalValues.isOfficialUrl;
                 });
 
-                // value validation
                 this.isValueValidatableAsync = ko.computed(function () {
                     return _this.value() !== _this.originalValues.value;
                 });
@@ -122,13 +103,11 @@ var Establishments;
                     }
                 });
 
-                // official URL cannot be former URL
                 this.isOfficialUrl.subscribe(function (newValue) {
                     if (newValue)
                         _this.isFormerUrl(false);
                 });
 
-                // prepend protocol to URL for hrefs
                 this.valueHref = ko.computed(function () {
                     var url = _this.value();
                     if (!url)
@@ -146,10 +125,10 @@ var Establishments;
 
                 this.mutationSuccess = function (response) {
                     _this.owner.requestUrls(function () {
-                        _this.owner.editingUrl(0); // tell parent no item is being edited anymore
-                        _this.editMode(false); // hide the form, show the view
-                        _this.saveSpinner.stop(); // stop save spinner
-                        _this.purgeSpinner.stop(); // stop purge spinner
+                        _this.owner.editingUrl(0);
+                        _this.editMode(false);
+                        _this.saveSpinner.stop();
+                        _this.purgeSpinner.stop();
                         App.flasher.flash(response);
                     });
                 };
@@ -204,10 +183,10 @@ var Establishments;
             Url.prototype.showEditor = function () {
                 var editingUrl = this.owner.editingUrl();
                 if (!editingUrl) {
-                    this.owner.editingUrl(this.id() || -1); // tell parent which item is being edited
-                    this.editMode(true); // show the form / hide the viewer
+                    this.owner.editingUrl(this.id() || -1);
+                    this.editMode(true);
                     this.$valueElement.trigger('autosize');
-                    this.$valueElement.focus(); // focus the text box
+                    this.$valueElement.focus();
                 }
             };
 
@@ -218,7 +197,7 @@ var Establishments;
                     this.errors.showAllMessages();
                 } else if (!this.value.isValidating()) {
                     this.saveEditorClicked = false;
-                    this.saveSpinner.start(); // start save spinner
+                    this.saveSpinner.start();
 
                     if (this.id()) {
                         $.ajax({
@@ -238,12 +217,12 @@ var Establishments;
             };
 
             Url.prototype.cancelEditor = function () {
-                this.owner.editingUrl(0); // tell parent no item is being edited anymore
+                this.owner.editingUrl(0);
                 if (this.id()) {
-                    ko.mapping.fromJS(this.originalValues, {}, this); // restore original values
-                    this.editMode(false); // hide the form, show the view
+                    ko.mapping.fromJS(this.originalValues, {}, this);
+                    this.editMode(false);
                 } else {
-                    this.owner.urls.shift(); // remove the new empty item
+                    this.owner.urls.shift();
                 }
             };
 

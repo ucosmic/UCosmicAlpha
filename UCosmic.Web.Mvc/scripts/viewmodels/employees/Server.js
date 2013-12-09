@@ -1,9 +1,4 @@
-﻿/// <reference path="../../typings/jquery/jquery.d.ts" />
-/// <reference path="../../app/App.ts" />
-/// <reference path="../../app/Routes.d.ts" />
-/// <reference path="Routes.d.ts" />
-/// <reference path="Models.d.ts" />
-var Employees;
+﻿var Employees;
 (function (Employees) {
     (function (Servers) {
         function GetEmployeesPlaces(tenantId, data, settings) {

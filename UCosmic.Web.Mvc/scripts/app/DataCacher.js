@@ -1,4 +1,3 @@
-/// <reference path="../typings/jquery/jquery.d.ts" />
 var App;
 (function (App) {
     var DataCacher = (function () {

@@ -1,32 +1,12 @@
-//#region References
-/// <reference path="../../typings/jquery/jquery.d.ts" />
-/// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
-/// <reference path="../../typings/knockout/knockout.d.ts" />
-/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
-/// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
-/// <reference path="../../typings/kendo/kendo.all.d.ts" />
-/// <reference path="../../typings/tinymce/tinymce.d.ts" />
-/// <reference path="../../typings/moment/moment.d.ts" />
-/// <reference path="../../typings/linq/linq.d.ts" />
-/// <reference path="../../app/Routes.ts" />
-/// <reference path="../../app/Spinner.ts" />
-/// <reference path="ActivityEnums.ts" />
-/// <reference path="ServiceApiModel.d.ts" />
-//#endregion
 var Activities;
 (function (Activities) {
     (function (ViewModels) {
         var ActivityForm = (function () {
-            //#endregion
-            //#region Initial data load
             function ActivityForm() {
                 var _this = this;
-                //#region Primary scalar observables & properties
                 this.ready = ko.observable(false);
                 this.mode = ko.observable();
                 this.updatedOnUtc = ko.observable();
-                //#endregion
-                //#region View convenience computeds
                 this.isDraft = ko.computed(function () {
                     var mode = _this.mode();
                     if (!mode)
@@ -45,8 +25,6 @@ var Activities;
                         return undefined;
                     return moment(updatedOnUtc).format('M/D/YYYY');
                 });
-                //#endregion
-                //#region Subscriptions
                 this.isSaving = ko.observable(false);
                 this.saveSpinner = new App.Spinner({ delay: 200 });
                 this._isDirty = ko.observable(false);
@@ -58,8 +36,6 @@ var Activities;
                 this.placeOptions = ko.observableArray();
                 this.kendoPlaceIds = ko.observableArray();
                 this.typeOptions = ko.observableArray();
-                //#endregion
-                //#region Tags
                 this.tags = ko.observableArray();
                 this.tagInput = ko.observable();
                 this.documents = ko.observableArray();
@@ -114,8 +90,6 @@ var Activities;
                 return deferred;
             };
 
-            //#endregion
-            //#region Data Binding
             ActivityForm.prototype._applyBindings = function (target, data, placeOptions, typeOptions) {
                 this._bindData(data);
                 this._bindPlaceOptions(placeOptions);
@@ -220,7 +194,6 @@ var Activities;
 
             ActivityForm.prototype._bindSubscriptions = function () {
                 var _this = this;
-                // autosave when fields change
                 this.title.subscribe(function () {
                     _this._isDirty(true);
                 });
@@ -256,7 +229,6 @@ var Activities;
                         _this.saveSpinner.stop();
                 });
 
-                // popup when leaving empty undeleted page
                 window.onbeforeunload = function () {
                     if (!_this._hasData() && !_this._isDeleted) {
                         return "This activity currently has no data. If you continue, the activity will be kept and you can come back to add data later. If you intended to delete it, please stay on this page and click one of the 'Cancel' buttons provided instead.";
@@ -266,8 +238,6 @@ var Activities;
                 };
             };
 
-            //#endregion
-            //#region Kendo
             ActivityForm.prototype._bindKendo = function () {
                 this._bindDatePickers();
                 this._bindPlacesKendoMultiSelect();
@@ -338,7 +308,7 @@ var Activities;
                         type: 'PUT',
                         url: url
                     }).done(function () {
-                        _this._isSaved = true; // prevent tinymce onbeforeunload from updating again
+                        _this._isSaved = true;
                         location.href = App.Routes.Mvc.My.Profile.get();
                     }).fail(function (xhr) {
                         App.Failures.message(xhr, 'while trying to save your activity', true);
@@ -410,7 +380,7 @@ var Activities;
                     url: url,
                     async: async
                 }).done(function () {
-                    _this._isDeleted = true; // prevent tinymce onbeforeunload from updating again
+                    _this._isDeleted = true;
                     deferred.resolve();
                 }).fail(function (xhr) {
                     deferred.reject(xhr);
@@ -430,7 +400,6 @@ var Activities;
                 this.$startsOn.kendoDatePicker({
                     value: this.startsOn.date(),
                     format: this.startsOn.format(),
-                    // if user clicks date picker button, reset format
                     open: function (e) {
                         this.options.format = 'M/d/yyyy';
                     }
@@ -448,10 +417,8 @@ var Activities;
             };
 
             ActivityForm.prototype._bindPlaceOptions = function (placeOptions) {
-                // map places multiselect datasource to locations
                 ko.mapping.fromJS(placeOptions, {}, this.placeOptions);
 
-                // Initialize the list of selected locations with current locations in values
                 this.kendoPlaceIds(this.places().slice(0));
             };
 
@@ -472,7 +439,6 @@ var Activities;
             };
 
             ActivityForm.prototype._onPlaceMultiSelectChange = function (e) {
-                // find out if a place was added or deleted
                 var oldPlaceIds = this.places();
                 var newPlaceIds = e.sender.value();
                 var addedPlaceIds = $(newPlaceIds).not(oldPlaceIds).get();
@@ -571,14 +537,12 @@ var Activities;
 
             ActivityForm.prototype._onTagAutoCompleteSelect = function (e) {
                 var _this = this;
-                // the autocomplete filter will search establishment names, not establishments
-                // name.ownerId corresponds to the establishment.id
                 var dataItem = e.sender.dataItem(e.item.index());
                 this._addOrReplaceTag(dataItem.text).done(function () {
                     _this.tagInput('');
                     e.preventDefault();
                     e.sender.value('');
-                    e.sender.element.focus(); // this resets the value of e.sender._prev
+                    e.sender.element.focus();
                 }).fail(function (xhr) {
                     App.Failures.message(xhr, 'while trying to add this activity tag, please try again', true);
                 });
@@ -674,7 +638,6 @@ var Activities;
                         text: text
                     }
                 }).done(function () {
-                    // there should always be matching tag, but check to be safe
                     var tagToRemove = Enumerable.From(_this.tags()).SingleOrDefault(undefined, function (x) {
                         return text && x.text().toUpperCase() === text.toUpperCase();
                     });
@@ -705,7 +668,6 @@ var Activities;
                     progress: function (e) {
                         _this._onDocumentKendoProgress(e);
                     },
-                    //cancel: (e: kendo.ui.UploadCancelEvent): void => { this._onDocumentKendoCancel(e); },
                     success: function (e) {
                         _this._onDocumentKendoSuccess(e);
                     },
@@ -751,18 +713,6 @@ var Activities;
                 form.uploadProgress(e.percentComplete);
             };
 
-            //private _onDocumentKendoCancel(e: kendo.ui.UploadCancelEvent): void {
-            //    var form: ActivityDocumentForm = Enumerable.From(this.documents())
-            //        .FirstOrDefault(undefined, function (x: ActivityDocumentForm): boolean {
-            //            return x.isUpload() && !x.uploadError() && x.fileName() === e.files[0].name;
-            //        });
-            //    this.documents.remove(form);
-            //    var hasUploads = Enumerable.From(this.documents())
-            //        .Any(function (x: ActivityDocumentForm): boolean {
-            //            return x.isUpload() && !x.uploadError();
-            //        });
-            //    if (!hasUploads) this.isSaving(false);
-            //}
             ActivityForm.prototype._onDocumentKendoSuccess = function (e) {
                 var form = Enumerable.From(this.documents()).FirstOrDefault(undefined, function (x) {
                     return x.isUpload() && !x.uploadError() && x.fileName() === e.files[0].name;
@@ -925,7 +875,6 @@ var Activities;
                 return 'MM/dd/yyyy';
             };
 
-            //#endregion
             FormattedDateInput.prototype.isValid = function () {
                 var input = this.input(), format = this.format() || 'M/D/YYYY';
                 return !input || moment(input, format.toUpperCase()).isValid();
@@ -958,8 +907,6 @@ var Activities;
                 this.isUpload = ko.observable();
                 this.uploadError = ko.observable();
                 this.uploadProgress = ko.observable();
-                //#endregion
-                //#region View Computeds
                 this.displayExtension = ko.computed(function () {
                     var extension = _this.extension();
                     return extension ? extension.toLowerCase() : '';
@@ -970,8 +917,6 @@ var Activities;
                 this.uploadPercent = ko.computed(function () {
                     return '{0}%'.format(_this.uploadProgress() || 0);
                 });
-                //#endregion
-                //#region Title editing
                 this.isEditingTitle = ko.observable(false);
                 this.renameError = ko.observable();
                 this.isSavingTitle = ko.observable(false);
@@ -1113,19 +1058,6 @@ var Activities;
                 });
             };
 
-            //#endregion
-            //#region Deletion
-            //cancelEnabled: KnockoutComputed<boolean> = ko.computed((): boolean => {
-            //    return this.uploadProgress() < 90;
-            //});
-            //uploadCancel(item: ActivityDocumentForm, e: JQueryEventObject): void {
-            //    var kendoUpload = $('#files_upload').data('kendoUpload');
-            //    if (kendoUpload) {
-            //        var cancelButton = kendoUpload.wrapper.find('ul.k-upload-files')
-            //            .find('.k-file:has([title="' + this.fileName() + '"]) .k-cancel');
-            //        cancelButton.click();
-            //    }
-            //}
             ActivityDocumentForm.prototype.purge = function (item, index) {
                 var _this = this;
                 this._owner.$deleteDocumentDialog.dialog({

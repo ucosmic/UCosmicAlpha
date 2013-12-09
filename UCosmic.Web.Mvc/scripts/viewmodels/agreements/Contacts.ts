@@ -1,6 +1,3 @@
-/// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
-/// <reference path="phones.ts" />
-
 module Agreements {
     export class SelectConstructor {
         constructor(public name: string, public id: string) {

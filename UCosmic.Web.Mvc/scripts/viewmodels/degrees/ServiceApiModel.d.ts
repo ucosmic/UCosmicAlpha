@@ -1,5 +1,3 @@
-/// <reference path="../../typings/knockout/knockout.d.ts" />
-
 declare module Service.ApiModels.Degree {
 
     export interface IDegree {

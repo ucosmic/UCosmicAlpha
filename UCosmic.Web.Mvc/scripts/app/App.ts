@@ -1,7 +1,3 @@
-/// <reference path="../typings/jquery/jquery.d.ts" />
-/// <reference path="../typings/jquery.plugins/jquery.autosize.d.ts" />
-/// <reference path="../typings/jquery.plugins/jquery.placeholder.d.ts" />
-
 interface String {
     format(...args: any[]): string;
 }

@@ -1,6 +1,3 @@
-/// <reference path="../../typings/knockout/knockout.d.ts" />
-/// <reference path="../places/ApiModels.d.ts" />
-
 declare module Agreements.ApiModels {
 
     export interface FlatEstablishment {

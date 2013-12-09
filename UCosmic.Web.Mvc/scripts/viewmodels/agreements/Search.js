@@ -1,15 +1,3 @@
-/// <reference path="../../typings/jquery/jquery.d.ts" />
-/// <reference path="../../typings/knockout/knockout.d.ts" />
-/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
-/// <reference path="../../typings/sammyjs/sammyjs.d.ts" />
-/// <reference path="../../app/App.ts" />
-/// <reference path="../../app/PagedSearch.ts" />
-/// <reference path="../../app/SideSwiper.ts" />
-/// <reference path="../../app/Routes.ts" />
-/// <reference path="../places/ApiModels.d.ts" />
-/// <reference path="SearchResult.ts" />
-/// <reference path="ApiModels.d.ts" />
-/// <reference path="publicView.ts" />
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -32,24 +20,19 @@ var Agreements;
                 this.deferredFadeInOut = $.Deferred();
                 this.deferredFadeInOut2 = $.Deferred();
                 this.optionsEnabled = ko.observable(true);
-                // sammy & URL hashing
                 this.sammy = Sammy();
                 this.sammyBeforeRoute = /\#\/page\/(.*)\//;
                 this.sammyGetPageRoute = '#/page/:pageNumber/';
                 this.sammyDefaultPageRoute = '{0}/agreements[\/]?'.format(this.domain);
-                // filtering
                 this.countries = ko.observableArray();
                 this.countryCode = ko.observable();
-                // lensing
                 this.lenses = ko.observableArray([
                     { text: 'Table', value: 'table' },
                     { text: 'List', value: 'list' }
                 ]);
                 this.lens = ko.observable();
-                // items page
                 this.$itemsPage = undefined;
                 this.trail = ko.observableArray([]);
-                // results
                 this.resultsMapping = {
                     'items': {
                         key: function (data) {
@@ -88,40 +71,33 @@ var Agreements;
                 this._setupSessionStorage();
             };
 
-            // countries dropdown
             Search.prototype._setupCountryDropDown = function () {
                 var _this = this;
                 ko.computed(function () {
-                    // populate countryCode based on last value when paging backwards
                     var lastCountryCode = $('input[type=hidden][data-bind="value: countryCode"]').val();
 
                     $.get(App.Routes.WebApi.Countries.get()).done(function (response) {
-                        // setup empty value
                         var emptyValue = {
                             code: '-1',
                             name: '[Without country]'
                         };
                         response.splice(response.length, 0, emptyValue);
 
-                        _this.countries(response); // push into observable array
+                        _this.countries(response);
 
-                        // restore selected value when paging backwards
                         if (lastCountryCode && lastCountryCode !== _this.countryCode())
                             _this.countryCode(lastCountryCode);
                     });
                 }).extend({ throttle: 1 });
             };
 
-            // paging subscriptions
             Search.prototype._setupPagingSubscriptions = function () {
                 var _this = this;
-                // whenever pageNumber changes, set the location for sammy
                 this.pageNumber.subscribe(function (newValue) {
                     _this._setLocation();
                 });
             };
 
-            // lensing
             Search.prototype._setupLensing = function () {
                 var _this = this;
                 this.changeLens = function (lens) {
@@ -140,7 +116,6 @@ var Agreements;
                 });
 
                 if (self.initDefaultPageRoute) {
-                    // match /establishments or /establishments/
                     self.sammy.get(self.sammyDefaultPageRoute, function () {
                         self._initPageHash(this);
                     });
@@ -156,11 +131,9 @@ var Agreements;
                 if (trail.length > 0 && trail[trail.length - 1] === sammyContext.path)
                     return;
                 if (trail.length > 1 && trail[trail.length - 2] === sammyContext.path) {
-                    // swipe backward
                     trail.pop();
                     return;
                 } else if (trail.length > 0) {
-                    // swipe forward
                 }
                 trail.push(sammyContext.path);
             };
@@ -172,7 +145,6 @@ var Agreements;
 
                 pageNumber = sammyContext.params['pageNumber'];
 
-                // make sure the viewmodel pagenumber is in sync with the route
                 if (pageNumber && parseInt(pageNumber) !== Number(this.pageNumber()))
                     this.pageNumber(parseInt(pageNumber));
                 return true;
@@ -206,7 +178,7 @@ var Agreements;
                 } else {
                     ko.mapping.fromJS(js, this.resultsMapping, this);
                 }
-                App.WindowScroller.restoreTop(); // restore scroll when coming back from detail page
+                App.WindowScroller.restoreTop();
                 this.transitionedPageNumber(this.pageNumber());
                 this.deferredFadeInOut2.resolve();
             };
@@ -248,18 +220,14 @@ var Agreements;
                 });
             };
 
-            // go to add new
             Search.prototype.gotoAddNew = function () {
                 return true;
             };
 
-            // click item
-            // TODO: is this still needed?
             Search.prototype.clickAction = function (viewModel, e) {
                 return true;
             };
 
-            // TODO: this is also not used anywhere, detailHref on SearchResult is though.
             Search.prototype.detailHref = function (id) {
                 return App.Routes.Mvc.Establishments.show(id);
             };

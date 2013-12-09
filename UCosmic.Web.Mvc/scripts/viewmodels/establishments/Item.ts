@@ -1,20 +1,3 @@
-/// <reference path="../../typings/jquery/jquery.d.ts" />
-/// <reference path="../../typings/knockout/knockout.d.ts" />
-/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
-/// <reference path="../../typings/googlemaps/google.maps.d.ts" />
-/// <reference path="../../google/ToolsOverlay.ts" />
-/// <reference path="../../app/App.ts" />
-/// <reference path="../../app/SideSwiper.ts" />
-/// <reference path="../../app/Routes.ts" />
-/// <reference path="../../app/Spinner.ts" />
-/// <reference path="../languages/ApiModels.d.ts" />
-/// <reference path="Name.ts" />
-/// <reference path="Url.ts" />
-/// <reference path="Location.ts" />
-/// <reference path="Search.ts" />
-/// <reference path="SearchResult.ts" />
-/// <reference path="ApiModels.d.ts" />
-
 module Establishments.ViewModels {
 
     import gm = google.maps

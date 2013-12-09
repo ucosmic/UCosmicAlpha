@@ -1,9 +1,3 @@
-/// <reference path="../../typings/jquery/jquery.d.ts" />
-/// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
-/// <reference path="../../typings/knockout/knockout.d.ts" />
-/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
-/// <reference path="../../app/Routes.ts" />
-/// <reference path="../../app/App.ts" />
 var ViewModels;
 (function (ViewModels) {
     (function (Degrees) {
@@ -66,7 +60,6 @@ var ViewModels;
                                 viewModel.deleteEducationById(data.id());
                                 $(this).dialog("close");
 
-                                /* TBD - Don't reload page. */
                                 location.href = App.Routes.Mvc.My.Profile.get("geographic-expertise");
                             }
                         },

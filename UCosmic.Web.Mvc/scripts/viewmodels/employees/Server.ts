@@ -1,10 +1,4 @@
-﻿/// <reference path="../../typings/jquery/jquery.d.ts" />
-/// <reference path="../../app/App.ts" />
-/// <reference path="../../app/Routes.d.ts" />
-/// <reference path="Routes.d.ts" />
-/// <reference path="Models.d.ts" />
-
-module Employees.Servers {
+﻿module Employees.Servers {
 
     export function GetEmployeesPlaces(tenantId: any, data: ApiModels.EmployeesPlacesInputModel, settings?: JQueryAjaxSettings): JQueryPromise<ApiModels.EmployeesPlaceApiModel[]> {
         var promise: JQueryDeferred<ApiModels.EmployeesPlaceApiModel[]> = $.Deferred();

@@ -1,4 +1,3 @@
-/// <reference path="../../typings/knockout/knockout.d.ts" />
 var Agreements;
 (function (Agreements) {
     var Visibility = (function () {

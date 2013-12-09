@@ -1,31 +1,4 @@
-﻿/// <reference path="../../typings/jquery/jquery.d.ts" />
-/// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
-/// <reference path="../../typings/knockout/knockout.d.ts" />
-/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
-/// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
-/// <reference path="../../typings/kendo/kendo.all.d.ts" />
-/// <reference path="../../typings/sammyjs/sammyjs.d.ts" />
-/// <reference path="../../app/Routes.ts" />
-/// <reference path="../../app/Spinner.ts" />
-/// <reference path="../../app/Flasher.ts" />
-/// <reference path="ServerApiModel.d.ts" />
-/// <reference path="../employees/ServerApiModel.d.ts" />
-/// <reference path="../activities/Activities.ts" />
-/// <reference path="../geographicExpertises/GeographicExpertises.ts" />
-/// <reference path="../languageExpertises/LanguageExpertises.ts" />
-/// <reference path="../degrees/Degrees.ts" />
-/// <reference path="../internationalAffiliations/InternationalAffiliations.ts" />
-/// <reference path="../../app/Routes.d.ts" />
-/// <reference path="../../app/DataCacher.ts" />
-/// <reference path="../../app/Models.d.ts" />
-/// <reference path="../establishments/ApiModels.d.ts" />
-/// <reference path="../establishments/Server.ts" />
-/// <reference path="../employees/Models.d.ts" />
-/// <reference path="../employees/Server.ts" />
-/// <reference path="../people/Server.ts" />
-/// <reference path="../people/Models.d.ts" />
-/// <reference path="../../app/FormSelect.ts" />
-var RootViewModels = ViewModels;
+﻿var RootViewModels = ViewModels;
 
 var People;
 (function (People) {
@@ -48,8 +21,6 @@ var People;
             }
             AffiliatedEstablishmentEditor.prototype._getOptionsCaption = function (options) {
                 var _this = this;
-                // the option label for the first dropdown is different because it is required
-                // this is the first editor all options' parentId's are equal to default establishment
                 var isFirst = Enumerable.From(options).All(function (x) {
                     return x.parentId == _this.owner.owner.defaultAffiliation.establishmentId;
                 });
@@ -58,7 +29,6 @@ var People;
             };
 
             AffiliatedEstablishmentEditor.prototype._getSelectOptions = function (options) {
-                // convert options from array of establishments to text/value pair array
                 var selectOptions = Enumerable.From(options).Select(function (x) {
                     return {
                         text: x.contextName || x.officialName,
@@ -73,7 +43,6 @@ var People;
                 if (newValue) {
                     this.owner.bindEstablishmentEditors(newValue);
                 } else {
-                    // need to find most granular that is still selected
                     var index = Enumerable.From(siblingEditors).IndexOf(this);
                     var ancestors = siblingEditors.slice(0, index).reverse();
                     var ancestor = Enumerable.From(ancestors).FirstOrDefault(undefined, function (x) {
@@ -93,7 +62,6 @@ var People;
         var Affiliation = (function () {
             function Affiliation(owner, dataOrPersonId) {
                 var _this = this;
-                //#region Observable Interface Implementation
                 this.affiliationId = ko.observable();
                 this.personId = ko.observable();
                 this.establishmentId = ko.observable();
@@ -102,12 +70,8 @@ var People;
                 this.facultyRank = ko.observable();
                 this.establishments = ko.observableArray();
                 this.hideValidationMessages = ko.observable(true);
-                //#endregion
-                //#region Data Mutation
                 this.saveSpinner = new App.Spinner({ delay: 200 });
                 this.purgeSpinner = new App.Spinner();
-                //#endregion
-                //#region Cascading Establishments
                 this.establishmentEditors = ko.observableArray();
                 this.firstEstablishmentId = ko.computed(function () {
                     var establishmentEditors = _this.establishmentEditors();
@@ -129,12 +93,8 @@ var People;
                     }
                     return -1;
                 });
-                //#endregion
-                //#region Faculty Rank DropDown
                 this.facultyRankSelect = new App.FormSelect({ kendoOptions: {} });
                 this.hasFacultyRanks = ko.observable(false);
-                //#endregion
-                //#region Postition Title Text
                 this.jobTitlesHtml = ko.computed(function () {
                     return _this._computeJobTitles();
                 });
@@ -150,7 +110,6 @@ var People;
                     this.isEditing = ko.observable(true);
                 }
 
-                // wait for faculty rank data and then bind to select options
                 setTimeout(function () {
                     _this._loadFacultyRankOptions();
                 }, 0);
@@ -168,9 +127,8 @@ var People;
                     return;
                 }
 
-                ko.mapping.fromJS(this.data, {}, this); // restore observable properties
+                ko.mapping.fromJS(this.data, {}, this);
 
-                // restore faculty rank to its previous value
                 var selectedFacultyRank = this.facultyRank();
                 if (selectedFacultyRank)
                     this.facultyRankSelect.value(selectedFacultyRank.facultyRankId());
@@ -179,7 +137,6 @@ var People;
 
             Affiliation.prototype._initValidation = function () {
                 var _this = this;
-                // job titles cannot exceed 500 characters
                 this.jobTitles.extend({
                     maxLength: {
                         message: 'Position Title(s) cannot contain more than 500 characters.',
@@ -187,14 +144,12 @@ var People;
                     }
                 });
 
-                // the first establishment editor cannot be empty
                 this.firstEstablishmentId.extend({
                     required: {
                         message: 'At least one main affiliation is required.'
                     }
                 });
 
-                // cannot have duplicate affiliations
                 this.lastEstablishmentId.extend({
                     validation: {
                         validator: function (value) {
@@ -288,44 +243,32 @@ var People;
 
             Affiliation.prototype.bindEstablishmentEditors = function (establishmentId) {
                 var _this = this;
-                // can't bind the editors until the default affiliation's offspring are loaded
                 this.owner.establishmentData.ready().done(function (offspring) {
                     _this._bindEstablishmentEditors(establishmentId, offspring);
                 });
             };
 
             Affiliation.prototype._bindEstablishmentEditors = function (establishmentId, offspring) {
-                this.establishmentEditors([]); // clear existing editors
+                this.establishmentEditors([]);
 
-                // the establishmentId passed as an argument represents the most granular establishment
-                // create it first, then walk up using parentId's until the default establishment is reached
                 var currentEstablishmentId = establishmentId;
                 while (currentEstablishmentId && currentEstablishmentId != this.owner.defaultAffiliation.establishmentId) {
                     var currentEstablishment = this._bindEstablishmentEditor(currentEstablishmentId, offspring);
                     currentEstablishmentId = currentEstablishment.parentId;
                 }
 
-                // the above loop only renders from the most granular selected establishment and its ancestors
-                // if there are more granular unselected options, need to render them as last binding
                 this._bindEstablishmentEditor(establishmentId, offspring, true);
             };
 
             Affiliation.prototype._bindEstablishmentEditor = function (establishmentId, offspring, isLast) {
                 if (typeof isLast === "undefined") { isLast = false; }
-                // first try to find the establishment api model
                 var establishment = this._getEstablishmentById(establishmentId, offspring);
 
-                // when establishment exists and this IS NOT the last binding, get establishment's siblings
-                // when establishment exists and this IS the last binding, get establishment's children
-                // when establishment is undefined, get default affiliation establishment's children
                 var options = this._getEstablishmentEditorOptions(establishment ? !isLast ? establishment.parentId : establishment.id : this.owner.defaultAffiliation.establishmentId, offspring);
 
-                // only add an editor when there will be options
                 if (options.length) {
-                    // when this is the last binding, do not pass the establishment
                     var editor = new AffiliatedEstablishmentEditor(this, options, !isLast ? establishment : undefined);
 
-                    // when this is not the last binding, insert editor as first element
                     if (!isLast) {
                         this.establishmentEditors.unshift(editor);
                     } else {
@@ -339,7 +282,6 @@ var People;
             };
 
             Affiliation.prototype._getEstablishmentById = function (establishmentId, offspring) {
-                // will be undefined when establishmentId == defaultAffiliation.establishmentId
                 var establishment = Enumerable.From(offspring).SingleOrDefault(undefined, function (x) {
                     return x.id == establishmentId;
                 });
@@ -359,8 +301,6 @@ var People;
 
             Affiliation.prototype._loadFacultyRankOptions = function () {
                 var _this = this;
-                // the employee module settings data needs to be loaded
-                // so that we can get the faculty rank options (if there are any)
                 this.owner.employeeSettingsData.ready().done(function (settings) {
                     _this._bindFacultyRankOptions(settings);
                 });
@@ -368,11 +308,10 @@ var People;
 
             Affiliation.prototype._bindFacultyRankOptions = function (settings) {
                 var _this = this;
-                // settings can be null/undefined, and may not have faculty ranks
                 if (settings && settings.facultyRanks && settings.facultyRanks.length) {
                     this.hasFacultyRanks(true);
                     var options = this._getFacultyRankSelectOptions(settings);
-                    this.facultyRankSelect.caption('[None]'); // must be set before options
+                    this.facultyRankSelect.caption('[None]');
                     this.facultyRankSelect.options(options);
                     var facultyRank = this.facultyRank();
                     if (facultyRank)
@@ -384,7 +323,6 @@ var People;
             };
 
             Affiliation.prototype._getFacultyRankSelectOptions = function (settings) {
-                // sort by rank && convert to text/value pair for select options binding
                 var options = Enumerable.From(settings.facultyRanks).OrderBy(function (x) {
                     return x.rank;
                 }).Select(function (x) {
@@ -408,11 +346,8 @@ var People;
         ViewModels.Affiliation = Affiliation;
 
         var Profile = (function () {
-            //#endregion
-            //#region Construction
             function Profile(personId) {
                 var _this = this;
-                //#region Properties
                 this._sammy = Sammy();
                 this._activitiesViewModel = null;
                 this._geographicExpertisesViewModel = null;
@@ -463,39 +398,34 @@ var People;
                 this.employeeSettingsData = new App.DataCacher(function () {
                     return _this._loadEmployeeSettingsData();
                 });
-                this.personId2 = personId; // bring in personId from viewbag
+                this.personId2 = personId;
 
-                // go ahead and load affiliations
                 this.affiliationData.ready();
             }
             Profile.prototype._loadAffiliationData = function () {
                 var _this = this;
                 var promise = $.Deferred();
 
-                // get this person's affiliations from the server
                 People.Servers.GetAffiliationsByPerson().done(function (affiliations) {
-                    // default affiliation does not need to be observable
                     _this.defaultAffiliation = Enumerable.From(affiliations).Single(function (x) {
                         return x.isDefault;
                     });
                     _this.preferredTitle(_this.defaultAffiliation.jobTitles);
 
-                    // the default affiliation is not editable, filter it out
                     var editableAffiliations = Enumerable.From(affiliations).Except([_this.defaultAffiliation]).OrderBy(function (x) {
                         return x.affiliationId;
                     }).ToArray();
 
-                    // map editable affiliations into observable array of Affiliation viewmodels
                     ko.mapping.fromJS(editableAffiliations, {
                         create: function (options) {
                             return new Affiliation(_this, options.data);
                         }
                     }, _this.editableAffiliations);
 
-                    _this.establishmentData.ready(); // begin loading the default affiliation's offspring
-                    _this.employeeSettingsData.ready(); // begin loading the employee module settings
-                    _this.affiliationsSpinner.stop(); // stop the loading spinner
-                    promise.resolve(affiliations); // resolve the promise for affiliation data
+                    _this.establishmentData.ready();
+                    _this.employeeSettingsData.ready();
+                    _this.affiliationsSpinner.stop();
+                    promise.resolve(affiliations);
                 });
                 return promise;
             };
@@ -529,15 +459,6 @@ var People;
                     return this._loadPromise;
                 this._loadPromise = $.Deferred();
 
-                // start both requests at the same time
-                //var facultyRanksPact = $.Deferred();
-                //$.get(App.Routes.WebApi.Employees.ModuleSettings.FacultyRanks.get())
-                //    .done((data: RootViewModels.Employees.IServerFacultyRankApiModel[], textStatus: string, jqXHR: JQueryXHR): void => {
-                //        facultyRanksPact.resolve(data);
-                //    })
-                //    .fail((jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void => {
-                //        facultyRanksPact.reject(jqXHR, textStatus, errorThrown);
-                //    });
                 var viewModelPact = $.Deferred();
                 $.get('/api/user/person').done(function (data, textStatus, jqXHR) {
                     viewModelPact.resolve(data);
@@ -545,32 +466,17 @@ var People;
                     viewModelPact.reject(jqXHR, textStatus, errorThrown);
                 });
 
-                // only process after both requests have been resolved
                 viewModelPact.done(function (viewModel) {
-                    //this.facultyRanks(facultyRanks); // populate the faculty ranks menu
-                    //if (facultyRanks.length == 0) {
-                    //    this.facultyRankId(null);
-                    //}
-                    ko.mapping.fromJS(viewModel, { ignore: "id" }, _this); // populate the scalars
+                    ko.mapping.fromJS(viewModel, { ignore: "id" }, _this);
                     _this.personId = viewModel.id;
 
                     _this._originalValues = viewModel;
 
-                    //if (!this._isInitialized) {
-                    //    $(this).trigger('ready'); // ready to apply bindings
-                    //    this._isInitialized = true; // bindings have been applied
-                    //    this.$facultyRanks().kendoDropDownList(); // kendoui dropdown for faculty ranks
-                    //}
-                    //this._reloadAffiliations();
                     _this._setupValidation();
                     _this._setupKendoWidgets();
                     _this._setupDisplayNameDerivation();
                     _this._setupCardComputeds();
 
-                    //debugger;
-                    //if (this.startInEdit()) {
-                    //    this.startEditing();
-                    //}
                     if (startTab === "") {
                         _this._setupRouting();
                         _this._sammy.run("#/activities");
@@ -665,10 +571,9 @@ var People;
             Profile.prototype.tabClickHandler = function (event) {
                 var tabName = event.item.innerText;
                 if (tabName == null)
-                    tabName = event.item.textContent; // FF
+                    tabName = event.item.textContent;
                 tabName = this.tabTitleToName(tabName);
 
-                //this._startTab( tabName );
                 location.href = "#/" + tabName;
             };
 
@@ -702,7 +607,7 @@ var People;
             };
 
             Profile.prototype.cancelEditing = function () {
-                ko.mapping.fromJS(this._originalValues, {}, this); // restore original values
+                ko.mapping.fromJS(this._originalValues, {}, this);
                 this.stopEditing();
             };
 
@@ -721,7 +626,6 @@ var People;
                     People.Servers.PutAffiliation(affiliationPutModel, this.defaultAffiliation.establishmentId);
 
                     $.ajax({
-                        //url: App.Routes.WebApi.My.Profile.put(),
                         url: '/api/user/person',
                         type: 'PUT',
                         data: apiModel
@@ -729,7 +633,6 @@ var People;
                         App.flasher.flash(responseText);
                         _this.stopEditing();
                     }).fail(function () {
-                        //alert('a PUT API call failed :(');
                     }).always(function () {
                         _this.saveSpinner.stop();
                     });
@@ -808,7 +711,6 @@ var People;
                 });
             };
 
-            // client validation rules
             Profile.prototype._setupValidation = function () {
                 this.displayName.extend({
                     required: {
@@ -844,7 +746,6 @@ var People;
                 ko.validation.group(this);
             };
 
-            // comboboxes for salutation & suffix
             Profile.prototype._setupKendoWidgets = function () {
                 var _this = this;
                 var tabstrip = $('#tabstrip');
@@ -855,8 +756,6 @@ var People;
                     animation: false
                 }).show();
 
-                // when the $element observables are bound, they will have length
-                // use this opportinity to apply kendo extensions
                 this.$nameSalutation.subscribe(function (newValue) {
                     if (newValue && newValue.length)
                         newValue.kendoComboBox({
@@ -886,7 +785,6 @@ var People;
                         });
                 });
 
-                // this is getting a little long, can probably factor out event handlers / validation stuff
                 this.$photo.subscribe(function (newValue) {
                     if (newValue && newValue.length) {
                         newValue.kendoUpload({
@@ -899,7 +797,7 @@ var People;
                                 saveUrl: App.Routes.WebApi.My.Photo.post()
                             },
                             select: function (e) {
-                                _this.photoUploadSpinner.start(); // display async wait message
+                                _this.photoUploadSpinner.start();
                                 $.ajax({
                                     type: 'POST',
                                     async: false,
@@ -913,15 +811,13 @@ var People;
                                 }).fail(function (xhr) {
                                     _this.photoUploadError(xhr.responseText);
                                     e.preventDefault();
-                                    _this.photoUploadSpinner.stop(); // hide async wait message
+                                    _this.photoUploadSpinner.stop();
                                 });
                             },
                             complete: function () {
-                                _this.photoUploadSpinner.stop(); // hide async wait message
+                                _this.photoUploadSpinner.stop();
                             },
                             success: function (e) {
-                                // this event is triggered by both upload and remove requests
-                                // ignore remove operations becuase they don't actually do anything
                                 if (e.operation == 'upload') {
                                     if (e.response && e.response.message) {
                                         App.flasher.flash(e.response.message);
@@ -942,18 +838,15 @@ var People;
                 });
             };
 
-            // logic to derive display name
             Profile.prototype._setupDisplayNameDerivation = function () {
                 var _this = this;
                 this.displayName.subscribe(function (newValue) {
                     if (!_this.isDisplayNameDerived()) {
-                        // stash user-entered display name only when it is not derived
                         _this._userDisplayName = newValue;
                     }
                 });
 
                 ko.computed(function () {
-                    // generate display name if it has been API-initialized
                     if (_this.isDisplayNameDerived()) {
                         var mapSource = {
                             id: _this.personId,
@@ -976,19 +869,16 @@ var People;
                             _this.displayName(result);
                         });
                     } else {
-                        // prevent user display name from being blank
                         if (!_this._userDisplayName)
                             _this._userDisplayName = _this.displayName();
 
-                        // restore user-entered display name
                         _this.displayName(_this._userDisplayName);
                     }
-                }).extend({ throttle: 400 }); // wait for observables to stop changing
+                }).extend({ throttle: 400 });
             };
 
             Profile.prototype._setupCardComputeds = function () {
                 var _this = this;
-                // text translation for gender codes
                 this.genderText = ko.computed(function () {
                     var genderCode = _this.gender();
                     if (genderCode === 'M')
@@ -1000,7 +890,6 @@ var People;
                     return 'Gender Unknown';
                 });
 
-                // friendly string for isActive boolean
                 this.isActiveText = ko.computed(function () {
                     return _this.isActive() ? 'Active' : 'Inactive';
                 });

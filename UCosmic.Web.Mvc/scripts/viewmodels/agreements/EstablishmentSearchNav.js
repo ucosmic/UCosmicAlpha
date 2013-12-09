@@ -1,13 +1,3 @@
-/// <reference path="../../typings/knockout/knockout.d.ts" />
-/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
-/// <reference path="../../typings/jquery/jquery.d.ts" />
-/// <reference path="../../app/Routes.ts" />
-/// <reference path="../../typings/kendo/kendo.all.d.ts" />
-/// <reference path="../establishments/Url.ts" />
-/// <reference path="../establishments/SearchResult.ts" />
-/// <reference path="../establishments/Search.ts" />
-/// <reference path="../establishments/Name.ts" />
-/// <reference path="../establishments/Item.ts" />
 var Agreements;
 (function (Agreements) {
     var InstitutionalAgreementParticipantModel = (function () {
@@ -24,7 +14,6 @@ var Agreements;
 
     var EstablishmentSearchNav = (function () {
         function EstablishmentSearchNav(editOrNewUrl, participants, agreementIsEdit, agreementId, scrollBody, deferredPageFadeIn) {
-            //search vars
             this.establishmentSearchViewModel = new Establishments.ViewModels.Search();
             this.hasBoundSearch = { does: false };
             this.hasBoundItem = false;
@@ -70,7 +59,6 @@ var Agreements;
             });
         };
 
-        //fade non active modules out
         EstablishmentSearchNav.prototype.fadeModsOut = function (deferred, deferred2, $obj, $obj2, time) {
             if ($obj.css("display") !== "none") {
                 $obj.fadeOut(time, function () {
@@ -88,7 +76,6 @@ var Agreements;
             }
         };
 
-        //sammy navigation
         EstablishmentSearchNav.prototype.bindSearch = function () {
             var _this = this;
             if (!this.hasBoundSearch.does) {
@@ -109,7 +96,6 @@ var Agreements;
                     sessionStorage.setItem("addest", "no");
                 }
 
-                //Check the url for changes
                 this.establishmentSearchViewModel.sammy.bind("location-changed", function () {
                     if (_this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf(lastURL) < 0) {
                         var $asideRootSearch = $("#asideRootSearch"), $asideParentSearch = $("#asideParentSearch");
@@ -135,8 +121,6 @@ var Agreements;
 
                                                 _this.establishmentItemViewModel.validatingSpinner.start();
 
-                                                // reference the single name and url
-                                                // wait for async validation to stop
                                                 if (officialName.text.isValidating() || officialUrl.value.isValidating() || _this.establishmentItemViewModel.ceebCode.isValidating() || _this.establishmentItemViewModel.uCosmicCode.isValidating()) {
                                                     setTimeout(function () {
                                                         var waitResult = _this.establishmentItemViewModel.submitToCreate(formElement);
@@ -146,7 +130,6 @@ var Agreements;
                                                     return false;
                                                 }
 
-                                                // check validity
                                                 _this.establishmentItemViewModel.isValidationSummaryVisible(true);
                                                 if (!_this.establishmentItemViewModel.isValid()) {
                                                     _this.establishmentItemViewModel.errors.showAllMessages();

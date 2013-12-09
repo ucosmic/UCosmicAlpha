@@ -1,14 +1,7 @@
-/// <reference path="../../typings/knockout/knockout.d.ts" />
-/// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
-/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
-/// <reference path="../../typings/jquery/jquery.d.ts" />
-/// <reference path="../../typings/kendo/kendo.all.d.ts" />
-/// <reference path="../../app/Routes.ts" />
 var Agreements;
 (function (Agreements) {
     var BasicInfo = (function () {
         function BasicInfo(agreementId, deferredUAgreements) {
-            //basic info vars
             this.$uAgreements = ko.observable();
             this.uAgreements = ko.mapping.fromJS([]);
             this.uAgreementSelected = ko.observable("");

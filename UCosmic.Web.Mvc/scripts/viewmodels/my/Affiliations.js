@@ -1,6 +1,4 @@
-﻿/// <reference path="../../typings/knockout/knockout.d.ts" />
-/// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
-var ViewModels;
+﻿var ViewModels;
 (function (ViewModels) {
     (function (My) {
         var Affiliations = (function () {

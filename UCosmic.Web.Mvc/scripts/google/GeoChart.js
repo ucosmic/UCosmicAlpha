@@ -1,12 +1,9 @@
-/// <reference path="../typings/google.visualization/google.visualization.d.ts" />
-/// <reference path="../typings/jquery/jquery.d.ts" />
 var App;
 (function (App) {
     (function (Google) {
         var GeoChart = (function () {
             function GeoChart(elementOrId) {
                 this._promise = $.Deferred();
-                // did we get an element or an element id?
                 if (typeof elementOrId === 'string') {
                     this.element = document.getElementById(elementOrId);
                 } else {
@@ -15,8 +12,6 @@ var App;
             }
             GeoChart.prototype.draw = function (data, options) {
                 var _this = this;
-                // if the chart does not yet exist, construct it and set
-                // up a promise for its ready callback
                 if (!this.geoChart) {
                     this.geoChart = new google.visualization.GeoChart(this.element);
                 }

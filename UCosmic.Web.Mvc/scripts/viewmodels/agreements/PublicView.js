@@ -1,15 +1,3 @@
-/// <reference path="../../app/Spinner.ts" />
-/// <reference path="../../typings/knockout/knockout.d.ts" />
-/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
-/// <reference path="../../typings/globalize/globalize.d.ts" />
-/// <reference path="../../typings/jquery/jquery.d.ts" />
-/// <reference path="../../app/App.ts" />
-/// <reference path="../../typings/moment/moment.d.ts" />
-/// <reference path="../../app/Routes.ts" />
-/// <reference path="populateFiles.ts" />
-/// <reference path="../../typings/googlemaps/google.maps.d.ts" />
-/// <reference path="../../typings/linq/linq.d.ts" />
-/// <reference path="ApiModels.d.ts" />
 var Agreements;
 (function (Agreements) {
     (function (ViewModels) {
@@ -120,12 +108,10 @@ var Agreements;
 
             PublicView.prototype._bindMap = function () {
                 var _this = this;
-                // extract the partners from participants (they are non-owners)
                 var partners = Enumerable.From(this.participants()).Where(function (x) {
                     return !x.isOwner;
                 }).ToArray();
 
-                // collect together all of the plottable partner marker points
                 var centers = Enumerable.From(partners).Where(function (x) {
                     return x.center && x.center.hasValue;
                 }).Select(function (x) {
@@ -137,12 +123,10 @@ var Agreements;
 
                 var bounds = new google.maps.LatLngBounds();
                 $.each(latLngs, function (index, latLng) {
-                    // matching partner may have different index than this latLng
                     var title = Enumerable.From(partners).Single(function (x) {
                         return x.center && x.center == centers[index];
                     }).establishmentTranslatedName;
 
-                    // plot the marker
                     var options = {
                         map: _this._googleMap,
                         position: latLng,
@@ -153,17 +137,14 @@ var Agreements;
                     _this._googleMarkers.push(marker);
                 });
 
-                // when there is only 1 marker, center the map on it
                 if (centers.length == 1) {
                     this._googleMap.setCenter(latLngs[0]);
 
-                    // check to see if the centered partner has zoom
                     var partner = Enumerable.From(partners).Single(function (x) {
                         return x.center && x.center == centers[0];
                     });
                     var zoom = partner.googleMapZoomLevel;
                     if (zoom) {
-                        //this._animateMapZoom(zoom);
                         this._googleMap.setZoom(zoom);
                     } else if (partner.boundingBox && partner.boundingBox.hasValue) {
                         bounds = new google.maps.LatLngBounds(new google.maps.LatLng(partner.boundingBox.southWest.latitude, partner.boundingBox.southWest.longitude), new google.maps.LatLng(partner.boundingBox.northEast.latitude, partner.boundingBox.northEast.longitude));
@@ -193,7 +174,6 @@ var Agreements;
             PublicView.prototype.createMap = function () {
                 var self = this;
                 function initialize() {
-                    //https://developers.google.com/maps/documentation/javascript/markers#add
                     var partners = Enumerable.From(self.participants()).Where(function (x) {
                         return !x.isOwner;
                     }).ToArray(), centers = Enumerable.From(self.participants()).Select(function (x) {
@@ -202,17 +182,12 @@ var Agreements;
                         return new google.maps.LatLng(x.latitude, x.longitude);
                     }).ToArray(), map;
 
-                    //  Make an array of the LatLng's of the markers you want to show
-                    //var LatLngList = new Array(new google.maps.LatLng(52.537, -2.061), new google.maps.LatLng(52.564, -2.017));
-                    //  Create a new viewpoint bound
                     var bounds = new google.maps.LatLngBounds();
 
                     for (var i = 0, LtLgLen = LatLngList.length; i < LtLgLen; i++) {
-                        //  And increase the bounds to take this point
                         bounds.extend(LatLngList[i]);
                     }
 
-                    //  Fit these bounds to the map
                     map = new google.maps.Map(document.getElementById("map-canvas"), {
                         mapTypeId: google.maps.MapTypeId.ROADMAP,
                         mapMaker: true

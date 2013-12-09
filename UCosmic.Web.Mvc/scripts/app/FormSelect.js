@@ -1,25 +1,17 @@
-/// <reference path="../typings/jquery/jquery.d.ts" />
-/// <reference path="../typings/knockout/knockout.d.ts" />
-/// <reference path="../typings/linq/linq.d.ts" />
-/// <reference path="../typings/kendo/kendo.all.d.ts" />
-/// <reference path="Models.d.ts" />
 var App;
 (function (App) {
     var FormSelect = (function () {
         function FormSelect(settings) {
             var _this = this;
             this.settings = settings;
-            // merge settings with defaults
             this.settings = $.extend({}, FormSelect.defaultSettings, this.settings);
             this._initKendoOptions();
             var initialOptions = this._getInitialOptions();
 
-            // properties are undefined, set up observables here
             this.options = ko.observableArray(initialOptions);
             this.value = ko.observable(this.settings.value);
             this.caption = ko.observable(this.settings.optionsCaption);
 
-            // subscribe to options & value changes
             this.options.subscribe(function (newValue) {
                 _this._onOptionsChanged(newValue);
             });
@@ -28,9 +20,6 @@ var App;
             });
         }
         FormSelect.prototype._getInitialOptions = function () {
-            // when this is first bound, the options may not be present.
-            // if value is set, it will be cleared unless the options
-            // contains an item matching the value.
             var options = this.settings.options || [];
             var value = this.settings.value;
             if (!options.length && this.settings.loadingText) {
@@ -43,10 +32,7 @@ var App;
             return options;
         };
 
-        //#endregion
-        //#region Change Subscriptions
         FormSelect.prototype._onValueChanged = function (value) {
-            // need to make sure the value is in the options array
             var options = this.options().slice(0);
             if (options && options.length && options[0].text == this.settings.loadingText && options[0].value != value) {
                 options = options.slice(1);
@@ -62,7 +48,6 @@ var App;
             var caption = this.caption();
             options = options || [];
             if (caption) {
-                // need to make sure first option is the caption
                 var option = options.length ? options[0] : undefined;
                 if (!option || typeof option.value !== 'undefined') {
                     options.unshift({
@@ -71,7 +56,6 @@ var App;
                     });
                 }
             } else {
-                // need to make sure first option is not the caption
                 var option = options.length ? options[0] : undefined;
                 if (option && typeof option.value === 'undefined') {
                     options.shift();
@@ -79,10 +63,7 @@ var App;
             }
         };
 
-        //#endregion
-        //#region Kendo DropDownList
         FormSelect.prototype.applyKendo = function () {
-            // don't do anything unless there is a select element and kendo options
             var $select = this.$select;
             if (!$select || !this.settings.kendoOptions)
                 return;
@@ -109,7 +90,6 @@ var App;
         };
 
         FormSelect.prototype._ensureKendoTextColor = function () {
-            // change color when caption is selected
             var value = this.value();
             var $select = this.$select;
             var kendoDropDown = this._getKendoDropDownList();
@@ -124,7 +104,6 @@ var App;
         };
 
         FormSelect.prototype._ensureKendoSelection = function () {
-            // select item in kendo widget (this does not happen by default)
             var value = this.value();
             var kendoDropDown = this._getKendoDropDownList();
             if (kendoDropDown) {
@@ -135,7 +114,6 @@ var App;
         };
 
         FormSelect.prototype._maximizeKendoPopup = function (e) {
-            // adjust height to maximize available viewport
             setTimeout(function () {
                 var $ul = e.sender.ul;
                 var ulHeight = $ul.outerHeight(true);

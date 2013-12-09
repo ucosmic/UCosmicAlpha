@@ -1,13 +1,3 @@
-/// <reference path="../../typings/jquery/jquery.d.ts" />
-/// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
-/// <reference path="../../typings/knockout/knockout.d.ts" />
-/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
-/// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
-/// <reference path="../../app/Routes.ts" />
-/// <reference path="../../app/Flasher.ts" />
-/// <reference path="../../app/Spinner.ts" />
-/// <reference path="Item.ts" />
-/// <reference path="ApiModels.d.ts" />
 var Establishments;
 (function (Establishments) {
     (function (ServerModels) {
@@ -64,7 +54,6 @@ var Establishments;
         var Name = (function () {
             function Name(js, owner) {
                 var _this = this;
-                // api observables
                 this.id = ko.observable();
                 this.ownerId = ko.observable();
                 this.text = ko.observable();
@@ -72,37 +61,29 @@ var Establishments;
                 this.isFormerName = ko.observable();
                 this.languageName = ko.observable();
                 this.languageCode = ko.observable();
-                // other observables
                 this.editMode = ko.observable();
                 this.$textElement = undefined;
                 this.$languagesElement = undefined;
                 this.$confirmPurgeDialog = undefined;
-                // spinners
                 this.saveSpinner = new App.Spinner();
                 this.purgeSpinner = new App.Spinner();
                 this.textValidationSpinner = new App.Spinner();
-                // private fields
                 this.saveEditorClicked = false;
                 this.owner = owner;
 
-                // when adding new name, js is not defined
                 if (!js)
                     js = new Establishments.ServerModels.Name(this.owner.id);
                 if (js.id === 0)
                     js.ownerId = this.owner.id;
 
-                // hold onto original values so they can be reset on cancel
                 this.originalValues = js;
 
-                // map api properties to observables
                 ko.mapping.fromJS(js, {}, this);
 
-                // view computeds
                 this.isOfficialNameEnabled = ko.computed(function () {
                     return !_this.originalValues.isOfficialName;
                 });
 
-                // text validation
                 this.isTextValidatableAsync = ko.computed(function () {
                     return _this.text() !== _this.originalValues.text;
                 });
@@ -123,13 +104,11 @@ var Establishments;
                     }
                 });
 
-                // languages
                 this.selectedLanguageCode = ko.observable(this.originalValues.languageCode);
                 this.owner.languages.subscribe(function () {
-                    _this.selectedLanguageCode(_this.languageCode()); // shadow property is bound to dropdown list
+                    _this.selectedLanguageCode(_this.languageCode());
                 });
 
-                // official name cannot be former name
                 this.isOfficialName.subscribe(function (newValue) {
                     if (newValue)
                         _this.isFormerName(false);
@@ -137,10 +116,10 @@ var Establishments;
 
                 this.mutationSuccess = function (response) {
                     _this.owner.requestNames(function () {
-                        _this.owner.editingName(0); // tell parent no item is being edited anymore
-                        _this.editMode(false); // hide the form, show the view
-                        _this.saveSpinner.stop(); // stop save spinner
-                        _this.purgeSpinner.stop(); // stop purge spinner
+                        _this.owner.editingName(0);
+                        _this.editMode(false);
+                        _this.saveSpinner.stop();
+                        _this.purgeSpinner.stop();
                         App.flasher.flash(response);
                     });
                 };
@@ -190,10 +169,10 @@ var Establishments;
             Name.prototype.showEditor = function () {
                 var editingName = this.owner.editingName();
                 if (!editingName) {
-                    this.owner.editingName(this.id() || -1); // tell parent which item is being edited
-                    this.editMode(true); // show the form / hide the viewer
+                    this.owner.editingName(this.id() || -1);
+                    this.editMode(true);
                     this.$textElement.trigger('autosize');
-                    this.$textElement.focus(); // focus the text box
+                    this.$textElement.focus();
                 }
             };
 
@@ -204,7 +183,7 @@ var Establishments;
                     this.errors.showAllMessages();
                 } else if (!this.text.isValidating()) {
                     this.saveEditorClicked = false;
-                    this.saveSpinner.start(); // start save spinner
+                    this.saveSpinner.start();
 
                     if (this.id()) {
                         $.ajax({
@@ -224,12 +203,12 @@ var Establishments;
             };
 
             Name.prototype.cancelEditor = function () {
-                this.owner.editingName(0); // tell parent no item is being edited anymore
+                this.owner.editingName(0);
                 if (this.id()) {
-                    ko.mapping.fromJS(this.originalValues, {}, this); // restore original values
-                    this.editMode(false); // hide the form, show the view
+                    ko.mapping.fromJS(this.originalValues, {}, this);
+                    this.editMode(false);
                 } else {
-                    this.owner.names.shift(); // remove the new empty item
+                    this.owner.names.shift();
                 }
             };
 

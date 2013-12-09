@@ -1,7 +1,3 @@
-/// <reference path="../viewmodels/establishments/Routes.d.ts" />
-/// <reference path="../viewmodels/employees/Routes.d.ts" />
-/// <reference path="../viewmodels/people/Routes.d.ts" />
-
 import EstablishmentsRoot = Establishments;
 import EmployeesRoot = Employees;
 import PeopleRoot = People;

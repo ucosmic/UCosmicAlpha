@@ -1,8 +1,3 @@
-/// <reference path="../../typings/jquery/jquery.d.ts" />
-/// <reference path="../../app/App.ts" />
-/// <reference path="../../app/Routes.d.ts" />
-/// <reference path="ApiModels.d.ts" />
-/// <reference path="Routes.d.ts" />
 var Establishments;
 (function (Establishments) {
     (function (Servers) {

@@ -1,11 +1,3 @@
-/// <reference path="../../google/ToolsOverlay.ts" />
-/// <reference path="../../app/Routes.ts" />
-/// <reference path="../../app/Flasher.ts" />
-/// <reference path="../../app/Spinner.ts" />
-/// <reference path="../places/ApiModels.d.ts" />
-/// <reference path="../places/Utils.ts" />
-/// <reference path="ApiModels.d.ts" />
-
 module Establishments.ViewModels {
 
     import gm = google.maps;

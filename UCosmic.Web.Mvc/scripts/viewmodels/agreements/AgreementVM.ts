@@ -1,23 +1,3 @@
-/// <reference path="../../typings/knockout/knockout.d.ts" />
-/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
-/// <reference path="../../typings/globalize/globalize.d.ts" />
-/// <reference path="../../typings/kendo/kendo.all.d.ts" />
-/// <reference path="../../typings/jquery/jquery.d.ts" />
-/// <reference path="../../app/App.ts" />
-/// <reference path="../../app/Routes.ts" />
-/// <reference path="../../app/Spinner.ts" />
-/// <reference path="../../typings/sammyjs/sammyjs.d.ts" />
-/// <reference path="../establishments/ApiModels.d.ts" />
-/// <reference path="scrollBody.ts" />
-/// <reference path="contacts.ts" />
-/// <reference path="fileAttachments.ts" />
-/// <reference path="datesStatus.ts" />
-/// <reference path="visibility.ts" />
-/// <reference path="participants.ts" />
-/// <reference path="populateFiles.ts" />
-/// <reference path="basicInfo.ts" />
-/// <reference path="establishmentSearchNav.ts" />
-
 class InstitutionalAgreementEditModel {
     constructor(public agreementId: number) {
         $("table.data").children("tbody").addClass("searchResults");

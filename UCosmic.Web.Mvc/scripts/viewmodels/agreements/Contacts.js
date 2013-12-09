@@ -1,5 +1,3 @@
-/// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
-/// <reference path="phones.ts" />
 var Agreements;
 (function (Agreements) {
     var SelectConstructor = (function () {
@@ -14,7 +12,6 @@ var Agreements;
     Agreements.SelectConstructor = SelectConstructor;
     var Contacts = (function () {
         function Contacts(isCustomContactTypeAllowed, establishmentItemViewModel, agreementIsEdit, agreementId, kendoWindowBug, deferredPopContacts) {
-            //contact vars
             this.$contactTypeOptions = ko.observable();
             this.contactTypeOptions = ko.mapping.fromJS([]);
             this.contactTypeOptionSelected = ko.observable();
@@ -108,11 +105,6 @@ var Agreements;
             }
             this.contactTypeOptionSelected(me.type());
 
-            //if (this.isCustomContactTypeAllowed) {
-            //    dropdownlist = $("#contactTypeOptions").data("kendoComboBox");
-            //} else {
-            //    dropdownlist = $("#contactTypeOptions").data("kendoDropDownList");
-            //}
             if (this.isCustomContactTypeAllowed()) {
                 dropdownlist = $("#contactTypeOptions").data("kendoComboBox");
                 dropdownlist.select(function (dataItem) {
@@ -129,9 +121,6 @@ var Agreements;
                 });
             }
 
-            //dropdownlist.select(function (dataItem) {
-            //    return dataItem.name === me.type();
-            //})
             dropdownlist = $("#contactSuffix").data("kendoDropDownList");
             dropdownlist.select(function (dataItem) {
                 return dataItem.name === me.suffix();
@@ -194,7 +183,6 @@ var Agreements;
 
                     data = {
                         agreementId: this.contacts()[this.contactIndex].agreementId(),
-                        //PersonId: this.contacts()[this.contactIndex].personId(),
                         Type: this.contacts()[this.contactIndex].type(),
                         DisplayName: this.contacts()[this.contactIndex].displayName(),
                         FirstName: this.contacts()[this.contactIndex].firstName(),
@@ -238,7 +226,6 @@ var Agreements;
                             url: url,
                             type: 'DELETE',
                             success: function () {
-                                //$("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * 1.1)));
                             }
                         });
                     });
@@ -401,7 +388,6 @@ var Agreements;
             });
             this.$addContactDialog.parent().addClass("contactKendoWindow");
 
-            //kendo autocomplete select
             kacSelect = function (me, e) {
                 var dataItem = me.dataItem(e.item.index());
 
@@ -509,7 +495,6 @@ var Agreements;
                 var _this = this;
                 var context = ko.dataFor(this);
 
-                //added for weird bug for when adding more than 1 phone number then editing the type.
                 if (context.type != $(this).val() && $(this).val() !== "") {
                     context.type = $(this).val();
                 }
@@ -547,7 +532,6 @@ var Agreements;
                 var context = ko.dataFor(this);
 
                 if (self.agreementIsEdit() && context.value == $(this).val()) {
-                    //first do a validation for phone
                     if ($(this).val() == '') {
                         $("#phoneNumberValidate" + context.id).css("visibility", "visible");
                     } else {
@@ -663,7 +647,6 @@ var Agreements;
             });
         };
 
-        //post files
         Contacts.prototype.postMe = function (data, url) {
             var _this = this;
             $.post(url, data).done(function (response, statusText, xhr) {
@@ -686,7 +669,6 @@ var Agreements;
             });
         };
 
-        //part of save agreement
         Contacts.prototype.agreementPostContacts = function (response, statusText, xhr) {
             var _this = this;
             var tempUrl = App.Routes.WebApi.Agreements.Contacts.post(this.agreementId), data;
