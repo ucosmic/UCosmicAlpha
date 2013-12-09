@@ -1,10 +1,10 @@
+/// <reference path="../../typings/jquery/jquery.d.ts" />
+/// <reference path="../../typings/knockout/knockout.d.ts" />
+/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
+/// <reference path="Search.ts" />
+/// <reference path="ApiModels.d.ts" />
 var Establishments;
 (function (Establishments) {
-    /// <reference path="../../typings/jquery/jquery.d.ts" />
-    /// <reference path="../../typings/knockout/knockout.d.ts" />
-    /// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
-    /// <reference path="Search.ts" />
-    /// <reference path="ApiModels.d.ts" />
     (function (ViewModels) {
         var SearchResult = (function () {
             function SearchResult(values, owner) {
@@ -110,4 +110,3 @@ var Establishments;
     })(Establishments.ViewModels || (Establishments.ViewModels = {}));
     var ViewModels = Establishments.ViewModels;
 })(Establishments || (Establishments = {}));
-//# sourceMappingURL=SearchResult.js.map

@@ -85,13 +85,15 @@ var Agreements;
                         };
                     }
                     if (!e.isDefaultPrevented()) {
-                        _this.fileUploadSpinner.start();
+                        _this.fileUploadSpinner.start(); // display async wait message
                     }
                 },
                 complete: function () {
-                    _this.fileUploadSpinner.stop();
+                    _this.fileUploadSpinner.stop(); // hide async wait message
                 },
                 success: function (e) {
+                    // this event is triggered by both upload and remove requests
+                    // ignore remove operations because they don't actually do anything
                     if (e.operation == 'upload') {
                         var myId;
 
@@ -139,9 +141,9 @@ var Agreements;
 
                     if (e.XMLHttpRequest.status === 415)
                         _this.isFileExtensionInvalid(true);
-else if (e.XMLHttpRequest.status === 413)
+                    else if (e.XMLHttpRequest.status === 413)
                         _this.isFileTooManyBytes(true);
-else
+                    else
                         _this.isFileFailureUnexpected(true);
                 }
             });
@@ -238,6 +240,7 @@ else
 
         FileAttachments.prototype.fileVisibilityClicked = function (me, e) {
             var _this = this;
+            //add e.target.textContent for double click firing.
             if (this.agreementIsEdit() && e.target.textContent == "") {
                 var data = ko.mapping.toJS({
                     agreementId: this.agreementId,
@@ -322,4 +325,3 @@ else
     })();
     Agreements.FileAttachments = FileAttachments;
 })(Agreements || (Agreements = {}));
-//# sourceMappingURL=FileAttachments.js.map

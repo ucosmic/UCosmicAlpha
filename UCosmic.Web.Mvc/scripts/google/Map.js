@@ -1,9 +1,9 @@
+/// <reference path="../typings/googlemaps/google.maps.d.ts" />
+/// <reference path="../typings/jquery/jquery.d.ts" />
+/// <reference path="../typings/knockout/knockout.d.ts" />
+/// <reference path="../app/App.ts" />
 var App;
 (function (App) {
-    /// <reference path="../typings/googlemaps/google.maps.d.ts" />
-    /// <reference path="../typings/jquery/jquery.d.ts" />
-    /// <reference path="../typings/knockout/knockout.d.ts" />
-    /// <reference path="../app/App.ts" />
     (function (GoogleMaps) {
         var Map = (function () {
             function Map(elementOrId, options, settings) {
@@ -34,6 +34,7 @@ var App;
 
                 this._log('Constructing google map wrapper instance.');
 
+                // did we get an element or an element id?
                 if (typeof elementOrId === 'string') {
                     this._element = document.getElementById(elementOrId);
                 } else {
@@ -56,6 +57,7 @@ var App;
                 this._log('Latitude initialized to {0}.', this.lat());
                 this._log('Longitude initialized to {0}.', this.lng());
 
+                // automatically create() the map by default, only skip if autoCreate == false.
                 if (typeof this._settings.autoCreate === 'undefined' || this._settings.autoCreate) {
                     this._log('Eagerly readying the google map instance.');
                     this.ready();
@@ -65,6 +67,8 @@ var App;
             }
             Map.prototype.ready = function () {
                 var _this = this;
+                // if the map does not yet exist, construct it and set
+                // up a promise for its first idle event.
                 if (!this.map) {
                     this._create();
 
@@ -86,6 +90,7 @@ var App;
                 // first set up the options
                 var options = this._options;
 
+                // center, zoom, and mapTypeId are required
                 if (!options.center)
                     options.center = Map.defaultCenter;
                 if (!options.zoom)
@@ -93,6 +98,7 @@ var App;
                 if (!options.mapTypeId)
                     options.mapTypeId = google.maps.MapTypeId.ROADMAP;
 
+                // default scrollwheel to false if not specified
                 if (!options.scrollwheel)
                     options.scrollwheel = false;
 
@@ -194,9 +200,9 @@ var App;
                 return Map.areNumbersEqualy(center1.lat(), center2.lat(), precision) && Map.areNumbersEqualy(center1.lng(), center2.lng(), precision);
             };
 
-            Map.areNumbersEqualy = //39.24683949
+            //39.24683949
             //39.2468395
-            function (coordinate1, coordinate2, preceision) {
+            Map.areNumbersEqualy = function (coordinate1, coordinate2, preceision) {
                 coordinate1 = Map._reducePrecision(coordinate1, preceision);
                 coordinate2 = Map._reducePrecision(coordinate2, preceision);
                 return coordinate1 - coordinate2 == 0;
@@ -356,4 +362,3 @@ var App;
     })(App.GoogleMaps || (App.GoogleMaps = {}));
     var GoogleMaps = App.GoogleMaps;
 })(App || (App = {}));
-//# sourceMappingURL=Map.js.map

@@ -168,7 +168,7 @@ var People;
                     return;
                 }
 
-                ko.mapping.fromJS(this.data, {}, this);
+                ko.mapping.fromJS(this.data, {}, this); // restore observable properties
 
                 // restore faculty rank to its previous value
                 var selectedFacultyRank = this.facultyRank();
@@ -295,7 +295,7 @@ var People;
             };
 
             Affiliation.prototype._bindEstablishmentEditors = function (establishmentId, offspring) {
-                this.establishmentEditors([]);
+                this.establishmentEditors([]); // clear existing editors
 
                 // the establishmentId passed as an argument represents the most granular establishment
                 // create it first, then walk up using parentId's until the default establishment is reached
@@ -320,10 +320,12 @@ var People;
                 // when establishment is undefined, get default affiliation establishment's children
                 var options = this._getEstablishmentEditorOptions(establishment ? !isLast ? establishment.parentId : establishment.id : this.owner.defaultAffiliation.establishmentId, offspring);
 
+                // only add an editor when there will be options
                 if (options.length) {
                     // when this is the last binding, do not pass the establishment
                     var editor = new AffiliatedEstablishmentEditor(this, options, !isLast ? establishment : undefined);
 
+                    // when this is not the last binding, insert editor as first element
                     if (!isLast) {
                         this.establishmentEditors.unshift(editor);
                     } else {
@@ -366,10 +368,11 @@ var People;
 
             Affiliation.prototype._bindFacultyRankOptions = function (settings) {
                 var _this = this;
+                // settings can be null/undefined, and may not have faculty ranks
                 if (settings && settings.facultyRanks && settings.facultyRanks.length) {
                     this.hasFacultyRanks(true);
                     var options = this._getFacultyRankSelectOptions(settings);
-                    this.facultyRankSelect.caption('[None]');
+                    this.facultyRankSelect.caption('[None]'); // must be set before options
                     this.facultyRankSelect.options(options);
                     var facultyRank = this.facultyRank();
                     if (facultyRank)
@@ -430,15 +433,10 @@ var People;
                 this.middleName = ko.observable();
                 this.lastName = ko.observable();
                 this.suffix = ko.observable();
-                //isFacultyRankEditable: () => boolean;
-                //isFacultyRankVisible: () => boolean;
-                //facultyRankText: () => string;
-                //facultyRanks: KnockoutObservableArray<RootViewModels.Employees.IServerFacultyRankApiModel> = ko.observableArray();
-                //facultyRankId: KnockoutObservable<any> = ko.observable(null);
                 this.defaultEstablishmentHasCampuses = ko.observable(false);
                 this.preferredTitle = ko.observable();
                 this.gender = ko.observable();
-                this.isActive = ko.observable();
+                this.isActive = ko.observable(undefined);
                 this.$photo = ko.observable();
                 this.$facultyRanks = ko.observable();
                 this.$nameSalutation = ko.observable();
@@ -465,7 +463,7 @@ var People;
                 this.employeeSettingsData = new App.DataCacher(function () {
                     return _this._loadEmployeeSettingsData();
                 });
-                this.personId2 = personId;
+                this.personId2 = personId; // bring in personId from viewbag
 
                 // go ahead and load affiliations
                 this.affiliationData.ready();
@@ -494,10 +492,10 @@ var People;
                         }
                     }, _this.editableAffiliations);
 
-                    _this.establishmentData.ready();
-                    _this.employeeSettingsData.ready();
-                    _this.affiliationsSpinner.stop();
-                    promise.resolve(affiliations);
+                    _this.establishmentData.ready(); // begin loading the default affiliation's offspring
+                    _this.employeeSettingsData.ready(); // begin loading the employee module settings
+                    _this.affiliationsSpinner.stop(); // stop the loading spinner
+                    promise.resolve(affiliations); // resolve the promise for affiliation data
                 });
                 return promise;
             };
@@ -553,7 +551,7 @@ var People;
                     //if (facultyRanks.length == 0) {
                     //    this.facultyRankId(null);
                     //}
-                    ko.mapping.fromJS(viewModel, { ignore: "id" }, _this);
+                    ko.mapping.fromJS(viewModel, { ignore: "id" }, _this); // populate the scalars
                     _this.personId = viewModel.id;
 
                     _this._originalValues = viewModel;
@@ -569,6 +567,10 @@ var People;
                     _this._setupDisplayNameDerivation();
                     _this._setupCardComputeds();
 
+                    //debugger;
+                    //if (this.startInEdit()) {
+                    //    this.startEditing();
+                    //}
                     if (startTab === "") {
                         _this._setupRouting();
                         _this._sammy.run("#/activities");
@@ -663,7 +665,7 @@ var People;
             Profile.prototype.tabClickHandler = function (event) {
                 var tabName = event.item.innerText;
                 if (tabName == null)
-                    tabName = event.item.textContent;
+                    tabName = event.item.textContent; // FF
                 tabName = this.tabTitleToName(tabName);
 
                 //this._startTab( tabName );
@@ -700,7 +702,7 @@ var People;
             };
 
             Profile.prototype.cancelEditing = function () {
-                ko.mapping.fromJS(this._originalValues, {}, this);
+                ko.mapping.fromJS(this._originalValues, {}, this); // restore original values
                 this.stopEditing();
             };
 
@@ -897,7 +899,7 @@ var People;
                                 saveUrl: App.Routes.WebApi.My.Photo.post()
                             },
                             select: function (e) {
-                                _this.photoUploadSpinner.start();
+                                _this.photoUploadSpinner.start(); // display async wait message
                                 $.ajax({
                                     type: 'POST',
                                     async: false,
@@ -911,13 +913,15 @@ var People;
                                 }).fail(function (xhr) {
                                     _this.photoUploadError(xhr.responseText);
                                     e.preventDefault();
-                                    _this.photoUploadSpinner.stop();
+                                    _this.photoUploadSpinner.stop(); // hide async wait message
                                 });
                             },
                             complete: function () {
-                                _this.photoUploadSpinner.stop();
+                                _this.photoUploadSpinner.stop(); // hide async wait message
                             },
                             success: function (e) {
+                                // this event is triggered by both upload and remove requests
+                                // ignore remove operations becuase they don't actually do anything
                                 if (e.operation == 'upload') {
                                     if (e.response && e.response.message) {
                                         App.flasher.flash(e.response.message);
@@ -949,6 +953,7 @@ var People;
                 });
 
                 ko.computed(function () {
+                    // generate display name if it has been API-initialized
                     if (_this.isDisplayNameDerived()) {
                         var mapSource = {
                             id: _this.personId,
@@ -971,13 +976,14 @@ var People;
                             _this.displayName(result);
                         });
                     } else {
+                        // prevent user display name from being blank
                         if (!_this._userDisplayName)
                             _this._userDisplayName = _this.displayName();
 
                         // restore user-entered display name
                         _this.displayName(_this._userDisplayName);
                     }
-                }).extend({ throttle: 400 });
+                }).extend({ throttle: 400 }); // wait for observables to stop changing
             };
 
             Profile.prototype._setupCardComputeds = function () {
@@ -1038,4 +1044,3 @@ var People;
     })(People.ViewModels || (People.ViewModels = {}));
     var ViewModels = People.ViewModels;
 })(People || (People = {}));
-//# sourceMappingURL=Profile.js.map

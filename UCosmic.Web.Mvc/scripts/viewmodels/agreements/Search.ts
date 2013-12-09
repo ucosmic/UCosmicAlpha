@@ -172,8 +172,8 @@ module Agreements.ViewModels {
         }
 
         // filtering
-        countries: KnockoutObservableArray<Places.ApiModels.Country> = ko.observableArray();
-        countryCode: KnockoutObservable<string> = ko.observable();
+        countries = ko.observableArray<Places.ApiModels.Country>();
+        countryCode = ko.observable<string>();
 
         // lensing
         lenses: KnockoutObservableArray<Lens> = ko.observableArray([
@@ -183,12 +183,12 @@ module Agreements.ViewModels {
             //{ text: 'Map', value: 'map' },
             //{ text: 'Tree', value: 'tree' }
         ]);
-        lens: KnockoutObservable<string> = ko.observable();
+        lens = ko.observable<string>();
         changeLens: (lens: Lens) => void;
 
         // items page
         $itemsPage: JQuery = undefined;
-        trail: KnockoutObservableArray<string> = ko.observableArray([]);
+        trail = ko.observableArray<string>([]);
         lockAnimation(): void {
             this.nextForceDisabled(true);
             this.prevForceDisabled(true);

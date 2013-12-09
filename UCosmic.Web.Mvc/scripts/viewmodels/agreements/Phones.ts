@@ -32,7 +32,7 @@ module Agreements {
         contactPhoneType = ko.observable();
         contactPhones = ko.observableArray();
         phoneTypes = ko.mapping.fromJS([]);
-        $phoneTypes: KnockoutObservable<JQuery> = ko.observable();
+        $phoneTypes = ko.observable<JQuery>();
         deletedPhones = Array();
 
         selectConstructor = function (name: string, id: string) {

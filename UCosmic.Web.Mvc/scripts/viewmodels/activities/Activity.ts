@@ -26,7 +26,7 @@ module Activities.ViewModels {
         private _originalId: number;
 
         activityId: KnockoutObservable<number>;
-        mode: KnockoutObservable<ActivityMode> = ko.observable();
+        mode = ko.observable<ActivityMode>();
         title: KnockoutObservable<string>;
         content: KnockoutObservable<string>;
         startsOn: FormattedDateInput;
@@ -35,7 +35,7 @@ module Activities.ViewModels {
         isExternallyFunded: KnockoutObservable<boolean>;
         isInternallyFunded: KnockoutObservable<boolean>;
         updatedByPrincipal: KnockoutObservable<string>;
-        updatedOnUtc: KnockoutObservable<string> = ko.observable();
+        updatedOnUtc = ko.observable<string>();
 
         //#endregion
         //#region View convenience computeds
@@ -455,7 +455,7 @@ module Activities.ViewModels {
                 || this.types().length || this.places().length || this.tags().length
                 || this.documents().length
             ;
-            return _hasData;
+            return _hasData ? true : false;
         }
 
         //#endregion
@@ -578,7 +578,7 @@ module Activities.ViewModels {
         //#region Types
 
         types: KnockoutObservableArray<number>;
-        typeOptions: KnockoutObservableArray<ActivityTypeCheckBox> = ko.observableArray(); // array of activity type options displayed as list of checkboxes
+        typeOptions = ko.observableArray<ActivityTypeCheckBox>(); // array of activity type options displayed as list of checkboxes
         $typeUrlFormat: JQuery;
 
         private _bindTypeOptions(typeOptions: any[]): void {
@@ -594,8 +594,8 @@ module Activities.ViewModels {
         //#endregion
         //#region Tags
 
-        tags: KnockoutObservableArray<KoModels.ActivityTag> = ko.observableArray(); // Data bound to new tag textArea
-        tagInput: KnockoutObservable<string> = ko.observable();
+        tags = ko.observableArray<KoModels.ActivityTag>(); // Data bound to new tag textArea
+        tagInput = ko.observable<string>();
         $tagInput: JQuery;
         $tagsUrlFormat: JQuery;
         $tagsAutoCompleteUrl: JQuery;
@@ -757,7 +757,7 @@ module Activities.ViewModels {
         //#region Documents
 
         static iconMaxSide: number = 64; // max width or height of the document icon
-        documents: KnockoutObservableArray<ActivityDocumentForm> = ko.observableArray();
+        documents = ko.observableArray<ActivityDocumentForm>();
         //$fileUpload: JQuery;
         $deleteDocumentDialog: JQuery;
         deleteDocumentSpinner = new App.Spinner();
@@ -944,7 +944,7 @@ module Activities.ViewModels {
 
     export class FormattedDateInput {
 
-        input: KnockoutObservable<string> = ko.observable();
+        input = ko.observable<string>();
         kendoDatePicker: any;
         private static _defaultFormat = 'M/d/yyyy';
 
@@ -1020,16 +1020,16 @@ module Activities.ViewModels {
         //#region Properties
 
         private _owner: ActivityForm;
-        activityId: KnockoutObservable<number> = ko.observable();
-        documentId: KnockoutObservable<number> = ko.observable();
-        title: KnockoutObservable<string> = ko.observable();
-        fileName: KnockoutObservable<string> = ko.observable();
-        byteCount: KnockoutObservable<number> = ko.observable();
-        size: KnockoutObservable<string> = ko.observable();
-        extension: KnockoutObservable<string> = ko.observable();
-        isUpload: KnockoutObservable<boolean> = ko.observable();
-        uploadError: KnockoutObservable<string> = ko.observable();
-        uploadProgress: KnockoutObservable<number> = ko.observable();
+        activityId = ko.observable<number>();
+        documentId = ko.observable<number>();
+        title = ko.observable<string>();
+        fileName = ko.observable<string>();
+        byteCount = ko.observable<number>();
+        size = ko.observable<string>();
+        extension = ko.observable<string>();
+        isUpload = ko.observable<boolean>();
+        uploadError = ko.observable<string>();
+        uploadProgress = ko.observable<number>();
         private static _iconSrcFormat;
         private static _maxLengthMessageFormat = 'Document name cannot be longer than {0} characters. You entered {1} characters.';
         private static _duplicateNameMessageFormat = "The file name '{0}' is not allowed because this activity already has a file with the same name. " +
@@ -1158,7 +1158,7 @@ module Activities.ViewModels {
         isEditingTitle: KnockoutObservable<boolean> = ko.observable(false);
         $titleInput: JQuery;
         private _stashedTitle: string;
-        renameError: KnockoutObservable<string> = ko.observable();
+        renameError = ko.observable<string>();
         editTitle(): void {
             if (this.isSavingTitle()) return;
             this._stashedTitle = this.title();

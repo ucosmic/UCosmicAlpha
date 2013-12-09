@@ -7,25 +7,41 @@ Routes.Api = Routes.Api || {};
 @* EMPLOYEES *@
 Routes.Api.Employees = Routes.Api.Employees || {};
 
-Routes.Api.Employees.places = function (domain) {
+Routes.Api.Employees.places = function (tenantId) {
+    if (typeof tenantId === 'number')
+        return '@routeWriter.WriteRoute(Url.HttpRouteUrl(null, new
+        {
+            controller = "Employees",
+            action = "GetPlaces",
+            establishmentId = routeWriter.Value<int>(0),
+        }))'.format(tenantId);
+
     return '@routeWriter.WriteRoute(Url.HttpRouteUrl(null, new
     {
         controller = "Employees",
         action = "GetPlaces",
         domain = routeWriter.Value<string>(0),
-    }))'.format(domain);
+    }))'.format(tenantId);
 };
 
 @* ACTIVITIES *@
 Routes.Api.Employees.Activities = Routes.Api.Employees.Activities || {};
 
-Routes.Api.Employees.Activities.counts = function (domain) {
+Routes.Api.Employees.Activities.counts = function (tenantId) {
+    if (typeof tenantId === 'number')
+        return '@routeWriter.WriteRoute(Url.HttpRouteUrl(null, new
+        {
+            controller = "Employees",
+            action = "GetActivityCounts",
+            establishmentId = routeWriter.Value<int>(0),
+        }))'.format(tenantId);
+
     return '@routeWriter.WriteRoute(Url.HttpRouteUrl(null, new
     {
         controller = "Employees",
         action = "GetActivityCounts",
         domain = routeWriter.Value<string>(0),
-    }))'.format(domain);
+    }))'.format(tenantId);
 };
 
 @* SETTINGS *@

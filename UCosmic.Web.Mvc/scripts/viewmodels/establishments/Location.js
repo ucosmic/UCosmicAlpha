@@ -1,12 +1,12 @@
+/// <reference path="../../google/ToolsOverlay.ts" />
+/// <reference path="../../app/Routes.ts" />
+/// <reference path="../../app/Flasher.ts" />
+/// <reference path="../../app/Spinner.ts" />
+/// <reference path="../places/ApiModels.d.ts" />
+/// <reference path="../places/Utils.ts" />
+/// <reference path="ApiModels.d.ts" />
 var Establishments;
 (function (Establishments) {
-    /// <reference path="../../google/ToolsOverlay.ts" />
-    /// <reference path="../../app/Routes.ts" />
-    /// <reference path="../../app/Flasher.ts" />
-    /// <reference path="../../app/Spinner.ts" />
-    /// <reference path="../places/ApiModels.d.ts" />
-    /// <reference path="../places/Utils.ts" />
-    /// <reference path="ApiModels.d.ts" />
     (function (ViewModels) {
         var gm = google.maps;
 
@@ -70,6 +70,7 @@ var Establishments;
                 });
 
                 this.isEditing.subscribe(function (newValue) {
+                    // when edit mode is changed, show or hide marker tool overlay
                     if (newValue) {
                         // show map marker tool
                         _this.mapTools().showMarkerTools();
@@ -128,9 +129,12 @@ var Establishments;
                     return country ? country.officialName : '[Unknown]';
                 });
                 this.countryId.subscribe(function (newValue) {
+                    // when this value is set before the countries menu is loaded,
+                    // it will be reset to undefined.
                     if (newValue && _this.countries().length == 0)
-                        _this._countryId = newValue;
+                        _this._countryId = newValue; // stash the value to set it after menu loads
 
+                    // scope the menu to the selected country
                     if (newValue && _this.countries().length > 0) {
                         var country = Places.Utils.getPlaceById(_this.countries(), newValue);
                         if (country) {
@@ -170,8 +174,10 @@ var Establishments;
                     return _this.countryId() && (_this.admin1s().length > 0 || _this.admin1sLoading());
                 });
                 this.admin1Id.subscribe(function (newValue) {
+                    // when this value is set before the admin1 menu is loaded,
+                    // it will be reset to undefined.
                     if (newValue && _this.admin1s().length == 0)
-                        _this._admin1Id = newValue;
+                        _this._admin1Id = newValue; // stash the value to set it after menu loads
 
                     if (newValue && _this.admin1s().length > 0) {
                         var admin1 = Places.Utils.getPlaceById(_this.admin1s(), newValue);
@@ -200,8 +206,10 @@ var Establishments;
                     return _this.countryId() && _this.admin1Id() && (_this.admin2s().length > 0 || _this.admin2sLoading());
                 });
                 this.admin2Id.subscribe(function (newValue) {
+                    // when this value is set before the admin2 menu is loaded,
+                    // it will be reset to undefined.
                     if (newValue && _this.admin2s().length == 0)
-                        _this._admin2Id = newValue;
+                        _this._admin2Id = newValue; // stash the value to set it after menu loads
 
                     if (newValue && _this.admin2s().length > 0) {
                         var admin2 = Places.Utils.getPlaceById(_this.admin2s(), newValue);
@@ -230,8 +238,10 @@ var Establishments;
                     return _this.countryId() && _this.admin1Id() && _this.admin2Id() && (_this.admin3s().length > 0 || _this.admin3sLoading());
                 });
                 this.admin3Id.subscribe(function (newValue) {
+                    // when this value is set before the admin3 menu is loaded,
+                    // it will be reset to undefined.
                     if (newValue && _this.admin3s().length == 0)
-                        _this._admin3Id = newValue;
+                        _this._admin3Id = newValue; // stash the value to set it after menu loads
 
                     if (newValue && _this.admin3s().length > 0) {
                         var admin3 = Places.Utils.getPlaceById(_this.admin3s(), newValue);
@@ -263,12 +273,12 @@ var Establishments;
                     scrollwheel: false
                 };
                 google.maps.visualRefresh = true;
-                this.map = new gm.Map(this.$mapCanvas()[0], mapOptions);
+                this.map = new gm.Map(this.$mapCanvas()[0], mapOptions); // create map on element
                 this.isMapVisible(true);
 
                 gm.event.addListenerOnce(this.map, 'idle', function () {
                     _this.mapTools(new App.GoogleMaps.ToolsOverlay(_this.map));
-                    _this.mapTools().hideMarkerTools();
+                    _this.mapTools().hideMarkerTools(); // initially hide the marker tools
 
                     gm.event.addListener(_this.map, 'zoom_changed', function () {
                         // track the map zoom
@@ -280,7 +290,7 @@ var Establishments;
                 this.$mapCanvas().on('marker_destroyed', function () {
                     var center = _this.map.getCenter();
                     var zoom = _this.map.getZoom();
-                    _this.countryId(undefined);
+                    _this.countryId(undefined); // reset location info
                     _this.continentId(undefined);
                     _this.admin1Id(undefined);
                     _this.admin2Id(undefined);
@@ -325,11 +335,13 @@ var Establishments;
             };
 
             Location.prototype.loadMapZoom = function (response) {
+                // zoom map to reveal location
                 if (response.googleMapZoomLevel && response.center && response.center.hasValue)
                     this.map.setZoom(response.googleMapZoomLevel);
-else if (response.box.hasValue)
+                else if (response.box.hasValue)
                     this.map.fitBounds(Places.Utils.convertToLatLngBounds(response.box));
 
+                // map may have no center but bounding box and zoom
                 if (response.googleMapZoomLevel && response.googleMapZoomLevel > 1)
                     this.map.setZoom(response.googleMapZoomLevel);
                 if (response.googleMapZoomLevel || response.box.hasValue)
@@ -337,6 +349,7 @@ else if (response.box.hasValue)
             };
 
             Location.prototype.loadMapMarker = function (response) {
+                // place marker and set map center
                 if (response.center.hasValue) {
                     var latLng = Places.Utils.convertToLatLng(response.center);
                     this.mapTools().placeMarker(latLng);
@@ -357,34 +370,34 @@ else if (response.box.hasValue)
                 var country = Places.Utils.getCountry(places);
                 if (country)
                     this.countryId(country.id);
-else
+                else
                     this.countryId(undefined);
 
                 // populate admin1 menu
                 var admin1 = Places.Utils.getAdmin1(places);
                 if (admin1)
                     this.admin1Id(admin1.id);
-else
+                else
                     this.admin1Id(undefined);
 
                 // populate admin2 menu
                 var admin2 = Places.Utils.getAdmin2(places);
                 if (admin2)
                     this.admin2Id(admin2.id);
-else
+                else
                     this.admin2Id(undefined);
 
                 // populate admin3 menu
                 var admin3 = Places.Utils.getAdmin3(places);
                 if (admin3)
                     this.admin3Id(admin3.id);
-else
+                else
                     this.admin3Id(undefined);
 
                 var subAdmins = Places.Utils.getSubAdmins(places);
                 if (subAdmins && subAdmins.length)
                     this.subAdmins(subAdmins);
-else
+                else
                     this.subAdmins([]);
             };
 
@@ -454,6 +467,7 @@ else
                 var _this = this;
                 var me = this;
 
+                // shouldn't be able to click this button for add form, guarding anyway
                 if (!this.ownerId)
                     return;
 
@@ -480,6 +494,7 @@ else
                         longitude: centerLng
                     };
 
+                // center the map on the lat/lng before getting bounds
                 if (center)
                     this.map.setCenter(Places.Utils.convertToLatLng(center));
 
@@ -498,15 +513,15 @@ else
 
                 if (this.subAdmins().length)
                     placeId = this.subAdmins()[this.subAdmins().length - 1].id;
-else if (this.admin3Id())
+                else if (this.admin3Id())
                     placeId = this.admin3Id();
-else if (this.admin2Id())
+                else if (this.admin2Id())
                     placeId = this.admin2Id();
-else if (this.admin1Id())
+                else if (this.admin1Id())
                     placeId = this.admin1Id();
-else if (this.countryId())
+                else if (this.countryId())
                     placeId = this.countryId();
-else if (this.continentId())
+                else if (this.continentId())
                     placeId = this.continentId();
 
                 var js = {
@@ -522,6 +537,7 @@ else if (this.continentId())
                 var _this = this;
                 this.isEditing(false);
 
+                // shouldn't be able to click this button for add form, guarding anyway
                 if (!this.ownerId)
                     return;
 
@@ -550,4 +566,3 @@ else if (this.continentId())
     })(Establishments.ViewModels || (Establishments.ViewModels = {}));
     var ViewModels = Establishments.ViewModels;
 })(Establishments || (Establishments = {}));
-//# sourceMappingURL=Location.js.map

@@ -6,10 +6,10 @@
 
 module Employees.Servers {
 
-    export function GetEmployeesPlaces(tenantDomain: any, data: ApiModels.EmployeesPlacesInputModel, settings?: JQueryAjaxSettings): JQueryPromise<ApiModels.EmployeesPlaceApiModel[]> {
+    export function GetEmployeesPlaces(tenantId: any, data: ApiModels.EmployeesPlacesInputModel, settings?: JQueryAjaxSettings): JQueryPromise<ApiModels.EmployeesPlaceApiModel[]> {
         var promise: JQueryDeferred<ApiModels.EmployeesPlaceApiModel[]> = $.Deferred();
         settings = settings || {};
-        settings.url = Routes.Api.Employees.places(tenantDomain);
+        settings.url = Routes.Api.Employees.places(tenantId);
         if (data) settings.data = data;
         $.ajax(settings)
             .done((response: ApiModels.EmployeesPlaceApiModel[]): void => {
@@ -21,10 +21,10 @@ module Employees.Servers {
         return promise;
     }
 
-    export function GetActivityCounts(tenantDomain: any, settings?: JQueryAjaxSettings): JQueryPromise<ApiModels.EmployeeActivityCounts> {
+    export function GetActivityCounts(tenantId: any, settings?: JQueryAjaxSettings): JQueryPromise<ApiModels.EmployeeActivityCounts> {
         var promise: JQueryDeferred<ApiModels.EmployeeActivityCounts> = $.Deferred();
         settings = settings || {};
-        settings.url = Routes.Api.Employees.Activities.counts(tenantDomain);
+        settings.url = Routes.Api.Employees.Activities.counts(tenantId);
         $.ajax(settings)
             .done((response: ApiModels.EmployeeActivityCounts): void => {
                 promise.resolve(response);

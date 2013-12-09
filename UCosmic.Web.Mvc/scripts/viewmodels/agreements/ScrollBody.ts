@@ -90,7 +90,6 @@ module ScrollBody {
         scrollMyBody = function (position): void {
             var $body;
 
-            //ie sucks!
             if (!$("body").scrollTop()) {
                 $("html, body").scrollTop(position);
             } else {
@@ -101,7 +100,6 @@ module ScrollBody {
         //scroll based on side nav
         goToSection = function (location, data, event): void {
             var offset = $("#" + location).offset();
-            //ie sucks!
             if (!$("body").scrollTop()) {
                 $("html, body").scrollTop(offset.top - 20);
             } else {
@@ -125,7 +123,6 @@ module ScrollBody {
                 this.section4Top = this.mySection4.offset();
                 this.section5Top = this.mySection5.offset();
                 this.section6Top = this.mySection6.offset();
-                //ie sucks!
                 if (!$("body").scrollTop()) {
                     this.$body = $("html, body").scrollTop() + 100;
                 } else {

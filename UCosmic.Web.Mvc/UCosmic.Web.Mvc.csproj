@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\Build\Microsoft.TypeScript.Default.props" Condition="'$(Configuration)' == 'DebugBuildTs' Or '$(Configuration)' == 'Release'" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -23,6 +23,11 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <TypeScriptToolsVersion>0.9</TypeScriptToolsVersion>
+    <TypeScriptSourceMap>False</TypeScriptSourceMap>
+    <TypeScriptModuleKind>none</TypeScriptModuleKind>
+    <TypeScriptCompileOnSaveEnabled>True</TypeScriptCompileOnSaveEnabled>
+    <TypeScriptNoImplicitAny>False</TypeScriptNoImplicitAny>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -833,62 +838,11 @@
     <Content Include="images\icons\spinner\barber-38-green.gif" />
     <Content Include="images\icons\spinner\barber-40-green.gif" />
     <Content Include="images\icons\spinner\spinner-24-blue.gif" />
-    <None Include="scripts\app\PagedSearch.js.map">
-      <DependentUpon>PagedSearch.ts</DependentUpon>
-    </None>
-    <None Include="scripts\app\Pager.js.map">
-      <DependentUpon>Pager.ts</DependentUpon>
-    </None>
-    <None Include="scripts\app\SideSwiper.js.map">
-      <DependentUpon>SideSwiper.ts</DependentUpon>
-    </None>
-    <None Include="scripts\app\ImageSwapper.js.map">
-      <DependentUpon>ImageSwapper.ts</DependentUpon>
-    </None>
-    <None Include="scripts\app\FormSelect.js.map">
-      <DependentUpon>FormSelect.ts</DependentUpon>
-    </None>
-    <None Include="scripts\app\DataCacher.js.map">
-      <DependentUpon>DataCacher.ts</DependentUpon>
-    </None>
-    <None Include="scripts\app\Spinner.js.map">
-      <DependentUpon>Spinner.ts</DependentUpon>
-    </None>
-    <None Include="scripts\app\Routes.js.map">
-      <DependentUpon>Routes.ts</DependentUpon>
-    </None>
-    <Content Include="scripts\app\HistoryJS.js.map">
-      <DependentUpon>HistoryJS.ts</DependentUpon>
-    </Content>
-    <None Include="scripts\app\Flasher.js.map">
-      <DependentUpon>Flasher.ts</DependentUpon>
-    </None>
-    <None Include="scripts\app\App.js.map">
-      <DependentUpon>App.ts</DependentUpon>
-    </None>
-    <None Include="scripts\google\ColumnChart.js.map">
-      <DependentUpon>ColumnChart.ts</DependentUpon>
-    </None>
-    <None Include="scripts\google\GeoChart.js.map">
-      <DependentUpon>GeoChart.ts</DependentUpon>
-    </None>
-    <None Include="scripts\google\LineChart.js.map">
-      <DependentUpon>LineChart.ts</DependentUpon>
-    </None>
-    <None Include="scripts\google\Map.js.map">
-      <DependentUpon>Map.ts</DependentUpon>
-    </None>
-    <None Include="scripts\google\ToolsOverlay.js.map">
-      <DependentUpon>ToolsOverlay.ts</DependentUpon>
-    </None>
     <None Include="scripts\jquery\jquery-1.9.1.intellisense.js" />
     <Content Include="images\placeholders\ExpertiseMock.png" />
     <Content Include="images\transparent.png" />
     <TypeScriptCompile Include="scripts\app\Flasher.ts" />
     <TypeScriptCompile Include="scripts\app\PagedSearch.ts" />
-    <None Include="scripts\ko\knockout.binding-handlers.js.map">
-      <DependentUpon>knockout.binding-handlers.ts</DependentUpon>
-    </None>
     <None Include="scripts\oss\D3-LICENSE.txt" />
     <TypeScriptCompile Include="scripts\app\Routes.d.ts" />
     <TypeScriptCompile Include="scripts\app\DataCacher.ts" />
@@ -1768,6 +1722,12 @@
     <Content Include="scripts\ko\knockout.binding-handlers.js">
       <DependentUpon>knockout.binding-handlers.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="scripts\typings\knockout.mapping\knockout.mapping.d.ts" />
+    <TypeScriptCompile Include="scripts\typings\knockout.validation\knockout.validation.d.ts" />
+    <None Include="scripts\typings\knockout\knockout.amd.d.ts" />
+    <TypeScriptCompile Include="scripts\typings\knockout\knockout.d.ts" />
+    <TypeScriptCompile Include="scripts\typings\modernizr\modernizr.d.ts" />
+    <TypeScriptCompile Include="scripts\typings\moment\moment.d.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\establishments\SearchResult.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\establishments\Search.ts" />
     <Content Include="scripts\require\main.js" />
@@ -2041,10 +2001,6 @@
     <TypeScriptCompile Include="scripts\typings\jquery.plugins\jquery.tinymce.d.ts" />
     <TypeScriptCompile Include="scripts\typings\jqueryui\jqueryui.d.ts" />
     <TypeScriptCompile Include="scripts\typings\kendo\kendo.all.d.ts" />
-    <TypeScriptCompile Include="scripts\typings\knockout.mapping\knockout.mapping.d.ts" />
-    <TypeScriptCompile Include="scripts\typings\knockout.validation\knockout.validation.d.ts" />
-    <TypeScriptCompile Include="scripts\typings\modernizr\modernizr.d.ts" />
-    <TypeScriptCompile Include="scripts\typings\moment\moment.d.ts" />
     <TypeScriptCompile Include="scripts\typings\sammyjs\sammyjs.d.ts" />
     <TypeScriptCompile Include="scripts\typings\tinymce\tinymce.d.ts" />
     <TypeScriptCompile Include="scripts\typings\d3\d3.d.ts" />
@@ -2052,7 +2008,6 @@
     <TypeScriptCompile Include="scripts\typings\google.visualization\google.visualization.d.ts" />
     <TypeScriptCompile Include="scripts\typings\history\history.d.ts" />
     <TypeScriptCompile Include="scripts\typings\jquery\jquery.d.ts" />
-    <TypeScriptCompile Include="scripts\typings\knockout\knockout.d.ts" />
     <None Include="scripts\typings\linq\linq.3.0.3-Beta4.d.ts" />
     <TypeScriptCompile Include="scripts\typings\linq\linq.d.ts" />
     <TypeScriptCompile Include="scripts\typings\linq\linq.jquery.d.ts" />
@@ -2264,153 +2219,6 @@
     <Content Include="scripts\viewmodels\users\User.js">
       <DependentUpon>User.ts</DependentUpon>
     </Content>
-    <None Include="scripts\viewmodels\agreements\DatesStatus.js.map">
-      <DependentUpon>DatesStatus.ts</DependentUpon>
-    </None>
-    <None Include="scripts\viewmodels\activities\Activities.js.map">
-      <DependentUpon>Activities.ts</DependentUpon>
-    </None>
-    <None Include="scripts\viewmodels\activities\Activity.js.map">
-      <DependentUpon>Activity.ts</DependentUpon>
-    </None>
-    <None Include="scripts\viewmodels\activities\ActivityEnums.js.map">
-      <DependentUpon>ActivityEnums.ts</DependentUpon>
-    </None>
-    <None Include="scripts\viewmodels\agreements\BasicInfo.js.map">
-      <DependentUpon>BasicInfo.ts</DependentUpon>
-    </None>
-    <None Include="scripts\viewmodels\agreements\EstablishmentSearchNav.js.map">
-      <DependentUpon>EstablishmentSearchNav.ts</DependentUpon>
-    </None>
-    <None Include="scripts\viewmodels\agreements\FileAttachments.js.map">
-      <DependentUpon>FileAttachments.ts</DependentUpon>
-    </None>
-    <None Include="scripts\viewmodels\agreements\AgreementVM.js.map">
-      <DependentUpon>AgreementVM.ts</DependentUpon>
-    </None>
-    <None Include="scripts\viewmodels\activities\ActivitiesSpike.js.map">
-      <DependentUpon>ActivitiesSpike.ts</DependentUpon>
-    </None>
-    <None Include="scripts\viewmodels\agreements\Participants.js.map">
-      <DependentUpon>Participants.ts</DependentUpon>
-    </None>
-    <None Include="scripts\viewmodels\agreements\Contacts.js.map">
-      <DependentUpon>Contacts.ts</DependentUpon>
-    </None>
-    <None Include="scripts\viewmodels\agreements\ScrollBody.js.map">
-      <DependentUpon>ScrollBody.ts</DependentUpon>
-    </None>
-    <None Include="scripts\viewmodels\agreements\SearchResult.js.map">
-      <DependentUpon>SearchResult.ts</DependentUpon>
-    </None>
-    <None Include="scripts\viewmodels\agreements\SearchTable.js.map">
-      <DependentUpon>SearchTable.ts</DependentUpon>
-    </None>
-    <None Include="scripts\viewmodels\agreements\Visibility.js.map">
-      <DependentUpon>Visibility.ts</DependentUpon>
-    </None>
-    <None Include="scripts\viewmodels\agreements\SearchLenses.js.map">
-      <DependentUpon>SearchLenses.ts</DependentUpon>
-    </None>
-    <None Include="scripts\viewmodels\agreements\Search.js.map">
-      <DependentUpon>Search.ts</DependentUpon>
-    </None>
-    <None Include="scripts\viewmodels\agreements\Phones.js.map">
-      <DependentUpon>Phones.ts</DependentUpon>
-    </None>
-    <None Include="scripts\viewmodels\agreements\SearchMap.js.map">
-      <DependentUpon>SearchMap.ts</DependentUpon>
-    </None>
-    <None Include="scripts\viewmodels\agreements\PublicView.js.map">
-      <DependentUpon>PublicView.ts</DependentUpon>
-    </None>
-    <None Include="scripts\viewmodels\agreements\PopulateFiles.js.map">
-      <DependentUpon>PopulateFiles.ts</DependentUpon>
-    </None>
-    <None Include="scripts\viewmodels\establishments\Server.js.map">
-      <DependentUpon>Server.ts</DependentUpon>
-    </None>
-    <None Include="scripts\viewmodels\degrees\Degrees.js.map">
-      <DependentUpon>Degrees.ts</DependentUpon>
-    </None>
-    <None Include="scripts\viewmodels\establishments\Location.js.map">
-      <DependentUpon>Location.ts</DependentUpon>
-    </None>
-    <None Include="scripts\viewmodels\employees\Server.js.map">
-      <DependentUpon>Server.ts</DependentUpon>
-    </None>
-    <None Include="scripts\viewmodels\establishments\Item.js.map">
-      <DependentUpon>Item.ts</DependentUpon>
-    </None>
-    <None Include="scripts\viewmodels\establishments\Search.js.map">
-      <DependentUpon>Search.ts</DependentUpon>
-    </None>
-    <None Include="scripts\viewmodels\employees\Employees.js.map">
-      <DependentUpon>Employees.ts</DependentUpon>
-    </None>
-    <None Include="scripts\viewmodels\degrees\Degree.js.map">
-      <DependentUpon>Degree.ts</DependentUpon>
-    </None>
-    <None Include="scripts\viewmodels\establishments\SearchResult.js.map">
-      <DependentUpon>SearchResult.ts</DependentUpon>
-    </None>
-    <None Include="scripts\viewmodels\employees\Summary.js.map">
-      <DependentUpon>Summary.ts</DependentUpon>
-    </None>
-    <None Include="scripts\viewmodels\establishments\Name.js.map">
-      <DependentUpon>Name.ts</DependentUpon>
-    </None>
-    <None Include="scripts\viewmodels\establishments\Url.js.map">
-      <DependentUpon>Url.ts</DependentUpon>
-    </None>
-    <None Include="scripts\viewmodels\geographicExpertises\GeographicExpertises.js.map">
-      <DependentUpon>GeographicExpertises.ts</DependentUpon>
-    </None>
-    <None Include="scripts\viewmodels\languageExpertises\LanguageExpertises.js.map">
-      <DependentUpon>LanguageExpertises.ts</DependentUpon>
-    </None>
-    <None Include="scripts\viewmodels\my\Affiliations.js.map">
-      <DependentUpon>Affiliations.ts</DependentUpon>
-    </None>
-    <None Include="scripts\viewmodels\internationalAffiliations\InternationalAffiliation.js.map">
-      <DependentUpon>InternationalAffiliation.ts</DependentUpon>
-    </None>
-    <None Include="scripts\viewmodels\internationalAffiliations\InternationalAffiliations.js.map">
-      <DependentUpon>InternationalAffiliations.ts</DependentUpon>
-    </None>
-    <None Include="scripts\viewmodels\my\EmailAddresses.js.map">
-      <DependentUpon>EmailAddresses.ts</DependentUpon>
-    </None>
-    <None Include="scripts\viewmodels\my\Profile.js.map">
-      <DependentUpon>Profile.ts</DependentUpon>
-    </None>
-    <None Include="scripts\viewmodels\geographicExpertises\GeographicExpertise.js.map">
-      <DependentUpon>GeographicExpertise.ts</DependentUpon>
-    </None>
-    <None Include="scripts\viewmodels\languageExpertises\LanguageExpertise.js.map">
-      <DependentUpon>LanguageExpertise.ts</DependentUpon>
-    </None>
-    <None Include="scripts\viewmodels\representatives\RepModuleSettings.js.map">
-      <DependentUpon>RepModuleSettings.ts</DependentUpon>
-    </None>
-    <None Include="scripts\viewmodels\users\User.js.map">
-      <DependentUpon>User.ts</DependentUpon>
-    </None>
-    <None Include="scripts\viewmodels\people\Activities.js.map">
-      <DependentUpon>Activities.ts</DependentUpon>
-    </None>
-    <None Include="scripts\viewmodels\places\Utils.js.map">
-      <DependentUpon>Utils.ts</DependentUpon>
-    </None>
-    <None Include="scripts\viewmodels\users\SearchResult.js.map">
-      <DependentUpon>SearchResult.ts</DependentUpon>
-    </None>
-    <None Include="scripts\viewmodels\users\Search.js.map">
-      <DependentUpon>Search.ts</DependentUpon>
-    </None>
-    <None Include="scripts\viewmodels\people\Server.js.map">
-      <DependentUpon>Server.ts</DependentUpon>
-    </None>
     <None Include="startup\sql\ElmahSqlSetup.sql" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
@@ -2965,7 +2773,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\Build\Microsoft.TypeScript.targets" Condition="'$(Configuration)' == 'DebugBuildTs' Or '$(Configuration)' == 'Release'" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets') And ('$(Configuration)' == 'DebugBuildTs' Or '$(Configuration)' == 'Release' Or '$(Configuration)' == '')" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
   <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">

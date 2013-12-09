@@ -63,16 +63,16 @@ module Establishments.ViewModels {
     export class Name implements KnockoutValidationGroup {
 
         // api observables
-        id: KnockoutObservable<number> = ko.observable();
-        ownerId: KnockoutObservable<number> = ko.observable();
-        text: KnockoutObservable<string> = ko.observable();
-        isOfficialName: KnockoutObservable<boolean> = ko.observable();
-        isFormerName: KnockoutObservable<boolean> = ko.observable();
-        languageName: KnockoutObservable<string> = ko.observable();
-        languageCode: KnockoutObservable<string> = ko.observable();
+        id = ko.observable<number>();
+        ownerId = ko.observable<number>();
+        text = ko.observable<string>();
+        isOfficialName = ko.observable<boolean>();
+        isFormerName = ko.observable<boolean>();
+        languageName = ko.observable<string>();
+        languageCode = ko.observable<string>();
 
         // other observables
-        editMode: KnockoutObservable<boolean> = ko.observable();
+        editMode = ko.observable<boolean>();
         $textElement: JQuery = undefined; // bind to this so we can focus it on actions
         $languagesElement: JQuery = undefined; // bind to this so we can restore on back button
         selectedLanguageCode: KnockoutObservable<string>; // shadow to restore after list items are bound

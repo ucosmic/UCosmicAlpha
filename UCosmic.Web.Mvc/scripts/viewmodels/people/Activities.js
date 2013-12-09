@@ -79,7 +79,7 @@ var People;
                         };
                         response.splice(response.length, 0, emptyValue);
 
-                        _this.countries(response);
+                        _this.countries(response); // push into observable array
 
                         _this.countryCode(modelData.CountryCode);
                         _this.hasInitialized = true;
@@ -92,4 +92,3 @@ var People;
     })(People.ViewModels || (People.ViewModels = {}));
     var ViewModels = People.ViewModels;
 })(People || (People = {}));
-//# sourceMappingURL=Activities.js.map

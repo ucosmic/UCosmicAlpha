@@ -1,11 +1,11 @@
+/// <reference path="../../typings/jquery/jquery.d.ts" />
+/// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
+/// <reference path="../../typings/knockout/knockout.d.ts" />
+/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
+/// <reference path="../../app/Routes.ts" />
+/// <reference path="../../app/App.ts" />
 var ViewModels;
 (function (ViewModels) {
-    /// <reference path="../../typings/jquery/jquery.d.ts" />
-    /// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
-    /// <reference path="../../typings/knockout/knockout.d.ts" />
-    /// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
-    /// <reference path="../../app/Routes.ts" />
-    /// <reference path="../../app/App.ts" />
     (function (Degrees) {
         var DegreeSearchInput = (function () {
             function DegreeSearchInput() {
@@ -62,8 +62,7 @@ var ViewModels;
                     modal: true,
                     buttons: [
                         {
-                            text: "Yes, confirm delete",
-                            click: function () {
+                            text: "Yes, confirm delete", click: function () {
                                 viewModel.deleteEducationById(data.id());
                                 $(this).dialog("close");
 
@@ -72,8 +71,7 @@ var ViewModels;
                             }
                         },
                         {
-                            text: "No, cancel delete",
-                            click: function () {
+                            text: "No, cancel delete", click: function () {
                                 $(this).dialog("close");
                             }
                         }
@@ -90,4 +88,3 @@ var ViewModels;
     })(ViewModels.Degrees || (ViewModels.Degrees = {}));
     var Degrees = ViewModels.Degrees;
 })(ViewModels || (ViewModels = {}));
-//# sourceMappingURL=Degrees.js.map

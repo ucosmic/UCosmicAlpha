@@ -101,13 +101,13 @@ module People.ViewModels {
     export class Affiliation implements KoModels.Affiliation, KnockoutValidationGroup {
         //#region Observable Interface Implementation
 
-        affiliationId: KnockoutObservable<number> = ko.observable();
-        personId: KnockoutObservable<number> = ko.observable();
-        establishmentId: KnockoutObservable<number> = ko.observable();
-        isDefault: KnockoutObservable<boolean> = ko.observable();
-        jobTitles: KnockoutObservable<string> = ko.observable();
-        facultyRank: KnockoutObservable<Employees.KoModels.EmployeeSettingsFacultyRank> = ko.observable();
-        establishments: KnockoutObservableArray<KoModels.AffiliatedEstablishment> = ko.observableArray();
+        affiliationId = ko.observable<number>();
+        personId = ko.observable<number>();
+        establishmentId = ko.observable<number>();
+        isDefault = ko.observable<boolean>();
+        jobTitles = ko.observable<string>();
+        facultyRank = ko.observable<Employees.KoModels.EmployeeSettingsFacultyRank>();
+        establishments = ko.observableArray<KoModels.AffiliatedEstablishment>();
 
         //#endregion
         //#region Construction
@@ -168,7 +168,7 @@ module People.ViewModels {
 
         isValid: () => boolean;
         errors: KnockoutValidationErrors;
-        hideValidationMessages: KnockoutObservable<boolean> = ko.observable(true);
+        hideValidationMessages = ko.observable<boolean>(true);
 
         private _initValidation(): void {
 
@@ -293,7 +293,7 @@ module People.ViewModels {
         //#endregion
         //#region Cascading Establishments
 
-        establishmentEditors: KnockoutObservableArray<AffiliatedEstablishmentEditor> = ko.observableArray(); // department drop downs
+        establishmentEditors = ko.observableArray<AffiliatedEstablishmentEditor>(); // department drop downs
 
         firstEstablishmentId = ko.computed((): number => {
             var establishmentEditors = this.establishmentEditors();
@@ -402,7 +402,7 @@ module People.ViewModels {
         //#region Faculty Rank DropDown
 
         facultyRankSelect = new App.FormSelect<number>({ kendoOptions: {}, });
-        hasFacultyRanks: KnockoutObservable<boolean> = ko.observable(false);
+        hasFacultyRanks = ko.observable<boolean>(false);
 
         private _loadFacultyRankOptions(): void {
             // the employee module settings data needs to be loaded
@@ -475,16 +475,16 @@ module People.ViewModels {
         private _degreesViewModel: RootViewModels.Degrees.DegreeList = null;
         private _internationalAffiliationsViewModel: RootViewModels.InternationalAffiliations.InternationalAffiliationList = null;
 
-        hasPhoto: KnockoutObservable<boolean> = ko.observable();
-        photoUploadError: KnockoutObservable<string> = ko.observable();
+        hasPhoto = ko.observable<boolean>();
+        photoUploadError = ko.observable<string>();
         static photoUploadUnexpectedErrorMessage = 'UCosmic experienced an unexpected error managing your photo, please try again. If you continue to experience this issue, please use the Feedback & Support link on this page to report it.';
-        photoSrc: KnockoutObservable<string> = ko.observable(
+        photoSrc = ko.observable<string>(
             App.Routes.WebApi.My.Photo.get({ maxSide: 128, refresh: new Date().toUTCString() }));
         photoUploadSpinner = new App.Spinner({ delay: 400 });
         photoDeleteSpinner = new App.Spinner({ delay: 400 });
 
-        isDisplayNameDerived: KnockoutObservable<boolean> = ko.observable();
-        displayName: KnockoutObservable<string> = ko.observable();
+        isDisplayNameDerived = ko.observable<boolean>();
+        displayName = ko.observable<string>();
         private _userDisplayName: string = '';
 
         campuses: any[];
@@ -494,41 +494,35 @@ module People.ViewModels {
         personId: number = 0;
         personId2: number;
 
-        salutation: KnockoutObservable<string> = ko.observable();
-        firstName: KnockoutObservable<string> = ko.observable();
-        middleName: KnockoutObservable<string> = ko.observable();
-        lastName: KnockoutObservable<string> = ko.observable();
-        suffix: KnockoutObservable<string> = ko.observable();
+        salutation = ko.observable<string>();
+        firstName = ko.observable<string>();
+        middleName = ko.observable<string>();
+        lastName = ko.observable<string>();
+        suffix = ko.observable<string>();
 
-        //isFacultyRankEditable: () => boolean;
-        //isFacultyRankVisible: () => boolean;
-        //facultyRankText: () => string;
-        //facultyRanks: KnockoutObservableArray<RootViewModels.Employees.IServerFacultyRankApiModel> = ko.observableArray();
-        //facultyRankId: KnockoutObservable<any> = ko.observable(null);
+        defaultEstablishmentHasCampuses = ko.observable<boolean>(false);
 
-        defaultEstablishmentHasCampuses: KnockoutObservable<boolean> = ko.observable(false);
+        preferredTitle = ko.observable<string>();
 
-        preferredTitle: KnockoutObservable<string> = ko.observable();
-
-        gender: KnockoutObservable<string> = ko.observable();
-        isActive: KnockoutObservable<boolean> = ko.observable();
+        gender = ko.observable<string>();
+        isActive = ko.observable<boolean>(undefined);
         genderText: () => string;
         isActiveText: () => string;
 
-        $photo: KnockoutObservable<JQuery> = ko.observable();
-        $facultyRanks: KnockoutObservable<JQuery> = ko.observable();
-        $nameSalutation: KnockoutObservable<JQuery> = ko.observable();
-        $nameSuffix: KnockoutObservable<JQuery> = ko.observable();
+        $photo = ko.observable<JQuery>();
+        $facultyRanks = ko.observable<JQuery>();
+        $nameSalutation = ko.observable<JQuery>();
+        $nameSuffix = ko.observable<JQuery>();
         $editSection: JQuery;
         $confirmPurgeDialog: JQuery;
 
         isValid: () => boolean;
         errors: KnockoutValidationErrors;
-        editMode: KnockoutObservable<boolean> = ko.observable(false);
+        editMode = ko.observable<boolean>(false);
         saveSpinner = new App.Spinner({ delay: 200, });
 
-        startInEdit: KnockoutObservable<boolean> = ko.observable(false);
-        startTabName: KnockoutObservable<string> = ko.observable("Activities");
+        startInEdit = ko.observable<boolean>(false);
+        startTabName = ko.observable<string>("Activities");
 
         //#endregion
         //#region Construction
@@ -544,7 +538,7 @@ module People.ViewModels {
         //#region Affiliations
 
         defaultAffiliation: ApiModels.Affiliation;
-        editableAffiliations: KnockoutObservableArray<KoModels.Affiliation> = ko.observableArray();
+        editableAffiliations = ko.observableArray<KoModels.Affiliation>();
         affiliationsSpinner = new App.Spinner({ delay: 400, runImmediately: true, });
         $confirmDeleteAffiliation: JQuery;
         isEditingAffiliation = ko.computed((): boolean => {

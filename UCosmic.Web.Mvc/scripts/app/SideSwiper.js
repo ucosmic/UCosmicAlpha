@@ -40,6 +40,7 @@ var App;
                 // after the left frame has slid out of view, hide it
                 $currentFrame.hide().css({ left: 0 }).attr('data-side-swiper', 'off').data('side-swiper', 'off');
 
+                // invoke callback if one was passed
                 if (callback)
                     callback();
             });
@@ -63,6 +64,7 @@ var App;
                 // after the right frame  is slid out of view, hide it
                 $currentFrame.hide().attr('data-side-swiper', 'off').data('side-swiper', 'off');
 
+                // invoke callback if one was passed
                 if (callback)
                     callback();
             });
@@ -71,4 +73,3 @@ var App;
     })();
     App.SideSwiper = SideSwiper;
 })(App || (App = {}));
-//# sourceMappingURL=SideSwiper.js.map

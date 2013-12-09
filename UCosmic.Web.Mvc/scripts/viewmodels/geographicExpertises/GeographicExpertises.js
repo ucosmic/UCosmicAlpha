@@ -1,12 +1,12 @@
+/// <reference path="../../typings/jquery/jquery.d.ts" />
+/// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
+/// <reference path="../../typings/knockout/knockout.d.ts" />
+/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
+/// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
+/// <reference path="../../typings/kendo/kendo.all.d.ts" />
+/// <reference path="../../app/Routes.ts" />
 var ViewModels;
 (function (ViewModels) {
-    /// <reference path="../../typings/jquery/jquery.d.ts" />
-    /// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
-    /// <reference path="../../typings/knockout/knockout.d.ts" />
-    /// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
-    /// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
-    /// <reference path="../../typings/kendo/kendo.all.d.ts" />
-    /// <reference path="../../app/Routes.ts" />
     (function (GeographicExpertises) {
         var GeographicExpertiseSearchInput = (function () {
             function GeographicExpertiseSearchInput() {
@@ -64,8 +64,7 @@ var ViewModels;
                     modal: true,
                     buttons: [
                         {
-                            text: "Yes, confirm delete",
-                            click: function () {
+                            text: "Yes, confirm delete", click: function () {
                                 viewModel.deleteExpertiseById(data.id());
                                 $(this).dialog("close");
 
@@ -74,8 +73,7 @@ var ViewModels;
                             }
                         },
                         {
-                            text: "No, cancel delete",
-                            click: function () {
+                            text: "No, cancel delete", click: function () {
                                 $(this).dialog("close");
                             }
                         }
@@ -105,4 +103,3 @@ var ViewModels;
     })(ViewModels.GeographicExpertises || (ViewModels.GeographicExpertises = {}));
     var GeographicExpertises = ViewModels.GeographicExpertises;
 })(ViewModels || (ViewModels = {}));
-//# sourceMappingURL=GeographicExpertises.js.map

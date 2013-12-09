@@ -35,9 +35,9 @@ module Agreements.ViewModels {
         //#region Search Filter Inputs
 
         // throttle keyword to reduce number API requests
-        keyword: KnockoutObservable<string> = ko.observable(
+        keyword = ko.observable<string>(
             sessionStorage.getItem(SearchTable.KeywordSessionKey) || '');
-        keywordThrottled: KnockoutComputed<string> = ko.computed(this.keyword)
+        keywordThrottled = ko.computed<string>(this.keyword)
             .extend({ throttle: 400 });
 
         // instead of throttling, both this and the options are observed
@@ -243,8 +243,8 @@ module Agreements.ViewModels {
 
         spinner = new App.Spinner({ delay: 400, runImmediately: true, });
         $results: JQuery;
-        private _requestHistory: KnockoutObservableArray<SearchTableInput> = ko.observableArray();
-        private _currentRequest: KnockoutComputed<SearchTableInput> = ko.computed((): SearchTableInput => {
+        private _requestHistory = ko.observableArray<SearchTableInput>();
+        private _currentRequest = ko.computed((): SearchTableInput => {
             // this will run once during construction
             return this._computeCurrentRequest();
         });
@@ -391,15 +391,15 @@ module Agreements.ViewModels {
 
     export class TableRow {
 
-        id: KnockoutObservable<number> = ko.observable();
-        name: KnockoutObservable<string> = ko.observable();
-        countryNames: KnockoutObservable<string> = ko.observable();
-        startsOn: KnockoutObservable<string> = ko.observable();
-        expiresOn: KnockoutObservable<string> = ko.observable();
-        type: KnockoutObservable<string> = ko.observable();
-        status: KnockoutObservable<string> = ko.observable();
-        countries: KnockoutObservableArray<string> = ko.observableArray();
-        participants: KnockoutObservableArray<any> = ko.observableArray();
+        id = ko.observable<number>();
+        name = ko.observable<string>();
+        countryNames = ko.observable<string>();
+        startsOn = ko.observable<string>();
+        expiresOn = ko.observable<string>();
+        type = ko.observable<string>();
+        status = ko.observable<string>();
+        countries = ko.observableArray<string>();
+        participants = ko.observableArray<any>();
 
         constructor(data: any, public owner: SearchTable) {
             ko.mapping.fromJS(data, {}, this);

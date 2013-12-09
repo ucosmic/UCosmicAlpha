@@ -1,15 +1,15 @@
-﻿var Employees;
+﻿/// <reference path="../../typings/jquery/jquery.d.ts" />
+/// <reference path="../../app/App.ts" />
+/// <reference path="../../app/Routes.d.ts" />
+/// <reference path="Routes.d.ts" />
+/// <reference path="Models.d.ts" />
+var Employees;
 (function (Employees) {
-    /// <reference path="../../typings/jquery/jquery.d.ts" />
-    /// <reference path="../../app/App.ts" />
-    /// <reference path="../../app/Routes.d.ts" />
-    /// <reference path="Routes.d.ts" />
-    /// <reference path="Models.d.ts" />
     (function (Servers) {
-        function GetEmployeesPlaces(tenantDomain, data, settings) {
+        function GetEmployeesPlaces(tenantId, data, settings) {
             var promise = $.Deferred();
             settings = settings || {};
-            settings.url = Routes.Api.Employees.places(tenantDomain);
+            settings.url = Routes.Api.Employees.places(tenantId);
             if (data)
                 settings.data = data;
             $.ajax(settings).done(function (response) {
@@ -21,10 +21,10 @@
         }
         Servers.GetEmployeesPlaces = GetEmployeesPlaces;
 
-        function GetActivityCounts(tenantDomain, settings) {
+        function GetActivityCounts(tenantId, settings) {
             var promise = $.Deferred();
             settings = settings || {};
-            settings.url = Routes.Api.Employees.Activities.counts(tenantDomain);
+            settings.url = Routes.Api.Employees.Activities.counts(tenantId);
             $.ajax(settings).done(function (response) {
                 promise.resolve(response);
             }).fail(function (xhr) {
@@ -44,7 +44,7 @@
             }).fail(function (xhr) {
                 if (xhr.status === 404)
                     promise.resolve(null);
-else
+                else
                     promise.reject(xhr);
             });
             return promise;
@@ -53,4 +53,3 @@ else
     })(Employees.Servers || (Employees.Servers = {}));
     var Servers = Employees.Servers;
 })(Employees || (Employees = {}));
-//# sourceMappingURL=Server.js.map

@@ -1,18 +1,18 @@
-﻿var ViewModels;
+﻿/// <reference path="../../typings/jquery/jquery.d.ts" />
+/// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
+/// <reference path="../../typings/knockout/knockout.d.ts" />
+/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
+/// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
+/// <reference path="../../typings/kendo/kendo.all.d.ts" />
+/// <reference path="../../typings/moment/moment.d.ts" />
+/// <reference path="../../typings/googlemaps/google.maps.d.ts" />
+/// <reference path="../../typings/sammyjs/sammyjs.d.ts" />
+/// <reference path="../../typings/linq/linq.d.ts" />
+/// <reference path="../../app/Routes.ts" />
+/// <reference path="../../app/Spinner.ts" />
+/// <reference path="../activities/ServiceApiModel.d.ts" />
+var ViewModels;
 (function (ViewModels) {
-    /// <reference path="../../typings/jquery/jquery.d.ts" />
-    /// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
-    /// <reference path="../../typings/knockout/knockout.d.ts" />
-    /// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
-    /// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
-    /// <reference path="../../typings/kendo/kendo.all.d.ts" />
-    /// <reference path="../../typings/moment/moment.d.ts" />
-    /// <reference path="../../typings/googlemaps/google.maps.d.ts" />
-    /// <reference path="../../typings/sammyjs/sammyjs.d.ts" />
-    /// <reference path="../../typings/linq/linq.d.ts" />
-    /// <reference path="../../app/Routes.ts" />
-    /// <reference path="../../app/Spinner.ts" />
-    /// <reference path="../activities/ServiceApiModel.d.ts" />
     (function (Employees) {
         //declare class MarkerWithLabelOptions extends MarkerWithLabel {
         //    constructor();
@@ -108,52 +108,28 @@
                 and _getHeatmapPeopleDataTable() to update the custom place tooltips text. */
                 this.geochartCustomPlaces = [
                     {
-                        name: 'Antarctica',
-                        id: 'antarctica',
-                        activityCount: 0,
-                        peopleCount: 0
+                        name: 'Antarctica', id: 'antarctica', activityCount: 0, peopleCount: 0
                     },
                     {
-                        name: 'Southern Ocean',
-                        id: 'southernOcean',
-                        activityCount: 0,
-                        peopleCount: 0
+                        name: 'Southern Ocean', id: 'southernOcean', activityCount: 0, peopleCount: 0
                     },
                     {
-                        name: 'Indian Ocean',
-                        id: 'indianOcean',
-                        activityCount: 0,
-                        peopleCount: 0
+                        name: 'Indian Ocean', id: 'indianOcean', activityCount: 0, peopleCount: 0
                     },
                     {
-                        name: 'Pacific Ocean',
-                        id: 'pacificOcean',
-                        activityCount: 0,
-                        peopleCount: 0
+                        name: 'Pacific Ocean', id: 'pacificOcean', activityCount: 0, peopleCount: 0
                     },
                     {
-                        name: 'Atlantic Ocean',
-                        id: 'atlanticOcean',
-                        activityCount: 0,
-                        peopleCount: 0
+                        name: 'Atlantic Ocean', id: 'atlanticOcean', activityCount: 0, peopleCount: 0
                     },
                     {
-                        name: 'Gulf of Mexico',
-                        id: 'gulfOfMexico',
-                        activityCount: 0,
-                        peopleCount: 0
+                        name: 'Gulf of Mexico', id: 'gulfOfMexico', activityCount: 0, peopleCount: 0
                     },
                     {
-                        name: 'Caribbean Sea',
-                        id: 'caribbean',
-                        activityCount: 0,
-                        peopleCount: 0
+                        name: 'Caribbean Sea', id: 'caribbean', activityCount: 0, peopleCount: 0
                     },
                     {
-                        name: 'Arctic Ocean',
-                        id: 'arcticOcean',
-                        activityCount: 0,
-                        peopleCount: 0
+                        name: 'Arctic Ocean', id: 'arcticOcean', activityCount: 0, peopleCount: 0
                     }
                 ];
                 this.activityTableRows = ko.observableArray([
@@ -164,13 +140,11 @@
                         activityDescription: '',
                         activityTitle: '',
                         activityTypeIds: [],
-                        activityTypes: [
-                            {
+                        activityTypes: [{
                                 rank: 0,
                                 iconName: '',
                                 toolTip: ''
-                            }
-                        ],
+                            }],
                         activityDate: ''
                     }
                 ]);
@@ -183,13 +157,11 @@
                         activityTitle: '',
                         placeOfficialName: '',
                         activityTypeIds: [],
-                        activityTypes: [
-                            {
+                        activityTypes: [{
                                 rank: 0,
                                 iconName: '',
                                 toolTip: ''
-                            }
-                        ]
+                            }]
                     }
                 ]);
                 this.activityColumnSort = [
@@ -212,7 +184,7 @@
             }
             FacultyAndStaff.prototype._initialize = function (institutionInfo) {
                 this.sammy = Sammy();
-                this.initialLocations = [];
+                this.initialLocations = []; // Bug - To overcome bug in Multiselect.
                 this.selectedLocationValues = [];
                 this.fromDate = ko.observable();
                 this.toDate = ko.observable();
@@ -233,7 +205,7 @@
                 //this.isTableVisible = ko.observable(false);
                 this.mapType = ko.observable('heatmap');
                 this.searchType = ko.observable('activities');
-                this.selectedPlace = ko.observable(null);
+                this.selectedPlace = ko.observable(null); // null for global view
                 this.mapRegion = ko.observable('world');
                 this.isGlobalView = ko.observable(true);
 
@@ -254,20 +226,16 @@
                 this.heatmapActivityDataTable = null;
                 this.heatmapPeopleDataTable = null;
                 this.activityResults = ko.mapping.fromJS({
-                    placeResults: [
-                        {
+                    placeResults: [{
                             officialName: '',
                             results: []
-                        }
-                    ]
+                        }]
                 });
                 this.peopleResults = ko.mapping.fromJS({
-                    placeResults: [
-                        {
+                    placeResults: [{
                             officialName: '',
                             results: []
-                        }
-                    ]
+                        }]
                 });
                 this.pointmapActivityMarkers = null;
                 this.pointmapPeopleMarkers = null;
@@ -407,16 +375,7 @@
                 $("#" + establishmentDropListId).kendoDropDownList({
                     dataTextField: "officialName",
                     dataValueField: "id",
-                    dataSource: this.institutionDropListData,
-                    change: function (e) {
-                        var item = this.dataItem(e.sender.selectedIndex);
-                        me.clearCachedData();
-                        me.establishmentId(item.id);
-                        me.establishmentOfficialName(item.officialName);
-                        me.selectMap(me.mapType());
-
-                        me.drawPointmap(true);
-                    }
+                    dataSource: this.institutionDropListData
                 });
 
                 $("#" + departmentDropListId).kendoDropDownList({
@@ -459,30 +418,27 @@
                     dataValueField: "id",
                     optionLabel: { officialName: "[All Colleges]", id: 0 },
                     dataSource: collegeDropListDataSource,
-                    change: function (e) {
-                        var selectedIndex = e.sender.selectedIndex;
-                        if (selectedIndex != -1) {
-                            var item = this.dataItem(selectedIndex);
-                            if ((item != null) && (item.id != 0)) {
-                                var dataSource = new kendo.data.DataSource({
-                                    transport: {
-                                        read: {
-                                            url: App.Routes.WebApi.Establishments.getChildren(item.id),
-                                            data: { orderBy: ['rank-asc', 'name-asc'] }
-                                        }
-                                    }
-                                });
-
-                                $("#" + departmentDropListId).data("kendoDropDownList").setDataSource(dataSource);
-                            }
-
-                            if (selectedIndex == 0) {
-                                $("#" + departmentDropListId).data("kendoDropDownList").setDataSource(new kendo.data.DataSource());
-                            }
-
-                            me.drawPointmap(true);
-                        }
-                    },
+                    //change: function (e) {
+                    //    var selectedIndex = e.sender.selectedIndex;
+                    //    if (selectedIndex != -1) {
+                    //        var item = this.dataItem(selectedIndex);
+                    //        if ((item != null) && (item.id != 0)) {
+                    //            var dataSource = new kendo.data.DataSource({
+                    //                transport: {
+                    //                    read: {
+                    //                        url: App.Routes.WebApi.Establishments.getChildren(item.id),
+                    //                        data: { orderBy: ['rank-asc', 'name-asc'] }
+                    //                    }
+                    //                }
+                    //            });
+                    //            $("#" + departmentDropListId).data("kendoDropDownList").setDataSource(dataSource);
+                    //        }
+                    //        if (selectedIndex == 0) {
+                    //            $("#" + departmentDropListId).data("kendoDropDownList").setDataSource(new kendo.data.DataSource());
+                    //        }
+                    //        me.drawPointmap(true);
+                    //    }
+                    //},
                     dataBound: function (e) {
                         if ((this.selectedIndex != null) && (this.selectedIndex != -1)) {
                             var item = this.dataItem(this.selectedIndex);
@@ -518,33 +474,29 @@
                                 }
                             }
                         }),
-                        change: function (e) {
-                            var selectedIndex = e.sender.selectedIndex;
-                            if ((selectedIndex != null) && (selectedIndex != -1)) {
-                                var item = this.dataItem(selectedIndex);
-                                if ((item != null) && (item.id != 0)) {
-                                    var dataSource = new kendo.data.DataSource({
-                                        transport: {
-                                            read: {
-                                                url: App.Routes.WebApi.Establishments.getChildren(item.id),
-                                                data: { orderBy: ['rank-asc', 'name-asc'] }
-                                            }
-                                        }
-                                    });
-
-                                    $("#" + collegeDropListId).data("kendoDropDownList").setDataSource(dataSource);
-                                }
-
-                                if (selectedIndex == 0) {
-                                    $("#" + departmentDropListId).data("kendoDropDownList").setDataSource(new kendo.data.DataSource());
-                                    $("#" + collegeDropListId).data("kendoDropDownList").setDataSource(new kendo.data.DataSource());
-
-                                    $("#" + collegeDropListId).data("kendoDropDownList").text("");
-                                }
-
-                                me.drawPointmap(true);
-                            }
-                        },
+                        //change: function (e) {
+                        //    var selectedIndex = e.sender.selectedIndex;
+                        //    if ((selectedIndex != null) && (selectedIndex != -1)) {
+                        //        var item = this.dataItem(selectedIndex);
+                        //        if ((item != null) && (item.id != 0)) {
+                        //            var dataSource = new kendo.data.DataSource({
+                        //                transport: {
+                        //                    read: {
+                        //                        url: App.Routes.WebApi.Establishments.getChildren(item.id),
+                        //                        data: { orderBy: ['rank-asc', 'name-asc'] }
+                        //                    }
+                        //                }
+                        //            });
+                        //            $("#" + collegeDropListId).data("kendoDropDownList").setDataSource(dataSource);
+                        //        }
+                        //        if (selectedIndex == 0) {
+                        //            $("#" + departmentDropListId).data("kendoDropDownList").setDataSource(new kendo.data.DataSource());
+                        //            $("#" + collegeDropListId).data("kendoDropDownList").setDataSource(new kendo.data.DataSource());
+                        //            $("#" + collegeDropListId).data("kendoDropDownList").text("");
+                        //        }
+                        //        me.drawPointmap(true);
+                        //    }
+                        //},
                         dataBound: function (e) {
                             if ((this.selectedIndex != null) && (this.selectedIndex != -1)) {
                                 var item = this.dataItem(this.selectedIndex);
@@ -649,7 +601,7 @@
 
             FacultyAndStaff.prototype.removeSubscriptions = function () {
                 for (var i = 0; i < this.subscriptions.length; i += 1) {
-                    (this.subscriptions[i]).dispose();
+                    this.subscriptions[i].dispose(); //no longer want notifications
                 }
             };
 
@@ -699,6 +651,7 @@
                     datalessRegionColor: 'FFFFFF'
                 };
 
+                /* ----- Setup ColumnChart ----- */
                 if (this.activityTypes() != null) {
                     this.barchartActivityOptions = {
                         //title: 'Global Activities',
@@ -846,7 +799,7 @@
                     dataTable.addColumn('string', 'Country');
                     dataTable.addColumn('number', 'Total Activities');
 
-                    var placeCounts = (this.globalActivityCountData).placeCounts;
+                    var placeCounts = this.globalActivityCountData.placeCounts;
                     if ((placeCounts != null) && (placeCounts.length > 0)) {
                         for (var i = 0; i < this.geochartCustomPlaces.length; i += 1) {
                             this.geochartCustomPlaces[i].activityCount = 0;
@@ -917,7 +870,7 @@
                     dataTable.addColumn('string', 'Country');
                     dataTable.addColumn('number', 'Total People');
 
-                    var placeCounts = (this.globalPeopleCountData).placeCounts;
+                    var placeCounts = this.globalPeopleCountData.placeCounts;
                     if ((placeCounts != null) && (placeCounts.length > 0)) {
                         for (var i = 0; i < this.geochartCustomPlaces.length; i += 1) {
                             this.geochartCustomPlaces[i].peopleCount = 0;
@@ -1004,7 +957,7 @@
                 } else {
                     var placeId = this.getPlaceId(placeOfficialName);
                     if (placeId != null) {
-                        if ((this.placeActivityCountData == null) || ((this.placeActivityCountData).placeId != placeId)) {
+                        if ((this.placeActivityCountData == null) || (this.placeActivityCountData.placeId != placeId)) {
                             //this.loadSpinner.start();
                             $.ajax({
                                 type: "GET",
@@ -1045,9 +998,9 @@
                     dt.addColumn('number', 'Count');
                     dt.addColumn({ type: 'number', role: 'annotation' });
 
-                    for (var i = 0; i < (this.globalActivityCountData).typeCounts.length; i += 1) {
-                        var activityType = (this.globalActivityCountData).typeCounts[i].type;
-                        var count = (this.globalActivityCountData).typeCounts[i].count;
+                    for (var i = 0; i < this.globalActivityCountData.typeCounts.length; i += 1) {
+                        var activityType = this.globalActivityCountData.typeCounts[i].type;
+                        var count = this.globalActivityCountData.typeCounts[i].count;
                         dt.addRow([activityType, count, count]);
                     }
                 } else {
@@ -1059,9 +1012,9 @@
                         dt.addColumn('number', 'Count');
                         dt.addColumn({ type: 'number', role: 'annotation' });
 
-                        for (var i = 0; i < (this.placeActivityCountData).typeCounts.length; i += 1) {
-                            var activityType = (this.placeActivityCountData).typeCounts[i].type;
-                            var count = (this.placeActivityCountData).typeCounts[i].count;
+                        for (var i = 0; i < this.placeActivityCountData.typeCounts.length; i += 1) {
+                            var activityType = this.placeActivityCountData.typeCounts[i].type;
+                            var count = this.placeActivityCountData.typeCounts[i].count;
                             dt.addRow([activityType, count, count]);
                         }
                     }
@@ -1112,7 +1065,7 @@
                 } else {
                     var placeId = this.getPlaceId(placeOfficialName);
                     if (placeId != null) {
-                        if ((this.placePeopleCountData == null) || ((this.placePeopleCountData).placeId != placeId)) {
+                        if ((this.placePeopleCountData == null) || (this.placePeopleCountData.placeId != placeId)) {
                             //this.loadSpinner.start();
                             $.ajax({
                                 type: "GET",
@@ -1151,15 +1104,15 @@
                 dt.addColumn({ type: 'number', role: 'annotation' });
 
                 if (placeOfficialName == null) {
-                    for (var i = 0; i < (this.globalPeopleCountData).typeCounts.length; i += 1) {
-                        var activityType = (this.globalPeopleCountData).typeCounts[i].type;
-                        var count = (this.globalPeopleCountData).typeCounts[i].count;
+                    for (var i = 0; i < this.globalPeopleCountData.typeCounts.length; i += 1) {
+                        var activityType = this.globalPeopleCountData.typeCounts[i].type;
+                        var count = this.globalPeopleCountData.typeCounts[i].count;
                         dt.addRow([activityType, count, count]);
                     }
                 } else {
-                    for (var i = 0; i < (this.placePeopleCountData).typeCounts.length; i += 1) {
-                        var activityType = (this.placePeopleCountData).typeCounts[i].type;
-                        var count = (this.placePeopleCountData).typeCounts[i].count;
+                    for (var i = 0; i < this.placePeopleCountData.typeCounts.length; i += 1) {
+                        var activityType = this.placePeopleCountData.typeCounts[i].type;
+                        var count = this.placePeopleCountData.typeCounts[i].count;
                         dt.addRow([activityType, count, count]);
                     }
                 }
@@ -1200,7 +1153,7 @@
                 } else {
                     var placeId = this.getPlaceId(placeOfficialName);
                     if (placeId != null) {
-                        if ((this.placeActivityTrendData == null) || ((this.placeActivityTrendData).placeId != placeId)) {
+                        if ((this.placeActivityTrendData == null) || (this.placeActivityTrendData.placeId != placeId)) {
                             //this.loadSpinner.start();
                             $.ajax({
                                 type: "GET",
@@ -1237,15 +1190,15 @@
                 dt.addColumn('number', 'Count');
 
                 if (placeOfficialName == null) {
-                    for (var i = 0; i < (this.globalActivityTrendData).trendCounts.length; i += 1) {
-                        var year = (this.globalActivityTrendData).trendCounts[i].year.toString();
-                        var count = (this.globalActivityTrendData).trendCounts[i].count;
+                    for (var i = 0; i < this.globalActivityTrendData.trendCounts.length; i += 1) {
+                        var year = this.globalActivityTrendData.trendCounts[i].year.toString();
+                        var count = this.globalActivityTrendData.trendCounts[i].count;
                         dt.addRow([year, count]);
                     }
                 } else {
-                    for (var i = 0; i < (this.placeActivityTrendData).trendCounts.length; i += 1) {
-                        var year = (this.placeActivityTrendData).trendCounts[i].year.toString();
-                        var count = (this.placeActivityTrendData).trendCounts[i].count;
+                    for (var i = 0; i < this.placeActivityTrendData.trendCounts.length; i += 1) {
+                        var year = this.placeActivityTrendData.trendCounts[i].year.toString();
+                        var count = this.placeActivityTrendData.trendCounts[i].count;
                         dt.addRow([year, count]);
                     }
                 }
@@ -1283,7 +1236,7 @@
                 } else {
                     var placeId = this.getPlaceId(placeOfficialName);
                     if (placeId != null) {
-                        if ((this.placePeopleTrendData == null) || ((this.placePeopleTrendData).placeId != placeId)) {
+                        if ((this.placePeopleTrendData == null) || (this.placePeopleTrendData.placeId != placeId)) {
                             //this.loadSpinner.start();
                             $.ajax({
                                 type: "GET",
@@ -1320,15 +1273,15 @@
                 dt.addColumn('number', 'Count');
 
                 if (placeOfficialName == null) {
-                    for (var i = 0; i < (this.globalPeopleTrendData).trendCounts.length; i += 1) {
-                        var year = (this.globalPeopleTrendData).trendCounts[i].year.toString();
-                        var count = (this.globalPeopleTrendData).trendCounts[i].count;
+                    for (var i = 0; i < this.globalPeopleTrendData.trendCounts.length; i += 1) {
+                        var year = this.globalPeopleTrendData.trendCounts[i].year.toString();
+                        var count = this.globalPeopleTrendData.trendCounts[i].count;
                         dt.addRow([year, count]);
                     }
                 } else {
-                    for (var i = 0; i < (this.placePeopleTrendData).trendCounts.length; i += 1) {
-                        var year = (this.placePeopleTrendData).trendCounts[i].year.toString();
-                        var count = (this.placePeopleTrendData).trendCounts[i].count;
+                    for (var i = 0; i < this.placePeopleTrendData.trendCounts.length; i += 1) {
+                        var year = this.placePeopleTrendData.trendCounts[i].year.toString();
+                        var count = this.placePeopleTrendData.trendCounts[i].count;
                         dt.addRow([year, count]);
                     }
                 }
@@ -2317,4 +2270,3 @@
     })(ViewModels.Employees || (ViewModels.Employees = {}));
     var Employees = ViewModels.Employees;
 })(ViewModels || (ViewModels = {}));
-//# sourceMappingURL=Employees.js.map

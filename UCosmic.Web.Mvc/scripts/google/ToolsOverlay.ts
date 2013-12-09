@@ -18,7 +18,7 @@ module App.GoogleMaps {
 
         position: gm.ControlPosition; // which google maps control position to render the tools in
         elementId: string; // id of the element wrapping the tools DOM markup (excludes #)
-        markerLatLng: KnockoutObservable<gm.LatLng> = ko.observable(); // position of the marker
+        markerLatLng = ko.observable<gm.LatLng>(); // position of the marker
 
         private element: Element; // reference to actual element with elementId
         private $element: JQuery; // jQuery wrapper for the element
@@ -58,9 +58,9 @@ module App.GoogleMaps {
             else this.$markerRemoveButton.hide();
 
             // add click handlers to the marker buttons
-            this.$markerAddButton.on('click', this,
+            this.$markerAddButton.on('click', undefined, this,
                 (e: JQueryEventObject) => { this.createMarker(e); });
-            this.$markerRemoveButton.on('click', this,
+            this.$markerRemoveButton.on('click', undefined, this,
                 (e: JQueryEventObject) => { this.removeMarker(e); });
 
             this.$element.show(); // unhide the tools element

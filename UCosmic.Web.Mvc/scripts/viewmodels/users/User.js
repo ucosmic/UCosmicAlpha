@@ -1,9 +1,9 @@
+/// <reference path="../../typings/jquery/jquery.d.ts" />
+/// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
+/// <reference path="../../app/Routes.ts" />
+/// <reference path="../../app/Spinner.ts" />
 var ViewModels;
 (function (ViewModels) {
-    /// <reference path="../../typings/jquery/jquery.d.ts" />
-    /// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
-    /// <reference path="../../app/Routes.ts" />
-    /// <reference path="../../app/Spinner.ts" />
     (function (Users) {
         //class UserNameValidator implements KnockoutValidationAsyncRuleDefinition {
         //    private _ruleName: string = 'validUserName';
@@ -123,4 +123,3 @@ var ViewModels;
     })(ViewModels.Users || (ViewModels.Users = {}));
     var Users = ViewModels.Users;
 })(ViewModels || (ViewModels = {}));
-//# sourceMappingURL=User.js.map

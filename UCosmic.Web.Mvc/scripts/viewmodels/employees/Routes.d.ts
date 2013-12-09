@@ -3,11 +3,11 @@ declare module Employees.ApiRoutes {
     export interface Employees {
         Activities: Activities;
         Settings: Settings;
-        places(domain: string): string;
+        places(tenantId: any): string;
     }
 
     export interface Activities {
-        counts(domain: string): string;
+        counts(tenantId: any): string;
     }
 
     export interface Settings {

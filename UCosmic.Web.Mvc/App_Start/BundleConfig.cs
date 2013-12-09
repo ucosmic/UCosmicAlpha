@@ -196,6 +196,7 @@ namespace UCosmic.Web.Mvc
                 "~/scripts/google/GeoChart.js",
                 "~/scripts/google/ColumnChart.js",
                 "~/scripts/google/LineChart.js",
+                "~/scripts/viewmodels/establishments/Server.js",
                 "~/scripts/viewmodels/employees/Server.js",
                 "~/scripts/viewmodels/employees/Summary.js"));
             bundles.Add(new ScriptBundle("~/bundles/people/activities").Include(

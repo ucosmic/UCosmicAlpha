@@ -40,8 +40,8 @@ module Agreements.ViewModels {
         //#region Search Filter Inputs
 
         // instead of throttling, both this and the options are observed
-        continentCode: KnockoutObservable<string> = ko.observable(
-            parseInt(sessionStorage.getItem(SearchMap.ContinentSessionKey)) || 'any');
+        continentCode = ko.observable<string>(
+            sessionStorage.getItem(SearchMap.ContinentSessionKey) || 'any');
         countryCode: KnockoutObservable<string> = ko.observable(
             sessionStorage.getItem(SearchMap.CountrySessionKey) || 'any');
         placeId: KnockoutObservable<number> = ko.observable(
@@ -187,7 +187,7 @@ module Agreements.ViewModels {
         //#region Country & Continent Options
 
         // initial options show loading message
-        countries: KnockoutObservableArray<Places.ApiModels.Country> = ko.observableArray();
+        countries = ko.observableArray<Places.ApiModels.Country>();
         countryOptions = ko.computed((): Places.ApiModels.Country[]=> {
             return this._computeCountryOptions();
         });
@@ -429,7 +429,7 @@ module Agreements.ViewModels {
         //#endregion
         //#region Query Scoping
 
-        private _scopeHistory: KnockoutObservableArray<SearchMapScope> = ko.observableArray();
+        private _scopeHistory = ko.observableArray<SearchMapScope>();
         private _currentScope = ko.computed((): SearchMapScope => {
             // this will run once during construction
             return this._computeCurrentScope();
@@ -500,8 +500,8 @@ module Agreements.ViewModels {
             var thisViewport = this._currentViewport();
 
             if (!lastViewport || lastViewport.zoom != thisViewport.zoom ||
-                !SearchMap._areCoordinatesEqualEnough(lastViewport.center.lat(), thisViewport.center.lat() ||
-                    !SearchMap._areCoordinatesEqualEnough(lastViewport.center.lng(), thisViewport.center.lng()))) {
+                !SearchMap._areCoordinatesEqualEnough(lastViewport.center.lat(), thisViewport.center.lat()) ||
+                    !SearchMap._areCoordinatesEqualEnough(lastViewport.center.lng(), thisViewport.center.lng())) {
 
                 this._viewportHistory.push(thisViewport);
                 $.when(this._map.ready()).then((): void => {

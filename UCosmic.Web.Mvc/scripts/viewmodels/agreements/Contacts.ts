@@ -52,19 +52,19 @@ module Agreements {
         deferredPopContacts;
 
         //contact vars
-        $contactTypeOptions: KnockoutObservable<JQuery> = ko.observable();
+        $contactTypeOptions = ko.observable<JQuery>();
         contactTypeOptions = ko.mapping.fromJS([]);
-        contactTypeOptionSelected: KnockoutObservable<string> = ko.observable();
+        contactTypeOptionSelected = ko.observable<string>();
         contactsIsEdit = ko.observable(false);
         contactFirstName = ko.observable();
         contactLastName = ko.observable();
-        contactId = ko.observable();
+        contactId = ko.observable<number>();
         contactSuffix = ko.mapping.fromJS([]);
         contactSuffixSelected = ko.observable();
-        $$contactSuffix: KnockoutObservable<JQuery> = ko.observable();
+        $$contactSuffix = ko.observable<JQuery>();
         contactSalutation = ko.mapping.fromJS([]);
         contactSalutationSelected = ko.observable();
-        $$contactSalutation: KnockoutObservable<JQuery> = ko.observable();
+        $$contactSalutation = ko.observable<JQuery>();
         contactJobTitle = ko.observable();
         contactPersonId = ko.observable();
         contactUserId = ko.observable();
@@ -203,7 +203,7 @@ module Agreements {
 
                     data = {
                         agreementId: this.contacts()[this.contactIndex].agreementId(),
-                        PersonId: this.contacts()[this.contactIndex].personId(),
+                        //PersonId: this.contacts()[this.contactIndex].personId(),
                         Type: this.contacts()[this.contactIndex].type(),
                         DisplayName: this.contacts()[this.contactIndex].displayName(),
                         FirstName: this.contacts()[this.contactIndex].firstName(),

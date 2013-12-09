@@ -1,17 +1,17 @@
+/// <reference path="../../typings/jquery/jquery.d.ts" />
+/// <reference path="../../typings/sammyjs/sammyjs.d.ts" />
+/// <reference path="../../typings/knockout/knockout.d.ts" />
+/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
+/// <reference path="../../typings/linq/linq.d.ts" />
+/// <reference path="../../typings/moment/moment.d.ts" />
+/// <reference path="../../app/App.ts" />
+/// <reference path="../../app/Routes.ts" />
+/// <reference path="../../app/Spinner.ts" />
+/// <reference path="../../app/Pagination.d.ts" />
+/// <reference path="../../app/Pager.ts" />
+/// <reference path="../places/ApiModels.d.ts" />
 var Agreements;
 (function (Agreements) {
-    /// <reference path="../../typings/jquery/jquery.d.ts" />
-    /// <reference path="../../typings/sammyjs/sammyjs.d.ts" />
-    /// <reference path="../../typings/knockout/knockout.d.ts" />
-    /// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
-    /// <reference path="../../typings/linq/linq.d.ts" />
-    /// <reference path="../../typings/moment/moment.d.ts" />
-    /// <reference path="../../app/App.ts" />
-    /// <reference path="../../app/Routes.ts" />
-    /// <reference path="../../app/Spinner.ts" />
-    /// <reference path="../../app/Pagination.d.ts" />
-    /// <reference path="../../app/Pager.ts" />
-    /// <reference path="../places/ApiModels.d.ts" />
     (function (ViewModels) {
         var SearchTable = (function () {
             //#endregion
@@ -85,6 +85,7 @@ var Agreements;
                 var countryCode = this.countryCode();
                 var options = this.countryOptions();
 
+                // keep countryCode as an option so that we don't lose it when options change
                 if (options.length == 1 && options[0].code != countryCode)
                     options[0].code = countryCode;
             };
@@ -109,7 +110,7 @@ var Agreements;
                     };
                     options = Enumerable.From([any]).Concat(options).Concat([none]).ToArray();
 
-                    _this.countryOptions(options);
+                    _this.countryOptions(options); // push into observable array
                     deferred.resolve();
                 });
                 return deferred;
@@ -134,7 +135,7 @@ var Agreements;
 
                 // activate the page route (create default hashtag parameters)
                 this.sammy.get(this.settings.activationRoute || this.sammy.getLocation(), function () {
-                    viewModel.setLocation();
+                    viewModel.setLocation(); // base activated route on current input filters
                 });
 
                 if (!this.settings.sammy && !this.sammy.isRunning())
@@ -210,6 +211,12 @@ var Agreements;
                 var lastRequest = requestHistory.length ? Enumerable.From(requestHistory).Last() : null;
                 var thisRequest = this._currentRequest();
 
+                //// do we know for a fact that the pageNumber is overflowed?
+                //if (this.pager.input.pageCount() != undefined &&
+                //    this.pager.input.pageCount() < thisRequest.pageNumber) {
+                //    this.pager.input.pageNumberText("1");
+                //    return;
+                //}
                 if (!lastRequest || !this._areRequestsAligned(thisRequest, lastRequest)) {
                     this._requestHistory.push(thisRequest);
                     this._load();
@@ -239,6 +246,7 @@ var Agreements;
                     // need to make sure the current inputs still match the request
                     var currentRequest = _this._currentRequest();
                     if (_this._areRequestsAligned(thisRequest, currentRequest)) {
+                        // when there are zero results, server will NOT correct the pageNumber
                         if (response.itemTotal < 1 && thisRequest.pageNumber != 1) {
                             // need to correct the page number here
                             _this._fixOverflowedPageNumber(thisRequest, 1);
@@ -273,10 +281,13 @@ var Agreements;
                 var requests = this._requestHistory().slice(0);
                 var requestToFix = requests[requests.length - 1];
                 for (var i = requests.length - 1; i >= 0; i--) {
+                    // stop here if any input paramter besides the page number does not match
                     if (!this._areRequestsAligned(request, requests[i], true))
                         break;
                     requestToFix = requests[i];
 
+                    // only pop off the request if it matches everything but the overflowed page number
+                    // and it is not the first request
                     if (this._requestHistory().length > 1 && this._areRequestsAligned(request, requests[i - 1], true)) {
                         this._requestHistory.pop();
                     }
@@ -360,4 +371,3 @@ var Agreements;
     })(Agreements.ViewModels || (Agreements.ViewModels = {}));
     var ViewModels = Agreements.ViewModels;
 })(Agreements || (Agreements = {}));
-//# sourceMappingURL=SearchTable.js.map

@@ -1,4 +1,4 @@
-module ViewModels.RepModuleSettings {
+module ViewModels.Representatives {
 
     export class RepModuleSettings {
 

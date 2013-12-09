@@ -1,3 +1,14 @@
+/// <reference path="../../typings/jquery/jquery.d.ts" />
+/// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
+/// <reference path="../../typings/knockout/knockout.d.ts" />
+/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
+/// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
+/// <reference path="../../typings/sammyjs/sammyjs.d.ts" />
+/// <reference path="../../typings/kendo/kendo.all.d.ts" />
+/// <reference path="../../app/Routes.ts" />
+/// <reference path="../../app/Flasher.ts" />
+/// <reference path="../../app/PagedSearch.ts" />
+/// <reference path="SearchResult.ts" />
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -6,17 +17,6 @@ var __extends = this.__extends || function (d, b) {
 };
 var ViewModels;
 (function (ViewModels) {
-    /// <reference path="../../typings/jquery/jquery.d.ts" />
-    /// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
-    /// <reference path="../../typings/knockout/knockout.d.ts" />
-    /// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
-    /// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
-    /// <reference path="../../typings/sammyjs/sammyjs.d.ts" />
-    /// <reference path="../../typings/kendo/kendo.all.d.ts" />
-    /// <reference path="../../app/Routes.ts" />
-    /// <reference path="../../app/Flasher.ts" />
-    /// <reference path="../../app/PagedSearch.ts" />
-    /// <reference path="SearchResult.ts" />
     (function (Users) {
         var Search = (function (_super) {
             __extends(Search, _super);
@@ -102,9 +102,11 @@ var ViewModels;
                 var self = this;
 
                 this.sammy.before(/\#\/page\/(.*)/, function () {
+                    // do not allow route navigation when pagination buttons are forced disabled
                     if (self.nextForceDisabled() || self.prevForceDisabled())
                         return false;
 
+                    // detect back / forward buttons
                     if (self._history().length > 1) {
                         var toPath = this.path;
                         for (var i = 0; i < self._history().length; i++) {
@@ -192,13 +194,14 @@ var ViewModels;
                 if (isEnabled) {
                     var pageNumber = Number(this.pageNumber()) + pageDelta;
                     if (pageNumber > 0 && pageNumber <= this.pageCount()) {
+                        // detect forward or back button
                         if (this._history().length > 1) {
                             var toPath = location.pathname + this.getPageHash(pageNumber);
                             var i = (pageDelta < 0) ? 0 : this._history().length - 1;
                             var iMove = function () {
                                 if (pageDelta < 0)
                                     i++;
-else
+                                else
                                     i--;
                             };
                             for (; i < this._history().length && i >= 0; iMove()) {
@@ -228,4 +231,3 @@ else
     })(ViewModels.Users || (ViewModels.Users = {}));
     var Users = ViewModels.Users;
 })(ViewModels || (ViewModels = {}));
-//# sourceMappingURL=Search.js.map

@@ -1,3 +1,15 @@
+/// <reference path="../../typings/jquery/jquery.d.ts" />
+/// <reference path="../../typings/knockout/knockout.d.ts" />
+/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
+/// <reference path="../../typings/sammyjs/sammyjs.d.ts" />
+/// <reference path="../../app/App.ts" />
+/// <reference path="../../app/PagedSearch.ts" />
+/// <reference path="../../app/SideSwiper.ts" />
+/// <reference path="../../app/Routes.ts" />
+/// <reference path="../places/ApiModels.d.ts" />
+/// <reference path="SearchResult.ts" />
+/// <reference path="ApiModels.d.ts" />
+/// <reference path="publicView.ts" />
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -6,18 +18,6 @@ var __extends = this.__extends || function (d, b) {
 };
 var Agreements;
 (function (Agreements) {
-    /// <reference path="../../typings/jquery/jquery.d.ts" />
-    /// <reference path="../../typings/knockout/knockout.d.ts" />
-    /// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
-    /// <reference path="../../typings/sammyjs/sammyjs.d.ts" />
-    /// <reference path="../../app/App.ts" />
-    /// <reference path="../../app/PagedSearch.ts" />
-    /// <reference path="../../app/SideSwiper.ts" />
-    /// <reference path="../../app/Routes.ts" />
-    /// <reference path="../places/ApiModels.d.ts" />
-    /// <reference path="SearchResult.ts" />
-    /// <reference path="ApiModels.d.ts" />
-    /// <reference path="publicView.ts" />
     (function (ViewModels) {
         var Search = (function (_super) {
             __extends(Search, _super);
@@ -56,7 +56,7 @@ var Agreements;
                             return ko.utils.unwrapObservable(data.id);
                         },
                         create: function (options) {
-                            return new ViewModels.SearchResult(options.data, options.parent);
+                            return new Agreements.ViewModels.SearchResult(options.data, options.parent);
                         }
                     },
                     ignore: ['pageSize', 'pageNumber']
@@ -103,8 +103,9 @@ var Agreements;
                         };
                         response.splice(response.length, 0, emptyValue);
 
-                        _this.countries(response);
+                        _this.countries(response); // push into observable array
 
+                        // restore selected value when paging backwards
                         if (lastCountryCode && lastCountryCode !== _this.countryCode())
                             _this.countryCode(lastCountryCode);
                     });
@@ -171,6 +172,7 @@ var Agreements;
 
                 pageNumber = sammyContext.params['pageNumber'];
 
+                // make sure the viewmodel pagenumber is in sync with the route
                 if (pageNumber && parseInt(pageNumber) !== Number(this.pageNumber()))
                     this.pageNumber(parseInt(pageNumber));
                 return true;
@@ -204,7 +206,7 @@ var Agreements;
                 } else {
                     ko.mapping.fromJS(js, this.resultsMapping, this);
                 }
-                App.WindowScroller.restoreTop();
+                App.WindowScroller.restoreTop(); // restore scroll when coming back from detail page
                 this.transitionedPageNumber(this.pageNumber());
                 this.deferredFadeInOut2.resolve();
             };
@@ -306,4 +308,3 @@ var Agreements;
     })(Agreements.ViewModels || (Agreements.ViewModels = {}));
     var ViewModels = Agreements.ViewModels;
 })(Agreements || (Agreements = {}));
-//# sourceMappingURL=Search.js.map

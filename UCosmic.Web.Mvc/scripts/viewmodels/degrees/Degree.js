@@ -1,14 +1,14 @@
+/// <reference path="../../typings/jquery/jquery.d.ts" />
+/// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
+/// <reference path="../../typings/knockout/knockout.d.ts" />
+/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
+/// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
+/// <reference path="../../typings/kendo/kendo.all.d.ts" />
+/// <reference path="../../app/App.ts" />
+/// <reference path="../../app/Routes.ts" />
+/// <reference path="ServiceApiModel.d.ts" />
 var ViewModels;
 (function (ViewModels) {
-    /// <reference path="../../typings/jquery/jquery.d.ts" />
-    /// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
-    /// <reference path="../../typings/knockout/knockout.d.ts" />
-    /// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
-    /// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
-    /// <reference path="../../typings/kendo/kendo.all.d.ts" />
-    /// <reference path="../../app/App.ts" />
-    /// <reference path="../../app/Routes.ts" />
-    /// <reference path="ServiceApiModel.d.ts" />
     (function (Degrees) {
         var Degree = (function () {
             function Degree(educationId) {
@@ -151,6 +151,7 @@ var ViewModels;
                     return;
                 }
 
+                /* If there is no year, return as null, not 0 */
                 if (this.yearAwarded() != null) {
                     var yearAwaredStr = this.yearAwarded().toString();
                     yearAwaredStr = $.trim(yearAwaredStr);
@@ -223,4 +224,3 @@ var ViewModels;
     })(ViewModels.Degrees || (ViewModels.Degrees = {}));
     var Degrees = ViewModels.Degrees;
 })(ViewModels || (ViewModels = {}));
-//# sourceMappingURL=Degree.js.map

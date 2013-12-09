@@ -7,6 +7,24 @@ Routes.Api = Routes.Api || {};
 @* ESTABLISHMENTS *@
 Routes.Api.Establishments = Routes.Api.Establishments || {};
 
+Routes.Api.Establishments.single = function (establishmentId) {
+    return '@routeWriter.WriteRoute(Url.HttpRouteUrl(null, new
+    {
+        controller = "Establishments",
+        action = "Get",
+        establishmentId = routeWriter.Value<int>(0),
+    }))'.format(establishmentId);
+};
+
+Routes.Api.Establishments.children = function (parentId) {
+    return '@routeWriter.WriteRoute(Url.HttpRouteUrl(null, new
+    {
+        controller = "Establishments",
+        action = "GetChildren",
+        establishmentId = routeWriter.Value<int>(0),
+    }))'.format(parentId);
+    };
+
 Routes.Api.Establishments.offspring = function (ancestorId) {
     return '@routeWriter.WriteRoute(Url.HttpRouteUrl(null, new
     {

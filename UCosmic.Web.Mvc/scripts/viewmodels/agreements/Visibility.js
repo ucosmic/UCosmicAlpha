@@ -9,4 +9,3 @@ var Agreements;
     })();
     Agreements.Visibility = Visibility;
 })(Agreements || (Agreements = {}));
-//# sourceMappingURL=Visibility.js.map

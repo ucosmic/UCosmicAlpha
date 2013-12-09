@@ -11,15 +11,19 @@
 /// <reference path="../../google/GeoChart.ts" />
 /// <reference path="../../google/ColumnChart.ts" />
 /// <reference path="../../google/LineChart.ts" />
+/// <reference path="../establishments/Server.ts" />
+/// <reference path="../establishments/ApiModels.d.ts" />
 /// <reference path="Server.ts" />
 /// <reference path="Models.d.ts" />
 /// <reference path="../../app/App.ts" />
+/// <reference path="../../app/Models.d.ts" />
 /// <reference path="../../app/DataCacher.ts" />
 /// <reference path="../../app/ImageSwapper.ts" />
 
 module Employees.ViewModels {
 
     export interface SummarySettings {
+        tenantId: number;
         tenantDomain: string;
         element: Element;
         geoChart: SummaryGeoChartSettings;
@@ -54,6 +58,7 @@ module Employees.ViewModels {
     export class SummaryRouteState {
         pivot: DataGraphPivot; // enum during build, int at runtime
         placeId: number;
+        establishmentId: number;
 
         static areEqual(first: SummaryRouteState, second: SummaryRouteState): boolean {
             if (!first && !second) return true;
@@ -62,17 +67,18 @@ module Employees.ViewModels {
             var areEqual = true;
             if (first.pivot != second.pivot) areEqual = false;
             if (first.placeId != second.placeId) areEqual = false;
+            if (first.establishmentId != second.establishmentId) areEqual = false;
             return areEqual;
         }
 
         static isEmpty(state: SummaryRouteState): boolean {
             if (!state) return true;
-            return !state.pivot && !state.placeId;
+            return !state.pivot && !state.placeId && !state.establishmentId;
         }
 
         static isIncomplete(state: SummaryRouteState): boolean {
             if (!state) return true;
-            return !state.pivot || !state.placeId;
+            return !state.pivot || !state.placeId || !state.establishmentId;
         }
     }
 
@@ -109,21 +115,15 @@ module Employees.ViewModels {
             // bind history.js to statechange events
             HistoryJS.Adapter.bind(window, 'statechange', (): void => { this._onRouteChanged(); });
 
-            // begin loading data
-            this.activityCountsData.ready();
+            // initialize charts
             this._initGeoChart();
             this._initActivityTypeChart();
             this._initActivityYearChart();
-
-            // need to fire this once because route changes before history is bound
-            this.bindingsApplied.done((): void => {
-                this._applyState();
-            });
         }
 
         private _bindingsApplied: JQueryDeferred<void> = $.Deferred();
         bindingsApplied: JQueryPromise<void> = this._bindingsApplied;
-        areBindingsApplied: KnockoutObservable<boolean> = ko.observable(false);
+        areBindingsApplied = ko.observable<boolean>(false);
 
         applyBindings(): void {
             // did we get an element or an element id?
@@ -141,7 +141,7 @@ module Employees.ViewModels {
 
         private static _pivotDefault = DataGraphPivot.activities;
         private static _pivotKey = 'EmployeeSummaryPivot';
-        pivot: KnockoutObservable<DataGraphPivot> = ko.observable(
+        pivot = ko.observable<DataGraphPivot>(
             parseInt(sessionStorage.getItem(Summary._pivotKey)) || Summary._pivotDefault);
 
         private _pivotChanged = ko.computed((): void => { this._onPivotChanged(); });
@@ -182,7 +182,7 @@ module Employees.ViewModels {
 
         private static _placeIdDefault = 1;
         private static _placeIdKey = 'EmployeeSummaryPlaceId';
-        placeId: KnockoutObservable<number> = ko.observable(
+        placeId = ko.observable<number>(
             parseInt(sessionStorage.getItem(Summary._placeIdKey)) || Summary._placeIdDefault);
 
         private _placeIdChanged = ko.computed((): void => { this._onPlaceIdChanged(); });
@@ -207,6 +207,34 @@ module Employees.ViewModels {
         });
 
         //#endregion
+        //#region Tenancy
+
+        private static _establishmentIdKey = 'EmployeeSummaryEstablishmentId';
+        establishmentId = ko.observable<number>(
+            parseInt(sessionStorage.getItem(Summary._establishmentIdKey)) || this.settings.tenantId);
+
+        private _establishmentIdChanged = ko.computed((): void => { this._onEstablishmentIdChanged(); });
+        private _onEstablishmentIdChanged(): void {
+            // compare value with what is stored in the session
+            var value = <number>this.establishmentId();
+            var old = parseInt(sessionStorage.getItem(Summary._establishmentIdKey)) || undefined;
+
+            // don't do anything unless the value has changed
+            if (value !== old) {
+                // save the new value to session storage
+                sessionStorage.setItem(Summary._establishmentIdKey, value.toString());
+            }
+        }
+
+        hasEstablishmentId = ko.computed((): boolean => {
+            var establishmentId = this.establishmentId();
+            return (establishmentId && establishmentId > 0);
+        });
+        hasNoEstablishmentId = ko.computed((): boolean => {
+            return !this.hasEstablishmentId();
+        });
+
+        //#endregion
         //#endregion
         //#region Routing
 
@@ -224,6 +252,7 @@ module Employees.ViewModels {
             return {
                 pivot: this.pivot(),
                 placeId: this.placeId(),
+                establishmentId: this.establishmentId(),
             };
         });
 
@@ -232,31 +261,40 @@ module Employees.ViewModels {
         }).extend({ throttle: 1 });
 
         private _onRouteStateChanged(): void {
-            // this runs whenever an observable component of routeState changes
-            // and will run at least once when the page loads, since it is a computed
-            // there are 4 main scenarios we want to handle here:
-            // 1.) when the route state matches the url state, update the historyjs state
-            // 2.) when we have incomplete url state, replace current url based on route state
-            // 3.) when historyjs state is empty and url state is complete, we have a url
-            //     that should override the current route state values
-            // 4.) all other cases mean user interaction, and should push a new url
+
             var routeState = this.routeState(); // the new state we want in the URL
             var urlState = this._getUrlState(); // actual state based on current URL
+
+            // we need to make sure the establishmentId is applicable before applying route state
             var areBindingsApplied = this.areBindingsApplied();
+            if (!areBindingsApplied) return;
+            this.tenancyData.ready()
+                .done((establishments: Establishments.ApiModels.ScalarEstablishment[]): void => {
 
-            // when the url state is missing something (or everything), replace it with route data
-            if (SummaryRouteState.isIncomplete(urlState) || SummaryRouteState.areEqual(routeState, urlState)) {
-                HistoryJS.replaceState(routeState, '', '?' + $.param(routeState));
-            }
+                    routeState = this.routeState(); // the new state we want in the URL
+                    urlState = this._getUrlState(); // actual state based on current URL
 
-            // by now url state is not equal but is not incomplete either
-            // since we have it, update the route values with the url values
-            else if (!areBindingsApplied) {
-                this._updateState(urlState);
-            }
-            else {
-                HistoryJS.pushState(routeState, '', '?' + $.param(routeState));
-            }
+                    // this runs whenever an observable component of routeState changes
+                    // and will run at least once when the page loads, since it is a computed
+                    // there are 4 main scenarios we want to handle here:
+                    // 1.) when the route state matches the url state, update the historyjs state
+                    // 2.) when we have incomplete url state, replace current url based on route state
+                    // 3.) when historyjs state is empty and url state is complete, we have a url
+                    //     that should override the current route state values
+                    // 4.) all other cases mean user interaction, and should push a new url
+                    ///var areBindingsApplied = this.areBindingsApplied();
+
+                    // when the url state is missing something (or everything), replace it with route data
+                    if (SummaryRouteState.isIncomplete(urlState) || SummaryRouteState.areEqual(routeState, urlState)) {
+                        HistoryJS.replaceState(routeState, '', '?' + $.param(routeState));
+                    }
+
+                    // by now url state is not equal but is not incomplete either
+                    // since we have it, update the route values with the url values
+                    else {
+                        HistoryJS.pushState(routeState, '', '?' + $.param(routeState));
+                    }
+                });
         }
 
         private _onRouteChanged(): void {
@@ -269,9 +307,12 @@ module Employees.ViewModels {
         private _updateState(state: SummaryRouteState): void {
             this.pivot(state.pivot);
             this.placeId(state.placeId);
+            this.selectedTenant(state.establishmentId);
+            this.establishmentId(state.establishmentId);
         }
 
         private _applyState(): void {
+            this.activityCountsData.ready();
             this._drawGeoChart();
             this._drawActivityTypeChart();
             this._drawActivityYearChart();
@@ -281,7 +322,7 @@ module Employees.ViewModels {
         //#region Pivot Data
         //#region Places
 
-        hasPlaceData: KnockoutObservable<boolean> = ko.observable(false);
+        hasPlaceData = ko.observable<boolean>(false);
 
         placeData: App.DataCacher<ApiModels.EmployeesPlaceApiModel[]> = new App.DataCacher(
             (): JQueryPromise<ApiModels.EmployeesPlaceApiModel[]> => {
@@ -297,7 +338,7 @@ module Employees.ViewModels {
                 placeAgnostic: true,
             };
             this.geoChartSpinner.start();
-            Servers.GetEmployeesPlaces(this.settings.tenantDomain, request)
+            Servers.GetEmployeesPlaces(this.selectedTenant(), request)
                 .done((places: ApiModels.EmployeesPlaceApiModel[]): void => {
                     this.hasPlaceData(places && places.length > 0);
                     promise.resolve(places);
@@ -331,6 +372,67 @@ module Employees.ViewModels {
         }
 
         //#endregion
+        //#region Tenancy
+
+        hasTenancyData = ko.observable<boolean>(false);
+        selectedTenant = ko.observable<number>(this.settings.tenantId);
+
+        tenancyData: App.DataCacher<Establishments.ApiModels.ScalarEstablishment[]> = new App.DataCacher(
+            (): JQueryPromise<Establishments.ApiModels.ScalarEstablishment[]> => {
+                return this._loadTenancyData();
+            });
+
+        private _selectedTenantChanged = ko.computed((): void => {
+            var areBindingsApplied = this.areBindingsApplied();
+            var hasTenancyData = this.hasTenancyData();
+            var selectedTenant = this.selectedTenant();
+            var establishmentId = this.establishmentId();
+            if (!areBindingsApplied || !hasTenancyData || !selectedTenant || selectedTenant == establishmentId)
+                return;
+
+            $.when(this.placeData.reload(), this.activityCountsData.reload()).done((): void => {
+                this.establishmentId(selectedTenant);
+            });
+        });
+
+        tenantOptions = ko.observableArray<App.ApiModels.SelectOption<number>>();
+
+        private _loadTenancyData(): JQueryPromise<Establishments.ApiModels.ScalarEstablishment[]> {
+            // calling .ready() on tenancyData invokes this
+            var deferred: JQueryDeferred<Establishments.ApiModels.ScalarEstablishment[]> = $.Deferred();
+            $.when(Establishments.Servers.Single(this.settings.tenantId), Establishments.Servers.GetChildren(this.settings.tenantId))
+                .done((parentData: Establishments.ApiModels.ScalarEstablishment, childData: Establishments.ApiModels.ScalarEstablishment[]): void => {
+                    childData = childData || [];
+                    var tenants = Enumerable.From(childData)
+                        .OrderBy(function (x: Establishments.ApiModels.ScalarEstablishment): number {
+                            return x.rank;
+                        }).ToArray();
+                    tenants.unshift(parentData);
+
+                    this.tenantOptions([]);
+                    if (childData.length) {
+                        var options = Enumerable.From(tenants)
+                            .Select(function (x: Establishments.ApiModels.ScalarEstablishment): App.ApiModels.SelectOption<number> {
+                                var option: App.ApiModels.SelectOption<number> = {
+                                    value: x.id,
+                                    text: x.contextName || x.officialName,
+                                };
+                                return option;
+                            }).ToArray();
+                        this.tenantOptions(options);
+                    }
+
+                    deferred.resolve(tenants);
+                    if (childData.length) this.hasTenancyData(true);
+                })
+                .fail((xhr: JQueryXHR): void => {
+                    App.Failures.message(xhr, 'while trying to load institution organizational data.', true);
+                    deferred.reject();
+                })
+            return deferred.promise();
+        }
+
+        //#endregion
         //#endregion
         //#region Summaries
         //#region Top Summary
@@ -346,7 +448,7 @@ module Employees.ViewModels {
 
         private _loadActivityCounts(): JQueryPromise<ApiModels.EmployeeActivityCounts> {
             var promise: JQueryDeferred<ApiModels.EmployeeActivityCounts> = $.Deferred();
-            Servers.GetActivityCounts(this.settings.tenantDomain)
+            Servers.GetActivityCounts(this.selectedTenant())
                 .done((summary: ApiModels.EmployeeActivityCounts): void => {
                     ko.mapping.fromJS(summary, {}, this.activityTotals);
                     promise.resolve(summary);
@@ -398,7 +500,7 @@ module Employees.ViewModels {
         geoChart: App.Google.GeoChart = new App.Google.GeoChart(
             document.getElementById(this.settings.geoChart.googleElementId));
         geoChartSpinner = new App.Spinner({ delay: 400, runImmediately: true, });
-        isGeoChartReady: KnockoutObservable<boolean> = ko.observable(false);
+        isGeoChartReady = ko.observable<boolean>(false);
         _geoChartGradientLo: string;
         _geoChartGradientHi: string;
         private _geoChartDataTable: google.visualization.DataTable = this._newGeoChartDataTable();
@@ -539,7 +641,7 @@ module Employees.ViewModels {
 
         activityTypeChart: App.Google.ColumnChart = new App.Google.ColumnChart(
             document.getElementById(this.settings.activityTypesChart.googleElementId));
-        isActivityTypeChartReady: KnockoutObservable<boolean> = ko.observable(false);
+        isActivityTypeChartReady = ko.observable<boolean>(false);
 
         _chartDataColor: string;
         private _getChartDataColor(): string {
@@ -649,7 +751,7 @@ module Employees.ViewModels {
             });
         }
 
-        activityTypes: KnockoutObservableArray<ApiModels.EmployeeActivityTypeCount> = ko.observableArray();
+        activityTypes = ko.observableArray<ApiModels.EmployeeActivityTypeCount>();
         private _getActivityTypes(): ApiModels.EmployeeActivityTypeCount[] {
             var placeId = this.placeId();
             if (placeId == 1) placeId = null;
@@ -681,7 +783,7 @@ module Employees.ViewModels {
 
         activityYearChart: App.Google.LineChart = new App.Google.LineChart(
             document.getElementById(this.settings.activityYearsChart.googleElementId));
-        isActivityYearChartReady: KnockoutObservable<boolean> = ko.observable(false);
+        isActivityYearChartReady = ko.observable<boolean>(false);
         private _activityYearChartDataTable: google.visualization.DataTable = this._newActivityYearChartDataTable();
 
         private _getActivityYearChartOptions(): google.visualization.LineChartOptions {
@@ -763,7 +865,7 @@ module Employees.ViewModels {
             });
         }
 
-        activityYears: KnockoutObservableArray<ApiModels.EmployeeActivityYearCount> = ko.observableArray();
+        activityYears = ko.observableArray<ApiModels.EmployeeActivityYearCount>();
         private _getActivityYears(): ApiModels.EmployeeActivityYearCount[] {
             var placeId = this.placeId();
             if (placeId == 1) placeId = null;
@@ -825,7 +927,7 @@ module Employees.ViewModels {
 
         private _parsePlaceOverlays(): void {
             if (this.placeOverlays) return;
-            this.placeOverlays = ko.observableArray();
+            this.placeOverlays = ko.observableArray<SummaryGeoChartPlaceOverlay>();
             var overlays = $('#{0} .overlays .places .data'
                 .format(this.settings.geoChart.boxElementId)).children();
             $.each(overlays, (i: number, overlay: Element): void => {
@@ -887,13 +989,9 @@ module Employees.ViewModels {
             return typeof d3 !== 'undefined';
         }
 
-        isD3Defined = ko.computed((): boolean => {
-            return Summary._isD3Defined();
-        });
+        isD3Defined = ko.computed((): boolean => { return Summary._isD3Defined(); });
 
-        isD3Undefined = ko.computed((): boolean => {
-            return !Summary._isD3Defined();
-        });
+        isD3Undefined = ko.computed((): boolean => { return !Summary._isD3Defined(); });
 
         private _svgInjectPlaceOverlays(): void {
             // IE8 cannot load the d3 library
@@ -1028,7 +1126,7 @@ module Employees.ViewModels {
         //#endregion
         //#region Tooltips
 
-        private _tooltips: KnockoutObservableArray<JQuery> = ko.observableArray();
+        private _tooltips = ko.observableArray<JQuery>();
 
         private _createOverlayTooltips(): void {
             var tooltips = this._tooltips();

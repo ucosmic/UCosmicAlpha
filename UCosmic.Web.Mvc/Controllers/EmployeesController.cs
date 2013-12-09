@@ -1,5 +1,7 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Web.Mvc;
 using AttributeRouting.Web.Mvc;
+using UCosmic.Domain.Establishments;
 
 namespace UCosmic.Web.Mvc.Controllers
 {
@@ -24,7 +26,10 @@ namespace UCosmic.Web.Mvc.Controllers
         [GET("{domain}/employees")]
         public virtual ActionResult TenantIndex(string domain)
         {
+            var establishment = _queryProcessor.Execute(new EstablishmentByDomain(domain));
+            if (establishment == null) return HttpNotFound();
             ViewBag.EmployeesDomain = domain;
+            ViewBag.EmployeesEstablishmentId = establishment.RevisionId;
             return View();
         }
 

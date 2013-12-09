@@ -1,6 +1,6 @@
 var ViewModels;
 (function (ViewModels) {
-    (function (RepModuleSettings) {
+    (function (Representatives) {
         var RepModuleSettings = (function () {
             function RepModuleSettings(welcomeMessage, emailMessage) {
                 this.welcomeMessage = welcomeMessage;
@@ -8,8 +8,7 @@ var ViewModels;
             }
             return RepModuleSettings;
         })();
-        RepModuleSettings.RepModuleSettings = RepModuleSettings;
-    })(ViewModels.RepModuleSettings || (ViewModels.RepModuleSettings = {}));
-    var RepModuleSettings = ViewModels.RepModuleSettings;
+        Representatives.RepModuleSettings = RepModuleSettings;
+    })(ViewModels.Representatives || (ViewModels.Representatives = {}));
+    var Representatives = ViewModels.Representatives;
 })(ViewModels || (ViewModels = {}));
-//# sourceMappingURL=RepModuleSettings.js.map

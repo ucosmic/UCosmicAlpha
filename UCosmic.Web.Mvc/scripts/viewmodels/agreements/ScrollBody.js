@@ -16,7 +16,6 @@ var ScrollBody;
             //scroll based on side nav
             this.goToSection = function (location, data, event) {
                 var offset = $("#" + location).offset();
-
                 if (!$("body").scrollTop()) {
                     $("html, body").scrollTop(offset.top - 20);
                 } else {
@@ -73,7 +72,6 @@ var ScrollBody;
                 _this.section4Top = _this.mySection4.offset();
                 _this.section5Top = _this.mySection5.offset();
                 _this.section6Top = _this.mySection6.offset();
-
                 if (!$("body").scrollTop()) {
                     _this.$body = $("html, body").scrollTop() + 100;
                 } else {
@@ -116,4 +114,3 @@ var ScrollBody;
     })();
     ScrollBody.Scroll = Scroll;
 })(ScrollBody || (ScrollBody = {}));
-//# sourceMappingURL=ScrollBody.js.map

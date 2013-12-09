@@ -161,22 +161,22 @@ module Establishments.ViewModels {
 
         // fields
         id: number = 0;
-        originalValues: KnockoutObservable<any> = ko.observable();
-        private _isInitialized: KnockoutObservable<boolean> = ko.observable(false);
+        originalValues = ko.observable<any>();
+        private _isInitialized = ko.observable<boolean>(false);
         $genericAlertDialog: JQuery = undefined;
         location: Location;
         createSpinner = new App.Spinner();
         validatingSpinner = new App.Spinner({ delay: 200, });
-        categories: KnockoutObservableArray<any> = ko.observableArray();
+        categories = ko.observableArray<any>();
         typeIdSaveSpinner = new App.Spinner({ delay: 200, });
         typeIdValidatingSpinner = new App.Spinner({ delay: 200, });
         isTypeIdSaveDisabled: KnockoutComputed<boolean>;
-        typeId: KnockoutObservable<number> = ko.observable();
-        typeText: KnockoutObservable<string> = ko.observable('[Loading...]');
-        ceebCode: KnockoutObservable<string> = ko.observable();
-        uCosmicCode: KnockoutObservable<string> = ko.observable();
-        isEditingTypeId: KnockoutObservable<boolean> = ko.observable();
-        isValidationSummaryVisible = ko.observable(false);
+        typeId = ko.observable<number>();
+        typeText = ko.observable<string>('[Loading...]');
+        ceebCode = ko.observable<string>();
+        uCosmicCode = ko.observable<string>(undefined);
+        isEditingTypeId = ko.observable<boolean>(undefined);
+        isValidationSummaryVisible = ko.observable<boolean>(false);
         typeEmptyText: KnockoutComputed<string>;
         isValid: () => boolean;
         errors: KnockoutValidationErrors;
@@ -232,7 +232,7 @@ module Establishments.ViewModels {
             });
 
             this.isTypeIdSaveDisabled = ko.computed((): boolean => {
-                return this.typeId.isValidating()
+                var isTypeIdSaveDisabled = this.typeId.isValidating()
                     || this.uCosmicCode.isValidating()
                     || this.ceebCode.isValidating()
                     || this.typeIdSaveSpinner.isVisible()
@@ -240,6 +240,7 @@ module Establishments.ViewModels {
                     || this.typeId.error
                     || this.ceebCode.error
                     || this.uCosmicCode.error;
+                return isTypeIdSaveDisabled ? true : false;
             });
 
             this.parentId.extend({
@@ -247,7 +248,7 @@ module Establishments.ViewModels {
             });
 
             // load the scalars
-            var categoriesPact = $.Deferred();
+            var categoriesPact: JQueryDeferred<any[]> = $.Deferred();
             $.get(App.Routes.WebApi.Establishments.Categories.get())
                 .done((data: any, textStatus: string, jqXHR: JQueryXHR): void => {
                     categoriesPact.resolve(data);
@@ -258,7 +259,7 @@ module Establishments.ViewModels {
 
             var viewModelPact = this._loadScalars();
 
-            $.when(categoriesPact, viewModelPact).then(
+            $.when(categoriesPact, viewModelPact).done(
 
                 // all requests succeeded
                 (categories: any[], viewModel: ApiModels.ScalarEstablishment): void => {
@@ -275,12 +276,12 @@ module Establishments.ViewModels {
                     if (!this._isInitialized()) {
                         this._isInitialized(true); // bindings have been applied
                     }
-                },
+                });//,
 
                 // one of the responses failed (never called more than once, even on multifailures)
-                (xhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
-                    //alert('a GET API call failed :(');
-                });
+                //(xhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
+                //    //alert('a GET API call failed :(');
+                //});
 
             ko.validation.group(this);
             if (doSetupSammy) {
@@ -292,9 +293,9 @@ module Establishments.ViewModels {
         //#region Names
 
         // observables, computeds, & variables
-        languages: KnockoutObservableArray<Languages.ApiModels.Language> = ko.observableArray(); // select options
-        names: KnockoutObservableArray<Name> = ko.observableArray();
-        editingName: KnockoutObservable<number> = ko.observable(0);
+        languages = ko.observableArray<Languages.ApiModels.Language>(); // select options
+        names = ko.observableArray<Name>();
+        editingName = ko.observable<number>(0);
         canAddName: KnockoutComputed<boolean>;
         private _namesMapping: any;
         namesSpinner = new App.Spinner({ runImmediately: true, });
@@ -371,8 +372,8 @@ module Establishments.ViewModels {
         //#region URLs
 
         // observables, computeds, & variables
-        urls: KnockoutObservableArray<Url> = ko.observableArray();
-        editingUrl: KnockoutObservable<number> = ko.observable(0);
+        urls = ko.observableArray<Url>();
+        editingUrl = ko.observable<number>(0);
         canAddUrl: KnockoutComputed<boolean>;
         private _urlsMapping: any;
         urlsSpinner = new App.Spinner({ runImmediately: true, });
@@ -507,8 +508,8 @@ module Establishments.ViewModels {
         }
 
         // hit /api/establishments/{id} for scalar values
-        private _loadScalars(): JQueryDeferred<void> {
-            var deferred = $.Deferred();
+        private _loadScalars(): JQueryDeferred<ApiModels.ScalarEstablishment> {
+            var deferred: JQueryDeferred<ApiModels.ScalarEstablishment> = $.Deferred();
             if (this.id) {
                 $.get(App.Routes.WebApi.Establishments.get(this.id))
                     .done((response: ApiModels.ScalarEstablishment, textStatus: string, jqXHR: JQueryXHR): void => {
@@ -592,8 +593,8 @@ module Establishments.ViewModels {
         parentSearch = new Search(false);
         sammy: Sammy.Application = Sammy();
         private _findingParent: boolean = false;
-        parentEstablishment: KnockoutObservable<any> = ko.observable();
-        parentId: KnockoutObservable<number> = ko.observable();
+        parentEstablishment = ko.observable<any>();
+        parentId = ko.observable<number>();
         private _parentScrollTop: number;
         parentIdSaveSpinner = new App.Spinner({ delay: 200, });
         parentIdValidatingSpinner = new App.Spinner({ delay: 200, });
@@ -672,10 +673,11 @@ module Establishments.ViewModels {
             });
 
             this.isParentIdSaveDisabled = ko.computed((): boolean => {
-                return this.parentId.isValidating()
+                var isParentIdSaveDisabled = this.parentId.isValidating()
                     || this.parentIdSaveSpinner.isVisible()
                     || this.parentIdValidatingSpinner.isVisible()
                     || this.parentId.error;
+                return isParentIdSaveDisabled ? true : false;
             });
 
             this.parentId.subscribe((newValue: number): void => {

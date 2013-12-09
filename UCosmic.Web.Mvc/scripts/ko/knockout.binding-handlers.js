@@ -1,6 +1,7 @@
 /// <reference path="../typings/jquery/jquery.d.ts" />
 /// <reference path="../typings/knockout/knockout.d.ts" />
 /// <reference path="../typings/tinymce/tinymce.d.ts" />
+
 ko.bindingHandlers.element = {
     update: function (element, valueAccessor, allBindingsAccessor, viewModel) {
         var name = ko.utils.unwrapObservable(valueAccessor());
@@ -57,6 +58,7 @@ ko.bindingHandlers.slideDownVisible = {
         if (value && !$(element).is(':visible')) {
             $(element).slideDown('fast');
         } else if (!value) {
+            // element may still be animating
             if ($(element).is(':animated')) {
                 $(element).hide();
             } else {
@@ -72,12 +74,12 @@ ko.bindingHandlers.fadeVisible = {
         var isCurrentlyVisible = !(element.style.display == "none");
         if (value && !isCurrentlyVisible)
             $(element).fadeIn();
-else if ((!value) && isCurrentlyVisible)
+        else if ((!value) && isCurrentlyVisible)
             $(element).fadeOut();
     }
 };
 
-((function ($) {
+(function ($) {
     var instances_by_id = {}, init_queue = $.Deferred(), init_queue_next = init_queue;
     init_queue.resolve();
     ko.bindingHandlers.tinymce = {
@@ -111,7 +113,7 @@ else if ((!value) && isCurrentlyVisible)
                             setTimeout(function () {
                                 modelValue(ed.getContent({ format: 'raw' }));
                             }, 10);
-else
+                        else
                             modelValue(ed.getContent({ format: 'raw' }));
                     }
                 };
@@ -175,6 +177,7 @@ else
                     if (ed) {
                         ed.remove();
 
+                        // remove referenced instance if possible.
                         if (instances_by_id[tid]) {
                             delete instances_by_id[tid];
                         }
@@ -182,6 +185,7 @@ else
                 });
             });
 
+            // TinyMCE attaches to the element by DOM id, so we need to make one for the element if it doesn't have one already.
             if (!element.id) {
                 element.id = tinyMCE.DOM.uniqueId();
             }
@@ -218,6 +222,15 @@ else
             var value = ko.utils.unwrapObservable(valueAccessor());
             var id = el.attr('id');
 
+            //handle programmatic updates to the observable
+            // also makes sure it doesn't update it if it's the same.
+            // otherwise, it will reload the instance, causing the cursor to jump.
+            //if (id !== undefined) {
+            //    var content = tinyMCE.getInstanceById(id).getContent({ format: 'raw' })
+            //    if (content !== value) {
+            //        el.html(value);
+            //    }
+            //}
             if (id !== undefined && id !== '' && instances_by_id.hasOwnProperty(id)) {
                 var content = instances_by_id[id].getContent({ format: 'raw' });
                 if (content !== value || content !== el.val()) {
@@ -226,5 +239,4 @@ else
             }
         }
     };
-})(jQuery));
-//# sourceMappingURL=knockout.binding-handlers.js.map
+}(jQuery));

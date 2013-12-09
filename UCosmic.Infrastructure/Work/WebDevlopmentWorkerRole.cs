@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using SimpleInjector;
-using UCosmic.Domain.Activities;
 using UCosmic.Domain.Employees;
-using UCosmic.Domain.People;
 using UCosmic.Domain.Places;
 
 namespace UCosmic.Work

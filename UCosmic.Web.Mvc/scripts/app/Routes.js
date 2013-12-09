@@ -1,7 +1,7 @@
+/// <reference path="../typings/jquery/jquery.d.ts" />
+/// <reference path="App.ts" />
 var App;
 (function (App) {
-    /// <reference path="../typings/jquery/jquery.d.ts" />
-    /// <reference path="App.ts" />
     // DO NOT CREATE ANY NEW ROUTES HERE, THIS FILE IS FROZEN.
     // WE NOW GENERATE ROUTES FROM SERVER_SIDE MVC ACTIONS
     // USING @Url.HttpRouteUrl. SEE OTHER ROUTE FILES FOR MORE.
@@ -23,7 +23,7 @@ var App;
                 var apiPrefix = WebApi.urlPrefix;
                 if (!hasTrailingSlash(apiPrefix))
                     apiPrefix = apiPrefix + '/';
-                var url = App.Routes.applicationPath + apiPrefix + relativeUrl;
+                var url = Routes.applicationPath + apiPrefix + relativeUrl;
                 if (!hasTrailingSlash(url))
                     url = url + '/';
                 return url;
@@ -33,7 +33,7 @@ var App;
                 var apiPrefix = WebApi.urlPrefix;
                 if (!hasTrailingSlash(apiPrefix))
                     apiPrefix = apiPrefix + '/';
-                var url = App.Routes.applicationPath + apiPrefix + relativeUrl;
+                var url = Routes.applicationPath + apiPrefix + relativeUrl;
                 if (!hasTrailingSlash(url))
                     url = url + '?';
                 return url;
@@ -416,13 +416,13 @@ var App;
 
                     (function (Content) {
                         function view(agreementId, fileId) {
-                            var url = Agreements.Files.get(agreementId, fileId);
+                            var url = Files.get(agreementId, fileId);
                             url += '/content';
                             return makeUrl(url);
                         }
                         Content.view = view;
                         function download(agreementId, fileId) {
-                            var url = Agreements.Files.get(agreementId, fileId);
+                            var url = Files.get(agreementId, fileId);
                             url += '/download';
                             return makeUrl(url);
                         }
@@ -756,14 +756,14 @@ var App;
 
         (function (Mvc) {
             function makeUrl(relativeUrl) {
-                var url = App.Routes.applicationPath + relativeUrl;
+                var url = Routes.applicationPath + relativeUrl;
                 if (!hasTrailingSlash(url))
                     url = url + '/';
                 return url;
             }
 
             function makeUrlWithParams(relativeUrl) {
-                var url = App.Routes.applicationPath + relativeUrl;
+                var url = Routes.applicationPath + relativeUrl;
                 if (!hasTrailingQM(url))
                     url = url + '?';
                 return url;
@@ -910,7 +910,7 @@ var App;
 
         (function (Content) {
             function makeUrl(relativeUrl) {
-                var url = App.Routes.applicationPath + relativeUrl;
+                var url = Routes.applicationPath + relativeUrl;
                 if (!hasTrailingSlash(url))
                     url = url + '/';
                 return url;
@@ -928,4 +928,3 @@ var App;
     })(App.Routes || (App.Routes = {}));
     var Routes = App.Routes;
 })(App || (App = {}));
-//# sourceMappingURL=Routes.js.map

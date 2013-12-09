@@ -85,20 +85,20 @@ module ViewModels.Users {
         name: KnockoutObservable<string>;
         personDisplayName: KnockoutObservable<string>;
         roles: KnockoutObservableArray<any>;
-        roleOptions: KnockoutObservableArray<any> = ko.observableArray();
-        roleOptionsCaption: KnockoutObservable<string> = ko.observable('[Loading...]');
-        selectedRoleOption: KnockoutObservable<number> = ko.observable();
-        roleToRevoke: KnockoutObservable<number> = ko.observable();
-        $roleSelect: KnockoutObservable<JQuery> = ko.observable();
+        roleOptions = ko.observableArray<any>();
+        roleOptionsCaption = ko.observable<string>('[Loading...]');
+        selectedRoleOption = ko.observable<number>();
+        roleToRevoke = ko.observable<number>();
+        $roleSelect = ko.observable<JQuery>();
         isRoleGrantDisabled: KnockoutComputed<boolean>;
         roleSpinner = new App.Spinner({ delay: 0, isVisible: true });
-        isRevokeError: KnockoutObservable<boolean> = ko.observable();
-        revokeErrorText: KnockoutObservable<string> = ko.observable();
-        isGrantError: KnockoutObservable<boolean> = ko.observable();
-        grantErrorText: KnockoutObservable<string> = ko.observable();
+        isRevokeError = ko.observable<boolean>();
+        revokeErrorText = ko.observable<string>();
+        isGrantError = ko.observable<boolean>();
+        grantErrorText = ko.observable<string>();
 
-        $menu: KnockoutObservable<JQuery> = ko.observable();
-        isEditingRoles: KnockoutObservable<boolean> = ko.observable(false);
+        $menu = ko.observable<JQuery>();
+        isEditingRoles = ko.observable<boolean>(false);
 
         hasGrants: KnockoutComputed<boolean>;
         hasNoGrants: KnockoutComputed<boolean>;

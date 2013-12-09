@@ -1,16 +1,16 @@
+/// <reference path="../../typings/jquery/jquery.d.ts" />
+/// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
+/// <reference path="../../typings/knockout/knockout.d.ts" />
+/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
+/// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
+/// <reference path="../../typings/kendo/kendo.all.d.ts" />
+/// <reference path="../../typings/linq/linq.d.ts" />
+/// <reference path="../../app/Routes.ts" />
+/// <reference path="../../typings/moment/moment.d.ts" />
+/// <reference path="ActivityEnums.ts" />
+/// <reference path="ServiceApiModel.d.ts" />
 var Activities;
 (function (Activities) {
-    /// <reference path="../../typings/jquery/jquery.d.ts" />
-    /// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
-    /// <reference path="../../typings/knockout/knockout.d.ts" />
-    /// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
-    /// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
-    /// <reference path="../../typings/kendo/kendo.all.d.ts" />
-    /// <reference path="../../typings/linq/linq.d.ts" />
-    /// <reference path="../../app/Routes.ts" />
-    /// <reference path="../../typings/moment/moment.d.ts" />
-    /// <reference path="ActivityEnums.ts" />
-    /// <reference path="ServiceApiModel.d.ts" />
     (function (ViewModels) {
         var ActivityList = (function () {
             function ActivityList() {
@@ -64,19 +64,20 @@ var Activities;
                     var mode = _this.mode();
                     if (!mode)
                         return false;
-                    return mode == ViewModels.ActivityMode.draft;
+                    return mode == 1 /* draft */;
                 });
                 this.isPublished = ko.computed(function () {
                     var mode = _this.mode();
                     if (!mode)
                         return false;
-                    return mode == ViewModels.ActivityMode.published;
+                    return mode == 2 /* published */;
                 });
                 this.datesText = ko.computed(function () {
                     return _this._computeDatesText();
                 });
                 this._owner = owner;
 
+                // make sure types are ordered by rank
                 if (data.types && data.types.length)
                     data.types = Enumerable.From(data.types).OrderBy(function (x) {
                         return x.rank;
@@ -182,8 +183,7 @@ var Activities;
                                 $dialog.dialog('close');
                             },
                             'data-css-link': true
-                        }
-                    ]
+                        }]
                 });
             };
             return ActivityListItem;
@@ -192,4 +192,3 @@ var Activities;
     })(Activities.ViewModels || (Activities.ViewModels = {}));
     var ViewModels = Activities.ViewModels;
 })(Activities || (Activities = {}));
-//# sourceMappingURL=Activities.js.map

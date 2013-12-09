@@ -108,6 +108,11 @@ var Agreements;
             }
             this.contactTypeOptionSelected(me.type());
 
+            //if (this.isCustomContactTypeAllowed) {
+            //    dropdownlist = $("#contactTypeOptions").data("kendoComboBox");
+            //} else {
+            //    dropdownlist = $("#contactTypeOptions").data("kendoDropDownList");
+            //}
             if (this.isCustomContactTypeAllowed()) {
                 dropdownlist = $("#contactTypeOptions").data("kendoComboBox");
                 dropdownlist.select(function (dataItem) {
@@ -189,7 +194,7 @@ var Agreements;
 
                     data = {
                         agreementId: this.contacts()[this.contactIndex].agreementId(),
-                        PersonId: this.contacts()[this.contactIndex].personId(),
+                        //PersonId: this.contacts()[this.contactIndex].personId(),
                         Type: this.contacts()[this.contactIndex].type(),
                         DisplayName: this.contacts()[this.contactIndex].displayName(),
                         FirstName: this.contacts()[this.contactIndex].firstName(),
@@ -504,6 +509,7 @@ var Agreements;
                 var _this = this;
                 var context = ko.dataFor(this);
 
+                //added for weird bug for when adding more than 1 phone number then editing the type.
                 if (context.type != $(this).val() && $(this).val() !== "") {
                     context.type = $(this).val();
                 }
@@ -541,6 +547,7 @@ var Agreements;
                 var context = ko.dataFor(this);
 
                 if (self.agreementIsEdit() && context.value == $(this).val()) {
+                    //first do a validation for phone
                     if ($(this).val() == '') {
                         $("#phoneNumberValidate" + context.id).css("visibility", "visible");
                     } else {
@@ -707,4 +714,3 @@ var Agreements;
     })();
     Agreements.Contacts = Contacts;
 })(Agreements || (Agreements = {}));
-//# sourceMappingURL=Contacts.js.map

@@ -35,17 +35,17 @@ module ViewModels.Users {
 
     export class User implements KnockoutValidationGroup {
 
-        id: KnockoutObservable<number> = ko.observable();
-        name: KnockoutObservable<string> = ko.observable();
+        id = ko.observable<number>();
+        name = ko.observable<string>();
 
         saveSpinner = new App.Spinner({ delay: 200, });
-        errorMessage: KnockoutObservable<string> = ko.observable();
+        errorMessage = ko.observable<string>();
 
         isValid: () => boolean;
         errors: KnockoutValidationErrors;
         //isValidating: KnockoutComputed<boolean>;
 
-        isWarned: KnockoutObservable<boolean> = ko.observable(sessionStorage.getItem('UserCreateFormIsWarned') || false);
+        isWarned = ko.observable<boolean>(sessionStorage.getItem('UserCreateFormIsWarned') || false);
 
         acceptWarning(): void {
             this.isWarned(true);

@@ -28,16 +28,16 @@ module Agreements {
         deferredPopFiles;
 
         //file vars
-        $file: KnockoutObservable<JQuery> = ko.observable();
-        hasFile: KnockoutObservable<boolean> = ko.observable();
-        isFileExtensionInvalid: KnockoutObservable<boolean> = ko.observable(false);
-        isFileTooManyBytes: KnockoutObservable<boolean> = ko.observable(false);
-        isFileFailureUnexpected: KnockoutObservable<boolean> = ko.observable(false);
-        isFileInvalid: KnockoutObservable<boolean> = ko.observable(false);
-        fileError: KnockoutObservable<string> = ko.observable();
-        fileFileExtension: KnockoutObservable<string> = ko.observable();
-        fileFileName: KnockoutObservable<string> = ko.observable();
-        fileSrc: KnockoutObservable<string> = ko.observable();
+        $file = ko.observable<JQuery>();
+        hasFile = ko.observable<boolean>();
+        isFileExtensionInvalid = ko.observable<boolean>(false);
+        isFileTooManyBytes = ko.observable<boolean>(false);
+        isFileFailureUnexpected = ko.observable<boolean>(false);
+        isFileInvalid = ko.observable<boolean>(false);
+        fileError = ko.observable<string>();
+        fileFileExtension = ko.observable<string>();
+        fileFileName = ko.observable<string>();
+        fileSrc = ko.observable<string>();
         fileUploadSpinner = new App.Spinner({ delay: 400, });
         fileDeleteSpinner = new App.Spinner({ delay: 400, });
         $confirmPurgeDialog: JQuery;

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -50,6 +49,24 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [CacheHttpGet(Duration = 60)]
+        [GET("{establishmentId:int}/employees/places", ActionPrecedence = 1)]
+        public IEnumerable<EmployeesPlaceApiModel> GetPlaces(int establishmentId, [FromUri] EmployeesPlacesInputModel input)
+        {
+            //throw new Exception();
+            //System.Threading.Thread.Sleep(10000);
+
+            var query = new EmployeePlaceViews(establishmentId)
+            {
+                Countries = input.Countries,
+                PlaceIds = input.PlaceIds,
+                PlaceAgnostic = input.PlaceAgnostic,
+            };
+            var views = _queryProcessor.Execute(query);
+            var models = Mapper.Map<EmployeesPlaceApiModel[]>(views);
+            return models;
+        }
+
+        [CacheHttpGet(Duration = 60)]
         [GET("{domain}/employees/activities/counts")]
         public EmployeeActivityCountsModel GetActivityCounts(string domain)
         {
@@ -61,6 +78,32 @@ namespace UCosmic.Web.Mvc.ApiControllers
             {
                 view = new EmployeeActivityCountsView();
                 var establishment = _queryProcessor.Execute(new EstablishmentByDomain(domain));
+                if (establishment != null)
+                    view.EstablishmentId = establishment.RevisionId;
+            }
+
+            var model = new EmployeeActivityCountsModel
+            {
+                ActivityCount = view.ActivityCount,
+                PersonCount = view.PersonCount,
+                LocationCount = view.LocationCount,
+            };
+
+            return model;
+        }
+
+        [CacheHttpGet(Duration = 60)]
+        [GET("{establishmentId:int}/employees/activities/counts", ActionPrecedence = 1)]
+        public EmployeeActivityCountsModel GetActivityCounts(int establishmentId)
+        {
+            //throw new Exception();
+            //System.Threading.Thread.Sleep(5000);
+
+            var view = _queryProcessor.Execute(new EmployeeActivityCountsViewByEstablishment(establishmentId));
+            if (view == null)
+            {
+                view = new EmployeeActivityCountsView();
+                var establishment = _queryProcessor.Execute(new EstablishmentById(establishmentId));
                 if (establishment != null)
                     view.EstablishmentId = establishment.RevisionId;
             }

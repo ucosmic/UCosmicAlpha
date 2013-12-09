@@ -1,15 +1,15 @@
+/// <reference path="../../typings/jquery/jquery.d.ts" />
+/// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
+/// <reference path="../../typings/knockout/knockout.d.ts" />
+/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
+/// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
+/// <reference path="../../app/Routes.ts" />
+/// <reference path="../../app/Flasher.ts" />
+/// <reference path="../../app/Spinner.ts" />
+/// <reference path="Item.ts" />
+/// <reference path="ApiModels.d.ts" />
 var Establishments;
 (function (Establishments) {
-    /// <reference path="../../typings/jquery/jquery.d.ts" />
-    /// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
-    /// <reference path="../../typings/knockout/knockout.d.ts" />
-    /// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
-    /// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
-    /// <reference path="../../app/Routes.ts" />
-    /// <reference path="../../app/Flasher.ts" />
-    /// <reference path="../../app/Spinner.ts" />
-    /// <reference path="Item.ts" />
-    /// <reference path="ApiModels.d.ts" />
     (function (ServerModels) {
         var Url = (function () {
             function Url(ownerId) {
@@ -80,6 +80,7 @@ var Establishments;
                 this.saveEditorClicked = false;
                 this.owner = owner;
 
+                // when adding new URL, js is not defined
                 if (!js)
                     js = new Establishments.ServerModels.Url(this.owner.id);
                 if (js.id === 0)
@@ -145,10 +146,10 @@ var Establishments;
 
                 this.mutationSuccess = function (response) {
                     _this.owner.requestUrls(function () {
-                        _this.owner.editingUrl(0);
-                        _this.editMode(false);
-                        _this.saveSpinner.stop();
-                        _this.purgeSpinner.stop();
+                        _this.owner.editingUrl(0); // tell parent no item is being edited anymore
+                        _this.editMode(false); // hide the form, show the view
+                        _this.saveSpinner.stop(); // stop save spinner
+                        _this.purgeSpinner.stop(); // stop purge spinner
                         App.flasher.flash(response);
                     });
                 };
@@ -203,10 +204,10 @@ var Establishments;
             Url.prototype.showEditor = function () {
                 var editingUrl = this.owner.editingUrl();
                 if (!editingUrl) {
-                    this.owner.editingUrl(this.id() || -1);
-                    this.editMode(true);
+                    this.owner.editingUrl(this.id() || -1); // tell parent which item is being edited
+                    this.editMode(true); // show the form / hide the viewer
                     this.$valueElement.trigger('autosize');
-                    this.$valueElement.focus();
+                    this.$valueElement.focus(); // focus the text box
                 }
             };
 
@@ -217,7 +218,7 @@ var Establishments;
                     this.errors.showAllMessages();
                 } else if (!this.value.isValidating()) {
                     this.saveEditorClicked = false;
-                    this.saveSpinner.start();
+                    this.saveSpinner.start(); // start save spinner
 
                     if (this.id()) {
                         $.ajax({
@@ -237,12 +238,12 @@ var Establishments;
             };
 
             Url.prototype.cancelEditor = function () {
-                this.owner.editingUrl(0);
+                this.owner.editingUrl(0); // tell parent no item is being edited anymore
                 if (this.id()) {
-                    ko.mapping.fromJS(this.originalValues, {}, this);
-                    this.editMode(false);
+                    ko.mapping.fromJS(this.originalValues, {}, this); // restore original values
+                    this.editMode(false); // hide the form, show the view
                 } else {
-                    this.owner.urls.shift();
+                    this.owner.urls.shift(); // remove the new empty item
                 }
             };
 
@@ -318,4 +319,3 @@ var Establishments;
     })(Establishments.ViewModels || (Establishments.ViewModels = {}));
     var ViewModels = Establishments.ViewModels;
 })(Establishments || (Establishments = {}));
-//# sourceMappingURL=Url.js.map

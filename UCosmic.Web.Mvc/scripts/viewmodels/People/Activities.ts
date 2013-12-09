@@ -42,8 +42,8 @@ module People.ViewModels {
         pageSize = ko.observable(modelData.PageSize);
         pageNumber = ko.observable((modelData.PageNumber != null) ? modelData.PageNumber : 1);
         keyword = ko.observable(modelData.Keyword);
-        countries: KnockoutObservableArray<Places.ApiModels.Country> = ko.observableArray();
-        countryCode: KnockoutObservable<string> = ko.observable();
+        countries = ko.observableArray<Places.ApiModels.Country>();
+        countryCode = ko.observable<string>();
         prevEnabled = ko.observable(true);
         nextEnabled = ko.observable(true);
         orderBy = ko.observable(modelData.OrderBy);

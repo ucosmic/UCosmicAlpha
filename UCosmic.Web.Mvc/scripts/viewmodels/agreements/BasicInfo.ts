@@ -19,15 +19,15 @@ module Agreements {
         deferredUAgreements;
 
         //basic info vars
-        $uAgreements: KnockoutObservable<JQuery> = ko.observable();
+        $uAgreements = ko.observable<JQuery>();
         uAgreements = ko.mapping.fromJS([]);
         uAgreementSelected = ko.observable("");
         nickname = ko.observable();
         content = ko.observable();
         privateNotes = ko.observable();
-        $typeOptions: KnockoutObservable<JQuery> = ko.observable();
+        $typeOptions = ko.observable<JQuery>();
         typeOptions = ko.mapping.fromJS([]);
-        typeOptionSelected: KnockoutObservable<string> = ko.observable();
+        typeOptionSelected = ko.observable<string>();
         agreementContent = ko.observable();
         isCustomTypeAllowed = ko.observable();
         isCustomStatusAllowed = ko.observable();

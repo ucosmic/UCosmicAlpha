@@ -1,23 +1,26 @@
-﻿var Employees;
+﻿/// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
+/// <reference path="../../typings/kendo/kendo.all.d.ts" />
+/// <reference path="../../app/HistoryJS.ts" />
+/// <reference path="../../typings/history/history.d.ts" />
+/// <reference path="../../typings/d3/d3.d.ts" />
+/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
+/// <reference path="../../app/Spinner.ts" />
+/// <reference path="../../typings/google.visualization/google.visualization.d.ts" />
+/// <reference path="../../typings/knockout/knockout.d.ts" />
+/// <reference path="../../typings/linq/linq.d.ts" />
+/// <reference path="../../google/GeoChart.ts" />
+/// <reference path="../../google/ColumnChart.ts" />
+/// <reference path="../../google/LineChart.ts" />
+/// <reference path="../establishments/Server.ts" />
+/// <reference path="../establishments/ApiModels.d.ts" />
+/// <reference path="Server.ts" />
+/// <reference path="Models.d.ts" />
+/// <reference path="../../app/App.ts" />
+/// <reference path="../../app/Models.d.ts" />
+/// <reference path="../../app/DataCacher.ts" />
+/// <reference path="../../app/ImageSwapper.ts" />
+var Employees;
 (function (Employees) {
-    /// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
-    /// <reference path="../../typings/kendo/kendo.all.d.ts" />
-    /// <reference path="../../app/HistoryJS.ts" />
-    /// <reference path="../../typings/history/history.d.ts" />
-    /// <reference path="../../typings/d3/d3.d.ts" />
-    /// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
-    /// <reference path="../../app/Spinner.ts" />
-    /// <reference path="../../typings/google.visualization/google.visualization.d.ts" />
-    /// <reference path="../../typings/knockout/knockout.d.ts" />
-    /// <reference path="../../typings/linq/linq.d.ts" />
-    /// <reference path="../../google/GeoChart.ts" />
-    /// <reference path="../../google/ColumnChart.ts" />
-    /// <reference path="../../google/LineChart.ts" />
-    /// <reference path="Server.ts" />
-    /// <reference path="Models.d.ts" />
-    /// <reference path="../../app/App.ts" />
-    /// <reference path="../../app/DataCacher.ts" />
-    /// <reference path="../../app/ImageSwapper.ts" />
     (function (ViewModels) {
         var SummaryRouteState = (function () {
             function SummaryRouteState() {
@@ -34,19 +37,21 @@
                     areEqual = false;
                 if (first.placeId != second.placeId)
                     areEqual = false;
+                if (first.establishmentId != second.establishmentId)
+                    areEqual = false;
                 return areEqual;
             };
 
             SummaryRouteState.isEmpty = function (state) {
                 if (!state)
                     return true;
-                return !state.pivot && !state.placeId;
+                return !state.pivot && !state.placeId && !state.establishmentId;
             };
 
             SummaryRouteState.isIncomplete = function (state) {
                 if (!state)
                     return true;
-                return !state.pivot || !state.placeId;
+                return !state.pivot || !state.placeId || !state.establishmentId;
             };
             return SummaryRouteState;
         })();
@@ -74,10 +79,10 @@
                     _this._onPivotChanged();
                 });
                 this.isPivotPeople = ko.computed(function () {
-                    return _this.pivot() == DataGraphPivot.people;
+                    return _this.pivot() == 1 /* people */;
                 });
                 this.isPivotActivities = ko.computed(function () {
-                    return _this.pivot() == DataGraphPivot.activities;
+                    return _this.pivot() == 2 /* activities */;
                 });
                 this.placeId = ko.observable(parseInt(sessionStorage.getItem(Summary._placeIdKey)) || Summary._placeIdDefault);
                 this._placeIdChanged = ko.computed(function () {
@@ -90,10 +95,22 @@
                 this.hasNoPlaceId = ko.computed(function () {
                     return !_this.hasPlaceId();
                 });
+                this.establishmentId = ko.observable(parseInt(sessionStorage.getItem(Summary._establishmentIdKey)) || this.settings.tenantId);
+                this._establishmentIdChanged = ko.computed(function () {
+                    _this._onEstablishmentIdChanged();
+                });
+                this.hasEstablishmentId = ko.computed(function () {
+                    var establishmentId = _this.establishmentId();
+                    return (establishmentId && establishmentId > 0);
+                });
+                this.hasNoEstablishmentId = ko.computed(function () {
+                    return !_this.hasEstablishmentId();
+                });
                 this.routeState = ko.computed(function () {
                     return {
                         pivot: _this.pivot(),
-                        placeId: _this.placeId()
+                        placeId: _this.placeId(),
+                        establishmentId: _this.establishmentId()
                     };
                 });
                 this._routeStateChanged = ko.computed(function () {
@@ -106,6 +123,26 @@
                 this.placeData = new App.DataCacher(function () {
                     return _this._loadPlaceData();
                 });
+                //#endregion
+                //#region Tenancy
+                this.hasTenancyData = ko.observable(false);
+                this.selectedTenant = ko.observable(this.settings.tenantId);
+                this.tenancyData = new App.DataCacher(function () {
+                    return _this._loadTenancyData();
+                });
+                this._selectedTenantChanged = ko.computed(function () {
+                    var areBindingsApplied = _this.areBindingsApplied();
+                    var hasTenancyData = _this.hasTenancyData();
+                    var selectedTenant = _this.selectedTenant();
+                    var establishmentId = _this.establishmentId();
+                    if (!areBindingsApplied || !hasTenancyData || !selectedTenant || selectedTenant == establishmentId)
+                        return;
+
+                    $.when(_this.placeData.reload(), _this.activityCountsData.reload()).done(function () {
+                        _this.establishmentId(selectedTenant);
+                    });
+                });
+                this.tenantOptions = ko.observableArray();
                 //#endregion
                 //#endregion
                 //#region Summaries
@@ -155,6 +192,7 @@
                         return false;
                     var areVisible = (placeId == 1 || isPlaceOverlaySelected) && isGeoChartReady;
 
+                    // hide the svg overlays if applicable
                     if (Summary._isD3Defined() && _this.settings.geoChart.googleElementId) {
                         // overlay may already be drawn
                         var dInjectRootElementId = '{0}_place_overlays_root'.format(_this.settings.geoChart.googleElementId);
@@ -204,16 +242,10 @@
                     _this._onRouteChanged();
                 });
 
-                // begin loading data
-                this.activityCountsData.ready();
+                // initialize charts
                 this._initGeoChart();
                 this._initActivityTypeChart();
                 this._initActivityYearChart();
-
-                // need to fire this once because route changes before history is bound
-                this.bindingsApplied.done(function () {
-                    _this._applyState();
-                });
             }
             Summary.loadGoogleVisualization = function () {
                 // this is necessary to load all of the google visualization API's used by this
@@ -241,6 +273,7 @@
                 var value = this.pivot();
                 var old = parseInt(sessionStorage.getItem(Summary._pivotKey)) || 0;
 
+                // don't do anything unless the value has changed
                 if (value !== old) {
                     // save the new value to session storage
                     sessionStorage.setItem(Summary._pivotKey, value.toString());
@@ -248,11 +281,11 @@
             };
 
             Summary.prototype.pivotPeople = function () {
-                this.pivot(DataGraphPivot.people);
+                this.pivot(1 /* people */);
             };
 
             Summary.prototype.pivotActivities = function () {
-                this.pivot(DataGraphPivot.activities);
+                this.pivot(2 /* activities */);
             };
 
             Summary.prototype.isPivot = function (pivot) {
@@ -264,9 +297,22 @@
                 var value = this.placeId();
                 var old = parseInt(sessionStorage.getItem(Summary._placeIdKey)) || undefined;
 
+                // don't do anything unless the value has changed
                 if (value !== old) {
                     // save the new value to session storage
                     sessionStorage.setItem(Summary._placeIdKey, value.toString());
+                }
+            };
+
+            Summary.prototype._onEstablishmentIdChanged = function () {
+                // compare value with what is stored in the session
+                var value = this.establishmentId();
+                var old = parseInt(sessionStorage.getItem(Summary._establishmentIdKey)) || undefined;
+
+                // don't do anything unless the value has changed
+                if (value !== old) {
+                    // save the new value to session storage
+                    sessionStorage.setItem(Summary._establishmentIdKey, value.toString());
                 }
             };
 
@@ -283,25 +329,34 @@
             };
 
             Summary.prototype._onRouteStateChanged = function () {
-                // this runs whenever an observable component of routeState changes
-                // and will run at least once when the page loads, since it is a computed
-                // there are 4 main scenarios we want to handle here:
-                // 1.) when the route state matches the url state, update the historyjs state
-                // 2.) when we have incomplete url state, replace current url based on route state
-                // 3.) when historyjs state is empty and url state is complete, we have a url
-                //     that should override the current route state values
-                // 4.) all other cases mean user interaction, and should push a new url
+                var _this = this;
                 var routeState = this.routeState();
                 var urlState = this._getUrlState();
-                var areBindingsApplied = this.areBindingsApplied();
 
-                if (SummaryRouteState.isIncomplete(urlState) || SummaryRouteState.areEqual(routeState, urlState)) {
-                    HistoryJS.replaceState(routeState, '', '?' + $.param(routeState));
-                } else if (!areBindingsApplied) {
-                    this._updateState(urlState);
-                } else {
-                    HistoryJS.pushState(routeState, '', '?' + $.param(routeState));
-                }
+                // we need to make sure the establishmentId is applicable before applying route state
+                var areBindingsApplied = this.areBindingsApplied();
+                if (!areBindingsApplied)
+                    return;
+                this.tenancyData.ready().done(function (establishments) {
+                    routeState = _this.routeState(); // the new state we want in the URL
+                    urlState = _this._getUrlState(); // actual state based on current URL
+
+                    // this runs whenever an observable component of routeState changes
+                    // and will run at least once when the page loads, since it is a computed
+                    // there are 4 main scenarios we want to handle here:
+                    // 1.) when the route state matches the url state, update the historyjs state
+                    // 2.) when we have incomplete url state, replace current url based on route state
+                    // 3.) when historyjs state is empty and url state is complete, we have a url
+                    //     that should override the current route state values
+                    // 4.) all other cases mean user interaction, and should push a new url
+                    ///var areBindingsApplied = this.areBindingsApplied();
+                    // when the url state is missing something (or everything), replace it with route data
+                    if (SummaryRouteState.isIncomplete(urlState) || SummaryRouteState.areEqual(routeState, urlState)) {
+                        HistoryJS.replaceState(routeState, '', '?' + $.param(routeState));
+                    } else {
+                        HistoryJS.pushState(routeState, '', '?' + $.param(routeState));
+                    }
+                });
             };
 
             Summary.prototype._onRouteChanged = function () {
@@ -314,9 +369,12 @@
             Summary.prototype._updateState = function (state) {
                 this.pivot(state.pivot);
                 this.placeId(state.placeId);
+                this.selectedTenant(state.establishmentId);
+                this.establishmentId(state.establishmentId);
             };
 
             Summary.prototype._applyState = function () {
+                this.activityCountsData.ready();
                 this._drawGeoChart();
                 this._drawActivityTypeChart();
                 this._drawActivityYearChart();
@@ -332,7 +390,7 @@
                     placeAgnostic: true
                 };
                 this.geoChartSpinner.start();
-                Employees.Servers.GetEmployeesPlaces(this.settings.tenantDomain, request).done(function (places) {
+                Employees.Servers.GetEmployeesPlaces(this.selectedTenant(), request).done(function (places) {
                     _this.hasPlaceData(places && places.length > 0);
                     promise.resolve(places);
                 }).fail(function (xhr) {
@@ -360,10 +418,43 @@
                 return place;
             };
 
+            Summary.prototype._loadTenancyData = function () {
+                var _this = this;
+                // calling .ready() on tenancyData invokes this
+                var deferred = $.Deferred();
+                $.when(Establishments.Servers.Single(this.settings.tenantId), Establishments.Servers.GetChildren(this.settings.tenantId)).done(function (parentData, childData) {
+                    childData = childData || [];
+                    var tenants = Enumerable.From(childData).OrderBy(function (x) {
+                        return x.rank;
+                    }).ToArray();
+                    tenants.unshift(parentData);
+
+                    _this.tenantOptions([]);
+                    if (childData.length) {
+                        var options = Enumerable.From(tenants).Select(function (x) {
+                            var option = {
+                                value: x.id,
+                                text: x.contextName || x.officialName
+                            };
+                            return option;
+                        }).ToArray();
+                        _this.tenantOptions(options);
+                    }
+
+                    deferred.resolve(tenants);
+                    if (childData.length)
+                        _this.hasTenancyData(true);
+                }).fail(function (xhr) {
+                    App.Failures.message(xhr, 'while trying to load institution organizational data.', true);
+                    deferred.reject();
+                });
+                return deferred.promise();
+            };
+
             Summary.prototype._loadActivityCounts = function () {
                 var _this = this;
                 var promise = $.Deferred();
-                Employees.Servers.GetActivityCounts(this.settings.tenantDomain).done(function (summary) {
+                Employees.Servers.GetActivityCounts(this.selectedTenant()).done(function (summary) {
                     ko.mapping.fromJS(summary, {}, _this.activityTotals);
                     promise.resolve(summary);
                 }).fail(function (xhr) {
@@ -437,8 +528,11 @@
 
                 if (!this.isGeoChartReady()) {
                     this.geoChart.draw(this._geoChartDataTable, this._getGeoChartOptions()).then(function () {
+                        // svg injection depends on the chart being ready,
+                        // and bindings having been applied, and the
+                        // overlays being visible
                         if (!_this.isGeoChartReady()) {
-                            _this.isGeoChartReady(true);
+                            _this.isGeoChartReady(true); // call this before overlaying to ensure positions
                             _this.bindingsApplied.done(function () {
                                 _this._svgInjectPlaceOverlays();
                                 google.visualization.events.addListener(_this.geoChart.geoChart, 'select', function () {
@@ -483,6 +577,7 @@
                         _this._geoChartDataTable.setColumnLabel(1, 'Total {0}'.format(isPivotPeople ? 'People' : 'Activities'));
                         _this._geoChartDataTable.removeRows(0, _this._geoChartDataTable.getNumberOfRows());
                         $.each(places, function (i, dataPoint) {
+                            // do not count the agnostic place
                             if (!dataPoint.placeId)
                                 return;
                             var total = isPivotPeople ? dataPoint.activityPersonIds.length : dataPoint.activityIds.length;
@@ -779,14 +874,15 @@
                 }
             };
 
-            Summary._isD3Defined = //#endregion
+            //#endregion
             //#region SVG Injection
-            function () {
+            Summary._isD3Defined = function () {
                 return typeof d3 !== 'undefined';
             };
 
             Summary.prototype._svgInjectPlaceOverlays = function () {
                 var _this = this;
+                // IE8 cannot load the d3 library
                 if (!Summary._isD3Defined() || !this.settings.geoChart.googleElementId || !this.settings.geoChart.boxElementId)
                     return;
 
@@ -817,14 +913,14 @@
                 // iterate over the parsed place overlays
                 // first, need to show the data root in order to get valid positions
                 var jContainer = $('#{0} .overlays .places .data'.format(this.settings.geoChart.boxElementId));
-                jContainer.show();
+                jContainer.show(); // need to do this to get positions & dimensions from jQuery
 
                 var overlays = this.placeOverlays();
                 $.each(overlays, function (i, overlay) {
                     _this._svgInjectPlaceOverlay(dInjectRoot, overlay);
                 });
 
-                jContainer.hide();
+                jContainer.hide(); // no longer need dimensions, hide the HTML overlays
 
                 // now use jQuery to rearrange the order of the elements
                 $('#{0} svg > g > g:last-child'.format(this.settings.geoChart.googleElementId)).insertAfter('#{0} svg > g > g:nth-child(2)'.format(this.settings.geoChart.googleElementId));
@@ -894,6 +990,7 @@
                 var _this = this;
                 var tooltips = this._tooltips();
 
+                // remove tooltips when they already exist
                 if (tooltips.length) {
                     // destroy all of the tooltips
                     $.each(this._tooltips(), function (i, tooltip) {
@@ -950,15 +1047,16 @@
             };
             Summary._googleVisualizationLoadedPromise = $.Deferred();
 
-            Summary._pivotDefault = DataGraphPivot.activities;
+            Summary._pivotDefault = 2 /* activities */;
             Summary._pivotKey = 'EmployeeSummaryPivot';
 
             Summary._placeIdDefault = 1;
             Summary._placeIdKey = 'EmployeeSummaryPlaceId';
+
+            Summary._establishmentIdKey = 'EmployeeSummaryEstablishmentId';
             return Summary;
         })();
         ViewModels.Summary = Summary;
     })(Employees.ViewModels || (Employees.ViewModels = {}));
     var ViewModels = Employees.ViewModels;
 })(Employees || (Employees = {}));
-//# sourceMappingURL=Summary.js.map

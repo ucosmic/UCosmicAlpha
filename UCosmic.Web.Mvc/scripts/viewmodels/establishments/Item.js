@@ -1,21 +1,21 @@
+/// <reference path="../../typings/jquery/jquery.d.ts" />
+/// <reference path="../../typings/knockout/knockout.d.ts" />
+/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
+/// <reference path="../../typings/googlemaps/google.maps.d.ts" />
+/// <reference path="../../google/ToolsOverlay.ts" />
+/// <reference path="../../app/App.ts" />
+/// <reference path="../../app/SideSwiper.ts" />
+/// <reference path="../../app/Routes.ts" />
+/// <reference path="../../app/Spinner.ts" />
+/// <reference path="../languages/ApiModels.d.ts" />
+/// <reference path="Name.ts" />
+/// <reference path="Url.ts" />
+/// <reference path="Location.ts" />
+/// <reference path="Search.ts" />
+/// <reference path="SearchResult.ts" />
+/// <reference path="ApiModels.d.ts" />
 var Establishments;
 (function (Establishments) {
-    /// <reference path="../../typings/jquery/jquery.d.ts" />
-    /// <reference path="../../typings/knockout/knockout.d.ts" />
-    /// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
-    /// <reference path="../../typings/googlemaps/google.maps.d.ts" />
-    /// <reference path="../../google/ToolsOverlay.ts" />
-    /// <reference path="../../app/App.ts" />
-    /// <reference path="../../app/SideSwiper.ts" />
-    /// <reference path="../../app/Routes.ts" />
-    /// <reference path="../../app/Spinner.ts" />
-    /// <reference path="../languages/ApiModels.d.ts" />
-    /// <reference path="Name.ts" />
-    /// <reference path="Url.ts" />
-    /// <reference path="Location.ts" />
-    /// <reference path="Search.ts" />
-    /// <reference path="SearchResult.ts" />
-    /// <reference path="ApiModels.d.ts" />
     (function (ViewModels) {
         var gm = google.maps;
 
@@ -158,8 +158,8 @@ var Establishments;
                 this.typeId = ko.observable();
                 this.typeText = ko.observable('[Loading...]');
                 this.ceebCode = ko.observable();
-                this.uCosmicCode = ko.observable();
-                this.isEditingTypeId = ko.observable();
+                this.uCosmicCode = ko.observable(undefined);
+                this.isEditingTypeId = ko.observable(undefined);
                 this.isValidationSummaryVisible = ko.observable(false);
                 this.flasherProxy = new App.FlasherProxy();
                 //#region Names
@@ -175,11 +175,9 @@ var Establishments;
                 this.editingUrl = ko.observable(0);
                 this.urlsSpinner = new App.Spinner({ runImmediately: true });
                 this.sideSwiper = new App.SideSwiper({
-                    frameWidth: 980,
-                    speed: 'fast',
-                    root: '#establishment_page'
+                    frameWidth: 980, speed: 'fast', root: '#establishment_page'
                 });
-                this.parentSearch = new ViewModels.Search(false);
+                this.parentSearch = new Establishments.ViewModels.Search(false);
                 this.sammy = Sammy();
                 this._findingParent = false;
                 this.parentEstablishment = ko.observable();
@@ -192,7 +190,7 @@ var Establishments;
 
                 this._initNamesComputeds();
                 this._initUrlsComputeds();
-                this.location = new ViewModels.Location(this.id);
+                this.location = new Establishments.ViewModels.Location(this.id);
 
                 this.typeEmptyText = ko.computed(function () {
                     return _this.categories().length > 0 ? '[Select a classification]' : '[Loading...]';
@@ -234,7 +232,8 @@ var Establishments;
                 });
 
                 this.isTypeIdSaveDisabled = ko.computed(function () {
-                    return _this.typeId.isValidating() || _this.uCosmicCode.isValidating() || _this.ceebCode.isValidating() || _this.typeIdSaveSpinner.isVisible() || _this.typeIdValidatingSpinner.isVisible() || _this.typeId.error || _this.ceebCode.error || _this.uCosmicCode.error;
+                    var isTypeIdSaveDisabled = _this.typeId.isValidating() || _this.uCosmicCode.isValidating() || _this.ceebCode.isValidating() || _this.typeIdSaveSpinner.isVisible() || _this.typeIdValidatingSpinner.isVisible() || _this.typeId.error || _this.ceebCode.error || _this.uCosmicCode.error;
+                    return isTypeIdSaveDisabled ? true : false;
                 });
 
                 this.parentId.extend({
@@ -251,7 +250,7 @@ var Establishments;
 
                 var viewModelPact = this._loadScalars();
 
-                $.when(categoriesPact, viewModelPact).then(// all requests succeeded
+                $.when(categoriesPact, viewModelPact).done(// all requests succeeded
                 function (categories, viewModel) {
                     ko.mapping.fromJS(categories, {}, _this.categories);
 
@@ -263,13 +262,14 @@ var Establishments;
                     }
 
                     if (!_this._isInitialized()) {
-                        _this._isInitialized(true);
+                        _this._isInitialized(true); // bindings have been applied
                     }
-                }, // one of the responses failed (never called more than once, even on multifailures)
-                function (xhr, textStatus, errorThrown) {
-                    //alert('a GET API call failed :(');
-                });
+                }); //,
 
+                // one of the responses failed (never called more than once, even on multifailures)
+                //(xhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
+                //    //alert('a GET API call failed :(');
+                //});
                 ko.validation.group(this);
                 if (doSetupSammy) {
                     this._setupSammy();
@@ -301,7 +301,7 @@ var Establishments;
                 var apiModel = new Establishments.ServerModels.Name(this.id);
                 if (this.names().length === 0)
                     apiModel.isOfficialName = true;
-                var newName = new ViewModels.Name(apiModel, this);
+                var newName = new Establishments.ViewModels.Name(apiModel, this);
                 this.names.unshift(newName);
                 newName.showEditor();
                 App.Obtruder.obtrude(document);
@@ -316,15 +316,15 @@ var Establishments;
                             code: undefined,
                             name: '[Language Neutral]'
                         };
-                        response.splice(0, 0, emptyValue);
-                        _this.languages(response);
+                        response.splice(0, 0, emptyValue); // add null option
+                        _this.languages(response); // set the options dropdown
                     });
                 }).extend({ throttle: 1 });
 
                 // set up names mapping
                 this._namesMapping = {
                     create: function (options) {
-                        return new ViewModels.Name(options.data, _this);
+                        return new Establishments.ViewModels.Name(options.data, _this);
                     }
                 };
 
@@ -336,7 +336,7 @@ var Establishments;
                 ko.computed(function () {
                     if (_this.id)
                         _this.requestNames();
-else
+                    else
                         setTimeout(function () {
                             _this.namesSpinner.stop();
                             _this.addName();
@@ -365,7 +365,7 @@ else
                 var apiModel = new Establishments.ServerModels.Url(this.id);
                 if (this.urls().length === 0)
                     apiModel.isOfficialUrl = true;
-                var newUrl = new ViewModels.Url(apiModel, this);
+                var newUrl = new Establishments.ViewModels.Url(apiModel, this);
                 this.urls.unshift(newUrl);
                 newUrl.showEditor();
                 App.Obtruder.obtrude(document);
@@ -376,7 +376,7 @@ else
                 // set up URLs mapping
                 this._urlsMapping = {
                     create: function (options) {
-                        return new ViewModels.Url(options.data, _this);
+                        return new Establishments.ViewModels.Url(options.data, _this);
                     }
                 };
 
@@ -388,7 +388,7 @@ else
                 ko.computed(function () {
                     if (_this.id)
                         _this.requestUrls();
-else
+                    else
                         setTimeout(function () {
                             _this.urlsSpinner.stop();
                             _this.addUrl();
@@ -408,6 +408,7 @@ else
                     var officialUrl = this.urls()[0];
                     var location = this.location;
 
+                    // wait for async validation to stop
                     if (officialName.text.isValidating() || officialUrl.value.isValidating() || this.ceebCode.isValidating() || this.uCosmicCode.isValidating()) {
                         setTimeout(function () {
                             var waitResult = _this.submitToCreate(formElement);
@@ -507,6 +508,7 @@ else
                 if (!this.id)
                     return;
 
+                // wait for async validators to finish
                 if (this.ceebCode.isValidating() || this.uCosmicCode.isValidating()) {
                     this.typeIdValidatingSpinner.start();
                     window.setTimeout(function () {
@@ -620,7 +622,8 @@ else
                 });
 
                 this.isParentIdSaveDisabled = ko.computed(function () {
-                    return _this.parentId.isValidating() || _this.parentIdSaveSpinner.isVisible() || _this.parentIdValidatingSpinner.isVisible() || _this.parentId.error;
+                    var isParentIdSaveDisabled = _this.parentId.isValidating() || _this.parentIdSaveSpinner.isVisible() || _this.parentIdValidatingSpinner.isVisible() || _this.parentId.error;
+                    return isParentIdSaveDisabled ? true : false;
                 });
 
                 this.parentId.subscribe(function (newValue) {
@@ -631,7 +634,7 @@ else
                         $.get(url, { id: newValue }).done(function (response) {
                             if (response && response.items && response.items.length) {
                                 var parent = response.items[0];
-                                _this.parentEstablishment(new ViewModels.SearchResult(parent, _this.parentSearch));
+                                _this.parentEstablishment(new Establishments.ViewModels.SearchResult(parent, _this.parentSearch));
                             }
                         });
                     }
@@ -653,6 +656,7 @@ else
                 if (!this.id)
                     return;
 
+                // wait for async validator to finish
                 if (this.parentId.isValidating()) {
                     this.parentIdValidatingSpinner.start();
                     window.setTimeout(function () {
@@ -693,4 +697,3 @@ else
     })(Establishments.ViewModels || (Establishments.ViewModels = {}));
     var ViewModels = Establishments.ViewModels;
 })(Establishments || (Establishments = {}));
-//# sourceMappingURL=Item.js.map

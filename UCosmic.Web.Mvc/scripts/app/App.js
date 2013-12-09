@@ -19,6 +19,7 @@ var App;
         function message(xhr, reason, autoAlert) {
             if (typeof reason === "undefined") { reason = ''; }
             if (typeof autoAlert === "undefined") { autoAlert = false; }
+            // do not report error if user clicked on link or browser control
             if (xhr)
                 if (xhr.readyState === 0 || xhr.status === 0)
                     return null;
@@ -95,7 +96,7 @@ var App;
                                 top: '',
                                 bottom: '0px'
                             });
-else
+                        else
                             $content.css({
                                 top: '0px',
                                 bottom: ''
@@ -158,10 +159,12 @@ else
             obtruders = obtruders || App.Obtruders;
             for (obtruder in obtruders) {
                 if (obtruders.hasOwnProperty(obtruder)) {
+                    // apply an unobtrusive behavior
                     if (typeof obtruders[obtruder] === 'function') {
                         obtruders[obtruder].apply(this, Array.prototype.slice.call(arguments, 0, 1) || document);
                     }
 
+                    // apply all unobtrusive behaviors in set
                     if (typeof obtruders[obtruder] === 'object') {
                         App.Obtruder.obtrude(selector, obtruders[obtruder]);
                     }
@@ -185,6 +188,8 @@ else
         $.each(params.replace(/\+/g, ' ').split('&'), function (j, v) {
             var param = v.split('='), key = decode(param[0]), val, cur = obj, i = 0, keys = key.split(']['), keys_last = keys.length - 1;
 
+            // If the first keys part contains [ and the last ends with ], then []
+            // are correctly balanced.
             if (/\[/.test(keys[0]) && /\]$/.test(keys[keys_last])) {
                 // Remove the trailing ] from the last keys part.
                 keys[keys_last] = keys[keys_last].replace(/\]$/, '');
@@ -199,11 +204,13 @@ else
                 keys_last = 0;
             }
 
+            // Are we dealing with a name=value pair, or just a name?
             if (param.length === 2) {
                 val = decode(param[1]);
 
+                // Coerce values.
                 if (coerce) {
-                    val = val && !isNaN(val) ? +val : val === 'undefined' ? undefined : coerce_types[val] !== undefined ? coerce_types[val] : val;
+                    val = val && !isNaN(val) ? +val : val === 'undefined' ? undefined : coerce_types[val] !== undefined ? coerce_types[val] : val; // string
                 }
 
                 if (keys_last) {
@@ -212,6 +219,8 @@ else
                         cur = cur[key] = i < keys_last ? cur[key] || (keys[i + 1] && isNaN(Number(keys[i + 1])) ? {} : []) : val;
                     }
                 } else {
+                    // Simple key, even simpler rules, since only scalars and shallow
+                    // arrays are allowed.
                     if ($.isArray(obj[key])) {
                         // val is already an array, so push on the next value.
                         obj[key].push(val);
@@ -234,4 +243,3 @@ else
     }
     App.deparam = deparam;
 })(App || (App = {}));
-//# sourceMappingURL=App.js.map

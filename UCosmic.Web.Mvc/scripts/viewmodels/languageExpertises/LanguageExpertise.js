@@ -1,14 +1,14 @@
+/// <reference path="../../typings/jquery/jquery.d.ts" />
+/// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
+/// <reference path="../../typings/knockout/knockout.d.ts" />
+/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
+/// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
+/// <reference path="../../typings/kendo/kendo.all.d.ts" />
+/// <reference path="../../typings/tinymce/tinymce.d.ts" />
+/// <reference path="../../typings/moment/moment.d.ts" />
+/// <reference path="../../app/Routes.ts" />
 var ViewModels;
 (function (ViewModels) {
-    /// <reference path="../../typings/jquery/jquery.d.ts" />
-    /// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
-    /// <reference path="../../typings/knockout/knockout.d.ts" />
-    /// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
-    /// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
-    /// <reference path="../../typings/kendo/kendo.all.d.ts" />
-    /// <reference path="../../typings/tinymce/tinymce.d.ts" />
-    /// <reference path="../../typings/moment/moment.d.ts" />
-    /// <reference path="../../app/Routes.ts" />
     (function (LanguageExpertises) {
         var LanguageExpertise = (function () {
             function LanguageExpertise(expertiseId) {
@@ -279,4 +279,3 @@ var ViewModels;
     })(ViewModels.LanguageExpertises || (ViewModels.LanguageExpertises = {}));
     var LanguageExpertises = ViewModels.LanguageExpertises;
 })(ViewModels || (ViewModels = {}));
-//# sourceMappingURL=LanguageExpertise.js.map

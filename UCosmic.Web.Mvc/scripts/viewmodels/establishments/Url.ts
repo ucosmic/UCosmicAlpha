@@ -61,14 +61,14 @@ module Establishments.ViewModels {
     export class Url implements KnockoutValidationGroup {
 
         // api observables
-        id: KnockoutObservable<number> = ko.observable();
-        ownerId: KnockoutObservable<number> = ko.observable();
-        value: KnockoutObservable<string> = ko.observable();
-        isOfficialUrl: KnockoutObservable<boolean> = ko.observable();
-        isFormerUrl: KnockoutObservable<boolean> = ko.observable();
+        id = ko.observable<number>();
+        ownerId = ko.observable<number>();
+        value = ko.observable<string>();
+        isOfficialUrl = ko.observable<boolean>();
+        isFormerUrl = ko.observable<boolean>();
 
         // other observables
-        editMode: KnockoutObservable<boolean> = ko.observable();
+        editMode = ko.observable<boolean>();
         $valueElement: JQuery = undefined; // bind to this so we can focus it on actions
         $confirmPurgeDialog: JQuery = undefined;
         isValid: () => boolean;

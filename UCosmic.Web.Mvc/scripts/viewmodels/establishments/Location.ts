@@ -14,50 +14,50 @@ module Establishments.ViewModels {
         ownerId: number;
         map: google.maps.Map;
         mapZoom: KnockoutObservable<number> = ko.observable(1);
-        mapTools: KnockoutObservable<App.GoogleMaps.ToolsOverlay> = ko.observable();
+        mapTools = ko.observable<App.GoogleMaps.ToolsOverlay>();
         toolsMarkerLat: KnockoutComputed<number>;
         toolsMarkerLng: KnockoutComputed<number>;
-        $mapCanvas: KnockoutObservable<JQuery> = ko.observable();
-        isMapVisible: KnockoutObservable<boolean> = ko.observable();
-        isLoaded: KnockoutObservable<boolean> = ko.observable();
-        continents: KnockoutObservableArray<Places.ApiModels.Place> = ko.observableArray();
-        continentId: KnockoutObservable<number> = ko.observable();
+        $mapCanvas = ko.observable<JQuery>();
+        isMapVisible = ko.observable<boolean>();
+        isLoaded = ko.observable<boolean>();
+        continents = ko.observableArray<Places.ApiModels.Place>();
+        continentId = ko.observable<number>();
         continentName: KnockoutComputed<string>;
-        countries: KnockoutObservableArray<Places.ApiModels.Place> = ko.observableArray();
-        countryId: KnockoutObservable<number> = ko.observable();
+        countries = ko.observableArray<Places.ApiModels.Place>();
+        countryId = ko.observable<number>();
         countryName: KnockoutComputed<string>;
         countryOptionsCaption: KnockoutComputed<string>;
         private _countryId: number;
         private allowCountryFitBounds: boolean = true;
-        admin1s:  KnockoutObservableArray<Places.ApiModels.Place> = ko.observableArray();
-        admin1Id: KnockoutObservable<number> = ko.observable();
+        admin1s = ko.observableArray<Places.ApiModels.Place>();
+        admin1Id = ko.observable<number>();
         admin1Name: KnockoutComputed<string>;
         admin1OptionsCaption: KnockoutComputed<string>;
         admin1sLoading: KnockoutObservable<boolean> = ko.observable(false);
         private _admin1Id: number;
         showAdmin1Input: KnockoutComputed<boolean>;
-        admin2s:  KnockoutObservableArray<Places.ApiModels.Place> = ko.observableArray();
-        admin2Id: KnockoutObservable<number> = ko.observable();
+        admin2s = ko.observableArray<Places.ApiModels.Place>();
+        admin2Id = ko.observable<number>();
         admin2Name: KnockoutComputed<string>;
         admin2OptionsCaption: KnockoutComputed<string>;
         admin2sLoading: KnockoutObservable<boolean> = ko.observable(false);
         private _admin2Id: number;
         showAdmin2Input: KnockoutComputed<boolean>;
-        admin3s:  KnockoutObservableArray<Places.ApiModels.Place> = ko.observableArray();
-        admin3Id: KnockoutObservable<number> = ko.observable();
+        admin3s = ko.observableArray<Places.ApiModels.Place>();
+        admin3Id = ko.observable<number>();
         admin3Name: KnockoutComputed<string>;
         admin3OptionsCaption: KnockoutComputed<string>;
         admin3sLoading: KnockoutObservable<boolean> = ko.observable(false);
         private _admin3Id: number;
         showAdmin3Input: KnockoutComputed<boolean>;
-        places:  KnockoutObservableArray<Places.ApiModels.Place> = ko.observableArray();
-        subAdmins:  KnockoutObservableArray<Places.ApiModels.Place> = ko.observableArray();
+        places = ko.observableArray<Places.ApiModels.Place>();
+        subAdmins = ko.observableArray<Places.ApiModels.Place>();
         loadSpinner = new App.Spinner({ delay: 400, });
         saveSpinner = new App.Spinner({ delay: 400, });
         $dataLoadingDialog: JQuery;
         isEditable: () => boolean;
         isEditIconVisible: () => boolean;
-        isEditing: KnockoutObservable<boolean> = ko.observable();
+        isEditing = ko.observable<boolean>();
 
         constructor(ownerId: number) {
             this.ownerId = ownerId;
@@ -122,11 +122,11 @@ module Establishments.ViewModels {
             // continents section
             ko.computed((): void => {
                 $.get(App.Routes.WebApi.Places.get(), { isContinent: true })
-                .done((response: Places.ApiModels.Place[]): void => {
-                    this.continents(response);
-                });
+                    .done((response: Places.ApiModels.Place[]): void => {
+                        this.continents(response);
+                    });
             })
-            .extend({ throttle: 1 });
+                .extend({ throttle: 1 });
             this.continentName = ko.computed((): string => {
                 var continentId = this.continentId();
                 if (!continentId) return '[Unspecified]';
@@ -140,16 +140,16 @@ module Establishments.ViewModels {
             });
             ko.computed((): void => {
                 $.get(App.Routes.WebApi.Places.get(), { isCountry: true })
-                .done((response: Places.ApiModels.Place[]): void => {
-                    this.countries(response);
-                    if (this._countryId) {
-                        var countryId = this._countryId;
-                        this._countryId = undefined;
-                        this.countryId(countryId);
-                    }
-                });
+                    .done((response: Places.ApiModels.Place[]): void => {
+                        this.countries(response);
+                        if (this._countryId) {
+                            var countryId = this._countryId;
+                            this._countryId = undefined;
+                            this.countryId(countryId);
+                        }
+                    });
             })
-            .extend({ throttle: 1 });
+                .extend({ throttle: 1 });
             this.countryName = ko.computed((): string => {
                 var countryId = this.countryId();
                 if (!countryId) return '[Unspecified]';
@@ -337,32 +337,32 @@ module Establishments.ViewModels {
                     .get(latLng.lat(), latLng.lng());
                 this.loadSpinner.start();
                 $.get(route)
-                .done((response: Places.ApiModels.Place[]): void => {
-                    if (response && response.length) {
-                        this.allowCountryFitBounds = false;
-                        this.fillPlacesHierarchy(response);
-                    }
-                })
-                .always((): void => {
-                    this.loadSpinner.stop();
-                })
-                .fail((arg1: any, arg2, arg3, arg4, arg5): void => {
-                    //alert('update call fail :(');
-                });
+                    .done((response: Places.ApiModels.Place[]): void => {
+                        if (response && response.length) {
+                            this.allowCountryFitBounds = false;
+                            this.fillPlacesHierarchy(response);
+                        }
+                    })
+                    .always((): void => {
+                        this.loadSpinner.stop();
+                    })
+                    .fail((arg1: any, arg2, arg3, arg4, arg5): void => {
+                        //alert('update call fail :(');
+                    });
             });
 
             if (this.ownerId) { // set up based on current owner id
                 this.isLoaded(false);
                 $.get(App.Routes.WebApi.Establishments.Locations.get(this.ownerId))
-                .done((response: ApiModels.Location): void => {
-                    gm.event.addListenerOnce(this.map, 'idle', (): void => {
-                        this.loadMapZoom(response);
-                        this.loadMapMarker(response);
-                    });
+                    .done((response: ApiModels.Location): void => {
+                        gm.event.addListenerOnce(this.map, 'idle', (): void => {
+                            this.loadMapZoom(response);
+                            this.loadMapMarker(response);
+                        });
 
-                    this.fillPlacesHierarchy(response.places);
-                    this.isLoaded(true);
-                })
+                        this.fillPlacesHierarchy(response.places);
+                        this.isLoaded(true);
+                    })
             }
             else { // otherwise, make map editable
                 gm.event.addListenerOnce(this.map, 'idle', (): void => {
@@ -438,11 +438,11 @@ module Establishments.ViewModels {
                 data: { isAdmin1: true, parentId: countryId },
                 cache: false
             }).done((results: Places.ApiModels.Place[]) => {
-                this.admin1s(results);
-                if (this._admin1Id)
-                    this.admin1Id(this._admin1Id);
-                this.admin1sLoading(false);
-            });
+                    this.admin1s(results);
+                    if (this._admin1Id)
+                        this.admin1Id(this._admin1Id);
+                    this.admin1sLoading(false);
+                });
         }
 
         private loadAdmin2s(admin1Id: number): void {
@@ -456,11 +456,11 @@ module Establishments.ViewModels {
                 url: admin2Url,
                 cache: false,
             }).done((results: Places.ApiModels.Place[]) => {
-                this.admin2s(results);
-                if (this._admin2Id)
-                    this.admin2Id(this._admin2Id);
-                this.admin2sLoading(false);
-            });
+                    this.admin2s(results);
+                    if (this._admin2Id)
+                        this.admin2Id(this._admin2Id);
+                    this.admin2sLoading(false);
+                });
         }
 
         private loadAdmin3s(admin2Id: number): void {
@@ -474,11 +474,11 @@ module Establishments.ViewModels {
                 url: admin3Url,
                 cache: false
             }).done((results: Places.ApiModels.Place[]) => {
-                this.admin3s(results);
-                if (this._admin3Id)
-                    this.admin3Id(this._admin3Id);
-                this.admin3sLoading(false);
-            });
+                    this.admin3s(results);
+                    if (this._admin3Id)
+                        this.admin3Id(this._admin3Id);
+                    this.admin3sLoading(false);
+                });
         }
 
         changePlaceInLocation(): void {
@@ -500,16 +500,16 @@ module Establishments.ViewModels {
                 type: 'PUT',
                 data: me.serializeData()
             })
-            .always((): void => {
-                me.saveSpinner.stop();
-            })
-            .done((response: string, statusText: string, xhr: JQueryXHR): void => {
-                App.flasher.flash(response);
-                this.isEditing(false);
-            })
-            .fail((arg1: any, arg2, arg3): void => {
-                //alert('fail :(');
-            });
+                .always((): void => {
+                    me.saveSpinner.stop();
+                })
+                .done((response: string, statusText: string, xhr: JQueryXHR): void => {
+                    App.flasher.flash(response);
+                    this.isEditing(false);
+                })
+                .fail((arg1: any, arg2, arg3): void => {
+                    //alert('fail :(');
+                });
         }
 
         serializeData(): ApiModels.PutLocation {

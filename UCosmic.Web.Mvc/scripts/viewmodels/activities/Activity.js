@@ -1,20 +1,20 @@
+//#region References
+/// <reference path="../../typings/jquery/jquery.d.ts" />
+/// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
+/// <reference path="../../typings/knockout/knockout.d.ts" />
+/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
+/// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
+/// <reference path="../../typings/kendo/kendo.all.d.ts" />
+/// <reference path="../../typings/tinymce/tinymce.d.ts" />
+/// <reference path="../../typings/moment/moment.d.ts" />
+/// <reference path="../../typings/linq/linq.d.ts" />
+/// <reference path="../../app/Routes.ts" />
+/// <reference path="../../app/Spinner.ts" />
+/// <reference path="ActivityEnums.ts" />
+/// <reference path="ServiceApiModel.d.ts" />
+//#endregion
 var Activities;
 (function (Activities) {
-    //#region References
-    /// <reference path="../../typings/jquery/jquery.d.ts" />
-    /// <reference path="../../typings/jqueryui/jqueryui.d.ts" />
-    /// <reference path="../../typings/knockout/knockout.d.ts" />
-    /// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
-    /// <reference path="../../typings/knockout.validation/knockout.validation.d.ts" />
-    /// <reference path="../../typings/kendo/kendo.all.d.ts" />
-    /// <reference path="../../typings/tinymce/tinymce.d.ts" />
-    /// <reference path="../../typings/moment/moment.d.ts" />
-    /// <reference path="../../typings/linq/linq.d.ts" />
-    /// <reference path="../../app/Routes.ts" />
-    /// <reference path="../../app/Spinner.ts" />
-    /// <reference path="ActivityEnums.ts" />
-    /// <reference path="ServiceApiModel.d.ts" />
-    //#endregion
     (function (ViewModels) {
         var ActivityForm = (function () {
             //#endregion
@@ -31,13 +31,13 @@ var Activities;
                     var mode = _this.mode();
                     if (!mode)
                         return false;
-                    return mode == ViewModels.ActivityMode.draft;
+                    return mode == 1 /* draft */;
                 });
                 this.isPublished = ko.computed(function () {
                     var mode = _this.mode();
                     if (!mode)
                         return false;
-                    return mode == ViewModels.ActivityMode.published;
+                    return mode == 2 /* published */;
                 });
                 this.updatedOnDate = ko.computed(function () {
                     var updatedOnUtc = _this.updatedOnUtc();
@@ -252,7 +252,7 @@ var Activities;
                 this.isSaving.subscribe(function (newValue) {
                     if (newValue)
                         _this.saveSpinner.start();
-else
+                    else
                         _this.saveSpinner.stop();
                 });
 
@@ -338,7 +338,7 @@ else
                         type: 'PUT',
                         url: url
                     }).done(function () {
-                        _this._isSaved = true;
+                        _this._isSaved = true; // prevent tinymce onbeforeunload from updating again
                         location.href = App.Routes.Mvc.My.Profile.get();
                     }).fail(function (xhr) {
                         App.Failures.message(xhr, 'while trying to save your activity', true);
@@ -396,8 +396,7 @@ else
                                 _this.$cancelDialog.dialog('close');
                             },
                             'data-css-link': true
-                        }
-                    ]
+                        }]
                 });
             };
 
@@ -411,7 +410,7 @@ else
                     url: url,
                     async: async
                 }).done(function () {
-                    _this._isDeleted = true;
+                    _this._isDeleted = true; // prevent tinymce onbeforeunload from updating again
                     deferred.resolve();
                 }).fail(function (xhr) {
                     deferred.reject(xhr);
@@ -424,7 +423,7 @@ else
 
             ActivityForm.prototype._hasData = function () {
                 var _hasData = this.title() || this.content() || this.onGoing() || this.startsOn.input() || this.endsOn.input() || this.isExternallyFunded() || this.isInternallyFunded() || this.types().length || this.places().length || this.tags().length || this.documents().length;
-                return _hasData;
+                return _hasData ? true : false;
             };
 
             ActivityForm.prototype._bindDatePickers = function () {
@@ -481,7 +480,7 @@ else
 
                 if (addedPlaceIds.length === 1)
                     this._addPlaceId(addedPlaceIds[0], e);
-else if (removedPlaceIds.length === 1)
+                else if (removedPlaceIds.length === 1)
                     this._removePlaceId(removedPlaceIds[0], e);
             };
 
@@ -579,7 +578,7 @@ else if (removedPlaceIds.length === 1)
                     _this.tagInput('');
                     e.preventDefault();
                     e.sender.value('');
-                    e.sender.element.focus();
+                    e.sender.element.focus(); // this resets the value of e.sender._prev
                 }).fail(function (xhr) {
                     App.Failures.message(xhr, 'while trying to add this activity tag, please try again', true);
                 });
@@ -649,7 +648,7 @@ else if (removedPlaceIds.length === 1)
                     var tag = {
                         activityId: _this.activityId(),
                         text: text,
-                        domainType: ViewModels.ActivityTagDomainType.custom,
+                        domainType: 1 /* custom */,
                         domainKey: undefined
                     };
                     var observableTag = ko.mapping.fromJS(tag);
@@ -807,7 +806,7 @@ else if (removedPlaceIds.length === 1)
                 this.checked.subscribe(function (newValue) {
                     if (newValue)
                         _this._onChecked();
-else
+                    else
                         _this._onUnchecked();
                 });
             }
@@ -913,15 +912,15 @@ else
                     return undefined;
                 if (FormattedDateInput._yyyy.test(input))
                     return 'yyyy';
-else if (FormattedDateInput._mYyyy.test(input))
+                else if (FormattedDateInput._mYyyy.test(input))
                     return 'M/yyyy';
-else if (FormattedDateInput._mmYyyy.test(input))
+                else if (FormattedDateInput._mmYyyy.test(input))
                     return 'MM/yyyy';
-else if (FormattedDateInput._mDYyyy.test(input))
+                else if (FormattedDateInput._mDYyyy.test(input))
                     return 'M/d/yyyy';
-else if (FormattedDateInput._mmDYyyy.test(input))
+                else if (FormattedDateInput._mmDYyyy.test(input))
                     return 'MM/d/yyyy';
-else if (FormattedDateInput._mDdYyyy.test(input))
+                else if (FormattedDateInput._mDdYyyy.test(input))
                     return 'M/dd/yyyy';
                 return 'MM/dd/yyyy';
             };
@@ -979,7 +978,7 @@ else if (FormattedDateInput._mDdYyyy.test(input))
                 this._owner = owner;
                 if (typeof arg0.documentId === 'undefined')
                     this._constructUploading(arg0);
-else
+                else
                     this._constructUploaded(arg0);
             }
             ActivityDocumentForm.prototype._constructUploaded = function (data) {
@@ -1052,7 +1051,7 @@ else
                 this.uploadProgress.subscribe(function (newValue) {
                     if (newValue < 0)
                         _this.uploadProgress(0);
-else if (newValue > 100)
+                    else if (newValue > 100)
                         _this.uploadProgress(100);
                 });
             };
@@ -1167,8 +1166,7 @@ else if (newValue > 100)
                                 _this._owner.$deleteDocumentDialog.dialog('close');
                             },
                             'data-css-link': true
-                        }
-                    ]
+                        }]
                 });
             };
 
@@ -1183,4 +1181,3 @@ else if (newValue > 100)
     })(Activities.ViewModels || (Activities.ViewModels = {}));
     var ViewModels = Activities.ViewModels;
 })(Activities || (Activities = {}));
-//# sourceMappingURL=Activity.js.map

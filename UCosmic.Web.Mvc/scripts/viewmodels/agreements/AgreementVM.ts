@@ -114,10 +114,10 @@ class InstitutionalAgreementEditModel {
 
     //set the path for editing an agreement or new agreement.
     editOrNewUrl = { val: 'new' };
-    trail: KnockoutObservableArray<string> = ko.observableArray([]);
-    nextForceDisabled: KnockoutObservable<boolean> = ko.observable(false);
-    prevForceDisabled: KnockoutObservable<boolean> = ko.observable(false);
-    pageNumber: KnockoutObservable<number> = ko.observable();
+    trail = ko.observableArray<string>([]);
+    nextForceDisabled = ko.observable<boolean>(false);
+    prevForceDisabled = ko.observable<boolean>(false);
+    pageNumber = ko.observable<number>();
     $genericAlertDialog: JQuery = undefined;
 
     //added this because kendo window after selecting a autocomplte and then clicking the window, 

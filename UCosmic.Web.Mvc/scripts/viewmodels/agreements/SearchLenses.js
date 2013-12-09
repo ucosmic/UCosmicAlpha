@@ -1,8 +1,8 @@
+/// <reference path="../../typings/knockout/knockout.d.ts" />
+/// <reference path="SearchTable.ts" />
+/// <reference path="SearchMap.ts" />
 var Agreements;
 (function (Agreements) {
-    /// <reference path="../../typings/knockout/knockout.d.ts" />
-    /// <reference path="SearchTable.ts" />
-    /// <reference path="SearchMap.ts" />
     (function (ViewModels) {
         var SearchLenses = (function () {
             //#endregion
@@ -28,7 +28,7 @@ var Agreements;
                 //#endregion
                 this._hasMapBeenResizedOnce = false;
                 this._runSammy();
-                this.table = new ViewModels.SearchTable({
+                this.table = new Agreements.ViewModels.SearchTable({
                     element: undefined,
                     domain: this.settings.domain,
                     visibility: this.settings.visibility,
@@ -37,7 +37,7 @@ var Agreements;
                     detailUrl: this.settings.detailUrl,
                     sammy: this.sammy
                 });
-                this.map = new ViewModels.SearchMap({
+                this.map = new Agreements.ViewModels.SearchMap({
                     element: undefined,
                     domain: this.settings.domain,
                     visibility: this.settings.visibility,
@@ -118,8 +118,8 @@ var Agreements;
                 this.map.countryCode('any');
                 this.map.placeId(0);
                 this.map.zoom(1);
-                this.map.lat(ViewModels.SearchMap.defaultMapCenter.lat());
-                this.map.lng(ViewModels.SearchMap.defaultMapCenter.lng());
+                this.map.lat(Agreements.ViewModels.SearchMap.defaultMapCenter.lat());
+                this.map.lng(Agreements.ViewModels.SearchMap.defaultMapCenter.lng());
             };
             SearchLenses.LensSessionKey = 'AgreementSearchLens';
             return SearchLenses;
@@ -128,4 +128,3 @@ var Agreements;
     })(Agreements.ViewModels || (Agreements.ViewModels = {}));
     var ViewModels = Agreements.ViewModels;
 })(Agreements || (Agreements = {}));
-//# sourceMappingURL=SearchLenses.js.map

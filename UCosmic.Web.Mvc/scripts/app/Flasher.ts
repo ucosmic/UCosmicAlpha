@@ -64,13 +64,13 @@ module App {
         }
 
         // text to be displayed in the flasher
-        text: KnockoutObservable<string> = ko.observable();
+        text = ko.observable<string>();
 
         // number of seconds to display the flashed text
         tickCount: KnockoutObservable<number> = ko.observable(9);
 
-        isDismissing: KnockoutObservable<boolean> = ko.observable();
-        isDismissed: KnockoutObservable<boolean> = ko.observable();
+        isDismissing = ko.observable<boolean>();
+        isDismissed = ko.observable<boolean>();
 
         // DOM element that wraps the flasher markup
         $element: JQuery = undefined;

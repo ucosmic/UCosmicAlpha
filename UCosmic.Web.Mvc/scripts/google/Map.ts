@@ -263,10 +263,10 @@ module App.GoogleMaps { // TODO: rename to App.Google to keep in line with googl
         //#endregion
         //#region Bounds (North East Soutn West)
 
-        north: KnockoutObservable<number> = ko.observable();
-        south: KnockoutObservable<number> = ko.observable();
-        east: KnockoutObservable<number> = ko.observable();
-        west: KnockoutObservable<number> = ko.observable();
+        north = ko.observable<number>();
+        south = ko.observable<number>();
+        east = ko.observable<number>();
+        west = ko.observable<number>();
 
         private _boundsChanged(): void {
             var bounds = this.map.getBounds();
@@ -329,7 +329,7 @@ module App.GoogleMaps { // TODO: rename to App.Google to keep in line with googl
         //#endregion
         //#region Markers
 
-        markers: KnockoutObservableArray<google.maps.Marker> = ko.observableArray([]);
+        markers = ko.observableArray<google.maps.Marker>([]);
 
         addMarker(options: google.maps.MarkerOptions): google.maps.Marker {
             options.map = this.map;
@@ -360,7 +360,7 @@ module App.GoogleMaps { // TODO: rename to App.Google to keep in line with googl
         //#endregion
         //#region InfoWindows
 
-        infoWindows: KnockoutObservableArray<google.maps.InfoWindow> = ko.observableArray([]);
+        infoWindows = ko.observableArray<google.maps.InfoWindow>([]);
 
         openInfoWindowAtMarker(options: google.maps.InfoWindowOptions, marker: google.maps.Marker): google.maps.InfoWindow {
             var infoWindow = new google.maps.InfoWindow(options);

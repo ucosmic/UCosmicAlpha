@@ -1,17 +1,17 @@
+/// <reference path="../../app/Spinner.ts" />
+/// <reference path="../../typings/knockout/knockout.d.ts" />
+/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
+/// <reference path="../../typings/globalize/globalize.d.ts" />
+/// <reference path="../../typings/jquery/jquery.d.ts" />
+/// <reference path="../../app/App.ts" />
+/// <reference path="../../typings/moment/moment.d.ts" />
+/// <reference path="../../app/Routes.ts" />
+/// <reference path="populateFiles.ts" />
+/// <reference path="../../typings/googlemaps/google.maps.d.ts" />
+/// <reference path="../../typings/linq/linq.d.ts" />
+/// <reference path="ApiModels.d.ts" />
 var Agreements;
 (function (Agreements) {
-    /// <reference path="../../app/Spinner.ts" />
-    /// <reference path="../../typings/knockout/knockout.d.ts" />
-    /// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
-    /// <reference path="../../typings/globalize/globalize.d.ts" />
-    /// <reference path="../../typings/jquery/jquery.d.ts" />
-    /// <reference path="../../app/App.ts" />
-    /// <reference path="../../typings/moment/moment.d.ts" />
-    /// <reference path="../../app/Routes.ts" />
-    /// <reference path="populateFiles.ts" />
-    /// <reference path="../../typings/googlemaps/google.maps.d.ts" />
-    /// <reference path="../../typings/linq/linq.d.ts" />
-    /// <reference path="ApiModels.d.ts" />
     (function (ViewModels) {
         var PublicView = (function () {
             function PublicView(agreementId, agreementVisibility) {
@@ -153,6 +153,7 @@ var Agreements;
                     _this._googleMarkers.push(marker);
                 });
 
+                // when there is only 1 marker, center the map on it
                 if (centers.length == 1) {
                     this._googleMap.setCenter(latLngs[0]);
 
@@ -233,4 +234,3 @@ var Agreements;
     })(Agreements.ViewModels || (Agreements.ViewModels = {}));
     var ViewModels = Agreements.ViewModels;
 })(Agreements || (Agreements = {}));
-//# sourceMappingURL=PublicView.js.map

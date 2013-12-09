@@ -1,11 +1,11 @@
+/// <reference path="../../typings/moment/moment.d.ts" />
+/// <reference path="../../typings/jquery/jquery.d.ts" />
+/// <reference path="../../typings/knockout/knockout.d.ts" />
+/// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
+/// <reference path="Search.ts" />
+/// <reference path="ApiModels.d.ts" />
 var Agreements;
 (function (Agreements) {
-    /// <reference path="../../typings/moment/moment.d.ts" />
-    /// <reference path="../../typings/jquery/jquery.d.ts" />
-    /// <reference path="../../typings/knockout/knockout.d.ts" />
-    /// <reference path="../../typings/knockout.mapping/knockout.mapping.d.ts" />
-    /// <reference path="Search.ts" />
-    /// <reference path="ApiModels.d.ts" />
     (function (ViewModels) {
         var SearchResult = (function () {
             function SearchResult(values, owner) {
@@ -55,4 +55,3 @@ var Agreements;
     })(Agreements.ViewModels || (Agreements.ViewModels = {}));
     var ViewModels = Agreements.ViewModels;
 })(Agreements || (Agreements = {}));
-//# sourceMappingURL=SearchResult.js.map

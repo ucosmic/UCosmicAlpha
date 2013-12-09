@@ -15,6 +15,7 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
+
 var Establishments;
 (function (Establishments) {
     (function (ViewModels) {
@@ -55,7 +56,7 @@ var Establishments;
                             return ko.utils.unwrapObservable(data.id);
                         },
                         create: function (options) {
-                            return new ViewModels.SearchResult(options.data, options.parent);
+                            return new Establishments.ViewModels.SearchResult(options.data, options.parent);
                         }
                     },
                     ignore: ['pageSize', 'pageNumber']
@@ -85,8 +86,9 @@ var Establishments;
                         };
                         response.splice(response.length, 0, emptyValue);
 
-                        _this.countries(response);
+                        _this.countries(response); // push into observable array
 
+                        // restore selected value when paging backwards
                         if (lastCountryCode && lastCountryCode !== _this.countryCode())
                             _this.countryCode(lastCountryCode);
                     });
@@ -170,6 +172,7 @@ var Establishments;
 
                 var pageNumber = sammyContext.params['pageNumber'];
 
+                // make sure the viewmodel pagenumber is in sync with the route
                 if (pageNumber && parseInt(pageNumber) !== Number(this.pageNumber()))
                     this.pageNumber(parseInt(pageNumber));
                 return true;
@@ -205,7 +208,7 @@ var Establishments;
                 } else {
                     ko.mapping.fromJS(js, this.resultsMapping, this);
                 }
-                App.WindowScroller.restoreTop();
+                App.WindowScroller.restoreTop(); // restore scroll when coming back from detail page
                 this.spinner.stop();
                 this.swipeCallback();
                 this.transitionedPageNumber(this.pageNumber());
@@ -260,4 +263,3 @@ var Establishments;
     })(Establishments.ViewModels || (Establishments.ViewModels = {}));
     var ViewModels = Establishments.ViewModels;
 })(Establishments || (Establishments = {}));
-//# sourceMappingURL=Search.js.map

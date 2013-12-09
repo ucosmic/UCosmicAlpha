@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using UCosmic.Domain.Activities;
-using UCosmic.Domain.Degrees;
 using UCosmic.Domain.Establishments;
 using UCosmic.Domain.Places;
 
@@ -25,16 +24,23 @@ namespace UCosmic.Domain.Employees
         internal IEnumerable<int> GetEstablishmentIdsWithData()
         {
             var establishmentsWithActivities = _entities.Query<Activity>()
+                // activities must be originals, published, and author must have a default affiliation
                 .Where(x => x.Original == null && x.ModeText == PublishedText && x.Person.Affiliations.Any(y => y.IsDefault))
-                .Select(x => x.Person.Affiliations.FirstOrDefault(y => y.IsDefault).Establishment)
+
+                // get the author's affiliated establishments which are offspring of the author's default affiliation
+                .SelectMany(x => x.Person.Affiliations.Where(y => y.IsDefault ||
+                    // ReSharper disable PossibleNullReferenceException
+                    y.Establishment.Ancestors.Any(z => z.AncestorId == x.Person.Affiliations.FirstOrDefault(a => a.IsDefault).EstablishmentId)
+                    // ReSharper restore PossibleNullReferenceException
+                )
+                .Select(y => y.Establishment))
                 .Distinct()
             ;
-            var establishmentsWithDegrees = _entities.Query<Degree>()
-                .Where(x => x.Person.Affiliations.Any(y => y.IsDefault))
-                .Select(x => x.Person.Affiliations.FirstOrDefault(y => y.IsDefault).Establishment)
+            var establishmentAncestorsWithActivities = establishmentsWithActivities.SelectMany(x => x.Ancestors.Select(y => y.Ancestor))
                 .Distinct()
             ;
-            var establishmentIdsWithEmployeeData = establishmentsWithActivities.Union(establishmentsWithDegrees)
+            var establishmentIdsWithEmployeeData = establishmentsWithActivities
+                .Union(establishmentAncestorsWithActivities)
                 .Select(x => x.RevisionId)
             ;
 
@@ -46,8 +52,9 @@ namespace UCosmic.Domain.Employees
             var activitiesEagerLoad = new Expression<Func<ActivityValues, object>>[]
             {
                 x => x.Activity,
-                x => x.Locations.Select(y => y.Place.Ancestors),
+                x => x.Locations.Select(y => y.Place.Ancestors.Select(z => z.Ancestor)),
                 x => x.Types,
+                x => x.Tags,
             };
 
             // get all public activities for this establishment and all of its offspring establishments
@@ -56,10 +63,11 @@ namespace UCosmic.Domain.Employees
                     x.Original == null && x.ModeText == PublishedText && // published, non-work-copy
                     x.Person.Affiliations.Any(y => y.IsDefault) // make sure person's default affiliation is not null
                     &&
-                    (   // person's default affiliation is with or underneath the tenant domain being queried
-                        x.Person.Affiliations.FirstOrDefault(y => y.IsDefault).EstablishmentId == establishmentId
-                        ||
-                        x.Person.Affiliations.FirstOrDefault(y => y.IsDefault).Establishment.Ancestors.Any(y => y.AncestorId == establishmentId)
+                    (   // person must be affiliated with this establishment or one of its offspring under the default affiliation
+                        x.Person.Affiliations.Any(y => (y.EstablishmentId == establishmentId || y.Establishment.Ancestors.Any(z => z.AncestorId == establishmentId))
+                            // ReSharper disable PossibleNullReferenceException
+                            && (y.IsDefault || y.Establishment.Ancestors.Any(z => z.AncestorId == x.Person.Affiliations.FirstOrDefault(a => a.IsDefault).EstablishmentId)))
+                            // ReSharper restore PossibleNullReferenceException
                     )
                 )
                 .Select(x => x.Values.FirstOrDefault(y => y.ModeText == PublishedText))
@@ -69,7 +77,8 @@ namespace UCosmic.Domain.Employees
 
             var countriesEagerLoad = new Expression<Func<Place, object>>[] { x => x.GeoPlanetPlace, };
             Expression<Func<ActivityValues, IEnumerable<Place>>> activityLocationPlaces = x => x.Locations.Select(y => y.Place);
-            Expression<Func<ActivityValues, IEnumerable<Place>>> activityLocationPlaceAncestors = x => x.Locations.SelectMany(y => y.Place.Ancestors.Select(z => z.Ancestor));
+            Expression<Func<ActivityValues, IEnumerable<Place>>> activityLocationPlaceAncestors = x => x.Locations
+                .SelectMany(y => y.Place.Ancestors.Where(z => !z.Ancestor.IsEarth).Select(z => z.Ancestor));
 
             // TODO: this still does not account for activites tagged with a place.
             var establishmentPlaces = _entities.Query<EstablishmentLocation>()
@@ -173,7 +182,7 @@ namespace UCosmic.Domain.Employees
                     ? activitiesArray
                         .Where(activity =>
                             activity.Locations.Any(location => location.PlaceId == place.RevisionId) ||
-                            activity.Locations.Any(location => location.Place.Ancestors.Any(node => node.AncestorId == place.RevisionId)) ||
+                            activity.Locations.Any(location => location.Place.Ancestors.Any(node => node.AncestorId == place.RevisionId && !place.IsEarth)) ||
                                 //activity.Locations.Any(location => location.Place.IsRegion &&
                                 //    (location.Place.Components.Any(c => c.RevisionId == place.RevisionId) ||
                                 //    location.Place.Components.Any(c => c.Ancestors.Any(node => node.AncestorId == place.RevisionId)))) ||

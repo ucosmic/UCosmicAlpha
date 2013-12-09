@@ -21,9 +21,9 @@ module Agreements {
         expDate = ko.observable();
         isEstimated = ko.observable();
         autoRenew = ko.observable(2);
-        $statusOptions: KnockoutObservable<JQuery> = ko.observable();
+        $statusOptions = ko.observable<JQuery>();
         statusOptions = ko.mapping.fromJS([]);
-        statusOptionSelected: KnockoutObservable<string> = ko.observable();
+        statusOptionSelected = ko.observable<string>();
         validateEffectiveDatesCurrentStatus;
 
         private _setupValidation(): void {

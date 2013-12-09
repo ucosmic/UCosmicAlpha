@@ -8,16 +8,17 @@ var App;
 
     //private methods
     function init(flasher) {
+        // executes once each time the flasher text changes
         if (flasher.text()) {
-            window.clearInterval(tickInterval);
-            ticks = 9;
-            flasher.tickCount(ticks);
+            window.clearInterval(tickInterval); // clear the tick interval
+            ticks = 9; // reset ticks to top value
+            flasher.tickCount(ticks); // update the viewmodel tick count
             tickInterval = window.setInterval(function () {
-                tick(flasher);
+                tick(flasher); // tick once each second
             }, 1000);
             flasher.isDismissing(false);
             flasher.isDismissed(false);
-            flasher.$element.hide().removeClass('hide').fadeIn('fast');
+            flasher.$element.hide().removeClass('hide').fadeIn('fast'); // fade in element
         } else {
             flasher.isDismissed(true);
             flasher.isDismissing(false);
@@ -29,14 +30,15 @@ var App;
     }
 
     function tick(flasher) {
+        // executes once each second until tick interval is cleared
         if (ticks <= 0) {
-            ticks = 0;
-            window.clearInterval(tickInterval);
-            flasher.dismiss();
+            ticks = 0; // reset ticks to zero
+            window.clearInterval(tickInterval); // clear the tick interval
+            flasher.dismiss(); // dismiss the flasher (fade out & hide)
         } else {
-            --ticks;
+            --ticks; // decrement the ticks (one second has passed)
         }
-        flasher.tickCount(ticks);
+        flasher.tickCount(ticks); // update the viewmodel tick count
     }
 
     // keep class private but implement exported interface
@@ -100,4 +102,3 @@ var App;
     })();
     App.FlasherProxy = FlasherProxy;
 })(App || (App = {}));
-//# sourceMappingURL=Flasher.js.map

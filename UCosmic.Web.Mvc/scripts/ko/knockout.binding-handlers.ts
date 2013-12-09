@@ -59,7 +59,7 @@ ko.bindingHandlers.multilineText = {
         return { 'controlsDescendantBindings': true };
     },
     update: function (element: Element, valueAccessor: () => any): void {
-        var text: string = ko.utils.unwrapObservable(valueAccessor());
+        var text: string = ko.utils.unwrapObservable<string>(valueAccessor());
         if (text) {
             text = text.replace('\r\n', '<br />').replace('\n\r', '<br />')
                 .replace('\n', '<br />').replace('\r', '<br />');

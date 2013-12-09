@@ -205,7 +205,7 @@ module ViewModels.Employees {
 
         degreeCount: KnockoutObservable<number>;
 
-        subscriptions: Array;
+        subscriptions: any[];
 
         /* If you add or remove from this list, also look at _getHeatmapActivityDataTable()
             and _getHeatmapPeopleDataTable() to update the custom place tooltips text. */
@@ -299,8 +299,8 @@ module ViewModels.Employees {
             this.sammy = Sammy();
             this.initialLocations = [];        // Bug - To overcome bug in Multiselect.
             this.selectedLocationValues = [];
-            this.fromDate = ko.observable();
-            this.toDate = ko.observable();
+            this.fromDate = ko.observable<any>();
+            this.toDate = ko.observable<any>();
             this.includeUndated = ko.observable(true);
             this.establishmentId = ko.observable(null);
             this.establishmentOfficialName = ko.observable(null);
@@ -320,8 +320,8 @@ module ViewModels.Employees {
             this.mapRegion = ko.observable('world');
             this.isGlobalView = ko.observable(true);
 
-            this.degreesChecked = ko.observable();
-            this.tags = ko.observable();
+            this.degreesChecked = ko.observable<boolean>();
+            this.tags = ko.observable<any>();
 
             this.loadSpinner = new App.Spinner({ delay: 200, });
             this.sortSpinner = new App.Spinner({ delay: 200, });
@@ -498,15 +498,15 @@ module ViewModels.Employees {
                 dataTextField: "officialName",
                 dataValueField: "id",
                 dataSource: this.institutionDropListData,
-                change: function (e) {
-                    var item = this.dataItem(e.sender.selectedIndex);
-                    me.clearCachedData();
-                    me.establishmentId(item.id);
-                    me.establishmentOfficialName(item.officialName);
-                    me.selectMap(me.mapType());
+                //change: function (e) {
+                //    var item = this.dataItem(e.sender.selectedIndex);
+                //    me.clearCachedData();
+                //    me.establishmentId(item.id);
+                //    me.establishmentOfficialName(item.officialName);
+                //    me.selectMap(me.mapType());
 
-                    me.drawPointmap(true);
-                }
+                //    me.drawPointmap(true);
+                //}
             });
 
             $("#" + departmentDropListId).kendoDropDownList({
@@ -551,30 +551,30 @@ module ViewModels.Employees {
                 dataValueField: "id",
                 optionLabel: { officialName: "[All Colleges]", id: 0 },
                 dataSource: collegeDropListDataSource,
-                change: function (e) {
-                    var selectedIndex = e.sender.selectedIndex;
-                    if (selectedIndex != -1) {
-                        var item = this.dataItem(selectedIndex);
-                        if ((item != null) && (item.id != 0)) {
-                            var dataSource = new kendo.data.DataSource({
-                                transport: {
-                                    read: {
-                                        url: App.Routes.WebApi.Establishments.getChildren(item.id),
-                                        data: { orderBy: ['rank-asc', 'name-asc'] }
-                                    }
-                                }
-                            });
+                //change: function (e) {
+                //    var selectedIndex = e.sender.selectedIndex;
+                //    if (selectedIndex != -1) {
+                //        var item = this.dataItem(selectedIndex);
+                //        if ((item != null) && (item.id != 0)) {
+                //            var dataSource = new kendo.data.DataSource({
+                //                transport: {
+                //                    read: {
+                //                        url: App.Routes.WebApi.Establishments.getChildren(item.id),
+                //                        data: { orderBy: ['rank-asc', 'name-asc'] }
+                //                    }
+                //                }
+                //            });
 
-                            $("#" + departmentDropListId).data("kendoDropDownList").setDataSource(dataSource);
-                        }
+                //            $("#" + departmentDropListId).data("kendoDropDownList").setDataSource(dataSource);
+                //        }
 
-                        if (selectedIndex == 0) {
-                            $("#" + departmentDropListId).data("kendoDropDownList").setDataSource(new kendo.data.DataSource());
-                        }
+                //        if (selectedIndex == 0) {
+                //            $("#" + departmentDropListId).data("kendoDropDownList").setDataSource(new kendo.data.DataSource());
+                //        }
 
-                        me.drawPointmap(true);
-                    }
-                },
+                //        me.drawPointmap(true);
+                //    }
+                //},
                 dataBound: function (e) {
                     if ((this.selectedIndex != null) && (this.selectedIndex != -1)) {
                         var item = this.dataItem(this.selectedIndex);
@@ -610,33 +610,33 @@ module ViewModels.Employees {
                             }
                         }
                     }),
-                    change: function (e) {
-                        var selectedIndex = e.sender.selectedIndex;
-                        if ((selectedIndex != null) && (selectedIndex != -1)) {
-                            var item = this.dataItem(selectedIndex);
-                            if ((item != null) && (item.id != 0)) {
-                                var dataSource = new kendo.data.DataSource({
-                                    transport: {
-                                        read: {
-                                            url: App.Routes.WebApi.Establishments.getChildren(item.id),
-                                            data: { orderBy: ['rank-asc', 'name-asc'] }
-                                        }
-                                    }
-                                });
+                    //change: function (e) {
+                    //    var selectedIndex = e.sender.selectedIndex;
+                    //    if ((selectedIndex != null) && (selectedIndex != -1)) {
+                    //        var item = this.dataItem(selectedIndex);
+                    //        if ((item != null) && (item.id != 0)) {
+                    //            var dataSource = new kendo.data.DataSource({
+                    //                transport: {
+                    //                    read: {
+                    //                        url: App.Routes.WebApi.Establishments.getChildren(item.id),
+                    //                        data: { orderBy: ['rank-asc', 'name-asc'] }
+                    //                    }
+                    //                }
+                    //            });
 
-                                $("#" + collegeDropListId).data("kendoDropDownList").setDataSource(dataSource);
-                            }
+                    //            $("#" + collegeDropListId).data("kendoDropDownList").setDataSource(dataSource);
+                    //        }
 
-                            if (selectedIndex == 0) {
-                                $("#" + departmentDropListId).data("kendoDropDownList").setDataSource(new kendo.data.DataSource());
-                                $("#" + collegeDropListId).data("kendoDropDownList").setDataSource(new kendo.data.DataSource());
+                    //        if (selectedIndex == 0) {
+                    //            $("#" + departmentDropListId).data("kendoDropDownList").setDataSource(new kendo.data.DataSource());
+                    //            $("#" + collegeDropListId).data("kendoDropDownList").setDataSource(new kendo.data.DataSource());
 
-                                $("#" + collegeDropListId).data("kendoDropDownList").text("");
-                            }
+                    //            $("#" + collegeDropListId).data("kendoDropDownList").text("");
+                    //        }
 
-                            me.drawPointmap(true);
-                        }
-                    },
+                    //        me.drawPointmap(true);
+                    //    }
+                    //},
                     dataBound: function (e) {
                         if ((this.selectedIndex != null) && (this.selectedIndex != -1)) {
                             var item = this.dataItem(this.selectedIndex);

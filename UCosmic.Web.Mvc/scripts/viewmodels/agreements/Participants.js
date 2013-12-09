@@ -107,4 +107,3 @@ var Agreements;
     })();
     Agreements.Participants = Participants;
 })(Agreements || (Agreements = {}));
-//# sourceMappingURL=Participants.js.map

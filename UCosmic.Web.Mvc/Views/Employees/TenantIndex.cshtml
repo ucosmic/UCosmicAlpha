@@ -12,24 +12,20 @@
 @section styles
 {
     <link rel="stylesheet" type="text/css" href="~/styles/sass/sheets/employees/summary.css" />
-
 }
 @section scripts
 {
     @* need this for the google visualization packages *@
-
     <script src="https://www.google.com/jsapi"></script>
 
     @* IE8 cannot handle D3 or SVG's in general *@
     <!--[if !IE | gt IE 8]><!-->
-
     <script src="~/scripts/oss/d3.v3.js"></script>
-
     <!--<![endif]-->
 
-    @* employee API routes come from CSHTML file *@
-
+    @* API routes come from CSHTML files *@
     <script>
+        @{Html.RenderPartial(MVC.JavaScriptRoutes.Views.Establishments);}
         @{Html.RenderPartial(MVC.JavaScriptRoutes.Views.Employees);}
     </script>
 
@@ -37,10 +33,10 @@
     @Scripts.Render("~/bundles/employees/summary")
 
     @* Google API needs to be called outside of JQuery ready() *@
-
     <script>
         Employees.ViewModels.Summary.loadGoogleVisualization().done(function () {
             var viewModel = new Employees.ViewModels.Summary({
+                tenantId: parseInt('@ViewBag.EmployeesEstablishmentId'),
                 tenantDomain: '@ViewBag.EmployeesDomain',
                 element: $('[data-current-module=employees]')[0],
                 geoChart: {
@@ -230,6 +226,13 @@
         <aside class="on-right from-top">
             <div class="summary-sidebar">
 
+                <div data-bind="visible: hasTenancyData" style="display: none;">
+                    <select data-bind="options: tenantOptions, value: selectedTenant, optionsText: 'text', optionsValue: 'value', jQuery: '$selectTenant'"
+                            style="padding: 3px 5px; margin: initial; height: auto;">
+                        <option value="">[Loading...]</option>
+                    </select>
+                </div>
+
                 @* ACTIVITY TYPES COLUMN CHART & ICONS *@
                 <div id="activity_type_chart_box" data-bind="visible: activityTypes().length" style="display: none;">
                     <div class="heading group">
@@ -253,7 +256,8 @@
                                 </div>
                             </div>
                         </div>
-                        <span data-bind="visible: hasPlaceId">in
+                        <span data-bind="visible: hasPlaceId">
+                            in
                             <span class="light-transparent badge" data-bind="text: selectedPlaceSummary.locationCount">?</span>
                         </span>
                     </div>
@@ -290,7 +294,8 @@
                                 </div>
                             </div>
                         </div>
-                        <span data-bind="visible: hasPlaceId">in
+                        <span data-bind="visible: hasPlaceId">
+                            in
                             <span class="light-transparent badge" data-bind="text: selectedPlaceSummary.locationCount">?</span>
                         </span>
                     </div>

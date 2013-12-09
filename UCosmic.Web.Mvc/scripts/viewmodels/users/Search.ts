@@ -19,11 +19,11 @@ module ViewModels.Users {
         static OrderBySessionKey = 'UserSearchOrderBy';
 
         sammy: Sammy.Application = Sammy();
-        $historyJson: KnockoutObservable<JQuery> = ko.observable();
-        private _history: KnockoutObservableArray<string> = ko.observableArray([]);
+        $historyJson = ko.observable<JQuery>();
+        private _history = ko.observableArray<string>([]);
         private _historyIndex: number = 0;
         impersonateForm: Element;
-        impersonateUserName: KnockoutObservable<string> = ko.observable();
+        impersonateUserName = ko.observable<string>();
         flasherProxy = new App.FlasherProxy();
 
         constructor() {
@@ -150,7 +150,7 @@ module ViewModels.Users {
                 }
             });
 
-            this._history.subscribe((newValue: string[]): void => {
+            this._history.subscribe((newValue: string): void => {
                 if (this.$historyJson() && this.$historyJson().length) {
                     var currentJson = this.$historyJson().val();
                     var newJson = ko.toJSON(newValue);

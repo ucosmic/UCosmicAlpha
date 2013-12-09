@@ -6,7 +6,7 @@ module App {
 
         input: PagerStatus;
         output: PagerStatus;
-        items: KnockoutObservableArray<T> = ko.observableArray();
+        items = ko.observableArray<T>();
 
         constructor(pageNumber: string, pageSize: string) {
             this.input = new PagerStatus(pageNumber, pageSize);
@@ -22,10 +22,10 @@ module App {
 
     export class PagerStatus {
 
-        pageNumberText: KnockoutObservable<string> = ko.observable('1');
-        pageSizeText: KnockoutObservable<string> = ko.observable('10');
-        itemCount: KnockoutObservable<number> = ko.observable();
-        itemTotal: KnockoutObservable<number> = ko.observable();
+        pageNumberText = ko.observable<string>('1');
+        pageSizeText = ko.observable<string>('10');
+        itemCount = ko.observable<number>();
+        itemTotal = ko.observable<number>();
 
         constructor(pageNumber: string, pageSize: string) {
             this.pageNumberText(pageNumber);
@@ -48,7 +48,7 @@ module App {
 
         isItemTotalDefined: KnockoutComputed<boolean> = ko.computed((): boolean => {
             var itemTotal = this.itemTotal();
-            return itemTotal || itemTotal == 0;
+            return itemTotal || itemTotal == 0 ? true : false;
         });
 
         pageCount: KnockoutComputed<number> = ko.computed((): number => {

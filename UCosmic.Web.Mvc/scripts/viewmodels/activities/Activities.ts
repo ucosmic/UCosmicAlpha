@@ -55,7 +55,7 @@ module Activities.ViewModels {
 
         private _owner: ActivityList;
         activityId: KnockoutObservable<string>;
-        mode: KnockoutObservable<ActivityMode> = ko.observable();
+        mode = ko.observable<ActivityMode>();
         title: KnockoutObservable<string>;
         onGoing: KnockoutObservable<boolean>;
         startsOn: KnockoutObservable<string>;

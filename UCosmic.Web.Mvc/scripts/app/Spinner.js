@@ -2,6 +2,8 @@
 /// <reference path="../typings/knockout/knockout.d.ts" />
 var App;
 (function (App) {
+    
+
     var Spinner = (function () {
         //constructor(options?: ISpinnerxOptions) {
         //    if (!options) options = new SpinnerxOptions();
@@ -33,8 +35,11 @@ var App;
             this.isRunning(true);
             if (this.settings.delay < 1 || immediately)
                 this.isVisible(true);
-else
+            else
                 setTimeout(function () {
+                    // only show spinner when load is still being processed
+                    //if (this.isSpinning() && !this.inTransition())
+                    //if (this._isActivated())
                     if (_this.isRunning())
                         _this.isVisible(true);
                 }, this.settings.delay);
@@ -53,4 +58,3 @@ else
     })();
     App.Spinner = Spinner;
 })(App || (App = {}));
-//# sourceMappingURL=Spinner.js.map

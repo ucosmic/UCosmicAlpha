@@ -135,6 +135,8 @@ var Agreements;
 
                                                 _this.establishmentItemViewModel.validatingSpinner.start();
 
+                                                // reference the single name and url
+                                                // wait for async validation to stop
                                                 if (officialName.text.isValidating() || officialUrl.value.isValidating() || _this.establishmentItemViewModel.ceebCode.isValidating() || _this.establishmentItemViewModel.uCosmicCode.isValidating()) {
                                                     setTimeout(function () {
                                                         var waitResult = _this.establishmentItemViewModel.submitToCreate(formElement);
@@ -317,4 +319,3 @@ var Agreements;
     })();
     Agreements.EstablishmentSearchNav = EstablishmentSearchNav;
 })(Agreements || (Agreements = {}));
-//# sourceMappingURL=EstablishmentSearchNav.js.map

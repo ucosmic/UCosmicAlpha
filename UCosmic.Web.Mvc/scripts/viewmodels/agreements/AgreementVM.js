@@ -291,6 +291,7 @@ var InstitutionalAgreementEditModel = (function () {
         var _this = this;
         var offset;
 
+        // validate in this order to put scroll in right place
         if (!this.datesStatus.validateEffectiveDatesCurrentStatus.isValid()) {
             offset = $("#effective_dates_current_status").offset();
             this.datesStatus.validateEffectiveDatesCurrentStatus.errors.showAllMessages(true);
@@ -310,6 +311,7 @@ var InstitutionalAgreementEditModel = (function () {
             $("#nav_participants").addClass("current");
         }
         if (offset != undefined) {
+            //ie sucks!
             if (!$("body").scrollTop()) {
                 $("html, body").scrollTop(offset.top - 20);
             } else {
@@ -320,6 +322,7 @@ var InstitutionalAgreementEditModel = (function () {
 
             this.spinner.start();
 
+            //ie sucks!
             if (!$("body").scrollTop()) {
                 $("html, body").scrollTop(0);
             } else {
@@ -443,4 +446,3 @@ var InstitutionalAgreementEditModel = (function () {
     };
     return InstitutionalAgreementEditModel;
 })();
-//# sourceMappingURL=AgreementVM.js.map

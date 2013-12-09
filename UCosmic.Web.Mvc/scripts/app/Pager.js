@@ -32,7 +32,7 @@ var App;
             });
             this.isItemTotalDefined = ko.computed(function () {
                 var itemTotal = _this.itemTotal();
-                return itemTotal || itemTotal == 0;
+                return itemTotal || itemTotal == 0 ? true : false;
             });
             this.pageCount = ko.computed(function () {
                 if (!_this.isItemTotalDefined())
@@ -54,6 +54,7 @@ var App;
                 var pageNumber = _this.pageNumber();
                 var options = _this.pageNumberOptions();
 
+                // keep pageNumber as an option so that we don't lose it when options change
                 if (options.length == 1 && options[0] != pageNumber)
                     options[0] = pageNumber;
             });
@@ -117,4 +118,3 @@ var App;
     })();
     App.PagerStatus = PagerStatus;
 })(App || (App = {}));
-//# sourceMappingURL=Pager.js.map

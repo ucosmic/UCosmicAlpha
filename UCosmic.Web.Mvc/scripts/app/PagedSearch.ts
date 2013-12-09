@@ -6,10 +6,10 @@ module App {
     export class PagedSearch {
 
         // paging observables
-        pageSize: KnockoutObservable<number> = ko.observable();
-        pageNumber: KnockoutObservable<number> = ko.observable();
-        transitionedPageNumber: KnockoutObservable<number> = ko.observable();
-        itemTotal: KnockoutObservable<number> = ko.observable();
+        pageSize = ko.observable<number>();
+        pageNumber = ko.observable<number>();
+        transitionedPageNumber = ko.observable<number>();
+        itemTotal = ko.observable<number>();
         nextForceDisabled: KnockoutObservable<boolean> = ko.observable(false);
         prevForceDisabled: KnockoutObservable<boolean> = ko.observable(false);
 
@@ -47,7 +47,7 @@ module App {
         showStatus: KnockoutComputed<boolean>;
 
         // filtering
-        orderBy: KnockoutObservable<string> = ko.observable();
+        orderBy = ko.observable<string>();
         keyword: KnockoutObservable<string> =
             ko.observable($('input[type=hidden][data-bind="value: keyword"]').val());
         throttledKeyword: KnockoutComputed<string>;
@@ -108,7 +108,7 @@ module App {
             });
 
             // filtering computeds
-            this.throttledKeyword = ko.computed(this.keyword)
+            this.throttledKeyword = ko.computed<string>(this.keyword)
                 .extend({ throttle: 400 });
         }
 

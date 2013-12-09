@@ -1,3 +1,7 @@
+/// <reference path="../typings/googlemaps/google.maps.d.ts" />
+/// <reference path="../typings/knockout/knockout.d.ts" />
+/// <reference path="../typings/jquery/jquery.d.ts" />
+/// <reference path="../typings/jqueryui/jqueryui.d.ts" />
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -6,10 +10,6 @@ var __extends = this.__extends || function (d, b) {
 };
 var App;
 (function (App) {
-    /// <reference path="../typings/googlemaps/google.maps.d.ts" />
-    /// <reference path="../typings/knockout/knockout.d.ts" />
-    /// <reference path="../typings/jquery/jquery.d.ts" />
-    /// <reference path="../typings/jqueryui/jqueryui.d.ts" />
     (function (GoogleMaps) {
         var gm = google.maps;
 
@@ -42,27 +42,28 @@ var App;
                 this.$markerRemoveButton = this.$element.find('.marker img.remove-button');
                 this.$markerButtonsContainer = this.$element.find('.marker');
 
-                this.setMap(map);
+                this.setMap(map); // invokes onAdd() then draw()
             }
             ToolsOverlay.prototype.onAdd = function () {
                 var _this = this;
                 // render the tools element on the map canvas
                 this.getMap().controls[this.position].push(this.element);
 
+                // display the correct marker button
                 if (this.markerLatLng())
                     this.$markerAddButton.hide();
-else
+                else
                     this.$markerRemoveButton.hide();
 
                 // add click handlers to the marker buttons
-                this.$markerAddButton.on('click', this, function (e) {
+                this.$markerAddButton.on('click', undefined, this, function (e) {
                     _this.createMarker(e);
                 });
-                this.$markerRemoveButton.on('click', this, function (e) {
+                this.$markerRemoveButton.on('click', undefined, this, function (e) {
                     _this.removeMarker(e);
                 });
 
-                this.$element.show();
+                this.$element.show(); // unhide the tools element
             };
 
             ToolsOverlay.prototype.onRemove = function () {
@@ -130,16 +131,16 @@ else
                     clickable: false,
                     icon: new gm.MarkerImage($dragIcon.attr('src'), new gm.Size($dragIcon.width(), $dragIcon.height()), dragOrigin, dragAnchor)
                 });
-                this.$markerAddButton.hide();
-                this.$markerRemoveButton.show();
+                this.$markerAddButton.hide(); // hide the add button
+                this.$markerRemoveButton.show(); // show the remove button
                 this.markerMoveListener = gm.event.addListener(this.getMap(), 'mousemove', function (e) {
-                    _this.marker.setPosition(e.latLng);
+                    _this.marker.setPosition(e.latLng); // move the marker icon along with the mouse
                 });
                 this.markerDropListener = gm.event.addListenerOnce(this.getMap(), 'mouseup', function (e) {
                     gm.event.removeListener(_this.markerMoveListener);
                     gm.event.removeListener(_this.markerDropListener);
                     _this.getMap().setOptions({ draggableCursor: undefined });
-                    _this.marker.setMap(null);
+                    _this.marker.setMap(null); // remove old marker
 
                     // compute position to drop the marker onto
                     var overlayView = new gm.OverlayView();
@@ -154,8 +155,8 @@ else
                     if (dragOffsetData && dragOffsetData.indexOf(','))
                         dragOffset = new gm.Point(parseInt(dragOffsetData.split(',')[0]), parseInt(dragOffsetData.split(',')[1]));
 
-                    pixels.y += dragOffset.y;
-                    pixels.x += dragOffset.x;
+                    pixels.y += dragOffset.y; // Y offset
+                    pixels.x += dragOffset.x; // X offset
                     e.latLng = overlayView.getProjection().fromContainerPixelToLatLng(pixels);
                     _this.placeMarker(e.latLng);
                     $(_this.getMap().getDiv()).trigger('marker_created', _this);
@@ -205,11 +206,11 @@ else
                     this.markerDropListener = undefined;
                 }
                 gm.event.clearInstanceListeners(this.marker);
-                this.marker.setMap(null);
+                this.marker.setMap(null); // destroy the marker
                 this.marker = undefined;
-                this.updateMarkerLatLng(null);
-                this.$markerRemoveButton.hide();
-                this.$markerAddButton.show();
+                this.updateMarkerLatLng(null); // nullify coordinates
+                this.$markerRemoveButton.hide(); // hide remove button
+                this.$markerAddButton.show(); // show add button
                 $(this.getMap().getDiv()).trigger('marker_destroyed', this);
             };
 
@@ -232,4 +233,3 @@ else
     })(App.GoogleMaps || (App.GoogleMaps = {}));
     var GoogleMaps = App.GoogleMaps;
 })(App || (App = {}));
-//# sourceMappingURL=ToolsOverlay.js.map

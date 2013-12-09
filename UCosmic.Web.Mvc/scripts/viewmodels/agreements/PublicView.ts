@@ -40,14 +40,14 @@ module Agreements.ViewModels {
         isBound = ko.observable(false);
         files = ko.observableArray();
         content = ko.observable();
-        expiresOn = ko.observable();
+        expiresOn = ko.observable<string>();
         isAutoRenew = ko.observable();
         status = ko.observable();
         isExpirationEstimated = ko.observable();
         name = ko.observable();
         notes = ko.observable();
         participants = ko.observableArray();
-        startsOn = ko.observable();
+        startsOn = ko.observable<string>();
         type = ko.observable();
         umbrellaId = ko.observable();
         contacts = ko.mapping.fromJS([]);
@@ -126,7 +126,7 @@ module Agreements.ViewModels {
             });
             return deferred;
         }
-        private _googleMarkers: KnockoutObservableArray<google.maps.Marker> = ko.observableArray();
+        private _googleMarkers = ko.observableArray<google.maps.Marker>();
         private _bindMap(): void {
             // extract the partners from participants (they are non-owners)
             var partners = Enumerable.From(this.participants())

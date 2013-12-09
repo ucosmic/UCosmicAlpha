@@ -20,10 +20,11 @@ namespace UCosmic.Domain.Employees
                     x.Original == null && x.ModeText == publishedText && // published, non-work-copy
                     x.Person.Affiliations.Any(y => y.IsDefault) // make sure person's default affiliation is not null
                     &&
-                    (   // person's default affiliation is with or underneath the tenant domain being queried
-                        x.Person.Affiliations.FirstOrDefault(y => y.IsDefault).EstablishmentId == establishmentId
-                        ||
-                        x.Person.Affiliations.FirstOrDefault(y => y.IsDefault).Establishment.Ancestors.Any(y => y.AncestorId == establishmentId)
+                    (   // person must be affiliated with this establishment or one of its offspring under the default affiliation
+                        x.Person.Affiliations.Any(y => (y.EstablishmentId == establishmentId || y.Establishment.Ancestors.Any(z => z.AncestorId == establishmentId))
+                            // ReSharper disable PossibleNullReferenceException
+                            && (y.IsDefault || y.Establishment.Ancestors.Any(z => z.AncestorId == x.Person.Affiliations.FirstOrDefault(a => a.IsDefault).EstablishmentId)))
+                            // ReSharper restore PossibleNullReferenceException
                     )
                 )
                 .Select(x => x.Values.FirstOrDefault(y => y.ModeText == publishedText))
