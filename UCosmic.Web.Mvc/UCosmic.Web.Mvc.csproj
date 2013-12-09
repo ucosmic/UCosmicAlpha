@@ -2013,7 +2013,7 @@
     <TypeScriptCompile Include="scripts\typings\linq\linq.jquery.d.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\activities\ActivityEnums.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\activities\ActivitiesViewModel.ts" />
-    <Content Include="scripts\viewmodels\activities\ActivitiesSpike.js">
+    <Content Include="scripts\viewmodels\activities\ActivitiesViewModel.js">
       <DependentUpon>ActivitiesViewModel.ts</DependentUpon>
     </Content>
     <Content Include="scripts\viewmodels\activities\ActivityEnums.js">
@@ -2730,7 +2730,6 @@
     <Folder Include="App_Data\binary-data\" />
     <Folder Include="App_Data\mail\" />
     <Folder Include="content\mail\" />
-    <Folder Include="Views\ActivitiesSpike\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config">

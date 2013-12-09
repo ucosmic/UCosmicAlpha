@@ -2842,9 +2842,8 @@ namespace Links
                 public static readonly string Activities_ts = Url("Activities.ts");
                 public static readonly string Activities_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Activities.min.js") ? Url("Activities.min.js") : Url("Activities.js");
                               
-                public static readonly string ActivitiesSpike_js_map = Url("ActivitiesSpike.js.map");
                 public static readonly string ActivitiesViewModel_ts = Url("ActivitiesViewModel.ts");
-                public static readonly string ActivitiesSpike_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/ActivitiesSpike.min.js") ? Url("ActivitiesSpike.min.js") : Url("ActivitiesSpike.js");
+                public static readonly string ActivitiesViewModel_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/ActivitiesViewModel.min.js") ? Url("ActivitiesViewModel.min.js") : Url("ActivitiesViewModel.js");
                               
                 public static readonly string Activity_ts = Url("Activity.ts");
                 public static readonly string Activity_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Activity.min.js") ? Url("Activity.min.js") : Url("Activity.js");

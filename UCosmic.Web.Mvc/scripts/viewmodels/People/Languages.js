@@ -29,13 +29,8 @@ var People;
                             //vAxis: { title: 'Categories', titleTextStyle: { color: 'red' } },
                             hAxis: {
                                 ticks: [
-                                    { v: 0, f: "none" },
-                                    { v: 1, f: "Elementary" },
-                                    { v: 2, f: "Limited" },
-                                    { v: 3, f: "General" },
-                                    { v: 4, f: "Advanced" },
-                                    { v: 5, f: "Fluent" }
-                                ]
+                                    { v: 0, f: "none" }, { v: 1, f: "Elementary" }, { v: 2, f: "Limited" }, { v: 3, f: "General" },
+                                    { v: 4, f: "Advanced" }, { v: 5, f: "Fluent" }]
                             }
                         };
 
@@ -50,4 +45,3 @@ var People;
     })(People.ViewModels || (People.ViewModels = {}));
     var ViewModels = People.ViewModels;
 })(People || (People = {}));
-//# sourceMappingURL=Languages.js.map
