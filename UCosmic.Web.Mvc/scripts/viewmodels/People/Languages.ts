@@ -1,25 +1,40 @@
 //var modelData;// just for typescript because this is passed set up in the page itself.
 module People.ViewModels {
+    export interface profency {
 
+    }
     export class LanguageViewModel {
         constructor(modelData) {
             google.load('visualization', '1', { 'packages': ['corechart'] });
             google.setOnLoadCallback(function () {
                 $(document).ready(function () {
-                    var data = google.visualization.arrayToDataTable([
-                        ['Year', 'Sales', 'Expenses'],
-                        ['2004', 1000, 400],
-                        ['2005', 1170, 460],
-                        ['2006', 660, 1120],
-                        ['2007', 1030, 540]
-                    ]);
+                    $.each(modelData, function (item) {
 
+                    });
+                    var data = google.visualization.arrayToDataTable([
+                        ['Categories', "Proficiency", { type: 'string', role: 'tooltip' }, { role: 'style' }],
+                        ['Speaking', 1, "test1", '#319CBD'],
+                        ['Listening', 5, "test2", '#94CE39'],
+                        ['Reading', 3, "test3", '#73218C'],
+                        ['Writing', 4, "test4", '#B5184A']
+                    ]);
+                    //no gradients yet - http://code.google.com/p/google-visualization-api-issues/issues/detail?id=550
+                    //data.addRows([
+                    //    ["none", 1],
+                    //    ["some", 2],
+                    //    ["more", 3],
+                    //    ["even more", 4],
+                    //    ["most", 5]
+                    //]);
                     var options = {
-                        title: 'Company Performance',
-                        vAxis: { title: 'Year', titleTextStyle: { color: 'red' } }
+                        //vAxis: { title: 'Categories', titleTextStyle: { color: 'red' } },
+                        hAxis: {
+                            ticks: [{ v: 0, f: "none" }, { v: 1, f: "Elementary" }, { v: 2, f: "Limited" }, { v: 3, f: "General" },
+                                { v: 4, f: "Advanced" }, { v: 5, f: "Fluent" }]
+                        },
                     };
 
-                    var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
+                    var chart = new google.visualization.BarChart(document.getElementById('chart_div+' + modelData[1].Id));
                     chart.draw(data, options);
 
                 });

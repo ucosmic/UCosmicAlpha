@@ -59,11 +59,7 @@ namespace UCosmic.Web.Mvc.Models
                     .ForMember(d => d.ReadingDescription, o => o.MapFrom(s => LanguageProficiency.Scales[s.ReadingProficiency].Description))
                     .ForMember(d => d.ListeningDescription, o => o.MapFrom(s => LanguageProficiency.Scales[s.ListeningProficiency].Description))
                     .ForMember(d => d.WritingDescription, o => o.MapFrom(s => LanguageProficiency.Scales[s.WritingProficiency].Description))
-                    //.ForMember(d => d.SpeakingMeanings, o => o.MapFrom(s => LanguageProficiency.SpeakingMeanings.SingleOrDefault(m => m.Proficiency == LanguageProficiency.Scales[1].Proficiency).Description))
-                    //.ForMember(d => d.SpeakingMeanings, o => o.MapFrom(s => LanguageProficiency.SpeakingMeanings.SingleOrDefault(m => m.Proficiency == new LanguageProficiency.Proficiency() { }).Description))
-                    //.ForMember(d => d.SpeakingMeanings, o => o.MapFrom(s => LanguageProficiency.SpeakingMeanings.Where(y => (y.Proficiency == new LanguageProficiency.Proficiency())).Select(m => m.Description)))
                     ;
-
             }
         }
 
