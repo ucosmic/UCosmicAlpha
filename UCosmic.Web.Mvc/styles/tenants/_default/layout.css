@@ -18,7 +18,8 @@ html {
     min-height: 100%;
     min-width: 980px;
     font-family: Arial, Helvetica, sans-serif;
-    color: #333; }
+    color: #333;
+    background-color: #fff; }
 
 /* layout banner stylesheet */
 body > nav.my {

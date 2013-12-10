@@ -151,8 +151,6 @@ namespace UCosmic.Web.Mvc.Controllers
         [GET("activities/{activityId:int}")]
         public virtual ActionResult Details(int activityId)
         {
-            var model = new ActivityPublicViewModel();
-
             var entity = _queryProcessor.Execute(new PublicActivityById(User, activityId)
             {
                 EagerLoad = new Expression<Func<ActivityValues, object>>[]
@@ -167,11 +165,8 @@ namespace UCosmic.Web.Mvc.Controllers
             });
             if (entity == null) return HttpNotFound();
 
-            model = Mapper.Map<ActivityPublicViewModel>(entity);
+            var model = Mapper.Map<ActivityPublicViewModel>(entity);
 
-            //model.Content = new HtmlString("<p>Permian/Triassic (P/Tr) Boundary Global Even....<p>");
-            //model.Person.EmailAddress = "aReallyLongEmail@aReallyLongDomain.usf.edu";
-            //model.Person.DisplayName = "aReally Long DISPLAY name";
             return View(model);
         }
     }

@@ -22,7 +22,7 @@
     @Scripts.Render("~/bundles/people/activities")
 
     <script type="text/javascript">
-        var viewModel = new People.ViewModels.ActivityInputModel();
+        var viewModel = new People.ViewModels.ActivityInputModel(modelData);
         ko.applyBindings(viewModel, $('#main')[0]);
     </script>
 

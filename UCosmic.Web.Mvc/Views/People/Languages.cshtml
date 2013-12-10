@@ -9,7 +9,7 @@
         @Html.Partial(MVC.Activities.Views._Bib)
     </nav>
 }
-{@section scripts
+@section scripts
 {
     <script type="text/javascript">
         var modelData = @Html.Raw(Json.Encode(Model));
@@ -24,21 +24,14 @@
     </script>
 
 }
-}
+
 @section styles
 {
     <style>
-        .comma-list {
-            display: inline;
+        .google-visualization-tooltip {
+            font-size: 14px !important;
+            left: 170px !important;
         }
-
-            .comma-list:after {
-                content: ', ';
-            }
-
-            .comma-list:last-child:after {
-                content: '';
-            }
     </style>
 }
 <div class="content fixed to-top" data-current-module="employees">

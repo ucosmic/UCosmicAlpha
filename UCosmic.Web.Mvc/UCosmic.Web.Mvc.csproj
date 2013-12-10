@@ -768,6 +768,12 @@
     <Content Include="content\themes\base\minified\jquery.ui.tooltip.min.css" />
     <Content Include="images\antarctica_283x35.png" />
     <Content Include="images\bg\ui-bg_flat_black_40x100.png" />
+    <TypeScriptCompile Include="Models\Activities\ActivityPublicViewModel.cs.d.ts">
+      <DependentUpon>ActivityPublicViewModel.cs</DependentUpon>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="Models\LanguageExpertiseViewModel.cs.d.ts">
+      <DependentUpon>LanguageExpertiseViewModel.cs</DependentUpon>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="scripts\google\ToolsOverlay.ts" />
     <Content Include="images\geochart\hot\antarctica.png" />
     <Content Include="images\geochart\hot\arctic-ocean.png" />
@@ -2012,9 +2018,10 @@
     <TypeScriptCompile Include="scripts\typings\linq\linq.d.ts" />
     <TypeScriptCompile Include="scripts\typings\linq\linq.jquery.d.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\activities\ActivityEnums.ts" />
-    <TypeScriptCompile Include="scripts\viewmodels\activities\ActivitiesViewModel.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\activities\PublicView.ts" />
     <Content Include="scripts\viewmodels\activities\ActivitiesViewModel.js">
-      <DependentUpon>ActivitiesViewModel.ts</DependentUpon>
+      <DependentUpon>PublicView.ts</DependentUpon>
+      <DependentUpon>PublicView.ts</DependentUpon>
     </Content>
     <Content Include="scripts\viewmodels\activities\ActivityEnums.js">
       <DependentUpon>ActivityEnums.ts</DependentUpon>

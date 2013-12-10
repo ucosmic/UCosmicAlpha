@@ -89,6 +89,7 @@
     <LessMinify>True</LessMinify>
     <LessShowPreviewWindow>True</LessShowPreviewWindow>
     <MarkdownAutoHyperlinks>false</MarkdownAutoHyperlinks>
+    <MarkdownMargin_width>958</MarkdownMargin_width>
     <MarkdownAutoNewLine>false</MarkdownAutoNewLine>
     <MarkdownCompileToLocation />
     <MarkdownEnableCompiler>false</MarkdownEnableCompiler>

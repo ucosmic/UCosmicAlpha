@@ -149,7 +149,7 @@ namespace UCosmic.Web.Mvc
 
             bundles.Add(new ScriptBundle("~/bundles/ActivityPublicView").Include(
                 "~/scripts/google/Map.js",
-                "~/scripts/viewmodels/activities/ActivitiesViewMdoel.js"));
+                "~/scripts/viewmodels/activities/PublicView.js"));
 
             // geographic expertise
             bundles.Add(new ScriptBundle("~/bundles/geographicExpertises").Include(

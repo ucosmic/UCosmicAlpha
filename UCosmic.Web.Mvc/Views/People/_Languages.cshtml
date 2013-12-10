@@ -9,10 +9,10 @@
         {
             @* RESULTS *@
             <div>
-                <ul style="font-size: 20px;">
+                <ul style="font-size: 20px; line-height: 28px;">
                     @foreach (var language in Model)
                     {
-                        <li style="margin-bottom: 1em;">
+                        <li style="margin-bottom: 2em;">
                             @if (language.LanguageName != null)
                             {
                                 if (language.Dialect != null)
@@ -39,8 +39,7 @@
                                     <strong>@language.Other</strong>
                                 }
                             }
-
-                            <div id="chart_div+@language.Id" style="width: 590px; height: 300px;"></div>
+                            <div id="@string.Format("chart_div_{0}", language.Id)" style="width: 100%; height: 300px;"></div>
                             @*<ul>
                                     @if (language.SpeakingProficiency > 0)
                                     {

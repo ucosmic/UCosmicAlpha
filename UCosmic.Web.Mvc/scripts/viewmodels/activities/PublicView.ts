@@ -2,15 +2,15 @@
 /// <reference path="../../app/App.ts" />
 /// <reference path="../../google/Map.ts" />
 
-var activityData;
 module Activities.ViewModels {
 
     export class PublicView {
 
-        constructor() {
+        constructor(activityData) {
+            this.activityData = activityData;
             this.addMarkers();
         }
-
+        activityData
         lat = 15;
         lng = 6;
         zoom = -1;
@@ -31,7 +31,7 @@ module Activities.ViewModels {
             );
         private addMarkers() {
             var markers: google.maps.Marker[] = [];
-            $.each(activityData.Places, (i: number, place: any): void => {
+            $.each(this.activityData.Places, (i: number, place: any): void => {
                 if (place.PlaceCenter.HasValue) {
                     var options: google.maps.MarkerOptions = {
                         position: new google.maps.LatLng(place.PlaceCenter.Latitude, place.PlaceCenter.Longitude),
