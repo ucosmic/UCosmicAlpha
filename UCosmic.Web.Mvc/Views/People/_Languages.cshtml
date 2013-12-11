@@ -4,7 +4,6 @@
 @* DEGREES *@
 <section class="content fixed to-top">
     <div>
-
         @if (Model != null && Model.Any())
         {
             @* RESULTS *@
@@ -19,8 +18,6 @@
                                 {
                                     <strong>@language.LanguageName</strong><text>,</text>
                                     <strong>@language.Dialect</strong>
-
-
                                 }
                                 else
                                 {
@@ -40,37 +37,6 @@
                                 }
                             }
                             <div id="@string.Format("chart_div_{0}", language.Id)" style="width: 100%; height: 300px;"></div>
-                            @*<ul>
-                                    @if (language.SpeakingProficiency > 0)
-                                    {
-                                        <li>
-                                            Speaking -
-                                            @Html.Partial(MVC.People.Views._LanguagesProficiency, language.SpeakingProficiency)
-                                        </li>
-                                    }
-                                    @if (language.ListeningProficiency > 0)
-                                    {
-                                        <li>
-                                            Listening -
-                                            @Html.Partial(MVC.People.Views._LanguagesProficiency, language.ListeningProficiency)
-                                        </li>
-                                    }
-                                    @if (language.ReadingProficiency > 0)
-                                    {
-                                        <li>
-                                            Reading -
-                                            @Html.Partial(MVC.People.Views._LanguagesProficiency, language.ReadingProficiency)
-                                        </li>
-                                    }
-                                    @if (language.WritingProficiency > 0)
-                                    {
-                                        <li>
-                                            Writing -
-                                            @Html.Partial(MVC.People.Views._LanguagesProficiency, language.WritingProficiency)
-                                        </li>
-                                    }
-
-                                </ul>*@
                         </li>
                     }
                 </ul>
@@ -83,7 +49,5 @@
                 This person has no known language expertise.
             </p>
         }
-
-
     </div>
 </section>

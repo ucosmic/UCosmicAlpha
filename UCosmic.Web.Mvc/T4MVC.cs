@@ -41,7 +41,6 @@ public static class MVC
     public static UCosmic.Web.Mvc.Controllers.SamlMetadataController SamlMetadata = new UCosmic.Web.Mvc.Controllers.T4MVC_SamlMetadataController();
     public static UCosmic.Web.Mvc.Controllers.TenancyController Tenancy = new UCosmic.Web.Mvc.Controllers.T4MVC_TenancyController();
     public static UCosmic.Web.Mvc.Controllers.UsersController Users = new UCosmic.Web.Mvc.Controllers.T4MVC_UsersController();
-    public static T4MVC.ActivitiesSpikeController ActivitiesSpike = new T4MVC.ActivitiesSpikeController();
     public static T4MVC.SharedController Shared = new T4MVC.SharedController();
 }
 
@@ -2842,14 +2841,14 @@ namespace Links
                 public static readonly string Activities_ts = Url("Activities.ts");
                 public static readonly string Activities_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Activities.min.js") ? Url("Activities.min.js") : Url("Activities.js");
                               
-                public static readonly string ActivitiesViewModel_ts = Url("ActivitiesViewModel.ts");
-                public static readonly string ActivitiesViewModel_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/ActivitiesViewModel.min.js") ? Url("ActivitiesViewModel.min.js") : Url("ActivitiesViewModel.js");
-                              
                 public static readonly string Activity_ts = Url("Activity.ts");
                 public static readonly string Activity_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Activity.min.js") ? Url("Activity.min.js") : Url("Activity.js");
                               
                 public static readonly string ActivityEnums_ts = Url("ActivityEnums.ts");
                 public static readonly string ActivityEnums_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/ActivityEnums.min.js") ? Url("ActivityEnums.min.js") : Url("ActivityEnums.js");
+                              
+                public static readonly string PublicView_ts = Url("PublicView.ts");
+                public static readonly string ActivitiesViewModel_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/ActivitiesViewModel.min.js") ? Url("ActivitiesViewModel.min.js") : Url("ActivitiesViewModel.js");
                               
                 public static readonly string ServiceApiModel_d_ts = Url("ServiceApiModel.d.ts");
             }

@@ -19,18 +19,18 @@
     @Scripts.Render("~/bundles/people/languages")
 
     <script type="text/javascript">
-        var viewModel = new People.ViewModels.LanguageViewModel(modelData);
-        ko.applyBindings(viewModel, $('#main')[0]);
+        People.ViewModels.LanguageViewModel.loadGoogleVisualization().done(function() {
+            var viewModel = new People.ViewModels.LanguageViewModel(modelData);
+            ko.applyBindings(viewModel, $('#main')[0]);
+        });
     </script>
-
 }
-
 @section styles
 {
     <style>
         .google-visualization-tooltip {
             font-size: 14px !important;
-            left: 170px !important;
+            left: 150px !important;
         }
     </style>
 }
@@ -44,7 +44,6 @@
             </header>
             @Html.Action(MVC.People.GetCard())
             @Html.Partial(MVC.People.Views._Languages, Model)
-
         </div>
         <aside class="on-right from-top" data-fixed-scroll="root">
             <div data-fixed-scroll="anchor"></div>

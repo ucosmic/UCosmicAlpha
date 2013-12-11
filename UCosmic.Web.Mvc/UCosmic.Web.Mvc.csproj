@@ -290,9 +290,6 @@
     <Compile Include="ActivitiesController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
-    <Compile Include="ActivitiesSpikeController.generated.cs">
-      <DependentUpon>T4MVC.tt</DependentUpon>
-    </Compile>
     <Compile Include="AdminController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
@@ -768,9 +765,6 @@
     <Content Include="content\themes\base\minified\jquery.ui.tooltip.min.css" />
     <Content Include="images\antarctica_283x35.png" />
     <Content Include="images\bg\ui-bg_flat_black_40x100.png" />
-    <TypeScriptCompile Include="Models\Activities\ActivityPublicViewModel.cs.d.ts">
-      <DependentUpon>ActivityPublicViewModel.cs</DependentUpon>
-    </TypeScriptCompile>
     <TypeScriptCompile Include="Models\LanguageExpertiseViewModel.cs.d.ts">
       <DependentUpon>LanguageExpertiseViewModel.cs</DependentUpon>
     </TypeScriptCompile>

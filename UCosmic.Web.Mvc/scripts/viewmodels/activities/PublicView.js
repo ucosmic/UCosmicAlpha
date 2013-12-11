@@ -1,8 +1,8 @@
+/// <reference path="../../typings/googlemaps/google.maps.d.ts" />
+/// <reference path="../../app/App.ts" />
+/// <reference path="../../google/Map.ts" />
 var Activities;
 (function (Activities) {
-    /// <reference path="../../typings/googlemaps/google.maps.d.ts" />
-    /// <reference path="../../app/App.ts" />
-    /// <reference path="../../google/Map.ts" />
     (function (ViewModels) {
         var PublicView = (function () {
             function PublicView(activityData) {
@@ -47,4 +47,3 @@ var Activities;
     })(Activities.ViewModels || (Activities.ViewModels = {}));
     var ViewModels = Activities.ViewModels;
 })(Activities || (Activities = {}));
-//# sourceMappingURL=PublicView.js.map

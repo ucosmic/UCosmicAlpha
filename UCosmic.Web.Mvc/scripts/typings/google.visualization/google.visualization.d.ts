@@ -387,6 +387,7 @@ declare module google {
         export class BarChart {
             constructor(element: Element);
             draw(data: DataTable, options: BarChartOptions): void;
+            draw(data: DataView, options: BarChartOptions): void;
             getBoundingBox(id: string): ChartBoundingBox;
             getChartAreaBoundingBox(): ChartBoundingBox;
             getChartLayoutInterface(): ChartLayoutInterface;
