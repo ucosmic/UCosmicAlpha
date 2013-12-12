@@ -2586,6 +2586,8 @@
     <Content Include="Views\People\Languages.cshtml" />
     <Content Include="Views\People\_Languages.cshtml" />
     <Content Include="Views\People\_LanguagesProficiency.cshtml" />
+    <Content Include="Views\People\GlobalExpertises.cshtml" />
+    <Content Include="Views\People\_GlobalExpertises.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

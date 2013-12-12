@@ -5,6 +5,7 @@ using System.Security.Policy;
 using System.Web;
 using System.Web.Mvc;
 using AttributeRouting.Web.Mvc;
+using UCosmic.Domain.GeographicExpertise;
 using UCosmic.Web.Mvc.Models;
 using UCosmic.Domain.People;
 using System.Linq.Expressions;
@@ -104,12 +105,26 @@ namespace UCosmic.Web.Mvc.Controllers
         public virtual ActionResult Languages(int personId)
         {
             var query = new LanguageExpertisesByPersonId(personId);
-            
+
             var entities = _queryProcessor.Execute(query);
 
             var model = Mapper.Map<LanguageExpertiseViewModel[]>(entities);
 
             ViewBag.currentPage = "languages";
+            ViewBag.personId = personId;
+            return View(model);
+        }
+
+        [GET("people/{personId:int}/global-expertise")]
+        public virtual ActionResult GlobalExpertises(int personId)
+        {
+            var query = new GeographicExpertisesByPersonId(personId);
+
+            var entities = _queryProcessor.Execute(query);
+
+            var model = Mapper.Map<GeographicExpertiseApiModel[]>(entities);
+
+            ViewBag.currentPage = "global-expertise";
             ViewBag.personId = personId;
             return View(model);
         }

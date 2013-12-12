@@ -1,0 +1,30 @@
+﻿@using System.Runtime.CompilerServices
+@model IEnumerable<UCosmic.Web.Mvc.Models.GeographicExpertiseApiModel>
+
+@* DEGREES *@
+<section class="content fixed to-top">
+    <div>
+        @if (Model != null && Model.Any())
+        {
+            @* RESULTS *@
+            <div>
+                <ul style="font-size: 20px; line-height: 28px;">
+                    @foreach (var global in Model)
+                    {
+                        <li style="margin-bottom: 2em;">
+                            <div><strong>@global.Locations.Select(x => x.PlaceOfficialName)</strong></div>
+                            <span>@global.Description</span>
+                        </li>
+                    }
+                </ul>
+            </div>
+        }
+        else
+        {
+            @* ZERO RESULTS MESSAGE *@
+            <p>
+                This person has no known global expertise.
+            </p>
+        }
+    </div>
+</section>

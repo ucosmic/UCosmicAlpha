@@ -352,6 +352,9 @@ declare module google {
             vAxis?: ChartAxis;
             width?: number;
         }
+        
+        //#endregion
+        //#region BarChart
 
         // https://google-developers.appspot.com/chart/interactive/docs/gallery/barchart#Configuration_Options
         export interface BarChartOptions {

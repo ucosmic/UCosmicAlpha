@@ -5,6 +5,10 @@ namespace UCosmic.Domain.GeographicExpertise
 {
     public class GeographicExpertisesByPersonId : BaseEntitiesQuery<GeographicExpertise>, IDefineQuery<PagedQueryResult<GeographicExpertise>>
     {
+        public GeographicExpertisesByPersonId(int personId)
+        {
+            PersonId = personId;
+        }
         public int PersonId { get; set; }
         public int PageSize { get; set; }
         public int PageNumber { get; set; }

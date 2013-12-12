@@ -77,6 +77,12 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Languages);
         }
+        [NonAction]
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public System.Web.Mvc.ActionResult GlobalExpertises()
+        {
+            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.GlobalExpertises);
+        }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public PeopleController Actions { get { return MVC.People; } }
@@ -99,6 +105,7 @@ namespace UCosmic.Web.Mvc.Controllers
             public readonly string Degrees = "Degrees";
             public readonly string GetAffiliations = "GetAffiliations";
             public readonly string Languages = "Languages";
+            public readonly string GlobalExpertises = "GlobalExpertises";
         }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -110,6 +117,7 @@ namespace UCosmic.Web.Mvc.Controllers
             public const string Degrees = "Degrees";
             public const string GetAffiliations = "GetAffiliations";
             public const string Languages = "Languages";
+            public const string GlobalExpertises = "GlobalExpertises";
         }
 
 
@@ -163,6 +171,14 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             public readonly string personId = "personId";
         }
+        static readonly ActionParamsClass_GlobalExpertises s_params_GlobalExpertises = new ActionParamsClass_GlobalExpertises();
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public ActionParamsClass_GlobalExpertises GlobalExpertisesParams { get { return s_params_GlobalExpertises; } }
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public class ActionParamsClass_GlobalExpertises
+        {
+            public readonly string personId = "personId";
+        }
         static readonly ViewsClass s_views = new ViewsClass();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public ViewsClass Views { get { return s_views; } }
@@ -178,6 +194,7 @@ namespace UCosmic.Web.Mvc.Controllers
                 public readonly string _Bib = "_Bib";
                 public readonly string _Card = "_Card";
                 public readonly string _Degrees = "_Degrees";
+                public readonly string _GlobalExpertises = "_GlobalExpertises";
                 public readonly string _Languages = "_Languages";
                 public readonly string _LanguagesProficiency = "_LanguagesProficiency";
                 public readonly string _Profile = "_Profile";
@@ -185,6 +202,7 @@ namespace UCosmic.Web.Mvc.Controllers
                 public readonly string _SidebarNav = "_SidebarNav";
                 public readonly string Activities = "Activities";
                 public readonly string Degrees = "Degrees";
+                public readonly string GlobalExpertises = "GlobalExpertises";
                 public readonly string Index = "Index";
                 public readonly string Languages = "Languages";
             }
@@ -193,6 +211,7 @@ namespace UCosmic.Web.Mvc.Controllers
             public readonly string _Bib = "~/Views/People/_Bib.cshtml";
             public readonly string _Card = "~/Views/People/_Card.cshtml";
             public readonly string _Degrees = "~/Views/People/_Degrees.cshtml";
+            public readonly string _GlobalExpertises = "~/Views/People/_GlobalExpertises.cshtml";
             public readonly string _Languages = "~/Views/People/_Languages.cshtml";
             public readonly string _LanguagesProficiency = "~/Views/People/_LanguagesProficiency.cshtml";
             public readonly string _Profile = "~/Views/People/_Profile.cshtml";
@@ -200,6 +219,7 @@ namespace UCosmic.Web.Mvc.Controllers
             public readonly string _SidebarNav = "~/Views/People/_SidebarNav.cshtml";
             public readonly string Activities = "~/Views/People/Activities.cshtml";
             public readonly string Degrees = "~/Views/People/Degrees.cshtml";
+            public readonly string GlobalExpertises = "~/Views/People/GlobalExpertises.cshtml";
             public readonly string Index = "~/Views/People/Index.cshtml";
             public readonly string Languages = "~/Views/People/Languages.cshtml";
         }
@@ -250,6 +270,13 @@ namespace UCosmic.Web.Mvc.Controllers
         public override System.Web.Mvc.ActionResult Languages(int personId)
         {
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Languages);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "personId", personId);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.ActionResult GlobalExpertises(int personId)
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.GlobalExpertises);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "personId", personId);
             return callInfo;
         }

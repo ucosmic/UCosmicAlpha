@@ -38,7 +38,7 @@ var People;
                     var options = {
                         hAxis: {
                             ticks: [
-                                { v: 0, f: "none" }, { v: 1, f: "Elementary" }, { v: 2, f: "Limited" }, { v: 3, f: "General" },
+                                { v: 0, f: "None" }, { v: 1, f: "Elementary" }, { v: 2, f: "Limited" }, { v: 3, f: "General" },
                                 { v: 4, f: "Advanced" }, { v: 5, f: "Fluent" }],
                             minValue: 0,
                             maxValue: 5,
@@ -53,7 +53,8 @@ var People;
                         legend: { position: "none" },
                         width: 690,
                         height: 300,
-                        chartArea: { left: 80, top: 32, bottom: 40, width: "80%", height: "80%" }
+                        chartArea: { left: 80, top: 32, bottom: 40, width: "80%", height: "80%" },
+                        bar: { groupWidth: "40%" }
                     };
                     var chart = new google.visualization.BarChart(document.getElementById('chart_div_' + modelData[index].Id));
                     chart.draw(data, options);

@@ -20,20 +20,6 @@ namespace UCosmic.Web.Mvc.Models
         public LanguageExpertiseItemViewModel Listening { get; set; }
         public LanguageExpertiseItemViewModel Reading { get; set; }
         public LanguageExpertiseItemViewModel Writing { get; set; }
-
-
-        //public int SpeakingProficiency { get; set; }
-        //public int ListeningProficiency { get; set; }
-        //public int ReadingProficiency { get; set; }
-        //public int WritingProficiency { get; set; }
-        //public string SpeakingMeaning { get; set; }
-        //public string ReadingMeaning { get; set; }
-        //public string ListeningMeaning { get; set; }
-        //public string WritingMeaning { get; set; }
-        //public string SpeakingDescription { get; set; }
-        //public string ReadingDescription { get; set; }
-        //public string ListeningDescription { get; set; }
-        //public string WritingDescription { get; set; }
     }
 
     public class LanguageExpertiseItemViewModel
