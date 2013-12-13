@@ -8,7 +8,7 @@
         <a href="@Url.Action(hasStyleDomain ? MVC.Employees.TenantIndex(styleDomain) : MVC.Employees.Index())">Summary</a>
     </li>
     <li class="search">
-        <a href="@Url.Action(hasStyleDomain ? MVC.Employees.Search(styleDomain) : MVC.Employees.Index())">Search</a>
+        <a href="@Url.Action(hasStyleDomain ? MVC.Employees.Table(styleDomain, null) : MVC.Employees.Index())">Search</a>
     </li>
     <li class="expert">
         <a href="/facultystaff/#/expert">Find an Expert</a>

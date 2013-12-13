@@ -19,12 +19,10 @@ namespace UCosmic.Web.Mvc.Controllers
     public partial class PeopleController : Controller
     {
         private readonly IProcessQueries _queryProcessor;
-        private readonly IQueryEntities _entities;
 
-        public PeopleController(IProcessQueries queryProcessor, IQueryEntities entities)
+        public PeopleController(IProcessQueries queryProcessor)
         {
             _queryProcessor = queryProcessor;
-            _entities = entities;
         }
 
         [GET("people/{personId:int}")]

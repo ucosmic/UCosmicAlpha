@@ -49,9 +49,9 @@ namespace UCosmic.Web.Mvc.Controllers
         }
         [NonAction]
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public System.Web.Mvc.ActionResult Search()
+        public System.Web.Mvc.ActionResult Table()
         {
-            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Search);
+            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Table);
         }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -71,7 +71,7 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             public readonly string Index = "Index";
             public readonly string TenantIndex = "TenantIndex";
-            public readonly string Search = "Search";
+            public readonly string Table = "Table";
         }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -79,7 +79,7 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             public const string Index = "Index";
             public const string TenantIndex = "TenantIndex";
-            public const string Search = "Search";
+            public const string Table = "Table";
         }
 
 
@@ -91,13 +91,14 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             public readonly string domain = "domain";
         }
-        static readonly ActionParamsClass_Search s_params_Search = new ActionParamsClass_Search();
+        static readonly ActionParamsClass_Table s_params_Table = new ActionParamsClass_Table();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public ActionParamsClass_Search SearchParams { get { return s_params_Search; } }
+        public ActionParamsClass_Table TableParams { get { return s_params_Table; } }
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public class ActionParamsClass_Search
+        public class ActionParamsClass_Table
         {
             public readonly string domain = "domain";
+            public readonly string input = "input";
         }
         static readonly ViewsClass s_views = new ViewsClass();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -111,12 +112,12 @@ namespace UCosmic.Web.Mvc.Controllers
             {
                 public readonly string _Bib = "_Bib";
                 public readonly string Index = "Index";
-                public readonly string Search = "Search";
+                public readonly string Table = "Table";
                 public readonly string TenantIndex = "TenantIndex";
             }
             public readonly string _Bib = "~/Views/Employees/_Bib.cshtml";
             public readonly string Index = "~/Views/Employees/Index.cshtml";
-            public readonly string Search = "~/Views/Employees/Search.cshtml";
+            public readonly string Table = "~/Views/Employees/Table.cshtml";
             public readonly string TenantIndex = "~/Views/Employees/TenantIndex.cshtml";
         }
     }
@@ -139,10 +140,11 @@ namespace UCosmic.Web.Mvc.Controllers
             return callInfo;
         }
 
-        public override System.Web.Mvc.ActionResult Search(string domain)
+        public override System.Web.Mvc.ActionResult Table(string domain, UCosmic.Web.Mvc.Models.ActivitySearchInputModel input)
         {
-            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Search);
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Table);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "domain", domain);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "input", input);
             return callInfo;
         }
 

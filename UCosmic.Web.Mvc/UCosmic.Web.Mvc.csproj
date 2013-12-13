@@ -325,6 +325,7 @@
     <Compile Include="Models\Activities\ActivityDocumentViewModel.cs" />
     <Compile Include="Models\Activities\ActivityPersonViewModel.cs" />
     <Compile Include="Models\Activities\ActivityPlaceViewModel.cs" />
+    <Compile Include="Models\Activities\Search\ActivitySearchModel.cs" />
     <Compile Include="Models\Activities\ActivityTagViewModel.cs" />
     <Compile Include="Models\Activities\ActivityTypeViewModel.cs" />
     <Compile Include="Models\Agreements\AgreementOwningTenant.cs" />
@@ -520,6 +521,7 @@
     <Compile Include="PeopleController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
+    <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RepsController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
@@ -1729,6 +1731,7 @@
     <TypeScriptCompile Include="scripts\typings\knockout\knockout.d.ts" />
     <TypeScriptCompile Include="scripts\typings\modernizr\modernizr.d.ts" />
     <TypeScriptCompile Include="scripts\typings\moment\moment.d.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\activities\Search.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\establishments\SearchResult.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\establishments\Search.ts" />
     <Content Include="scripts\require\main.js" />
@@ -2014,10 +2017,6 @@
     <TypeScriptCompile Include="scripts\typings\linq\linq.jquery.d.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\activities\ActivityEnums.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\activities\PublicView.ts" />
-    <Content Include="scripts\viewmodels\activities\ActivitiesViewModel.js">
-      <DependentUpon>PublicView.ts</DependentUpon>
-      <DependentUpon>PublicView.ts</DependentUpon>
-    </Content>
     <Content Include="scripts\viewmodels\activities\ActivityEnums.js">
       <DependentUpon>ActivityEnums.ts</DependentUpon>
     </Content>
@@ -2050,6 +2049,12 @@
     <TypeScriptCompile Include="scripts\viewmodels\agreements\SearchResult.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\agreements\SearchTable.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\agreements\Visibility.ts" />
+    <Content Include="scripts\viewmodels\activities\PublicView.js">
+      <DependentUpon>PublicView.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\activities\Search.js">
+      <DependentUpon>Search.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\viewmodels\agreements\AgreementVM.js">
       <DependentUpon>AgreementVM.ts</DependentUpon>
     </Content>
@@ -2185,7 +2190,7 @@
     <Content Include="scripts\viewmodels\my\Affiliations.js">
       <DependentUpon>Affiliations.ts</DependentUpon>
     </Content>
-    <TypeScriptCompile Include="scripts\viewmodels\activities\ServiceApiModel.d.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\activities\Models.d.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\activities\Activities.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\my\EmailAddresses.ts" />
     <Content Include="scripts\viewmodels\my\EmailAddresses.js">
@@ -2587,7 +2592,7 @@
     <Content Include="Views\People\_Languages.cshtml" />
     <Content Include="Views\People\_LanguagesProficiency.cshtml" />
     <Content Include="Views\People\GlobalExpertises.cshtml" />
-    <Content Include="Views\Employees\Search.cshtml" />
+    <Content Include="Views\Employees\Table.cshtml" />
     <Content Include="Views\People\_GlobalExpertises.cshtml" />
     <Content Include="Views\People\_Emails.cshtml" />
     <None Include="Web.Debug.config">
@@ -2789,7 +2794,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>False</AutoAssignPort>
           <DevelopmentServerPort>3014</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>

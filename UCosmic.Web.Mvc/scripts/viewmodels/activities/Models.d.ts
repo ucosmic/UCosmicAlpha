@@ -1,5 +1,11 @@
 declare module Activities.ApiModels {
 
+    export interface SearchInput extends App.ApiModels.SearchInput {
+        keyword?: string;
+        countryCode?: string;
+        orderBy?: string;
+    }
+
     export interface Activity {
         activityMode: string;
         activityId: number;

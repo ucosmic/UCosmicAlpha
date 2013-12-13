@@ -2847,10 +2847,13 @@ namespace Links
                 public static readonly string ActivityEnums_ts = Url("ActivityEnums.ts");
                 public static readonly string ActivityEnums_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/ActivityEnums.min.js") ? Url("ActivityEnums.min.js") : Url("ActivityEnums.js");
                               
+                public static readonly string Models_d_ts = Url("Models.d.ts");
                 public static readonly string PublicView_ts = Url("PublicView.ts");
-                public static readonly string ActivitiesViewModel_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/ActivitiesViewModel.min.js") ? Url("ActivitiesViewModel.min.js") : Url("ActivitiesViewModel.js");
+                public static readonly string PublicView_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/PublicView.min.js") ? Url("PublicView.min.js") : Url("PublicView.js");
                               
-                public static readonly string ServiceApiModel_d_ts = Url("ServiceApiModel.d.ts");
+                public static readonly string Search_ts = Url("Search.ts");
+                public static readonly string Search_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Search.min.js") ? Url("Search.min.js") : Url("Search.js");
+                              
             }
         
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
