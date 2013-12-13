@@ -2,13 +2,10 @@ var People;
 (function (People) {
     (function (ViewModels) {
         var LanguageViewModel = (function () {
-            //#endregion
             function LanguageViewModel(modelData) {
                 this.setupGoogleChart(modelData);
             }
             LanguageViewModel.loadGoogleVisualization = function () {
-                // this is necessary to load all of the google visualization API's used by this
-                // viewmodel. additionally, https://www.google.com/jsapi script must be present
                 google.load('visualization', '1', { 'packages': ['corechart'] });
 
                 google.setOnLoadCallback(function () {
@@ -32,7 +29,6 @@ var People;
                         ['Writing', modelData[index].Writing.Proficiency, modelData[index].Writing.Meaning, '#B5184A']
                     ]);
 
-                    //no gradients yet - http://code.google.com/p/google-visualization-api-issues/issues/detail?id=550
                     var options = {
                         hAxis: {
                             ticks: [
