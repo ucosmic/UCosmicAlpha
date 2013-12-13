@@ -12,8 +12,14 @@
                     @foreach (var global in Model)
                     {
                         <li style="margin-bottom: 2em;">
-                            <div><strong>@global.Locations.Select(x => x.PlaceOfficialName)</strong></div>
-                            <span>@global.Description</span>
+                            <ul style="display: inline-block;">
+                                @foreach (var location in global.Locations)
+                                {
+                                    <li class="comma-list"><strong>@location.PlaceOfficialName</strong></li>
+                                    @*<li class="comma-list"><strong>test</strong></li>*@
+                                }
+                            </ul>
+                            <div>@global.Description</div>
                         </li>
                     }
                 </ul>

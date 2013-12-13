@@ -1,53 +1,48 @@
 ﻿@using UCosmic.Web.Mvc.ApiControllers
 @model UCosmic.Web.Mvc.Models.GeographicExpertiseApiModel[]
-    @{
+
+@{
     ViewBag.Title = "UCosmic Profile";
-    }
-    @section bib
+}
+@section bib
 {
-        <nav class="bib hide" data-current-bib="faculty">
-            @Html.Partial(MVC.Activities.Views._Bib)
-        </nav>
-    }
-    @section scripts
+    <nav class="bib hide" data-current-bib="faculty">
+        @Html.Partial(MVC.Activities.Views._Bib)
+    </nav>
+}
+@section styles
 {
+    <style>
+        .comma-list {
+            display: inline;
+        }
 
-
-
-    }
-    @section styles
-{
-        <style>
-            .comma-list {
-                display: inline;
+            .comma-list:after {
+                content: ', ';
             }
 
-                .comma-list:after {
-                    content: ', ';
-                }
-
-                .comma-list:last-child:after {
-                    content: '';
-                }
-        </style>
-    }
-    <div class="content fixed to-top" data-current-module="employees">
-        <div class="group">
-            <div class="on-left from-top">
-                <header>
-                    <h1>
-                        International Activities
-                    </h1>
-                </header>
-                @Html.Action(MVC.People.GetCard())
-                @Html.Partial(MVC.People.Views._GlobalExpertises, Model)
-            </div>
-            <aside class="on-right from-top" data-fixed-scroll="root">
-                <div data-fixed-scroll="anchor"></div>
-                <div data-fixed-scroll="content">
-                    @Html.Partial(MVC.People.Views._SidebarNav, Model)
-                </div>
-            </aside>
+            .comma-list:last-child:after {
+                content: '';
+            }
+    </style>
+}
+<div class="content fixed to-top" data-current-module="employees">
+    <div class="group">
+        <div class="on-left from-top">
+            <header>
+                <h1>
+                    International Activities
+                </h1>
+            </header>
+            @Html.Action(MVC.People.GetCard())
+            @Html.Partial(MVC.People.Views._GlobalExpertises, Model)
         </div>
+        <aside class="on-right from-top" data-fixed-scroll="root">
+            <div data-fixed-scroll="anchor"></div>
+            <div data-fixed-scroll="content">
+                @Html.Partial(MVC.People.Views._SidebarNav, Model)
+            </div>
+        </aside>
     </div>
+</div>
 

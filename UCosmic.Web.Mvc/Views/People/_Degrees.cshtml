@@ -17,15 +17,15 @@
                             <ul style="display: inline-block;">
                                 @if (degree.Institution != null && degree.Institution.OfficialName != string.Empty)
                                 {
-                                    <li class="comma-list"><span>@degree.Institution.OfficialName</span></li>   
+                                    <li class="comma-list">@degree.Institution.OfficialName</li>   
                                 }
                                 @if (!string.IsNullOrEmpty(degree.FieldOfStudy))
                                 {
-                                    <li class="comma-list"><span>@degree.FieldOfStudy</span></li>
+                                    <li class="comma-list">@degree.FieldOfStudy</li>
                                 }
                                 @if (degree.YearAwarded != null)
                                 {
-                                    <li class="comma-list"><span>@degree.YearAwarded</span></li>
+                                    <li class="comma-list">@degree.YearAwarded</li>
                                 }
                             </ul>
                         </li>

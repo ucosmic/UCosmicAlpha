@@ -19,8 +19,6 @@ var People;
 
             LanguageViewModel.prototype.setupGoogleChart = function (modelData) {
                 var _this = this;
-                //google.load('visualization', '1', { 'packages': ['corechart'] });
-                //google.setOnLoadCallback(() => {
                 $.each(modelData, function (index, value) {
                     modelData[index].Speaking.Meaning = _this.addTooltipStyle(modelData[index].Speaking.Meaning);
                     modelData[index].Listening.Meaning = _this.addTooltipStyle(modelData[index].Listening.Meaning);
@@ -59,7 +57,6 @@ var People;
                     var chart = new google.visualization.BarChart(document.getElementById('chart_div_' + modelData[index].Id));
                     chart.draw(data, options);
                 });
-                //});
             };
             LanguageViewModel.prototype.addTooltipStyle = function (Meaning) {
                 if (Meaning != null) {

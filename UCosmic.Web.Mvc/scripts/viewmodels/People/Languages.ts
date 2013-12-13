@@ -21,8 +21,6 @@ module People.ViewModels {
             this.setupGoogleChart(modelData);
         }
         setupGoogleChart(modelData: server.LanguageExpertiseViewModel) {
-            //google.load('visualization', '1', { 'packages': ['corechart'] });
-            //google.setOnLoadCallback(() => {
             $.each(modelData, (index, value) => {
                 modelData[index].Speaking.Meaning = this.addTooltipStyle(modelData[index].Speaking.Meaning);
                 modelData[index].Listening.Meaning = this.addTooltipStyle(modelData[index].Listening.Meaning);
@@ -59,7 +57,6 @@ module People.ViewModels {
                 var chart = new google.visualization.BarChart(document.getElementById('chart_div_' + modelData[index].Id));
                 chart.draw(data, options);
             });
-            //});
         }
         addTooltipStyle(Meaning: string) {
             if (Meaning != null) {

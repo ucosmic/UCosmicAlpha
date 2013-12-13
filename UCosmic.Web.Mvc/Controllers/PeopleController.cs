@@ -61,8 +61,8 @@ namespace UCosmic.Web.Mvc.Controllers
             var query = new ActivitiesByPersonId(User, personId);
             Mapper.Map(input, query);
             var entities = _queryProcessor.Execute(query);
-
             var model = Mapper.Map<PageOfActivityPublicViewModel>(entities);
+
             ViewBag.keyword = input.Keyword;
             ViewBag.personId = personId;
             ViewBag.countryCode = input.CountryCode;
@@ -76,8 +76,8 @@ namespace UCosmic.Web.Mvc.Controllers
             var query = new DegreesByPersonId(personId);
             Mapper.Map(input, query);
             var entities = _queryProcessor.Execute(query);
-
             var model = Mapper.Map<PageOfDegreePublicViewModel>(entities);
+
             ViewBag.currentPage = "degrees";
             ViewBag.personId = personId;
             return View(model);
@@ -95,7 +95,6 @@ namespace UCosmic.Web.Mvc.Controllers
                 }
             };
             var entities = _queryProcessor.Execute(query);
-
             var model = Mapper.Map<AffiliationViewModel[]>(entities.Where(x => !x.IsDefault));
 
             return PartialView(MVC.People.Views._Affiliations, model);
@@ -105,9 +104,7 @@ namespace UCosmic.Web.Mvc.Controllers
         public virtual ActionResult Languages(int personId)
         {
             var query = new LanguageExpertisesByPersonId(personId);
-
             var entities = _queryProcessor.Execute(query);
-
             var model = Mapper.Map<LanguageExpertiseViewModel[]>(entities);
 
             ViewBag.currentPage = "languages";
@@ -119,9 +116,7 @@ namespace UCosmic.Web.Mvc.Controllers
         public virtual ActionResult GlobalExpertises(int personId)
         {
             var query = new GeographicExpertisesByPersonId(personId);
-
             var entities = _queryProcessor.Execute(query);
-
             var model = Mapper.Map<GeographicExpertiseApiModel[]>(entities);
 
             ViewBag.currentPage = "global-expertise";
