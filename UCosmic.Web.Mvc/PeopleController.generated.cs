@@ -191,7 +191,6 @@ namespace UCosmic.Web.Mvc.Controllers
             {
                 public readonly string _Activities = "_Activities";
                 public readonly string _Affiliations = "_Affiliations";
-                public readonly string _Bib = "_Bib";
                 public readonly string _Card = "_Card";
                 public readonly string _Degrees = "_Degrees";
                 public readonly string _GlobalExpertises = "_GlobalExpertises";
@@ -208,7 +207,6 @@ namespace UCosmic.Web.Mvc.Controllers
             }
             public readonly string _Activities = "~/Views/People/_Activities.cshtml";
             public readonly string _Affiliations = "~/Views/People/_Affiliations.cshtml";
-            public readonly string _Bib = "~/Views/People/_Bib.cshtml";
             public readonly string _Card = "~/Views/People/_Card.cshtml";
             public readonly string _Degrees = "~/Views/People/_Degrees.cshtml";
             public readonly string _GlobalExpertises = "~/Views/People/_GlobalExpertises.cshtml";

@@ -33,5 +33,15 @@ namespace UCosmic.Web.Mvc.Controllers
             return View();
         }
 
+        [GET("{domain}/employees/search")]
+        public virtual ActionResult Search(string domain)
+        {
+            var establishment = _queryProcessor.Execute(new EstablishmentByDomain(domain));
+            if (establishment == null) return HttpNotFound();
+            ViewBag.EmployeesDomain = domain;
+            ViewBag.EmployeesEstablishmentId = establishment.RevisionId;
+            return View();
+        }
+
     }
 }

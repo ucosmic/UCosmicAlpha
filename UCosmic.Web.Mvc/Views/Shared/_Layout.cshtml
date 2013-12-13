@@ -74,7 +74,7 @@
                 <a href="@Url.Action(hasStyleDomain ? MVC.Agreements.TenantIndex(styleDomain) : MVC.Agreements.Index())">Agreements</a>
             </li>
             <li class="employees">
-                <a href="@Url.Action(MVC.FacultyStaff.Index())">Faculty & Staff</a>
+                <a href="@Url.Action(hasStyleDomain ? MVC.Employees.TenantIndex(styleDomain) : MVC.Employees.Index())">Faculty & Staff</a>
             </li>
             <li class="alumni">
                 <a href="@Url.Action(MVC.Home.Alumni())">Alumni</a>

@@ -1,11 +1,16 @@
-﻿<ul class="group">
-    <li id="bib-faculty-staff-summary" class="summary">
-        <a href="#">Summary</a>
+﻿@{
+    var tenancy = Request.Tenancy();
+    var styleDomain = tenancy != null ? tenancy.StyleDomain : "default";
+    var hasStyleDomain = !string.IsNullOrWhiteSpace(styleDomain) && !"default".Equals(styleDomain, StringComparison.OrdinalIgnoreCase);
+}
+<ul class="group">
+    <li class="summary">
+        <a href="@Url.Action(hasStyleDomain ? MVC.Employees.TenantIndex(styleDomain) : MVC.Employees.Index())">Summary</a>
     </li>
-    <li id="bib-faculty-staff-search" class="search">
-        <a href="/facultystaff/#/search">Search</a>
+    <li class="search">
+        <a href="@Url.Action(hasStyleDomain ? MVC.Employees.Search(styleDomain) : MVC.Employees.Index())">Search</a>
     </li>
-    <li id="bib-faculty-staff-expert" class="expert">
+    <li class="expert">
         <a href="/facultystaff/#/expert">Find an Expert</a>
     </li>
 </ul>

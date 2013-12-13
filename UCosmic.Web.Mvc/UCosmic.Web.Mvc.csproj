@@ -2572,7 +2572,6 @@
     <Content Include="Views\Employees\_Bib.cshtml" />
     <Content Include="Views\JavaScriptRoutes\Employees.cshtml" />
     <Content Include="Views\People\Index.cshtml" />
-    <Content Include="Views\People\_Bib.cshtml" />
     <Content Include="Views\JavaScriptRoutes\People.cshtml" />
     <Content Include="Views\JavaScriptRoutes\Establishments.cshtml" />
     <Content Include="Views\People\_SidebarNav.cshtml" />
@@ -2588,12 +2587,15 @@
     <Content Include="Views\People\_Languages.cshtml" />
     <Content Include="Views\People\_LanguagesProficiency.cshtml" />
     <Content Include="Views\People\GlobalExpertises.cshtml" />
+    <Content Include="Views\Employees\Search.cshtml" />
     <Content Include="Views\People\_GlobalExpertises.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
     <None Include="scripts\_references.js" />
-    <Content Include="Views\Web.config" />
+    <Content Include="Views\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
