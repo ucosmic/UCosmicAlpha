@@ -77,7 +77,6 @@ namespace UCosmic.Web.Mvc.Controllers
             Mapper.Map(input, query);
             var entities = _queryProcessor.Execute(query);
             var model = Mapper.Map<PageOfDegreePublicViewModel>(entities);
-
             ViewBag.currentPage = "degrees";
             ViewBag.personId = personId;
             return View(model);

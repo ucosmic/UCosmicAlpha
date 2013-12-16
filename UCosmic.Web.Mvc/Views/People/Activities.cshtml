@@ -13,11 +13,11 @@
 {
 
     <script type="text/javascript">
-        var modelData = @Html.Raw(Json.Encode(Model));
-        modelData.Keyword = "@ViewBag.keyword";
-        modelData.CountryCode = "@ViewBag.countryCode";
-        modelData.OrderBy = "@ViewBag.orderBy";
-    </script>
+        var modelData = $.parseJSON('@Html.Raw(Json.Encode(Model))');
+        modelData.Keyword = '@ViewBag.keyword';
+        modelData.CountryCode = '@ViewBag.countryCode';
+        modelData.OrderBy = '@ViewBag.orderBy';
+</script>
 
     @Scripts.Render("~/bundles/people/activities")
 

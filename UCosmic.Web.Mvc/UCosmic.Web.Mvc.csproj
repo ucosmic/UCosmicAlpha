@@ -2589,6 +2589,7 @@
     <Content Include="Views\People\GlobalExpertises.cshtml" />
     <Content Include="Views\Employees\Search.cshtml" />
     <Content Include="Views\People\_GlobalExpertises.cshtml" />
+    <Content Include="Views\People\_emails.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

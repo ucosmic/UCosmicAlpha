@@ -12,7 +12,7 @@
 {
 
     <script type="text/javascript">
-        var activityData = @Html.Raw(Json.Encode(Model));
+        var activityData = $.parseJSON('@Html.Raw(Json.Encode(Model))');
     </script>
 
     @Scripts.Render("~/bundles/activityPublicView")
