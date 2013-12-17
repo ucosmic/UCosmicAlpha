@@ -47,7 +47,8 @@ namespace UCosmic.Web.Mvc.Models
             {
                 CreateMap<ActivityValues, ActivitySearchResultModel>()
                     .ForMember(d => d.Owner, o => o.Ignore())
-                    .ForMember(d => d.Places, o => o.MapFrom(s => s.Locations))
+                    .ForMember(d => d.Places, o => o.MapFrom(s => s.Locations.OrderBy(x => x.Place.OfficialName)))
+                    .ForMember(d => d.Types, o => o.MapFrom(s => s.Types.OrderBy(x => x.Type.Type)))
                 ;
             }
         }

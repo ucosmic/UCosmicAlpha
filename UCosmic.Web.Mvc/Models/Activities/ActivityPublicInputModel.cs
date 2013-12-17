@@ -24,7 +24,7 @@ namespace UCosmic.Web.Mvc.Models
                     .ForMember(d => d.EagerLoad, o => o.Ignore())
                     .ForMember(d => d.Principal, o => o.Ignore())
                     .ForMember(d => d.PersonId, o => o.Ignore())
-                    .ForMember(d => d.OrderBy, o => o.Ignore())
+
                     // map the country code
                     .ForMember(d => d.CountryCode, o => o.ResolveUsing(s =>
                     {
@@ -35,6 +35,7 @@ namespace UCosmic.Web.Mvc.Models
                         return "any".Equals(s.CountryCode, StringComparison.OrdinalIgnoreCase) || string.IsNullOrWhiteSpace(s.CountryCode)
                             ? string.Empty : s.CountryCode;
                     }))
+
                     // map the order by
                     .ForMember(d => d.OrderBy, o => o.ResolveUsing(s =>
                     {

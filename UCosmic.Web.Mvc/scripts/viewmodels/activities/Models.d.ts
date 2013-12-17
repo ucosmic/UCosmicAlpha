@@ -6,6 +6,16 @@ declare module Activities.ApiModels {
         orderBy?: string;
     }
 
+    export interface SearchResult {
+        activityId: number;
+        title: string;
+        startsOn: string;
+        endsOn: string;
+        startsFormat: string;
+        endsFormat: string;
+        onGoing: boolean;
+    }
+
     export interface Activity {
         activityMode: string;
         activityId: number;
