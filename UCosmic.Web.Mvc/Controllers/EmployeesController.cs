@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Net.Http;
 using System.Web.Mvc;
 using AttributeRouting.Web.Mvc;
+using AutoMapper;
+using UCosmic.Domain.Activities;
 using UCosmic.Domain.Establishments;
 using UCosmic.Web.Mvc.Models;
 
@@ -41,9 +44,18 @@ namespace UCosmic.Web.Mvc.Controllers
         [GET("{domain}/employees/table")]
         public virtual ActionResult Table(string domain, ActivitySearchInputModel input)
         {
+            var query = new ActivitiesByKeyword
+            {
+                EstablishmentDomain = domain,
+                EagerLoad = ActivitySearchResultProfiler.EntitiyToModel.EagerLoad,
+            };
+            Mapper.Map(input, query);
+            var results = _queryProcessor.Execute(query);
+
             var model = new ActivitySearchModel
             {
                 Input = input,
+                Output = Mapper.Map<PageOfActivitySearchResultModel>(results),
             };
 
             using (var http = new HttpClient())

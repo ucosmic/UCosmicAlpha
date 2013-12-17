@@ -13,7 +13,7 @@ namespace UCosmic.Web.Mvc.Models
         public int PageNumber { get; set; }
     }
 
-    public static class ActivitySearchInputProfiler
+    public static class MyActivitySearchInputProfiler
     {
         public class EntityToQuery : Profile
         {

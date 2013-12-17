@@ -60,7 +60,7 @@ namespace UCosmic.Web.Mvc
                     var workerRole = DependencyResolver.Current.GetService<WebDevlopmentWorkerRole>();
                     workerRole.OnStart();
                     workerRole.Run(cancellationToken);
-                });
+                }, cancellationToken);
 
                 AppDomain.CurrentDomain.DomainUnload += (sender, args) => cancellationTokenSource.Cancel();
             }

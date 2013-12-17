@@ -213,6 +213,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [GET("icon/{name}")]
+        [CacheHttpGet(Duration = 3600)]
         public HttpResponseMessage GetIcon(string name)
         {
             if (string.IsNullOrEmpty(name) || string.IsNullOrWhiteSpace(name))

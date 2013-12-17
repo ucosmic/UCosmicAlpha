@@ -140,6 +140,7 @@
     <Compile Include="Domain\Activities\Commands\CopyActivityAndValues.cs" />
     <Compile Include="Domain\Activities\Commands\CopyActivityValues.cs" />
     <Compile Include="Domain\Activities\Commands\CreateActivityAndValues.cs" />
+    <Compile Include="Domain\Activities\Queries\ActivitiesByKeyword.cs" />
     <Compile Include="Domain\Activities\_Deprecatable\CreateActivityDocument.cs" />
     <Compile Include="Domain\Activities\_Deprecatable\CreateActivityLocation.cs" />
     <Compile Include="Domain\Activities\_Deprecatable\CreateActivityTag.cs" />

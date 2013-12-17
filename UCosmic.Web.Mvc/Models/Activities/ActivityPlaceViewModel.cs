@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using UCosmic.Domain.Activities;
+
 namespace UCosmic.Web.Mvc.Models
 {
     public class ActivityPlaceViewModel

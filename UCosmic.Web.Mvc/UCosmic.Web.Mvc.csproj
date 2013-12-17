@@ -325,9 +325,11 @@
     <Compile Include="Models\Activities\ActivityDocumentViewModel.cs" />
     <Compile Include="Models\Activities\ActivityPersonViewModel.cs" />
     <Compile Include="Models\Activities\ActivityPlaceViewModel.cs" />
+    <Compile Include="Models\Activities\Search\ActivitySearchInputModel.cs" />
     <Compile Include="Models\Activities\Search\ActivitySearchModel.cs" />
     <Compile Include="Models\Activities\ActivityTagViewModel.cs" />
     <Compile Include="Models\Activities\ActivityTypeViewModel.cs" />
+    <Compile Include="Models\Activities\Search\ActivitySearchResultModel.cs" />
     <Compile Include="Models\Agreements\AgreementOwningTenant.cs" />
     <Compile Include="Models\Employees\EmployeeSettingsFacultyRankApiModel.cs" />
     <Compile Include="Models\Degrees\DegreePublicViewModel.cs" />
