@@ -73,6 +73,12 @@ namespace UCosmic.Web.Mvc.Controllers
         }
         [NonAction]
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public System.Web.Mvc.ActionResult GetEmails()
+        {
+            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.GetEmails);
+        }
+        [NonAction]
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public System.Web.Mvc.ActionResult Languages()
         {
             return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Languages);
@@ -104,6 +110,7 @@ namespace UCosmic.Web.Mvc.Controllers
             public readonly string Activities = "Activities";
             public readonly string Degrees = "Degrees";
             public readonly string GetAffiliations = "GetAffiliations";
+            public readonly string GetEmails = "GetEmails";
             public readonly string Languages = "Languages";
             public readonly string GlobalExpertises = "GlobalExpertises";
         }
@@ -116,6 +123,7 @@ namespace UCosmic.Web.Mvc.Controllers
             public const string Activities = "Activities";
             public const string Degrees = "Degrees";
             public const string GetAffiliations = "GetAffiliations";
+            public const string GetEmails = "GetEmails";
             public const string Languages = "Languages";
             public const string GlobalExpertises = "GlobalExpertises";
         }
@@ -163,6 +171,14 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             public readonly string personId = "personId";
         }
+        static readonly ActionParamsClass_GetEmails s_params_GetEmails = new ActionParamsClass_GetEmails();
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public ActionParamsClass_GetEmails GetEmailsParams { get { return s_params_GetEmails; } }
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public class ActionParamsClass_GetEmails
+        {
+            public readonly string personId = "personId";
+        }
         static readonly ActionParamsClass_Languages s_params_Languages = new ActionParamsClass_Languages();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public ActionParamsClass_Languages LanguagesParams { get { return s_params_Languages; } }
@@ -193,6 +209,7 @@ namespace UCosmic.Web.Mvc.Controllers
                 public readonly string _Affiliations = "_Affiliations";
                 public readonly string _Card = "_Card";
                 public readonly string _Degrees = "_Degrees";
+                public readonly string _Emails = "_Emails";
                 public readonly string _GlobalExpertises = "_GlobalExpertises";
                 public readonly string _Languages = "_Languages";
                 public readonly string _LanguagesProficiency = "_LanguagesProficiency";
@@ -209,6 +226,7 @@ namespace UCosmic.Web.Mvc.Controllers
             public readonly string _Affiliations = "~/Views/People/_Affiliations.cshtml";
             public readonly string _Card = "~/Views/People/_Card.cshtml";
             public readonly string _Degrees = "~/Views/People/_Degrees.cshtml";
+            public readonly string _Emails = "~/Views/People/_Emails.cshtml";
             public readonly string _GlobalExpertises = "~/Views/People/_GlobalExpertises.cshtml";
             public readonly string _Languages = "~/Views/People/_Languages.cshtml";
             public readonly string _LanguagesProficiency = "~/Views/People/_LanguagesProficiency.cshtml";
@@ -261,6 +279,13 @@ namespace UCosmic.Web.Mvc.Controllers
         public override System.Web.Mvc.ActionResult GetAffiliations(int personId)
         {
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.GetAffiliations);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "personId", personId);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.ActionResult GetEmails(int personId)
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.GetEmails);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "personId", personId);
             return callInfo;
         }

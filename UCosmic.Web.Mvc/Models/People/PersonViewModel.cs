@@ -13,6 +13,7 @@ namespace UCosmic.Web.Mvc.Models
         public string DisplayName { get; set; }
         public string EmailAddress { get; set; }
         public string JobTitles { get; set; }
+        public string[] Emails { get; set; }
     }
     public static class PeopleViewProfiler
     {
@@ -24,6 +25,7 @@ namespace UCosmic.Web.Mvc.Models
                     .ForMember(d => d.PersonId, o => o.MapFrom(s => s.RevisionId))
                     .ForMember(d => d.EmailAddress, o => o.MapFrom(s => s.Emails.Any(x => x.IsDefault) ? s.Emails.FirstOrDefault(x => x.IsDefault).Value : null))
                     .ForMember(d => d.JobTitles, o => o.MapFrom(s => s.DefaultAffiliation.IsDefault ? s.DefaultAffiliation.JobTitles : null))
+                    .ForMember(d => d.Emails, o => o.MapFrom(s => s.Emails.Where(x => !x.IsDefault).ToArray()))
                 ;
             }
         }

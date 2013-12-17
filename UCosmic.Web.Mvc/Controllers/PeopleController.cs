@@ -39,20 +39,31 @@ namespace UCosmic.Web.Mvc.Controllers
         [ChildActionOnly]
         public virtual ActionResult GetCard(int personId)
         {
-            var entity = _queryProcessor.Execute(new PersonById(personId)
+            //var entity = _queryProcessor.Execute(new PersonById(personId)
+            //{
+            //    EagerLoad = new Expression<Func<Person, object>>[]
+            //    {
+            //        x => x.Affiliations,
+            //        x => x.Emails,
+            //    }
+
+            //});
+            //if (entity == null) return HttpNotFound();
+
+            //var model = Mapper.Map<PersonViewModel>(entity);
+
+            //return PartialView(MVC.People.Views._Card, model);
+
+            var model = getPersion(personId);
+            if (model == null)
             {
-                EagerLoad = new Expression<Func<Person, object>>[]
-                {
-                    x => x.Affiliations,
-                    x => x.Emails,
-                }
-
-            });
-            if (entity == null) return HttpNotFound();
-
-            var model = Mapper.Map<PersonViewModel>(entity);
-
-            return PartialView(MVC.People.Views._Card, model);
+                return HttpNotFound();
+            }
+            else
+            {
+                return PartialView(MVC.People.Views._Emails, model);
+            }
+            //return model == null ? HttpNotFound() : PartialView(MVC.People.Views._Emails, model);
         }
 
         [GET("people/{personId:int}/activities")]
@@ -82,6 +93,20 @@ namespace UCosmic.Web.Mvc.Controllers
             return View(model);
         }
 
+        private PersonViewModel getPersion(int personId)
+        {
+            var entity = _queryProcessor.Execute(new PersonById(personId)
+            {
+                EagerLoad = new Expression<Func<Person, object>>[]
+                {
+                    x => x.Affiliations,
+                    x => x.Emails,
+                }
+
+            });
+            return entity == null ? null : Mapper.Map<PersonViewModel>(entity);
+        }
+
         [GET("people/{personId:int}/affiliations")]
         [ChildActionOnly]
         public virtual ActionResult GetAffiliations(int personId)
@@ -97,6 +122,30 @@ namespace UCosmic.Web.Mvc.Controllers
             var model = Mapper.Map<AffiliationViewModel[]>(entities.Where(x => !x.IsDefault));
 
             return PartialView(MVC.People.Views._Affiliations, model);
+        }
+
+        [GET("people/{personId:int}/emails")]
+        [ChildActionOnly]
+        public virtual ActionResult GetEmails(int personId)
+        {
+            //var entity = _queryProcessor.Execute(new PersonById(personId)
+            //{
+            //    EagerLoad = new Expression<Func<Person, object>>[]
+            //    {
+            //        x => x.Affiliations,
+            //        x => x.Emails,
+            //    }
+
+            //});
+            //if (entity == null) return HttpNotFound();
+
+            //var model = Mapper.Map<PersonViewModel>(entity);
+            var model = getPersion(personId);
+
+            return model == null ? null : PartialView(MVC.People.Views._Emails, model);
+            //return model == null ? HttpNotFound() : PartialView(MVC.People.Views._Emails, model);
+            
+            //return PartialView(MVC.People.Views._Emails, model);
         }
 
         [GET("people/{personId:int}/language-expertise")]

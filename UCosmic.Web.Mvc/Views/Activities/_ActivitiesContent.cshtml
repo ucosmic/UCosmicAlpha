@@ -81,11 +81,11 @@
                 @foreach (var tag in Model.Tags)
                 {
                     <li class="same-line">
-                        <a href='~/facultystaff/#/search/keyword/@tag.Text' style="text-decoration: none; color: inherit;">
+                        @*<a href='~/facultystaff/#/search/keyword/@tag.Text' style="text-decoration: none; color: inherit;">*@
                             <span style="padding: 4px; margin-right: 4px; background-color: #eee; border: solid 1px #ddd;">
                                 @tag.Text
                             </span>
-                        </a>
+                        @*</a>*@
                     </li>
                 }
             </ul>
@@ -100,7 +100,7 @@
                         <span style="display: inline-block; width: 32px; text-align: center;">
                             <img height="20" src="@Url.HttpRouteUrl(null, new { controller = "ActivityDocuments", action = "GetThumbnail", documentId = document.DocumentId, model = new UCosmic.Web.Mvc.Models.ImageResizeRequestModel() { MaxHeight = 20, MaxWidth = 30 } })" alt="" />
                         </span>
-                        <a href="/api/activities/@document.DocumentId/documents" title="@document.Title">@document.Title</a></li> 
+                        <a href="@Url.RouteUrl("DefaultApi", new { httproute = "", controller = "ActivityDocuments", id = document.DocumentId })" title="@document.Title">@document.Title</a></li> 
                 }
             </ul>
         </div>

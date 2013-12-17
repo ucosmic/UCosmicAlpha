@@ -1,30 +1,21 @@
 ﻿@using UCosmic.Web.Mvc.ApiControllers
-@model UCosmic.Web.Mvc.Models.AffiliationViewModel[]
+@model UCosmic.Web.Mvc.Models.PersonViewModel
 
 @* DEGREES *@
 <section class="content fixed to-top">
-    <h2 style="font-size: 24px;  padding-bottom: 1em;">Affiliations</h2>
-    @if (Model != null && Model.Any())
+    @if (Model != null && Model.Emails.Any())
     {
+        <h2 style="font-size: 24px; padding-bottom: 1em;">Additional Emails</h2>
         <div>
             <ul style="display: inline-block;">
-                @*@foreach (var emails in Model)
+                @foreach (var email in Model.Emails)
                 {
-                    if (emails.Text != null)
+                    if (email != null)
                     {
-                        <li class="comma-list">
-                            <strong>@emails.Text</strong>
-                        </li>
+                        <li class="comma-list"><span>@email</span></li>
                     }
-                }*@
+                }
             </ul>
         </div>
-    }
-    else
-    {
-        @* ZERO RESULTS MESSAGE *@
-        <p>
-            This person has no known affiliations.
-        </p>
     }
 </section>

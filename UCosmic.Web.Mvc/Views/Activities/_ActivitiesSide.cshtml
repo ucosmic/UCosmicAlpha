@@ -8,13 +8,13 @@
         <table style="margin-bottom: .5em">
             <tr>
                 <td style="vertical-align: bottom;">
-                    <a href='/people/@Model.Person.PersonId' style="text-decoration: none; cursor: pointer; color: inherit;">
+                    <a href='@Url.Action(MVC.People.Index((int)Model.Person.PersonId))' style="text-decoration: none; cursor: pointer; color: inherit;">
                         <img src="@Url.HttpRouteUrl(null, new { controller = "People", action = "GetPhoto", Id = Model.Person.PersonId })" style="max-width: 52px;  margin-right: .5em" height="48" />
                     </a>
                 </td>
                 <td >
-                    <a href='/people/@Model.Person.PersonId' style="text-decoration: none; cursor: pointer; color: inherit;">  
-                        <div  style="font-size:20px; line-height: 24px;">@Model.Person.DisplayName</div>
+                    <a href='@Url.Action(MVC.People.Index((int)Model.Person.PersonId))' style="text-decoration: none; cursor: pointer; color: inherit;">
+                        <div style="font-size:20px; line-height: 24px;">@Model.Person.DisplayName</div>
                     </a>
                     <div>@Model.Person.JobTitle</div>
                     <a style="-ms-word-break: break-all; word-break: break-all;" href="mailto:@Model.Person.EmailAddress" target="_top">@Model.Person.EmailAddress</a>
@@ -31,11 +31,11 @@
                 @foreach (var place in Model.Places)
                 {
                     <li class="same-line">
-                        <a href='~/facultystaff/#/search/country/@place.PlaceName' style="text-decoration: none; color: inherit;">
+                        @*<a href='~/facultystaff/#/search/country/@place.PlaceName' style="text-decoration: none; color: inherit;">*@
                             <span class="badge light-transparent">
                                 @place.PlaceName
                             </span>
-                        </a>
+                        @*</a>*@
                     </li>
                 }
             </ul>
