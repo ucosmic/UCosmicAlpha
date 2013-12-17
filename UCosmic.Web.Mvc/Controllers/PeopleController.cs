@@ -39,21 +39,6 @@ namespace UCosmic.Web.Mvc.Controllers
         [ChildActionOnly]
         public virtual ActionResult GetCard(int personId)
         {
-            //var entity = _queryProcessor.Execute(new PersonById(personId)
-            //{
-            //    EagerLoad = new Expression<Func<Person, object>>[]
-            //    {
-            //        x => x.Affiliations,
-            //        x => x.Emails,
-            //    }
-
-            //});
-            //if (entity == null) return HttpNotFound();
-
-            //var model = Mapper.Map<PersonViewModel>(entity);
-
-            //return PartialView(MVC.People.Views._Card, model);
-
             var model = getPersion(personId);
             if (model == null)
             {
@@ -61,9 +46,8 @@ namespace UCosmic.Web.Mvc.Controllers
             }
             else
             {
-                return PartialView(MVC.People.Views._Emails, model);
+                return PartialView(MVC.People.Views._Card, model);
             }
-            //return model == null ? HttpNotFound() : PartialView(MVC.People.Views._Emails, model);
         }
 
         [GET("people/{personId:int}/activities")]
@@ -128,24 +112,9 @@ namespace UCosmic.Web.Mvc.Controllers
         [ChildActionOnly]
         public virtual ActionResult GetEmails(int personId)
         {
-            //var entity = _queryProcessor.Execute(new PersonById(personId)
-            //{
-            //    EagerLoad = new Expression<Func<Person, object>>[]
-            //    {
-            //        x => x.Affiliations,
-            //        x => x.Emails,
-            //    }
-
-            //});
-            //if (entity == null) return HttpNotFound();
-
-            //var model = Mapper.Map<PersonViewModel>(entity);
             var model = getPersion(personId);
 
             return model == null ? null : PartialView(MVC.People.Views._Emails, model);
-            //return model == null ? HttpNotFound() : PartialView(MVC.People.Views._Emails, model);
-            
-            //return PartialView(MVC.People.Views._Emails, model);
         }
 
         [GET("people/{personId:int}/language-expertise")]
