@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Net.Http;
 using System.Web.Mvc;
 using AttributeRouting.Web.Mvc;
 using AutoMapper;
 using UCosmic.Domain.Activities;
 using UCosmic.Domain.Establishments;
+using UCosmic.Web.Mvc.Annotations;
 using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc.Controllers
@@ -17,12 +16,11 @@ namespace UCosmic.Web.Mvc.Controllers
     public partial class EmployeesController : Controller
     {
         private readonly IProcessQueries _queryProcessor;
-        private readonly IQueryEntities _queryEntities;
 
-        public EmployeesController(IProcessQueries queryProcessor, IQueryEntities queryEntities)
+        [UsedImplicitly]
+        public EmployeesController(IProcessQueries queryProcessor)
         {
             _queryProcessor = queryProcessor;
-            _queryEntities = queryEntities;
         }
 
         [GET("employees")]
@@ -62,8 +60,7 @@ namespace UCosmic.Web.Mvc.Controllers
             {
                 Debug.Assert(Request.Url != null);
                 var url = Url.RouteUrl(null, new { controller = "Countries", httproute = "", }, Request.Url.Scheme);
-                var countries = http.GetAsync(url).Result.Content.ReadAsAsync<IEnumerable<CountryApiModel>>().Result.ToList();
-                countries.Add(new CountryApiModel { Name = "[Without country]", Code = "-1" });
+                var countries = http.GetAsync(url).Result.Content.ReadAsAsync<IEnumerable<CountryApiModel>>().Result;
                 model.CountryOptions = countries.Select(x => new SelectListItem
                 {
                     Text = x.Name,

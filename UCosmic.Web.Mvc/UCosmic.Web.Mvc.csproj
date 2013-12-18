@@ -523,7 +523,6 @@
     <Compile Include="PeopleController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
-    <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RepsController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>

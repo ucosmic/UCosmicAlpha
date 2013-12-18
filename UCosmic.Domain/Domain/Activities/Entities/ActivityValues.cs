@@ -21,7 +21,25 @@ namespace UCosmic.Domain.Activities
         public int ActivityId { get; protected internal set; }
 
         public string Title { get; protected internal set; }
-        public string Content { get; protected internal set; }
+
+        public string Content
+        {
+            get { return _content; }
+            protected internal set
+            {
+                _content = value;
+                ContentSearchable = value;
+                if (!string.IsNullOrWhiteSpace(value))
+                {
+                    var length = value.Length;
+                    if (length > 8000) length = 8000;
+                    ContentSearchable = value.Substring(0, length);
+                }
+            }
+        }
+        private string _content;
+
+        public string ContentSearchable { get; protected internal set; }
 
         /* Rules for StartsOn and EndsOn:
          * 

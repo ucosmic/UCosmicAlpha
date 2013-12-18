@@ -75,6 +75,7 @@
     <Compile Include="..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Properties\ReSharperAnnotations.cs" />
     <Compile Include="Api\Commands\IHandleCommands.cs" />
     <Compile Include="Api\Data\IEagerLoad.cs" />
     <Compile Include="Api\Data\IManageViews.cs" />
@@ -141,6 +142,7 @@
     <Compile Include="Domain\Activities\Commands\CopyActivityValues.cs" />
     <Compile Include="Domain\Activities\Commands\CreateActivityAndValues.cs" />
     <Compile Include="Domain\Activities\Queries\ActivitiesByKeyword.cs" />
+    <Compile Include="Domain\Activities\Work\PopulateActivityContentSearchable.cs" />
     <Compile Include="Domain\Activities\_Deprecatable\CreateActivityDocument.cs" />
     <Compile Include="Domain\Activities\_Deprecatable\CreateActivityLocation.cs" />
     <Compile Include="Domain\Activities\_Deprecatable\CreateActivityTag.cs" />

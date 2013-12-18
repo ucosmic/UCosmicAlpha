@@ -230,9 +230,8 @@
                                     @Html.DropDownListFor(x => x.Input.OrderBy,
                                         new[]
                                         {
-                                            new SelectListItem { Text = "Sort by most recent", Value = "recency-desc" },
-                                            new SelectListItem { Text = "Sort by least recent", Value = "recency-asc" },
-                                            new SelectListItem { Text = "Sort by title Z-A", Value = "title-desc" },
+                                            new SelectListItem { Text = "Sort with most recent at top", Value = "recency-desc" },
+                                            new SelectListItem { Text = "Sort with most recent at bottom", Value = "recency-asc" },
                                             new SelectListItem { Text = "Sort by title A-Z", Value = "title-asc" },
                                             new SelectListItem { Text = "Sort by title Z-A", Value = "title-desc" },
                                             new SelectListItem { Text = "Sort by location A-Z", Value = "location-asc" },

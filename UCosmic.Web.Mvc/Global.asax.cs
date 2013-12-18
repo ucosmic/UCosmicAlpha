@@ -29,6 +29,7 @@ namespace UCosmic.Web.Mvc
             MvcHandler.DisableMvcResponseHeader = true;
 
             DependencyResolver.Current.GetService<ITriggerEvent<ApplicationStarted>>().Raise(new ApplicationStarted());
+            //new PerformPopulateActivityContentSearchableWork(new UCosmicContext()).Perform(new PopulateActivityContentSearchable());
         }
 
         protected void Application_PostAuthorizeRequest()
