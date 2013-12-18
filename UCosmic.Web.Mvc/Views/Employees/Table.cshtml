@@ -44,7 +44,7 @@
         <div class="on-left from-top">
             <header>
                 <h1>
-                    @ViewBag.Title
+                    Advanced Search
                 </h1>
             </header>
             <div>
@@ -124,7 +124,7 @@
                                     {
                                         <tr>
                                             @* LOCATIONS COLUMN *@
-                                            <td style="vertical-align: top;">
+                                            <td style="vertical-align: top; min-width: 120px;">
                                                 <ul style="display: inline-block;">
                                                     @foreach (var place in activity.Places)
                                                     {
@@ -164,23 +164,36 @@
 
                                             @* DATES COLUMN *@
                                             <td style="vertical-align: top;">
-                                                @if (activity.StartsOn.HasValue)
-                                                {
-                                                    <span style="white-space: nowrap">
-                                                        @activity.StartsOn.Value.ToString(activity.StartsFormat ?? "MM/dd/yyyy")
-                                                        @if (activity.EndsOn.HasValue || (activity.OnGoing.HasValue && activity.OnGoing.Value))
-                                                        {
-                                                            <text> - </text>
-                                                        }
-                                                    </span><br />
-                                                }
-                                                @if (activity.EndsOn.HasValue)
-                                                {
-                                                    <span>@activity.EndsOn.Value.ToString(activity.EndsFormat ?? "MM/dd/yyyy")</span>
-                                                }
                                                 @if (!activity.StartsOn.HasValue && !activity.EndsOn.HasValue && (!activity.OnGoing.HasValue || !activity.OnGoing.Value))
                                                 {
-                                                    <span>[Undated]</span>
+                                                    @: [Undated]
+                                                }
+                                                else if (!activity.StartsOn.HasValue)
+                                                {
+                                                    if (activity.EndsOn.HasValue)
+                                                    {
+                                                        @activity.EndsOn.Value.ToString(activity.EndsFormat ?? "M/d/yyyy")
+                                                    }
+                                                    else if (activity.OnGoing.HasValue && activity.OnGoing.Value)
+                                                    {
+                                                        @: (Ongoing)
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    if (activity.OnGoing.HasValue && activity.OnGoing.Value)
+                                                    {
+                                                        <span>@activity.StartsOn.Value.ToString(activity.StartsFormat ?? "M/d/yyyy") (Ongoing)</span>
+                                                    }
+                                                    else if (activity.EndsOn.HasValue)
+                                                    {
+                                                        <span style="white-space: nowrap;">@activity.StartsOn.Value.ToString(activity.StartsFormat ?? "M/d/yyyy") -</span>
+                                                        <span>@activity.EndsOn.Value.ToString(activity.EndsFormat ?? "M/d/yyyy")</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        @activity.StartsOn.Value.ToString(activity.StartsFormat ?? "M/d/yyyy")
+                                                    }
                                                 }
                                             </td>
                                         </tr>
@@ -257,12 +270,6 @@
                                         <option value="list">List</option>
                                     </select>
                                 </div>
-                                @*<div class="field">
-                                    <button class="link" data-xbind="click: prevPage, enable: prevEnabled" disabled="disabled">&lt;&lt; Previous</button>
-                                    |
-                                    <button class="link" data-xbind="click: nextPage, enable: nextEnabled" disabled="disabled">Next &gt;&gt;</button>
-                                    <input type="hidden" value="1" data-xbind="value: pageNumber" />
-                                </div>*@
                                 <div class="field" data-bind="with: pager.input">
                                     <button class="link" data-bind="click: prev, enable: prevAllowed" disabled="disabled">&lt;&lt; Previous</button>
                                     |

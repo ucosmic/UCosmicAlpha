@@ -104,23 +104,37 @@
                                             </tr>
                                         </table>
                                     </td>
-                                    <td >
-                                        @if (activity.StartsOn.HasValue)
-                                        {
-                                            <span style="white-space: nowrap" >@activity.StartsOn.Value.ToString(activity.StartsFormat ?? "MM/dd/yyyy")
-                                                @if (activity.EndsOn.HasValue || (activity.OnGoing.HasValue && activity.OnGoing.Value))
-                                                {
-                                                    <text> - </text>
-                                                }
-                                            </span><br />
-                                        }
-                                        @if (activity.EndsOn.HasValue)
-                                        {
-                                            <span>@activity.EndsOn.Value.ToString(activity.EndsFormat ?? "MM/dd/yyyy")</span>
-                                        }
+                                    <td>
                                         @if (!activity.StartsOn.HasValue && !activity.EndsOn.HasValue && (!activity.OnGoing.HasValue || !activity.OnGoing.Value))
                                         {
-                                            <span>[Undated]</span>
+                                            @: [Undated]
+                                                }
+                                        else if (!activity.StartsOn.HasValue)
+                                        {
+                                            if (activity.EndsOn.HasValue)
+                                            {
+                                                @activity.EndsOn.Value.ToString(activity.EndsFormat ?? "M/d/yyyy")
+                                            }
+                                            else if (activity.OnGoing.HasValue && activity.OnGoing.Value)
+                                            {
+                                                @: (Ongoing)
+                                                    }
+                                        }
+                                        else
+                                        {
+                                            if (activity.OnGoing.HasValue && activity.OnGoing.Value)
+                                            {
+                                                <span>@activity.StartsOn.Value.ToString(activity.StartsFormat ?? "M/d/yyyy") (Ongoing)</span>
+                                            }
+                                            else if (activity.EndsOn.HasValue)
+                                            {
+                                                <span style="white-space: nowrap;">@activity.StartsOn.Value.ToString(activity.StartsFormat ?? "M/d/yyyy") -</span>
+                                                <span>@activity.EndsOn.Value.ToString(activity.EndsFormat ?? "M/d/yyyy")</span>
+                                            }
+                                            else
+                                            {
+                                                @activity.StartsOn.Value.ToString(activity.StartsFormat ?? "M/d/yyyy")
+                                            }
                                         }
                                     </td>
                                 </tr>
