@@ -213,12 +213,12 @@ namespace UCosmic.Web.Mvc.Controllers
                 public readonly string _GlobalExpertises = "_GlobalExpertises";
                 public readonly string _Languages = "_Languages";
                 public readonly string _LanguagesProficiency = "_LanguagesProficiency";
-                public readonly string _Profile = "_Profile";
                 public readonly string _SearchSidebarNav = "_SearchSidebarNav";
                 public readonly string _SidebarNav = "_SidebarNav";
                 public readonly string Activities = "Activities";
                 public readonly string Degrees = "Degrees";
                 public readonly string GlobalExpertises = "GlobalExpertises";
+                public readonly string Index_Spike = "Index-Spike";
                 public readonly string Index = "Index";
                 public readonly string Languages = "Languages";
             }
@@ -230,12 +230,12 @@ namespace UCosmic.Web.Mvc.Controllers
             public readonly string _GlobalExpertises = "~/Views/People/_GlobalExpertises.cshtml";
             public readonly string _Languages = "~/Views/People/_Languages.cshtml";
             public readonly string _LanguagesProficiency = "~/Views/People/_LanguagesProficiency.cshtml";
-            public readonly string _Profile = "~/Views/People/_Profile.cshtml";
             public readonly string _SearchSidebarNav = "~/Views/People/_SearchSidebarNav.cshtml";
             public readonly string _SidebarNav = "~/Views/People/_SidebarNav.cshtml";
             public readonly string Activities = "~/Views/People/Activities.cshtml";
             public readonly string Degrees = "~/Views/People/Degrees.cshtml";
             public readonly string GlobalExpertises = "~/Views/People/GlobalExpertises.cshtml";
+            public readonly string Index_Spike = "~/Views/People/Index-Spike.cshtml";
             public readonly string Index = "~/Views/People/Index.cshtml";
             public readonly string Languages = "~/Views/People/Languages.cshtml";
         }

@@ -37,7 +37,7 @@ namespace UCosmic.Web.Mvc.Controllers
         [ChildActionOnly]
         public virtual ActionResult GetCard(int personId)
         {
-            var model = getPersion(personId);
+            var model = GetPerson(personId);
             if (model == null)
             {
                 return HttpNotFound();
@@ -75,7 +75,7 @@ namespace UCosmic.Web.Mvc.Controllers
             return View(model);
         }
 
-        private PersonViewModel getPersion(int personId)
+        private PersonViewModel GetPerson(int personId)
         {
             var entity = _queryProcessor.Execute(new PersonById(personId)
             {
@@ -110,7 +110,7 @@ namespace UCosmic.Web.Mvc.Controllers
         [ChildActionOnly]
         public virtual ActionResult GetEmails(int personId)
         {
-            var model = getPersion(personId);
+            var model = GetPerson(personId);
 
             return model == null ? null : PartialView(MVC.People.Views._Emails, model);
         }

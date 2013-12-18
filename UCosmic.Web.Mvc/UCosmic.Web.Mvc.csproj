@@ -2582,7 +2582,6 @@
     <Content Include="Views\JavaScriptRoutes\People.cshtml" />
     <Content Include="Views\JavaScriptRoutes\Establishments.cshtml" />
     <Content Include="Views\People\_SidebarNav.cshtml" />
-    <Content Include="Views\People\_Profile.cshtml" />
     <Content Include="Views\People\_Card.cshtml" />
     <Content Include="Views\People\Activities.cshtml" />
     <Content Include="Views\People\_Activities.cshtml" />
@@ -2597,6 +2596,7 @@
     <Content Include="Views\Employees\Table.cshtml" />
     <Content Include="Views\People\_GlobalExpertises.cshtml" />
     <Content Include="Views\People\_Emails.cshtml" />
+    <Content Include="Views\People\Index-Spike.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -1,7 +1,7 @@
 ﻿@using UCosmic.Web.Mvc.ApiControllers
 @model UCosmic.Web.Mvc.Models.AffiliationViewModel[]
 
-@* DEGREES *@
+@* AFFILIATIONS *@
 <section class="content fixed to-top">
     <h2 style="font-size: 24px;  padding-bottom: 1em;">Affiliations</h2>
     @if (Model != null && Model.Any())
@@ -18,12 +18,12 @@
                                 <strong>@affiliations.FacultyRank</strong>
                             }
                             <strong>@affiliations.JobTitles</strong>
-                            <ul >
-                                <li >@affiliations.EstablishmentName</li>
+                            <ul>
+                                <li>@affiliations.EstablishmentName</li>
 
                                 @foreach (var ancestorNames in affiliations.AncestorNames)
                                 {
-                                    <li ><span>@ancestorNames</span></li>
+                                    <li><span>@ancestorNames</span></li>
                                 }
                             </ul>
                         </li>

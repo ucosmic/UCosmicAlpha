@@ -8,11 +8,11 @@
         <table style="margin-bottom: .5em">
             <tr>
                 <td style="vertical-align: bottom;">
-                    <a href='@Url.Action(MVC.People.Index((int)Model.Person.PersonId))' style="text-decoration: none; cursor: pointer; color: inherit;">
-                        <img src="@Url.HttpRouteUrl(null, new { controller = "People", action = "GetPhoto", Id = Model.Person.PersonId })" style="max-width: 52px;  margin-right: .5em" height="48" />
+                    <a href='@Url.Action(MVC.People.Index(Model.Person.PersonId))' style="text-decoration: none; cursor: pointer; color: inherit;">
+                        <img src="@Url.HttpRouteUrl(null, new { controller = "People", action = "GetPhoto", personId = Model.Person.PersonId })" style="max-width: 52px;  margin-right: .5em" height="48" />
                     </a>
                 </td>
-                <td >
+                <td>
                     <a href='@Url.Action(MVC.People.Index((int)Model.Person.PersonId))' style="text-decoration: none; cursor: pointer; color: inherit;">
                         <div style="font-size:20px; line-height: 24px;">@Model.Person.DisplayName</div>
                     </a>
@@ -30,11 +30,11 @@
             <ul style="display: inline-block;">
                 @foreach (var place in Model.Places)
                 {
-                    <li class="same-line">
+                    <li class="same-line" style="margin-bottom: .5em;">
                         @*<a href='~/facultystaff/#/search/country/@place.PlaceName' style="text-decoration: none; color: inherit;">*@
-                            <span class="badge light-transparent">
-                                @place.PlaceName
-                            </span>
+                        <span class="badge light-transparent">
+                            @place.PlaceName
+                        </span>
                         @*</a>*@
                     </li>
                 }
