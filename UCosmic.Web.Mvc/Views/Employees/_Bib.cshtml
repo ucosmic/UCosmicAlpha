@@ -1,4 +1,5 @@
-﻿@{
+﻿@model dynamic
+@{
     var tenancy = Request.Tenancy();
     var styleDomain = tenancy != null ? tenancy.StyleDomain : "default";
     var hasStyleDomain = !string.IsNullOrWhiteSpace(styleDomain) && !"default".Equals(styleDomain, StringComparison.OrdinalIgnoreCase);
@@ -7,7 +8,7 @@
     <li class="summary">
         <a href="@Url.Action(hasStyleDomain ? MVC.Employees.TenantIndex(styleDomain) : MVC.Employees.Index())">Summary</a>
     </li>
-    <li class="search">
+    <li class="search @Model.Search">
         <a href="@Url.Action(hasStyleDomain ? MVC.Employees.Table(styleDomain, null) : MVC.Employees.Index())">Search</a>
     </li>
     <li class="expert">

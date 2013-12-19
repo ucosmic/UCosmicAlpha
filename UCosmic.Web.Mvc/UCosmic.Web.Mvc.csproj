@@ -318,6 +318,7 @@
     <Compile Include="ApiControllers\People\AffiliationsController.cs" />
     <Compile Include="Controllers\JavaScriptRoutesController.cs" />
     <Compile Include="Controllers\PeopleController.cs" />
+    <Compile Include="Helpers\CurrentModuleTabAttribute.cs" />
     <Compile Include="Helpers\JavascriptRouteWriter.cs" />
     <Compile Include="JavaScriptRoutesController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
@@ -842,6 +843,8 @@
     <Content Include="images\icons\sort\glyphicons_409_sort-by-attributes-alt.png" />
     <Content Include="images\icons\spinner\barber-38-green.gif" />
     <Content Include="images\icons\spinner\barber-40-green.gif" />
+    <Content Include="images\icons\spinner\spinner-20-blue-on-ddd.gif" />
+    <Content Include="images\icons\spinner\spinner-24-blue-on-ddd.gif" />
     <Content Include="images\icons\spinner\spinner-24-blue.gif" />
     <None Include="scripts\jquery\jquery-1.9.1.intellisense.js" />
     <Content Include="images\placeholders\ExpertiseMock.png" />

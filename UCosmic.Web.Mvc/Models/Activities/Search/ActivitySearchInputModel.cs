@@ -9,6 +9,11 @@ namespace UCosmic.Web.Mvc.Models
 {
     public class ActivitySearchInputModel : BaseSearchInputModel
     {
+        public ActivitySearchInputModel()
+        {
+            Pivot = ActivitySearchPivot.Activities;
+        }
+
         public ActivitySearchPivot Pivot { get; set; }
         public string CountryCode { get; set; }
         public string Keyword { get; set; }

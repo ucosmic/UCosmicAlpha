@@ -1,6 +1,7 @@
 declare module Activities.ApiModels {
 
     export interface SearchInput extends App.ApiModels.SearchInput {
+        pivot?: number;
         keyword?: string;
         countryCode?: string;
         orderBy?: string;

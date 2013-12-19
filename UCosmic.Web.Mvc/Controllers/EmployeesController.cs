@@ -39,6 +39,7 @@ namespace UCosmic.Web.Mvc.Controllers
             return View();
         }
 
+        [CurrentModuleTab(ModuleTab.Employees)]
         [GET("{domain}/employees/table")]
         public virtual ActionResult Table(string domain, ActivitySearchInputModel input)
         {
