@@ -27,13 +27,13 @@
     <script src="~/scripts/app/Pager.js"></script>
     <script src="~/scripts/viewmodels/activities/Search.js"></script>
     <script>
-    var settings = { @* TODO: put this json stuff into an HTML Helper ($.parseJson('@Json.SerializeObject(Model)')) *@
-        input: $.parseJSON('@Html.Raw(JsonConvert.SerializeObject(Model.Input, jsonSettings).Replace(@"\", @"\\").Replace("'", @"\'"))'),
-        output: $.parseJSON('@Html.Raw(JsonConvert.SerializeObject(Model.Output, jsonSettings).Replace(@"\", @"\\").Replace("'", @"\'"))'),
-        countryOptions: $.parseJSON('@Html.Raw(JsonConvert.SerializeObject(Model.CountryOptions, jsonSettings).Replace(@"\", @"\\").Replace("'", @"\'"))'),
-    };
-    var viewModel = new Activities.ViewModels.Search(settings);
-    viewModel.applyBindings(document.getElementById('activity_search_form'));
+        var settings = { @* TODO: put this json stuff into an HTML Helper ($.parseJson('@Json.SerializeObject(Model)')) *@
+            input: $.parseJSON('@Html.Raw(JsonConvert.SerializeObject(Model.Input, jsonSettings).Replace(@"\", @"\\").Replace("'", @"\'"))'),
+            output: $.parseJSON('@Html.Raw(JsonConvert.SerializeObject(Model.Output, jsonSettings).Replace(@"\", @"\\").Replace("'", @"\'"))'),
+            countryOptions: $.parseJSON('@Html.Raw(JsonConvert.SerializeObject(Model.CountryOptions, jsonSettings).Replace(@"\", @"\\").Replace("'", @"\'"))'),
+        };
+        var viewModel = new Activities.ViewModels.Search(settings);
+        viewModel.applyBindings(document.getElementById('activity_search_form'));
     </script>
 }
 
@@ -42,11 +42,25 @@
 <div class="content fixed to-top" data-current-module="employees">
     <form class="group" method="GET" id="activity_search_form" data-bind="jQuery: '$form'">
         <div class="on-left from-top">
-            <header>
-                <h1>
-                    Advanced Search
-                </h1>
-            </header>
+            <div class="group">
+                <div class="on-left">
+                    <header>
+                        <h1>
+                            Advanced Search for
+                        </h1>
+                    </header>
+                </div>
+                <div class="on-right">
+                    <label>
+                        <input type="radio" name="pivot" value="@((int)ActivitySearchPivot.Activities)" checked="@(Model.Input.Pivot != ActivitySearchPivot.People ? "checked" : null)" />
+                        Activities
+                    </label>
+                    <label>
+                        <input type="radio" name="pivot" value="@((int)ActivitySearchPivot.People)" checked="@(Model.Input.Pivot == ActivitySearchPivot.People ? "checked" : null)" />
+                        People
+                    </label>
+                </div>
+            </div>
             <div>
                 @* KEYWORD TEXT BOX *@
                 <div class="field" style="margin-bottom: 0;">
@@ -98,110 +112,204 @@
                         There are no results that match your search terms.
                     </p>
                 }
+                else if (Model.Input.Pivot == ActivitySearchPivot.Activities)
+                {
+                    @* ACTIVITY RESULTS TABLE *@
+                    <table class="data">
+                        <colgroup>
+                            <col style="vertical-align: top;" />
+                            <col style="vertical-align: top;" />
+                            <col style="vertical-align: top;" />
+                            <col style="vertical-align: top;" />
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>Location(s)</th>
+                                <th>Activity Title</th>
+                                <th>Type(s)</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody class="searchResults">
+                            @foreach (var activity in Model.Output.Items)
+                            {
+                                <tr>
+                                    @* LOCATIONS COLUMN *@
+                                    <td style="vertical-align: top; min-width: 120px;">
+                                        <ul style="display: inline-block;">
+                                            @foreach (var place in activity.Places)
+                                            {
+                                                <li class="comma-list"><span>@place.PlaceName</span></li>
+                                            }
+                                        </ul>
+                                    </td>
+
+                                    @* TITLE COLUMN *@
+                                    <td style="vertical-align: top;">
+                                        <a href="@Url.Action(MVC.Activities.Details(activity.ActivityId))">
+                                            @activity.Title
+                                        </a>
+                                        - @activity.Owner.DisplayName
+                                    </td>
+
+                                    @* TYPE ICONS COLUMN *@
+                                    <td style="vertical-align: top;">
+                                        <table style="border: none;" class="no-data">
+                                            <tr>
+                                                @for (var i = 0; i < activity.Types.Length; i++)
+                                                {
+                                                    <td style="border: none; margin: 2px; padding: 2px;">
+                                                        <span style="display: inline-block; width: 32px; text-align: center;">
+                                                            <img title="@activity.Types[i].Text" height="24"
+                                                                 src="@Url.HttpRouteUrl(null, new {controller = "EmployeeModuleSettings", action = "GetIcon", typeId = activity.Types[i].TypeId})" alt="" />
+                                                        </span>
+                                                    </td>
+                                                    //How many columns per row
+                                                    if ((i + 1) % 2 == 0)
+                                                    {
+                                                        Html.Raw("</tr>");
+                                                        Html.Raw("<tr>");
+                                                    }
+                                                }
+                                            </tr>
+                                        </table>
+                                    </td>
+
+                                    @* DATES COLUMN *@
+                                    <td style="vertical-align: top;">
+                                        @if (!activity.StartsOn.HasValue && !activity.EndsOn.HasValue && (!activity.OnGoing.HasValue || !activity.OnGoing.Value))
+                                        {
+                                            @: [Undated]
+                                        }
+                                        else if (!activity.StartsOn.HasValue)
+                                        {
+                                            if (activity.EndsOn.HasValue)
+                                            {
+                                                @activity.EndsOn.Value.ToString(activity.EndsFormat ?? "M/d/yyyy")
+                                            }
+                                            else if (activity.OnGoing.Value)
+                                            {
+                                                @: (Ongoing)
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (activity.OnGoing.HasValue && activity.OnGoing.Value)
+                                            {
+                                                <span>@activity.StartsOn.Value.ToString(activity.StartsFormat ?? "M/d/yyyy") (Ongoing)</span>
+                                            }
+                                            else if (activity.EndsOn.HasValue)
+                                            {
+                                                <span style="white-space: nowrap;">@activity.StartsOn.Value.ToString(activity.StartsFormat ?? "M/d/yyyy") -</span>
+                                                <span>@activity.EndsOn.Value.ToString(activity.EndsFormat ?? "M/d/yyyy")</span>
+                                            }
+                                            else
+                                            {
+                                                @activity.StartsOn.Value.ToString(activity.StartsFormat ?? "M/d/yyyy")
+                                            }
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
                 else
                 {
-                    @* RESULTS *@
-                    <div>
-                        @* TABLE *@
-                        <div>
-                            <table class="data">
-                                <colgroup>
-                                    <col style="vertical-align: top;" />
-                                    <col style="vertical-align: top;" />
-                                    <col style="vertical-align: top;" />
-                                    <col style="vertical-align: top;" />
-                                </colgroup>
-                                <thead>
-                                    <tr>
-                                        <th>Location</th>
-                                        <th>Title</th>
-                                        <th>Type</th>
-                                        <th>Date</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="searchResults">
-                                    @foreach (var activity in Model.Output.Items)
-                                    {
-                                        <tr>
-                                            @* LOCATIONS COLUMN *@
-                                            <td style="vertical-align: top; min-width: 120px;">
-                                                <ul style="display: inline-block;">
-                                                    @foreach (var place in activity.Places)
-                                                    {
-                                                        <li class="comma-list"><span>@place.PlaceName</span></li>
-                                                    }
-                                                </ul>
-                                            </td>
+                    @* PEOPLE RESULTS TABLE *@
+                    <table class="data">
+                        <colgroup>
+                            <col style="vertical-align: top;" />
+                            <col style="vertical-align: top;" />
+                            <col style="vertical-align: top;" />
+                            <col style="vertical-align: top;" />
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>Who</th>
+                                <th>What</th>
+                                <th>Where</th>
+                                <th>When</th>
+                            </tr>
+                        </thead>
+                        <tbody class="searchResults">
+                            @foreach (var activity in Model.Output.Items)
+                            {
+                                <tr>
+                                    @* PERSON COLUMN *@
+                                    <td style="vertical-align: top; min-width: 120px;">
+                                        <a href="@Url.Action(MVC.People.Activities(activity.Owner.PersonId, null))">
+                                            @activity.Owner.LastCommaFirst
+                                        </a>
+                                    </td>
 
-                                            @* TITLE COLUMN *@
-                                            <td style="vertical-align: top;">
-                                                <a href="@Url.Action(MVC.Activities.Details(activity.ActivityId))">
-                                                    @activity.Title
-                                                </a>
-                                            </td>
+                                    @* TITLE COLUMN *@
+                                    <td style="vertical-align: top;">
+                                        <a href="@Url.Action(MVC.Activities.Details(activity.ActivityId))">
+                                            @activity.Title
+                                        </a>
+                                        @if (activity.Types.Any())
+                                        {
+                                            <ul style="display: inline;">
+                                                @foreach (var type in activity.Types)
+                                                {
+                                                    <li style="display: inline;">
+                                                        <img style="vertical-align: top; margin-left: 4px; margin-top: 2px; max-width: 16px;" title="@type.Text" height="16"
+                                                             src="@Url.HttpRouteUrl(null, new {controller = "EmployeeModuleSettings", action = "GetIcon", typeId = type.TypeId})" alt="(@type.Text)" />
+                                                    </li>
+                                                }
+                                            </ul>
+                                        }
+                                    </td>
 
-                                            @* TYPE ICONS COLUMN *@
-                                            <td style="vertical-align: top;">
-                                                <table style="border: none;" class="no-data">
-                                                    <tr>
-                                                        @for (var i = 0; i < activity.Types.Length; i++)
-                                                        {
-                                                            <td style="border: none; margin: 2px; padding: 2px;">
-                                                                <span style="display: inline-block; width: 32px; text-align: center;">
-                                                                    <img title="@activity.Types[i].Text" height="24" src="@Url.HttpRouteUrl(null, new { controller = "EmployeeModuleSettings", action = "GetIcon", typeId = activity.Types[i].TypeId })" alt="" />
-                                                                </span>
-                                                            </td>
-                                                            //How many columns per row
-                                                            if ((i + 1) % 2 == 0)
-                                                            {
-                                                                @Html.Raw("</tr>")
-                                                                @Html.Raw("<tr>")
-                                                            }
-                                                        }
-                                                    </tr>
-                                                </table>
-                                            </td>
+                                    @* LOCATIONS COLUMN *@
+                                    <td style="vertical-align: top; min-width: 120px;">
+                                        <ul style="display: inline-block;">
+                                            @foreach (var place in activity.Places)
+                                            {
+                                                <li class="comma-list"><span>@place.PlaceName</span></li>
+                                            }
+                                        </ul>
+                                    </td>
 
-                                            @* DATES COLUMN *@
-                                            <td style="vertical-align: top;">
-                                                @if (!activity.StartsOn.HasValue && !activity.EndsOn.HasValue && (!activity.OnGoing.HasValue || !activity.OnGoing.Value))
-                                                {
-                                                    @: [Undated]
+                                    @* DATES COLUMN*@
+                                    <td style="vertical-align: top;">
+                                        @if (!activity.StartsOn.HasValue && !activity.EndsOn.HasValue && (!activity.OnGoing.HasValue || !activity.OnGoing.Value))
+                                        {
+                                            @: [Undated]
+                                            }
+                                        else if (!activity.StartsOn.HasValue)
+                                        {
+                                            if (activity.EndsOn.HasValue)
+                                            {
+                                                @activity.EndsOn.Value.ToString(activity.EndsFormat ?? "M/d/yyyy")
+                                            }
+                                            else if (activity.OnGoing.Value)
+                                            {
+                                                @: (Ongoing)
                                                 }
-                                                else if (!activity.StartsOn.HasValue)
-                                                {
-                                                    if (activity.EndsOn.HasValue)
-                                                    {
-                                                        @activity.EndsOn.Value.ToString(activity.EndsFormat ?? "M/d/yyyy")
-                                                    }
-                                                    else if (activity.OnGoing.HasValue && activity.OnGoing.Value)
-                                                    {
-                                                        @: (Ongoing)
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    if (activity.OnGoing.HasValue && activity.OnGoing.Value)
-                                                    {
-                                                        <span>@activity.StartsOn.Value.ToString(activity.StartsFormat ?? "M/d/yyyy") (Ongoing)</span>
-                                                    }
-                                                    else if (activity.EndsOn.HasValue)
-                                                    {
-                                                        <span style="white-space: nowrap;">@activity.StartsOn.Value.ToString(activity.StartsFormat ?? "M/d/yyyy") -</span>
-                                                        <span>@activity.EndsOn.Value.ToString(activity.EndsFormat ?? "M/d/yyyy")</span>
-                                                    }
-                                                    else
-                                                    {
-                                                        @activity.StartsOn.Value.ToString(activity.StartsFormat ?? "M/d/yyyy")
-                                                    }
-                                                }
-                                            </td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                                        }
+                                        else
+                                        {
+                                            if (activity.OnGoing.HasValue && activity.OnGoing.Value)
+                                            {
+                                                <span>@activity.StartsOn.Value.ToString(activity.StartsFormat ?? "M/d/yyyy") (Ongoing)</span>
+                                            }
+                                            else if (activity.EndsOn.HasValue)
+                                            {
+                                                <span style="white-space: nowrap;">@activity.StartsOn.Value.ToString(activity.StartsFormat ?? "M/d/yyyy") -</span>
+                                                <span>@activity.EndsOn.Value.ToString(activity.EndsFormat ?? "M/d/yyyy")</span>
+                                            }
+                                            else
+                                            {
+                                                @activity.StartsOn.Value.ToString(activity.StartsFormat ?? "M/d/yyyy")
+                                            }
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
                 }
             </div>
         </div>
@@ -219,11 +327,11 @@
                         <li class="static square-bottom">
                             <div class="content">
                                 <div class="field">
-                                    @Html.DropDownListFor(x => x.Input.CountryCode, Model.CountryOptions, "[Everywhere]", new
+                                    @Html.DropDownListFor(x => x.Input.CountryCode, Model.CountryOptions, "[All countries]", new
                                     {
                                         @class = "side",
                                         Name = "countryCode",
-                                        data_bind = "value: countryCode, options: countryOptions, optionsCaption: '[Everywhere]', optionsText: 'text', optionsValue: 'value'"
+                                        data_bind = "value: countryCode, options: countryOptions, optionsCaption: '[All countries]', optionsText: 'text', optionsValue: 'value'"
                                     })
                                 </div>
                                 <div class="field">
@@ -232,10 +340,12 @@
                                         {
                                             new SelectListItem { Text = "Sort with most recent at top", Value = "recency-desc" },
                                             new SelectListItem { Text = "Sort with most recent at bottom", Value = "recency-asc" },
-                                            new SelectListItem { Text = "Sort by title A-Z", Value = "title-asc" },
-                                            new SelectListItem { Text = "Sort by title Z-A", Value = "title-desc" },
+                                            new SelectListItem { Text = "Sort by activity title A-Z", Value = "title-asc" },
+                                            new SelectListItem { Text = "Sort by activity title Z-A", Value = "title-desc" },
                                             new SelectListItem { Text = "Sort by location A-Z", Value = "location-asc" },
                                             new SelectListItem { Text = "Sort by location Z-A", Value = "location-desc" },
+                                            new SelectListItem { Text = "Sort by person last name A-Z", Value = "lastname-asc" },
+                                            new SelectListItem { Text = "Sort by person last name Z-A", Value = "lastname-desc" },
                                             new SelectListItem { Text = "Sort by type A-Z", Value = "type-asc" },
                                             new SelectListItem { Text = "Sort by type Z-A", Value = "type-desc" },
                                         },

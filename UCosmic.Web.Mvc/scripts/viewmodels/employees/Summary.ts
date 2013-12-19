@@ -62,8 +62,8 @@
 
     export enum DataGraphPivot {
         unknown = 0,
-        people = 1,
-        activities = 2,
+        activities = 1,
+        people = 2,
         degress = 3,
     }
 

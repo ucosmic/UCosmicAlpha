@@ -9,6 +9,7 @@ namespace UCosmic.Web.Mvc.Models
 {
     public class ActivitySearchInputModel : BaseSearchInputModel
     {
+        public ActivitySearchPivot Pivot { get; set; }
         public string CountryCode { get; set; }
         public string Keyword { get; set; }
         public string OrderBy { get; set; }
@@ -67,6 +68,9 @@ namespace UCosmic.Web.Mvc.Models
                                     orderBy.Add(x => x.Locations.Select(y => y.Place.OfficialName)
                                         .OrderBy(y => y).FirstOrDefault(), direction);
                                     break;
+                                case "lastname":
+                                    orderBy.Add(x => x.Activity.Person.LastName ?? x.Activity.Person.DisplayName, direction);
+                                    break;
                                 case "recency":
                                     // note that "desc" here means most recent will come at the top (they have the most recency, descending to less recent activities)
                                     // this puts all ongoings at the top when most recent, at bottom when least recent
@@ -95,6 +99,9 @@ namespace UCosmic.Web.Mvc.Models
                                     break;
                             }
                         }
+
+                        if (!orderBy.Any())
+                            orderBy.Add(x => x.RevisionId, OrderByDirection.Ascending);
 
                         return orderBy;
                     }))

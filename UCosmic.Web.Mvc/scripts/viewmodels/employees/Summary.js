@@ -38,8 +38,8 @@
 
         (function (DataGraphPivot) {
             DataGraphPivot[DataGraphPivot["unknown"] = 0] = "unknown";
-            DataGraphPivot[DataGraphPivot["people"] = 1] = "people";
-            DataGraphPivot[DataGraphPivot["activities"] = 2] = "activities";
+            DataGraphPivot[DataGraphPivot["activities"] = 1] = "activities";
+            DataGraphPivot[DataGraphPivot["people"] = 2] = "people";
             DataGraphPivot[DataGraphPivot["degress"] = 3] = "degress";
         })(ViewModels.DataGraphPivot || (ViewModels.DataGraphPivot = {}));
         var DataGraphPivot = ViewModels.DataGraphPivot;
@@ -56,10 +56,10 @@
                     _this._onPivotChanged();
                 });
                 this.isPivotPeople = ko.computed(function () {
-                    return _this.pivot() == 1 /* people */;
+                    return _this.pivot() == 2 /* people */;
                 });
                 this.isPivotActivities = ko.computed(function () {
-                    return _this.pivot() == 2 /* activities */;
+                    return _this.pivot() == 1 /* activities */;
                 });
                 this.placeId = ko.observable(parseInt(sessionStorage.getItem(Summary._placeIdKey)) || Summary._placeIdDefault);
                 this._placeIdChanged = ko.computed(function () {
@@ -227,11 +227,11 @@
             };
 
             Summary.prototype.pivotPeople = function () {
-                this.pivot(1 /* people */);
+                this.pivot(2 /* people */);
             };
 
             Summary.prototype.pivotActivities = function () {
-                this.pivot(2 /* activities */);
+                this.pivot(1 /* activities */);
             };
 
             Summary.prototype.isPivot = function (pivot) {
@@ -918,7 +918,7 @@
             };
             Summary._googleVisualizationLoadedPromise = $.Deferred();
 
-            Summary._pivotDefault = 2 /* activities */;
+            Summary._pivotDefault = 1 /* activities */;
             Summary._pivotKey = 'EmployeeSummaryPivot';
 
             Summary._placeIdDefault = 1;

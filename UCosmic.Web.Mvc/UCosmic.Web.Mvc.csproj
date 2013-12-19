@@ -329,6 +329,7 @@
     <Compile Include="Models\Activities\Search\ActivitySearchModel.cs" />
     <Compile Include="Models\Activities\ActivityTagViewModel.cs" />
     <Compile Include="Models\Activities\ActivityTypeViewModel.cs" />
+    <Compile Include="Models\Activities\Search\ActivitySearchPivot.cs" />
     <Compile Include="Models\Activities\Search\ActivitySearchResultModel.cs" />
     <Compile Include="Models\Agreements\AgreementOwningTenant.cs" />
     <Compile Include="Models\Employees\EmployeeSettingsFacultyRankApiModel.cs" />

@@ -55,6 +55,12 @@ namespace UCosmic.Web.Mvc.Controllers
         }
         [NonAction]
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public System.Web.Mvc.ActionResult Index_Spike()
+        {
+            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Index_Spike);
+        }
+        [NonAction]
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public System.Web.Mvc.ActionResult Activities()
         {
             return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Activities);
@@ -107,6 +113,7 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             public readonly string Index = "Index";
             public readonly string GetCard = "GetCard";
+            public readonly string Index_Spike = "Index_Spike";
             public readonly string Activities = "Activities";
             public readonly string Degrees = "Degrees";
             public readonly string GetAffiliations = "GetAffiliations";
@@ -120,6 +127,7 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             public const string Index = "Index";
             public const string GetCard = "GetCard";
+            public const string Index_Spike = "Index_Spike";
             public const string Activities = "Activities";
             public const string Degrees = "Degrees";
             public const string GetAffiliations = "GetAffiliations";
@@ -142,6 +150,14 @@ namespace UCosmic.Web.Mvc.Controllers
         public ActionParamsClass_GetCard GetCardParams { get { return s_params_GetCard; } }
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public class ActionParamsClass_GetCard
+        {
+            public readonly string personId = "personId";
+        }
+        static readonly ActionParamsClass_Index_Spike s_params_Index_Spike = new ActionParamsClass_Index_Spike();
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public ActionParamsClass_Index_Spike Index_SpikeParams { get { return s_params_Index_Spike; } }
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public class ActionParamsClass_Index_Spike
         {
             public readonly string personId = "personId";
         }
@@ -258,6 +274,13 @@ namespace UCosmic.Web.Mvc.Controllers
         public override System.Web.Mvc.ActionResult GetCard(int personId)
         {
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.GetCard);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "personId", personId);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.ActionResult Index_Spike(int personId)
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Index_Spike);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "personId", personId);
             return callInfo;
         }
