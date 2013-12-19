@@ -2596,7 +2596,8 @@
     <Content Include="Views\Employees\Table.cshtml" />
     <Content Include="Views\People\_GlobalExpertises.cshtml" />
     <Content Include="Views\People\_Emails.cshtml" />
-    <Content Include="Views\People\Index-Spike.cshtml" />
+    <Content Include="Views\People\Index_Spike.cshtml" />
+    <Content Include="Views\People\_PersonalInfo-Spike.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -48,6 +48,22 @@ namespace UCosmic.Web.Mvc.Controllers
             }
         }
 
+        [GET("people/{personId:int}/index_spike")]
+        public virtual ActionResult Index_Spike(int personId)
+        {
+            ViewBag.personId = personId;
+            ViewBag.currentPage = "profile";
+            var model = GetPerson(personId);
+            if (model == null)
+            {
+                return HttpNotFound();
+            }
+            else
+            {
+                return View(model);
+            }
+        }
+
         [GET("people/{personId:int}/activities")]
         public virtual ActionResult Activities(int personId, ActivityPublicInputModel input)
         {

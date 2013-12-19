@@ -1,4 +1,5 @@
-﻿@{
+﻿@model UCosmic.Web.Mvc.Models.PersonViewModel
+@{
     ViewBag.Title = "UCosmic Profile";
 }
 @section bib
@@ -33,14 +34,27 @@
     </style>
 }
 <div class="content fixed to-top" data-current-module="faculty">
-    <form class="group">
+    <div class="group">
         <div class="on-left from-top">
             <header>
                 <h1>
                     UCosmic Profile
                 </h1>
             </header>
-            @Html.Action(MVC.People.GetCard())
+            <section class="person-profile" data-bind="click: startEditing, css: { clickable: !editMode() }">
+                <div class="card">
+                    @Html.Action(MVC.People.GetCard())
+                </div>
+                <div class="action">
+                    Click to edit
+                </div>
+            </section>
+            <section class="fieldset" style="display: none;" data-bind="jqElement: '$editSection'">
+                <fieldset class="no-sidebar" style="width:0%;">
+                    @*<legend>Edit @customProfileTitle</legend>*@
+                    @Html.Partial(MVC.People.Views._PersonalInfo_Spike)
+                </fieldset>
+            </section>
             @Html.Action(MVC.People.GetAffiliations())
             @Html.Action(MVC.People.GetEmails())
         </div>
@@ -50,6 +64,7 @@
                 @Html.Partial(MVC.People.Views._SidebarNav)
             </div>
         </aside>
-    </form>
+
+    </div>
 </div>
 
