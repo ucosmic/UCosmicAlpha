@@ -29,6 +29,7 @@ namespace UCosmic.Web.Mvc.Controllers
             return View();
         }
 
+        [CurrentModuleTab(ModuleTab.Employees)]
         [GET("{domain}/employees")]
         public virtual ActionResult TenantIndex(string domain)
         {
