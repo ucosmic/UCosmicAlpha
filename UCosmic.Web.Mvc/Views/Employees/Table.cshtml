@@ -219,11 +219,11 @@
                         <li class="static square-bottom">
                             <div class="content">
                                 <div class="field">
-                                    @Html.DropDownListFor(x => x.Input.CountryCode, Model.CountryOptions, "[All countries]", new
+                                    @Html.DropDownListFor(x => x.Input.CountryCode, Model.CountryOptions, "[Everywhere]", new
                                     {
                                         @class = "side",
                                         Name = "countryCode",
-                                        data_bind = "value: countryCode, options: countryOptions, optionsCaption: '[All countries]', optionsText: 'text', optionsValue: 'value'"
+                                        data_bind = "value: countryCode, options: countryOptions, optionsCaption: '[Everywhere]', optionsText: 'text', optionsValue: 'value'"
                                     })
                                 </div>
                                 <div class="field">

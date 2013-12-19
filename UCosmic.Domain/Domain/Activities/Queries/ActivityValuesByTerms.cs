@@ -1,47 +1,44 @@
 ﻿using System;
 using System.Linq;
-using System.Security.Principal;
 using UCosmic.Domain.Establishments;
 
 namespace UCosmic.Domain.Activities
 {
-    public class ActivitiesByKeyword : BaseEntitiesQuery<ActivityValues>, IDefineQuery<PagedQueryResult<ActivityValues>>
+    public class ActivityValuesByTerms : IDefineQuery<IQueryable<ActivityValues>>
     {
-        public ActivitiesByKeyword()
+        internal ActivityValuesByTerms()
         {
             PageSize = 10;
             PageNumber = 1;
         }
 
-        public int? PersonId { get; set; }
-        public int? EstablishmentId { get; set; }
-        public string EstablishmentDomain { get; set; }
-
         public int PageNumber { get; set; }
         public int PageSize { get; set; }
+
+        public int? EstablishmentId { get; set; }
+        public string EstablishmentDomain { get; set; }
 
         public string CountryCode { get; set; }
         public string Keyword { get; set; }
     }
 
-    public class HandleActivitiesByKeywordQuery : IHandleQueries<ActivitiesByKeyword, PagedQueryResult<ActivityValues>>
+    public class HandleActivityValuesByTermsQuery : IHandleQueries<ActivityValuesByTerms, IQueryable<ActivityValues>>
     {
         private readonly IProcessQueries _queryProcessor;
         private readonly IQueryEntities _entities;
         private static readonly string PublicText = ActivityMode.Public.AsSentenceFragment();
 
-        public HandleActivitiesByKeywordQuery(IProcessQueries queryProcessor, IQueryEntities entities)
+        public HandleActivityValuesByTermsQuery(IProcessQueries queryProcessor, IQueryEntities entities)
         {
             _queryProcessor = queryProcessor;
             _entities = entities;
         }
 
-        public PagedQueryResult<ActivityValues> Handle(ActivitiesByKeyword query)
+        public IQueryable<ActivityValues> Handle(ActivityValuesByTerms query)
         {
             if (query == null) throw new ArgumentNullException("query");
 
             var queryable = _entities.Query<ActivityValues>()
-                .EagerLoad(_entities, query.EagerLoad)
                 .Where(x => x.ModeText == PublicText && x.Activity.ModeText == PublicText && x.Activity.Original == null)
             ;
 
@@ -68,6 +65,7 @@ namespace UCosmic.Domain.Activities
                 // query locations separately from other fields, then get the id's of each separate query, then union them together
                 var nonLocationQueryable = queryable.Where(x => (x.Title != null && x.Title.Contains(query.Keyword))
                     || (x.ContentSearchable != null && x.ContentSearchable.Contains(query.Keyword))
+                    || x.Activity.Person.DisplayName.Contains(query.Keyword)
                     || x.Tags.Any(y => y.Text.Contains(query.Keyword))
                     || x.Types.Any(y => y.Type.Type.Contains(query.Keyword))
                 );
@@ -78,10 +76,7 @@ namespace UCosmic.Domain.Activities
                 queryable = _entities.Query<ActivityValues>().Where(x => ids.Contains(x.RevisionId));
             }
 
-            queryable = queryable.OrderBy(query.OrderBy);
-
-            var result = new PagedQueryResult<ActivityValues>(queryable, query.PageSize, query.PageNumber);
-            return result;
+            return queryable;
         }
     }
 }

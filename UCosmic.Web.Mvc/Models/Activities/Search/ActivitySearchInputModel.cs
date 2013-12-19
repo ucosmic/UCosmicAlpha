@@ -20,7 +20,7 @@ namespace UCosmic.Web.Mvc.Models
         {
             protected override void Configure()
             {
-                CreateMap<ActivitySearchInputModel, ActivitiesByKeyword>()
+                CreateMap<ActivitySearchInputModel, ActivityValuesPageByTerms>()
                     .ForMember(d => d.EstablishmentId, o => o.Ignore())
                     .ForMember(d => d.EstablishmentDomain, o => o.Ignore())
                     .ForMember(d => d.PersonId, o => o.Ignore())

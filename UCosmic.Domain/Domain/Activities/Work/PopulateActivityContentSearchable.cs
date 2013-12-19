@@ -23,10 +23,13 @@ namespace UCosmic.Domain.Activities
         {
             var isChanged = false;
             var entities = _entities.Get<ActivityValues>();
-            foreach (var entity in entities.Where(x => string.IsNullOrWhiteSpace(x.ContentSearchable) && !string.IsNullOrWhiteSpace(x.Content)))
+            foreach (var entity in entities)
             {
-                entity.Content = entity.Content;
-                isChanged = true;
+                if (string.IsNullOrWhiteSpace(entity.ContentSearchable) && !string.IsNullOrWhiteSpace(entity.Content))
+                {
+                    entity.Content = entity.Content;
+                    isChanged = true;
+                }
             }
             if (isChanged) _entities.SaveChanges();
         }

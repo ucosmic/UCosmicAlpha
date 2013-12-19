@@ -42,7 +42,7 @@ namespace UCosmic.Web.Mvc.Controllers
         [GET("{domain}/employees/table")]
         public virtual ActionResult Table(string domain, ActivitySearchInputModel input)
         {
-            var query = new ActivitiesByKeyword
+            var query = new ActivityValuesPageByTerms
             {
                 EstablishmentDomain = domain,
                 EagerLoad = ActivitySearchResultProfiler.EntitiyToModel.EagerLoad,
