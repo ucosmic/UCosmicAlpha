@@ -1,5 +1,4 @@
-﻿@using UCosmic.Web.Mvc.ApiControllers
-@model UCosmic.Web.Mvc.Models.PageOfActivityPublicViewModel
+﻿@model UCosmic.Web.Mvc.Models.PageOfActivityPublicViewModel
 
 @* ACTIVITIES *@
 <section class="content fixed to-top">
@@ -97,8 +96,8 @@
                                                     //How many columns per row
                                                     if ((i + 1) % 2 == 0)
                                                     {
-                                                    @Html.Raw("</tr>");
-                                                    @Html.Raw("<tr>");
+                                                    @Html.Raw("</tr>")
+                                                    @Html.Raw("<tr>")
                                                     }
                                                 }
                                             </tr>
@@ -147,9 +146,9 @@
         else
         {
 @* ZERO RESULTS MESSAGE *@
-            <p>
+            <span>
                 There are no results that match your search terms.
-            </p>
+            </span>
         }
 
 

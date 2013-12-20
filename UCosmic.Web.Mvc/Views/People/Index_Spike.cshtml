@@ -10,12 +10,23 @@
 }
 @section scripts
 {
+    @if (ViewBag.isOwner)
+    {
+        <script src="~/scripts/oss/linq.js"></script>
+        <script src="~/scripts/app/DataCacher.js"></script>
+        <script src="~/scripts/viewmodels/people/Server.js"></script>
+        
+        <script type="text/javascript">
+            var modelData = $.parseJSON('@Html.Raw(Json.Encode(Model))');
+        </script>
 
+        @Scripts.Render("~/bundles/people/profileEditor")
 
-
-    <script type="text/javascript">
-    </script>
-
+        <script type="text/javascript">
+            var viewModel = new People.ViewModels.ProfileSpike(modelData);
+            ko.applyBindings(viewModel, $('#main')[0]);
+        </script>
+    }
 }
 @section styles
 {
@@ -49,12 +60,15 @@
                     Click to edit
                 </div>
             </section>
-            <section class="fieldset" style="display: none;" data-bind="jqElement: '$editSection'">
-                <fieldset class="no-sidebar" style="width:0%;">
-                    @*<legend>Edit @customProfileTitle</legend>*@
-                    @Html.Partial(MVC.People.Views._PersonalInfo_Spike)
-                </fieldset>
-            </section>
+            @if (ViewBag.isOwner)
+            {
+                <section class="fieldset" style="display: none;" data-bind="jqElement: '$editSection', visible: editMode">
+                    <fieldset class="no-sidebar" style="width:0;">
+                        @*<legend>Edit @customProfileTitle</legend>*@
+                        @Html.Partial(MVC.People.Views._PersonalInfo_Spike)
+                    </fieldset>
+                </section>
+            }
             @Html.Action(MVC.People.GetAffiliations())
             @Html.Action(MVC.People.GetEmails())
         </div>

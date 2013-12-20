@@ -1,5 +1,4 @@
-﻿@using UCosmic.Web.Mvc.ApiControllers
-@model UCosmic.Web.Mvc.Models.PersonViewModel
+﻿@model UCosmic.Web.Mvc.Models.PersonViewModel
 
 <section id="card">
 
@@ -13,7 +12,7 @@
                 <td>
                     <div style="font-size: 24px; line-height: 28px;">@Model.DisplayName</div>
                     <div>@Model.JobTitles</div>
-                    <a style="-ms-word-break: break-all; word-break: break-all;" href="mailto:@Model.EmailAddress" target="_top">@Model.EmailAddress</a>
+                    <a style="-ms-word-break: break-all; -moz-word-break: break-all; -o-word-break: break-all; word-break: break-all;" href="mailto:@Model.EmailAddress" target="_top">@Model.EmailAddress</a>
                 </td>
             </tr>
         </table>

@@ -1,19 +1,19 @@
-﻿var modelData;
-var People;
+﻿var People;
 (function (People) {
     (function (ViewModels) {
         var ActivityInputModel = (function () {
-            function ActivityInputModel() {
-                this.pageSize = ko.observable(modelData.PageSize);
-                this.pageNumber = ko.observable((modelData.PageNumber != null) ? modelData.PageNumber : 1);
-                this.keyword = ko.observable(modelData.Keyword);
+            function ActivityInputModel(modelData) {
+                this.pageSize = ko.observable(this.modelData.PageSize);
+                this.pageNumber = ko.observable((this.modelData.PageNumber != null) ? this.modelData.PageNumber : 1);
+                this.keyword = ko.observable(this.modelData.Keyword);
                 this.countries = ko.observableArray();
                 this.countryCode = ko.observable();
                 this.prevEnabled = ko.observable(true);
                 this.nextEnabled = ko.observable(true);
-                this.orderBy = ko.observable(modelData.OrderBy);
+                this.orderBy = ko.observable(this.modelData.OrderBy);
                 this.hasInitialized = false;
                 this.optionsEnabled = ko.observable(false);
+                this.modelData = modelData;
                 this._setupCountryDropDown();
                 if (this.pageNumber() >= modelData.PageCount) {
                     this.nextEnabled(false);
@@ -74,7 +74,7 @@ var People;
 
                         _this.countries(response);
 
-                        _this.countryCode(modelData.CountryCode);
+                        _this.countryCode(_this.modelData.CountryCode);
                         _this.hasInitialized = true;
                     });
                 }).extend({ throttle: 1 });

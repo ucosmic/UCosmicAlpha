@@ -1,8 +1,8 @@
-﻿var modelData;
-module People.ViewModels {
+﻿module People.ViewModels {
 
     export class ActivityInputModel {
-        constructor() {
+        constructor(modelData: any) {
+            this.modelData = modelData;
             this._setupCountryDropDown();
             if (this.pageNumber() >= modelData.PageCount) {
                 this.nextEnabled(false);
@@ -33,15 +33,16 @@ module People.ViewModels {
                 }
             }, this);
         }
+        modelData;
         $form: JQuery;
-        pageSize = ko.observable(modelData.PageSize);
-        pageNumber = ko.observable((modelData.PageNumber != null) ? modelData.PageNumber : 1);
-        keyword = ko.observable(modelData.Keyword);
+        pageSize = ko.observable(this.modelData.PageSize);
+        pageNumber = ko.observable((this.modelData.PageNumber != null) ? this.modelData.PageNumber : 1);
+        keyword = ko.observable(this.modelData.Keyword);
         countries = ko.observableArray<Places.ApiModels.Country>();
         countryCode = ko.observable<string>();
         prevEnabled = ko.observable(true);
         nextEnabled = ko.observable(true);
-        orderBy = ko.observable(modelData.OrderBy);
+        orderBy = ko.observable(this.modelData.OrderBy);
 
         nextPage(model, event): void {
             event.preventDefault();
@@ -79,7 +80,7 @@ module People.ViewModels {
 
                         this.countries(response); // push into observable array
 
-                        this.countryCode(modelData.CountryCode);
+                        this.countryCode(this.modelData.CountryCode);
                         this.hasInitialized = true;
                     });
             })

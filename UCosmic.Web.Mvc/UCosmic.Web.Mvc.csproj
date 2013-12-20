@@ -774,6 +774,9 @@
     <TypeScriptCompile Include="Models\LanguageExpertiseViewModel.cs.d.ts">
       <DependentUpon>LanguageExpertiseViewModel.cs</DependentUpon>
     </TypeScriptCompile>
+    <TypeScriptCompile Include="Models\People\PersonViewModel.cs.d.ts">
+      <DependentUpon>PersonViewModel.cs</DependentUpon>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="scripts\google\ToolsOverlay.ts" />
     <Content Include="images\geochart\hot\antarctica.png" />
     <Content Include="images\geochart\hot\arctic-ocean.png" />
@@ -2139,6 +2142,7 @@
     </Content>
     <TypeScriptCompile Include="scripts\viewmodels\people\Languages.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\my\Profile.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\people\ProfileEditor.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\representatives\RepModuleSettings.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\geographicExpertises\GeographicExpertises.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\degrees\ServiceApiModel.d.ts" />

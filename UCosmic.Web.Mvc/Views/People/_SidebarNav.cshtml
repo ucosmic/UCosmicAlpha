@@ -3,7 +3,7 @@
     <ul>
         <li class="@if(ViewBag.currentPage == "profile")
     {
-        @Html.Raw("current");
+        @Html.Raw("current")
     }" id="nav_profile">
             <a href="@Url.Action(MVC.People.Index((int)ViewBag.personId))" class="group">
                 <span class="arrow"></span>
@@ -18,7 +18,7 @@
         </li>
         <li class="@if(ViewBag.currentPage == "degrees")
     {
-        @Html.Raw("current");
+        @Html.Raw("current")
     }" id="nav_education">
             <a href="@Url.Action(MVC.People.Degrees((int)ViewBag.personId, null))" class="group">
                 <span class="arrow"></span>
@@ -28,7 +28,6 @@
         <li class="@if (ViewBag.currentPage == "global-expertise")
                    {
                        @Html.Raw("current")
-                       ;
                    }" id="nav_global_expertise">
             <a href="@Url.Action(MVC.People.GlobalExpertises((int)ViewBag.personId))" class="group">
                 <span class="arrow"></span>
@@ -38,7 +37,6 @@
         <li class="@if (ViewBag.currentPage == "languages")
                    {
                        @Html.Raw("current")
-                       ;
                    }" id="nav_language_expertise">
             <a href="@Url.Action(MVC.People.Languages((int)ViewBag.personId))" class="group">
                 <span class="arrow"></span>

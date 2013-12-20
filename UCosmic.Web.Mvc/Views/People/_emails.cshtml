@@ -1,16 +1,15 @@
-﻿@using UCosmic.Web.Mvc.ApiControllers
-@model UCosmic.Web.Mvc.Models.PersonViewModel
+﻿@model UCosmic.Web.Mvc.Models.PersonViewModel
 
 @* EMAILS *@
 <section class="content fixed to-top">
     @if (Model != null && Model.EmailAddress != null)
     {
-        <h2 style="font-size: 24px; padding-bottom: 1em;">Emails</h2>
+        <h2 style="font-size: 24px; padding-bottom: 1em;">Contact Information</h2>
         <div>
             <ul>
                 @if (Model.EmailAddress != null)
                 {
-                    <li><strong>@Model.EmailAddress</strong><span style="color: gray;"> (default)</span></li>
+                    <li><strong>@Model.EmailAddress</strong><span style="color: #666;"> (default)</span></li>
                 }
                 @foreach (var emailAddress in Model.EmailAddresses)
                 {

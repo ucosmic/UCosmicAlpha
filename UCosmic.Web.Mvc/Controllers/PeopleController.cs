@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Security.Policy;
-using System.Web;
 using System.Web.Mvc;
 using AttributeRouting.Web.Mvc;
 using UCosmic.Domain.GeographicExpertise;
@@ -42,10 +39,7 @@ namespace UCosmic.Web.Mvc.Controllers
             {
                 return HttpNotFound();
             }
-            else
-            {
-                return PartialView(MVC.People.Views._Card, model);
-            }
+            return PartialView(MVC.People.Views._Card, model);
         }
 
         [GET("people/{personId:int}/index_spike")]
@@ -58,10 +52,10 @@ namespace UCosmic.Web.Mvc.Controllers
             {
                 return HttpNotFound();
             }
-            else
-            {
-                return View(model);
-            }
+            ViewBag.isOwner = false;
+            if (User.Identity.Name == model.EmailAddress)
+                ViewBag.isOwner = true;
+            return View(model);
         }
 
         [GET("people/{personId:int}/activities")]

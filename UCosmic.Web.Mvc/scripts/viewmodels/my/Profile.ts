@@ -418,7 +418,7 @@ module People.ViewModels {
         }
 
         //#endregion
-        //#region Postition Title Text
+        //#region Position Title Text
 
         jobTitlesHtml = ko.computed((): string => {
             return this._computeJobTitles();
@@ -939,7 +939,7 @@ module People.ViewModels {
             }).show();
 
             // when the $element observables are bound, they will have length
-            // use this opportinity to apply kendo extensions
+            // use this opportunity to apply kendo extensions
             this.$nameSalutation.subscribe((newValue: JQuery): void => {
                 if (newValue && newValue.length)
                     newValue.kendoComboBox({
