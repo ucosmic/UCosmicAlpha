@@ -3,6 +3,7 @@
     public enum AppSettingsKey
     {
         DeployedTo,
+        AzureStorageData,
 
         GeoNamesUserName,
         GeoPlanetAppId,

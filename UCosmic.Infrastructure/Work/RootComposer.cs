@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Microsoft.WindowsAzure;
 using SimpleInjector;
 using SimpleInjector.Extensions;
 using UCosmic.CompositionRoot;
@@ -17,7 +18,7 @@ namespace UCosmic.Work
             // register the work scheduler
             if (settings.Flags.HasFlag(RootCompositionFlags.Azure))
                 container.RegisterSingle<IScheduleWork>(() =>
-                    new AzureBlobWorkScheduler(ConnectionStringName.UCosmicCloudData.ToString()));
+                    new AzureBlobWorkScheduler(CloudConfigurationManager.GetSetting(AppSettingsKey.AzureStorageData.ToString())));
 
             else if (settings.Flags.HasFlag(RootCompositionFlags.Web))
                 container.RegisterSingle<IScheduleWork>(() => new WebDevelopmentWorkScheduler());

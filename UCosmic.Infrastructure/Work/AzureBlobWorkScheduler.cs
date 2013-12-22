@@ -1,13 +1,12 @@
-﻿using System;
+﻿using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Blob;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading;
-using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Blob;
-using Newtonsoft.Json;
 
 namespace UCosmic.Work
 {
@@ -16,20 +15,9 @@ namespace UCosmic.Work
         private const string BlobKey = "work-schedule";
         private readonly CloudBlockBlob _blob;
 
-        public AzureBlobWorkScheduler(string connectionStringName)
+        public AzureBlobWorkScheduler(string connectionString)
         {
-            if (string.IsNullOrWhiteSpace(connectionStringName))
-                throw new ArgumentNullException("connectionStringName", "Cannot be null or whitespace.");
-            var connectionString = ConfigurationManager.ConnectionStrings[connectionStringName];
-            if (connectionString == null)
-                throw new InvalidOperationException(string.Format(
-                    "There is no ConnectionString named '{0}' in the configuration file.", connectionStringName));
-
-            if (string.IsNullOrWhiteSpace(connectionString.ConnectionString))
-                throw new InvalidOperationException(string.Format(
-                    "The ConnectionString named '{0}' has no connectionString attribute value.", connectionStringName));
-
-            var storageAccount = CloudStorageAccount.Parse(connectionString.ConnectionString);
+            var storageAccount = CloudStorageAccount.Parse(connectionString);
             var client = storageAccount.CreateCloudBlobClient();
             var container = client.GetContainerReference(BlobKey);
             container.CreateIfNotExists(BlobContainerPublicAccessType.Off);

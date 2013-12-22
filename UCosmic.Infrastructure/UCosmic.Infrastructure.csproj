@@ -165,7 +165,6 @@
     <Compile Include="CompositionRoot\RootComposer.cs" />
     <Compile Include="CompositionRoot\RootCompositionFlags.cs" />
     <Compile Include="CompositionRoot\RootCompositionSettings.cs" />
-    <Compile Include="Configuration\ConnectionStringName.cs" />
     <Compile Include="Cqrs\AzureCacheViewManager.cs" />
     <Compile Include="Cache\IProvideCache.cs" />
     <Compile Include="_Deprecatable\HandleEventAsynchronouslyDecorator.cs" />

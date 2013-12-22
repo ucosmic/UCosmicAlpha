@@ -1,9 +1,8 @@
-﻿using System;
-using System.Configuration;
+﻿using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Blob;
+using System;
 using System.IO;
 using System.Linq;
-using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace UCosmic.BinaryData
 {
@@ -12,18 +11,9 @@ namespace UCosmic.BinaryData
     {
         private readonly CloudBlobClient _blobClient;
 
-        public AzureBlobBinaryDataStorage(string connectionStringName)
+        public AzureBlobBinaryDataStorage(string connectionString)
         {
-            var connectionString = ConfigurationManager.ConnectionStrings[connectionStringName];
-            if (connectionString == null)
-                throw new InvalidOperationException(string.Format(
-                    "There is no ConnectionString named '{0}' in the configuration file.", connectionStringName));
-
-            if (string.IsNullOrWhiteSpace(connectionString.ConnectionString))
-                throw new InvalidOperationException(string.Format(
-                    "The ConnectionString named '{0}' has no connectionString attribute value.", connectionStringName));
-
-            var storageAccount = CloudStorageAccount.Parse(connectionString.ConnectionString);
+            var storageAccount = CloudStorageAccount.Parse(connectionString);
             _blobClient = storageAccount.CreateCloudBlobClient();
         }
 
