@@ -346,12 +346,6 @@ var People;
         var ProfileSpike = (function () {
             function ProfileSpike(personId) {
                 var _this = this;
-                this._sammy = Sammy();
-                this._activitiesViewModel = null;
-                this._geographicExpertisesViewModel = null;
-                this._languageExpertisesViewModel = null;
-                this._degreesViewModel = null;
-                this._internationalAffiliationsViewModel = null;
                 this.hasPhoto = ko.observable();
                 this.photoUploadError = ko.observable();
                 this.photoSrc = ko.observable(App.Routes.WebApi.My.Photo.get({ maxSide: 128, refresh: new Date().toUTCString() }));
@@ -475,95 +469,12 @@ var People;
                     _this._setupDisplayNameDerivation();
                     _this._setupCardComputeds();
 
-                    if (startTab === "") {
-                        _this._setupRouting();
-                        _this._sammy.run("#/activities");
-                    } else {
-                        var url = location.href;
-                        var index = url.lastIndexOf("?");
-                        if (index != -1) {
-                            _this._startTab(startTab);
-                            _this._setupRouting();
-                        } else {
-                            _this._setupRouting();
-                            _this._sammy.run("#/" + startTab);
-                        }
-                    }
-
                     _this._loadPromise.resolve();
                 }).fail(function (xhr, textStatus, errorThrown) {
                     _this._loadPromise.reject(xhr, textStatus, errorThrown);
                 });
 
                 return this._loadPromise;
-            };
-
-            ProfileSpike.prototype._startTab = function (tabName) {
-                var _this = this;
-                var viewModel;
-                var tabStrip = $("#tabstrip").data("kendoTabStrip");
-
-                if (tabName === "activities") {
-                    if (this._activitiesViewModel == null) {
-                        this._activitiesViewModel = new Activities.ViewModels.ActivityList();
-                        this._activitiesViewModel.load().done(function () {
-                            ko.applyBindings(_this._activitiesViewModel, $("#activities")[0]);
-                        }).fail(function (jqXhr, textStatus, errorThrown) {
-                            alert(textStatus + "|" + errorThrown);
-                        });
-                    }
-                    if (tabStrip.select() != 0) {
-                        tabStrip.select(0);
-                    }
-                } else if (tabName === "geographic-expertise") {
-                    if (this._geographicExpertisesViewModel == null) {
-                        this._geographicExpertisesViewModel = new RootViewModels.GeographicExpertises.GeographicExpertiseList(this.personId);
-                        this._geographicExpertisesViewModel.load().done(function () {
-                            ko.applyBindings(_this._geographicExpertisesViewModel, $("#geographic-expertises")[0]);
-                        }).fail(function (jqXhr, textStatus, errorThrown) {
-                            alert(textStatus + "|" + errorThrown);
-                        });
-                    }
-                    if (tabStrip.select() != 1) {
-                        tabStrip.select(1);
-                    }
-                } else if (tabName === "language-expertise") {
-                    if (this._languageExpertisesViewModel == null) {
-                        this._languageExpertisesViewModel = new RootViewModels.LanguageExpertises.LanguageExpertiseList(this.personId);
-                        this._languageExpertisesViewModel.load().done(function () {
-                            ko.applyBindings(_this._languageExpertisesViewModel, $("#language-expertises")[0]);
-                        }).fail(function (jqXhr, textStatus, errorThrown) {
-                            alert(textStatus + "|" + errorThrown);
-                        });
-                    }
-                    if (tabStrip.select() != 2) {
-                        tabStrip.select(2);
-                    }
-                } else if (tabName === "formal-education") {
-                    if (this._degreesViewModel == null) {
-                        this._degreesViewModel = new RootViewModels.Degrees.DegreeList(this.personId);
-                        this._degreesViewModel.load().done(function () {
-                            ko.applyBindings(_this._degreesViewModel, $("#degrees")[0]);
-                        }).fail(function (jqXhr, textStatus, errorThrown) {
-                            alert(textStatus + "|" + errorThrown);
-                        });
-                    }
-                    if (tabStrip.select() != 3) {
-                        tabStrip.select(3);
-                    }
-                } else if (tabName === "affiliations") {
-                    if (this._internationalAffiliationsViewModel == null) {
-                        this._internationalAffiliationsViewModel = new RootViewModels.InternationalAffiliations.InternationalAffiliationList(this.personId);
-                        this._internationalAffiliationsViewModel.load().done(function () {
-                            ko.applyBindings(_this._internationalAffiliationsViewModel, $("#international-affiliations")[0]);
-                        }).fail(function (jqXhr, textStatus, errorThrown) {
-                            alert(textStatus + " |" + errorThrown);
-                        });
-                    }
-                    if (tabStrip.select() != 4) {
-                        tabStrip.select(4);
-                    }
-                }
             };
 
             ProfileSpike.prototype.tabClickHandler = function (event) {
@@ -684,28 +595,6 @@ var People;
                     _this.photoSrc(App.Routes.WebApi.My.Photo.get({ maxSide: 128, refresh: new Date().toUTCString() }));
                 }).fail(function () {
                     _this.photoUploadError(ProfileSpike.photoUploadUnexpectedErrorMessage);
-                });
-            };
-
-            ProfileSpike.prototype._setupRouting = function () {
-                var _this = this;
-                this._sammy.route('get', '#/', function () {
-                    _this._startTab('activities');
-                });
-                this._sammy.route('get', '#/activities', function () {
-                    _this._startTab('activities');
-                });
-                this._sammy.route('get', '#/geographic-expertise', function () {
-                    _this._startTab('geographic-expertise');
-                });
-                this._sammy.route('get', '#/language-expertise', function () {
-                    _this._startTab('language-expertise');
-                });
-                this._sammy.route('get', '#/formal-education', function () {
-                    _this._startTab('formal-education');
-                });
-                this._sammy.route('get', '#/affiliations', function () {
-                    _this._startTab('affiliations');
                 });
             };
 

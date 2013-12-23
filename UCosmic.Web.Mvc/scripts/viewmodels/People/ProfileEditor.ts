@@ -455,14 +455,14 @@
      export class ProfileSpike implements KnockoutValidationGroup {
          //#region Properties
 
-         private _sammy: Sammy.Application = Sammy();
+         //private _sammy: Sammy.Application = Sammy();
          //private _isInitialized: boolean = false;
          private _originalValues: ApiModels.IServerProfileApiModel;
-         private _activitiesViewModel: Activities.ViewModels.ActivityList = null;
-         private _geographicExpertisesViewModel: RootViewModels.GeographicExpertises.GeographicExpertiseList = null;
-         private _languageExpertisesViewModel: RootViewModels.LanguageExpertises.LanguageExpertiseList = null;
-         private _degreesViewModel: RootViewModels.Degrees.DegreeList = null;
-         private _internationalAffiliationsViewModel: RootViewModels.InternationalAffiliations.InternationalAffiliationList = null;
+         //private _activitiesViewModel: Activities.ViewModels.ActivityList = null;
+         //private _geographicExpertisesViewModel: RootViewModels.GeographicExpertises.GeographicExpertiseList = null;
+         //private _languageExpertisesViewModel: RootViewModels.LanguageExpertises.LanguageExpertiseList = null;
+         //private _degreesViewModel: RootViewModels.Degrees.DegreeList = null;
+         //private _internationalAffiliationsViewModel: RootViewModels.InternationalAffiliations.InternationalAffiliationList = null;
 
          hasPhoto = ko.observable<boolean>();
          photoUploadError = ko.observable<string>();
@@ -672,21 +672,21 @@
                  //    this.startEditing();
                  //}
 
-                 if (startTab === "") {
-                     this._setupRouting();
-                     this._sammy.run("#/activities");
-                 }
-                 else {
-                     var url = location.href;
-                     var index = url.lastIndexOf("?");
-                     if (index != -1) {
-                         this._startTab(startTab);
-                         this._setupRouting();
-                     } else {
-                         this._setupRouting();
-                         this._sammy.run("#/" + startTab);
-                     }
-                 }
+                 //if (startTab === "") {
+                 //    this._setupRouting();
+                 //    this._sammy.run("#/activities");
+                 //}
+                 //else {
+                 //    var url = location.href;
+                 //    var index = url.lastIndexOf("?");
+                 //    if (index != -1) {
+                 //        this._startTab(startTab);
+                 //        this._setupRouting();
+                 //    } else {
+                 //        this._setupRouting();
+                 //        this._sammy.run("#/" + startTab);
+                 //    }
+                 //}
 
                  this._loadPromise.resolve();
              })
@@ -702,82 +702,82 @@
              return this._loadPromise;
          }
 
-         private _startTab(tabName: string): void {
-             var viewModel: any;
-             var tabStrip = $("#tabstrip").data("kendoTabStrip");
+         //private _startTab(tabName: string): void {
+         //    var viewModel: any;
+         //    var tabStrip = $("#tabstrip").data("kendoTabStrip");
 
-             if (tabName === "activities") {
-                 if (this._activitiesViewModel == null) {
-                     this._activitiesViewModel = new Activities.ViewModels.ActivityList();
-                     this._activitiesViewModel.load()
-                         .done((): void => {
-                             ko.applyBindings(this._activitiesViewModel, $("#activities")[0]);
-                         })
-                         .fail(function (jqXhr, textStatus, errorThrown) {
-                             alert(textStatus + "|" + errorThrown);
-                         });
-                 }
-                 if (tabStrip.select() != 0) {
-                     tabStrip.select(0);
-                 }
-             } else if (tabName === "geographic-expertise") {
-                 if (this._geographicExpertisesViewModel == null) {
-                     this._geographicExpertisesViewModel = new RootViewModels.GeographicExpertises.GeographicExpertiseList(this.personId);
-                     this._geographicExpertisesViewModel.load()
-                         .done((): void => {
-                             ko.applyBindings(this._geographicExpertisesViewModel, $("#geographic-expertises")[0]);
-                         })
-                         .fail(function (jqXhr, textStatus, errorThrown) {
-                             alert(textStatus + "|" + errorThrown);
-                         });
-                 }
-                 if (tabStrip.select() != 1) {
-                     tabStrip.select(1);
-                 }
-             } else if (tabName === "language-expertise") {
-                 if (this._languageExpertisesViewModel == null) {
-                     this._languageExpertisesViewModel = new RootViewModels.LanguageExpertises.LanguageExpertiseList(this.personId);
-                     this._languageExpertisesViewModel.load()
-                         .done((): void => {
-                             ko.applyBindings(this._languageExpertisesViewModel, $("#language-expertises")[0]);
-                         })
-                         .fail(function (jqXhr, textStatus, errorThrown) {
-                             alert(textStatus + "|" + errorThrown);
-                         });
-                 }
-                 if (tabStrip.select() != 2) {
-                     tabStrip.select(2);
-                 }
-             } else if (tabName === "formal-education") {
-                 if (this._degreesViewModel == null) {
-                     this._degreesViewModel = new RootViewModels.Degrees.DegreeList(this.personId);
-                     this._degreesViewModel.load()
-                         .done((): void => {
-                             ko.applyBindings(this._degreesViewModel, $("#degrees")[0]);
-                         })
-                         .fail(function (jqXhr, textStatus, errorThrown) {
-                             alert(textStatus + "|" + errorThrown);
-                         });
-                 }
-                 if (tabStrip.select() != 3) {
-                     tabStrip.select(3);
-                 }
-             } else if (tabName === "affiliations") {
-                 if (this._internationalAffiliationsViewModel == null) {
-                     this._internationalAffiliationsViewModel = new RootViewModels.InternationalAffiliations.InternationalAffiliationList(this.personId);
-                     this._internationalAffiliationsViewModel.load()
-                         .done((): void => {
-                             ko.applyBindings(this._internationalAffiliationsViewModel, $("#international-affiliations")[0]);
-                         })
-                         .fail(function (jqXhr, textStatus, errorThrown) {
-                             alert(textStatus + " |" + errorThrown);
-                         });
-                 }
-                 if (tabStrip.select() != 4) {
-                     tabStrip.select(4);
-                 }
-             }
-         }
+         //    if (tabName === "activities") {
+         //        if (this._activitiesViewModel == null) {
+         //            this._activitiesViewModel = new Activities.ViewModels.ActivityList();
+         //            this._activitiesViewModel.load()
+         //                .done((): void => {
+         //                    ko.applyBindings(this._activitiesViewModel, $("#activities")[0]);
+         //                })
+         //                .fail(function (jqXhr, textStatus, errorThrown) {
+         //                    alert(textStatus + "|" + errorThrown);
+         //                });
+         //        }
+         //        if (tabStrip.select() != 0) {
+         //            tabStrip.select(0);
+         //        }
+         //    } else if (tabName === "geographic-expertise") {
+         //        if (this._geographicExpertisesViewModel == null) {
+         //            this._geographicExpertisesViewModel = new RootViewModels.GeographicExpertises.GeographicExpertiseList(this.personId);
+         //            this._geographicExpertisesViewModel.load()
+         //                .done((): void => {
+         //                    ko.applyBindings(this._geographicExpertisesViewModel, $("#geographic-expertises")[0]);
+         //                })
+         //                .fail(function (jqXhr, textStatus, errorThrown) {
+         //                    alert(textStatus + "|" + errorThrown);
+         //                });
+         //        }
+         //        if (tabStrip.select() != 1) {
+         //            tabStrip.select(1);
+         //        }
+         //    } else if (tabName === "language-expertise") {
+         //        if (this._languageExpertisesViewModel == null) {
+         //            this._languageExpertisesViewModel = new RootViewModels.LanguageExpertises.LanguageExpertiseList(this.personId);
+         //            this._languageExpertisesViewModel.load()
+         //                .done((): void => {
+         //                    ko.applyBindings(this._languageExpertisesViewModel, $("#language-expertises")[0]);
+         //                })
+         //                .fail(function (jqXhr, textStatus, errorThrown) {
+         //                    alert(textStatus + "|" + errorThrown);
+         //                });
+         //        }
+         //        if (tabStrip.select() != 2) {
+         //            tabStrip.select(2);
+         //        }
+         //    } else if (tabName === "formal-education") {
+         //        if (this._degreesViewModel == null) {
+         //            this._degreesViewModel = new RootViewModels.Degrees.DegreeList(this.personId);
+         //            this._degreesViewModel.load()
+         //                .done((): void => {
+         //                    ko.applyBindings(this._degreesViewModel, $("#degrees")[0]);
+         //                })
+         //                .fail(function (jqXhr, textStatus, errorThrown) {
+         //                    alert(textStatus + "|" + errorThrown);
+         //                });
+         //        }
+         //        if (tabStrip.select() != 3) {
+         //            tabStrip.select(3);
+         //        }
+         //    } else if (tabName === "affiliations") {
+         //        if (this._internationalAffiliationsViewModel == null) {
+         //            this._internationalAffiliationsViewModel = new RootViewModels.InternationalAffiliations.InternationalAffiliationList(this.personId);
+         //            this._internationalAffiliationsViewModel.load()
+         //                .done((): void => {
+         //                    ko.applyBindings(this._internationalAffiliationsViewModel, $("#international-affiliations")[0]);
+         //                })
+         //                .fail(function (jqXhr, textStatus, errorThrown) {
+         //                    alert(textStatus + " |" + errorThrown);
+         //                });
+         //        }
+         //        if (tabStrip.select() != 4) {
+         //            tabStrip.select(4);
+         //        }
+         //    }
+         //}
 
          tabClickHandler(event: any): void {
              var tabName = event.item.innerText; // IE
@@ -902,14 +902,14 @@
                  });
          }
 
-         private _setupRouting(): void {
-             this._sammy.route('get', '#/', (): void => { this._startTab('activities'); });
-             this._sammy.route('get', '#/activities', (): void => { this._startTab('activities'); });
-             this._sammy.route('get', '#/geographic-expertise', (): void => { this._startTab('geographic-expertise'); });
-             this._sammy.route('get', '#/language-expertise', (): void => { this._startTab('language-expertise'); });
-             this._sammy.route('get', '#/formal-education', (): void => { this._startTab('formal-education'); });
-             this._sammy.route('get', '#/affiliations', (): void => { this._startTab('affiliations'); });
-         }
+         //private _setupRouting(): void {
+         //    this._sammy.route('get', '#/', (): void => { this._startTab('activities'); });
+         //    this._sammy.route('get', '#/activities', (): void => { this._startTab('activities'); });
+         //    this._sammy.route('get', '#/geographic-expertise', (): void => { this._startTab('geographic-expertise'); });
+         //    this._sammy.route('get', '#/language-expertise', (): void => { this._startTab('language-expertise'); });
+         //    this._sammy.route('get', '#/formal-education', (): void => { this._startTab('formal-education'); });
+         //    this._sammy.route('get', '#/affiliations', (): void => { this._startTab('affiliations'); });
+         //}
 
          // client validation rules
          private _setupValidation(): void {

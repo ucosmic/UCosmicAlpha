@@ -12,8 +12,19 @@
 {
     @if (ViewBag.isOwner)
     {
+    <script>
+        @{Html.RenderPartial(MVC.JavaScriptRoutes.Views.Establishments);}
+        @{Html.RenderPartial(MVC.JavaScriptRoutes.Views.Employees);}
+        @{Html.RenderPartial(MVC.JavaScriptRoutes.Views.People);}
+    </script>
         <script src="~/scripts/oss/linq.js"></script>
         <script src="~/scripts/app/DataCacher.js"></script>
+
+    <script src="~/scripts/app/FormSelect.js"></script>
+
+    <script src="~/scripts/viewmodels/establishments/Server.js"></script>
+
+    <script src="~/scripts/viewmodels/employees/Server.js"></script>
         <script src="~/scripts/viewmodels/people/Server.js"></script>
         
         <script type="text/javascript">
@@ -22,9 +33,35 @@
 
         @Scripts.Render("~/bundles/people/profileEditor")
 
-        <script type="text/javascript">
+        @*<script type="text/javascript">
             var viewModel = new People.ViewModels.ProfileSpike(modelData);
             ko.applyBindings(viewModel, $('#main')[0]);
+        </script*@
+        <script type="text/javascript">
+
+            $(function () {
+                var profileViewModel = new People.ViewModels.ProfileSpike('@ViewBag.PersonId');
+                profileViewModel.load('@ViewBag.Tab')
+                    .done(function () {
+                        ko.applyBindings(profileViewModel, $('#main')[0]);
+                        //profileViewModel.startEditing();
+
+                        /* KendoUI TabStrip Bug? - .select(0) does not produce a select event */
+                        //if ( '@ViewBag.Tab' === '' ) {
+                        //    //profileViewModel.startTab("activities");
+                        //    location.href = "#/activities";
+                        //} else {
+                        //    //$( "#tabstrip" ).data( "kendoTabStrip" ).select( @ViewBag.Tab);
+                        //    debugger;
+                        //    var url = App.Routes.Mvc.My.Profile.get() + "#/" + '@ViewBag.Tab';
+                        //    location.href = url;
+                        //}
+                    })
+                    .fail(function (xhr) {
+                        App.Failures.message(xhr, 'while trying to load your profile', true);
+                    });
+            });
+
         </script>
     }
 }
