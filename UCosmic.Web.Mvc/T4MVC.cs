@@ -3052,6 +3052,7 @@ namespace Links
                               
                 public static readonly string Languages_ts = Url("Languages.ts");
                 public static readonly string Models_d_ts = Url("Models.d.ts");
+                public static readonly string ProfileEditor_ts = Url("ProfileEditor.ts");
                 public static readonly string Routes_d_ts = Url("Routes.d.ts");
                 public static readonly string Server_ts = Url("Server.ts");
                 public static readonly string Server_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Server.min.js") ? Url("Server.min.js") : Url("Server.js");
