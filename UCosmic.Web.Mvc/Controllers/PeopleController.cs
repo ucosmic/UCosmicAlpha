@@ -52,9 +52,9 @@ namespace UCosmic.Web.Mvc.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.isOwner = false;
-            if (User.Identity.Name == model.EmailAddress)
-                ViewBag.isOwner = true;
+            //ViewBag.isOwner = false;
+            //if (User.Identity.Name == model.EmailAddress)
+            //    ViewBag.isOwner = true;
             return View(model);
         }
 

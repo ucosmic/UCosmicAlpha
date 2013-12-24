@@ -1,4 +1,5 @@
-﻿@model UCosmic.Web.Mvc.Models.PersonViewModel
+﻿@using Links
+@model UCosmic.Web.Mvc.Models.PersonViewModel
 @{
     ViewBag.Title = "UCosmic Profile";
 }
@@ -10,33 +11,33 @@
 }
 @section scripts
 {
-    @if (ViewBag.isOwner)
+    @if (User.Identity.Name.Equals(Model.Username, StringComparison.OrdinalIgnoreCase))
     {
-    <script>
-        @{Html.RenderPartial(MVC.JavaScriptRoutes.Views.Establishments);}
-        @{Html.RenderPartial(MVC.JavaScriptRoutes.Views.Employees);}
-        @{Html.RenderPartial(MVC.JavaScriptRoutes.Views.People);}
-    </script>
+        <script>
+            @{Html.RenderPartial(MVC.JavaScriptRoutes.Views.Establishments);}
+            @{Html.RenderPartial(MVC.JavaScriptRoutes.Views.Employees);}
+            @{Html.RenderPartial(MVC.JavaScriptRoutes.Views.People);}
+        </script>
         <script src="~/scripts/oss/linq.js"></script>
         <script src="~/scripts/app/DataCacher.js"></script>
 
-    <script src="~/scripts/app/FormSelect.js"></script>
+        <script src="~/scripts/app/FormSelect.js"></script>
 
-    <script src="~/scripts/viewmodels/establishments/Server.js"></script>
+        <script src="~/scripts/viewmodels/establishments/Server.js"></script>
 
-    <script src="~/scripts/viewmodels/employees/Server.js"></script>
+        <script src="~/scripts/viewmodels/employees/Server.js"></script>
         <script src="~/scripts/viewmodels/people/Server.js"></script>
-        
-        <script type="text/javascript">
-            var modelData = $.parseJSON('@Html.Raw(Json.Encode(Model))');
-        </script>
+
+        @*<script type="text/javascript">
+                var modelData = $.parseJSON('@Html.Raw(Json.Encode(Model))');
+            </script>*@
 
         @Scripts.Render("~/bundles/people/profileEditor")
 
         @*<script type="text/javascript">
-            var viewModel = new People.ViewModels.ProfileSpike(modelData);
-            ko.applyBindings(viewModel, $('#main')[0]);
-        </script*@
+                var viewModel = new People.ViewModels.ProfileSpike(modelData);
+                ko.applyBindings(viewModel, $('#main')[0]);
+            </script*@
         <script type="text/javascript">
 
             $(function () {
@@ -44,18 +45,6 @@
                 profileViewModel.load('@ViewBag.Tab')
                     .done(function () {
                         ko.applyBindings(profileViewModel, $('#main')[0]);
-                        //profileViewModel.startEditing();
-
-                        /* KendoUI TabStrip Bug? - .select(0) does not produce a select event */
-                        //if ( '@ViewBag.Tab' === '' ) {
-                        //    //profileViewModel.startTab("activities");
-                        //    location.href = "#/activities";
-                        //} else {
-                        //    //$( "#tabstrip" ).data( "kendoTabStrip" ).select( @ViewBag.Tab);
-                        //    debugger;
-                        //    var url = App.Routes.Mvc.My.Profile.get() + "#/" + '@ViewBag.Tab';
-                        //    location.href = url;
-                        //}
                     })
                     .fail(function (xhr) {
                         App.Failures.message(xhr, 'while trying to load your profile', true);
@@ -89,7 +78,8 @@
                     UCosmic Profile
                 </h1>
             </header>
-            <section class="person-profile" data-bind="click: startEditing, css: { clickable: !editMode() }">
+            @* CARD *@
+            <section class="person-profile"> @*data-bind="click: startEditing, css: { clickable: !editMode() }">*@
                 <div class="card">
                     @Html.Action(MVC.People.GetCard())
                 </div>
@@ -97,8 +87,13 @@
                     Click to edit
                 </div>
             </section>
-            @if (ViewBag.isOwner)
+            @if (User.Identity.Name.Equals(Model.Username, StringComparison.OrdinalIgnoreCase))
             {
+                @* SAVED PROFILE *@
+                <section class="content fixed to-top">
+                    
+                </section>
+                @* EDIT PROFILE *@
                 <section class="fieldset" style="display: none;" data-bind="jqElement: '$editSection', visible: editMode">
                     <fieldset class="no-sidebar" style="width:0;">
                         @*<legend>Edit @customProfileTitle</legend>*@
@@ -106,7 +101,9 @@
                     </fieldset>
                 </section>
             }
+            @* AFFILIATIONS *@
             @Html.Action(MVC.People.GetAffiliations())
+            @* CONTACT INFORMATION *@
             @Html.Action(MVC.People.GetEmails())
         </div>
         <aside class="on-right from-top" data-fixed-scroll="root">

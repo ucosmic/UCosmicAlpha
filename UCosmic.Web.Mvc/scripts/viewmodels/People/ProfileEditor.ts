@@ -2,7 +2,7 @@
 
  module People.ViewModels {
 
-     //export class ProfileEdit {
+     //export class ProfileSpike {
 
      //   constructor(modelData: server.PersonViewModel) {
      //       this.modelData = modelData
@@ -353,9 +353,9 @@
                  else {
                      this.establishmentEditors.push(editor);
                  }
-                 this.owner.load().done((): void => {
-                     editor.select.applyKendo();
-                 });
+                 //this.owner.load().done((): void => {
+                 //    editor.select.applyKendo();
+                 //});
              }
              return establishment;
          }
@@ -409,9 +409,9 @@
                  var facultyRank = this.facultyRank(); // value may not be defined
                  if (facultyRank)
                      this.facultyRankSelect.value(facultyRank.facultyRankId());
-                 this.owner.load().done((): void => {
-                     this.facultyRankSelect.applyKendo();
-                 });
+                 //this.owner.load().done((): void => {
+                 //    this.facultyRankSelect.applyKendo();
+                 //});
              }
          }
 
@@ -450,80 +450,17 @@
      }
 
 
-
-
      export class ProfileSpike implements KnockoutValidationGroup {
-         //#region Properties
-
-         //private _sammy: Sammy.Application = Sammy();
-         //private _isInitialized: boolean = false;
-         private _originalValues: ApiModels.IServerProfileApiModel;
-         //private _activitiesViewModel: Activities.ViewModels.ActivityList = null;
-         //private _geographicExpertisesViewModel: RootViewModels.GeographicExpertises.GeographicExpertiseList = null;
-         //private _languageExpertisesViewModel: RootViewModels.LanguageExpertises.LanguageExpertiseList = null;
-         //private _degreesViewModel: RootViewModels.Degrees.DegreeList = null;
-         //private _internationalAffiliationsViewModel: RootViewModels.InternationalAffiliations.InternationalAffiliationList = null;
-
-         hasPhoto = ko.observable<boolean>();
-         photoUploadError = ko.observable<string>();
-         static photoUploadUnexpectedErrorMessage = 'UCosmic experienced an unexpected error managing your photo, please try again. If you continue to experience this issue, please use the Feedback & Support link on this page to report it.';
-         photoSrc = ko.observable<string>(
-             App.Routes.WebApi.My.Photo.get({ maxSide: 128, refresh: new Date().toUTCString() }));
-         photoUploadSpinner = new App.Spinner({ delay: 400 });
-         photoDeleteSpinner = new App.Spinner({ delay: 400 });
-
-         isDisplayNameDerived = ko.observable<boolean>();
-         displayName = ko.observable<string>();
-         private _userDisplayName: string = '';
-
-         campuses: any[];
-         colleges: any[];
-         departments: any[];
-
+       
+        constructor(personId: number) {
+            //this.cardData = cardData;
+            // go ahead and load affiliations
+            this.affiliationData.ready();
+        }
          personId: number = 0;
-         personId2: number;
-
-         salutation = ko.observable<string>();
-         firstName = ko.observable<string>();
-         middleName = ko.observable<string>();
-         lastName = ko.observable<string>();
-         suffix = ko.observable<string>();
-
-         defaultEstablishmentHasCampuses = ko.observable<boolean>(false);
-
+         //personId2: number;
          preferredTitle = ko.observable<string>();
 
-         gender = ko.observable<string>();
-         isActive = ko.observable<boolean>(undefined);
-         genderText: () => string;
-         isActiveText: () => string;
-
-         $photo = ko.observable<JQuery>();
-         $facultyRanks = ko.observable<JQuery>();
-         $nameSalutation = ko.observable<JQuery>();
-         $nameSuffix = ko.observable<JQuery>();
-         $editSection: JQuery;
-         $confirmPurgeDialog: JQuery;
-
-         isValid: () => boolean;
-         errors: KnockoutValidationErrors;
-         editMode = ko.observable<boolean>(false);
-         saveSpinner = new App.Spinner({ delay: 200, });
-
-         startInEdit = ko.observable<boolean>(false);
-         startTabName = ko.observable<string>("Activities");
-
-         //#endregion
-         //#region Construction
-
-         constructor(personId: number) {
-             this.personId2 = personId; // bring in personId from viewbag
-
-             // go ahead and load affiliations
-             this.affiliationData.ready();
-         }
-
-         //#endregion
          //#region Affiliations
 
          defaultAffiliation: ApiModels.Affiliation;
@@ -618,530 +555,721 @@
          //#endregion
          //#region DC / USF implementation
 
-         private _loadPromise: JQueryDeferred<any>;
-         load(startTab: string = ''): JQueryPromise<any> {
-             if (this._loadPromise) return this._loadPromise;
-             this._loadPromise = $.Deferred();
-
-             // start both requests at the same time
-             //var facultyRanksPact = $.Deferred();
-             //$.get(App.Routes.WebApi.Employees.ModuleSettings.FacultyRanks.get())
-             //    .done((data: RootViewModels.Employees.IServerFacultyRankApiModel[], textStatus: string, jqXHR: JQueryXHR): void => {
-             //        facultyRanksPact.resolve(data);
-             //    })
-             //    .fail((jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void => {
-             //        facultyRanksPact.reject(jqXHR, textStatus, errorThrown);
-             //    });
-
-             var viewModelPact = $.Deferred();
-             $.get('/api/user/person') // todo: button this up
-             //$.get(App.Routes.WebApi.My.Profile.get())
-                 .done((data: ApiModels.IServerProfileApiModel, textStatus: string, jqXHR: JQueryXHR): void => {
-                     viewModelPact.resolve(data);
-                 })
-                 .fail((jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void => {
-                     viewModelPact.reject(jqXHR, textStatus, errorThrown);
-                 });
-
-             // only process after both requests have been resolved
-             viewModelPact.done((viewModel: ApiModels.IServerProfileApiModel): void => {
-
-                 //this.facultyRanks(facultyRanks); // populate the faculty ranks menu
-                 //if (facultyRanks.length == 0) {
-                 //    this.facultyRankId(null);
-                 //}
-
-                 ko.mapping.fromJS(viewModel, { ignore: "id" }, this); // populate the scalars
-                 this.personId = viewModel.id;
-
-                 this._originalValues = viewModel;
-
-                 //if (!this._isInitialized) {
-                 //    $(this).trigger('ready'); // ready to apply bindings
-                 //    this._isInitialized = true; // bindings have been applied
-                 //    this.$facultyRanks().kendoDropDownList(); // kendoui dropdown for faculty ranks
-                 //}
-                 //this._reloadAffiliations();
-                 this._setupValidation();
-                 this._setupKendoWidgets();
-                 this._setupDisplayNameDerivation();
-                 this._setupCardComputeds();
-
-                 //debugger;
-                 //if (this.startInEdit()) {
-                 //    this.startEditing();
-                 //}
-
-                 //if (startTab === "") {
-                 //    this._setupRouting();
-                 //    this._sammy.run("#/activities");
-                 //}
-                 //else {
-                 //    var url = location.href;
-                 //    var index = url.lastIndexOf("?");
-                 //    if (index != -1) {
-                 //        this._startTab(startTab);
-                 //        this._setupRouting();
-                 //    } else {
-                 //        this._setupRouting();
-                 //        this._sammy.run("#/" + startTab);
-                 //    }
-                 //}
-
-                 this._loadPromise.resolve();
-             })
-             //,
-             // one of the responses failed (never called more than once, even on multifailures)
-             //(xhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
-             //    //alert('a GET API call failed :(');
-             //});
-                 .fail((xhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
-                     this._loadPromise.reject(xhr, textStatus, errorThrown);
-                 });
-
-             return this._loadPromise;
+         startEditingAffiliations(): void { // show the editor
+             
          }
 
-         //private _startTab(tabName: string): void {
-         //    var viewModel: any;
-         //    var tabStrip = $("#tabstrip").data("kendoTabStrip");
-
-         //    if (tabName === "activities") {
-         //        if (this._activitiesViewModel == null) {
-         //            this._activitiesViewModel = new Activities.ViewModels.ActivityList();
-         //            this._activitiesViewModel.load()
-         //                .done((): void => {
-         //                    ko.applyBindings(this._activitiesViewModel, $("#activities")[0]);
-         //                })
-         //                .fail(function (jqXhr, textStatus, errorThrown) {
-         //                    alert(textStatus + "|" + errorThrown);
-         //                });
-         //        }
-         //        if (tabStrip.select() != 0) {
-         //            tabStrip.select(0);
-         //        }
-         //    } else if (tabName === "geographic-expertise") {
-         //        if (this._geographicExpertisesViewModel == null) {
-         //            this._geographicExpertisesViewModel = new RootViewModels.GeographicExpertises.GeographicExpertiseList(this.personId);
-         //            this._geographicExpertisesViewModel.load()
-         //                .done((): void => {
-         //                    ko.applyBindings(this._geographicExpertisesViewModel, $("#geographic-expertises")[0]);
-         //                })
-         //                .fail(function (jqXhr, textStatus, errorThrown) {
-         //                    alert(textStatus + "|" + errorThrown);
-         //                });
-         //        }
-         //        if (tabStrip.select() != 1) {
-         //            tabStrip.select(1);
-         //        }
-         //    } else if (tabName === "language-expertise") {
-         //        if (this._languageExpertisesViewModel == null) {
-         //            this._languageExpertisesViewModel = new RootViewModels.LanguageExpertises.LanguageExpertiseList(this.personId);
-         //            this._languageExpertisesViewModel.load()
-         //                .done((): void => {
-         //                    ko.applyBindings(this._languageExpertisesViewModel, $("#language-expertises")[0]);
-         //                })
-         //                .fail(function (jqXhr, textStatus, errorThrown) {
-         //                    alert(textStatus + "|" + errorThrown);
-         //                });
-         //        }
-         //        if (tabStrip.select() != 2) {
-         //            tabStrip.select(2);
-         //        }
-         //    } else if (tabName === "formal-education") {
-         //        if (this._degreesViewModel == null) {
-         //            this._degreesViewModel = new RootViewModels.Degrees.DegreeList(this.personId);
-         //            this._degreesViewModel.load()
-         //                .done((): void => {
-         //                    ko.applyBindings(this._degreesViewModel, $("#degrees")[0]);
-         //                })
-         //                .fail(function (jqXhr, textStatus, errorThrown) {
-         //                    alert(textStatus + "|" + errorThrown);
-         //                });
-         //        }
-         //        if (tabStrip.select() != 3) {
-         //            tabStrip.select(3);
-         //        }
-         //    } else if (tabName === "affiliations") {
-         //        if (this._internationalAffiliationsViewModel == null) {
-         //            this._internationalAffiliationsViewModel = new RootViewModels.InternationalAffiliations.InternationalAffiliationList(this.personId);
-         //            this._internationalAffiliationsViewModel.load()
-         //                .done((): void => {
-         //                    ko.applyBindings(this._internationalAffiliationsViewModel, $("#international-affiliations")[0]);
-         //                })
-         //                .fail(function (jqXhr, textStatus, errorThrown) {
-         //                    alert(textStatus + " |" + errorThrown);
-         //                });
-         //        }
-         //        if (tabStrip.select() != 4) {
-         //            tabStrip.select(4);
-         //        }
-         //    }
-         //}
-
-         tabClickHandler(event: any): void {
-             var tabName = event.item.innerText; // IE
-             if (tabName == null) tabName = event.item.textContent; // FF
-             tabName = this.tabTitleToName(tabName);
-             //this._startTab( tabName );
-             location.href = "#/" + tabName;
+         stopEditingAffiliations(): void { // hide the editor
+             
          }
 
-         tabTitleToName(title: string): string {
-             var tabName = null;
-             if (title === "Activities") tabName = "activities";
-             if (title === "Geographic Expertise") tabName = "geographic-expertise";
-             if (title === "Language Expertise") tabName = "language-expertise";
-             if (title === "Formal Education") tabName = "formal-education";
-             if (title === "Affiliations") tabName = "affiliations";
-             return tabName;
+         cancelEditingAffiliations(): void {
+             
          }
 
-         startEditing(): void { // show the editor
-             this.editMode(true);
-             if (this.$editSection.length) {
-                 this.$editSection.slideDown();
-             }
-         }
-
-         stopEditing(): void { // hide the editor
-             this.editMode(false);
-             if (this.$editSection.length) {
-                 this.$editSection.slideUp();
-             }
-         }
-
-         cancelEditing(): void {
-             ko.mapping.fromJS(this._originalValues, {}, this); // restore original values
-             this.stopEditing();
-         }
-
-         saveInfo(): void {
-
-             if (!this.isValid()) {
-                 this.errors.showAllMessages();
-             }
-             else {
-                 var apiModel = ko.mapping.toJS(this);
-
-                 this.saveSpinner.start();
-
-                 var affiliationPutModel: ApiModels.AffiliationPut = {
-                     jobTitles: this.preferredTitle(),
-                 };
-                 Servers.PutAffiliation(affiliationPutModel, this.defaultAffiliation.establishmentId);
-
-                 $.ajax({
-                     //url: App.Routes.WebApi.My.Profile.put(),
-                     url: '/api/user/person', // TODO: button this up
-                     type: 'PUT',
-                     data: apiModel
-                 })
-                     .done((responseText: string, statusText: string, xhr: JQueryXHR) => {
-                         App.flasher.flash(responseText);
-                         this.stopEditing();
-                     })
-                     .fail(() => {
-                         //alert('a PUT API call failed :(');
-                     })
-                     .always((): void => {
-                         this.saveSpinner.stop();
-                     });
-             }
-         }
-
-         startDeletingPhoto(): void {
-             if (this.$confirmPurgeDialog && this.$confirmPurgeDialog.length) {
-                 this.$confirmPurgeDialog.dialog({
-                     dialogClass: 'jquery-ui',
-                     width: 'auto',
-                     resizable: false,
-                     modal: true,
-                     buttons: [
-                         {
-                             text: 'Yes, confirm delete',
-                             click: (): void => {
-                                 this.$confirmPurgeDialog.dialog('close');
-                                 this._deletePhoto();
-                             }
-                         },
-                         {
-                             text: 'No, cancel delete',
-                             click: (): void => {
-                                 this.$confirmPurgeDialog.dialog('close');
-                                 this.photoDeleteSpinner.stop();
-                             },
-                             'data-css-link': true
-                         }
-                     ]
-                 });
-             }
-             else if (confirm('Are you sure you want to delete your profile photo?')) {
-                 this._deletePhoto();
-             }
-         }
-
-         private _deletePhoto(): void {
-             this.photoDeleteSpinner.start();
-             this.photoUploadError(undefined);
-             $.ajax({ // submit ajax DELETE request
-                 url: App.Routes.WebApi.My.Photo.del(),
-                 type: 'DELETE'
-             })
-                 .always((): void => {
-                     this.photoDeleteSpinner.stop();
-                 })
-                 .done((response: string, statusText: string, xhr: JQueryXHR): void => {
-                     if (typeof response === 'string') App.flasher.flash(response);
-                     this.hasPhoto(false);
-                     this.photoSrc(App.Routes.WebApi.My.Photo
-                         .get({ maxSide: 128, refresh: new Date().toUTCString() }));
-                 })
-                 .fail((): void => {
-                     this.photoUploadError(ProfileSpike.photoUploadUnexpectedErrorMessage);
-                 });
-         }
-
-         //private _setupRouting(): void {
-         //    this._sammy.route('get', '#/', (): void => { this._startTab('activities'); });
-         //    this._sammy.route('get', '#/activities', (): void => { this._startTab('activities'); });
-         //    this._sammy.route('get', '#/geographic-expertise', (): void => { this._startTab('geographic-expertise'); });
-         //    this._sammy.route('get', '#/language-expertise', (): void => { this._startTab('language-expertise'); });
-         //    this._sammy.route('get', '#/formal-education', (): void => { this._startTab('formal-education'); });
-         //    this._sammy.route('get', '#/affiliations', (): void => { this._startTab('affiliations'); });
-         //}
-
-         // client validation rules
-         private _setupValidation(): void {
-             this.displayName.extend({
-                 required: {
-                     message: 'Display name is required.'
-                 },
-                 maxLength: 200
-             });
-
-             this.salutation.extend({
-                 maxLength: 50
-             });
-
-             this.firstName.extend({
-                 maxLength: 100
-             });
-
-             this.middleName.extend({
-                 maxLength: 100
-             });
-
-             this.lastName.extend({
-                 maxLength: 100
-             });
-
-             this.suffix.extend({
-                 maxLength: 50
-             });
-
-             this.preferredTitle.extend({
-                 maxLength: 500
-             });
-
-             ko.validation.group(this);
-         }
-
-         // comboboxes for salutation & suffix
-         private _setupKendoWidgets(): void {
-
-             var tabstrip = $('#tabstrip');
-             tabstrip.kendoTabStrip({
-                 select: (e: any): void => { this.tabClickHandler(e); },
-                 animation: false
-             }).show();
-
-             // when the $element observables are bound, they will have length
-             // use this opportunity to apply kendo extensions
-             this.$nameSalutation.subscribe((newValue: JQuery): void => {
-                 if (newValue && newValue.length)
-                     newValue.kendoComboBox({
-                         dataTextField: "text",
-                         dataValueField: "value",
-                         dataSource: new kendo.data.DataSource({
-                             transport: {
-                                 read: {
-                                     url: App.Routes.WebApi.People.Names.Salutations.get()
-                                 }
-                             }
-                         })
-                     });
-             });
-             this.$nameSuffix.subscribe((newValue: JQuery): void => {
-                 if (newValue && newValue.length)
-                     newValue.kendoComboBox({
-                         dataTextField: "text",
-                         dataValueField: "value",
-                         dataSource: new kendo.data.DataSource({
-                             transport: {
-                                 read: {
-                                     url: App.Routes.WebApi.People.Names.Suffixes.get()
-                                 }
-                             }
-                         })
-                     });
-             });
-
-             // this is getting a little long, can probably factor out event handlers / validation stuff
-             this.$photo.subscribe((newValue: JQuery): void => {
-                 if (newValue && newValue.length) {
-                     newValue.kendoUpload({
-                         multiple: false,
-                         showFileList: false,
-                         localization: {
-                             select: 'Choose a photo to upload...'
-                         },
-                         async: {
-                             saveUrl: App.Routes.WebApi.My.Photo.post()
-                         },
-                         select: (e: kendo.ui.UploadSelectEvent): void => {
-                             this.photoUploadSpinner.start(); // display async wait message
-                             $.ajax({
-                                 type: 'POST',
-                                 async: false,
-                                 url: App.Routes.WebApi.My.Photo.validate(),
-                                 data: {
-                                     name: e.files[0].name,
-                                     length: e.files[0].size
-                                 }
-                             })
-                                 .done((): void => {
-                                     this.photoUploadError(undefined);
-                                 })
-                                 .fail((xhr: JQueryXHR): void => {
-                                     this.photoUploadError(xhr.responseText);
-                                     e.preventDefault();
-                                     this.photoUploadSpinner.stop(); // hide async wait message
-                                 });
-                         },
-                         complete: (): void => {
-                             this.photoUploadSpinner.stop(); // hide async wait message
-                         },
-                         success: (e: any): void => {
-                             // this event is triggered by both upload and remove requests
-                             // ignore remove operations because they don't actually do anything
-                             if (e.operation == 'upload') {
-                                 if (e.response && e.response.message) {
-                                     App.flasher.flash(e.response.message);
-                                 }
-                                 this.hasPhoto(true);
-                                 this.photoSrc(App.Routes.WebApi.My.Photo
-                                     .get({ maxSide: 128, refresh: new Date().toUTCString() }));
-                             }
-                         },
-                         error: (e: kendo.ui.UploadErrorEvent): void => {
-                             if (e.XMLHttpRequest.responseText &&
-                                 e.XMLHttpRequest.responseText.length < 1000) {
-                                 this.photoUploadError(e.XMLHttpRequest.responseText);
-                             }
-                             else {
-                                 this.photoUploadError(ProfileSpike.photoUploadUnexpectedErrorMessage);
-                             }
-                         }
-                     });
-                 }
-             });
-         }
-
-         // logic to derive display name
-         private _setupDisplayNameDerivation(): void {
-             this.displayName.subscribe((newValue: string): void => {
-                 if (!this.isDisplayNameDerived()) {
-                     // stash user-entered display name only when it is not derived
-                     this._userDisplayName = newValue;
-                 }
-             });
-
-             ko.computed((): void => {
-                 // generate display name if it has been API-initialized
-                 if (this.isDisplayNameDerived() /* && this._isInitialized */) {
-                     var mapSource = {
-                         id: this.personId,
-                         isDisplayNameDerived: this.isDisplayNameDerived(),
-                         displayName: this.displayName(),
-                         salutation: this.salutation(),
-                         firstName: this.firstName(),
-                         middleName: this.middleName(),
-                         lastName: this.lastName(),
-                         suffix: this.suffix()
-                     };
-                     var data = ko.mapping.toJS(mapSource);
-
-                     $.ajax({
-                         url: App.Routes.WebApi.People.Names.DeriveDisplayName.get(),
-                         type: 'GET',
-                         cache: false,
-                         data: data,
-                     }).done((result: string): void => {
-                             this.displayName(result);
-                         });
-                 }
-                 else /* if (this._isInitialized) */ {
-                     // prevent user display name from being blank
-                     if (!this._userDisplayName)
-                         this._userDisplayName = this.displayName();
-                     // restore user-entered display name
-                     this.displayName(this._userDisplayName);
-                 }
-             }).extend({ throttle: 400 }); // wait for observables to stop changing
-         }
-
-         private _setupCardComputeds(): void {
-
-             // text translation for gender codes
-             this.genderText = ko.computed((): string => {
-                 var genderCode = this.gender();
-                 if (genderCode === 'M') return 'Male';
-                 if (genderCode === 'F') return 'Female';
-                 if (genderCode === 'P') return 'Gender Undisclosed';
-                 return 'Gender Unknown';
-             });
-
-             // friendly string for isActive boolean
-             this.isActiveText = ko.computed((): string => {
-                 return this.isActive() ? 'Active' : 'Inactive';
-             });
-         }
-
-         deleteProfile(data: any, event: any) {
-             var me = this;
-             $("#confirmProfileDeleteDialog").dialog({
-                 width: 300,
-                 height: 200,
-                 modal: true,
-                 resizable: false,
-                 draggable: false,
-                 buttons: {
-                     "Delete": function () {
-                         $.ajax({
-                             async: false,
-                             type: "DELETE",
-                             url: App.Routes.WebApi.People.del(me.personId),
-                             success: function (data, statusText, jqXHR) {
-                                 alert(jqXHR.statusText);
-                             },
-                             error: function (jqXHR, statusText, errorThrown) {
-                                 alert(statusText);
-                             },
-                             complete: function (jqXHR, statusText) {
-                                 $("#confirmProfileDeleteDialog").dialog("close");
-                             }
-                         });
-                     },
-
-                     "Cancel": function () {
-                         $(this).dialog("close");
-                     }
-                 }
-             });
+         saveAffiliations(): void {
+             var affiliationPutModel: ApiModels.AffiliationPut = {
+                 jobTitles: this.preferredTitle(),
+             };
+             Servers.PutAffiliation(affiliationPutModel, this.defaultAffiliation.establishmentId);
          }
 
          //#endregion
      }
+
+
+     //export class ProfileSpike implements KnockoutValidationGroup {
+     //    //#region Properties
+
+     //    //private _sammy: Sammy.Application = Sammy();
+     //    //private _isInitialized: boolean = false;
+     //    private _originalValues: ApiModels.IServerProfileApiModel;
+     //    //private _activitiesViewModel: Activities.ViewModels.ActivityList = null;
+     //    //private _geographicExpertisesViewModel: RootViewModels.GeographicExpertises.GeographicExpertiseList = null;
+     //    //private _languageExpertisesViewModel: RootViewModels.LanguageExpertises.LanguageExpertiseList = null;
+     //    //private _degreesViewModel: RootViewModels.Degrees.DegreeList = null;
+     //    //private _internationalAffiliationsViewModel: RootViewModels.InternationalAffiliations.InternationalAffiliationList = null;
+
+     //    //cardData: card;
+
+     //    hasPhoto = ko.observable<boolean>();
+     //    photoUploadError = ko.observable<string>();
+     //    static photoUploadUnexpectedErrorMessage = 'UCosmic experienced an unexpected error managing your photo, please try again. If you continue to experience this issue, please use the Feedback & Support link on this page to report it.';
+     //    photoSrc = ko.observable<string>(
+     //        App.Routes.WebApi.My.Photo.get({ maxSide: 128, refresh: new Date().toUTCString() }));
+     //    photoUploadSpinner = new App.Spinner({ delay: 400 });
+     //    photoDeleteSpinner = new App.Spinner({ delay: 400 });
+
+     //    isDisplayNameDerived = ko.observable<boolean>();
+     //    displayName = ko.observable<string>();
+     //    private _userDisplayName: string = '';
+
+     //    campuses: any[];
+     //    colleges: any[];
+     //    departments: any[];
+
+     //    personId: number = 0;
+     //    personId2: number;
+
+     //    salutation = ko.observable<string>();
+     //    firstName = ko.observable<string>();
+     //    middleName = ko.observable<string>();
+     //    lastName = ko.observable<string>();
+     //    suffix = ko.observable<string>();
+
+     //    defaultEstablishmentHasCampuses = ko.observable<boolean>(false);
+
+     //    preferredTitle = ko.observable<string>();
+
+     //    gender = ko.observable<string>();
+     //    isActive = ko.observable<boolean>(undefined);
+     //    genderText: () => string;
+     //    isActiveText: () => string;
+
+     //    $photo = ko.observable<JQuery>();
+     //    $facultyRanks = ko.observable<JQuery>();
+     //    $nameSalutation = ko.observable<JQuery>();
+     //    $nameSuffix = ko.observable<JQuery>();
+     //    $editSection: JQuery;
+     //    $confirmPurgeDialog: JQuery;
+
+     //    isValid: () => boolean;
+     //    errors: KnockoutValidationErrors;
+     //    editMode = ko.observable<boolean>(false);
+     //    saveSpinner = new App.Spinner({ delay: 200, });
+
+     //    startInEdit = ko.observable<boolean>(false);
+     //    startTabName = ko.observable<string>("Activities");
+
+     //    //#endregion
+     //    //#region Construction
+
+     //    constructor(personId: number) {
+     //        this.personId2 = personId; // bring in personId from viewbag
+     //        //this.cardData = cardData;
+     //        // go ahead and load affiliations
+     //        this.affiliationData.ready();
+     //    }
+
+     //    //#endregion
+     //    //#region Affiliations
+
+     //    defaultAffiliation: ApiModels.Affiliation;
+     //    editableAffiliations = ko.observableArray<KoModels.Affiliation>();
+     //    affiliationsSpinner = new App.Spinner({ delay: 400, runImmediately: true, });
+     //    $confirmDeleteAffiliation: JQuery;
+     //    isEditingAffiliation = ko.computed((): boolean => {
+     //        var editableAffiliations = this.editableAffiliations();
+     //        var editingAffiliation = Enumerable.From(editableAffiliations)
+     //            .FirstOrDefault(undefined, function (x: AffiliationSpike): boolean {
+     //                return x.isEditing();
+     //            });
+     //        return typeof editingAffiliation !== 'undefined';
+     //    });
+
+     //    affiliationData = new App.DataCacher<ApiModels.Affiliation[]>(
+     //        (): JQueryPromise<ApiModels.Affiliation[]> => {
+     //            return this._loadAffiliationData();
+     //        });
+
+     //    private _loadAffiliationData(): JQueryPromise<ApiModels.Affiliation[]> {
+     //        var promise: JQueryDeferred<ApiModels.Affiliation[]> = $.Deferred();
+
+     //        // get this person's affiliations from the server
+     //        Servers.GetAffiliationsByPerson()
+     //            .done((affiliations: ApiModels.Affiliation[]): void => {
+
+     //                // default affiliation does not need to be observable
+     //                this.defaultAffiliation = Enumerable.From(affiliations)
+     //                    .Single(function (x: ApiModels.Affiliation): boolean {
+     //                        return x.isDefault;
+     //                    });
+     //                this.preferredTitle(this.defaultAffiliation.jobTitles);
+
+     //                // the default affiliation is not editable, filter it out
+     //                var editableAffiliations = Enumerable.From(affiliations)
+     //                    .Except([this.defaultAffiliation])
+     //                    .OrderBy(function (x: ApiModels.Affiliation): number {
+     //                        return x.affiliationId;
+     //                    })
+     //                    .ToArray();
+
+     //                // map editable affiliations into observable array of Affiliation viewmodels
+     //                ko.mapping.fromJS(editableAffiliations, {
+     //                    create: (options: KnockoutMappingCreateOptions): AffiliationSpike => {
+     //                        return new AffiliationSpike(this, options.data);
+     //                    },
+     //                }, this.editableAffiliations);
+
+     //                this.establishmentData.ready(); // begin loading the default affiliation's offspring
+     //                this.employeeSettingsData.ready(); // begin loading the employee module settings
+     //                this.affiliationsSpinner.stop(); // stop the loading spinner
+     //                promise.resolve(affiliations); // resolve the promise for affiliation data
+     //            });
+     //        return promise;
+     //    }
+
+     //    establishmentData = new App.DataCacher<Establishments.ApiModels.ScalarEstablishment[]>(
+     //        (): JQueryPromise<Establishments.ApiModels.ScalarEstablishment[]> => {
+     //            return this._loadEstablishmentData();
+     //        });
+
+     //    private _loadEstablishmentData(): JQueryPromise<Establishments.ApiModels.ScalarEstablishment[]> {
+     //        var promise: JQueryDeferred<Establishments.ApiModels.ScalarEstablishment[]> = $.Deferred();
+     //        Establishments.Servers.GetOffspring(this.defaultAffiliation.establishmentId)
+     //            .done((offspring: Establishments.ApiModels.ScalarEstablishment[]): void => {
+     //                promise.resolve(offspring);
+     //            });
+     //        return promise;
+     //    }
+
+     //    employeeSettingsData = new App.DataCacher<Employees.ApiModels.EmployeeSettings>(
+     //        (): JQueryPromise<Employees.ApiModels.EmployeeSettings> => {
+     //            return this._loadEmployeeSettingsData();
+     //        });
+
+     //    private _loadEmployeeSettingsData(): JQueryPromise<Employees.ApiModels.EmployeeSettings> {
+     //        var promise: JQueryDeferred<Employees.ApiModels.EmployeeSettings> = $.Deferred();
+     //        Employees.Servers.GetSettingsByPerson()
+     //            .done((settings: Employees.ApiModels.EmployeeSettings): void => {
+     //                promise.resolve(settings);
+     //            });
+     //        return promise;
+     //    }
+
+     //    addAffiliation(): void {
+     //        var affiliation = new AffiliationSpike(this, this.personId);
+     //        this.editableAffiliations.push(affiliation);
+     //        affiliation.bindEstablishmentEditors(undefined);
+     //    }
+
+     //    //#endregion
+     //    //#region DC / USF implementation
+
+     //    private _loadPromise: JQueryDeferred<any>;
+     //    load(startTab: string = ''): JQueryPromise<any> {
+     //        if (this._loadPromise) return this._loadPromise;
+     //        this._loadPromise = $.Deferred();
+
+     //        // start both requests at the same time
+     //        //var facultyRanksPact = $.Deferred();
+     //        //$.get(App.Routes.WebApi.Employees.ModuleSettings.FacultyRanks.get())
+     //        //    .done((data: RootViewModels.Employees.IServerFacultyRankApiModel[], textStatus: string, jqXHR: JQueryXHR): void => {
+     //        //        facultyRanksPact.resolve(data);
+     //        //    })
+     //        //    .fail((jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void => {
+     //        //        facultyRanksPact.reject(jqXHR, textStatus, errorThrown);
+     //        //    });
+
+     //        var viewModelPact = $.Deferred();
+     //        $.get('/api/user/person') // todo: button this up
+     //        //$.get(App.Routes.WebApi.My.Profile.get())
+     //            .done((data: ApiModels.IServerProfileApiModel, textStatus: string, jqXHR: JQueryXHR): void => {
+     //                viewModelPact.resolve(data);
+     //            })
+     //            .fail((jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void => {
+     //                viewModelPact.reject(jqXHR, textStatus, errorThrown);
+     //            });
+
+     //        // only process after both requests have been resolved
+     //        viewModelPact.done((viewModel: ApiModels.IServerProfileApiModel): void => {
+
+     //            //this.facultyRanks(facultyRanks); // populate the faculty ranks menu
+     //            //if (facultyRanks.length == 0) {
+     //            //    this.facultyRankId(null);
+     //            //}
+
+     //            ko.mapping.fromJS(viewModel, { ignore: "id" }, this); // populate the scalars
+     //            this.personId = viewModel.id;
+
+     //            this._originalValues = viewModel;
+
+     //            //if (!this._isInitialized) {
+     //            //    $(this).trigger('ready'); // ready to apply bindings
+     //            //    this._isInitialized = true; // bindings have been applied
+     //            //    this.$facultyRanks().kendoDropDownList(); // kendoui dropdown for faculty ranks
+     //            //}
+     //            //this._reloadAffiliations();
+     //            this._setupValidation();
+     //            this._setupKendoWidgets();
+     //            this._setupDisplayNameDerivation();
+     //            this._setupCardComputeds();
+
+     //            //debugger;
+     //            //if (this.startInEdit()) {
+     //            //    this.startEditing();
+     //            //}
+
+     //            //if (startTab === "") {
+     //            //    this._setupRouting();
+     //            //    this._sammy.run("#/activities");
+     //            //}
+     //            //else {
+     //            //    var url = location.href;
+     //            //    var index = url.lastIndexOf("?");
+     //            //    if (index != -1) {
+     //            //        this._startTab(startTab);
+     //            //        this._setupRouting();
+     //            //    } else {
+     //            //        this._setupRouting();
+     //            //        this._sammy.run("#/" + startTab);
+     //            //    }
+     //            //}
+
+     //            this._loadPromise.resolve();
+     //        })
+     //        //,
+     //        // one of the responses failed (never called more than once, even on multifailures)
+     //        //(xhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
+     //        //    //alert('a GET API call failed :(');
+     //        //});
+     //            .fail((xhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
+     //                this._loadPromise.reject(xhr, textStatus, errorThrown);
+     //            });
+
+     //        return this._loadPromise;
+     //    }
+
+     //    //private _startTab(tabName: string): void {
+     //    //    var viewModel: any;
+     //    //    var tabStrip = $("#tabstrip").data("kendoTabStrip");
+
+     //    //    if (tabName === "activities") {
+     //    //        if (this._activitiesViewModel == null) {
+     //    //            this._activitiesViewModel = new Activities.ViewModels.ActivityList();
+     //    //            this._activitiesViewModel.load()
+     //    //                .done((): void => {
+     //    //                    ko.applyBindings(this._activitiesViewModel, $("#activities")[0]);
+     //    //                })
+     //    //                .fail(function (jqXhr, textStatus, errorThrown) {
+     //    //                    alert(textStatus + "|" + errorThrown);
+     //    //                });
+     //    //        }
+     //    //        if (tabStrip.select() != 0) {
+     //    //            tabStrip.select(0);
+     //    //        }
+     //    //    } else if (tabName === "geographic-expertise") {
+     //    //        if (this._geographicExpertisesViewModel == null) {
+     //    //            this._geographicExpertisesViewModel = new RootViewModels.GeographicExpertises.GeographicExpertiseList(this.personId);
+     //    //            this._geographicExpertisesViewModel.load()
+     //    //                .done((): void => {
+     //    //                    ko.applyBindings(this._geographicExpertisesViewModel, $("#geographic-expertises")[0]);
+     //    //                })
+     //    //                .fail(function (jqXhr, textStatus, errorThrown) {
+     //    //                    alert(textStatus + "|" + errorThrown);
+     //    //                });
+     //    //        }
+     //    //        if (tabStrip.select() != 1) {
+     //    //            tabStrip.select(1);
+     //    //        }
+     //    //    } else if (tabName === "language-expertise") {
+     //    //        if (this._languageExpertisesViewModel == null) {
+     //    //            this._languageExpertisesViewModel = new RootViewModels.LanguageExpertises.LanguageExpertiseList(this.personId);
+     //    //            this._languageExpertisesViewModel.load()
+     //    //                .done((): void => {
+     //    //                    ko.applyBindings(this._languageExpertisesViewModel, $("#language-expertises")[0]);
+     //    //                })
+     //    //                .fail(function (jqXhr, textStatus, errorThrown) {
+     //    //                    alert(textStatus + "|" + errorThrown);
+     //    //                });
+     //    //        }
+     //    //        if (tabStrip.select() != 2) {
+     //    //            tabStrip.select(2);
+     //    //        }
+     //    //    } else if (tabName === "formal-education") {
+     //    //        if (this._degreesViewModel == null) {
+     //    //            this._degreesViewModel = new RootViewModels.Degrees.DegreeList(this.personId);
+     //    //            this._degreesViewModel.load()
+     //    //                .done((): void => {
+     //    //                    ko.applyBindings(this._degreesViewModel, $("#degrees")[0]);
+     //    //                })
+     //    //                .fail(function (jqXhr, textStatus, errorThrown) {
+     //    //                    alert(textStatus + "|" + errorThrown);
+     //    //                });
+     //    //        }
+     //    //        if (tabStrip.select() != 3) {
+     //    //            tabStrip.select(3);
+     //    //        }
+     //    //    } else if (tabName === "affiliations") {
+     //    //        if (this._internationalAffiliationsViewModel == null) {
+     //    //            this._internationalAffiliationsViewModel = new RootViewModels.InternationalAffiliations.InternationalAffiliationList(this.personId);
+     //    //            this._internationalAffiliationsViewModel.load()
+     //    //                .done((): void => {
+     //    //                    ko.applyBindings(this._internationalAffiliationsViewModel, $("#international-affiliations")[0]);
+     //    //                })
+     //    //                .fail(function (jqXhr, textStatus, errorThrown) {
+     //    //                    alert(textStatus + " |" + errorThrown);
+     //    //                });
+     //    //        }
+     //    //        if (tabStrip.select() != 4) {
+     //    //            tabStrip.select(4);
+     //    //        }
+     //    //    }
+     //    //}
+
+     //    tabClickHandler(event: any): void {
+     //        var tabName = event.item.innerText; // IE
+     //        if (tabName == null) tabName = event.item.textContent; // FF
+     //        tabName = this.tabTitleToName(tabName);
+     //        //this._startTab( tabName );
+     //        location.href = "#/" + tabName;
+     //    }
+
+     //    tabTitleToName(title: string): string {
+     //        var tabName = null;
+     //        if (title === "Activities") tabName = "activities";
+     //        if (title === "Geographic Expertise") tabName = "geographic-expertise";
+     //        if (title === "Language Expertise") tabName = "language-expertise";
+     //        if (title === "Formal Education") tabName = "formal-education";
+     //        if (title === "Affiliations") tabName = "affiliations";
+     //        return tabName;
+     //    }
+
+     //    startEditing(): void { // show the editor
+     //        this.editMode(true);
+     //        if (this.$editSection.length) {
+     //            this.$editSection.slideDown();
+     //        }
+     //    }
+
+     //    stopEditing(): void { // hide the editor
+     //        this.editMode(false);
+     //        if (this.$editSection.length) {
+     //            this.$editSection.slideUp();
+     //        }
+     //    }
+
+     //    cancelEditing(): void {
+     //        ko.mapping.fromJS(this._originalValues, {}, this); // restore original values
+     //        this.stopEditing();
+     //    }
+
+     //    saveInfo(): void {
+
+     //        if (!this.isValid()) {
+     //            this.errors.showAllMessages();
+     //        }
+     //        else {
+     //            var apiModel = ko.mapping.toJS(this);
+
+     //            this.saveSpinner.start();
+
+     //            var affiliationPutModel: ApiModels.AffiliationPut = {
+     //                jobTitles: this.preferredTitle(),
+     //            };
+     //            Servers.PutAffiliation(affiliationPutModel, this.defaultAffiliation.establishmentId);
+
+     //            $.ajax({
+     //                //url: App.Routes.WebApi.My.Profile.put(),
+     //                url: '/api/user/person', // TODO: button this up
+     //                type: 'PUT',
+     //                data: apiModel
+     //            })
+     //                .done((responseText: string, statusText: string, xhr: JQueryXHR) => {
+     //                    App.flasher.flash(responseText);
+     //                    this.stopEditing();
+     //                })
+     //                .fail(() => {
+     //                    //alert('a PUT API call failed :(');
+     //                })
+     //                .always((): void => {
+     //                    this.saveSpinner.stop();
+     //                });
+     //        }
+     //    }
+
+     //    startDeletingPhoto(): void {
+     //        if (this.$confirmPurgeDialog && this.$confirmPurgeDialog.length) {
+     //            this.$confirmPurgeDialog.dialog({
+     //                dialogClass: 'jquery-ui',
+     //                width: 'auto',
+     //                resizable: false,
+     //                modal: true,
+     //                buttons: [
+     //                    {
+     //                        text: 'Yes, confirm delete',
+     //                        click: (): void => {
+     //                            this.$confirmPurgeDialog.dialog('close');
+     //                            this._deletePhoto();
+     //                        }
+     //                    },
+     //                    {
+     //                        text: 'No, cancel delete',
+     //                        click: (): void => {
+     //                            this.$confirmPurgeDialog.dialog('close');
+     //                            this.photoDeleteSpinner.stop();
+     //                        },
+     //                        'data-css-link': true
+     //                    }
+     //                ]
+     //            });
+     //        }
+     //        else if (confirm('Are you sure you want to delete your profile photo?')) {
+     //            this._deletePhoto();
+     //        }
+     //    }
+
+     //    private _deletePhoto(): void {
+     //        this.photoDeleteSpinner.start();
+     //        this.photoUploadError(undefined);
+     //        $.ajax({ // submit ajax DELETE request
+     //            url: App.Routes.WebApi.My.Photo.del(),
+     //            type: 'DELETE'
+     //        })
+     //            .always((): void => {
+     //                this.photoDeleteSpinner.stop();
+     //            })
+     //            .done((response: string, statusText: string, xhr: JQueryXHR): void => {
+     //                if (typeof response === 'string') App.flasher.flash(response);
+     //                this.hasPhoto(false);
+     //                this.photoSrc(App.Routes.WebApi.My.Photo
+     //                    .get({ maxSide: 128, refresh: new Date().toUTCString() }));
+     //            })
+     //            .fail((): void => {
+     //                this.photoUploadError(ProfileSpike.photoUploadUnexpectedErrorMessage);
+     //            });
+     //    }
+
+     //    //private _setupRouting(): void {
+     //    //    this._sammy.route('get', '#/', (): void => { this._startTab('activities'); });
+     //    //    this._sammy.route('get', '#/activities', (): void => { this._startTab('activities'); });
+     //    //    this._sammy.route('get', '#/geographic-expertise', (): void => { this._startTab('geographic-expertise'); });
+     //    //    this._sammy.route('get', '#/language-expertise', (): void => { this._startTab('language-expertise'); });
+     //    //    this._sammy.route('get', '#/formal-education', (): void => { this._startTab('formal-education'); });
+     //    //    this._sammy.route('get', '#/affiliations', (): void => { this._startTab('affiliations'); });
+     //    //}
+
+     //    // client validation rules
+     //    private _setupValidation(): void {
+     //        this.displayName.extend({
+     //            required: {
+     //                message: 'Display name is required.'
+     //            },
+     //            maxLength: 200
+     //        });
+
+     //        this.salutation.extend({
+     //            maxLength: 50
+     //        });
+
+     //        this.firstName.extend({
+     //            maxLength: 100
+     //        });
+
+     //        this.middleName.extend({
+     //            maxLength: 100
+     //        });
+
+     //        this.lastName.extend({
+     //            maxLength: 100
+     //        });
+
+     //        this.suffix.extend({
+     //            maxLength: 50
+     //        });
+
+     //        this.preferredTitle.extend({
+     //            maxLength: 500
+     //        });
+
+     //        ko.validation.group(this);
+     //    }
+
+     //    // comboboxes for salutation & suffix
+     //    private _setupKendoWidgets(): void {
+
+     //        var tabstrip = $('#tabstrip');
+     //        tabstrip.kendoTabStrip({
+     //            select: (e: any): void => { this.tabClickHandler(e); },
+     //            animation: false
+     //        }).show();
+
+     //        // when the $element observables are bound, they will have length
+     //        // use this opportunity to apply kendo extensions
+     //        this.$nameSalutation.subscribe((newValue: JQuery): void => {
+     //            if (newValue && newValue.length)
+     //                newValue.kendoComboBox({
+     //                    dataTextField: "text",
+     //                    dataValueField: "value",
+     //                    dataSource: new kendo.data.DataSource({
+     //                        transport: {
+     //                            read: {
+     //                                url: App.Routes.WebApi.People.Names.Salutations.get()
+     //                            }
+     //                        }
+     //                    })
+     //                });
+     //        });
+     //        this.$nameSuffix.subscribe((newValue: JQuery): void => {
+     //            if (newValue && newValue.length)
+     //                newValue.kendoComboBox({
+     //                    dataTextField: "text",
+     //                    dataValueField: "value",
+     //                    dataSource: new kendo.data.DataSource({
+     //                        transport: {
+     //                            read: {
+     //                                url: App.Routes.WebApi.People.Names.Suffixes.get()
+     //                            }
+     //                        }
+     //                    })
+     //                });
+     //        });
+
+     //        // this is getting a little long, can probably factor out event handlers / validation stuff
+     //        this.$photo.subscribe((newValue: JQuery): void => {
+     //            if (newValue && newValue.length) {
+     //                newValue.kendoUpload({
+     //                    multiple: false,
+     //                    showFileList: false,
+     //                    localization: {
+     //                        select: 'Choose a photo to upload...'
+     //                    },
+     //                    async: {
+     //                        saveUrl: App.Routes.WebApi.My.Photo.post()
+     //                    },
+     //                    select: (e: kendo.ui.UploadSelectEvent): void => {
+     //                        this.photoUploadSpinner.start(); // display async wait message
+     //                        $.ajax({
+     //                            type: 'POST',
+     //                            async: false,
+     //                            url: App.Routes.WebApi.My.Photo.validate(),
+     //                            data: {
+     //                                name: e.files[0].name,
+     //                                length: e.files[0].size
+     //                            }
+     //                        })
+     //                            .done((): void => {
+     //                                this.photoUploadError(undefined);
+     //                            })
+     //                            .fail((xhr: JQueryXHR): void => {
+     //                                this.photoUploadError(xhr.responseText);
+     //                                e.preventDefault();
+     //                                this.photoUploadSpinner.stop(); // hide async wait message
+     //                            });
+     //                    },
+     //                    complete: (): void => {
+     //                        this.photoUploadSpinner.stop(); // hide async wait message
+     //                    },
+     //                    success: (e: any): void => {
+     //                        // this event is triggered by both upload and remove requests
+     //                        // ignore remove operations because they don't actually do anything
+     //                        if (e.operation == 'upload') {
+     //                            if (e.response && e.response.message) {
+     //                                App.flasher.flash(e.response.message);
+     //                            }
+     //                            this.hasPhoto(true);
+     //                            this.photoSrc(App.Routes.WebApi.My.Photo
+     //                                .get({ maxSide: 128, refresh: new Date().toUTCString() }));
+     //                        }
+     //                    },
+     //                    error: (e: kendo.ui.UploadErrorEvent): void => {
+     //                        if (e.XMLHttpRequest.responseText &&
+     //                            e.XMLHttpRequest.responseText.length < 1000) {
+     //                            this.photoUploadError(e.XMLHttpRequest.responseText);
+     //                        }
+     //                        else {
+     //                            this.photoUploadError(ProfileSpike.photoUploadUnexpectedErrorMessage);
+     //                        }
+     //                    }
+     //                });
+     //            }
+     //        });
+     //    }
+
+     //    // logic to derive display name
+     //    private _setupDisplayNameDerivation(): void {
+     //        this.displayName.subscribe((newValue: string): void => {
+     //            if (!this.isDisplayNameDerived()) {
+     //                // stash user-entered display name only when it is not derived
+     //                this._userDisplayName = newValue;
+     //            }
+     //        });
+
+     //        ko.computed((): void => {
+     //            // generate display name if it has been API-initialized
+     //            if (this.isDisplayNameDerived() /* && this._isInitialized */) {
+     //                var mapSource = {
+     //                    id: this.personId,
+     //                    isDisplayNameDerived: this.isDisplayNameDerived(),
+     //                    displayName: this.displayName(),
+     //                    salutation: this.salutation(),
+     //                    firstName: this.firstName(),
+     //                    middleName: this.middleName(),
+     //                    lastName: this.lastName(),
+     //                    suffix: this.suffix()
+     //                };
+     //                var data = ko.mapping.toJS(mapSource);
+
+     //                $.ajax({
+     //                    url: App.Routes.WebApi.People.Names.DeriveDisplayName.get(),
+     //                    type: 'GET',
+     //                    cache: false,
+     //                    data: data,
+     //                }).done((result: string): void => {
+     //                        this.displayName(result);
+     //                    });
+     //            }
+     //            else /* if (this._isInitialized) */ {
+     //                // prevent user display name from being blank
+     //                if (!this._userDisplayName)
+     //                    this._userDisplayName = this.displayName();
+     //                // restore user-entered display name
+     //                this.displayName(this._userDisplayName);
+     //            }
+     //        }).extend({ throttle: 400 }); // wait for observables to stop changing
+     //    }
+
+     //    private _setupCardComputeds(): void {
+
+     //        // text translation for gender codes
+     //        this.genderText = ko.computed((): string => {
+     //            var genderCode = this.gender();
+     //            if (genderCode === 'M') return 'Male';
+     //            if (genderCode === 'F') return 'Female';
+     //            if (genderCode === 'P') return 'Gender Undisclosed';
+     //            return 'Gender Unknown';
+     //        });
+
+     //        // friendly string for isActive boolean
+     //        this.isActiveText = ko.computed((): string => {
+     //            return this.isActive() ? 'Active' : 'Inactive';
+     //        });
+     //    }
+
+     //    deleteProfile(data: any, event: any) {
+     //        var me = this;
+     //        $("#confirmProfileDeleteDialog").dialog({
+     //            width: 300,
+     //            height: 200,
+     //            modal: true,
+     //            resizable: false,
+     //            draggable: false,
+     //            buttons: {
+     //                "Delete": function () {
+     //                    $.ajax({
+     //                        async: false,
+     //                        type: "DELETE",
+     //                        url: App.Routes.WebApi.People.del(me.personId),
+     //                        success: function (data, statusText, jqXHR) {
+     //                            alert(jqXHR.statusText);
+     //                        },
+     //                        error: function (jqXHR, statusText, errorThrown) {
+     //                            alert(statusText);
+     //                        },
+     //                        complete: function (jqXHR, statusText) {
+     //                            $("#confirmProfileDeleteDialog").dialog("close");
+     //                        }
+     //                    });
+     //                },
+
+     //                "Cancel": function () {
+     //                    $(this).dialog("close");
+     //                }
+     //            }
+     //        });
+     //    }
+
+     //    //#endregion
+     //}
 
  }
