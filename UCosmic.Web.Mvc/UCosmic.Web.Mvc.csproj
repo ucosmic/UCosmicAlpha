@@ -2747,6 +2747,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\binary-data\" />
+    <Folder Include="App_Data\lucene\" />
     <Folder Include="App_Data\mail\" />
     <Folder Include="content\mail\" />
   </ItemGroup>

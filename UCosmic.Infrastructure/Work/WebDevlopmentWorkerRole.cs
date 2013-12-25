@@ -20,6 +20,7 @@ namespace UCosmic.Work
         private readonly IDictionary<IDefineWork, IEnumerable<dynamic>> _workforce =
             new Dictionary<IDefineWork, IEnumerable<dynamic>>
             {
+                { new IndexPlaceDocuments(), null },
                 { new ProjectEmployeeSummaryViews(), null },
                 { new RepairPlaceHierarchies(), null },
             };
