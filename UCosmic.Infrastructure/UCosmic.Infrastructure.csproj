@@ -167,6 +167,8 @@
     <Compile Include="Cqrs\RetryCommandDecorator.cs" />
     <Compile Include="Cqrs\RetryQueryDecorator.cs" />
     <Compile Include="Lucene\AzureDirectoryStore.cs" />
+    <Compile Include="Lucene\RootComposer.cs" />
+    <Compile Include="Lucene\SearcherManager.cs" />
     <Compile Include="SeedData\PrivateSqlSeeder.cs" />
     <Compile Include="_Extensions\BinaryDataStorageExtensions.cs" />
     <Compile Include="BinaryData\IisFileSystemBinaryDataStorage.cs" />

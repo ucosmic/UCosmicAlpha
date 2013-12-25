@@ -10,6 +10,7 @@ using UCosmic.Cqrs;
 using UCosmic.EntityFramework;
 using UCosmic.FluentValidation;
 using UCosmic.Logging;
+using UCosmic.Lucene;
 using UCosmic.Mail;
 using UCosmic.Saml;
 using UCosmic.Security;
@@ -54,6 +55,7 @@ namespace UCosmic.CompositionRoot
 
             container.RegisterCacheProvider(settings);
             container.RegisterViewManagement(settings);
+            container.RegisterLucene();
 
             container.RegisterWorkScheduling(settings);
         }

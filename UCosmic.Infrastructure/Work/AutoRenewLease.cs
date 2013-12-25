@@ -10,6 +10,7 @@ namespace UCosmic.Work
         private readonly CloudBlockBlob _blob;
         public readonly string LeaseId;
         private Thread _renewalThread;
+        private volatile bool _isRenewing = true;
         private bool _disposed;
 
         public bool HasLease { get { return LeaseId != null; } }
@@ -23,20 +24,21 @@ namespace UCosmic.Work
             if (!HasLease) return;
 
             // keep renewing lease
-            // ReSharper disable FunctionNeverReturns
             _renewalThread = new Thread(() =>
             {
                 try
                 {
-                    while (true)
+                    while (_isRenewing)
                     {
                         Thread.Sleep(TimeSpan.FromSeconds(40.0));
-                        blob.RenewLease(AccessCondition.GenerateLeaseCondition(LeaseId));
+                        if (_isRenewing)
+                            blob.RenewLease(AccessCondition.GenerateLeaseCondition(LeaseId));
                     }
                 }
-                catch (ThreadAbortException) { }
+                // ReSharper disable EmptyGeneralCatchClause
+                catch { }
+                // ReSharper restore EmptyGeneralCatchClause
             });
-            // ReSharper restore FunctionNeverReturns
             _renewalThread.Start();
         }
 
@@ -56,7 +58,8 @@ namespace UCosmic.Work
             if (_disposed) return;
             if (disposing && _renewalThread != null)
             {
-                _renewalThread.Abort();
+                //_renewalThread.Abort();
+                _isRenewing = false;
                 _blob.ReleaseLease(AccessCondition.GenerateLeaseCondition(LeaseId));
                 _renewalThread = null;
             }

@@ -1,51 +1,49 @@
-﻿using Lucene.Net.Analysis;
-using Lucene.Net.Analysis.Standard;
+﻿using System;
+using System.Collections.Concurrent;
 using Lucene.Net.Store;
 using Lucene.Net.Store.Azure;
 using Microsoft.WindowsAzure.Storage;
-using System.Collections.Generic;
-using UCosmic.Domain;
 
 namespace UCosmic.Lucene
 {
-    public class AzureDirectoryStore : IStoreTextIndices
+    [UsedImplicitly]
+    public class AzureDirectoryStore : IStoreDocumentIndexes
     {
         private readonly CloudStorageAccount _cloudStorageAccount;
-        private readonly IDictionary<string, Directory> _directoryCache = new Dictionary<string, Directory>();
+        private readonly ConcurrentDictionary<string, Directory> _cache = new ConcurrentDictionary<string, Directory>();
 
         public AzureDirectoryStore(string connectionString)
         {
             _cloudStorageAccount = CloudStorageAccount.Parse(connectionString);
         }
 
-        public Directory GetStore(string catalog)
+        private Directory GetDirectory(string catalog)
         {
             catalog = string.Format("lucene-{0}", catalog.ToLower());
-            if (!_directoryCache.ContainsKey(catalog) || _directoryCache[catalog] == null)
-                _directoryCache[catalog] = new AzureDirectory(_cloudStorageAccount, catalog, new RAMDirectory());
-            return _directoryCache[catalog];
+
+            if (!_cache.ContainsKey(catalog) || _cache[catalog] == null)
+                _cache.TryAdd(catalog, new AzureDirectory(_cloudStorageAccount, catalog, new RAMDirectory()));
+            return _cache[catalog];
         }
 
-        public Directory GetStore<TEntity>() where TEntity : Entity
+        public Directory GetDirectory(Type documentType)
         {
-            return GetStore<TEntity, StandardAnalyzer>();
+            if (documentType == null) throw new ArgumentNullException("documentType");
+            if (!typeof(IDefineDocument).IsAssignableFrom(documentType))
+                throw new ArgumentException(string.Format(
+                    "Invalid documentType: '{0}' is not assignable from '{1}'.",
+                        documentType, typeof(IDefineDocument)), "documentType");
+
+            var documentName = documentType.Name.ToLower();
+            if (documentName.EndsWith("document"))
+                documentName = documentName.Substring(0, documentName.Length - "document".Length);
+
+            return GetDirectory(documentName);
         }
 
-        public Directory GetStore<TEntity, TAnalyzer>()
-            where TEntity : Entity
-            where TAnalyzer : Analyzer
+        public Directory GetDirectory<TDocument>() where TDocument : IDefineDocument
         {
-            var entityName = typeof(TEntity).Name.ToLower();
-            var analyzerName = typeof(TAnalyzer) == typeof(StandardAnalyzer)
-                ? null : typeof(TAnalyzer).Name.ToLower();
-            if (analyzerName != null && analyzerName.EndsWith("analyzer"))
-                analyzerName = analyzerName.Substring(0, analyzerName.Length - "analyzer".Length);
-
-            var catalog = analyzerName == null
-                ? entityName
-                : string.Format("{0}-{1}", typeof(TEntity).Name.ToLower(), typeof(TAnalyzer));
-
-            return GetStore(catalog);
+            return GetDirectory(typeof(TDocument));
         }
     }
 }

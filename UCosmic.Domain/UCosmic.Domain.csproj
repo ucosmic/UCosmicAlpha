@@ -49,13 +49,15 @@
     <Reference Include="FluentValidation">
       <HintPath>..\packages\FluentValidation.3.4.6.0\lib\Net40\FluentValidation.dll</HintPath>
     </Reference>
-    <Reference Include="ICSharpCode.SharpZipLib">
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
     <Reference Include="LinqKit">
       <HintPath>..\packages\LinqKit.1.0\lib\35\LinqKit.dll</HintPath>
     </Reference>
-    <Reference Include="Lucene.Net">
+    <Reference Include="Lucene.Net, Version=3.0.3.0, Culture=neutral, PublicKeyToken=85089178b9ac3181, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Lucene.Net.3.0.3\lib\NET40\Lucene.Net.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -81,8 +83,14 @@
     <Compile Include="..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Api\Text\IStoreTextIndex.cs" />
+    <Compile Include="Api\Lucene\IDefineDocument.cs" />
+    <Compile Include="Api\Lucene\IProvideDocumentSearchers.cs" />
+    <Compile Include="Api\Lucene\IStoreDocumentIndexes.cs" />
+    <Compile Include="Api\Lucene\IIndexDocuments.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityValuesByTerms.cs" />
+    <Compile Include="Domain\Places\Documents\PlaceDocument.cs" />
+    <Compile Include="Domain\Places\Documents\PlaceDocumentIndexer.cs" />
+    <Compile Include="Domain\Places\Queries\AutoCompletePlaceName.cs" />
     <Compile Include="Properties\ReSharperAnnotations.cs" />
     <Compile Include="Api\Commands\IHandleCommands.cs" />
     <Compile Include="Api\Data\IEagerLoad.cs" />

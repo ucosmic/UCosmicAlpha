@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Linq;
-using UCosmic.Web.Mvc.Annotations;
 
 namespace UCosmic.Domain.Activities
 {

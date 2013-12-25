@@ -233,7 +233,7 @@ module Agreements {
                             lastURL = "#/new/";
                         } else if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("" + this.editOrNewUrl.val + "#/page/") > 0) {
                             if (sessionStorage.getItem("addest") === "yes") {
-                                this.establishmentSearchViewModel.clickAction = (context): boolean => {
+                                this.establishmentSearchViewModel.clickAction = (context: any): boolean => {
                                     this.establishmentItemViewModel.parentEstablishment(context);
                                     this.establishmentItemViewModel.parentId(context.id());
                                     this.establishmentSearchViewModel.sammy.setLocation('#/new/');
@@ -250,7 +250,7 @@ module Agreements {
                                 $asideParentSearch.hide();
                                 this.SearchPageBind("participant");
                                 this.establishmentSearchViewModel.header("Choose a participant");
-                                this.establishmentSearchViewModel.clickAction = (context): boolean => {
+                                this.establishmentSearchViewModel.clickAction = (context: any): boolean => {
                                     var myParticipant = new InstitutionalAgreementParticipantModel(
                                         false,
                                         context.id(),

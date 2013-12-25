@@ -7,7 +7,6 @@ using AttributeRouting.Web.Mvc;
 using AutoMapper;
 using UCosmic.Domain.Activities;
 using UCosmic.Domain.Establishments;
-using UCosmic.Web.Mvc.Annotations;
 using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc.Controllers
