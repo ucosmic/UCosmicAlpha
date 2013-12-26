@@ -116,11 +116,6 @@ module Agreements {
                 this.$contactSuffix.data("kendoDropDownList").enable(false);
             }
             this.contactTypeOptionSelected(me.type());
-            //if (this.isCustomContactTypeAllowed) {
-            //    dropdownlist = $("#contactTypeOptions").data("kendoComboBox");
-            //} else {
-            //    dropdownlist = $("#contactTypeOptions").data("kendoDropDownList");
-            //}
             if (this.isCustomContactTypeAllowed()) {
                 dropdownlist = $("#contactTypeOptions").data("kendoComboBox");
                 dropdownlist.select((dataItem) => {
@@ -136,9 +131,6 @@ module Agreements {
                     return dataItem.text === this.contactTypeOptionSelected();
                 });
             }
-            //dropdownlist.select(function (dataItem) {
-            //    return dataItem.name === me.type();
-            //})
             dropdownlist = $("#contactSuffix").data("kendoDropDownList");
             dropdownlist.select(function (dataItem) {
                 return dataItem.name === me.suffix();

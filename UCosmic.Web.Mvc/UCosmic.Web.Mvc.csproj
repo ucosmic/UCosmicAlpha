@@ -2604,6 +2604,7 @@
     <Content Include="Views\People\_Emails.cshtml" />
     <Content Include="Views\People\Index_Spike.cshtml" />
     <Content Include="Views\People\_PersonalInfo-Spike.cshtml" />
+    <Content Include="Views\People\_AffiliationsEditor.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -104,7 +104,6 @@ var Agreements;
                 this.$contactSuffix.data("kendoDropDownList").enable(false);
             }
             this.contactTypeOptionSelected(me.type());
-
             if (this.isCustomContactTypeAllowed()) {
                 dropdownlist = $("#contactTypeOptions").data("kendoComboBox");
                 dropdownlist.select(function (dataItem) {
@@ -120,7 +119,6 @@ var Agreements;
                     return dataItem.text === _this.contactTypeOptionSelected();
                 });
             }
-
             dropdownlist = $("#contactSuffix").data("kendoDropDownList");
             dropdownlist.select(function (dataItem) {
                 return dataItem.name === me.suffix();

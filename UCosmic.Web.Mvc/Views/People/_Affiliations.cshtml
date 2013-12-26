@@ -2,41 +2,42 @@
 @model UCosmic.Web.Mvc.Models.AffiliationViewModel[]
 
 @* AFFILIATIONS *@
-<section class="content fixed to-top">
-    <h2 style="font-size: 24px;  padding-bottom: 1em;">Affiliations</h2>
-    @if (Model != null && Model.Any())
+<h2 style="font-size: 24px;  padding-bottom: 1em;">Affiliations</h2>
+@if (Model != null && Model.Any())
+{
+    <div>
+        <ul style="font-size: 20px;">
+            @foreach (var affiliations in Model)
+{
+    if (affiliations.EstablishmentName != null)
     {
-        <div>
-            <ul style="font-size: 20px;">
-                @foreach (var affiliations in Model)
-                {
-                    if (affiliations.EstablishmentName != null)
-                    {
-                        <li style="margin-bottom: 1em;">
-                            @if (affiliations.FacultyRank != "Other")
-                            {
-                                <strong>@affiliations.FacultyRank</strong>
-                            }
-                            <strong>@affiliations.JobTitles</strong>
-                            <ul>
-                                <li>@affiliations.EstablishmentName</li>
+        <li style="margin-bottom: 1em;" data-bind="click: startEditingAffiliations, css: { clickable: !editMode() }">
+            @if (affiliations.FacultyRank != "Other")
+            {
+                <strong>@affiliations.FacultyRank</strong>
+            }
+            <strong>@affiliations.JobTitles</strong>
+            <ul>
+                <li>@affiliations.EstablishmentName</li>
 
-                                @foreach (var ancestorNames in affiliations.AncestorNames)
-                                {
-                                    <li><span>@ancestorNames</span></li>
-                                }
-                            </ul>
-                        </li>
-                    }
+                @foreach (var ancestorNames in affiliations.AncestorNames)
+                {
+                    <li><span>@ancestorNames</span></li>
                 }
             </ul>
-        </div>
+            <div class="action">
+                Click to edit
+            </div>
+        </li>
     }
-    else
-    {
-        @* ZERO RESULTS MESSAGE *@
-        <span>
-            This person has no known affiliations.
-        </span>
-    }
-</section>
+}
+        </ul>
+    </div>
+}
+else
+{
+    @* ZERO RESULTS MESSAGE *@
+    <span>
+        This person has no known affiliations.
+    </span>
+}

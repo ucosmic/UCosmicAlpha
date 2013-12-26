@@ -3,7 +3,7 @@
     var viewingUser = Session.UserImpersonating() ?? User;
 }
 
-<form style="width:500px;" enctype=" multipart />form-data" method="POST" data-bind="submit: saveInfo, validationOptions: { decorateElement: true, errorClass: 'error' }">
+<form style="width:500px;" id="personal_info_edit_form" method="POST" data-bind="submit: saveInfo, validationOptions: { decorateElement: true, errorClass: 'error' }">
     <div class="field-table w690-l190-v500" >
         <div class="field-row">
             <div class="field-label" style="padding-top: 0;">

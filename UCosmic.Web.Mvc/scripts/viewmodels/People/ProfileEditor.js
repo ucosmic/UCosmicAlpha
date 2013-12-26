@@ -340,7 +340,10 @@ var People;
             function ProfileSpike(personId) {
                 var _this = this;
                 this.personId = 0;
+                this.editMode = ko.observable(false);
+                this.saveSpinner = new App.Spinner({ delay: 200 });
                 this.preferredTitle = ko.observable();
+                this.$edit_affiliations_dialog = $("#edit_affiliations_dialog");
                 this.editableAffiliations = ko.observableArray();
                 this.affiliationsSpinner = new App.Spinner({ delay: 400, runImmediately: true });
                 this.isEditingAffiliation = ko.computed(function () {
@@ -361,6 +364,25 @@ var People;
                 });
                 this.affiliationData.ready();
             }
+            ProfileSpike.prototype.bindJquery = function () {
+                var self = this, kacSelect;
+
+                this.$edit_affiliations_dialog.kendoWindow({
+                    width: 950,
+                    open: function () {
+                        $("html, body").css("overflow", "hidden");
+                    },
+                    close: function () {
+                        $("html, body").css("overflow", "");
+                        $("#addAContact").fadeIn(500);
+                    },
+                    visible: false,
+                    draggable: false,
+                    resizable: false
+                });
+                this.$edit_affiliations_dialog.parent().addClass("contactKendoWindow");
+            };
+
             ProfileSpike.prototype._loadAffiliationData = function () {
                 var _this = this;
                 var promise = $.Deferred();
@@ -412,6 +434,7 @@ var People;
             };
 
             ProfileSpike.prototype.startEditingAffiliations = function () {
+                this.$edit_affiliations_dialog.data("kendoWindow").open().title("Add Contact");
             };
 
             ProfileSpike.prototype.stopEditingAffiliations = function () {

@@ -42,13 +42,8 @@
 
             $(function () {
                 var profileViewModel = new People.ViewModels.ProfileSpike('@ViewBag.PersonId');
-                profileViewModel.load('@ViewBag.Tab')
-                    .done(function () {
-                        ko.applyBindings(profileViewModel, $('#main')[0]);
-                    })
-                    .fail(function (xhr) {
-                        App.Failures.message(xhr, 'while trying to load your profile', true);
-                    });
+                ko.applyBindings(profileViewModel, $('#affiliations')[0]);
+                profileViewModel.bindJquery();
             });
 
         </script>
@@ -79,7 +74,8 @@
                 </h1>
             </header>
             @* CARD *@
-            <section class="person-profile"> @*data-bind="click: startEditing, css: { clickable: !editMode() }">*@
+            <section class="person-profile">
+                @*data-bind="click: startEditing, css: { clickable: !editMode() }">*@
                 <div class="card">
                     @Html.Action(MVC.People.GetCard())
                 </div>
@@ -87,22 +83,18 @@
                     Click to edit
                 </div>
             </section>
-            @if (User.Identity.Name.Equals(Model.Username, StringComparison.OrdinalIgnoreCase))
-            {
-                @* SAVED PROFILE *@
-                <section class="content fixed to-top">
-                    
-                </section>
-                @* EDIT PROFILE *@
-                <section class="fieldset" style="display: none;" data-bind="jqElement: '$editSection', visible: editMode">
-                    <fieldset class="no-sidebar" style="width:0;">
-                        @*<legend>Edit @customProfileTitle</legend>*@
-                        @Html.Partial(MVC.People.Views._PersonalInfo_Spike)
-                    </fieldset>
-                </section>
-            }
             @* AFFILIATIONS *@
-            @Html.Action(MVC.People.GetAffiliations())
+            <section class="content fixed to-top" id="affiliations">
+                @Html.Action(MVC.People.GetAffiliations())
+                @if (User.Identity.Name.Equals(Model.Username, StringComparison.OrdinalIgnoreCase))
+                {
+                    @* EDIT AFFILIATIONS *@
+                    <section>
+                        @*<legend>Edit @customProfileTitle</legend>*@
+                        @Html.Partial(MVC.People.Views._AffiliationsEditor)
+                    </section>
+                }
+            </section>
             @* CONTACT INFORMATION *@
             @Html.Action(MVC.People.GetEmails())
         </div>
