@@ -87,7 +87,7 @@
                         Showing <span>@Model.Output.FirstNumber</span>
                         @if (@Model.Output.PageCount > 0)
                         {
-                        <span>- <span>@Model.Output.LastNumber</span></span>
+                            <span>- <span>@Model.Output.LastNumber</span></span>
                         }
                         of <span>@Model.Output.ItemTotal</span>
                     </strong>
@@ -345,6 +345,13 @@
                         </li>
                         <li class="static square-bottom">
                             <div class="content">
+                                @* LOCATION AUTOCOMPLETE *@
+                                <div class="field">
+                                    <input type="text" placeholder="[Enter location]"
+                                           data-bind="jQuery: '$location'"
+                                           style="height: 20px; line-height: 16px; font-size: 14px; padding: 3px 4px; margin: 0;" />
+                                </div>
+
                                 @* COUNTRY DROPDOWN *@
                                 <div class="field">
                                     @Html.DropDownListFor(x => x.Input.CountryCode, Model.CountryOptions, "[All countries]", new

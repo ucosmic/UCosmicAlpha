@@ -1,18 +1,17 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Linq;
 using Lucene.Net.Index;
 using Lucene.Net.Search;
 
 namespace UCosmic.Domain.Places
 {
-    public class AutoCompletePlaceName : IDefineQuery<string>, IDefineWork
+    public class AutoCompletePlaceName : IDefineQuery<PlaceDocument[]>
     {
         public string Terms { get; set; }
-        public TimeSpan Interval { get { return TimeSpan.FromMinutes(1); } }
+        public int? MaxResults { get; set; }
     }
 
-    public class HandleAutoCompletePlaceNameQuery : IHandleQueries<AutoCompletePlaceName, string>, IPerformWork<AutoCompletePlaceName>
+    public class HandleAutoCompletePlaceNameQuery : IHandleQueries<AutoCompletePlaceName, PlaceDocument[]>
     {
         private readonly IProvideDocumentSearchers _searchers;
 
@@ -21,47 +20,47 @@ namespace UCosmic.Domain.Places
             _searchers = searchers;
         }
 
-        public string Handle(AutoCompletePlaceName query)
+        public PlaceDocument[] Handle(AutoCompletePlaceName query)
         {
+
+            if (query == null) throw new ArgumentNullException("query");
+            if (string.IsNullOrWhiteSpace(query.Terms)) return new PlaceDocument[0];
+
             var eDoc = new PlaceDocument();
-
-            var keywords = new[] { "C", "Ch", "Chi", "Chin", "China" };
-            foreach (var keyword in keywords)
+            var keyword = query.Terms;
+            var searcher = _searchers.Acquire<PlaceDocument>();
+            try
             {
-                var searcher = _searchers.Acquire<PlaceDocument>();
-                try
+                var search = new BooleanQuery
                 {
-                    var search = new BooleanQuery
                     {
+                        new PrefixQuery(new Term(eDoc.PropertyName(x => x.OfficialName), keyword))
                         {
-                            new PrefixQuery(new Term(eDoc.PropertyName(x => x.OfficialName), keyword))
-                            {
-                                Boost = 2,
-                            },
-                            Occur.SHOULD
+                            Boost = 2,
                         },
+                        Occur.SHOULD
+                    },
+                    {
+                        new PrefixQuery(new Term(eDoc.PropertyName(x => x.OfficialNameLower), keyword.ToLower()))
                         {
-                            new PrefixQuery(new Term(eDoc.PropertyName(x => x.OfficialNameStandard),
-                                keyword.ToLower())),
-                            Occur.SHOULD
-                        }
-                    };
-                    var results = searcher.Search(search, int.MaxValue);
-                    var documents = results.ScoreDocs.Select(x => new PlaceDocument(x, searcher.Doc(x.Doc))).ToArray();
-                    Debug.Assert(documents.Length >= 0);
-                }
-                finally
-                {
-                    _searchers.Release(searcher);
-                }
+                            Boost = 2,
+                        },
+                        Occur.SHOULD
+                    },
+                    {
+                        new PrefixQuery(new Term(eDoc.PropertyName(x => x.OfficialNameStandard),
+                            keyword.ToLower())),
+                        Occur.SHOULD
+                    },
+                };
+                var results = searcher.Search(search, query.MaxResults ?? int.MaxValue);
+                var documents = results.ScoreDocs.Select(x => new PlaceDocument(x, searcher.Doc(x.Doc))).ToArray();
+                return documents;
             }
-
-            return null;
-        }
-
-        public void Perform(AutoCompletePlaceName job)
-        {
-            Handle(new AutoCompletePlaceName { Terms = "C" });
+            finally
+            {
+                _searchers.Release(searcher);
+            }
         }
     }
 }

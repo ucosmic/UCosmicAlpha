@@ -24,6 +24,7 @@ module Activities.ViewModels {
         isPeopleChecked = ko.computed((): boolean => { return this.pivot() == DataGraphPivot.people; });
 
         $form: JQuery;
+        $location: JQuery;
         loadingSpinner = new App.Spinner()
 
         constructor(public settings: SearchSettings) {
@@ -34,7 +35,32 @@ module Activities.ViewModels {
         applyBindings(element: Element): void {
             ko.applyBindings(this, element);
             //this._areBindingsApplied(true);
+            this._applyKendo();
             this._applySubscriptions();
+        }
+
+        private _applyKendo(): void {
+            this.$location.kendoComboBox({
+                dataTextField: 'officialName',
+                dataValueField: 'placeId',
+                filter: 'contains',
+                dataSource: new kendo.data.DataSource({
+                    serverFiltering: true,
+                    transport: {
+                        read: {
+                            url: '/api/places/names/autocomplete',
+                        },
+                        parameterMap: (data: kendo.data.DataSourceTransportParameterMapData, action: string): any => {
+                            if (action == 'read' && data && data.filter && data.filter.filters && data.filter.filters.length) {
+                                return {
+                                    terms: data.filter.filters[0].value,
+                                };
+                            }
+                            return data;
+                        }
+                    }
+                }),
+            });
         }
 
         private _applySubscriptions(): void {

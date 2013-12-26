@@ -29,7 +29,32 @@ var Activities;
             Search.prototype.applyBindings = function (element) {
                 ko.applyBindings(this, element);
 
+                this._applyKendo();
                 this._applySubscriptions();
+            };
+
+            Search.prototype._applyKendo = function () {
+                this.$location.kendoComboBox({
+                    dataTextField: 'officialName',
+                    dataValueField: 'placeId',
+                    filter: 'contains',
+                    dataSource: new kendo.data.DataSource({
+                        serverFiltering: true,
+                        transport: {
+                            read: {
+                                url: '/api/places/names/autocomplete'
+                            },
+                            parameterMap: function (data, action) {
+                                if (action == 'read' && data && data.filter && data.filter.filters && data.filter.filters.length) {
+                                    return {
+                                        terms: data.filter.filters[0].value
+                                    };
+                                }
+                                return data;
+                            }
+                        }
+                    })
+                });
             };
 
             Search.prototype._applySubscriptions = function () {

@@ -47,7 +47,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         //[CacheHttpGet(Duration = 3600)]
-        [GET("{placeId}")]
+        [GET("{placeId:int}")]
         public PlaceApiModel Get(int placeId)
         {
             //System.Threading.Thread.Sleep(2000); // test api latency
@@ -82,7 +82,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         //[CacheHttpGet(Duration = 3600)]
-        [GET("{placeId}/children")]
+        [GET("{placeId:int}/children")]
         public IEnumerable<PlaceApiModel> GetChildren(int placeId)
         {
             //System.Threading.Thread.Sleep(5000); // test api latency
