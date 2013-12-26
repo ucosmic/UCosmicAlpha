@@ -34,26 +34,95 @@ var Activities;
             };
 
             Search.prototype._applyKendo = function () {
+                var _this = this;
+                var inputInitialized = false;
+                var emptyDataItem = {
+                    officialName: '[Begin typing to see options]',
+                    placeId: undefined
+                };
+                var emptyDataSource = new kendo.data.DataSource({ data: [emptyDataItem] });
+                var serverDataSource = new kendo.data.DataSource({
+                    serverFiltering: true,
+                    transport: {
+                        read: {
+                            url: '/api/places/names/autocomplete'
+                        },
+                        parameterMap: function (data, action) {
+                            if (action == 'read' && data && data.filter && data.filter.filters && data.filter.filters.length) {
+                                return {
+                                    terms: data.filter.filters[0].value
+                                };
+                            }
+                            return data;
+                        }
+                    }
+                });
+                var hasPlace = (this.settings.input.placeIds && this.settings.input.placeIds.length && this.settings.input.placeNames && this.settings.input.placeNames.length && this.settings.input.placeIds[0] && this.settings.input.placeNames[0]) ? true : false;
+                var dataSource = hasPlace ? 'server' : 'empty';
+                var checkDataSource = function (widget) {
+                    var inputVal = $.trim(widget.input.val());
+                    if (!inputVal && dataSource == 'empty')
+                        return;
+                    if (inputVal && dataSource == 'server')
+                        return;
+                    if (!inputVal && dataSource != 'empty') {
+                        dataSource = 'empty';
+                        widget.setDataSource(emptyDataSource);
+                        return;
+                    }
+                    if (inputVal && dataSource != 'server') {
+                        dataSource = 'server';
+                        widget.setDataSource(serverDataSource);
+                        return;
+                    }
+                };
                 this.$location.kendoComboBox({
+                    animation: false,
                     dataTextField: 'officialName',
                     dataValueField: 'placeId',
                     filter: 'contains',
-                    dataSource: new kendo.data.DataSource({
-                        serverFiltering: true,
-                        transport: {
-                            read: {
-                                url: '/api/places/names/autocomplete'
-                            },
-                            parameterMap: function (data, action) {
-                                if (action == 'read' && data && data.filter && data.filter.filters && data.filter.filters.length) {
-                                    return {
-                                        terms: data.filter.filters[0].value
-                                    };
-                                }
-                                return data;
-                            }
+                    dataSource: hasPlace ? serverDataSource : emptyDataSource,
+                    select: function (e) {
+                        if (e.item.text() == emptyDataItem.officialName) {
+                            e.sender.input.val('');
+                            e.sender.search('');
+                            return;
                         }
-                    })
+
+                        setTimeout(function () {
+                            if (!_this.settings.input.placeIds || !_this.settings.input.placeIds.length || _this.settings.input.placeIds[0] != parseInt(e.sender.value())) {
+                                _this._submitForm();
+                            }
+                        }, 0);
+                    },
+                    dataBound: function (e) {
+                        var widget = e.sender;
+                        var input = widget.input;
+                        var inputVal = $.trim(input.val());
+
+                        if (!inputInitialized) {
+                            input.attr('name', 'placeNames');
+                            input.on('keydown', function () {
+                                setTimeout(function () {
+                                    checkDataSource(widget);
+                                }, 0);
+                            });
+                            if (hasPlace && inputVal) {
+                                widget.search(inputVal);
+                            }
+                            inputInitialized = true;
+                        } else if (hasPlace) {
+                            widget.select(function (dataItem) {
+                                return dataItem.placeId == this.settings.input.placeIds[0];
+                            });
+                            widget.close();
+                            input.blur();
+                            hasPlace = false;
+                            setTimeout(function () {
+                                _this.$location.val(_this.settings.input.placeIds[0]);
+                            }, 0);
+                        }
+                    }
                 });
             };
 

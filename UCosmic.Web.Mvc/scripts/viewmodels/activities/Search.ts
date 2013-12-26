@@ -40,26 +40,94 @@ module Activities.ViewModels {
         }
 
         private _applyKendo(): void {
+            var inputInitialized = false;
+            var emptyDataItem = {
+                officialName: '[Begin typing to see options]',
+                placeId: undefined,
+            };
+            var emptyDataSource = new kendo.data.DataSource({ data: [emptyDataItem], });
+            var serverDataSource = new kendo.data.DataSource({
+                serverFiltering: true,
+                transport: {
+                    read: {
+                        url: '/api/places/names/autocomplete',
+                    },
+                    parameterMap: (data: kendo.data.DataSourceTransportParameterMapData, action: string): any => {
+                        if (action == 'read' && data && data.filter && data.filter.filters && data.filter.filters.length) {
+                            return {
+                                terms: data.filter.filters[0].value,
+                            };
+                        }
+                        return data;
+                    }
+                }
+            });
+            var hasPlace = (this.settings.input.placeIds && this.settings.input.placeIds.length
+                && this.settings.input.placeNames && this.settings.input.placeNames.length
+                && this.settings.input.placeIds[0] && this.settings.input.placeNames[0]) ? true : false;
+            var dataSource = hasPlace ? 'server' : 'empty';
+            var checkDataSource = (widget: kendo.ui.ComboBox): void => {
+                var inputVal = $.trim(widget.input.val());
+                if (!inputVal && dataSource == 'empty') return;
+                if (inputVal && dataSource == 'server') return;
+                if (!inputVal && dataSource != 'empty') {
+                    dataSource = 'empty'
+                    widget.setDataSource(emptyDataSource);
+                    return;
+                }
+                if (inputVal && dataSource != 'server') {
+                    dataSource = 'server';
+                    widget.setDataSource(serverDataSource);
+                    return;
+                }
+            }
             this.$location.kendoComboBox({
+                animation: false,
                 dataTextField: 'officialName',
                 dataValueField: 'placeId',
                 filter: 'contains',
-                dataSource: new kendo.data.DataSource({
-                    serverFiltering: true,
-                    transport: {
-                        read: {
-                            url: '/api/places/names/autocomplete',
-                        },
-                        parameterMap: (data: kendo.data.DataSourceTransportParameterMapData, action: string): any => {
-                            if (action == 'read' && data && data.filter && data.filter.filters && data.filter.filters.length) {
-                                return {
-                                    terms: data.filter.filters[0].value,
-                                };
-                            }
-                            return data;
-                        }
+                dataSource: hasPlace ? serverDataSource : emptyDataSource,
+                select: (e: kendo.ui.ComboBoxSelectEvent): void => {
+                    if (e.item.text() == emptyDataItem.officialName) {
+                        e.sender.input.val('');
+                        e.sender.search('');
+                        return;
                     }
-                }),
+
+                    setTimeout((): void=> {
+                        if (!this.settings.input.placeIds || !this.settings.input.placeIds.length ||
+                            this.settings.input.placeIds[0] != parseInt(e.sender.value())) {
+                            this._submitForm();
+                        }
+                    }, 0);
+                },
+                dataBound: (e: kendo.ui.ComboBoxEvent): void => {
+                    var widget = e.sender;
+                    var input = widget.input;
+                    var inputVal = $.trim(input.val());
+
+                    if (!inputInitialized) {
+                        input.attr('name', 'placeNames');
+                        input.on('keydown', (): void => {
+                            setTimeout((): void => { checkDataSource(widget); }, 0);
+                        });
+                        if (hasPlace && inputVal) {
+                            widget.search(inputVal);
+                        }
+                        inputInitialized = true;
+                    }
+                    else if (hasPlace) {
+                        widget.select(function (dataItem: any): boolean {
+                            return dataItem.placeId == this.settings.input.placeIds[0];
+                        });
+                        widget.close();
+                        input.blur();
+                        hasPlace = false;
+                        setTimeout((): void => {
+                            this.$location.val(this.settings.input.placeIds[0]);
+                        }, 0)
+                    }
+                }
             });
         }
 

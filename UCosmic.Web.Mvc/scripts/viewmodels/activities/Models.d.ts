@@ -4,6 +4,8 @@ declare module Activities.ApiModels {
         pivot?: number;
         keyword?: string;
         countryCode?: string;
+        placeIds?: number[];
+        placeNames?: string[];
         orderBy?: string;
     }
 

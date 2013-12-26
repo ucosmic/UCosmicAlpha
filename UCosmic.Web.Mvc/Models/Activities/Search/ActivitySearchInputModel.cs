@@ -16,6 +16,8 @@ namespace UCosmic.Web.Mvc.Models
 
         public ActivitySearchPivot Pivot { get; set; }
         public string CountryCode { get; set; }
+        public int[] PlaceIds { get; set; }
+        public string[] PlaceNames { get; set; }
         public string Keyword { get; set; }
         public string OrderBy { get; set; }
     }

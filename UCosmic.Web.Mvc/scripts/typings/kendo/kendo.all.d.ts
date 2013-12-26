@@ -788,6 +788,7 @@ declare module kendo.ui {
 
     class ComboBox extends kendo.ui.Widget {
         element: JQuery;
+        input: JQuery;
         wrapper: JQuery;
         constructor(element: Element, options?: ComboBoxOptions);
         options: ComboBoxOptions;

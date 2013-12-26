@@ -20,6 +20,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             _queries = queries;
         }
 
+        [CacheHttpGet(Duration = 3600)]
         [GET("names/autocomplete")]
         public IEnumerable<PlaceNameAutoCompleteModel> GetAutoComplete(string terms = null)
         {

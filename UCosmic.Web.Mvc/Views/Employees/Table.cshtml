@@ -73,11 +73,21 @@
             </div>
 
             @* KEYWORD TEXT BOX *@
-            <div class="field" style="margin-bottom: 0;">
-                <input type="search" value="@Model.Input.Keyword" placeholder="Find an activity by keyword." name="keyword"
-                       data-bind="event: { search: onKeywordInputSearchEvent }" style="width: 588px; margin-right: 12px" />
-                <input type="submit" value="Search" title="Click here or press the enter key to search." />
-            </div>
+            <table style="border: none; border-collapse: collapse; width: 100%;">
+                <tr>
+                    <td style="width: 95%;">
+                        <div class="field" style="margin-bottom: 0;">
+                            <input type="search" value="@Model.Input.Keyword" placeholder="Find an activity by keyword." name="keyword"
+                                   data-bind="event: { search: onKeywordInputSearchEvent }" xstyle="width: 550px; margin-right: 12px" />
+                        </div>
+                    </td>
+                    <td>
+                        <div class="field" style="margin-bottom: 0; margin-left: 12px;">
+                            <input type="submit" value="Search" title="Click here or press the enter key to search." />
+                        </div>
+                    </td>
+                </tr>
+            </table>
 
             @* PAGER STATUS *@
             @if (Model != null && Model.Output.Items.Any())
@@ -347,8 +357,8 @@
                             <div class="content">
                                 @* LOCATION AUTOCOMPLETE *@
                                 <div class="field">
-                                    <input type="text" placeholder="[Enter location]"
-                                           data-bind="jQuery: '$location'"
+                                    <input name="placeIds" type="text" placeholder="[Enter location]" data-bind="jQuery: '$location'"
+                                           value="@(Model.Input.PlaceNames != null && Model.Input.PlaceNames.Any() ? Model.Input.PlaceNames.First() : "")"
                                            style="height: 20px; line-height: 16px; font-size: 14px; padding: 3px 4px; margin: 0;" />
                                 </div>
 
