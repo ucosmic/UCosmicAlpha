@@ -81,6 +81,7 @@ var Activities;
                     }
                 };
                 this.$location.kendoComboBox({
+                    suggest: true,
                     animation: false,
                     height: 420,
                     dataTextField: 'officialName',
