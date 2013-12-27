@@ -41,7 +41,7 @@
         <script type="text/javascript">
 
             $(function () {
-                var profileViewModel = new People.ViewModels.ProfileSpike('@ViewBag.PersonId');
+                var profileViewModel = new People.ViewModels.ProfileSpike('@Model.PersonId');
                 ko.applyBindings(profileViewModel, $('#affiliations')[0]);
                 profileViewModel.bindJquery();
             });
@@ -56,13 +56,19 @@
             display: inline;
         }
 
-            .comma-list:after {
-                content: ', ';
-            }
+        .comma-list:after {
+            content: ', ';
+        }
 
-            .comma-list:last-child:after {
-                content: '';
-            }
+        .comma-list:last-child:after {
+            content: '';
+        }
+
+        .affiliations-kendo-window {
+            position: fixed !important;
+            top: 100px !important;
+            left: 100px;
+        }
     </style>
 }
 <div class="content fixed to-top" data-current-module="faculty">
@@ -85,7 +91,6 @@
             </section>
             @* AFFILIATIONS *@
             <section class="content fixed to-top" id="affiliations">
-                @Html.Action(MVC.People.GetAffiliations())
                 @if (User.Identity.Name.Equals(Model.Username, StringComparison.OrdinalIgnoreCase))
                 {
                     @* EDIT AFFILIATIONS *@
@@ -93,6 +98,10 @@
                         @*<legend>Edit @customProfileTitle</legend>*@
                         @Html.Partial(MVC.People.Views._AffiliationsEditor)
                     </section>
+                }
+                else
+                {  
+                    @Html.Action(MVC.People.GetAffiliations())
                 }
             </section>
             @* CONTACT INFORMATION *@

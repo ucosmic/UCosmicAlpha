@@ -365,10 +365,11 @@ var People;
                 this.affiliationData.ready();
             }
             ProfileSpike.prototype.bindJquery = function () {
-                var self = this, kacSelect;
+                var _this = this;
+                var self = this, kacSelect, positioned = false;
 
                 this.$edit_affiliations_dialog.kendoWindow({
-                    width: 950,
+                    width: 550,
                     open: function () {
                         $("html, body").css("overflow", "hidden");
                     },
@@ -376,11 +377,22 @@ var People;
                         $("html, body").css("overflow", "");
                         $("#addAContact").fadeIn(500);
                     },
+                    activate: function () {
+                        if (positioned === false) {
+                            _this.$edit_affiliations_dialog.parent().css({ "display": "none" });
+                            _this.$edit_affiliations_dialog.parent().css({ "visibility": "visible" });
+                            _this.$edit_affiliations_dialog.parent().fadeIn(200);
+                            _this.$edit_affiliations_dialog.parent().css({ "left": (_this.$edit_affiliations_dialog.parent().offset().left + 215) + "px" });
+                            positioned = true;
+                        }
+                    },
                     visible: false,
                     draggable: false,
                     resizable: false
                 });
-                this.$edit_affiliations_dialog.parent().addClass("contactKendoWindow");
+                this.$edit_affiliations_dialog.parent().css({ "visibility": "hidden" });
+
+                this.$edit_affiliations_dialog.parent().addClass("affiliations-kendo-window");
             };
 
             ProfileSpike.prototype._loadAffiliationData = function () {
@@ -433,14 +445,8 @@ var People;
                 affiliation.bindEstablishmentEditors(undefined);
             };
 
-            ProfileSpike.prototype.startEditingAffiliations = function () {
-                this.$edit_affiliations_dialog.data("kendoWindow").open().title("Add Contact");
-            };
-
-            ProfileSpike.prototype.stopEditingAffiliations = function () {
-            };
-
-            ProfileSpike.prototype.cancelEditingAffiliations = function () {
+            ProfileSpike.prototype.startEditingAffiliations = function (me) {
+                me.owner.$edit_affiliations_dialog.data("kendoWindow").open().title("Affiliations");
             };
 
             ProfileSpike.prototype.saveAffiliations = function () {

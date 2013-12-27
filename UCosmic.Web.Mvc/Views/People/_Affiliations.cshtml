@@ -8,29 +8,29 @@
     <div>
         <ul style="font-size: 20px;">
             @foreach (var affiliations in Model)
-{
-    if (affiliations.EstablishmentName != null)
-    {
-        <li style="margin-bottom: 1em;" data-bind="click: startEditingAffiliations, css: { clickable: !editMode() }">
-            @if (affiliations.FacultyRank != "Other")
             {
-                <strong>@affiliations.FacultyRank</strong>
-            }
-            <strong>@affiliations.JobTitles</strong>
-            <ul>
-                <li>@affiliations.EstablishmentName</li>
-
-                @foreach (var ancestorNames in affiliations.AncestorNames)
+                if (affiliations.EstablishmentName != null)
                 {
-                    <li><span>@ancestorNames</span></li>
+                    <li style="margin-bottom: 1em;">
+                        @if (affiliations.FacultyRank != "Other")
+                        {
+                            <strong style="display: block">@affiliations.FacultyRank</strong>
+                        }
+                        <strong style="display: block">@affiliations.JobTitles</strong>
+                        <ul>
+                            <li>@affiliations.EstablishmentName</li>
+
+                            @foreach (var ancestorNames in affiliations.AncestorNames)
+                            {
+                                <li><span>@ancestorNames</span></li>
+                            }
+                        </ul>
+                        <div class="action">
+                            Click to edit
+                        </div>
+                    </li>
                 }
-            </ul>
-            <div class="action">
-                Click to edit
-            </div>
-        </li>
-    }
-}
+            }
         </ul>
     </div>
 }

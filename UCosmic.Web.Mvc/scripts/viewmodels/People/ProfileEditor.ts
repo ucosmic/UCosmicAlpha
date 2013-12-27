@@ -465,13 +465,12 @@ module People.ViewModels {
         preferredTitle = ko.observable<string>();
         $edit_affiliations_dialog = $("#edit_affiliations_dialog");
 
-
         bindJquery(): void {
             var self = this,
-                kacSelect;
+                kacSelect, positioned = false;
 
             this.$edit_affiliations_dialog.kendoWindow({
-                width: 950,
+                width: 550,
                 open: () => {
                     //this.kendoWindowBug.val = $("body").scrollTop() - 10;
                     $("html, body").css("overflow", "hidden");
@@ -482,11 +481,22 @@ module People.ViewModels {
                     $("#addAContact").fadeIn(500);
                     //this.clearContact();
                 },
+                activate: () => {
+                    if (positioned === false) {
+                        this.$edit_affiliations_dialog.parent().css({ "display": "none" });
+                        this.$edit_affiliations_dialog.parent().css({ "visibility": "visible" });
+                        this.$edit_affiliations_dialog.parent().fadeIn(200);
+                        this.$edit_affiliations_dialog.parent().css({ "left": (this.$edit_affiliations_dialog.parent().offset().left + 215) + "px" });
+                        positioned = true;
+                    }
+                },
                 visible: false,
                 draggable: false,
                 resizable: false
             });
-            this.$edit_affiliations_dialog.parent().addClass("contactKendoWindow");
+            this.$edit_affiliations_dialog.parent().css({ "visibility": "hidden" });
+            //this.$edit_affiliations_dialog.parent().css({ "left": (this.$edit_affiliations_dialog.parent().offset().left + 100) + "px" });
+            this.$edit_affiliations_dialog.parent().addClass("affiliations-kendo-window");
         }
 
 
@@ -584,18 +594,10 @@ module People.ViewModels {
         //#endregion
         //#region DC / USF implementation
 
-        startEditingAffiliations(): void { // show the editor
-            this.$edit_affiliations_dialog.data("kendoWindow").open().title("Add Contact")
+        startEditingAffiliations(me): void { // show the editor
+            me.owner.$edit_affiliations_dialog.data("kendoWindow").open().title("Affiliations");
         }
-
-        stopEditingAffiliations(): void { // hide the editor
-
-        }
-
-        cancelEditingAffiliations(): void {
-
-        }
-
+        
         saveAffiliations(): void {
             var affiliationPutModel: ApiModels.AffiliationPut = {
                 jobTitles: this.preferredTitle(),
