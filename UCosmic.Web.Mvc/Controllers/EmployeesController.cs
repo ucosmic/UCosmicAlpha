@@ -53,6 +53,7 @@ namespace UCosmic.Web.Mvc.Controllers
 
             var model = new ActivitySearchModel
             {
+                Domain = domain,
                 Input = input,
                 Output = Mapper.Map<PageOfActivitySearchResultModel>(results),
             };

@@ -161,6 +161,9 @@
                         People
                     </label>
                 </div>
+                <div class="on-right" style="margin-top: 8px;">
+                    <a href="@Url.Action(MVC.Employees.Table(Model.Domain, null))" class="restore-underline">Reset search</a>
+                </div>
             </div>
 
             @* KEYWORD TEXT BOX *@
@@ -172,9 +175,9 @@
                                    data-bind="event: { search: onKeywordInputSearchEvent }" xstyle="width: 550px; margin-right: 12px" />
                         </div>
                     </td>
-                    <td>
+                    <td style="text-align: right;">
                         <div class="field" style="margin-bottom: 0; margin-left: 12px;">
-                            <input type="submit" value="Search" title="Click here or press the enter key to search." />
+                            <input type="submit" value="Search" title="Click here or press the enter key to search." style="margin-right: 0;" />
                         </div>
                     </td>
                 </tr>
