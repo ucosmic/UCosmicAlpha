@@ -17,7 +17,8 @@ namespace UCosmic.Domain.Activities
         public int PageNumber { get; set; }
         public int PageSize { get; set; }
 
-        public string CountryCode { get; set; }
+        public int[] PlaceIds { get; set; }
+        //public string CountryCode { get; set; }
         public string Keyword { get; set; }
     }
 
@@ -39,7 +40,8 @@ namespace UCosmic.Domain.Activities
 
             var queryable = _queryProcessor.Execute(new ActivityValuesByTerms
             {
-                CountryCode = query.CountryCode,
+                PlaceIds = query.PlaceIds,
+                //CountryCode = query.CountryCode,
                 EstablishmentDomain = query.EstablishmentDomain,
                 EstablishmentId = query.EstablishmentId,
                 Keyword = query.Keyword,

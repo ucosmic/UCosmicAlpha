@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using UCosmic.Domain.Establishments;
+using UCosmic.Domain.Places;
 
 namespace UCosmic.Domain.Activities
 {
@@ -18,7 +19,8 @@ namespace UCosmic.Domain.Activities
         public int? EstablishmentId { get; set; }
         public string EstablishmentDomain { get; set; }
 
-        public string CountryCode { get; set; }
+        public int[] PlaceIds { get; set; }
+        //public string CountryCode { get; set; }
         public string Keyword { get; set; }
     }
 
@@ -52,28 +54,40 @@ namespace UCosmic.Domain.Activities
                 queryable = queryable.Where(x => x.Activity.Person.Affiliations.Any(y => y.IsDefault && y.EstablishmentId == establishment.RevisionId));
             }
 
-            // when the query's country code is empty string, match all agreements regardless of country.
-            // when the query's country code is null, match agreements with partners that have no known country
-            if (!string.IsNullOrWhiteSpace(query.CountryCode))
+            if (query.PlaceIds != null && query.PlaceIds.Any())
             {
-                queryable = queryable.Where(x => x.Locations.Any(y => y.Place.IsCountry && y.Place.GeoPlanetPlace != null && query.CountryCode.Equals(y.Place.GeoPlanetPlace.Country.Code, StringComparison.OrdinalIgnoreCase)));
+                var placeTag = ActivityTagDomainType.Place.AsSentenceFragment();
+                var componentIds = _entities.Query<Place>().Where(x => query.PlaceIds.Contains(x.RevisionId))
+                    .SelectMany(x => x.Components.Select(y => y.RevisionId)).ToArray();
+                var placeIds = query.PlaceIds.Union(componentIds).ToArray();
+                queryable = queryable.Where(x =>
+                    x.Locations.Any(y =>
+                        placeIds.Contains(y.PlaceId) // match place exactly
+
+                            // match place's ancestors to queried placeId, unless global
+                        || (y.Place.Ancestors.Any(z => placeIds.Except(new[] { 1 }).Contains(z.AncestorId)))
+                    )
+                        // match based on place tags
+                    || x.Tags.Any(y => y.DomainTypeText == placeTag && y.DomainKey.HasValue && placeIds.Contains(y.DomainKey.Value))
+                );
             }
 
             if (!string.IsNullOrWhiteSpace(query.Keyword))
             {
                 // SQL Server can't handle a complex query like this with eager loading, so we break it up
                 // query locations separately from other fields, then get the id's of each separate query, then union them together
-                var nonLocationQueryable = queryable.Where(x => (x.Title != null && x.Title.Contains(query.Keyword))
+                queryable = queryable.Where(x => (x.Title != null && x.Title.Contains(query.Keyword))
+                //var nonLocationQueryable = queryable.Where(x => (x.Title != null && x.Title.Contains(query.Keyword))
                     || (x.ContentSearchable != null && x.ContentSearchable.Contains(query.Keyword))
                     || x.Activity.Person.DisplayName.Contains(query.Keyword)
                     || x.Tags.Any(y => y.Text.Contains(query.Keyword))
                     || x.Types.Any(y => y.Type.Type.Contains(query.Keyword))
                 );
-                var locationQueryable = queryable.Where(x => x.Locations.Any(y => y.Place.OfficialName.Contains(query.Keyword)));
-                var nonLocationIds = nonLocationQueryable.Select(x => x.RevisionId);
-                var locationIds = locationQueryable.Select(x => x.RevisionId);
-                var ids = nonLocationIds.Union(locationIds).Distinct().ToArray();
-                queryable = _entities.Query<ActivityValues>().Where(x => ids.Contains(x.RevisionId));
+                //var locationQueryable = queryable.Where(x => x.Locations.Any(y => y.Place.OfficialName.Contains(query.Keyword)));
+                //var nonLocationIds = nonLocationQueryable.Select(x => x.RevisionId);
+                //var locationIds = locationQueryable.Select(x => x.RevisionId);
+                //var ids = nonLocationIds.Union(locationIds).Distinct().ToArray();
+                //queryable = _entities.Query<ActivityValues>().Where(x => ids.Contains(x.RevisionId));
             }
 
             return queryable;

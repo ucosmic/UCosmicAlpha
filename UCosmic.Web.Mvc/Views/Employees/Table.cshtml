@@ -122,7 +122,7 @@
         var settings = { @* TODO: put this json stuff into an HTML Helper ($.parseJson('@Json.SerializeObject(Model)')) *@
             input: $.parseJSON('@Html.Raw(JsonConvert.SerializeObject(Model.Input, jsonSettings).Replace(@"\", @"\\").Replace("'", @"\'"))'),
             output: $.parseJSON('@Html.Raw(JsonConvert.SerializeObject(Model.Output, jsonSettings).Replace(@"\", @"\\").Replace("'", @"\'"))'),
-            countryOptions: $.parseJSON('@Html.Raw(JsonConvert.SerializeObject(Model.CountryOptions, jsonSettings).Replace(@"\", @"\\").Replace("'", @"\'"))'),
+            @*countryOptions: $.parseJSON('@Html.Raw(JsonConvert.SerializeObject(Model.CountryOptions, jsonSettings).Replace(@"\", @"\\").Replace("'", @"\'"))'),*@
         };
         var viewModel = new Activities.ViewModels.Search(settings);
         viewModel.applyBindings(document.getElementById('activity_search_form'));
@@ -459,14 +459,14 @@
                                     </div>
 
                                     @* COUNTRY DROPDOWN *@
-                                    <div class="field">
+                                    @*<div class="field">
                                         @Html.DropDownListFor(x => x.Input.CountryCode, Model.CountryOptions, "[All countries]", new
-                                    {
-                                        @class = "side",
-                                        Name = "countryCode",
-                                        data_bind = "value: countryCode, options: countryOptions, optionsCaption: '[All countries]', optionsText: 'text', optionsValue: 'value'"
-                                    })
-                                    </div>
+                                        {
+                                            @class = "side",
+                                            Name = "countryCode",
+                                            data_bind = "value: countryCode, options: countryOptions, optionsCaption: '[All countries]', optionsText: 'text', optionsValue: 'value'"
+                                        })
+                                    </div>*@
 
                                     @* SORT DROPDOWN *@
                                     <div class="field">

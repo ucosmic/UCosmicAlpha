@@ -15,7 +15,7 @@ namespace UCosmic.Web.Mvc.Models
         }
 
         public ActivitySearchPivot Pivot { get; set; }
-        public string CountryCode { get; set; }
+        //public string CountryCode { get; set; }
         public int[] PlaceIds { get; set; }
         public string[] PlaceNames { get; set; }
         public string Keyword { get; set; }
@@ -32,18 +32,19 @@ namespace UCosmic.Web.Mvc.Models
                     .ForMember(d => d.EstablishmentId, o => o.Ignore())
                     .ForMember(d => d.EstablishmentDomain, o => o.Ignore())
                     .ForMember(d => d.PersonId, o => o.Ignore())
+                    .ForMember(d => d.PlaceIds, o => o.MapFrom(s => s.PlaceIds == null ? null : s.PlaceIds.Where(x => x > 0)))
                     .ForMember(d => d.EagerLoad, o => o.Ignore())
 
                     // map the country code
-                    .ForMember(d => d.CountryCode, o => o.ResolveUsing(s =>
-                    {
-                        // a country code value of null implies finding results without a country code
-                        if (s.CountryCode == "-1" || "none".Equals(s.CountryCode, StringComparison.OrdinalIgnoreCase)) return null;
+                    //.ForMember(d => d.CountryCode, o => o.ResolveUsing(s =>
+                    //{
+                    //    // a country code value of null implies finding results without a country code
+                    //    if (s.CountryCode == "-1" || "none".Equals(s.CountryCode, StringComparison.OrdinalIgnoreCase)) return null;
 
-                        // a country code value of "" implies finding all results regardless of country code
-                        return "any".Equals(s.CountryCode, StringComparison.OrdinalIgnoreCase) || string.IsNullOrWhiteSpace(s.CountryCode)
-                            ? string.Empty : s.CountryCode;
-                    }))
+                    //    // a country code value of "" implies finding all results regardless of country code
+                    //    return "any".Equals(s.CountryCode, StringComparison.OrdinalIgnoreCase) || string.IsNullOrWhiteSpace(s.CountryCode)
+                    //        ? string.Empty : s.CountryCode;
+                    //}))
 
                     // map the order by
                     .ForMember(d => d.OrderBy, o => o.ResolveUsing(s =>

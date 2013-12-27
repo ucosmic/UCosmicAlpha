@@ -58,18 +58,18 @@ namespace UCosmic.Web.Mvc.Controllers
                 Output = Mapper.Map<PageOfActivitySearchResultModel>(results),
             };
 
-            using (var http = new HttpClient())
-            {
-                Debug.Assert(Request.Url != null);
-                var url = Url.RouteUrl(null, new { controller = "Countries", httproute = "", }, Request.Url.Scheme);
-                var countries = http.GetAsync(url).Result.Content.ReadAsAsync<IEnumerable<CountryApiModel>>().Result;
-                model.CountryOptions = countries.Select(x => new SelectListItem
-                {
-                    Text = x.Name,
-                    Value = x.Code,
-                    Selected = x.Code == input.CountryCode,
-                });
-            }
+            //using (var http = new HttpClient())
+            //{
+            //    Debug.Assert(Request.Url != null);
+            //    var url = Url.RouteUrl(null, new { controller = "Countries", httproute = "", }, Request.Url.Scheme);
+            //    var countries = http.GetAsync(url).Result.Content.ReadAsAsync<IEnumerable<CountryApiModel>>().Result;
+            //    model.CountryOptions = countries.Select(x => new SelectListItem
+            //    {
+            //        Text = x.Name,
+            //        Value = x.Code,
+            //        Selected = x.Code == input.CountryCode,
+            //    });
+            //}
 
             return View(model);
         }
