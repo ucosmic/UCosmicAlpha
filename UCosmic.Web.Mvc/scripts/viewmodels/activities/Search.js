@@ -28,7 +28,6 @@ var Activities;
             }
             Search.prototype.applyBindings = function (element) {
                 ko.applyBindings(this, element);
-
                 this._applyKendo();
                 this._applySubscriptions();
             };
@@ -67,7 +66,13 @@ var Activities;
                         return;
                     if (!inputVal && dataSource != 'empty') {
                         dataSource = 'empty';
-                        widget.setDataSource(emptyDataSource);
+                        widget.value('');
+                        _this.$placeIds.val('');
+                        if (_this.settings.input.placeIds && _this.settings.input.placeIds.length) {
+                            _this._submitForm();
+                        } else {
+                            widget.setDataSource(emptyDataSource);
+                        }
                         return;
                     }
                     if (inputVal && dataSource != 'server') {
@@ -83,17 +88,29 @@ var Activities;
                     filter: 'contains',
                     dataSource: hasPlace ? serverDataSource : emptyDataSource,
                     select: function (e) {
-                        if (e.item.text() == emptyDataItem.officialName) {
-                            e.sender.input.val('');
-                            e.sender.search('');
+                        var dataItem = e.sender.dataItem(e.item.index());
+                        if (dataItem.officialName == emptyDataItem.officialName) {
+                            _this.$placeIds.val('');
+                            e.preventDefault();
                             return;
                         }
 
-                        setTimeout(function () {
-                            if (!_this.settings.input.placeIds || !_this.settings.input.placeIds.length || _this.settings.input.placeIds[0] != parseInt(e.sender.value())) {
+                        if (!_this.settings.input.placeIds || !_this.settings.input.placeIds.length || _this.settings.input.placeIds[0] != dataItem.placeId) {
+                            _this._submitForm();
+                        }
+                    },
+                    change: function (e) {
+                        var dataItem = e.sender.dataItem(e.sender.select());
+                        if (!dataItem) {
+                            _this.$placeIds.val();
+                            e.sender.value('');
+                            checkDataSource(e.sender);
+                        } else {
+                            _this.$placeIds.val(dataItem.placeId);
+                            if (!_this.settings.input.placeIds || !_this.settings.input.placeIds.length || _this.settings.input.placeIds[0] != dataItem.placeId) {
                                 _this._submitForm();
                             }
-                        }, 0);
+                        }
                     },
                     dataBound: function (e) {
                         var widget = e.sender;
@@ -102,6 +119,7 @@ var Activities;
 
                         if (!inputInitialized) {
                             input.attr('name', 'placeNames');
+                            _this.$location.attr('name', '');
                             input.on('keydown', function () {
                                 setTimeout(function () {
                                     checkDataSource(widget);
@@ -118,9 +136,6 @@ var Activities;
                             widget.close();
                             input.blur();
                             hasPlace = false;
-                            setTimeout(function () {
-                                _this.$location.val(_this.settings.input.placeIds[0]);
-                            }, 0);
                         }
                     }
                 });

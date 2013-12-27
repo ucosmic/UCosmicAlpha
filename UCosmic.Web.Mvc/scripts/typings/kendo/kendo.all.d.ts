@@ -800,6 +800,7 @@ declare module kendo.ui {
         open(): void;
         refresh(): void;
         search(word: string): void;
+        select(): number;
         select(li: any): number;
         setDataSource(dataSource: kendo.data.DataSource): void;
         suggest(value: string): void;
@@ -859,6 +860,7 @@ declare module kendo.ui {
 
     interface ComboBoxSelectEvent extends ComboBoxEvent {
         item?: JQuery;
+        preventDefault: Function;
     }
 
 

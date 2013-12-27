@@ -25,16 +25,15 @@ module Activities.ViewModels {
 
         $form: JQuery;
         $location: JQuery;
+        $placeIds: JQuery;
         loadingSpinner = new App.Spinner()
 
         constructor(public settings: SearchSettings) {
             this.pager.apply(this.settings.output);
         }
 
-        //private _areBindingsApplied = ko.observable(false);
         applyBindings(element: Element): void {
             ko.applyBindings(this, element);
-            //this._areBindingsApplied(true);
             this._applyKendo();
             this._applySubscriptions();
         }
@@ -60,7 +59,7 @@ module Activities.ViewModels {
                         }
                         return data;
                     }
-                }
+                },
             });
             var hasPlace = (this.settings.input.placeIds && this.settings.input.placeIds.length
                 && this.settings.input.placeNames && this.settings.input.placeNames.length
@@ -72,7 +71,13 @@ module Activities.ViewModels {
                 if (inputVal && dataSource == 'server') return;
                 if (!inputVal && dataSource != 'empty') {
                     dataSource = 'empty'
-                    widget.setDataSource(emptyDataSource);
+                    widget.value('');
+                    this.$placeIds.val('');
+                    if (this.settings.input.placeIds && this.settings.input.placeIds.length) {
+                        this._submitForm();
+                    } else {
+                        widget.setDataSource(emptyDataSource);
+                    }
                     return;
                 }
                 if (inputVal && dataSource != 'server') {
@@ -88,18 +93,31 @@ module Activities.ViewModels {
                 filter: 'contains',
                 dataSource: hasPlace ? serverDataSource : emptyDataSource,
                 select: (e: kendo.ui.ComboBoxSelectEvent): void => {
-                    if (e.item.text() == emptyDataItem.officialName) {
-                        e.sender.input.val('');
-                        e.sender.search('');
+                    var dataItem = e.sender.dataItem(e.item.index());
+                    if (dataItem.officialName == emptyDataItem.officialName) {
+                        this.$placeIds.val('');
+                        e.preventDefault();
                         return;
                     }
 
-                    setTimeout((): void=> {
+                    if (!this.settings.input.placeIds || !this.settings.input.placeIds.length ||
+                        this.settings.input.placeIds[0] != dataItem.placeId) {
+                        this._submitForm();
+                    }
+                },
+                change: (e: kendo.ui.ComboBoxEvent): void => {
+                    var dataItem = e.sender.dataItem(e.sender.select());
+                    if (!dataItem) {
+                        this.$placeIds.val();
+                        e.sender.value('');
+                        checkDataSource(e.sender);
+                    } else {
+                        this.$placeIds.val(dataItem.placeId);
                         if (!this.settings.input.placeIds || !this.settings.input.placeIds.length ||
-                            this.settings.input.placeIds[0] != parseInt(e.sender.value())) {
+                            this.settings.input.placeIds[0] != dataItem.placeId) {
                             this._submitForm();
                         }
-                    }, 0);
+                    }
                 },
                 dataBound: (e: kendo.ui.ComboBoxEvent): void => {
                     var widget = e.sender;
@@ -108,6 +126,7 @@ module Activities.ViewModels {
 
                     if (!inputInitialized) {
                         input.attr('name', 'placeNames');
+                        this.$location.attr('name', '');
                         input.on('keydown', (): void => {
                             setTimeout((): void => { checkDataSource(widget); }, 0);
                         });
@@ -123,9 +142,6 @@ module Activities.ViewModels {
                         widget.close();
                         input.blur();
                         hasPlace = false;
-                        setTimeout((): void => {
-                            this.$location.val(this.settings.input.placeIds[0]);
-                        }, 0)
                     }
                 }
             });
