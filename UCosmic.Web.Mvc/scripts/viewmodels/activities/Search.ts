@@ -104,6 +104,8 @@ module Activities.ViewModels {
 
                     if (!this.settings.input.placeIds || !this.settings.input.placeIds.length ||
                         this.settings.input.placeIds[0] != dataItem.placeId) {
+                        e.sender.input.val(dataItem.officialName);
+                        this.$location.val(dataItem.officialName);
                         this._submitForm();
                     }
                 },
@@ -114,6 +116,8 @@ module Activities.ViewModels {
                         e.sender.value('');
                         checkDataSource(e.sender);
                     } else {
+                        e.sender.input.val(dataItem.officialName);
+                        this.$location.val(dataItem.officialName);
                         this.$placeIds.val(dataItem.placeId);
                         if (!this.settings.input.placeIds || !this.settings.input.placeIds.length ||
                             this.settings.input.placeIds[0] != dataItem.placeId) {

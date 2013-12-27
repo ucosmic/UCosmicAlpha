@@ -98,6 +98,8 @@ var Activities;
                         }
 
                         if (!_this.settings.input.placeIds || !_this.settings.input.placeIds.length || _this.settings.input.placeIds[0] != dataItem.placeId) {
+                            e.sender.input.val(dataItem.officialName);
+                            _this.$location.val(dataItem.officialName);
                             _this._submitForm();
                         }
                     },
@@ -108,6 +110,8 @@ var Activities;
                             e.sender.value('');
                             checkDataSource(e.sender);
                         } else {
+                            e.sender.input.val(dataItem.officialName);
+                            _this.$location.val(dataItem.officialName);
                             _this.$placeIds.val(dataItem.placeId);
                             if (!_this.settings.input.placeIds || !_this.settings.input.placeIds.length || _this.settings.input.placeIds[0] != dataItem.placeId) {
                                 _this._submitForm();
