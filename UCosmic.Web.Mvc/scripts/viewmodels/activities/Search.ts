@@ -96,6 +96,16 @@ module Activities.ViewModels {
                 dataSource: hasPlace ? serverDataSource : emptyDataSource,
                 select: (e: kendo.ui.ComboBoxSelectEvent): void => {
                     var dataItem = e.sender.dataItem(e.item.index());
+
+                    if (dataItem.placeId == -1) {
+                        e.sender.value('');
+                        e.sender.input.val('');
+                        this.$placeIds.val('');
+                        e.preventDefault();
+                        this._submitForm();
+                        return;
+                    }
+
                     if (dataItem.officialName == emptyDataItem.officialName) {
                         this.$placeIds.val('');
                         e.preventDefault();
@@ -113,7 +123,7 @@ module Activities.ViewModels {
                 change: (e: kendo.ui.ComboBoxEvent): void => {
                     var dataItem = e.sender.dataItem(e.sender.select());
                     if (!dataItem) {
-                        this.$placeIds.val();
+                        this.$placeIds.val('');
                         e.sender.value('');
                         checkDataSource(e.sender);
                     } else {
@@ -126,6 +136,9 @@ module Activities.ViewModels {
                         }
                     }
                 },
+                //open: (e: kendo.ui.ComboBoxEvent): boolean => {
+                //    return false;
+                //},
                 dataBound: (e: kendo.ui.ComboBoxEvent): void => {
                     var widget = e.sender;
                     var input = widget.input;
@@ -139,6 +152,7 @@ module Activities.ViewModels {
                         });
                         if (hasPlace && inputVal) {
                             widget.search(inputVal);
+                            widget.close();
                         }
                         inputInitialized = true;
                     }
@@ -150,6 +164,15 @@ module Activities.ViewModels {
                         input.blur();
                         hasPlace = false;
                     }
+
+                    var value = e.sender.value();
+                    if (value) {
+                        var dataSource = e.sender.dataSource;
+                        var data = dataSource.data();
+                        var hasClearer = Enumerable.From(data).Any(function (x: any): boolean {return x.placeId == -1 });
+                        if (!hasClearer) dataSource.add({ officialName: '[Clear current selection]', placeId: -1 })
+                    }
+
                 }
             });
             var comboBox: kendo.ui.ComboBox = this.$location.data('kendoComboBox');

@@ -89,6 +89,16 @@ var Activities;
                     dataSource: hasPlace ? serverDataSource : emptyDataSource,
                     select: function (e) {
                         var dataItem = e.sender.dataItem(e.item.index());
+
+                        if (dataItem.placeId == -1) {
+                            e.sender.value('');
+                            e.sender.input.val('');
+                            _this.$placeIds.val('');
+                            e.preventDefault();
+                            _this._submitForm();
+                            return;
+                        }
+
                         if (dataItem.officialName == emptyDataItem.officialName) {
                             _this.$placeIds.val('');
                             e.preventDefault();
@@ -105,7 +115,7 @@ var Activities;
                     change: function (e) {
                         var dataItem = e.sender.dataItem(e.sender.select());
                         if (!dataItem) {
-                            _this.$placeIds.val();
+                            _this.$placeIds.val('');
                             e.sender.value('');
                             checkDataSource(e.sender);
                         } else {
@@ -132,6 +142,7 @@ var Activities;
                             });
                             if (hasPlace && inputVal) {
                                 widget.search(inputVal);
+                                widget.close();
                             }
                             inputInitialized = true;
                         } else if (hasPlace) {
@@ -141,6 +152,17 @@ var Activities;
                             widget.close();
                             input.blur();
                             hasPlace = false;
+                        }
+
+                        var value = e.sender.value();
+                        if (value) {
+                            var dataSource = e.sender.dataSource;
+                            var data = dataSource.data();
+                            var hasClearer = Enumerable.From(data).Any(function (x) {
+                                return x.placeId == -1;
+                            });
+                            if (!hasClearer)
+                                dataSource.add({ officialName: '[Clear current selection]', placeId: -1 });
                         }
                     }
                 });
