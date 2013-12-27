@@ -2605,6 +2605,7 @@
     <Content Include="Views\People\Index_Spike.cshtml" />
     <Content Include="Views\People\_PersonalInfo-Spike.cshtml" />
     <Content Include="Views\People\_AffiliationsEditor.cshtml" />
+    <Content Include="Views\Employees\_ActivityDatesDisplay.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

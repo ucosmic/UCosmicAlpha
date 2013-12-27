@@ -1,0 +1,39 @@
+﻿@model dynamic
+@{
+    var startsOn = (DateTime?)Model.StartsOn;
+    var endsOn = (DateTime?)Model.EndsOn;
+    var onGoing = (bool?)Model.OnGoing;
+    var startsFormat = (string)Model.StartsFormat;
+    var endsFormat = (string)Model.EndsFormat;
+}
+@if (!startsOn.HasValue && !endsOn.HasValue && (!onGoing.HasValue || !onGoing.Value))
+{
+    <text>[Undated]</text>
+}
+else if (!startsOn.HasValue)
+{
+    if (endsOn.HasValue)
+    {
+        <text>@endsOn.Value.ToString(endsFormat ?? "M/d/yyyy")</text>
+    }
+    else // Debug.Assert(onGoing == true)
+    {
+        <text>(Ongoing)</text>
+    }
+}
+else
+{
+    if (onGoing.HasValue && onGoing.Value)
+    {
+        <span>@startsOn.Value.ToString(startsFormat ?? "M/d/yyyy") (Ongoing)</span>
+    }
+    else if (endsOn.HasValue)
+    {
+        <span style="white-space: nowrap;">@startsOn.Value.ToString(startsFormat ?? "M/d/yyyy") -</span>
+        <span>@endsOn.Value.ToString(endsFormat ?? "M/d/yyyy")</span>
+    }
+    else
+    {
+        <text>@startsOn.Value.ToString(startsFormat ?? "M/d/yyyy")</text>
+    }
+}

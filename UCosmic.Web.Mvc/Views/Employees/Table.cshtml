@@ -296,37 +296,7 @@
 
                                     @* DATES COLUMN *@
                                     <td style="vertical-align: top;">
-                                        @if (!activity.StartsOn.HasValue && !activity.EndsOn.HasValue && (!activity.OnGoing.HasValue || !activity.OnGoing.Value))
-                                        {
-                                            @: [Undated]
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    }
-                                        else if (!activity.StartsOn.HasValue)
-                                        {
-                                            if (activity.EndsOn.HasValue)
-                                            {
-                                            @activity.EndsOn.Value.ToString(activity.EndsFormat ?? "M/d/yyyy")
-                                            }
-                                            else if (activity.OnGoing.Value)
-                                            {
-                                            @: (Ongoing)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        }
-                                        }
-                                        else
-                                        {
-                                            if (activity.OnGoing.HasValue && activity.OnGoing.Value)
-                                            {
-                                            <span>@activity.StartsOn.Value.ToString(activity.StartsFormat ?? "M/d/yyyy") (Ongoing)</span>
-                                            }
-                                            else if (activity.EndsOn.HasValue)
-                                            {
-                                            <span style="white-space: nowrap;">@activity.StartsOn.Value.ToString(activity.StartsFormat ?? "M/d/yyyy") -</span>
-                                            <span>@activity.EndsOn.Value.ToString(activity.EndsFormat ?? "M/d/yyyy")</span>
-                                            }
-                                            else
-                                            {
-                                            @activity.StartsOn.Value.ToString(activity.StartsFormat ?? "M/d/yyyy")
-                                            }
-                                        }
+                                        @{Html.RenderPartial(MVC.Employees.Views._ActivityDatesDisplay, activity);}
                                     </td>
                                 </tr>
                             }
@@ -391,37 +361,7 @@
 
                                     @* DATES COLUMN*@
                                     <td style="vertical-align: top;">
-                                        @if (!activity.StartsOn.HasValue && !activity.EndsOn.HasValue && (!activity.OnGoing.HasValue || !activity.OnGoing.Value))
-                                        {
-                                            @: [Undated]
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    }
-                                        else if (!activity.StartsOn.HasValue)
-                                        {
-                                            if (activity.EndsOn.HasValue)
-                                            {
-                                            @activity.EndsOn.Value.ToString(activity.EndsFormat ?? "M/d/yyyy")
-                                            }
-                                            else if (activity.OnGoing.Value)
-                                            {
-                                            @: (Ongoing)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        }
-                                        }
-                                        else
-                                        {
-                                            if (activity.OnGoing.HasValue && activity.OnGoing.Value)
-                                            {
-                                            <span>@activity.StartsOn.Value.ToString(activity.StartsFormat ?? "M/d/yyyy") (Ongoing)</span>
-                                            }
-                                            else if (activity.EndsOn.HasValue)
-                                            {
-                                            <span style="white-space: nowrap;">@activity.StartsOn.Value.ToString(activity.StartsFormat ?? "M/d/yyyy") -</span>
-                                            <span>@activity.EndsOn.Value.ToString(activity.EndsFormat ?? "M/d/yyyy")</span>
-                                            }
-                                            else
-                                            {
-                                            @activity.StartsOn.Value.ToString(activity.StartsFormat ?? "M/d/yyyy")
-                                            }
-                                        }
+                                        @{Html.RenderPartial(MVC.Employees.Views._ActivityDatesDisplay, activity);}
                                     </td>
                                 </tr>
                             }
@@ -460,13 +400,13 @@
 
                                     @* COUNTRY DROPDOWN *@
                                     @*<div class="field">
-                                        @Html.DropDownListFor(x => x.Input.CountryCode, Model.CountryOptions, "[All countries]", new
-                                        {
-                                            @class = "side",
-                                            Name = "countryCode",
-                                            data_bind = "value: countryCode, options: countryOptions, optionsCaption: '[All countries]', optionsText: 'text', optionsValue: 'value'"
-                                        })
-                                    </div>*@
+                                            @Html.DropDownListFor(x => x.Input.CountryCode, Model.CountryOptions, "[All countries]", new
+                                            {
+                                                @class = "side",
+                                                Name = "countryCode",
+                                                data_bind = "value: countryCode, options: countryOptions, optionsCaption: '[All countries]', optionsText: 'text', optionsValue: 'value'"
+                                            })
+                                        </div>*@
 
                                     @* SORT DROPDOWN *@
                                     <div class="field">

@@ -110,11 +110,13 @@ namespace UCosmic.Web.Mvc.Controllers
             public _ViewNamesClass ViewNames { get { return s_ViewNames; } }
             public class _ViewNamesClass
             {
+                public readonly string _ActivityDatesDisplay = "_ActivityDatesDisplay";
                 public readonly string _Bib = "_Bib";
                 public readonly string Index = "Index";
                 public readonly string Table = "Table";
                 public readonly string TenantIndex = "TenantIndex";
             }
+            public readonly string _ActivityDatesDisplay = "~/Views/Employees/_ActivityDatesDisplay.cshtml";
             public readonly string _Bib = "~/Views/Employees/_Bib.cshtml";
             public readonly string Index = "~/Views/Employees/Index.cshtml";
             public readonly string Table = "~/Views/Employees/Table.cshtml";
