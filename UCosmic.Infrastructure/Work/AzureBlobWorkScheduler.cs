@@ -126,11 +126,18 @@ namespace UCosmic.Work
                 return Enumerable.Empty<ScheduledJob>();
 
             var schedule = intermediate
-                .Select(x => new ScheduledJob
+                .Select(x =>
                 {
-                    Job = (IDefineWork)JsonConvert.DeserializeObject(x.Job, Type.GetType(x.Type)),
-                    OnUtc = x.OnUtc,
+                    var type = Type.GetType(x.Type);
+                    var deserializedObject = JsonConvert.DeserializeObject(x.Job, type);
+                    var jobDefinition = deserializedObject as IDefineWork;
+                    return jobDefinition != null ? new ScheduledJob
+                    {
+                        Job = jobDefinition,
+                        OnUtc = x.OnUtc,
+                    } : null;
                 })
+                .Where(x => x != null)
                 .ToArray();
 
             return schedule;
@@ -148,7 +155,14 @@ namespace UCosmic.Work
                     Job = JsonConvert.SerializeObject(x.Job),
                     OnUtc = x.OnUtc,
                 })
-                .ToArray();
+                .ToList();
+
+            var lastSchedule = JsonConvert.DeserializeObject<IntermediateSchedule[]>(LoadIntermediateSchedule());
+            foreach (var missingJob in lastSchedule)
+            {
+                if (intermediate.Any(x => x.Type == missingJob.Type)) continue;
+                intermediate.Add(missingJob);
+            }
 
             var json = JsonConvert.SerializeObject(intermediate);
             var bytes = json.AsByteArray();

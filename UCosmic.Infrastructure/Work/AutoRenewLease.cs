@@ -9,8 +9,8 @@ namespace UCosmic.Work
     {
         private readonly CloudBlockBlob _blob;
         public readonly string LeaseId;
-        private Thread _renewalThread;
-        private volatile bool _isRenewing = true;
+        private Timer _renewalTimer;
+        private bool _isRenewing = true;
         private bool _disposed;
 
         public bool HasLease { get { return LeaseId != null; } }
@@ -24,22 +24,12 @@ namespace UCosmic.Work
             if (!HasLease) return;
 
             // keep renewing lease
-            _renewalThread = new Thread(() =>
+            var fortySeconds = TimeSpan.FromSeconds(40);
+            _renewalTimer = new Timer(x =>
             {
-                try
-                {
-                    while (_isRenewing)
-                    {
-                        Thread.Sleep(TimeSpan.FromSeconds(40.0));
-                        if (_isRenewing)
-                            blob.RenewLease(AccessCondition.GenerateLeaseCondition(LeaseId));
-                    }
-                }
-                // ReSharper disable EmptyGeneralCatchClause
-                catch { }
-                // ReSharper restore EmptyGeneralCatchClause
-            });
-            _renewalThread.Start();
+                if (_isRenewing)
+                    blob.RenewLease(AccessCondition.GenerateLeaseCondition(LeaseId));
+            }, null, fortySeconds, fortySeconds);
         }
 
         ~AutoRenewLease()
@@ -53,15 +43,15 @@ namespace UCosmic.Work
             GC.SuppressFinalize(this);
         }
 
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (_disposed) return;
-            if (disposing && _renewalThread != null)
+            if (disposing && _renewalTimer != null)
             {
-                //_renewalThread.Abort();
                 _isRenewing = false;
+                _renewalTimer.Dispose();
                 _blob.ReleaseLease(AccessCondition.GenerateLeaseCondition(LeaseId));
-                _renewalThread = null;
+                _renewalTimer = null;
             }
             _disposed = true;
         }
