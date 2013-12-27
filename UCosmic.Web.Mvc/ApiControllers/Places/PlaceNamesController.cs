@@ -22,13 +22,13 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
         [CacheHttpGet(Duration = 3600)]
         [GET("names/autocomplete")]
-        public IEnumerable<PlaceNameAutoCompleteModel> GetAutoComplete(string terms = null)
+        public IEnumerable<PlaceNameAutoCompleteModel> GetAutoComplete(string terms = null, int maxResults = 10)
         {
             if (string.IsNullOrWhiteSpace(terms)) return Enumerable.Empty<PlaceNameAutoCompleteModel>();
             var query = new AutoCompletePlaceName
             {
                 Terms = terms,
-                MaxResults = 15,
+                MaxResults = maxResults,
             };
             var documents = _queries.Execute(query);
             var models = Mapper.Map<PlaceNameAutoCompleteModel[]>(documents);

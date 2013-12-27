@@ -49,7 +49,8 @@ var Activities;
                         parameterMap: function (data, action) {
                             if (action == 'read' && data && data.filter && data.filter.filters && data.filter.filters.length) {
                                 return {
-                                    terms: data.filter.filters[0].value
+                                    terms: data.filter.filters[0].value,
+                                    maxResults: 20
                                 };
                             }
                             return data;
@@ -83,6 +84,7 @@ var Activities;
                 };
                 this.$location.kendoComboBox({
                     animation: false,
+                    height: 420,
                     dataTextField: 'officialName',
                     dataValueField: 'placeId',
                     filter: 'contains',
@@ -139,6 +141,8 @@ var Activities;
                         }
                     }
                 });
+                var comboBox = this.$location.data('kendoComboBox');
+                comboBox.list.addClass('k-ucosmic');
             };
 
             Search.prototype._applySubscriptions = function () {

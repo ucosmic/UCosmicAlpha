@@ -790,6 +790,7 @@ declare module kendo.ui {
         element: JQuery;
         input: JQuery;
         wrapper: JQuery;
+        list: JQuery;
         constructor(element: Element, options?: ComboBoxOptions);
         options: ComboBoxOptions;
         dataSource: kendo.data.DataSource;

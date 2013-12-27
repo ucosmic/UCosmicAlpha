@@ -55,6 +55,7 @@ module Activities.ViewModels {
                         if (action == 'read' && data && data.filter && data.filter.filters && data.filter.filters.length) {
                             return {
                                 terms: data.filter.filters[0].value,
+                                maxResults: 20,
                             };
                         }
                         return data;
@@ -88,6 +89,7 @@ module Activities.ViewModels {
             }
             this.$location.kendoComboBox({
                 animation: false,
+                height: 420,
                 dataTextField: 'officialName',
                 dataValueField: 'placeId',
                 filter: 'contains',
@@ -145,6 +147,8 @@ module Activities.ViewModels {
                     }
                 }
             });
+            var comboBox: kendo.ui.ComboBox = this.$location.data('kendoComboBox');
+            comboBox.list.addClass('k-ucosmic');
         }
 
         private _applySubscriptions(): void {
