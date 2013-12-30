@@ -129,12 +129,15 @@ module People.ViewModels {
 
         isEditing: KnockoutObservable<boolean>; // mode for tracking whether to display form or read-only view to user
 
-        edit(): void {
+        edit(me): void {
+            this.owner.startEditingAffiliations(me);
             this.bindEstablishmentEditors(this.establishmentId());
             this.isEditing(true);
         }
 
         cancel(): void {
+            this.owner.cancelClicked = false;
+            this.owner.$edit_affiliations_dialog.data("kendoWindow").close();
             var affiliationId = this.affiliationId();
             if (!affiliationId) {
                 this.owner.editableAffiliations.remove(this);
@@ -214,6 +217,8 @@ module People.ViewModels {
             Servers.PutAffiliation(data, this.establishmentId() || data.establishmentId)
                 .done((): void => {
                     this.owner.affiliationData.reload();
+                    this.owner.cancelClicked = false;
+                    this.owner.$edit_affiliations_dialog.data("kendoWindow").close();
                 })
                 .fail((xhr: JQueryXHR): void => {
                     App.Failures.message(xhr, 'while trying to save your affiliation', true);
@@ -461,6 +466,7 @@ module People.ViewModels {
         personId: number = 0;
         editMode = ko.observable<boolean>(false);
         saveSpinner = new App.Spinner({ delay: 200, });
+        cancelClicked: boolean = true;
         //personId2: number;
         preferredTitle = ko.observable<string>();
         $edit_affiliations_dialog = $("#edit_affiliations_dialog");
@@ -479,6 +485,17 @@ module People.ViewModels {
                     //this.kendoWindowBug.val = 0;
                     $("html, body").css("overflow", "");
                     $("#addAContact").fadeIn(500);
+
+                    var editableAffiliations = this.editableAffiliations();
+                    var editingAffiliation = Enumerable.From(editableAffiliations)
+                        .FirstOrDefault(undefined, function (x: AffiliationSpike): boolean {
+                            return x.isEditing();
+                        });
+                    if (this.cancelClicked) {
+                        editingAffiliation.cancel();
+                    }
+                    this.cancelClicked = true;
+                    //this.editableAffiliations.(false);
                     //this.clearContact();
                 },
                 activate: () => {

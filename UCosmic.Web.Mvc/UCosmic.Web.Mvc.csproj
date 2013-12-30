@@ -826,6 +826,7 @@
     <Content Include="images\icons\maps\gulfOfMexicoHover.png" />
     <Content Include="images\icons\maps\indianOcean.png" />
     <Content Include="images\icons\maps\indianOceanHover.png" />
+    <Content Include="images\icons\maps\mapPimple.png" />
     <Content Include="images\icons\maps\pacificOcean.png" />
     <Content Include="images\icons\maps\pacificOceanHover.png" />
     <Content Include="images\icons\maps\southernOcean.png" />

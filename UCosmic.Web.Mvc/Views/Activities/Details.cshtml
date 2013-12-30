@@ -13,12 +13,14 @@
 
     <script type="text/javascript">
         var activityData = $.parseJSON('@Html.Raw(Json.Encode(Model))');
+        var imagePimpleUrl = '@Url.Content("~/images/icons/maps/mapPimple.png")';
+
     </script>
 
     @Scripts.Render("~/bundles/activityPublicView")
 
     <script type="text/javascript">
-        var viewModel = new Activities.ViewModels.PublicView(activityData);
+        var viewModel = new Activities.ViewModels.PublicView(activityData, imagePimpleUrl);
     </script>
 
 }

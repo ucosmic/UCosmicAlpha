@@ -4,11 +4,11 @@
     }*@
 <div>
     <ul style="font-size: 20px;" data-bind="foreach: editableAffiliations">
-        <li style="margin-bottom: 1em;" data-bind="click: $root.startEditingAffiliations, css: { clickable: !$root.editMode() }">
-            <div>
+        <li style="margin-bottom: 1em;">
+            <div style="overflow: hidden;">
                 <span style="float: left">
-                    <strong style="display: block" data-bind="text: facultyRank().text(), visible: hasFacultyRanks() && facultyRank() && facultyRank().text() != 'Other'"></strong>
-                    <strong style="display: block" data-bind="html: jobTitlesHtml, visible: jobTitles"></strong>
+                    <strong style="display: block; line-height: 24px;" data-bind="text: facultyRank().text(), visible: hasFacultyRanks() && facultyRank() && facultyRank().text() != 'Other'"></strong>
+                    <strong style="display: block; line-height: 28px;" data-bind="html: jobTitlesHtml, visible: jobTitles"></strong>
                 </span>
                 <div style="float: right; width: 70px; text-align: right;">
                     @* TODO: wire this up to gray disabled images *@
@@ -21,11 +21,12 @@
                          style="margin-left: 8px;" />
                     <!-- /ko -->
                 </div>
-                <br />
             </div>
-            <ul data-bind="foreach: establishments.reverse()">
-                <li data-bind="if: ($index() !== ($parent.establishments().length - 1))"><span data-bind="text: displayName"></span></li>
-            </ul>
+            <div>
+                <ul data-bind="foreach: establishments.reverse()">
+                    <li data-bind="if: ($index() !== ($parent.establishments().length - 1))"><span data-bind="text: displayName"></span></li>
+                </ul>
+            </div>
         </li>
     </ul>
     @* ADD NEW - TODO: this should be a button, not a hyperlink *@
@@ -61,7 +62,7 @@
 
                     @* ITEMS *@
                     <div data-bind="visible: editableAffiliations().length">
-                        <ul data-bind="foreach: editableAffiliations" class="affiliations">
+                        <ul id="editable_affiliations" data-bind="foreach: editableAffiliations" class="affiliations">
                             <li>
 
 
@@ -84,9 +85,9 @@
                                         </div>
                                         <div>
                                             <textarea placeholder="[Optional - Title(s) and department(s) not identified above or below]"
-                                                      data-bind="value: jobTitles, visible: hasFacultyRanks"></textarea>
+                                                      data-bind="value: jobTitles, visible: hasFacultyRanks, valueUpdate: 'afterkeydown'"></textarea>
                                             <textarea placeholder="[Optional - Titles(s) and department(s) not identified below]"
-                                                      data-bind="value: jobTitles, visible: !hasFacultyRanks()"></textarea>
+                                                      data-bind="value: jobTitles, visible: !hasFacultyRanks(), valueUpdate: 'afterkeydown'"></textarea>
                                         </div>
                                     </div>
                                     <div style="margin: 1em 0;">
@@ -109,7 +110,7 @@
                                         </ul>
                                     </div>
                                     <div style="margin-top: 1em;">
-                                        <input type="button" data-bind="click: save, disable: saveSpinner.isRunning" value="Save" class="save link" />
+                                        <input type="button" data-bind="click: save, disable: saveSpinner.isRunning" value="Save" class="save" />
                                         <input type="button" class="link" value="Cancel" data-bind="click: cancel, disable: saveSpinner.isRunning" />
                                         <span data-bind="visible: saveSpinner.isVisible" style="display: inline-block; margin-left: 12px;">
                                             <img src="~/images/icons/spinner/spinner-24-blue.gif" alt="" data-bind="visible: saveSpinner.isVisible" style="display: none;" />

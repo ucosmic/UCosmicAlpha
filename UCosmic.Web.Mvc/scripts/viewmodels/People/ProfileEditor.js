@@ -113,12 +113,15 @@ var People;
                 }, 0);
                 this._initValidation();
             }
-            AffiliationSpike.prototype.edit = function () {
+            AffiliationSpike.prototype.edit = function (me) {
+                this.owner.startEditingAffiliations(me);
                 this.bindEstablishmentEditors(this.establishmentId());
                 this.isEditing(true);
             };
 
             AffiliationSpike.prototype.cancel = function () {
+                this.owner.cancelClicked = false;
+                this.owner.$edit_affiliations_dialog.data("kendoWindow").close();
                 var affiliationId = this.affiliationId();
                 if (!affiliationId) {
                     this.owner.editableAffiliations.remove(this);
@@ -182,6 +185,8 @@ var People;
                 this.saveSpinner.start();
                 People.Servers.PutAffiliation(data, this.establishmentId() || data.establishmentId).done(function () {
                     _this.owner.affiliationData.reload();
+                    _this.owner.cancelClicked = false;
+                    _this.owner.$edit_affiliations_dialog.data("kendoWindow").close();
                 }).fail(function (xhr) {
                     App.Failures.message(xhr, 'while trying to save your affiliation', true);
                     _this.saveSpinner.stop();
@@ -342,6 +347,7 @@ var People;
                 this.personId = 0;
                 this.editMode = ko.observable(false);
                 this.saveSpinner = new App.Spinner({ delay: 200 });
+                this.cancelClicked = true;
                 this.preferredTitle = ko.observable();
                 this.$edit_affiliations_dialog = $("#edit_affiliations_dialog");
                 this.editableAffiliations = ko.observableArray();
@@ -376,6 +382,15 @@ var People;
                     close: function () {
                         $("html, body").css("overflow", "");
                         $("#addAContact").fadeIn(500);
+
+                        var editableAffiliations = _this.editableAffiliations();
+                        var editingAffiliation = Enumerable.From(editableAffiliations).FirstOrDefault(undefined, function (x) {
+                            return x.isEditing();
+                        });
+                        if (_this.cancelClicked) {
+                            editingAffiliation.cancel();
+                        }
+                        _this.cancelClicked = true;
                     },
                     activate: function () {
                         if (positioned === false) {
