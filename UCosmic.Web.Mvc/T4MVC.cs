@@ -3980,6 +3980,7 @@ namespace Links
                 public static readonly string gulfOfMexicoHover_png = Url("gulfOfMexicoHover.png");
                 public static readonly string indianOcean_png = Url("indianOcean.png");
                 public static readonly string indianOceanHover_png = Url("indianOceanHover.png");
+                public static readonly string mapPimple_png = Url("mapPimple.png");
                 public static readonly string pacificOcean_png = Url("pacificOcean.png");
                 public static readonly string pacificOceanHover_png = Url("pacificOceanHover.png");
                 public static readonly string southernOcean_png = Url("southernOcean.png");

@@ -370,6 +370,26 @@ var People;
                 });
                 this.affiliationData.ready();
             }
+            ProfileSpike.prototype.facultyRankAutoUpdate = function (data) {
+                if (data.value() == undefined) {
+                    return null;
+                }
+                var match = ko.utils.arrayFirst(data.options(), function (item) {
+                    return data.value() === item.value;
+                });
+                return match.text;
+            };
+
+            ProfileSpike.prototype.affiliatedEstablishmentsAutoUpdate = function (data) {
+                if (data.value() == undefined) {
+                    return null;
+                }
+                var match = ko.utils.arrayFirst(data.options(), function (item) {
+                    return data.value() === item.value;
+                });
+                return match.text;
+            };
+
             ProfileSpike.prototype.bindJquery = function () {
                 var _this = this;
                 var self = this, kacSelect, positioned = false;

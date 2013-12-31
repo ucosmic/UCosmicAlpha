@@ -283,9 +283,9 @@ module People.ViewModels {
 
         //#endregion
         //#region Cascading Establishments
-
+        
         establishmentEditors = ko.observableArray<AffiliatedEstablishmentEditorSpike>(); // department drop downs
-
+        
         firstEstablishmentId = ko.computed((): number => {
             var establishmentEditors = this.establishmentEditors();
             if (establishmentEditors.length) {
@@ -470,6 +470,26 @@ module People.ViewModels {
         //personId2: number;
         preferredTitle = ko.observable<string>();
         $edit_affiliations_dialog = $("#edit_affiliations_dialog");
+
+        facultyRankAutoUpdate(data) {
+            if (data.value() == undefined) {
+                return null;
+            }
+            var match = ko.utils.arrayFirst(data.options(), function (item: any) {
+                return data.value() === item.value;
+            });
+            return match.text;
+        }
+
+        affiliatedEstablishmentsAutoUpdate(data) {
+            if (data.value() == undefined) {
+                return null;
+            }
+            var match = ko.utils.arrayFirst(data.options(), function (item: any) {
+                return data.value() === item.value;
+            });
+            return match.text;
+        }
 
         bindJquery(): void {
             var self = this,

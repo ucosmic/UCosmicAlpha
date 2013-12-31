@@ -1,4 +1,4 @@
-﻿var Activities;
+var Activities;
 (function (Activities) {
     (function (ViewModels) {
         var PublicView = (function () {

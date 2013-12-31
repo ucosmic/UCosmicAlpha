@@ -5,26 +5,43 @@
 <div>
     <ul style="font-size: 20px;" data-bind="foreach: editableAffiliations">
         <li style="margin-bottom: 1em;">
-            <div style="overflow: hidden;">
-                <span style="float: left">
-                    <strong style="display: block; line-height: 24px;" data-bind="text: facultyRank().text(), visible: hasFacultyRanks() && facultyRank() && facultyRank().text() != 'Other'"></strong>
-                    <strong style="display: block; line-height: 28px;" data-bind="html: jobTitlesHtml, visible: jobTitles"></strong>
-                </span>
-                <div style="float: right; width: 70px; text-align: right;">
-                    @* TODO: wire this up to gray disabled images *@
-                    <!-- ko if: !owner.isEditingAffiliation() -->
-                    <img data-bind="click: edit, visible: !purgeSpinner.isVisible()" alt="" src="~/images/icons/edit/pencil-a-24.png" title="Edit this affiliation"
-                         style="cursor: pointer; margin-left: 8px;" />
-                    <img data-bind="click: purge, visible: !purgeSpinner.isVisible()" alt="" src="~/images/icons/minus/minus-24-red.png" title="Delete this affiliation"
-                         style="cursor: pointer; margin-left: 8px;" />
-                    <img data-bind="visible: purgeSpinner.isVisible" alt="" src="~/images/icons/spinner/spinner-24-blue.gif" title="Deleting this affiliation..."
-                         style="margin-left: 8px;" />
-                    <!-- /ko -->
+            <div data-bind="visible: !isEditing()">
+                <div style="overflow: hidden;">
+                    <span style="float: left">
+                        <strong style="display: block; line-height: 24px;" data-bind="text: facultyRank().text(), visible: hasFacultyRanks() && facultyRank() && facultyRank().text() != 'Other'"></strong>
+                        <strong style="display: block; line-height: 28px;" data-bind="html: jobTitlesHtml, visible: jobTitles"></strong>
+                    </span>
+                    <div style="float: right; width: 70px; text-align: right;">
+                        @* TODO: wire this up to gray disabled images *@
+                        <!-- ko if: !owner.isEditingAffiliation() -->
+                        <img data-bind="click: edit, visible: !purgeSpinner.isVisible()" alt="" src="~/images/icons/edit/pencil-a-24.png" title="Edit this affiliation"
+                             style="cursor: pointer; margin-left: 8px;" />
+                        <img data-bind="click: purge, visible: !purgeSpinner.isVisible()" alt="" src="~/images/icons/minus/minus-24-red.png" title="Delete this affiliation"
+                             style="cursor: pointer; margin-left: 8px;" />
+                        <img data-bind="visible: purgeSpinner.isVisible" alt="" src="~/images/icons/spinner/spinner-24-blue.gif" title="Deleting this affiliation..."
+                             style="margin-left: 8px;" />
+                        <!-- /ko -->
+                    </div>
+                </div>
+                <div>
+                    <ul data-bind="foreach: establishments.reverse()">
+                        <li data-bind="if: ($index() !== ($parent.establishments().length - 1))"><span data-bind="text: displayName"></span></li>
+                    </ul>
                 </div>
             </div>
-            <div>
-                <ul data-bind="foreach: establishments.reverse()">
-                    <li data-bind="if: ($index() !== ($parent.establishments().length - 1))"><span data-bind="text: displayName"></span></li>
+            <div data-bind="visible: isEditing">
+                    <span data-bind="visible: hasFacultyRanks, if: hasFacultyRanks" style="margin-bottom: 1em;">
+                        <span data-bind="with: facultyRankSelect">
+                            <strong style="display: block; line-height: 24px;" data-bind="text: $root.facultyRankAutoUpdate($data), visible: $root.facultyRankAutoUpdate($data) != 'Other'"></strong>
+                        </span>
+                    </span>
+                <strong style="display: block; line-height: 28px;" data-bind="html: jobTitlesHtml, visible: jobTitles"></strong>
+                <ul data-bind="foreach: establishmentEditors.slice(0).reverse()">
+                    <li>
+                        <span data-bind="with: select">
+                            <span data-bind="text: $root.affiliatedEstablishmentsAutoUpdate($data)"></span>
+                        </span>
+                    </li>
                 </ul>
             </div>
         </li>
@@ -41,145 +58,145 @@
 <div id="edit_affiliations_dialog">
     <form style="width:500px;" id="affiliations_edit_form" method="POST" data-bind="submit: saveAffiliations">
         @*, validationOptions: { decorateElement: true, errorClass: 'error' }">*@
-    <div class="field-table w690-l190-v500">
+        <div class="field-table w690-l190-v500">
 
 
-        @* AFFILIATIONS ROW *@
-        <div class="field-row">
-            <div class="field-value">
-                @* LOADING SPINNER *@
-                <div data-bind="visible: affiliationsSpinner.isVisible">
-                    <img alt="" src="~/images/icons/spinner/spinner-20-blue.gif" />
-                    <span>Loading affiliation data...</span>
-                </div>
-
-                @* BOUND CONTENT *@
-                <div data-bind="visible: !affiliationsSpinner.isVisible()">
-                    @* NO ITEMS *@
-                    <div data-bind="visible: !editableAffiliations().length">
-                        [None]
+            @* AFFILIATIONS ROW *@
+            <div class="field-row">
+                <div class="field-value">
+                    @* LOADING SPINNER *@
+                    <div data-bind="visible: affiliationsSpinner.isVisible">
+                        <img alt="" src="~/images/icons/spinner/spinner-20-blue.gif" />
+                        <span>Loading affiliation data...</span>
                     </div>
 
-                    @* ITEMS *@
-                    <div data-bind="visible: editableAffiliations().length">
-                        <ul id="editable_affiliations" data-bind="foreach: editableAffiliations" class="affiliations">
-                            <li>
+                    @* BOUND CONTENT *@
+                    <div data-bind="visible: !affiliationsSpinner.isVisible()">
+                        @* NO ITEMS *@
+                        <div data-bind="visible: !editableAffiliations().length">
+                            [None]
+                        </div>
+
+                        @* ITEMS *@
+                        <div data-bind="visible: editableAffiliations().length">
+                            <ul id="editable_affiliations" data-bind="foreach: editableAffiliations" class="affiliations">
+                                <li>
 
 
-                                @* EDITOR *@
-                                <div data-bind="visible: isEditing">
-                                    <div data-bind="visible: hasFacultyRanks, if: hasFacultyRanks" style="margin-bottom: 1em;">
-                                        <div style="margin-bottom: 4px;">
-                                            <strong>Faculty Rank:</strong>
+                                    @* EDITOR *@
+                                    <div data-bind="visible: isEditing">
+                                        <div data-bind="visible: hasFacultyRanks, if: hasFacultyRanks" style="margin-bottom: 1em;">
+                                            <div style="margin-bottom: 4px;">
+                                                <strong>Faculty Rank:</strong>
+                                            </div>
+                                            <div data-bind="with: facultyRankSelect">
+                                                <select data-bind="options: options, value: value, optionsText: 'text', optionsValue: 'value', jQuery: '$select'"
+                                                        style="width: 100%; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;">
+                                                    <option>[Loading...]</option>
+                                                </select>
+                                            </div>
                                         </div>
-                                        <div data-bind="with: facultyRankSelect">
-                                            <select data-bind="options: options, value: value, optionsText: 'text', optionsValue: 'value', jQuery: '$select'"
-                                                    style="width: 100%; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;">
-                                                <option>[Loading...]</option>
-                                            </select>
+                                        <div style="margin-bottom: 1em;">
+                                            <div style="margin-bottom: 4px;">
+                                                <strong>Title &amp; Department:</strong>
+                                            </div>
+                                            <div>
+                                                <textarea placeholder="[Optional - Title(s) and department(s) not identified above or below]"
+                                                          data-bind="value: jobTitles, visible: hasFacultyRanks, valueUpdate: 'afterkeydown'"></textarea>
+                                                <textarea placeholder="[Optional - Titles(s) and department(s) not identified below]"
+                                                          data-bind="value: jobTitles, visible: !hasFacultyRanks(), valueUpdate: 'afterkeydown'"></textarea>
+                                            </div>
+                                        </div>
+                                        <div style="margin: 1em 0;">
+                                            <strong>*Affiliation(s):</strong>
+                                            <ul data-bind="foreach: establishmentEditors">
+                                                <li style="margin-top: 4px;">
+                                                    <div data-bind="with: select">
+                                                        <select data-bind="options: options, value: value, optionsText: 'text', optionsValue: 'value', jQuery: '$select'"
+                                                                style="width: 100%; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;">
+                                                            <option>[Loading...]</option>
+                                                        </select>
+                                                    </div>
+                                                    <!-- ko if: $index() == 0 && !$parent.hideValidationMessages() -->
+                                                    <div data-bind="validationMessage: $parent.firstEstablishmentId" class="validationMessage"></div>
+                                                    <!-- /ko -->
+                                                    <!-- ko if: select.value() == $parent.lastEstablishmentId() && !$parent.hideValidationMessages() -->
+                                                    <div data-bind="validationMessage: $parent.lastEstablishmentId" class="validationMessage"></div>
+                                                    <!-- /ko -->
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div style="margin-top: 1em;">
+                                            <input type="button" data-bind="click: save, disable: saveSpinner.isRunning" value="Save" class="save" />
+                                            <input type="button" class="link" value="Cancel" data-bind="click: cancel, disable: saveSpinner.isRunning" />
+                                            <span data-bind="visible: saveSpinner.isVisible" style="display: inline-block; margin-left: 12px;">
+                                                <img src="~/images/icons/spinner/spinner-24-blue.gif" alt="" data-bind="visible: saveSpinner.isVisible" style="display: none;" />
+                                                Saving...
+                                            </span>
                                         </div>
                                     </div>
-                                    <div style="margin-bottom: 1em;">
-                                        <div style="margin-bottom: 4px;">
-                                            <strong>Title &amp; Department:</strong>
-                                        </div>
-                                        <div>
-                                            <textarea placeholder="[Optional - Title(s) and department(s) not identified above or below]"
-                                                      data-bind="value: jobTitles, visible: hasFacultyRanks, valueUpdate: 'afterkeydown'"></textarea>
-                                            <textarea placeholder="[Optional - Titles(s) and department(s) not identified below]"
-                                                      data-bind="value: jobTitles, visible: !hasFacultyRanks(), valueUpdate: 'afterkeydown'"></textarea>
-                                        </div>
-                                    </div>
-                                    <div style="margin: 1em 0;">
-                                        <strong>*Affiliation(s):</strong>
-                                        <ul data-bind="foreach: establishmentEditors">
-                                            <li style="margin-top: 4px;">
-                                                <div data-bind="with: select">
-                                                    <select data-bind="options: options, value: value, optionsText: 'text', optionsValue: 'value', jQuery: '$select'"
-                                                            style="width: 100%; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;">
-                                                        <option>[Loading...]</option>
-                                                    </select>
-                                                </div>
-                                                <!-- ko if: $index() == 0 && !$parent.hideValidationMessages() -->
-                                                <div data-bind="validationMessage: $parent.firstEstablishmentId" class="validationMessage"></div>
-                                                <!-- /ko -->
-                                                <!-- ko if: select.value() == $parent.lastEstablishmentId() && !$parent.hideValidationMessages() -->
-                                                <div data-bind="validationMessage: $parent.lastEstablishmentId" class="validationMessage"></div>
-                                                <!-- /ko -->
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div style="margin-top: 1em;">
-                                        <input type="button" data-bind="click: save, disable: saveSpinner.isRunning" value="Save" class="save" />
-                                        <input type="button" class="link" value="Cancel" data-bind="click: cancel, disable: saveSpinner.isRunning" />
-                                        <span data-bind="visible: saveSpinner.isVisible" style="display: inline-block; margin-left: 12px;">
-                                            <img src="~/images/icons/spinner/spinner-24-blue.gif" alt="" data-bind="visible: saveSpinner.isVisible" style="display: none;" />
-                                            Saving...
-                                        </span>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
+                                </li>
+                            </ul>
+                        </div>
+
                     </div>
-
                 </div>
-            </div>
-            <div style="display: none;">
-                <div data-bind="jQuery: '$confirmDeleteAffiliation'" title="Please confirm your intent">
-                    Are you sure you want to delete this affiliation? This cannot be undone.
+                <div style="display: none;">
+                    <div data-bind="jQuery: '$confirmDeleteAffiliation'" title="Please confirm your intent">
+                        Are you sure you want to delete this affiliation? This cannot be undone.
+                    </div>
                 </div>
             </div>
         </div>
+    </form>
+
+
+    <div id="affiliationErrorDialog" class="dialog">
+        <span id="affiliationErrorDialogMessage"></span>
     </div>
-</form>
 
+    <div id="confirmAffiliationDeleteDialog" class="dialog" title="Confirm Delete">
+        <span style="font-weight: bold">Are you sure you want to delete this affiliation?</span>
+    </div>
 
-<div id="affiliationErrorDialog" class="dialog">
-    <span id="affiliationErrorDialogMessage"></span>
-</div>
+    <!-- KNOCKOUT TEMPLATES -->
 
-<div id="confirmAffiliationDeleteDialog" class="dialog" title="Confirm Delete">
-    <span style="font-weight: bold">Are you sure you want to delete this affiliation?</span>
-</div>
-
-<!-- KNOCKOUT TEMPLATES -->
-
-<script type="text/html" id="affiliations-template">
-    <li data-bind="click: function (data, event) { $root.editAffiliation(data, event); }">
-        <div style="display: inline-block" data-bind="visible: campusId() != null">
-            <div style="width: 200px; display: inherit; font-weight: bold">
-                <span>Institutional Affiliation:</span>
+    <script type="text/html" id="affiliations-template">
+        <li data-bind="click: function (data, event) { $root.editAffiliation(data, event); }">
+            <div style="display: inline-block" data-bind="visible: campusId() != null">
+                <div style="width: 200px; display: inherit; font-weight: bold">
+                    <span>Institutional Affiliation:</span>
+                </div>
+                <div class="affiliation-item">
+                    <span data-bind="text: campus"></span>
+                </div>
             </div>
-            <div class="affiliation-item">
-                <span data-bind="text: campus"></span>
+            <div style="display: inline-block" data-bind="visible: collegeId() != null">
+                <div style="width: 200px; display: inherit; font-weight: bold">
+                    <span>College/Unit:</span>
+                </div>
+                <div class="affiliation-item">
+                    <span data-bind="text: college"></span>
+                </div>
             </div>
-        </div>
-        <div style="display: inline-block" data-bind="visible: collegeId() != null">
-            <div style="width: 200px; display: inherit; font-weight: bold">
-                <span>College/Unit:</span>
+            <div style="display: inline-block" data-bind="visible: (departmentId() != null) && (department() !== 'None')">
+                <div style="vertical-align: top; width: 200px; display: inherit; font-weight: bold">
+                    <span>Department:</span>
+                </div>
+                <div class="affiliation-item">
+                    <span data-bind="text: department"></span>
+                </div>
             </div>
-            <div class="affiliation-item">
-                <span data-bind="text: college"></span>
+            <div style="display: inline-block" data-bind="visible: facultyRankId() != null">
+                <div style="width: 200px; display: inherit; font-weight: bold">
+                    <span>Position Title:</span>
+                </div>
+                <div class="affiliation-item">
+                    <span data-bind="text: facultyRank"></span>
+                </div>
             </div>
-        </div>
-        <div style="display: inline-block" data-bind="visible: (departmentId() != null) && (department() !== 'None')">
-            <div style="vertical-align: top; width: 200px; display: inherit; font-weight: bold">
-                <span>Department:</span>
-            </div>
-            <div class="affiliation-item">
-                <span data-bind="text: department"></span>
-            </div>
-        </div>
-        <div style="display: inline-block" data-bind="visible: facultyRankId() != null">
-            <div style="width: 200px; display: inherit; font-weight: bold">
-                <span>Position Title:</span>
-            </div>
-            <div class="affiliation-item">
-                <span data-bind="text: facultyRank"></span>
-            </div>
-        </div>
-        <hr />
-    </li>
-</script>
+            <hr />
+        </li>
+    </script>
 
 </div>
