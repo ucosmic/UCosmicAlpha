@@ -114,7 +114,7 @@ var People;
                 this._initValidation();
             }
             AffiliationSpike.prototype.edit = function (me) {
-                this.owner.startEditingAffiliations(me);
+                this.owner.startEditingAffiliations();
                 this.bindEstablishmentEditors(this.establishmentId());
                 this.isEditing(true);
             };
@@ -210,7 +210,6 @@ var People;
                                     _this.purgeSpinner.start(true);
                                     _this._purge();
                                 },
-                                'data-css-link': true,
                                 'data-confirm-delete-link': true
                             },
                             {
@@ -278,6 +277,7 @@ var People;
                         this.establishmentEditors.push(editor);
                     }
                 }
+                this.owner.hasAffiliationsEditorLoaded(true);
                 return establishment;
             };
 
@@ -344,8 +344,10 @@ var People;
         var ProfileSpike = (function () {
             function ProfileSpike(personId) {
                 var _this = this;
+                this.hasAffiliationsEditorLoaded = ko.observable(false);
+                this.hasViewModelLoaded = ko.observable(false);
                 this.personId = 0;
-                this.editMode = ko.observable(false);
+                this.isEditMode = ko.observable(false);
                 this.saveSpinner = new App.Spinner({ delay: 200 });
                 this.cancelClicked = true;
                 this.preferredTitle = ko.observable();
@@ -369,6 +371,7 @@ var People;
                     return _this._loadEmployeeSettingsData();
                 });
                 this.affiliationData.ready();
+                this.hasViewModelLoaded(true);
             }
             ProfileSpike.prototype.facultyRankAutoUpdate = function (data) {
                 if (data.value() == undefined) {
@@ -398,10 +401,11 @@ var People;
                     width: 550,
                     open: function () {
                         $("html, body").css("overflow", "hidden");
+                        _this.isEditMode(true);
                     },
                     close: function () {
                         $("html, body").css("overflow", "");
-                        $("#addAContact").fadeIn(500);
+                        _this.isEditMode(false);
 
                         var editableAffiliations = _this.editableAffiliations();
                         var editingAffiliation = Enumerable.From(editableAffiliations).FirstOrDefault(undefined, function (x) {
@@ -426,7 +430,6 @@ var People;
                     resizable: false
                 });
                 this.$edit_affiliations_dialog.parent().css({ "visibility": "hidden" });
-
                 this.$edit_affiliations_dialog.parent().addClass("affiliations-kendo-window");
             };
 
@@ -474,14 +477,15 @@ var People;
                 return promise;
             };
 
-            ProfileSpike.prototype.addAffiliation = function () {
+            ProfileSpike.prototype.addAffiliation = function (me) {
+                this.startEditingAffiliations();
                 var affiliation = new AffiliationSpike(this, this.personId);
                 this.editableAffiliations.push(affiliation);
                 affiliation.bindEstablishmentEditors(undefined);
             };
 
-            ProfileSpike.prototype.startEditingAffiliations = function (me) {
-                me.owner.$edit_affiliations_dialog.data("kendoWindow").open().title("Affiliations");
+            ProfileSpike.prototype.startEditingAffiliations = function () {
+                this.$edit_affiliations_dialog.data("kendoWindow").open().title("Affiliations");
             };
 
             ProfileSpike.prototype.saveAffiliations = function () {

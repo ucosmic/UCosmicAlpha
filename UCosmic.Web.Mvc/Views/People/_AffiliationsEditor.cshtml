@@ -2,13 +2,23 @@
     @{
         var viewingUser = Session.UserImpersonating() ?? User;
     }*@
-<div>
+<h2 style="font-size: 24px;  padding-bottom: 1em;">Affiliations</h2>
+
+<div style="font-size: 16px;  padding-bottom: 1em; " data-bind="visible: !hasViewModelLoaded()">
+    <img alt="" src="~/images/icons/spinner/spinner-20-blue.gif" />
+    <span>Loading affiliation data...</span>
+</div>
+
+
+<div data-bind="visible: hasViewModelLoaded" style="display: none">
     <ul style="font-size: 20px;" data-bind="foreach: editableAffiliations">
         <li style="margin-bottom: 1em;">
             <div data-bind="visible: !isEditing()">
                 <div style="overflow: hidden;">
                     <span style="float: left">
-                        <strong style="display: block; line-height: 24px;" data-bind="text: facultyRank().text(), visible: hasFacultyRanks() && facultyRank() && facultyRank().text() != 'Other'"></strong>
+                        <span data-bind="if: facultyRank() != undefined">
+                            <strong style="display: block; line-height: 24px;" data-bind="text: facultyRank().text(), visible: hasFacultyRanks() && facultyRank() && facultyRank().text() != 'Other'"></strong>
+                        </span>
                         <strong style="display: block; line-height: 28px;" data-bind="html: jobTitlesHtml, visible: jobTitles"></strong>
                     </span>
                     <div style="float: right; width: 70px; text-align: right;">
@@ -30,12 +40,16 @@
                 </div>
             </div>
             <div data-bind="visible: isEditing">
-                    <span data-bind="visible: hasFacultyRanks, if: hasFacultyRanks" style="margin-bottom: 1em;">
-                        <span data-bind="with: facultyRankSelect">
-                            <strong style="display: block; line-height: 24px;" data-bind="text: $root.facultyRankAutoUpdate($data), visible: $root.facultyRankAutoUpdate($data) != 'Other'"></strong>
-                        </span>
+                <span data-bind="visible: hasFacultyRanks, if: hasFacultyRanks" style="margin-bottom: 1em;">
+                    <span data-bind="with: facultyRankSelect">
+                        <strong style="display: block; line-height: 24px;" data-bind="text: $root.facultyRankAutoUpdate($data), visible: $root.facultyRankAutoUpdate($data) != 'Other'"></strong>
                     </span>
+                </span>
                 <strong style="display: block; line-height: 28px;" data-bind="html: jobTitlesHtml, visible: jobTitles"></strong>
+                <div style="font-size: 20px;  padding-bottom: 1em; " data-bind="visible: !$root.hasAffiliationsEditorLoaded()">
+                    <img alt="" src="~/images/icons/spinner/spinner-20-blue.gif" />
+                    <span>Loading affiliations...</span>
+                </div>
                 <ul data-bind="foreach: establishmentEditors.slice(0).reverse()">
                     <li>
                         <span data-bind="with: select">
@@ -47,7 +61,7 @@
         </li>
     </ul>
     @* ADD NEW - TODO: this should be a button, not a hyperlink *@
-    <div style="margin-top: 12px; line-height: 24px;">
+    <div style="margin-top: 12px; line-height: 24px;" data-bind="visible: !isEditMode()">
         <a href="#" class="with-img" data-bind="click: addAffiliation">
             <img src="~/images/icons/plus/plus-24-green.png" alt="Add a new affiliation" style="cursor: pointer; padding-right: 4px;" />
             <span class="text">Add a new affiliation</span>
@@ -55,7 +69,7 @@
     </div>
 </div>
 
-<div id="edit_affiliations_dialog">
+<div id="edit_affiliations_dialog" data-bind="visible: hasViewModelLoaded" style="display: none">
     <form style="width:500px;" id="affiliations_edit_form" method="POST" data-bind="submit: saveAffiliations">
         @*, validationOptions: { decorateElement: true, errorClass: 'error' }">*@
         <div class="field-table w690-l190-v500">
@@ -109,6 +123,10 @@
                                         </div>
                                         <div style="margin: 1em 0;">
                                             <strong>*Affiliation(s):</strong>
+                                            <div style="font-size: 20px;  padding-bottom: 1em; " data-bind="visible: !$root.hasAffiliationsEditorLoaded()">
+                                                <img alt="" src="~/images/icons/spinner/spinner-20-blue.gif" />
+                                                <span>Loading affiliations...</span>
+                                            </div>
                                             <ul data-bind="foreach: establishmentEditors">
                                                 <li style="margin-top: 4px;">
                                                     <div data-bind="with: select">

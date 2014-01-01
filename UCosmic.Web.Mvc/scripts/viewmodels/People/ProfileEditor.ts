@@ -1,19 +1,4 @@
-//import RootViewModelsSpike = ViewModels;
-
 module People.ViewModels {
-
-    //export class ProfileSpike {
-
-    //   constructor(modelData: server.PersonViewModel) {
-    //       this.modelData = modelData
-    //   }
-    //   modelData;
-    //   editMode = ko.observable(false);
-    //   startEditing () {
-    //       this.editMode(true);
-    //   }
-
-    //}
     export class AffiliatedEstablishmentEditorSpike {
 
         select = new App.FormSelect<number>({ kendoOptions: {}, });
@@ -130,7 +115,7 @@ module People.ViewModels {
         isEditing: KnockoutObservable<boolean>; // mode for tracking whether to display form or read-only view to user
 
         edit(me): void {
-            this.owner.startEditingAffiliations(me);
+            this.owner.startEditingAffiliations();
             this.bindEstablishmentEditors(this.establishmentId());
             this.isEditing(true);
         }
@@ -243,7 +228,6 @@ module People.ViewModels {
                                 this.purgeSpinner.start(true);
                                 this._purge();
                             },
-                            'data-css-link': true,
                             'data-confirm-delete-link': true,
                         },
                         {
@@ -283,9 +267,9 @@ module People.ViewModels {
 
         //#endregion
         //#region Cascading Establishments
-        
+
         establishmentEditors = ko.observableArray<AffiliatedEstablishmentEditorSpike>(); // department drop downs
-        
+
         firstEstablishmentId = ko.computed((): number => {
             var establishmentEditors = this.establishmentEditors();
             if (establishmentEditors.length) {
@@ -358,10 +342,8 @@ module People.ViewModels {
                 else {
                     this.establishmentEditors.push(editor);
                 }
-                //this.owner.load().done((): void => {
-                //    editor.select.applyKendo();
-                //});
             }
+            this.owner.hasAffiliationsEditorLoaded(true);
             return establishment;
         }
 
@@ -414,9 +396,6 @@ module People.ViewModels {
                 var facultyRank = this.facultyRank(); // value may not be defined
                 if (facultyRank)
                     this.facultyRankSelect.value(facultyRank.facultyRankId());
-                //this.owner.load().done((): void => {
-                //    this.facultyRankSelect.applyKendo();
-                //});
             }
         }
 
@@ -458,16 +437,16 @@ module People.ViewModels {
     export class ProfileSpike implements KnockoutValidationGroup {
 
         constructor(personId: number) {
-            //this.cardData = cardData;
             // go ahead and load affiliations
             this.affiliationData.ready();
-            //this.bindJquery();
+            this.hasViewModelLoaded(true);
         }
+        hasAffiliationsEditorLoaded = ko.observable<boolean>(false);
+        hasViewModelLoaded = ko.observable<boolean>(false);
         personId: number = 0;
-        editMode = ko.observable<boolean>(false);
+        isEditMode = ko.observable<boolean>(false);
         saveSpinner = new App.Spinner({ delay: 200, });
         cancelClicked: boolean = true;
-        //personId2: number;
         preferredTitle = ko.observable<string>();
         $edit_affiliations_dialog = $("#edit_affiliations_dialog");
 
@@ -498,13 +477,12 @@ module People.ViewModels {
             this.$edit_affiliations_dialog.kendoWindow({
                 width: 550,
                 open: () => {
-                    //this.kendoWindowBug.val = $("body").scrollTop() - 10;
                     $("html, body").css("overflow", "hidden");
+                    this.isEditMode(true);
                 },
                 close: () => {
-                    //this.kendoWindowBug.val = 0;
                     $("html, body").css("overflow", "");
-                    $("#addAContact").fadeIn(500);
+                    this.isEditMode(false);
 
                     var editableAffiliations = this.editableAffiliations();
                     var editingAffiliation = Enumerable.From(editableAffiliations)
@@ -515,8 +493,6 @@ module People.ViewModels {
                         editingAffiliation.cancel();
                     }
                     this.cancelClicked = true;
-                    //this.editableAffiliations.(false);
-                    //this.clearContact();
                 },
                 activate: () => {
                     if (positioned === false) {
@@ -532,10 +508,8 @@ module People.ViewModels {
                 resizable: false
             });
             this.$edit_affiliations_dialog.parent().css({ "visibility": "hidden" });
-            //this.$edit_affiliations_dialog.parent().css({ "left": (this.$edit_affiliations_dialog.parent().offset().left + 100) + "px" });
             this.$edit_affiliations_dialog.parent().addClass("affiliations-kendo-window");
         }
-
 
         //#region Affiliations
 
@@ -622,7 +596,8 @@ module People.ViewModels {
             return promise;
         }
 
-        addAffiliation(): void {
+        addAffiliation(me): void {
+            this.startEditingAffiliations();
             var affiliation = new AffiliationSpike(this, this.personId);
             this.editableAffiliations.push(affiliation);
             affiliation.bindEstablishmentEditors(undefined);
@@ -631,10 +606,10 @@ module People.ViewModels {
         //#endregion
         //#region DC / USF implementation
 
-        startEditingAffiliations(me): void { // show the editor
-            me.owner.$edit_affiliations_dialog.data("kendoWindow").open().title("Affiliations");
+        startEditingAffiliations(): void { // show the editor
+            this.$edit_affiliations_dialog.data("kendoWindow").open().title("Affiliations");
         }
-        
+
         saveAffiliations(): void {
             var affiliationPutModel: ApiModels.AffiliationPut = {
                 jobTitles: this.preferredTitle(),

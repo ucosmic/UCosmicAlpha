@@ -1,5 +1,4 @@
-﻿@using Links
-@model UCosmic.Web.Mvc.Models.PersonViewModel
+﻿@model UCosmic.Web.Mvc.Models.PersonViewModel
 @{
     ViewBag.Title = "UCosmic Profile";
 }
@@ -56,13 +55,13 @@
             display: inline;
         }
 
-        .comma-list:after {
-            content: ', ';
-        }
+            .comma-list:after {
+                content: ', ';
+            }
 
-        .comma-list:last-child:after {
-            content: '';
-        }
+            .comma-list:last-child:after {
+                content: '';
+            }
 
         .affiliations-kendo-window {
             position: fixed !important;
@@ -100,7 +99,7 @@
                     </section>
                 }
                 else
-                {  
+                {
                     @Html.Action(MVC.People.GetAffiliations())
                 }
             </section>

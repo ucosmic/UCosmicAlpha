@@ -26,6 +26,7 @@
             white-space: nowrap;
             -o-text-overflow: ellipsis;
             -ms-text-overflow: ellipsis;
+            -moz-text-overflow: ellipsis;
             text-overflow: ellipsis;
         }
     </style>
@@ -111,7 +112,7 @@
                                     <div class="group">
                                         <div class="on-left photo">
                                             <img src="@Url.HttpRouteUrl(null, new { controller = "MyPhoto", action = "Get", maxSide = 128, refresh = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture) })"
-                                                alt="" data-bind="attr: { src: photoSrc }" />
+                                                 alt="" data-bind="attr: { src: photoSrc }" />
                                         </div>
                                         <div class="on-left name-and-title">
                                             <div>
@@ -127,12 +128,12 @@
                                             }
                                         </div>
                                         @*<div class="on-left faculty">
-                                            <span class="branded-dark1 badge" style="display: none;" data-bind="text: facultyRankText, visible: isFacultyRankVisible"></span>
-                                            <!--<div class="appointments" data-bind="multilineText: administrativeAppointments">
-                                                    <br />
-                                                    <br />
-                                                </div>-->
-                                        </div>*@
+                                                <span class="branded-dark1 badge" style="display: none;" data-bind="text: facultyRankText, visible: isFacultyRankVisible"></span>
+                                                <!--<div class="appointments" data-bind="multilineText: administrativeAppointments">
+                                                        <br />
+                                                        <br />
+                                                    </div>-->
+                                            </div>*@
                                         <div class="on-right" style="display: none" data-bind="visible: !isActive()">
                                             <span style="color: #cc0000">Your profile is currently inactive and is excluded from public view. </span>
                                             <br />
@@ -159,7 +160,7 @@
                                 <li>Language Expertise</li>
                                 <li>Formal Education</li>
                                 @*<li>Affiliations</li>
-                                <li>Email Addresses</li>*@
+                                    <li>Email Addresses</li>*@
                             </ul>
                             <div>
                                 @{ Html.RenderAction(MVC.Activities.Get()); }
@@ -175,12 +176,12 @@
                                 @Html.Partial(MVC.MyProfile.Views._Degrees)
                             </div>
                             @*<div>
-                                @Html.Partial(MVC.MyProfile.Views._InternationalAffiliations)
-                            </div>
-                            <div>
-                                My Email Addresses
-                                @Html.Partial(MVC.MyProfile.Views._EmailAddresses)
-                            </div>*@
+                                    @Html.Partial(MVC.MyProfile.Views._InternationalAffiliations)
+                                </div>
+                                <div>
+                                    My Email Addresses
+                                    @Html.Partial(MVC.MyProfile.Views._EmailAddresses)
+                                </div>*@
                         </div>
                     </div>
                 </div>
