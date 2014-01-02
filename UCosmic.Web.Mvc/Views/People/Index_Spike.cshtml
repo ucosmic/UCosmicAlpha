@@ -40,9 +40,13 @@
         <script type="text/javascript">
 
             $(function () {
-                var profileViewModel = new People.ViewModels.ProfileSpike('@Model.PersonId');
-                ko.applyBindings(profileViewModel, $('#affiliations')[0]);
-                profileViewModel.bindJquery();
+                var affiliationsViewModel = new People.ViewModels.AffiliationsEditor('@Model.PersonId');
+                ko.applyBindings(affiliationsViewModel, $('#affiliations')[0]);
+                affiliationsViewModel.bindJquery();
+
+                var personalInfoViewModel = new People.ViewModels.PersonalInfoEditor('@Model.PersonId');
+                ko.applyBindings(personalInfoViewModel, $('#card')[0]);
+                personalInfoViewModel.load();
             });
 
         </script>
@@ -79,13 +83,17 @@
                 </h1>
             </header>
             @* CARD *@
-            <section class="person-profile">
-                @*data-bind="click: startEditing, css: { clickable: !editMode() }">*@
+            <section class="person-profile" id="card">
                 <div class="card">
-                    @Html.Action(MVC.People.GetCard())
-                </div>
-                <div class="action">
-                    Click to edit
+
+                    @if (User.Identity.Name.Equals(Model.Username, StringComparison.OrdinalIgnoreCase))
+                    {
+                        @Html.Partial(MVC.People.Views._PersonalInfoEditor)
+                    }
+                    else
+                    {
+                        @Html.Action(MVC.People.GetCard())
+                    }
                 </div>
             </section>
             @* AFFILIATIONS *@
@@ -115,4 +123,3 @@
 
     </div>
 </div>
-

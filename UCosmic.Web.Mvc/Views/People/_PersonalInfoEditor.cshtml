@@ -1,0 +1,199 @@
+﻿@model UCosmic.Web.Mvc.Models.PersonViewModel
+@using System.Globalization
+@{
+    var viewingUser = Session.UserImpersonating() ?? User;
+}
+
+<section class="person-profile" data-bind="click: startEditing, css: { clickable: !isEditMode() }">
+    <div class="card" style="font-size: 20px;">
+        @* Person *@
+        <table style="margin-bottom: .5em">
+            <tr>
+                <td style="vertical-align: bottom;">
+                    <img src="@Url.HttpRouteUrl(null, new { controller = "People", action = "GetPhoto", Id = Model.PersonId })" style="max-width: 100px;  margin-right: 1em" height="108" />
+                </td>
+                <td>
+                    <div style="font-size: 24px; line-height: 28px;">@Model.DisplayName</div>
+                    <div>@Model.JobTitles</div>
+                    <a style="-ms-word-break: break-all; -moz-word-break: break-all; -o-word-break: break-all; word-break: break-all;" href="mailto:@Model.EmailAddress" target="_top">@Model.EmailAddress</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="action">
+        Click to edit
+    </div>
+</section>
+
+<div id="edit_personal_info_dialog" style="display: none">
+    <form style="width:500px;" id="personal_info_edit_form" method="POST" data-bind="submit: saveInfo, validationOptions: { decorateElement: true, errorClass: 'error' }">
+        <div class="field-table w690-l190-v500">
+            <div class="field-row">
+                <div class="field-label" style="padding-top: 0;">
+                    <img src="@Url.HttpRouteUrl(null, new { controller = "MyPhoto", action = "Get", maxSide = "128", refresh = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture) })"
+                         alt="" data-bind="attr: { src: photoSrc }" />
+                </div>
+                <div class="field-input">
+                    <div>
+                        <input type="file" name="photo" data-bind="jqObservableElement: '$photo'" />
+                    </div>
+                    <div style="padding-left: 4px;">
+                        <div data-bind="visible: hasPhoto" style="display: none; padding-top: 4px;">
+                            <input type="button" value="Delete my photo" data-bind="click: startDeletingPhoto, attr: { disabled: photoDeleteSpinner.isVisible } " />
+                            <img data-bind="visible: photoDeleteSpinner.isVisible" src="~/images/icons/spinner/spinner-20-blue.gif" alt="" style="display: none;" />
+                        </div>
+                        <div data-bind="jqElement: '$confirmPurgeDialog'" title="Please confirm your intent" style="display: none;">
+                            <div>
+                                <p>
+                                    Are you sure you want to delete your profile photo?
+                                </p>
+                            </div>
+                        </div>
+                        <div data-bind="visible: photoUploadError" style="display: none;">
+                            <span class="validationMessage" data-bind="text: photoUploadError"></span>
+                        </div>
+                        <div data-bind="visible: photoUploadSpinner.isVisible" style="padding-top: 4px; display: none;">
+                            <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
+                            <strong>Uploading...</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="field-row above-unlabeled-row">
+                <div class="field-label">
+                    <label>Display name</label>
+                </div>
+                <div class="field-input">
+                    <input type="text" data-bind="value: displayName, valueUpdate: 'afterkeydown', attr: { disabled: isDisplayNameDerived }" />
+                </div>
+            </div>
+            <div class="field-row">
+                <div>
+                    <label>
+                        <input type="checkbox" data-bind="checked: isDisplayNameDerived" />
+                        Automatically generate my display name based on the fields below.
+                    </label>
+                </div>
+            </div>
+            <div class="field-row">
+                <div class="field-label">
+                    <label>Salutation</label>
+                </div>
+                <div class="field-input">
+                    <input type="text" placeholder="[None]"
+                           data-bind="value: salutation, valueUpdate: 'afterkeydown', jqObservableElement: '$nameSalutation'" />
+                </div>
+            </div>
+            <div class="field-row">
+                <div class="field-label">
+                    <label>First Name</label>
+                </div>
+                <div class="field-input">
+                    <input type="text" placeholder="[Please enter your first name here]"
+                           data-bind="value: firstName, valueUpdate: 'afterkeydown'" />
+                </div>
+            </div>
+            <div class="field-row">
+                <div class="field-label">
+                    <label>Middle Name or Initial</label>
+                </div>
+                <div class="field-input">
+                    <input type="text" placeholder="[None]"
+                           data-bind="value: middleName, valueUpdate: 'afterkeydown'" />
+                </div>
+            </div>
+            <div class="field-row">
+                <div class="field-label">
+                    <label>Last Name</label>
+                </div>
+                <div class="field-input">
+                    <input type="text" placeholder="[Please enter your last name here]"
+                           data-bind="value: lastName, valueUpdate: 'afterkeydown'" />
+                </div>
+            </div>
+            <div class="field-row">
+                <div class="field-label">
+                    <label>Suffix</label>
+                </div>
+                <div class="field-input">
+                    <input type="text" placeholder="[None]"
+                           data-bind="value: suffix, valueUpdate: 'afterkeydown', jqObservableElement: '$nameSuffix'" />
+                </div>
+            </div>
+            <div class="field-row">
+                <div class="field-label">
+                    <label>My Preferred Title is</label>
+                </div>
+                <div class="field-input">
+                    <textarea rows="2" data-bind="value: preferredTitle, valueUpdate: 'afterkeydown'"></textarea>
+                </div>
+            </div>
+
+
+            @* GENDER ROW *@
+            @if (viewingUser.IsInRole(RoleName.EmployeeProfileManager))
+            {
+                <div class="field-row">
+                    <div class="field-label">
+                        <label>Gender</label>
+                    </div>
+                    <div class="field-input for-checkables">
+                        <div>
+                            <label>
+                                <input type="radio" name="genderGroup" value="@UCosmic.Domain.People.PersonGender.Male" data-bind="checked: gender" />
+                                <span>Male</span>
+                            </label>
+                        </div>
+                        <div>
+                            <label>
+                                <input type="radio" name="genderGroup" value="@UCosmic.Domain.People.PersonGender.Female" data-bind="checked: gender" />
+                                <span>Female</span>
+                            </label>
+                        </div>
+                        <div>
+                            <label>
+                                <input type="radio" name="genderGroup" value="@UCosmic.Domain.People.PersonGender.NonDisclosed" data-bind="checked: gender" />
+                                <span>Undisclosed</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            }
+
+
+
+            @if (viewingUser.IsInRole(RoleName.EmployeeProfileManager))
+            {
+                <div class="field-row">
+                    <div>
+                        <label>
+                            <input type="checkbox" data-bind="checked: isActive" />
+                            This profile is currently active.
+                        </label>
+                    </div>
+                    <div>
+                        <!--<span style="display: inline-block; float: right"><a href="#">Delete User</a></span>-->
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div>
+                    <span style="display: inline-block; float: right"><a href="#">Request my profile be deleted</a></span>
+                </div>
+            }
+
+            <div class="field-row">
+                <div>
+                    <input type="submit" value="Save" data-bind="attr: { disabled: saveSpinner.isVisible }" />
+                    &nbsp;&nbsp;&nbsp;
+                    <a href="#/cancel-profile-edit/" data-bind="click: cancelEditing">Cancel</a>
+                    &nbsp;&nbsp;&nbsp;
+                    <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" data-bind="visible: saveSpinner.isVisible" style="display: none;" />
+                    <strong data-bind="visible: saveSpinner.isVisible" style="display: none;">Saving...</strong>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+

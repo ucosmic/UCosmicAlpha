@@ -2142,7 +2142,8 @@
     </Content>
     <TypeScriptCompile Include="scripts\viewmodels\people\Languages.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\my\Profile.ts" />
-    <TypeScriptCompile Include="scripts\viewmodels\people\ProfileEditor.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\people\AffiliationsEditor.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\people\PersonalInfoEditor.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\representatives\RepModuleSettings.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\geographicExpertises\GeographicExpertises.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\degrees\ServiceApiModel.d.ts" />
@@ -2187,6 +2188,15 @@
     <TypeScriptCompile Include="scripts\viewmodels\people\Models.d.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\people\Routes.d.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\people\Server.ts" />
+    <Content Include="scripts\viewmodels\people\AffiliationsEditor.js">
+      <DependentUpon>AffiliationsEditor.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\people\Languages.js">
+      <DependentUpon>Languages.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\people\ProfileEditor.js">
+      <DependentUpon>PersonalInfoEditor.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\viewmodels\people\Server.js">
       <DependentUpon>Server.ts</DependentUpon>
     </Content>
@@ -2604,7 +2614,7 @@
     <Content Include="Views\People\_GlobalExpertises.cshtml" />
     <Content Include="Views\People\_Emails.cshtml" />
     <Content Include="Views\People\Index_Spike.cshtml" />
-    <Content Include="Views\People\_PersonalInfo-Spike.cshtml" />
+    <Content Include="Views\People\_PersonalInfoEditor.cshtml" />
     <Content Include="Views\People\_AffiliationsEditor.cshtml" />
     <Content Include="Views\Employees\_ActivityDatesDisplay.cshtml" />
     <None Include="Web.Debug.config">

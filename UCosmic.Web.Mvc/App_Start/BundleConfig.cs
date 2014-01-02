@@ -200,7 +200,8 @@ namespace UCosmic.Web.Mvc
                 "~/scripts/viewmodels/employees/Server.js",
                 "~/scripts/viewmodels/employees/Summary.js"));
             bundles.Add(new ScriptBundle("~/bundles/people/profileEditor").Include(
-                "~/scripts/viewmodels/people/profileEditor.js"));
+                "~/scripts/viewmodels/people/affiliationsEditor.js",
+                "~/scripts/viewmodels/people/personalInfoEditor.js"));
             bundles.Add(new ScriptBundle("~/bundles/people/activities").Include(
                 "~/scripts/viewmodels/people/activities.js"));
             bundles.Add(new ScriptBundle("~/bundles/people/languages").Include(

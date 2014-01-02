@@ -230,7 +230,7 @@ namespace UCosmic.Web.Mvc.Controllers
                 public readonly string _GlobalExpertises = "_GlobalExpertises";
                 public readonly string _Languages = "_Languages";
                 public readonly string _LanguagesProficiency = "_LanguagesProficiency";
-                public readonly string _PersonalInfo_Spike = "_PersonalInfo-Spike";
+                public readonly string _PersonalInfoEditor = "_PersonalInfoEditor";
                 public readonly string _SearchSidebarNav = "_SearchSidebarNav";
                 public readonly string _SidebarNav = "_SidebarNav";
                 public readonly string Activities = "Activities";
@@ -249,7 +249,7 @@ namespace UCosmic.Web.Mvc.Controllers
             public readonly string _GlobalExpertises = "~/Views/People/_GlobalExpertises.cshtml";
             public readonly string _Languages = "~/Views/People/_Languages.cshtml";
             public readonly string _LanguagesProficiency = "~/Views/People/_LanguagesProficiency.cshtml";
-            public readonly string _PersonalInfo_Spike = "~/Views/People/_PersonalInfo-Spike.cshtml";
+            public readonly string _PersonalInfoEditor = "~/Views/People/_PersonalInfoEditor.cshtml";
             public readonly string _SearchSidebarNav = "~/Views/People/_SearchSidebarNav.cshtml";
             public readonly string _SidebarNav = "~/Views/People/_SidebarNav.cshtml";
             public readonly string Activities = "~/Views/People/Activities.cshtml";
