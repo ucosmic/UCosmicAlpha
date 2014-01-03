@@ -395,7 +395,7 @@ var People;
 
             AffiliationsEditor.prototype.bindJquery = function () {
                 var _this = this;
-                var self = this, kacSelect, positioned = false;
+                var self = this, kacSelect;
 
                 this.$edit_affiliations_dialog.kendoWindow({
                     width: 550,
@@ -417,20 +417,15 @@ var People;
                         _this.cancelClicked = true;
                     },
                     activate: function () {
-                        if (positioned === false) {
-                            _this.$edit_affiliations_dialog.parent().css({ "display": "none" });
-                            _this.$edit_affiliations_dialog.parent().css({ "visibility": "visible" });
-                            _this.$edit_affiliations_dialog.parent().fadeIn(200);
-                            _this.$edit_affiliations_dialog.parent().css({ "left": (_this.$edit_affiliations_dialog.parent().offset().left + 215) + "px" });
-                            positioned = true;
-                        }
                     },
                     visible: false,
                     draggable: false,
                     resizable: false
                 });
-                this.$edit_affiliations_dialog.parent().css({ "visibility": "hidden" });
+
                 this.$edit_affiliations_dialog.parent().addClass("profile-kendo-window");
+                var dialog = this.$edit_affiliations_dialog.data("kendoWindow");
+                dialog.center();
             };
 
             AffiliationsEditor.prototype._loadAffiliationData = function () {

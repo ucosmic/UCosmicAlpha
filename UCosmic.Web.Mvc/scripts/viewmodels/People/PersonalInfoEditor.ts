@@ -316,7 +316,7 @@ module People.ViewModels {
                 }
             });
             var self = this,
-                kacSelect, positioned = false;
+                kacSelect;
             this.$edit_personal_info_dialog.kendoWindow({
                 width: 550,
                 open: () => {
@@ -327,23 +327,25 @@ module People.ViewModels {
                     $("html, body").css("overflow", "");
                     this.isEditMode(false);
                 },
+                maxHeight: 500,
                 activate: () => {
-                    if (positioned === false) {
-                        this.$edit_personal_info_dialog.parent().css({
-                            "overflow-y": "scroll", "max-height": "500px",
-                            "display": "none", "visibility": "visible",
-                        });
-                        this.$edit_personal_info_dialog.parent().fadeIn(200);
-                        this.$edit_personal_info_dialog.parent().css({ "left": (this.$edit_personal_info_dialog.parent().offset().left + 215) + "px" });
-                        positioned = true;
-                    }
+                    //if (positioned === false) {
+                    //    this.$edit_personal_info_dialog.parent().css({ "display": "none" });
+                    //    this.$edit_personal_info_dialog.parent().css({ "visibility": "visible" });
+                    //    this.$edit_personal_info_dialog.parent().fadeIn(200);
+                    //    this.$edit_personal_info_dialog.parent().css({ "left": (this.$edit_personal_info_dialog.parent().offset().left + 215) + "px" });
+                    //    positioned = true;
+                    //}
                 },
                 visible: false,
                 draggable: false,
                 resizable: false
             });
-            this.$edit_personal_info_dialog.parent().css({ "visibility": "hidden" });
+            //this.$edit_personal_info_dialog.parent().css({ "visibility": "hidden" });
             this.$edit_personal_info_dialog.parent().addClass("profile-kendo-window");
+
+            var dialog = this.$edit_personal_info_dialog.data("kendoWindow");
+            dialog.center();
         }
 
         // logic to derive display name
