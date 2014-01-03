@@ -435,12 +435,9 @@ module People.ViewModels {
 
 
     export class AffiliationsEditor implements KnockoutValidationGroup {
+        
+        //#region Properties
 
-        constructor(personId: number) {
-            // go ahead and load affiliations
-            this.affiliationData.ready();
-            this.hasViewModelLoaded(true);
-        }
         hasAffiliationsEditorLoaded = ko.observable<boolean>(false);
         hasViewModelLoaded = ko.observable<boolean>(false);
         personId: number = 0;
@@ -449,6 +446,18 @@ module People.ViewModels {
         cancelClicked: boolean = true;
         preferredTitle = ko.observable<string>();
         $edit_affiliations_dialog = $("#edit_affiliations_dialog");
+
+        //#endregion
+        //#region Construction
+
+        constructor(personId: number) {
+            // go ahead and load affiliations
+            this.affiliationData.ready();
+            this.hasViewModelLoaded(true);
+        }
+        
+        //#endregion
+        //#region Affiliations
 
         facultyRankAutoUpdate(data) {
             if (data.value() == undefined) {
@@ -508,11 +517,9 @@ module People.ViewModels {
                 resizable: false
             });
             this.$edit_affiliations_dialog.parent().css({ "visibility": "hidden" });
-            this.$edit_affiliations_dialog.parent().addClass("affiliations-kendo-window");
+            this.$edit_affiliations_dialog.parent().addClass("profile-kendo-window");
         }
-
-        //#region Affiliations
-
+        
         defaultAffiliation: ApiModels.Affiliation;
         editableAffiliations = ko.observableArray<KoModels.Affiliation>();
         affiliationsSpinner = new App.Spinner({ delay: 400, runImmediately: true, });
@@ -603,8 +610,6 @@ module People.ViewModels {
             affiliation.bindEstablishmentEditors(undefined);
         }
 
-        //#endregion
-        //#region DC / USF implementation
 
         startEditingAffiliations(): void { // show the editor
             this.$edit_affiliations_dialog.data("kendoWindow").open().title("Affiliations");

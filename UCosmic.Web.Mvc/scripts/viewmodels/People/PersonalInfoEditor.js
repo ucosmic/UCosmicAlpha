@@ -18,7 +18,6 @@ var People;
                 this.lastName = ko.observable();
                 this.suffix = ko.observable();
                 this.defaultEstablishmentHasCampuses = ko.observable(false);
-                this.preferredTitle = ko.observable();
                 this.gender = ko.observable();
                 this.isActive = ko.observable(undefined);
                 this.$photo = ko.observable();
@@ -49,14 +48,11 @@ var People;
                 viewModelPact.done(function (viewModel) {
                     ko.mapping.fromJS(viewModel, { ignore: "id" }, _this);
                     _this.personId = viewModel.id;
-
                     _this._originalValues = viewModel;
-
                     _this._setupValidation();
                     _this._setupKendoWidgets();
                     _this._setupDisplayNameDerivation();
                     _this._setupCardComputeds();
-
                     _this._loadPromise.resolve();
                 }).fail(function (xhr, textStatus, errorThrown) {
                     _this._loadPromise.reject(xhr, textStatus, errorThrown);
@@ -75,6 +71,7 @@ var People;
             };
 
             PersonalInfoEditor.prototype.cancelEditing = function () {
+                this.$edit_personal_info_dialog.data("kendoWindow").close();
                 ko.mapping.fromJS(this._originalValues, {}, this);
                 this.stopEditing();
             };
@@ -88,10 +85,6 @@ var People;
 
                     this.saveSpinner.start();
 
-                    var affiliationPutModel = {
-                        jobTitles: this.preferredTitle()
-                    };
-
                     $.ajax({
                         url: '/api/user/person',
                         type: 'PUT',
@@ -99,6 +92,7 @@ var People;
                     }).done(function (responseText, statusText, xhr) {
                         App.flasher.flash(responseText);
                         _this.stopEditing();
+                        _this.$edit_personal_info_dialog.data("kendoWindow").close();
                     }).fail(function () {
                     }).always(function () {
                         _this.saveSpinner.stop();
@@ -182,10 +176,6 @@ var People;
 
                 this.suffix.extend({
                     maxLength: 50
-                });
-
-                this.preferredTitle.extend({
-                    maxLength: 500
                 });
 
                 ko.validation.group(this);
@@ -273,9 +263,7 @@ var People;
                         });
                     }
                 });
-
                 var self = this, kacSelect, positioned = false;
-
                 this.$edit_personal_info_dialog.kendoWindow({
                     width: 550,
                     open: function () {
@@ -302,7 +290,7 @@ var People;
                     resizable: false
                 });
                 this.$edit_personal_info_dialog.parent().css({ "visibility": "hidden" });
-                this.$edit_personal_info_dialog.parent().addClass("affiliations-kendo-window");
+                this.$edit_personal_info_dialog.parent().addClass("profile-kendo-window");
             };
 
             PersonalInfoEditor.prototype._setupDisplayNameDerivation = function () {

@@ -10,10 +10,10 @@
         <table style="margin-bottom: .5em">
             <tr>
                 <td style="vertical-align: bottom;">
-                    <img src="@Url.HttpRouteUrl(null, new { controller = "People", action = "GetPhoto", Id = Model.PersonId })" style="max-width: 100px;  margin-right: 1em" height="108" />
+                    <img data-bind="attr: { src: photoSrc }" src="@Url.HttpRouteUrl(null, new { controller = "People", action = "GetPhoto", Id = Model.PersonId })" style="max-width: 100px;  margin-right: 1em" height="108" />
                 </td>
                 <td>
-                    <div style="font-size: 24px; line-height: 28px;">@Model.DisplayName</div>
+                    <div data-bind="text: displayName" style=" font-size: 24px; line-height: 28px;">@Model.DisplayName</div>
                     <div>@Model.JobTitles</div>
                     <a style="-ms-word-break: break-all; -moz-word-break: break-all; -o-word-break: break-all; word-break: break-all;" href="mailto:@Model.EmailAddress" target="_top">@Model.EmailAddress</a>
                 </td>
@@ -120,15 +120,6 @@
                            data-bind="value: suffix, valueUpdate: 'afterkeydown', jqObservableElement: '$nameSuffix'" />
                 </div>
             </div>
-            <div class="field-row">
-                <div class="field-label">
-                    <label>My Preferred Title is</label>
-                </div>
-                <div class="field-input">
-                    <textarea rows="2" data-bind="value: preferredTitle, valueUpdate: 'afterkeydown'"></textarea>
-                </div>
-            </div>
-
 
             @* GENDER ROW *@
             @if (viewingUser.IsInRole(RoleName.EmployeeProfileManager))

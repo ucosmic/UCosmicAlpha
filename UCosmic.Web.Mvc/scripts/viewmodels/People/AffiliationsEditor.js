@@ -430,7 +430,7 @@ var People;
                     resizable: false
                 });
                 this.$edit_affiliations_dialog.parent().css({ "visibility": "hidden" });
-                this.$edit_affiliations_dialog.parent().addClass("affiliations-kendo-window");
+                this.$edit_affiliations_dialog.parent().addClass("profile-kendo-window");
             };
 
             AffiliationsEditor.prototype._loadAffiliationData = function () {

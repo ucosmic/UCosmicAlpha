@@ -3,17 +3,7 @@ module People.ViewModels {
 
     export class PersonalInfoEditor implements KnockoutValidationGroup {
         //#region Properties
-
-        //private _sammy: Sammy.Application = Sammy();
-        //private _isInitialized: boolean = false;
         private _originalValues: ApiModels.IServerProfileApiModel;
-        //private _activitiesViewModel: Activities.ViewModels.ActivityList = null;
-        //private _geographicExpertisesViewModel: RootViewModels.GeographicExpertises.GeographicExpertiseList = null;
-        //private _languageExpertisesViewModel: RootViewModels.LanguageExpertises.LanguageExpertiseList = null;
-        //private _degreesViewModel: RootViewModels.Degrees.DegreeList = null;
-        //private _internationalAffiliationsViewModel: RootViewModels.InternationalAffiliations.InternationalAffiliationList = null;
-
-        //cardData: card;
 
         hasPhoto = ko.observable<boolean>();
         photoUploadError = ko.observable<string>();
@@ -41,9 +31,7 @@ module People.ViewModels {
         suffix = ko.observable<string>();
 
         defaultEstablishmentHasCampuses = ko.observable<boolean>(false);
-
-        preferredTitle = ko.observable<string>();
-
+        
         gender = ko.observable<string>();
         isActive = ko.observable<boolean>(undefined);
         genderText: () => string;
@@ -70,15 +58,11 @@ module People.ViewModels {
         //#region Construction
 
         constructor(personId: number) {
-            this.personId2 = personId; // bring in personId from viewbag
-            //this.cardData = cardData;
-            // go ahead and load affiliations
-            //this.affiliationData.ready();
+            this.personId2 = personId; 
         }
 
         //#endregion
-
-        //#region DC / USF implementation
+        //#region Personal Information
 
         private _loadPromise: JQueryDeferred<any>;
         load(startTab: string = ''): JQueryPromise<any> {
@@ -96,19 +80,13 @@ module People.ViewModels {
 
             // only process after both requests have been resolved
             viewModelPact.done((viewModel: ApiModels.IServerProfileApiModel): void => {
-
-
                 ko.mapping.fromJS(viewModel, { ignore: "id" }, this); // populate the scalars
                 this.personId = viewModel.id;
-
                 this._originalValues = viewModel;
-
                 this._setupValidation();
                 this._setupKendoWidgets();
                 this._setupDisplayNameDerivation();
                 this._setupCardComputeds();
-
-
                 this._loadPromise.resolve();
             })
                 .fail((xhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
@@ -118,30 +96,22 @@ module People.ViewModels {
             return this._loadPromise;
         }
 
-
-
         startEditing(): void { // show the editor
             this.isEditMode(true);
             this.$edit_personal_info_dialog.data("kendoWindow").open().title("Personal Information");
-            //if (this.$editSection.length) {
-            //    this.$editSection.slideDown();
-            //}
         }
 
         stopEditing(): void { // hide the editor
             this.isEditMode(false);
-            //if (this.$editSection.length) {
-            //    this.$editSection.slideUp();
-            //}
         }
 
         cancelEditing(): void {
+            this.$edit_personal_info_dialog.data("kendoWindow").close();
             ko.mapping.fromJS(this._originalValues, {}, this); // restore original values
             this.stopEditing();
         }
 
         saveInfo(): void {
-
             if (!this.isValid()) {
                 this.errors.showAllMessages();
             }
@@ -150,12 +120,7 @@ module People.ViewModels {
 
                 this.saveSpinner.start();
 
-                var affiliationPutModel: ApiModels.AffiliationPut = {
-                    jobTitles: this.preferredTitle(),
-                };
-                
                 $.ajax({
-                    //url: App.Routes.WebApi.My.Profile.put(),
                     url: '/api/user/person', // TODO: button this up
                     type: 'PUT',
                     data: apiModel
@@ -163,6 +128,7 @@ module People.ViewModels {
                     .done((responseText: string, statusText: string, xhr: JQueryXHR) => {
                         App.flasher.flash(responseText);
                         this.stopEditing();
+                        this.$edit_personal_info_dialog.data("kendoWindow").close();
                     })
                     .fail(() => {
                         //alert('a PUT API call failed :(');
@@ -225,7 +191,6 @@ module People.ViewModels {
                 });
         }
 
-
         // client validation rules
         private _setupValidation(): void {
             this.displayName.extend({
@@ -254,18 +219,12 @@ module People.ViewModels {
             this.suffix.extend({
                 maxLength: 50
             });
-
-            this.preferredTitle.extend({
-                maxLength: 500
-            });
-
+            
             ko.validation.group(this);
         }
 
         // comboboxes for salutation & suffix
         private _setupKendoWidgets(): void {
-
-
             // when the $element observables are bound, they will have length
             // use this opportunity to apply kendo extensions
             this.$nameSalutation.subscribe((newValue: JQuery): void => {
@@ -356,10 +315,8 @@ module People.ViewModels {
                     });
                 }
             });
-
             var self = this,
                 kacSelect, positioned = false;
-
             this.$edit_personal_info_dialog.kendoWindow({
                 width: 550,
                 open: () => {
@@ -386,7 +343,7 @@ module People.ViewModels {
                 resizable: false
             });
             this.$edit_personal_info_dialog.parent().css({ "visibility": "hidden" });
-            this.$edit_personal_info_dialog.parent().addClass("affiliations-kendo-window");
+            this.$edit_personal_info_dialog.parent().addClass("profile-kendo-window");
         }
 
         // logic to derive display name
