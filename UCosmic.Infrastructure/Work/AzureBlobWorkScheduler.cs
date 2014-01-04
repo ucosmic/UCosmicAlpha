@@ -158,10 +158,13 @@ namespace UCosmic.Work
                 .ToList();
 
             var lastSchedule = JsonConvert.DeserializeObject<IntermediateSchedule[]>(LoadIntermediateSchedule());
-            foreach (var missingJob in lastSchedule)
+            if (lastSchedule != null)
             {
-                if (intermediate.Any(x => x.Type == missingJob.Type)) continue;
-                intermediate.Add(missingJob);
+                foreach (var missingJob in lastSchedule)
+                {
+                    if (intermediate.Any(x => x.Type == missingJob.Type)) continue;
+                    intermediate.Add(missingJob);
+                }
             }
 
             var json = JsonConvert.SerializeObject(intermediate);
