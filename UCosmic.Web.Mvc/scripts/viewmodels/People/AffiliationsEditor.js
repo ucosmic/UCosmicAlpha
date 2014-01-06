@@ -416,13 +416,10 @@ var People;
                         }
                         _this.cancelClicked = true;
                     },
-                    activate: function () {
-                    },
                     visible: false,
                     draggable: false,
                     resizable: false
                 });
-
                 this.$edit_affiliations_dialog.parent().addClass("profile-kendo-window");
                 var dialog = this.$edit_affiliations_dialog.data("kendoWindow");
                 dialog.center();

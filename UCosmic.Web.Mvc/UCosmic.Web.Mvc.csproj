@@ -2575,8 +2575,8 @@
     <Content Include="Views\Agreements\SearchTable.cshtml" />
     <Content Include="Views\Activities\Details.cshtml" />
     <Content Include="Views\Activities\_ActivitiesContent.cshtml" />
-    <Content Include="Views\Activities\_Bib.cshtml" />
     <Content Include="Views\Activities\_ActivitiesSide.cshtml" />
+    <Content Include="Views\Activities\_Bib.cshtml" />
     <None Include="Views\ApiTest\Index.cshtml" />
     <Content Include="Views\Agreements\Settings.cshtml" />
     <Content Include="Views\Agreements\_SearchSideBar.cshtml" />

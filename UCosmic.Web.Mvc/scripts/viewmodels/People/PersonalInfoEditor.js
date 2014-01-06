@@ -275,13 +275,10 @@ var People;
                         _this.isEditMode(false);
                     },
                     maxHeight: 500,
-                    activate: function () {
-                    },
                     visible: false,
                     draggable: false,
                     resizable: false
                 });
-
                 this.$edit_personal_info_dialog.parent().addClass("profile-kendo-window");
 
                 var dialog = this.$edit_personal_info_dialog.data("kendoWindow");

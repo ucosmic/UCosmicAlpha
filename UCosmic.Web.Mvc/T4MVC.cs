@@ -3050,11 +3050,14 @@ namespace Links
                 public static readonly string Activities_ts = Url("Activities.ts");
                 public static readonly string Activities_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Activities.min.js") ? Url("Activities.min.js") : Url("Activities.js");
                               
+                public static readonly string AffiliationsEditor_ts = Url("AffiliationsEditor.ts");
+                public static readonly string AffiliationsEditor_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/AffiliationsEditor.min.js") ? Url("AffiliationsEditor.min.js") : Url("AffiliationsEditor.js");
+                              
                 public static readonly string Languages_ts = Url("Languages.ts");
                 public static readonly string Languages_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Languages.min.js") ? Url("Languages.min.js") : Url("Languages.js");
                               
                 public static readonly string Models_d_ts = Url("Models.d.ts");
-                public static readonly string ProfileEditor_ts = Url("ProfileEditor.ts");
+                public static readonly string PersonalInfoEditor_ts = Url("PersonalInfoEditor.ts");
                 public static readonly string ProfileEditor_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/ProfileEditor.min.js") ? Url("ProfileEditor.min.js") : Url("ProfileEditor.js");
                               
                 public static readonly string Routes_d_ts = Url("Routes.d.ts");

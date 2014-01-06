@@ -10,7 +10,13 @@
     <li class="search @ViewBag.Search">
         <a href="@Url.Action(hasStyleDomain ? MVC.Employees.Table(styleDomain, null) : MVC.Employees.Index())">Search</a>
     </li>
-    <li class="expert">
-        <a href="/facultystaff/#/expert">Find an Expert</a>
+    @if (ViewBag.isActivity != null)
+    {
+    <li class="search @ViewBag.Faculty">
+        <a href="@Url.Action(hasStyleDomain ? MVC.Employees.Table(styleDomain, null) : MVC.Employees.Index())">Activity Detail</a>
     </li>
+    }
+    @*<li class="expert">
+        <a href="/facultystaff/#/expert">Find an Expert</a>
+    </li>*@
 </ul>
