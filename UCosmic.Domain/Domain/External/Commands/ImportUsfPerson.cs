@@ -140,6 +140,15 @@ namespace UCosmic.Domain.External
             }
 
             // update person
+            var displayName = _queryProcessor.Execute(new GenerateDisplayName
+            {
+                FirstName = usfPerson.FirstName,
+                MiddleName = usfPerson.MiddleName,
+                LastName = usfPerson.LastName,
+                Suffix = usfPerson.Suffix,
+            });
+            if (string.IsNullOrWhiteSpace(displayName))
+                displayName = usfPerson.EmailAddress;
             var updatePersonCommand = new UpdatePerson(command.Principal, user.Person.RevisionId)
             {
                 NoCommit = true,
@@ -148,7 +157,8 @@ namespace UCosmic.Domain.External
                 LastName = usfPerson.LastName,
                 Gender = string.IsNullOrWhiteSpace(usfPerson.Gender) ? "P" : usfPerson.Gender.Substring(0, 1).ToUpper(),
                 Suffix = usfPerson.Suffix,
-                IsDisplayNameDerived = true,
+                DisplayName = displayName,
+                IsDisplayNameDerived = false,
                 IsActive = true,
             };
             _updatePerson.Handle(updatePersonCommand);
