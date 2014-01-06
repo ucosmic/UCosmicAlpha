@@ -26,12 +26,18 @@ var Activities;
             }
             Search.prototype.applyBindings = function (element) {
                 ko.applyBindings(this, element);
+                kendo.init($(element));
                 this._applyKendo();
                 this._applySubscriptions();
             };
 
             Search.prototype._applyKendo = function () {
                 var _this = this;
+                var kendoSince = this.$since.data('kendoDatePicker');
+                kendoSince.element.val(this.settings.input.since);
+                var kendoUntil = this.$until.data('kendoDatePicker');
+                kendoUntil.element.val(this.settings.input.until);
+
                 var inputInitialized = false;
                 var emptyDataItem = {
                     officialName: '[Begin typing to see options]',
@@ -68,7 +74,6 @@ var Activities;
                         widget.value('');
                         _this.$placeIds.val('');
                         if (_this.settings.input.placeIds && _this.settings.input.placeIds.length) {
-                            _this._submitForm();
                         } else {
                             widget.setDataSource(emptyDataSource);
                         }

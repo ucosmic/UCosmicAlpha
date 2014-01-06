@@ -107,6 +107,57 @@
                         background: Highlight;
                         color: HighlightText;
                     }
+
+        .dates.picker.field .k-datepicker {
+            width: 100%;
+            border-radius: 0;
+            margin-top: 2px;
+            vertical-align: top;
+            margin-bottom: 2px;
+        }
+
+            .dates.picker.field .k-datepicker .k-picker-wrap {
+                border-radius: 0;
+                border-color: #ddd;
+                border-top-color: #aaa;
+                border-left-color: #aaa;
+                height: 18px;
+                box-shadow: none;
+                padding-right: 20px;
+            }
+
+                .dates.picker.field .k-datepicker .k-picker-wrap input {
+                    border-radius: 0;
+                    margin: 0;
+                    text-indent: 0;
+                    font-family: Arial, Helvetica, sans-serif;
+                    height: 18px;
+                    box-sizing: border-box;
+                    margin-bottom: 0;
+                    color: #000;
+                }
+
+                .dates.picker.field .k-datepicker .k-picker-wrap .k-select {
+                    min-height: 16px;
+                    max-height: 16px;
+                    height: 16px;
+                    min-width: 16px;
+                    max-width: 16px;
+                    width: 16px;
+                    border-radius: 0;
+                }
+
+                    .dates.picker.field .k-datepicker .k-picker-wrap .k-select .k-icon {
+                        min-height: 16px;
+                        max-height: 16px;
+                        height: 16px;
+                        min-width: 16px;
+                        max-width: 16px;
+                        width: 16px;
+                        vertical-align: top;
+                        margin-top: 2px;
+                        margin-left: 0;
+                    }
     </style>
 }
 
@@ -391,7 +442,7 @@
                             <div class="content">
                                 @* LOCATION AUTOCOMPLETE *@
                                 <div class="location combobox field">
-                                    <input name="placeNames" type="text" placeholder="[Enter location]" data-bind="jQuery: '$location'"
+                                    <input name="placeNames" type="text" placeholder="[Find by location]" data-bind="jQuery: '$location'"
                                            value="@(Model.Input.PlaceNames != null && Model.Input.PlaceNames.Any() ? Model.Input.PlaceNames.First() : "")"
                                            class="side" />
                                     <input name="placeIds" type="hidden" data-bind="jQuery: '$placeIds'"
@@ -458,44 +509,75 @@
                                     <button class="link" data-bind="click: next, enable: nextAllowed" disabled="disabled">Next &gt;&gt;</button>
                                 </div>
 
-                                <div class="field" data-xbind="with: pager.input">
-                                    @if (Model.ActivityTypes != null && Model.ActivityTypes.Any())
-                                    {
-                                        <div style="margin-top: 12px;">
-                                            <span>Narrow by activity type</span>
-                                            <ol style="color: #000; font-size: 13px; margin-top: 4px;">
-                                                @foreach (var activityType in Model.ActivityTypes)
-                                                {
-                                                    var isChecked = Model.Input.ActivityTypeIds == null
-                                                                    || !Model.Input.ActivityTypeIds.Any()
-                                                                    || Model.Input.ActivityTypeIds.Contains(activityType.ActivityTypeId)
-                                                        ? "checked" : null;
-                                                    var checkBoxId = string.Format("activity_type_checkbox_{0}", Guid.NewGuid());
-                                                    <li>
-                                                        <div class="group">
-                                                            <div class="on-left">
-                                                                <label style="cursor: pointer;">
-                                                                    <input type="checkbox" id="@checkBoxId"
-                                                                           name="activityTypeIds" value="@activityType.ActivityTypeId" checked="@isChecked"
-                                                                           style="cursor: pointer;" />
-                                                                    <img title="@activityType.Text" width="14" alt="" style="margin-top: -6px; cursor: pointer;"
-                                                                         src="@Url.HttpRouteUrl(null, new { controller = "EmployeeModuleSettings", action = "GetIcon", typeId = activityType.ActivityTypeId })" />
-                                                                </label>
-                                                            </div>
-                                                            <div class="on-left" style="width: 180px; margin-left: 4px; margin-top: -2px;">
-                                                                <label style="cursor: pointer; vertical-align: top;" for="@checkBoxId">
-                                                                    @activityType.Text
-                                                                </label>
-                                                            </div>
+                                @* ACTIVITY TYPE CHECKBOXES *@
+                                @if (Model.ActivityTypes != null && Model.ActivityTypes.Any())
+                                {
+                                    <div class="field" style="margin-top: 12px;">
+                                        <strong>Find by activity type</strong>
+                                        <ol style="color: #000; font-size: 13px; margin-top: 4px;">
+                                            @foreach (var activityType in Model.ActivityTypes)
+                                            {
+                                                var isChecked = Model.Input.ActivityTypeIds == null ||
+                                                                !Model.Input.ActivityTypeIds.Any() ||
+                                                                Model.Input.ActivityTypeIds.Contains(activityType.ActivityTypeId)
+                                                    ? "checked" : null;
+                                                var checkBoxId = string.Format("activity_type_checkbox_{0}", Guid.NewGuid());
+                                                <li>
+                                                    <div class="group">
+                                                        <div class="on-left">
+                                                            <label style="cursor: pointer;">
+                                                                <input type="checkbox" id="@checkBoxId"
+                                                                       name="activityTypeIds" value="@activityType.ActivityTypeId" checked="@isChecked"
+                                                                       style="cursor: pointer;" />
+                                                                <img title="@activityType.Text" width="14" alt="" style="margin-top: -6px; cursor: pointer;"
+                                                                     src="@Url.HttpRouteUrl(null, new { controller = "EmployeeModuleSettings", action = "GetIcon", typeId = activityType.ActivityTypeId })" />
+                                                            </label>
                                                         </div>
-                                                    </li>
-                                                }
-                                            </ol>
-                                            <div style="margin-top: 4px; text-align: center;">
-                                                <input type="submit" value="Apply Activity Type Filters" style="font-size: 14px; line-height: normal; padding: 4px 8px;" />
-                                            </div>
+                                                        <div class="on-left" style="width: 180px; margin-left: 4px; margin-top: -2px;">
+                                                            <label style="cursor: pointer; vertical-align: top;" for="@checkBoxId">
+                                                                @activityType.Text
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            }
+                                        </ol>
+                                        <div style="margin-top: 4px; text-align: center;">
+                                            <input type="submit" value="Search" style="font-size: 14px; line-height: normal; padding: 4px 8px;" />
                                         </div>
-                                    }
+                                    </div>
+                                }
+
+                                @* DATE FIELDS *@
+                                <div class="dates picker field" style="margin-top: 12px;">
+                                    <strong>Find by date(s)</strong>
+                                    <div class="group">
+                                        <div class="on-left" style="width: 110px;">
+                                            <input type="text" name="Since" placeholder="[Since]" class="side" value="@Model.Input.Since" data-role="datepicker"
+                                                   data-bind="jQuery: '$since'" />
+                                        </div>
+                                        <div class="on-right" style="width: 110px;">
+                                            <input type="text" name="Until" placeholder="[Until]" class="side" value="@Model.Input.Until" data-role="datepicker"
+                                                   data-bind="jQuery: '$until'" />
+                                        </div>
+                                    </div>
+                                    <div style="font-size: 12px; color: #555;">
+                                        YYYY or M/YYYY or M/D/YYYY
+                                    </div>
+                                    <div style="color: #000; font-size: 13px; line-height: 13px; margin-top: 4px;">
+                                        @{
+                                            var includeUndated = Model.Input.IncludeUndated == null ||
+                                                            Model.Input.IncludeUndated.Value
+                                                ? "checked" : null;
+                                        }
+                                        <label style="cursor: pointer; vertical-align: top;">
+                                            <input type="checkbox" name="includeUndated" checked="@includeUndated" value="true" style="cursor: pointer;" /> Include undated activities
+                                            <input type="hidden" name="includeUndated" value="false" />
+                                        </label>
+                                    </div>
+                                    <div style="margin-top: 8px; text-align: center;">
+                                        <input type="submit" value="Search" style="font-size: 14px; line-height: normal; padding: 4px 8px;" />
+                                    </div>
                                 </div>
                             </div>
                         </li>

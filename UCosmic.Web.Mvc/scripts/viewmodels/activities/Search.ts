@@ -25,6 +25,8 @@ module Activities.ViewModels {
 
         $form: JQuery;
         $location: JQuery;
+        $since: JQuery;
+        $until: JQuery;
         $placeIds: JQuery;
         loadingSpinner = new App.Spinner()
 
@@ -34,11 +36,21 @@ module Activities.ViewModels {
 
         applyBindings(element: Element): void {
             ko.applyBindings(this, element);
+            kendo.init($(element));
             this._applyKendo();
             this._applySubscriptions();
         }
 
         private _applyKendo(): void {
+            //#region DatePickers
+
+            var kendoSince = this.$since.data('kendoDatePicker');
+            kendoSince.element.val(this.settings.input.since);
+            var kendoUntil = this.$until.data('kendoDatePicker');
+            kendoUntil.element.val(this.settings.input.until);
+
+            //#endregion
+            //#region ComboBox for Place(s) filter
             var inputInitialized = false;
             var emptyDataItem = {
                 officialName: '[Begin typing to see options]',
@@ -75,7 +87,7 @@ module Activities.ViewModels {
                     widget.value('');
                     this.$placeIds.val('');
                     if (this.settings.input.placeIds && this.settings.input.placeIds.length) {
-                        this._submitForm();
+                        //this._submitForm(); // this makes changing location searches annoying
                     } else {
                         widget.setDataSource(emptyDataSource);
                     }
@@ -178,6 +190,7 @@ module Activities.ViewModels {
             });
             var comboBox: kendo.ui.ComboBox = this.$location.data('kendoComboBox');
             comboBox.list.addClass('k-ucosmic');
+            //#endregion
         }
 
         private _applySubscriptions(): void {

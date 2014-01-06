@@ -21,6 +21,9 @@ namespace UCosmic.Web.Mvc.Models
         public int[] ActivityTypeIds { get; set; }
         public string Keyword { get; set; }
         public string OrderBy { get; set; }
+        public string Since { get; set; }
+        public string Until { get; set; }
+        public bool? IncludeUndated { get; set; }
     }
 
     public static class ActivitySearchInputProfiler

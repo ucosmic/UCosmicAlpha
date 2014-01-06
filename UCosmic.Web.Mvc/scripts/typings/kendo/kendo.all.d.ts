@@ -1,6 +1,7 @@
 // Type definitions for Kendo UI
 
 declare module kendo {
+    function init(element: JQuery);
     function bind(selector: string, viewModel: any, namespace?: any): void;
     function bind(element: JQuery, viewModel: any, namespace?: any): void;
     function bind(element: Element, viewModel: any, namespace?: any): void;

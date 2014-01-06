@@ -22,6 +22,7 @@ namespace UCosmic.Domain.Activities
         public int[] PlaceIds { get; set; }
         //public string CountryCode { get; set; }
         public int[] ActivityTypeIds { get; set; }
+        public bool? IncludeUndated { get; set; }
         public string Keyword { get; set; }
     }
 
@@ -58,6 +59,12 @@ namespace UCosmic.Domain.Activities
             if (query.ActivityTypeIds != null && query.ActivityTypeIds.Any())
             {
                 queryable = queryable.Where(x => x.Types.Any(y => query.ActivityTypeIds.Contains(y.TypeId)));
+            }
+
+            // exclude undated items only when specified as false
+            if (query.IncludeUndated.HasValue && !query.IncludeUndated.Value)
+            {
+                queryable = queryable.Where(x => x.StartsOn.HasValue || x.EndsOn.HasValue);
             }
 
             if (query.PlaceIds != null && query.PlaceIds.Any())

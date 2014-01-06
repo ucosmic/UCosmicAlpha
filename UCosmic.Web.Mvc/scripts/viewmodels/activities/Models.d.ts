@@ -6,6 +6,9 @@ declare module Activities.ApiModels {
         countryCode?: string;
         placeIds?: number[];
         placeNames?: string[];
+        since?: string;
+        until?: string;
+        includeUndated?: string;
         orderBy?: string;
     }
 
