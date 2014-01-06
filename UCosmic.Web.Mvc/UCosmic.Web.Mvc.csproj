@@ -333,6 +333,7 @@
     <Compile Include="Models\Activities\ActivityTypeViewModel.cs" />
     <Compile Include="Models\Activities\Search\ActivitySearchPivot.cs" />
     <Compile Include="Models\Activities\Search\ActivitySearchResultModel.cs" />
+    <Compile Include="Models\Activities\Search\ActivityTypeModel.cs" />
     <Compile Include="Models\Agreements\AgreementOwningTenant.cs" />
     <Compile Include="Models\Employees\EmployeeSettingsFacultyRankApiModel.cs" />
     <Compile Include="Models\Degrees\DegreePublicViewModel.cs" />

@@ -221,262 +221,299 @@
                 </div>
             }
 
-                @* ZERO RESULTS MESSAGE *@
-                @if (Model.Output == null || Model.Output.Items == null || !Model.Output.Items.Any())
-                {
-                    <p>
-                        There are no results that match your search terms.
-                    </p>
-                }
-                else
-                {
-                    var activitiesDisplay = Model.Input.Pivot != ActivitySearchPivot.People ? "table" : "none";
-                    var peopleDisplay = Model.Input.Pivot == ActivitySearchPivot.People ? "table" : "none";
+            @* ZERO RESULTS MESSAGE *@
+            @if (Model.Output == null || Model.Output.Items == null || !Model.Output.Items.Any())
+            {
+                <p>
+                    There are no results that match your search terms.
+                </p>
+            }
+            else
+            {
+                var activitiesDisplay = Model.Input.Pivot != ActivitySearchPivot.People ? "table" : "none";
+                var peopleDisplay = Model.Input.Pivot == ActivitySearchPivot.People ? "table" : "none";
 
-                    @* ACTIVITY RESULTS TABLE *@
-                    <table class="data" style="display: @activitiesDisplay;" data-bind="visible: isActivitiesChecked">
-                        <colgroup>
-                            <col style="vertical-align: top;" />
-                            <col style="vertical-align: top;" />
-                            <col style="vertical-align: top;" />
-                            <col style="vertical-align: top;" />
-                        </colgroup>
-                        <thead>
+                @* ACTIVITY RESULTS TABLE *@
+                <table class="data" style="display: @activitiesDisplay;" data-bind="visible: isActivitiesChecked">
+                    <colgroup>
+                        <col style="vertical-align: top;" />
+                        <col style="vertical-align: top;" />
+                        <col style="vertical-align: top;" />
+                        <col style="vertical-align: top;" />
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>Location(s)</th>
+                            <th>Activity Title</th>
+                            <th>Type(s)</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody class="searchResults">
+                        @foreach (var activity in Model.Output.Items)
+                        {
                             <tr>
-                                <th>Location(s)</th>
-                                <th>Activity Title</th>
-                                <th>Type(s)</th>
-                                <th>Date</th>
-                            </tr>
-                        </thead>
-                        <tbody class="searchResults">
-                            @foreach (var activity in Model.Output.Items)
-                            {
-                                <tr>
-                                    @* LOCATIONS COLUMN *@
-                                    <td style="vertical-align: top; min-width: 120px;">
-                                        <ul style="display: inline-block;">
-                                            @foreach (var place in activity.Places)
+                                @* LOCATIONS COLUMN *@
+                                <td style="vertical-align: top; min-width: 120px;">
+                                    <ul style="display: inline-block;">
+                                        @foreach (var place in activity.Places)
+                                        {
+                                            <li class="comma-list"><span>@place.PlaceName</span></li>
+                                        }
+                                    </ul>
+                                </td>
+
+                                @* TITLE COLUMN *@
+                                <td style="vertical-align: top;">
+                                    <a href="@Url.Action(MVC.Activities.Details(activity.ActivityId))">
+                                        @activity.Title
+                                    </a>
+                                    - @activity.Owner.DisplayName
+                                </td>
+
+                                @* TYPE ICONS COLUMN *@
+                                <td style="vertical-align: top;">
+                                    <table style="border: none;" class="no-data">
+                                        <tr>
+                                            @for (var i = 0; i < activity.Types.Length; i++)
                                             {
-                                                <li class="comma-list"><span>@place.PlaceName</span></li>
+                                                <td style="border: none; margin: 2px; padding: 2px;">
+                                                    <span style="display: inline-block; width: 32px; text-align: center;">
+                                                        <img title="@activity.Types[i].Text" height="24"
+                                                             src="@Url.HttpRouteUrl(null, new {controller = "EmployeeModuleSettings", action = "GetIcon", typeId = activity.Types[i].TypeId})" alt="" />
+                                                    </span>
+                                                </td>
+                                                //How many columns per row
+                                                if ((i + 1) % 2 == 0)
+                                                {
+                                                    Html.Raw("</tr>");
+                                                    Html.Raw("<tr>");
+                                                }
+                                            }
+                                        </tr>
+                                    </table>
+                                </td>
+
+                                @* DATES COLUMN *@
+                                <td style="vertical-align: top;">
+                                    @{Html.RenderPartial(MVC.Employees.Views._ActivityDatesDisplay, activity);}
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+                @* PEOPLE RESULTS TABLE *@
+                <table class="data" style="display: @peopleDisplay;" data-bind="visible: isPeopleChecked">
+                    <colgroup>
+                        <col style="vertical-align: top;" />
+                        <col style="vertical-align: top;" />
+                        <col style="vertical-align: top;" />
+                        <col style="vertical-align: top;" />
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>Who</th>
+                            <th>What</th>
+                            <th>Where</th>
+                            <th>When</th>
+                        </tr>
+                    </thead>
+                    <tbody class="searchResults">
+                        @foreach (var activity in Model.Output.Items)
+                        {
+                            <tr>
+                                @* PERSON COLUMN *@
+                                <td style="vertical-align: top; min-width: 120px;">
+                                    <a href="@Url.Action(MVC.People.Activities(activity.Owner.PersonId, null))">
+                                        @activity.Owner.LastCommaFirst
+                                    </a>
+                                </td>
+
+                                @* TITLE COLUMN *@
+                                <td style="vertical-align: top;">
+                                    <a href="@Url.Action(MVC.Activities.Details(activity.ActivityId))">
+                                        @activity.Title
+                                    </a>
+                                    @if (activity.Types.Any())
+                                    {
+                                        <ul style="display: inline;">
+                                            @foreach (var type in activity.Types)
+                                            {
+                                                <li style="display: inline;">
+                                                    <img style="vertical-align: top; margin-left: 4px; margin-top: 2px; max-width: 16px;" title="@type.Text" height="16"
+                                                         src="@Url.HttpRouteUrl(null, new {controller = "EmployeeModuleSettings", action = "GetIcon", typeId = type.TypeId})" alt="(@type.Text)" />
+                                                </li>
                                             }
                                         </ul>
-                                    </td>
+                                    }
+                                </td>
 
-                                    @* TITLE COLUMN *@
-                                    <td style="vertical-align: top;">
-                                        <a href="@Url.Action(MVC.Activities.Details(activity.ActivityId))">
-                                            @activity.Title
-                                        </a>
-                                        - @activity.Owner.DisplayName
-                                    </td>
-
-                                    @* TYPE ICONS COLUMN *@
-                                    <td style="vertical-align: top;">
-                                        <table style="border: none;" class="no-data">
-                                            <tr>
-                                                @for (var i = 0; i < activity.Types.Length; i++)
-                                                {
-                                                    <td style="border: none; margin: 2px; padding: 2px;">
-                                                        <span style="display: inline-block; width: 32px; text-align: center;">
-                                                            <img title="@activity.Types[i].Text" height="24"
-                                                                 src="@Url.HttpRouteUrl(null, new {controller = "EmployeeModuleSettings", action = "GetIcon", typeId = activity.Types[i].TypeId})" alt="" />
-                                                        </span>
-                                                    </td>
-                                                    //How many columns per row
-                                                    if ((i + 1) % 2 == 0)
-                                                    {
-                                                        Html.Raw("</tr>");
-                                                        Html.Raw("<tr>");
-                                                    }
-                                                }
-                                            </tr>
-                                        </table>
-                                    </td>
-
-                                    @* DATES COLUMN *@
-                                    <td style="vertical-align: top;">
-                                        @{Html.RenderPartial(MVC.Employees.Views._ActivityDatesDisplay, activity);}
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-
-                    @* PEOPLE RESULTS TABLE *@
-                    <table class="data" style="display: @peopleDisplay;" data-bind="visible: isPeopleChecked">
-                        <colgroup>
-                            <col style="vertical-align: top;" />
-                            <col style="vertical-align: top;" />
-                            <col style="vertical-align: top;" />
-                            <col style="vertical-align: top;" />
-                        </colgroup>
-                        <thead>
-                            <tr>
-                                <th>Who</th>
-                                <th>What</th>
-                                <th>Where</th>
-                                <th>When</th>
-                            </tr>
-                        </thead>
-                        <tbody class="searchResults">
-                            @foreach (var activity in Model.Output.Items)
-                            {
-                                <tr>
-                                    @* PERSON COLUMN *@
-                                    <td style="vertical-align: top; min-width: 120px;">
-                                        <a href="@Url.Action(MVC.People.Activities(activity.Owner.PersonId, null))">
-                                            @activity.Owner.LastCommaFirst
-                                        </a>
-                                    </td>
-
-                                    @* TITLE COLUMN *@
-                                    <td style="vertical-align: top;">
-                                        <a href="@Url.Action(MVC.Activities.Details(activity.ActivityId))">
-                                            @activity.Title
-                                        </a>
-                                        @if (activity.Types.Any())
+                                @* LOCATIONS COLUMN *@
+                                <td style="vertical-align: top; min-width: 120px;">
+                                    <ul style="display: inline-block;">
+                                        @foreach (var place in activity.Places)
                                         {
-                                            <ul style="display: inline;">
-                                                @foreach (var type in activity.Types)
+                                            <li class="comma-list"><span>@place.PlaceName</span></li>
+                                        }
+                                    </ul>
+                                </td>
+
+                                @* DATES COLUMN*@
+                                <td style="vertical-align: top;">
+                                    @{Html.RenderPartial(MVC.Employees.Views._ActivityDatesDisplay, activity);}
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+        <aside class="on-right from-top" data-fixed-scroll="root">
+            <div data-fixed-scroll="anchor"></div>
+            <div data-fixed-scroll="content">
+                <nav class="side">
+                    <ul class="top">
+                        <li class="static square-bottom" style="margin-bottom: 0;">
+                            <div class="group">
+                                <div class="on-left"></div>
+                            </div>
+                            <div class="group no-link">
+                                <span class="arrow"></span>
+                                <span class="text">
+                                    Search Options
+                                    <img src="~/images/icons/spinner/spinner-20-blue-on-ddd.gif" alt=""
+                                         style="margin-left: 4px; display: none;" data-bind="visible: loadingSpinner.isVisible" />
+                                </span>
+                            </div>
+                        </li>
+                        <li class="static square-bottom">
+                            <div class="content">
+                                @* LOCATION AUTOCOMPLETE *@
+                                <div class="location combobox field">
+                                    <input name="placeNames" type="text" placeholder="[Enter location]" data-bind="jQuery: '$location'"
+                                           value="@(Model.Input.PlaceNames != null && Model.Input.PlaceNames.Any() ? Model.Input.PlaceNames.First() : "")"
+                                           class="side" />
+                                    <input name="placeIds" type="hidden" data-bind="jQuery: '$placeIds'"
+                                           value="@(Model.Input.PlaceIds != null && Model.Input.PlaceIds.Any() ? Model.Input.PlaceIds.First() : (int?)null)" />
+                                </div>
+
+                                @* COUNTRY DROPDOWN *@
+                                @*<div class="field">
+                                        @Html.DropDownListFor(x => x.Input.CountryCode, Model.CountryOptions, "[All countries]", new
+                                        {
+                                            @class = "side",
+                                            Name = "countryCode",
+                                            data_bind = "value: countryCode, options: countryOptions, optionsCaption: '[All countries]', optionsText: 'text', optionsValue: 'value'"
+                                        })
+                                    </div>*@
+
+                                @* SORT DROPDOWN *@
+                                <div class="field">
+                                    @Html.DropDownListFor(x => x.Input.OrderBy,
+                                    new[]
+                                    {
+                                        new SelectListItem { Text = "Sort with most recent at top", Value = "recency-desc" },
+                                        new SelectListItem { Text = "Sort with most recent at bottom", Value = "recency-asc" },
+                                        new SelectListItem { Text = "Sort by activity title A-Z", Value = "title-asc" },
+                                        new SelectListItem { Text = "Sort by activity title Z-A", Value = "title-desc" },
+                                        new SelectListItem { Text = "Sort by location A-Z", Value = "location-asc" },
+                                        new SelectListItem { Text = "Sort by location Z-A", Value = "location-desc" },
+                                        new SelectListItem { Text = "Sort by person last name A-Z", Value = "lastname-asc" },
+                                        new SelectListItem { Text = "Sort by person last name Z-A", Value = "lastname-desc" },
+                                        new SelectListItem { Text = "Sort by type A-Z", Value = "type-asc" },
+                                        new SelectListItem { Text = "Sort by type Z-A", Value = "type-desc" },
+                                    },
+                                    new
+                                    {
+                                        @class = "side",
+                                        Name = "orderBy",
+                                        data_bind = "value: orderBy"
+                                    })
+                                </div>
+
+                                @* PAGE SIZE DROPDOWN *@
+                                <div class="field">
+                                    @Html.DropDownListFor(x => x.Input.PageSize,
+                                    new[]
+                                    {
+                                        new SelectListItem { Text = "Show 10 results per page", Value = "10" },
+                                        new SelectListItem { Text = "Show 20 results per page", Value = "20" },
+                                        new SelectListItem { Text = "Show 50 results per page", Value = "50" },
+                                        new SelectListItem { Text = "Show 100 results per page", Value = "100" },
+                                        new SelectListItem { Text = "Show 250 results per page", Value = "250" },
+                                    },
+                                    new
+                                    {
+                                        @class = "side",
+                                        Name = "pageSize",
+                                        data_bind = "value: pager.input.pageSizeText"
+                                    })
+                                </div>
+
+                                @* PREV & NEXT PAGER BUTTONS *@
+                                <div class="field" data-bind="with: pager.input">
+                                    <button class="link" data-bind="click: prev, enable: prevAllowed" disabled="disabled">&lt;&lt; Previous</button>
+                                    |
+                                    <button class="link" data-bind="click: next, enable: nextAllowed" disabled="disabled">Next &gt;&gt;</button>
+                                </div>
+
+                                <div class="field" data-xbind="with: pager.input">
+                                    @if (Model.ActivityTypes != null && Model.ActivityTypes.Any())
+                                    {
+                                        <div style="margin-top: 12px;">
+                                            <span>Narrow by activity type</span>
+                                            <ol style="color: #000; font-size: 13px; margin-top: 4px;">
+                                                @foreach (var activityType in Model.ActivityTypes)
                                                 {
-                                                    <li style="display: inline;">
-                                                        <img style="vertical-align: top; margin-left: 4px; margin-top: 2px; max-width: 16px;" title="@type.Text" height="16"
-                                                             src="@Url.HttpRouteUrl(null, new {controller = "EmployeeModuleSettings", action = "GetIcon", typeId = type.TypeId})" alt="(@type.Text)" />
+                                                    var isChecked = Model.Input.ActivityTypeIds == null
+                                                                    || !Model.Input.ActivityTypeIds.Any()
+                                                                    || Model.Input.ActivityTypeIds.Contains(activityType.ActivityTypeId)
+                                                        ? "checked" : null;
+                                                    var checkBoxId = string.Format("activity_type_checkbox_{0}", Guid.NewGuid());
+                                                    <li>
+                                                        <div class="group">
+                                                            <div class="on-left">
+                                                                <label style="cursor: pointer;">
+                                                                    <input type="checkbox" id="@checkBoxId"
+                                                                           name="activityTypeIds" value="@activityType.ActivityTypeId" checked="@isChecked"
+                                                                           style="cursor: pointer;" />
+                                                                    <img title="@activityType.Text" width="14" alt="" style="margin-top: -6px; cursor: pointer;"
+                                                                         src="@Url.HttpRouteUrl(null, new { controller = "EmployeeModuleSettings", action = "GetIcon", typeId = activityType.ActivityTypeId })" />
+                                                                </label>
+                                                            </div>
+                                                            <div class="on-left" style="width: 180px; margin-left: 4px; margin-top: -2px;">
+                                                                <label style="cursor: pointer; vertical-align: top;" for="@checkBoxId">
+                                                                    @activityType.Text
+                                                                </label>
+                                                            </div>
+                                                        </div>
                                                     </li>
                                                 }
-                                            </ul>
-                                        }
-                                    </td>
+                                            </ol>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
 
-                                    @* LOCATIONS COLUMN *@
-                                    <td style="vertical-align: top; min-width: 120px;">
-                                        <ul style="display: inline-block;">
-                                            @foreach (var place in activity.Places)
-                                            {
-                                                <li class="comma-list"><span>@place.PlaceName</span></li>
-                                            }
-                                        </ul>
-                                    </td>
-
-                                    @* DATES COLUMN*@
-                                    <td style="vertical-align: top;">
-                                        @{Html.RenderPartial(MVC.Employees.Views._ActivityDatesDisplay, activity);}
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                }
+                    <ul class="bottom">
+                        <li class="current">
+                            <a href="#" class="group">
+                                <span class="arrow"></span>
+                                <span class="text">Table</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="group">
+                                <span class="arrow"></span>
+                                <span class="text">Map</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
-            <aside class="on-right from-top" data-fixed-scroll="root">
-                <div data-fixed-scroll="anchor"></div>
-                <div data-fixed-scroll="content">
-                    <nav class="side">
-                        <ul class="top">
-                            <li class="static square-bottom" style="margin-bottom: 0;">
-                                <div class="group">
-                                    <div class="on-left"></div>
-                                </div>
-                                <div class="group no-link">
-                                    <span class="arrow"></span>
-                                    <span class="text">
-                                        Search Options
-                                        <img src="~/images/icons/spinner/spinner-20-blue-on-ddd.gif" alt=""
-                                             style="margin-left: 4px; display: none;" data-bind="visible: loadingSpinner.isVisible" />
-                                    </span>
-                                </div>
-                            </li>
-                            <li class="static square-bottom">
-                                <div class="content">
-                                    @* LOCATION AUTOCOMPLETE *@
-                                    <div class="location combobox field">
-                                        <input name="placeNames" type="text" placeholder="[Enter location]" data-bind="jQuery: '$location'"
-                                               value="@(Model.Input.PlaceNames != null && Model.Input.PlaceNames.Any() ? Model.Input.PlaceNames.First() : "")"
-                                               class="side" />
-                                        <input name="placeIds" type="hidden" data-bind="jQuery: '$placeIds'"
-                                               value="@(Model.Input.PlaceIds != null && Model.Input.PlaceIds.Any() ? Model.Input.PlaceIds.First() : (int?)null)" />
-                                    </div>
-
-                                    @* COUNTRY DROPDOWN *@
-                                    @*<div class="field">
-                                            @Html.DropDownListFor(x => x.Input.CountryCode, Model.CountryOptions, "[All countries]", new
-                                            {
-                                                @class = "side",
-                                                Name = "countryCode",
-                                                data_bind = "value: countryCode, options: countryOptions, optionsCaption: '[All countries]', optionsText: 'text', optionsValue: 'value'"
-                                            })
-                                        </div>*@
-
-                                    @* SORT DROPDOWN *@
-                                    <div class="field">
-                                        @Html.DropDownListFor(x => x.Input.OrderBy,
-                                        new[]
-                                        {
-                                            new SelectListItem { Text = "Sort with most recent at top", Value = "recency-desc" },
-                                            new SelectListItem { Text = "Sort with most recent at bottom", Value = "recency-asc" },
-                                            new SelectListItem { Text = "Sort by activity title A-Z", Value = "title-asc" },
-                                            new SelectListItem { Text = "Sort by activity title Z-A", Value = "title-desc" },
-                                            new SelectListItem { Text = "Sort by location A-Z", Value = "location-asc" },
-                                            new SelectListItem { Text = "Sort by location Z-A", Value = "location-desc" },
-                                            new SelectListItem { Text = "Sort by person last name A-Z", Value = "lastname-asc" },
-                                            new SelectListItem { Text = "Sort by person last name Z-A", Value = "lastname-desc" },
-                                            new SelectListItem { Text = "Sort by type A-Z", Value = "type-asc" },
-                                            new SelectListItem { Text = "Sort by type Z-A", Value = "type-desc" },
-                                        },
-                                        new
-                                        {
-                                            @class = "side",
-                                            Name = "orderBy",
-                                            data_bind = "value: orderBy"
-                                        })
-                                    </div>
-
-                                    @* PAGE SIZE DROPDOWN *@
-                                    <div class="field">
-                                        @Html.DropDownListFor(x => x.Input.PageSize,
-                                        new[]
-                                        {
-                                            new SelectListItem { Text = "Show 10 results per page", Value = "10" },
-                                            new SelectListItem { Text = "Show 20 results per page", Value = "20" },
-                                            new SelectListItem { Text = "Show 50 results per page", Value = "50" },
-                                            new SelectListItem { Text = "Show 100 results per page", Value = "100" },
-                                            new SelectListItem { Text = "Show 250 results per page", Value = "250" },
-                                        },
-                                        new
-                                        {
-                                            @class = "side",
-                                            Name = "pageSize",
-                                            data_bind = "value: pager.input.pageSizeText"
-                                        })
-                                    </div>
-
-                                    @* PREV & NEXT PAGER BUTTONS *@
-                                    <div class="field" data-bind="with: pager.input">
-                                        <button class="link" data-bind="click: prev, enable: prevAllowed" disabled="disabled">&lt;&lt; Previous</button>
-                                        |
-                                        <button class="link" data-bind="click: next, enable: nextAllowed" disabled="disabled">Next &gt;&gt;</button>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-
-                        <ul class="bottom">
-                            <li class="current">
-                                <a href="#" class="group">
-                                    <span class="arrow"></span>
-                                    <span class="text">Table</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" class="group">
-                                    <span class="arrow"></span>
-                                    <span class="text">Map</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
-            </aside>
-        </form>
-    </div>
+        </aside>
+    </form>
+</div>

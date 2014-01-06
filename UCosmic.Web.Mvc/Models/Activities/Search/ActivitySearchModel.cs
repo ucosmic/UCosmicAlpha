@@ -9,5 +9,6 @@ namespace UCosmic.Web.Mvc.Models
         public ActivitySearchInputModel Input { get; set; }
         public PageOfActivitySearchResultModel Output { get; set; }
         //public IEnumerable<SelectListItem> CountryOptions { get; set; }
+        public IEnumerable<ActivityTypeModel> ActivityTypes { get; set; }
     }
 }

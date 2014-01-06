@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System;
 using System.Linq;
-using System.Net.Http;
+using System.Linq.Expressions;
 using System.Web.Mvc;
 using AttributeRouting.Web.Mvc;
 using AutoMapper;
 using UCosmic.Domain.Activities;
+using UCosmic.Domain.Employees;
 using UCosmic.Domain.Establishments;
 using UCosmic.Web.Mvc.Models;
 
@@ -56,7 +56,17 @@ namespace UCosmic.Web.Mvc.Controllers
                 Domain = domain,
                 Input = input,
                 Output = Mapper.Map<PageOfActivitySearchResultModel>(results),
+                ActivityTypes = Enumerable.Empty<ActivityTypeModel>(),
             };
+            var settings = _queryProcessor.Execute(new EmployeeSettingsByEstablishment(domain)
+            {
+                EagerLoad = new Expression<Func<EmployeeModuleSettings, object>>[]
+                {
+                    x => x.ActivityTypes,
+                }
+            });
+            if (settings != null && settings.ActivityTypes.Any())
+                model.ActivityTypes = Mapper.Map<ActivityTypeModel[]>(settings.ActivityTypes.OrderBy(x => x.Rank));
 
             //using (var http = new HttpClient())
             //{
@@ -73,6 +83,5 @@ namespace UCosmic.Web.Mvc.Controllers
 
             return View(model);
         }
-
     }
 }

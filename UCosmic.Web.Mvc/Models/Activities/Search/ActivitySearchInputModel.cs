@@ -18,6 +18,7 @@ namespace UCosmic.Web.Mvc.Models
         //public string CountryCode { get; set; }
         public int[] PlaceIds { get; set; }
         public string[] PlaceNames { get; set; }
+        public int[] ActivityTypeIds { get; set; }
         public string Keyword { get; set; }
         public string OrderBy { get; set; }
     }

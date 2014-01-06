@@ -21,6 +21,7 @@ namespace UCosmic.Domain.Activities
 
         public int[] PlaceIds { get; set; }
         //public string CountryCode { get; set; }
+        public int[] ActivityTypeIds { get; set; }
         public string Keyword { get; set; }
     }
 
@@ -52,6 +53,11 @@ namespace UCosmic.Domain.Activities
             {
                 var establishment = _queryProcessor.Execute(new EstablishmentByDomain(query.EstablishmentDomain));
                 queryable = queryable.Where(x => x.Activity.Person.Affiliations.Any(y => y.IsDefault && y.EstablishmentId == establishment.RevisionId));
+            }
+
+            if (query.ActivityTypeIds != null && query.ActivityTypeIds.Any())
+            {
+                queryable = queryable.Where(x => x.Types.Any(y => query.ActivityTypeIds.Contains(y.TypeId)));
             }
 
             if (query.PlaceIds != null && query.PlaceIds.Any())
