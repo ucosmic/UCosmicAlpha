@@ -22,6 +22,8 @@ namespace UCosmic.Domain.Activities
         public int[] PlaceIds { get; set; }
         //public string CountryCode { get; set; }
         public int[] ActivityTypeIds { get; set; }
+        public DateTime? Since { get; set; }
+        public DateTime? Until { get; set; }
         public bool? IncludeUndated { get; set; }
         public string Keyword { get; set; }
     }
@@ -67,6 +69,35 @@ namespace UCosmic.Domain.Activities
                 queryable = queryable.Where(x => x.StartsOn.HasValue || x.EndsOn.HasValue);
             }
 
+            if (query.Since.HasValue)
+            {
+                queryable = queryable.Where(x =>
+                    x.OnGoing.HasValue && x.OnGoing.Value // always include ongoing activities
+                    || (
+                        x.EndsOn.HasValue // when it has an end date
+                            ? x.EndsOn >= query.Since // include it if the end date is equal or after
+                        // when it has neither date, it is undated and handled by a separate filter
+                            : !x.StartsOn.HasValue
+                        // when it has no end date but does have start date, start must be equal or after
+                                || x.StartsOn >= query.Since
+                    )
+                );
+            }
+
+            if (query.Until.HasValue)
+            {
+                queryable = queryable.Where(x =>
+                    (!x.OnGoing.HasValue || !x.OnGoing.Value) // always exclude ongoing activities (todo: separate filter?)
+                    &&
+                    (x.EndsOn.HasValue // when it has an end date
+                        ? x.EndsOn <= query.Until // include it if the end date is equal or before
+                        // when it has neither date, it is undated and handled by a separate filter
+                        : !x.StartsOn.HasValue
+                        // when it has no end date but does have start date, start must be equal or before
+                            || x.StartsOn.Value <= query.Until)
+                );
+            }
+
             if (query.PlaceIds != null && query.PlaceIds.Any())
             {
                 var placeTag = ActivityTagDomainType.Place.AsSentenceFragment();
@@ -90,7 +121,7 @@ namespace UCosmic.Domain.Activities
                 // SQL Server can't handle a complex query like this with eager loading, so we break it up
                 // query locations separately from other fields, then get the id's of each separate query, then union them together
                 queryable = queryable.Where(x => (x.Title != null && x.Title.Contains(query.Keyword))
-                //var nonLocationQueryable = queryable.Where(x => (x.Title != null && x.Title.Contains(query.Keyword))
+                    //var nonLocationQueryable = queryable.Where(x => (x.Title != null && x.Title.Contains(query.Keyword))
                     || (x.ContentSearchable != null && x.ContentSearchable.Contains(query.Keyword))
                     || x.Activity.Person.DisplayName.Contains(query.Keyword)
                     || x.Tags.Any(y => y.Text.Contains(query.Keyword))

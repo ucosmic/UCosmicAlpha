@@ -20,6 +20,8 @@ namespace UCosmic.Domain.Activities
         public int[] PlaceIds { get; set; }
         //public string CountryCode { get; set; }
         public int[] ActivityTypeIds { get; set; }
+        public DateTime? Since { get; set; }
+        public DateTime? Until { get; set; }
         public bool? IncludeUndated { get; set; }
         public string Keyword { get; set; }
     }
@@ -45,6 +47,8 @@ namespace UCosmic.Domain.Activities
                 PlaceIds = query.PlaceIds,
                 //CountryCode = query.CountryCode,
                 ActivityTypeIds = query.ActivityTypeIds,
+                Since = query.Since,
+                Until = query.Until,
                 IncludeUndated = query.IncludeUndated,
                 EstablishmentDomain = query.EstablishmentDomain,
                 EstablishmentId = query.EstablishmentId,

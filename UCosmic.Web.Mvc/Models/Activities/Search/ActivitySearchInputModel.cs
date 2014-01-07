@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using AutoMapper;
@@ -12,6 +13,7 @@ namespace UCosmic.Web.Mvc.Models
         public ActivitySearchInputModel()
         {
             Pivot = ActivitySearchPivot.Activities;
+            OrderBy = "recency-desc";
         }
 
         public ActivitySearchPivot Pivot { get; set; }
@@ -49,6 +51,10 @@ namespace UCosmic.Web.Mvc.Models
                     //    return "any".Equals(s.CountryCode, StringComparison.OrdinalIgnoreCase) || string.IsNullOrWhiteSpace(s.CountryCode)
                     //        ? string.Empty : s.CountryCode;
                     //}))
+
+                    // map from strings to dates
+                    .ForMember(d => d.Since, o => o.ResolveUsing(s => StringToDateTime(s.Since)))
+                    .ForMember(d => d.Until, o => o.ResolveUsing(s => StringToDateTime(s.Until, true)))
 
                     // map the order by
                     .ForMember(d => d.OrderBy, o => o.ResolveUsing(s =>
@@ -118,6 +124,20 @@ namespace UCosmic.Web.Mvc.Models
                         return orderBy;
                     }))
                 ;
+            }
+
+            private DateTime? StringToDateTime(string value, bool until = false)
+            {
+                // date could be passed as yyyy, m/yyyy, or m/d/yyyy
+                if (string.IsNullOrWhiteSpace(value)) return null;
+                DateTime dateTime;
+                if (DateTime.TryParse(value, CultureInfo.CurrentUICulture, DateTimeStyles.AdjustToUniversal, out dateTime))
+                    return dateTime;
+                int year;
+                if (int.TryParse(value, out year))
+                    if (year >= DateTime.MinValue.Year && year <= DateTime.MaxValue.Year)
+                        return new DateTime(year, until ? 12 : 1, until ? 31 : 1).ToUniversalTime();
+                return null;
             }
         }
     }
