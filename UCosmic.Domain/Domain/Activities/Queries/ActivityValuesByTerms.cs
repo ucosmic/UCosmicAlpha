@@ -87,14 +87,21 @@ namespace UCosmic.Domain.Activities
             if (query.Until.HasValue)
             {
                 queryable = queryable.Where(x =>
-                    (!x.OnGoing.HasValue || !x.OnGoing.Value) // always exclude ongoing activities (todo: separate filter?)
-                    &&
-                    (x.EndsOn.HasValue // when it has an end date
-                        ? x.EndsOn <= query.Until // include it if the end date is equal or before
-                        // when it has neither date, it is undated and handled by a separate filter
-                        : !x.StartsOn.HasValue
-                        // when it has no end date but does have start date, start must be equal or before
-                            || x.StartsOn.Value <= query.Until)
+                    x.OnGoing.HasValue && x.OnGoing.Value && x.StartsOn.HasValue // when an activity is ongoing and has a start date
+                        ? x.StartsOn <= query.Until // include it only when the start date is equal or after
+
+                        // when an activity is not ongoing and has both start and end dates
+                        : x.StartsOn.HasValue && x.EndsOn.HasValue
+                            ? x.StartsOn <= query.Until && x.EndsOn <= query.Until // include it when both are equal or before
+
+                            // when an activity is not ongoing and has only start date
+                            : x.StartsOn.HasValue
+                                ? x.StartsOn <= query.Until // include it when start is equal or before
+
+                                // include all undated, which are handled by a separate filter
+                                : !x.EndsOn.HasValue
+                                    // when an activity is not ongoing and has only end date
+                                    || x.EndsOn <= query.Until // include it when end is equal or before
                 );
             }
 

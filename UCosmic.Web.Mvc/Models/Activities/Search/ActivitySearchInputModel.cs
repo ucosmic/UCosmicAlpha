@@ -126,17 +126,18 @@ namespace UCosmic.Web.Mvc.Models
                 ;
             }
 
-            private DateTime? StringToDateTime(string value, bool until = false)
+            private static DateTime? StringToDateTime(string value, bool until = false)
             {
                 // date could be passed as yyyy, m/yyyy, or m/d/yyyy
                 if (string.IsNullOrWhiteSpace(value)) return null;
+                value = value.Trim();
                 DateTime dateTime;
                 if (DateTime.TryParse(value, CultureInfo.CurrentUICulture, DateTimeStyles.AdjustToUniversal, out dateTime))
                     return dateTime;
                 int year;
                 if (int.TryParse(value, out year))
                     if (year >= DateTime.MinValue.Year && year <= DateTime.MaxValue.Year)
-                        return new DateTime(year, until ? 12 : 1, until ? 31 : 1).ToUniversalTime();
+                        return DateTime.ParseExact(value, "yyyy", CultureInfo.CurrentUICulture, DateTimeStyles.AdjustToUniversal);
                 return null;
             }
         }
