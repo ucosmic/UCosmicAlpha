@@ -23,6 +23,7 @@ module Activities.ViewModels {
     }
 
     export class Search {
+        //#region Construction
 
         //countryOptions = ko.observableArray(this.settings.countryOptions);
         //countryCode = ko.observable(this.settings.input.countryCode);
@@ -33,10 +34,6 @@ module Activities.ViewModels {
 
         isActivitiesChecked = ko.computed((): boolean => { return this.pivot() != DataGraphPivot.people; });
         isPeopleChecked = ko.computed((): boolean => { return this.pivot() == DataGraphPivot.people; });
-        activityTypeCheckBoxes = ko.observableArray<ActivityTypeSearchCheckBox>(Enumerable.From(this.settings.activityTypes)
-            .Select((x: ApiModels.ActivityTypeSearchFilter): ActivityTypeSearchCheckBox => {
-                return new ActivityTypeSearchCheckBox(x, this.settings)
-        }).ToArray());
 
         $form: JQuery;
         $location: JQuery;
@@ -48,6 +45,9 @@ module Activities.ViewModels {
         constructor(public settings: SearchSettings) {
             this.pager.apply(this.settings.output);
         }
+
+        //#endregion
+        //#region Initialization
 
         applyBindings(element: Element): void {
             ko.applyBindings(this, element);
@@ -216,6 +216,9 @@ module Activities.ViewModels {
             //this.pivot.subscribe((newValue: DataGraphPivot): void => { this._submitForm(); });
         }
 
+        //#endregion
+        //#region Automatic Form Submits
+
         private _submitForm(): void {
             if (this.loadingSpinner.isVisible()) return;
             this.loadingSpinner.start();
@@ -227,6 +230,14 @@ module Activities.ViewModels {
             if ($.trim(this.keyword()) && !$.trim($(e.target).val()) && this.$form)
                 this.$form.submit();
         }
+
+        //#endregion
+        //#region Activity Type CheckBoxes
+
+        activityTypeCheckBoxes = ko.observableArray<ActivityTypeSearchCheckBox>(Enumerable.From(this.settings.activityTypes)
+            .Select((x: ApiModels.ActivityTypeSearchFilter): ActivityTypeSearchCheckBox => {
+                return new ActivityTypeSearchCheckBox(x, this.settings)
+        }).ToArray());
 
         isCheckAllActivityTypesDisabled = ko.computed((): boolean => {
             return Enumerable.From(this.activityTypeCheckBoxes())
@@ -256,5 +267,28 @@ module Activities.ViewModels {
                 })
         }
 
+        //#endregion
+        //#region Date Filter Controls
+
+        since = ko.observable(this.settings.input.since);
+        until = ko.observable(this.settings.input.until);
+
+        isClearSinceDisabled = ko.computed((): boolean => {
+            return this.since() ? false : true;
+        });
+
+        isClearUntilDisabled = ko.computed((): boolean => {
+            return this.until() ? false : true;
+        });
+
+        clearSince(): void {
+            this.since('');
+        }
+
+        clearUntil(): void {
+            this.until('');
+        }
+
+        //#endregion
     }
-} 
+}

@@ -433,7 +433,7 @@
                             <div class="group no-link">
                                 <span class="arrow"></span>
                                 <span class="text">
-                                    Search Options
+                                    Common Search Options
                                     <img src="~/images/icons/spinner/spinner-20-blue-on-ddd.gif" alt=""
                                          style="margin-left: 4px; display: none;" data-bind="visible: loadingSpinner.isVisible" />
                                 </span>
@@ -569,12 +569,12 @@
                                     <strong>Find by date(s)</strong>
                                     <div class="group">
                                         <div class="on-left" style="width: 110px;">
-                                            <input type="text" name="Since" placeholder="[Since]" class="side" value="@Model.Input.Since" data-role="datepicker"
-                                                   data-bind="jQuery: '$since'" />
+                                            <input type="text" name="Since" placeholder="[From]" class="side" value="@Model.Input.Since" data-role="datepicker"
+                                                   data-bind="value: since, valueUpdate: 'afterkeydown', jQuery: '$since'" />
                                         </div>
                                         <div class="on-right" style="width: 110px;">
-                                            <input type="text" name="Until" placeholder="[Until]" class="side" value="@Model.Input.Until" data-role="datepicker"
-                                                   data-bind="jQuery: '$until'" />
+                                            <input type="text" name="Until" placeholder="[To]" class="side" value="@Model.Input.Until" data-role="datepicker"
+                                                   data-bind="value: until, valueUpdate: 'afterkeydown', jQuery: '$until'" />
                                         </div>
                                     </div>
                                     <div style="font-size: 12px; color: #555;">
@@ -591,8 +591,24 @@
                                             <input type="hidden" name="includeUndated" value="false" />
                                         </label>
                                     </div>
-                                    <div style="margin-top: 8px; text-align: center;">
-                                        <input type="submit" value="Search" style="font-size: 14px; line-height: normal; padding: 4px 8px;" />
+                                    <div style="margin-top: 8px">
+                                        @{
+                                            var clearSinceDisabled = string.IsNullOrWhiteSpace(Model.Input.Since) ? "disabled" : null;
+                                            var clearUntilDisabled = string.IsNullOrWhiteSpace(Model.Input.Until) ? "disabled" : null;
+                                        }
+                                        <input type="submit" value="Search" style="font-size: 14px; line-height: normal; padding: 4px 8px; margin-right: 4px;" />
+                                        <button type="button" class="link"
+                                                data-bind="click: clearSince, disable: isClearSinceDisabled"
+                                                disabled="@clearSinceDisabled"
+                                                style="font-size: 14px; line-height: normal; margin-right: 4px;">
+                                            Clear from
+                                        </button>
+                                        <button type="button" class="link"
+                                                data-bind="click: clearUntil, disable: isClearUntilDisabled"
+                                                disabled="@clearUntilDisabled"
+                                                style="font-size: 14px; line-height: normal;">
+                                            Clear to
+                                        </button>
                                     </div>
                                 </div>
                             </div>

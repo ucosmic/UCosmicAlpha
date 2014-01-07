@@ -31,10 +31,10 @@ var Activities;
                 this.isPeopleChecked = ko.computed(function () {
                     return _this.pivot() == 2 /* people */;
                 });
+                this.loadingSpinner = new App.Spinner();
                 this.activityTypeCheckBoxes = ko.observableArray(Enumerable.From(this.settings.activityTypes).Select(function (x) {
                     return new ActivityTypeSearchCheckBox(x, _this.settings);
                 }).ToArray());
-                this.loadingSpinner = new App.Spinner();
                 this.isCheckAllActivityTypesDisabled = ko.computed(function () {
                     return Enumerable.From(_this.activityTypeCheckBoxes()).All(function (x) {
                         return x.isChecked();
@@ -44,6 +44,14 @@ var Activities;
                     return Enumerable.From(_this.activityTypeCheckBoxes()).All(function (x) {
                         return !x.isChecked();
                     });
+                });
+                this.since = ko.observable(this.settings.input.since);
+                this.until = ko.observable(this.settings.input.until);
+                this.isClearSinceDisabled = ko.computed(function () {
+                    return _this.since() ? false : true;
+                });
+                this.isClearUntilDisabled = ko.computed(function () {
+                    return _this.until() ? false : true;
                 });
                 this.pager.apply(this.settings.output);
             }
@@ -235,6 +243,14 @@ var Activities;
                 Enumerable.From(this.activityTypeCheckBoxes()).ForEach(function (x) {
                     x.isChecked(false);
                 });
+            };
+
+            Search.prototype.clearSince = function () {
+                this.since('');
+            };
+
+            Search.prototype.clearUntil = function () {
+                this.until('');
             };
             return Search;
         })();
