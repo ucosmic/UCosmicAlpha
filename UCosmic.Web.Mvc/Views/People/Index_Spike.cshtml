@@ -26,17 +26,10 @@
 
         <script src="~/scripts/viewmodels/employees/Server.js"></script>
         <script src="~/scripts/viewmodels/people/Server.js"></script>
-
-        @*<script type="text/javascript">
-                var modelData = $.parseJSON('@Html.Raw(Json.Encode(Model))');
-            </script>*@
+        
 
         @Scripts.Render("~/bundles/people/profileEditor")
 
-        @*<script type="text/javascript">
-                var viewModel = new People.ViewModels.ProfileSpike(modelData);
-                ko.applyBindings(viewModel, $('#main')[0]);
-            </script*@
         <script type="text/javascript">
 
             $(function () {
@@ -102,7 +95,6 @@
                 {
                     @* EDIT AFFILIATIONS *@
                     <section>
-                        @*<legend>Edit @customProfileTitle</legend>*@
                         @Html.Partial(MVC.People.Views._AffiliationsEditor)
                     </section>
                 }

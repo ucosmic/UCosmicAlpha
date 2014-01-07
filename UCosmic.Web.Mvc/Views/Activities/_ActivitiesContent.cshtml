@@ -76,19 +76,16 @@
         }
         
 @* TAGS *@
-        <div style="margin: 1.5em 0;">
-            <ul style="display: inline-block;">
+        <div style="margin: 1em 0;">
+            <span>Tag/Keyword/Collaborating Institution</span>
                 @foreach (var tag in Model.Tags)
                 {
-                    <li class="same-line">
                         @*<a href='~/facultystaff/#/search/keyword/@tag.Text' style="text-decoration: none; color: inherit;">*@
-                            <span style="padding: 4px; margin-right: 4px; background-color: #eee; border: solid 1px #ddd;">
+                            <span style="padding: 4px; margin-right: 4px; background-color: #eee; border: solid 1px #ddd; display: inline-block;">
                                 @tag.Text
                             </span>
                         @*</a>*@
-                    </li>
                 }
-            </ul>
         </div>
 
         @* DOCUMENTS *@
