@@ -4,11 +4,22 @@ module Activities.ViewModels {
         input: ApiModels.SearchInput;
         output: App.PageOf<ApiModels.SearchResult>;
         //countryOptions: App.ApiModels.SelectOption<string>[];
+        activityTypes: ApiModels.ActivityTypeSearchFilter[];
     }
 
     export enum DataGraphPivot {
         activities = 1,
         people = 2,
+    }
+
+    export class ActivityTypeSearchCheckBox {
+        // when activity types is null or empty, assume all are checked
+        isChecked = ko.observable(!this.settings.input.activityTypeIds || !this.settings.input.activityTypeIds.length ||
+            // otherwise, it is only checked when input contains the activity type id
+            Enumerable.From(this.settings.input.activityTypeIds).Contains(this.activityType.activityTypeId));
+
+
+        constructor(public activityType: ApiModels.ActivityTypeSearchFilter, public settings: SearchSettings) { }
     }
 
     export class Search {
@@ -22,6 +33,10 @@ module Activities.ViewModels {
 
         isActivitiesChecked = ko.computed((): boolean => { return this.pivot() != DataGraphPivot.people; });
         isPeopleChecked = ko.computed((): boolean => { return this.pivot() == DataGraphPivot.people; });
+        activityTypeCheckBoxes = ko.observableArray<ActivityTypeSearchCheckBox>(Enumerable.From(this.settings.activityTypes)
+            .Select((x: ApiModels.ActivityTypeSearchFilter): ActivityTypeSearchCheckBox => {
+                return new ActivityTypeSearchCheckBox(x, this.settings)
+        }).ToArray());
 
         $form: JQuery;
         $location: JQuery;
@@ -212,5 +227,34 @@ module Activities.ViewModels {
             if ($.trim(this.keyword()) && !$.trim($(e.target).val()) && this.$form)
                 this.$form.submit();
         }
+
+        isCheckAllActivityTypesDisabled = ko.computed((): boolean => {
+            return Enumerable.From(this.activityTypeCheckBoxes())
+                .All((x: ActivityTypeSearchCheckBox): boolean => {
+                    return x.isChecked();
+            });
+        });
+
+        isUncheckAllActivityTypesDisabled = ko.computed((): boolean => {
+            return Enumerable.From(this.activityTypeCheckBoxes())
+                .All((x: ActivityTypeSearchCheckBox): boolean => {
+                    return !x.isChecked();
+                });
+        });
+
+        checkAllActivityTypes(): void {
+            Enumerable.From(this.activityTypeCheckBoxes())
+                .ForEach((x: ActivityTypeSearchCheckBox): void => {
+                    x.isChecked(true);
+                })
+        }
+
+        uncheckAllActivityTypes(): void {
+            Enumerable.From(this.activityTypeCheckBoxes())
+                .ForEach((x: ActivityTypeSearchCheckBox): void => {
+                    x.isChecked(false);
+                })
+        }
+
     }
 } 

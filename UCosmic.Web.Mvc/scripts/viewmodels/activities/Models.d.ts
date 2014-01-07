@@ -6,6 +6,7 @@ declare module Activities.ApiModels {
         countryCode?: string;
         placeIds?: number[];
         placeNames?: string[];
+        activityTypeIds: number[];
         since?: string;
         until?: string;
         includeUndated?: string;
@@ -45,6 +46,12 @@ declare module Activities.ApiModels {
     export interface ActivityType {
         activityId: number;
         typeId: number;
+        text: string;
+        rank: number;
+    }
+
+    export interface ActivityTypeSearchFilter {
+        activityTypeId: number;
         text: string;
         rank: number;
     }

@@ -7,6 +7,16 @@ var Activities;
         })(ViewModels.DataGraphPivot || (ViewModels.DataGraphPivot = {}));
         var DataGraphPivot = ViewModels.DataGraphPivot;
 
+        var ActivityTypeSearchCheckBox = (function () {
+            function ActivityTypeSearchCheckBox(activityType, settings) {
+                this.activityType = activityType;
+                this.settings = settings;
+                this.isChecked = ko.observable(!this.settings.input.activityTypeIds || !this.settings.input.activityTypeIds.length || Enumerable.From(this.settings.input.activityTypeIds).Contains(this.activityType.activityTypeId));
+            }
+            return ActivityTypeSearchCheckBox;
+        })();
+        ViewModels.ActivityTypeSearchCheckBox = ActivityTypeSearchCheckBox;
+
         var Search = (function () {
             function Search(settings) {
                 var _this = this;
@@ -21,7 +31,20 @@ var Activities;
                 this.isPeopleChecked = ko.computed(function () {
                     return _this.pivot() == 2 /* people */;
                 });
+                this.activityTypeCheckBoxes = ko.observableArray(Enumerable.From(this.settings.activityTypes).Select(function (x) {
+                    return new ActivityTypeSearchCheckBox(x, _this.settings);
+                }).ToArray());
                 this.loadingSpinner = new App.Spinner();
+                this.isCheckAllActivityTypesDisabled = ko.computed(function () {
+                    return Enumerable.From(_this.activityTypeCheckBoxes()).All(function (x) {
+                        return x.isChecked();
+                    });
+                });
+                this.isUncheckAllActivityTypesDisabled = ko.computed(function () {
+                    return Enumerable.From(_this.activityTypeCheckBoxes()).All(function (x) {
+                        return !x.isChecked();
+                    });
+                });
                 this.pager.apply(this.settings.output);
             }
             Search.prototype.applyBindings = function (element) {
@@ -200,6 +223,18 @@ var Activities;
             Search.prototype.onKeywordInputSearchEvent = function (viewModel, e) {
                 if ($.trim(this.keyword()) && !$.trim($(e.target).val()) && this.$form)
                     this.$form.submit();
+            };
+
+            Search.prototype.checkAllActivityTypes = function () {
+                Enumerable.From(this.activityTypeCheckBoxes()).ForEach(function (x) {
+                    x.isChecked(true);
+                });
+            };
+
+            Search.prototype.uncheckAllActivityTypes = function () {
+                Enumerable.From(this.activityTypeCheckBoxes()).ForEach(function (x) {
+                    x.isChecked(false);
+                });
             };
             return Search;
         })();
