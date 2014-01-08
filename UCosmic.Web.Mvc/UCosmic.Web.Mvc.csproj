@@ -2195,7 +2195,7 @@
     <Content Include="scripts\viewmodels\people\Languages.js">
       <DependentUpon>Languages.ts</DependentUpon>
     </Content>
-    <Content Include="scripts\viewmodels\people\ProfileEditor.js">
+    <Content Include="scripts\viewmodels\people\PersonalInfoEditor.js">
       <DependentUpon>PersonalInfoEditor.ts</DependentUpon>
     </Content>
     <Content Include="scripts\viewmodels\people\Server.js">

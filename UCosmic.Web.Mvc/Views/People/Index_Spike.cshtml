@@ -38,8 +38,8 @@
                 affiliationsViewModel.bindJquery();
 
                 var personalInfoViewModel = new People.ViewModels.PersonalInfoEditor('@Model.PersonId');
-                ko.applyBindings(personalInfoViewModel, $('#card')[0]);
                 personalInfoViewModel.load();
+                ko.applyBindings(personalInfoViewModel, $('#card')[0]);
             });
 
         </script>

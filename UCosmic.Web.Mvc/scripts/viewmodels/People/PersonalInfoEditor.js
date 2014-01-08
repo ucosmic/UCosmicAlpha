@@ -20,10 +20,10 @@ var People;
                 this.defaultEstablishmentHasCampuses = ko.observable(false);
                 this.gender = ko.observable();
                 this.isActive = ko.observable(undefined);
-                this.$photo = ko.observable();
+                this.$photo = $("#photo");
                 this.$facultyRanks = ko.observable();
-                this.$nameSalutation = ko.observable();
-                this.$nameSuffix = ko.observable();
+                this.$nameSalutation = $("#salutation");
+                this.$nameSuffix = $("#suffix");
                 this.$edit_personal_info_dialog = $("#edit_personal_info_dialog");
                 this.isEditMode = ko.observable(false);
                 this.saveSpinner = new App.Spinner({ delay: 200 });
@@ -183,84 +183,74 @@ var People;
 
             PersonalInfoEditor.prototype._setupKendoWidgets = function () {
                 var _this = this;
-                this.$nameSalutation.subscribe(function (newValue) {
-                    if (newValue && newValue.length)
-                        newValue.kendoComboBox({
-                            dataTextField: "text",
-                            dataValueField: "value",
-                            dataSource: new kendo.data.DataSource({
-                                transport: {
-                                    read: {
-                                        url: App.Routes.WebApi.People.Names.Salutations.get()
-                                    }
-                                }
-                            })
-                        });
+                this.$nameSalutation.kendoComboBox({
+                    dataTextField: "text",
+                    dataValueField: "value",
+                    dataSource: new kendo.data.DataSource({
+                        transport: {
+                            read: {
+                                url: App.Routes.WebApi.People.Names.Salutations.get()
+                            }
+                        }
+                    })
                 });
-                this.$nameSuffix.subscribe(function (newValue) {
-                    if (newValue && newValue.length)
-                        newValue.kendoComboBox({
-                            dataTextField: "text",
-                            dataValueField: "value",
-                            dataSource: new kendo.data.DataSource({
-                                transport: {
-                                    read: {
-                                        url: App.Routes.WebApi.People.Names.Suffixes.get()
-                                    }
-                                }
-                            })
-                        });
+                this.$nameSuffix.kendoComboBox({
+                    dataTextField: "text",
+                    dataValueField: "value",
+                    dataSource: new kendo.data.DataSource({
+                        transport: {
+                            read: {
+                                url: App.Routes.WebApi.People.Names.Suffixes.get()
+                            }
+                        }
+                    })
                 });
 
-                this.$photo.subscribe(function (newValue) {
-                    if (newValue && newValue.length) {
-                        newValue.kendoUpload({
-                            multiple: false,
-                            showFileList: false,
-                            localization: {
-                                select: 'Choose a photo to upload...'
-                            },
-                            async: {
-                                saveUrl: App.Routes.WebApi.My.Photo.post()
-                            },
-                            select: function (e) {
-                                _this.photoUploadSpinner.start();
-                                $.ajax({
-                                    type: 'POST',
-                                    async: false,
-                                    url: App.Routes.WebApi.My.Photo.validate(),
-                                    data: {
-                                        name: e.files[0].name,
-                                        length: e.files[0].size
-                                    }
-                                }).done(function () {
-                                    _this.photoUploadError(undefined);
-                                }).fail(function (xhr) {
-                                    _this.photoUploadError(xhr.responseText);
-                                    e.preventDefault();
-                                    _this.photoUploadSpinner.stop();
-                                });
-                            },
-                            complete: function () {
-                                _this.photoUploadSpinner.stop();
-                            },
-                            success: function (e) {
-                                if (e.operation == 'upload') {
-                                    if (e.response && e.response.message) {
-                                        App.flasher.flash(e.response.message);
-                                    }
-                                    _this.hasPhoto(true);
-                                    _this.photoSrc(App.Routes.WebApi.My.Photo.get({ maxSide: 128, refresh: new Date().toUTCString() }));
-                                }
-                            },
-                            error: function (e) {
-                                if (e.XMLHttpRequest.responseText && e.XMLHttpRequest.responseText.length < 1000) {
-                                    _this.photoUploadError(e.XMLHttpRequest.responseText);
-                                } else {
-                                    _this.photoUploadError(PersonalInfoEditor.photoUploadUnexpectedErrorMessage);
-                                }
+                this.$photo.kendoUpload({
+                    multiple: false,
+                    showFileList: false,
+                    localization: {
+                        select: 'Choose a photo to upload...'
+                    },
+                    async: {
+                        saveUrl: App.Routes.WebApi.My.Photo.post()
+                    },
+                    select: function (e) {
+                        _this.photoUploadSpinner.start();
+                        $.ajax({
+                            type: 'POST',
+                            async: false,
+                            url: App.Routes.WebApi.My.Photo.validate(),
+                            data: {
+                                name: e.files[0].name,
+                                length: e.files[0].size
                             }
+                        }).done(function () {
+                            _this.photoUploadError(undefined);
+                        }).fail(function (xhr) {
+                            _this.photoUploadError(xhr.responseText);
+                            e.preventDefault();
+                            _this.photoUploadSpinner.stop();
                         });
+                    },
+                    complete: function () {
+                        _this.photoUploadSpinner.stop();
+                    },
+                    success: function (e) {
+                        if (e.operation == 'upload') {
+                            if (e.response && e.response.message) {
+                                App.flasher.flash(e.response.message);
+                            }
+                            _this.hasPhoto(true);
+                            _this.photoSrc(App.Routes.WebApi.My.Photo.get({ maxSide: 128, refresh: new Date().toUTCString() }));
+                        }
+                    },
+                    error: function (e) {
+                        if (e.XMLHttpRequest.responseText && e.XMLHttpRequest.responseText.length < 1000) {
+                            _this.photoUploadError(e.XMLHttpRequest.responseText);
+                        } else {
+                            _this.photoUploadError(PersonalInfoEditor.photoUploadUnexpectedErrorMessage);
+                        }
                     }
                 });
                 var self = this, kacSelect;

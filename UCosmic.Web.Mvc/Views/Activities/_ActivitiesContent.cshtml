@@ -16,13 +16,13 @@
                             <span style="display: inline-block; width: 32px; text-align: center;">
                                 <img title="@type.Text" height="24" src="@Url.HttpRouteUrl(null, new { controller = "EmployeeModuleSettings", action = "GetIcon", typeId = type.TypeId })" alt="" />
                             </span>
-                        </li> 
+                        </li>
                     }
                 </ul>
-            </div> 
+            </div>
         }
-        
-@* DATES *@
+
+        @* DATES *@
         <div style="margin: 1em 0; font-size: 20px; line-height: 24px;">
             @if (Model.StartsOn.HasValue)
             {
@@ -32,7 +32,7 @@
             {
                 if (Model.StartsOn.HasValue)
                 {
-                <span style="padding: 0 4px 0 4px;">-</span>
+                    <span style="padding: 0 4px 0 4px;">-</span>
                 }
                 <span>@Model.EndsOn.Value.ToString(Model.EndsFormat ?? "MM/dd/yyyy")</span>
             }
@@ -40,7 +40,7 @@
             {
                 if (Model.StartsOn.HasValue)
                 {
-                <span style="padding: 0 4px 0 4px;">-</span>
+                    <span style="padding: 0 4px 0 4px;">-</span>
                 }
                 <span>On Going</span>
             }
@@ -74,18 +74,21 @@
                 This activity is externally funded.
             </div>
         }
-        
-@* TAGS *@
+
+        @* TAGS *@
         <div style="margin: 1em 0;">
-            <span>Tag/Keyword/Collaborating Institution</span>
-                @foreach (var tag in Model.Tags)
-                {
-                        @*<a href='~/facultystaff/#/search/keyword/@tag.Text' style="text-decoration: none; color: inherit;">*@
-                            <span style="padding: 4px; margin-right: 4px; background-color: #eee; border: solid 1px #ddd; display: inline-block;">
-                                @tag.Text
-                            </span>
-                        @*</a>*@
-                }
+            @if (Model.Tags.Length > 0)
+            {
+                <em style="display: block; line-height: 28px">Tag(s) / Keyword(s) / Collaborating Institution(s)</em>
+            }
+            @foreach (var tag in Model.Tags)
+            {
+                @*<a href='~/facultystaff/#/search/keyword/@tag.Text' style="text-decoration: none; color: inherit;">*@
+                <span style="padding: 4px; margin-right: 4px; background-color: #eee; border: solid 1px #ddd; display: inline-block;">
+                    @tag.Text
+                </span>
+                @*</a>*@
+            }
         </div>
 
         @* DOCUMENTS *@
@@ -97,7 +100,8 @@
                         <span style="display: inline-block; width: 32px; text-align: center;">
                             <img height="20" src="@Url.HttpRouteUrl(null, new { controller = "ActivityDocuments", action = "GetThumbnail", documentId = document.DocumentId, model = new UCosmic.Web.Mvc.Models.ImageResizeRequestModel() { MaxHeight = 20, MaxWidth = 30 } })" alt="" />
                         </span>
-                        <a href="@Url.RouteUrl("DefaultApi", new { httproute = "", controller = "ActivityDocuments", id = document.DocumentId })" title="@document.Title">@document.Title</a></li> 
+                        <a href="@Url.RouteUrl("DefaultApi", new { httproute = "", controller = "ActivityDocuments", id = document.DocumentId })" title="@document.Title">@document.Title</a>
+                    </li>
                 }
             </ul>
         </div>

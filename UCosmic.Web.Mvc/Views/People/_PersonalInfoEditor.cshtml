@@ -35,7 +35,7 @@
                 </div>
                 <div class="field-input">
                     <div>
-                        <input type="file" name="photo" data-bind="jqObservableElement: '$photo'" />
+                        <input type="file" name="photo" id="photo" />
                     </div>
                     <div style="padding-left: 4px;">
                         <div data-bind="visible: hasPhoto" style="display: none; padding-top: 4px;">
@@ -80,8 +80,8 @@
                     <label>Salutation</label>
                 </div>
                 <div class="field-input">
-                    <input type="text" placeholder="[None]"
-                           data-bind="value: salutation, valueUpdate: 'afterkeydown', jqObservableElement: '$nameSalutation'" />
+                    <input type="text" placeholder="[None]" id="salutation"
+                           data-bind="value: salutation, valueUpdate: 'afterkeydown'" />
                 </div>
             </div>
             <div class="field-row">
@@ -116,8 +116,8 @@
                     <label>Suffix</label>
                 </div>
                 <div class="field-input">
-                    <input type="text" placeholder="[None]"
-                           data-bind="value: suffix, valueUpdate: 'afterkeydown', jqObservableElement: '$nameSuffix'" />
+                    <input type="text" placeholder="[None]" id="suffix"
+                           data-bind="value: suffix, valueUpdate: 'afterkeydown'" />
                 </div>
             </div>
 

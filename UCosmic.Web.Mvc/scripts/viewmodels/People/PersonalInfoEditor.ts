@@ -1,5 +1,5 @@
 module People.ViewModels {
-   
+
 
     export class PersonalInfoEditor implements KnockoutValidationGroup {
         //#region Properties
@@ -31,20 +31,20 @@ module People.ViewModels {
         suffix = ko.observable<string>();
 
         defaultEstablishmentHasCampuses = ko.observable<boolean>(false);
-        
+
         gender = ko.observable<string>();
         isActive = ko.observable<boolean>(undefined);
         genderText: () => string;
         isActiveText: () => string;
 
-        $photo = ko.observable<JQuery>();
+        $photo = $("#photo");
         $facultyRanks = ko.observable<JQuery>();
-        $nameSalutation = ko.observable<JQuery>();
-        $nameSuffix = ko.observable<JQuery>();
+        $nameSalutation = $("#salutation");
+        $nameSuffix = $("#suffix")
         $editSection: JQuery;
         $confirmPurgeDialog: JQuery;
         $edit_personal_info_dialog = $("#edit_personal_info_dialog");
-        
+
 
         isValid: () => boolean;
         errors: KnockoutValidationErrors;
@@ -58,7 +58,7 @@ module People.ViewModels {
         //#region Construction
 
         constructor(personId: number) {
-            this.personId2 = personId; 
+            this.personId2 = personId;
         }
 
         //#endregion
@@ -219,100 +219,88 @@ module People.ViewModels {
             this.suffix.extend({
                 maxLength: 50
             });
-            
+
             ko.validation.group(this);
         }
 
         // comboboxes for salutation & suffix
         private _setupKendoWidgets(): void {
-            // when the $element observables are bound, they will have length
-            // use this opportunity to apply kendo extensions
-            this.$nameSalutation.subscribe((newValue: JQuery): void => {
-                if (newValue && newValue.length)
-                    newValue.kendoComboBox({
-                        dataTextField: "text",
-                        dataValueField: "value",
-                        dataSource: new kendo.data.DataSource({
-                            transport: {
-                                read: {
-                                    url: App.Routes.WebApi.People.Names.Salutations.get()
-                                }
-                            }
-                        })
-                    });
+
+            this.$nameSalutation.kendoComboBox({
+                dataTextField: "text",
+                dataValueField: "value",
+                dataSource: new kendo.data.DataSource({
+                    transport: {
+                        read: {
+                            url: App.Routes.WebApi.People.Names.Salutations.get()
+                        }
+                    }
+                })
             });
-            this.$nameSuffix.subscribe((newValue: JQuery): void => {
-                if (newValue && newValue.length)
-                    newValue.kendoComboBox({
-                        dataTextField: "text",
-                        dataValueField: "value",
-                        dataSource: new kendo.data.DataSource({
-                            transport: {
-                                read: {
-                                    url: App.Routes.WebApi.People.Names.Suffixes.get()
-                                }
-                            }
-                        })
-                    });
+            this.$nameSuffix.kendoComboBox({
+                dataTextField: "text",
+                dataValueField: "value",
+                dataSource: new kendo.data.DataSource({
+                    transport: {
+                        read: {
+                            url: App.Routes.WebApi.People.Names.Suffixes.get()
+                        }
+                    }
+                })
             });
 
-            // this is getting a little long, can probably factor out event handlers / validation stuff
-            this.$photo.subscribe((newValue: JQuery): void => {
-                if (newValue && newValue.length) {
-                    newValue.kendoUpload({
-                        multiple: false,
-                        showFileList: false,
-                        localization: {
-                            select: 'Choose a photo to upload...'
-                        },
-                        async: {
-                            saveUrl: App.Routes.WebApi.My.Photo.post()
-                        },
-                        select: (e: kendo.ui.UploadSelectEvent): void => {
-                            this.photoUploadSpinner.start(); // display async wait message
-                            $.ajax({
-                                type: 'POST',
-                                async: false,
-                                url: App.Routes.WebApi.My.Photo.validate(),
-                                data: {
-                                    name: e.files[0].name,
-                                    length: e.files[0].size
-                                }
-                            })
-                                .done((): void => {
-                                    this.photoUploadError(undefined);
-                                })
-                                .fail((xhr: JQueryXHR): void => {
-                                    this.photoUploadError(xhr.responseText);
-                                    e.preventDefault();
-                                    this.photoUploadSpinner.stop(); // hide async wait message
-                                });
-                        },
-                        complete: (): void => {
-                            this.photoUploadSpinner.stop(); // hide async wait message
-                        },
-                        success: (e: any): void => {
-                            // this event is triggered by both upload and remove requests
-                            // ignore remove operations because they don't actually do anything
-                            if (e.operation == 'upload') {
-                                if (e.response && e.response.message) {
-                                    App.flasher.flash(e.response.message);
-                                }
-                                this.hasPhoto(true);
-                                this.photoSrc(App.Routes.WebApi.My.Photo
-                                    .get({ maxSide: 128, refresh: new Date().toUTCString() }));
-                            }
-                        },
-                        error: (e: kendo.ui.UploadErrorEvent): void => {
-                            if (e.XMLHttpRequest.responseText &&
-                                e.XMLHttpRequest.responseText.length < 1000) {
-                                this.photoUploadError(e.XMLHttpRequest.responseText);
-                            }
-                            else {
-                                this.photoUploadError(PersonalInfoEditor.photoUploadUnexpectedErrorMessage);
-                            }
+            this.$photo.kendoUpload({
+                multiple: false,
+                showFileList: false,
+                localization: {
+                    select: 'Choose a photo to upload...'
+                },
+                async: {
+                    saveUrl: App.Routes.WebApi.My.Photo.post()
+                },
+                select: (e: kendo.ui.UploadSelectEvent): void => {
+                    this.photoUploadSpinner.start(); // display async wait message
+                    $.ajax({
+                        type: 'POST',
+                        async: false,
+                        url: App.Routes.WebApi.My.Photo.validate(),
+                        data: {
+                            name: e.files[0].name,
+                            length: e.files[0].size
                         }
-                    });
+                    })
+                        .done((): void => {
+                            this.photoUploadError(undefined);
+                        })
+                        .fail((xhr: JQueryXHR): void => {
+                            this.photoUploadError(xhr.responseText);
+                            e.preventDefault();
+                            this.photoUploadSpinner.stop(); // hide async wait message
+                        });
+                },
+                complete: (): void => {
+                    this.photoUploadSpinner.stop(); // hide async wait message
+                },
+                success: (e: any): void => {
+                    // this event is triggered by both upload and remove requests
+                    // ignore remove operations because they don't actually do anything
+                    if (e.operation == 'upload') {
+                        if (e.response && e.response.message) {
+                            App.flasher.flash(e.response.message);
+                        }
+                        this.hasPhoto(true);
+                        this.photoSrc(App.Routes.WebApi.My.Photo
+                            .get({ maxSide: 128, refresh: new Date().toUTCString() }));
+                    }
+                },
+                error: (e: kendo.ui.UploadErrorEvent): void => {
+                    if (e.XMLHttpRequest.responseText &&
+                        e.XMLHttpRequest.responseText.length < 1000) {
+                        this.photoUploadError(e.XMLHttpRequest.responseText);
+                    }
+                    else {
+                        this.photoUploadError(PersonalInfoEditor.photoUploadUnexpectedErrorMessage);
+                    }
                 }
             });
             var self = this,
