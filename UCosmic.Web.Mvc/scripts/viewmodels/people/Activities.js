@@ -14,16 +14,16 @@
                 this.hasInitialized = false;
                 this.optionsEnabled = ko.observable(false);
                 this.modelData = modelData;
-                this.pageSize = ko.observable(this.modelData.PageSize);
-                this.pageNumber = ko.observable((this.modelData.PageNumber != null) ? this.modelData.PageNumber : 1);
-                this.keyword = ko.observable(this.modelData.Keyword);
-                this.orderBy = ko.observable(this.modelData.OrderBy);
+                this.pageSize(this.modelData.PageSize);
+                this.pageNumber((this.modelData.PageNumber != null) ? this.modelData.PageNumber : "1");
+                this.keyword(this.modelData.Keyword);
+                this.orderBy(this.modelData.OrderBy);
 
                 this._setupCountryDropDown();
                 if (this.pageNumber() >= modelData.PageCount) {
                     this.nextEnabled(false);
                 }
-                if (this.pageNumber() == 1) {
+                if (parseInt(this.pageNumber()) == 1) {
                     this.prevEnabled(false);
                 }
                 this.pageNumber.subscribe(function (newValue) {
