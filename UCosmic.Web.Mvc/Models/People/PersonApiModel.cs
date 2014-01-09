@@ -20,6 +20,7 @@ namespace UCosmic.Web.Mvc.Models
         public bool IsActive { get; set; }
         public string Gender { get; set; }
         public string DefaultEmailAddress { get; set; }
+        public bool HasPhoto { get; set; }
     }
 
     public class PageOfPersonApiModel : PageOf<PersonApiModel> { }
@@ -32,6 +33,7 @@ namespace UCosmic.Web.Mvc.Models
                 x => x.Emails,
                 x => x.User,
                 x => x.Affiliations,
+                x => x.Photo,
             };
 
         public class EntityToModel : Profile
@@ -43,6 +45,7 @@ namespace UCosmic.Web.Mvc.Models
                     .ForMember(d => d.UserId, o => o.MapFrom(s => s.User == null ? (int?)null : s.User.RevisionId))
                     .ForMember(d => d.DefaultEmailAddress, o => o.MapFrom(s =>
                         (s.DefaultEmail != null) ? s.DefaultEmail.Value : null))
+                    .ForMember(d => d.HasPhoto, o => o.MapFrom(s => s.Photo != null))
                     //.ForMember(d => d.DefaultTitle, o => o.MapFrom(s =>
                     //    s.Affiliations.Any(x => x.IsDefault) ? s.Affiliations.FirstOrDefault(x => x.IsDefault).JobTitles : null))
                 ;

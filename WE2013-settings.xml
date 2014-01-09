@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <webessentials version="1.9">
   <settings>
-    <BrowserLink_ShowMenu>True</BrowserLink_ShowMenu>
+    <BrowserLink_ShowMenu>true</BrowserLink_ShowMenu>
     <CoffeeScriptCompileToLocation>True</CoffeeScriptCompileToLocation>
     <CoffeeScriptEnableCompiler>True</CoffeeScriptEnableCompiler>
     <CoffeeScriptGenerateJsFile>True</CoffeeScriptGenerateJsFile>

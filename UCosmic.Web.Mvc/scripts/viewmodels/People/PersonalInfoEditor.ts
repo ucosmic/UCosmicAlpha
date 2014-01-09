@@ -5,6 +5,7 @@ module People.ViewModels {
         //#region Properties
         private _originalValues: ApiModels.IServerProfileApiModel;
 
+        kendoHasLoaded = ko.observable<boolean>(false);
         hasPhoto = ko.observable<boolean>();
         photoUploadError = ko.observable<string>();
         static photoUploadUnexpectedErrorMessage = 'UCosmic experienced an unexpected error managing your photo, please try again. If you continue to experience this issue, please use the Feedback & Support link on this page to report it.';
@@ -88,6 +89,9 @@ module People.ViewModels {
                 this._setupDisplayNameDerivation();
                 this._setupCardComputeds();
                 this._loadPromise.resolve();
+                //if (this.photoSrc != null) {
+                //    this.hasPhoto(true);
+                //}
             })
                 .fail((xhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
                     this._loadPromise.reject(xhr, textStatus, errorThrown);
@@ -97,8 +101,10 @@ module People.ViewModels {
         }
 
         startEditing(): void { // show the editor
-            this.isEditMode(true);
-            this.$edit_personal_info_dialog.data("kendoWindow").open().title("Personal Information");
+            if (this.kendoHasLoaded()) {
+                this.isEditMode(true);
+                this.$edit_personal_info_dialog.data("kendoWindow").open().title("Personal Information");
+            }
         }
 
         stopEditing(): void { // hide the editor
@@ -162,7 +168,8 @@ module People.ViewModels {
                             },
                             'data-css-link': true
                         }
-                    ]
+                    ], 
+                    zIndex: 10004
                 });
             }
             else if (confirm('Are you sure you want to delete your profile photo?')) {
@@ -324,6 +331,7 @@ module People.ViewModels {
 
             var dialog = this.$edit_personal_info_dialog.data("kendoWindow");
             dialog.center();
+            this.kendoHasLoaded(true);
         }
 
         // logic to derive display name

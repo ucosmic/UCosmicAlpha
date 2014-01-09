@@ -3,17 +3,22 @@
     (function (ViewModels) {
         var ActivityInputModel = (function () {
             function ActivityInputModel(modelData) {
-                this.pageSize = ko.observable(this.modelData.PageSize);
-                this.pageNumber = ko.observable((this.modelData.PageNumber != null) ? this.modelData.PageNumber : 1);
-                this.keyword = ko.observable(this.modelData.Keyword);
+                this.pageSize = ko.observable();
+                this.pageNumber = ko.observable();
+                this.keyword = ko.observable();
                 this.countries = ko.observableArray();
                 this.countryCode = ko.observable();
                 this.prevEnabled = ko.observable(true);
                 this.nextEnabled = ko.observable(true);
-                this.orderBy = ko.observable(this.modelData.OrderBy);
+                this.orderBy = ko.observable();
                 this.hasInitialized = false;
                 this.optionsEnabled = ko.observable(false);
                 this.modelData = modelData;
+                this.pageSize = ko.observable(this.modelData.PageSize);
+                this.pageNumber = ko.observable((this.modelData.PageNumber != null) ? this.modelData.PageNumber : 1);
+                this.keyword = ko.observable(this.modelData.Keyword);
+                this.orderBy = ko.observable(this.modelData.OrderBy);
+
                 this._setupCountryDropDown();
                 if (this.pageNumber() >= modelData.PageCount) {
                     this.nextEnabled(false);

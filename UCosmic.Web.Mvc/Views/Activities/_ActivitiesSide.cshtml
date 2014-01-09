@@ -1,44 +1,68 @@
 ﻿@using UCosmic.Web.Mvc.ApiControllers
 @model UCosmic.Web.Mvc.Models.ActivityPublicViewModel
 
+<style>
+    .yellow-affordance {
+        background-color: #FBFDB3 !important;
+    }
+
+    .yellow-affordance:hover {
+        background-color: #e0d1a5 !important;
+    }
+    .profile-mini-card > .action {
+        display: none;
+    }
+    .profile-mini-card:hover > .action {
+        display: block;
+        background-color: #e0d1a5 !important;
+        padding: 4px;
+        padding-bottom: .5em;
+    }
+</style>
 <aside id="publicView">
 
     <div style="font-size: 16px;">
         @* Person *@
-        <table style="margin-bottom: .5em">
-            <tr>
-                <td style="vertical-align: bottom;">
-                    <a href='@Url.Action(MVC.People.Index(Model.Person.PersonId))' style="text-decoration: none; cursor: pointer; color: inherit;">
-                        <img src="@Url.HttpRouteUrl(null, new { controller = "People", action = "GetPhoto", personId = Model.Person.PersonId })" style="max-width: 52px;  margin-right: .5em" height="48" />
-                    </a>
-                </td>
-                <td>
-                    <a href='@Url.Action(MVC.People.Index((int)Model.Person.PersonId))' style="text-decoration: none; cursor: pointer; color: inherit;">
-                        <div style="font-size:20px; line-height: 24px;">@Model.Person.DisplayName</div>
-                    </a>
-                    <div>@Model.Person.JobTitle</div>
-                    <a style="-ms-word-break: break-all; word-break: break-all;" href="mailto:@Model.Person.EmailAddress" target="_top">@Model.Person.EmailAddress</a>
-                </td>
-            </tr>
-        </table>
+        <a class="profile-mini-card" href='@Url.Action(MVC.People.Index((int)Model.Person.PersonId))' style="text-decoration: none; cursor: pointer; color: inherit;">
+            <div style="padding: 4px; padding-bottom: .5em; margin: 0;" class="yellow-affordance">
+                <table>
+                    <tr>
+                        <td style="vertical-align: top; padding-top: 5px;">
+                            <a href='@Url.Action(MVC.People.Index(Model.Person.PersonId))' style="text-decoration: none; cursor: pointer; color: inherit;">
+                                <img src="@Url.HttpRouteUrl(null, new { controller = "People", action = "GetPhoto", personId = Model.Person.PersonId })" style="max-width: 52px;  margin-right: .5em" height="48" />
+                            </a>
+                        </td>
+                        <td>
+                            <a href='@Url.Action(MVC.People.Index((int)Model.Person.PersonId))' style="text-decoration: none; cursor: pointer; color: inherit;">
+                                <div style="font-size:20px; line-height: 24px;">@Model.Person.DisplayName</div>
+                            </a>
+                            <div>@Model.Person.JobTitle</div>
+                            <a style="-ms-word-break: break-all; word-break: break-all;" href="mailto:@Model.Person.EmailAddress" target="_top">@Model.Person.EmailAddress</a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="action" data-bind="visible: kendoHasLoaded">
+                Click to view profile
+            </div>
+        </a>
+            @* MAP *@
+            <div style="height: 200px; width: 280px;" id="map-canvas"></div>
 
-        @* MAP *@
-        <div style="height: 200px; width: 280px;" id="map-canvas"></div>
-
-        @* PLACES *@
-        <div style="margin: 1em 0;">
-            <ul style="display: inline-block;">
-                @foreach (var place in Model.Places)
-                {
-                    <li class="same-line" style="margin-bottom: .5em;">
-                        @*<a href='~/facultystaff/#/search/country/@place.PlaceName' style="text-decoration: none; color: inherit;">*@
-                        <span class="badge light-transparent">
-                            @place.PlaceName
-                        </span>
-                        @*</a>*@
-                    </li>
-                }
-            </ul>
-        </div>
-    </div>
+            @* PLACES *@
+            <div style="margin: 1em 0;">
+                <ul style="display: inline-block;">
+                    @foreach (var place in Model.Places)
+                    {
+                        <li class="same-line" style="margin-bottom: .5em;">
+                            @*<a href='~/facultystaff/#/search/country/@place.PlaceName' style="text-decoration: none; color: inherit;">*@
+                            <span class="badge light-transparent">
+                                @place.PlaceName
+                            </span>
+                            @*</a>*@
+                        </li>
+                    }
+                </ul>
+            </div>
+</div>
 </aside>

@@ -3,6 +3,7 @@ var People;
     (function (ViewModels) {
         var PersonalInfoEditor = (function () {
             function PersonalInfoEditor(personId) {
+                this.kendoHasLoaded = ko.observable(false);
                 this.hasPhoto = ko.observable();
                 this.photoUploadError = ko.observable();
                 this.photoSrc = ko.observable(App.Routes.WebApi.My.Photo.get({ maxSide: 128, refresh: new Date().toUTCString() }));
@@ -62,8 +63,10 @@ var People;
             };
 
             PersonalInfoEditor.prototype.startEditing = function () {
-                this.isEditMode(true);
-                this.$edit_personal_info_dialog.data("kendoWindow").open().title("Personal Information");
+                if (this.kendoHasLoaded()) {
+                    this.isEditMode(true);
+                    this.$edit_personal_info_dialog.data("kendoWindow").open().title("Personal Information");
+                }
             };
 
             PersonalInfoEditor.prototype.stopEditing = function () {
@@ -124,7 +127,8 @@ var People;
                                 },
                                 'data-css-link': true
                             }
-                        ]
+                        ],
+                        zIndex: 10004
                     });
                 } else if (confirm('Are you sure you want to delete your profile photo?')) {
                     this._deletePhoto();
@@ -273,6 +277,7 @@ var People;
 
                 var dialog = this.$edit_personal_info_dialog.data("kendoWindow");
                 dialog.center();
+                this.kendoHasLoaded(true);
             };
 
             PersonalInfoEditor.prototype._setupDisplayNameDerivation = function () {

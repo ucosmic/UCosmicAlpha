@@ -3,6 +3,11 @@
     export class ActivityInputModel {
         constructor(modelData: any) {
             this.modelData = modelData;
+            this.pageSize = ko.observable(this.modelData.PageSize);
+            this.pageNumber = ko.observable((this.modelData.PageNumber != null) ? this.modelData.PageNumber : 1);
+            this.keyword = ko.observable(this.modelData.Keyword);
+            this.orderBy = ko.observable(this.modelData.OrderBy);
+
             this._setupCountryDropDown();
             if (this.pageNumber() >= modelData.PageCount) {
                 this.nextEnabled(false);
@@ -35,14 +40,14 @@
         }
         modelData;
         $form: JQuery;
-        pageSize = ko.observable(this.modelData.PageSize);
-        pageNumber = ko.observable((this.modelData.PageNumber != null) ? this.modelData.PageNumber : 1);
-        keyword = ko.observable(this.modelData.Keyword);
+        pageSize = ko.observable();
+        pageNumber = ko.observable();
+        keyword = ko.observable();
         countries = ko.observableArray<Places.ApiModels.Country>();
         countryCode = ko.observable<string>();
         prevEnabled = ko.observable(true);
         nextEnabled = ko.observable(true);
-        orderBy = ko.observable(this.modelData.OrderBy);
+        orderBy = ko.observable();
 
         nextPage(model, event): void {
             event.preventDefault();
