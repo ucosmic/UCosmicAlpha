@@ -319,6 +319,7 @@
     <Compile Include="ApiControllers\Places\PlaceNamesController.cs" />
     <Compile Include="Controllers\JavaScriptRoutesController.cs" />
     <Compile Include="Controllers\PeopleController.cs" />
+    <Compile Include="Helpers\SerializeObject.cs" />
     <Compile Include="Helpers\CurrentModuleTabAttribute.cs" />
     <Compile Include="Helpers\JavascriptRouteWriter.cs" />
     <Compile Include="JavaScriptRoutesController.generated.cs">

@@ -3,13 +3,16 @@
     export class ActivityInputModel {
         constructor(modelData: any) {
             this.modelData = modelData;
-            this.pageSize(this.modelData.PageSize);
-            this.pageNumber((this.modelData.PageNumber != null) ? this.modelData.PageNumber : "1");
-            this.keyword(this.modelData.Keyword);
-            this.orderBy(this.modelData.OrderBy);
-
+            this.pageSize(this.modelData.pageSize);
+            this.pageNumber((this.modelData.pageNumber != null) ? this.modelData.pageNumber : "1");
+            this.keyword(this.modelData.keyword);
+            this.orderBy(this.modelData.orderBy);
+            var pageCount = (modelData.itemTotal / parseInt(this.pageSize()));
+            if (parseInt(pageCount.toString()) < pageCount) {
+                pageCount = parseInt(pageCount.toString()) + 1
+            }
             this._setupCountryDropDown();
-            if (this.pageNumber() >= modelData.PageCount) {
+            if (parseInt(this.pageNumber()) >= pageCount) {
                 this.nextEnabled(false);
             }
             if (parseInt(this.pageNumber()) == 1) {
@@ -40,7 +43,7 @@
         }
         modelData;
         $form: JQuery;
-        pageSize = ko.observable();
+        pageSize = ko.observable<string>();
         pageNumber = ko.observable<string>();
         keyword = ko.observable();
         countries = ko.observableArray<Places.ApiModels.Country>();
@@ -85,7 +88,7 @@
 
                         this.countries(response); // push into observable array
 
-                        this.countryCode(this.modelData.CountryCode);
+                        this.countryCode(this.modelData.countryCode);
                         this.hasInitialized = true;
                     });
             })

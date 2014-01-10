@@ -14,13 +14,16 @@
                 this.hasInitialized = false;
                 this.optionsEnabled = ko.observable(false);
                 this.modelData = modelData;
-                this.pageSize(this.modelData.PageSize);
-                this.pageNumber((this.modelData.PageNumber != null) ? this.modelData.PageNumber : "1");
-                this.keyword(this.modelData.Keyword);
-                this.orderBy(this.modelData.OrderBy);
-
+                this.pageSize(this.modelData.pageSize);
+                this.pageNumber((this.modelData.pageNumber != null) ? this.modelData.pageNumber : "1");
+                this.keyword(this.modelData.keyword);
+                this.orderBy(this.modelData.orderBy);
+                var pageCount = (modelData.itemTotal / parseInt(this.pageSize()));
+                if (parseInt(pageCount.toString()) < pageCount) {
+                    pageCount = parseInt(pageCount.toString()) + 1;
+                }
                 this._setupCountryDropDown();
-                if (this.pageNumber() >= modelData.PageCount) {
+                if (parseInt(this.pageNumber()) >= pageCount) {
                     this.nextEnabled(false);
                 }
                 if (parseInt(this.pageNumber()) == 1) {
@@ -79,7 +82,7 @@
 
                         _this.countries(response);
 
-                        _this.countryCode(_this.modelData.CountryCode);
+                        _this.countryCode(_this.modelData.countryCode);
                         _this.hasInitialized = true;
                     });
                 }).extend({ throttle: 1 });

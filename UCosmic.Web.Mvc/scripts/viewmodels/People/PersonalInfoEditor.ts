@@ -168,7 +168,7 @@ module People.ViewModels {
                             },
                             'data-css-link': true
                         }
-                    ], 
+                    ],
                     zIndex: 10004
                 });
             }

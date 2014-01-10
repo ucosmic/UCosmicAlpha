@@ -7,7 +7,7 @@
 
 @{
     ViewBag.Title = "Search Activities";
-    var jsonSettings = new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() };
+    //var jsonSettings = new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() };
 }
 
 
@@ -171,10 +171,13 @@
     <script src="~/scripts/viewmodels/activities/Search.js"></script>
     <script>
         var settings = { @* TODO: put this json stuff into an HTML Helper ($.parseJson('@Json.SerializeObject(Model)')) *@
-            input: $.parseJSON('@Html.Raw(JsonConvert.SerializeObject(Model.Input, jsonSettings).Replace(@"\", @"\\").Replace("'", @"\'"))'),
-            output: $.parseJSON('@Html.Raw(JsonConvert.SerializeObject(Model.Output, jsonSettings).Replace(@"\", @"\\").Replace("'", @"\'"))'),
+            @*input: $.parseJSON('@Html.Raw(JsonConvert.SerializeObject(Model.Input, jsonSettings).Replace(@"\", @"\\").Replace("'", @"\'"))'),
+        output: $.parseJSON('@Html.Raw(JsonConvert.SerializeObject(Model.Output, jsonSettings).Replace(@"\", @"\\").Replace("'", @"\'"))'),*@
+            input: $.parseJSON('@Html.Raw(Html.SerializeObject(Model.Input))'),
+            output: $.parseJSON('@Html.Raw(Html.SerializeObject(Model.Output))'),
             @*countryOptions: $.parseJSON('@Html.Raw(JsonConvert.SerializeObject(Model.CountryOptions, jsonSettings).Replace(@"\", @"\\").Replace("'", @"\'"))'),*@
-            activityTypes: $.parseJSON('@Html.Raw(JsonConvert.SerializeObject(Model.ActivityTypes, jsonSettings).Replace(@"\", @"\\").Replace("'", @"\'"))'),
+            activityTypes: $.parseJSON('@Html.Raw(Html.SerializeObject(Model.ActivityTypes))'),
+            @*activityTypes: $.parseJSON('@Html.Raw(JsonConvert.SerializeObject(Model.ActivityTypes, jsonSettings).Replace(@"\", @"\\").Replace("'", @"\'"))'),*@
         };
         var viewModel = new Activities.ViewModels.Search(settings);
         viewModel.applyBindings(document.getElementById('activity_search_form'));
