@@ -1,4 +1,5 @@
-﻿@{
+﻿@using UCosmic.Domain.Agreements
+@{
     ViewBag.Title = "Agreement Details";
 }
 @section bib
@@ -7,7 +8,7 @@
         @Html.Partial(MVC.Agreements.Views._Bib, new ViewDataDictionary
         {
             { "Show", true },
-            { "Edit", ViewBag.AgreementId },
+            { "Edit", ViewBag.AgreementVisibility == AgreementVisibility.Private ? ViewBag.AgreementId : null },
         })
     </nav>
 }
