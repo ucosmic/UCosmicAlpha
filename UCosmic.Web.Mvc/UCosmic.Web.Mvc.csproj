@@ -2290,6 +2290,9 @@
     <Content Include="images\icons\spinner\spinner-20-blue.gif" />
     <Content Include="images\icons\logo\user-voice-24-filled.png" />
     <Content Include="styles\reset.css" />
+    <Content Include="styles\sass\sheets\employees\activities-table.css">
+      <DependentUpon>activities-table.scss</DependentUpon>
+    </Content>
     <Content Include="styles\sass\sheets\employees\summary.css">
       <DependentUpon>summary.scss</DependentUpon>
     </Content>
@@ -2393,6 +2396,7 @@
       <CompileStyle>Nested</CompileStyle>
       <DebugInfo>False</DebugInfo>
     </Content>
+    <Content Include="styles\sass\sheets\employees\activities-table.scss" />
     <None Include="styles\tenants\testshib.org\banner-logo.png" />
     <None Include="styles\tenants\testshib.org\designs.css">
       <DependentUpon>designs.scss</DependentUpon>

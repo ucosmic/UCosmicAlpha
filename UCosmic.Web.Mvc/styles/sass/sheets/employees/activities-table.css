@@ -1,0 +1,121 @@
+body nav.side input[type=text].side {
+  height: 20px;
+  line-height: 16px;
+  font-size: 14px;
+  padding: 3px 4px;
+  margin: 2px 0; }
+body .location.combobox.field .k-combobox {
+  background: transparent;
+  width: 100%;
+  height: 20px;
+  margin: 1px 0 2px 0;
+  overflow: hidden;
+  border-radius: 0; }
+body .location.combobox.field .k-dropdown-wrap {
+  height: 18px;
+  padding-right: 18px; }
+  body .location.combobox.field .k-dropdown-wrap input.k-input {
+    margin: 0;
+    padding: 0 0 0 4px;
+    height: 18px;
+    line-height: 16px;
+    font-size: 14px; }
+  body .location.combobox.field .k-dropdown-wrap input::-ms-clear {
+    width: 0;
+    height: 0; }
+  body .location.combobox.field .k-dropdown-wrap .k-select {
+    box-sizing: border-box;
+    min-height: 0;
+    height: 18px;
+    width: 18px;
+    border: solid 1px #999;
+    border-radius: 0; }
+    body .location.combobox.field .k-dropdown-wrap .k-select .k-icon {
+      margin: 1px 0 0 0;
+      vertical-align: top; }
+body .k-list-container.k-popup.k-ucosmic {
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
+  background: #fff; }
+  body .k-list-container.k-popup.k-ucosmic ul.k-list {
+    font-family: Arial;
+    font-size: 14px;
+    border: solid 1px ActiveBorder; }
+    body .k-list-container.k-popup.k-ucosmic ul.k-list li.k-item {
+      min-height: 0;
+      border: 0;
+      border-radius: 0;
+      padding: 1px 5px;
+      line-height: normal;
+      vertical-align: middle;
+      color: #000; }
+      body .k-list-container.k-popup.k-ucosmic ul.k-list li.k-item.k-item.k-state-focused {
+        box-shadow: none;
+        background: #eee;
+        color: #000; }
+      body .k-list-container.k-popup.k-ucosmic ul.k-list li.k-item.k-item.k-state-hover {
+        box-shadow: none;
+        background: Highlight;
+        color: HighlightText; }
+body .dates.picker.field .k-datepicker {
+  width: 100%;
+  border-radius: 0;
+  margin-top: 2px;
+  vertical-align: top;
+  margin-bottom: 2px; }
+  body .dates.picker.field .k-datepicker .k-picker-wrap {
+    border-radius: 0;
+    border-color: #ddd;
+    border-top-color: #aaa;
+    border-left-color: #aaa;
+    height: 18px;
+    box-shadow: none;
+    padding-right: 20px; }
+    body .dates.picker.field .k-datepicker .k-picker-wrap input {
+      border-radius: 0;
+      margin: 0;
+      text-indent: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      height: 18px;
+      box-sizing: border-box;
+      margin-bottom: 0;
+      color: #000; }
+    body .dates.picker.field .k-datepicker .k-picker-wrap .k-select {
+      min-height: 16px;
+      max-height: 16px;
+      height: 16px;
+      min-width: 16px;
+      max-width: 16px;
+      width: 16px;
+      border-radius: 0; }
+      body .dates.picker.field .k-datepicker .k-picker-wrap .k-select .k-icon {
+        min-height: 16px;
+        max-height: 16px;
+        height: 16px;
+        min-width: 16px;
+        max-width: 16px;
+        width: 16px;
+        vertical-align: top;
+        margin-top: 2px;
+        margin-left: 0; }
+body label.activities-pivot {
+  cursor: pointer;
+  display: inline-block;
+  background-color: #ddd;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: solid 1px #999;
+  text-align: center;
+  margin-left: 12px;
+  min-width: 95px;
+  font-weight: normal; }
+  body label.activities-pivot.checked {
+    font-weight: bold; }
+body td.locations-column {
+  vertical-align: top;
+  min-width: 120px; }
+body td.person-column {
+  vertical-align: top;
+  min-width: 120px; }
+
