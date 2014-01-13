@@ -1,0 +1,19 @@
+﻿@{ var routeWriter = new JavascriptRouteWriter(); }
+
+@* API ROUTES *@
+var Routes = Routes || {};
+Routes.Api = Routes.Api || {};
+
+@* PLACES *@
+Routes.Api.Places = Routes.Api.Places || {};
+
+@* PLACE NAMES *@
+Routes.Api.Places.Names = Routes.Api.Places.Names || {};
+
+Routes.Api.Places.Names.autocomplete = function () {
+    return '@routeWriter.WriteRoute(Url.HttpRouteUrl(null, new
+    {
+        controller = "PlaceNames",
+        action = "GetAutoComplete",
+    }))';
+};

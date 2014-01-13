@@ -79,7 +79,7 @@ var Activities;
                     serverFiltering: true,
                     transport: {
                         read: {
-                            url: '/api/places/names/autocomplete'
+                            url: Routes.Api.Places.Names.autocomplete()
                         },
                         parameterMap: function (data, action) {
                             if (action == 'read' && data && data.filter && data.filter.filters && data.filter.filters.length) {

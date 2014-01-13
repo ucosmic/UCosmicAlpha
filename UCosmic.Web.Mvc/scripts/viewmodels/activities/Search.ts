@@ -76,7 +76,7 @@ module Activities.ViewModels {
                 serverFiltering: true,
                 transport: {
                     read: {
-                        url: '/api/places/names/autocomplete',
+                        url: Routes.Api.Places.Names.autocomplete(),
                     },
                     parameterMap: (data: kendo.data.DataSourceTransportParameterMapData, action: string): any => {
                         if (action == 'read' && data && data.filter && data.filter.filters && data.filter.filters.length) {

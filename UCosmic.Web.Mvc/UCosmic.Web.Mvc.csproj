@@ -2150,6 +2150,7 @@
     <TypeScriptCompile Include="scripts\viewmodels\my\Profile.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\people\AffiliationsEditor.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\people\PersonalInfoEditor.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\places\Routes.d.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\representatives\RepModuleSettings.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\geographicExpertises\GeographicExpertises.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\degrees\ServiceApiModel.d.ts" />
@@ -2627,6 +2628,7 @@
     <Content Include="Views\People\_PersonalInfoEditor.cshtml" />
     <Content Include="Views\People\_AffiliationsEditor.cshtml" />
     <Content Include="Views\Employees\_ActivityDatesDisplay.cshtml" />
+    <Content Include="Views\JavaScriptRoutes\Places.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

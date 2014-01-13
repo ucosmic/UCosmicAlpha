@@ -83,10 +83,12 @@ namespace UCosmic.Web.Mvc.Controllers
                 public readonly string Employees = "Employees";
                 public readonly string Establishments = "Establishments";
                 public readonly string People = "People";
+                public readonly string Places = "Places";
             }
             public readonly string Employees = "~/Views/JavaScriptRoutes/Employees.cshtml";
             public readonly string Establishments = "~/Views/JavaScriptRoutes/Establishments.cshtml";
             public readonly string People = "~/Views/JavaScriptRoutes/People.cshtml";
+            public readonly string Places = "~/Views/JavaScriptRoutes/Places.cshtml";
         }
     }
 

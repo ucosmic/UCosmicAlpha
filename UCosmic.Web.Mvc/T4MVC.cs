@@ -3075,6 +3075,7 @@ namespace Links
                 public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
                 public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
                 public static readonly string ApiModels_d_ts = Url("ApiModels.d.ts");
+                public static readonly string Routes_d_ts = Url("Routes.d.ts");
                 public static readonly string Utils_ts = Url("Utils.ts");
                 public static readonly string Utils_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Utils.min.js") ? Url("Utils.min.js") : Url("Utils.js");
                               
@@ -3515,6 +3516,9 @@ namespace Links
                     private const string URLPATH = "~/styles/sass/sheets/employees";
                     public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
                     public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                    public static readonly string activities_table_scss = Url("activities-table.scss");
+                    public static readonly string activities_table_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/activities-table.min.css") ? Url("activities-table.min.css") : Url("activities-table.css");
+                         
                     public static readonly string summary_scss = Url("summary.scss");
                     public static readonly string summary_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/summary.min.css") ? Url("summary.min.css") : Url("summary.css");
                          
