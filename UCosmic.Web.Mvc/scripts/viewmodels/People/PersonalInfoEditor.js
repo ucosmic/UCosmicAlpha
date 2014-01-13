@@ -259,7 +259,7 @@ var People;
                 });
                 var self = this, kacSelect;
                 this.$edit_personal_info_dialog.kendoWindow({
-                    width: 550,
+                    width: 910,
                     open: function () {
                         $("html, body").css("overflow", "hidden");
                         _this.isEditMode(true);

@@ -313,7 +313,7 @@ module People.ViewModels {
             var self = this,
                 kacSelect;
             this.$edit_personal_info_dialog.kendoWindow({
-                width: 550,
+                width: 910,
                 open: () => {
                     $("html, body").css("overflow", "hidden");
                     this.isEditMode(true);
