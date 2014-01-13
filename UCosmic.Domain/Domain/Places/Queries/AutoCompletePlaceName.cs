@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Linq.Expressions;
 using Lucene.Net.Index;
 using Lucene.Net.Search;
 
@@ -9,6 +10,7 @@ namespace UCosmic.Domain.Places
     {
         public string Terms { get; set; }
         public int? MaxResults { get; set; }
+        public int? Granularity { get; set; }
     }
 
     public class HandleAutoCompletePlaceNameQuery : IHandleQueries<AutoCompletePlaceName, PlaceDocument[]>
@@ -31,7 +33,7 @@ namespace UCosmic.Domain.Places
             var searcher = _searchers.Acquire<PlaceDocument>();
             try
             {
-                var search = new BooleanQuery
+                var terms = new BooleanQuery
                 {
                     {
                         new PrefixQuery(new Term(eDoc.PropertyName(x => x.OfficialName), keyword))
@@ -53,6 +55,15 @@ namespace UCosmic.Domain.Places
                         Occur.SHOULD
                     },
                 };
+
+                var search = new BooleanQuery { { terms, Occur.MUST } };
+
+                if (query.Granularity.HasValue)
+                {
+                    var granularity = NumericRangeQuery.NewIntRange(eDoc.PropertyName(x => x.AncestorCount), 0, query.Granularity, true, true);
+                    search.Add(granularity, Occur.MUST);
+                }
+
                 var results = searcher.Search(search, query.MaxResults ?? int.MaxValue);
                 var documents = results.ScoreDocs.Select(x => new PlaceDocument(x, searcher.Doc(x.Doc))).ToArray();
                 return documents;

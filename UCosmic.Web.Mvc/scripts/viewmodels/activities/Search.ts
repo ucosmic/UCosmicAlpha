@@ -83,6 +83,7 @@ module Activities.ViewModels {
                             return {
                                 terms: data.filter.filters[0].value,
                                 maxResults: 20,
+                                granularity: 2,
                             };
                         }
                         return data;

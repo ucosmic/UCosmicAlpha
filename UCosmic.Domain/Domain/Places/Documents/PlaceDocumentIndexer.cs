@@ -40,6 +40,7 @@ namespace UCosmic.Domain.Places
                 .EagerLoad(_entities, new Expression<Func<Place, object>>[]
                 {
                     x => x.Names,
+                    x => x.Ancestors,
                 })
                 .OrderBy(x => x.RevisionId);
             var total = places.Count();
@@ -74,6 +75,13 @@ namespace UCosmic.Domain.Places
             document.Add(new Field(place.PropertyName(x => x.IsEarth), place.IsEarth.ToString().ToLower(), Field.Store.YES, Field.Index.NO));
             document.Add(new Field(place.PropertyName(x => x.IsContinent), place.IsContinent.ToString().ToLower(), Field.Store.YES, Field.Index.NO));
             document.Add(new Field(place.PropertyName(x => x.IsCountry), place.IsCountry.ToString().ToLower(), Field.Store.YES, Field.Index.NO));
+            document.Add(new Field(place.PropertyName(x => x.IsWater), place.IsCountry.ToString().ToLower(), Field.Store.YES, Field.Index.NO));
+            document.Add(new Field(place.PropertyName(x => x.IsRegion), place.IsCountry.ToString().ToLower(), Field.Store.YES, Field.Index.NO));
+            document.Add(new Field(place.PropertyName(x => x.IsAdmin1), place.IsCountry.ToString().ToLower(), Field.Store.YES, Field.Index.NO));
+            document.Add(new Field(place.PropertyName(x => x.IsAdmin2), place.IsCountry.ToString().ToLower(), Field.Store.YES, Field.Index.NO));
+            document.Add(new Field(place.PropertyName(x => x.IsAdmin3), place.IsCountry.ToString().ToLower(), Field.Store.YES, Field.Index.NO));
+            document.Add(new Field(place.PropertyName(x => x.IsAdmin3), place.IsCountry.ToString().ToLower(), Field.Store.YES, Field.Index.NO));
+            document.Add(new NumericField(place.PropertyName(x => x.AncestorCount), Field.Store.YES, true).SetIntValue(place.AncestorCount));
             return document;
         }
 

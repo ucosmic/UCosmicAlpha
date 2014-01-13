@@ -441,6 +441,7 @@
     <Compile Include="Models\People\PeopleSearchInputModel.cs" />
     <Compile Include="Models\People\PersonViewModel.cs" />
     <Compile Include="Models\People\PersonApiModel.cs" />
+    <Compile Include="Models\Places\AutoCompleteNameInputModel.cs" />
     <Compile Include="Models\Places\PlaceNameAutoCompleteModel.cs" />
     <Compile Include="Models\Users\RoleSearchInputModel.cs" />
     <Compile Include="Models\Users\RoleApiModel.cs" />

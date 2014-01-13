@@ -13,6 +13,12 @@ namespace UCosmic.Domain.Places
             IsEarth = entity.IsEarth;
             IsContinent = entity.IsContinent;
             IsCountry = entity.IsCountry;
+            IsWater = entity.IsWater;
+            IsRegion = entity.IsRegion;
+            IsAdmin1 = entity.IsAdmin1;
+            IsAdmin2 = entity.IsAdmin2;
+            IsAdmin3 = entity.IsAdmin3;
+            AncestorCount = entity.Ancestors.Count;
             OfficialName = entity.OfficialName;
         }
 
@@ -32,6 +38,12 @@ namespace UCosmic.Domain.Places
         public bool IsEarth { get; set; }
         public bool IsContinent { get; set; }
         public bool IsCountry { get; set; }
+        public bool IsWater { get; set; }
+        public bool IsRegion { get; set; }
+        public bool IsAdmin1 { get; set; }
+        public bool IsAdmin2 { get; set; }
+        public bool IsAdmin3 { get; set; }
+        public int AncestorCount { get; set; }
 
         //[Field(IndexMode.NotAnalyzed)]
         public string OfficialName { get; set; }

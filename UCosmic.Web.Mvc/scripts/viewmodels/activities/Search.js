@@ -85,7 +85,8 @@ var Activities;
                             if (action == 'read' && data && data.filter && data.filter.filters && data.filter.filters.length) {
                                 return {
                                     terms: data.filter.filters[0].value,
-                                    maxResults: 20
+                                    maxResults: 20,
+                                    granularity: 2
                                 };
                             }
                             return data;
