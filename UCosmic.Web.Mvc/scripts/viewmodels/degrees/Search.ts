@@ -192,7 +192,7 @@ module ViewModels.Degrees {
                     return ko.utils.unwrapObservable(data.id);
                 },
                 create: function (options) {
-                    return new SearchResult(options.data, options.parent);
+                    //return new SearchResult(options.data, options.parent);
                 }
             },
             ignore: ['pageSize', 'pageNumber']
@@ -260,10 +260,10 @@ module ViewModels.Degrees {
 
         // click item
         // TODO: is this still needed?
-        clickAction(viewModel: SearchResult, e: JQueryEventObject): boolean {
+        ////clickAction(viewModel: SearchResult, e: JQueryEventObject): boolean {
 
-            return true;
-        }
+        ////    return true;
+        ////}
 
         // TODO: this is also not used anywhere, detailHref on SearchResult is though.
         detailHref(id: number): string {

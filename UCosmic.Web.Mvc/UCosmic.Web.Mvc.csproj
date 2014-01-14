@@ -1742,6 +1742,7 @@
     <TypeScriptCompile Include="scripts\typings\modernizr\modernizr.d.ts" />
     <TypeScriptCompile Include="scripts\typings\moment\moment.d.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\activities\Search.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\degrees\Search.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\establishments\SearchResult.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\establishments\Search.ts" />
     <Content Include="scripts\require\main.js" />
@@ -2125,6 +2126,9 @@
     </Content>
     <TypeScriptCompile Include="scripts\viewmodels\employees\Employees.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\employees\Models.d.ts" />
+    <Content Include="scripts\viewmodels\degrees\Search.js">
+      <DependentUpon>Search.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\viewmodels\employees\Employees.js">
       <DependentUpon>Employees.ts</DependentUpon>
     </Content>

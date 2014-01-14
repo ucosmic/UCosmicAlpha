@@ -1,4 +1,4 @@
-﻿var __extends = this.__extends || function (d, b) {
+var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     __.prototype = b.prototype;
@@ -39,7 +39,6 @@ var ViewModels;
                             return ko.utils.unwrapObservable(data.id);
                         },
                         create: function (options) {
-                            return new SearchResult(options.data, options.parent);
                         }
                     },
                     ignore: ['pageSize', 'pageNumber']
@@ -221,10 +220,6 @@ var ViewModels;
             };
 
             Search.prototype.gotoAddNew = function () {
-                return true;
-            };
-
-            Search.prototype.clickAction = function (viewModel, e) {
                 return true;
             };
 
