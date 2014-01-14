@@ -13,7 +13,17 @@
         }
 
     .one-column {
-        width: 50% !important;
+        width: 45% !important;
+    }
+    .field-column-left {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+    .field-column-right {
+        padding-right: 16px;
+    }
+    .field-table.w690-l250-v440 .field-input {
+        width: 100%;
     }
 </style>
 <section class="person-profile " data-bind="click: startEditing, css: { clickable: !isEditMode() }">
@@ -45,11 +55,11 @@
         <div class="field-table w690-l250-v440">
             <div class="field-row">
                 <div class="field-column-left one-column">
-                    <div class="field-label" style="padding-top: 0;">
+                    <div class="field-label" style="padding-top: 0; float: left; width: 130px;">
                         <img src="@Url.HttpRouteUrl(null, new { controller = "MyPhoto", action = "Get", maxSide = "128", refresh = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture) })"
                              alt="" data-bind="attr: { src: photoSrc }" />
                     </div>
-                    <div class="field-input">
+                    <div class="field-input" style="float: right; width: 220px; height: 100px;">
                         <div>
                             <input type="file" name="photo" id="photo" />
                         </div>
@@ -176,14 +186,16 @@
             @if (viewingUser.IsInRole(RoleName.EmployeeProfileManager))
             {
                 <div class="field-row">
-                    <div>
-                        <label>
-                            <input type="checkbox" data-bind="checked: isActive" />
-                            This profile is currently active.
-                        </label>
-                    </div>
-                    <div>
-                        <!--<span style="display: inline-block; float: right"><a href="#">Delete User</a></span>-->
+                    <div class="field-column-left one-column">
+                        <div>
+                            <label>
+                                <input type="checkbox" data-bind="checked: isActive" />
+                                This profile is currently active.
+                            </label>
+                        </div>
+                        <div>
+                            <!--<span style="display: inline-block; float: right"><a href="#">Delete User</a></span>-->
+                        </div>
                     </div>
                 </div>
             }
@@ -195,16 +207,18 @@
             }
 
             <div class="field-row">
-                <div>
-                    <input type="submit" value="Save" data-bind="attr: { disabled: saveSpinner.isVisible }" />
-                    &nbsp;&nbsp;&nbsp;
-                    <a href="#/cancel-profile-edit/" data-bind="click: cancelEditing">Cancel</a>
-                    &nbsp;&nbsp;&nbsp;
-                    <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" data-bind="visible: saveSpinner.isVisible" style="display: none;" />
-                    <strong data-bind="visible: saveSpinner.isVisible" style="display: none;">Saving...</strong>
+                <div class="field-column-left one-column">
+                    <div>
+                        <input type="submit" value="Save" data-bind="attr: { disabled: saveSpinner.isVisible }" />
+                        &nbsp;&nbsp;&nbsp;
+                        <a href="#/cancel-profile-edit/" data-bind="click: cancelEditing">Cancel</a>
+                        &nbsp;&nbsp;&nbsp;
+                        <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" data-bind="visible: saveSpinner.isVisible" style="display: none;" />
+                        <strong data-bind="visible: saveSpinner.isVisible" style="display: none;">Saving...</strong>
+                    </div>
                 </div>
             </div>
         </div>
-    </form>
+</form>
 </div>
 

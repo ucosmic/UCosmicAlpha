@@ -35,7 +35,9 @@ module ViewModels.Degrees {
                 })
                 .fail((jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
                     {
-                        deferred.reject(jqXhr, textStatus, errorThrown);
+                        if (jqXhr.status != 0) {
+                            deferred.reject(jqXhr, textStatus, errorThrown);
+                        }
                     }
                 });
 

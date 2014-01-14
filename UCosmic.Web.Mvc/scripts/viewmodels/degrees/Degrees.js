@@ -1,4 +1,4 @@
-var ViewModels;
+﻿var ViewModels;
 (function (ViewModels) {
     (function (Degrees) {
         var DegreeSearchInput = (function () {
@@ -28,7 +28,9 @@ var ViewModels;
                     }
                 }).fail(function (jqXhr, textStatus, errorThrown) {
                      {
-                        deferred.reject(jqXhr, textStatus, errorThrown);
+                        if (jqXhr.status != 0) {
+                            deferred.reject(jqXhr, textStatus, errorThrown);
+                        }
                     }
                 });
 

@@ -196,8 +196,14 @@ var People;
                                 url: App.Routes.WebApi.People.Names.Salutations.get()
                             }
                         }
-                    })
+                    }),
+                    change: function (e) {
+                        if (this.text() == "[None]") {
+                            this.text("");
+                        }
+                    }
                 });
+
                 this.$nameSuffix.kendoComboBox({
                     dataTextField: "text",
                     dataValueField: "value",
@@ -207,7 +213,12 @@ var People;
                                 url: App.Routes.WebApi.People.Names.Suffixes.get()
                             }
                         }
-                    })
+                    }),
+                    change: function (e) {
+                        if (this.text() == "[None]") {
+                            this.text("");
+                        }
+                    }
                 });
 
                 this.$photo.kendoUpload({
@@ -259,7 +270,7 @@ var People;
                 });
                 var self = this, kacSelect;
                 this.$edit_personal_info_dialog.kendoWindow({
-                    width: 910,
+                    width: 810,
                     open: function () {
                         $("html, body").css("overflow", "hidden");
                         _this.isEditMode(true);
@@ -268,7 +279,7 @@ var People;
                         $("html, body").css("overflow", "");
                         _this.isEditMode(false);
                     },
-                    maxHeight: 500,
+                    maxHeight: 648,
                     visible: false,
                     draggable: false,
                     resizable: false

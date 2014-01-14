@@ -96,50 +96,57 @@
                                     <input type="text" id="institution" style="width: 800px; height: 32px" data-bind="value: institutionOfficialName" />
                                 </span>
                             </div>
+                            @*<div style="margin-top: 14px">
+                                <a data-bind="click: addParticipant" class="button">
+                                    <i class="green plus"></i>
+                                    <span class="text">Add an institution</span>
+                                </a>
+                            </div>*@
 
-                            <!-- INSTITUTION COUNTRY -->
-                            <div style="margin-bottom: 8px">
-                                <span style="padding-left: 124px" data-bind="text: institutionCountryOfficialName()"></span>
+
+                                <!-- INSTITUTION COUNTRY -->
+                                <div style="margin-bottom: 8px">
+                                    <span style="padding-left: 124px" data-bind="text: institutionCountryOfficialName()"></span>
+                                </div>
                             </div>
-                        </div>
 
-                        <!-- BUTTONS -->
-                        <div style="margin-bottom: 32px" data-bind="template: { name: 'buttons-template'}"></div>
+                            <!-- BUTTONS -->
+                            <div style="margin-bottom: 32px" data-bind="template: { name: 'buttons-template'}"></div>
 
-                        <!-- LAST UPDATED -->
-                        <div style="width: 50%; height: 1.5em; border-top: 1px; border-style: solid">
-                            <span style="font-size:smaller; color:slategray">
-                                <span>Last updated</span>
-                                <label id="last-updated-date" data-bind="text: (whenLastUpdated() != null) ? moment(whenLastUpdated()).format('MM/DD/YYYY') : ''"></label>
-                                <span> by </span>
-                                <label id="last-updated-name" data-bind="text: whoLastUpdated()"></label>
-                            </span>
+                            <!-- LAST UPDATED -->
+                            <div style="width: 50%; height: 1.5em; border-top: 1px; border-style: solid">
+                                <span style="font-size:smaller; color:slategray">
+                                    <span>Last updated</span>
+                                    <label id="last-updated-date" data-bind="text: (whenLastUpdated() != null) ? moment(whenLastUpdated()).format('MM/DD/YYYY') : ''"></label>
+                                    <span> by </span>
+                                    <label id="last-updated-name" data-bind="text: whoLastUpdated()"></label>
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- JQUERY DIALOGS -->
-<div id="cancelConfirmDialog" class="dialog" title="Confirm Cancel">
-    <div>By cancelling, you will lose all changes.</div>
-    <div style="font-weight: bold">Are you sure you want to Cancel editing this degree?</div>
-</div>
+    <!-- JQUERY DIALOGS -->
+    <div id="cancelConfirmDialog" class="dialog" title="Confirm Cancel">
+        <div>By cancelling, you will lose all changes.</div>
+        <div style="font-weight: bold">Are you sure you want to Cancel editing this degree?</div>
+    </div>
 
-<div id="degreeBeingEditedDialog" class="dialog" title="Error Renaming Document">
-    <div>The degree cannot be edited at this time because it is in use by:</div>
-    <div id="editingUserName" style="text-align: center"></div>
-    <a id="editingUserEmail" style="text-align: center"></a>
-</div>
+    <div id="degreeBeingEditedDialog" class="dialog" title="Error Renaming Document">
+        <div>The degree cannot be edited at this time because it is in use by:</div>
+        <div id="editingUserName" style="text-align: center"></div>
+        <a id="editingUserEmail" style="text-align: center"></a>
+    </div>
 
 
-<!-- KNOCKOUT TEMPLATES -->
-<script type="text/html" id="buttons-template">
-    <span>
-        <input type="button" value="Save" data-bind="click: function (item, event) { save(item, event, 'Save'); }, clickBubble: false"/>
-        <input type="button" value="Guide Me" style="margin-left: 50px"/>
-        <input type="button" value="Cancel" style="float: right" data-bind="click: function (item, event) { cancel(item, event); }, clickBubble: false"/>
-    </span>
-</script>
+    <!-- KNOCKOUT TEMPLATES -->
+    <script type="text/html" id="buttons-template">
+        <span>
+            <input type="button" value="Save" data-bind="click: function (item, event) { save(item, event, 'Save'); }, clickBubble: false"/>
+            <input type="button" value="Guide Me" style="margin-left: 50px"/>
+            <input type="button" value="Cancel" style="float: right" data-bind="click: function (item, event) { cancel(item, event); }, clickBubble: false"/>
+        </span>
+    </script>
