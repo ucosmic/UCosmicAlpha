@@ -1,5 +1,10 @@
 module ViewModels.Degrees {
 
+    export class Institution {
+        
+    }
+
+
     export class Degree implements Service.ApiModels.Degree.IObservableDegree, KnockoutValidationGroup {
         /* True if any field changes. */
         dirtyFlag: KnockoutObservable<boolean> = ko.observable( false );
@@ -16,9 +21,11 @@ module ViewModels.Degrees {
         title: KnockoutObservable<string>;
         fieldOfStudy: KnockoutObservable<string>;
         yearAwarded: KnockoutObservable<any>;
+
         institutionId: KnockoutObservable<any>;
         institutionOfficialName: KnockoutObservable<string>;
         institutionCountryOfficialName: KnockoutObservable<string>;
+
         errors: KnockoutValidationErrors;
         isValid: () => boolean;
         isAnyMessageShown: () => boolean;
@@ -223,6 +230,20 @@ module ViewModels.Degrees {
                 //location.href = App.Routes.Mvc.My.Profile.get() + '#/formal-education';
                 history.back();
             }
+        }
+
+        removeParticipant(establishmentResultViewModel, e): boolean {
+            
+            return false;
+        }
+
+
+        addParticipant(establishmentResultViewModel): void {
+            var search = new Establishments.ViewModels.Search;// ViewModels.Degrees.Search()
+            
+            search.sammy.setLocation('#/page/1/');
+            var nav = new ViewModels.Degrees.EstablishmentSearchNav(this.institutionId(), this.institutionOfficialName(), this.institutionCountryOfficialName())
+            //nav.does = true;
         }
     }
 }

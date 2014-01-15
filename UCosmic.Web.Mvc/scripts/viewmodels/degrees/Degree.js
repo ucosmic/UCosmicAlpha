@@ -1,6 +1,13 @@
 var ViewModels;
 (function (ViewModels) {
     (function (Degrees) {
+        var Institution = (function () {
+            function Institution() {
+            }
+            return Institution;
+        })();
+        Degrees.Institution = Institution;
+
         var Degree = (function () {
             function Degree(educationId) {
                 this.dirtyFlag = ko.observable(false);
@@ -202,6 +209,17 @@ var ViewModels;
                 } else {
                     history.back();
                 }
+            };
+
+            Degree.prototype.removeParticipant = function (establishmentResultViewModel, e) {
+                return false;
+            };
+
+            Degree.prototype.addParticipant = function (establishmentResultViewModel) {
+                var search = new Establishments.ViewModels.Search;
+
+                search.sammy.setLocation('#/page/1/');
+                var nav = new ViewModels.Degrees.EstablishmentSearchNav(this.institutionId(), this.institutionOfficialName(), this.institutionCountryOfficialName());
             };
             return Degree;
         })();

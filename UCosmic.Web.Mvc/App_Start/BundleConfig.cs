@@ -173,6 +173,14 @@ namespace UCosmic.Web.Mvc
             bundles.Add(new ScriptBundle("~/bundles/degrees").Include(
                 "~/scripts/viewmodels/degrees/Degrees.js"));
             bundles.Add(new ScriptBundle("~/bundles/degree").Include(
+                "~/scripts/app/PagedSearch.js",
+                "~/scripts/viewmodels/establishments/SearchResult.js",
+                "~/scripts/viewmodels/establishments/Search.js",
+                "~/scripts/viewmodels/establishments/Name.js",
+                "~/scripts/viewmodels/establishments/Url.js",
+                "~/scripts/viewmodels/establishments/Location.js",
+                "~/scripts/viewmodels/establishments/Item.js",
+                "~/scripts/viewmodels/agreements/establishmentSearchNav.js",
                 "~/scripts/viewmodels/degrees/Degree.js"));
 
             // affiliations

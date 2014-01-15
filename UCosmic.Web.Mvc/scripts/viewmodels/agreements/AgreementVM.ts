@@ -100,7 +100,7 @@ class InstitutionalAgreementEditModel {
     pageNumber = ko.observable<number>();
     $genericAlertDialog: JQuery = undefined;
 
-    //added this because kendo window after selecting a autocomplte and then clicking the window, 
+    //added this because kendo window after selecting a autocomplete and then clicking the window, 
     //the body would scroll to the top.
     kendoWindowBug = { val: 0 };
 

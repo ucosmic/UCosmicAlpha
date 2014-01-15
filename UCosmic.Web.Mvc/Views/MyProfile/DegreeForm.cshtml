@@ -90,24 +90,24 @@
                             </div>
 
                             <!-- INSTITUTION -->
-                            <div style="margin-bottom: 14px">
+                            @*<div style="margin-bottom: 14px">
                                 <span>
                                     <label for="institution" class="non-required-field">Institution</label>
                                     <input type="text" id="institution" style="width: 800px; height: 32px" data-bind="value: institutionOfficialName" />
                                 </span>
-                            </div>
-                            @*<div style="margin-top: 14px">
+                            </div>*@
+                            <div style="margin-top: 14px">
                                 <a data-bind="click: addParticipant" class="button">
                                     <i class="green plus"></i>
                                     <span class="text">Add an institution</span>
                                 </a>
-                            </div>*@
+                            </div>
 
 
                                 <!-- INSTITUTION COUNTRY -->
-                                <div style="margin-bottom: 8px">
+                                @*<div style="margin-bottom: 8px">
                                     <span style="padding-left: 124px" data-bind="text: institutionCountryOfficialName()"></span>
-                                </div>
+                                </div>*@
                             </div>
 
                             <!-- BUTTONS -->
@@ -128,6 +128,60 @@
             </div>
         </div>
     </div>
+<div id="establishment_search" class="content fixed to-top" style="display: none;">
+    <form class="group" data-bind="submit: requestResults">
+        <div class="on-left from-top">
+            <header>
+                <h1 data-bind="text: header">
+                    Choose a participant
+                </h1>
+                <div style="float: right">
+                    <a href="#/" id="cancelAddParticipant" class="button">Cancel</a>
+                </div>
+            </header>
+            @Html.Partial(MVC.Establishments.Views._SearchAndResults)
+        </div>
+        <aside id="asideRootSearch" class="on-right from-top" data-fixed-scroll="root">
+            <div data-fixed-scroll="anchor"></div>
+            <div data-fixed-scroll="content">
+                @Html.Partial(MVC.Establishments.Views._SearchSideBar)
+            </div>
+        </aside>
+        <aside id="asideParentSearch" class="on-right from-top" data-fixed-scroll="root">
+            <div data-fixed-scroll="anchor"></div>
+            <div data-fixed-scroll="content">
+                @Html.Partial(MVC.Establishments.Views._ParentSearchSideBar)
+            </div>
+        </aside>
+    </form>
+</div>
+<div id="add_establishment" class="content fixed to-top" style="visibility: hidden">
+    <div data-side-swiper="root" id="establishment_page">
+        <div data-side-swiper="deck">
+            <div data-side-swiper="on">
+                <div class="group">
+                    <div class="on-left from-top">
+                        <header>
+                            <h1>
+                                Add an establishment
+                            </h1>
+                            <div style="float: right">
+                                <a href="#/" id="cancelAddEstablishment" class="button">Cancel</a>
+                            </div>
+                        </header>
+                        @Html.Partial(MVC.Establishments.Views._FormAndCards)
+                    </div>
+                    <aside class="on-right from-top" data-fixed-scroll="root">
+                        <div data-fixed-scroll="anchor"></div>
+                        <div data-fixed-scroll="content">
+                            @Html.Partial(MVC.Establishments.Views._FormSideBar)
+                        </div>
+                    </aside>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
     <!-- JQUERY DIALOGS -->
     <div id="cancelConfirmDialog" class="dialog" title="Confirm Cancel">
