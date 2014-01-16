@@ -31,7 +31,7 @@
 
 //                                   || /* or */
 //                                   (
-//                                       /* On-going only. If OnGoing has value and true, do not check EndsOn, because
+//                                       /* Ongoing only. If OnGoing has value and true, do not check EndsOn, because
 //                                        * user may have checked, then uncheck Ongoing and EndsOn is not necessarily null'd
 //                                        * when OnGoing is set to false (unchecked).
 //                                        */
@@ -44,7 +44,7 @@
 //                                            (includeFuture || (a.EndsOn < toDate))) &&
 //                                        (!a.OnGoing.HasValue || !a.OnGoing.Value)) ||
 
-//                                       /* Start date and on-going.  Do not check EndsOn. */
+//                                       /* Start date and ongoing.  Do not check EndsOn. */
 //                                       ((a.StartsOn.HasValue && (a.StartsOn.Value < toDate)) &&
 //                                        (a.OnGoing.HasValue && a.OnGoing.Value)) ||
 

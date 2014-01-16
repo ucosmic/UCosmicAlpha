@@ -180,7 +180,7 @@ namespace UCosmic.Web.Mvc
                 "~/scripts/viewmodels/establishments/Url.js",
                 "~/scripts/viewmodels/establishments/Location.js",
                 "~/scripts/viewmodels/establishments/Item.js",
-                "~/scripts/viewmodels/agreements/establishmentSearchNav.js",
+                "~/scripts/viewmodels/degrees/establishmentSearchNav.js",
                 "~/scripts/viewmodels/degrees/Degree.js"));
 
             // affiliations

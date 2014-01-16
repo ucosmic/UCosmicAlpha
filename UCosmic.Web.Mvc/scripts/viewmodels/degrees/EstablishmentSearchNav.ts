@@ -1,44 +1,51 @@
 module ViewModels.Degrees {
 
-    export class InstitutionalAgreementParticipantModel {
-        constructor(isOwner: any, establishmentId: number, establishmentOfficialName: string,
-            establishmentTranslatedName: string) {
-            this.isOwner = ko.observable(isOwner);
-            this.establishmentId = ko.observable(establishmentId);
-            this.establishmentOfficialName = ko.observable(establishmentOfficialName);
-            this.establishmentTranslatedName = ko.observable(establishmentTranslatedName);
-        }
-        isOwner;
-        establishmentId;
-        establishmentOfficialName;
-        establishmentTranslatedName;
-    };
+    //export class InstitutionalAgreementParticipantModel {
+    //    constructor(isOwner: any, establishmentId: number, establishmentOfficialName: string,
+    //        establishmentTranslatedName: string) {
+    //        this.isOwner = ko.observable(isOwner);
+    //        this.establishmentId = ko.observable(establishmentId);
+    //        this.establishmentOfficialName = ko.observable(establishmentOfficialName);
+    //        this.establishmentTranslatedName = ko.observable(establishmentTranslatedName);
+    //    }
+    //    isOwner;
+    //    establishmentId;
+    //    establishmentOfficialName;
+    //    establishmentTranslatedName;
+    //};
 
     export class EstablishmentSearchNav {
-        constructor(institutionId, institutionOfficialName, institutionCountryOfficialName) {
+        constructor(institutionId, institutionOfficialName, institutionCountryOfficialName,
+            institutionTranslatedName, institutionOfficialNameDoesNotMatchTranslation) {
             this.institutionId = institutionId;
             this.institutionOfficialName = institutionOfficialName;
             this.institutionCountryOfficialName = institutionCountryOfficialName;
+
+            this.institutionTranslatedName = institutionTranslatedName;
+            this.institutionOfficialNameDoesNotMatchTranslation = institutionOfficialNameDoesNotMatchTranslation;
+
         }
 
         //imported vars
         institutionId;
         institutionOfficialName;
         institutionCountryOfficialName;
+        institutionOfficialNameDoesNotMatchTranslation;
+        institutionTranslatedName;
 
         //search vars
-        sammyUrl = '#/new/';
+        sammyUrl = 'new/';
         establishmentSearchViewModel = new Establishments.ViewModels.Search();
         establishmentItemViewModel;
         hasBoundSearch = { does: false };
         hasBoundItem = false;
-        
+
         SearchPageBind(parentOrParticipant: string): void {
             var $cancelAddParticipant = $("#cancelAddParticipant"),
                 $searchSideBarAddNew = $("#searchSideBarAddNew"),
                 deferred = $.Deferred(),
                 deferred2 = $.Deferred(),
-                $obj = $("[data-current-module='agreements']"),
+                $obj = $("[data-current-module='degrees']"),
                 $obj2 = $("#add_establishment"),
                 time = 500;
 
@@ -96,15 +103,27 @@ module ViewModels.Degrees {
         //sammy navigation
         bindSearch(): void {
             if (!this.hasBoundSearch.does) {
-                var lastURL = "asdf";
+                var establishment_search = $("#establishment_search"),
+                    deferred = $.Deferred(),
+                    deferred2 = $.Deferred(),
+                    $obj = $("[data-current-module='home']"),
+                    $obj2 = $("#add_establishment"),
+                    time = 500,
+                    lastURL = 'asdf';
 
+                this.fadeModsOut(deferred, deferred2, $obj, $obj2, time);
+
+                $.when(deferred, deferred2)
+                    .done(() => {
+                        establishment_search.css("visibility", "").hide().fadeIn(500)
+                    });
                 this.establishmentSearchViewModel.sammyBeforeRoute = /\#\/index\/(.*)\//;
                 this.establishmentSearchViewModel.sammyGetPageRoute = '#/index';
-                this.establishmentSearchViewModel.sammyDefaultPageRoute = '/agreements[\/]?';
+                this.establishmentSearchViewModel.sammyDefaultPageRoute = '/degrees[\/]?';
                 ko.applyBindings(this.establishmentSearchViewModel, $('#establishment_search')[0]);
                 if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("#") === -1) {
                     if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("" + this.sammyUrl + "") === -1) {
-                        this.establishmentSearchViewModel.sammy.setLocation("/agreements/" + this.sammyUrl + "#/index");
+                        this.establishmentSearchViewModel.sammy.setLocation("/degrees/" + this.sammyUrl + "#/index");
                     } else {
                         this.establishmentSearchViewModel.sammy.setLocation('#/index');
                     }
@@ -119,11 +138,11 @@ module ViewModels.Degrees {
                             $asideParentSearch = $("#asideParentSearch");
 
                         if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("" + this.sammyUrl + "#/new/") > 0) {
-                            var $addEstablishment = $("#add_establishment");
+                            var $addEstablishment = $("#add_establishment"),
                                 deferred = $.Deferred(),
                                 deferred2 = $.Deferred(),
                                 $obj = $("#establishment_search"),
-                                $obj2 = $("[data-current-module='agreements']"),
+                                $obj2 = $("[data-current-module='home']"),
                                 time = 500;
 
                             this.fadeModsOut(deferred, deferred2, $obj, $obj2, time);
@@ -246,77 +265,19 @@ module ViewModels.Degrees {
                                 this.SearchPageBind("participant");
                                 this.establishmentSearchViewModel.header("Choose a participant");
                                 this.establishmentSearchViewModel.clickAction = (context: any): boolean => {
-                                    var myParticipant = new InstitutionalAgreementParticipantModel(
-                                        false,
-                                        context.id(),
-                                        context.officialName(),
-                                        context.translatedName()
-                                        ),
-                                        alreadyExist = false;
-
-                                    //for (var i = 0, j = this.participants.participants().length; i < j; i++) {
-                                    //    if (this.participants.participants()[i].establishmentId() === myParticipant.establishmentId()) {
-                                    //        alreadyExist = true;
-                                    //        break;
-                                    //    }
-                                    //}
-                                    if (alreadyExist !== true) {
-                                        $.ajax({
-                                            url: App.Routes.WebApi.Agreements.Participants.isOwner(myParticipant.establishmentId()),
-                                            type: 'GET',
-                                            async: false
-                                        })
-                                            .done((response) => {
-                                                myParticipant.isOwner(response);
-                                                //if (this.agreementIsEdit()) {
-                                                //    var url = App.Routes.WebApi.Agreements.Participants.put(this.agreementId, myParticipant.establishmentId());
-
-                                                //    $.ajax({
-                                                //        type: 'PUT',
-                                                //        url: url,
-                                                //        data: myParticipant,
-                                                //        success: (response: any, statusText: string, xhr: JQueryXHR): void => {
-                                                //            this.participants.participants.push(myParticipant);
-                                                //        },
-                                                //        error: (xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
-                                                //            alert(xhr.responseText);
-                                                //        }
-                                                //    });
-                                                //} else {
-                                                //    this.participants.participants.push(myParticipant);
-                                                //}
-                                                this.establishmentSearchViewModel.sammy.setLocation("agreements/" + this.sammyUrl + "");
-                                                $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * .85)));
-                                            })
-                                            .fail(() => {
-                                                //if (this.agreementIsEdit()) {
-                                                //    var url = App.Routes.WebApi.Agreements.Participants.put(this.agreementId, myParticipant.establishmentId());
-
-                                                //    $.ajax({
-                                                //        type: 'PUT',
-                                                //        url: url,
-                                                //        data: myParticipant,
-                                                //        success: (response: any, statusText: string, xhr: JQueryXHR): void => {
-                                                //            this.participants.participants.push(myParticipant);
-                                                //        },
-                                                //        error: (xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
-                                                //            alert(xhr.responseText);
-                                                //        }
-                                                //    });
-                                                //} else {
-                                                //    this.participants.participants.push(myParticipant);
-                                                //}
-                                                this.establishmentSearchViewModel.sammy.setLocation("agreements/" + this.sammyUrl + "");
-                                            });
-                                    } else {
-                                        alert("This Participant has already been added.")
-                                    }
+                                    this.institutionId(context.id());
+                                    this.institutionOfficialName(context.officialName());
+                                    this.institutionCountryOfficialName(context.countryName());
+                                    this.institutionTranslatedName(context.translatedName());
+                                    this.institutionOfficialNameDoesNotMatchTranslation(context.officialNameDoesNotMatchTranslation());
+                                    this.establishmentSearchViewModel.sammy.setLocation("my/degrees/" + this.sammyUrl + "");
+                                    //update the institiution values
                                     return false;
                                 }
                             }
                             //this.scrollBody.scrollMyBody(0);
                             lastURL = "#/page/";
-                        } else if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("agreements/" + this.sammyUrl + "") > 0) {
+                        } else if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("my/degrees/" + this.sammyUrl + "") > 0) {
                             var deferred = $.Deferred(),
                                 deferred2 = $.Deferred(),
                                 $obj = $("#establishment_search"),
@@ -329,7 +290,7 @@ module ViewModels.Degrees {
                             this.fadeModsOut(deferred, deferred2, $obj, $obj2, time);
                             $.when(deferred, deferred2)
                                 .done(() => {
-                                    $("[data-current-module='agreements']").fadeIn(500).promise().done(() => {
+                                    $("[data-current-module='home']").fadeIn(500).promise().done(() => {
                                         $(this).show();
                                         //this.scrollBody.scrollMyBody(0);
                                         //this.deferredPageFadeIn.resolve();

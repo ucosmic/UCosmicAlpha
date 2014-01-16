@@ -96,19 +96,31 @@
                                     <input type="text" id="institution" style="width: 800px; height: 32px" data-bind="value: institutionOfficialName" />
                                 </span>
                             </div>*@
+
+
+                            <!-- INSTITUTION COUNTRY -->
+                            @*<div style="margin-bottom: 8px">
+                                <span style="padding-left: 124px" data-bind="text: institutionCountryOfficialName()"></span>
+                            </div>*@
+
+                            <div data-bind="visible: (institutionTranslatedName())" style="display: none; width: 525px; font-size: 16px; line-height: 24px;">
+                                <a title="Remove this participant" data-bind="click: removeParticipant"><i class="red minus on-right" style="margin:0;"></i></a>
+                                <div class="item">
+                                    <div>
+                                        <strong data-bind="text: institutionTranslatedName"></strong>
+                                        <span data-bind="visible: institutionOfficialNameDoesNotMatchTranslation">(<span data-bind="    text: institutionOfficialName"></span>)</span>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div style="margin-top: 14px">
                                 <a data-bind="click: addParticipant" class="button">
                                     <i class="green plus"></i>
-                                    <span class="text">Add an institution</span>
+                                    <span class="text">Choose an institution</span>
                                 </a>
                             </div>
+                        </div>
 
-
-                                <!-- INSTITUTION COUNTRY -->
-                                @*<div style="margin-bottom: 8px">
-                                    <span style="padding-left: 124px" data-bind="text: institutionCountryOfficialName()"></span>
-                                </div>*@
-                            </div>
 
                             <!-- BUTTONS -->
                             <div style="margin-bottom: 32px" data-bind="template: { name: 'buttons-template'}"></div>

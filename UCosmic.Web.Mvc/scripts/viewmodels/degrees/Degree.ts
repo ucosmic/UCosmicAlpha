@@ -25,6 +25,8 @@ module ViewModels.Degrees {
         institutionId: KnockoutObservable<any>;
         institutionOfficialName: KnockoutObservable<string>;
         institutionCountryOfficialName: KnockoutObservable<string>;
+        institutionTranslatedName: KnockoutObservable<string>;
+        institutionOfficialNameDoesNotMatchTranslation: KnockoutObservable<boolean>;
 
         errors: KnockoutValidationErrors;
         isValid: () => boolean;
@@ -124,7 +126,9 @@ module ViewModels.Degrees {
                 this.whoLastUpdated = ko.observable( null );
                 this.institutionId = ko.observable( null );
                 this.institutionOfficialName = ko.observable( null );
-                this.institutionCountryOfficialName = ko.observable( null );
+                this.institutionCountryOfficialName = ko.observable(null);
+                this.institutionTranslatedName = ko.observable(null);
+                this.institutionOfficialNameDoesNotMatchTranslation = ko.observable(null);
                 deferred.resolve();
             }
             else {
@@ -242,8 +246,10 @@ module ViewModels.Degrees {
             var search = new Establishments.ViewModels.Search;// ViewModels.Degrees.Search()
             
             search.sammy.setLocation('#/page/1/');
-            var nav = new ViewModels.Degrees.EstablishmentSearchNav(this.institutionId(), this.institutionOfficialName(), this.institutionCountryOfficialName())
+            var nav = new ViewModels.Degrees.EstablishmentSearchNav(this.institutionId, this.institutionOfficialName, this.institutionCountryOfficialName,
+                this.institutionTranslatedName, this.institutionOfficialNameDoesNotMatchTranslation);
             //nav.does = true;
+            nav.bindSearch();
         }
     }
 }

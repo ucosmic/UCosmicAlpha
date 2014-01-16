@@ -113,6 +113,8 @@ var ViewModels;
                     this.institutionId = ko.observable(null);
                     this.institutionOfficialName = ko.observable(null);
                     this.institutionCountryOfficialName = ko.observable(null);
+                    this.institutionTranslatedName = ko.observable(null);
+                    this.institutionOfficialNameDoesNotMatchTranslation = ko.observable(null);
                     deferred.resolve();
                 } else {
                     var dataPact = $.Deferred();
@@ -219,7 +221,9 @@ var ViewModels;
                 var search = new Establishments.ViewModels.Search;
 
                 search.sammy.setLocation('#/page/1/');
-                var nav = new ViewModels.Degrees.EstablishmentSearchNav(this.institutionId(), this.institutionOfficialName(), this.institutionCountryOfficialName());
+                var nav = new ViewModels.Degrees.EstablishmentSearchNav(this.institutionId, this.institutionOfficialName, this.institutionCountryOfficialName, this.institutionTranslatedName, this.institutionOfficialNameDoesNotMatchTranslation);
+
+                nav.bindSearch();
             };
             return Degree;
         })();
