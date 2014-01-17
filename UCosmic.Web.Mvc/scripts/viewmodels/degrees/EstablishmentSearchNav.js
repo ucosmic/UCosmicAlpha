@@ -69,13 +69,7 @@ var ViewModels;
             EstablishmentSearchNav.prototype.bindSearch = function () {
                 var _this = this;
                 if (!this.hasBoundSearch.does) {
-                    var establishment_search = $("#establishment_search"), deferred = $.Deferred(), deferred2 = $.Deferred(), $obj = $("[data-current-module='home']"), $obj2 = $("#add_establishment"), time = 500, lastURL = 'asdf';
-
-                    this.fadeModsOut(deferred, deferred2, $obj, $obj2, time);
-
-                    $.when(deferred, deferred2).done(function () {
-                        establishment_search.css("visibility", "").hide().fadeIn(500);
-                    });
+                    var lastURL = 'asdf';
                     this.establishmentSearchViewModel.sammyBeforeRoute = /\#\/index\/(.*)\//;
                     this.establishmentSearchViewModel.sammyGetPageRoute = '#/index';
                     this.establishmentSearchViewModel.sammyDefaultPageRoute = '/degrees[\/]?';
@@ -187,9 +181,15 @@ var ViewModels;
                                         }
                                     });
                                 });
-
                                 lastURL = "#/new/";
                             } else if (_this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("" + _this.sammyUrl + "#/page/") > 0) {
+                                var establishment_search = $("#establishment_search"), deferred = $.Deferred(), deferred2 = $.Deferred(), $obj = $("[data-current-module='home']"), $obj2 = $("#add_establishment"), time = 500, lastURL = 'asdf';
+
+                                _this.fadeModsOut(deferred, deferred2, $obj, $obj2, time);
+
+                                $.when(deferred, deferred2).done(function () {
+                                    establishment_search.css("visibility", "").hide().fadeIn(500);
+                                });
                                 if (sessionStorage.getItem("addest") === "yes") {
                                     _this.establishmentSearchViewModel.clickAction = function (context) {
                                         _this.establishmentItemViewModel.parentEstablishment(context);
@@ -218,7 +218,6 @@ var ViewModels;
                                         return false;
                                     };
                                 }
-
                                 lastURL = "#/page/";
                             } else if (_this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("my/degrees/" + _this.sammyUrl + "") > 0) {
                                 var deferred = $.Deferred(), deferred2 = $.Deferred(), $obj = $("#establishment_search"), $obj2 = $("#add_establishment"), time = 500;

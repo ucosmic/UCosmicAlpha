@@ -1,16 +1,14 @@
 module ViewModels.Degrees {
 
-    export class Institution {
-        
-    }
-
-
     export class Degree implements Service.ApiModels.Degree.IObservableDegree, KnockoutValidationGroup {
         /* True if any field changes. */
         dirtyFlag: KnockoutObservable<boolean> = ko.observable( false );
 
         /* Element id of institution autocomplete */
         institutionSelectorId: string;
+
+        hasBoundSearch = false;
+        nav;
 
         /* IObservableDegree implemented */
         id: KnockoutObservable<number>;
@@ -79,7 +77,7 @@ module ViewModels.Degrees {
                         this.institutionCountryOfficialName(null);
                     }
                 }
-            } );
+            });
         }
 
         checkInstitutionForNull() {
@@ -237,19 +235,26 @@ module ViewModels.Degrees {
         }
 
         removeParticipant(establishmentResultViewModel, e): boolean {
-            
+            this.institutionId(null);
+            this.institutionOfficialName(null);
+            this.institutionCountryOfficialName(null);
+            this.institutionTranslatedName(null);
+            this.institutionOfficialNameDoesNotMatchTranslation(null);
             return false;
         }
 
-
         addParticipant(establishmentResultViewModel): void {
-            var search = new Establishments.ViewModels.Search;// ViewModels.Degrees.Search()
-            
-            search.sammy.setLocation('#/page/1/');
-            var nav = new ViewModels.Degrees.EstablishmentSearchNav(this.institutionId, this.institutionOfficialName, this.institutionCountryOfficialName,
-                this.institutionTranslatedName, this.institutionOfficialNameDoesNotMatchTranslation);
-            //nav.does = true;
-            nav.bindSearch();
+            if (!this.hasBoundSearch) {
+                var search = new Establishments.ViewModels.Search;
+
+                search.sammy.setLocation('#/page/1/');
+                this.nav = new ViewModels.Degrees.EstablishmentSearchNav(this.institutionId, this.institutionOfficialName, this.institutionCountryOfficialName,
+                    this.institutionTranslatedName, this.institutionOfficialNameDoesNotMatchTranslation);
+                this.nav.bindSearch();
+            } else {
+                this.nav.establishmentSearchViewModel.sammy.setLocation('#/page/');
+            }
+            this.hasBoundSearch = true;
         }
     }
 }

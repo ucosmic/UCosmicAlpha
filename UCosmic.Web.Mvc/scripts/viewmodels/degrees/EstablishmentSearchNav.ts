@@ -1,19 +1,5 @@
 module ViewModels.Degrees {
 
-    //export class InstitutionalAgreementParticipantModel {
-    //    constructor(isOwner: any, establishmentId: number, establishmentOfficialName: string,
-    //        establishmentTranslatedName: string) {
-    //        this.isOwner = ko.observable(isOwner);
-    //        this.establishmentId = ko.observable(establishmentId);
-    //        this.establishmentOfficialName = ko.observable(establishmentOfficialName);
-    //        this.establishmentTranslatedName = ko.observable(establishmentTranslatedName);
-    //    }
-    //    isOwner;
-    //    establishmentId;
-    //    establishmentOfficialName;
-    //    establishmentTranslatedName;
-    //};
-
     export class EstablishmentSearchNav {
         constructor(institutionId, institutionOfficialName, institutionCountryOfficialName,
             institutionTranslatedName, institutionOfficialNameDoesNotMatchTranslation) {
@@ -103,20 +89,7 @@ module ViewModels.Degrees {
         //sammy navigation
         bindSearch(): void {
             if (!this.hasBoundSearch.does) {
-                var establishment_search = $("#establishment_search"),
-                    deferred = $.Deferred(),
-                    deferred2 = $.Deferred(),
-                    $obj = $("[data-current-module='home']"),
-                    $obj2 = $("#add_establishment"),
-                    time = 500,
-                    lastURL = 'asdf';
-
-                this.fadeModsOut(deferred, deferred2, $obj, $obj2, time);
-
-                $.when(deferred, deferred2)
-                    .done(() => {
-                        establishment_search.css("visibility", "").hide().fadeIn(500)
-                    });
+                var lastURL = 'asdf';
                 this.establishmentSearchViewModel.sammyBeforeRoute = /\#\/index\/(.*)\//;
                 this.establishmentSearchViewModel.sammyGetPageRoute = '#/index';
                 this.establishmentSearchViewModel.sammyDefaultPageRoute = '/degrees[\/]?';
@@ -243,9 +216,22 @@ module ViewModels.Degrees {
                                         }
                                     });
                                 })
-                            //this.scrollBody.scrollMyBody(0);
                             lastURL = "#/new/";
                         } else if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("" + this.sammyUrl + "#/page/") > 0) {
+                            var establishment_search = $("#establishment_search"),
+                                deferred = $.Deferred(),
+                                deferred2 = $.Deferred(),
+                                $obj = $("[data-current-module='home']"),
+                                $obj2 = $("#add_establishment"),
+                                time = 500,
+                                lastURL = 'asdf';
+
+                            this.fadeModsOut(deferred, deferred2, $obj, $obj2, time);
+
+                            $.when(deferred, deferred2)
+                                .done(() => {
+                                    establishment_search.css("visibility", "").hide().fadeIn(500)
+                                });
                             if (sessionStorage.getItem("addest") === "yes") {
                                 this.establishmentSearchViewModel.clickAction = (context: any): boolean => {
                                     this.establishmentItemViewModel.parentEstablishment(context);
@@ -275,7 +261,6 @@ module ViewModels.Degrees {
                                     return false;
                                 }
                             }
-                            //this.scrollBody.scrollMyBody(0);
                             lastURL = "#/page/";
                         } else if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("my/degrees/" + this.sammyUrl + "") > 0) {
                             var deferred = $.Deferred(),
@@ -292,8 +277,6 @@ module ViewModels.Degrees {
                                 .done(() => {
                                     $("[data-current-module='home']").fadeIn(500).promise().done(() => {
                                         $(this).show();
-                                        //this.scrollBody.scrollMyBody(0);
-                                        //this.deferredPageFadeIn.resolve();
                                     });
                                 });
                         } else {

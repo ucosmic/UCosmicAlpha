@@ -1,5 +1,4 @@
-﻿@using UCosmic.Web.Mvc.ApiControllers
-@model UCosmic.Web.Mvc.Models.ActivityPublicViewModel
+﻿@model UCosmic.Web.Mvc.Models.ActivityPublicViewModel
 
 <section id="publicView">
 
@@ -98,7 +97,7 @@
                 {
                     <li style="margin-bottom: .5em;">
                         <span style="display: inline-block; width: 32px; text-align: center;">
-                            <img height="20" src="@Url.HttpRouteUrl(null, new { controller = "ActivityDocuments", action = "GetThumbnail", documentId = document.DocumentId, model = new UCosmic.Web.Mvc.Models.ImageResizeRequestModel() { MaxHeight = 20, MaxWidth = 30 } })" alt="" />
+                            <img height="20" src="@Url.HttpRouteUrl(null, new { controller = "ActivityDocuments", action = "GetThumbnail", documentId = document.DocumentId, model = new UCosmic.Web.Mvc.Models.ImageResizeRequestModel { MaxHeight = 20, MaxWidth = 30 } })" alt="" />
                         </span>
                         <a href="@Url.RouteUrl("DefaultApi", new { httproute = "", controller = "ActivityDocuments", id = document.DocumentId })" title="@document.Title">@document.Title</a>
                     </li>

@@ -1,16 +1,10 @@
 var ViewModels;
 (function (ViewModels) {
     (function (Degrees) {
-        var Institution = (function () {
-            function Institution() {
-            }
-            return Institution;
-        })();
-        Degrees.Institution = Institution;
-
         var Degree = (function () {
             function Degree(educationId) {
                 this.dirtyFlag = ko.observable(false);
+                this.hasBoundSearch = false;
                 this._initialize(educationId);
             }
             Degree.prototype._initialize = function (degreeId) {
@@ -214,16 +208,25 @@ var ViewModels;
             };
 
             Degree.prototype.removeParticipant = function (establishmentResultViewModel, e) {
+                this.institutionId(null);
+                this.institutionOfficialName(null);
+                this.institutionCountryOfficialName(null);
+                this.institutionTranslatedName(null);
+                this.institutionOfficialNameDoesNotMatchTranslation(null);
                 return false;
             };
 
             Degree.prototype.addParticipant = function (establishmentResultViewModel) {
-                var search = new Establishments.ViewModels.Search;
+                if (!this.hasBoundSearch) {
+                    var search = new Establishments.ViewModels.Search;
 
-                search.sammy.setLocation('#/page/1/');
-                var nav = new ViewModels.Degrees.EstablishmentSearchNav(this.institutionId, this.institutionOfficialName, this.institutionCountryOfficialName, this.institutionTranslatedName, this.institutionOfficialNameDoesNotMatchTranslation);
-
-                nav.bindSearch();
+                    search.sammy.setLocation('#/page/1/');
+                    this.nav = new ViewModels.Degrees.EstablishmentSearchNav(this.institutionId, this.institutionOfficialName, this.institutionCountryOfficialName, this.institutionTranslatedName, this.institutionOfficialNameDoesNotMatchTranslation);
+                    this.nav.bindSearch();
+                } else {
+                    this.nav.establishmentSearchViewModel.sammy.setLocation('#/page/');
+                }
+                this.hasBoundSearch = true;
             };
             return Degree;
         })();
