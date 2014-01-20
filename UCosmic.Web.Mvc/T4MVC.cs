@@ -2847,6 +2847,9 @@ namespace Links
                 public static readonly string ActivityEnums_ts = Url("ActivityEnums.ts");
                 public static readonly string ActivityEnums_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/ActivityEnums.min.js") ? Url("ActivityEnums.min.js") : Url("ActivityEnums.js");
                               
+                public static readonly string Map_ts = Url("Map.ts");
+                public static readonly string Map_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Map.min.js") ? Url("Map.min.js") : Url("Map.js");
+                              
                 public static readonly string Models_d_ts = Url("Models.d.ts");
                 public static readonly string PublicView_ts = Url("PublicView.ts");
                 public static readonly string PublicView_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/PublicView.min.js") ? Url("PublicView.min.js") : Url("PublicView.js");

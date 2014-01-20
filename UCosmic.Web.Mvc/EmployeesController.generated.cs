@@ -59,6 +59,12 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Map);
         }
+        [NonAction]
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public System.Web.Mvc.ActionResult DegreesTable()
+        {
+            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.DegreesTable);
+        }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public EmployeesController Actions { get { return MVC.Employees; } }
@@ -79,6 +85,7 @@ namespace UCosmic.Web.Mvc.Controllers
             public readonly string TenantIndex = "TenantIndex";
             public readonly string Table = "Table";
             public readonly string Map = "Map";
+            public readonly string DegreesTable = "DegreesTable";
         }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -88,6 +95,7 @@ namespace UCosmic.Web.Mvc.Controllers
             public const string TenantIndex = "TenantIndex";
             public const string Table = "Table";
             public const string Map = "Map";
+            public const string DegreesTable = "DegreesTable";
         }
 
 
@@ -117,6 +125,15 @@ namespace UCosmic.Web.Mvc.Controllers
             public readonly string domain = "domain";
             public readonly string input = "input";
         }
+        static readonly ActionParamsClass_DegreesTable s_params_DegreesTable = new ActionParamsClass_DegreesTable();
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public ActionParamsClass_DegreesTable DegreesTableParams { get { return s_params_DegreesTable; } }
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public class ActionParamsClass_DegreesTable
+        {
+            public readonly string domain = "domain";
+            public readonly string input = "input";
+        }
         static readonly ViewsClass s_views = new ViewsClass();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public ViewsClass Views { get { return s_views; } }
@@ -129,6 +146,7 @@ namespace UCosmic.Web.Mvc.Controllers
             {
                 public readonly string _ActivityDatesDisplay = "_ActivityDatesDisplay";
                 public readonly string _Bib = "_Bib";
+                public readonly string DegreesTable = "DegreesTable";
                 public readonly string Index = "Index";
                 public readonly string Map = "Map";
                 public readonly string Table = "Table";
@@ -136,6 +154,7 @@ namespace UCosmic.Web.Mvc.Controllers
             }
             public readonly string _ActivityDatesDisplay = "~/Views/Employees/_ActivityDatesDisplay.cshtml";
             public readonly string _Bib = "~/Views/Employees/_Bib.cshtml";
+            public readonly string DegreesTable = "~/Views/Employees/DegreesTable.cshtml";
             public readonly string Index = "~/Views/Employees/Index.cshtml";
             public readonly string Map = "~/Views/Employees/Map.cshtml";
             public readonly string Table = "~/Views/Employees/Table.cshtml";
@@ -172,6 +191,14 @@ namespace UCosmic.Web.Mvc.Controllers
         public override System.Web.Mvc.ActionResult Map(string domain, UCosmic.Web.Mvc.Models.ActivitySearchInputModel input)
         {
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Map);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "domain", domain);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "input", input);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.ActionResult DegreesTable(string domain, UCosmic.Web.Mvc.Models.DegreesSearchInputModel input)
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.DegreesTable);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "domain", domain);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "input", input);
             return callInfo;

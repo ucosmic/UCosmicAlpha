@@ -5,6 +5,7 @@ using System.Web.Mvc;
 using AttributeRouting.Web.Mvc;
 using AutoMapper;
 using UCosmic.Domain.Activities;
+using UCosmic.Domain.Degrees;
 using UCosmic.Domain.Employees;
 using UCosmic.Domain.Establishments;
 using UCosmic.Web.Mvc.Models;
@@ -112,6 +113,28 @@ namespace UCosmic.Web.Mvc.Controllers
             });
             if (settings != null && settings.ActivityTypes.Any())
                 model.ActivityTypes = Mapper.Map<ActivityTypeModel[]>(settings.ActivityTypes.OrderBy(x => x.Rank));
+
+            return View(model);
+        }
+
+        [CurrentModuleTab(ModuleTab.Employees)]
+        [GET("{domain}/employees/degrees/table")]
+        public virtual ActionResult DegreesTable(string domain, DegreesSearchInputModel input)
+        {
+            var query = new DegreesPageByTerms
+            {
+                EstablishmentDomain = domain,
+                EagerLoad = DegreeSearchResultProfiler.EntitiyToModel.EagerLoad,
+            };
+            Mapper.Map(input, query);
+            var results = _queryProcessor.Execute(query);
+
+            var model = new DegreeSearchModel
+            {
+                Domain = domain,
+                Input = input,
+                Output = Mapper.Map<PageOfDegreeSearchResultModel>(results),
+            };
 
             return View(model);
         }

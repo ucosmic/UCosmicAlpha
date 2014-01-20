@@ -328,6 +328,9 @@
     <Compile Include="Models\Activities\ActivityDocumentViewModel.cs" />
     <Compile Include="Models\Activities\ActivityPersonViewModel.cs" />
     <Compile Include="Models\Activities\ActivityPlaceViewModel.cs" />
+    <Compile Include="Models\Activities\Search\DegreeSearchModel.cs" />
+    <Compile Include="Models\Activities\Search\DegreeSearchResultModel.cs" />
+    <Compile Include="Models\Activities\Search\DegreesSearchInputModel.cs" />
     <Compile Include="Models\Activities\Search\ActivitySearchInputModel.cs" />
     <Compile Include="Models\Activities\Search\ActivitySearchModel.cs" />
     <Compile Include="Models\Activities\ActivityTagViewModel.cs" />
@@ -2635,6 +2638,7 @@
     <Content Include="Views\Employees\_ActivityDatesDisplay.cshtml" />
     <Content Include="Views\JavaScriptRoutes\Places.cshtml" />
     <Content Include="Views\Employees\Map.cshtml" />
+    <Content Include="Views\Employees\DegreesTable.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

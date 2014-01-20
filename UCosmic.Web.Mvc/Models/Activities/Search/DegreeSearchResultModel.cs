@@ -4,55 +4,57 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using AutoMapper;
-using UCosmic.Domain.Activities;
+using UCosmic.Domain.Degrees;
+using UCosmic.Domain.Establishments;
 using UCosmic.Domain.People;
 
 namespace UCosmic.Web.Mvc.Models
 {
-    public class ActivitySearchResultModel
+    public class DegreeSearchResultModel
     {
-        public ActivityMode Mode { get; set; }
-        public int ActivityId { get; set; }
+        public int DegreeId { get; set; }
         public string Title { get; set; }
-        public DateTime? StartsOn { get; set; }
-        public DateTime? EndsOn { get; set; }
-        public string StartsFormat { get; set; }
-        public string EndsFormat { get; set; }
-        public bool? OnGoing { get; set; }
-        public ActivityTypeViewModel[] Types { get; set; }
-        public ActivityPlaceViewModel[] Places { get; set; }
-        public ActivitySearchResultOwnerModel Owner { get; set; }
+        public string FieldOfStudy { get; set; }
+        public int? YearAwarded { get; set; }
+        public DegreeSearchResultOwnerModel Owner { get; set; }
+        public DegreeSearchResultEstablishmentModel AlmaMater { get; set; }
 
-        public class ActivitySearchResultOwnerModel
+        public class DegreeSearchResultOwnerModel
         {
             public int PersonId { get; set; }
             public string DisplayName { get; set; }
             public string LastCommaFirst { get; set; }
         }
+
+        public class DegreeSearchResultEstablishmentModel
+        {
+            public int EstablishmentId { get; set; }
+            public string TranslatedName { get; set; }
+            public string OfficialName { get; set; }
+        }
     }
 
-    public class PageOfActivitySearchResultModel : PageOf<ActivitySearchResultModel>
+    public class PageOfDegreeSearchResultModel : PageOf<DegreeSearchResultModel>
     {
     }
 
-    public static class ActivitySearchResultProfiler
+    public static class DegreeSearchResultProfiler
     {
         public class EntitiyToModel : Profile
         {
-            public static IList<Expression<Func<ActivityValues, object>>> EagerLoad = new Expression<Func<ActivityValues, object>>[]
+            public static IList<Expression<Func<Degree, object>>> EagerLoad = new Expression<Func<Degree, object>>[]
             {
-                x => x.Types.Select(y => y.Type),
-                x => x.Locations.Select(y => y.Place),
-                x => x.Activity.Person,
+                x => x.Person,
+                x => x.Institution.Names.Select(y => y.TranslationToLanguage),
             };
 
             protected override void Configure()
             {
-                CreateMap<ActivityValues, ActivitySearchResultModel>()
-                    .ForMember(d => d.Owner, o => o.MapFrom(s => s.Activity.Person))
-                    .ForMember(d => d.Places, o => o.MapFrom(s => s.Locations.OrderBy(x => x.Place.OfficialName)))
-                    .ForMember(d => d.Types, o => o.MapFrom(s => s.Types.OrderBy(x => x.Type.Rank)))
-                ;
+                CreateMap<Degree, DegreeSearchResultModel>()
+                    .ForMember(d => d.DegreeId, o => o.MapFrom(s => s.RevisionId))
+                    .ForMember(d => d.Owner, o => o.MapFrom(s => s.Person))
+                    .ForMember(d => d.AlmaMater, o => o.MapFrom(s => s.Institution))
+;
             }
         }
 
@@ -60,7 +62,7 @@ namespace UCosmic.Web.Mvc.Models
         {
             protected override void Configure()
             {
-                CreateMap<Person, ActivitySearchResultModel.ActivitySearchResultOwnerModel>()
+                CreateMap<Person, DegreeSearchResultModel.DegreeSearchResultOwnerModel>()
                     .ForMember(d => d.PersonId, o => o.MapFrom(s => s.RevisionId))
                     .ForMember(d => d.LastCommaFirst, o => o.ResolveUsing(s =>
                     {
@@ -86,11 +88,21 @@ namespace UCosmic.Web.Mvc.Models
             }
         }
 
+        public class EstablishmentToModel : Profile
+        {
+            protected override void Configure()
+            {
+                CreateMap<Establishment, DegreeSearchResultModel.DegreeSearchResultEstablishmentModel>()
+                    .ForMember(d => d.EstablishmentId, o => o.MapFrom(s => s.RevisionId))
+                ;
+            }
+        }
+
         public class PageQueryResultToPageOfItems : Profile
         {
             protected override void Configure()
             {
-                CreateMap<PagedQueryResult<ActivityValues>, PageOfActivitySearchResultModel>();
+                CreateMap<PagedQueryResult<Degree>, PageOfDegreeSearchResultModel>();
             }
         }
     }
