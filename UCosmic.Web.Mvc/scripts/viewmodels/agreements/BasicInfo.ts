@@ -64,7 +64,7 @@ module Agreements {
         }
 
         bindJquery(): void {
-            if (this.isCustomTypeAllowed) {
+            if (this.isCustomTypeAllowed()) {
                 $("#type_options").kendoComboBox({
                     dataTextField: "name",
                     dataValueField: "id",

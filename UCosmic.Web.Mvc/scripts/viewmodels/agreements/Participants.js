@@ -6,6 +6,7 @@ var Agreements;
             this.participantsExport = ko.mapping.fromJS([]);
             this.participants = ko.mapping.fromJS([]);
             this.participantsErrorMsg = ko.observable();
+            this.deletingParticipant = false;
             this.removeParticipant = this.removeParticipant.bind(this);
             this.agreementIsEdit = agreementIsEdit;
             this.agreementId = agreementId;
@@ -30,30 +31,35 @@ var Agreements;
             });
         }
         Participants.prototype.removeParticipant = function (establishmentResultViewModel, e) {
+            var _this = this;
             if (confirm('Are you sure you want to remove "' + establishmentResultViewModel.establishmentTranslatedName() + '" as a participant from this agreement?')) {
                 var self = this;
-
                 if (this.agreementIsEdit()) {
-                    var url = App.Routes.WebApi.Agreements.Participants.del(this.agreementId, ko.dataFor(e.target).establishmentId());
+                    if (this.deletingParticipant == false) {
+                        this.deletingParticipant = true;
+                        var url = App.Routes.WebApi.Agreements.Participants.del(this.agreementId, ko.dataFor(e.target).establishmentId());
 
-                    $.ajax({
-                        url: url,
-                        type: 'DELETE',
-                        success: function () {
-                            self.participants.remove(function (item) {
-                                if (item.establishmentId() === establishmentResultViewModel.establishmentId()) {
-                                    $(item.participantEl).slideUp('fast', function () {
-                                        self.participants.remove(item);
-                                        $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * 1.1)));
-                                    });
-                                }
-                                return false;
-                            });
-                        },
-                        error: function (xhr, statusText, errorThrown) {
-                            alert(xhr.responseText);
-                        }
-                    });
+                        $.ajax({
+                            url: url,
+                            type: 'DELETE',
+                            success: function () {
+                                _this.deletingParticipant = false;
+                                self.participants.remove(function (item) {
+                                    if (item.establishmentId() === establishmentResultViewModel.establishmentId()) {
+                                        $(item.participantEl).slideUp('fast', function () {
+                                            self.participants.remove(item);
+                                            $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * 1.1)));
+                                        });
+                                    }
+                                    return false;
+                                });
+                            },
+                            error: function (xhr, statusText, errorThrown) {
+                                _this.deletingParticipant = false;
+                                alert(xhr.responseText);
+                            }
+                        });
+                    }
                 } else {
                     self.participants.remove(function (item) {
                         if (item.establishmentId() === establishmentResultViewModel.establishmentId()) {

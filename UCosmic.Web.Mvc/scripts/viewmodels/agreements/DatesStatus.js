@@ -57,7 +57,7 @@ var Agreements;
         };
 
         DatesStatus.prototype.bindJquery = function () {
-            if (this.isCustomStatusAllowed) {
+            if (this.isCustomStatusAllowed()) {
                 $("#status_options").kendoComboBox({
                     dataTextField: "name",
                     dataValueField: "id",

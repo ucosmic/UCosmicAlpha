@@ -83,6 +83,7 @@ class InstitutionalAgreementEditModel {
     fileListPopulator;
 
     percentOffBodyHeight = .6;
+    savingAgreement = false;
     //jquery deferred for setting body height.
     deferredUAgreements = $.Deferred();
     deferredPopParticipants = $.Deferred();
@@ -315,7 +316,7 @@ class InstitutionalAgreementEditModel {
             $("#nav_participants").addClass("current");
         }
         if (offset != undefined) {
-            //ie sucks!
+
             if (!$("body").scrollTop()) {
                 $("html, body").scrollTop(offset.top - 20);
             } else {
@@ -330,7 +331,7 @@ class InstitutionalAgreementEditModel {
                 data;
 
             this.spinner.start();
-            //ie sucks!
+
             if (!$("body").scrollTop()) {
                 $("html, body").scrollTop(0);
             } else {
@@ -367,89 +368,97 @@ class InstitutionalAgreementEditModel {
                 umbrellaId: (this.basicInfo.uAgreementSelected() != 0) ? this.basicInfo.uAgreementSelected() : undefined,
                 type: this.basicInfo.typeOptionSelected()
             })
-            if (this.agreementIsEdit()) {
-                $LoadingPage.text("Saving changes...");
+            if (this.savingAgreement == false) {
+                this.savingAgreement = true;
+                if (this.agreementIsEdit()) {
+                    $LoadingPage.text("Saving changes...");
 
-                $("[data-current-module='agreements']").show().fadeOut(500, function () {
-                    $("#Loading_page").hide().fadeIn(500);
-                });
-                url = App.Routes.WebApi.Agreements.put(this.agreementId);
-                $.ajax({
-                    type: 'PUT',
-                    url: url,
-                    data: data,
-                    success: (response: any, statusText: string, xhr: JQueryXHR): void => {
-                        $LoadingPage.text("Agreement Saved...");
-                        setTimeout(function () {
-                            $("#Loading_page").show().fadeOut(500, function () {
-                                $("[data-current-module='agreements']").hide().fadeIn(500);
-                            });
-                        }, 5000);
-                    },
-                    error: (xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
-                        this.spinner.stop();
-                        if (xhr.status === 400) { // validation message will be in xhr response text...
-                            this.establishmentSearchNav.establishmentItemViewModel.$genericAlertDialog.find('p.content')
-                                .html(xhr.responseText.replace('\n', '<br /><br />'));
-                            this.establishmentSearchNav.establishmentItemViewModel.$genericAlertDialog.dialog({
-                                title: 'Alert Message',
-                                dialogClass: 'jquery-ui',
-                                width: 'auto',
-                                resizable: false,
-                                modal: true,
-                                buttons: {
-                                    'Ok': (): void => { this.establishmentSearchNav.establishmentItemViewModel.$genericAlertDialog.dialog('close'); }
-                                }
-                            });
-                        }
-                    }
-                });
-            } else {
-                $LoadingPage.text("Saving agreement...");
+                    $("[data-current-module='agreements']").show().fadeOut(500, function () {
+                        $("#Loading_page").hide().fadeIn(500);
+                    });
+                    url = App.Routes.WebApi.Agreements.put(this.agreementId);
+                    $.ajax({
+                        type: 'PUT',
+                        url: url,
+                        data: data,
+                        success: (response: any, statusText: string, xhr: JQueryXHR): void => {
+                            this.savingAgreement = false;
+                            $LoadingPage.text("Agreement Saved...");
+                            setTimeout(function () {
+                                $("#Loading_page").show().fadeOut(500, function () {
+                                    $("[data-current-module='agreements']").hide().fadeIn(500);
+                                });
+                            }, 5000);
+                        },
+                        error: (xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
+                            this.savingAgreement = false;
+                            this.spinner.stop();
+                            if (xhr.status === 400) { // validation message will be in xhr response text...
+                                this.establishmentSearchNav.establishmentItemViewModel.$genericAlertDialog.find('p.content')
+                                    .html(xhr.responseText.replace('\n', '<br /><br />'));
+                                this.establishmentSearchNav.establishmentItemViewModel.$genericAlertDialog.dialog({
+                                    title: 'Alert Message',
+                                    dialogClass: 'jquery-ui',
+                                    width: 'auto',
+                                    resizable: false,
+                                    modal: true,
+                                    buttons: {
+                                        'Ok': (): void => { this.establishmentSearchNav.establishmentItemViewModel.$genericAlertDialog.dialog('close'); }
+                                    }
+                                });
+                            }
+                        },
+                    });
+                } else {
+                    $LoadingPage.text("Saving agreement...");
 
-                $("[data-current-module='agreements']").show().fadeOut(500, function () {
-                    $("#Loading_page").hide().fadeIn(500);
-                });
-                url = App.Routes.WebApi.Agreements.post();
-                $.post(url, data)
-                    .done((response: any, statusText: string, xhr: JQueryXHR): void => {
-                        var myUrl = xhr.getResponseHeader('Location');
+                    $("[data-current-module='agreements']").show().fadeOut(500, function () {
+                        $("#Loading_page").hide().fadeIn(500);
+                    });
+                    url = App.Routes.WebApi.Agreements.post();
+                    $.post(url, data)
+                        .done((response: any, statusText: string, xhr: JQueryXHR): void => {
+                            this.savingAgreement = false;
+                            var myUrl = xhr.getResponseHeader('Location');
 
-                        this.agreementId = parseInt(myUrl.substring(myUrl.lastIndexOf("/") + 1));
-                        this.fileAttachment.agreementId = this.agreementId;
-                        this.contact.agreementId = this.agreementId;
-                        this.fileAttachment.agreementPostFiles(response, statusText, xhr);
-                        this.contact.agreementPostContacts(response, statusText, xhr);
-                        //change url to edit
-                        $LoadingPage.text("Agreement Saved...");
-                        setTimeout(function () {
-                            if (xhr != undefined) {
-                                window.location.hash = ""
+                            this.agreementId = parseInt(myUrl.substring(myUrl.lastIndexOf("/") + 1));
+                            this.fileAttachment.agreementId = this.agreementId;
+                            this.contact.agreementId = this.agreementId;
+                            this.fileAttachment.agreementPostFiles(response, statusText, xhr);
+                            this.contact.agreementPostContacts(response, statusText, xhr);
+                            //change url to edit
+                            $LoadingPage.text("Agreement Saved...");
+                            setTimeout(function () {
+                                if (xhr != undefined) {
+                                    window.location.hash = ""
                                 window.location.href = "/agreements/" + xhr.getResponseHeader('Location').substring(xhr.getResponseHeader('Location').lastIndexOf("/") + 1) + "/edit/"
                                 }
-                            else {
-                                alert("success, but no location")
+                                else {
+                                    alert("success, but no location")
                             }
-                        }, 5000);
-                    })
-                    .fail((xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
-                        this.spinner.stop();
-                        if (xhr.status === 400) { // validation message will be in xhr response text...
-                            this.establishmentSearchNav.establishmentItemViewModel.$genericAlertDialog.find('p.content')
-                                .html(xhr.responseText.replace('\n', '<br /><br />'));
-                            this.establishmentSearchNav.establishmentItemViewModel.$genericAlertDialog.dialog({
-                                title: 'Alert Message',
-                                dialogClass: 'jquery-ui',
-                                width: 'auto',
-                                resizable: false,
-                                modal: true,
-                                buttons: {
-                                    'Ok': (): void => { this.establishmentSearchNav.establishmentItemViewModel.$genericAlertDialog.dialog('close'); }
-                                }
-                            });
-                        }
-                    });
+                            }, 5000);
+                        })
+                        .fail((xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
+                            this.savingAgreement = false;
+                            this.spinner.stop();
+                            if (xhr.status === 400) { // validation message will be in xhr response text...
+                                this.establishmentSearchNav.establishmentItemViewModel.$genericAlertDialog.find('p.content')
+                                    .html(xhr.responseText.replace('\n', '<br /><br />'));
+                                this.establishmentSearchNav.establishmentItemViewModel.$genericAlertDialog.dialog({
+                                    title: 'Alert Message',
+                                    dialogClass: 'jquery-ui',
+                                    width: 'auto',
+                                    resizable: false,
+                                    modal: true,
+                                    buttons: {
+                                        'Ok': (): void => { this.establishmentSearchNav.establishmentItemViewModel.$genericAlertDialog.dialog('close'); }
+                                    }
+                                });
+                            }
+                        });
+                }
             }
+            
         }
     }
 }

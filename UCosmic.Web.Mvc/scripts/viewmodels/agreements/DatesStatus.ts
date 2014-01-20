@@ -64,7 +64,7 @@ module Agreements {
         }
         
         bindJquery(): void {
-            if (this.isCustomStatusAllowed) {
+            if (this.isCustomStatusAllowed()) {
                 $("#status_options").kendoComboBox({
                     dataTextField: "name",
                     dataValueField: "id",

@@ -3,6 +3,7 @@ var InstitutionalAgreementEditModel = (function () {
         var _this = this;
         this.agreementId = agreementId;
         this.percentOffBodyHeight = .6;
+        this.savingAgreement = false;
         this.deferredUAgreements = $.Deferred();
         this.deferredPopParticipants = $.Deferred();
         this.deferredPopContacts = $.Deferred();
@@ -326,26 +327,76 @@ var InstitutionalAgreementEditModel = (function () {
                 umbrellaId: (this.basicInfo.uAgreementSelected() != 0) ? this.basicInfo.uAgreementSelected() : undefined,
                 type: this.basicInfo.typeOptionSelected()
             });
-            if (this.agreementIsEdit()) {
-                $LoadingPage.text("Saving changes...");
+            if (this.savingAgreement == false) {
+                this.savingAgreement = true;
+                if (this.agreementIsEdit()) {
+                    $LoadingPage.text("Saving changes...");
 
-                $("[data-current-module='agreements']").show().fadeOut(500, function () {
-                    $("#Loading_page").hide().fadeIn(500);
-                });
-                url = App.Routes.WebApi.Agreements.put(this.agreementId);
-                $.ajax({
-                    type: 'PUT',
-                    url: url,
-                    data: data,
-                    success: function (response, statusText, xhr) {
+                    $("[data-current-module='agreements']").show().fadeOut(500, function () {
+                        $("#Loading_page").hide().fadeIn(500);
+                    });
+                    url = App.Routes.WebApi.Agreements.put(this.agreementId);
+                    $.ajax({
+                        type: 'PUT',
+                        url: url,
+                        data: data,
+                        success: function (response, statusText, xhr) {
+                            _this.savingAgreement = false;
+                            $LoadingPage.text("Agreement Saved...");
+                            setTimeout(function () {
+                                $("#Loading_page").show().fadeOut(500, function () {
+                                    $("[data-current-module='agreements']").hide().fadeIn(500);
+                                });
+                            }, 5000);
+                        },
+                        error: function (xhr, statusText, errorThrown) {
+                            _this.savingAgreement = false;
+                            _this.spinner.stop();
+                            if (xhr.status === 400) {
+                                _this.establishmentSearchNav.establishmentItemViewModel.$genericAlertDialog.find('p.content').html(xhr.responseText.replace('\n', '<br /><br />'));
+                                _this.establishmentSearchNav.establishmentItemViewModel.$genericAlertDialog.dialog({
+                                    title: 'Alert Message',
+                                    dialogClass: 'jquery-ui',
+                                    width: 'auto',
+                                    resizable: false,
+                                    modal: true,
+                                    buttons: {
+                                        'Ok': function () {
+                                            _this.establishmentSearchNav.establishmentItemViewModel.$genericAlertDialog.dialog('close');
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    });
+                } else {
+                    $LoadingPage.text("Saving agreement...");
+
+                    $("[data-current-module='agreements']").show().fadeOut(500, function () {
+                        $("#Loading_page").hide().fadeIn(500);
+                    });
+                    url = App.Routes.WebApi.Agreements.post();
+                    $.post(url, data).done(function (response, statusText, xhr) {
+                        _this.savingAgreement = false;
+                        var myUrl = xhr.getResponseHeader('Location');
+
+                        _this.agreementId = parseInt(myUrl.substring(myUrl.lastIndexOf("/") + 1));
+                        _this.fileAttachment.agreementId = _this.agreementId;
+                        _this.contact.agreementId = _this.agreementId;
+                        _this.fileAttachment.agreementPostFiles(response, statusText, xhr);
+                        _this.contact.agreementPostContacts(response, statusText, xhr);
+
                         $LoadingPage.text("Agreement Saved...");
                         setTimeout(function () {
-                            $("#Loading_page").show().fadeOut(500, function () {
-                                $("[data-current-module='agreements']").hide().fadeIn(500);
-                            });
+                            if (xhr != undefined) {
+                                window.location.hash = "";
+                                window.location.href = "/agreements/" + xhr.getResponseHeader('Location').substring(xhr.getResponseHeader('Location').lastIndexOf("/") + 1) + "/edit/";
+                            } else {
+                                alert("success, but no location");
+                            }
                         }, 5000);
-                    },
-                    error: function (xhr, statusText, errorThrown) {
+                    }).fail(function (xhr, statusText, errorThrown) {
+                        _this.savingAgreement = false;
                         _this.spinner.stop();
                         if (xhr.status === 400) {
                             _this.establishmentSearchNav.establishmentItemViewModel.$genericAlertDialog.find('p.content').html(xhr.responseText.replace('\n', '<br /><br />'));
@@ -362,51 +413,8 @@ var InstitutionalAgreementEditModel = (function () {
                                 }
                             });
                         }
-                    }
-                });
-            } else {
-                $LoadingPage.text("Saving agreement...");
-
-                $("[data-current-module='agreements']").show().fadeOut(500, function () {
-                    $("#Loading_page").hide().fadeIn(500);
-                });
-                url = App.Routes.WebApi.Agreements.post();
-                $.post(url, data).done(function (response, statusText, xhr) {
-                    var myUrl = xhr.getResponseHeader('Location');
-
-                    _this.agreementId = parseInt(myUrl.substring(myUrl.lastIndexOf("/") + 1));
-                    _this.fileAttachment.agreementId = _this.agreementId;
-                    _this.contact.agreementId = _this.agreementId;
-                    _this.fileAttachment.agreementPostFiles(response, statusText, xhr);
-                    _this.contact.agreementPostContacts(response, statusText, xhr);
-
-                    $LoadingPage.text("Agreement Saved...");
-                    setTimeout(function () {
-                        if (xhr != undefined) {
-                            window.location.hash = "";
-                            window.location.href = "/agreements/" + xhr.getResponseHeader('Location').substring(xhr.getResponseHeader('Location').lastIndexOf("/") + 1) + "/edit/";
-                        } else {
-                            alert("success, but no location");
-                        }
-                    }, 5000);
-                }).fail(function (xhr, statusText, errorThrown) {
-                    _this.spinner.stop();
-                    if (xhr.status === 400) {
-                        _this.establishmentSearchNav.establishmentItemViewModel.$genericAlertDialog.find('p.content').html(xhr.responseText.replace('\n', '<br /><br />'));
-                        _this.establishmentSearchNav.establishmentItemViewModel.$genericAlertDialog.dialog({
-                            title: 'Alert Message',
-                            dialogClass: 'jquery-ui',
-                            width: 'auto',
-                            resizable: false,
-                            modal: true,
-                            buttons: {
-                                'Ok': function () {
-                                    _this.establishmentSearchNav.establishmentItemViewModel.$genericAlertDialog.dialog('close');
-                                }
-                            }
-                        });
-                    }
-                });
+                    });
+                }
             }
         }
     };

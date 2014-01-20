@@ -37,35 +37,40 @@ module Agreements {
         participants = ko.mapping.fromJS([]);
         participantsErrorMsg = ko.observable();
         participantsShowErrorMsg;
+        deletingParticipant = false;
 
 
         removeParticipant(establishmentResultViewModel, e): boolean {
             if (confirm('Are you sure you want to remove "' +
                 establishmentResultViewModel.establishmentTranslatedName() +
                 '" as a participant from this agreement?')) {
-                    var self = this;
-
+                var self = this;
                 if (this.agreementIsEdit()) {
-                    var url = App.Routes.WebApi.Agreements.Participants.del(this.agreementId, ko.dataFor(e.target).establishmentId());
+                    if (this.deletingParticipant == false) {
+                        this.deletingParticipant = true;
+                        var url = App.Routes.WebApi.Agreements.Participants.del(this.agreementId, ko.dataFor(e.target).establishmentId());
 
-                    $.ajax({
-                        url: url,
-                        type: 'DELETE',
-                        success: (): void => {
-                            self.participants.remove(function (item) {
-                                if (item.establishmentId() === establishmentResultViewModel.establishmentId()) {
-                                    $(item.participantEl).slideUp('fast', function () {
-                                        self.participants.remove(item);
-                                        $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * 1.1)));
-                                    });
-                                }
-                                return false;
-                            });
-                        },
-                        error: (xhr: JQueryXHR, statusText: string, errorThrown: string): void => {// validation message will be in xhr response text...
-                            alert(xhr.responseText);
-                        }
-                    })
+                        $.ajax({
+                            url: url,
+                            type: 'DELETE',
+                            success: (): void => {
+                                this.deletingParticipant = false;
+                                self.participants.remove(function (item) {
+                                    if (item.establishmentId() === establishmentResultViewModel.establishmentId()) {
+                                        $(item.participantEl).slideUp('fast', function () {
+                                            self.participants.remove(item);
+                                            $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * 1.1)));
+                                        });
+                                    }
+                                    return false;
+                                });
+                            },
+                            error: (xhr: JQueryXHR, statusText: string, errorThrown: string): void => {// validation message will be in xhr response text...
+                                this.deletingParticipant = false;
+                                alert(xhr.responseText);
+                            }
+                        })
+                    }
                 } else {
                     self.participants.remove(function (item) {
                         if (item.establishmentId() === establishmentResultViewModel.establishmentId()) {
@@ -77,6 +82,7 @@ module Agreements {
                         return false;
                     });
                 }
+
             }
             e.preventDefault();
             e.stopPropagation();
