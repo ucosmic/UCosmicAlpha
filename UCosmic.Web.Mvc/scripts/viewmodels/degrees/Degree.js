@@ -13,8 +13,6 @@ var ViewModels;
 
             Degree.prototype.setupWidgets = function (institutionSelectorId) {
                 var _this = this;
-                this.institutionSelectorId = institutionSelectorId;
-
                 $("#" + institutionSelectorId).kendoAutoComplete({
                     minLength: 3,
                     filter: "contains",
@@ -40,7 +38,6 @@ var ViewModels;
                         }
                     }),
                     change: function (e) {
-                        _this.checkInstitutionForNull();
                     },
                     select: function (e) {
                         var me = $("#" + institutionSelectorId).data("kendoAutoComplete");
@@ -54,19 +51,6 @@ var ViewModels;
                         }
                     }
                 });
-            };
-
-            Degree.prototype.checkInstitutionForNull = function () {
-                var me = $("#" + this.institutionSelectorId).data("kendoAutoComplete");
-                var value = (me.value() != null) ? me.value().toString() : null;
-                if (value != null) {
-                    value = $.trim(value);
-                }
-                if ((value == null) || (value.length == 0)) {
-                    me.value(null);
-                    this.institutionOfficialName(null);
-                    this.institutionId(null);
-                }
             };
 
             Degree.prototype.setupValidation = function () {
@@ -109,6 +93,7 @@ var ViewModels;
                     this.institutionCountryOfficialName = ko.observable(null);
                     this.institutionTranslatedName = ko.observable(null);
                     this.institutionOfficialNameDoesNotMatchTranslation = ko.observable(null);
+                    this.almaMaterButtonText = ko.observable('Choose my alma mater');
                     deferred.resolve();
                 } else {
                     var dataPact = $.Deferred();
@@ -126,6 +111,10 @@ var ViewModels;
 
                     $.when(dataPact).done(function (data) {
                         ko.mapping.fromJS(data, {}, _this);
+
+                        _this.institutionOfficialNameDoesNotMatchTranslation = ko.observable(!((_this.institutionOfficialName() === _this.institutionTranslatedName()) || _this.institutionOfficialName() == undefined));
+
+                        _this.almaMaterButtonText = ko.observable('Change my alma mater');
 
                         deferred.resolve();
                     }).fail(function (xhr, textStatus, errorThrown) {
@@ -149,8 +138,6 @@ var ViewModels;
                         this.yearAwarded(null);
                     }
                 }
-
-                this.checkInstitutionForNull();
 
                 var mapSource = {
                     id: this.id,
@@ -221,7 +208,7 @@ var ViewModels;
                     var search = new Establishments.ViewModels.Search;
 
                     search.sammy.setLocation('#/page/1/');
-                    this.nav = new ViewModels.Degrees.EstablishmentSearchNav(this.institutionId, this.institutionOfficialName, this.institutionCountryOfficialName, this.institutionTranslatedName, this.institutionOfficialNameDoesNotMatchTranslation);
+                    this.nav = new ViewModels.Degrees.EstablishmentSearchNav(this.institutionId, this.institutionOfficialName, this.institutionCountryOfficialName, this.institutionTranslatedName, this.id, this.institutionOfficialNameDoesNotMatchTranslation);
                     this.nav.bindSearch();
                 } else {
                     this.nav.establishmentSearchViewModel.sammy.setLocation('#/page/');

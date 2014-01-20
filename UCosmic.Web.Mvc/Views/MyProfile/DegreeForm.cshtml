@@ -88,21 +88,7 @@
                                     <input type="text" id="yearAwarded" style="width: 60px; margin-right: 8px" data-bind="value: yearAwarded" />
                                 </span>
                             </div>
-
-                            <!-- INSTITUTION -->
-                            @*<div style="margin-bottom: 14px">
-                                <span>
-                                    <label for="institution" class="non-required-field">Institution</label>
-                                    <input type="text" id="institution" style="width: 800px; height: 32px" data-bind="value: institutionOfficialName" />
-                                </span>
-                            </div>*@
-
-
-                            <!-- INSTITUTION COUNTRY -->
-                            @*<div style="margin-bottom: 8px">
-                                <span style="padding-left: 124px" data-bind="text: institutionCountryOfficialName()"></span>
-                            </div>*@
-
+                            
                             <div data-bind="visible: (institutionTranslatedName())" style="display: none; width: 525px; font-size: 16px; line-height: 24px;">
                                 <a title="Remove this participant" data-bind="click: removeParticipant"><i class="red minus on-right" style="margin:0;"></i></a>
                                 <div class="item">
@@ -116,7 +102,7 @@
                             <div style="margin-top: 14px">
                                 <a data-bind="click: addParticipant" class="button">
                                     <i class="green plus"></i>
-                                    <span class="text">Choose an institution</span>
+                                    <span class="text" data-bind="text: almaMaterButtonText">Choose an institution</span>
                                 </a>
                             </div>
                         </div>

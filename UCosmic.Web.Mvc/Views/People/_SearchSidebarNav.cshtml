@@ -1,9 +1,8 @@
-﻿@using UCosmic.Web.Mvc.ApiControllers
-@model UCosmic.Web.Mvc.Models.PageOfActivityPublicViewModel
+﻿@model UCosmic.Web.Mvc.Models.PageOfActivityPublicViewModel
 @* RIGHT *@
 <nav class="side">
     <ul class="top">
-        <li class="static square-bottom" style="margin-bottom: 0px;">
+        <li class="static square-bottom" style="margin-bottom: 0;">
             <div class="group no-link">
                 <span class="arrow"></span>
                 <span class="text">Search Options</span>
@@ -20,6 +19,8 @@
                 </div>
                 <div class="field">
                     <select class="side" name="orderBy" data-bind="value: orderBy, enabled: optionsEnabled">
+                        <option value="recency-desc">Sort with most recent at top</option>
+                        <option value="recency-asc">Sort with most recent at bottom</option>
                         <option value="title-asc">Sort by title A-Z</option>
                         <option value="title-desc">Sort by title Z-A</option>
                         <option value="location-asc">Sort by location A-Z</option>

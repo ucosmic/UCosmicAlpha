@@ -2,24 +2,29 @@ module ViewModels.Degrees {
 
     export class EstablishmentSearchNav {
         constructor(institutionId, institutionOfficialName, institutionCountryOfficialName,
-            institutionTranslatedName, institutionOfficialNameDoesNotMatchTranslation) {
+            institutionTranslatedName, degreeId, institutionOfficialNameDoesNotMatchTranslation) {
+            this.institutionOfficialNameDoesNotMatchTranslation = institutionOfficialNameDoesNotMatchTranslation;
             this.institutionId = institutionId;
             this.institutionOfficialName = institutionOfficialName;
             this.institutionCountryOfficialName = institutionCountryOfficialName;
+            this.degreeId = degreeId;
 
             this.institutionTranslatedName = institutionTranslatedName;
-            this.institutionOfficialNameDoesNotMatchTranslation = institutionOfficialNameDoesNotMatchTranslation;
-
+            if (this.degreeId) {
+                    this.sammyUrl = this.degreeId() + "/";
+            }
         }
 
         //imported vars
+        degreeId;
         institutionId;
         institutionOfficialName;
         institutionCountryOfficialName;
-        institutionOfficialNameDoesNotMatchTranslation;
         institutionTranslatedName;
+        institutionOfficialNameDoesNotMatchTranslation;
 
         //search vars
+        lastURL = 'asdf';
         sammyUrl = 'new/';
         establishmentSearchViewModel = new Establishments.ViewModels.Search();
         establishmentItemViewModel;
@@ -36,7 +41,7 @@ module ViewModels.Degrees {
                 time = 500;
 
             this.establishmentSearchViewModel.detailTooltip = (): string => {
-                return 'Choose this establishment as a ' + parentOrParticipant;
+                return 'Choose this Institution as a ' + parentOrParticipant;
             }
 
             $cancelAddParticipant.off();
@@ -88,8 +93,7 @@ module ViewModels.Degrees {
 
         //sammy navigation
         bindSearch(): void {
-            if (!this.hasBoundSearch.does) {
-                var lastURL = 'asdf';
+            if (!this.hasBoundSearch.does) { 
                 this.establishmentSearchViewModel.sammyBeforeRoute = /\#\/index\/(.*)\//;
                 this.establishmentSearchViewModel.sammyGetPageRoute = '#/index';
                 this.establishmentSearchViewModel.sammyDefaultPageRoute = '/degrees[\/]?';
@@ -104,9 +108,9 @@ module ViewModels.Degrees {
                 if (sessionStorage.getItem("addest") == undefined) {
                     sessionStorage.setItem("addest", "no");
                 }
-                //Check the url for changes
+                //Check the url for changes 
                 this.establishmentSearchViewModel.sammy.bind("location-changed", () => {
-                    if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf(lastURL) < 0) {
+                    if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf(this.lastURL) < 0) {
                         var $asideRootSearch = $("#asideRootSearch"),
                             $asideParentSearch = $("#asideParentSearch");
 
@@ -166,7 +170,7 @@ module ViewModels.Degrees {
                                                             url = App.Routes.WebApi.Establishments.post(),
                                                             data = this.establishmentItemViewModel.serializeData();
 
-                                                        $LoadingPage.text("Creating Establishment...");
+                                                        $LoadingPage.text("Creating Institution...");
                                                         data.officialName = officialName.serializeData();
                                                         data.officialUrl = officialUrl.serializeData();
                                                         data.location = location.serializeData();
@@ -174,7 +178,7 @@ module ViewModels.Degrees {
                                                         $.post(url, data)
                                                             .done((response: any, statusText: string, xhr: JQueryXHR): void => {
                                                                 this.establishmentItemViewModel.createSpinner.stop();
-                                                                $LoadingPage.text("Establishment created, you are being redirected to previous page...");
+                                                                $LoadingPage.text("Institution created, you are being redirected to previous page...");
                                                                 $("#add_establishment").fadeOut(500, () => {
                                                                     $("#Loading_page").fadeIn(500);
                                                                     setTimeout(() => {
@@ -216,16 +220,17 @@ module ViewModels.Degrees {
                                         }
                                     });
                                 })
-                            lastURL = "#/new/";
+                            this.lastURL = "#/new/";
                         } else if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("" + this.sammyUrl + "#/page/") > 0) {
                             var establishment_search = $("#establishment_search"),
                                 deferred = $.Deferred(),
                                 deferred2 = $.Deferred(),
                                 $obj = $("[data-current-module='home']"),
                                 $obj2 = $("#add_establishment"),
-                                time = 500,
-                                lastURL = 'asdf';
+                                time = 500;
 
+                            this.lastURL = 'asdf';
+                            
                             this.fadeModsOut(deferred, deferred2, $obj, $obj2, time);
 
                             $.when(deferred, deferred2)
@@ -239,17 +244,17 @@ module ViewModels.Degrees {
                                     this.establishmentSearchViewModel.sammy.setLocation('#/new/');
                                     return false;
                                 }
-                                this.establishmentSearchViewModel.header("Choose a parent establishment");
+                                this.establishmentSearchViewModel.header("Choose a parent Institution");
                                 $asideRootSearch.hide();
                                 $asideParentSearch.show();
                                 this.SearchPageBind("parent");
-                                this.establishmentSearchViewModel.header("Choose a parent establishment");
+                                this.establishmentSearchViewModel.header("Choose a parent Institution");
                             }
                             else {
                                 $asideRootSearch.show();
                                 $asideParentSearch.hide();
-                                this.SearchPageBind("participant");
-                                this.establishmentSearchViewModel.header("Choose a participant");
+                                this.SearchPageBind("institution");
+                                this.establishmentSearchViewModel.header("Choose an alma mater");
                                 this.establishmentSearchViewModel.clickAction = (context: any): boolean => {
                                     this.institutionId(context.id());
                                     this.institutionOfficialName(context.officialName());
@@ -261,7 +266,7 @@ module ViewModels.Degrees {
                                     return false;
                                 }
                             }
-                            lastURL = "#/page/";
+                            this.lastURL = "#/page/";
                         } else if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("my/degrees/" + this.sammyUrl + "") > 0) {
                             var deferred = $.Deferred(),
                                 deferred2 = $.Deferred(),
@@ -270,7 +275,7 @@ module ViewModels.Degrees {
                                 time = 500;
 
                             sessionStorage.setItem("addest", "no");
-                            lastURL = "#/index";
+                            this.lastURL = "#/index";
                             this.establishmentSearchViewModel.sammy.setLocation('#/index');
                             this.fadeModsOut(deferred, deferred2, $obj, $obj2, time);
                             $.when(deferred, deferred2)

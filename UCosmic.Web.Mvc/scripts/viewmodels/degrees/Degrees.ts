@@ -28,17 +28,11 @@ module ViewModels.Degrees {
 
             $.get(App.Routes.WebApi.My.Degrees.get(), expertiseSearchInput)
                 .done((data: any, textStatus: string, jqXHR: JQueryXHR): void => {
-                    {
-                        ko.mapping.fromJS(data, {}, this);
-                        deferred.resolve();
-                    }
+                    ko.mapping.fromJS(data, {}, this);
+                    deferred.resolve();
                 })
-                .fail((jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
-                    {
-                        if (jqXhr.status != 0) {
-                            deferred.reject(jqXhr, textStatus, errorThrown);
-                        }
-                    }
+                .fail((xhr: JQueryXHR): void => {
+                    App.Failures.message(xhr, 'while loading your degrees', true);
                 });
 
             return deferred;
@@ -51,9 +45,8 @@ module ViewModels.Degrees {
                 url: App.Routes.WebApi.My.Degrees.del(expertiseId),
                 success: (data: any, textStatus: string, jqXHR: JQueryXHR): void =>
                 { },
-                error: (jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void =>
-                {
-                    alert(textStatus);
+                error: (xhr: JQueryXHR): void => {
+                    App.Failures.message(xhr, 'while deleting your degree', true);
                 }
             });
         }
@@ -65,20 +58,20 @@ module ViewModels.Degrees {
                 resizable: false,
                 modal: true,
                 buttons: [
-                            {
-                                text: "Yes, confirm delete", click: function (): void {
-                                    viewModel.deleteEducationById(data.id());
-                                    $(this).dialog("close");
+                    {
+                        text: "Yes, confirm delete", click: function (): void {
+                            viewModel.deleteEducationById(data.id());
+                            $(this).dialog("close");
 
-                                    /* TBD - Don't reload page. */
-                                    location.href = App.Routes.Mvc.My.Profile.get("geographic-expertise");
-                                }
-                            },
-                            {
-                                text: "No, cancel delete", click: function (): void {
-                                    $(this).dialog("close");
-                                }
-                            },
+                            /* TBD - Don't reload page. */
+                            location.href = App.Routes.Mvc.My.Profile.get("geographic-expertise");
+                        }
+                    },
+                    {
+                        text: "No, cancel delete", click: function (): void {
+                            $(this).dialog("close");
+                        }
+                    },
                 ]
             });
         }

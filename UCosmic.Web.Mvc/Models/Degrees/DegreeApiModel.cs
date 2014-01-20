@@ -23,6 +23,7 @@ namespace UCosmic.Web.Mvc.Models
         public int? InstitutionId { get; set; }
         public string InstitutionOfficialName { get; set; }
         public string InstitutionCountryOfficialName { get; set; }
+        public string InstitutionTranslatedName { get; set; }
         public string FormattedInfo { get; set; }   // used in Degree List, for display only
 
         internal static readonly IEnumerable<Expression<Func<Degree, object>>> EagerLoads = new Expression<Func<Degree, object>>[]
@@ -94,7 +95,9 @@ namespace UCosmic.Web.Mvc.Models
                     .ForMember(d => d.WhenLastUpdated, o => o.MapFrom(s => s.UpdatedOnUtc))
                     .ForMember(d => d.WhoLastUpdated, o => o.MapFrom(s => s.UpdatedByPrincipal))
                     .ForMember(d => d.Version, o => o.MapFrom(s => Convert.ToBase64String(s.Version)))
-                    .ForMember(d => d.InstitutionOfficialName, o => o.MapFrom(s => s.InstitutionId.HasValue ? s.Institution.OfficialName : null))
+                    .ForMember(d => d.InstitutionOfficialName, o => o.MapFrom(s =>
+                        s.Institution.OfficialName == s.Institution.TranslatedName.Text ? null : s.Institution.OfficialName))
+                    //.ForMember(d => d.InstitutionOfficialName, o => o.MapFrom(s => s.InstitutionId.HasValue ? s.Institution.OfficialName : null))
                     .ForMember(d => d.InstitutionCountryOfficialName, o => o.MapFrom(s => 
                         s.InstitutionId.HasValue && s.Institution.Location.Places.Any(x => x.IsCountry)
                             ? s.Institution.Location.Places.FirstOrDefault(x => x.IsCountry) : null))

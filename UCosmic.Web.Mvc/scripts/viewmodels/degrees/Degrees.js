@@ -22,16 +22,10 @@ var ViewModels;
                 expertiseSearchInput.pageSize = App.Constants.int32Max;
 
                 $.get(App.Routes.WebApi.My.Degrees.get(), expertiseSearchInput).done(function (data, textStatus, jqXHR) {
-                     {
-                        ko.mapping.fromJS(data, {}, _this);
-                        deferred.resolve();
-                    }
-                }).fail(function (jqXhr, textStatus, errorThrown) {
-                     {
-                        if (jqXhr.status != 0) {
-                            deferred.reject(jqXhr, textStatus, errorThrown);
-                        }
-                    }
+                    ko.mapping.fromJS(data, {}, _this);
+                    deferred.resolve();
+                }).fail(function (xhr) {
+                    App.Failures.message(xhr, 'while loading your degrees', true);
                 });
 
                 return deferred;
@@ -44,8 +38,8 @@ var ViewModels;
                     url: App.Routes.WebApi.My.Degrees.del(expertiseId),
                     success: function (data, textStatus, jqXHR) {
                     },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        alert(textStatus);
+                    error: function (xhr) {
+                        App.Failures.message(xhr, 'while deleting your degree', true);
                     }
                 });
             };

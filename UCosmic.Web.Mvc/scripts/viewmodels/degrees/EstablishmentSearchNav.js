@@ -2,24 +2,29 @@ var ViewModels;
 (function (ViewModels) {
     (function (Degrees) {
         var EstablishmentSearchNav = (function () {
-            function EstablishmentSearchNav(institutionId, institutionOfficialName, institutionCountryOfficialName, institutionTranslatedName, institutionOfficialNameDoesNotMatchTranslation) {
+            function EstablishmentSearchNav(institutionId, institutionOfficialName, institutionCountryOfficialName, institutionTranslatedName, degreeId, institutionOfficialNameDoesNotMatchTranslation) {
+                this.lastURL = 'asdf';
                 this.sammyUrl = 'new/';
                 this.establishmentSearchViewModel = new Establishments.ViewModels.Search();
                 this.hasBoundSearch = { does: false };
                 this.hasBoundItem = false;
+                this.institutionOfficialNameDoesNotMatchTranslation = institutionOfficialNameDoesNotMatchTranslation;
                 this.institutionId = institutionId;
                 this.institutionOfficialName = institutionOfficialName;
                 this.institutionCountryOfficialName = institutionCountryOfficialName;
+                this.degreeId = degreeId;
 
                 this.institutionTranslatedName = institutionTranslatedName;
-                this.institutionOfficialNameDoesNotMatchTranslation = institutionOfficialNameDoesNotMatchTranslation;
+                if (this.degreeId) {
+                    this.sammyUrl = this.degreeId() + "/";
+                }
             }
             EstablishmentSearchNav.prototype.SearchPageBind = function (parentOrParticipant) {
                 var _this = this;
                 var $cancelAddParticipant = $("#cancelAddParticipant"), $searchSideBarAddNew = $("#searchSideBarAddNew"), deferred = $.Deferred(), deferred2 = $.Deferred(), $obj = $("[data-current-module='degrees']"), $obj2 = $("#add_establishment"), time = 500;
 
                 this.establishmentSearchViewModel.detailTooltip = function () {
-                    return 'Choose this establishment as a ' + parentOrParticipant;
+                    return 'Choose this Institution as a ' + parentOrParticipant;
                 };
 
                 $cancelAddParticipant.off();
@@ -69,7 +74,6 @@ var ViewModels;
             EstablishmentSearchNav.prototype.bindSearch = function () {
                 var _this = this;
                 if (!this.hasBoundSearch.does) {
-                    var lastURL = 'asdf';
                     this.establishmentSearchViewModel.sammyBeforeRoute = /\#\/index\/(.*)\//;
                     this.establishmentSearchViewModel.sammyGetPageRoute = '#/index';
                     this.establishmentSearchViewModel.sammyDefaultPageRoute = '/degrees[\/]?';
@@ -86,7 +90,7 @@ var ViewModels;
                     }
 
                     this.establishmentSearchViewModel.sammy.bind("location-changed", function () {
-                        if (_this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf(lastURL) < 0) {
+                        if (_this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf(_this.lastURL) < 0) {
                             var $asideRootSearch = $("#asideRootSearch"), $asideParentSearch = $("#asideParentSearch");
 
                             if (_this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("" + _this.sammyUrl + "#/new/") > 0) {
@@ -132,14 +136,14 @@ var ViewModels;
                                                     if (officialName.isValid() && officialUrl.isValid() && _this.establishmentItemViewModel.isValid()) {
                                                         var $LoadingPage = $("#Loading_page").find("strong"), url = App.Routes.WebApi.Establishments.post(), data = _this.establishmentItemViewModel.serializeData();
 
-                                                        $LoadingPage.text("Creating Establishment...");
+                                                        $LoadingPage.text("Creating Institution...");
                                                         data.officialName = officialName.serializeData();
                                                         data.officialUrl = officialUrl.serializeData();
                                                         data.location = location.serializeData();
                                                         _this.establishmentItemViewModel.createSpinner.start();
                                                         $.post(url, data).done(function (response, statusText, xhr) {
                                                             _this.establishmentItemViewModel.createSpinner.stop();
-                                                            $LoadingPage.text("Establishment created, you are being redirected to previous page...");
+                                                            $LoadingPage.text("Institution created, you are being redirected to previous page...");
                                                             $("#add_establishment").fadeOut(500, function () {
                                                                 $("#Loading_page").fadeIn(500);
                                                                 setTimeout(function () {
@@ -181,9 +185,11 @@ var ViewModels;
                                         }
                                     });
                                 });
-                                lastURL = "#/new/";
+                                _this.lastURL = "#/new/";
                             } else if (_this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("" + _this.sammyUrl + "#/page/") > 0) {
-                                var establishment_search = $("#establishment_search"), deferred = $.Deferred(), deferred2 = $.Deferred(), $obj = $("[data-current-module='home']"), $obj2 = $("#add_establishment"), time = 500, lastURL = 'asdf';
+                                var establishment_search = $("#establishment_search"), deferred = $.Deferred(), deferred2 = $.Deferred(), $obj = $("[data-current-module='home']"), $obj2 = $("#add_establishment"), time = 500;
+
+                                _this.lastURL = 'asdf';
 
                                 _this.fadeModsOut(deferred, deferred2, $obj, $obj2, time);
 
@@ -197,16 +203,16 @@ var ViewModels;
                                         _this.establishmentSearchViewModel.sammy.setLocation('#/new/');
                                         return false;
                                     };
-                                    _this.establishmentSearchViewModel.header("Choose a parent establishment");
+                                    _this.establishmentSearchViewModel.header("Choose a parent Institution");
                                     $asideRootSearch.hide();
                                     $asideParentSearch.show();
                                     _this.SearchPageBind("parent");
-                                    _this.establishmentSearchViewModel.header("Choose a parent establishment");
+                                    _this.establishmentSearchViewModel.header("Choose a parent Institution");
                                 } else {
                                     $asideRootSearch.show();
                                     $asideParentSearch.hide();
-                                    _this.SearchPageBind("participant");
-                                    _this.establishmentSearchViewModel.header("Choose a participant");
+                                    _this.SearchPageBind("institution");
+                                    _this.establishmentSearchViewModel.header("Choose an alma mater");
                                     _this.establishmentSearchViewModel.clickAction = function (context) {
                                         _this.institutionId(context.id());
                                         _this.institutionOfficialName(context.officialName());
@@ -218,12 +224,12 @@ var ViewModels;
                                         return false;
                                     };
                                 }
-                                lastURL = "#/page/";
+                                _this.lastURL = "#/page/";
                             } else if (_this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("my/degrees/" + _this.sammyUrl + "") > 0) {
                                 var deferred = $.Deferred(), deferred2 = $.Deferred(), $obj = $("#establishment_search"), $obj2 = $("#add_establishment"), time = 500;
 
                                 sessionStorage.setItem("addest", "no");
-                                lastURL = "#/index";
+                                _this.lastURL = "#/index";
                                 _this.establishmentSearchViewModel.sammy.setLocation('#/index');
                                 _this.fadeModsOut(deferred, deferred2, $obj, $obj2, time);
                                 $.when(deferred, deferred2).done(function () {
