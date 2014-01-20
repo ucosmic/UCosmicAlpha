@@ -44,3 +44,18 @@ declare module Service.ApiModels.Degree {
     }
 
 }
+
+declare module Degrees.ApiModels {
+
+    export interface SearchInput extends App.ApiModels.SearchInput {
+        keyword?: string;
+        orderBy?: string;
+    }
+
+    export interface SearchResult {
+        degreeId: number;
+        title: string;
+        fieldOfStudy: string;
+        yearAwarded: string;
+    }
+}

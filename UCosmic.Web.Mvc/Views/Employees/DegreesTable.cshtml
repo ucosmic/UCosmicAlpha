@@ -14,8 +14,24 @@
     </nav>
 }
 
+@section scripts
+{
+    <script src="~/scripts/oss/linq.js"></script>
+    <script src="~/scripts/app/Pager.js"></script>
+    <script src="~/scripts/app/Spinner.js"></script>
+    <script src="~/scripts/viewmodels/degrees/Search.js"></script>
+    <script>
+        var settings = {
+            input: $.parseJSON('@Html.Raw(Html.SerializeObject(Model.Input))'),
+            output: $.parseJSON('@Html.Raw(Html.SerializeObject(Model.Output))'),
+        };
+        var viewModel = new Degrees.ViewModels.Search(settings);
+        viewModel.applyBindings(document.getElementById('degree_search_form'));
+    </script>
+}
+
 <div class="content fixed to-top" data-current-module="degrees">
-    <form class="group" method="GET" id="degree_search_form">
+    <form class="group" method="GET" id="degree_search_form" data-bind="jQuery: '$form'">
         <div class="on-left from-top">
             @* HEADING & PIVOT RADIOS *@
             <div class="group">
@@ -123,7 +139,7 @@
 
                                 @* DEGREE COLUMN *@
                                 <td style="vertical-align: top;">
-                                    <strong>@degree.Title</strong> @degree.FieldOfStudy @degree.YearAwarded<br/>
+                                    <strong>@degree.Title</strong> @degree.FieldOfStudy @degree.YearAwarded<br />
                                     @if (degree.AlmaMater != null)
                                     {
                                         <strong title="@(degree.AlmaMater.OfficialName != degree.AlmaMater.TranslatedName ? degree.AlmaMater.OfficialName : null)">
@@ -131,9 +147,9 @@
                                         </strong>
                                     }
                                     @*else
-                                    {
-                                        <text>Unidentified Institution</text>
-                                    }*@
+                                        {
+                                            <text>Unidentified Institution</text>
+                                        }*@
                                 </td>
 
                                 @* COUNTRY COLUMN *@
