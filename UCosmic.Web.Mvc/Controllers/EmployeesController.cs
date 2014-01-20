@@ -83,5 +83,37 @@ namespace UCosmic.Web.Mvc.Controllers
 
             return View(model);
         }
+
+        [CurrentModuleTab(ModuleTab.Employees)]
+        [GET("{domain}/employees/map")]
+        public virtual ActionResult Map(string domain, ActivitySearchInputModel input)
+        {
+            var query = new ActivityValuesPageByTerms
+            {
+                EstablishmentDomain = domain,
+                EagerLoad = ActivitySearchResultProfiler.EntitiyToModel.EagerLoad,
+            };
+            Mapper.Map(input, query);
+            var results = _queryProcessor.Execute(query);
+
+            var model = new ActivitySearchModel
+            {
+                Domain = domain,
+                Input = input,
+                Output = Mapper.Map<PageOfActivitySearchResultModel>(results),
+                ActivityTypes = Enumerable.Empty<ActivityTypeModel>(),
+            };
+            var settings = _queryProcessor.Execute(new EmployeeSettingsByEstablishment(domain)
+            {
+                EagerLoad = new Expression<Func<EmployeeModuleSettings, object>>[]
+                {
+                    x => x.ActivityTypes,
+                }
+            });
+            if (settings != null && settings.ActivityTypes.Any())
+                model.ActivityTypes = Mapper.Map<ActivityTypeModel[]>(settings.ActivityTypes.OrderBy(x => x.Rank));
+
+            return View(model);
+        }
     }
 }

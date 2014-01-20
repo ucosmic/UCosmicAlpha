@@ -1742,6 +1742,7 @@
     <TypeScriptCompile Include="scripts\typings\knockout\knockout.d.ts" />
     <TypeScriptCompile Include="scripts\typings\modernizr\modernizr.d.ts" />
     <TypeScriptCompile Include="scripts\typings\moment\moment.d.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\activities\Map.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\activities\Search.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\degrees\EstablishmentSearchNav.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\establishments\SearchResult.ts" />
@@ -2061,6 +2062,9 @@
     <TypeScriptCompile Include="scripts\viewmodels\agreements\SearchResult.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\agreements\SearchTable.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\agreements\Visibility.ts" />
+    <Content Include="scripts\viewmodels\activities\Map.js">
+      <DependentUpon>Map.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\viewmodels\activities\PublicView.js">
       <DependentUpon>PublicView.ts</DependentUpon>
     </Content>
@@ -2630,6 +2634,7 @@
     <Content Include="Views\People\_AffiliationsEditor.cshtml" />
     <Content Include="Views\Employees\_ActivityDatesDisplay.cshtml" />
     <Content Include="Views\JavaScriptRoutes\Places.cshtml" />
+    <Content Include="Views\Employees\Map.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
