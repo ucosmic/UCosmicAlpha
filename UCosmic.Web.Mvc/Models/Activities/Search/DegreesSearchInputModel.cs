@@ -62,6 +62,15 @@ namespace UCosmic.Web.Mvc.Models
                                 case "lastname":
                                     orderBy.Add(x => x.Person.LastName ?? x.Person.DisplayName, direction);
                                     break;
+
+                                case "country":
+                                    orderBy.Add(x => x.Institution != null && x.Institution.Location.Places.Any(y => y.IsCountry), otherDirection);
+                                    orderBy.Add(x => x.Institution != null
+                                        ? x.Institution.Location.Places.Any(y => y.IsCountry)
+                                            ? x.Institution.Location.Places.FirstOrDefault(y => y.IsCountry).OfficialName
+                                            : null
+                                        : null, direction);
+                                    break;
                             }
                         }
 

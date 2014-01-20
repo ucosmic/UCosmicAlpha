@@ -136,14 +136,9 @@
                                     }*@
                                 </td>
 
-                                @* LOCATIONS COLUMN *@
+                                @* COUNTRY COLUMN *@
                                 <td class="locations-column">
-                                    <ul style="display: inline-block;">
-                                        @*@foreach (var place in activity.Places)
-                                            {
-                                                <li class="comma-list"><span>@place.PlaceName</span></li>
-                                            }*@
-                                    </ul>
+                                    @degree.CountryName
                                 </td>
                             </tr>
                         }
@@ -188,6 +183,8 @@
                                         {
                                             new SelectListItem { Text = "Sort by person last name A-Z", Value = "lastname-asc" },
                                             new SelectListItem { Text = "Sort by person last name Z-A", Value = "lastname-desc" },
+                                            new SelectListItem { Text = "Sort by country A-Z", Value = "country-asc" },
+                                            new SelectListItem { Text = "Sort by country Z-A", Value = "country-desc" },
                                             //new SelectListItem { Text = "Sort with most recent at top", Value = "recency-desc" },
                                             //new SelectListItem { Text = "Sort with most recent at bottom", Value = "recency-asc" },
                                             //new SelectListItem { Text = "Sort by activity title A-Z", Value = "title-asc" },

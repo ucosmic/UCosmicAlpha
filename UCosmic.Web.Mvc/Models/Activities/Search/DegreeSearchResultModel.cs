@@ -16,6 +16,7 @@ namespace UCosmic.Web.Mvc.Models
         public string Title { get; set; }
         public string FieldOfStudy { get; set; }
         public int? YearAwarded { get; set; }
+        public string CountryName { get; set; }
         public DegreeSearchResultOwnerModel Owner { get; set; }
         public DegreeSearchResultEstablishmentModel AlmaMater { get; set; }
 
@@ -46,6 +47,7 @@ namespace UCosmic.Web.Mvc.Models
             {
                 x => x.Person,
                 x => x.Institution.Names.Select(y => y.TranslationToLanguage),
+                x => x.Institution.Location.Places,
             };
 
             protected override void Configure()
@@ -54,7 +56,16 @@ namespace UCosmic.Web.Mvc.Models
                     .ForMember(d => d.DegreeId, o => o.MapFrom(s => s.RevisionId))
                     .ForMember(d => d.Owner, o => o.MapFrom(s => s.Person))
                     .ForMember(d => d.AlmaMater, o => o.MapFrom(s => s.Institution))
-;
+                    .ForMember(d => d.CountryName, o => o.ResolveUsing(s =>
+                    {
+                        if (s.Institution != null)
+                        {
+                            var country = s.Institution.Location.Places.FirstOrDefault(x => x.IsCountry);
+                            if (country != null) return country.OfficialName;
+                        }
+                        return "[Unknown]";
+                    }))
+                ;
             }
         }
 
