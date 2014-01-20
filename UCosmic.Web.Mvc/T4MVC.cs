@@ -2932,6 +2932,9 @@ namespace Links
                 public static readonly string EstablishmentSearchNav_ts = Url("EstablishmentSearchNav.ts");
                 public static readonly string EstablishmentSearchNav_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/EstablishmentSearchNav.min.js") ? Url("EstablishmentSearchNav.min.js") : Url("EstablishmentSearchNav.js");
                               
+                public static readonly string Search_ts = Url("Search.ts");
+                public static readonly string Search_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Search.min.js") ? Url("Search.min.js") : Url("Search.js");
+                              
                 public static readonly string ServiceApiModel_d_ts = Url("ServiceApiModel.d.ts");
             }
         

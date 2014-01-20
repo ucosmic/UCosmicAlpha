@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Objects.SqlClient;
 using System.Linq;
 using UCosmic.Domain.Establishments;
 
@@ -17,6 +18,7 @@ namespace UCosmic.Domain.Degrees
 
         public int PageSize { get; set; }
         public int PageNumber { get; set; }
+        public string Keyword { get; set; }
     }
 
     public class HandleDegreesPageByTermsQuery : IHandleQueries<DegreesPageByTerms, PagedQueryResult<Degree>>
@@ -45,6 +47,16 @@ namespace UCosmic.Domain.Degrees
             {
                 var establishment = _queries.Execute(new EstablishmentByDomain(query.EstablishmentDomain));
                 queryable = queryable.Where(x => x.Person.Affiliations.Any(y => y.IsDefault && y.EstablishmentId == establishment.RevisionId));
+            }
+
+            if (!string.IsNullOrWhiteSpace(query.Keyword))
+            {
+                var inTitle = queryable.Where(x => x.Title.Contains(query.Keyword));
+                var inFieldOfStudy = queryable.Where(x => (x.FieldOfStudy != null && x.FieldOfStudy.Contains(query.Keyword)));
+                var inYearAwarded = queryable.Where(x => (x.YearAwarded.HasValue && SqlFunctions.StringConvert((double)x.YearAwarded.Value).Contains(query.Keyword)));
+                var inEstablishment = queryable.Where(x => x.Institution != null && x.Institution.Names.Any(y => y.Text.Contains(query.Keyword)));
+                var inCountry = queryable.Where(x => x.Institution != null && x.Institution.Location.Places.Any(y => y.OfficialName.Contains(query.Keyword)));
+                queryable = inTitle.Union(inFieldOfStudy).Union(inYearAwarded).Union(inEstablishment).Union(inCountry);
             }
 
             queryable = queryable.OrderBy(query.OrderBy);
