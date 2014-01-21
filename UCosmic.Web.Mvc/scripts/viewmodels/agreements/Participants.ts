@@ -46,6 +46,19 @@ module Agreements {
                 '" as a participant from this agreement?')) {
                 var self = this;
                 if (this.agreementIsEdit()) {
+                    if (ko.dataFor(e.target).isOwner()) {
+                        var counter = 0;
+                        $.each(ko.contextFor(e.target).$parent.participants(), function (i, item) {
+                            if (item.isOwner() == true) {
+                                counter++;
+                            }
+                        });
+                        if (counter < 2) {
+                            alert("You must add another home participant before you can delete this one.");
+                            return false;
+                        }
+                    }
+                    
                     if (this.deletingParticipant == false) {
                         this.deletingParticipant = true;
                         var url = App.Routes.WebApi.Agreements.Participants.del(this.agreementId, ko.dataFor(e.target).establishmentId());

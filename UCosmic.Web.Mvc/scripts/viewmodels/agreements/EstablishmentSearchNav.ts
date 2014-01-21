@@ -37,7 +37,7 @@ module Agreements {
         establishmentItemViewModel;
         hasBoundSearch = { does: false };
         hasBoundItem = false;
-        
+
         SearchPageBind(parentOrParticipant: string): void {
             var $cancelAddParticipant = $("#cancelAddParticipant"),
                 $searchSideBarAddNew = $("#searchSideBarAddNew"),
@@ -125,11 +125,11 @@ module Agreements {
 
                         if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("" + this.editOrNewUrl.val + "#/new/") > 0) {
                             var $addEstablishment = $("#add_establishment");
-                                deferred = $.Deferred(),
-                                deferred2 = $.Deferred(),
-                                $obj = $("#establishment_search"),
-                                $obj2 = $("[data-current-module='agreements']"),
-                                time = 500;
+                            deferred = $.Deferred(),
+                            deferred2 = $.Deferred(),
+                            $obj = $("#establishment_search"),
+                            $obj2 = $("[data-current-module='agreements']"),
+                            time = 500;
 
                             this.fadeModsOut(deferred, deferred2, $obj, $obj2, time);
                             $.when(deferred, deferred2)

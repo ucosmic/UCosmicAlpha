@@ -5,24 +5,24 @@
 @section styles
 {
     <style>
-    .non-required-field
-    {
-        width: 120px;
-        display:inline-block;
-        text-align: right;
-    }
-    .required-field
-    {
-        width: 120px;
-        display:inline-block;
-        text-align: right;
-    }
-    .required-field::after {
-        content: "*";
-        font-size: large;
-        vertical-align: text-top;
-        color: red;
-    }
+        .non-required-field {
+            width: 120px;
+            display: inline-block;
+            text-align: right;
+        }
+
+        .required-field {
+            width: 120px;
+            display: inline-block;
+            text-align: right;
+        }
+
+            .required-field::after {
+                content: "*";
+                font-size: large;
+                vertical-align: text-top;
+                color: red;
+            }
     </style>
 }
 
@@ -31,16 +31,16 @@
     @Scripts.Render("~/bundles/degree")
 
     <script type="text/javascript">
-        $(function() {
+        $(function () {
             var degreeViewModel = new ViewModels.Degrees.Degree(@ViewBag.DegreeId);
             degreeViewModel.load()
-                .done(function() {
-                    degreeViewModel.setupWidgets( "institution" );
+                .done(function () {
+                    degreeViewModel.setupWidgets("institution");
                     degreeViewModel.setupValidation();
-                    ko.applyBindings( degreeViewModel, $( "#degree-edit" )[0] );
+                    ko.applyBindings(degreeViewModel, $("#degree-edit")[0]);
                     degreeViewModel.setupSubscriptions();
                 })
-                .fail(function(jqXhr, textStatus, errorThrown) {
+                .fail(function (jqXhr, textStatus, errorThrown) {
                     alert(textStatus + "|" + errorThrown);
                 });
         });
@@ -91,18 +91,18 @@
 
                             <!-- ALMA MATER -->
                             <div style="margin-bottom: 8px; display: none; width: 525px;" data-bind="visible: (institutionTranslatedName())">
-                                    <label for="yearAwarded" class="non-required-field">Alma Mater</label>
-                                    <div style="width: 400px; display: inline-block;">
-                                        <a title="Remove this participant" data-bind="click: removeParticipant"><i class="red minus on-right" style="margin:0;"></i></a>
-                                        <div class="item" style="width: 350px;">
-                                            <div>
-                                                <strong data-bind="text: institutionTranslatedName"></strong>
-                                                <span data-bind="visible: institutionOfficialNameDoesNotMatchTranslation">(<span data-bind="    text: institutionOfficialName"></span>)</span>
-                                            </div>
+                                <label for="yearAwarded" class="non-required-field">Alma Mater</label>
+                                <div style="width: 400px; display: inline-block;">
+                                    <a title="Remove this participant" data-bind="click: removeParticipant"><i class="red minus on-right" style="margin:0;"></i></a>
+                                    <div class="item" style="width: 350px;">
+                                        <div>
+                                            <strong data-bind="text: institutionTranslatedName"></strong>
+                                            <span data-bind="visible: institutionOfficialNameDoesNotMatchTranslation">(<span data-bind="    text: institutionOfficialName"></span>)</span>
                                         </div>
                                     </div>
+                                </div>
                             </div>
-                            
+
                             <div style="margin-top: 14px">
                                 <a data-bind="click: addParticipant" class="button">
                                     <i class="green plus"></i>
@@ -112,24 +112,24 @@
                         </div>
 
 
-                            <!-- BUTTONS -->
-                            <div style="margin-bottom: 32px" data-bind="template: { name: 'buttons-template'}"></div>
+                        <!-- BUTTONS -->
+                        <div style="margin-bottom: 32px" data-bind="template: { name: 'buttons-template'}"></div>
 
-                            <!-- LAST UPDATED -->
-                            <div style="width: 50%; height: 1.5em; border-top: 1px; border-style: solid">
-                                <span style="font-size:smaller; color:slategray">
-                                    <span>Last updated</span>
-                                    <label id="last-updated-date" data-bind="text: (whenLastUpdated() != null) ? moment(whenLastUpdated()).format('MM/DD/YYYY') : ''"></label>
-                                    <span> by </span>
-                                    <label id="last-updated-name" data-bind="text: whoLastUpdated()"></label>
-                                </span>
-                            </div>
+                        <!-- LAST UPDATED -->
+                        <div style="width: 50%; height: 1.5em; border-top: 1px; border-style: solid">
+                            <span style="font-size:smaller; color:slategray">
+                                <span>Last updated</span>
+                                <label id="last-updated-date" data-bind="text: (whenLastUpdated() != null) ? moment(whenLastUpdated()).format('MM/DD/YYYY') : ''"></label>
+                                <span> by </span>
+                                <label id="last-updated-name" data-bind="text: whoLastUpdated()"></label>
+                            </span>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 <div id="establishment_search" class="content fixed to-top" style="display: none;">
     <form class="group" data-bind="submit: requestResults">
         <div class="on-left from-top">
@@ -185,24 +185,24 @@
     </div>
 </div>
 
-    <!-- JQUERY DIALOGS -->
-    <div id="cancelConfirmDialog" class="dialog" title="Confirm Cancel">
-        <div>By cancelling, you will lose all changes.</div>
-        <div style="font-weight: bold">Are you sure you want to Cancel editing this degree?</div>
-    </div>
+<!-- JQUERY DIALOGS -->
+<div id="cancelConfirmDialog" class="dialog" title="Confirm Cancel">
+    <div>By cancelling, you will lose all changes.</div>
+    <div style="font-weight: bold">Are you sure you want to Cancel editing this degree?</div>
+</div>
 
-    <div id="degreeBeingEditedDialog" class="dialog" title="Error Renaming Document">
-        <div>The degree cannot be edited at this time because it is in use by:</div>
-        <div id="editingUserName" style="text-align: center"></div>
-        <a id="editingUserEmail" style="text-align: center"></a>
-    </div>
+<div id="degreeBeingEditedDialog" class="dialog" title="Error Renaming Document">
+    <div>The degree cannot be edited at this time because it is in use by:</div>
+    <div id="editingUserName" style="text-align: center"></div>
+    <a id="editingUserEmail" style="text-align: center"></a>
+</div>
 
 
-    <!-- KNOCKOUT TEMPLATES -->
-    <script type="text/html" id="buttons-template">
-        <span>
-            <input type="button" value="Save" data-bind="click: function (item, event) { save(item, event, 'Save'); }, clickBubble: false"/>
-            <input type="button" value="Guide Me" style="margin-left: 50px"/>
-            <input type="button" value="Cancel" style="float: right" data-bind="click: function (item, event) { cancel(item, event); }, clickBubble: false"/>
-        </span>
-    </script>
+<!-- KNOCKOUT TEMPLATES -->
+<script type="text/html" id="buttons-template">
+    <span>
+        <input type="button" value="Save" data-bind="click: function (item, event) { save(item, event, 'Save'); }, clickBubble: false" />
+        <input type="button" value="Guide Me" style="margin-left: 50px" />
+        <input type="button" value="Cancel" style="float: right" data-bind="click: function (item, event) { cancel(item, event); }, clickBubble: false" />
+    </span>
+</script>

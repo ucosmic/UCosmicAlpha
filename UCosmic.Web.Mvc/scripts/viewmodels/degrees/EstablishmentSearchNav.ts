@@ -11,7 +11,7 @@ module ViewModels.Degrees {
 
             this.institutionTranslatedName = institutionTranslatedName;
             if (this.degreeId && this.degreeId > 0) {
-                    this.sammyUrl = this.degreeId() + "/";
+                this.sammyUrl = this.degreeId() + "/";
             }
         }
 
@@ -93,7 +93,7 @@ module ViewModels.Degrees {
 
         //sammy navigation
         bindSearch(): void {
-            if (!this.hasBoundSearch.does) { 
+            if (!this.hasBoundSearch.does) {
                 this.establishmentSearchViewModel.sammyBeforeRoute = /\#\/index\/(.*)\//;
                 this.establishmentSearchViewModel.sammyGetPageRoute = '#/index';
                 this.establishmentSearchViewModel.sammyDefaultPageRoute = '/degrees[\/]?';
@@ -230,7 +230,7 @@ module ViewModels.Degrees {
                                 time = 500;
 
                             this.lastURL = 'asdf';
-                            
+
                             this.fadeModsOut(deferred, deferred2, $obj, $obj2, time);
 
                             $.when(deferred, deferred2)

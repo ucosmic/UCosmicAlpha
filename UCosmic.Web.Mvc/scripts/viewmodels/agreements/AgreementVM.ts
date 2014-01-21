@@ -458,7 +458,7 @@ class InstitutionalAgreementEditModel {
                         });
                 }
             }
-            
+
         }
     }
 }

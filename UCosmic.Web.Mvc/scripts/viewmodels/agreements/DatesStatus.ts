@@ -31,8 +31,8 @@ module Agreements {
                 message: 'The field must be greater than start date'
             }
             ko.validation.rules.date.validator = function (value, validate) {
-                    return !value.length || (validate && Globalize.parseDate(value) != null);
-                }
+                return !value.length || (validate && Globalize.parseDate(value) != null);
+            }
             ko.validation.registerExtenders();
             this.validateEffectiveDatesCurrentStatus = ko.validatedObservable({
                 startDate: this.startDate.extend({
@@ -62,7 +62,7 @@ module Agreements {
                 })
             })
         }
-        
+
         bindJquery(): void {
             if (this.isCustomStatusAllowed()) {
                 $("#status_options").kendoComboBox({
