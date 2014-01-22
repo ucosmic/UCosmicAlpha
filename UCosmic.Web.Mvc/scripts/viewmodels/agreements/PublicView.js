@@ -52,6 +52,10 @@ var Agreements;
                 this.files = this.fileListPopulator.files;
                 this.fileListPopulator.populate(this.agreementId);
                 this.populateContacts();
+                if (sessionStorage.getItem("agreementSaved") == "yes") {
+                    sessionStorage.setItem("agreementSaved", "no");
+                    App.flasher.flash("Agreement saved");
+                }
             }
             PublicView.prototype.fileHref = function (parent, data) {
                 return '/api/agreements/' + parent.agreementId + '/files/' + data.id() + '/content/';

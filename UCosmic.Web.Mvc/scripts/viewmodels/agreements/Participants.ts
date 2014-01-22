@@ -36,6 +36,8 @@ module Agreements {
         participantsExport = ko.mapping.fromJS([]);
         participants = ko.mapping.fromJS([]);
         participantsErrorMsg = ko.observable();
+        editParticipantsErrorMsg = ko.observable();
+        editParticipantsShowErrorMsg = ko.observable(false);
         participantsShowErrorMsg;
         deletingParticipant = false;
 
@@ -53,8 +55,11 @@ module Agreements {
                                 counter++;
                             }
                         });
+                        this.editParticipantsShowErrorMsg(false);
                         if (counter < 2) {
-                            alert("You must add another home participant before you can delete this one.");
+                            //alert("You must add another home participant before you can delete this one.");
+                            this.editParticipantsErrorMsg("You must add another home participant before you can delete this one.");
+                            this.editParticipantsShowErrorMsg(true);
                             return false;
                         }
                     }

@@ -15,7 +15,7 @@ var ViewModels;
                 this.degreeId = degreeId;
 
                 this.institutionTranslatedName = institutionTranslatedName;
-                if (this.degreeId && this.degreeId > 0) {
+                if (this.degreeId() && this.degreeId() > 0) {
                     this.sammyUrl = this.degreeId() + "/";
                 }
             }

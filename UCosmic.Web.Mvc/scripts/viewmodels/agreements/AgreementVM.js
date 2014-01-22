@@ -342,12 +342,8 @@ var InstitutionalAgreementEditModel = (function () {
                         data: data,
                         success: function (response, statusText, xhr) {
                             _this.savingAgreement = false;
-                            $LoadingPage.text("Agreement Saved...");
-                            setTimeout(function () {
-                                $("#Loading_page").show().fadeOut(500, function () {
-                                    $("[data-current-module='agreements']").hide().fadeIn(500);
-                                });
-                            }, 5000);
+                            sessionStorage.setItem("agreementSaved", "yes");
+                            location.href = App.Routes.Mvc.Agreements.show(_this.agreementId);
                         },
                         error: function (xhr, statusText, errorThrown) {
                             _this.savingAgreement = false;

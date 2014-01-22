@@ -606,6 +606,17 @@ module App.Routes {
             return url;
         }
 
+        export module Agreements {
+            export function show(AgreementId: number) {
+                return makeUrl('agreements/' + AgreementId);
+            }
+            //export function created(params?: any) {
+            //    var url = makeUrl('agreements/created');
+            //    if (params) url += '?' + $.param(params);
+            //    return url;
+            //}
+        }
+
         export module Establishments {
             export function show(establishmentId: number) {
                 return makeUrl('establishments/' + establishmentId);

@@ -383,12 +383,14 @@ class InstitutionalAgreementEditModel {
                         data: data,
                         success: (response: any, statusText: string, xhr: JQueryXHR): void => {
                             this.savingAgreement = false;
-                            $LoadingPage.text("Agreement Saved...");
-                            setTimeout(function () {
-                                $("#Loading_page").show().fadeOut(500, function () {
-                                    $("[data-current-module='agreements']").hide().fadeIn(500);
-                                });
-                            }, 5000);
+                            sessionStorage.setItem("agreementSaved", "yes");
+                            location.href = App.Routes.Mvc.Agreements.show(this.agreementId);
+                            //$LoadingPage.text("Agreement Saved...");
+                            //setTimeout(function () {
+                            //    $("#Loading_page").show().fadeOut(500, function () {
+                            //        $("[data-current-module='agreements']").hide().fadeIn(500);
+                            //    });
+                            //}, 5000);
                         },
                         error: (xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
                             this.savingAgreement = false;

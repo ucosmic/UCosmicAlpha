@@ -748,6 +748,14 @@ var App;
                 return url;
             }
 
+            (function (Agreements) {
+                function show(AgreementId) {
+                    return makeUrl('agreements/' + AgreementId);
+                }
+                Agreements.show = show;
+            })(Mvc.Agreements || (Mvc.Agreements = {}));
+            var Agreements = Mvc.Agreements;
+
             (function (Establishments) {
                 function show(establishmentId) {
                     return makeUrl('establishments/' + establishmentId);

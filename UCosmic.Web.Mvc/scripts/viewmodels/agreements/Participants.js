@@ -6,6 +6,8 @@ var Agreements;
             this.participantsExport = ko.mapping.fromJS([]);
             this.participants = ko.mapping.fromJS([]);
             this.participantsErrorMsg = ko.observable();
+            this.editParticipantsErrorMsg = ko.observable();
+            this.editParticipantsShowErrorMsg = ko.observable(false);
             this.deletingParticipant = false;
             this.removeParticipant = this.removeParticipant.bind(this);
             this.agreementIsEdit = agreementIsEdit;
@@ -42,8 +44,10 @@ var Agreements;
                                 counter++;
                             }
                         });
+                        this.editParticipantsShowErrorMsg(false);
                         if (counter < 2) {
-                            alert("You must add another home participant before you can delete this one.");
+                            this.editParticipantsErrorMsg("You must add another home participant before you can delete this one.");
+                            this.editParticipantsShowErrorMsg(true);
                             return false;
                         }
                     }
