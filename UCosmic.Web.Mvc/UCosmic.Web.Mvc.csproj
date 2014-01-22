@@ -339,6 +339,7 @@
     <Compile Include="Models\Activities\Search\ActivitySearchResultModel.cs" />
     <Compile Include="Models\Activities\Search\ActivityTypeModel.cs" />
     <Compile Include="Models\Agreements\AgreementOwningTenant.cs" />
+    <Compile Include="Models\Employees\EmployeesBibNavModel.cs" />
     <Compile Include="Models\Employees\EmployeeSettingsFacultyRankApiModel.cs" />
     <Compile Include="Models\Degrees\DegreePublicViewModel.cs" />
     <Compile Include="Models\Employees\EmployeeActivityCountsModel.cs" />

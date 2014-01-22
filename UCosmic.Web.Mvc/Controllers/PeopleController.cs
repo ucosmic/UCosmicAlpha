@@ -22,9 +22,14 @@ namespace UCosmic.Web.Mvc.Controllers
             _queryProcessor = queryProcessor;
         }
 
+        [CurrentModuleTab(ModuleTab.Employees)]
         [GET("people/{personId:int}")]
         public virtual ActionResult Index(int personId)
         {
+            var person = _queryProcessor.Execute(new PersonById(personId));
+            if (person == null) return HttpNotFound();
+
+            ViewBag.CustomBib = person.DisplayName;
             ViewBag.personId = personId;
             ViewBag.currentPage = "profile";
             return View();
@@ -42,6 +47,7 @@ namespace UCosmic.Web.Mvc.Controllers
             return PartialView(MVC.People.Views._Card, model);
         }
 
+        [CurrentModuleTab(ModuleTab.Employees)]
         [GET("people/{personId:int}/index_spike")]
         public virtual ActionResult Index_Spike(int personId)
         {
@@ -52,17 +58,23 @@ namespace UCosmic.Web.Mvc.Controllers
             {
                 return HttpNotFound();
             }
-            return View(model);
+            ViewBag.CustomBib = model.DisplayName;
+            return View(MVC.People.Views.Index_Spike, model);
         }
 
+        [CurrentModuleTab(ModuleTab.Employees)]
         [GET("people/{personId:int}/activities")]
         public virtual ActionResult Activities(int personId, ActivityPublicInputModel input)
         {
+            var person = _queryProcessor.Execute(new PersonById(personId));
+            if (person == null) return HttpNotFound();
+
             var query = new ActivitiesByPersonId(User, personId);
             Mapper.Map(input, query);
             var entities = _queryProcessor.Execute(query);
             var model = Mapper.Map<PageOfActivityPublicViewModel>(entities);
 
+            ViewBag.CustomBib = person.DisplayName;
             ViewBag.keyword = input.Keyword;
             ViewBag.personId = personId;
             ViewBag.countryCode = input.CountryCode;
@@ -70,13 +82,18 @@ namespace UCosmic.Web.Mvc.Controllers
             return View(model);
         }
 
+        [CurrentModuleTab(ModuleTab.Employees)]
         [GET("people/{personId:int}/degrees")]
         public virtual ActionResult Degrees(int personId, DegreeSearchInputModel input)
         {
+            var person = _queryProcessor.Execute(new PersonById(personId));
+            if (person == null) return HttpNotFound();
+
             var query = new DegreesByPersonId(personId);
             Mapper.Map(input, query);
             var entities = _queryProcessor.Execute(query);
             var model = Mapper.Map<PageOfDegreePublicViewModel>(entities);
+            ViewBag.CustomBib = person.DisplayName;
             ViewBag.currentPage = "degrees";
             ViewBag.personId = personId;
             return View(model);
@@ -122,25 +139,35 @@ namespace UCosmic.Web.Mvc.Controllers
             return model == null ? null : PartialView(MVC.People.Views._Emails, model);
         }
 
+        [CurrentModuleTab(ModuleTab.Employees)]
         [GET("people/{personId:int}/language-expertise")]
         public virtual ActionResult Languages(int personId)
         {
+            var person = _queryProcessor.Execute(new PersonById(personId));
+            if (person == null) return HttpNotFound();
+
             var query = new LanguageExpertisesByPersonId(personId);
             var entities = _queryProcessor.Execute(query);
             var model = Mapper.Map<LanguageExpertiseViewModel[]>(entities);
 
+            ViewBag.CustomBib = person.DisplayName;
             ViewBag.currentPage = "languages";
             ViewBag.personId = personId;
             return View(model);
         }
 
+        [CurrentModuleTab(ModuleTab.Employees)]
         [GET("people/{personId:int}/global-expertise")]
         public virtual ActionResult GlobalExpertises(int personId)
         {
+            var person = _queryProcessor.Execute(new PersonById(personId));
+            if (person == null) return HttpNotFound();
+
             var query = new GeographicExpertisesByPersonId(personId);
             var entities = _queryProcessor.Execute(query);
             var model = Mapper.Map<GeographicExpertiseApiModel[]>(entities);
 
+            ViewBag.CustomBib = person.DisplayName;
             ViewBag.currentPage = "global-expertise";
             ViewBag.personId = personId;
             return View(model);

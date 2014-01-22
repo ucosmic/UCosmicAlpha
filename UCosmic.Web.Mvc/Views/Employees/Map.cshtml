@@ -10,8 +10,8 @@
 
 @section bib
 {
-    <nav class="bib" data-current-bib="search">
-        @Html.Partial(MVC.Employees.Views._Bib, new ViewDataDictionary(new { Search = "current" }))
+    <nav class="bib">
+        @Html.Partial(MVC.Employees.Views._Bib, new EmployeesBibNavModel { Activities = true })
     </nav>
 }
 

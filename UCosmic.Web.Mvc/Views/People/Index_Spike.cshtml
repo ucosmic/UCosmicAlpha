@@ -1,11 +1,12 @@
-﻿@model UCosmic.Web.Mvc.Models.PersonViewModel
+﻿@using UCosmic.Web.Mvc.Models
+@model PersonViewModel
 @{
     ViewBag.Title = "UCosmic Profile";
 }
 @section bib
 {
-    <nav class="bib hide" data-current-bib="faculty">
-        @Html.Partial(MVC.Employees.Views._Bib)
+    <nav class="bib">
+        @Html.Partial(MVC.Employees.Views._Bib, new EmployeesBibNavModel { Custom = ViewBag.CustomBib })
     </nav>
 }
 @section scripts

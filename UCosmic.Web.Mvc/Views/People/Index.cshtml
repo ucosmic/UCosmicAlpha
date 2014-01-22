@@ -1,20 +1,12 @@
-﻿@{
+﻿@using UCosmic.Web.Mvc.Models
+@{
     ViewBag.Title = "UCosmic Profile";
 }
 @section bib
 {
-    <nav class="bib hide" data-current-bib="faculty">
-        @Html.Partial(MVC.Employees.Views._Bib)
+    <nav class="bib">
+        @Html.Partial(MVC.Employees.Views._Bib, new EmployeesBibNavModel { Custom = ViewBag.CustomBib })
     </nav>
-}
-@section scripts
-{
-
-
-
-    <script type="text/javascript">
-    </script>
-
 }
 @section styles
 {
@@ -23,13 +15,13 @@
             display: inline;
         }
 
-        .comma-list:after {
-            content: ', ';
-        }
+            .comma-list:after {
+                content: ', ';
+            }
 
-        .comma-list:last-child:after {
-            content: '';
-        }
+            .comma-list:last-child:after {
+                content: '';
+            }
     </style>
 }
 <div class="content fixed to-top" data-current-module="faculty">

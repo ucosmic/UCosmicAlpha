@@ -1,34 +1,29 @@
-﻿@model UCosmic.Web.Mvc.Models.PageOfDegreePublicViewModel
+﻿@using UCosmic.Web.Mvc.Models
+@model PageOfDegreePublicViewModel
 @{
     ViewBag.Title = "UCosmic Profile";
 }
 @section bib
 {
-    <nav class="bib hide" data-current-bib="faculty">
-        @Html.Partial(MVC.Employees.Views._Bib)
+    <nav class="bib">
+        @Html.Partial(MVC.Employees.Views._Bib, new EmployeesBibNavModel { Custom = ViewBag.CustomBib })
     </nav>
 }
-@section scripts
-{
 
-    
-
-}
 @section styles
 {
     <style>
-
         .comma-list {
             display: inline;
         }
 
-        .comma-list:after {
-            content: ', ';
-        }
+            .comma-list:after {
+                content: ', ';
+            }
 
-        .comma-list:last-child:after {
-            content: '';
-        }
+            .comma-list:last-child:after {
+                content: '';
+            }
     </style>
 }
 <div class="content fixed to-top" data-current-module="employees">
@@ -36,7 +31,7 @@
         <div class="on-left from-top">
             <header>
                 <h1>
-                   All Formal Education
+                    All Formal Education
                 </h1>
             </header>
             @Html.Action(MVC.People.GetCard())

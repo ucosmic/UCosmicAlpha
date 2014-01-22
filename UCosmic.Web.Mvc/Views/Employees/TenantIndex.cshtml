@@ -1,11 +1,12 @@
-﻿@{
+﻿@using UCosmic.Web.Mvc.Models
+@{
     ViewBag.Title = "Professional Engagement Summary";
 }
 
 @section bib
 {
-    <nav class="bib hide" data-current-bib="summary">
-        @Html.Partial(MVC.Employees.Views._Bib, new ViewDataDictionary(new { Summary = "current" }))
+    <nav class="bib">
+        @Html.Partial(MVC.Employees.Views._Bib, new EmployeesBibNavModel { Activities = true })
     </nav>
 }
 
@@ -238,7 +239,7 @@
                                     @*<span class="arrow"></span>*@
                                     <span class="text">
                                         @*<img src="~/images/icons/spinner/spinner-20-blue-on-ddd.gif" alt=""
-                                             style="margin-left: 4px; display: none;" data-bind="visible: loadingSpinner.isVisible" />*@
+                                            style="margin-left: 4px; display: none;" data-bind="visible: loadingSpinner.isVisible" />*@
                                     </span>
                                 </div>
                             </li>

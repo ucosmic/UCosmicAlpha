@@ -166,6 +166,7 @@ namespace UCosmic.Web.Mvc.Controllers
             if (entity == null) return HttpNotFound();
 
             var model = Mapper.Map<ActivityPublicViewModel>(entity);
+            ViewBag.CustomBib = entity.Activity.Person.DisplayName;
             ViewBag.isActivity = true;
             @ViewBag.Faculty = "current";
             return View(model);
