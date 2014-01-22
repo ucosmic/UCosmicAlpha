@@ -99,6 +99,13 @@
                 </tr>
             </table>
 
+            <p>
+                We're still working on the activities interactive map lens. Please check back again soon.
+            </p>
+            <p>
+                In the meantime, you can <a href="@Url.Action(MVC.Employees.TenantIndex(Model.Domain))">click here for activity summary charts</a>
+                or <a href="@Url.Action(MVC.Employees.Table(Model.Domain, null))">click here for an advanced acticity search</a>.
+            </p>
         </div>
         <aside class="on-right from-top" data-fixed-scroll="root">
             <div data-fixed-scroll="anchor"></div>
@@ -234,6 +241,12 @@
                         </li>
                     </ul>
                     <ul class="bottom">
+                        <li>
+                            <a href="@Url.Action(MVC.Employees.TenantIndex(Model.Domain))" class="group">
+                                <span class="arrow"></span>
+                                <span class="text">Summary</span>
+                            </a>
+                        </li>
                         <li>
                             @{
                                 var tableUrl = Url.Action(MVC.Employees.Table());
