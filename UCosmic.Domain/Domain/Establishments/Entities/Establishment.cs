@@ -30,7 +30,7 @@ namespace UCosmic.Domain.Establishments
         public virtual ICollection<EstablishmentName> Names { get; protected set; }
         public int? VerticalRank { get; protected internal set; } // Used for ordering Establishments in lists.
         public virtual ICollection<EstablishmentCustomId> CustomIds { get; protected set; }
-
+        public bool IsUnverified { get; protected internal set; }
         public EstablishmentName TranslateNameTo(string languageIsoCode)
         {
             if (string.IsNullOrWhiteSpace(languageIsoCode)) return null;

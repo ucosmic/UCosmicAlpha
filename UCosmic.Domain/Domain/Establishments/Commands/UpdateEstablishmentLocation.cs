@@ -56,10 +56,10 @@ namespace UCosmic.Domain.Establishments
             );
 
             // text of the establishment name is required, has max length, and must be unique
-            RuleFor(x => x.Principal)
-                .Must(x => x.IsInRole(RoleName.EstablishmentAdministrator))
-                    .WithMessage("User '{0}' is not authorized to execute this command.")
-            ;
+            //RuleFor(x => x.Principal)
+            //    .Must(x => x.IsInRole(RoleName.EstablishmentAdministrator))
+            //        .WithMessage("User '{0}' is not authorized to execute this command.", x => x.Principal.Identity.Name)
+            //;
 
             // place must exist if specified
             When(x => x.PlaceId.HasValue, () =>

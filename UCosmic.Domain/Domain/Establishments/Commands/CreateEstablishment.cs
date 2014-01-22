@@ -137,11 +137,20 @@ namespace UCosmic.Domain.Establishments
                 OfficialName = command.OfficialName.Text,
                 WebsiteUrl = hasOfficialUrl ? command.OfficialUrl.Value : null,
                 Location = new EstablishmentLocation(),
-                CollegeBoardDesignatedIndicator = command.CeebCode,
-                UCosmicCode = command.UCosmicCode,
+                //CollegeBoardDesignatedIndicator = command.CeebCode,
+                //UCosmicCode = command.UCosmicCode,
                 //ExternalId = command.ExternalId,
                 VerticalRank = command.Rank
             };
+            if (command.Principal.IsInRole(RoleName.EstablishmentAdministrator))
+            {
+                establishment.CollegeBoardDesignatedIndicator = command.CeebCode;
+                establishment.UCosmicCode = command.UCosmicCode;
+            }
+            else
+            {
+                establishment.IsUnverified = true;
+            }
 
             // log audit
             var audit = new CommandEvent
