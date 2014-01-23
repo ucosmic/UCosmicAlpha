@@ -90,25 +90,52 @@
                             </div>
 
                             <!-- ALMA MATER -->
-                            <div style="margin-bottom: 8px; display: none; width: 525px;" data-bind="visible: (institutionTranslatedName())">
-                                <label for="yearAwarded" class="non-required-field">Alma Mater</label>
-                                <div style="width: 400px; display: inline-block;">
-                                    <a title="Remove this participant" data-bind="click: removeParticipant"><i class="red minus on-right" style="margin:0;"></i></a>
-                                    <div class="item" style="width: 350px;">
-                                        <div>
-                                            <strong data-bind="text: institutionTranslatedName"></strong>
-                                            <span data-bind="visible: institutionOfficialNameDoesNotMatchTranslation">(<span data-bind="    text: institutionOfficialName"></span>)</span>
+                            <table>
+                                <tr>
+                                    <td style="vertical-align: top;">
+                                        <label style="margin-top: 4px;" class="required-field">Alma Mater</label>
+                                    </td>
+                                    <td>
+                                        <div style="width: 400px; margin-left: 4px; display: inline-block;">
+                                            <div style="margin-bottom: 8px; display: none;" data-bind="visible: (institutionTranslatedName())">
+                                                <a title="Remove this participant" data-bind="click: removeParticipant"><i class="red minus on-right" style="margin:0;"></i></a>
+                                                <div class="item" style="width: 350px;">
+                                                    <div>
+                                                        <strong data-bind="text: institutionTranslatedName"></strong>
+                                                        <span data-bind="visible: institutionOfficialNameDoesNotMatchTranslation">(<span data-bind="    text: institutionOfficialName"></span>)</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <span class="validationMessage" style="display: none; margin-bottom: 8px;" data-bind="text: almaMaterErrorMsg, visible: almaMaterErrorMsg().length > 0"></span>
+                                            <div style="margin-top: 4px">
+                                                <a data-bind="click: addParticipant" class="button">
+                                                    <i class="green plus"></i>
+                                                    <span class="text" data-bind="text: almaMaterButtonText">Choose my alma mater</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                            @*<div style="margin-bottom: 8px; display: none; width: 525px;" data-bind="visible: (institutionTranslatedName())">
+                                    <label class="non-required-field">Alma Mater</label>
+                                    <div style="width: 400px; display: inline-block;">
+                                        <a title="Remove this participant" data-bind="click: removeParticipant"><i class="red minus on-right" style="margin:0;"></i></a>
+                                        <div class="item" style="width: 350px;">
+                                            <div>
+                                                <strong data-bind="text: institutionTranslatedName"></strong>
+                                                <span data-bind="visible: institutionOfficialNameDoesNotMatchTranslation">(<span data-bind="    text: institutionOfficialName"></span>)</span>
+                                            </div>
+                                        </div>
+                                        <div style="margin-top: 14px">
+                                            <a data-bind="click: addParticipant" class="button">
+                                                <i class="green plus"></i>
+                                                <span class="text" data-bind="text: almaMaterButtonText">Choose my alma mater</span>
+                                            </a>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
+                                </div>*@
 
-                            <div style="margin-top: 14px">
-                                <a data-bind="click: addParticipant" class="button">
-                                    <i class="green plus"></i>
-                                    <span class="text" data-bind="text: almaMaterButtonText">Choose my alma mater</span>
-                                </a>
-                            </div>
                         </div>
 
 
@@ -116,14 +143,14 @@
                         <div style="margin-bottom: 32px" data-bind="template: { name: 'buttons-template'}"></div>
 
                         <!-- LAST UPDATED -->
-                        <div style="width: 50%; height: 1.5em; border-top: 1px; border-style: solid">
+                        @*<div style="width: 50%; height: 1.5em; border-top: 1px; border-style: solid">
                             <span style="font-size:smaller; color:slategray">
                                 <span>Last updated</span>
                                 <label id="last-updated-date" data-bind="text: (whenLastUpdated() != null) ? moment(whenLastUpdated()).format('MM/DD/YYYY') : ''"></label>
                                 <span> by </span>
                                 <label id="last-updated-name" data-bind="text: whoLastUpdated()"></label>
                             </span>
-                        </div>
+                        </div>*@
                     </div>
                 </div>
             </div>

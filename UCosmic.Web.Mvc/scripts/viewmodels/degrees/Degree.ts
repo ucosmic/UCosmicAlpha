@@ -26,6 +26,7 @@ module ViewModels.Degrees {
         institutionTranslatedName: KnockoutObservable<string>;
         institutionOfficialNameDoesNotMatchTranslation: KnockoutObservable<boolean>;
         almaMaterButtonText: KnockoutObservable<string>;
+        almaMaterErrorMsg: KnockoutObservable<string>;
 
         errors: KnockoutValidationErrors;
         isValid: () => boolean;
@@ -97,7 +98,7 @@ module ViewModels.Degrees {
         setupValidation(): void {
             this.title.extend({ required: true, minLength: 1, maxLength: 256 });
             this.yearAwarded.extend({ min: 1900 });
-
+            this.institutionId.extend({required: true})
             ko.validation.group(this);
         }
 
@@ -105,7 +106,7 @@ module ViewModels.Degrees {
             this.title.subscribe((newValue: any): void => { this.dirtyFlag(true); });
             this.fieldOfStudy.subscribe((newValue: any): void => { this.dirtyFlag(true); });
             this.yearAwarded.subscribe((newValue: any): void => { this.dirtyFlag(true); });
-            this.institutionId.subscribe((newValue: any): void => { this.dirtyFlag(true); });
+            this.institutionId.subscribe((newValue: any): void => { this.dirtyFlag(true); this.almaMaterErrorMsg(''); });
         }
 
         constructor(educationId: number) {
@@ -115,6 +116,7 @@ module ViewModels.Degrees {
         load(): JQueryPromise<any> {
             var deferred: JQueryDeferred<void> = $.Deferred();
 
+            this.almaMaterErrorMsg = ko.observable('');
             if (this.id() == 0) {
                 this.version = ko.observable(null);
                 this.personId = ko.observable(0);
@@ -167,6 +169,9 @@ module ViewModels.Degrees {
             if (!this.isValid()) {
                 // TBD - need dialog here.
                 this.errors.showAllMessages();
+                if (!this.institutionId()) {
+                    this.almaMaterErrorMsg('You must choose your alma mater.');
+                }
                 return;
             }
 

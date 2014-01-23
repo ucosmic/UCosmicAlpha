@@ -1,4 +1,4 @@
-var ViewModels;
+﻿var ViewModels;
 (function (ViewModels) {
     (function (Degrees) {
         var Degree = (function () {
@@ -56,7 +56,7 @@ var ViewModels;
             Degree.prototype.setupValidation = function () {
                 this.title.extend({ required: true, minLength: 1, maxLength: 256 });
                 this.yearAwarded.extend({ min: 1900 });
-
+                this.institutionId.extend({ required: true });
                 ko.validation.group(this);
             };
 
@@ -73,6 +73,7 @@ var ViewModels;
                 });
                 this.institutionId.subscribe(function (newValue) {
                     _this.dirtyFlag(true);
+                    _this.almaMaterErrorMsg('');
                 });
             };
 
@@ -80,6 +81,7 @@ var ViewModels;
                 var _this = this;
                 var deferred = $.Deferred();
 
+                this.almaMaterErrorMsg = ko.observable('');
                 if (this.id() == 0) {
                     this.version = ko.observable(null);
                     this.personId = ko.observable(0);
@@ -128,6 +130,9 @@ var ViewModels;
             Degree.prototype.save = function (viewModel, event) {
                 if (!this.isValid()) {
                     this.errors.showAllMessages();
+                    if (!this.institutionId()) {
+                        this.almaMaterErrorMsg('You must choose your alma mater.');
+                    }
                     return;
                 }
 
