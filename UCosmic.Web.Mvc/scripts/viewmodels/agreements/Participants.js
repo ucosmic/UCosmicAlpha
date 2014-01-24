@@ -105,7 +105,7 @@ var Agreements;
                     create: function (options) {
                         return (new (function () {
                             this.officialNameDoesNotMatchTranslation = ko.computed(function () {
-                                return !(options.data.establishmentOfficialName === options.data.establishmentTranslatedName);
+                                return !(options.data.establishmentOfficialName === options.data.establishmentTranslatedName || !options.data.establishmentOfficialName);
                             });
 
                             ko.mapping.fromJS(options.data, {}, this);

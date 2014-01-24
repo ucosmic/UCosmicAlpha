@@ -8,8 +8,8 @@ module Agreements {
             this.establishmentOfficialName = ko.observable(establishmentOfficialName);
             this.establishmentTranslatedName = ko.observable(establishmentTranslatedName);
 
-            this.officialNameDoesNotMatchTranslation = ko.computed(function () {
-                return !(this.participants.establishmentOfficialName === this.participants.establishmentTranslatedName);
+            this.officialNameDoesNotMatchTranslation = ko.computed(() => {
+                return !(this.establishmentOfficialName === this.establishmentTranslatedName || !this.establishmentOfficialName);
             });
         }
         isOwner;

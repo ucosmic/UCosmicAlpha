@@ -2,13 +2,14 @@ var Agreements;
 (function (Agreements) {
     var InstitutionalAgreementParticipantModel = (function () {
         function InstitutionalAgreementParticipantModel(isOwner, establishmentId, establishmentOfficialName, establishmentTranslatedName) {
+            var _this = this;
             this.isOwner = ko.observable(isOwner);
             this.establishmentId = ko.observable(establishmentId);
             this.establishmentOfficialName = ko.observable(establishmentOfficialName);
             this.establishmentTranslatedName = ko.observable(establishmentTranslatedName);
 
             this.officialNameDoesNotMatchTranslation = ko.computed(function () {
-                return !(this.participants.establishmentOfficialName === this.participants.establishmentTranslatedName);
+                return !(_this.establishmentOfficialName === _this.establishmentTranslatedName || !_this.establishmentOfficialName);
             });
         }
         return InstitutionalAgreementParticipantModel;

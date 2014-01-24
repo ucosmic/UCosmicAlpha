@@ -129,7 +129,7 @@ module Agreements {
 
                                 // setup the computed binding
                                 this.officialNameDoesNotMatchTranslation = ko.computed(function () {
-                                    return !(options.data.establishmentOfficialName === options.data.establishmentTranslatedName);
+                                    return !(options.data.establishmentOfficialName === options.data.establishmentTranslatedName || !options.data.establishmentOfficialName);
                                 });
 
                                 // let the ko mapping plugin continue to map out this object, so the rest of it will be observable
