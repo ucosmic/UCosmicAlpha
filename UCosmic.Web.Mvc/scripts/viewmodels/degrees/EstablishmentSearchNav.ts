@@ -178,16 +178,35 @@ module ViewModels.Degrees {
                                                         $.post(url, data)
                                                             .done((response: any, statusText: string, xhr: JQueryXHR): void => {
                                                                 this.establishmentItemViewModel.createSpinner.stop();
-                                                                $LoadingPage.text("Institution created, you are being redirected to previous page...");
                                                                 $("#add_establishment").fadeOut(500, () => {
-                                                                    $("#Loading_page").fadeIn(500);
-                                                                    setTimeout(() => {
-                                                                        $("#Loading_page").fadeOut(500, function () {
-                                                                            $LoadingPage.text("Loading Page...");
-                                                                        });
-                                                                        this.establishmentSearchViewModel.sammy.setLocation('#/page/1/');
-                                                                    }, 5000);
                                                                 });
+                                                                var establishmentId = parseInt(xhr.getResponseHeader('Location').substring(xhr.getResponseHeader('Location').lastIndexOf("/") + 1));
+                                                                $.get(App.Routes.WebApi.Establishments.get(establishmentId))
+                                                                    .done((response: any): void => {
+                                                                        App.flasher.flash("Institution Created.");
+                                                                        this.institutionId(response.id);
+                                                                        this.institutionOfficialName(response.officialName);
+                                                                        this.institutionCountryOfficialName(response.countryName);
+                                                                        this.institutionTranslatedName(response.translatedName);
+                                                                        this.institutionOfficialNameDoesNotMatchTranslation(response.officialNameDoesNotMatchTranslation);
+                                                                        this.establishmentSearchViewModel.sammy.setLocation("my/degrees/" + this.sammyUrl + "");
+                                                                    })
+                                                                    .fail((xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
+                                                                        if (xhr.status === 400) { // validation message will be in xhr response text...
+                                                                            this.establishmentItemViewModel.$genericAlertDialog.find('p.content')
+                                                                                .html(xhr.responseText.replace('\n', '<br /><br />'));
+                                                                            this.establishmentItemViewModel.$genericAlertDialog.dialog({
+                                                                                title: 'Alert Message',
+                                                                                dialogClass: 'jquery-ui',
+                                                                                width: 'auto',
+                                                                                resizable: false,
+                                                                                modal: true,
+                                                                                buttons: {
+                                                                                    'Ok': (): void => { this.establishmentItemViewModel.$genericAlertDialog.dialog('close'); }
+                                                                                }
+                                                                            });
+                                                                        }
+                                                                    });
                                                             })
                                                             .fail((xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
                                                                 if (xhr.status === 400) { // validation message will be in xhr response text...

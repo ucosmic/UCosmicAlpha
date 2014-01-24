@@ -6,6 +6,10 @@ var Agreements;
             this.establishmentId = ko.observable(establishmentId);
             this.establishmentOfficialName = ko.observable(establishmentOfficialName);
             this.establishmentTranslatedName = ko.observable(establishmentTranslatedName);
+
+            this.officialNameDoesNotMatchTranslation = ko.computed(function () {
+                return !(this.participants.establishmentOfficialName === this.participants.establishmentTranslatedName);
+            });
         }
         return InstitutionalAgreementParticipantModel;
     })();
@@ -151,15 +155,73 @@ var Agreements;
                                                     _this.establishmentItemViewModel.createSpinner.start();
                                                     $.post(url, data).done(function (response, statusText, xhr) {
                                                         _this.establishmentItemViewModel.createSpinner.stop();
-                                                        $LoadingPage.text("Establishment created, you are being redirected to previous page...");
                                                         $("#add_establishment").fadeOut(500, function () {
-                                                            $("#Loading_page").fadeIn(500);
-                                                            setTimeout(function () {
-                                                                $("#Loading_page").fadeOut(500, function () {
-                                                                    $LoadingPage.text("Loading Page...");
+                                                        });
+                                                        var establishmentId = parseInt(xhr.getResponseHeader('Location').substring(xhr.getResponseHeader('Location').lastIndexOf("/") + 1));
+                                                        $.get(App.Routes.WebApi.Establishments.get(establishmentId)).done(function (response) {
+                                                            App.flasher.flash("Establishment Created.");
+                                                            var myParticipant = new InstitutionalAgreementParticipantModel(false, response.id, response.officialName, response.translatedName), alreadyExist = false;
+                                                            $.ajax({
+                                                                url: App.Routes.WebApi.Agreements.Participants.isOwner(myParticipant.establishmentId()),
+                                                                type: 'GET',
+                                                                async: false
+                                                            }).done(function (response) {
+                                                                myParticipant.isOwner(response);
+                                                                if (_this.agreementIsEdit()) {
+                                                                    var url = App.Routes.WebApi.Agreements.Participants.put(_this.agreementId, myParticipant.establishmentId());
+
+                                                                    $.ajax({
+                                                                        type: 'PUT',
+                                                                        url: url,
+                                                                        data: myParticipant,
+                                                                        success: function (response, statusText, xhr) {
+                                                                            _this.participants.participants.push(myParticipant);
+                                                                        },
+                                                                        error: function (xhr, statusText, errorThrown) {
+                                                                            alert(xhr.responseText);
+                                                                        }
+                                                                    });
+                                                                } else {
+                                                                    _this.participants.participants.push(myParticipant);
+                                                                }
+                                                                _this.establishmentSearchViewModel.sammy.setLocation("agreements/" + _this.editOrNewUrl.val + "");
+                                                                $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * .85)));
+                                                            }).fail(function () {
+                                                                if (_this.agreementIsEdit()) {
+                                                                    var url = App.Routes.WebApi.Agreements.Participants.put(_this.agreementId, myParticipant.establishmentId());
+
+                                                                    $.ajax({
+                                                                        type: 'PUT',
+                                                                        url: url,
+                                                                        data: myParticipant,
+                                                                        success: function (response, statusText, xhr) {
+                                                                            _this.participants.participants.push(myParticipant);
+                                                                        },
+                                                                        error: function (xhr, statusText, errorThrown) {
+                                                                            alert(xhr.responseText);
+                                                                        }
+                                                                    });
+                                                                } else {
+                                                                    _this.participants.participants.push(myParticipant);
+                                                                }
+                                                                _this.establishmentSearchViewModel.sammy.setLocation("agreements/" + _this.editOrNewUrl.val + "");
+                                                            });
+                                                        }).fail(function (xhr, statusText, errorThrown) {
+                                                            if (xhr.status === 400) {
+                                                                _this.establishmentItemViewModel.$genericAlertDialog.find('p.content').html(xhr.responseText.replace('\n', '<br /><br />'));
+                                                                _this.establishmentItemViewModel.$genericAlertDialog.dialog({
+                                                                    title: 'Alert Message',
+                                                                    dialogClass: 'jquery-ui',
+                                                                    width: 'auto',
+                                                                    resizable: false,
+                                                                    modal: true,
+                                                                    buttons: {
+                                                                        'Ok': function () {
+                                                                            _this.establishmentItemViewModel.$genericAlertDialog.dialog('close');
+                                                                        }
+                                                                    }
                                                                 });
-                                                                _this.establishmentSearchViewModel.sammy.setLocation('#/page/1/');
-                                                            }, 5000);
+                                                            }
                                                         });
                                                     }).fail(function (xhr, statusText, errorThrown) {
                                                         if (xhr.status === 400) {

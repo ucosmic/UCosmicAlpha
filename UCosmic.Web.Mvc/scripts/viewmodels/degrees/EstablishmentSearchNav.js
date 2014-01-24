@@ -143,15 +143,33 @@ var ViewModels;
                                                         _this.establishmentItemViewModel.createSpinner.start();
                                                         $.post(url, data).done(function (response, statusText, xhr) {
                                                             _this.establishmentItemViewModel.createSpinner.stop();
-                                                            $LoadingPage.text("Institution created, you are being redirected to previous page...");
                                                             $("#add_establishment").fadeOut(500, function () {
-                                                                $("#Loading_page").fadeIn(500);
-                                                                setTimeout(function () {
-                                                                    $("#Loading_page").fadeOut(500, function () {
-                                                                        $LoadingPage.text("Loading Page...");
+                                                            });
+                                                            var establishmentId = parseInt(xhr.getResponseHeader('Location').substring(xhr.getResponseHeader('Location').lastIndexOf("/") + 1));
+                                                            $.get(App.Routes.WebApi.Establishments.get(establishmentId)).done(function (response) {
+                                                                App.flasher.flash("Institution Created.");
+                                                                _this.institutionId(response.id);
+                                                                _this.institutionOfficialName(response.officialName);
+                                                                _this.institutionCountryOfficialName(response.countryName);
+                                                                _this.institutionTranslatedName(response.translatedName);
+                                                                _this.institutionOfficialNameDoesNotMatchTranslation(response.officialNameDoesNotMatchTranslation);
+                                                                _this.establishmentSearchViewModel.sammy.setLocation("my/degrees/" + _this.sammyUrl + "");
+                                                            }).fail(function (xhr, statusText, errorThrown) {
+                                                                if (xhr.status === 400) {
+                                                                    _this.establishmentItemViewModel.$genericAlertDialog.find('p.content').html(xhr.responseText.replace('\n', '<br /><br />'));
+                                                                    _this.establishmentItemViewModel.$genericAlertDialog.dialog({
+                                                                        title: 'Alert Message',
+                                                                        dialogClass: 'jquery-ui',
+                                                                        width: 'auto',
+                                                                        resizable: false,
+                                                                        modal: true,
+                                                                        buttons: {
+                                                                            'Ok': function () {
+                                                                                _this.establishmentItemViewModel.$genericAlertDialog.dialog('close');
+                                                                            }
+                                                                        }
                                                                     });
-                                                                    _this.establishmentSearchViewModel.sammy.setLocation('#/page/1/');
-                                                                }, 5000);
+                                                                }
                                                             });
                                                         }).fail(function (xhr, statusText, errorThrown) {
                                                             if (xhr.status === 400) {

@@ -101,7 +101,18 @@ var Agreements;
                     itemTotal: 0
                 }, this.participants);
             } else {
-                ko.mapping.fromJS(js, this.participants);
+                var mappingOptions = {
+                    create: function (options) {
+                        return (new (function () {
+                            this.officialNameDoesNotMatchTranslation = ko.computed(function () {
+                                return !(options.data.establishmentOfficialName === options.data.establishmentTranslatedName);
+                            });
+
+                            ko.mapping.fromJS(options.data, {}, this);
+                        })());
+                    }
+                };
+                ko.mapping.fromJS(js, mappingOptions, this.participants);
             }
         };
 

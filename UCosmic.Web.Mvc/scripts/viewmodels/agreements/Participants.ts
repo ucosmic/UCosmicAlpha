@@ -115,7 +115,29 @@ module Agreements {
                 }, this.participants);
             }
             else {
-                ko.mapping.fromJS(js, this.participants);
+                // specifies the create callback for the 'persons' property
+                var mappingOptions = {
+
+                        // overriding the default creation / initialization code
+                        create: function (options) {
+
+                            // immediately return a new instance of an inline-function.  We're doing this so the
+                            //     context ("this"), is correct when the code is actually executed.
+                            //     "this" should point to the item in what will be the observable array.
+                            //     I put a few more parens in here to make things a little more obvious
+                            return (new (function () {
+
+                                // setup the computed binding
+                                this.officialNameDoesNotMatchTranslation = ko.computed(function () {
+                                    return !(options.data.establishmentOfficialName === options.data.establishmentTranslatedName);
+                                });
+
+                                // let the ko mapping plugin continue to map out this object, so the rest of it will be observable
+                                ko.mapping.fromJS(options.data, {}, this);
+                            })(/* call the ctor here */));
+                        }
+                };
+                ko.mapping.fromJS(js, mappingOptions, this.participants);
             }
         }
 

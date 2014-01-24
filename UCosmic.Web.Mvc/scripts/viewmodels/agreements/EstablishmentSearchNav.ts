@@ -7,11 +7,16 @@ module Agreements {
             this.establishmentId = ko.observable(establishmentId);
             this.establishmentOfficialName = ko.observable(establishmentOfficialName);
             this.establishmentTranslatedName = ko.observable(establishmentTranslatedName);
+
+            this.officialNameDoesNotMatchTranslation = ko.computed(function () {
+                return !(this.participants.establishmentOfficialName === this.participants.establishmentTranslatedName);
+            });
         }
         isOwner;
         establishmentId;
         establishmentOfficialName;
         establishmentTranslatedName;
+        officialNameDoesNotMatchTranslation;
     };
 
     export class EstablishmentSearchNav {
@@ -187,16 +192,93 @@ module Agreements {
                                                         $.post(url, data)
                                                             .done((response: any, statusText: string, xhr: JQueryXHR): void => {
                                                                 this.establishmentItemViewModel.createSpinner.stop();
-                                                                $LoadingPage.text("Establishment created, you are being redirected to previous page...");
                                                                 $("#add_establishment").fadeOut(500, () => {
-                                                                    $("#Loading_page").fadeIn(500);
-                                                                    setTimeout(() => {
-                                                                        $("#Loading_page").fadeOut(500, function () {
-                                                                            $LoadingPage.text("Loading Page...");
-                                                                        });
-                                                                        this.establishmentSearchViewModel.sammy.setLocation('#/page/1/');
-                                                                    }, 5000);
                                                                 });
+                                                                var establishmentId = parseInt(xhr.getResponseHeader('Location').substring(xhr.getResponseHeader('Location').lastIndexOf("/") + 1));
+                                                                $.get(App.Routes.WebApi.Establishments.get(establishmentId))
+                                                                    .done((response: any): void => {
+                                                                        App.flasher.flash("Establishment Created.");
+                                                                        var myParticipant = new InstitutionalAgreementParticipantModel(
+                                                                            false,
+                                                                            response.id,
+                                                                            response.officialName,
+                                                                            response.translatedName
+                                                                            ),
+                                                                            alreadyExist = false;
+                                                                        $.ajax({
+                                                                            url: App.Routes.WebApi.Agreements.Participants.isOwner(myParticipant.establishmentId()),
+                                                                            type: 'GET',
+                                                                            async: false
+                                                                        })
+                                                                            .done((response) => {
+                                                                                myParticipant.isOwner(response);
+                                                                                if (this.agreementIsEdit()) {
+                                                                                    var url = App.Routes.WebApi.Agreements.Participants.put(this.agreementId, myParticipant.establishmentId());
+
+                                                                                    $.ajax({
+                                                                                        type: 'PUT',
+                                                                                        url: url,
+                                                                                        data: myParticipant,
+                                                                                        success: (response: any, statusText: string, xhr: JQueryXHR): void => {
+                                                                                            this.participants.participants.push(myParticipant);
+                                                                                        },
+                                                                                        error: (xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
+                                                                                            alert(xhr.responseText);
+                                                                                        }
+                                                                                    });
+                                                                                } else {
+                                                                                    this.participants.participants.push(myParticipant);
+                                                                                }
+                                                                                this.establishmentSearchViewModel.sammy.setLocation("agreements/" + this.editOrNewUrl.val + "");
+                                                                                $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * .85)));
+                                                                            })
+                                                                            .fail(() => {
+                                                                                if (this.agreementIsEdit()) {
+                                                                                    var url = App.Routes.WebApi.Agreements.Participants.put(this.agreementId, myParticipant.establishmentId());
+
+                                                                                    $.ajax({
+                                                                                        type: 'PUT',
+                                                                                        url: url,
+                                                                                        data: myParticipant,
+                                                                                        success: (response: any, statusText: string, xhr: JQueryXHR): void => {
+                                                                                            this.participants.participants.push(myParticipant);
+                                                                                        },
+                                                                                        error: (xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
+                                                                                            alert(xhr.responseText);
+                                                                                        }
+                                                                                    });
+                                                                                } else {
+                                                                                    this.participants.participants.push(myParticipant);
+                                                                                }
+                                                                                this.establishmentSearchViewModel.sammy.setLocation("agreements/" + this.editOrNewUrl.val + "");
+                                                                            });
+                                                                    })
+                                                                    .fail((xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
+                                                                        if (xhr.status === 400) { // validation message will be in xhr response text...
+                                                                            this.establishmentItemViewModel.$genericAlertDialog.find('p.content')
+                                                                                .html(xhr.responseText.replace('\n', '<br /><br />'));
+                                                                            this.establishmentItemViewModel.$genericAlertDialog.dialog({
+                                                                                title: 'Alert Message',
+                                                                                dialogClass: 'jquery-ui',
+                                                                                width: 'auto',
+                                                                                resizable: false,
+                                                                                modal: true,
+                                                                                buttons: {
+                                                                                    'Ok': (): void => { this.establishmentItemViewModel.$genericAlertDialog.dialog('close'); }
+                                                                                }
+                                                                            });
+                                                                        }
+                                                                    });
+                                                                //$LoadingPage.text("Establishment created, you are being redirected to previous page...");
+                                                                //$("#add_establishment").fadeOut(500, () => {
+                                                                //    $("#Loading_page").fadeIn(500);
+                                                                //    setTimeout(() => {
+                                                                //        $("#Loading_page").fadeOut(500, function () {
+                                                                //            $LoadingPage.text("Loading Page...");
+                                                                //        });
+                                                                //        this.establishmentSearchViewModel.sammy.setLocation('#/page/1/');
+                                                                //    }, 5000);
+                                                                //});
                                                             })
                                                             .fail((xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
                                                                 if (xhr.status === 400) { // validation message will be in xhr response text...

@@ -1,10 +1,20 @@
 ﻿<section class="fieldset">
     <header>
         <h2>
-            <span>Classification &amp; Identifier Codes</span>
-            <a href="#/" title="Edit classification & identifier codes" data-bind="visible: !isEditingTypeId(), click: clickToEditTypeId" style="display: none;">
-                <img src="~/images/icons/edit/pencil-a-24.png" alt="Edit classification & identifier codes" />
-            </a>
+            @if (User.IsInRole(RoleName.EstablishmentAdministrator))
+            {
+                <span>Classification &amp; Identifier Codes</span>
+                <a href="#/" title="Edit classification & identifier codes" data-bind="visible: !isEditingTypeId(), click: clickToEditTypeId" style="display: none;">
+                    <img src="~/images/icons/edit/pencil-a-24.png" alt="Edit classification & identifier codes" />
+                </a>
+            }
+            else
+            {
+                <span>Classification</span>
+                <a href="#/" title="Edit classification" data-bind="visible: !isEditingTypeId(), click: clickToEditTypeId" style="display: none;">
+                    <img src="~/images/icons/edit/pencil-a-24.png" alt="Edit classification" />
+                </a>
+            }
         </h2>
     </header>
     <div class="field-table w690-l190-v500">
