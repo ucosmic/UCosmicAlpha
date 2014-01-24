@@ -97,20 +97,12 @@
                                     </td>
                                     <td>
                                         <div style="width: 400px; margin-left: 4px; display: inline-block;">
-                                            <div style="margin-bottom: 8px; display: none;" data-bind="visible: (institutionTranslatedName())">
+                                            <div style="margin-bottom: 8px; display: none;" data-bind="visible: (institutionTranslatedName() || institutionOfficialName())">
                                                 <a title="Remove this participant" data-bind="click: removeParticipant"><i class="red minus on-right" style="margin:0;"></i></a>
                                                 <div class="item" style="width: 350px;">
                                                     <div>
                                                         <strong data-bind="text: institutionTranslatedName"></strong>
                                                         <span data-bind="visible: institutionOfficialNameDoesNotMatchTranslation">(<span data-bind="    text: institutionOfficialName"></span>)</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div style="margin-bottom: 8px; display: none;" data-bind="visible: (!institutionTranslatedName() && institutionOfficialName())">
-                                                <a title="Remove this participant" data-bind="click: removeParticipant"><i class="red minus on-right" style="margin:0;"></i></a>
-                                                <div class="item" style="width: 350px;">
-                                                    <div>
-                                                        <strong data-bind="text: institutionOfficialName"></strong>
                                                     </div>
                                                 </div>
                                             </div>
