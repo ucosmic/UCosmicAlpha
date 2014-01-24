@@ -71,8 +71,8 @@ var Agreements;
                                     return false;
                                 });
                             },
-                            error: function (xhr, statusText, errorThrown) {
-                                _this.deletingParticipant = false;
+                            error: function (xhr) {
+                                App.Failures.message(xhr, xhr.responseText, true);
                                 alert(xhr.responseText);
                             }
                         });

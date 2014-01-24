@@ -289,7 +289,7 @@ class InstitutionalAgreementEditModel {
                 this.processSettings(result);
             })
             .fail(function (xhr) {
-                alert('fail: status = ' + xhr.status + ' ' + xhr.statusText + '; message = "' + xhr.responseText + '"');
+                App.Failures.message(xhr, xhr.responseText, true);
             });
     }
 
@@ -386,71 +386,83 @@ class InstitutionalAgreementEditModel {
                             sessionStorage.setItem("agreementSaved", "yes");
                             location.href = App.Routes.Mvc.Agreements.show(this.agreementId);
                         },
-                        error: (xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
+                        //error: (xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
+                        //    this.savingAgreement = false;
+                        //    this.spinner.stop();
+                        //    if (xhr.status === 400) { // validation message will be in xhr response text...
+                        //        this.establishmentSearchNav.establishmentItemViewModel.$genericAlertDialog.find('p.content')
+                        //            .html(xhr.responseText.replace('\n', '<br /><br />'));
+                        //        this.establishmentSearchNav.establishmentItemViewModel.$genericAlertDialog.dialog({
+                        //            title: 'Alert Message',
+                        //            dialogClass: 'jquery-ui',
+                        //            width: 'auto',
+                        //            resizable: false,
+                        //            modal: true,
+                        //            buttons: {
+                        //                'Ok': (): void => { this.establishmentSearchNav.establishmentItemViewModel.$genericAlertDialog.dialog('close'); }
+                        //            }
+                        //        });
+                        //    }
+                        //},
+                        error: (xhr: JQueryXHR): void => {
                             this.savingAgreement = false;
                             this.spinner.stop();
-                            if (xhr.status === 400) { // validation message will be in xhr response text...
-                                this.establishmentSearchNav.establishmentItemViewModel.$genericAlertDialog.find('p.content')
-                                    .html(xhr.responseText.replace('\n', '<br /><br />'));
-                                this.establishmentSearchNav.establishmentItemViewModel.$genericAlertDialog.dialog({
-                                    title: 'Alert Message',
-                                    dialogClass: 'jquery-ui',
-                                    width: 'auto',
-                                    resizable: false,
-                                    modal: true,
-                                    buttons: {
-                                        'Ok': (): void => { this.establishmentSearchNav.establishmentItemViewModel.$genericAlertDialog.dialog('close'); }
-                                    }
-                                });
-                            }
-                        },
+                            App.Failures.message(xhr, xhr.responseText, true);
+                            alert(xhr.responseText);
+                        }
                     });
                 } else {
-                    $LoadingPage.text("Saving agreement...");
+                    //$LoadingPage.text("Saving agreement...");
 
-                    $("[data-current-module='agreements']").show().fadeOut(500, function () {
-                        $("#Loading_page").hide().fadeIn(500);
-                    });
+                    //$("[data-current-module='agreements']").show().fadeOut(500, function () {
+                    //    $("#Loading_page").hide().fadeIn(500);
+                    //});
                     url = App.Routes.WebApi.Agreements.post();
                     $.post(url, data)
                         .done((response: any, statusText: string, xhr: JQueryXHR): void => {
+                            this.agreementId = parseInt(xhr.getResponseHeader('Location').substring(xhr.getResponseHeader('Location').lastIndexOf("/") + 1));
                             this.savingAgreement = false;
-                            var myUrl = xhr.getResponseHeader('Location');
+                            sessionStorage.setItem("agreementSaved", "yes");
+                            location.href = App.Routes.Mvc.Agreements.show(this.agreementId);
 
-                            this.agreementId = parseInt(myUrl.substring(myUrl.lastIndexOf("/") + 1));
-                            this.fileAttachment.agreementId = this.agreementId;
-                            this.contact.agreementId = this.agreementId;
-                            this.fileAttachment.agreementPostFiles(response, statusText, xhr);
-                            this.contact.agreementPostContacts(response, statusText, xhr);
-                            //change url to edit
-                            $LoadingPage.text("Agreement Saved...");
-                            setTimeout(function () {
-                                if (xhr != undefined) {
-                                    window.location.hash = ""
-                                window.location.href = "/agreements/" + xhr.getResponseHeader('Location').substring(xhr.getResponseHeader('Location').lastIndexOf("/") + 1) + "/edit/"
-                                }
-                                else {
-                                    alert("success, but no location")
-                            }
-                            }, 5000);
+                            //this.savingAgreement = false;
+                            //var myUrl = xhr.getResponseHeader('Location');
+
+                            //this.agreementId = parseInt(myUrl.substring(myUrl.lastIndexOf("/") + 1));
+                            //this.fileAttachment.agreementId = this.agreementId;
+                            //this.contact.agreementId = this.agreementId;
+                            //this.fileAttachment.agreementPostFiles(response, statusText, xhr);
+                            //this.contact.agreementPostContacts(response, statusText, xhr);
+                            ////change url to edit
+                            //$LoadingPage.text("Agreement Saved...");
+                            //setTimeout(function () {
+                            //    if (xhr != undefined) {
+                            //        window.location.hash = ""
+                            //    window.location.href = "/agreements/" + xhr.getResponseHeader('Location').substring(xhr.getResponseHeader('Location').lastIndexOf("/") + 1) + "/edit/"
+                            //    }
+                            //    else {
+                            //        alert("success, but no location")
+                            //}
+                            //}, 5000);
                         })
                         .fail((xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
                             this.savingAgreement = false;
                             this.spinner.stop();
-                            if (xhr.status === 400) { // validation message will be in xhr response text...
-                                this.establishmentSearchNav.establishmentItemViewModel.$genericAlertDialog.find('p.content')
-                                    .html(xhr.responseText.replace('\n', '<br /><br />'));
-                                this.establishmentSearchNav.establishmentItemViewModel.$genericAlertDialog.dialog({
-                                    title: 'Alert Message',
-                                    dialogClass: 'jquery-ui',
-                                    width: 'auto',
-                                    resizable: false,
-                                    modal: true,
-                                    buttons: {
-                                        'Ok': (): void => { this.establishmentSearchNav.establishmentItemViewModel.$genericAlertDialog.dialog('close'); }
-                                    }
-                                });
-                            }
+                            //if (xhr.status === 400) { // validation message will be in xhr response text...
+                            //    this.establishmentSearchNav.establishmentItemViewModel.$genericAlertDialog.find('p.content')
+                            //        .html(xhr.responseText.replace('\n', '<br /><br />'));
+                            //    this.establishmentSearchNav.establishmentItemViewModel.$genericAlertDialog.dialog({
+                            //        title: 'Alert Message',
+                            //        dialogClass: 'jquery-ui',
+                            //        width: 'auto',
+                            //        resizable: false,
+                            //        modal: true,
+                            //        buttons: {
+                            //            'Ok': (): void => { this.establishmentSearchNav.establishmentItemViewModel.$genericAlertDialog.dialog('close'); }
+                            //        }
+                            //    });
+                            //}
+                            App.Failures.message(xhr, xhr.responseText, true);
                         });
                 }
             }

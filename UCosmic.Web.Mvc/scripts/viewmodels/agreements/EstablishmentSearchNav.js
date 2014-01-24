@@ -178,8 +178,8 @@ var Agreements;
                                                                         success: function (response, statusText, xhr) {
                                                                             _this.participants.participants.push(myParticipant);
                                                                         },
-                                                                        error: function (xhr, statusText, errorThrown) {
-                                                                            alert(xhr.responseText);
+                                                                        error: function (xhr) {
+                                                                            App.Failures.message(xhr, xhr.responseText, true);
                                                                         }
                                                                     });
                                                                 } else {
@@ -198,8 +198,8 @@ var Agreements;
                                                                         success: function (response, statusText, xhr) {
                                                                             _this.participants.participants.push(myParticipant);
                                                                         },
-                                                                        error: function (xhr, statusText, errorThrown) {
-                                                                            alert(xhr.responseText);
+                                                                        error: function (xhr) {
+                                                                            App.Failures.message(xhr, xhr.responseText, true);
                                                                         }
                                                                     });
                                                                 } else {
@@ -208,38 +208,8 @@ var Agreements;
                                                                 _this.establishmentSearchViewModel.sammy.setLocation("agreements/" + _this.editOrNewUrl.val + "");
                                                             });
                                                         }).fail(function (xhr, statusText, errorThrown) {
-                                                            if (xhr.status === 400) {
-                                                                _this.establishmentItemViewModel.$genericAlertDialog.find('p.content').html(xhr.responseText.replace('\n', '<br /><br />'));
-                                                                _this.establishmentItemViewModel.$genericAlertDialog.dialog({
-                                                                    title: 'Alert Message',
-                                                                    dialogClass: 'jquery-ui',
-                                                                    width: 'auto',
-                                                                    resizable: false,
-                                                                    modal: true,
-                                                                    buttons: {
-                                                                        'Ok': function () {
-                                                                            _this.establishmentItemViewModel.$genericAlertDialog.dialog('close');
-                                                                        }
-                                                                    }
-                                                                });
-                                                            }
+                                                            App.Failures.message(xhr, xhr.responseText, true);
                                                         });
-                                                    }).fail(function (xhr, statusText, errorThrown) {
-                                                        if (xhr.status === 400) {
-                                                            _this.establishmentItemViewModel.$genericAlertDialog.find('p.content').html(xhr.responseText.replace('\n', '<br /><br />'));
-                                                            _this.establishmentItemViewModel.$genericAlertDialog.dialog({
-                                                                title: 'Alert Message',
-                                                                dialogClass: 'jquery-ui',
-                                                                width: 'auto',
-                                                                resizable: false,
-                                                                modal: true,
-                                                                buttons: {
-                                                                    'Ok': function () {
-                                                                        _this.establishmentItemViewModel.$genericAlertDialog.dialog('close');
-                                                                    }
-                                                                }
-                                                            });
-                                                        }
                                                     });
                                                 }
                                             }
@@ -302,8 +272,8 @@ var Agreements;
                                                     success: function (response, statusText, xhr) {
                                                         _this.participants.participants.push(myParticipant);
                                                     },
-                                                    error: function (xhr, statusText, errorThrown) {
-                                                        alert(xhr.responseText);
+                                                    error: function (xhr) {
+                                                        App.Failures.message(xhr, xhr.responseText, true);
                                                     }
                                                 });
                                             } else {
@@ -322,8 +292,8 @@ var Agreements;
                                                     success: function (response, statusText, xhr) {
                                                         _this.participants.participants.push(myParticipant);
                                                     },
-                                                    error: function (xhr, statusText, errorThrown) {
-                                                        alert(xhr.responseText);
+                                                    error: function (xhr) {
+                                                        App.Failures.message(xhr, xhr.responseText, true);
                                                     }
                                                 });
                                             } else {

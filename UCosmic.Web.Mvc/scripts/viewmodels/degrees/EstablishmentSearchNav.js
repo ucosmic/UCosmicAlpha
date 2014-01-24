@@ -154,39 +154,11 @@ var ViewModels;
                                                                 _this.institutionTranslatedName(response.translatedName);
                                                                 _this.institutionOfficialNameDoesNotMatchTranslation(response.officialNameDoesNotMatchTranslation);
                                                                 _this.establishmentSearchViewModel.sammy.setLocation("my/degrees/" + _this.sammyUrl + "");
-                                                            }).fail(function (xhr, statusText, errorThrown) {
-                                                                if (xhr.status === 400) {
-                                                                    _this.establishmentItemViewModel.$genericAlertDialog.find('p.content').html(xhr.responseText.replace('\n', '<br /><br />'));
-                                                                    _this.establishmentItemViewModel.$genericAlertDialog.dialog({
-                                                                        title: 'Alert Message',
-                                                                        dialogClass: 'jquery-ui',
-                                                                        width: 'auto',
-                                                                        resizable: false,
-                                                                        modal: true,
-                                                                        buttons: {
-                                                                            'Ok': function () {
-                                                                                _this.establishmentItemViewModel.$genericAlertDialog.dialog('close');
-                                                                            }
-                                                                        }
-                                                                    });
-                                                                }
+                                                            }).fail(function (xhr) {
+                                                                App.Failures.message(xhr, xhr.responseText, true);
                                                             });
-                                                        }).fail(function (xhr, statusText, errorThrown) {
-                                                            if (xhr.status === 400) {
-                                                                _this.establishmentItemViewModel.$genericAlertDialog.find('p.content').html(xhr.responseText.replace('\n', '<br /><br />'));
-                                                                _this.establishmentItemViewModel.$genericAlertDialog.dialog({
-                                                                    title: 'Alert Message',
-                                                                    dialogClass: 'jquery-ui',
-                                                                    width: 'auto',
-                                                                    resizable: false,
-                                                                    modal: true,
-                                                                    buttons: {
-                                                                        'Ok': function () {
-                                                                            _this.establishmentItemViewModel.$genericAlertDialog.dialog('close');
-                                                                        }
-                                                                    }
-                                                                });
-                                                            }
+                                                        }).fail(function (xhr) {
+                                                            App.Failures.message(xhr, xhr.responseText, true);
                                                         });
                                                     }
                                                 }

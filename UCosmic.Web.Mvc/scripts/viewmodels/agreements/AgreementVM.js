@@ -254,7 +254,7 @@ var InstitutionalAgreementEditModel = (function () {
         }).done(function (result) {
             _this.processSettings(result);
         }).fail(function (xhr) {
-            alert('fail: status = ' + xhr.status + ' ' + xhr.statusText + '; message = "' + xhr.responseText + '"');
+            App.Failures.message(xhr, xhr.responseText, true);
         });
     };
 
@@ -345,70 +345,25 @@ var InstitutionalAgreementEditModel = (function () {
                             sessionStorage.setItem("agreementSaved", "yes");
                             location.href = App.Routes.Mvc.Agreements.show(_this.agreementId);
                         },
-                        error: function (xhr, statusText, errorThrown) {
+                        error: function (xhr) {
                             _this.savingAgreement = false;
                             _this.spinner.stop();
-                            if (xhr.status === 400) {
-                                _this.establishmentSearchNav.establishmentItemViewModel.$genericAlertDialog.find('p.content').html(xhr.responseText.replace('\n', '<br /><br />'));
-                                _this.establishmentSearchNav.establishmentItemViewModel.$genericAlertDialog.dialog({
-                                    title: 'Alert Message',
-                                    dialogClass: 'jquery-ui',
-                                    width: 'auto',
-                                    resizable: false,
-                                    modal: true,
-                                    buttons: {
-                                        'Ok': function () {
-                                            _this.establishmentSearchNav.establishmentItemViewModel.$genericAlertDialog.dialog('close');
-                                        }
-                                    }
-                                });
-                            }
+                            App.Failures.message(xhr, xhr.responseText, true);
+                            alert(xhr.responseText);
                         }
                     });
                 } else {
-                    $LoadingPage.text("Saving agreement...");
-
-                    $("[data-current-module='agreements']").show().fadeOut(500, function () {
-                        $("#Loading_page").hide().fadeIn(500);
-                    });
                     url = App.Routes.WebApi.Agreements.post();
                     $.post(url, data).done(function (response, statusText, xhr) {
+                        _this.agreementId = parseInt(xhr.getResponseHeader('Location').substring(xhr.getResponseHeader('Location').lastIndexOf("/") + 1));
                         _this.savingAgreement = false;
-                        var myUrl = xhr.getResponseHeader('Location');
-
-                        _this.agreementId = parseInt(myUrl.substring(myUrl.lastIndexOf("/") + 1));
-                        _this.fileAttachment.agreementId = _this.agreementId;
-                        _this.contact.agreementId = _this.agreementId;
-                        _this.fileAttachment.agreementPostFiles(response, statusText, xhr);
-                        _this.contact.agreementPostContacts(response, statusText, xhr);
-
-                        $LoadingPage.text("Agreement Saved...");
-                        setTimeout(function () {
-                            if (xhr != undefined) {
-                                window.location.hash = "";
-                                window.location.href = "/agreements/" + xhr.getResponseHeader('Location').substring(xhr.getResponseHeader('Location').lastIndexOf("/") + 1) + "/edit/";
-                            } else {
-                                alert("success, but no location");
-                            }
-                        }, 5000);
+                        sessionStorage.setItem("agreementSaved", "yes");
+                        location.href = App.Routes.Mvc.Agreements.show(_this.agreementId);
                     }).fail(function (xhr, statusText, errorThrown) {
                         _this.savingAgreement = false;
                         _this.spinner.stop();
-                        if (xhr.status === 400) {
-                            _this.establishmentSearchNav.establishmentItemViewModel.$genericAlertDialog.find('p.content').html(xhr.responseText.replace('\n', '<br /><br />'));
-                            _this.establishmentSearchNav.establishmentItemViewModel.$genericAlertDialog.dialog({
-                                title: 'Alert Message',
-                                dialogClass: 'jquery-ui',
-                                width: 'auto',
-                                resizable: false,
-                                modal: true,
-                                buttons: {
-                                    'Ok': function () {
-                                        _this.establishmentSearchNav.establishmentItemViewModel.$genericAlertDialog.dialog('close');
-                                    }
-                                }
-                            });
-                        }
+
+                        App.Failures.message(xhr, xhr.responseText, true);
                     });
                 }
             }
