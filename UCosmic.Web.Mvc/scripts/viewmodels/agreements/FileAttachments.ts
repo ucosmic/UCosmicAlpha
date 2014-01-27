@@ -192,8 +192,8 @@ module Agreements {
                 var data = ko.mapping.toJS({
                     agreementId: me.agreementId,
                     uploadGuid: me.guid,
-                    originalName: me.guid,
-                    extension: me.extension,
+                    originalName: me.originalName,
+                    extension: me.customNameExt,
                     customName: me.customName,
                     visibility: me.visibility
                 }),
@@ -241,10 +241,10 @@ module Agreements {
             //add e.target.textContent for double click firing.
             if (this.agreementIsEdit() && e.target.textContent == "") {
                 var data = ko.mapping.toJS({
-                    agreementId: this.agreementId,
+                    agreementId: me.agreementId,
                     uploadGuid: me.guid,
-                    originalName: me.guid,
-                    extension: me.extension,
+                    originalName: me.originalName,
+                    extension: me.customNameExt,
                     customName: me.customName,
                     visibility: me.visibility
                 }),

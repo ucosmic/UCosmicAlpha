@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using UCosmic.Domain.Audit;
 using UCosmic.Domain.Files;
 using UCosmic.Domain.Identity;
+using UCosmic.Domain.Agreements.Commands;
 
 namespace UCosmic.Domain.Agreements
 {
@@ -89,6 +90,12 @@ namespace UCosmic.Domain.Agreements
 
             var entity = _entities.Get<AgreementFile>().Single(x => x.Id == command.FileId);
 
+            // TODO: This will have to be removed when visibility for agreement files is patched.
+            if (string.IsNullOrWhiteSpace(entity.VisibilityText))
+            {
+                entity.Visibility = AgreementVisibility.Private;
+            }
+
             // log audit
             var audit = new CommandEvent
             {
@@ -99,7 +106,7 @@ namespace UCosmic.Domain.Agreements
                     command.AgreementId,
                     command.FileId,
                     command.CustomName,
-                    command.Visibility,
+                    Visibility = command.Visibility.AsEnum<AgreementVisibility>(),
                 }),
                 PreviousState = entity.ToJsonAudit(),
             };

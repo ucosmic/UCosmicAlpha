@@ -37,7 +37,10 @@ namespace UCosmic.Domain.Agreements
         public AgreementVisibility Visibility
         {
             get { return VisibilityText.AsEnum<AgreementVisibility>(); }
-            protected internal set { VisibilityText = value.AsSentenceFragment(); }
+            protected internal set
+            {
+                VisibilityText = value.AsSentenceFragment();
+            }
         }
 
         public DateTime CreatedOnUtc { get; protected set; }

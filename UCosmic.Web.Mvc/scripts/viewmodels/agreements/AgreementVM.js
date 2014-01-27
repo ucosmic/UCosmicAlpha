@@ -349,7 +349,6 @@ var InstitutionalAgreementEditModel = (function () {
                             _this.savingAgreement = false;
                             _this.spinner.stop();
                             App.Failures.message(xhr, xhr.responseText, true);
-                            alert(xhr.responseText);
                         }
                     });
                 } else {

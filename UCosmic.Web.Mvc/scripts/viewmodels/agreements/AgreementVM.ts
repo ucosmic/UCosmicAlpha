@@ -408,7 +408,7 @@ class InstitutionalAgreementEditModel {
                             this.savingAgreement = false;
                             this.spinner.stop();
                             App.Failures.message(xhr, xhr.responseText, true);
-                            alert(xhr.responseText);
+                            //alert(xhr.responseText);
                         }
                     });
                 } else {
