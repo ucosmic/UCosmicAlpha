@@ -44,10 +44,23 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [GET(PluralUrl)]
         public PageOfActivityApiModel Get([FromUri] MyActivitiesInputModel input)
         {
-            if (input.PageSize < 1 || input.PageNumber < 1)
+            if (input == null)
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
 
-            var query = new MyActivities(User);
+            if (input.PageNumber < 1) input.PageNumber = 1;
+            if (input.PageSize < 1) input.PageSize = 10;
+
+            var query = new MyActivityValues(User)
+            {
+                EagerLoad = new Expression<Func<ActivityValues, object>>[]
+                {
+                    x => x.Activity,
+                    x => x.Documents,
+                    x => x.Locations.Select(y => y.Place),
+                    x => x.Tags,
+                    x => x.Types.Select(y => y.Type),
+                }
+            };
             Mapper.Map(input, query);
             var page = _queryProcessor.Execute(query);
             var model = Mapper.Map<PageOfActivityApiModel>(page);
