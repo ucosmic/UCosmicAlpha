@@ -283,6 +283,61 @@ INCLUDE ( [RevisionId],
 INCLUDE ( [Separation])");
 
             #endregion
+            #region Activity indices & stats
+
+            context.Database.ExecuteSqlCommand(
+@"CREATE NONCLUSTERED INDEX [IX_ActivityValuesId_WithIncludes] ON [ActivitiesV2].[ActivityLocation]
+(
+	[ActivityValuesId] ASC
+)
+INCLUDE ( 	[RevisionId],
+	[PlaceId],
+	[EntityId],
+	[CreatedOnUtc],
+	[CreatedByPrincipal],
+	[UpdatedOnUtc],
+	[UpdatedByPrincipal],
+	[Version],
+	[IsCurrent],
+	[IsArchived],
+	[IsDeleted])");
+
+            context.Database.ExecuteSqlCommand(
+@"CREATE STATISTICS [ST_ActivityValuesId_RevisionId_PlaceId] ON [ActivitiesV2].[ActivityLocation]([ActivityValuesId], [RevisionId], [PlaceId])");
+
+            context.Database.ExecuteSqlCommand(
+@"CREATE STATISTICS [ST_PlaceId_RevisionId] ON [ActivitiesV2].[ActivityLocation]([PlaceId], [RevisionId])");
+
+            context.Database.ExecuteSqlCommand(
+@"CREATE NONCLUSTERED INDEX [IX_ActivityValuesId_WithIncludes] ON [ActivitiesV2].[ActivityType]
+(
+	[ActivityValuesId] ASC
+)
+INCLUDE ( 	[RevisionId],
+	[TypeId],
+	[EntityId],
+	[CreatedOnUtc],
+	[CreatedByPrincipal],
+	[UpdatedOnUtc],
+	[UpdatedByPrincipal],
+	[Version],
+	[IsCurrent],
+	[IsArchived],
+	[IsDeleted])");
+
+            context.Database.ExecuteSqlCommand(
+@"CREATE STATISTICS [ST_RevisionId_TypeId] ON [ActivitiesV2].[ActivityType]([ActivityValuesId], [RevisionId], [TypeId])");
+
+            context.Database.ExecuteSqlCommand(
+@"CREATE STATISTICS [ST_TypeId_RevisionId] ON [ActivitiesV2].[ActivityType]([TypeId], [RevisionId])");
+
+            context.Database.ExecuteSqlCommand(
+@"CREATE STATISTICS [ST_RevisionId_OnGoing] ON [ActivitiesV2].[ActivityValues]([RevisionId], [OnGoing])");
+
+            context.Database.ExecuteSqlCommand(
+@"CREATE STATISTICS [ST_OnGoing] ON [ActivitiesV2].[ActivityValues]([OnGoing])");
+
+            #endregion
 
             context.SaveChanges();
         }
