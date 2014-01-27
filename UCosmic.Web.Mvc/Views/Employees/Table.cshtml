@@ -102,20 +102,20 @@
             @* PAGER STATUS *@
             @if (Model != null && Model.Output.Items.Any())
             {
-            <div style="height: 24px; margin: 1em 0;">
-                <strong>
-                    Showing <span>@Model.Output.FirstNumber</span>
-                    @if (@Model.Output.PageCount > 0)
+                <div style="height: 24px; margin: 1em 0;">
+                    <strong>
+                        Showing <span>@Model.Output.FirstNumber</span>
+                        @if (@Model.Output.PageCount > 0)
                         {
-                        <span>- <span>@Model.Output.LastNumber</span></span>
+                            <span>- <span>@Model.Output.LastNumber</span></span>
                         }
-                    of <span>@Model.Output.ItemTotal</span>
-                </strong>
-                @if (Model != null && Model.Output != null && Model.Output.PageCount > 0)
+                        of <span>@Model.Output.ItemTotal</span>
+                    </strong>
+                    @if (Model != null && Model.Output != null && Model.Output.PageCount > 0)
                     {
-                    <span>
-                        (page
-                        @Html.DropDownListFor(x => x.Output.PageNumber, Enumerable.Range(1, Model.Output.PageCount)
+                        <span>
+                            (page
+                            @Html.DropDownListFor(x => x.Output.PageNumber, Enumerable.Range(1, Model.Output.PageCount)
                                 .Select(x => new SelectListItem
                                 {
                                     Text = x.ToString(CultureInfo.InvariantCulture),
@@ -127,78 +127,78 @@
                                     data_bind = "value: pager.input.pageNumberText",
                                     style = "padding: 0; margin: 0; line-height: 16px; height: auto;",
                                 })
-                        of <span>@Model.Output.PageCount</span>)
-                    </span>
+                            of <span>@Model.Output.PageCount</span>)
+                        </span>
                     }
-                <span style="margin-left: 12px; display: none;" data-bind="visible: loadingSpinner.isVisible">
-                    <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
-                    Loading...
-                </span>
-            </div>
+                    <span style="margin-left: 12px; display: none;" data-bind="visible: loadingSpinner.isVisible">
+                        <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
+                        Loading...
+                    </span>
+                </div>
             }
 
             @* ZERO RESULTS MESSAGE *@
             @if (Model.Output == null || Model.Output.Items == null || !Model.Output.Items.Any())
             {
-            <p>
-                There are no results that match your search terms.
-            </p>
+                <p>
+                    There are no results that match your search terms.
+                </p>
             }
             else
             {
                 var activitiesDisplay = Model.Input.Pivot != ActivitySearchPivot.People ? "table" : "none";
                 var peopleDisplay = Model.Input.Pivot == ActivitySearchPivot.People ? "table" : "none";
 
-            @* ACTIVITY RESULTS TABLE *@
-            <table class="data" style="display: @activitiesDisplay;" data-bind="visible: isActivitiesChecked">
-                <colgroup>
-                    <col style="vertical-align: top;" />
-                    <col style="vertical-align: top;" />
-                    <col style="vertical-align: top;" />
-                    <col style="vertical-align: top;" />
-                </colgroup>
-                <thead>
-                    <tr>
-                        <th>Location(s)</th>
-                        <th>Activity Title</th>
-                        <th>Type(s)</th>
-                        <th>Date</th>
-                    </tr>
-                </thead>
-                <tbody class="searchResults">
-                    @foreach (var activity in Model.Output.Items)
-                        {
+                @* ACTIVITY RESULTS TABLE *@
+                <table class="data" style="display: @activitiesDisplay;" data-bind="visible: isActivitiesChecked">
+                    <colgroup>
+                        <col style="vertical-align: top;" />
+                        <col style="vertical-align: top;" />
+                        <col style="vertical-align: top;" />
+                        <col style="vertical-align: top;" />
+                    </colgroup>
+                    <thead>
                         <tr>
-                            @* LOCATIONS COLUMN *@
-                            <td class="locations-column">
-                                <ul style="display: inline-block;">
-                                    @foreach (var place in activity.Places)
+                            <th>Location(s)</th>
+                            <th>Activity Title</th>
+                            <th>Type(s)</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody class="searchResults">
+                        @foreach (var activity in Model.Output.Items)
+                        {
+                            <tr>
+                                @* LOCATIONS COLUMN *@
+                                <td class="locations-column">
+                                    <ul style="display: inline-block;">
+                                        @foreach (var place in activity.Places)
                                         {
-                                        <li class="comma-list"><span>@place.PlaceName</span></li>
+                                            <li class="comma-list"><span>@place.PlaceName</span></li>
                                         }
-                                </ul>
-                            </td>
+                                    </ul>
+                                </td>
 
-                            @* TITLE COLUMN *@
-                            <td style="vertical-align: top;">
-                                <a href="@Url.Action(MVC.Activities.Details(activity.ActivityId))">
-                                    @activity.Title
-                                </a>
-                                - @activity.Owner.DisplayName
-                            </td>
+                                @* TITLE COLUMN *@
+                                <td style="vertical-align: top;">
+                                    <a href="@Url.Action(MVC.Activities.Details(activity.ActivityId))">
+                                        @activity.Title
+                                    </a>
+                                    - @activity.Owner.DisplayName
+                                </td>
 
-                            @* TYPE ICONS COLUMN *@
-                            <td style="vertical-align: top;">
-                                <table style="border: none;" class="no-data">
-                                    <tr>
-                                        @for (var i = 0; i < activity.Types.Length; i++)
+                                @* TYPE ICONS COLUMN *@
+                                <td style="vertical-align: top;">
+                                    <table style="border: none;" class="no-data">
+                                        <tr>
+                                            @for (var i = 0; i < activity.Types.Length; i++)
                                             {
-                                            <td style="border: none; margin: 2px; padding: 2px;">
-                                                <span style="display: inline-block; width: 32px; text-align: center;">
-                                                    <img title="@activity.Types[i].Text" height="24"
-                                                         src="@Url.HttpRouteUrl(null, new {controller = "EmployeeModuleSettings", action = "GetIcon", typeId = activity.Types[i].TypeId})" alt="" />
-                                                </span>
-                                            </td>
+                                                <td style="border: none; margin: 2px; padding: 2px;">
+                                                    <span style="display: inline-block; width: 32px; text-align: center;">
+                                                        <img title="@activity.Types[i].Text" height="24"
+                                                             src="@Url.HttpRouteUrl(null, new {controller = "EmployeeModuleSettings", action = "GetIcon", typeId = activity.Types[i].TypeId})" alt="" />
+                                                    </span>
+                                                </td>
                                                 //How many columns per row
                                                 if ((i + 1) % 2 == 0)
                                                 {
@@ -206,83 +206,83 @@
                                                     Html.Raw("<tr>");
                                                 }
                                             }
-                                    </tr>
-                                </table>
-                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
 
-                            @* DATES COLUMN *@
-                            <td style="vertical-align: top;">
-                                @{Html.RenderPartial(MVC.Employees.Views._ActivityDatesDisplay, activity);}
-                            </td>
-                        </tr>
+                                @* DATES COLUMN *@
+                                <td style="vertical-align: top;">
+                                    @{Html.RenderPartial(MVC.Employees.Views._ActivityDatesDisplay, activity);}
+                                </td>
+                            </tr>
                         }
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
 
-            @* PEOPLE RESULTS TABLE *@
-            <table class="data" style="display: @peopleDisplay;" data-bind="visible: isPeopleChecked">
-                <colgroup>
-                    <col style="vertical-align: top;" />
-                    <col style="vertical-align: top;" />
-                    <col style="vertical-align: top;" />
-                    <col style="vertical-align: top;" />
-                </colgroup>
-                <thead>
-                    <tr>
-                        <th>Who</th>
-                        <th>What</th>
-                        <th>Where</th>
-                        <th>When</th>
-                    </tr>
-                </thead>
-                <tbody class="searchResults">
-                    @foreach (var activity in Model.Output.Items)
-                        {
+                @* PEOPLE RESULTS TABLE *@
+                <table class="data" style="display: @peopleDisplay;" data-bind="visible: isPeopleChecked">
+                    <colgroup>
+                        <col style="vertical-align: top;" />
+                        <col style="vertical-align: top;" />
+                        <col style="vertical-align: top;" />
+                        <col style="vertical-align: top;" />
+                    </colgroup>
+                    <thead>
                         <tr>
-                            @* PERSON COLUMN *@
-                            <td class="person-column">
-                                <a href="@Url.Action(MVC.People.Activities(activity.Owner.PersonId, null))">
-                                    @activity.Owner.LastCommaFirst
-                                </a>
-                            </td>
-
-                            @* TITLE COLUMN *@
-                            <td style="vertical-align: top;">
-                                <a href="@Url.Action(MVC.Activities.Details(activity.ActivityId))">
-                                    @activity.Title
-                                </a>
-                                @if (activity.Types.Any())
-                                    {
-                                    <ul style="display: inline;">
-                                        @foreach (var type in activity.Types)
-                                            {
-                                            <li style="display: inline;">
-                                                <img style="vertical-align: top; margin-left: 4px; margin-top: 2px; max-width: 16px;" title="@type.Text" height="16"
-                                                     src="@Url.HttpRouteUrl(null, new {controller = "EmployeeModuleSettings", action = "GetIcon", typeId = type.TypeId})" alt="(@type.Text)" />
-                                            </li>
-                                            }
-                                    </ul>
-                                    }
-                            </td>
-
-                            @* LOCATIONS COLUMN *@
-                            <td class="locations-column">
-                                <ul style="display: inline-block;">
-                                    @foreach (var place in activity.Places)
-                                        {
-                                        <li class="comma-list"><span>@place.PlaceName</span></li>
-                                        }
-                                </ul>
-                            </td>
-
-                            @* DATES COLUMN*@
-                            <td style="vertical-align: top;">
-                                @{Html.RenderPartial(MVC.Employees.Views._ActivityDatesDisplay, activity);}
-                            </td>
+                            <th>Who</th>
+                            <th>What</th>
+                            <th>Where</th>
+                            <th>When</th>
                         </tr>
+                    </thead>
+                    <tbody class="searchResults">
+                        @foreach (var activity in Model.Output.Items)
+                        {
+                            <tr>
+                                @* PERSON COLUMN *@
+                                <td class="person-column">
+                                    <a href="@Url.Action(MVC.People.Activities(activity.Owner.PersonId, null))">
+                                        @activity.Owner.LastCommaFirst
+                                    </a>
+                                </td>
+
+                                @* TITLE COLUMN *@
+                                <td style="vertical-align: top;">
+                                    <a href="@Url.Action(MVC.Activities.Details(activity.ActivityId))">
+                                        @activity.Title
+                                    </a>
+                                    @if (activity.Types.Any())
+                                    {
+                                        <ul style="display: inline;">
+                                            @foreach (var type in activity.Types)
+                                            {
+                                                <li style="display: inline;">
+                                                    <img style="vertical-align: top; margin-left: 4px; margin-top: 2px; max-width: 16px;" title="@type.Text" height="16"
+                                                         src="@Url.HttpRouteUrl(null, new {controller = "EmployeeModuleSettings", action = "GetIcon", typeId = type.TypeId})" alt="(@type.Text)" />
+                                                </li>
+                                            }
+                                        </ul>
+                                    }
+                                </td>
+
+                                @* LOCATIONS COLUMN *@
+                                <td class="locations-column">
+                                    <ul style="display: inline-block;">
+                                        @foreach (var place in activity.Places)
+                                        {
+                                            <li class="comma-list"><span>@place.PlaceName</span></li>
+                                        }
+                                    </ul>
+                                </td>
+
+                                @* DATES COLUMN*@
+                                <td style="vertical-align: top;">
+                                    @{Html.RenderPartial(MVC.Employees.Views._ActivityDatesDisplay, activity);}
+                                </td>
+                            </tr>
                         }
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
             }
         </div>
         <aside class="on-right from-top" data-fixed-scroll="root">
