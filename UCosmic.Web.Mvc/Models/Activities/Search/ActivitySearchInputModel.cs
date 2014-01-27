@@ -116,6 +116,10 @@ namespace UCosmic.Web.Mvc.Models
                                     // so far all date sorting has been by year: use this to also sort by month & day descending
                                     orderBy.Add(x => x.EndsOn ?? x.StartsOn, direction);
 
+                                    // activities that have both start & end have already been sorted by end date
+                                    // within these, also need to sorty by start date
+                                    orderBy.Add(x => x.StartsOn.HasValue && x.EndsOn.HasValue ? x.StartsOn : (DateTime?)null, direction);
+
                                     // finally, sort by title alphabetically
                                     orderBy.Add(x => x.Title, OrderByDirection.Ascending);
                                     break;
