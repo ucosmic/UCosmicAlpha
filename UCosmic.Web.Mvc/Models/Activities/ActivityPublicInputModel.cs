@@ -71,31 +71,32 @@ namespace UCosmic.Web.Mvc.Models
                                         .OrderBy(y => y).FirstOrDefault(), direction);
                                     break;
                                 case "recency":
-                                    // note that "desc" here means most recent will come at the top (they have the most recency, descending to less recent activities)
-                                    // this puts all ongoings at the top when most recent, at bottom when least recent
-                                    orderBy.Add(x => x.OnGoing, direction);
-
-                                    // sort by year descending. Year comes from end date first, or start date if end date is null, or int.MinValue if start date is null
-                                    // this will group the list by year descending, essentially creating 1 sort group for each coalesced year
-                                    orderBy.Add(x => x.EndsOn.HasValue
-                                        ? x.EndsOn.Value.Year
-                                        : x.StartsOn.HasValue
-                                            ? x.StartsOn.Value.Year
-                                            : int.MinValue, direction);
-
-                                    // activities that have both a start date & end date in same year come at the top (true above false)
-                                    orderBy.Add(x => x.StartsOn.HasValue && x.EndsOn.HasValue && x.StartsOn.Value.Year == x.EndsOn.Value.Year, direction);
-
-                                    // activities that have both start & end come at bottom (true below false) because they will not be in same year
-                                    // after the sort expression above puts ones in same year at the top
-                                    orderBy.Add(x => x.EndsOn.HasValue && x.StartsOn.HasValue, otherDirection);
-
-                                    // so far all date sorting has been by year: use this to also sort by month & day descending
-                                    orderBy.Add(x => x.EndsOn ?? x.StartsOn, direction);
-
-                                    // finally, sort by title alphabetically
-                                    orderBy.Add(x => x.Title, OrderByDirection.Ascending);
+                                    orderBy.Recency(direction);
                                     break;
+                                    //// note that "desc" here means most recent will come at the top (they have the most recency, descending to less recent activities)
+                                    //// this puts all ongoings at the top when most recent, at bottom when least recent
+                                    //orderBy.Add(x => x.OnGoing, direction);
+
+                                    //// sort by year descending. Year comes from end date first, or start date if end date is null, or int.MinValue if start date is null
+                                    //// this will group the list by year descending, essentially creating 1 sort group for each coalesced year
+                                    //orderBy.Add(x => x.EndsOn.HasValue
+                                    //    ? x.EndsOn.Value.Year
+                                    //    : x.StartsOn.HasValue
+                                    //        ? x.StartsOn.Value.Year
+                                    //        : int.MinValue, direction);
+
+                                    //// activities that have both a start date & end date in same year come at the top (true above false)
+                                    //orderBy.Add(x => x.StartsOn.HasValue && x.EndsOn.HasValue && x.StartsOn.Value.Year == x.EndsOn.Value.Year, direction);
+
+                                    //// activities that have both start & end come at bottom (true below false) because they will not be in same year
+                                    //// after the sort expression above puts ones in same year at the top
+                                    //orderBy.Add(x => x.EndsOn.HasValue && x.StartsOn.HasValue, otherDirection);
+
+                                    //// so far all date sorting has been by year: use this to also sort by month & day descending
+                                    //orderBy.Add(x => x.EndsOn ?? x.StartsOn, direction);
+
+                                    //// finally, sort by title alphabetically
+                                    //orderBy.Add(x => x.Title, OrderByDirection.Ascending);
                             }
                         }
 

@@ -90,6 +90,7 @@
     <Compile Include="Api\Lucene\IIndexDocuments.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityValuesByTerms.cs" />
     <Compile Include="Domain\Activities\Queries\MyActivityValues.cs" />
+    <Compile Include="Domain\Activities\_Internal\SortActivityValues.cs" />
     <Compile Include="Domain\Degrees\Queries\DegreesPageByTerms.cs" />
     <Compile Include="Domain\Places\Documents\PlaceDocument.cs" />
     <Compile Include="Domain\Places\Documents\PlaceDocumentIndexer.cs" />
