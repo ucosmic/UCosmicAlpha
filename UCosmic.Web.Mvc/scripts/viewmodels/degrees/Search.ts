@@ -3,14 +3,14 @@ module Degrees.ViewModels {
     export interface SearchSettings {
         input: ApiModels.SearchInput;
         output: App.PageOf<ApiModels.SearchResult>;
-        //countryOptions: App.ApiModels.SelectOption<string>[];
+        countryOptions: App.ApiModels.SelectOption<string>[];
     }
 
     export class Search {
         //#region Construction
 
-        //countryOptions = ko.observableArray(this.settings.countryOptions);
-        //countryCode = ko.observable(this.settings.input.countryCode);
+        countryOptions = ko.observableArray(this.settings.countryOptions);
+        countryCode = ko.observable(this.settings.input.countryCode);
         orderBy = ko.observable(this.settings.input.orderBy);
         keyword = ko.observable(this.settings.input.keyword);
         pager = new App.Pager<ApiModels.SearchResult>(this.settings.input.pageNumber.toString(), this.settings.input.pageSize.toString());
@@ -34,7 +34,7 @@ module Degrees.ViewModels {
         private _applySubscriptions(): void {
             this.pager.input.pageSizeText.subscribe((newValue: string): void => { this._submitForm(); });
             this.pager.input.pageNumberText.subscribe((newValue: string): void => { this._submitForm(); });
-            //this.countryCode.subscribe((newValue: string): void => { this._submitForm(); });
+            this.countryCode.subscribe((newValue: string): void => { this._submitForm(); });
             this.orderBy.subscribe((newValue: string): void => { this._submitForm(); });
         }
 

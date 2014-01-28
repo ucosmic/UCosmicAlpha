@@ -50,6 +50,7 @@ declare module Degrees.ApiModels {
     export interface SearchInput extends App.ApiModels.SearchInput {
         keyword?: string;
         orderBy?: string;
+        countryCode?: string;
     }
 
     export interface SearchResult {

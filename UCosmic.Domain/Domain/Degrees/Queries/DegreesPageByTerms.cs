@@ -18,6 +18,7 @@ namespace UCosmic.Domain.Degrees
 
         public int PageSize { get; set; }
         public int PageNumber { get; set; }
+        public string CountryCode { get; set; }
         public string Keyword { get; set; }
     }
 
@@ -47,6 +48,12 @@ namespace UCosmic.Domain.Degrees
             {
                 var establishment = _queries.Execute(new EstablishmentByDomain(query.EstablishmentDomain));
                 queryable = queryable.Where(x => x.Person.Affiliations.Any(y => y.IsDefault && y.EstablishmentId == establishment.RevisionId));
+            }
+
+            if (!string.IsNullOrWhiteSpace(query.CountryCode))
+            {
+                queryable = queryable.Where(x => x.Institution != null && x.Institution.Location.Places.Any(
+                    y => y.GeoPlanetPlace != null && y.GeoPlanetPlace.Country.Code == query.CountryCode));
             }
 
             if (!string.IsNullOrWhiteSpace(query.Keyword))

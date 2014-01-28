@@ -4,6 +4,8 @@ var Degrees;
         var Search = (function () {
             function Search(settings) {
                 this.settings = settings;
+                this.countryOptions = ko.observableArray(this.settings.countryOptions);
+                this.countryCode = ko.observable(this.settings.input.countryCode);
                 this.orderBy = ko.observable(this.settings.input.orderBy);
                 this.keyword = ko.observable(this.settings.input.keyword);
                 this.pager = new App.Pager(this.settings.input.pageNumber.toString(), this.settings.input.pageSize.toString());
@@ -24,7 +26,9 @@ var Degrees;
                 this.pager.input.pageNumberText.subscribe(function (newValue) {
                     _this._submitForm();
                 });
-
+                this.countryCode.subscribe(function (newValue) {
+                    _this._submitForm();
+                });
                 this.orderBy.subscribe(function (newValue) {
                     _this._submitForm();
                 });

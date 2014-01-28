@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Net.Http;
 using System.Web.Mvc;
 using AttributeRouting.Web.Mvc;
 using AutoMapper;
@@ -69,19 +72,6 @@ namespace UCosmic.Web.Mvc.Controllers
             if (settings != null && settings.ActivityTypes.Any())
                 model.ActivityTypes = Mapper.Map<ActivityTypeModel[]>(settings.ActivityTypes.OrderBy(x => x.Rank));
 
-            //using (var http = new HttpClient())
-            //{
-            //    Debug.Assert(Request.Url != null);
-            //    var url = Url.RouteUrl(null, new { controller = "Countries", httproute = "", }, Request.Url.Scheme);
-            //    var countries = http.GetAsync(url).Result.Content.ReadAsAsync<IEnumerable<CountryApiModel>>().Result;
-            //    model.CountryOptions = countries.Select(x => new SelectListItem
-            //    {
-            //        Text = x.Name,
-            //        Value = x.Code,
-            //        Selected = x.Code == input.CountryCode,
-            //    });
-            //}
-
             return View(model);
         }
 
@@ -135,6 +125,19 @@ namespace UCosmic.Web.Mvc.Controllers
                 Input = input,
                 Output = Mapper.Map<PageOfDegreeSearchResultModel>(results),
             };
+
+            using (var http = new HttpClient())
+            {
+                Debug.Assert(Request.Url != null);
+                var url = Url.RouteUrl(null, new { controller = "Countries", httproute = "", }, Request.Url.Scheme);
+                var countries = http.GetAsync(url).Result.Content.ReadAsAsync<IEnumerable<CountryApiModel>>().Result;
+                model.CountryOptions = countries.Select(x => new SelectListItem
+                {
+                    Text = x.Name,
+                    Value = x.Code,
+                    Selected = x.Code == input.CountryCode,
+                });
+            }
 
             return View(model);
         }

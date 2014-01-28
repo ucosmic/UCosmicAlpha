@@ -14,6 +14,7 @@ namespace UCosmic.Web.Mvc.Models
             OrderBy = "lastname-asc";
         }
 
+        public string CountryCode { get; set; }
         public string Keyword { get; set; }
         public string OrderBy { get; set; }
     }

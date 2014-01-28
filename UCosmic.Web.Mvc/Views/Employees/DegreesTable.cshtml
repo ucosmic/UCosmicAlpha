@@ -24,6 +24,7 @@
         var settings = {
             input: $.parseJSON('@Html.Raw(Html.SerializeObject(Model.Input))'),
             output: $.parseJSON('@Html.Raw(Html.SerializeObject(Model.Output))'),
+            countryOptions: $.parseJSON('@Html.Raw(Html.SerializeObject(Model.CountryOptions))'),
         };
         var viewModel = new Degrees.ViewModels.Search(settings);
         viewModel.applyBindings(document.getElementById('degree_search_form'));
@@ -183,14 +184,17 @@
                         </li>
                         <li class="static square-bottom">
                             <div class="content">
-                                @* LOCATION AUTOCOMPLETE *@
-                                @*<div class="location combobox field">
-                                        <input name="placeNames" type="text" placeholder="[Find by location]" data-bind="jQuery: '$location'"
-                                               value="@(Model.Input.PlaceNames != null && Model.Input.PlaceNames.Any() ? Model.Input.PlaceNames.First() : "")"
-                                               class="side" />
-                                        <input name="placeIds" type="hidden" data-bind="jQuery: '$placeIds'"
-                                               value="@(Model.Input.PlaceIds != null && Model.Input.PlaceIds.Any() ? Model.Input.PlaceIds.First() : (int?)null)" />
-                                    </div>*@
+                                @* COUNTRY DROPDOWN *@
+                                <div class="field">
+                                    @Html.DropDownListFor(x => x.Input.CountryCode, Model.CountryOptions, "[All countries]", new
+                                    {
+                                        @class = "side",
+                                        Name = "countryCode",
+                                        data_bind = "value: countryCode, options: countryOptions, optionsCaption: '[All countries]', optionsText: 'text', optionsValue: 'value'"
+                                    })
+                                </div>
+
+
 
 
                                 @* SORT DROPDOWN *@
