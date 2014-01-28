@@ -1,4 +1,4 @@
-﻿var Establishments;
+var Establishments;
 (function (Establishments) {
     (function (ViewModels) {
         var gm = google.maps;

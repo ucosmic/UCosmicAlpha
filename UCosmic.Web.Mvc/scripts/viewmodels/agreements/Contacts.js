@@ -1,4 +1,4 @@
-﻿var Agreements;
+var Agreements;
 (function (Agreements) {
     var SelectConstructor = (function () {
         function SelectConstructor(name, id) {
