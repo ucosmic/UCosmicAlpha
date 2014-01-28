@@ -1,10 +1,17 @@
 class InstitutionalAgreementEditModel {
-    constructor(public agreementId: number) { 
+    constructor(public agreementId: number) {
         $("table.data").children("tbody").addClass("searchResults");
         var culture = $("meta[name='accept-language']").attr("content");
-        this.scrollBody = new ScrollBody.Scroll("[data-current-module='agreements']","participants", "basic_info",
-            "effective_dates_current_status", "contacts", "file_attachments", "overall_visibility", null, null, null,
-            null, this.kendoWindowBug);
+        this.scrollBody = new ScrollBody.Scroll({
+            bindTo: "[data-current-module='agreements']",
+            section1: "participants",
+            section2: "basic_info",
+            section3: "effective_dates_current_status",
+            section4: "contacts",
+            section5: "file_attachments",
+            section6: "overall_visibility",
+            kendoWindowBug: this.kendoWindowBug
+        });
         this.establishmentSearchNav = new Agreements.EstablishmentSearchNav(this.editOrNewUrl,
             this.participants, this.agreementIsEdit, this.agreementId, this.scrollBody, this.deferredPageFadeIn);
         this.participants = new Agreements.Participants(this.agreementId, this.deferredPopParticipants,
@@ -412,27 +419,30 @@ class InstitutionalAgreementEditModel {
                         }
                     });
                 } else {
-                    //$LoadingPage.text("Saving agreement...");
+                    $LoadingPage.text("Saving agreement...");
 
-                    //$("[data-current-module='agreements']").show().fadeOut(500, function () {
-                    //    $("#Loading_page").hide().fadeIn(500);
-                    //});
+                    $("[data-current-module='agreements']").show().fadeOut(500, function () {
+                        $("#Loading_page").hide().fadeIn(500);
+                    });
                     url = App.Routes.WebApi.Agreements.post();
                     $.post(url, data)
                         .done((response: any, statusText: string, xhr: JQueryXHR): void => {
                             this.agreementId = parseInt(xhr.getResponseHeader('Location').substring(xhr.getResponseHeader('Location').lastIndexOf("/") + 1));
                             this.savingAgreement = false;
-                            sessionStorage.setItem("agreementSaved", "yes");
-                            location.href = App.Routes.Mvc.Agreements.show(this.agreementId);
+                            var myUrl = xhr.getResponseHeader('Location');
+                            this.agreementId = parseInt(myUrl.substring(myUrl.lastIndexOf("/") + 1));
+                            this.fileAttachment.agreementId = this.agreementId;
+                            this.contact.agreementId = this.agreementId;
+                            var deferredPostFiles = $.Deferred();
+                            var deferredPostContacts = $.Deferred();
+                            this.fileAttachment.agreementPostFiles(response, statusText, xhr, deferredPostFiles);
+                            this.contact.agreementPostContacts(response, statusText, xhr, deferredPostContacts);
 
-                            //this.savingAgreement = false;
-                            //var myUrl = xhr.getResponseHeader('Location');
-
-                            //this.agreementId = parseInt(myUrl.substring(myUrl.lastIndexOf("/") + 1));
-                            //this.fileAttachment.agreementId = this.agreementId;
-                            //this.contact.agreementId = this.agreementId;
-                            //this.fileAttachment.agreementPostFiles(response, statusText, xhr);
-                            //this.contact.agreementPostContacts(response, statusText, xhr);
+                            $.when(deferredPostFiles, deferredPostContacts)
+                            {
+                                sessionStorage.setItem("agreementSaved", "yes");
+                                location.href = App.Routes.Mvc.Agreements.show(this.agreementId);
+                            }
                             ////change url to edit
                             //$LoadingPage.text("Agreement Saved...");
                             //setTimeout(function () {

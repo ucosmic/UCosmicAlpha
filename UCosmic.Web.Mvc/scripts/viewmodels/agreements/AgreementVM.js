@@ -24,7 +24,16 @@ var InstitutionalAgreementEditModel = (function () {
         });
         $("table.data").children("tbody").addClass("searchResults");
         var culture = $("meta[name='accept-language']").attr("content");
-        this.scrollBody = new ScrollBody.Scroll("[data-current-module='agreements']", "participants", "basic_info", "effective_dates_current_status", "contacts", "file_attachments", "overall_visibility", null, null, null, null, this.kendoWindowBug);
+        this.scrollBody = new ScrollBody.Scroll({
+            bindTo: "[data-current-module='agreements']",
+            section1: "participants",
+            section2: "basic_info",
+            section3: "effective_dates_current_status",
+            section4: "contacts",
+            section5: "file_attachments",
+            section6: "overall_visibility",
+            kendoWindowBug: this.kendoWindowBug
+        });
         this.establishmentSearchNav = new Agreements.EstablishmentSearchNav(this.editOrNewUrl, this.participants, this.agreementIsEdit, this.agreementId, this.scrollBody, this.deferredPageFadeIn);
         this.participants = new Agreements.Participants(this.agreementId, this.deferredPopParticipants, this.agreementIsEdit, this.establishmentSearchNav.establishmentSearchViewModel, this.establishmentSearchNav.hasBoundSearch);
         this.establishmentSearchNav.participants = this.participants;
@@ -351,12 +360,29 @@ var InstitutionalAgreementEditModel = (function () {
                         }
                     });
                 } else {
+                    $LoadingPage.text("Saving agreement...");
+
+                    $("[data-current-module='agreements']").show().fadeOut(500, function () {
+                        $("#Loading_page").hide().fadeIn(500);
+                    });
                     url = App.Routes.WebApi.Agreements.post();
                     $.post(url, data).done(function (response, statusText, xhr) {
                         _this.agreementId = parseInt(xhr.getResponseHeader('Location').substring(xhr.getResponseHeader('Location').lastIndexOf("/") + 1));
                         _this.savingAgreement = false;
-                        sessionStorage.setItem("agreementSaved", "yes");
-                        location.href = App.Routes.Mvc.Agreements.show(_this.agreementId);
+                        var myUrl = xhr.getResponseHeader('Location');
+                        _this.agreementId = parseInt(myUrl.substring(myUrl.lastIndexOf("/") + 1));
+                        _this.fileAttachment.agreementId = _this.agreementId;
+                        _this.contact.agreementId = _this.agreementId;
+                        var deferredPostFiles = $.Deferred();
+                        var deferredPostContacts = $.Deferred();
+                        _this.fileAttachment.agreementPostFiles(response, statusText, xhr, deferredPostFiles);
+                        _this.contact.agreementPostContacts(response, statusText, xhr, deferredPostContacts);
+
+                        $.when(deferredPostFiles, deferredPostContacts);
+                         {
+                            sessionStorage.setItem("agreementSaved", "yes");
+                            location.href = App.Routes.Mvc.Agreements.show(_this.agreementId);
+                        }
                     }).fail(function (xhr, statusText, errorThrown) {
                         _this.savingAgreement = false;
                         _this.spinner.stop();

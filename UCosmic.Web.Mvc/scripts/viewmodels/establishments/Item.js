@@ -162,7 +162,14 @@ var Establishments;
                 this.parentId = ko.observable();
                 this.parentIdSaveSpinner = new App.Spinner({ delay: 200 });
                 this.parentIdValidatingSpinner = new App.Spinner({ delay: 200 });
-                this.scrollBody = new ScrollBody.Scroll("#establishment_page", "names", "urls", "parent", "location", "classification", null, null, null, null, null, null).bindJquery();
+                this.scrollBody = new ScrollBody.Scroll({
+                    bindTo: "#establishment_page",
+                    section1: "names",
+                    section2: "urls",
+                    section3: "parent",
+                    section4: "location",
+                    section5: "classification"
+                }).bindJquery();
 
                 this.id = id || 0;
                 doSetupSammy = (doSetupSammy === false) ? false : true;
@@ -398,24 +405,16 @@ var Establishments;
                         data.location = location.serializeData();
                         this.createSpinner.start();
                         $.post(url, data).done(function (response, statusText, xhr) {
+                            _this.names()[0].text("");
+                            _this.urls()[0].value("");
+                            officialName.errors.showAllMessages(false);
+                            officialUrl.errors.showAllMessages(false);
+                            _this.isValidationSummaryVisible(false);
                             window.location.href = App.Routes.Mvc.Establishments.created({ location: xhr.getResponseHeader('Location') });
                         }).fail(function (xhr, statusText, errorThrown) {
                             _this.createSpinner.stop();
-                            if (xhr.status === 400) {
-                                _this.$genericAlertDialog.find('p.content').html(xhr.responseText.replace('\n', '<br /><br />'));
-                                _this.$genericAlertDialog.dialog({
-                                    title: 'Alert Message',
-                                    dialogClass: 'jquery-ui',
-                                    width: 'auto',
-                                    resizable: false,
-                                    modal: true,
-                                    buttons: {
-                                        'Ok': function () {
-                                            _this.$genericAlertDialog.dialog('close');
-                                        }
-                                    }
-                                });
-                            }
+
+                            App.Failures.message(xhr, xhr.responseText, true);
                         });
                     }
                 }

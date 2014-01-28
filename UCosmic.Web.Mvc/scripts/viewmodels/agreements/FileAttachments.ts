@@ -34,6 +34,17 @@ module Agreements {
         fileDeleteSpinner = new App.Spinner({ delay: 400, });
         $confirmPurgeDialog: JQuery;
         tempFileId = 0;
+        //validateFile;
+
+        //private _setupValidation(): void {
+        //    this.validateFile = ko.validatedObservable({
+        //        agreementType: this.files.customNameFile.extend({
+        //            required: {
+        //                message: "Agreement type is required."
+        //            }
+        //        })
+        //    });
+        //}
 
         private _$bindKendoFile(): void {
             var saveUrl = "";
@@ -124,6 +135,7 @@ module Agreements {
                             visibility: "Public",
                             guid: e.response.guid,
                             isEdit: false,
+                            isNotValidated: false,
                             customNameFile: e.files[0].name.substring(0, e.files[0].name.indexOf(e.files[0].extension)),
                             customNameExt: e.files[0].extension
                         }));
@@ -186,8 +198,15 @@ module Agreements {
         }
 
         updateFile(me, e): void {
+            if (me.customNameFile().length > 0) {
+                me.isNotValidated(false);
+            } else {
+                me.isNotValidated(true);
+                return;
+            }
             me.customName(me.customNameFile() + me.customNameExt())
             me.isEdit(false);
+
             if (this.agreementIsEdit()) {
                 var data = ko.mapping.toJS({
                     agreementId: me.agreementId,
@@ -239,6 +258,12 @@ module Agreements {
 
         fileVisibilityClicked(me, e): boolean {
             //add e.target.textContent for double click firing.
+            if (me.customNameFile().length > 0) {
+                me.isNotValidated(false);
+            } else {
+                me.isNotValidated(true);
+                return false;
+            }
             if (this.agreementIsEdit() && e.target.textContent == "") {
                 var data = ko.mapping.toJS({
                     agreementId: me.agreementId,
@@ -280,29 +305,54 @@ module Agreements {
 
         //post files
         postMe(data, url): void {
-            $.post(url, data)
-                .done((response: any, statusText: string, xhr: JQueryXHR): void => {
-                })
-                .fail((xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
-                    if (xhr.status === 400) { // validation message will be in xhr response text...
-                        this.establishmentItemViewModel.$genericAlertDialog.find('p.content')
-                            .html(xhr.responseText.replace('\n', '<br /><br />'));
-                        this.establishmentItemViewModel.$genericAlertDialog.dialog({
-                            title: 'Alert Message',
-                            dialogClass: 'jquery-ui',
-                            width: 'auto',
-                            resizable: false,
-                            modal: true,
-                            buttons: {
-                                'Ok': (): void => { this.establishmentItemViewModel.$genericAlertDialog.dialog('close'); }
-                            }
-                        });
-                    }
-                });
+            //$.post(url, data)
+            //    .done((response: any, statusText: string, xhr: JQueryXHR): void => {
+            //    })
+            //    .fail((xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
+            //        if (xhr.status === 400) { // validation message will be in xhr response text...
+            //            this.establishmentItemViewModel.$genericAlertDialog.find('p.content')
+            //                .html(xhr.responseText.replace('\n', '<br /><br />'));
+            //            this.establishmentItemViewModel.$genericAlertDialog.dialog({
+            //                title: 'Alert Message',
+            //                dialogClass: 'jquery-ui',
+            //                width: 'auto',
+            //                resizable: false,
+            //                modal: true,
+            //                buttons: {
+            //                    'Ok': (): void => { this.establishmentItemViewModel.$genericAlertDialog.dialog('close'); }
+            //                }
+            //            });
+            //        }
+            //    });
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                async: false,// need to do this before page redirect.
+                data: data,
+                error: (xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
+                    this.spinner.stop();
+                    //if (xhr.status === 400) { // validation message will be in xhr response text...
+                    //    this.establishmentItemViewModel.$genericAlertDialog.find('p.content')
+                    //        .html(xhr.responseText.replace('\n', '<br /><br />'));
+                    //    this.establishmentItemViewModel.$genericAlertDialog.dialog({
+                    //        title: 'Alert Message',
+                    //        dialogClass: 'jquery-ui',
+                    //        width: 'auto',
+                    //        resizable: false,
+                    //        modal: true,
+                    //        buttons: {
+                    //            'Ok': (): void => { this.establishmentItemViewModel.$genericAlertDialog.dialog('close'); }
+                    //        }
+                    //    });
+                    //}
+                    App.Failures.message(xhr, xhr.responseText, true);
+                }
+            });
         }
 
         //part of save agreement
-        agreementPostFiles(response: any, statusText: string, xhr: JQueryXHR): void {
+        agreementPostFiles(response: any, statusText: string, xhr: JQueryXHR, deferred): void {
             var tempUrl = App.Routes.WebApi.Agreements.Files.post(this.agreementId),
                 data;
 
@@ -317,6 +367,7 @@ module Agreements {
                 })
                 this.postMe(data, tempUrl);
             });
+            deferred.resolve();
             this.spinner.stop();
         }
 

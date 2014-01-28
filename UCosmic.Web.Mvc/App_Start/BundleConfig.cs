@@ -88,6 +88,7 @@ namespace UCosmic.Web.Mvc
                 "~/scripts/viewmodels/establishments/Item.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/agreements").Include(
+                "~/scripts/viewmodels/places/Utils.js",
                 "~/scripts/jquery/jquery.globalize/globalize.js",
                 "~/scripts/app/PagedSearch.js",
                 "~/scripts/google/toolsoverlay.js",

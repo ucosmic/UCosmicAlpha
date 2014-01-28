@@ -1,19 +1,36 @@
 module ScrollBody {
 
+    export interface iScrollBody {
+        bindTo: string;
+        section1?: string;
+        section2?: string;
+        section3?: string;
+        section4?: string;
+        section5?: string;
+        section6?: string;
+        section7?: string;
+        section8?: string;
+        section9?: string;
+        section10?: string;
+        kendoWindowBug?
+    }
+
+
     export class Scroll {
 
-        constructor(bindTo: string, section1?: string, section2?: string, section3?: string, section4?: string, section5?: string, section6?: string,
-        section7?: string, section8?: string, section9?: string, section10?: string, kendoWindowBug?) {
-            this.section1 = ((section1) ? section1 : "");
-            this.section2 = ((section2) ? section2 : "");
-            this.section3 = ((section3) ? section3 : "");
-            this.section4 = ((section4) ? section4 : "");
-            this.section5 = ((section5) ? section5 : "");
-            this.section6 = ((section6) ? section6 : "");
-            this.section7 = ((section7) ? section7 : "");
-            this.section8 = ((section8) ? section8 : "");
-            this.section9 = ((section9) ? section9 : "");
-            this.section10 = ((section10) ? section10 : "");
+        //constructor(bindTo: string, section1?: string, section2?: string, section3?: string, section4?: string, section5?: string, section6?: string,
+        //    section7?: string, section8?: string, section9?: string, section10?: string, kendoWindowBug?) {
+        constructor(iScrollBody) {
+            this.section1 = ((iScrollBody.section1) ? iScrollBody.section1 : "");
+            this.section2 = ((iScrollBody.section2) ? iScrollBody.section2 : "");
+            this.section3 = ((iScrollBody.section3) ? iScrollBody.section3 : "");
+            this.section4 = ((iScrollBody.section4) ? iScrollBody.section4 : "");
+            this.section5 = ((iScrollBody.section5) ? iScrollBody.section5 : "");
+            this.section6 = ((iScrollBody.section6) ? iScrollBody.section6 : "");
+            this.section7 = ((iScrollBody.section7) ? iScrollBody.section7 : "");
+            this.section8 = ((iScrollBody.section8) ? iScrollBody.section8 : "");
+            this.section9 = ((iScrollBody.section9) ? iScrollBody.section9 : "");
+            this.section10 = ((iScrollBody.section10) ? iScrollBody.section10 : "");
             this.mySection1 = $("#" + this.section1);
             this.mySection2 = $("#" + this.section2);
             this.mySection3 = $("#" + this.section3);
@@ -34,9 +51,9 @@ module ScrollBody {
             this.navSection8 = $("#nav_" + this.section8);
             this.navSection9 = $("#nav_" + this.section9);
             this.navSection10 = $("#nav_" + this.section10);
-            this.kendoWindowBug = ((kendoWindowBug) ? kendoWindowBug : { val: 0 });
+            this.kendoWindowBug = ((iScrollBody.kendoWindowBug) ? iScrollBody.kendoWindowBug : { val: 0 });
             this.$body;
-            this.$bindTo = $(bindTo);
+            this.$bindTo = $(iScrollBody.bindTo);
         }
 
         //imported vars

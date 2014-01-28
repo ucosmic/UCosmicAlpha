@@ -152,7 +152,12 @@ var ViewModels;
                                                                 _this.institutionOfficialName(response.officialName);
                                                                 _this.institutionCountryOfficialName(response.countryName);
                                                                 _this.institutionTranslatedName(response.translatedName);
-                                                                _this.institutionOfficialNameDoesNotMatchTranslation(response.officialNameDoesNotMatchTranslation);
+                                                                _this.institutionOfficialNameDoesNotMatchTranslation(!((_this.institutionOfficialName() === _this.institutionTranslatedName()) || _this.institutionOfficialName() == undefined));
+                                                                _this.establishmentItemViewModel.urls()[0].value("");
+                                                                _this.establishmentItemViewModel.names()[0].text("");
+                                                                officialName.errors.showAllMessages(false);
+                                                                officialUrl.errors.showAllMessages(false);
+                                                                _this.establishmentItemViewModel.isValidationSummaryVisible(false);
                                                                 _this.establishmentSearchViewModel.sammy.setLocation("my/degrees/" + _this.sammyUrl + "");
                                                             }).fail(function (xhr) {
                                                                 App.Failures.message(xhr, xhr.responseText, true);

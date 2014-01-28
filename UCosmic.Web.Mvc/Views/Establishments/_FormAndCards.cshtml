@@ -18,7 +18,7 @@
                         <strong data-bind="visible: createSpinner.isVisible">Saving...</strong>
                     </div>
                 </section>
-                <section class="fieldset" data-bind="visible: isValidationSummaryVisible() && errors().length" style="display: none;">
+                <section class="fieldset" data-bind="visible: isValidationSummaryVisible() && (errors().length || names()[0].errors().length || urls()[0].errors().length)" style="display: none;">
                     <div class="validation-summary">
                         <h3>Please correct the following and try again:</h3>
                         <div data-bind="foreach: names">

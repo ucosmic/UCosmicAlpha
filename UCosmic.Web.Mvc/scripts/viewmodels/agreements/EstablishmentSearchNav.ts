@@ -230,6 +230,12 @@ module Agreements {
                                                                                 } else {
                                                                                     this.participants.participants.push(myParticipant);
                                                                                 }
+                                                                                this.establishmentItemViewModel.urls()[0].value("")
+                                                                                this.establishmentItemViewModel.names()[0].text("");
+                                                                                officialName.errors.showAllMessages(false);
+                                                                                officialUrl.errors.showAllMessages(false);
+                                                                                this.establishmentItemViewModel.isValidationSummaryVisible(false);
+
                                                                                 this.establishmentSearchViewModel.sammy.setLocation("agreements/" + this.editOrNewUrl.val + "");
                                                                             })
                                                                             .fail(() => {

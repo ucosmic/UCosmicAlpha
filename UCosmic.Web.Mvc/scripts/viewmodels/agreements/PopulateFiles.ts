@@ -12,6 +12,7 @@ module Agreements {
                             customName: item.customName,
                             visibility: item.visibility,
                             isEdit: false,
+                            isNotValidated: false,
                             customNameFile: item.customName.substring(0, item.customName.lastIndexOf(".")),
                             customNameExt: item.customName.substring(item.customName.lastIndexOf("."), item.customName.length)
                         }));

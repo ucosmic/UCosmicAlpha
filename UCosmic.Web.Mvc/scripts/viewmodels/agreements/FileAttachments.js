@@ -110,6 +110,7 @@ var Agreements;
                             visibility: "Public",
                             guid: e.response.guid,
                             isEdit: false,
+                            isNotValidated: false,
                             customNameFile: e.files[0].name.substring(0, e.files[0].name.indexOf(e.files[0].extension)),
                             customNameExt: e.files[0].extension
                         }));
@@ -172,8 +173,15 @@ var Agreements;
 
         FileAttachments.prototype.updateFile = function (me, e) {
             var _this = this;
+            if (me.customNameFile().length > 0) {
+                me.isNotValidated(false);
+            } else {
+                me.isNotValidated(true);
+                return;
+            }
             me.customName(me.customNameFile() + me.customNameExt());
             me.isEdit(false);
+
             if (this.agreementIsEdit()) {
                 var data = ko.mapping.toJS({
                     agreementId: me.agreementId,
@@ -225,6 +233,12 @@ var Agreements;
 
         FileAttachments.prototype.fileVisibilityClicked = function (me, e) {
             var _this = this;
+            if (me.customNameFile().length > 0) {
+                me.isNotValidated(false);
+            } else {
+                me.isNotValidated(true);
+                return false;
+            }
             if (this.agreementIsEdit() && e.target.textContent == "") {
                 var data = ko.mapping.toJS({
                     agreementId: me.agreementId,
@@ -266,27 +280,20 @@ var Agreements;
 
         FileAttachments.prototype.postMe = function (data, url) {
             var _this = this;
-            $.post(url, data).done(function (response, statusText, xhr) {
-            }).fail(function (xhr, statusText, errorThrown) {
-                if (xhr.status === 400) {
-                    _this.establishmentItemViewModel.$genericAlertDialog.find('p.content').html(xhr.responseText.replace('\n', '<br /><br />'));
-                    _this.establishmentItemViewModel.$genericAlertDialog.dialog({
-                        title: 'Alert Message',
-                        dialogClass: 'jquery-ui',
-                        width: 'auto',
-                        resizable: false,
-                        modal: true,
-                        buttons: {
-                            'Ok': function () {
-                                _this.establishmentItemViewModel.$genericAlertDialog.dialog('close');
-                            }
-                        }
-                    });
+            $.ajax({
+                type: 'POST',
+                url: url,
+                async: false,
+                data: data,
+                error: function (xhr, statusText, errorThrown) {
+                    _this.spinner.stop();
+
+                    App.Failures.message(xhr, xhr.responseText, true);
                 }
             });
         };
 
-        FileAttachments.prototype.agreementPostFiles = function (response, statusText, xhr) {
+        FileAttachments.prototype.agreementPostFiles = function (response, statusText, xhr, deferred) {
             var _this = this;
             var tempUrl = App.Routes.WebApi.Agreements.Files.post(this.agreementId), data;
 
@@ -301,6 +308,7 @@ var Agreements;
                 });
                 _this.postMe(data, tempUrl);
             });
+            deferred.resolve();
             this.spinner.stop();
         };
         return FileAttachments;

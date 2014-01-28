@@ -186,6 +186,12 @@ var Agreements;
                                                                 } else {
                                                                     _this.participants.participants.push(myParticipant);
                                                                 }
+                                                                _this.establishmentItemViewModel.urls()[0].value("");
+                                                                _this.establishmentItemViewModel.names()[0].text("");
+                                                                officialName.errors.showAllMessages(false);
+                                                                officialUrl.errors.showAllMessages(false);
+                                                                _this.establishmentItemViewModel.isValidationSummaryVisible(false);
+
                                                                 _this.establishmentSearchViewModel.sammy.setLocation("agreements/" + _this.editOrNewUrl.val + "");
                                                             }).fail(function () {
                                                                 if (_this.agreementIsEdit()) {

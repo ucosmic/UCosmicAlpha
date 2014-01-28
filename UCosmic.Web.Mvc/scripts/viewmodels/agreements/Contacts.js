@@ -645,28 +645,18 @@ var Agreements;
         };
 
         Contacts.prototype.postMe = function (data, url) {
-            var _this = this;
-            $.post(url, data).done(function (response, statusText, xhr) {
-            }).fail(function (xhr, statusText, errorThrown) {
-                if (xhr.status === 400) {
-                    _this.establishmentItemViewModel.$genericAlertDialog.find('p.content').html(xhr.responseText.replace('\n', '<br /><br />'));
-                    _this.establishmentItemViewModel.$genericAlertDialog.dialog({
-                        title: 'Alert Message',
-                        dialogClass: 'jquery-ui',
-                        width: 'auto',
-                        resizable: false,
-                        modal: true,
-                        buttons: {
-                            'Ok': function () {
-                                _this.establishmentItemViewModel.$genericAlertDialog.dialog('close');
-                            }
-                        }
-                    });
+            $.ajax({
+                type: 'POST',
+                url: url,
+                async: false,
+                data: data,
+                error: function (xhr, statusText, errorThrown) {
+                    App.Failures.message(xhr, xhr.responseText, true);
                 }
             });
         };
 
-        Contacts.prototype.agreementPostContacts = function (response, statusText, xhr) {
+        Contacts.prototype.agreementPostContacts = function (response, statusText, xhr, deferred) {
             var _this = this;
             var tempUrl = App.Routes.WebApi.Agreements.Contacts.post(this.agreementId), data;
 
@@ -688,6 +678,7 @@ var Agreements;
                 };
                 _this.postMe(data, tempUrl);
             });
+            deferred.resolve();
         };
         return Contacts;
     })();

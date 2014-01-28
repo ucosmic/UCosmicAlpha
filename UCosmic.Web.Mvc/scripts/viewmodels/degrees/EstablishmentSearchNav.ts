@@ -188,7 +188,12 @@ module ViewModels.Degrees {
                                                                         this.institutionOfficialName(response.officialName);
                                                                         this.institutionCountryOfficialName(response.countryName);
                                                                         this.institutionTranslatedName(response.translatedName);
-                                                                        this.institutionOfficialNameDoesNotMatchTranslation(response.officialNameDoesNotMatchTranslation);
+                                                                        this.institutionOfficialNameDoesNotMatchTranslation(!((this.institutionOfficialName() === this.institutionTranslatedName()) || this.institutionOfficialName() == undefined));
+                                                                        this.establishmentItemViewModel.urls()[0].value("")
+                                                                                this.establishmentItemViewModel.names()[0].text("");
+                                                                        officialName.errors.showAllMessages(false);
+                                                                        officialUrl.errors.showAllMessages(false);
+                                                                        this.establishmentItemViewModel.isValidationSummaryVisible(false);
                                                                         this.establishmentSearchViewModel.sammy.setLocation("my/degrees/" + this.sammyUrl + "");
                                                                     })
                                                                     .fail((xhr: JQueryXHR): void => {
