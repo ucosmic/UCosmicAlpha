@@ -24,7 +24,7 @@ var InstitutionalAgreementEditModel = (function () {
         });
         $("table.data").children("tbody").addClass("searchResults");
         var culture = $("meta[name='accept-language']").attr("content");
-        this.scrollBody = new ScrollBody.Scroll("participants", "basic_info", "effective_dates_current_status", "contacts", "file_attachments", "overall_visibility", null, null, null, null, this.kendoWindowBug);
+        this.scrollBody = new ScrollBody.Scroll("[data-current-module='agreements']", "participants", "basic_info", "effective_dates_current_status", "contacts", "file_attachments", "overall_visibility", null, null, null, null, this.kendoWindowBug);
         this.establishmentSearchNav = new Agreements.EstablishmentSearchNav(this.editOrNewUrl, this.participants, this.agreementIsEdit, this.agreementId, this.scrollBody, this.deferredPageFadeIn);
         this.participants = new Agreements.Participants(this.agreementId, this.deferredPopParticipants, this.agreementIsEdit, this.establishmentSearchNav.establishmentSearchViewModel, this.establishmentSearchNav.hasBoundSearch);
         this.establishmentSearchNav.participants = this.participants;
@@ -52,7 +52,7 @@ var InstitutionalAgreementEditModel = (function () {
             this.participants.populateParticipants();
             $.when(this.deferredPageFadeIn, this.deferredPopParticipants).done(function () {
                 _this._updateKendoDialog($(window).width());
-                $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * _this.percentOffBodyHeight)));
+
                 _this._bindjQueryKendo();
             });
         } else {
@@ -67,7 +67,6 @@ var InstitutionalAgreementEditModel = (function () {
             $("#Loading_page").hide();
             $.when(this.deferredPopContacts, this.deferredPopFiles, this.deferredPopParticipants, this.deferredPageFadeIn).done(function () {
                 _this._updateKendoDialog($(window).width());
-                $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * _this.percentOffBodyHeight)));
             });
         }
 

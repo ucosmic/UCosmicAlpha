@@ -6,7 +6,6 @@ using Newtonsoft.Json;
 using UCosmic.Domain.Audit;
 using UCosmic.Domain.Files;
 using UCosmic.Domain.Identity;
-using UCosmic.Domain.Agreements.Commands;
 
 namespace UCosmic.Domain.Agreements
 {

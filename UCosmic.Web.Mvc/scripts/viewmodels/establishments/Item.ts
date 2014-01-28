@@ -1,7 +1,8 @@
+
 module Establishments.ViewModels {
 
     import gm = google.maps
-
+    
     class CeebCodeValidator implements KnockoutValidationAsyncRuleDefinition {
         async: boolean = true;
         message: string = 'error';
@@ -167,6 +168,10 @@ module Establishments.ViewModels {
 
         constructor(id?: number, doSetupSammy?: boolean) {
 
+            this.scrollBody = new ScrollBody.Scroll("#establishment_page", "names", "urls",
+                "parent", "location", "classification", null, null, null, null,
+                null, null).bindJquery();
+            //scrollBody.bindJquery();
             // initialize the aggregate id
             this.id = id || 0;
             doSetupSammy = (doSetupSammy === false) ? false : true;
@@ -412,6 +417,8 @@ module Establishments.ViewModels {
         }
 
         //#endregion
+
+        scrollBody;
 
         submitToCreate(formElement: HTMLFormElement): boolean {
             if (!this.id || this.id === 0) {

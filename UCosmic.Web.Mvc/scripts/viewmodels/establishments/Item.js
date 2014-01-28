@@ -1,4 +1,4 @@
-var Establishments;
+﻿var Establishments;
 (function (Establishments) {
     (function (ViewModels) {
         var gm = google.maps;
@@ -162,6 +162,8 @@ var Establishments;
                 this.parentId = ko.observable();
                 this.parentIdSaveSpinner = new App.Spinner({ delay: 200 });
                 this.parentIdValidatingSpinner = new App.Spinner({ delay: 200 });
+                this.scrollBody = new ScrollBody.Scroll("#establishment_page", "names", "urls", "parent", "location", "classification", null, null, null, null, null, null).bindJquery();
+
                 this.id = id || 0;
                 doSetupSammy = (doSetupSammy === false) ? false : true;
 

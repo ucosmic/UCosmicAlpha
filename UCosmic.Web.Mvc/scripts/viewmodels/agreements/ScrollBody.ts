@@ -2,7 +2,7 @@ module ScrollBody {
 
     export class Scroll {
 
-        constructor(section1?: string, section2?: string, section3?: string, section4?: string, section5?: string, section6?: string,
+        constructor(bindTo: string, section1?: string, section2?: string, section3?: string, section4?: string, section5?: string, section6?: string,
         section7?: string, section8?: string, section9?: string, section10?: string, kendoWindowBug?) {
             this.section1 = ((section1) ? section1 : "");
             this.section2 = ((section2) ? section2 : "");
@@ -36,6 +36,7 @@ module ScrollBody {
             this.navSection10 = $("#nav_" + this.section10);
             this.kendoWindowBug = ((kendoWindowBug) ? kendoWindowBug : { val: 0 });
             this.$body;
+            this.$bindTo = $(bindTo);
         }
 
         //imported vars
@@ -83,6 +84,7 @@ module ScrollBody {
         section8Top;
         section9Top;
         section10Top;
+        $bindTo
 
         //scroll based on top position
         scrollMyBody = function (position): void {
@@ -96,16 +98,16 @@ module ScrollBody {
         }
 
         //scroll based on side nav
-        goToSection = function (location, data, event): void {
-            var offset = $("#" + location).offset();
-            if (!$("body").scrollTop()) {
-                $("html, body").scrollTop(offset.top - 20);
-            } else {
-                $("body").scrollTop(offset.top - 20);
-            }
-            $(event.target).closest("ul").find("li").removeClass("current");
-            $(event.target).closest("li").addClass("current");
-        }
+        //goToSection = function (location, data, event): void {
+        //    var offset = $("#" + location).offset();
+        //    if (!$("body").scrollTop()) {
+        //        $("html, body").scrollTop(offset.top - 20);
+        //    } else {
+        //        $("body").scrollTop(offset.top - 20);
+        //    }
+        //    $(event.target).closest("ul").find("li").removeClass("current");
+        //    $(event.target).closest("li").addClass("current");
+        //}
 
         bindJquery(): void {
             var self = this;
@@ -126,37 +128,56 @@ module ScrollBody {
                 } else {
                     this.$body = $("body").scrollTop() + 100;
                 }
+                var aside = this.$bindTo.find("aside");
                 if (this.$body <= this.section1Top.top + this.mySection1.height() + 40) {
-                    $("aside").find("li").removeClass("current");
+                    aside.find("li").removeClass("current");
                     this.navSection1.addClass("current");
                 } else if (this.$body >= this.section2Top.top && (this.$body <= this.section2Top.top + this.mySection2.height() + 40 || this.section3 === "")) {
-                    $("aside").find("li").removeClass("current");
+                    aside.find("li").removeClass("current");
                     this.navSection2.addClass("current");
                 } else if (this.$body >= this.section3Top.top && (this.$body <= this.section3Top.top + this.mySection3.height() + 40 || this.section4 === "")) {
-                    $("aside").find("li").removeClass("current");
+                    aside.find("li").removeClass("current");
                     this.navSection3.addClass("current");
                 } else if (this.$body >= this.section4Top.top && (this.$body <= this.section4Top.top + this.mySection4.height() + 40 || this.section5 === "")) {
-                    $("aside").find("li").removeClass("current");
+                    aside.find("li").removeClass("current");
                     this.navSection4.addClass("current");
                 } else if (this.$body >= this.section5Top.top && (this.$body <= this.section5Top.top + this.mySection5.height() + 40 || this.section6 === "")) {
-                    $("aside").find("li").removeClass("current");
+                    aside.find("li").removeClass("current");
                     this.navSection5.addClass("current");
                 } else if (this.$body >= this.section6Top.top && (this.$body <= this.section6Top.top + this.mySection6.height() + 40 || this.section7 === "")) {
-                    $("aside").find("li").removeClass("current");
+                    aside.find("li").removeClass("current");
                     this.navSection6.addClass("current");
                 } else if (this.$body >= this.section7Top.top && (this.$body <= this.section7Top.top + this.mySection7.height() + 40 || this.section8 === "")) {
-                    $("aside").find("li").removeClass("current");
+                    aside.find("li").removeClass("current");
                     this.navSection7.addClass("current");
                 } else if (this.$body >= this.section8Top.top && (this.$body <= this.section8Top.top + this.mySection8.height() + 40 || this.section9 === "")) {
-                    $("aside").find("li").removeClass("current");
+                    aside.find("li").removeClass("current");
                     this.navSection8.addClass("current");
                 } else if (this.$body >= this.section9Top.top && (this.$body <= this.section9Top.top + this.mySection8.height() + 40 || this.section10 === "")) {
-                    $("aside").find("li").removeClass("current");
+                    aside.find("li").removeClass("current");
                     this.navSection9.addClass("current");
                 } else if (this.$body >= this.section10Top.top) {
-                    $("aside").find("li").removeClass("current");
+                    aside.find("li").removeClass("current");
                     this.navSection10.closest("li").addClass("current");
                 }
+            })
+
+            this.$bindTo.find(".side").find("a").click(function (event) {
+                var $body = $("body");
+                var location = $(this).parent().attr("id").substring(4);
+                var offset = $("#" + location).offset();
+                if (!$body.scrollTop()) {
+                    $("html, body").scrollTop(offset.top - 20);
+                } else {
+                    $body.scrollTop(offset.top - 20);
+                }
+                $(event.target).closest("ul").find("li").removeClass("current");
+                //setTimeout(function () {
+                //    $(event.target).closest("li").addClass("current");
+                //}, 500);
+                $(event.target).closest("li").addClass("current");
+                event.preventDefault();
+                event.stopPropagation();
             })
         }
     }

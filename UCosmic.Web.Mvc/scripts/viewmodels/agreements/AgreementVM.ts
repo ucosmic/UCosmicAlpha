@@ -1,8 +1,8 @@
 class InstitutionalAgreementEditModel {
-    constructor(public agreementId: number) {
+    constructor(public agreementId: number) { 
         $("table.data").children("tbody").addClass("searchResults");
         var culture = $("meta[name='accept-language']").attr("content");
-        this.scrollBody = new ScrollBody.Scroll("participants", "basic_info",
+        this.scrollBody = new ScrollBody.Scroll("[data-current-module='agreements']","participants", "basic_info",
             "effective_dates_current_status", "contacts", "file_attachments", "overall_visibility", null, null, null,
             null, this.kendoWindowBug);
         this.establishmentSearchNav = new Agreements.EstablishmentSearchNav(this.editOrNewUrl,
@@ -39,7 +39,7 @@ class InstitutionalAgreementEditModel {
             $.when(this.deferredPageFadeIn, this.deferredPopParticipants)
                 .done(() => {
                     this._updateKendoDialog($(window).width());
-                    $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * this.percentOffBodyHeight)));
+                    //$("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * this.percentOffBodyHeight)));
                     this._bindjQueryKendo();
                 });
         } else {
@@ -55,7 +55,7 @@ class InstitutionalAgreementEditModel {
             $.when(this.deferredPopContacts, this.deferredPopFiles, this.deferredPopParticipants, this.deferredPageFadeIn)
                 .done(() => {
                     this._updateKendoDialog($(window).width());
-                    $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * this.percentOffBodyHeight)));
+                    //$("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * this.percentOffBodyHeight)));
                     //this._bindjQueryKendo();
                 });
         }

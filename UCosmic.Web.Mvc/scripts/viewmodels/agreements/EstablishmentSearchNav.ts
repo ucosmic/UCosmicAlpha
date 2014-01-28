@@ -107,6 +107,7 @@ module Agreements {
         bindSearch(): void {
             if (!this.hasBoundSearch.does) {
                 var lastURL = "asdf";
+                $("body").css("min-height", "0");
 
                 this.establishmentSearchViewModel.sammyBeforeRoute = /\#\/index\/(.*)\//;
                 this.establishmentSearchViewModel.sammyGetPageRoute = '#/index';
@@ -135,7 +136,7 @@ module Agreements {
                             $obj = $("#establishment_search"),
                             $obj2 = $("[data-current-module='agreements']"),
                             time = 500;
-
+                            //$("body").css("min-height", 0);
                             this.fadeModsOut(deferred, deferred2, $obj, $obj2, time);
                             $.when(deferred, deferred2)
                                 .done(() => {
@@ -230,7 +231,6 @@ module Agreements {
                                                                                     this.participants.participants.push(myParticipant);
                                                                                 }
                                                                                 this.establishmentSearchViewModel.sammy.setLocation("agreements/" + this.editOrNewUrl.val + "");
-                                                                                $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * .85)));
                                                                             })
                                                                             .fail(() => {
                                                                                 if (this.agreementIsEdit()) {
@@ -375,7 +375,7 @@ module Agreements {
                                                     this.participants.participants.push(myParticipant);
                                                 }
                                                 this.establishmentSearchViewModel.sammy.setLocation("agreements/" + this.editOrNewUrl.val + "");
-                                                $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * .85)));
+                                                //$("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * .85)));
                                             })
                                             .fail(() => {
                                                 if (this.agreementIsEdit()) {
@@ -422,6 +422,7 @@ module Agreements {
                                         $(this).show();
                                         this.scrollBody.scrollMyBody(0);
                                         this.deferredPageFadeIn.resolve();
+                                        //$("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * .85)));
                                     });
                                 });
                         } else {

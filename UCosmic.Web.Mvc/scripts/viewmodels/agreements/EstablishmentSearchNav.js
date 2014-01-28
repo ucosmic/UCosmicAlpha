@@ -85,6 +85,7 @@ var Agreements;
             var _this = this;
             if (!this.hasBoundSearch.does) {
                 var lastURL = "asdf";
+                $("body").css("min-height", "0");
 
                 this.establishmentSearchViewModel.sammyBeforeRoute = /\#\/index\/(.*)\//;
                 this.establishmentSearchViewModel.sammyGetPageRoute = '#/index';
@@ -186,7 +187,6 @@ var Agreements;
                                                                     _this.participants.participants.push(myParticipant);
                                                                 }
                                                                 _this.establishmentSearchViewModel.sammy.setLocation("agreements/" + _this.editOrNewUrl.val + "");
-                                                                $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * .85)));
                                                             }).fail(function () {
                                                                 if (_this.agreementIsEdit()) {
                                                                     var url = App.Routes.WebApi.Agreements.Participants.put(_this.agreementId, myParticipant.establishmentId());
@@ -280,7 +280,6 @@ var Agreements;
                                                 _this.participants.participants.push(myParticipant);
                                             }
                                             _this.establishmentSearchViewModel.sammy.setLocation("agreements/" + _this.editOrNewUrl.val + "");
-                                            $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * .85)));
                                         }).fail(function () {
                                             if (_this.agreementIsEdit()) {
                                                 var url = App.Routes.WebApi.Agreements.Participants.put(_this.agreementId, myParticipant.establishmentId());

@@ -113,7 +113,6 @@ var Agreements;
                             customNameFile: e.files[0].name.substring(0, e.files[0].name.indexOf(e.files[0].extension)),
                             customNameExt: e.files[0].extension
                         }));
-                        $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * .85)));
                     }
                 },
                 error: function (e) {
@@ -153,7 +152,6 @@ var Agreements;
                     type: 'DELETE',
                     success: function () {
                         _this.files.remove(me);
-                        $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * 1.1)));
                     }
                 });
             }

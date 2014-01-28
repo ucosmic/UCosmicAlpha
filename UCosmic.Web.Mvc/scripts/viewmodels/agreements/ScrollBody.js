@@ -1,7 +1,7 @@
-var ScrollBody;
+﻿var ScrollBody;
 (function (ScrollBody) {
     var Scroll = (function () {
-        function Scroll(section1, section2, section3, section4, section5, section6, section7, section8, section9, section10, kendoWindowBug) {
+        function Scroll(bindTo, section1, section2, section3, section4, section5, section6, section7, section8, section9, section10, kendoWindowBug) {
             this.scrollMyBody = function (position) {
                 var $body;
 
@@ -10,16 +10,6 @@ var ScrollBody;
                 } else {
                     $("body").scrollTop(position);
                 }
-            };
-            this.goToSection = function (location, data, event) {
-                var offset = $("#" + location).offset();
-                if (!$("body").scrollTop()) {
-                    $("html, body").scrollTop(offset.top - 20);
-                } else {
-                    $("body").scrollTop(offset.top - 20);
-                }
-                $(event.target).closest("ul").find("li").removeClass("current");
-                $(event.target).closest("li").addClass("current");
             };
             this.section1 = ((section1) ? section1 : "");
             this.section2 = ((section2) ? section2 : "");
@@ -53,6 +43,7 @@ var ScrollBody;
             this.navSection10 = $("#nav_" + this.section10);
             this.kendoWindowBug = ((kendoWindowBug) ? kendoWindowBug : { val: 0 });
             this.$body;
+            this.$bindTo = $(bindTo);
         }
         Scroll.prototype.bindJquery = function () {
             var _this = this;
@@ -73,37 +64,54 @@ var ScrollBody;
                 } else {
                     _this.$body = $("body").scrollTop() + 100;
                 }
+                var aside = _this.$bindTo.find("aside");
                 if (_this.$body <= _this.section1Top.top + _this.mySection1.height() + 40) {
-                    $("aside").find("li").removeClass("current");
+                    aside.find("li").removeClass("current");
                     _this.navSection1.addClass("current");
                 } else if (_this.$body >= _this.section2Top.top && (_this.$body <= _this.section2Top.top + _this.mySection2.height() + 40 || _this.section3 === "")) {
-                    $("aside").find("li").removeClass("current");
+                    aside.find("li").removeClass("current");
                     _this.navSection2.addClass("current");
                 } else if (_this.$body >= _this.section3Top.top && (_this.$body <= _this.section3Top.top + _this.mySection3.height() + 40 || _this.section4 === "")) {
-                    $("aside").find("li").removeClass("current");
+                    aside.find("li").removeClass("current");
                     _this.navSection3.addClass("current");
                 } else if (_this.$body >= _this.section4Top.top && (_this.$body <= _this.section4Top.top + _this.mySection4.height() + 40 || _this.section5 === "")) {
-                    $("aside").find("li").removeClass("current");
+                    aside.find("li").removeClass("current");
                     _this.navSection4.addClass("current");
                 } else if (_this.$body >= _this.section5Top.top && (_this.$body <= _this.section5Top.top + _this.mySection5.height() + 40 || _this.section6 === "")) {
-                    $("aside").find("li").removeClass("current");
+                    aside.find("li").removeClass("current");
                     _this.navSection5.addClass("current");
                 } else if (_this.$body >= _this.section6Top.top && (_this.$body <= _this.section6Top.top + _this.mySection6.height() + 40 || _this.section7 === "")) {
-                    $("aside").find("li").removeClass("current");
+                    aside.find("li").removeClass("current");
                     _this.navSection6.addClass("current");
                 } else if (_this.$body >= _this.section7Top.top && (_this.$body <= _this.section7Top.top + _this.mySection7.height() + 40 || _this.section8 === "")) {
-                    $("aside").find("li").removeClass("current");
+                    aside.find("li").removeClass("current");
                     _this.navSection7.addClass("current");
                 } else if (_this.$body >= _this.section8Top.top && (_this.$body <= _this.section8Top.top + _this.mySection8.height() + 40 || _this.section9 === "")) {
-                    $("aside").find("li").removeClass("current");
+                    aside.find("li").removeClass("current");
                     _this.navSection8.addClass("current");
                 } else if (_this.$body >= _this.section9Top.top && (_this.$body <= _this.section9Top.top + _this.mySection8.height() + 40 || _this.section10 === "")) {
-                    $("aside").find("li").removeClass("current");
+                    aside.find("li").removeClass("current");
                     _this.navSection9.addClass("current");
                 } else if (_this.$body >= _this.section10Top.top) {
-                    $("aside").find("li").removeClass("current");
+                    aside.find("li").removeClass("current");
                     _this.navSection10.closest("li").addClass("current");
                 }
+            });
+
+            this.$bindTo.find(".side").find("a").click(function (event) {
+                var $body = $("body");
+                var location = $(this).parent().attr("id").substring(4);
+                var offset = $("#" + location).offset();
+                if (!$body.scrollTop()) {
+                    $("html, body").scrollTop(offset.top - 20);
+                } else {
+                    $body.scrollTop(offset.top - 20);
+                }
+                $(event.target).closest("ul").find("li").removeClass("current");
+
+                $(event.target).closest("li").addClass("current");
+                event.preventDefault();
+                event.stopPropagation();
             });
         };
         return Scroll;

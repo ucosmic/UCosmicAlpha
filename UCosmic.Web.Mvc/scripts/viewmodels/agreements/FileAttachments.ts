@@ -127,7 +127,7 @@ module Agreements {
                             customNameFile: e.files[0].name.substring(0, e.files[0].name.indexOf(e.files[0].extension)),
                             customNameExt: e.files[0].extension
                         }));
-                        $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * .85)));
+                        //$("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * .85)));
                     }
                 },
                 error: (e: any): void => {
@@ -166,7 +166,7 @@ module Agreements {
                     type: 'DELETE',
                     success: (): void => {
                         this.files.remove(me);
-                        $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * 1.1)));
+                        //$("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * 1.1)));
                     }
                 })
         }

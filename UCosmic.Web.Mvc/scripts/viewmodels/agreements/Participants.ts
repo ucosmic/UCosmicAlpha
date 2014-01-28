@@ -77,7 +77,7 @@ module Agreements {
                                     if (item.establishmentId() === establishmentResultViewModel.establishmentId()) {
                                         $(item.participantEl).slideUp('fast', function () {
                                             self.participants.remove(item);
-                                            $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * 1.1)));
+                                            //$("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * 1.1)));
                                         });
                                     }
                                     return false;
@@ -94,7 +94,7 @@ module Agreements {
                         if (item.establishmentId() === establishmentResultViewModel.establishmentId()) {
                             $(item.participantEl).slideUp('fast', function () {
                                 self.participants.remove(item);
-                                $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * 1.1)));
+                                //$("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * 1.1)));
                             });
                         }
                         return false;

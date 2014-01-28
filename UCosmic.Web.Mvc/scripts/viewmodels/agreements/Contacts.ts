@@ -271,7 +271,7 @@ module Agreements {
                 }
                 this.$addContactDialog.data("kendoWindow").close();
                 $("#addAContact").fadeIn(500);
-                $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * .85)));
+                //$("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * .85)));
                 if (this.agreementIsEdit()) {
                     var url = App.Routes.WebApi.Agreements.Contacts.post(this.agreementId);
 
@@ -368,7 +368,7 @@ module Agreements {
                         type: 'DELETE',
                         success: (): void => {
                             this.contacts.remove(me);
-                            $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * 1.1)));
+                            //$("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * 1.1)));
                         }
                     })
                     }
