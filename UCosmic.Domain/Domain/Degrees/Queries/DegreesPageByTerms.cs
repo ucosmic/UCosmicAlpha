@@ -56,7 +56,8 @@ namespace UCosmic.Domain.Degrees
                 var inYearAwarded = queryable.Where(x => (x.YearAwarded.HasValue && SqlFunctions.StringConvert((double)x.YearAwarded.Value).Contains(query.Keyword)));
                 var inEstablishment = queryable.Where(x => x.Institution != null && x.Institution.Names.Any(y => y.Text.Contains(query.Keyword)));
                 var inCountry = queryable.Where(x => x.Institution != null && x.Institution.Location.Places.Any(y => y.OfficialName.Contains(query.Keyword)));
-                queryable = inTitle.Union(inFieldOfStudy).Union(inYearAwarded).Union(inEstablishment).Union(inCountry);
+                var inPerson = queryable.Where(x => x.Person.DisplayName.Contains(query.Keyword));
+                queryable = inTitle.Union(inFieldOfStudy).Union(inYearAwarded).Union(inEstablishment).Union(inCountry).Union(inPerson);
             }
 
             queryable = queryable.OrderBy(query.OrderBy);
