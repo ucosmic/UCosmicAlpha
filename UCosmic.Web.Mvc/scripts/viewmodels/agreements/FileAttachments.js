@@ -287,7 +287,6 @@ var Agreements;
                 data: data,
                 error: function (xhr, statusText, errorThrown) {
                     _this.spinner.stop();
-
                     App.Failures.message(xhr, xhr.responseText, true);
                 }
             });

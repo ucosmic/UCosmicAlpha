@@ -197,38 +197,10 @@ module ViewModels.Degrees {
                                                                         this.establishmentSearchViewModel.sammy.setLocation("my/degrees/" + this.sammyUrl + "");
                                                                     })
                                                                     .fail((xhr: JQueryXHR): void => {
-                                                                        //if (xhr.status === 400) { // validation message will be in xhr response text...
-                                                                        //    this.establishmentItemViewModel.$genericAlertDialog.find('p.content')
-                                                                        //        .html(xhr.responseText.replace('\n', '<br /><br />'));
-                                                                        //    this.establishmentItemViewModel.$genericAlertDialog.dialog({
-                                                                        //        title: 'Alert Message',
-                                                                        //        dialogClass: 'jquery-ui',
-                                                                        //        width: 'auto',
-                                                                        //        resizable: false,
-                                                                        //        modal: true,
-                                                                        //        buttons: {
-                                                                        //            'Ok': (): void => { this.establishmentItemViewModel.$genericAlertDialog.dialog('close'); }
-                                                                        //        }
-                                                                        //    });
-                                                                        //}
                                                                         App.Failures.message(xhr, xhr.responseText, true);
                                                                     });
                                                             })
                                                             .fail((xhr: JQueryXHR): void => {
-                                                                //if (xhr.status === 400) { // validation message will be in xhr response text...
-                                                                //    this.establishmentItemViewModel.$genericAlertDialog.find('p.content')
-                                                                //        .html(xhr.responseText.replace('\n', '<br /><br />'));
-                                                                //    this.establishmentItemViewModel.$genericAlertDialog.dialog({
-                                                                //        title: 'Alert Message',
-                                                                //        dialogClass: 'jquery-ui',
-                                                                //        width: 'auto',
-                                                                //        resizable: false,
-                                                                //        modal: true,
-                                                                //        buttons: {
-                                                                //            'Ok': (): void => { this.establishmentItemViewModel.$genericAlertDialog.dialog('close'); }
-                                                                //        }
-                                                                //    });
-                                                                //}
                                                                 App.Failures.message(xhr, xhr.responseText, true);
                                                             });
                                                     }

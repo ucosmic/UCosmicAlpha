@@ -46,7 +46,6 @@ class InstitutionalAgreementEditModel {
             $.when(this.deferredPageFadeIn, this.deferredPopParticipants)
                 .done(() => {
                     this._updateKendoDialog($(window).width());
-                    //$("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * this.percentOffBodyHeight)));
                     this._bindjQueryKendo();
                 });
         } else {
@@ -62,8 +61,6 @@ class InstitutionalAgreementEditModel {
             $.when(this.deferredPopContacts, this.deferredPopFiles, this.deferredPopParticipants, this.deferredPageFadeIn)
                 .done(() => {
                     this._updateKendoDialog($(window).width());
-                    //$("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * this.percentOffBodyHeight)));
-                    //this._bindjQueryKendo();
                 });
         }
 
@@ -393,24 +390,6 @@ class InstitutionalAgreementEditModel {
                             sessionStorage.setItem("agreementSaved", "yes");
                             location.href = App.Routes.Mvc.Agreements.show(this.agreementId);
                         },
-                        //error: (xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
-                        //    this.savingAgreement = false;
-                        //    this.spinner.stop();
-                        //    if (xhr.status === 400) { // validation message will be in xhr response text...
-                        //        this.establishmentSearchNav.establishmentItemViewModel.$genericAlertDialog.find('p.content')
-                        //            .html(xhr.responseText.replace('\n', '<br /><br />'));
-                        //        this.establishmentSearchNav.establishmentItemViewModel.$genericAlertDialog.dialog({
-                        //            title: 'Alert Message',
-                        //            dialogClass: 'jquery-ui',
-                        //            width: 'auto',
-                        //            resizable: false,
-                        //            modal: true,
-                        //            buttons: {
-                        //                'Ok': (): void => { this.establishmentSearchNav.establishmentItemViewModel.$genericAlertDialog.dialog('close'); }
-                        //            }
-                        //        });
-                        //    }
-                        //},
                         error: (xhr: JQueryXHR): void => {
                             this.savingAgreement = false;
                             this.spinner.stop();
@@ -443,35 +422,10 @@ class InstitutionalAgreementEditModel {
                                 sessionStorage.setItem("agreementSaved", "yes");
                                 location.href = App.Routes.Mvc.Agreements.show(this.agreementId);
                             }
-                            ////change url to edit
-                            //$LoadingPage.text("Agreement Saved...");
-                            //setTimeout(function () {
-                            //    if (xhr != undefined) {
-                            //        window.location.hash = ""
-                            //    window.location.href = "/agreements/" + xhr.getResponseHeader('Location').substring(xhr.getResponseHeader('Location').lastIndexOf("/") + 1) + "/edit/"
-                            //    }
-                            //    else {
-                            //        alert("success, but no location")
-                            //}
-                            //}, 5000);
                         })
                         .fail((xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
                             this.savingAgreement = false;
                             this.spinner.stop();
-                            //if (xhr.status === 400) { // validation message will be in xhr response text...
-                            //    this.establishmentSearchNav.establishmentItemViewModel.$genericAlertDialog.find('p.content')
-                            //        .html(xhr.responseText.replace('\n', '<br /><br />'));
-                            //    this.establishmentSearchNav.establishmentItemViewModel.$genericAlertDialog.dialog({
-                            //        title: 'Alert Message',
-                            //        dialogClass: 'jquery-ui',
-                            //        width: 'auto',
-                            //        resizable: false,
-                            //        modal: true,
-                            //        buttons: {
-                            //            'Ok': (): void => { this.establishmentSearchNav.establishmentItemViewModel.$genericAlertDialog.dialog('close'); }
-                            //        }
-                            //    });
-                            //}
                             App.Failures.message(xhr, xhr.responseText, true);
                         });
                 }

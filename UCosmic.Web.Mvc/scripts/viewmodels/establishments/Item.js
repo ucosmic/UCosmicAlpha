@@ -413,7 +413,6 @@ var Establishments;
                             window.location.href = App.Routes.Mvc.Establishments.created({ location: xhr.getResponseHeader('Location') });
                         }).fail(function (xhr, statusText, errorThrown) {
                             _this.createSpinner.stop();
-
                             App.Failures.message(xhr, xhr.responseText, true);
                         });
                     }

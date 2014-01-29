@@ -660,25 +660,6 @@ module Agreements {
 
         //post files
         postMe(data, url): void {
-            //$.post(url, data)
-            //    .done((response: any, statusText: string, xhr: JQueryXHR): void => {
-            //    })
-            //    .fail((xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
-            //        if (xhr.status === 400) { // validation message will be in xhr response text...
-            //            this.establishmentItemViewModel.$genericAlertDialog.find('p.content')
-            //                .html(xhr.responseText.replace('\n', '<br /><br />'));
-            //            this.establishmentItemViewModel.$genericAlertDialog.dialog({
-            //                title: 'Alert Message',
-            //                dialogClass: 'jquery-ui',
-            //                width: 'auto',
-            //                resizable: false,
-            //                modal: true,
-            //                buttons: {
-            //                    'Ok': (): void => { this.establishmentItemViewModel.$genericAlertDialog.dialog('close'); }
-            //                }
-            //            });
-            //        }
-            //    });
 
             $.ajax({
                 type: 'POST',
@@ -686,20 +667,6 @@ module Agreements {
                 async: false,// need to do this before page redirect.
                 data: data,
                 error: (xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
-                    //if (xhr.status === 400) { // validation message will be in xhr response text...
-                    //    this.establishmentItemViewModel.$genericAlertDialog.find('p.content')
-                    //        .html(xhr.responseText.replace('\n', '<br /><br />'));
-                    //    this.establishmentItemViewModel.$genericAlertDialog.dialog({
-                    //        title: 'Alert Message',
-                    //        dialogClass: 'jquery-ui',
-                    //        width: 'auto',
-                    //        resizable: false,
-                    //        modal: true,
-                    //        buttons: {
-                    //            'Ok': (): void => { this.establishmentItemViewModel.$genericAlertDialog.dialog('close'); }
-                    //        }
-                    //    });
-                    //}
                     App.Failures.message(xhr, xhr.responseText, true);
                 }
             });

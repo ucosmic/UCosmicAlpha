@@ -261,48 +261,7 @@ module Agreements {
                                                                     })
                                                                     .fail((xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
                                                                         App.Failures.message(xhr, xhr.responseText, true);
-                                                                        //if (xhr.status === 400) { // validation message will be in xhr response text...
-                                                                        //    this.establishmentItemViewModel.$genericAlertDialog.find('p.content')
-                                                                        //        .html(xhr.responseText.replace('\n', '<br /><br />'));
-                                                                        //    this.establishmentItemViewModel.$genericAlertDialog.dialog({
-                                                                        //        title: 'Alert Message',
-                                                                        //        dialogClass: 'jquery-ui',
-                                                                        //        width: 'auto',
-                                                                        //        resizable: false,
-                                                                        //        modal: true,
-                                                                        //        buttons: {
-                                                                        //            'Ok': (): void => { this.establishmentItemViewModel.$genericAlertDialog.dialog('close'); }
-                                                                        //        }
-                                                                        //    });
-
-                                                                        //};
-                                                                        //$LoadingPage.text("Establishment created, you are being redirected to previous page...");
-                                                                        //$("#add_establishment").fadeOut(500, () => {
-                                                                        //    $("#Loading_page").fadeIn(500);
-                                                                        //    setTimeout(() => {
-                                                                        //        $("#Loading_page").fadeOut(500, function () {
-                                                                        //            $LoadingPage.text("Loading Page...");
-                                                                        //        });
-                                                                        //        this.establishmentSearchViewModel.sammy.setLocation('#/page/1/');
-                                                                        //    }, 5000);
-                                                                        //});
                                                                     });
-                                                                //.fail((xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
-                                                                //    if (xhr.status === 400) { // validation message will be in xhr response text...
-                                                                //        this.establishmentItemViewModel.$genericAlertDialog.find('p.content')
-                                                                //            .html(xhr.responseText.replace('\n', '<br /><br />'));
-                                                                //        this.establishmentItemViewModel.$genericAlertDialog.dialog({
-                                                                //            title: 'Alert Message',
-                                                                //            dialogClass: 'jquery-ui',
-                                                                //            width: 'auto',
-                                                                //            resizable: false,
-                                                                //            modal: true,
-                                                                //            buttons: {
-                                                                //                'Ok': (): void => { this.establishmentItemViewModel.$genericAlertDialog.dialog('close'); }
-                                                                //            }
-                                                                //        });
-                                                                //    }
-                                                                //});
                                                             });
                                                     }
                                                 }

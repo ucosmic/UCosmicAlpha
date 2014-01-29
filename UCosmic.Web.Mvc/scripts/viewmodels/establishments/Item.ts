@@ -168,9 +168,6 @@ module Establishments.ViewModels {
 
         constructor(id?: number, doSetupSammy?: boolean) {
 
-            //this.scrollBody = new ScrollBody.Scroll("#establishment_page", "names", "urls",
-            //    "parent", "location", "classification", null, null, null, null,
-            //    null, null).bindJquery();
             this.scrollBody = new ScrollBody.Scroll({
                 bindTo: "#establishment_page",
                 section1: "names",
@@ -179,7 +176,6 @@ module Establishments.ViewModels {
                 section4: "location",
                 section5: "classification"
             }).bindJquery();
-            //scrollBody.bindJquery();
             // initialize the aggregate id
             this.id = id || 0;
             doSetupSammy = (doSetupSammy === false) ? false : true;
@@ -272,12 +268,7 @@ module Establishments.ViewModels {
                     if (!this._isInitialized()) {
                         this._isInitialized(true); // bindings have been applied
                     }
-                });//,
-
-            // one of the responses failed (never called more than once, even on multifailures)
-            //(xhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
-            //    //alert('a GET API call failed :(');
-            //});
+                });
 
             ko.validation.group(this);
             if (doSetupSammy) {
@@ -480,21 +471,7 @@ module Establishments.ViewModels {
 
                         })
                         .fail((xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
-                            this.createSpinner.stop();
-                            //if (xhr.status === 400) { // validation message will be in xhr response text...
-                            //    this.$genericAlertDialog.find('p.content')
-                            //        .html(xhr.responseText.replace('\n', '<br /><br />'));
-                            //    this.$genericAlertDialog.dialog({
-                            //        title: 'Alert Message',
-                            //        dialogClass: 'jquery-ui',
-                            //        width: 'auto',
-                            //        resizable: false,
-                            //        modal: true,
-                            //        buttons: {
-                            //            'Ok': (): void => { this.$genericAlertDialog.dialog('close'); }
-                            //        }
-                            //    });
-                            //}
+                            this.createSpinner.stop();//}
                             App.Failures.message(xhr, xhr.responseText, true);
                         });
                 }

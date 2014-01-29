@@ -61,7 +61,6 @@ var InstitutionalAgreementEditModel = (function () {
             this.participants.populateParticipants();
             $.when(this.deferredPageFadeIn, this.deferredPopParticipants).done(function () {
                 _this._updateKendoDialog($(window).width());
-
                 _this._bindjQueryKendo();
             });
         } else {
@@ -386,7 +385,6 @@ var InstitutionalAgreementEditModel = (function () {
                     }).fail(function (xhr, statusText, errorThrown) {
                         _this.savingAgreement = false;
                         _this.spinner.stop();
-
                         App.Failures.message(xhr, xhr.responseText, true);
                     });
                 }
