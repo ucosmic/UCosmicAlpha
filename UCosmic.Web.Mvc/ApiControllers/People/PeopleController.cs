@@ -21,18 +21,18 @@ namespace UCosmic.Web.Mvc.ApiControllers
     {
         private readonly IProcessQueries _queryProcessor;
         private readonly IHandleCommands<UpdatePerson> _updatePerson;
-        private readonly IHandleCommands<DeletePerson> _deletePerson;
+        //private readonly IHandleCommands<DeletePerson> _deletePerson;
         private readonly IStoreBinaryData _binaryData;
 
         public PeopleController(IProcessQueries queryProcessor
             , IHandleCommands<UpdatePerson> updatePerson
-            , IHandleCommands<DeletePerson> deletePerson
+            //, IHandleCommands<DeletePerson> deletePerson
             , IStoreBinaryData binaryData
         )
         {
             _queryProcessor = queryProcessor;
             _updatePerson = updatePerson;
-            _deletePerson = deletePerson;
+            //_deletePerson = deletePerson;
             _binaryData = binaryData;
         }
 
@@ -123,15 +123,16 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return response;
         }
 
-        [Authorize(Roles = RoleName.EmployeeProfileManager)]
-        [DELETE("{id}")]
-        public HttpResponseMessage Delete(int id)
-        {
-            if (id == 0) throw new HttpResponseException(HttpStatusCode.BadRequest);
+        // todo: should never really delete a person from API, instead should disassociate
+        //[Authorize(Roles = RoleName.EmployeeProfileManager)]
+        //[DELETE("{id}")]
+        //public HttpResponseMessage Delete(int id)
+        //{
+        //    if (id == 0) throw new HttpResponseException(HttpStatusCode.BadRequest);
 
-            var deleteCommand = new DeletePerson(User, id);
-            _deletePerson.Handle(deleteCommand);
-            return Request.CreateResponse(HttpStatusCode.OK);
-        }
+        //    var deleteCommand = new DeletePerson(User, id);
+        //    _deletePerson.Handle(deleteCommand);
+        //    return Request.CreateResponse(HttpStatusCode.OK);
+        //}
     }
 }

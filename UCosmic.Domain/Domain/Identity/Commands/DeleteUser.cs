@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Security.Principal;
 using FluentValidation;
 
@@ -34,6 +35,7 @@ namespace UCosmic.Domain.Identity
             ;
 
             RuleFor(x => x.Id)
+                .MustFindUserById(entities)
                 .MustBeTenantUserId(queryProcessor, x => x.Principal)
                     .WithMessage(MustBeTenantUserId<object>.FailMessageFormat, x => x.Principal.Identity.Name, x => x.GetType().Name, x => x.Id)
             ;
@@ -55,11 +57,23 @@ namespace UCosmic.Domain.Identity
         {
             if (command == null) throw new ArgumentNullException("command");
 
-            var user = _entities.Get<User>().SingleOrDefault(a => a.RevisionId == command.Id);
-            if (user == null) { throw new Exception("User not found."); }
+            var user = _entities.Get<User>()
+                .EagerLoad(_entities, new Expression<Func<User, object>>[]
+                {
+                    x => x.Person.Affiliations,
+                })
+                .Single(a => a.RevisionId == command.Id);
+
+            // when deleting a user, we also want to disassociate their person from tenancy
+            var person = user.Person;
+            if (person != null)
+            {
+                person.IsActive = false;
+                if (person.DefaultAffiliation != null)
+                    person.DefaultAffiliation.IsDefault = false;
+            }
 
             _entities.Purge(user);
-
             _unitOfWork.SaveChanges();
         }
     }

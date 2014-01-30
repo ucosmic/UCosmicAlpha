@@ -1,4 +1,4 @@
-var ViewModels;
+﻿var ViewModels;
 (function (ViewModels) {
     (function (Users) {
         var RoleGrantValidator = (function () {
@@ -71,6 +71,7 @@ var ViewModels;
                 this.selectedRoleOption = ko.observable();
                 this.roleToRevoke = ko.observable();
                 this.$roleSelect = ko.observable();
+                this.deleteSpinner = new App.Spinner();
                 this.roleSpinner = new App.Spinner({ delay: 0, isVisible: true });
                 this.isRevokeError = ko.observable();
                 this.revokeErrorText = ko.observable();
@@ -352,37 +353,51 @@ var ViewModels;
             };
 
             SearchResult.prototype.deleteUser = function () {
-                var me = this;
-                $("#confirmUserDeleteDialog").dialog({
-                    width: 300,
-                    height: 200,
-                    modal: true,
-                    resizable: false,
-                    draggable: false,
-                    buttons: {
-                        "Delete": function () {
-                            $.ajax({
-                                async: false,
-                                type: "DELETE",
-                                url: App.Routes.WebApi.Identity.Users.del(me.id()),
-                                success: function (data, statusText, jqXHR) {
-                                    if (statusText !== "success") {
-                                        alert(jqXHR.statusText);
-                                    }
-                                },
-                                error: function (jqXHR, statusText, errorThrown) {
-                                    alert(statusText);
-                                },
-                                complete: function (jqXHR, statusText) {
-                                    $("#confirmUserDeleteDialog").dialog("close");
-                                    window.location.reload();
-                                }
-                            });
-                        },
-                        "Cancel": function () {
-                            $("#confirmUserDeleteDialog").dialog("close");
-                        }
+                var _this = this;
+                var disableButtons = function (disable) {
+                    if (typeof disable === "undefined") { disable = true; }
+                    if (disable) {
+                        _this.$confirmPurgeDialog.parents('.ui-dialog').find('button').attr('disabled', 'disabled');
+                    } else {
+                        _this.$confirmPurgeDialog.parents('.ui-dialog').find('button').removeAttr('disabled');
                     }
+                };
+
+                this.$confirmPurgeDialog.dialog({
+                    dialogClass: 'jquery-ui',
+                    width: 'auto',
+                    resizable: false,
+                    modal: true,
+                    buttons: [
+                        {
+                            text: 'Yes, confirm delete',
+                            click: function () {
+                                _this.deleteSpinner.start();
+                                disableButtons();
+                                $.ajax({
+                                    type: "DELETE",
+                                    url: App.Routes.WebApi.Identity.Users.del(_this.id())
+                                }).done(function () {
+                                    _this._owner._pullResults().done(function (response) {
+                                        _this._owner._loadResults(response);
+                                        _this.$confirmPurgeDialog.dialog('close');
+                                    });
+                                }).fail(function (xhr) {
+                                    App.Failures.message(xhr, 'while trying to delete this user', true);
+                                }).always(function () {
+                                    _this.deleteSpinner.stop();
+                                    disableButtons(false);
+                                });
+                            }
+                        },
+                        {
+                            text: 'No, cancel delete',
+                            click: function () {
+                                _this.$confirmPurgeDialog.dialog('close');
+                            },
+                            'data-css-link': true
+                        }
+                    ]
                 });
             };
             return SearchResult;

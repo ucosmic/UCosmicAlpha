@@ -78,6 +78,8 @@ module ViewModels.Users {
         selectedRoleOption = ko.observable<number>();
         roleToRevoke = ko.observable<number>();
         $roleSelect = ko.observable<JQuery>();
+        $confirmPurgeDialog: JQuery;
+        deleteSpinner = new App.Spinner();
         isRoleGrantDisabled: KnockoutComputed<boolean>;
         roleSpinner = new App.Spinner({ delay: 0, isVisible: true });
         isRevokeError = ko.observable<boolean>();
@@ -384,38 +386,56 @@ module ViewModels.Users {
         }
 
         deleteUser(): void {
-            var me = this;
-            $("#confirmUserDeleteDialog").dialog({
-                width: 300,
-                height: 200,
-                modal: true,
-                resizable: false,
-                draggable: false,
-                buttons: {
-                    "Delete": function () {
-                        $.ajax({
-                            async: false,
-                            type: "DELETE",
-                            url: App.Routes.WebApi.Identity.Users.del(me.id()),
-                            success: function (data: any, statusText: string, jqXHR: JQueryXHR) {
-                                if (statusText !== "success") {
-                                    alert(jqXHR.statusText);
-                                }
-                            },
-                            error: function (jqXHR, statusText, errorThrown) {
-                                alert(statusText);
-                            },
-                            complete: function (jqXHR, statusText) {
-                                $("#confirmUserDeleteDialog").dialog("close");
-                                window.location.reload();
-                            }
-                        });
-                    },
 
-                    "Cancel": function () {
-                        $("#confirmUserDeleteDialog").dialog("close");
-                    }
+            var disableButtons = (disable: boolean = true): void => {
+                if (disable) {
+                    this.$confirmPurgeDialog.parents('.ui-dialog').find('button').attr('disabled', 'disabled');
+                } else {
+                    this.$confirmPurgeDialog.parents('.ui-dialog').find('button').removeAttr('disabled');
                 }
+            }
+
+            this.$confirmPurgeDialog.dialog({
+                dialogClass: 'jquery-ui',
+                width: 'auto',
+                resizable: false,
+                modal: true,
+                buttons: [
+                    {
+                        text: 'Yes, confirm delete',
+                        click: (): void => {
+                            // disable the button & show spinner
+                            this.deleteSpinner.start();
+                            disableButtons();
+                            $.ajax({
+                                //async: false,
+                                type: "DELETE",
+                                url: App.Routes.WebApi.Identity.Users.del(this.id()),
+                            })
+                                .done((): void => {
+                                    this._owner._pullResults().done((response: any[]): void => {
+                                        this._owner._loadResults(response);
+                                        this.$confirmPurgeDialog.dialog('close');
+                                    });
+                                })
+                                .fail((xhr: JQueryXHR): void => {
+                                    App.Failures.message(xhr, 'while trying to delete this user', true);
+                                })
+                                .always((): void => {
+                                    this.deleteSpinner.stop();
+                                    disableButtons(false);
+                                });
+                        }
+
+                    },
+                    {
+                        text: 'No, cancel delete',
+                        click: (): void => {
+                            this.$confirmPurgeDialog.dialog('close');
+                        },
+                        'data-css-link': true
+                    },
+                ],
             });
         }
     }

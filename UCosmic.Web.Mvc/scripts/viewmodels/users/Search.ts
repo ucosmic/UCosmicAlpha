@@ -27,7 +27,7 @@ module ViewModels.Users {
             this._setupSessionStorage();
         }
 
-        private _pullResults(): JQueryDeferred<any[]> {
+        _pullResults(): JQueryDeferred<any[]> {
             var deferred = $.Deferred();
             var queryParameters = {
                 pageSize: this.pageSize(),
@@ -57,7 +57,7 @@ module ViewModels.Users {
             return deferred;
         }
 
-        private _loadResults(results: any): void {
+        _loadResults(results: any): void {
             var resultsMapping = {
                 items: {
                     key: (data: any): any => {

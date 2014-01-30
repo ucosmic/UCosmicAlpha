@@ -11,7 +11,6 @@ using AutoMapper;
 using FluentValidation;
 using FluentValidation.Results;
 using UCosmic.Domain.Identity;
-using UCosmic.Domain.People;
 using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc.ApiControllers
@@ -23,20 +22,20 @@ namespace UCosmic.Web.Mvc.ApiControllers
         private readonly IProcessQueries _queryProcessor;
         private readonly IHandleCommands<CreateUser> _createUser;
         private readonly IHandleCommands<DeleteUser> _deleteUser;
-        private readonly IHandleCommands<DeletePerson> _deletePerson;
+        //private readonly IHandleCommands<DeletePerson> _deletePerson;
         private readonly IValidator<CreateUser> _createValidator;
 
         public UsersController(IProcessQueries queryProcessor
             , IHandleCommands<CreateUser> createUser
             , IHandleCommands<DeleteUser> deleteUser
-            , IHandleCommands<DeletePerson> deletePerson
+            //, IHandleCommands<DeletePerson> deletePerson
             , IValidator<CreateUser> createValidator
         )
         {
             _queryProcessor = queryProcessor;
             _createUser = createUser;
             _deleteUser = deleteUser;
-            _deletePerson = deletePerson;
+            //_deletePerson = deletePerson;
             _createValidator = createValidator;
         }
 
@@ -143,39 +142,23 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [DELETE("{userId:int}")]
         public HttpResponseMessage Delete(int userId)
         {
+            //System.Threading.Thread.Sleep(3000);
+
             if (userId == 0)
                 return Request.CreateResponse(HttpStatusCode.BadRequest);
 
-            try
+            var user = _queryProcessor.Execute(new UserById(userId)
             {
-                var user = _queryProcessor.Execute(new UserById(userId)
+                EagerLoad = new Expression<Func<User, object>>[]
                 {
-                    EagerLoad = new Expression<Func<User, object>>[]
-                    {
-                        x => x.Person
-                    }
-                });
-
-                if (user != null)
-                {
-                    int personId = user.Person.RevisionId;
-
-                    var deleteUserCommand = new DeleteUser(User, user.RevisionId);
-                    _deleteUser.Handle(deleteUserCommand);
-
-                    var deletePersonCommand = new DeletePerson(User, personId);
-                    _deletePerson.Handle(deletePersonCommand);
+                    x => x.Person
                 }
-            }
-            catch (Exception ex)
+            });
+
+            if (user != null)
             {
-                var responseMessage = new HttpResponseMessage
-                {
-                    StatusCode = HttpStatusCode.NotModified,
-                    Content = new StringContent(ex.Message),
-                    ReasonPhrase = "User Delete Error"
-                };
-                throw new HttpResponseException(responseMessage);
+                var deleteUserCommand = new DeleteUser(User, user.RevisionId);
+                _deleteUser.Handle(deleteUserCommand);
             }
 
             return Request.CreateResponse(HttpStatusCode.OK);
