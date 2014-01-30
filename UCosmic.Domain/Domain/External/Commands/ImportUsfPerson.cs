@@ -33,14 +33,12 @@ namespace UCosmic.Domain.External
         private readonly ICommandEntities _entities;
         private readonly IHandleCommands<ImportUsfEstablishments> _importEstablishments;
         private readonly IHandleCommands<CreateAffiliation> _createAffiliation;
-        private readonly IHandleCommands<CreateEmailAddress> _createEmailAddress;
         private readonly IHandleCommands<UpdatePerson> _updatePerson;
 
         public HandleImportUsfPersonCommand(IProcessQueries queryProcessor
             , ICommandEntities entities
             , IHandleCommands<ImportUsfEstablishments> importEstablishments
             , IHandleCommands<CreateAffiliation> createAffiliation
-            , IHandleCommands<CreateEmailAddress> createEmailAddress
             , IHandleCommands<UpdatePerson> updatePerson
         )
         {
@@ -48,7 +46,6 @@ namespace UCosmic.Domain.External
             _entities = entities;
             _importEstablishments = importEstablishments;
             _createAffiliation = createAffiliation;
-            _createEmailAddress = createEmailAddress;
             _updatePerson = updatePerson;
         }
 
@@ -127,16 +124,14 @@ namespace UCosmic.Domain.External
                 }
             }
 
-            // possibly add a new email address
-            if (user.Person.Emails.Any(x => x.Value.Equals(usfPerson.EmailAddress, StringComparison.OrdinalIgnoreCase)))
+            // possibly add a new email addresss
+            if (!user.Name.Equals(usfPerson.EmailAddress, StringComparison.OrdinalIgnoreCase))
             {
                 reportBuilder.Report("USF person has email address '{0}' different from username.", usfPerson.EmailAddress);
-                _createEmailAddress.Handle(new CreateEmailAddress(usfPerson.EmailAddress, user.Person)
-                {
-                    NoCommit = true,
-                    IsFromSaml = false,
-                    IsConfirmed = true,
-                });
+
+                // create user command will already have created an email based on the username / EPPN
+                // we trust USF email addresses, so change the email added during person creation
+                user.Person.Emails.Single(x => x.IsDefault).Value = usfPerson.EmailAddress;
             }
 
             // update person
