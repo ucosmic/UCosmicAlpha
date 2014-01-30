@@ -136,148 +136,158 @@ module Agreements {
                             $obj = $("#establishment_search"),
                             $obj2 = $("[data-current-module='agreements']"),
                             time = 500;
-                            //$("body").css("min-height", 0);
                             this.fadeModsOut(deferred, deferred2, $obj, $obj2, time);
                             $.when(deferred, deferred2)
                                 .done(() => {
+                                    $("#establishment_page").find("aside").find("li").removeClass("current");
+                                    $("#nav_names").addClass("current");
                                     $addEstablishment.css("visibility", "").hide().fadeIn(500, () => {
-                                        if (!this.hasBoundItem) {
-                                            var $cancelAddEstablishment = $("#cancelAddEstablishment");
+                                    //ko.cleanNode($addEstablishment[0]);
+                                    if (!this.hasBoundItem) {
+                                        var $cancelAddEstablishment = $("#cancelAddEstablishment");
 
-                                            this.establishmentItemViewModel = new Establishments.ViewModels.Item(null, false);
-                                            this.establishmentItemViewModel.goToSearch = () => {
-                                                sessionStorage.setItem("addest", "yes");
-                                                this.establishmentSearchViewModel.sammy.setLocation('#/page/1/');
-                                            }
-                                            this.establishmentItemViewModel.submitToCreate = (formElement: HTMLFormElement): boolean => {
-                                                if (!this.establishmentItemViewModel.id || this.establishmentItemViewModel.id === 0) {
-                                                    var me = this.establishmentItemViewModel,
-                                                        officialName: Establishments.ViewModels.Name = this.establishmentItemViewModel.names()[0],
-                                                        officialUrl: Establishments.ViewModels.Url = this.establishmentItemViewModel.urls()[0],
-                                                        location = this.establishmentItemViewModel.location;
+                                        this.establishmentItemViewModel = new Establishments.ViewModels.Item(null, false);
+                                        this.establishmentItemViewModel.goToSearch = () => {
+                                            sessionStorage.setItem("addest", "yes");
+                                            this.establishmentSearchViewModel.sammy.setLocation('#/page/1/');
+                                        }
+                                        this.establishmentItemViewModel.submitToCreate = (formElement: HTMLFormElement): boolean => {
+                                            if (!this.establishmentItemViewModel.id || this.establishmentItemViewModel.id === 0) {
+                                                var me = this.establishmentItemViewModel,
+                                                    officialName: Establishments.ViewModels.Name = this.establishmentItemViewModel.names()[0],
+                                                    officialUrl: Establishments.ViewModels.Url = this.establishmentItemViewModel.urls()[0],
+                                                    location = this.establishmentItemViewModel.location;
 
-                                                    this.establishmentItemViewModel.validatingSpinner.start();
-                                                    // reference the single name and url
-                                                    // wait for async validation to stop
-                                                    if (officialName.text.isValidating() || officialUrl.value.isValidating() ||
-                                                        this.establishmentItemViewModel.ceebCode.isValidating() || this.establishmentItemViewModel.uCosmicCode.isValidating()) {
-                                                        setTimeout((): boolean => {
-                                                            var waitResult = this.establishmentItemViewModel.submitToCreate(formElement);
+                                                this.establishmentItemViewModel.validatingSpinner.start();
+                                                // reference the single name and url
+                                                // wait for async validation to stop
+                                                if (officialName.text.isValidating() || officialUrl.value.isValidating() ||
+                                                    this.establishmentItemViewModel.ceebCode.isValidating() || this.establishmentItemViewModel.uCosmicCode.isValidating()) {
+                                                    setTimeout((): boolean => {
+                                                        var waitResult = this.establishmentItemViewModel.submitToCreate(formElement);
 
-                                                            return false;
-                                                        }, 50);
                                                         return false;
-                                                    }
-                                                    // check validity
-                                                    this.establishmentItemViewModel.isValidationSummaryVisible(true);
-                                                    if (!this.establishmentItemViewModel.isValid()) {
-                                                        this.establishmentItemViewModel.errors.showAllMessages();
-                                                    }
-                                                    if (!officialName.isValid()) {
-                                                        officialName.errors.showAllMessages();
-                                                    }
-                                                    if (!officialUrl.isValid()) {
-                                                        officialUrl.errors.showAllMessages();
-                                                    }
-                                                    this.establishmentItemViewModel.validatingSpinner.stop();
-                                                    if (officialName.isValid() && officialUrl.isValid() && this.establishmentItemViewModel.isValid()) {
-                                                        var $LoadingPage = $("#Loading_page").find("strong"),
-                                                            url = App.Routes.WebApi.Establishments.post(),
-                                                            data = this.establishmentItemViewModel.serializeData();
+                                                    }, 50);
+                                                    return false;
+                                                }
+                                                // check validity
+                                                this.establishmentItemViewModel.isValidationSummaryVisible(true);
+                                                if (!this.establishmentItemViewModel.isValid()) {
+                                                    this.establishmentItemViewModel.errors.showAllMessages();
+                                                }
+                                                if (!officialName.isValid()) {
+                                                    officialName.errors.showAllMessages();
+                                                }
+                                                if (!officialUrl.isValid()) {
+                                                    officialUrl.errors.showAllMessages();
+                                                }
+                                                this.establishmentItemViewModel.validatingSpinner.stop();
+                                                if (officialName.isValid() && officialUrl.isValid() && this.establishmentItemViewModel.isValid()) {
+                                                    var $LoadingPage = $("#Loading_page").find("strong"),
+                                                        url = App.Routes.WebApi.Establishments.post(),
+                                                        data = this.establishmentItemViewModel.serializeData();
 
-                                                        $LoadingPage.text("Creating Establishment...");
-                                                        data.officialName = officialName.serializeData();
-                                                        data.officialUrl = officialUrl.serializeData();
-                                                        data.location = location.serializeData();
-                                                        this.establishmentItemViewModel.createSpinner.start();
-                                                        $.post(url, data)
-                                                            .done((response: any, statusText: string, xhr: JQueryXHR): void => {
-                                                                this.establishmentItemViewModel.createSpinner.stop();
-                                                                $("#add_establishment").fadeOut(500, () => {
-                                                                });
-                                                                var establishmentId = parseInt(xhr.getResponseHeader('Location').substring(xhr.getResponseHeader('Location').lastIndexOf("/") + 1));
-                                                                $.get(App.Routes.WebApi.Establishments.get(establishmentId))
-                                                                    .done((response: any): void => {
-                                                                        App.flasher.flash("Establishment Created.");
-                                                                        var myParticipant = new InstitutionalAgreementParticipantModel(
+                                                    $LoadingPage.text("Creating Establishment...");
+                                                    data.officialName = officialName.serializeData();
+                                                    data.officialUrl = officialUrl.serializeData();
+                                                    data.location = location.serializeData();
+                                                    this.establishmentItemViewModel.createSpinner.start();
+                                                    $.post(url, data)
+                                                        .done((response: any, statusText: string, xhr: JQueryXHR): void => {
+                                                            this.establishmentItemViewModel.createSpinner.stop();
+                                                            $("#add_establishment").fadeOut(500, () => {
+                                                            });
+                                                            var establishmentId = parseInt(xhr.getResponseHeader('Location').substring(xhr.getResponseHeader('Location').lastIndexOf("/") + 1));
+                                                            $.get(App.Routes.WebApi.Establishments.get(establishmentId))
+                                                                .done((response: any): void => {
+                                                                    App.flasher.flash("Establishment Created.");
+                                                                    var myParticipant = new InstitutionalAgreementParticipantModel(
                                                                             false,
                                                                             response.id,
                                                                             response.officialName,
                                                                             response.translatedName
-                                                                            ),
-                                                                            alreadyExist = false;
-                                                                        $.ajax({
+                                                                        ),
+                                                                        alreadyExist = false;
+                                                                    $.ajax({
                                                                             url: App.Routes.WebApi.Agreements.Participants.isOwner(myParticipant.establishmentId()),
                                                                             type: 'GET',
                                                                             async: false
                                                                         })
-                                                                            .done((response) => {
-                                                                                myParticipant.isOwner(response);
-                                                                                if (this.agreementIsEdit()) {
-                                                                                    var url = App.Routes.WebApi.Agreements.Participants.put(this.agreementId, myParticipant.establishmentId());
+                                                                        .done((response) => {
+                                                                            myParticipant.isOwner(response);
+                                                                            if (this.agreementIsEdit()) {
+                                                                                var url = App.Routes.WebApi.Agreements.Participants.put(this.agreementId, myParticipant.establishmentId());
 
-                                                                                    $.ajax({
-                                                                                        type: 'PUT',
-                                                                                        url: url,
-                                                                                        data: myParticipant,
-                                                                                        success: (response: any, statusText: string, xhr: JQueryXHR): void => {
-                                                                                            this.participants.participants.push(myParticipant);
-                                                                                        },
-                                                                                        error: (xhr: JQueryXHR): void => {
-                                                                                            App.Failures.message(xhr, xhr.responseText, true);
-                                                                                        }
-                                                                                    });
-                                                                                } else {
-                                                                                    this.participants.participants.push(myParticipant);
-                                                                                }
-                                                                                this.establishmentItemViewModel.urls()[0].value("")
-                                                                                this.establishmentItemViewModel.names()[0].text("");
-                                                                                officialName.errors.showAllMessages(false);
-                                                                                officialUrl.errors.showAllMessages(false);
-                                                                                this.establishmentItemViewModel.isValidationSummaryVisible(false);
+                                                                                $.ajax({
+                                                                                    type: 'PUT',
+                                                                                    url: url,
+                                                                                    data: myParticipant,
+                                                                                    success: (response: any, statusText: string, xhr: JQueryXHR): void => {
+                                                                                        this.participants.participants.push(myParticipant);
+                                                                                    },
+                                                                                    error: (xhr: JQueryXHR): void => {
+                                                                                        App.Failures.message(xhr, xhr.responseText, true);
+                                                                                    }
+                                                                                });
+                                                                            } else {
+                                                                                this.participants.participants.push(myParticipant);
+                                                                            }
+                                                                            //reset values
+                                                                            this.establishmentItemViewModel.urls()[0].value("")
+                                                                            this.establishmentItemViewModel.names()[0].text("");
+                                                                            this.establishmentItemViewModel.names()[0].selectedLanguageCode("");
+                                                                            this.establishmentItemViewModel.parentId(undefined);
+                                                                            this.establishmentItemViewModel.location.countryId(null);
+                                                                            this.establishmentItemViewModel.typeId(null);
+                                                                            this.establishmentItemViewModel.ceebCode(null);
+                                                                            this.establishmentItemViewModel.uCosmicCode(null);
+                                                                            this.establishmentItemViewModel.errors.showAllMessages(false);
+                                                                            officialName.errors.showAllMessages(false);
+                                                                            officialUrl.errors.showAllMessages(false);
+                                                                            this.establishmentItemViewModel.isValidationSummaryVisible(false);
 
-                                                                                this.establishmentSearchViewModel.sammy.setLocation("agreements/" + this.editOrNewUrl.val + "");
-                                                                            })
-                                                                            .fail(() => {
-                                                                                if (this.agreementIsEdit()) {
-                                                                                    var url = App.Routes.WebApi.Agreements.Participants.put(this.agreementId, myParticipant.establishmentId());
+                                                                            this.establishmentSearchViewModel.sammy.setLocation("agreements/" + this.editOrNewUrl.val + "");
+                                                                        })
+                                                                        .fail(() => {
+                                                                            if (this.agreementIsEdit()) {
+                                                                                var url = App.Routes.WebApi.Agreements.Participants.put(this.agreementId, myParticipant.establishmentId());
 
-                                                                                    $.ajax({
-                                                                                        type: 'PUT',
-                                                                                        url: url,
-                                                                                        data: myParticipant,
-                                                                                        success: (response: any, statusText: string, xhr: JQueryXHR): void => {
-                                                                                            this.participants.participants.push(myParticipant);
-                                                                                        },
-                                                                                        error: (xhr: JQueryXHR): void => {
-                                                                                            App.Failures.message(xhr, xhr.responseText, true);
-                                                                                        }
-                                                                                    });
-                                                                                } else {
-                                                                                    this.participants.participants.push(myParticipant);
-                                                                                }
-                                                                                this.establishmentSearchViewModel.sammy.setLocation("agreements/" + this.editOrNewUrl.val + "");
-                                                                            });
-                                                                    })
-                                                                    .fail((xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
-                                                                        App.Failures.message(xhr, xhr.responseText, true);
-                                                                    });
-                                                            });
-                                                    }
+                                                                                $.ajax({
+                                                                                    type: 'PUT',
+                                                                                    url: url,
+                                                                                    data: myParticipant,
+                                                                                    success: (response: any, statusText: string, xhr: JQueryXHR): void => {
+                                                                                        this.participants.participants.push(myParticipant);
+                                                                                    },
+                                                                                    error: (xhr: JQueryXHR): void => {
+                                                                                        App.Failures.message(xhr, xhr.responseText, true);
+                                                                                    }
+                                                                                });
+                                                                            } else {
+                                                                                this.participants.participants.push(myParticipant);
+                                                                            }
+                                                                            this.establishmentSearchViewModel.sammy.setLocation("agreements/" + this.editOrNewUrl.val + "");
+                                                                        });
+                                                                })
+                                                                .fail((xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
+                                                                    App.Failures.message(xhr, xhr.responseText, true);
+                                                                });
+                                                        });
                                                 }
-                                                return false;
                                             }
-                                            ko.applyBindings(this.establishmentItemViewModel, $addEstablishment[0]);
-                                            $cancelAddEstablishment.on("click", (e) => {
-                                                sessionStorage.setItem("addest", "no");
-                                                this.establishmentSearchViewModel.sammy.setLocation('#/page/1/');
-                                                e.preventDefault();
-                                                return false;
-                                            });
-                                            this.hasBoundItem = true;
+                                            return false;
                                         }
+                                        ko.applyBindings(this.establishmentItemViewModel, $addEstablishment[0]);
+                                        $cancelAddEstablishment.on("click", (e) => {
+                                            sessionStorage.setItem("addest", "no");
+                                            this.establishmentSearchViewModel.sammy.setLocation('#/page/1/');
+                                            e.preventDefault();
+                                            return false;
+                                        });
+                                        this.hasBoundItem = true;
+                                    }
                                     });
-                                })
+                                });
                             this.scrollBody.scrollMyBody(0);
                             lastURL = "#/new/";
                         } else if (this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("" + this.editOrNewUrl.val + "#/page/") > 0) {
@@ -340,7 +350,6 @@ module Agreements {
                                                     this.participants.participants.push(myParticipant);
                                                 }
                                                 this.establishmentSearchViewModel.sammy.setLocation("agreements/" + this.editOrNewUrl.val + "");
-                                                //$("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * .85)));
                                             })
                                             .fail(() => {
                                                 if (this.agreementIsEdit()) {
@@ -384,10 +393,11 @@ module Agreements {
                             $.when(deferred, deferred2)
                                 .done(() => {
                                     $("[data-current-module='agreements']").fadeIn(500).promise().done(() => {
+                                        $("[data-current-module='agreements']").find("aside").find("li").removeClass("current");
+                                        $("#nav_participants").addClass("current");
                                         $(this).show();
                                         this.scrollBody.scrollMyBody(0);
                                         this.deferredPageFadeIn.resolve();
-                                        //$("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * .85)));
                                     });
                                 });
                         } else {

@@ -407,7 +407,14 @@ var Establishments;
                         $.post(url, data).done(function (response, statusText, xhr) {
                             _this.names()[0].text("");
                             _this.urls()[0].value("");
+                            _this.names()[0].selectedLanguageCode("");
+                            _this.location.countryId(null);
+                            _this.typeId(null);
+                            _this.ceebCode(null);
+                            _this.uCosmicCode(null);
+                            _this.parentId(undefined);
                             officialName.errors.showAllMessages(false);
+                            _this.errors.showAllMessages(false);
                             officialUrl.errors.showAllMessages(false);
                             _this.isValidationSummaryVisible(false);
                             window.location.href = App.Routes.Mvc.Establishments.created({ location: xhr.getResponseHeader('Location') });

@@ -127,7 +127,7 @@ module Agreements {
                         //     I put a few more parens in here to make things a little more obvious
                         return (new (function () {
 
-                            // setup the computed binding
+                            // setup the computed binding 
                             this.officialNameDoesNotMatchTranslation = ko.computed(function () {
                                 return !(options.data.establishmentOfficialName === options.data.establishmentTranslatedName || !options.data.establishmentOfficialName);
                             });

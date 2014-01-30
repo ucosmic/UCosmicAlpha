@@ -463,7 +463,14 @@ module Establishments.ViewModels {
                             // redirect to show
                             this.names()[0].text("");
                             this.urls()[0].value("");
+                            this.names()[0].selectedLanguageCode("");
+                            this.location.countryId(null);
+                            this.typeId(null);
+                            this.ceebCode(null);
+                            this.uCosmicCode(null);
+                            this.parentId(undefined);
                             officialName.errors.showAllMessages(false);
+                            this.errors.showAllMessages(false);
                             officialUrl.errors.showAllMessages(false);
                             this.isValidationSummaryVisible(false);
                             window.location.href = App.Routes.Mvc.Establishments

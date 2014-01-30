@@ -109,9 +109,10 @@ var Agreements;
                         if (_this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("" + _this.editOrNewUrl.val + "#/new/") > 0) {
                             var $addEstablishment = $("#add_establishment");
                             deferred = $.Deferred(), deferred2 = $.Deferred(), $obj = $("#establishment_search"), $obj2 = $("[data-current-module='agreements']"), time = 500;
-
                             _this.fadeModsOut(deferred, deferred2, $obj, $obj2, time);
                             $.when(deferred, deferred2).done(function () {
+                                $("#establishment_page").find("aside").find("li").removeClass("current");
+                                $("#nav_names").addClass("current");
                                 $addEstablishment.css("visibility", "").hide().fadeIn(500, function () {
                                     if (!_this.hasBoundItem) {
                                         var $cancelAddEstablishment = $("#cancelAddEstablishment");
@@ -186,8 +187,16 @@ var Agreements;
                                                                 } else {
                                                                     _this.participants.participants.push(myParticipant);
                                                                 }
+
                                                                 _this.establishmentItemViewModel.urls()[0].value("");
                                                                 _this.establishmentItemViewModel.names()[0].text("");
+                                                                _this.establishmentItemViewModel.names()[0].selectedLanguageCode("");
+                                                                _this.establishmentItemViewModel.parentId(undefined);
+                                                                _this.establishmentItemViewModel.location.countryId(null);
+                                                                _this.establishmentItemViewModel.typeId(null);
+                                                                _this.establishmentItemViewModel.ceebCode(null);
+                                                                _this.establishmentItemViewModel.uCosmicCode(null);
+                                                                _this.establishmentItemViewModel.errors.showAllMessages(false);
                                                                 officialName.errors.showAllMessages(false);
                                                                 officialUrl.errors.showAllMessages(false);
                                                                 _this.establishmentItemViewModel.isValidationSummaryVisible(false);
@@ -323,6 +332,8 @@ var Agreements;
                             _this.fadeModsOut(deferred, deferred2, $obj, $obj2, time);
                             $.when(deferred, deferred2).done(function () {
                                 $("[data-current-module='agreements']").fadeIn(500).promise().done(function () {
+                                    $("[data-current-module='agreements']").find("aside").find("li").removeClass("current");
+                                    $("#nav_participants").addClass("current");
                                     $(_this).show();
                                     _this.scrollBody.scrollMyBody(0);
                                     _this.deferredPageFadeIn.resolve();
