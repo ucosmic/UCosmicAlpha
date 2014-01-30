@@ -49,7 +49,7 @@
     <MarkdownEncodeProblemUrlCharacters>True</MarkdownEncodeProblemUrlCharacters>
     <MarkdownGenerateXHTML>True</MarkdownGenerateXHTML>
     <MarkdownLinkEmails>True</MarkdownLinkEmails>
-    <MarkdownMargin_width>1041</MarkdownMargin_width>
+    <MarkdownMargin_width>1314</MarkdownMargin_width>
     <MarkdownShowPreviewWindow>True</MarkdownShowPreviewWindow>
     <MarkdownStrictBoldItalic>True</MarkdownStrictBoldItalic>
     <PixelPushing_OnByDefault>True</PixelPushing_OnByDefault>

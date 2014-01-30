@@ -32,7 +32,8 @@
                 </select>
             </div>
         </div>
-        @if (User.IsInRole(RoleName.EstablishmentAdministrator)){
+        @if (User.IsInRole(RoleName.EstablishmentAdministrator))
+        {
             <div class="field-row">
                 <div class="field-label">
                     <label>CEEB Code</label>
@@ -51,7 +52,7 @@
                     <input type="text" data-bind="value: uCosmicCode, visible: isEditingTypeId" placeholder="[None]" style="display: none;" />
                 </div>
             </div>
-            }
+        }
         <div class="field-row" data-bind="visible: id && isEditingTypeId" style="display: none;">
             <div class="field-unlabeled-input">
                 <input type="button" value="Save" data-bind="click: clickToSaveTypeId, disable: isTypeIdSaveDisabled" />

@@ -314,7 +314,7 @@
                     placeAgnostic: true
                 };
                 this.geoChartSpinner.start();
-                Employees.Servers.GetEmployeesPlaces(this.selectedTenant(), request).done(function (places) {
+                Employees.Servers.GetEmployeesPlaces(this.settings.tenantId, request).done(function (places) {
                     _this.hasPlaceData(places && places.length > 0);
                     promise.resolve(places);
                 }).fail(function (xhr) {

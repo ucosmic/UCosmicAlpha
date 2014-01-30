@@ -316,7 +316,7 @@
                 placeAgnostic: true,
             };
             this.geoChartSpinner.start();
-            Servers.GetEmployeesPlaces(this.selectedTenant(), request)
+            Servers.GetEmployeesPlaces(this.settings.tenantId, request)
                 .done((places: ApiModels.EmployeesPlaceApiModel[]): void => {
                     this.hasPlaceData(places && places.length > 0);
                     promise.resolve(places);
