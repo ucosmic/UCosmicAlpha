@@ -55,8 +55,9 @@
     </ul>
     @* ADD NEW - TODO: this should be a button, not a hyperlink *@
     <div style="margin-top: 12px; line-height: 24px;" data-bind="visible: !isEditMode()">
-        <a href="#" class="with-img" data-bind="click: addAffiliation">
-            <img src="~/images/icons/plus/plus-24-green.png" alt="Add a new affiliation" style="cursor: pointer; padding-right: 4px;" />
+        <a href="#" class="button" data-bind="click: addAffiliation">
+            @*<img src="~/images/icons/plus/plus-24-green.png" alt="Add a new affiliation" style="cursor: pointer; padding-right: 4px;" />*@
+            <i class="green plus"></i>
             <span class="text">Add a new affiliation</span>
         </a>
     </div>

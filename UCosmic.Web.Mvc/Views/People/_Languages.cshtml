@@ -1,5 +1,4 @@
-﻿@using System.Runtime.CompilerServices
-@model IEnumerable<UCosmic.Web.Mvc.Models.LanguageExpertiseViewModel>
+﻿@model IEnumerable<UCosmic.Web.Mvc.Models.LanguageExpertiseViewModel>
 
 @* LANGUAGES *@
 <section class="content fixed to-top">
@@ -8,6 +7,14 @@
         {
             @* RESULTS *@
             <div>
+                @if (User.Identity.Name.Equals(ViewBag.Username, StringComparison.OrdinalIgnoreCase))
+                {
+                    <div style="display: none;">
+                        <div data-bind="jQuery: '$confirmDeleteLanguage'" title="Please confirm your intent">
+                            Are you sure you want to delete this affiliation? This cannot be undone.
+                        </div>
+                    </div>
+                }
                 <ul style="font-size: 20px; line-height: 28px;">
                     @foreach (var language in Model)
                     {
@@ -18,10 +25,32 @@
                                 {
                                     <strong>@language.LanguageName</strong><text>,</text>
                                     <strong>@language.Dialect</strong>
+                                    if (User.Identity.Name.Equals(ViewBag.Username, StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        <div style="float: right; width: 70px; text-align: right;">
+                                            <img data-bind="click: edit.bind($data, @language.Id), visible: !purgeSpinner.isVisible()" alt="" src="~/images/icons/edit/pencil-a-24.png" title="Edit this affiliation"
+                                                 style="cursor: pointer; margin: 0 0 8px 8px;" />
+                                            <img data-bind="click: purge.bind($data, @language.Id), visible: !purgeSpinner.isVisible()" alt="" src="~/images/icons/minus/minus-24-red.png" title="Delete this affiliation"
+                                                 style="cursor: pointer; margin: 0 0 8px 8px;" />
+                                            <img data-bind="visible: purgeSpinner.isVisible" alt="" src="~/images/icons/spinner/spinner-24-blue.gif" title="Deleting this affiliation..."
+                                                 style="margin-left: 8px;" />
+                                        </div>
+                                    }
                                 }
                                 else
                                 {
                                     <strong>@language.LanguageName</strong>
+                                    if (User.Identity.Name.Equals(ViewBag.Username, StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        <div style="float: right; width: 70px; text-align: right;">
+                                            <img data-bind="click: edit.bind($data, @language.Id), visible: !purgeSpinner.isVisible()" alt="" src="~/images/icons/edit/pencil-a-24.png" title="Edit this affiliation"
+                                                 style="cursor: pointer; margin: 0 0 8px 8px;" />
+                                            <img data-bind="click: purge.bind($data, @language.Id), visible: !purgeSpinner.isVisible()" alt="" src="~/images/icons/minus/minus-24-red.png" title="Delete this affiliation"
+                                                 style="cursor: pointer; margin: 0 0 8px 8px;" />
+                                            <img data-bind="visible: purgeSpinner.isVisible" alt="" src="~/images/icons/spinner/spinner-24-blue.gif" title="Deleting this affiliation..."
+                                                 style="margin-left: 8px;" />
+                                        </div>
+                                    }
                                 }
                             }
                             else
@@ -30,13 +59,41 @@
                                 {
                                     <strong>@language.Other</strong><text>,</text>
                                     <strong>@language.Dialect</strong>
+                                    if (User.Identity.Name.Equals(ViewBag.Username, StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        <div style="float: right; width: 70px; text-align: right;">
+                                            <img data-bind="click: edit.bind($data, @language.Id), visible: !purgeSpinner.isVisible()" alt="" src="~/images/icons/edit/pencil-a-24.png" title="Edit this affiliation"
+                                                 style="cursor: pointer; margin: 0 0 8px 8px;" />
+                                            <img data-bind="click: purge.bind($data, @language.Id), visible: !purgeSpinner.isVisible()" alt="" src="~/images/icons/minus/minus-24-red.png" title="Delete this affiliation"
+                                                 style="cursor: pointer; margin: 0 0 8px 8px;" />
+                                            <img data-bind="visible: purgeSpinner.isVisible" alt="" src="~/images/icons/spinner/spinner-24-blue.gif" title="Deleting this affiliation..."
+                                                 style="margin-left: 8px;" />
+                                        </div>
+                                    }
                                 }
                                 else
                                 {
                                     <strong>@language.Other</strong>
+                                    if (User.Identity.Name.Equals(ViewBag.Username, StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        <div style="float: right; width: 70px; text-align: right;">
+                                            <img data-bind="click: edit.bind($data, @language.Id), visible: !purgeSpinner.isVisible()" alt="" src="~/images/icons/edit/pencil-a-24.png" title="Edit this affiliation"
+                                                 style="cursor: pointer; margin: 0 0 8px 8px;" />
+                                            <img data-bind="click: purge.bind($data, @language.Id), visible: !purgeSpinner.isVisible()" alt="" src="~/images/icons/minus/minus-24-red.png" title="Delete this affiliation"
+                                                 style="cursor: pointer; margin: 0 0 8px 8px;" />
+                                            <img data-bind="visible: purgeSpinner.isVisible" alt="" src="~/images/icons/spinner/spinner-24-blue.gif" title="Deleting this affiliation..."
+                                                 style="margin-left: 8px;" />
+                                        </div>
+                                    }
                                 }
                             }
                             <div id="@string.Format("chart_div_{0}", language.Id)" style="width: 100%; height: 300px;"></div>
+                        </li>
+                    }
+                    @if (User.Identity.Name.Equals(ViewBag.Username, StringComparison.OrdinalIgnoreCase))
+                    {
+                        <li id="luanguages_no_results" style="display: none; font-size: 16px;">
+                            @ViewBag.CustomBib has not yet identified any particular areas of language expertise.
                         </li>
                     }
                 </ul>
@@ -49,5 +106,13 @@
                 @ViewBag.CustomBib has not yet identified any particular areas of language expertise.
             </span>
         }
+    </div>
+
+    <div style="margin-top: 12px; line-height: 24px;">
+        <a href="#" class="button" data-bind="click: addLanguage">
+            @*<img src="~/images/icons/plus/plus-24-green.png" alt="Add a new language" style="cursor: pointer; padding-right: 4px;" />*@
+            <i class="green plus"></i>
+            <span class="text">Add a new language</span>
+        </a>
     </div>
 </section>

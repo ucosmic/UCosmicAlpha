@@ -165,6 +165,10 @@ namespace UCosmic.Web.Mvc.Controllers
             ViewBag.CustomBib = person.DisplayName;
             ViewBag.currentPage = "languages";
             ViewBag.personId = personId;
+
+            var personModel = GetPerson(personId);
+            
+            ViewBag.Username = personModel.Username;
             return View(model);
         }
 

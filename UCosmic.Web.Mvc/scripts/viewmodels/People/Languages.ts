@@ -64,5 +64,75 @@ module People.ViewModels {
             }
             return Meaning;
         }
+
+
+        purgeSpinner = new App.Spinner();
+        $confirmDeleteLanguage: JQuery;
+        private _purge(expertiseId): void {
+            $.ajax({
+                async: false,
+                type: "DELETE",
+                url: App.Routes.WebApi.LanguageExpertise.del(expertiseId),
+                success: (data: any, textStatus: string, jqXHR: JQueryXHR): void =>
+                {
+                    this.purgeSpinner.stop();
+                },
+                error: (jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void => {
+                    this.purgeSpinner.stop();
+                    alert(textStatus);
+                }
+            });
+        }
+        purge(expertiseId, thisData, event): void {
+            this.purgeSpinner.start();
+            if (this.$confirmDeleteLanguage && this.$confirmDeleteLanguage.length) {
+                this.$confirmDeleteLanguage.dialog({
+                    dialogClass: 'jquery-ui',
+                    width: 'auto',
+                    resizable: false,
+                    modal: true,
+                    buttons: [
+                        {
+                            text: 'Yes, confirm delete',
+                            click: (): void => {
+                                this.$confirmDeleteLanguage.dialog('close');
+                                this.purgeSpinner.start(true);
+                                this._purge(expertiseId);
+                                //have to check before removing
+                                if ($(event.target).closest("ul").find("li").length == 2) {
+                                    $("#luanguages_no_results").css("display", "block");
+                                }
+                                $(event.target).closest("li").remove();
+                            },
+                            'data-confirm-delete-link': true,
+                        },
+                        {
+                            text: 'No, cancel delete',
+                            click: (): void => {
+                                this.$confirmDeleteLanguage.dialog('close');
+                            },
+                            'data-css-link': true,
+                        }
+                    ],
+                    close: (): void => {
+                        this.purgeSpinner.stop();
+                    },
+                });
+            }
+            else {
+                if (confirm('Are you sure you want to delete this language expertise?')) {
+                    this._purge(expertiseId);
+                }
+                else {
+                    this.purgeSpinner.stop();
+                }
+            }
+        }
+        edit(id): void {
+            window.location.href = App.Routes.Mvc.My.LanguageExpertise.edit(id)
+        }
+        addLanguage(): void {
+            window.location.href = App.Routes.Mvc.My.LanguageExpertise.create();
+        }
     }
 }

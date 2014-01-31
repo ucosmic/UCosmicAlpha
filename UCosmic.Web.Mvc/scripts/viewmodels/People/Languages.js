@@ -1,8 +1,9 @@
-var People;
+﻿var People;
 (function (People) {
     (function (ViewModels) {
         var LanguageViewModel = (function () {
             function LanguageViewModel(modelData) {
+                this.purgeSpinner = new App.Spinner();
                 this.setupGoogleChart(modelData);
             }
             LanguageViewModel.loadGoogleVisualization = function () {
@@ -59,6 +60,72 @@ var People;
                     Meaning = "<div style='padding:5px; line-height:14px; width:400px;'>" + Meaning + "</div>";
                 }
                 return Meaning;
+            };
+
+            LanguageViewModel.prototype._purge = function (expertiseId) {
+                var _this = this;
+                $.ajax({
+                    async: false,
+                    type: "DELETE",
+                    url: App.Routes.WebApi.LanguageExpertise.del(expertiseId),
+                    success: function (data, textStatus, jqXHR) {
+                        _this.purgeSpinner.stop();
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        _this.purgeSpinner.stop();
+                        alert(textStatus);
+                    }
+                });
+            };
+            LanguageViewModel.prototype.purge = function (expertiseId, thisData, event) {
+                var _this = this;
+                this.purgeSpinner.start();
+                if (this.$confirmDeleteLanguage && this.$confirmDeleteLanguage.length) {
+                    this.$confirmDeleteLanguage.dialog({
+                        dialogClass: 'jquery-ui',
+                        width: 'auto',
+                        resizable: false,
+                        modal: true,
+                        buttons: [
+                            {
+                                text: 'Yes, confirm delete',
+                                click: function () {
+                                    _this.$confirmDeleteLanguage.dialog('close');
+                                    _this.purgeSpinner.start(true);
+                                    _this._purge(expertiseId);
+
+                                    if ($(event.target).closest("ul").find("li").length == 2) {
+                                        $("#luanguages_no_results").css("display", "block");
+                                    }
+                                    $(event.target).closest("li").remove();
+                                },
+                                'data-confirm-delete-link': true
+                            },
+                            {
+                                text: 'No, cancel delete',
+                                click: function () {
+                                    _this.$confirmDeleteLanguage.dialog('close');
+                                },
+                                'data-css-link': true
+                            }
+                        ],
+                        close: function () {
+                            _this.purgeSpinner.stop();
+                        }
+                    });
+                } else {
+                    if (confirm('Are you sure you want to delete this language expertise?')) {
+                        this._purge(expertiseId);
+                    } else {
+                        this.purgeSpinner.stop();
+                    }
+                }
+            };
+            LanguageViewModel.prototype.edit = function (id) {
+                window.location.href = App.Routes.Mvc.My.LanguageExpertise.edit(id);
+            };
+            LanguageViewModel.prototype.addLanguage = function () {
+                window.location.href = App.Routes.Mvc.My.LanguageExpertise.create();
             };
             LanguageViewModel._googleVisualizationLoadedPromise = $.Deferred();
             return LanguageViewModel;
