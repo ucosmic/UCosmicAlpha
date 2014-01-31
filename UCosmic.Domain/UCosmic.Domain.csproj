@@ -88,7 +88,9 @@
     <Compile Include="Api\Lucene\IProvideDocumentSearchers.cs" />
     <Compile Include="Api\Lucene\IStoreDocumentIndexes.cs" />
     <Compile Include="Api\Lucene\IIndexDocuments.cs" />
+    <Compile Include="Domain\Activities\Queries\ActivityValuesBy.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityValuesByTerms.cs" />
+    <Compile Include="Domain\Activities\Queries\ActivityValuesPageBy.cs" />
     <Compile Include="Domain\Activities\Queries\MyActivityValues.cs" />
     <Compile Include="Domain\Activities\_Internal\SortActivityValues.cs" />
     <Compile Include="Domain\Degrees\Queries\DegreesPageByTerms.cs" />
@@ -298,7 +300,7 @@
     <Compile Include="Domain\Establishments\Entities\EstablishmentCustomId.cs" />
     <Compile Include="Domain\Establishments\Queries\EstablishmentOffspring.cs" />
     <Compile Include="Domain\Establishments\Queries\EstablishmentByDomain.cs" />
-    <Compile Include="Domain\Activities\Queries\ActivitiesByPersonId.cs" />
+    <Compile Include="Domain\Activities\Queries\Deprecated\ActivitiesByPersonId.cs" />
     <Compile Include="Domain\External\Commands\ImportUsfPerson.cs" />
     <Compile Include="Domain\External\Commands\ImportUsfEstablishments.cs" />
     <Compile Include="Domain\External\Entities\ServiceIntegration.cs" />

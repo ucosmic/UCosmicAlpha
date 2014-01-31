@@ -69,8 +69,10 @@ namespace UCosmic.Web.Mvc.Controllers
             var person = _queryProcessor.Execute(new PersonById(personId));
             if (person == null) return HttpNotFound();
 
-            var query = new ActivitiesByPersonId(User, personId)
+            var query = new ActivityValuesPageBy
             {
+                Principal = User,
+                PersonId = personId,
                 EagerLoad = new Expression<Func<ActivityValues, object>>[]
                 {
                     x => x.Tags,

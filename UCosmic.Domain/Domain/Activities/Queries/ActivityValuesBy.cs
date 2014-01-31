@@ -1,26 +1,24 @@
 ﻿using System;
 using System.Linq;
+using System.Security.Principal;
 using UCosmic.Domain.Establishments;
+using UCosmic.Domain.People;
 using UCosmic.Domain.Places;
 
 namespace UCosmic.Domain.Activities
 {
-    public class ActivityValuesByTerms : IDefineQuery<IQueryable<ActivityValues>>
+    public class ActivityValuesBy : BaseEntitiesQuery<ActivityValues>, IDefineQuery<IQueryable<ActivityValues>>
     {
-        internal ActivityValuesByTerms()
-        {
-            PageSize = 10;
-            PageNumber = 1;
-        }
+        internal ActivityValuesBy() { }
 
-        public int PageNumber { get; set; }
-        public int PageSize { get; set; }
+        public IPrincipal Principal { get; set; }
+        public int? PersonId { get; set; }
 
         public int? EstablishmentId { get; set; }
         public string EstablishmentDomain { get; set; }
 
         public int[] PlaceIds { get; set; }
-        //public string CountryCode { get; set; }
+        public string CountryCode { get; set; }
         public int[] ActivityTypeIds { get; set; }
         public DateTime? Since { get; set; }
         public DateTime? Until { get; set; }
@@ -28,25 +26,47 @@ namespace UCosmic.Domain.Activities
         public string Keyword { get; set; }
     }
 
-    public class HandleActivityValuesByTermsQuery : IHandleQueries<ActivityValuesByTerms, IQueryable<ActivityValues>>
+    public class HandleActivityValuesByQuery : IHandleQueries<ActivityValuesBy, IQueryable<ActivityValues>>
     {
         private readonly IProcessQueries _queryProcessor;
         private readonly IQueryEntities _entities;
         private static readonly string PublicText = ActivityMode.Public.AsSentenceFragment();
 
-        public HandleActivityValuesByTermsQuery(IProcessQueries queryProcessor, IQueryEntities entities)
+        public HandleActivityValuesByQuery(IProcessQueries queryProcessor, IQueryEntities entities)
         {
             _queryProcessor = queryProcessor;
             _entities = entities;
         }
 
-        public IQueryable<ActivityValues> Handle(ActivityValuesByTerms query)
+        public IQueryable<ActivityValues> Handle(ActivityValuesBy query)
         {
             if (query == null) throw new ArgumentNullException("query");
 
             var queryable = _entities.Query<ActivityValues>()
-                .Where(x => x.ModeText == PublicText && x.Activity.ModeText == PublicText && x.Activity.Original == null)
+                .EagerLoad(_entities, query.EagerLoad)
+                .Where(x => x.ModeText == x.Activity.ModeText // only get the values for the mode of the activity
+                    && x.Activity.Original == null) // do not load activity work copies
             ;
+
+            if (query.PersonId.HasValue)
+            {
+                queryable = queryable.Where(x => x.Activity.PersonId == query.PersonId.Value);
+            }
+
+            // most cases for this query will be for published activities only.
+            // display draft activities only when they are owned by the principal.
+            if (query.PersonId.HasValue && query.Principal != null)
+            {
+                var person = _queryProcessor.Execute(new MyPerson(query.Principal));
+                if (person == null || person.RevisionId != query.PersonId.Value)
+                {
+                    queryable = queryable.Where(x => x.Activity.ModeText == PublicText);
+                }
+            }
+            else
+            {
+                queryable = queryable.Where(x => x.Activity.ModeText == PublicText);
+            }
 
             if (query.EstablishmentId.HasValue)
             {
@@ -105,6 +125,15 @@ namespace UCosmic.Domain.Activities
                 );
             }
 
+            // when the query's country code is empty string, match all activities regardless of country.
+            if (!string.IsNullOrWhiteSpace(query.CountryCode))
+            {
+                queryable = queryable.Where(x => x.Locations.Any(y =>
+                    y.Place.IsCountry && y.Place.GeoPlanetPlace != null &&
+                    query.CountryCode.Equals(y.Place.GeoPlanetPlace.Country.Code, StringComparison.OrdinalIgnoreCase)
+                ));
+            }
+
             if (query.PlaceIds != null && query.PlaceIds.Any())
             {
                 var placeTag = ActivityTagDomainType.Place.AsSentenceFragment();
@@ -140,6 +169,8 @@ namespace UCosmic.Domain.Activities
                 //var ids = nonLocationIds.Union(locationIds).Distinct().ToArray();
                 //queryable = _entities.Query<ActivityValues>().Where(x => ids.Contains(x.RevisionId));
             }
+
+            queryable = queryable.OrderBy(query.OrderBy);
 
             return queryable;
         }
