@@ -39,6 +39,7 @@ namespace UCosmic.Domain.Activities
             if (query == null) throw new ArgumentNullException("query");
 
             var queryable = _entities.Query<ActivityValues>()
+                .EagerLoad(_entities, query.EagerLoad)
                 .Where(x => x.Activity.PersonId == query.PersonId && x.ModeText == PublicText && x.Activity.ModeText == PublicText && x.Activity.Original == null)
             ;
 

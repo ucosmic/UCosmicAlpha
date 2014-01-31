@@ -38,9 +38,9 @@ namespace UCosmic.Web.Mvc.Models
                 CreateMap<ActivityValues, ActivityPublicViewModel>()
                     .ForMember(d => d.IsExternallyFunded, o => o.MapFrom(s => s.WasExternallyFunded))
                     .ForMember(d => d.IsInternallyFunded, o => o.MapFrom(s => s.WasInternallyFunded))
-                    .ForMember(d => d.Places, o => o.MapFrom(s => s.Locations))
                     .ForMember(d => d.Content, o => o.MapFrom(s => new HtmlString(s.Content)))
                     .ForMember(d => d.Person, o => o.MapFrom(s => s.Activity.Person))
+                    .ForMember(d => d.Places, o => o.MapFrom(s => s.Locations))
                 ;
             }
         }

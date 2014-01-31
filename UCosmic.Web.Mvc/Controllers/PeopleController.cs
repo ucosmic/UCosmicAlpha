@@ -69,7 +69,17 @@ namespace UCosmic.Web.Mvc.Controllers
             var person = _queryProcessor.Execute(new PersonById(personId));
             if (person == null) return HttpNotFound();
 
-            var query = new ActivitiesByPersonId(User, personId);
+            var query = new ActivitiesByPersonId(User, personId)
+            {
+                EagerLoad = new Expression<Func<ActivityValues, object>>[]
+                {
+                    x => x.Tags,
+                    x => x.Documents,
+                    x => x.Types.Select(y => y.Type),
+                    x => x.Locations.Select(y => y.Place),
+                    x => x.Activity.Person.Emails,
+                },
+            };
             Mapper.Map(input, query);
             var entities = _queryProcessor.Execute(query);
             var model = Mapper.Map<PageOfActivityPublicViewModel>(entities);
