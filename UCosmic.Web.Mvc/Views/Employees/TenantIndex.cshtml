@@ -88,7 +88,7 @@
                     <span data-bind="visible: locationCount() == 1" style="display: none;">location.</span>
                     <span data-bind="visible: locationCount() != 1">locations.</span>
                 </span>
-                <a href="#" title="Some data displayed on this page may be delayed by up to 15 minutes." style="font-size: 14px;" data-bind="click: function () { return false; }">Disclaimer</a>
+                <a href="#" title="Recently entered activities may take up to 1 hour to display." style="font-size: 14px;" data-bind="click: function () { return false; }">Disclaimer</a>
             </div>
 
             @* CHART INSTRUCTIONS & SPINNER *@
@@ -348,6 +348,7 @@
                                 </span>
                             </div>
                             <div id="google_activity_year_chart"></div>
+                            <em style="font-size: 12px; position: relative; top: -36px;">Trend data is updated as information becomes available.</em>
                         </div>
                     </div>
                 </div>

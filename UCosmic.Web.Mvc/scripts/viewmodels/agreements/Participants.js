@@ -1,4 +1,4 @@
-﻿var Agreements;
+var Agreements;
 (function (Agreements) {
     var Participants = (function () {
         function Participants(agreementId, dfdPopParticipants, agreementIsEdit, establishmentSearchViewModel, hasBoundSearch) {

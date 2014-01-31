@@ -848,8 +848,10 @@
             var placeId = this.placeId();
             if (placeId == 1) placeId = null;
             var places = this.placeData.cached;
-            var currentYear = new Date().getFullYear();
-            var minYear = currentYear - 10;
+            //var currentYear = new Date().getFullYear();
+            //var minYear = currentYear - 10;
+            var currentYear = 2012;
+            var minYear = 2003;
             var activityYears: ApiModels.EmployeeActivityYearCount[] = Enumerable.From(places)
                 .Where(function (x: ApiModels.EmployeesPlaceApiModel): boolean {
                     if (placeId == null) return !x.placeId;
