@@ -47,9 +47,8 @@ namespace UCosmic.Web.Mvc.Controllers
         [GET("{domain}/employees/table")]
         public virtual ActionResult Table(string domain, ActivitySearchInputModel input)
         {
-            var query = new ActivityValuesPageByTerms
+            var query = new ActivityValuesPageBy
             {
-                EstablishmentDomain = domain,
                 EagerLoad = ActivitySearchResultProfiler.EntitiyToModel.EagerLoad,
             };
             Mapper.Map(input, query);
@@ -79,9 +78,8 @@ namespace UCosmic.Web.Mvc.Controllers
         [GET("{domain}/employees/map")]
         public virtual ActionResult Map(string domain, ActivitySearchInputModel input)
         {
-            var query = new ActivityValuesPageByTerms
+            var query = new ActivityValuesPageBy
             {
-                EstablishmentDomain = domain,
                 EagerLoad = ActivitySearchResultProfiler.EntitiyToModel.EagerLoad,
             };
             Mapper.Map(input, query);

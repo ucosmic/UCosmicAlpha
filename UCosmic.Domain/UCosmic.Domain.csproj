@@ -89,7 +89,7 @@
     <Compile Include="Api\Lucene\IStoreDocumentIndexes.cs" />
     <Compile Include="Api\Lucene\IIndexDocuments.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityValuesBy.cs" />
-    <Compile Include="Domain\Activities\Queries\ActivityValuesByTerms.cs" />
+    <Compile Include="Domain\Activities\Queries\Deprecated\ActivityValuesByTerms.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityValuesPageBy.cs" />
     <Compile Include="Domain\Activities\Queries\MyActivityValues.cs" />
     <Compile Include="Domain\Activities\_Internal\SortActivityValues.cs" />
@@ -163,7 +163,7 @@
     <Compile Include="Domain\Activities\Commands\CopyActivityAndValues.cs" />
     <Compile Include="Domain\Activities\Commands\CopyActivityValues.cs" />
     <Compile Include="Domain\Activities\Commands\CreateActivityAndValues.cs" />
-    <Compile Include="Domain\Activities\Queries\ActivityValuesPageByTerms.cs" />
+    <Compile Include="Domain\Activities\Queries\Deprecated\ActivityValuesPageByTerms.cs" />
     <Compile Include="Domain\Activities\Work\PopulateActivityContentSearchable.cs" />
     <Compile Include="Domain\Activities\_Deprecatable\CreateActivityDocument.cs" />
     <Compile Include="Domain\Activities\_Deprecatable\CreateActivityLocation.cs" />

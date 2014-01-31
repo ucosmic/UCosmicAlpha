@@ -16,6 +16,7 @@ namespace UCosmic.Web.Mvc.Models
             OrderBy = "recency-desc";
         }
 
+        public string Domain { get; set; }
         public ActivitySearchPivot Pivot { get; set; }
         public int[] PlaceIds { get; set; }
         public string[] PlaceNames { get; set; }
@@ -33,10 +34,12 @@ namespace UCosmic.Web.Mvc.Models
         {
             protected override void Configure()
             {
-                CreateMap<ActivitySearchInputModel, ActivityValuesPageByTerms>()
+                CreateMap<ActivitySearchInputModel, ActivityValuesPageBy>()
+                    .ForMember(d => d.EstablishmentDomain, o => o.MapFrom(s => s.Domain))
                     .ForMember(d => d.EstablishmentId, o => o.Ignore())
-                    .ForMember(d => d.EstablishmentDomain, o => o.Ignore())
+                    .ForMember(d => d.Principal, o => o.Ignore())
                     .ForMember(d => d.PersonId, o => o.Ignore())
+                    .ForMember(d => d.CountryCode, o => o.Ignore())
                     .ForMember(d => d.PlaceIds, o => o.MapFrom(s => s.PlaceIds == null ? null : s.PlaceIds.Where(x => x > 0)))
                     .ForMember(d => d.EagerLoad, o => o.Ignore())
 
@@ -69,8 +72,8 @@ namespace UCosmic.Web.Mvc.Models
                             var column = columnAndDirection[0];
                             var direction = "desc".Equals(columnAndDirection[1], StringComparison.OrdinalIgnoreCase)
                                 ? OrderByDirection.Descending : OrderByDirection.Ascending;
-                            var otherDirection = "asc".Equals(columnAndDirection[1], StringComparison.OrdinalIgnoreCase)
-                                ? OrderByDirection.Descending : OrderByDirection.Ascending;
+                            //var otherDirection = "asc".Equals(columnAndDirection[1], StringComparison.OrdinalIgnoreCase)
+                            //    ? OrderByDirection.Descending : OrderByDirection.Ascending;
 
                             switch (column.ToLower())
                             {
