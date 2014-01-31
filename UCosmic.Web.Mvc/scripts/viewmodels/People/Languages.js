@@ -1,4 +1,4 @@
-﻿var People;
+var People;
 (function (People) {
     (function (ViewModels) {
         var LanguageViewModel = (function () {

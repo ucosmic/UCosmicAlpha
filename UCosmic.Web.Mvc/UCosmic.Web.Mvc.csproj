@@ -2159,6 +2159,7 @@
     <Content Include="scripts\viewmodels\establishments\Location.js">
       <DependentUpon>Location.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="scripts\viewmodels\people\Degrees.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\people\Languages.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\my\Profile.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\people\AffiliationsEditor.ts" />
@@ -2210,6 +2211,9 @@
     <TypeScriptCompile Include="scripts\viewmodels\people\Server.ts" />
     <Content Include="scripts\viewmodels\people\AffiliationsEditor.js">
       <DependentUpon>AffiliationsEditor.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\people\Languages - Copy.js">
+      <DependentUpon>Degrees.ts</DependentUpon>
     </Content>
     <Content Include="scripts\viewmodels\people\Languages.js">
       <DependentUpon>Languages.ts</DependentUpon>

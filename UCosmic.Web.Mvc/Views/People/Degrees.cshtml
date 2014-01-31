@@ -9,6 +9,18 @@
         @Html.Partial(MVC.Employees.Views._Bib, new EmployeesBibNavModel { Custom = ViewBag.CustomBib })
     </nav>
 }
+@if (User.Identity.Name.Equals(ViewBag.Username, StringComparison.OrdinalIgnoreCase))
+{
+    @section scripts
+    {
+        @Scripts.Render("~/bundles/people/degrees")
+
+        <script type="text/javascript">
+            var viewModel = new People.ViewModels.DegreeViewModel();
+            ko.applyBindings(viewModel, $('#main')[0]);
+        </script>
+    }
+}
 
 @section styles
 {

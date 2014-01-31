@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Web;
-using AutoMapper;
+﻿using AutoMapper;
 using UCosmic.Domain.Degrees;
 using UCosmic.Domain.Establishments;
 
@@ -16,6 +10,7 @@ namespace UCosmic.Web.Mvc.Models
         public string FieldOfStudy { get; set; }
         public int? YearAwarded { get; set; }
         public Establishment Institution { get; set; }
+        public int Id { get; set; }
     }
 
     public class PageOfDegreePublicViewModel : PageOf<DegreePublicViewModel>
@@ -28,7 +23,9 @@ namespace UCosmic.Web.Mvc.Models
         {
             protected override void Configure()
             {
-                CreateMap<Degree, DegreePublicViewModel>();
+                CreateMap<Degree, DegreePublicViewModel>()
+                    .ForMember(d => d.Id, o => o.MapFrom(s => s.RevisionId))
+                    ;
             }
         }
 
