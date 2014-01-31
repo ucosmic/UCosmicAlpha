@@ -204,7 +204,7 @@
     <Compile Include="Domain\Activities\Queries\ActivityPlacesByActivityId.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityTypesByActivityId.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityTagsByActivityId.cs" />
-    <Compile Include="Domain\Activities\Queries\MyActivities.cs" />
+    <Compile Include="Domain\Activities\Queries\Deprecated\MyActivities.cs" />
     <Compile Include="Domain\Activities\Queries\PublicActivityById.cs" />
     <Compile Include="Domain\Activities\Validation\MustNotBeDuplicateActivityDocument.cs" />
     <Compile Include="Domain\Activities\Validation\MustBeDocumentForActivity.cs" />

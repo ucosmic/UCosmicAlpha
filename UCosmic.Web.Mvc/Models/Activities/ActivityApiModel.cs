@@ -48,7 +48,7 @@ namespace UCosmic.Web.Mvc.Models
             }
         }
 
-        public class EntityToModel : Profile
+        public class EntityValuesToModel : Profile
         {
             protected override void Configure()
             {
@@ -69,48 +69,37 @@ namespace UCosmic.Web.Mvc.Models
                 ;
             }
         }
+
+        public class EntityToModel : Profile
+        {
+            protected override void Configure()
+            {
+                CreateMap<Activity, ActivityApiModel>()
+                    .ForMember(d => d.ActivityId, o => o.MapFrom(s => s.RevisionId))
+                    .ForMember(d => d.UpdatedOnUtc, o => o.MapFrom(s => s.UpdatedOnUtc ?? s.CreatedOnUtc))
+                    .ForMember(d => d.UpdatedOnUtc, o => o.ResolveUsing(s =>
+                    { // documents do not update the activity due to concurrency on multi-uploads
+                        var activity = s.UpdatedOnUtc ?? s.CreatedOnUtc;
+                        var docs = s.Values.Single(x => x.Mode == s.Mode).Documents;
+                        var ons = docs.Select(x => x.UpdatedOnUtc.HasValue ? x.UpdatedOnUtc.Value : x.CreatedOnUtc).Union(new[] { activity })
+                            .OrderByDescending(x => x);
+                        return ons.First();
+                    }))
+                    .ForMember(d => d.Title, o => o.MapFrom(s => s.Values.Single(x => x.Mode == s.Mode).Title))
+                    .ForMember(d => d.Content, o => o.MapFrom(s => s.Values.Single(x => x.Mode == s.Mode).Content))
+                    .ForMember(d => d.StartsOn, o => o.MapFrom(s => s.Values.Single(x => x.Mode == s.Mode).StartsOn))
+                    .ForMember(d => d.StartsFormat, o => o.MapFrom(s => s.Values.Single(x => x.Mode == s.Mode).StartsFormat))
+                    .ForMember(d => d.OnGoing, o => o.MapFrom(s => s.Values.Single(x => x.Mode == s.Mode).OnGoing))
+                    .ForMember(d => d.EndsOn, o => o.MapFrom(s => s.Values.Single(x => x.Mode == s.Mode).EndsOn))
+                    .ForMember(d => d.EndsFormat, o => o.MapFrom(s => s.Values.Single(x => x.Mode == s.Mode).EndsFormat))
+                    .ForMember(d => d.IsExternallyFunded, o => o.MapFrom(s => s.Values.Single(x => x.Mode == s.Mode).WasExternallyFunded))
+                    .ForMember(d => d.IsInternallyFunded, o => o.MapFrom(s => s.Values.Single(x => x.Mode == s.Mode).WasInternallyFunded))
+                    .ForMember(d => d.Types, o => o.MapFrom(s => s.Values.Single(x => x.Mode == s.Mode).Types))
+                    .ForMember(d => d.Places, o => o.MapFrom(s => s.Values.Single(x => x.Mode == s.Mode).Locations))
+                    .ForMember(d => d.Tags, o => o.MapFrom(s => s.Values.Single(x => x.Mode == s.Mode).Tags))
+                    .ForMember(d => d.Documents, o => o.MapFrom(s => s.Values.Single(x => x.Mode == s.Mode).Documents))
+                ;
+            }
+        }
     }
-
-    //public static class ActivityApiProfiler1
-    //{
-    //    public class PagedQueryResultToPageOfItems : Profile
-    //    {
-    //        protected override void Configure()
-    //        {
-    //            CreateMap<PagedQueryResult<Activity>, PageOfActivityApiModel>();
-    //        }
-    //    }
-
-    //    public class EntityToModel : Profile
-    //    {
-    //        protected override void Configure()
-    //        {
-    //            CreateMap<Activity, ActivityApiModel>()
-    //                .ForMember(d => d.ActivityId, o => o.MapFrom(s => s.RevisionId))
-    //                .ForMember(d => d.UpdatedOnUtc, o => o.MapFrom(s => s.UpdatedOnUtc ?? s.CreatedOnUtc))
-    //                .ForMember(d => d.UpdatedOnUtc, o => o.ResolveUsing(s =>
-    //                { // documents do not update the activity due to concurrency on multi-uploads
-    //                    var activity = s.UpdatedOnUtc ?? s.CreatedOnUtc;
-    //                    var docs = s.Values.Single(x => x.Mode == s.Mode).Documents;
-    //                    var ons = docs.Select(x => x.UpdatedOnUtc.HasValue ? x.UpdatedOnUtc.Value : x.CreatedOnUtc).Union(new[] { activity })
-    //                        .OrderByDescending(x => x);
-    //                    return ons.First();
-    //                }))
-    //                .ForMember(d => d.Title, o => o.MapFrom(s => s.Values.Single(x => x.Mode == s.Mode).Title))
-    //                .ForMember(d => d.Content, o => o.MapFrom(s => s.Values.Single(x => x.Mode == s.Mode).Content))
-    //                .ForMember(d => d.StartsOn, o => o.MapFrom(s => s.Values.Single(x => x.Mode == s.Mode).StartsOn))
-    //                .ForMember(d => d.StartsFormat, o => o.MapFrom(s => s.Values.Single(x => x.Mode == s.Mode).StartsFormat))
-    //                .ForMember(d => d.OnGoing, o => o.MapFrom(s => s.Values.Single(x => x.Mode == s.Mode).OnGoing))
-    //                .ForMember(d => d.EndsOn, o => o.MapFrom(s => s.Values.Single(x => x.Mode == s.Mode).EndsOn))
-    //                .ForMember(d => d.EndsFormat, o => o.MapFrom(s => s.Values.Single(x => x.Mode == s.Mode).EndsFormat))
-    //                .ForMember(d => d.IsExternallyFunded, o => o.MapFrom(s => s.Values.Single(x => x.Mode == s.Mode).WasExternallyFunded))
-    //                .ForMember(d => d.IsInternallyFunded, o => o.MapFrom(s => s.Values.Single(x => x.Mode == s.Mode).WasInternallyFunded))
-    //                .ForMember(d => d.Types, o => o.MapFrom(s => s.Values.Single(x => x.Mode == s.Mode).Types))
-    //                .ForMember(d => d.Places, o => o.MapFrom(s => s.Values.Single(x => x.Mode == s.Mode).Locations))
-    //                .ForMember(d => d.Tags, o => o.MapFrom(s => s.Values.Single(x => x.Mode == s.Mode).Tags))
-    //                .ForMember(d => d.Documents, o => o.MapFrom(s => s.Values.Single(x => x.Mode == s.Mode).Documents))
-    //            ;
-    //        }
-    //    }
-    //}
 }
