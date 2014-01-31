@@ -9,6 +9,7 @@ using AttributeRouting.Web.Http;
 using AutoMapper;
 using FluentValidation;
 using UCosmic.Domain.Activities;
+using UCosmic.Domain.People;
 using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc.ApiControllers
@@ -50,8 +51,11 @@ namespace UCosmic.Web.Mvc.ApiControllers
             if (input.PageNumber < 1) input.PageNumber = 1;
             if (input.PageSize < 1) input.PageSize = 10;
 
-            var query = new MyActivityValues(User)
+            var person = _queryProcessor.Execute(new MyPerson(User));
+            var query = new ActivityValuesPageBy
             {
+                Principal = User,
+                PersonId = person.RevisionId,
                 EagerLoad = new Expression<Func<ActivityValues, object>>[]
                 {
                     x => x.Activity,

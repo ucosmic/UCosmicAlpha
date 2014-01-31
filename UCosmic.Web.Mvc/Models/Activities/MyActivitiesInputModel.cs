@@ -19,44 +19,67 @@ namespace UCosmic.Web.Mvc.Models
             protected override void Configure()
             {
                 var defaultOrderBy = new Dictionary<Expression<Func<ActivityValues, object>>, OrderByDirection>();
-                //{
-                //    // this puts all ongoings at the top
-                //    { x => x.OnGoing, OrderByDirection.Descending },
-
-                //    // sort by year descending. Year comes from end date first, or start date if end date is null, or int.MinValue if start date is null
-                //    // this will group the list by year descending, essentially creating 1 sort group for each coalesced year
-                //    { x => x.EndsOn.HasValue
-                //        ? x.EndsOn.Value.Year
-                //        : x.StartsOn.HasValue
-                //            ? x.StartsOn.Value.Year
-                //            : int.MinValue, OrderByDirection.Descending },
-
-                //    // activities that have both a start date & end date in same year come at the top (true above false)
-                //    { x => x.StartsOn.HasValue
-                //        && x.EndsOn.HasValue
-                //        && x.StartsOn.Value.Year == x.EndsOn.Value.Year
-                //        , OrderByDirection.Descending },
-
-                //    // activities that have both start & end come at bottom (true below false) because they will not be in same year
-                //    // after the sort expression above puts ones in same year at the top
-                //    { x => x.EndsOn.HasValue
-                //        && x.StartsOn.HasValue, OrderByDirection.Ascending },
-
-                //    // so far all date sorting has been by year: use this to also sort by month & day descending
-                //    { x => x.EndsOn ?? x.StartsOn, OrderByDirection.Descending },
-
-                //    // finally, sort by title alphabetically
-                //    { x => x.Title, OrderByDirection.Ascending },
-                //};
-
-                CreateMap<MyActivitiesInputModel, MyActivityValues>()
+                CreateMap<MyActivitiesInputModel, ActivityValuesPageBy>()
                     .ForMember(d => d.Principal, o => o.Ignore())
-                    //.ForMember(d => d.EagerLoad, o => o.UseValue(ActivityApiModel.EagerLoad)) // paged list is faster without eager loading
+                    .ForMember(d => d.PersonId, o => o.Ignore())
                     .ForMember(d => d.EagerLoad, o => o.Ignore())
+                    .ForMember(d => d.EstablishmentId, o => o.UseValue(null))
+                    .ForMember(d => d.EstablishmentDomain, o => o.UseValue(null))
+                    .ForMember(d => d.CountryCode, o => o.UseValue(null))
+                    .ForMember(d => d.PlaceIds, o => o.UseValue(null))
+                    .ForMember(d => d.ActivityTypeIds, o => o.UseValue(null))
+                    .ForMember(d => d.Since, o => o.UseValue(null))
+                    .ForMember(d => d.Until, o => o.UseValue(null))
+                    .ForMember(d => d.IncludeUndated, o => o.UseValue(null))
+                    .ForMember(d => d.Keyword, o => o.UseValue(null))
                     .ForMember(d => d.OrderBy, o => o.UseValue(defaultOrderBy.Recency(OrderByDirection.Descending)))
                 ;
             }
         }
+
+        //public class EntityToQuery2 : Profile
+        //{
+        //    protected override void Configure()
+        //    {
+        //        var defaultOrderBy = new Dictionary<Expression<Func<ActivityValues, object>>, OrderByDirection>();
+        //        //{
+        //        //    // this puts all ongoings at the top
+        //        //    { x => x.OnGoing, OrderByDirection.Descending },
+
+        //        //    // sort by year descending. Year comes from end date first, or start date if end date is null, or int.MinValue if start date is null
+        //        //    // this will group the list by year descending, essentially creating 1 sort group for each coalesced year
+        //        //    { x => x.EndsOn.HasValue
+        //        //        ? x.EndsOn.Value.Year
+        //        //        : x.StartsOn.HasValue
+        //        //            ? x.StartsOn.Value.Year
+        //        //            : int.MinValue, OrderByDirection.Descending },
+
+        //        //    // activities that have both a start date & end date in same year come at the top (true above false)
+        //        //    { x => x.StartsOn.HasValue
+        //        //        && x.EndsOn.HasValue
+        //        //        && x.StartsOn.Value.Year == x.EndsOn.Value.Year
+        //        //        , OrderByDirection.Descending },
+
+        //        //    // activities that have both start & end come at bottom (true below false) because they will not be in same year
+        //        //    // after the sort expression above puts ones in same year at the top
+        //        //    { x => x.EndsOn.HasValue
+        //        //        && x.StartsOn.HasValue, OrderByDirection.Ascending },
+
+        //        //    // so far all date sorting has been by year: use this to also sort by month & day descending
+        //        //    { x => x.EndsOn ?? x.StartsOn, OrderByDirection.Descending },
+
+        //        //    // finally, sort by title alphabetically
+        //        //    { x => x.Title, OrderByDirection.Ascending },
+        //        //};
+
+        //        CreateMap<MyActivitiesInputModel, MyActivityValues>()
+        //            .ForMember(d => d.Principal, o => o.Ignore())
+        //            //.ForMember(d => d.EagerLoad, o => o.UseValue(ActivityApiModel.EagerLoad)) // paged list is faster without eager loading
+        //            .ForMember(d => d.EagerLoad, o => o.Ignore())
+        //            .ForMember(d => d.OrderBy, o => o.UseValue(defaultOrderBy.Recency(OrderByDirection.Descending)))
+        //        ;
+        //    }
+        //}
 
         //public class EntityToQuery1 : Profile
         //{

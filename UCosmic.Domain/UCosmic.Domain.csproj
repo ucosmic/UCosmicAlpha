@@ -91,7 +91,7 @@
     <Compile Include="Domain\Activities\Queries\ActivityValuesBy.cs" />
     <Compile Include="Domain\Activities\Queries\Deprecated\ActivityValuesByTerms.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityValuesPageBy.cs" />
-    <Compile Include="Domain\Activities\Queries\MyActivityValues.cs" />
+    <Compile Include="Domain\Activities\Queries\Deprecated\MyActivityValues.cs" />
     <Compile Include="Domain\Activities\_Internal\SortActivityValues.cs" />
     <Compile Include="Domain\Degrees\Queries\DegreesPageByTerms.cs" />
     <Compile Include="Domain\Places\Documents\PlaceDocument.cs" />
@@ -218,12 +218,12 @@
     <Compile Include="Domain\Activities\Validation\MustNotBeDuplicateActivityPlace.cs" />
     <Compile Include="Domain\Activities\Validation\MustHaveValuesForMode.cs" />
     <Compile Include="Domain\Activities\_Deprecatable\ActivityViewProjector.cs" />
-    <Compile Include="Domain\Activities\Queries\ActivityValuesByActivityIdAndMode.cs" />
+    <Compile Include="Domain\Activities\Queries\Deprecated\ActivityValuesByActivityIdAndMode.cs" />
     <Compile Include="Domain\Activities\_Deprecatable\ActivityCountByPlaceIds.cs" />
     <Compile Include="Domain\Activities\_Internal\QueryActivityValues.cs" />
     <Compile Include="Domain\Activities\_Deprecatable\QueryActivityViews.cs" />
     <Compile Include="Domain\Activities\_Deprecatable\ActivitySearch.cs" />
-    <Compile Include="Domain\Activities\Queries\ActivityExtensions.cs" />
+    <Compile Include="Domain\Activities\Queries\Deprecated\ActivityExtensions.cs" />
     <Compile Include="Domain\Activities\Validation\_Deprecated\_MustHaveActivityMode.cs" />
     <Compile Include="Domain\Activities\_Deprecatable\ActivityGlobalActivityCountView.cs" />
     <Compile Include="Domain\Activities\_Deprecatable\ActivityGlobalPeopleCountView.cs" />
@@ -457,7 +457,7 @@
     <Compile Include="Domain\Activities\Validation\_Deprecated\_MustOwnActivityType.cs" />
     <Compile Include="Domain\Activities\Validation\_Deprecated\_MustOwnActivityValues.cs" />
     <Compile Include="Domain\Employees\_Deprecatable\CreateEmployee.cs" />
-    <Compile Include="Domain\Activities\Queries\TenantActivitiesByKeyword.cs" />
+    <Compile Include="Domain\Activities\Queries\Deprecated\TenantActivitiesByKeyword.cs" />
     <Compile Include="Domain\Activities\_Internal\QueryActivities.cs" />
     <Compile Include="Domain\Employees\Commands\CreateEmployeeModuleSettings.cs" />
     <Compile Include="Domain\Employees\_Deprecatable\DeleteEmployee.cs" />
