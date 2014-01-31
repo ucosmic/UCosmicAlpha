@@ -2644,6 +2644,7 @@
     <Content Include="Views\JavaScriptRoutes\Places.cshtml" />
     <Content Include="Views\Employees\Map.cshtml" />
     <Content Include="Views\Employees\DegreesTable.cshtml" />
+    <Content Include="Views\Employees\Experts.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

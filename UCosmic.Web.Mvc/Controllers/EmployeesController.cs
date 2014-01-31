@@ -139,5 +139,12 @@ namespace UCosmic.Web.Mvc.Controllers
 
             return View(model);
         }
+
+        [CurrentModuleTab(ModuleTab.Employees)]
+        [GET("{domain}/employees/experts")]
+        public virtual ActionResult Experts(string domain)
+        {
+            return View();
+        }
     }
 }

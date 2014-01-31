@@ -26,8 +26,8 @@
     <li class="@(Model.Activities ? "current" : null)">
         <a href="@Url.Action(hasStyleDomain ? MVC.Employees.TenantIndex(styleDomain) : MVC.Employees.Index())">Activities</a>
     </li>
-    <li class="expert">
-        <a href="/facultystaff/#/expert">Find an Expert</a>
+    <li class="@(Model.FindAnExpert ? "current" : null)">
+        <a href="@Url.Action(hasStyleDomain ? MVC.Employees.Experts(styleDomain) : MVC.Employees.Index())">Find an Expert</a>
     </li>
     <li class="@(Model.Degrees ? "current" : null)">
         <a href="@Url.Action(hasStyleDomain ? MVC.Employees.DegreesTable(styleDomain, null) : MVC.Employees.Index())">Formal Education</a>

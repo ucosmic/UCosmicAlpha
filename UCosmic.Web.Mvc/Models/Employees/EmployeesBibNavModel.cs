@@ -4,6 +4,7 @@
     {
         public bool Activities { get; set; }
         public bool Degrees { get; set; }
+        public bool FindAnExpert { get; set; }
         public bool GeographicExpertise { get; set; }
         public bool LanguageExpertise { get; set; }
         public string Custom { get; set; }
