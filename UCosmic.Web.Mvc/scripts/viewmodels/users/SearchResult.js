@@ -1,4 +1,4 @@
-﻿var ViewModels;
+var ViewModels;
 (function (ViewModels) {
     (function (Users) {
         var RoleGrantValidator = (function () {
