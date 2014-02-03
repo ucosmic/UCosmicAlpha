@@ -3,71 +3,73 @@
 
 @* DEGREES *@
 <section class="content fixed to-top">
-    <div>
+<div>
 
-        @if (Model != null && Model.Items.Any())
-        {
+    @if (Model != null && Model.Items.Any())
+    {
             @* RESULTS *@
-            <div>
+        <div>
+            @if (User.Identity.Name.Equals(ViewBag.Username, StringComparison.OrdinalIgnoreCase))
+            {
+                <div style="display: none;">
+                    <div data-bind="jQuery: '$confirmDeleteDegree'" title="Please confirm your intent">
+                        Are you sure you want to delete this formal education? This cannot be undone.
+                    </div>
+                </div>
+            }
+            <ul style="font-size: 20px;">
+                @foreach (var degree in Model.Items)
+                {
+                    <li style="margin-bottom: 1em;">
+                        <strong style="display: block;">@degree.Title</strong>
+                        @if (User.Identity.Name.Equals(ViewBag.Username, StringComparison.OrdinalIgnoreCase))
+                        {
+                            <div style="float: right; width: 70px; text-align: right;">
+                                <img data-bind="click: edit.bind($data, @degree.Id), visible: !purgeSpinner.isVisible()" alt="" src="~/images/icons/edit/pencil-a-24.png" title="Edit this formal education"
+                                     style="cursor: pointer; margin: 0 0 8px 8px;" />
+                                <img data-bind="click: purge.bind($data, @degree.Id), visible: !purgeSpinner.isVisible()" a alt="" src="~/images/icons/minus/minus-24-red.png" title="Delete this formal education"
+                                     style="cursor: pointer; margin: 0 0 8px 8px;" />
+                                <img data-bind="visible: purgeSpinner.isVisible" alt="" src="~/images/icons/spinner/spinner-24-blue.gif" title="Deleting this formal education..."
+                                     style="margin-left: 8px; display: none;" />
+                            </div>
+                        }
+                        <ul style="display: inline-block;">
+                            @if (degree.Institution != null && degree.Institution.OfficialName != string.Empty)
+                            {
+                                <li class="comma-list">@degree.Institution.OfficialName</li>
+                            }
+                            @if (!string.IsNullOrEmpty(degree.FieldOfStudy))
+                            {
+                                <li class="comma-list">@degree.FieldOfStudy</li>
+                            }
+                            @if (degree.YearAwarded != null)
+                            {
+                                <li class="comma-list">@degree.YearAwarded</li>
+                            }
+                        </ul>
+                    </li>
+                }
                 @if (User.Identity.Name.Equals(ViewBag.Username, StringComparison.OrdinalIgnoreCase))
                 {
-                    <div style="display: none;">
-                        <div data-bind="jQuery: '$confirmDeleteDegree'" title="Please confirm your intent">
-                            Are you sure you want to delete this formal education? This cannot be undone.
-                        </div>
-                    </div>
+                    <li id="degrees_no_results" style="display: none; font-size: 16px;">
+                        @ViewBag.CustomBib has not yet identified any particular areas of formal education.
+                    </li>
                 }
-                <ul style="font-size: 20px;">
-                    @foreach (var degree in Model.Items)
-                    {
-                        <li style="margin-bottom: 1em;">
-                            <strong style="display: block;">@degree.Title</strong>
-                            @if (User.Identity.Name.Equals(ViewBag.Username, StringComparison.OrdinalIgnoreCase))
-                            {
-                                <div style="float: right; width: 70px; text-align: right;">
-                                    <img data-bind="click: edit.bind($data, @degree.Id), visible: !purgeSpinner.isVisible()" alt="" src="~/images/icons/edit/pencil-a-24.png" title="Edit this formal education"
-                                         style="cursor: pointer; margin: 0 0 8px 8px;" />
-                                    <img data-bind="click: purge.bind($data, @degree.Id), visible: !purgeSpinner.isVisible()" a alt="" src="~/images/icons/minus/minus-24-red.png" title="Delete this formal education"
-                                         style="cursor: pointer; margin: 0 0 8px 8px;" />
-                                    <img data-bind="visible: purgeSpinner.isVisible" alt="" src="~/images/icons/spinner/spinner-24-blue.gif" title="Deleting this formal education..."
-                                         style="margin-left: 8px; display: none;" />
-                                </div>
-                            }
-                            <ul style="display: inline-block;">
-                                @if (degree.Institution != null && degree.Institution.OfficialName != string.Empty)
-                                {
-                                    <li class="comma-list">@degree.Institution.OfficialName</li>
-                                }
-                                @if (!string.IsNullOrEmpty(degree.FieldOfStudy))
-                                {
-                                    <li class="comma-list">@degree.FieldOfStudy</li>
-                                }
-                                @if (degree.YearAwarded != null)
-                                {
-                                    <li class="comma-list">@degree.YearAwarded</li>
-                                }
-                            </ul>
-                        </li>
-                    }
-                    @if (User.Identity.Name.Equals(ViewBag.Username, StringComparison.OrdinalIgnoreCase))
-                    {
-                        <li id="degrees_no_results" style="display: none; font-size: 16px;">
-                            @ViewBag.CustomBib has not yet identified any particular areas of formal education.
-                        </li>
-                    }
-                </ul>
-            </div>
-        }
-        else
-        {
+            </ul>
+        </div>
+    }
+    else
+    {
             @* ZERO RESULTS MESSAGE *@
-            <span>
-                @ViewBag.CustomBib has not yet identified any particular areas of international degrees.
-            </span>
-        }
+        <span>
+            @ViewBag.CustomBib has not yet identified any particular areas of international degrees.
+        </span>
+    }
 
 
-    </div>
+</div>
+@if (User.Identity.Name.Equals(ViewBag.Username, StringComparison.OrdinalIgnoreCase))
+{
     <div style="margin-top: 12px; line-height: 24px;">
         <a href="#" class="button" data-bind="click: addDegree">
             @*<img src="~/images/icons/plus/plus-24-green.png" alt="Add a new language" style="cursor: pointer; padding-right: 4px;" />*@
@@ -75,4 +77,5 @@
             <span class="text">Add a new formal education</span>
         </a>
     </div>
+}
 </section>

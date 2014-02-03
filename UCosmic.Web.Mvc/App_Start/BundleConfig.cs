@@ -223,6 +223,8 @@ namespace UCosmic.Web.Mvc
                 "~/scripts/viewmodels/people/languages.js"));
             bundles.Add(new ScriptBundle("~/bundles/people/degrees").Include(
                 "~/scripts/viewmodels/people/degrees.js"));
+            bundles.Add(new ScriptBundle("~/bundles/people/global").Include(
+                "~/scripts/viewmodels/people/global.js"));
 
             // user search page
             bundles.Add(new ScriptBundle("~/bundles/users").Include(

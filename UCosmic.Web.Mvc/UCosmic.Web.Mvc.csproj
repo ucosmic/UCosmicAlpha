@@ -2159,6 +2159,7 @@
     <Content Include="scripts\viewmodels\establishments\Location.js">
       <DependentUpon>Location.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="scripts\viewmodels\people\Global.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\people\Degrees.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\people\Languages.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\my\Profile.ts" />

@@ -1,5 +1,4 @@
-﻿@using System.Runtime.CompilerServices
-@model IEnumerable<UCosmic.Web.Mvc.Models.GeographicExpertiseApiModel>
+﻿@model IEnumerable<UCosmic.Web.Mvc.Models.GeographicExpertiseApiModel>
 
 @* GLOBAL EXPERTISE *@
 <section class="content fixed to-top">
@@ -8,10 +7,29 @@
         {
             @* RESULTS *@
             <div>
+                @if (User.Identity.Name.Equals(ViewBag.Username, StringComparison.OrdinalIgnoreCase))
+                        {
+                            <div style="display: none;">
+                                <div data-bind="jQuery: '$confirmDeleteGlobal'" title="Please confirm your intent">
+                                    Are you sure you want to delete this global expertise? This cannot be undone.
+                                </div>
+                            </div>
+                        }
                 <ul style="font-size: 20px; line-height: 28px;">
                     @foreach (var global in Model)
                     {
                         <li style="margin-bottom: 2em;">
+                            @if (User.Identity.Name.Equals(ViewBag.Username, StringComparison.OrdinalIgnoreCase))
+                            {
+                                <div style="float: right; width: 70px; text-align: right;">
+                                    <img data-bind="click: edit.bind($data, @global.Id), visible: !purgeSpinner.isVisible()" alt="" src="~/images/icons/edit/pencil-a-24.png" title="Edit this global expertise"
+                                         style="cursor: pointer; margin: 0 0 8px 8px;" />
+                                    <img data-bind="click: purge.bind($data, @global.Id), visible: !purgeSpinner.isVisible()" a alt="" src="~/images/icons/minus/minus-24-red.png" title="Delete this global expertise"
+                                         style="cursor: pointer; margin: 0 0 8px 8px;" />
+                                    <img data-bind="visible: purgeSpinner.isVisible" alt="" src="~/images/icons/spinner/spinner-24-blue.gif" title="Deleting this global expertise..."
+                                         style="margin-left: 8px; display: none;" />
+                                </div>
+                            }
                             <ul style="display: inline-block;">
                                 @foreach (var location in global.Locations)
                                 {
@@ -19,6 +37,12 @@
                                 }
                             </ul>
                             <div>@global.Description</div>
+                        </li>
+                    }
+                    @if (User.Identity.Name.Equals(ViewBag.Username, StringComparison.OrdinalIgnoreCase))
+                    {
+                        <li id="global_no_results" style="display: none; font-size: 16px;">
+                            @ViewBag.CustomBib has not yet identified any particular areas of formal education.
                         </li>
                     }
                 </ul>
@@ -32,4 +56,14 @@
             </span>
         }
     </div>
+    @if (User.Identity.Name.Equals(ViewBag.Username, StringComparison.OrdinalIgnoreCase))
+    {
+        <div style="margin-top: 12px; line-height: 24px;">
+            <a href="#" class="button" data-bind="click: addGlobal">
+                <i class="green plus"></i>
+                <span class="text">Add a new global expertise</span>
+            </a>
+        </div>
+    }
 </section>
+
