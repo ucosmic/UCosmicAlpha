@@ -316,7 +316,8 @@
                 placeAgnostic: true,
             };
             this.geoChartSpinner.start();
-            Servers.GetEmployeesPlaces(this.settings.tenantId, request)
+            var establishmentId = this.selectedTenant() ? this.selectedTenant() : this.establishmentId();
+            Servers.GetEmployeesPlaces(establishmentId, request)
                 .done((places: ApiModels.EmployeesPlaceApiModel[]): void => {
                     this.hasPlaceData(places && places.length > 0);
                     promise.resolve(places);
@@ -364,6 +365,9 @@
             var areBindingsApplied = this.areBindingsApplied();
             var hasTenancyData = this.hasTenancyData();
             var selectedTenant = this.selectedTenant();
+            if (this.selectedTenant()) {
+                this.settings.tenantId = this.selectedTenant();
+            }
             var establishmentId = this.establishmentId();
             if (!areBindingsApplied || !hasTenancyData || !selectedTenant || selectedTenant == establishmentId)
                 return;

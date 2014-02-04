@@ -106,6 +106,9 @@
                     var areBindingsApplied = _this.areBindingsApplied();
                     var hasTenancyData = _this.hasTenancyData();
                     var selectedTenant = _this.selectedTenant();
+                    if (_this.selectedTenant()) {
+                        _this.settings.tenantId = _this.selectedTenant();
+                    }
                     var establishmentId = _this.establishmentId();
                     if (!areBindingsApplied || !hasTenancyData || !selectedTenant || selectedTenant == establishmentId)
                         return;
@@ -314,7 +317,8 @@
                     placeAgnostic: true
                 };
                 this.geoChartSpinner.start();
-                Employees.Servers.GetEmployeesPlaces(this.settings.tenantId, request).done(function (places) {
+                var establishmentId = this.selectedTenant() ? this.selectedTenant() : this.establishmentId();
+                Employees.Servers.GetEmployeesPlaces(establishmentId, request).done(function (places) {
                     _this.hasPlaceData(places && places.length > 0);
                     promise.resolve(places);
                 }).fail(function (xhr) {
