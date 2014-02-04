@@ -28,7 +28,7 @@ namespace UCosmic.Domain.People
         internal Person Person { get; private set; }
         public string Value { get; private set; }
         public bool IsConfirmed { get; internal set; }
-        public bool IsDefault { get; set; }
+        public bool IsDefault { get; internal set; }
         public bool IsFromSaml { get; internal set; }
 
         public int CreatedEmailAddressNumber { get; internal set; }
@@ -47,6 +47,8 @@ namespace UCosmic.Domain.People
                 .NotEmpty().WithMessage(MustNotHaveEmptyEmailAddress.FailMessage)
                 .EmailAddress().WithMessage(MustBeValidEmailAddressFormat.FailMessageFormat, x => x.Value)
                 .MustNotFindEmailAddressByValue(queries)
+                .MustBeAllowableEmailDomainForPerson(queries, x => x.PersonId)
+                    .When(x => x.Person == null, ApplyConditionTo.CurrentValidator)
             ;
 
             // when Person is null

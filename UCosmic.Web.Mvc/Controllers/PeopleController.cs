@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Web.Mvc;
 using AttributeRouting.Web.Mvc;
+using FluentValidation;
 using UCosmic.Domain.GeographicExpertise;
 using UCosmic.Web.Mvc.Models;
 using UCosmic.Domain.People;
@@ -16,10 +17,12 @@ namespace UCosmic.Web.Mvc.Controllers
     public partial class PeopleController : Controller
     {
         private readonly IProcessQueries _queryProcessor;
+        private readonly IHandleCommands<CreateEmailAddress> _createEmailAddress;
 
-        public PeopleController(IProcessQueries queryProcessor)
+        public PeopleController(IProcessQueries queryProcessor, IHandleCommands<CreateEmailAddress> createEmailAddress)
         {
             _queryProcessor = queryProcessor;
+            _createEmailAddress = createEmailAddress;
         }
 
         [CurrentModuleTab(ModuleTab.Employees)]
@@ -31,6 +34,7 @@ namespace UCosmic.Web.Mvc.Controllers
 
             ViewBag.CustomBib = person.DisplayName;
             ViewBag.personId = personId;
+            ViewBag.UserName = person.User != null ? person.User.Name : null;
             ViewBag.currentPage = "profile";
             return View();
         }
@@ -196,6 +200,37 @@ namespace UCosmic.Web.Mvc.Controllers
 
             ViewBag.Username = personModel.Username;
             return View(model);
+        }
+
+        [Authorize]
+        [POST("people/{personId:int}/emails")]
+        public virtual ActionResult Emails(int personId, EmailAddressPostModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var myPerson = _queryProcessor.Execute(new MyPerson(User)
+                {
+                    EagerLoad = new Expression<Func<Person, object>>[]
+                    {
+                        x => x.User,
+                    }
+                });
+                if (!myPerson.User.Name.Equals(User.Identity.Name, StringComparison.OrdinalIgnoreCase))
+                    ModelState.AddModelError(model.PropertyName(x => x.Value), "You are not authorized to add email addresses for this person.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                var firstError = ModelState.Values.SelectMany(x => x.Errors.Select(y => y.ErrorMessage)).First();
+                TempData.Flash("Could not add new email address: {0}", firstError);
+            }
+            else
+            {
+                var command = new CreateEmailAddress(model.Value, model.PersonId);
+                _createEmailAddress.Handle(command);
+                TempData.Flash("Email address '{0}' was successfully added", model.Value);
+            }
+            return RedirectToAction(MVC.People.Index(personId));
         }
     }
 }

@@ -95,6 +95,12 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.GlobalExpertises);
         }
+        [NonAction]
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public System.Web.Mvc.ActionResult Emails()
+        {
+            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Emails);
+        }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public PeopleController Actions { get { return MVC.People; } }
@@ -120,6 +126,7 @@ namespace UCosmic.Web.Mvc.Controllers
             public readonly string GetEmails = "GetEmails";
             public readonly string Languages = "Languages";
             public readonly string GlobalExpertises = "GlobalExpertises";
+            public readonly string Emails = "Emails";
         }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -134,6 +141,7 @@ namespace UCosmic.Web.Mvc.Controllers
             public const string GetEmails = "GetEmails";
             public const string Languages = "Languages";
             public const string GlobalExpertises = "GlobalExpertises";
+            public const string Emails = "Emails";
         }
 
 
@@ -210,6 +218,15 @@ namespace UCosmic.Web.Mvc.Controllers
         public class ActionParamsClass_GlobalExpertises
         {
             public readonly string personId = "personId";
+        }
+        static readonly ActionParamsClass_Emails s_params_Emails = new ActionParamsClass_Emails();
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public ActionParamsClass_Emails EmailsParams { get { return s_params_Emails; } }
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public class ActionParamsClass_Emails
+        {
+            public readonly string personId = "personId";
+            public readonly string model = "model";
         }
         static readonly ViewsClass s_views = new ViewsClass();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -328,6 +345,14 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.GlobalExpertises);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "personId", personId);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.ActionResult Emails(int personId, UCosmic.Web.Mvc.Models.EmailAddressPostModel model)
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Emails);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "personId", personId);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "model", model);
             return callInfo;
         }
 

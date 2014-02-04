@@ -7,13 +7,13 @@ namespace UCosmic.FluentValidation
 {
     internal static class RootComposer
     {
-        internal static void RegisterFluentValidation(this Container container)
+        internal static void RegisterFluentValidation(this Container container, params Assembly[] assemblies)
         {
             // by default, stop validation after first failure
             ValidatorOptions.CascadeMode = CascadeMode.StopOnFirstFailure;
 
             // merge domain with settings assemblies to register validators
-            var assemblies = new[] { Assembly.GetAssembly(typeof(IHandleCommands<>)) };
+            assemblies = assemblies ?? new[] { Assembly.GetAssembly(typeof(IHandleCommands<>)) };
 
             // fluent validation open generics
             container.RegisterManyForOpenGeneric(typeof(IValidator<>), assemblies);

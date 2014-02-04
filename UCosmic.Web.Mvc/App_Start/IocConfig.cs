@@ -4,9 +4,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Mvc;
+using FluentValidation.Mvc;
 using SimpleInjector;
 using SimpleInjector.Integration.Web.Mvc;
 using UCosmic.CompositionRoot;
+using UCosmic.FluentValidation;
 using UCosmic.SeedData;
 using UCosmic.WebApi;
 using UCosmic.Work;
@@ -29,6 +31,11 @@ namespace UCosmic.Web.Mvc
             {
                 Flags = RootCompositionFlags.Web |
                         RootCompositionFlags.Work,
+                FluentValidationAssemblies = new[]
+                {
+                    Assembly.GetAssembly(typeof(IHandleCommands<>)),
+                    Assembly.GetExecutingAssembly(),
+                }
             };
             container.ComposeRoot(rootCompositionSettings);
 
@@ -40,6 +47,14 @@ namespace UCosmic.Web.Mvc
 
             DependencyResolver.SetResolver(new SimpleInjectorDependencyResolver(container));
             GlobalConfiguration.Configuration.DependencyResolver = new SimpleInjectorHttpDependencyResolver(container);
+
+            FluentValidationModelValidatorProvider.Configure(
+                provider =>
+                {
+                    provider.ValidatorFactory = new FluentValidationValidatorFactory(container);
+                    provider.AddImplicitRequiredValidator = false;
+                }
+            );
 
             // seed data
             if (rootCompositionSettings.Flags.HasFlag(RootCompositionFlags.Debug))
