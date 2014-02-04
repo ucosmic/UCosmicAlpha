@@ -73,8 +73,7 @@ module People.ViewModels {
                 async: false,
                 type: "DELETE",
                 url: App.Routes.WebApi.LanguageExpertise.del(expertiseId),
-                success: (data: any, textStatus: string, jqXHR: JQueryXHR): void =>
-                {
+                success: (data: any, textStatus: string, jqXHR: JQueryXHR): void => {
                     this.purgeSpinner.stop();
                 },
                 error: (jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void => {

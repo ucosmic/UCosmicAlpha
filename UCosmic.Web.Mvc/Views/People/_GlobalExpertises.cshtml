@@ -8,13 +8,13 @@
             @* RESULTS *@
             <div>
                 @if (User.Identity.Name.Equals(ViewBag.Username, StringComparison.OrdinalIgnoreCase))
-                        {
-                            <div style="display: none;">
-                                <div data-bind="jQuery: '$confirmDeleteGlobal'" title="Please confirm your intent">
-                                    Are you sure you want to delete this global expertise? This cannot be undone.
-                                </div>
-                            </div>
-                        }
+                {
+                    <div style="display: none;">
+                        <div data-bind="jQuery: '$confirmDeleteGlobal'" title="Please confirm your intent">
+                            Are you sure you want to delete this global expertise? This cannot be undone.
+                        </div>
+                    </div>
+                }
                 <ul style="font-size: 20px; line-height: 28px;">
                     @foreach (var global in Model)
                     {

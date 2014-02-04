@@ -542,22 +542,22 @@ module App.Routes {
             }
         }
 
-        //export module Degrees {
-        //    export function get (degreeId?: number): string {
-        //        var url = 'degrees';
-        //        if (degreeId) url += '/' + degreeId;
-        //        return makeUrl(url);
-        //    }
-        //    export function post(): string {
-        //        return get();
-        //    }
-        //    export function put(degreeId: number): string {
-        //        return get(degreeId);
-        //    }
-        //    export function del(degreeId: number): string {
-        //        return get(degreeId);
-        //    }
-        //}
+        export module Activities {
+            export function get (activitiyId?: number): string {
+                var url = 'activities';
+                if (activitiyId) url += '/' + activitiyId;
+                return makeUrl(url);
+            }
+            export function post(): string {
+                return get();
+            }
+            export function put(activitiyId: number): string {
+                return get(activitiyId);
+            }
+            export function del(activitiyId: number): string {
+                return get(activitiyId);
+            }
+        }
 
         export module Affiliations {
             export function get (affiliationId?: number): string {
@@ -718,6 +718,18 @@ module App.Routes {
                 }
                 export function edit(expertiseId: number) {
                     return makeUrl(formatUrl(expertiseId));
+                }
+            }
+
+            export module Activities {
+                function formatUrl(resource: any): string {
+                    return 'my/activities/{0}'.format(resource);
+                }
+                export function create() {
+                    return makeUrl(formatUrl('new'));
+                }
+                export function edit(activityId: number) {
+                    return makeUrl(formatUrl(activityId));
                 }
             }
         }

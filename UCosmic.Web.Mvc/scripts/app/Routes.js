@@ -1,4 +1,4 @@
-var App;
+﻿var App;
 (function (App) {
     (function (Routes) {
         Routes.applicationPath = '/';
@@ -691,6 +691,29 @@ var App;
             })(WebApi.InternationalAffiliations || (WebApi.InternationalAffiliations = {}));
             var InternationalAffiliations = WebApi.InternationalAffiliations;
 
+            (function (Activities) {
+                function get(activitiyId) {
+                    var url = 'activities';
+                    if (activitiyId)
+                        url += '/' + activitiyId;
+                    return makeUrl(url);
+                }
+                Activities.get = get;
+                function post() {
+                    return get();
+                }
+                Activities.post = post;
+                function put(activitiyId) {
+                    return get(activitiyId);
+                }
+                Activities.put = put;
+                function del(activitiyId) {
+                    return get(activitiyId);
+                }
+                Activities.del = del;
+            })(WebApi.Activities || (WebApi.Activities = {}));
+            var Activities = WebApi.Activities;
+
             (function (Affiliations) {
                 function get(affiliationId) {
                     var url = makeUrl('affiliations');
@@ -886,6 +909,21 @@ var App;
                     LanguageExpertise.edit = edit;
                 })(My.LanguageExpertise || (My.LanguageExpertise = {}));
                 var LanguageExpertise = My.LanguageExpertise;
+
+                (function (Activities) {
+                    function formatUrl(resource) {
+                        return 'my/activities/{0}'.format(resource);
+                    }
+                    function create() {
+                        return makeUrl(formatUrl('new'));
+                    }
+                    Activities.create = create;
+                    function edit(activityId) {
+                        return makeUrl(formatUrl(activityId));
+                    }
+                    Activities.edit = edit;
+                })(My.Activities || (My.Activities = {}));
+                var Activities = My.Activities;
             })(Mvc.My || (Mvc.My = {}));
             var My = Mvc.My;
         })(Routes.Mvc || (Routes.Mvc = {}));

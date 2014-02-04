@@ -13,6 +13,7 @@
                 this.orderBy = ko.observable();
                 this.hasInitialized = false;
                 this.optionsEnabled = ko.observable(false);
+                this.purgeSpinner = new App.Spinner();
                 this.modelData = modelData;
                 this.pageSize(this.modelData.pageSize);
                 this.pageNumber((this.modelData.pageNumber != null) ? this.modelData.pageNumber : "1");
@@ -86,6 +87,72 @@
                         _this.hasInitialized = true;
                     });
                 }).extend({ throttle: 1 });
+            };
+
+            ActivityInputModel.prototype._purge = function (expertiseId) {
+                var _this = this;
+                $.ajax({
+                    async: false,
+                    type: "DELETE",
+                    url: App.Routes.WebApi.Activities.del(expertiseId),
+                    success: function (data, textStatus, jqXHR) {
+                        _this.purgeSpinner.stop();
+                    },
+                    error: function (xhr) {
+                        _this.purgeSpinner.stop();
+                        App.Failures.message(xhr, 'while deleting your activity', true);
+                    }
+                });
+            };
+            ActivityInputModel.prototype.purge = function (expertiseId, thisData, event) {
+                var _this = this;
+                this.purgeSpinner.start();
+                if (this.$confirmDeleteActivity && this.$confirmDeleteActivity.length) {
+                    this.$confirmDeleteActivity.dialog({
+                        dialogClass: 'jquery-ui',
+                        width: 'auto',
+                        resizable: false,
+                        modal: true,
+                        buttons: [
+                            {
+                                text: 'Yes, confirm delete',
+                                click: function () {
+                                    _this.$confirmDeleteActivity.dialog('close');
+                                    _this.purgeSpinner.start(true);
+                                    _this._purge(expertiseId);
+
+                                    if ($(event.target).closest("ul").children().length == 2) {
+                                        $("#activity_no_results").css("display", "block");
+                                    }
+                                    $(event.target).closest("li").remove();
+                                },
+                                'data-confirm-delete-link': true
+                            },
+                            {
+                                text: 'No, cancel delete',
+                                click: function () {
+                                    _this.$confirmDeleteActivity.dialog('close');
+                                },
+                                'data-css-link': true
+                            }
+                        ],
+                        close: function () {
+                            _this.purgeSpinner.stop();
+                        }
+                    });
+                } else {
+                    if (confirm('Are you sure you want to delete this activity?')) {
+                        this._purge(expertiseId);
+                    } else {
+                        this.purgeSpinner.stop();
+                    }
+                }
+            };
+            ActivityInputModel.prototype.edit = function (id) {
+                window.location.href = App.Routes.Mvc.My.Activities.edit(id);
+            };
+            ActivityInputModel.prototype.addActivity = function () {
+                window.location.href = App.Routes.Mvc.My.Activities.create();
             };
             return ActivityInputModel;
         })();

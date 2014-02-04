@@ -1,4 +1,5 @@
-﻿@model UCosmic.Web.Mvc.Models.PageOfActivityPublicViewModel
+﻿@using Microsoft.Ajax.Utilities
+@model UCosmic.Web.Mvc.Models.PageOfActivityPublicViewModel
 
 @* ACTIVITIES *@
 <section class="content fixed to-top">
@@ -8,6 +9,14 @@
             <input type="search" data-bind="value: keyword" placeholder="Find an activity by title, country, or keyword." name="keyword" style="width: 588px; margin-right: 12px" />
             <input type="submit" value="Search" title="Click here or press the enter key to search." />
         </div>
+        @if (User.Identity.Name.Equals(ViewBag.Username, StringComparison.OrdinalIgnoreCase))
+        {
+            <div style="display: none;">
+                <div data-bind="jQuery: '$confirmDeleteActivity'" title="Please confirm your intent">
+                    Are you sure you want to delete this language? This cannot be undone.
+                </div>
+            </div>
+        }
 
         @* PAGER STATUS & LOADING SPINNER *@
         <div class="group" style="margin: 1em 0;">
@@ -15,23 +24,27 @@
             {
                 <div class="on-left" style="height: 24px;">
                     <div>
-                        <strong>Showing <span>@Model.FirstNumber</span>
+                        <strong>
+                            Showing <span>@Model.FirstNumber</span>
                             @if (@Model.PageCount > 0)
                             {
                                 <span>- <span>@Model.LastNumber</span></span>
                             }
-                            of <span>@Model.ItemTotal</span></strong>
+                            of <span>@Model.ItemTotal</span>
+                        </strong>
                         @if (@Model.PageCount > 0)
                         {
-                            <span>(page
+                            <span>
+                                (page
                                 <select name="pageNumber" data-bind="value: pageNumber"
-                                    style="padding: 0; margin: 0; line-height: 16px; height: auto;">
+                                        style="padding: 0; margin: 0; line-height: 16px; height: auto;">
                                     @for (int i = 0; i < Model.PageCount; i++)
                                     {
-                                        <option value="@(i + 1)">@(i + 1)</option>   
+                                        <option value="@(i + 1)">@(i + 1)</option>
                                     }
                                 </select>
-                                of <span>@Model.PageCount</span>)</span>
+                                of <span>@Model.PageCount</span>)
+                            </span>
                         }
                     </div>
                 </div>
@@ -39,7 +52,7 @@
         </div>
         @if (Model != null && Model.Items.Any())
         {
-@* RESULTS *@
+            @* RESULTS *@
             <div>
                 @* TABLE *@
                 <div>
@@ -72,17 +85,90 @@
                                 <tr>
                                     <td>
                                         <ul style="display: inline-block;">
-                                            @foreach (var place in activity.Places)
+                                            @if (activity.Places.Length == 0)
                                             {
-                                                <li class="comma-list"><span>@place.PlaceName</span></li>
+                                                @: [unknown]
+                                            }
+                                            else
+                                            {
+                                                foreach (var place in activity.Places)
+                                                {
+                                                    <li class="comma-list">
+                                                        <span>
+                                                            @place.PlaceName
+                                                        </span>
+                                                    </li>
+                                                }
                                             }
                                         </ul>
                                     </td>
                                     <td>
-                                        <a href="@Url.Action(MVC.Activities.Details(activity.ActivityId))" >
-                                            @activity.Title
-                                        </a>
+                                        @if (User.Identity.Name.Equals(ViewBag.Username, StringComparison.OrdinalIgnoreCase))
+                                        {
+                                            <a style="display: block" href="@Url.Action(MVC.Activities.Details(activity.ActivityId))">
+                                                @if (activity.Title.IsNullOrWhiteSpace())
+                                                {
+                                                    @: [untitled activity @activity.ActivityId]
+                                                }
+                                                else
+                                                {
+                                                    @activity.Title
+                                                }
+
+                                            </a>
+                                            @*<a href="@Url.Action(MVC.Activities.Details(activity.ActivityId))">
+                                                    @if (activity.Title.IsNullOrWhiteSpace())
+                                                    {
+                                                        @: [untitled activity @activity.ActivityId]
+                                                    }
+                                                    else
+                                                    {
+                                                        @activity.Title
+                                                    }
+
+                                                </a>*@
+
+                                            <img data-bind="click: edit.bind($data, @activity.ActivityId), visible: !purgeSpinner.isVisible()" alt="" src="~/images/icons/edit/pencil-a-24.png" title="Edit this formal education"
+                                                 style="cursor: pointer; margin: 5px 0 8px 8px;" />
+                                            <img data-bind="click: purge.bind($data, @activity.ActivityId), visible: !purgeSpinner.isVisible()" a alt="" src="~/images/icons/minus/minus-24-red.png" title="Delete this formal education"
+                                                 style="cursor: pointer; margin: 5px 0 8px 8px;" />
+                                            <img data-bind="visible: purgeSpinner.isVisible" alt="" src="~/images/icons/spinner/spinner-24-blue.gif" title="Deleting this formal education..."
+                                                 style="margin-left: 8px; display: none; margin: 5px 0 8px 8px;" />
+                                            @*<a href="#" class="button" style="margin-top: 4px; display: inline-block;" data-bind="click: addDegree">
+                                                    <i class="green plus"></i>
+                                                    <span class="text">edit</span>
+                                                </a>
+
+                                                <a href="#" class="button" style="margin-top: 4px; display: inline-block;" data-bind=" click adddegree">
+                                                    <i class="green plus"></i>
+                                                    <span class="text">delete</span>
+                                                </a>*@
+
+
+                                        }
+                                        else
+                                        {
+                                            <a style="display: block" href="@Url.Action(MVC.Activities.Details(activity.ActivityId))">
+                                                @if (activity.Title.IsNullOrWhiteSpace())
+                                                {
+                                                    @: [untitled activity @activity.ActivityId]
+                                                }
+                                                else
+                                                {
+                                                    @activity.Title
+                                                }
+
+                                            </a>
+                                        }
                                     </td>
+                                    @*<td style="width: 50px;">
+                                            <img data-bind="click: edit.bind($data, @activity.ActivityId), visible: !purgeSpinner.isVisible()" alt="" src="~/images/icons/edit/pencil-a-24.png" title="Edit this formal education"
+                                                 style="cursor: pointer; margin: 5px 0 8px 8px;" />
+                                            <img data-bind="click: purge.bind($data, @activity.ActivityId), visible: !purgeSpinner.isVisible()" a alt="" src="~/images/icons/minus/minus-24-red.png" title="Delete this formal education"
+                                                 style="cursor: pointer; margin: 5px 0 8px 8px;" />
+                                            <img data-bind="visible: purgeSpinner.isVisible" alt="" src="~/images/icons/spinner/spinner-24-blue.gif" title="Deleting this formal education..."
+                                                 style="margin-left: 8px; display: none; margin: 5px 0 8px 8px;" />
+                                        </td>*@
                                     <td>
                                         <table style="border: none;" class="no-data">
                                             <tr>
@@ -92,12 +178,12 @@
                                                         <span style="display: inline-block; width: 32px; text-align: center;">
                                                             <img title="@activity.Types[i].Text" height="24" src="@Url.HttpRouteUrl(null, new { controller = "EmployeeModuleSettings", action = "GetIcon", typeId = activity.Types[i].TypeId })" alt="" />
                                                         </span>
-                                                    </td> 
+                                                    </td>
                                                     //How many columns per row
                                                     if ((i + 1) % 2 == 0)
                                                     {
-                                                    @Html.Raw("</tr>")
-                                                    @Html.Raw("<tr>")
+                                                        @Html.Raw("</tr>")
+                                                        @Html.Raw("<tr>")
                                                     }
                                                 }
                                             </tr>
@@ -107,17 +193,17 @@
                                         @if (!activity.StartsOn.HasValue && !activity.EndsOn.HasValue && (!activity.OnGoing.HasValue || !activity.OnGoing.Value))
                                         {
                                             @: [Undated]
-                                                }
+                                            }
                                         else if (!activity.StartsOn.HasValue)
                                         {
                                             if (activity.EndsOn.HasValue)
                                             {
                                                 @activity.EndsOn.Value.ToString(activity.EndsFormat ?? "M/d/yyyy")
                                             }
-                                            else if (activity.OnGoing.HasValue && activity.OnGoing.Value)
+                                            else if (activity.OnGoing.Value)
                                             {
                                                 @: (Ongoing)
-                                                    }
+                                            }
                                         }
                                         else
                                         {
@@ -142,10 +228,16 @@
                     </table>
                 </div>
             </div>
+            if (User.Identity.Name.Equals(ViewBag.Username, StringComparison.OrdinalIgnoreCase))
+            {
+                <li id="activity_no_results" style="display: none; font-size: 16px;">
+                    @ViewBag.CustomBib has not yet identified any particular areas of language expertise.
+                </li>
+            }
         }
         else
         {
-@* ZERO RESULTS MESSAGE *@
+            @* ZERO RESULTS MESSAGE *@
             <span>
                 @ViewBag.CustomBib has no activities that match your search terms.
             </span>
@@ -153,4 +245,15 @@
 
 
     </div>
+    @if (User.Identity.Name.Equals(ViewBag.Username, StringComparison.OrdinalIgnoreCase))
+    {
+        <div style="margin-top: 12px; line-height: 24px;">
+            <a href="#" class="button" data-bind="click: addActivity">
+                @*<img src="~/images/icons/plus/plus-24-green.png" alt="Add a new language" style="cursor: pointer; padding-right: 4px;" />*@
+                <i class="green plus"></i>
+                <span class="text">Add a new activity</span>
+            </a>
+        </div>
+    }
 </section>
+

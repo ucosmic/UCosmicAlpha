@@ -91,6 +91,9 @@ namespace UCosmic.Web.Mvc.Controllers
             ViewBag.personId = personId;
             ViewBag.countryCode = input.CountryCode;
             ViewBag.orderBy = input.OrderBy;
+            var personModel = GetPerson(personId);
+
+            ViewBag.Username = personModel.Username;
             return View(model);
         }
 

@@ -107,12 +107,14 @@
             </span>
         }
     </div>
-
-    <div style="margin-top: 12px; line-height: 24px;">
-        <a href="#" class="button" data-bind="click: addLanguage">
-            @*<img src="~/images/icons/plus/plus-24-green.png" alt="Add a new language" style="cursor: pointer; padding-right: 4px;" />*@
-            <i class="green plus"></i>
-            <span class="text">Add a new language</span>
-        </a>
-    </div>
+    @if (User.Identity.Name.Equals(ViewBag.Username, StringComparison.OrdinalIgnoreCase))
+    {
+        <div style="margin-top: 12px; line-height: 24px;">
+            <a href="#" class="button" data-bind="click: addLanguage">
+                @*<img src="~/images/icons/plus/plus-24-green.png" alt="Add a new language" style="cursor: pointer; padding-right: 4px;" />*@
+                <i class="green plus"></i>
+                <span class="text">Add a new language</span>
+            </a>
+        </div>
+    }
 </section>
