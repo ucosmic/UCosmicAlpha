@@ -427,7 +427,7 @@ module App.Routes {
                     return url;
                 }
             }
-
+            
             export module Names {
                 export class Salutations {
                     static get (): string {
@@ -655,6 +655,18 @@ module App.Routes {
                     return makeUrl('facultystaff/institution/' + institutionId);
                 }
             }
+        }
+
+        export module People {
+            export module Activities {
+                export function get(personId: number): string {
+                    var url = 'people/' + personId + '/activities';
+                    url = makeUrl(url);
+                    return url;
+                }
+
+            }
+
         }
 
         export module My {

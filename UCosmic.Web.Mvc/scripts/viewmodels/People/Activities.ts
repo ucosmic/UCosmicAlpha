@@ -1,5 +1,4 @@
 ﻿module People.ViewModels {
-
     export class ActivityInputModel {
         constructor(modelData: any) {
             this.modelData = modelData;
@@ -42,6 +41,8 @@
             }, this);
         }
         modelData;
+        isDraft: KnockoutComputed<boolean>;
+        isPublished: KnockoutComputed<boolean>;
         $form: JQuery;
         pageSize = ko.observable<string>();
         pageNumber = ko.observable<string>();
@@ -112,7 +113,7 @@
                 }
             });
         }
-        purge(expertiseId, thisData, event): void {
+        purge(expertiseId, personId, thisData, event): void {
             this.purgeSpinner.start();
             if (this.$confirmDeleteActivity && this.$confirmDeleteActivity.length) {
                 this.$confirmDeleteActivity.dialog({
@@ -127,11 +128,7 @@
                                 this.$confirmDeleteActivity.dialog('close');
                                 this.purgeSpinner.start(true);
                                 this._purge(expertiseId);
-                                //have to check before removing
-                                if ($(event.target).closest("ul").children().length == 2) {
-                                    $("#activity_no_results").css("display", "block");
-                                }
-                                $(event.target).closest("li").remove();
+                                window.location.href = App.Routes.Mvc.People.Activities.get(personId);
                             },
                             'data-confirm-delete-link': true,
                         },
@@ -163,6 +160,7 @@
         addActivity(): void {
             window.location.href = App.Routes.Mvc.My.Activities.create();
         }
+
     }
 
 }

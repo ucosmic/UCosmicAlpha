@@ -834,6 +834,19 @@ var App;
             })(Mvc.FacultyStaff || (Mvc.FacultyStaff = {}));
             var FacultyStaff = Mvc.FacultyStaff;
 
+            (function (People) {
+                (function (Activities) {
+                    function get(personId) {
+                        var url = 'people/' + personId + '/activities';
+                        url = makeUrl(url);
+                        return url;
+                    }
+                    Activities.get = get;
+                })(People.Activities || (People.Activities = {}));
+                var Activities = People.Activities;
+            })(Mvc.People || (Mvc.People = {}));
+            var People = Mvc.People;
+
             (function (My) {
                 (function (Profile) {
                     function get(tab) {

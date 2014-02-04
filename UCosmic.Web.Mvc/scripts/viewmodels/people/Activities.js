@@ -104,7 +104,7 @@
                     }
                 });
             };
-            ActivityInputModel.prototype.purge = function (expertiseId, thisData, event) {
+            ActivityInputModel.prototype.purge = function (expertiseId, personId, thisData, event) {
                 var _this = this;
                 this.purgeSpinner.start();
                 if (this.$confirmDeleteActivity && this.$confirmDeleteActivity.length) {
@@ -120,11 +120,7 @@
                                     _this.$confirmDeleteActivity.dialog('close');
                                     _this.purgeSpinner.start(true);
                                     _this._purge(expertiseId);
-
-                                    if ($(event.target).closest("ul").children().length == 2) {
-                                        $("#activity_no_results").css("display", "block");
-                                    }
-                                    $(event.target).closest("li").remove();
+                                    window.location.href = App.Routes.Mvc.People.Activities.get(personId);
                                 },
                                 'data-confirm-delete-link': true
                             },

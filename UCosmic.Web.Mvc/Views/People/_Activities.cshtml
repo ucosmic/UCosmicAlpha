@@ -1,4 +1,5 @@
 ﻿@using Microsoft.Ajax.Utilities
+@using UCosmic.Domain.Activities
 @model UCosmic.Web.Mvc.Models.PageOfActivityPublicViewModel
 
 @* ACTIVITIES *@
@@ -105,17 +106,27 @@
                                     <td>
                                         @if (User.Identity.Name.Equals(ViewBag.Username, StringComparison.OrdinalIgnoreCase))
                                         {
-                                            <a style="display: block" href="@Url.Action(MVC.Activities.Details(activity.ActivityId))">
-                                                @if (activity.Title.IsNullOrWhiteSpace())
+                                            <div>
+                                                <a href="@Url.Action(MVC.Activities.Details(activity.ActivityId))">
+                                                    @if (activity.Title.IsNullOrWhiteSpace())
+                                                    {
+                                                        @: [untitled activity @activity.ActivityId]
+                                                    }
+                                                    else
+                                                    {
+                                                        @activity.Title
+                                                    }
+
+                                                </a>
+                                                @if (activity.Mode == (ActivityMode) 1)
                                                 {
-                                                    @: [untitled activity @activity.ActivityId]
+                                                <span class="red badge" style="display: inline; vertical-align: middle">Draft</span>
                                                 }
                                                 else
                                                 {
-                                                    @activity.Title
+                                                <span class="green badge" style="display: inline; vertical-align: middle">Published</span>
                                                 }
-
-                                            </a>
+                                            </div>
                                             @*<a href="@Url.Action(MVC.Activities.Details(activity.ActivityId))">
                                                     @if (activity.Title.IsNullOrWhiteSpace())
                                                     {
@@ -130,7 +141,7 @@
 
                                             <img data-bind="click: edit.bind($data, @activity.ActivityId), visible: !purgeSpinner.isVisible()" alt="" src="~/images/icons/edit/pencil-a-24.png" title="Edit this formal education"
                                                  style="cursor: pointer; margin: 5px 0 8px 8px;" />
-                                            <img data-bind="click: purge.bind($data, @activity.ActivityId), visible: !purgeSpinner.isVisible()" a alt="" src="~/images/icons/minus/minus-24-red.png" title="Delete this formal education"
+                                            <img data-bind="click: purge.bind($data, @activity.ActivityId, @ViewBag.personId), visible: !purgeSpinner.isVisible()" a alt="" src="~/images/icons/minus/minus-24-red.png" title="Delete this formal education"
                                                  style="cursor: pointer; margin: 5px 0 8px 8px;" />
                                             <img data-bind="visible: purgeSpinner.isVisible" alt="" src="~/images/icons/spinner/spinner-24-blue.gif" title="Deleting this formal education..."
                                                  style="margin-left: 8px; display: none; margin: 5px 0 8px 8px;" />
@@ -228,12 +239,6 @@
                     </table>
                 </div>
             </div>
-            if (User.Identity.Name.Equals(ViewBag.Username, StringComparison.OrdinalIgnoreCase))
-            {
-                <li id="activity_no_results" style="display: none; font-size: 16px;">
-                    @ViewBag.CustomBib has not yet identified any particular areas of language expertise.
-                </li>
-            }
         }
         else
         {
