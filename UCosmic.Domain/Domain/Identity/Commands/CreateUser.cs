@@ -164,14 +164,17 @@ namespace UCosmic.Domain.Identity
                 person = createPersonCommand.CreatedPerson;
             }
 
-            var createEmailCommand = new CreateEmailAddress(command.Name, person)
+            if (!person.Emails.Any(x => x.Value.Equals(command.Name, StringComparison.OrdinalIgnoreCase)))
             {
-                NoCommit = true,
-                IsConfirmed = true,
-                IsFromSaml = false,
-                IsDefault = true,
-            };
-            _createEmailAddress.Handle(createEmailCommand);
+                var createEmailCommand = new CreateEmailAddress(command.Name, person)
+                {
+                    NoCommit = true,
+                    IsConfirmed = true,
+                    IsFromSaml = false,
+                    IsDefault = true,
+                };
+                _createEmailAddress.Handle(createEmailCommand);
+            }
 
             var affiliation = new Affiliation
             {

@@ -27,9 +27,9 @@ namespace UCosmic.Domain.People
         public int PersonId { get; private set; }
         internal Person Person { get; private set; }
         public string Value { get; private set; }
-        public bool IsConfirmed { get; set; }
+        public bool IsConfirmed { get; internal set; }
         public bool IsDefault { get; set; }
-        public bool IsFromSaml { get; set; }
+        public bool IsFromSaml { get; internal set; }
 
         public int CreatedEmailAddressNumber { get; internal set; }
         internal EmailAddress CreatedEmailAddress { get; set; }
@@ -38,7 +38,7 @@ namespace UCosmic.Domain.People
 
     public class ValidateCreateEmailAddressCommand : AbstractValidator<CreateEmailAddress>
     {
-        public ValidateCreateEmailAddressCommand(IQueryEntities entities)
+        public ValidateCreateEmailAddressCommand(IProcessQueries queries)
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
@@ -46,13 +46,14 @@ namespace UCosmic.Domain.People
             RuleFor(x => x.Value)
                 .NotEmpty().WithMessage(MustNotHaveEmptyEmailAddress.FailMessage)
                 .EmailAddress().WithMessage(MustBeValidEmailAddressFormat.FailMessageFormat, x => x.Value)
+                .MustNotFindEmailAddressByValue(queries)
             ;
 
             // when Person is null
             When(x => x.Person == null, () => 
                 // must find person in the database
                 RuleFor(x => x.PersonId)
-                    .MustFindPersonById(entities).WithMessage(MustFindPersonById.FailMessageFormat, x => x.PersonId)
+                    .MustFindPersonById(queries).WithMessage(MustFindPersonById.FailMessageFormat, x => x.PersonId)
             );
         }
     }
