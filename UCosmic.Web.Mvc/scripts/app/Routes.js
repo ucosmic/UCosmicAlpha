@@ -1,4 +1,4 @@
-﻿var App;
+var App;
 (function (App) {
     (function (Routes) {
         Routes.applicationPath = '/';

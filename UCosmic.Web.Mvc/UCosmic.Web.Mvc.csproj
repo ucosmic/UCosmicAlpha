@@ -2213,8 +2213,11 @@
     <Content Include="scripts\viewmodels\people\AffiliationsEditor.js">
       <DependentUpon>AffiliationsEditor.ts</DependentUpon>
     </Content>
-    <Content Include="scripts\viewmodels\people\Languages - Copy.js">
+    <Content Include="scripts\viewmodels\people\Degrees.js">
       <DependentUpon>Degrees.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\people\Global.js">
+      <DependentUpon>Global.ts</DependentUpon>
     </Content>
     <Content Include="scripts\viewmodels\people\Languages.js">
       <DependentUpon>Languages.ts</DependentUpon>

@@ -3062,6 +3062,8 @@ namespace Links
                 public static readonly string AffiliationsEditor_ts = Url("AffiliationsEditor.ts");
                 public static readonly string AffiliationsEditor_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/AffiliationsEditor.min.js") ? Url("AffiliationsEditor.min.js") : Url("AffiliationsEditor.js");
                               
+                public static readonly string Degrees_ts = Url("Degrees.ts");
+                public static readonly string Global_ts = Url("Global.ts");
                 public static readonly string Languages_ts = Url("Languages.ts");
                 public static readonly string Languages_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Languages.min.js") ? Url("Languages.min.js") : Url("Languages.js");
                               
