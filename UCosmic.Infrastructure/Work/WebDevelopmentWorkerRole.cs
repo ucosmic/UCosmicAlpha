@@ -8,11 +8,11 @@ using UCosmic.Domain.Places;
 
 namespace UCosmic.Work
 {
-    public class WebDevlopmentWorkerRole
+    public class WebDevelopmentWorkerRole
     {
         private readonly Container _container;
 
-        public WebDevlopmentWorkerRole(Container container)
+        public WebDevelopmentWorkerRole(Container container)
         {
             _container = container;
         }

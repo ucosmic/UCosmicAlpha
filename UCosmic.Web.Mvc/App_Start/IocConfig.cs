@@ -57,7 +57,7 @@ namespace UCosmic.Web.Mvc
                 var cancellationToken = cancellationTokenSource.Token;
                 Task.Factory.StartNew(() =>
                 {
-                    var workerRole = DependencyResolver.Current.GetService<WebDevlopmentWorkerRole>();
+                    var workerRole = DependencyResolver.Current.GetService<WebDevelopmentWorkerRole>();
                     workerRole.OnStart();
                     workerRole.Run(cancellationToken);
                 }, cancellationToken);
