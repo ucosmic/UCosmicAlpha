@@ -118,13 +118,13 @@
                                                     }
 
                                                 </a>
-                                                @if (activity.Mode == (ActivityMode) 1)
+                                                @if (activity.Mode == (ActivityMode)1)
                                                 {
-                                                <span class="red badge" style="display: inline; vertical-align: middle">Draft</span>
+                                                    <span class="red badge" style="display: inline; vertical-align: middle">Draft</span>
                                                 }
                                                 else
                                                 {
-                                                <span class="green badge" style="display: inline; vertical-align: middle">Published</span>
+                                                    <span class="green badge" style="display: inline; vertical-align: middle">Published</span>
                                                 }
                                             </div>
                                             @*<a href="@Url.Action(MVC.Activities.Details(activity.ActivityId))">
@@ -138,12 +138,17 @@
                                                     }
 
                                                 </a>*@
-
-                                            <img data-bind="click: edit.bind($data, @activity.ActivityId), visible: !purgeSpinner.isVisible()" alt="" src="~/images/icons/edit/pencil-a-24.png" title="Edit this formal education"
-                                                 style="cursor: pointer; margin: 5px 0 8px 8px;" />
-                                            <img data-bind="click: purge.bind($data, @activity.ActivityId, @ViewBag.personId), visible: !purgeSpinner.isVisible()" a alt="" src="~/images/icons/minus/minus-24-red.png" title="Delete this formal education"
-                                                 style="cursor: pointer; margin: 5px 0 8px 8px;" />
-                                            <img data-bind="visible: purgeSpinner.isVisible" alt="" src="~/images/icons/spinner/spinner-24-blue.gif" title="Deleting this formal education..."
+                                            <a style="text-decoration: none;" data-bind="click: edit.bind($data, @activity.ActivityId), visible: !purgeSpinner.isVisible()" href=''>
+                                                Edit
+                                                <img alt="" src="~/images/icons/edit/pencil-a-24.png" title="Edit this activity"
+                                                     style="cursor: pointer; margin: 5px 8px 8px 0; width: 20px;" />
+                                            </a>
+                                            <a style="text-decoration: none;" data-bind="click: purge.bind($data, @activity.ActivityId, @ViewBag.personId), visible: !purgeSpinner.isVisible()" href=''>
+                                                Delete
+                                                <img alt="" src="~/images/icons/minus/minus-24-red.png" title="Delete this activity"
+                                                     style="cursor: pointer; margin: 5px 8px 8px 0; width: 20px;" />
+                                            </a>
+                                            <img data-bind="visible: purgeSpinner.isVisible" alt="" src="~/images/icons/spinner/spinner-24-blue.gif" title="Deleting this activity..."
                                                  style="margin-left: 8px; display: none; margin: 5px 0 8px 8px;" />
                                             @*<a href="#" class="button" style="margin-top: 4px; display: inline-block;" data-bind="click: addDegree">
                                                     <i class="green plus"></i>

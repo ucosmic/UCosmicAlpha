@@ -52,7 +52,7 @@
                     @if (User.Identity.Name.Equals(ViewBag.Username, StringComparison.OrdinalIgnoreCase))
                     {
                         <li id="degrees_no_results" style="display: none; font-size: 16px;">
-                            @ViewBag.CustomBib has not yet identified any formal education.
+                            @ViewBag.CustomBib has not yet identified any formal education information.
                         </li>
                     }
                 </ul>
@@ -62,7 +62,7 @@
         {
             @* ZERO RESULTS MESSAGE *@
             <span>
-                @ViewBag.CustomBib has not yet identified any formal education.
+                @ViewBag.CustomBib has not yet identified any formal education information.
             </span>
         }
 
@@ -73,7 +73,7 @@
         <div style="margin-top: 12px; line-height: 24px;">
             <a href="#" class="button" data-bind="click: addDegree">
                 <i class="green plus"></i>
-                <span class="text">Add a new formal education</span>
+                <span class="text">Add new formal education</span>
             </a>
         </div>
     }
