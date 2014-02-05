@@ -19,6 +19,7 @@ namespace UCosmic.Domain.People
             Affiliations = new Collection<Affiliation>();
             Emails = new Collection<EmailAddress>();
             Messages = new Collection<EmailMessage>();
+            Urls = new Collection<ExternalUrl>();
             // ReSharper restore DoNotCallOverridableMethodsInConstructor
         }
 
@@ -37,6 +38,7 @@ namespace UCosmic.Domain.People
 
         public virtual User User { get; protected internal set; }
         public virtual ICollection<EmailMessage> Messages { get; protected set; }
+        public virtual ICollection<ExternalUrl> Urls { get; protected set; }
 
         public EmailAddress DefaultEmail { get { return Emails.SingleOrDefault(x => x.IsDefault); } }
 

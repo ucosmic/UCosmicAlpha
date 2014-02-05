@@ -319,6 +319,8 @@
     <Compile Include="ApiControllers\Expertise\GeographicExpertiseController.cs" />
     <Compile Include="ApiControllers\Expertise\LanguageExpertiseController.cs" />
     <Compile Include="ApiControllers\People\AffiliationsController.cs" />
+    <Compile Include="Models\People\PersonUrlApiModel.cs" />
+    <Compile Include="ApiControllers\People\PersonUrlsController.cs" />
     <Compile Include="ApiControllers\Places\PlaceNamesController.cs" />
     <Compile Include="Controllers\JavaScriptRoutesController.cs" />
     <Compile Include="Controllers\PeopleController.cs" />

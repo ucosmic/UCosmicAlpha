@@ -105,6 +105,21 @@ namespace UCosmic.EntityFramework
         }
     }
 
+    public class ExternalUrlOrm : EntityTypeConfiguration<ExternalUrl>
+    {
+        public ExternalUrlOrm()
+        {
+            ToTable(typeof(ExternalUrl).Name, DbSchemaName.People);
+
+            HasRequired(d => d.Person)
+                .WithMany(p => p.Urls)
+                .HasForeignKey(d => d.PersonId);
+
+            Property(x => x.Description).HasMaxLength(ExternalUrl.Constraints.DescriptionMaxLength);
+            Property(x => x.Value).HasMaxLength(ExternalUrl.Constraints.ValueMaxLength);
+        }
+    }
+
     public class AffiliationOrm : RevisableEntityTypeConfiguration<Affiliation>
     {
         public AffiliationOrm()
