@@ -53,6 +53,7 @@
             </div>
         </li>
     </ul>
+    <div data-bind="visible: editableAffiliations().length == 0">@ViewBag.CustomBib has not yet identified any additional affiliations.</div>
     @* ADD NEW - TODO: this should be a button, not a hyperlink *@
     <div style="margin-top: 12px; line-height: 24px;" data-bind="visible: !isEditMode()">
         <a href="#" class="button" data-bind="click: addAffiliation">

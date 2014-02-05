@@ -449,6 +449,8 @@
     <Compile Include="Models\People\AffiliationsViewModel.cs" />
     <Compile Include="Models\People\EmailAddressPostModel.cs" />
     <Compile Include="Models\People\PeopleSearchInputModel.cs" />
+    <Compile Include="Models\People\PersonEmailAddressesViewModel.cs" />
+    <Compile Include="Models\People\PersonEmailAddressViewModel.cs" />
     <Compile Include="Models\People\PersonViewModel.cs" />
     <Compile Include="Models\People\PersonApiModel.cs" />
     <Compile Include="Models\Places\AutoCompleteNameInputModel.cs" />

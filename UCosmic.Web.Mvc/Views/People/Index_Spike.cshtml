@@ -82,7 +82,8 @@
 
                     @if (User.Identity.Name.Equals(Model.Username, StringComparison.OrdinalIgnoreCase))
                     {
-                        @Html.Partial(MVC.People.Views._PersonalInfoEditor)
+                        Html.RenderPartial(MVC.People.Views._PersonalInfoEditor);
+                        //@Html.Partial(MVC.People.Views._PersonalInfoEditor)
                     }
                     else
                     {
@@ -101,7 +102,8 @@
                 }
                 else
                 {
-                    @Html.Action(MVC.People.GetAffiliations())
+                    //@Html.Action(MVC.People.GetAffiliations())
+                    Html.RenderAction(MVC.People.GetAffiliations());
                 }
             </section>
             @* CONTACT INFORMATION *@

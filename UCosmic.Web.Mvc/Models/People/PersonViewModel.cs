@@ -16,6 +16,7 @@ namespace UCosmic.Web.Mvc.Models
         public string[] EmailAddresses { get; set; }
         public string Username { get; set; }
     }
+
     public static class PeopleViewProfiler
     {
         public class EntityToModel : Profile

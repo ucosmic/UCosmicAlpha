@@ -36,16 +36,6 @@
             @Html.Action(MVC.People.GetAffiliations())
             @Html.Action(MVC.People.GetEmails())
 
-            @* TIM UI CODE TO REPLACE THIS *@
-            @if (User.Identity.Name.Equals(ViewBag.UserName))
-            {
-                <form method="POST" action="@Url.Action(MVC.People.Emails())">
-                    <input type="email" placeholder="Enter alternate email address" name="value" />
-                    <button type="submit">Add email address</button>
-                </form>
-            }
-
-            @* /TIM UI CODE TO REPLACE THIS *@
         </div>
         <aside class="on-right from-top" data-fixed-scroll="root">
             <div data-fixed-scroll="anchor"></div>

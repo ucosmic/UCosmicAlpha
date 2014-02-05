@@ -10,6 +10,7 @@ using AutoMapper;
 using UCosmic.Domain.Activities;
 using UCosmic.Domain.Degrees;
 using UCosmic.Domain.LanguageExpertise;
+using Expression = Microsoft.Ajax.Utilities.Expression;
 
 namespace UCosmic.Web.Mvc.Controllers
 {
@@ -148,6 +149,8 @@ namespace UCosmic.Web.Mvc.Controllers
                 }
             };
             var entities = _queryProcessor.Execute(query);
+            var person = _queryProcessor.Execute(new PersonById(personId));
+            ViewBag.CustomBib = person.DisplayName;
             var model = Mapper.Map<AffiliationViewModel[]>(entities.Where(x => !x.IsDefault));
 
             return PartialView(MVC.People.Views._Affiliations, model);
@@ -157,7 +160,14 @@ namespace UCosmic.Web.Mvc.Controllers
         [ChildActionOnly]
         public virtual ActionResult GetEmails(int personId)
         {
-            var model = GetPerson(personId);
+            var entity = _queryProcessor.Execute(new PersonById(personId)
+            {
+                EagerLoad = new Expression<Func<Person, object>>[]
+                {
+                    x => x.Emails
+                }
+            });
+            var model = Mapper.Map<PersonEmailAddressesViewModel>(entity);
 
             return model == null ? null : PartialView(MVC.People.Views._Emails, model);
         }
