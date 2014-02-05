@@ -176,6 +176,9 @@ body {
                 border-color: $person-profile-card-bg-color;
                 background-color: $person-profile-card-bg-color;
             }
+            > .yellow-affordance {
+                background-color: #e0d1a5 !important;
+            }
 
             > .action {
                 visibility: visible;

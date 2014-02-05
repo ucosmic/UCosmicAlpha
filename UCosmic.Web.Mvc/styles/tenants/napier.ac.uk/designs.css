@@ -112,6 +112,8 @@ body .person-profile {
     border-radius: 8px 8px 8px 0;
     border-color: #dddddd;
     background-color: #dddddd; }
+  body .person-profile.clickable:hover > .yellow-affordance {
+    background-color: #e0d1a5 !important; }
   body .person-profile.clickable:hover > .action {
     visibility: visible; }
   body .person-profile > .card {
