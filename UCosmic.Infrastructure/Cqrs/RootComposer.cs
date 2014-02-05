@@ -49,6 +49,7 @@ namespace UCosmic.Cqrs
         {
             // commands are in the domain project
             var assemblies = new[] { Assembly.GetAssembly(typeof(IHandleCommands<>)) };
+            container.RegisterSingle<IProcessCommands, CommandProcessor>();
             container.RegisterManyForOpenGeneric(typeof(IHandleCommands<>), assemblies);
 
             // retry all commands (after validation)

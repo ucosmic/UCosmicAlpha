@@ -84,10 +84,12 @@
     <Compile Include="..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Api\Commands\IProcessCommands.cs" />
     <Compile Include="Api\Lucene\IDefineDocument.cs" />
     <Compile Include="Api\Lucene\IProvideDocumentSearchers.cs" />
     <Compile Include="Api\Lucene\IStoreDocumentIndexes.cs" />
     <Compile Include="Api\Lucene\IIndexDocuments.cs" />
+    <Compile Include="Api\Validation\IProcessValidation.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityValuesBy.cs" />
     <Compile Include="Domain\Activities\Queries\Deprecated\ActivityValuesByTerms.cs" />
     <Compile Include="Domain\Activities\Queries\ActivityValuesPageBy.cs" />
@@ -100,7 +102,7 @@
     <Compile Include="Domain\People\Commands\CreateExternalUrl.cs" />
     <Compile Include="Domain\People\Commands\DeleteEmailAddress.cs" />
     <Compile Include="Domain\People\Entities\ExternalUrl.cs" />
-    <Compile Include="Domain\People\Queries\ExternalsUrlBy.cs" />
+    <Compile Include="Domain\People\Queries\ExternalUrlsBy.cs" />
     <Compile Include="Domain\People\Queries\ExternalUrlBy.cs" />
     <Compile Include="Domain\People\Queries\EmailAddressBy.cs" />
     <Compile Include="Domain\People\Validation\MustBeAllowableEmailDomainForPerson.cs" />

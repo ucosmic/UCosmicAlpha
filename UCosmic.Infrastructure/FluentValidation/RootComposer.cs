@@ -15,6 +15,9 @@ namespace UCosmic.FluentValidation
             // merge domain with settings assemblies to register validators
             assemblies = assemblies ?? new[] { Assembly.GetAssembly(typeof(IHandleCommands<>)) };
 
+            // register validation processor
+            container.RegisterSingle<IProcessValidation, ValidationProcessor>();
+
             // fluent validation open generics
             container.RegisterManyForOpenGeneric(typeof(IValidator<>), assemblies);
 

@@ -163,10 +163,12 @@
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="BinaryData\AzureBlobBinaryDataStorage.cs" />
+    <Compile Include="Cqrs\CommandProcessor.cs" />
     <Compile Include="Cqrs\HandleEventAsynchronouslyDecorator.cs" />
     <Compile Include="Cqrs\MultipleDispatchEventTrigger.cs" />
     <Compile Include="Cqrs\RetryCommandDecorator.cs" />
     <Compile Include="Cqrs\RetryQueryDecorator.cs" />
+    <Compile Include="FluentValidation\ValidationProcessor.cs" />
     <Compile Include="FluentValidation\FluentValidationValidatorFactory.cs" />
     <Compile Include="Lucene\AzureDirectoryStore.cs" />
     <Compile Include="Lucene\IisFileSystemDirectoryStore.cs" />

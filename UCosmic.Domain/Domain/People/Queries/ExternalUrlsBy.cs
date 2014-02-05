@@ -3,9 +3,9 @@ using System.Linq;
 
 namespace UCosmic.Domain.People
 {
-    public class ExternalsUrlBy : BaseEntityQuery<ExternalUrl>, IDefineQuery<IQueryable<ExternalUrl>>
+    public class ExternalUrlsBy : BaseEntityQuery<ExternalUrl>, IDefineQuery<IQueryable<ExternalUrl>>
     {
-        public ExternalsUrlBy(int personId)
+        public ExternalUrlsBy(int personId)
         {
             PersonId = personId;
         }
@@ -13,16 +13,16 @@ namespace UCosmic.Domain.People
         public int PersonId { get; private set; }
     }
 
-    public class HandleExternalsUrlByQuery : IHandleQueries<ExternalsUrlBy, IQueryable<ExternalUrl>>
+    public class HandleExternalUrlsByQuery : IHandleQueries<ExternalUrlsBy, IQueryable<ExternalUrl>>
     {
         private readonly IQueryEntities _entities;
 
-        public HandleExternalsUrlByQuery(IQueryEntities entities)
+        public HandleExternalUrlsByQuery(IQueryEntities entities)
         {
             _entities = entities;
         }
 
-        public IQueryable<ExternalUrl> Handle(ExternalsUrlBy query)
+        public IQueryable<ExternalUrl> Handle(ExternalUrlsBy query)
         {
             if (query == null) throw new ArgumentNullException("query");
 

@@ -52,6 +52,7 @@ namespace UCosmic.Domain.People
                 .Length(1, ExternalUrl.Constraints.ValueMaxLength)
                     .WithMessage("Link URL cannot contain more than {0} characters, you entered {1}.",
                         x => ExternalUrl.Constraints.ValueMaxLength, x => x.Value.Length)
+                .Must(BeHttpFormattedUrl).WithMessage("This is not a valid link / URL.")
             ;
         }
 
@@ -71,6 +72,13 @@ namespace UCosmic.Domain.People
                 }
             });
             return person.Urls.Select(x => x.Id).Contains(urlId);
+        }
+
+        private bool BeHttpFormattedUrl(string value)
+        {
+            if (value.StartsWith("http://", StringComparison.OrdinalIgnoreCase) || value.StartsWith("https://"))
+                if (Uri.IsWellFormedUriString(value, UriKind.Absolute)) return true;
+            return false;
         }
     }
 
