@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Web.Mvc;
 using AttributeRouting.Web.Mvc;
-using FluentValidation;
 using UCosmic.Domain.GeographicExpertise;
 using UCosmic.Web.Mvc.Models;
 using UCosmic.Domain.People;
@@ -18,11 +17,13 @@ namespace UCosmic.Web.Mvc.Controllers
     {
         private readonly IProcessQueries _queryProcessor;
         private readonly IHandleCommands<CreateEmailAddress> _createEmailAddress;
+        private readonly IHandleCommands<DeleteEmailAddress> _deleteEmailAddress;
 
-        public PeopleController(IProcessQueries queryProcessor, IHandleCommands<CreateEmailAddress> createEmailAddress)
+        public PeopleController(IProcessQueries queryProcessor, IHandleCommands<CreateEmailAddress> createEmailAddress, IHandleCommands<DeleteEmailAddress> deleteEmailAddress)
         {
             _queryProcessor = queryProcessor;
             _createEmailAddress = createEmailAddress;
+            _deleteEmailAddress = deleteEmailAddress;
         }
 
         [CurrentModuleTab(ModuleTab.Employees)]
@@ -229,6 +230,41 @@ namespace UCosmic.Web.Mvc.Controllers
                 var command = new CreateEmailAddress(model.Value, model.PersonId);
                 _createEmailAddress.Handle(command);
                 TempData.Flash("Email address '{0}' was successfully added", model.Value);
+            }
+            return RedirectToAction(MVC.People.Index(personId));
+        }
+
+        [Authorize]
+        [DELETE("people/{personId:int}/emails/{emailNumber}")]
+        public virtual ActionResult DeleteEmail(int personId, int emailNumber)
+        {
+            if (ModelState.IsValid)
+            {
+                var myPerson = _queryProcessor.Execute(new MyPerson(User)
+                {
+                    EagerLoad = new Expression<Func<Person, object>>[]
+                    {
+                        x => x.User,
+                    }
+                });
+                if (!myPerson.User.Name.Equals(User.Identity.Name, StringComparison.OrdinalIgnoreCase))
+                    ModelState.AddModelError("", "You are not authorized to delete email addresses for this person.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                var firstError = ModelState.Values.SelectMany(x => x.Errors.Select(y => y.ErrorMessage)).First();
+                TempData.Flash("Could not add new email address: {0}", firstError);
+            }
+            else
+            {
+                var emailAddress = _queryProcessor.Execute(new MyEmailAddressByNumber(User, emailNumber));
+                if (emailAddress != null)
+                {
+                    var command = new DeleteEmailAddress(User, personId, emailNumber);
+                    _deleteEmailAddress.Handle(command);
+                    TempData.Flash("Email address '{0}' was successfully deleted", emailAddress.Value);
+                }
             }
             return RedirectToAction(MVC.People.Index(personId));
         }

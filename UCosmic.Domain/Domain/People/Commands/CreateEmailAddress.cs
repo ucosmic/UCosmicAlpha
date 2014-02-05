@@ -64,16 +64,13 @@ namespace UCosmic.Domain.People
     {
         private readonly ICommandEntities _entities;
         private readonly IHandleCommands<UpdateEmailAddress> _updateEmail;
-        private readonly IUnitOfWork _unitOfWork;
 
         public HandleCreateEmailAddressCommand(ICommandEntities entities
             , IHandleCommands<UpdateEmailAddress> updateEmail
-            , IUnitOfWork unitOfWork
         )
         {
             _entities = entities;
             _updateEmail = updateEmail;
-            _unitOfWork = unitOfWork;
         }
 
         public void Handle(CreateEmailAddress command)
@@ -135,7 +132,7 @@ namespace UCosmic.Domain.People
             // store
             if (!command.NoCommit)
             {
-                _unitOfWork.SaveChanges();
+                _entities.SaveChanges();
             }
 
             command.CreatedEmailAddress = entity;

@@ -101,6 +101,12 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Emails);
         }
+        [NonAction]
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public System.Web.Mvc.ActionResult DeleteEmail()
+        {
+            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.DeleteEmail);
+        }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public PeopleController Actions { get { return MVC.People; } }
@@ -127,6 +133,7 @@ namespace UCosmic.Web.Mvc.Controllers
             public readonly string Languages = "Languages";
             public readonly string GlobalExpertises = "GlobalExpertises";
             public readonly string Emails = "Emails";
+            public readonly string DeleteEmail = "DeleteEmail";
         }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -142,6 +149,7 @@ namespace UCosmic.Web.Mvc.Controllers
             public const string Languages = "Languages";
             public const string GlobalExpertises = "GlobalExpertises";
             public const string Emails = "Emails";
+            public const string DeleteEmail = "DeleteEmail";
         }
 
 
@@ -227,6 +235,15 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             public readonly string personId = "personId";
             public readonly string model = "model";
+        }
+        static readonly ActionParamsClass_DeleteEmail s_params_DeleteEmail = new ActionParamsClass_DeleteEmail();
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public ActionParamsClass_DeleteEmail DeleteEmailParams { get { return s_params_DeleteEmail; } }
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public class ActionParamsClass_DeleteEmail
+        {
+            public readonly string personId = "personId";
+            public readonly string emailNumber = "emailNumber";
         }
         static readonly ViewsClass s_views = new ViewsClass();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -353,6 +370,14 @@ namespace UCosmic.Web.Mvc.Controllers
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Emails);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "personId", personId);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "model", model);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.ActionResult DeleteEmail(int personId, int emailNumber)
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.DeleteEmail);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "personId", personId);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "emailNumber", emailNumber);
             return callInfo;
         }
 

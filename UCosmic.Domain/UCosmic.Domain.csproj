@@ -95,6 +95,7 @@
     <Compile Include="Domain\Activities\_Internal\SortActivityValues.cs" />
     <Compile Include="Domain\Degrees\Queries\DegreesPageByTerms.cs" />
     <Compile Include="Domain\Establishments\Queries\EmailDomainsByEstablishment.cs" />
+    <Compile Include="Domain\People\Commands\DeleteEmailAddress.cs" />
     <Compile Include="Domain\People\Queries\EmailAddressBy.cs" />
     <Compile Include="Domain\People\Validation\MustBeAllowableEmailDomainForPerson.cs" />
     <Compile Include="Domain\People\Validation\MustNotFindEmailAddressByValue.cs" />
