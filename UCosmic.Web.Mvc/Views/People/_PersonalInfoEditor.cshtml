@@ -15,13 +15,16 @@
     .one-column {
         width: 45% !important;
     }
+
     .field-column-left {
         padding-left: 16px;
         padding-right: 16px;
     }
+
     .field-column-right {
         padding-right: 16px;
     }
+
     .field-table.w690-l250-v440 .field-input {
         width: 100%;
     }
@@ -36,13 +39,13 @@
                 </td>
                 <td>
                     <div data-bind="text: displayName" style=" font-size: 24px; line-height: 28px;">@Model.DisplayName</div>
-                    <div>@Model.JobTitles</div>
+                    <div data-bind="text: preferredTitle">@Model.JobTitles</div>
                     <a style="-ms-word-break: break-all; -moz-word-break: break-all; -o-word-break: break-all; word-break: break-all;" href="mailto:@Model.EmailAddress" target="_top">@Model.EmailAddress</a>
                 </td>
             </tr>
         </table>
     </div>
-    <div class="action" data-bind="visible: kendoHasLoaded">
+    <div class="action" style="display: none" data-bind="visible: kendoHasLoaded">
         Click to edit
     </div>
     <div class="action" data-bind="visible: !kendoHasLoaded()">
@@ -183,10 +186,19 @@
 
 
 
-            @if (viewingUser.IsInRole(RoleName.EmployeeProfileManager))
-            {
-                <div class="field-row">
-                    <div class="field-column-left one-column">
+            <div class="field-row">
+                <div class="field-column-left one-column">
+                    <div class="field-label">
+                        <label>My Preferred Title is</label>
+                    </div>
+                    <div class="field-input">
+                        <textarea placeholder="[None]" rows="3" 
+                                  data-bind="value: preferredTitle, valueUpdate: 'afterkeydown'" >@Model.JobTitles</textarea>
+                    </div>
+                </div>
+                @if (viewingUser.IsInRole(RoleName.EmployeeProfileManager))
+                {
+                    <div class="field-column-right one-column">
                         <div>
                             <label>
                                 <input type="checkbox" data-bind="checked: isActive" />
@@ -197,14 +209,15 @@
                             <!--<span style="display: inline-block; float: right"><a href="#">Delete User</a></span>-->
                         </div>
                     </div>
-                </div>
-            }
-            else
-            {
-                <div>
-                    <span style="display: inline-block; float: left; margin-bottom: 1em;"><a href="#">Request my profile be deleted</a></span>
-                </div>
-            }
+
+                }
+                else
+                {
+                    <div>
+                        <span style="display: inline-block; float: left; margin-bottom: 1em;"><a href="#">Request my profile be deleted</a></span>
+                    </div>
+                }
+            </div>
 
             <div class="field-row">
                 <div class="field-column-left one-column">
@@ -219,6 +232,5 @@
                 </div>
             </div>
         </div>
-</form>
+    </form>
 </div>
-

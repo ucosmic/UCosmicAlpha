@@ -2,7 +2,7 @@ var People;
 (function (People) {
     (function (ViewModels) {
         var PersonalInfoEditor = (function () {
-            function PersonalInfoEditor(personId) {
+            function PersonalInfoEditor(model) {
                 this.kendoHasLoaded = ko.observable(false);
                 this.hasPhoto = ko.observable();
                 this.photoUploadError = ko.observable();
@@ -18,6 +18,7 @@ var People;
                 this.middleName = ko.observable();
                 this.lastName = ko.observable();
                 this.suffix = ko.observable();
+                this.preferredTitle = ko.observable();
                 this.defaultEstablishmentHasCampuses = ko.observable(false);
                 this.gender = ko.observable();
                 this.isActive = ko.observable(undefined);
@@ -30,7 +31,8 @@ var People;
                 this.saveSpinner = new App.Spinner({ delay: 200 });
                 this.startInEdit = ko.observable(false);
                 this.startTabName = ko.observable("Activities");
-                this.personId2 = personId;
+                this.personId2 = model.personId;
+                this.model = model;
             }
             PersonalInfoEditor.prototype.load = function (startTab) {
                 if (typeof startTab === "undefined") { startTab = ''; }
@@ -49,6 +51,7 @@ var People;
                 viewModelPact.done(function (viewModel) {
                     ko.mapping.fromJS(viewModel, { ignore: "id" }, _this);
                     _this.personId = viewModel.id;
+                    _this.preferredTitle(_this.model.JobTitles);
                     _this._originalValues = viewModel;
                     _this._setupValidation();
                     _this._setupKendoWidgets();
@@ -76,6 +79,7 @@ var People;
             PersonalInfoEditor.prototype.cancelEditing = function () {
                 this.$edit_personal_info_dialog.data("kendoWindow").close();
                 ko.mapping.fromJS(this._originalValues, {}, this);
+                this.preferredTitle(this.model.JobTitles);
                 this.stopEditing();
             };
 
@@ -309,7 +313,8 @@ var People;
                             firstName: _this.firstName(),
                             middleName: _this.middleName(),
                             lastName: _this.lastName(),
-                            suffix: _this.suffix()
+                            suffix: _this.suffix(),
+                            preferredTitle: _this.preferredTitle()
                         };
                         var data = ko.mapping.toJS(mapSource);
 

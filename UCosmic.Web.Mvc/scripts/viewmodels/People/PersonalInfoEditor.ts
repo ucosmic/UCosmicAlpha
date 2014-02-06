@@ -30,6 +30,7 @@ module People.ViewModels {
         middleName = ko.observable<string>();
         lastName = ko.observable<string>();
         suffix = ko.observable<string>();
+        preferredTitle = ko.observable<string>()
 
         defaultEstablishmentHasCampuses = ko.observable<boolean>(false);
 
@@ -58,10 +59,12 @@ module People.ViewModels {
         //#endregion
         //#region Construction
 
-        constructor(personId: number) {
-            this.personId2 = personId;
-        }
+        constructor(model) {
+            this.personId2 = model.personId;
+            this.model = model
 
+        }
+        model
         //#endregion
         //#region Personal Information
 
@@ -83,6 +86,7 @@ module People.ViewModels {
             viewModelPact.done((viewModel: ApiModels.IServerProfileApiModel): void => {
                 ko.mapping.fromJS(viewModel, { ignore: "id" }, this); // populate the scalars
                 this.personId = viewModel.id;
+                    this.preferredTitle(this.model.JobTitles);
                 this._originalValues = viewModel;
                 this._setupValidation();
                 this._setupKendoWidgets();
@@ -114,6 +118,7 @@ module People.ViewModels {
         cancelEditing(): void {
             this.$edit_personal_info_dialog.data("kendoWindow").close();
             ko.mapping.fromJS(this._originalValues, {}, this); // restore original values
+            this.preferredTitle(this.model.JobTitles);
             this.stopEditing();
         }
 
@@ -365,7 +370,8 @@ module People.ViewModels {
                         firstName: this.firstName(),
                         middleName: this.middleName(),
                         lastName: this.lastName(),
-                        suffix: this.suffix()
+                        suffix: this.suffix(),
+                        preferredTitle: this.preferredTitle()
                     };
                     var data = ko.mapping.toJS(mapSource);
 
