@@ -809,6 +809,7 @@
     <Content Include="images\geochart\up\indian-ocean.png" />
     <Content Include="images\geochart\up\pacific-ocean.png" />
     <Content Include="images\geochart\up\southern-ocean.png" />
+    <Content Include="images\icons\agreements\folder-contract-icon.png" />
     <Content Include="images\icons\cancel\black-cancel-24.png" />
     <Content Include="images\icons\cancel\undo-4-512.jpg" />
     <Content Include="images\icons\download\down128.png" />
@@ -866,6 +867,7 @@
     <Content Include="images\icons\spinner\spinner-24-blue-on-ddd.gif" />
     <Content Include="images\icons\spinner\spinner-24-blue.gif" />
     <None Include="scripts\jquery\jquery-1.9.1.intellisense.js" />
+    <Content Include="images\icons\user\male-and-female-256.png" />
     <Content Include="images\placeholders\ExpertiseMock.png" />
     <Content Include="images\transparent.png" />
     <TypeScriptCompile Include="scripts\app\Flasher.ts" />

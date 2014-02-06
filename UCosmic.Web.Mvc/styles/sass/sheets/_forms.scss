@@ -233,6 +233,7 @@ a.button {
 }
 
 button, input[type=submit], input[type=reset], input[type=button], a.button, a.button:visited {
+    border: 0;
     margin: 0 12px 0 0;
     @include border-radius(4px);
     padding: 6px 12px;

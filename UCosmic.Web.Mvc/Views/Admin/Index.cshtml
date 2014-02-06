@@ -1,13 +1,39 @@
-﻿@{
-    ViewBag.Title = "Access Grants";
+﻿@model Dictionary<string, string>
+@{
+    ViewBag.Title = "Choose your institution";
+    var tenancy = Request.Tenancy();
+    var styleDomain = tenancy != null ? tenancy.StyleDomain : "default";
+    var hasStyleDomain = !string.IsNullOrWhiteSpace(styleDomain) && !"default".Equals(styleDomain, StringComparison.OrdinalIgnoreCase);
 }
+
 <div class="fixed content" data-current-module="admin">
     <header>
-        <h1>@ViewBag.Title</h1>
+        <h1>
+            Current Theme:
+            @if (hasStyleDomain)
+            {
+                if (Model.ContainsValue(styleDomain))
+                {
+                    <text>@Model.Single(x => x.Value == styleDomain).Key</text>
+                }
+                else
+                {
+                    <text>@styleDomain</text>
+                }
+            }
+            else
+            {
+                <text>UCosmic Default</text>
+            }
+        </h1>
     </header>
-    <p>
-        This alpha placeholder page has no content.
-    </p>
+    @*<header>
+            <h1>@ViewBag.Title</h1>
+        </header>
+        <p>
+            Here we can display the
+        </p>*@
+    <p>Code for switching themes to follow...</p>
 </div>
 @section bib
 {

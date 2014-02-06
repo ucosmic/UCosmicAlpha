@@ -59,7 +59,12 @@ module Agreements.ViewModels {
             this.sammy.run();
             var initialLocation = this.sammy.getLocation();
             var lensRoute = '#/{0}/'.format(this.lens());
-            if (initialLocation.indexOf(lensRoute) < 0) {
+            var needsLocationSet = initialLocation.indexOf(lensRoute) < 0;
+            if (!needsLocationSet) {
+                var otherParams = initialLocation.substr(initialLocation.indexOf(lensRoute) + lensRoute.length);
+                if (!otherParams || otherParams.length < 2) needsLocationSet = true;
+            }
+            if (needsLocationSet) {
                 if (this.isTableLens()) {
                     this.table.setLocation();
                     this.table.activate();

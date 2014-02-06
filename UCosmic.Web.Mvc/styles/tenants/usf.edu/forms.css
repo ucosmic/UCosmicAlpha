@@ -252,6 +252,7 @@ a.button > i.red.closer {
   background-image: url(../../../images/icons/closer/closer-24-red-disc.png); }
 
 button, input[type=submit], input[type=reset], input[type=button], a.button, a.button:visited {
+  border: 0;
   margin: 0 12px 0 0;
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;

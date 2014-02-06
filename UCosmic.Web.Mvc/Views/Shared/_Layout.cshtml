@@ -49,11 +49,11 @@
                             var userImpersonating = Session.UserImpersonating();
                             if (userImpersonating != null)
                             {
-                            <a href="@Url.Action(MVC.Identity.UndoSignOver())" title="Sign back on as @userImpersonating.Identity.Name">Sign back</a>
+                                <a href="@Url.Action(MVC.Identity.UndoSignOver())" title="Sign back on as @userImpersonating.Identity.Name">Sign back</a>
                             }
                             else
                             {
-                            <a href="@Url.Action(MVC.Identity.SignOut(Request.RawUrl))">Sign out</a>
+                                <a href="@Url.Action(MVC.Identity.SignOut(Request.RawUrl))">Sign out</a>
                             }
                         }
                         else
@@ -76,27 +76,30 @@
             <li class="employees @ViewBag.EmployeesModuleTab">
                 <a href="@Url.Action(hasStyleDomain ? MVC.Employees.TenantIndex(styleDomain) : MVC.Employees.Index())">Faculty & Staff</a>
             </li>
-            <li class="alumni">
-                <a href="@Url.Action(MVC.Home.Alumni())">Alumni</a>
-            </li>
-            <li class="students">
-                <a href="@Url.Action(MVC.Home.Students())">Students</a>
-            </li>
-            <li class="reps">
-                <a href="@Url.Action(MVC.Home.Representatives())">Representatives</a>
-            </li>
-            <li class="travel">
-                <a href="@Url.Action(MVC.Home.Travel())">Travel</a>
-            </li>
-            <li class="corporate">
-                <a href="@Url.Action(MVC.Home.CorporateEngagement())">Corporate Engagement</a>
-            </li>
-            <li class="press">
-                <a href="@Url.Action(MVC.Home.GlobalPress())">Global Press</a>
-            </li>
-            <li class="admin">
-                <a href="@Url.Action(MVC.Admin.Index())">Admin</a>
-            </li>
+            @*<li class="alumni">
+                    <a href="@Url.Action(MVC.Home.Alumni())">Alumni</a>
+                </li>
+                <li class="students">
+                    <a href="@Url.Action(MVC.Home.Students())">Students</a>
+                </li>
+                <li class="reps">
+                    <a href="@Url.Action(MVC.Home.Representatives())">Representatives</a>
+                </li>
+                <li class="travel">
+                    <a href="@Url.Action(MVC.Home.Travel())">Travel</a>
+                </li>
+                <li class="corporate">
+                    <a href="@Url.Action(MVC.Home.CorporateEngagement())">Corporate Engagement</a>
+                </li>
+                <li class="press">
+                    <a href="@Url.Action(MVC.Home.GlobalPress())">Global Press</a>
+                </li>*@
+            @if (User.IsInAnyRole(RoleName.UserManagers, RoleName.EstablishmentAdministrator))
+            {
+                <li class="admin @ViewBag.AdminModuleTab">
+                    <a href="@Url.Action(MVC.Admin.Index())">Admin</a>
+                </li>
+            }
         </ul>
     </nav>
     <header>
@@ -129,49 +132,67 @@
     </div>
     <footer>
         <div>
-            <nav class="modules">
-                <ul class="group">
+            <nav class="modules group">
+                <ul class="group on-left">
                     <li class="home">
-                        <a href="@Url.Action(MVC.Home.Index())">Home
+                        <a href="@Url.Action(MVC.Home.Index())">
+                            Home
                         </a>
                     </li>
                     <li class="agreements">
-                        <a href="@Url.Action(hasStyleDomain ? MVC.Agreements.TenantIndex(styleDomain) : MVC.Agreements.Index())">Agreements
+                        <a href="@Url.Action(hasStyleDomain ? MVC.Agreements.TenantIndex(styleDomain) : MVC.Agreements.Index())">
+                            Agreements
                         </a>
                     </li>
                     <li class="employees">
-                        <a href="@Url.Action(hasStyleDomain ? MVC.Employees.TenantIndex(styleDomain) : MVC.Employees.Index())">Faculty & Staff
+                        <a href="@Url.Action(hasStyleDomain ? MVC.Employees.TenantIndex(styleDomain) : MVC.Employees.Index())">
+                            Faculty & Staff
                         </a>
                     </li>
-                    <li class="alumni">
-                        <a href="@Url.Action(MVC.Home.Alumni())">Alumni
-                        </a>
-                    </li>
-                    <li class="students">
-                        <a href="@Url.Action(MVC.Home.Students())">Students
-                        </a>
-                    </li>
-                    <li class="reps">
-                        <a href="@Url.Action(MVC.Home.Representatives())">Representatives
-                        </a>
-                    </li>
-                    <li class="travel">
-                        <a href="@Url.Action(MVC.Home.Travel())">Travel
-                        </a>
-                    </li>
-                    <li class="corporate">
-                        <a href="@Url.Action(MVC.Home.CorporateEngagement())">Corporate Engagement
-                        </a>
-                    </li>
-                    <li class="press">
-                        <a href="@Url.Action(MVC.Home.GlobalPress())">Global Press
-                        </a>
-                    </li>
+                    @*<li class="alumni">
+                            <a href="@Url.Action(MVC.Home.Alumni())">
+                                Alumni
+                            </a>
+                        </li>
+                        <li class="students">
+                            <a href="@Url.Action(MVC.Home.Students())">
+                                Students
+                            </a>
+                        </li>
+                        <li class="reps">
+                            <a href="@Url.Action(MVC.Home.Representatives())">
+                                Representatives
+                            </a>
+                        </li>
+                        <li class="travel">
+                            <a href="@Url.Action(MVC.Home.Travel())">
+                                Travel
+                            </a>
+                        </li>
+                        <li class="corporate">
+                            <a href="@Url.Action(MVC.Home.CorporateEngagement())">
+                                Corporate Engagement
+                            </a>
+                        </li>
+                        <li class="press">
+                            <a href="@Url.Action(MVC.Home.GlobalPress())">
+                                Global Press
+                            </a>
+                        </li>*@
+                    @if (User.IsInAnyRole(RoleName.UserManagers, RoleName.EstablishmentAdministrator))
+                    {
+                        <li class="admin">
+                            <a href="@Url.Action(MVC.Admin.Index())">Admin</a>
+                        </li>
+                    }
                 </ul>
+                <div class="powered-by on-right">
+                    <a href="http://www.github.com/ucosmic" target="_blank" title="Source code version @ViewBag.Version">Powered by UCosmic</a> | Copyright &copy; 2011-@DateTime.UtcNow.Year
+                </div>
             </nav>
-            <small class="powered-by">
-                <a href="http://www.github.com/ucosmic" target="_blank" title="Source code version @ViewBag.Version">Powered by UCosmic</a> | Copyright &copy; 2011-@DateTime.UtcNow.Year
-            </small>
+            @*<small class="powered-by">
+                    <a href="http://www.github.com/ucosmic" target="_blank" title="Source code version @ViewBag.Version">Powered by UCosmic</a> | Copyright &copy; 2011-@DateTime.UtcNow.Year
+                </small>*@
         </div>
     </footer>
     <input id="scroll_top_tracker" type="hidden" />
