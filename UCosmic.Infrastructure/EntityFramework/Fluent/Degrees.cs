@@ -11,7 +11,7 @@ namespace UCosmic.EntityFramework
             HasRequired(d => d.Person)
                 .WithMany()
                 .HasForeignKey(d => d.PersonId)
-                .WillCascadeOnDelete(true);
+                .WillCascadeOnDelete(false);
 
             HasOptional(d => d.Institution)
                 .WithMany()
