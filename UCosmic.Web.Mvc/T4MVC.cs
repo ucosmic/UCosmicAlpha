@@ -87,9 +87,9 @@ public class T4MVC_System_Web_Mvc_RedirectToRouteResult : System.Web.Mvc.Redirec
     public RouteValueDictionary RouteValueDictionary { get; set; }
 }
 [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-public class T4MVC_System_Web_Mvc_ViewResult : System.Web.Mvc.ViewResult, IT4MVCActionResult
+public class T4MVC_System_Web_Mvc_PartialViewResult : System.Web.Mvc.PartialViewResult, IT4MVCActionResult
 {
-    public T4MVC_System_Web_Mvc_ViewResult(string area, string controller, string action, string protocol = null): base()
+    public T4MVC_System_Web_Mvc_PartialViewResult(string area, string controller, string action, string protocol = null): base()
     {
         this.InitMVCT4Result(area, controller, action, protocol);
     }
@@ -100,9 +100,9 @@ public class T4MVC_System_Web_Mvc_ViewResult : System.Web.Mvc.ViewResult, IT4MVC
     public RouteValueDictionary RouteValueDictionary { get; set; }
 }
 [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-public class T4MVC_System_Web_Mvc_PartialViewResult : System.Web.Mvc.PartialViewResult, IT4MVCActionResult
+public class T4MVC_System_Web_Mvc_ViewResult : System.Web.Mvc.ViewResult, IT4MVCActionResult
 {
-    public T4MVC_System_Web_Mvc_PartialViewResult(string area, string controller, string action, string protocol = null): base()
+    public T4MVC_System_Web_Mvc_ViewResult(string area, string controller, string action, string protocol = null): base()
     {
         this.InitMVCT4Result(area, controller, action, protocol);
     }
@@ -3581,6 +3581,7 @@ namespace Links
                 public static readonly string layout_scss = Url("layout.scss");
                 public static readonly string layout_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/layout.min.css") ? Url("layout.min.css") : Url("layout.css");
                      
+                public static readonly string logo_png = Url("logo.png");
             }
         
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -3603,6 +3604,7 @@ namespace Links
                 public static readonly string layout_scss = Url("layout.scss");
                 public static readonly string layout_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/layout.min.css") ? Url("layout.min.css") : Url("layout.css");
                      
+                public static readonly string logo_png = Url("logo.png");
             }
         
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -3625,6 +3627,7 @@ namespace Links
                 public static readonly string layout_scss = Url("layout.scss");
                 public static readonly string layout_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/layout.min.css") ? Url("layout.min.css") : Url("layout.css");
                      
+                public static readonly string logo_png = Url("logo.png");
             }
         
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -3647,6 +3650,7 @@ namespace Links
                 public static readonly string layout_scss = Url("layout.scss");
                 public static readonly string layout_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/layout.min.css") ? Url("layout.min.css") : Url("layout.css");
                      
+                public static readonly string logo_png = Url("logo.png");
             }
         
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -3669,6 +3673,7 @@ namespace Links
                 public static readonly string layout_scss = Url("layout.scss");
                 public static readonly string layout_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/layout.min.css") ? Url("layout.min.css") : Url("layout.css");
                      
+                public static readonly string logo_png = Url("logo.png");
             }
         
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -3691,6 +3696,7 @@ namespace Links
                 public static readonly string layout_scss = Url("layout.scss");
                 public static readonly string layout_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/layout.min.css") ? Url("layout.min.css") : Url("layout.css");
                      
+                public static readonly string logo_png = Url("logo.png");
             }
         
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -3714,6 +3720,7 @@ namespace Links
                 public static readonly string layout_scss = Url("layout.scss");
                 public static readonly string layout_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/layout.min.css") ? Url("layout.min.css") : Url("layout.css");
                      
+                public static readonly string logo_png = Url("logo.png");
             }
         
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -3759,6 +3766,7 @@ namespace Links
                 public static readonly string layout_scss = Url("layout.scss");
                 public static readonly string layout_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/layout.min.css") ? Url("layout.min.css") : Url("layout.css");
                      
+                public static readonly string logo_png = Url("logo.png");
             }
         
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -3781,6 +3789,7 @@ namespace Links
                 public static readonly string layout_scss = Url("layout.scss");
                 public static readonly string layout_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/layout.min.css") ? Url("layout.min.css") : Url("layout.css");
                      
+                public static readonly string logo_png = Url("logo.png");
             }
         
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -3803,6 +3812,7 @@ namespace Links
                 public static readonly string layout_scss = Url("layout.scss");
                 public static readonly string layout_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/layout.min.css") ? Url("layout.min.css") : Url("layout.css");
                      
+                public static readonly string logo_png = Url("logo.png");
             }
         
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -3825,6 +3835,7 @@ namespace Links
                 public static readonly string layout_scss = Url("layout.scss");
                 public static readonly string layout_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/layout.min.css") ? Url("layout.min.css") : Url("layout.css");
                      
+                public static readonly string logo_png = Url("logo.png");
             }
         
         }
@@ -3889,6 +3900,14 @@ namespace Links
             private const string URLPATH = "~/images/icons";
             public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
             public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+            [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+            public static class agreements {
+                private const string URLPATH = "~/images/icons/agreements";
+                public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+                public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                public static readonly string folder_contract_icon_png = Url("folder-contract-icon.png");
+            }
+        
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
             public static class cancel {
                 private const string URLPATH = "~/images/icons/cancel";
@@ -4099,6 +4118,7 @@ namespace Links
                 private const string URLPATH = "~/images/icons/user";
                 public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
                 public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                public static readonly string male_and_female_256_png = Url("male-and-female-256.png");
                 public static readonly string unisex_a_128_png = Url("unisex-a-128.png");
                 public static readonly string unisex_a_256_png = Url("unisex-a-256.png");
             }

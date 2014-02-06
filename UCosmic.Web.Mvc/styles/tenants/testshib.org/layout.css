@@ -712,8 +712,6 @@ body > footer {
       font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
       color: white;
       text-decoration: none; }
-      body > footer nav.modules .powered-by:hover {
-        xtext-decoration: underline; }
       @media only screen and (max-device-width: 1024px) {
         body > footer nav.modules .powered-by {
           font-size: 14px;

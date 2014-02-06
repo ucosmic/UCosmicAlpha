@@ -1,0 +1,15 @@
+﻿@model Dictionary<string, string>
+
+<div style="text-align: center;">
+
+    @foreach (var entry in Model)
+    {
+        var styleDomain = entry.Value.Trim(new[] { '_' });
+        var returnUrl = Request.RawUrl;
+        <div style="margin: 0 24px 24px 0; display: inline-block;">
+            <a href="@Url.Action(MVC.Tenancy.ActionNames.Tenant, MVC.Tenancy.Name, new { id = styleDomain, returnUrl })" style="text-decoration: none;">
+                <img alt="" src="~/styles/tenants/@entry.Value/logo.png" />
+            </a>
+        </div>
+    }
+</div>

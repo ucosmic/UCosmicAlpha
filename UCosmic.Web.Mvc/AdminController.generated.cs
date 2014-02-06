@@ -61,15 +61,25 @@ namespace UCosmic.Web.Mvc.Controllers
         public class ActionNamesClass
         {
             public readonly string Index = "Index";
+            public readonly string TenantLogos = "TenantLogos";
         }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public class ActionNameConstants
         {
             public const string Index = "Index";
+            public const string TenantLogos = "TenantLogos";
         }
 
 
+        static readonly ActionParamsClass_TenantLogos s_params_TenantLogos = new ActionParamsClass_TenantLogos();
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public ActionParamsClass_TenantLogos TenantLogosParams { get { return s_params_TenantLogos; } }
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public class ActionParamsClass_TenantLogos
+        {
+            public readonly string omitDefault = "omitDefault";
+        }
         static readonly ViewsClass s_views = new ViewsClass();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public ViewsClass Views { get { return s_views; } }
@@ -81,9 +91,11 @@ namespace UCosmic.Web.Mvc.Controllers
             public class _ViewNamesClass
             {
                 public readonly string _Bib = "_Bib";
+                public readonly string _TenantLogos = "_TenantLogos";
                 public readonly string Index = "Index";
             }
             public readonly string _Bib = "~/Views/Admin/_Bib.cshtml";
+            public readonly string _TenantLogos = "~/Views/Admin/_TenantLogos.cshtml";
             public readonly string Index = "~/Views/Admin/Index.cshtml";
         }
     }
@@ -96,6 +108,13 @@ namespace UCosmic.Web.Mvc.Controllers
         public override System.Web.Mvc.ActionResult Index()
         {
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Index);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.PartialViewResult TenantLogos(bool omitDefault)
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_PartialViewResult(Area, Name, ActionNames.TenantLogos);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "omitDefault", omitDefault);
             return callInfo;
         }
 

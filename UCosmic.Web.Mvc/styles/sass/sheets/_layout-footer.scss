@@ -54,9 +54,6 @@ body {
                 @include font-ms;
                 color: $footer-link-text-color;
                 text-decoration: none;
-                &:hover {
-                    xtext-decoration: underline;
-                }
                 @media only screen and (max-device-width : 1024px) {
                     @include font-height(14px, 20px);
                 }

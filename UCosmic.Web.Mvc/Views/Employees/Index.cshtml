@@ -2,14 +2,9 @@
     ViewBag.Title = "Faculty & Staff";
 }
 
-<div class="content fixed to-top" data-current-module="employees">
-    <div class="group">
-        <div class="on-left from-top">
-            <header>
-                <h1>
-                    @ViewBag.Title
-                </h1>
-            </header>
-        </div>
-    </div>
+<div class="fixed content" data-current-module="employees">
+    <header>
+        <h1>Choose your institution</h1>
+    </header>
+    @{ Html.RenderAction(MVC.Admin.TenantLogos(false)); }
 </div>

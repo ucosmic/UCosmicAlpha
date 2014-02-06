@@ -2339,6 +2339,7 @@
     <Content Include="styles\sass\sheets\people\my-profile.css">
       <DependentUpon>my-profile.scss</DependentUpon>
     </Content>
+    <Content Include="styles\tenants\hpu.edu\logo.png" />
     <Content Include="styles\tenants\hpu.edu\banner-logo.png" />
     <Content Include="styles\tenants\hpu.edu\designs.css">
       <DependentUpon>designs.scss</DependentUpon>
@@ -2352,6 +2353,8 @@
     <Content Include="styles\tenants\hpu.edu\layout.css">
       <DependentUpon>layout.scss</DependentUpon>
     </Content>
+    <Content Include="styles\tenants\lehigh.edu\logo.png" />
+    <Content Include="styles\tenants\napier.ac.uk\logo.png" />
     <Content Include="styles\tenants\napier.ac.uk\banner-logo.png" />
     <Content Include="styles\tenants\napier.ac.uk\designs.css">
       <DependentUpon>designs.scss</DependentUpon>
@@ -2365,6 +2368,13 @@
     <Content Include="styles\tenants\napier.ac.uk\layout.css">
       <DependentUpon>layout.scss</DependentUpon>
     </Content>
+    <Content Include="styles\tenants\suny.edu\logo.png" />
+    <Content Include="styles\tenants\testshib.org\logo.png" />
+    <Content Include="styles\tenants\uc.edu\logo.png" />
+    <Content Include="styles\tenants\usf.edu\logo.png" />
+    <Content Include="styles\tenants\uwi.edu\logo.png" />
+    <Content Include="styles\tenants\uwm.edu\logo.png" />
+    <Content Include="styles\tenants\westernu.ca\logo.png" />
     <Content Include="styles\tenants\westernu.ca\banner-logo.png" />
     <Content Include="styles\tenants\westernu.ca\designs.css">
       <DependentUpon>designs.scss</DependentUpon>
@@ -2504,6 +2514,7 @@
     <Content Include="styles\tenants\usf.edu\layout.css">
       <DependentUpon>layout.scss</DependentUpon>
     </Content>
+    <Content Include="styles\tenants\_default\logo.png" />
     <Content Include="styles\tenants\_default\designs.css">
       <DependentUpon>designs.scss</DependentUpon>
     </Content>
@@ -2624,6 +2635,7 @@
     <Content Include="Views\Activities\_ActivitiesContent.cshtml" />
     <Content Include="Views\Activities\_ActivitiesSide.cshtml" />
     <Content Include="Views\Activities\_Bib.cshtml" />
+    <Content Include="Views\Admin\_TenantLogos.cshtml" />
     <None Include="Views\ApiTest\Index.cshtml" />
     <Content Include="Views\Agreements\Settings.cshtml" />
     <Content Include="Views\Agreements\_SearchSideBar.cshtml" />

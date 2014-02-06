@@ -10,6 +10,13 @@ namespace UCosmic.Web.Mvc.Controllers
         [CurrentModuleTab(ModuleTab.Admin)]
         public virtual ActionResult Index()
         {
+            return View();
+        }
+
+        [ChildActionOnly]
+        [Route("admin/tenants")]
+        public virtual PartialViewResult TenantLogos(bool includeDefault = true)
+        {
             var model = new Dictionary<string, string>
             {
                 { "State University of New York", "suny.edu" },
@@ -22,8 +29,9 @@ namespace UCosmic.Web.Mvc.Controllers
                 { "University of Wisconsin Milwaukee", "uwm.edu" },
                 { "Western University", "westernu.ca" },
             };
-            return View(model);
+            if (includeDefault)
+                model.Add("The UCosmic Consortium", "_default");
+            return PartialView(MVC.Admin.Views._TenantLogos, model);
         }
-
     }
 }
