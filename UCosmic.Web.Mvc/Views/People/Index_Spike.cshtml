@@ -27,7 +27,7 @@
 
         <script src="~/scripts/viewmodels/employees/Server.js"></script>
         <script src="~/scripts/viewmodels/people/Server.js"></script>
-        
+
 
         @Scripts.Render("~/bundles/people/profileEditor")
 
@@ -38,7 +38,8 @@
                 ko.applyBindings(affiliationsViewModel, $('#affiliations')[0]);
                 affiliationsViewModel.bindJquery();
 
-                var personalInfoViewModel = new People.ViewModels.PersonalInfoEditor('@Model.PersonId');
+                var model = $.parseJSON('@Html.Raw(Json.Encode(Model))');
+                var personalInfoViewModel = new People.ViewModels.PersonalInfoEditor(model);
                 personalInfoViewModel.load();
                 ko.applyBindings(personalInfoViewModel, $('#card')[0]);
             });
@@ -63,7 +64,7 @@
 
         .profile-kendo-window {
             position: fixed !important;
-            top: 100px !important;
+            top: 60px !important;
             left: 100px;
         }
     </style>
@@ -107,7 +108,10 @@
                 }
             </section>
             @* CONTACT INFORMATION *@
-            @Html.Action(MVC.People.GetEmails())
+            <section class="content fixed to-top">
+                <h2 style="font-size: 24px; padding-bottom: 1em;">Contact Information</h2>
+                @Html.Action(MVC.People.GetEmails())
+            </section>
         </div>
         <aside class="on-right from-top" data-fixed-scroll="root">
             <div data-fixed-scroll="anchor"></div>

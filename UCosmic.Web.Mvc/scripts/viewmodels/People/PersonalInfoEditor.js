@@ -33,6 +33,7 @@ var People;
                 this.startTabName = ko.observable("Activities");
                 this.personId2 = model.personId;
                 this.model = model;
+                this.DefaultAffiliationEstablishmentId = model.DefaultAffiliationEstablishmentId;
             }
             PersonalInfoEditor.prototype.load = function (startTab) {
                 if (typeof startTab === "undefined") { startTab = ''; }
@@ -91,6 +92,11 @@ var People;
                     var apiModel = ko.mapping.toJS(this);
 
                     this.saveSpinner.start();
+
+                    var affiliationPutModel = {
+                        jobTitles: this.preferredTitle()
+                    };
+                    People.Servers.PutAffiliation(affiliationPutModel, this.DefaultAffiliationEstablishmentId);
 
                     $.ajax({
                         url: '/api/user/person',
@@ -313,8 +319,7 @@ var People;
                             firstName: _this.firstName(),
                             middleName: _this.middleName(),
                             lastName: _this.lastName(),
-                            suffix: _this.suffix(),
-                            preferredTitle: _this.preferredTitle()
+                            suffix: _this.suffix()
                         };
                         var data = ko.mapping.toJS(mapSource);
 

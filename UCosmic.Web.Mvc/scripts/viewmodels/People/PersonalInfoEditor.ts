@@ -31,6 +31,7 @@ module People.ViewModels {
         lastName = ko.observable<string>();
         suffix = ko.observable<string>();
         preferredTitle = ko.observable<string>()
+        DefaultAffiliationEstablishmentId: number;
 
         defaultEstablishmentHasCampuses = ko.observable<boolean>(false);
 
@@ -55,14 +56,14 @@ module People.ViewModels {
 
         startInEdit = ko.observable<boolean>(false);
         startTabName = ko.observable<string>("Activities");
-
+        
         //#endregion
         //#region Construction
 
         constructor(model) {
             this.personId2 = model.personId;
             this.model = model
-
+            this.DefaultAffiliationEstablishmentId = model.DefaultAffiliationEstablishmentId;
         }
         model
         //#endregion
@@ -130,6 +131,13 @@ module People.ViewModels {
                 var apiModel = ko.mapping.toJS(this);
 
                 this.saveSpinner.start();
+
+
+                var affiliationPutModel: ApiModels.AffiliationPut = {
+                    jobTitles: this.preferredTitle(),
+                };
+                Servers.PutAffiliation(affiliationPutModel, this.DefaultAffiliationEstablishmentId);
+
 
                 $.ajax({
                     url: '/api/user/person', // TODO: button this up
@@ -370,8 +378,7 @@ module People.ViewModels {
                         firstName: this.firstName(),
                         middleName: this.middleName(),
                         lastName: this.lastName(),
-                        suffix: this.suffix(),
-                        preferredTitle: this.preferredTitle()
+                        suffix: this.suffix()
                     };
                     var data = ko.mapping.toJS(mapSource);
 

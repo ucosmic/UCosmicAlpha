@@ -1,8 +1,6 @@
 ﻿@model UCosmic.Web.Mvc.Models.PersonEmailAddressesViewModel
 
 @* EMAILS *@
-<section class="content fixed to-top">
-    <h2 style="font-size: 24px; padding-bottom: 1em;">Contact Information</h2>
     <div style="float:left; width: 360px;">
         @if (Model != null && Model.Emails.Any())
         {
@@ -88,48 +86,3 @@
             </form>
         }
     </div>
-    <div style="float:right">
-        @*@if (Model != null && Model.EmailAddress != null)
-            {
-                <div>
-                    <ul>
-                        @foreach (var emailAddress in Model.EmailAddresses)
-                        {
-                            if (emailAddress != null)
-                            {
-                                <li>
-                                    @if (User.Identity.Name.Equals(Model.Username, StringComparison.OrdinalIgnoreCase))
-                                    {*@
-        @*<form action="@Url.Action(MVC.Emails.Delete())" method="POST">*@
-        @*<form style="display: inline-block;">
-                                            @emailAddress
-                                            <button class="link">
-                                                <img alt="" src="~/images/icons/minus/minus-24-red.png" title="Delete this profile link"
-                                                     style="cursor: pointer; margin: 5px 0 8px 8px;" />
-                                            </button>
-                                        </form>
-                                    }
-                                    else
-                                    {
-                                        @emailAddress
-                                    }
-                                </li>
-                            }
-                        }
-                    </ul>
-                </div>
-            }
-            @if (Model != null && User.Identity.Name.Equals(Model.Username, StringComparison.OrdinalIgnoreCase))
-            {
-                <form>
-                    <input type="email" style="width: 240px;" placeholder="Add new profile link" />
-                    <button href="#" class="button" style="margin:0;">
-                        <img alt="" src="~/images/icons/plus/plus-24-green-disc.png" title="Add new profile link."
-                             style="cursor: pointer; margin: 0" />
-                        <span style="font-size: 16px; display: inline-block; line-height: 20px; vertical-align: middle;">Add</span>
-                    </button>
-                </form>
-            }*@
-    </div>
-
-</section>
