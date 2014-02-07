@@ -21,8 +21,6 @@ namespace UCosmic.Domain.People
 
         public void Perform(AddNewEstablishmentTypes job)
         {
-            //var establishmentCategories = _entities.Get<EstablishmentCategory>().ToArray();
-
             var establishmentType = _entities.Get<EstablishmentType>().SingleOrDefault(x => x.CategoryCode == EstablishmentCategoryCode.Inst && x.EnglishName == "Institute");
             if (establishmentType != null) return;
 
