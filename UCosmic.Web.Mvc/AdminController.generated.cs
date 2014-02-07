@@ -78,7 +78,7 @@ namespace UCosmic.Web.Mvc.Controllers
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public class ActionParamsClass_TenantLogos
         {
-            public readonly string omitDefault = "omitDefault";
+            public readonly string includeDefault = "includeDefault";
         }
         static readonly ViewsClass s_views = new ViewsClass();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -111,10 +111,10 @@ namespace UCosmic.Web.Mvc.Controllers
             return callInfo;
         }
 
-        public override System.Web.Mvc.PartialViewResult TenantLogos(bool omitDefault)
+        public override System.Web.Mvc.PartialViewResult TenantLogos(bool includeDefault)
         {
             var callInfo = new T4MVC_System_Web_Mvc_PartialViewResult(Area, Name, ActionNames.TenantLogos);
-            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "omitDefault", omitDefault);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "includeDefault", includeDefault);
             return callInfo;
         }
 

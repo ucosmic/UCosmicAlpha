@@ -41,6 +41,10 @@ namespace UCosmic.Domain.People
                 {
                     emailValue = "ccao@health.usf.edu";
                 }
+                if (person.User.Name.Equals("yampol@usf.edu"))
+                {
+                    emailValue = "syampol1@health.usf.edu";
+                }
                 person.Emails.Add(new EmailAddress
                 {
                     IsConfirmed = true,
