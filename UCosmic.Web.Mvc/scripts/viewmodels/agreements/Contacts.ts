@@ -538,7 +538,7 @@ module Agreements {
                     });
                 }
             })
-        $("#addContactDialog").on("change", ".phoneNumbers", function () {
+            $("#addContactDialog").on("change", ".phoneNumbers", function () {
                 var context = ko.dataFor(this);
 
                 if (self.agreementIsEdit() && context.value == $(this).val()) {

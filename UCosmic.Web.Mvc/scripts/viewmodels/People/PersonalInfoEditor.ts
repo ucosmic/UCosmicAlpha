@@ -352,12 +352,26 @@ module People.ViewModels {
                 resizable: false
             });
             this.$edit_personal_info_dialog.parent().addClass("profile-kendo-window");
+            $(".k-window").css({
+                position: 'fixed',
+                margin: 'auto',
+                top: '20px'
+            });
 
             var dialog = this.$edit_personal_info_dialog.data("kendoWindow");
             dialog.center();
             this.kendoHasLoaded(true);
+
+            $(window).resize(() => {
+                dialog.center();
+            });
         }
 
+        //private _updateKendoDialog(windowWidth): void {
+        //    $(".k-window").css({
+        //        left: (windowWidth / 2 - ($(".k-window").width() / 2) + 10)
+        //    });
+        //}
         // logic to derive display name
         private _setupDisplayNameDerivation(): void {
             this.displayName.subscribe((newValue: string): void => {

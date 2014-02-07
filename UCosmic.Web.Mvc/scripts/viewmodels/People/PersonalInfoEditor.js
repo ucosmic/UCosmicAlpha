@@ -295,10 +295,19 @@ var People;
                     resizable: false
                 });
                 this.$edit_personal_info_dialog.parent().addClass("profile-kendo-window");
+                $(".k-window").css({
+                    position: 'fixed',
+                    margin: 'auto',
+                    top: '20px'
+                });
 
                 var dialog = this.$edit_personal_info_dialog.data("kendoWindow");
                 dialog.center();
                 this.kendoHasLoaded(true);
+
+                $(window).resize(function () {
+                    dialog.center();
+                });
             };
 
             PersonalInfoEditor.prototype._setupDisplayNameDerivation = function () {
