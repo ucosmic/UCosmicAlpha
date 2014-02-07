@@ -107,6 +107,7 @@
     <Compile Include="Domain\People\Queries\EmailAddressBy.cs" />
     <Compile Include="Domain\People\Validation\MustBeAllowableEmailDomainForPerson.cs" />
     <Compile Include="Domain\People\Validation\MustNotFindEmailAddressByValue.cs" />
+    <Compile Include="Domain\People\Work\FixUsfEmailAddresses.cs" />
     <Compile Include="Domain\Places\Documents\PlaceDocument.cs" />
     <Compile Include="Domain\Places\Documents\PlaceDocumentIndexer.cs" />
     <Compile Include="Domain\Places\Queries\AutoCompletePlaceName.cs" />
