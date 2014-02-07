@@ -1,0 +1,62 @@
+﻿@model UCosmic.Web.Mvc.Models.PersonUrlViewModel[]
+
+@* URLS *@
+@if (Model != null && Model.Any())
+{
+    <div>
+        @if (User.Identity.Name.Equals(ViewBag.Username, StringComparison.OrdinalIgnoreCase))
+        {
+            <div style="display: none;">
+                <div data-bind="jQuery: '$confirmDeleteUrl'" title="Please confirm your intent">
+                    Are you sure you want to delete this external link? This cannot be undone.
+                </div>
+            </div>
+        }
+        <ul>
+            @foreach (var url in Model)
+            {
+                <li>
+                    @if (User.Identity.Name.Equals(ViewBag.Username, StringComparison.OrdinalIgnoreCase))
+                    {
+                        @url.Value
+                        <div style="float: right; width: 70px; text-align: right;">
+                            <img data-bind="click: edit.bind($data, @url.UrlId), visible: !purgeSpinner.isVisible()" alt="" src="~/images/icons/edit/pencil-a-24.png" title="Edit this external link"
+                                 style="cursor: pointer; margin: 0 0 8px 8px;" />
+                            <img data-bind="click: purge.bind($data, @url.UrlId), visible: !purgeSpinner.isVisible()" a alt="" src="~/images/icons/minus/minus-24-red.png" title="Delete this external link"
+                                 style="cursor: pointer; margin: 0 0 8px 8px;" />
+                            <img data-bind="visible: purgeSpinner.isVisible" alt="" src="~/images/icons/spinner/spinner-24-blue.gif" title="Deleting this external link..."
+                                 style="margin-left: 8px; display: none;" />
+                        </div>
+                    }
+                    else
+                    {
+                        @url.Value
+                    }
+
+                </li>
+            }
+        </ul>
+        @if (User.Identity.Name.Equals(ViewBag.Username, StringComparison.OrdinalIgnoreCase))
+        {
+            <li id="url_no_results" style="display: none; font-size: 16px;">
+                @ViewBag.CustomBib has not yet identified any particular areas of formal education.
+            </li>
+        }
+    </div>
+}
+else
+{
+    <div style="margin-bottom: 12px;">
+        You have not entered any external links.
+    </div>
+}
+@if (Model != null && User.Identity.Name.Equals(ViewBag.Username, StringComparison.OrdinalIgnoreCase))
+{
+    @*<form method="POST" action="@Url.Action(MVC.People.Urls())">*@
+        <input type="text" placeholder="Enter external link" name="value" style="width:240px;" data-bind="link" />
+        <button href="#" class="button" style="margin:0;">
+            <img alt="" src="~/images/icons/plus/plus-24-green-disc.png" title="Add a new link."
+                 style="cursor: pointer; margin: 0" />
+            <span data-bind="click: addUrl" style="font-size: 16px; display: inline-block; line-height: 20px; vertical-align: middle;">Add</span>
+        </button>
+}

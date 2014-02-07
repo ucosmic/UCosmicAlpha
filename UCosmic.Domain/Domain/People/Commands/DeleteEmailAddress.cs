@@ -48,10 +48,10 @@ namespace UCosmic.Domain.People
             return person.RevisionId == command.PersonId;
         }
 
-        private bool NotBeDefaultEmailAddress(DeleteEmailAddress command, int number)
+        private bool NotBeDefaultEmailAddress(DeleteEmailAddress command, int personId)
         {
-            var emailAddress = _queries.Execute(new MyEmailAddressByNumber(command.Principal, number));
-            return emailAddress.IsDefault;
+            var emailAddress = _queries.Execute(new MyEmailAddressByNumber(command.Principal, command.EmailAddressNumber));
+            return !emailAddress.IsDefault;
         }
     }
 

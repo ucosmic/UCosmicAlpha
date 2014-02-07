@@ -3079,6 +3079,9 @@ namespace Links
                 public static readonly string Server_ts = Url("Server.ts");
                 public static readonly string Server_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Server.min.js") ? Url("Server.min.js") : Url("Server.js");
                               
+                public static readonly string Urls_ts = Url("Urls.ts");
+                public static readonly string Urls_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Urls.min.js") ? Url("Urls.min.js") : Url("Urls.js");
+                              
             }
         
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]

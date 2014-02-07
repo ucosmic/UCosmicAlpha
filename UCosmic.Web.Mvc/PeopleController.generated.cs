@@ -85,6 +85,12 @@ namespace UCosmic.Web.Mvc.Controllers
         }
         [NonAction]
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public System.Web.Mvc.ActionResult GetUrls()
+        {
+            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.GetUrls);
+        }
+        [NonAction]
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public System.Web.Mvc.ActionResult Languages()
         {
             return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Languages);
@@ -130,6 +136,7 @@ namespace UCosmic.Web.Mvc.Controllers
             public readonly string Degrees = "Degrees";
             public readonly string GetAffiliations = "GetAffiliations";
             public readonly string GetEmails = "GetEmails";
+            public readonly string GetUrls = "GetUrls";
             public readonly string Languages = "Languages";
             public readonly string GlobalExpertises = "GlobalExpertises";
             public readonly string Emails = "Emails";
@@ -146,6 +153,7 @@ namespace UCosmic.Web.Mvc.Controllers
             public const string Degrees = "Degrees";
             public const string GetAffiliations = "GetAffiliations";
             public const string GetEmails = "GetEmails";
+            public const string GetUrls = "GetUrls";
             public const string Languages = "Languages";
             public const string GlobalExpertises = "GlobalExpertises";
             public const string Emails = "Emails";
@@ -211,6 +219,14 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             public readonly string personId = "personId";
         }
+        static readonly ActionParamsClass_GetUrls s_params_GetUrls = new ActionParamsClass_GetUrls();
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public ActionParamsClass_GetUrls GetUrlsParams { get { return s_params_GetUrls; } }
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public class ActionParamsClass_GetUrls
+        {
+            public readonly string personId = "personId";
+        }
         static readonly ActionParamsClass_Languages s_params_Languages = new ActionParamsClass_Languages();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public ActionParamsClass_Languages LanguagesParams { get { return s_params_Languages; } }
@@ -267,6 +283,7 @@ namespace UCosmic.Web.Mvc.Controllers
                 public readonly string _PersonalInfoEditor = "_PersonalInfoEditor";
                 public readonly string _SearchSidebarNav = "_SearchSidebarNav";
                 public readonly string _SidebarNav = "_SidebarNav";
+                public readonly string _Urls = "_Urls";
                 public readonly string Activities = "Activities";
                 public readonly string Degrees = "Degrees";
                 public readonly string GlobalExpertises = "GlobalExpertises";
@@ -286,6 +303,7 @@ namespace UCosmic.Web.Mvc.Controllers
             public readonly string _PersonalInfoEditor = "~/Views/People/_PersonalInfoEditor.cshtml";
             public readonly string _SearchSidebarNav = "~/Views/People/_SearchSidebarNav.cshtml";
             public readonly string _SidebarNav = "~/Views/People/_SidebarNav.cshtml";
+            public readonly string _Urls = "~/Views/People/_Urls.cshtml";
             public readonly string Activities = "~/Views/People/Activities.cshtml";
             public readonly string Degrees = "~/Views/People/Degrees.cshtml";
             public readonly string GlobalExpertises = "~/Views/People/GlobalExpertises.cshtml";
@@ -347,6 +365,13 @@ namespace UCosmic.Web.Mvc.Controllers
         public override System.Web.Mvc.ActionResult GetEmails(int personId)
         {
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.GetEmails);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "personId", personId);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.ActionResult GetUrls(int personId)
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.GetUrls);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "personId", personId);
             return callInfo;
         }

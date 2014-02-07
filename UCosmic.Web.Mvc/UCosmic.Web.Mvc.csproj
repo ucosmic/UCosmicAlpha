@@ -319,6 +319,7 @@
     <Compile Include="ApiControllers\Expertise\GeographicExpertiseController.cs" />
     <Compile Include="ApiControllers\Expertise\LanguageExpertiseController.cs" />
     <Compile Include="ApiControllers\People\AffiliationsController.cs" />
+    <Compile Include="Models\People\PersonUrlViewModel.cs" />
     <Compile Include="Models\People\PersonUrlApiModel.cs" />
     <Compile Include="ApiControllers\People\PersonUrlsController.cs" />
     <Compile Include="ApiControllers\Places\PlaceNamesController.cs" />
@@ -2167,6 +2168,7 @@
     <Content Include="scripts\viewmodels\establishments\Location.js">
       <DependentUpon>Location.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="scripts\viewmodels\people\Urls.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\people\Global.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\people\Degrees.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\people\Languages.ts" />
@@ -2235,6 +2237,9 @@
     </Content>
     <Content Include="scripts\viewmodels\people\Server.js">
       <DependentUpon>Server.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\people\Urls.js">
+      <DependentUpon>Urls.ts</DependentUpon>
     </Content>
     <Content Include="scripts\viewmodels\places\Utils.js">
       <DependentUpon>Utils.ts</DependentUpon>
@@ -2661,6 +2666,7 @@
     <Content Include="Views\Employees\Map.cshtml" />
     <Content Include="Views\Employees\DegreesTable.cshtml" />
     <Content Include="Views\Employees\Experts.cshtml" />
+    <Content Include="Views\People\_Urls.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

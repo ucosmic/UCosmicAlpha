@@ -1,64 +1,21 @@
 ﻿@model UCosmic.Web.Mvc.Models.PersonEmailAddressesViewModel
 
 @* EMAILS *@
-    <div style="float:left; width: 360px;">
-        @if (Model != null && Model.Emails.Any())
-        {
-            <div>
-                <ul>
-                    @foreach (var emailAddress in Model.Emails)
-                    {
-                        <li>
+    @if (Model != null && Model.Emails.Any())
+    {
+        <div>
+            <ul>
+                @foreach (var emailAddress in Model.Emails)
+                {
+                    <li>
 
-                            @if (emailAddress.IsDefault)
-                            {
-                                <div @if (User.Identity.Name.Equals(Model.Username, StringComparison.OrdinalIgnoreCase)) { @Html.Raw("style='margin-bottom:12px;'")  }>
-                                    <strong>
-                                        @if (emailAddress.IsConfirmed)
-                                        {
-                                            <a href='mailTo:@emailAddress.Value'>
-                                                @emailAddress.Value
-                                            </a>
-                                        }
-                                        else
-                                        {
-                                            @emailAddress.Value
-                                        }
-                                    </strong>
-                                    <span style="color: #666;"> (default)</span>
-                                </div>
-                            }
-                            else
-                            {
-                                if (User.Identity.Name.Equals(Model.Username, StringComparison.OrdinalIgnoreCase))
-                                {
-                                    @*<form action="@Url.Action(MVC.Emails.Delete())" method="POST">
-                                            DELETE /people/{personId}/emails/{number
-                                        <form method="POST" action="@Url.Action(MVC.People.Emails())">
-                                    *@
-                                    <form method="POST" action="">
-                                        @Html.HttpMethodOverride(HttpVerbs.Delete)
-                                        @if (emailAddress.IsConfirmed)
-                                        {
-                                            <a  href='mailTo:@emailAddress.Value'>
-                                                @emailAddress.Value
-                                            </a>
-                                        }
-                                        else
-                                        {
-                                            @emailAddress.Value
-                                        }
-                                        <button class="link">
-                                            <img alt="" src="~/images/icons/minus/minus-24-red.png" title="Delete this email"
-                                                 style="cursor: pointer; margin: 5px 0 8px 8px;" />
-                                        </button>
-                                    </form>
-                                }
-                                else
-                                {
-                                    if (emailAddress.IsConfirmed)
+                        @if (emailAddress.IsDefault)
+                        {
+                            <div @if (User.Identity.Name.Equals(Model.Username, StringComparison.OrdinalIgnoreCase)) { @Html.Raw("style='margin-bottom:12px;'")   }>
+                                <strong>
+                                    @if (emailAddress.IsConfirmed)
                                     {
-                                        <a style="margin-top: 12px; display: block;" href='mailTo:@emailAddress.Value'>
+                                        <a href='mailTo:@emailAddress.Value'>
                                             @emailAddress.Value
                                         </a>
                                     }
@@ -66,23 +23,64 @@
                                     {
                                         @emailAddress.Value
                                     }
+                                </strong>
+                                <span style="color: #666;"> (default)</span>
+                            </div>
+                        }
+                        else
+                        {
+                            if (User.Identity.Name.Equals(Model.Username, StringComparison.OrdinalIgnoreCase))
+                            {
+                                @*<form action="@Url.Action(MVC.Emails.Delete())" method="POST">
+                                        DELETE /people/{personId}/emails/{number
+                                    <form method="POST" action="@Url.Action(MVC.People.Emails())">
+                                *@
+                                <form method="POST" action="@Url.Action(MVC.People.DeleteEmail(emailAddress.PersonId, emailAddress.Number))">
+                                @Html.HttpMethodOverride(HttpVerbs.Delete)
+                                @if (emailAddress.IsConfirmed)
+                                {
+                                        <a href='mailTo:@emailAddress.Value'>
+                                        @emailAddress.Value
+                                        </a>
+                                }
+                                else
+                                {
+                                    @emailAddress.Value
+                                }
+                                <button class="link">
+                                <img alt="" src="~/images/icons/minus/minus-24-red.png" title="Delete this email"
+                                style="cursor: pointer; margin: 5px 0 8px 8px;" />
+                                </button>
+                                </form>
+                            }
+                            else
+                            {
+                                if (emailAddress.IsConfirmed)
+                                {
+                                    <a style="margin-top: 12px; display: block;" href='mailTo:@emailAddress.Value'>
+                                        @emailAddress.Value
+                                    </a>
+                                }
+                                else
+                                {
+                                    @emailAddress.Value
                                 }
                             }
-                        </li>
-                    }
-                </ul>
-            </div>
-        }
-        @if (Model != null && User.Identity.Name.Equals(Model.Username, StringComparison.OrdinalIgnoreCase))
-        {
+                        }
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+    @if (Model != null && User.Identity.Name.Equals(Model.Username, StringComparison.OrdinalIgnoreCase))
+    {
 
-            <form method="POST" action="@Url.Action(MVC.People.Emails())">
-                <input type="email" placeholder="Enter alternate email address" name="value" style="width:240px;" />
-                <button href="#" class="button" style="margin:0;">
-                    <img alt="" src="~/images/icons/plus/plus-24-green-disc.png" title="Add a new email."
-                         style="cursor: pointer; margin: 0" />
-                    <span style="font-size: 16px; display: inline-block; line-height: 20px; vertical-align: middle;">Add</span>
-                </button>
-            </form>
-        }
-    </div>
+        <form method="POST" action="@Url.Action(MVC.People.Emails())">
+            <input type="email" placeholder="Enter alternate email address" name="value" style="width:240px;" />
+            <button href="#" class="button" style="margin:0;">
+                <img alt="" src="~/images/icons/plus/plus-24-green-disc.png" title="Add a new email."
+                     style="cursor: pointer; margin: 0" />
+                <span style="font-size: 16px; display: inline-block; line-height: 20px; vertical-align: middle;">Add</span>
+            </button>
+        </form>
+    }

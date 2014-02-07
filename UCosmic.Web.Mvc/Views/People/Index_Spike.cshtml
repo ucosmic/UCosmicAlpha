@@ -110,7 +110,12 @@
             @* CONTACT INFORMATION *@
             <section class="content fixed to-top">
                 <h2 style="font-size: 24px; padding-bottom: 1em;">Contact Information</h2>
-                @Html.Action(MVC.People.GetEmails())
+                <div style="float:left; width: 360px;">
+                    @Html.Action(MVC.People.GetEmails())
+                </div>
+                <div style="float:right;">
+                    @Html.Action(MVC.People.GetUrls())
+                </div>
             </section>
         </div>
         <aside class="on-right from-top" data-fixed-scroll="root">

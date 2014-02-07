@@ -172,6 +172,19 @@ namespace UCosmic.Web.Mvc.Controllers
             return model == null ? null : PartialView(MVC.People.Views._Emails, model);
         }
 
+        [GET("people/{personId:int}/urls")]
+        [ChildActionOnly]
+        public virtual ActionResult GetUrls(int personId)
+        {
+            var entity = _queryProcessor.Execute(new ExternalUrlsBy(personId));
+
+            //var model = Mapper.Map<PersonUrlsViewModel>(entity);
+            var model = Mapper.Map<PersonUrlViewModel[]>(entity);
+
+            var personModel = GetPerson(personId);
+            ViewBag.Username = personModel.Username;
+            return model == null ? null : PartialView(MVC.People.Views._Urls, model);
+        }
         [CurrentModuleTab(ModuleTab.Employees)]
         [GET("people/{personId:int}/language-expertise")]
         public virtual ActionResult Languages(int personId)
