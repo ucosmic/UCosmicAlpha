@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Text;
 
 namespace UCosmic.Domain.People
 {
@@ -31,6 +33,7 @@ namespace UCosmic.Domain.People
 
             if (peopleWithoutEmailAddress.Length < 1) return;
 
+            var fixedPeople = new List<string>();
             foreach (var person in peopleWithoutEmailAddress)
             {
                 var emailValue = person.User.Name;
@@ -45,7 +48,20 @@ namespace UCosmic.Domain.People
                     Number = 1,
                     Value = emailValue,
                 });
+                var fixedPerson = new StringBuilder();
+                fixedPerson.Append(person.DisplayName);
+                fixedPerson.Append(string.Format(" - NetID: {0}", person.User.Name));
+                fixedPerson.Append(string.Format(", email = {0}", emailValue));
+                fixedPeople.Add(fixedPerson.ToString());
             }
+
+            fixedPeople = fixedPeople.OrderBy(x => x).ToList();
+            var output = new StringBuilder();
+            foreach (var item in fixedPeople)
+            {
+                output.AppendLine(item);
+            }
+            var inspect = output.ToString();
 
             _entities.SaveChanges();
         }
