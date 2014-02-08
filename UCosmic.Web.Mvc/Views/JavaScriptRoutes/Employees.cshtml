@@ -115,3 +115,14 @@ Routes.Mvc.Employees.Activities.detail = function (activityId) {
         activityId = routeWriter.Value<int>(0),
     }))'.format(activityId);
 };
+
+
+Routes.Mvc.Employees.Degrees = Routes.Mvc.Employees.Degrees || {};
+Routes.Mvc.Employees.Degrees.detail = function (personId) {
+    return '@routeWriter.WriteRoute(Url.RouteUrl(new
+    {
+        controller = MVC.People.Name,
+        action = MVC.People.ActionNames.Degrees,
+        personId = routeWriter.Value<int>(0),
+    }))'.format(personId);
+};

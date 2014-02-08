@@ -26,19 +26,25 @@ namespace UCosmic.Web.Mvc.Controllers
         }
 
         [Authorize]
+        [CurrentModuleTab(ModuleTab.Employees)]
         [GET("my/degrees/new", ControllerPrecedence = 1)]
         public virtual ActionResult NewDegree()
         {
+            var person = _queryProcessor.Execute(new MyPerson(User));
             ViewBag.DegreeId = 0;
+            ViewBag.PersonId = person.RevisionId;
             return View(MVC.MyProfile.Views.DegreeForm);
         }
 
         [Authorize]
+        [CurrentModuleTab(ModuleTab.Employees)]
         [GET("my/degrees/{degreeId:int}")]
         [GET("my/degrees/{degreeId:int}/edit", ActionPrecedence = 1)]
         public virtual ActionResult EditDegree(int degreeId)
         {
+            var person = _queryProcessor.Execute(new MyPerson(User));
             ViewBag.DegreeId = degreeId;
+            ViewBag.PersonId = person.RevisionId;
             return View(MVC.MyProfile.Views.DegreeForm);
         }
 

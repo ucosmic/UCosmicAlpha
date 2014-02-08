@@ -1,5 +1,17 @@
-﻿@{
+﻿@using UCosmic.Web.Mvc.Models
+@{
     ViewBag.Title = "My Formal Education";
+}
+
+@section bib
+{
+    <nav class="bib">
+        @Html.Partial(MVC.Employees.Views._Bib, new EmployeesBibNavModel
+        {
+            Other = new KeyValuePair<string, string>("My Formal Education &raquo;", Url.Action(MVC.People.Degrees((int)ViewBag.PersonId, null))),
+            Custom = ViewBag.DegreeId == 0 ? "New" : "Edit",
+        })
+    </nav>
 }
 
 @section styles
@@ -28,11 +40,15 @@
 
 @section scripts
 {
+    <script>
+        @{ Html.RenderPartial(MVC.JavaScriptRoutes.Views.Employees); }
+    </script>
+
     @Scripts.Render("~/bundles/degree")
 
     <script type="text/javascript">
         $(function () {
-            var degreeViewModel = new ViewModels.Degrees.Degree(@ViewBag.DegreeId);
+            var degreeViewModel = new ViewModels.Degrees.Degree('@ViewBag.DegreeId', '@ViewBag.PersonId');
             degreeViewModel.load()
                 .done(function () {
                     degreeViewModel.setupWidgets("institution");
@@ -48,14 +64,7 @@
     </script>
 }
 
-@section bib
-{
-    <nav class="bib hide" data-current-bib="my">
-        @Html.Partial(MVC.Home.Views._Bib)
-    </nav>
-}
-
-<div class="content fixed to-top" data-current-module="home">
+<div class="content fixed to-top" id="degree_editor">
     <div data-side-swiper="root">
         <div data-side-swiper="deck">
             <div data-side-swiper="on">
@@ -199,7 +208,7 @@
 <script type="text/html" id="buttons-template">
     <span style="width: 540px; display: block;">
         <input type="button" value="Save" data-bind="click: function (item, event) { save(item, event, 'Save'); }, clickBubble: false" />
-        <input type="button" value="Guide Me" style="margin-left: 50px" />
+        @*<input type="button" value="Guide Me" style="margin-left: 50px" />*@
         <input type="button" value="Cancel" style="float: right" data-bind="click: function (item, event) { cancel(item, event); }, clickBubble: false" />
     </span>
 </script>

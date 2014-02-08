@@ -13,7 +13,7 @@ module ViewModels.Degrees {
         /* IObservableDegree implemented */
         id: KnockoutObservable<number>;
         version: KnockoutObservable<string>;
-        personId: KnockoutObservable<number>;
+        personId = ko.observable<number>();
         whenLastUpdated: KnockoutObservable<string>;
         whoLastUpdated: KnockoutObservable<string>;
         title: KnockoutObservable<string>;
@@ -109,8 +109,9 @@ module ViewModels.Degrees {
             this.institutionId.subscribe((newValue: any): void => { this.dirtyFlag(true); this.almaMaterErrorMsg(''); });
         }
 
-        constructor(educationId: number) {
-            this._initialize(educationId);
+        constructor(educationId: string, personId: string) {
+            this.personId(parseInt(personId));
+            this._initialize(parseInt(educationId));
         }
 
         load(): JQueryPromise<any> {
@@ -119,7 +120,7 @@ module ViewModels.Degrees {
             this.almaMaterErrorMsg = ko.observable('');
             if (this.id() == 0) {
                 this.version = ko.observable(null);
-                this.personId = ko.observable(0);
+                //this.personId = ko.observable(0);
                 this.title = ko.observable(null);
                 this.fieldOfStudy = ko.observable(null);
                 this.yearAwarded = ko.observable(null);
@@ -218,7 +219,8 @@ module ViewModels.Degrees {
                     App.Failures.message(xhr, 'while trying to save your degree', true);
                 },
                 complete: (jqXhr: JQueryXHR, textStatus: string): void => {
-                    location.href = App.Routes.Mvc.My.Profile.get() + '#/formal-education';
+                    //location.href = App.Routes.Mvc.My.Profile.get() + '#/formal-education';
+                    location.href = Routes.Mvc.Employees.Degrees.detail(this.personId());
                 }
             });
         }
@@ -235,13 +237,14 @@ module ViewModels.Degrees {
                         },
                         "Cancel and lose changes": function () {
                             $(this).dialog("close");
-                            location.href = App.Routes.Mvc.My.Profile.get("formal-education");
+                            location.href = Routes.Mvc.Employees.Degrees.detail(this.personId());
                         }
                     }
                 });
             } else {
                 //location.href = App.Routes.Mvc.My.Profile.get() + '#/formal-education';
-                history.back();
+                //history.back();
+                location.href = Routes.Mvc.Employees.Degrees.detail(this.personId());
             }
         }
 

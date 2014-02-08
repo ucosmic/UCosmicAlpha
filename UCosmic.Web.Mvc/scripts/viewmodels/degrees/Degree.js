@@ -1,11 +1,13 @@
-var ViewModels;
+﻿var ViewModels;
 (function (ViewModels) {
     (function (Degrees) {
         var Degree = (function () {
-            function Degree(educationId) {
+            function Degree(educationId, personId) {
                 this.dirtyFlag = ko.observable(false);
                 this.hasBoundSearch = false;
-                this._initialize(educationId);
+                this.personId = ko.observable();
+                this.personId(parseInt(personId));
+                this._initialize(parseInt(educationId));
             }
             Degree.prototype._initialize = function (degreeId) {
                 this.id = ko.observable(degreeId);
@@ -84,7 +86,7 @@ var ViewModels;
                 this.almaMaterErrorMsg = ko.observable('');
                 if (this.id() == 0) {
                     this.version = ko.observable(null);
-                    this.personId = ko.observable(0);
+
                     this.title = ko.observable(null);
                     this.fieldOfStudy = ko.observable(null);
                     this.yearAwarded = ko.observable(null);
@@ -128,6 +130,7 @@ var ViewModels;
             };
 
             Degree.prototype.save = function (viewModel, event) {
+                var _this = this;
                 if (!this.isValid()) {
                     this.errors.showAllMessages();
                     if (!this.institutionId()) {
@@ -173,7 +176,7 @@ var ViewModels;
                         App.Failures.message(xhr, 'while trying to save your degree', true);
                     },
                     complete: function (jqXhr, textStatus) {
-                        location.href = App.Routes.Mvc.My.Profile.get() + '#/formal-education';
+                        location.href = Routes.Mvc.Employees.Degrees.detail(_this.personId());
                     }
                 });
             };
@@ -190,12 +193,12 @@ var ViewModels;
                             },
                             "Cancel and lose changes": function () {
                                 $(this).dialog("close");
-                                location.href = App.Routes.Mvc.My.Profile.get("formal-education");
+                                location.href = Routes.Mvc.Employees.Degrees.detail(this.personId());
                             }
                         }
                     });
                 } else {
-                    history.back();
+                    location.href = Routes.Mvc.Employees.Degrees.detail(this.personId());
                 }
             };
 
