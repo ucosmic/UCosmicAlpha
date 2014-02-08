@@ -1,4 +1,4 @@
-var ViewModels;
+﻿var ViewModels;
 (function (ViewModels) {
     (function (Degrees) {
         var EstablishmentSearchNav = (function () {
@@ -21,7 +21,7 @@ var ViewModels;
             }
             EstablishmentSearchNav.prototype.SearchPageBind = function (parentOrParticipant) {
                 var _this = this;
-                var $cancelAddParticipant = $("#cancelAddParticipant"), $searchSideBarAddNew = $("#searchSideBarAddNew"), deferred = $.Deferred(), deferred2 = $.Deferred(), $obj = $("[data-current-module='degrees']"), $obj2 = $("#add_establishment"), time = 500;
+                var $cancelAddParticipant = $("#cancelAddParticipant"), $searchSideBarAddNew = $("#searchSideBarAddNew"), deferred = $.Deferred(), deferred2 = $.Deferred(), $obj = $("[data-current-module=degrees]"), $obj2 = $("#add_establishment"), time = 500;
 
                 this.establishmentSearchViewModel.detailTooltip = function () {
                     return 'Choose this Institution as a ' + parentOrParticipant;
@@ -94,7 +94,7 @@ var ViewModels;
                             var $asideRootSearch = $("#asideRootSearch"), $asideParentSearch = $("#asideParentSearch");
 
                             if (_this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("" + _this.sammyUrl + "#/new/") > 0) {
-                                var $addEstablishment = $("#add_establishment"), deferred = $.Deferred(), deferred2 = $.Deferred(), $obj = $("#establishment_search"), $obj2 = $("[data-current-module='home']"), time = 500;
+                                var $addEstablishment = $("#add_establishment"), deferred = $.Deferred(), deferred2 = $.Deferred(), $obj = $("#establishment_search"), $obj2 = $("[data-current-module=home]"), time = 500;
 
                                 _this.fadeModsOut(deferred, deferred2, $obj, $obj2, time);
                                 $.when(deferred, deferred2).done(function () {
@@ -182,7 +182,7 @@ var ViewModels;
                                 });
                                 _this.lastURL = "#/new/";
                             } else if (_this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("" + _this.sammyUrl + "#/page/") > 0) {
-                                var establishment_search = $("#establishment_search"), deferred = $.Deferred(), deferred2 = $.Deferred(), $obj = $("[data-current-module='home']"), $obj2 = $("#add_establishment"), time = 500;
+                                var establishment_search = $("#establishment_search"), deferred = $.Deferred(), deferred2 = $.Deferred(), $obj = $("[data-current-module=home]"), $obj2 = $("#add_establishment"), time = 500;
 
                                 _this.lastURL = 'asdf';
 
@@ -228,7 +228,7 @@ var ViewModels;
                                 _this.establishmentSearchViewModel.sammy.setLocation('#/index');
                                 _this.fadeModsOut(deferred, deferred2, $obj, $obj2, time);
                                 $.when(deferred, deferred2).done(function () {
-                                    $("[data-current-module='home']").fadeIn(500).promise().done(function () {
+                                    $("[data-current-module=home]").fadeIn(500).promise().done(function () {
                                         $(_this).show();
                                     });
                                 });

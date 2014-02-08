@@ -48,7 +48,7 @@ module Agreements {
                 $searchSideBarAddNew = $("#searchSideBarAddNew"),
                 deferred = $.Deferred(),
                 deferred2 = $.Deferred(),
-                $obj = $("[data-current-module='agreements']"),
+                $obj = $("[data-current-module=agreements]"),
                 $obj2 = $("#add_establishment"),
                 time = 500;
 
@@ -134,7 +134,7 @@ module Agreements {
                             deferred = $.Deferred(),
                             deferred2 = $.Deferred(),
                             $obj = $("#establishment_search"),
-                            $obj2 = $("[data-current-module='agreements']"),
+                            $obj2 = $("[data-current-module=agreements]"),
                             time = 500;
                             this.fadeModsOut(deferred, deferred2, $obj, $obj2, time);
                             $.when(deferred, deferred2)
@@ -392,8 +392,8 @@ module Agreements {
                             this.fadeModsOut(deferred, deferred2, $obj, $obj2, time);
                             $.when(deferred, deferred2)
                                 .done(() => {
-                                    $("[data-current-module='agreements']").fadeIn(500).promise().done(() => {
-                                        $("[data-current-module='agreements']").find("aside").find("li").removeClass("current");
+                                    $("[data-current-module=agreements]").fadeIn(500).promise().done(() => {
+                                        $("[data-current-module=agreements]").find("aside").find("li").removeClass("current");
                                         $("#nav_participants").addClass("current");
                                         $(this).show();
                                         this.scrollBody.scrollMyBody(0);

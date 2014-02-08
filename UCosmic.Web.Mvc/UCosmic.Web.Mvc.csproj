@@ -319,6 +319,7 @@
     <Compile Include="ApiControllers\Expertise\GeographicExpertiseController.cs" />
     <Compile Include="ApiControllers\Expertise\LanguageExpertiseController.cs" />
     <Compile Include="ApiControllers\People\AffiliationsController.cs" />
+    <Compile Include="Helpers\SessionExtensions.cs" />
     <Compile Include="Models\People\PersonUrlViewModel.cs" />
     <Compile Include="Models\People\PersonUrlApiModel.cs" />
     <Compile Include="ApiControllers\People\PersonUrlsController.cs" />

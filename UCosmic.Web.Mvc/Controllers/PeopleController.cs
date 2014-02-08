@@ -10,7 +10,6 @@ using AutoMapper;
 using UCosmic.Domain.Activities;
 using UCosmic.Domain.Degrees;
 using UCosmic.Domain.LanguageExpertise;
-using Expression = Microsoft.Ajax.Utilities.Expression;
 
 namespace UCosmic.Web.Mvc.Controllers
 {
@@ -28,8 +27,7 @@ namespace UCosmic.Web.Mvc.Controllers
         }
 
         [CurrentModuleTab(ModuleTab.Employees)]
-        [GET("people/{personId:int}")]
-        public virtual ActionResult Index(int personId)
+        public virtual ActionResult Index_Old(int personId)
         {
             var person = _queryProcessor.Execute(new PersonById(personId));
             if (person == null) return HttpNotFound();
@@ -38,7 +36,7 @@ namespace UCosmic.Web.Mvc.Controllers
             ViewBag.personId = personId;
             ViewBag.UserName = person.User != null ? person.User.Name : null;
             ViewBag.currentPage = "profile";
-            return View();
+            return View(MVC.People.Views.Index);
         }
 
         [GET("people/{personId:int}/card")]
@@ -54,8 +52,21 @@ namespace UCosmic.Web.Mvc.Controllers
         }
 
         [CurrentModuleTab(ModuleTab.Employees)]
+        [GET("person")]
+        public virtual ActionResult Me()
+        {
+            var myPerson = _queryProcessor.Execute(new MyPerson(User));
+            if (myPerson == null) return View(MVC.Errors.Views.Forbidden);
+            var personId = myPerson.RevisionId;
+
+            ViewBag.IsMyProfile = true;
+            return Index(personId);
+        }
+
+        [CurrentModuleTab(ModuleTab.Employees)]
+        [GET("people/{personId:int}", ActionPrecedence = 1)]
         [GET("people/{personId:int}/index_spike")]
-        public virtual ActionResult Index_Spike(int personId)
+        public virtual ActionResult Index(int personId)
         {
             ViewBag.personId = personId;
             ViewBag.currentPage = "profile";
@@ -65,7 +76,9 @@ namespace UCosmic.Web.Mvc.Controllers
                 return HttpNotFound();
             }
             ViewBag.CustomBib = model.DisplayName;
-            return View(MVC.People.Views.Index_Spike, model);
+            ViewBag.IsMyProfile = ViewBag.IsMyProfile ?? false;
+            ViewBag.Username = model.Username;
+            return View(ViewBag.IsMyProfile ? MVC.People.Views.Index_Spike : MVC.People.Views.Index, model);
         }
 
         [CurrentModuleTab(ModuleTab.Employees)]
@@ -182,9 +195,11 @@ namespace UCosmic.Web.Mvc.Controllers
             var model = Mapper.Map<PersonUrlViewModel[]>(entity);
 
             var personModel = GetPerson(personId);
+            ViewBag.PersonName = personModel.DisplayName;
             ViewBag.Username = personModel.Username;
             return model == null ? null : PartialView(MVC.People.Views._Urls, model);
         }
+
         [CurrentModuleTab(ModuleTab.Employees)]
         [GET("people/{personId:int}/language-expertise")]
         public virtual ActionResult Languages(int personId)

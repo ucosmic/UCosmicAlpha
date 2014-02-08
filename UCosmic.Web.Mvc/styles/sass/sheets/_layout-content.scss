@@ -66,7 +66,7 @@ body {
                             &:first-child > a > .text, &:first-child > div.no-link > .text {
                                 @include border-radius(8px 8px 0 0);
                             }
-                            &:first-child.current > a > .text {
+                            &:first-child.current > a > .text, &:first-child.current > div.no-link > .text {
                                 @include border-radius(0 8px 0 0);
                             }
                             &:last-child > a > .text, &:last-child.static .content {
@@ -119,11 +119,11 @@ body {
                                 background-color: $sidebar-hover-bg-color;
                                 color: $sidebar-hover-text-color;
                             }
-                            &.current > a > .arrow {
+                            &.current > a > .arrow, &.current > div.no-link > .arrow {
                                 border-right-color: $sidebar-current-bg-color;
                                 cursor: default;
                             }
-                            &.current > a > .text {
+                            &.current > a > .text, &.current > div.no-link > .text {
                                 background-color: $sidebar-current-bg-color;
                                 color: $sidebar-current-text-color;
                                 cursor: default;
@@ -161,6 +161,16 @@ body {
                                     }
                                 }
                             }
+                            > div.no-link .text a {
+                                text-decoration: underline;
+                                font-weight: normal;
+                                &:hover {
+                                    text-decoration: none;
+                                }
+                            }
+                            &.current > div.no-link .text a {
+                                color: $sidebar-content-text-color;
+                            }
                         }
                         &.top {
                             > li {
@@ -177,10 +187,10 @@ body {
                         }
                         &.bottom {
                             > li {
-                                &:first-child > a > .text {
+                                &:first-child > a > .text, &:first-child > div.no-link > .text {
                                     @include border-radius(0);
                                 }
-                                &:first-child.current > a > .text {
+                                &:first-child.current > a > .text, &:first-child.current > div.no-link > .text {
                                     @include border-radius(0);
                                 }
                             }

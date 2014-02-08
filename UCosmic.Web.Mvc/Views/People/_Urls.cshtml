@@ -47,7 +47,14 @@
 else
 {
     <div style="margin-bottom: 12px;">
-        You have not entered any external links.
+        @if (User.Identity.Name.Equals((string) ViewBag.Username, StringComparison.OrdinalIgnoreCase))
+        {
+            <text>You have not entered any external links.</text>
+        }
+        else
+        {
+            <text>@ViewBag.PersonName has not added any external links.</text>
+        }
     </div>
 }
 @if (Model != null && User.Identity.Name.Equals(ViewBag.Username, StringComparison.OrdinalIgnoreCase))

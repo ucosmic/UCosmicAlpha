@@ -44,7 +44,7 @@
                             var customProfileTitle = (tenancy != null && !string.IsNullOrWhiteSpace(tenancy.CustomProfileTitle))
                                 ? tenancy.CustomProfileTitle : "My UCosmic Profile";
 
-                            <a class="principal" href="@Url.Action(MVC.MyProfile.Index())"><span>@principal</span><span class="tenant-domain">@tenantDomain</span> - @customProfileTitle</a>
+                            <a class="principal" href="@Url.Action(MVC.People.Me())"><span>@principal</span><span class="tenant-domain">@tenantDomain</span> - @customProfileTitle</a>
 
                             var userImpersonating = Session.UserImpersonating();
                             if (userImpersonating != null)
@@ -74,7 +74,15 @@
                 <a href="@Url.Action(hasStyleDomain ? MVC.Agreements.TenantIndex(styleDomain) : MVC.Agreements.Index())">Agreements</a>
             </li>
             <li class="employees @ViewBag.EmployeesModuleTab">
-                <a href="@Url.Action(hasStyleDomain ? MVC.Employees.TenantIndex(styleDomain) : MVC.Employees.Index())">Faculty & Staff</a>
+                @{
+                    var employeesHref = Url.Action(hasStyleDomain ? MVC.Employees.TenantIndex(styleDomain) : MVC.Employees.Index());
+                    var lastEmployeeLens = Session.LastEmployeeLens();
+                    if (lastEmployeeLens != null && lastEmployeeLens.StartsWith(string.Format("/{0}/", styleDomain)))
+                    {
+                        employeesHref = lastEmployeeLens;
+                    }
+                }
+                <a href="@employeesHref">Faculty & Staff</a>
             </li>
             @*<li class="alumni">
                     <a href="@Url.Action(MVC.Home.Alumni())">Alumni</a>
@@ -145,7 +153,7 @@
                         </a>
                     </li>
                     <li class="employees">
-                        <a href="@Url.Action(hasStyleDomain ? MVC.Employees.TenantIndex(styleDomain) : MVC.Employees.Index())">
+                        <a href="@employeesHref">
                             Faculty & Staff
                         </a>
                     </li>

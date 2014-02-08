@@ -10,6 +10,7 @@ module Activities.ViewModels {
         private _originalId: number;
 
         activityId: KnockoutObservable<number>;
+        personId: KnockoutObservable<number>;
         mode = ko.observable<ActivityMode>();
         title: KnockoutObservable<string>;
         content: KnockoutObservable<string>;
@@ -340,7 +341,9 @@ module Activities.ViewModels {
                     })
                         .done(() => {
                             this._isSaved = true; // prevent tinymce onbeforeunload from updating again
-                            location.href = App.Routes.Mvc.My.Profile.get();
+                            location.href = mode == 'Draft'
+                                ? Routes.Mvc.Employees.Activities.byPerson(this.personId())
+                                : Routes.Mvc.Employees.Activities.detail(this._originalId);
                         })
                         .fail((xhr: JQueryXHR): void => {
                             App.Failures.message(xhr, 'while trying to save your activity', true);
@@ -388,7 +391,7 @@ module Activities.ViewModels {
                             this._purge()
                                 .done((): void => {
                                     this.$cancelDialog.dialog('close');
-                                    location.href = App.Routes.Mvc.My.Profile.get();
+                                    location.href = Routes.Mvc.Employees.Activities.byPerson(this.personId());
                                 })
                                 .fail((xhr: JQueryXHR): void => {
                                     App.Failures.message(xhr, 'while trying to discard your activity edits', true);

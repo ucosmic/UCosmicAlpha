@@ -25,7 +25,7 @@ namespace UCosmic.Web.Mvc
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
-            AreaRegistration.RegisterAllAreas();
+            //AreaRegistration.RegisterAllAreas();
             MvcHandler.DisableMvcResponseHeader = true;
 
             DependencyResolver.Current.GetService<ITriggerEvent<ApplicationStarted>>().Raise(new ApplicationStarted());

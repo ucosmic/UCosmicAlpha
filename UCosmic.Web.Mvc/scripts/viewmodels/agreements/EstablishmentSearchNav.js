@@ -1,4 +1,4 @@
-var Agreements;
+﻿var Agreements;
 (function (Agreements) {
     var InstitutionalAgreementParticipantModel = (function () {
         function InstitutionalAgreementParticipantModel(isOwner, establishmentId, establishmentOfficialName, establishmentTranslatedName) {
@@ -31,7 +31,7 @@ var Agreements;
         }
         EstablishmentSearchNav.prototype.SearchPageBind = function (parentOrParticipant) {
             var _this = this;
-            var $cancelAddParticipant = $("#cancelAddParticipant"), $searchSideBarAddNew = $("#searchSideBarAddNew"), deferred = $.Deferred(), deferred2 = $.Deferred(), $obj = $("[data-current-module='agreements']"), $obj2 = $("#add_establishment"), time = 500;
+            var $cancelAddParticipant = $("#cancelAddParticipant"), $searchSideBarAddNew = $("#searchSideBarAddNew"), deferred = $.Deferred(), deferred2 = $.Deferred(), $obj = $("[data-current-module=agreements]"), $obj2 = $("#add_establishment"), time = 500;
 
             this.establishmentSearchViewModel.detailTooltip = function () {
                 return 'Choose this establishment as a ' + parentOrParticipant;
@@ -108,7 +108,7 @@ var Agreements;
 
                         if (_this.establishmentSearchViewModel.sammy.getLocation().toLowerCase().indexOf("" + _this.editOrNewUrl.val + "#/new/") > 0) {
                             var $addEstablishment = $("#add_establishment");
-                            deferred = $.Deferred(), deferred2 = $.Deferred(), $obj = $("#establishment_search"), $obj2 = $("[data-current-module='agreements']"), time = 500;
+                            deferred = $.Deferred(), deferred2 = $.Deferred(), $obj = $("#establishment_search"), $obj2 = $("[data-current-module=agreements]"), time = 500;
                             _this.fadeModsOut(deferred, deferred2, $obj, $obj2, time);
                             $.when(deferred, deferred2).done(function () {
                                 $("#establishment_page").find("aside").find("li").removeClass("current");
@@ -331,8 +331,8 @@ var Agreements;
                             _this.establishmentSearchViewModel.sammy.setLocation('#/index');
                             _this.fadeModsOut(deferred, deferred2, $obj, $obj2, time);
                             $.when(deferred, deferred2).done(function () {
-                                $("[data-current-module='agreements']").fadeIn(500).promise().done(function () {
-                                    $("[data-current-module='agreements']").find("aside").find("li").removeClass("current");
+                                $("[data-current-module=agreements]").fadeIn(500).promise().done(function () {
+                                    $("[data-current-module=agreements]").find("aside").find("li").removeClass("current");
                                     $("#nav_participants").addClass("current");
                                     $(_this).show();
                                     _this.scrollBody.scrollMyBody(0);

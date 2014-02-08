@@ -29,7 +29,7 @@
         ko.virtualElements.allowedBindings.stopBinding = true;
 
         var agreementViewModel = new InstitutionalAgreementEditModel(@ViewBag.Id);
-        ko.applyBindings(agreementViewModel, $("[data-current-module='agreements']")[0]);
+        ko.applyBindings(agreementViewModel, $('[data-current-module=agreements]')[0]);
     </script>
 
 }

@@ -3,7 +3,7 @@ class InstitutionalAgreementEditModel {
         $("table.data").children("tbody").addClass("searchResults");
         var culture = $("meta[name='accept-language']").attr("content");
         this.scrollBody = new ScrollBody.Scroll({
-            bindTo: "[data-current-module='agreements']",
+            bindTo: "[data-current-module=agreements]",
             section1: "participants",
             section2: "basic_info",
             section3: "effective_dates_current_status",
@@ -115,7 +115,7 @@ class InstitutionalAgreementEditModel {
     //to correctly bind with ko, must set visibility to hidden. this removes the visibility to hidden and 
     //changes it to display none.
     private _hideOtherGroups(): void {
-        $("[data-current-module='agreements']").css("visibility", "").hide();
+        $("[data-current-module=agreements]").css("visibility", "").hide();
         $("#establishment_search").css("visibility", "").hide();
         $("#add_establishment").css("visibility", "").hide();
     }
@@ -377,7 +377,7 @@ class InstitutionalAgreementEditModel {
                 if (this.agreementIsEdit()) {
                     $LoadingPage.text("Saving changes...");
 
-                    $("[data-current-module='agreements']").show().fadeOut(500, function () {
+                    $("[data-current-module=agreements]").show().fadeOut(500, function () {
                         $("#Loading_page").hide().fadeIn(500);
                     });
                     url = App.Routes.WebApi.Agreements.put(this.agreementId);
@@ -400,7 +400,7 @@ class InstitutionalAgreementEditModel {
                 } else {
                     $LoadingPage.text("Saving agreement...");
 
-                    $("[data-current-module='agreements']").show().fadeOut(500, function () {
+                    $("[data-current-module=agreements]").show().fadeOut(500, function () {
                         $("#Loading_page").hide().fadeIn(500);
                     });
                     url = App.Routes.WebApi.Agreements.post();

@@ -40,6 +40,8 @@ namespace UCosmic.Web.Mvc.Controllers
             if (establishment == null) return HttpNotFound();
             ViewBag.EmployeesDomain = domain;
             ViewBag.EmployeesEstablishmentId = establishment.RevisionId;
+            Session.LastEmployeeLens(Request);
+            Session.LastActivityLens(Request);
             return View();
         }
 
@@ -71,6 +73,8 @@ namespace UCosmic.Web.Mvc.Controllers
             if (settings != null && settings.ActivityTypes.Any())
                 model.ActivityTypes = Mapper.Map<ActivityTypeModel[]>(settings.ActivityTypes.OrderBy(x => x.Rank));
 
+            Session.LastEmployeeLens(Request);
+            Session.LastActivityLens(Request);
             return View(model);
         }
 
@@ -102,6 +106,8 @@ namespace UCosmic.Web.Mvc.Controllers
             if (settings != null && settings.ActivityTypes.Any())
                 model.ActivityTypes = Mapper.Map<ActivityTypeModel[]>(settings.ActivityTypes.OrderBy(x => x.Rank));
 
+            Session.LastEmployeeLens(Request);
+            Session.LastActivityLens(Request);
             return View(model);
         }
 
@@ -137,6 +143,7 @@ namespace UCosmic.Web.Mvc.Controllers
                 });
             }
 
+            Session.LastEmployeeLens(Request);
             return View(model);
         }
 
@@ -144,6 +151,7 @@ namespace UCosmic.Web.Mvc.Controllers
         [GET("{domain}/employees/experts")]
         public virtual ActionResult Experts(string domain)
         {
+            Session.LastEmployeeLens(Request);
             return View();
         }
     }

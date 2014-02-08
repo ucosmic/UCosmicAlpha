@@ -385,7 +385,7 @@ body #main {
           -moz-border-radius: 8px 8px 0 0;
           -webkit-border-radius: 8px 8px 0 0;
           border-radius: 8px 8px 0 0; }
-        body #main > .content.fixed nav.side > ul > li:first-child.current > a > .text {
+        body #main > .content.fixed nav.side > ul > li:first-child.current > a > .text, body #main > .content.fixed nav.side > ul > li:first-child.current > div.no-link > .text {
           -moz-border-radius: 0 8px 0 0;
           -webkit-border-radius: 0 8px 0 0;
           border-radius: 0 8px 0 0; }
@@ -443,10 +443,10 @@ body #main {
           transition: all 250ms;
           background-color: #009ee0;
           color: white; }
-        body #main > .content.fixed nav.side > ul > li.current > a > .arrow {
+        body #main > .content.fixed nav.side > ul > li.current > a > .arrow, body #main > .content.fixed nav.side > ul > li.current > div.no-link > .arrow {
           border-right-color: #01529a;
           cursor: default; }
-        body #main > .content.fixed nav.side > ul > li.current > a > .text {
+        body #main > .content.fixed nav.side > ul > li.current > a > .text, body #main > .content.fixed nav.side > ul > li.current > div.no-link > .text {
           background-color: #01529a;
           color: white;
           cursor: default; }
@@ -478,6 +478,13 @@ body #main {
             color: #01529a; }
             body #main > .content.fixed nav.side > ul > li.static > .content a[disabled], body #main > .content.fixed nav.side > ul > li.static > .content button.link[disabled], body #main > .content.fixed nav.side > ul > li.static > .content input[type=submit].link[disabled], body #main > .content.fixed nav.side > ul > li.static > .content input[type=reset].link[disabled], body #main > .content.fixed nav.side > ul > li.static > .content input[type=button].link[disabled] {
               color: #999; }
+        body #main > .content.fixed nav.side > ul > li > div.no-link .text a {
+          text-decoration: underline;
+          font-weight: normal; }
+          body #main > .content.fixed nav.side > ul > li > div.no-link .text a:hover {
+            text-decoration: none; }
+        body #main > .content.fixed nav.side > ul > li.current > div.no-link .text a {
+          color: white; }
       body #main > .content.fixed nav.side > ul.top > li:last-child > a > .text {
         -moz-border-radius: 0;
         -webkit-border-radius: 0;
@@ -490,11 +497,11 @@ body #main {
         -moz-border-radius: 0;
         -webkit-border-radius: 0;
         border-radius: 0; }
-      body #main > .content.fixed nav.side > ul.bottom > li:first-child > a > .text {
+      body #main > .content.fixed nav.side > ul.bottom > li:first-child > a > .text, body #main > .content.fixed nav.side > ul.bottom > li:first-child > div.no-link > .text {
         -moz-border-radius: 0;
         -webkit-border-radius: 0;
         border-radius: 0; }
-      body #main > .content.fixed nav.side > ul.bottom > li:first-child.current > a > .text {
+      body #main > .content.fixed nav.side > ul.bottom > li:first-child.current > a > .text, body #main > .content.fixed nav.side > ul.bottom > li:first-child.current > div.no-link > .text {
         -moz-border-radius: 0;
         -webkit-border-radius: 0;
         border-radius: 0; }

@@ -11,6 +11,7 @@ namespace UCosmic.Web.Mvc.Models
     {
         public ActivityMode Mode { get; set; }
         public int ActivityId { get; set; }
+        public int PersonId { get; set; }
         public string Title { get; set; }
         public string Content { get; set; }
         public DateTime? StartsOn { get; set; }
@@ -54,6 +55,7 @@ namespace UCosmic.Web.Mvc.Models
             {
                 CreateMap<ActivityValues, ActivityApiModel>()
                     .ForMember(d => d.ActivityId, o => o.MapFrom(s => s.ActivityId))
+                    .ForMember(d => d.PersonId, o => o.MapFrom(s => s.Activity.PersonId))
                     .ForMember(d => d.UpdatedOnUtc, o => o.MapFrom(s => s.Activity.UpdatedOnUtc ?? s.Activity.CreatedOnUtc))
                     .ForMember(d => d.UpdatedOnUtc, o => o.ResolveUsing(s =>
                     { // documents do not update the activity due to concurrency on multi-uploads

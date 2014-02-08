@@ -1,4 +1,6 @@
-﻿namespace UCosmic.Web.Mvc.Models
+﻿using System.Collections.Generic;
+
+namespace UCosmic.Web.Mvc.Models
 {
     public class EmployeesBibNavModel
     {
@@ -7,6 +9,7 @@
         public bool FindAnExpert { get; set; }
         public bool GeographicExpertise { get; set; }
         public bool LanguageExpertise { get; set; }
+        public KeyValuePair<string, string> Other { get; set; }
         public string Custom { get; set; }
     }
 }

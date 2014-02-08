@@ -36,7 +36,7 @@ module ViewModels.Degrees {
                 $searchSideBarAddNew = $("#searchSideBarAddNew"),
                 deferred = $.Deferred(),
                 deferred2 = $.Deferred(),
-                $obj = $("[data-current-module='degrees']"),
+                $obj = $("[data-current-module=degrees]"),
                 $obj2 = $("#add_establishment"),
                 time = 500;
 
@@ -119,7 +119,7 @@ module ViewModels.Degrees {
                                 deferred = $.Deferred(),
                                 deferred2 = $.Deferred(),
                                 $obj = $("#establishment_search"),
-                                $obj2 = $("[data-current-module='home']"),
+                                $obj2 = $("[data-current-module=home]"),
                                 time = 500;
 
                             this.fadeModsOut(deferred, deferred2, $obj, $obj2, time);
@@ -223,7 +223,7 @@ module ViewModels.Degrees {
                             var establishment_search = $("#establishment_search"),
                                 deferred = $.Deferred(),
                                 deferred2 = $.Deferred(),
-                                $obj = $("[data-current-module='home']"),
+                                $obj = $("[data-current-module=home]"),
                                 $obj2 = $("#add_establishment"),
                                 time = 500;
 
@@ -278,7 +278,7 @@ module ViewModels.Degrees {
                             this.fadeModsOut(deferred, deferred2, $obj, $obj2, time);
                             $.when(deferred, deferred2)
                                 .done(() => {
-                                    $("[data-current-module='home']").fadeIn(500).promise().done(() => {
+                                    $("[data-current-module=home]").fadeIn(500).promise().done(() => {
                                         $(this).show();
                                     });
                                 });

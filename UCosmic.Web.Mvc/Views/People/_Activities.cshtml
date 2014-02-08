@@ -138,7 +138,9 @@
                                                     }
 
                                                 </a>*@
-                                            <a style="text-decoration: none;" data-bind="click: edit.bind($data, @activity.ActivityId), visible: !purgeSpinner.isVisible()" href=''>
+                                            <a style="text-decoration: none;"
+                                               data-xbind="click: edit.bind($data, @activity.ActivityId), visible: !purgeSpinner.isVisible()"
+                                               href="@Url.Action(MVC.Activities.Edit(activity.ActivityId))">
                                                 Edit
                                                 <img alt="" src="~/images/icons/edit/pencil-a-24.png" title="Edit this activity"
                                                      style="cursor: pointer; margin: 5px 8px 8px 0; width: 20px;" />
@@ -258,7 +260,7 @@
     @if (User.Identity.Name.Equals(ViewBag.Username, StringComparison.OrdinalIgnoreCase))
     {
         <div style="margin-top: 12px; line-height: 24px;">
-            <a href="#" class="button" data-bind="click: addActivity">
+            <a href="@Url.Action(MVC.Activities.Create())" class="button" data-xbind="click: addActivity">
                 @*<img src="~/images/icons/plus/plus-24-green.png" alt="Add a new language" style="cursor: pointer; padding-right: 4px;" />*@
                 <i class="green plus"></i>
                 <span class="text">Add a new activity</span>

@@ -32,9 +32,9 @@
                     UCosmic Profile
                 </h1>
             </header>
-            @Html.Action(MVC.People.GetCard())
-            @Html.Action(MVC.People.GetAffiliations())
-            @Html.Action(MVC.People.GetEmails())
+            @Html.Action(MVC.People.GetCard((int)ViewBag.personId))
+            @Html.Action(MVC.People.GetAffiliations((int)ViewBag.personId))
+            @Html.Action(MVC.People.GetEmails((int)ViewBag.personId))
 
         </div>
         <aside class="on-right from-top" data-fixed-scroll="root">

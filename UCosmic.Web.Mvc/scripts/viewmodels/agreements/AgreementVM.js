@@ -1,4 +1,4 @@
-var InstitutionalAgreementEditModel = (function () {
+﻿var InstitutionalAgreementEditModel = (function () {
     function InstitutionalAgreementEditModel(agreementId) {
         var _this = this;
         this.agreementId = agreementId;
@@ -25,7 +25,7 @@ var InstitutionalAgreementEditModel = (function () {
         $("table.data").children("tbody").addClass("searchResults");
         var culture = $("meta[name='accept-language']").attr("content");
         this.scrollBody = new ScrollBody.Scroll({
-            bindTo: "[data-current-module='agreements']",
+            bindTo: "[data-current-module=agreements]",
             section1: "participants",
             section2: "basic_info",
             section3: "effective_dates_current_status",
@@ -88,7 +88,7 @@ var InstitutionalAgreementEditModel = (function () {
         this._hideOtherGroups();
     }
     InstitutionalAgreementEditModel.prototype._hideOtherGroups = function () {
-        $("[data-current-module='agreements']").css("visibility", "").hide();
+        $("[data-current-module=agreements]").css("visibility", "").hide();
         $("#establishment_search").css("visibility", "").hide();
         $("#add_establishment").css("visibility", "").hide();
     };
@@ -339,7 +339,7 @@ var InstitutionalAgreementEditModel = (function () {
                 if (this.agreementIsEdit()) {
                     $LoadingPage.text("Saving changes...");
 
-                    $("[data-current-module='agreements']").show().fadeOut(500, function () {
+                    $("[data-current-module=agreements]").show().fadeOut(500, function () {
                         $("#Loading_page").hide().fadeIn(500);
                     });
                     url = App.Routes.WebApi.Agreements.put(this.agreementId);
@@ -361,7 +361,7 @@ var InstitutionalAgreementEditModel = (function () {
                 } else {
                     $LoadingPage.text("Saving agreement...");
 
-                    $("[data-current-module='agreements']").show().fadeOut(500, function () {
+                    $("[data-current-module=agreements]").show().fadeOut(500, function () {
                         $("#Loading_page").hide().fadeIn(500);
                     });
                     url = App.Routes.WebApi.Agreements.post();

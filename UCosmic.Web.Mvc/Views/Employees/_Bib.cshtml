@@ -5,26 +5,18 @@
     var styleDomain = tenancy != null ? tenancy.StyleDomain : "default";
     var hasStyleDomain = !string.IsNullOrWhiteSpace(styleDomain) && !"default".Equals(styleDomain, StringComparison.OrdinalIgnoreCase);
 }
-@*<ul class="group">
-        <li class="summary @ViewBag.Summary">
-            <a href="@Url.Action(hasStyleDomain ? MVC.Employees.TenantIndex(styleDomain) : MVC.Employees.Index())">Summary</a>
-        </li>
-        <li class="search @ViewBag.Search">
-            <a href="@Url.Action(hasStyleDomain ? MVC.Employees.Table(styleDomain, null) : MVC.Employees.Index())">Search</a>
-        </li>
-        @if (ViewBag.isActivity != null)
-        {
-        <li class="search @ViewBag.Faculty">
-            <a href="@Url.Action(hasStyleDomain ? MVC.Employees.Table(styleDomain, null) : MVC.Employees.Index())">Activity Detail</a>
-        </li>
-        }
-        <li class="expert">
-            <a href="/facultystaff/#/expert">Find an Expert</a>
-        </li>
-    </ul>*@
+
 <ul class="group">
     <li class="@(Model.Activities ? "current" : null)">
-        <a href="@Url.Action(hasStyleDomain ? MVC.Employees.TenantIndex(styleDomain) : MVC.Employees.Index())">Activities</a>
+        @{
+            var activitiesHref = Url.Action(hasStyleDomain ? MVC.Employees.TenantIndex(styleDomain) : MVC.Employees.Index());
+            var lastActivitiesLens = Session.LastActivityLens();
+            if (lastActivitiesLens != null && lastActivitiesLens.StartsWith(string.Format("/{0}/", styleDomain)))
+            {
+                activitiesHref = lastActivitiesLens;
+            }
+        }
+        <a href="@activitiesHref">Activities</a>
     </li>
     <li class="@(Model.FindAnExpert ? "current" : null)">
         <a href="@Url.Action(hasStyleDomain ? MVC.Employees.Experts(styleDomain) : MVC.Employees.Index())">Find an Expert</a>
@@ -42,6 +34,12 @@
     {
         <li class="current">
             <a>Language Expertise</a>
+        </li>
+    }
+    @if (Model.Other.Key != null && Model.Other.Value != null)
+    {
+        <li>
+            <a href="@Model.Other.Value">@Html.Raw(Model.Other.Key)</a>
         </li>
     }
     @if (!string.IsNullOrWhiteSpace(Model.Custom))

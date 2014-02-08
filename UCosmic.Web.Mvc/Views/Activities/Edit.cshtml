@@ -1,20 +1,32 @@
 ﻿@using UCosmic.Domain.Activities
+@using UCosmic.Web.Mvc.Models
 @{
     ViewBag.Title = "My International Activity";
+}
+
+@section bib
+{
+    <nav class="bib">
+        @Html.Partial(MVC.Employees.Views._Bib, new EmployeesBibNavModel
+        {
+            Other = new KeyValuePair<string, string>("My Activities &raquo;", Url.Action(MVC.People.Activities((int)ViewBag.PersonId, null))),
+            Custom = "Edit",
+        })
+    </nav>
 }
 
 @section styles
 {
     @{ Html.RenderPartial(MVC.Activities.Views._EditStyles, null); }
     @*<style>
-    /* use this to see default kendo upload progress section */
-        .k-upload-files {
-            max-width: 900px;
-        }
-        .k-upload .k-upload-status {
-            display: block;
-        }
-    </style>*@
+        /* use this to see default kendo upload progress section */
+            .k-upload-files {
+                max-width: 900px;
+            }
+            .k-upload .k-upload-status {
+                display: block;
+            }
+        </style>*@
 }
 
 @section scripts
@@ -28,6 +40,10 @@
     {
         <script type="text/javascript" src="~/scripts/tinymce/tiny_mce_src.js"></script>
     }
+    
+    <script>
+        @{ Html.RenderPartial(MVC.JavaScriptRoutes.Views.Employees); }
+    </script>
 
     @Scripts.Render("~/bundles/activity")
 
@@ -47,14 +63,7 @@
 
 }
 
-@section bib
-{
-    <nav class="bib hide" data-current-bib="my">
-        @Html.Partial(MVC.Home.Views._Bib)
-    </nav>
-}
-
-<div class="content fixed to-top" data-current-module="home">
+<div class="content fixed to-top">
     <form id="activity_editor" style="padding-top: 20px;">
 
         @* API URL's *@
@@ -94,7 +103,7 @@
                     <tr>
                         <td class="label"><span class="container required"><span class="text">Title</span></span></td>
                         <td>
-                            <textarea rows="1" placeholder="[Enter Title]" maxlength="500" data-bind="value: title"></textarea>
+                            <textarea rows="2" placeholder="[Enter Title]" maxlength="500" data-bind="value: title"></textarea>
                             <span data-bind="validationMessage: title" class="validationMessage"></span>
                         </td>
                     </tr>
@@ -199,8 +208,7 @@
                         save_enablewhendirty: true,
                         gecko_spellcheck: true,
                         theme_advanced_path: false
-                    }">
-                </textarea>
+                    }"></textarea>
                 @*<textarea id="description" rows="8" data-bind="value: content"></textarea>*@
             </div>
 
@@ -274,7 +282,7 @@
                                             <div class="on-left">
                                                 <div style="width: 310px;">
                                                     <input type="text" data-bind="value: title, jQuery: '$titleInput', event: { keypress: blurTitle }"
-                                                           maxlength="@ActivityDocumentConstraints.MaxTitleLength"  />
+                                                           maxlength="@ActivityDocumentConstraints.MaxTitleLength" />
                                                 </div>
                                             </div>
                                             <div class="on-left" style="line-height: 38px; margin-left: 12px; font-family: Arial, Helvetica, sans-serif;">
@@ -311,7 +319,7 @@
                                                 <div style="width: 370px;" data-bind="visible: window.FormData">
                                                     <div style="-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; width: 100%; height: 40px; border: solid 1px #7bd47b;">
                                                         <div style="width: 1%; height: 38px; background-color: #7bd47b; -moz-transition: width 1s; -o-transition: width 1s; -webkit-transition: width 1s; transition: width 1s;"
-                                                            data-bind="style: { width: uploadPercent }">
+                                                             data-bind="style: { width: uploadPercent }">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -332,12 +340,12 @@
                                             <div style="margin-top: 2px; margin-left: 4px;" data-bind="visible: window.FormData">
                                                 <span data-bind="text: uploadProgress"></span>% complete
                                                 @*&nbsp;
-                                                <button class="link" data-bind="click: uploadCancel, enable: cancelEnabled">Cancel</button>*@
+                                                    <button class="link" data-bind="click: uploadCancel, enable: cancelEnabled">Cancel</button>*@
                                             </div>
                                             <div style="margin-top: 2px; margin-left: 4px;" data-bind="visible: !window.FormData">
                                                 <span>Uploading...</span>
                                                 @*&nbsp;
-                                                <button class="link" data-bind="click: uploadCancel, enable: cancelEnabled">Cancel</button>*@
+                                                    <button class="link" data-bind="click: uploadCancel, enable: cancelEnabled">Cancel</button>*@
                                             </div>
                                         </div>
                                     </div>
@@ -411,7 +419,8 @@
             <span>
                 <span data-bind="text: text"></span>
                 <a href="/#" data-bind="click: function (item) { $parent.deleteTag(item); }" title="Remove tag" style="margin-left: 8px;">
-                    <img src="@Links.images.icons.minus.minus_20_red_png" alt="Remove tag" style="vertical-align: middle;" /></a>
+                    <img src="@Links.images.icons.minus.minus_20_red_png" alt="Remove tag" style="vertical-align: middle;" />
+                </a>
             </span>
         </div>
     </li>
@@ -430,7 +439,7 @@
                 </span>
             </div>
             <div class="on-right">
-                <input type="button" value="Guide Me" style="margin-left: 50px;" />
+                @*<input type="button" value="Guide Me" style="margin-left: 50px;" />*@
             </div>
         </div>
     </div>

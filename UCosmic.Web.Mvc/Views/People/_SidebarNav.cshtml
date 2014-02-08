@@ -1,14 +1,37 @@
 ﻿@* RIGHT *@
 <nav class="side">
     <ul>
-        <li class="@if(ViewBag.currentPage == "profile")
-    {
-        @Html.Raw("current")
-    }" id="nav_profile">
-            <a href="@Url.Action(MVC.People.Index((int)ViewBag.personId))" class="group">
-                <span class="arrow"></span>
-                <span class="text">Profile</span>
-            </a>
+        <li class="@(ViewBag.currentPage == "profile" ? "current" : null )" id="nav_profile">
+            @if (User.Identity.Name.Equals((string)ViewBag.Username, StringComparison.OrdinalIgnoreCase))
+            {
+                <div class="no-link group">
+                    <span class="arrow"></span>
+                    <span class="text">
+                        Profile
+                        @if (ViewBag.currentPage == "profile")
+                        {
+                            <text>@(ViewBag.IsMyProfile == true ? "(Edit)" : "(Public view)")</text>
+                        }
+                        @if (ViewBag.IsMyProfile == true || ViewBag.currentPage != "profile")
+                        {
+                            <text>&nbsp;</text>
+                            <a href="@Url.Action(MVC.People.Index((int)ViewBag.personId), null)">Public view</a>
+                        }
+                        @if (ViewBag.IsMyProfile != true || ViewBag.currentPage != "profile")
+                        {
+                            <text>&nbsp;</text>
+                            <a href="@Url.Action(MVC.People.Me())">Edit</a>
+                        }
+                    </span>
+                </div>
+            }
+            else
+            {
+                <a href="@Url.Action(MVC.People.Index((int)ViewBag.personId))" class="group">
+                    <span class="arrow"></span>
+                    <span class="text">Profile</span>
+                </a>
+            }
         </li>
         <li id="nav_activities">
             <a href="@Url.Action(MVC.People.Activities((int)ViewBag.personId, null))" class="group">
@@ -16,28 +39,19 @@
                 <span class="text">Activities</span>
             </a>
         </li>
-        <li class="@if(ViewBag.currentPage == "degrees")
-    {
-        @Html.Raw("current")
-    }" id="nav_education">
+        <li class="@(ViewBag.currentPage == "degrees" ? "current" : null)" id="nav_education">
             <a href="@Url.Action(MVC.People.Degrees((int)ViewBag.personId, null))" class="group">
                 <span class="arrow"></span>
                 <span class="text">Formal Education</span>
             </a>
         </li>
-        <li class="@if (ViewBag.currentPage == "global-expertise")
-                   {
-                       @Html.Raw("current")
-                   }" id="nav_global_expertise">
+        <li class="@(ViewBag.currentPage == "global-expertise" ? "current" : null)" id="nav_global_expertise">
             <a href="@Url.Action(MVC.People.GlobalExpertises((int)ViewBag.personId))" class="group">
                 <span class="arrow"></span>
                 <span class="text">Global Expertise</span>
             </a>
         </li>
-        <li class="@if (ViewBag.currentPage == "languages")
-                   {
-                       @Html.Raw("current")
-                   }" id="nav_language_expertise">
+        <li class="@(ViewBag.currentPage == "languages" ? "current" : null)" id="nav_language_expertise">
             <a href="@Url.Action(MVC.People.Languages((int)ViewBag.personId))" class="group">
                 <span class="arrow"></span>
                 <span class="text">Language Expertise</span>

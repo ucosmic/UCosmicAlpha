@@ -55,10 +55,26 @@
     </ul>
     <ul class="bottom">
         <li id="nav_profile">
-            <a href="@Url.Action(MVC.People.Index((int)ViewBag.personId))" class="group" >
-                <span class="arrow"></span>
-                <span class="text">Profile</span>
-            </a>
+            @if (User.Identity.Name.Equals((string)ViewBag.Username, StringComparison.OrdinalIgnoreCase))
+            {
+                <div class="no-link group">
+                    <span class="arrow"></span>
+                    <span class="text">
+                        Profile
+                        &nbsp;
+                        <a href="@Url.Action(MVC.People.Index((int)ViewBag.personId), null)">Public view</a>
+                        &nbsp;
+                        <a href="@Url.Action(MVC.People.Me())">Edit</a>
+                    </span>
+                </div>
+            }
+            else
+            {
+                <a href="@Url.Action(MVC.People.Index((int)ViewBag.personId))" class="group">
+                    <span class="arrow"></span>
+                    <span class="text">Profile</span>
+                </a>
+            }
         </li>
         <li class="current" id="nav_activities">
             <a href="@Url.Action(MVC.People.Activities((int)ViewBag.personId, null))" class="group">

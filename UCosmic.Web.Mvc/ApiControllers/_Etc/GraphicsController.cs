@@ -39,7 +39,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [GET("circle")]
-        [CacheHttpGet(Duration = 3600)]
+        [CacheHttpGet(Duration = 604800)]
         public HttpResponseMessage GetCircle([FromUri] CircleGraphicRequestModel model)
         {
             if (model.Side < 16 || model.Side > 48)

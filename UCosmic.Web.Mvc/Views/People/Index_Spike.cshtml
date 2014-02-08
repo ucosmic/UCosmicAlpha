@@ -1,7 +1,7 @@
 ﻿@using UCosmic.Web.Mvc.Models
 @model PersonViewModel
 @{
-    ViewBag.Title = "UCosmic Profile";
+    ViewBag.Title = ViewBag.CustomBib;
 }
 @section bib
 {
@@ -72,11 +72,13 @@
 <div class="content fixed to-top" data-current-module="faculty">
     <div class="group">
         <div class="on-left from-top">
-            <header>
-                <h1>
-                    UCosmic Profile
-                </h1>
-            </header>
+            @*
+                dL: I took this out, it brands the site too much. People may be confused.
+                    <header>
+                    <h1>
+                        UCosmic Profile
+                    </h1>
+                </header>*@
             @* CARD *@
             <section class="person-profile" id="card">
                 <div class="card" style="padding-left: 0;">
@@ -111,10 +113,10 @@
             <section class="content fixed to-top">
                 <h2 style="font-size: 24px; padding-bottom: 1em;">Contact Information</h2>
                 <div style="float:left; width: 360px;">
-                    @Html.Action(MVC.People.GetEmails())
+                    @Html.Action(MVC.People.GetEmails((int)ViewBag.personId))
                 </div>
                 <div style="float:right;">
-                    @Html.Action(MVC.People.GetUrls())
+                    @Html.Action(MVC.People.GetUrls((int)ViewBag.personId))
                 </div>
             </section>
         </div>

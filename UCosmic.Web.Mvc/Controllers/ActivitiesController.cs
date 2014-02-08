@@ -39,7 +39,8 @@ namespace UCosmic.Web.Mvc.Controllers
         }
 
         [Authorize]
-        [POST("my/activities")]
+        [Route("my/activities/new")]
+        //[POST("my/activities")]
         public virtual RedirectToRouteResult Create()
         {
             var command = new CreateActivityAndValues(User);
@@ -48,6 +49,7 @@ namespace UCosmic.Web.Mvc.Controllers
         }
 
         [Authorize]
+        [CurrentModuleTab(ModuleTab.Employees)]
         [GET("my/activities/{activityId:int}", ActionPrecedence = 2)]
         [GET("my/activities/{activityId:int}/edit", ActionPrecedence = 1)]
         public virtual ActionResult Edit(int activityId)
@@ -69,6 +71,7 @@ namespace UCosmic.Web.Mvc.Controllers
 
             ViewBag.ActivityId = activityId;
             ViewBag.ActivityWorkCopyId = copyActivityAndValues.CreatedActivity.RevisionId;
+            ViewBag.PersonId = activity.PersonId;
             BagUrlFormats();
             return View(MVC.Activities.Views.Edit);
         }
@@ -168,7 +171,8 @@ namespace UCosmic.Web.Mvc.Controllers
             var model = Mapper.Map<ActivityPublicViewModel>(entity);
             ViewBag.CustomBib = entity.Activity.Person.DisplayName;
             ViewBag.isActivity = true;
-            @ViewBag.Faculty = "current";
+            ViewBag.Faculty = "current";
+            ViewBag.PersonId = model.Person.PersonId;
             return View(model);
         }
     }

@@ -14,9 +14,9 @@ namespace UCosmic.Web.Mvc.Controllers
         }
 
         [Authorize]
-        //[GET("my")]
+        [GET("my")]
         //[GET("my/profile", ActionPrecedence = 2)]
-        [GET("person", ActionPrecedence = 1)]
+        //[GET("person", ActionPrecedence = 1)]
         public virtual ActionResult Index(string tab)
         {
             var person = _queryProcessor.Execute(new MyPerson(User));

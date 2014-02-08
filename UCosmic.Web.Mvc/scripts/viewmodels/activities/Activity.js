@@ -309,7 +309,7 @@ var Activities;
                         url: url
                     }).done(function () {
                         _this._isSaved = true;
-                        location.href = App.Routes.Mvc.My.Profile.get();
+                        location.href = mode == 'Draft' ? Routes.Mvc.Employees.Activities.byPerson(_this.personId()) : Routes.Mvc.Employees.Activities.detail(_this._originalId);
                     }).fail(function (xhr) {
                         App.Failures.message(xhr, 'while trying to save your activity', true);
                         _this.isSaving(false);
@@ -349,7 +349,7 @@ var Activities;
 
                                 _this._purge().done(function () {
                                     _this.$cancelDialog.dialog('close');
-                                    location.href = App.Routes.Mvc.My.Profile.get();
+                                    location.href = Routes.Mvc.Employees.Activities.byPerson(_this.personId());
                                 }).fail(function (xhr) {
                                     App.Failures.message(xhr, 'while trying to discard your activity edits', true);
                                 }).always(function () {

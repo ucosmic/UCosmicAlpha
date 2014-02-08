@@ -94,8 +94,24 @@ Routes.Mvc.Employees.Activities = Routes.Mvc.Employees.Activities || {};
 Routes.Mvc.Employees.Activities.edit = function (activityId) {
     return '@routeWriter.WriteRoute(Url.RouteUrl(new
     {
-        controller = "Activities",
-        action = "Edit",
+        controller = MVC.Activities.Name,
+        action = MVC.Activities.ActionNames.Edit,
+        activityId = routeWriter.Value<int>(0),
+    }))'.format(activityId);
+};
+Routes.Mvc.Employees.Activities.byPerson = function (personId) {
+    return '@routeWriter.WriteRoute(Url.RouteUrl(new
+    {
+        controller = MVC.People.Name,
+        action = MVC.People.ActionNames.Activities,
+        personId = routeWriter.Value<int>(0),
+    }))'.format(personId);
+};
+Routes.Mvc.Employees.Activities.detail = function (activityId) {
+    return '@routeWriter.WriteRoute(Url.RouteUrl(new
+    {
+        controller = MVC.Activities.Name,
+        action = MVC.Activities.ActionNames.Details,
         activityId = routeWriter.Value<int>(0),
     }))'.format(activityId);
 };

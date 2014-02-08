@@ -29,5 +29,7 @@ declare module Employees.MvcRoutes {
 
     export interface Activities {
         edit(activityId: number): string;
+        byPerson(personId: number): string;
+        detail(activityId: number): string;
     }
 }
