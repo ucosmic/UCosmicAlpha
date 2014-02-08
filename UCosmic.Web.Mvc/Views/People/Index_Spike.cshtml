@@ -38,7 +38,7 @@
                 ko.applyBindings(affiliationsViewModel, $('#affiliations')[0]);
                 affiliationsViewModel.bindJquery();
 
-                var model = $.parseJSON('@Html.Raw(Json.Encode(Model))');
+                var model = $.parseJSON('@Html.Raw(Html.SerializeObject(Model))');
                 var personalInfoViewModel = new People.ViewModels.PersonalInfoEditor(model);
                 personalInfoViewModel.load();
                 ko.applyBindings(personalInfoViewModel, $('#card')[0]);

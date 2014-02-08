@@ -12,8 +12,8 @@
 @section scripts
 {
 
-    <script type="text/javascript">
-        var activityData = $.parseJSON('@Html.Raw(Json.Encode(Model))');
+    <script>
+        var activityData = $.parseJSON('@Html.Raw(Html.SerializeObject(Model))');
         var imagePimpleUrl = '@Url.Content("~/images/icons/maps/mapPimple.png")';
 
     </script>

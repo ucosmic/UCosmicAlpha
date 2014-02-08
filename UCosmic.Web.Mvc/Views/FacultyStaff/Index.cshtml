@@ -290,7 +290,7 @@
 
                 $("#main").css("height", 760);
 
-                var institutionInfo = @Html.Raw(Json.Encode(Model));
+                var institutionInfo = @Html.Raw(Html.SerializeObject(Model));
 
                 if (institutionInfo.InstitutionId == 0) {
                     $("#faculty-staff-select").show();

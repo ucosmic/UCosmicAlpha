@@ -14,7 +14,6 @@
 
     <script type="text/javascript">
         var modelData = $.parseJSON('@Html.Raw(Html.SerializeObject(Model))');
-        @*$.parseJSON('@Html.Raw(Json.Encode(Model))');*@
         modelData.keyword = '@ViewBag.keyword';
         modelData.countryCode = '@ViewBag.countryCode';
         modelData.orderBy = '@ViewBag.orderBy';
