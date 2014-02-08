@@ -117,12 +117,25 @@ Routes.Mvc.Employees.Activities.detail = function (activityId) {
 };
 
 
+
 Routes.Mvc.Employees.Degrees = Routes.Mvc.Employees.Degrees || {};
 Routes.Mvc.Employees.Degrees.detail = function (personId) {
     return '@routeWriter.WriteRoute(Url.RouteUrl(new
     {
         controller = MVC.People.Name,
         action = MVC.People.ActionNames.Degrees,
+        personId = routeWriter.Value<int>(0),
+    }))'.format(personId);
+};
+
+
+
+Routes.Mvc.Employees.GeographicExpertise = Routes.Mvc.Employees.GeographicExpertise || {};
+Routes.Mvc.Employees.GeographicExpertise.detail = function (personId) {
+    return '@routeWriter.WriteRoute(Url.RouteUrl(new
+    {
+        controller = MVC.People.Name,
+        action = MVC.People.ActionNames.GlobalExpertises,
         personId = routeWriter.Value<int>(0),
     }))'.format(personId);
 };

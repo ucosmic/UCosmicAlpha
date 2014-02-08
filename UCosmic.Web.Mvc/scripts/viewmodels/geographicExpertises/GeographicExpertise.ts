@@ -80,8 +80,9 @@ module ViewModels.GeographicExpertises {
             this.description.subscribe((newValue: any): void => { this.dirtyFlag(true); });
         }
 
-        constructor( expertiseId: number ) {
-            this._initialize( expertiseId );
+        constructor(expertiseId: string, personId: string) {
+            this.personId = ko.observable(parseInt(personId));
+            this._initialize(parseInt(expertiseId));
         }
 
         load(): JQueryPromise<any> {
@@ -89,7 +90,7 @@ module ViewModels.GeographicExpertises {
 
             if ( this.id() == 0 ) {
                 this.version = ko.observable(null);
-                this.personId = ko.observable(0);
+                //this.personId = ko.observable(0);
                 this.description = ko.observable(null);
                 this.locations = ko.observableArray();
                 this.whenLastUpdated = ko.observable(null);
@@ -185,29 +186,39 @@ module ViewModels.GeographicExpertises {
                 App.Failures.message(xhr, 'while trying to save your geographic expertise', true);
             })
             .always((xhr: JQueryXHR, status: string): void => {
-                location.href = App.Routes.Mvc.My.Profile.get("geographic-expertise");
+                //location.href = App.Routes.Mvc.My.Profile.get("geographic-expertise");
+                location.href = Routes.Mvc.Employees.GeographicExpertise.detail(this.personId());
             });
         }
 
-        cancel( item: any, event: any, mode: string ): void {
+        cancel(item: any, event: any, mode: string): void {
+            var personId = this.personId();
             if ( this.dirtyFlag() == true ) {
-                $( "#cancelConfirmDialog" ).dialog( {
+                var $dialog = $('#cancelConfirmDialog');
+                $dialog.dialog( {
                     modal: true,
                     resizable: false,
-                    width: 450,
-                    buttons: {
-                        "Do not cancel": function () {
-                            $( this ).dialog( "close" );
+                    width: 'auto',
+                    buttons: [
+                        {
+                            text: 'Yes, cancel & lose changes',
+                            click: (): void => {
+                                location.href = Routes.Mvc.Employees.GeographicExpertise.detail(personId);
+                                $dialog.dialog('close');
+                            },
                         },
-                        "Cancel and lose changes": function () {
-                            $( this ).dialog( "close" );
-                            location.href = App.Routes.Mvc.My.Profile.get( "geographic-expertise" );
-                        }
-                    }
+                        {
+                            text: 'No, do not cancel',
+                            click: (): void => {
+                                $dialog.dialog('close');
+                            },
+                            'data-css-link': true,
+                        },
+                    ],
                 } );
             }
             else { 
-                location.href = App.Routes.Mvc.My.Profile.get( "geographic-expertise" );
+                location.href = Routes.Mvc.Employees.GeographicExpertise.detail(personId);
             }
         }
 

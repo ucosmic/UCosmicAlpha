@@ -31,8 +31,8 @@ namespace UCosmic.Web.Mvc.Controllers
         public virtual ActionResult NewDegree()
         {
             var person = _queryProcessor.Execute(new MyPerson(User));
-            ViewBag.DegreeId = 0;
             ViewBag.PersonId = person.RevisionId;
+            ViewBag.DegreeId = 0;
             return View(MVC.MyProfile.Views.DegreeForm);
         }
 
@@ -43,8 +43,8 @@ namespace UCosmic.Web.Mvc.Controllers
         public virtual ActionResult EditDegree(int degreeId)
         {
             var person = _queryProcessor.Execute(new MyPerson(User));
-            ViewBag.DegreeId = degreeId;
             ViewBag.PersonId = person.RevisionId;
+            ViewBag.DegreeId = degreeId;
             return View(MVC.MyProfile.Views.DegreeForm);
         }
 
@@ -52,6 +52,8 @@ namespace UCosmic.Web.Mvc.Controllers
         [GET("my/geographic-expertise/new", ControllerPrecedence = 1)]
         public virtual ActionResult NewGeographicExpertise()
         {
+            var person = _queryProcessor.Execute(new MyPerson(User));
+            ViewBag.PersonId = person.RevisionId;
             ViewBag.ExpertiseId = 0;
             return View(MVC.MyProfile.Views.GeographicExpertiseForm);
         }
@@ -61,6 +63,8 @@ namespace UCosmic.Web.Mvc.Controllers
         [GET("my/geographic-expertise/{expertiseId:int}/edit", ActionPrecedence = 1)]
         public virtual ActionResult EditGeographicExpertise(int expertiseId)
         {
+            var person = _queryProcessor.Execute(new MyPerson(User));
+            ViewBag.PersonId = person.RevisionId;
             ViewBag.ExpertiseId = expertiseId;
             return View(MVC.MyProfile.Views.GeographicExpertiseForm);
         }

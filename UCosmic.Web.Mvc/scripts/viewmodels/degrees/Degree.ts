@@ -227,19 +227,27 @@ module ViewModels.Degrees {
 
         cancel(item: any, event: any, mode: string): void {
             if (this.dirtyFlag() == true) {
-                $("#cancelConfirmDialog").dialog({
+                var $dialog = $('#cancelConfirmDialog');
+                $dialog.dialog({
                     modal: true,
                     resizable: false,
-                    width: 450,
-                    buttons: {
-                        "Do not cancel": function () {
-                            $(this).dialog("close");
+                    width: 'auto',
+                    buttons: [
+                        {
+                            text: 'Yes, cancel & lose changes',
+                            click: (): void => {
+                                location.href = Routes.Mvc.Employees.Degrees.detail(this.personId());
+                                $dialog.dialog('close');
+                            },
                         },
-                        "Cancel and lose changes": function () {
-                            $(this).dialog("close");
-                            location.href = Routes.Mvc.Employees.Degrees.detail(this.personId());
-                        }
-                    }
+                        {
+                            text: 'No, do not cancel',
+                            click: (): void => {
+                                $dialog.dialog('close');
+                            },
+                            'data-css-link': true,
+                        },
+                    ],
                 });
             } else {
                 //location.href = App.Routes.Mvc.My.Profile.get() + '#/formal-education';

@@ -182,20 +182,29 @@
             };
 
             Degree.prototype.cancel = function (item, event, mode) {
+                var _this = this;
                 if (this.dirtyFlag() == true) {
-                    $("#cancelConfirmDialog").dialog({
+                    var $dialog = $('#cancelConfirmDialog');
+                    $dialog.dialog({
                         modal: true,
                         resizable: false,
-                        width: 450,
-                        buttons: {
-                            "Do not cancel": function () {
-                                $(this).dialog("close");
+                        width: 'auto',
+                        buttons: [
+                            {
+                                text: 'Yes, cancel & lose changes',
+                                click: function () {
+                                    location.href = Routes.Mvc.Employees.Degrees.detail(_this.personId());
+                                    $dialog.dialog('close');
+                                }
                             },
-                            "Cancel and lose changes": function () {
-                                $(this).dialog("close");
-                                location.href = Routes.Mvc.Employees.Degrees.detail(this.personId());
+                            {
+                                text: 'No, do not cancel',
+                                click: function () {
+                                    $dialog.dialog('close');
+                                },
+                                'data-css-link': true
                             }
-                        }
+                        ]
                     });
                 } else {
                     location.href = Routes.Mvc.Employees.Degrees.detail(this.personId());

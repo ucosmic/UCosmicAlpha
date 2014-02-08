@@ -1,12 +1,13 @@
-var ViewModels;
+﻿var ViewModels;
 (function (ViewModels) {
     (function (GeographicExpertises) {
         var GeographicExpertise = (function () {
-            function GeographicExpertise(expertiseId) {
+            function GeographicExpertise(expertiseId, personId) {
                 this.dirtyFlag = ko.observable(false);
                 this.initialLocations = [];
                 this.selectedLocationValues = [];
-                this._initialize(expertiseId);
+                this.personId = ko.observable(parseInt(personId));
+                this._initialize(parseInt(expertiseId));
             }
             GeographicExpertise.prototype._initialize = function (expertiseId) {
                 this.id = ko.observable(expertiseId);
@@ -60,7 +61,7 @@ var ViewModels;
 
                 if (this.id() == 0) {
                     this.version = ko.observable(null);
-                    this.personId = ko.observable(0);
+
                     this.description = ko.observable(null);
                     this.locations = ko.observableArray();
                     this.whenLastUpdated = ko.observable(null);
@@ -103,6 +104,7 @@ var ViewModels;
             };
 
             GeographicExpertise.prototype.save = function (viewModel, event) {
+                var _this = this;
                 if (!this.isValid()) {
                     this.errors.showAllMessages();
                     return;
@@ -144,28 +146,37 @@ var ViewModels;
                 }).fail(function (xhr, status, errorThrown) {
                     App.Failures.message(xhr, 'while trying to save your geographic expertise', true);
                 }).always(function (xhr, status) {
-                    location.href = App.Routes.Mvc.My.Profile.get("geographic-expertise");
+                    location.href = Routes.Mvc.Employees.GeographicExpertise.detail(_this.personId());
                 });
             };
 
             GeographicExpertise.prototype.cancel = function (item, event, mode) {
+                var personId = this.personId();
                 if (this.dirtyFlag() == true) {
-                    $("#cancelConfirmDialog").dialog({
+                    var $dialog = $('#cancelConfirmDialog');
+                    $dialog.dialog({
                         modal: true,
                         resizable: false,
-                        width: 450,
-                        buttons: {
-                            "Do not cancel": function () {
-                                $(this).dialog("close");
+                        width: 'auto',
+                        buttons: [
+                            {
+                                text: 'Yes, cancel & lose changes',
+                                click: function () {
+                                    location.href = Routes.Mvc.Employees.GeographicExpertise.detail(personId);
+                                    $dialog.dialog('close');
+                                }
                             },
-                            "Cancel and lose changes": function () {
-                                $(this).dialog("close");
-                                location.href = App.Routes.Mvc.My.Profile.get("geographic-expertise");
+                            {
+                                text: 'No, do not cancel',
+                                click: function () {
+                                    $dialog.dialog('close');
+                                },
+                                'data-css-link': true
                             }
-                        }
+                        ]
                     });
                 } else {
-                    location.href = App.Routes.Mvc.My.Profile.get("geographic-expertise");
+                    location.href = Routes.Mvc.Employees.GeographicExpertise.detail(personId);
                 }
             };
 

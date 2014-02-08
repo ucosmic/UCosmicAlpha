@@ -1,58 +1,74 @@
-﻿@{
+﻿@using UCosmic.Web.Mvc.Models
+@{
     ViewBag.Title = "My Geographic Expertise";
+}
+
+@section bib
+{
+    <nav class="bib">
+        @Html.Partial(MVC.Employees.Views._Bib, new EmployeesBibNavModel
+        {
+            Other = new KeyValuePair<string, string>("My Global Expertise &raquo;", Url.Action(MVC.People.GlobalExpertises((int)ViewBag.PersonId))),
+            Custom = ViewBag.ExpertiseId == 0 ? "New" : "Edit",
+        })
+    </nav>
 }
 
 @section styles
 {
     <style>
-    .non-required-field
-    {
-        width: 120px;
-        display:inline-block;
-        text-align: right;
-        vertical-align: inherit;
-    }        
-    .required-field
-    {
-        width: 120px;
-        display:inline-block;
-        text-align: right;
-        vertical-align: inherit;
-    }
-    .required-field::after {
-        content: "*";
-        font-size: large;
-        vertical-align: text-top;
-        color: red;
-    }
+        .non-required-field {
+            width: 120px;
+            display: inline-block;
+            text-align: right;
+            vertical-align: inherit;
+        }
+
+        .required-field {
+            width: 120px;
+            display: inline-block;
+            text-align: right;
+            vertical-align: inherit;
+        }
+
+            .required-field::after {
+                content: "*";
+                font-size: large;
+                vertical-align: text-top;
+                color: red;
+            }
     </style>
 }
 
 @section scripts
 {
+    <script>
+        @{ Html.RenderPartial(MVC.JavaScriptRoutes.Views.Employees); }
+    </script>
+
     @Scripts.Render("~/bundles/geographicExpertise")
 
     <script type="text/javascript">
-        $(function() {
-            var expertiseViewModel = new ViewModels.GeographicExpertises.GeographicExpertise(@ViewBag.ExpertiseId);
+        $(function () {
+            var expertiseViewModel = new ViewModels.GeographicExpertises.GeographicExpertise('@ViewBag.ExpertiseId', '@ViewBag.PersonId');
             expertiseViewModel.load()
-                .done(function() {
+                .done(function () {
 
-                    expertiseViewModel.setupWidgets("location");                   
-                    ko.applyBindings( expertiseViewModel, $( "#geographic-expertise-edit" )[0] );
+                    expertiseViewModel.setupWidgets("location");
+                    ko.applyBindings(expertiseViewModel, $("#geographic-expertise-edit")[0]);
 
-                    var locationSelector = $( "#location" ).data( "kendoMultiSelect" );
-                    locationSelector.setDataSource( new kendo.data.DataSource({
+                    var locationSelector = $("#location").data("kendoMultiSelect");
+                    locationSelector.setDataSource(new kendo.data.DataSource({
                         serverFiltering: true,
                         transport: {
-                            read: function(options) {
+                            read: function (options) {
                                 $.ajax({
                                     url: App.Routes.WebApi.Places.get(),
-                                    
+
                                     /*
                                         Bug - There's a bug in KendoUI Multiselect whereby the datasource.read()
                                         gets called as soon as the widget gets focus.  This is bad as the Place
-                                        service will response with all the Places in the DB since there is no 
+                                        service will response with all the Places in the DB since there is no
                                         filter being provided.  Our workaround is to trap the empty filter
                                         and send a special character for the service to ignore.  Also,
                                         If options.success() is not actually call, the widget stops functioning
@@ -65,30 +81,23 @@
                                             (options.data.filter.filters[0].value != null)) ?
                                             options.data.filter.filters[0].value : "~"
                                     },
-                                    success: function(results) {
+                                    success: function (results) {
                                         options.success(results);
                                     }
                                 });
                             }
                         }
-                    } ) );
+                    }));
 
                     expertiseViewModel.setupValidation();
                     expertiseViewModel.setupSubscriptions();
                 })
-            .fail(function(jqXhr, textStatus, errorThrown) {
-            alert(textStatus + "|" + errorThrown);
-        });
+            .fail(function (jqXhr, textStatus, errorThrown) {
+                alert(textStatus + "|" + errorThrown);
+            });
         });
 
     </script>
-}
-
-@section bib
-{
-    <nav class="bib hide" data-current-bib="my">
-        @Html.Partial(MVC.Home.Views._Bib)
-    </nav>
 }
 
 <div class="content fixed to-top" data-current-module="home">
@@ -97,7 +106,7 @@
             <div data-side-swiper="on">
                 <div class="group">
                     <div id="geographic-expertise-edit" class="on-left from-top" style="width: 100%;">
-				        
+
                         <header>
                             <h1>@ViewBag.Title</h1>
                         </header>
@@ -112,7 +121,7 @@
                                 </div>
                             </div>
                             <span data-bind="validationMessage: locations" class="validationMessage"></span>
-                            
+
                             <!-- DESCRIPTION -->
                             <div>
                                 <span style="display: inline-block; vertical-align: middle">
@@ -122,7 +131,7 @@
                             </div>
 
                         </div>
-                            
+
                         <!-- BUTTONS -->
                         <div style="margin-bottom: 32px" data-bind="template: { name: 'buttons-template'}"></div>
 
@@ -135,26 +144,26 @@
                                 <label id="last-updated-name" data-bind="text: whoLastUpdated()"></label>
                             </span>
                         </div>
-                    </div>                      
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-                  
+
 <!-- JQUERY DIALOGS -->
 <div id="cancelConfirmDialog" class="dialog" title="Confirm Cancel">
     <div>By cancelling, you will lose all changes.</div>
-    <div style="font-weight: bold">Are you sure you want to Cancel editing this expertise?</div>
+    <div style="font-weight: bold">Are you sure you want to cancel editing this expertise?</div>
 </div>
 
 
 <!-- KNOCKOUT TEMPLATES -->
 <script type="text/html" id="buttons-template">
     <span>
-        <input type="button" value="Save" data-bind="click: function (item, event) { save(item, event, 'Save'); }, clickBubble: false"/>
-        <input type="button" value="Guide Me" style="margin-left: 50px"/>
-        <input type="button" value="Cancel" style="float: right; margin-right: 240px" data-bind="click: function (item, event) { cancel(item, event); }, clickBubble: false"/>
+        <input type="button" value="Save" data-bind="click: function (item, event) { save(item, event, 'Save'); }, clickBubble: false" />
+        @*<input type="button" value="Guide Me" style="margin-left: 50px" />*@
+        <input type="button" value="Cancel" style="float: right; margin-right: 240px" data-bind="click: function (item, event) { cancel(item, event); }, clickBubble: false" />
     </span>
 </script>
