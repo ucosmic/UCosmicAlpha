@@ -192,7 +192,6 @@ module ViewModels.GeographicExpertises {
         }
 
         cancel(item: any, event: any, mode: string): void {
-            var personId = this.personId();
             if ( this.dirtyFlag() == true ) {
                 var $dialog = $('#cancelConfirmDialog');
                 $dialog.dialog( {
@@ -203,7 +202,7 @@ module ViewModels.GeographicExpertises {
                         {
                             text: 'Yes, cancel & lose changes',
                             click: (): void => {
-                                location.href = Routes.Mvc.Employees.GeographicExpertise.detail(personId);
+                                location.href = Routes.Mvc.Employees.GeographicExpertise.detail(this.personId());
                                 $dialog.dialog('close');
                             },
                         },
@@ -218,7 +217,7 @@ module ViewModels.GeographicExpertises {
                 } );
             }
             else { 
-                location.href = Routes.Mvc.Employees.GeographicExpertise.detail(personId);
+                location.href = Routes.Mvc.Employees.GeographicExpertise.detail(this.personId());
             }
         }
 

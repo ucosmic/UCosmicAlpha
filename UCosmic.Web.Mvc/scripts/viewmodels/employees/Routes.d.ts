@@ -27,6 +27,7 @@ declare module Employees.MvcRoutes {
         Activities: Activities;
         Degrees: Degrees;
         GeographicExpertise: GeographicExpertise;
+        LanguageExpertise: LanguageExpertise;
     }
 
     export interface Activities {
@@ -40,6 +41,10 @@ declare module Employees.MvcRoutes {
     }
 
     export interface GeographicExpertise {
+        detail(personId: number): string;
+    }
+
+    export interface LanguageExpertise {
         detail(personId: number): string;
     }
 }

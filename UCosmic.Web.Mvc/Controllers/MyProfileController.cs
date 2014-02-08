@@ -49,6 +49,7 @@ namespace UCosmic.Web.Mvc.Controllers
         }
 
         [Authorize]
+        [CurrentModuleTab(ModuleTab.Employees)]
         [GET("my/geographic-expertise/new", ControllerPrecedence = 1)]
         public virtual ActionResult NewGeographicExpertise()
         {
@@ -59,6 +60,7 @@ namespace UCosmic.Web.Mvc.Controllers
         }
 
         [Authorize]
+        [CurrentModuleTab(ModuleTab.Employees)]
         [GET("my/geographic-expertise/{expertiseId:int}")]
         [GET("my/geographic-expertise/{expertiseId:int}/edit", ActionPrecedence = 1)]
         public virtual ActionResult EditGeographicExpertise(int expertiseId)
@@ -70,37 +72,43 @@ namespace UCosmic.Web.Mvc.Controllers
         }
 
         [Authorize]
+        [CurrentModuleTab(ModuleTab.Employees)]
         [GET("my/language-expertise/new", ControllerPrecedence = 1)]
         public virtual ActionResult NewLanguageExpertise()
         {
+            var person = _queryProcessor.Execute(new MyPerson(User));
+            ViewBag.PersonId = person.RevisionId;
             ViewBag.ExpertiseId = 0;
             return View(MVC.MyProfile.Views.LanguageExpertiseForm);
         }
 
         [Authorize]
+        [CurrentModuleTab(ModuleTab.Employees)]
         [GET("my/language-expertise/{expertiseId:int}")]
         [GET("my/language-expertise/{expertiseId:int}/edit", ActionPrecedence = 1)]
         public virtual ActionResult EditLanguageExpertise(int expertiseId)
         {
+            var person = _queryProcessor.Execute(new MyPerson(User));
+            ViewBag.PersonId = person.RevisionId;
             ViewBag.ExpertiseId = expertiseId;
             return View(MVC.MyProfile.Views.LanguageExpertiseForm);
         }
 
-        [Authorize]
-        [GET("my/international-affiliations/new", ControllerPrecedence = 1)]
-        public virtual ActionResult NewInternationalAffiliation()
-        {
-            ViewBag.AffiliationId = 0;
-            return View(MVC.MyProfile.Views.InternationalAffiliationForm);
-        }
+        //[Authorize]
+        //[GET("my/international-affiliations/new", ControllerPrecedence = 1)]
+        //public virtual ActionResult NewInternationalAffiliation()
+        //{
+        //    ViewBag.AffiliationId = 0;
+        //    return View(MVC.MyProfile.Views.InternationalAffiliationForm);
+        //}
 
-        [Authorize]
-        [GET("my/international-affiliations/{affiliationId:int}")]
-        [GET("my/international-affiliations/{affiliationId:int}/edit", ActionPrecedence = 1)]
-        public virtual ActionResult EditInternationalAffiliation(int affiliationId)
-        {
-            ViewBag.AffiliationId = affiliationId;
-            return View(MVC.MyProfile.Views.InternationalAffiliationForm);
-        }
+        //[Authorize]
+        //[GET("my/international-affiliations/{affiliationId:int}")]
+        //[GET("my/international-affiliations/{affiliationId:int}/edit", ActionPrecedence = 1)]
+        //public virtual ActionResult EditInternationalAffiliation(int affiliationId)
+        //{
+        //    ViewBag.AffiliationId = affiliationId;
+        //    return View(MVC.MyProfile.Views.InternationalAffiliationForm);
+        //}
     }
 }

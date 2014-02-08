@@ -1,73 +1,84 @@
-﻿@{
+﻿@using UCosmic.Web.Mvc.Models
+@{
     ViewBag.Title = "My Language Expertise";
+}
+
+@section bib
+{
+    <nav class="bib">
+        @Html.Partial(MVC.Employees.Views._Bib, new EmployeesBibNavModel
+        {
+            Other = new KeyValuePair<string, string>("My Language Expertise &raquo;", Url.Action(MVC.People.Languages((int)ViewBag.PersonId))),
+            Custom = ViewBag.ExpertiseId == 0 ? "New" : "Edit",
+        })
+    </nav>
 }
 
 @section styles
 {
     <style>
-    .non-required-field
-    {
-        width: 100px;
-        display:inline-block;
-        text-align: right;
-        vertical-align: inherit;
-    }
-    .required-field
-    {
-        width: 100px;
-        display:inline-block;
-        text-align: right;
-        vertical-align: inherit;
-    }
-    .required-field::after {
-        content: "*";
-        font-size: large;
-        vertical-align: text-top;
-        color: red;
-    }
+        .non-required-field {
+            width: 100px;
+            display: inline-block;
+            text-align: right;
+            vertical-align: inherit;
+        }
+
+        .required-field {
+            width: 100px;
+            display: inline-block;
+            text-align: right;
+            vertical-align: inherit;
+        }
+
+            .required-field::after {
+                content: "*";
+                font-size: large;
+                vertical-align: text-top;
+                color: red;
+            }
+
         .menu-item-header {
             font-weight: bold;
             line-height: 100%;
             margin-bottom: 4px;
         }
-    .menu-item {
-        font-size: smaller;
-        line-height: 120%;
-        margin-bottom: 8px;
-    }
+
+        .menu-item {
+            font-size: smaller;
+            line-height: 120%;
+            margin-bottom: 8px;
+        }
     </style>
 }
 
 @section scripts
 {
+    <script>
+        @{ Html.RenderPartial(MVC.JavaScriptRoutes.Views.Employees); }
+    </script>
+
     @Scripts.Render("~/bundles/languageExpertise")
 
     <script type="text/javascript">
-        $(function() {
-            var expertiseViewModel = new ViewModels.LanguageExpertises.LanguageExpertise(@ViewBag.ExpertiseId);
+        $(function () {
+            var expertiseViewModel = new ViewModels.LanguageExpertises.LanguageExpertise('@ViewBag.ExpertiseId', '@ViewBag.PersonId');
             expertiseViewModel.load()
-                .done(function() {
+                .done(function () {
                     expertiseViewModel.setupWidgets("language", "speaking", "listening", "reading", "writing");
-                    ko.applyBindings( expertiseViewModel, $( "#language-expertise-edit" )[0] );
+                    ko.applyBindings(expertiseViewModel, $("#language-expertise-edit")[0]);
                     expertiseViewModel.setupValidation();
                     expertiseViewModel.setupSubscriptions();
                 })
-                .fail(function(jqXhr, textStatus, errorThrown) {
+                .fail(function (jqXhr, textStatus, errorThrown) {
                     alert(textStatus + "|" + errorThrown);
                 });
-    });
+        });
 
     </script>
 }
 
-@section bib
-{
-    <nav class="bib hide" data-current-bib="my">
-        @Html.Partial(MVC.Home.Views._Bib)
-    </nav>
-}
-
-<div class="content fixed to-top" data-current-module="home">
+<div class="content fixed to-top">
     <div data-side-swiper="root">
         <div data-side-swiper="deck">
             <div data-side-swiper="on">
@@ -88,18 +99,18 @@
                             <!-- MAIN LANGUAGE DIALECT -->
                             <div data-bind="visible: languageId() != null">
                                 <label for="main-dialect" class="non-required-field" style="margin-left: 20px">Dialect</label>
-                                <input type="text" id="main-dialect" style="width: 400px" data-bind="value: dialect"/>
+                                <input type="text" id="main-dialect" style="width: 400px" data-bind="value: dialect" />
                             </div>
 
-                             <!-- OTHER LANGUAGE AND DIALECT -->
+                            <!-- OTHER LANGUAGE AND DIALECT -->
                             <div data-bind="visible: languageId() == null" style="display: none">
                                 <label for="other" class="required-field" style="margin-left: 20px">Other</label>
-                                <input type="text" id="other" style="width: 400px" data-bind="value: other"/>
+                                <input type="text" id="other" style="width: 400px" data-bind="value: other" />
                                 <span data-bind="visible: isOther()" class="validationMessage" style="display: none">Please provide the other language</span>
                             </div>
                             <div data-bind="visible: languageId() == null" style="display: none">
                                 <label for="other-dialect" class="non-required-field" style="margin-left: 20px">Dialect</label>
-                                <input type="text" id="other-dialect" style="width: 400px" data-bind="value: dialect"/>
+                                <input type="text" id="other-dialect" style="width: 400px" data-bind="value: dialect" />
                             </div>
 
                             <div style="margin-top: 20px; margin-bottom: 20px; font-weight: bold">
@@ -109,19 +120,19 @@
                             <!-- PROFICIENCIES -->
                             <div style="margin-bottom: 8px">
                                 <label for="speaking" class="non-required-field">Speaking</label>
-                                <select  id="speaking" style="width: 600px;" data-bind="value: speakingProficiency"></select>
+                                <select id="speaking" style="width: 600px;" data-bind="value: speakingProficiency"></select>
                             </div>
                             <div style="margin-bottom: 8px">
                                 <label for="listening" class="non-required-field">Listening</label>
-                                <select  id="listening" style="width: 600px" data-bind="value: listeningProficiency"></select>
+                                <select id="listening" style="width: 600px" data-bind="value: listeningProficiency"></select>
                             </div>
                             <div style="margin-bottom: 8px">
                                 <label for="reading" class="non-required-field">Reading</label>
-                                <select  id="reading" style="width: 600px" data-bind="value: readingProficiency"></select>
+                                <select id="reading" style="width: 600px" data-bind="value: readingProficiency"></select>
                             </div>
                             <div style="margin-bottom: 8px">
                                 <label for="writing" class="non-required-field">Writing</label>
-                                <select  id="writing" style="width: 600px" data-bind="value: writingProficiency"></select>
+                                <select id="writing" style="width: 600px" data-bind="value: writingProficiency"></select>
                             </div>
 
                         </div>
@@ -145,7 +156,7 @@
     </div>
 </div>
 
-                  
+
 <!-- JQUERY DIALOGS -->
 <div id="cancelConfirmDialog" class="dialog" title="Confirm Cancel">
     <div>By cancelling, you will lose all changes.</div>
@@ -156,13 +167,13 @@
 <script id="proficiency-template" type="text/x-kendo-tmpl">
     <div class="menu-item-header">${ data.title }</div>
     <div class="menu-item">${ data.description }</div>
-</script>  
+</script>
 
 <!-- KNOCKOUT TEMPLATES -->
 <script type="text/html" id="buttons-template">
     <span>
-        <input type="button" value="Save" data-bind="click: function (item, event) { save(item, event, 'Save'); }, clickBubble: false"/>
-        <input type="button" value="Guide Me" style="margin-left: 50px"/>
-        <input type="button" value="Cancel" style="float: right; margin-right: 240px" data-bind="click: function (item, event) { cancel(item, event); }, clickBubble: false"/>
+        <input type="button" value="Save" data-bind="click: function (item, event) { save(item, event, 'Save'); }, clickBubble: false" />
+        @*<input type="button" value="Guide Me" style="margin-left: 50px" />*@
+        <input type="button" value="Cancel" style="float: right; margin-right: 240px" data-bind="click: function (item, event) { cancel(item, event); }, clickBubble: false" />
     </span>
 </script>

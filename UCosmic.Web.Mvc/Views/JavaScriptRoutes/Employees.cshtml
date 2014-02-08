@@ -139,3 +139,15 @@ Routes.Mvc.Employees.GeographicExpertise.detail = function (personId) {
         personId = routeWriter.Value<int>(0),
     }))'.format(personId);
 };
+
+
+
+Routes.Mvc.Employees.LanguageExpertise = Routes.Mvc.Employees.LanguageExpertise || {};
+Routes.Mvc.Employees.LanguageExpertise.detail = function (personId) {
+    return '@routeWriter.WriteRoute(Url.RouteUrl(new
+    {
+        controller = MVC.People.Name,
+        action = MVC.People.ActionNames.Languages,
+        personId = routeWriter.Value<int>(0),
+    }))'.format(personId);
+};

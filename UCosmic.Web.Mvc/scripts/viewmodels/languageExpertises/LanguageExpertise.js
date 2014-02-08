@@ -1,11 +1,12 @@
-var ViewModels;
+﻿var ViewModels;
 (function (ViewModels) {
     (function (LanguageExpertises) {
         var LanguageExpertise = (function () {
-            function LanguageExpertise(expertiseId) {
+            function LanguageExpertise(expertiseId, personId) {
                 this.dirtyFlag = ko.observable(false);
                 this.isOther = ko.observable(false);
-                this._initialize(expertiseId);
+                this.personId = ko.observable(parseInt(personId));
+                this._initialize(parseInt(expertiseId));
             }
             LanguageExpertise.prototype._initialize = function (expertiseId) {
                 this.id = ko.observable(expertiseId);
@@ -124,7 +125,7 @@ var ViewModels;
 
                 if (this.id() == 0) {
                     this.version = ko.observable(null);
-                    this.personId = ko.observable(0);
+
                     this.whenLastUpdated = ko.observable(null);
                     this.whoLastUpdated = ko.observable(null);
                     this.languageId = ko.observable(0);
@@ -176,6 +177,7 @@ var ViewModels;
             };
 
             LanguageExpertise.prototype.save = function (viewModel, event) {
+                var _this = this;
                 if (!this.isValid()) {
                     this.errors.showAllMessages();
                     return;
@@ -221,29 +223,38 @@ var ViewModels;
                         alert(textStatus + " | " + errorThrown);
                     },
                     complete: function (jqXhr, textStatus) {
-                        location.href = App.Routes.Mvc.My.Profile.get("language-expertise");
+                        location.href = Routes.Mvc.Employees.LanguageExpertise.detail(_this.personId());
                     }
                 });
             };
 
             LanguageExpertise.prototype.cancel = function (item, event, mode) {
+                var _this = this;
                 if (this.dirtyFlag() == true) {
-                    $("#cancelConfirmDialog").dialog({
+                    var $dialog = $('#cancelConfirmDialog');
+                    $dialog.dialog({
                         modal: true,
                         resizable: false,
-                        width: 450,
-                        buttons: {
-                            "Do not cancel": function () {
-                                $(this).dialog("close");
+                        width: 'auto',
+                        buttons: [
+                            {
+                                text: 'Yes, cancel & lose changes',
+                                click: function () {
+                                    location.href = Routes.Mvc.Employees.LanguageExpertise.detail(_this.personId());
+                                    $dialog.dialog('close');
+                                }
                             },
-                            "Cancel and lose changes": function () {
-                                $(this).dialog("close");
-                                location.href = App.Routes.Mvc.My.Profile.get("language-expertise");
+                            {
+                                text: 'No, do not cancel',
+                                click: function () {
+                                    $dialog.dialog('close');
+                                },
+                                'data-css-link': true
                             }
-                        }
+                        ]
                     });
                 } else {
-                    location.href = App.Routes.Mvc.My.Profile.get("language-expertise");
+                    location.href = Routes.Mvc.Employees.LanguageExpertise.detail(this.personId());
                 }
             };
             return LanguageExpertise;

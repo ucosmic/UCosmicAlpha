@@ -151,7 +151,7 @@
             };
 
             GeographicExpertise.prototype.cancel = function (item, event, mode) {
-                var personId = this.personId();
+                var _this = this;
                 if (this.dirtyFlag() == true) {
                     var $dialog = $('#cancelConfirmDialog');
                     $dialog.dialog({
@@ -162,7 +162,7 @@
                             {
                                 text: 'Yes, cancel & lose changes',
                                 click: function () {
-                                    location.href = Routes.Mvc.Employees.GeographicExpertise.detail(personId);
+                                    location.href = Routes.Mvc.Employees.GeographicExpertise.detail(_this.personId());
                                     $dialog.dialog('close');
                                 }
                             },
@@ -176,7 +176,7 @@
                         ]
                     });
                 } else {
-                    location.href = Routes.Mvc.Employees.GeographicExpertise.detail(personId);
+                    location.href = Routes.Mvc.Employees.GeographicExpertise.detail(this.personId());
                 }
             };
 

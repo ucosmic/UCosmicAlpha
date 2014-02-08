@@ -65,12 +65,6 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.EditLanguageExpertise);
         }
-        [NonAction]
-        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public System.Web.Mvc.ActionResult EditInternationalAffiliation()
-        {
-            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.EditInternationalAffiliation);
-        }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public MyProfileController Actions { get { return MVC.MyProfile; } }
@@ -94,8 +88,6 @@ namespace UCosmic.Web.Mvc.Controllers
             public readonly string EditGeographicExpertise = "EditGeographicExpertise";
             public readonly string NewLanguageExpertise = "NewLanguageExpertise";
             public readonly string EditLanguageExpertise = "EditLanguageExpertise";
-            public readonly string NewInternationalAffiliation = "NewInternationalAffiliation";
-            public readonly string EditInternationalAffiliation = "EditInternationalAffiliation";
         }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -108,8 +100,6 @@ namespace UCosmic.Web.Mvc.Controllers
             public const string EditGeographicExpertise = "EditGeographicExpertise";
             public const string NewLanguageExpertise = "NewLanguageExpertise";
             public const string EditLanguageExpertise = "EditLanguageExpertise";
-            public const string NewInternationalAffiliation = "NewInternationalAffiliation";
-            public const string EditInternationalAffiliation = "EditInternationalAffiliation";
         }
 
 
@@ -144,14 +134,6 @@ namespace UCosmic.Web.Mvc.Controllers
         public class ActionParamsClass_EditLanguageExpertise
         {
             public readonly string expertiseId = "expertiseId";
-        }
-        static readonly ActionParamsClass_EditInternationalAffiliation s_params_EditInternationalAffiliation = new ActionParamsClass_EditInternationalAffiliation();
-        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public ActionParamsClass_EditInternationalAffiliation EditInternationalAffiliationParams { get { return s_params_EditInternationalAffiliation; } }
-        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public class ActionParamsClass_EditInternationalAffiliation
-        {
-            public readonly string affiliationId = "affiliationId";
         }
         static readonly ViewsClass s_views = new ViewsClass();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -239,19 +221,6 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.EditLanguageExpertise);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "expertiseId", expertiseId);
-            return callInfo;
-        }
-
-        public override System.Web.Mvc.ActionResult NewInternationalAffiliation()
-        {
-            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.NewInternationalAffiliation);
-            return callInfo;
-        }
-
-        public override System.Web.Mvc.ActionResult EditInternationalAffiliation(int affiliationId)
-        {
-            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.EditInternationalAffiliation);
-            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "affiliationId", affiliationId);
             return callInfo;
         }
 
