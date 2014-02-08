@@ -1,4 +1,4 @@
-﻿var Agreements;
+var Agreements;
 (function (Agreements) {
     var InstitutionalAgreementParticipantModel = (function () {
         function InstitutionalAgreementParticipantModel(isOwner, establishmentId, establishmentOfficialName, establishmentTranslatedName) {

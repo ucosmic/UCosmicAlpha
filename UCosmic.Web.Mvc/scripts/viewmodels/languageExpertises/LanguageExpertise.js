@@ -1,4 +1,4 @@
-﻿var ViewModels;
+var ViewModels;
 (function (ViewModels) {
     (function (LanguageExpertises) {
         var LanguageExpertise = (function () {

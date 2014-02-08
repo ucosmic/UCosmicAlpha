@@ -1,4 +1,4 @@
-﻿var InstitutionalAgreementEditModel = (function () {
+var InstitutionalAgreementEditModel = (function () {
     function InstitutionalAgreementEditModel(agreementId) {
         var _this = this;
         this.agreementId = agreementId;
