@@ -116,7 +116,7 @@
                         </td>
                     </tr>
                     @* TYPE *@
-                    <tr>
+                    <tr data-bind="if: typeOptions().length">
                         @* TODO: activity types / categories are not always required *@
                         <td class="label" style="padding-top: 0;"><span class="container required"><span class="text">Type(s)</span></span></td>
                         <td>
