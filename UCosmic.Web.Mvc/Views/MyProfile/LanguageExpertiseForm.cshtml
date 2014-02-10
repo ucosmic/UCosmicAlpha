@@ -20,14 +20,14 @@
         .non-required-field {
             width: 100px;
             display: inline-block;
-            text-align: right;
+            text-align: left;
             vertical-align: inherit;
         }
 
         .required-field {
             width: 100px;
             display: inline-block;
-            text-align: right;
+            text-align: left;
             vertical-align: inherit;
         }
 
@@ -90,26 +90,40 @@
                         <div style="margin-bottom: 38px">
 
                             <!-- LANGUAGE -->
-                            <div style="margin-bottom: 14px;">
-                                <label for="language" class="required-field" data-bind="css: { 'required-field': languageId() != null, 'non-required-field': languageId() == null }">Language</label>
+                            <div style="margin-bottom: 16px;">
+                                <label for="language" class="required-field" data-bind="css: { 'required-field': languageId() != null, 'non-required-field': languageId() == null }">
+                                    Language:
+                                </label>
                                 <input id="language" style="width: 400px" />
-                                <span data-bind="validationMessage: languageId" class="validationMessage"></span>
+                                <div style="margin-left: 104px;">
+                                    <span data-bind="validationMessage: languageId" class="validationMessage"></span>
+                                </div>
                             </div>
 
                             <!-- MAIN LANGUAGE DIALECT -->
-                            <div data-bind="visible: languageId() != null">
-                                <label for="main-dialect" class="non-required-field" style="margin-left: 20px">Dialect</label>
+                            <div data-bind="visible: languageId() != null" style="margin-bottom: 16px;">
+                                <label for="main-dialect" class="non-required-field" style="margin-left: 20px">
+                                    Dialect:
+                                </label>
                                 <input type="text" id="main-dialect" style="width: 400px" data-bind="value: dialect" />
                             </div>
 
                             <!-- OTHER LANGUAGE AND DIALECT -->
-                            <div data-bind="visible: languageId() == null" style="display: none">
-                                <label for="other" class="required-field" style="margin-left: 20px">Other</label>
+                            <div data-bind="visible: languageId() == null" style="display: none; margin-bottom: 16px;">
+                                <label for="other" class="required-field" style="margin-left: 20px">
+                                    Other:
+                                </label>
                                 <input type="text" id="other" style="width: 400px" data-bind="value: other" />
-                                <span data-bind="visible: isOther()" class="validationMessage" style="display: none">Please provide the other language</span>
+                                <div style="margin-left: 124px;">
+                                    <span data-bind="visible: isOther()" class="validationMessage" style="display: none;">
+                                        Please identify the other language.
+                                    </span>
+                                </div>
                             </div>
                             <div data-bind="visible: languageId() == null" style="display: none">
-                                <label for="other-dialect" class="non-required-field" style="margin-left: 20px">Dialect</label>
+                                <label for="other-dialect" class="non-required-field" style="margin-left: 20px">
+                                    Dialect:
+                                </label>
                                 <input type="text" id="other-dialect" style="width: 400px" data-bind="value: dialect" />
                             </div>
 
@@ -119,19 +133,27 @@
 
                             <!-- PROFICIENCIES -->
                             <div style="margin-bottom: 8px">
-                                <label for="speaking" class="non-required-field">Speaking</label>
+                                <label for="speaking" class="non-required-field">
+                                    Speaking:
+                                </label>
                                 <select id="speaking" style="width: 600px;" data-bind="value: speakingProficiency"></select>
                             </div>
                             <div style="margin-bottom: 8px">
-                                <label for="listening" class="non-required-field">Listening</label>
+                                <label for="listening" class="non-required-field">
+                                    Listening:
+                                </label>
                                 <select id="listening" style="width: 600px" data-bind="value: listeningProficiency"></select>
                             </div>
                             <div style="margin-bottom: 8px">
-                                <label for="reading" class="non-required-field">Reading</label>
+                                <label for="reading" class="non-required-field">
+                                    Reading:
+                                </label>
                                 <select id="reading" style="width: 600px" data-bind="value: readingProficiency"></select>
                             </div>
                             <div style="margin-bottom: 8px">
-                                <label for="writing" class="non-required-field">Writing</label>
+                                <label for="writing" class="non-required-field">
+                                    Writing:
+                                </label>
                                 <select id="writing" style="width: 600px" data-bind="value: writingProficiency"></select>
                             </div>
 
@@ -140,7 +162,7 @@
                         <!-- BUTTONS -->
                         <div style="margin-bottom: 32px" data-bind="template: { name: 'buttons-template'}"></div>
 
-                        <!-- LAST UPDATED -->
+                        <!-- LAST UPDATED
                         <div style="width: 50%; height: 1.5em; border-top: 1px; border-style: solid">
                             <span style="font-size:smaller; color:slategray">
                                 <span>Last updated</span>
@@ -148,7 +170,7 @@
                                 <span> by </span>
                                 <label id="last-updated-name" data-bind="text: whoLastUpdated()"></label>
                             </span>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
@@ -171,9 +193,11 @@
 
 <!-- KNOCKOUT TEMPLATES -->
 <script type="text/html" id="buttons-template">
-    <span>
-        <input type="button" value="Save" data-bind="click: function (item, event) { save(item, event, 'Save'); }, clickBubble: false" />
-        @*<input type="button" value="Guide Me" style="margin-left: 50px" />*@
-        <input type="button" value="Cancel" style="float: right; margin-right: 240px" data-bind="click: function (item, event) { cancel(item, event); }, clickBubble: false" />
-    </span>
+    <div style="border-top: solid 1px #ccc; padding-top: 24px; width: 712px;">
+        <div style="margin-left: 104px;">
+            <input type="button" value="Save" data-bind="click: function (item, event) { save(item, event, 'Save'); }, clickBubble: false" />
+            @*<input type="button" value="Guide Me" style="margin-left: 50px" />*@
+            <input type="button" value="Cancel" class="link" data-bind="click: function (item, event) { cancel(item, event); }, clickBubble: false" />
+        </div>
+    </div>
 </script>

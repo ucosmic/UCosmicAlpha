@@ -1,4 +1,4 @@
-var ViewModels;
+﻿var ViewModels;
 (function (ViewModels) {
     (function (LanguageExpertises) {
         var LanguageExpertise = (function () {
@@ -15,6 +15,7 @@ var ViewModels;
             LanguageExpertise.prototype.setupWidgets = function (languageInputId, speakingInputId, listeningInputId, readingInputId, writingInputId) {
                 var _this = this;
                 $("#" + languageInputId).kendoDropDownList({
+                    animation: false,
                     dataTextField: "name",
                     dataValueField: "id",
                     optionLabel: "Select...",
@@ -42,32 +43,40 @@ var ViewModels;
                 }
 
                 $("#" + speakingInputId).kendoDropDownList({
+                    animation: false,
                     dataTextField: "title",
                     dataValueField: "weight",
+                    height: 500,
                     dataSource: this.proficiencyInfo.speakingMeanings,
                     value: this.speakingProficiency().toString(),
                     template: kendo.template($("#proficiency-template").html())
                 });
 
                 $("#" + listeningInputId).kendoDropDownList({
+                    animation: false,
                     dataTextField: "title",
                     dataValueField: "weight",
+                    height: 500,
                     dataSource: this.proficiencyInfo.listeningMeanings,
                     value: this.listeningProficiency().toString(),
                     template: kendo.template($("#proficiency-template").html())
                 });
 
                 $("#" + readingInputId).kendoDropDownList({
+                    animation: false,
                     dataTextField: "title",
                     dataValueField: "weight",
+                    height: 500,
                     dataSource: this.proficiencyInfo.readingMeanings,
                     value: this.readingProficiency().toString(),
                     template: kendo.template($("#proficiency-template").html())
                 });
 
                 $("#" + writingInputId).kendoDropDownList({
+                    animation: false,
                     dataTextField: "title",
                     dataValueField: "weight",
+                    height: 500,
                     dataSource: this.proficiencyInfo.writingMeanings,
                     value: this.writingProficiency().toString(),
                     template: kendo.template($("#proficiency-template").html())
@@ -75,7 +84,12 @@ var ViewModels;
             };
 
             LanguageExpertise.prototype.setupValidation = function () {
-                this.languageId.extend({ notEqual: 0 });
+                this.languageId.extend({
+                    notEqual: {
+                        params: 0,
+                        message: 'Please select a language or \'Other\' from this menu. '
+                    }
+                });
 
                 ko.validation.group(this);
             };

@@ -2,7 +2,7 @@ module ViewModels.LanguageExpertises {
 
     export class LanguageExpertise {
         /* True if any field changes. */
-        dirtyFlag: KnockoutObservable<boolean> = ko.observable( false );
+        dirtyFlag: KnockoutObservable<boolean> = ko.observable(false);
 
         /* Languages */
         languageList: any;
@@ -32,18 +32,19 @@ module ViewModels.LanguageExpertises {
         languageDroplist: any;
         isOther: KnockoutObservable<boolean> = ko.observable(false);
 
-        _initialize( expertiseId: number ): void {
+        _initialize(expertiseId: number): void {
             this.id = ko.observable(expertiseId);
         }
 
-        setupWidgets( languageInputId: string,
-                      speakingInputId: string,
-                      listeningInputId: string,
-                      readingInputId: string,
-                      writingInputId: string
-             ): void {
+        setupWidgets(languageInputId: string,
+            speakingInputId: string,
+            listeningInputId: string,
+            readingInputId: string,
+            writingInputId: string
+            ): void {
 
             $("#" + languageInputId).kendoDropDownList({
+                animation: false,
                 dataTextField: "name",
                 dataValueField: "id",
                 optionLabel: "Select...",
@@ -62,42 +63,50 @@ module ViewModels.LanguageExpertises {
                         this.languageId(null);
                     }
                 }
-            }); 
+            });
 
             /* For some reason, setting the value in the droplist creation above to 0,
                 does not set the item to "Other" */
             this.languageDroplist = $("#" + languageInputId).data("kendoDropDownList");
             if (this.languageId() == null) {
-                this.languageDroplist.select(function(dataItem) { return dataItem.name === "Other"});
+                this.languageDroplist.select(function (dataItem) { return dataItem.name === "Other" });
             }
 
             $("#" + speakingInputId).kendoDropDownList({
+                animation: false,
                 dataTextField: "title",
                 dataValueField: "weight",
+                height: 500,
                 dataSource: this.proficiencyInfo.speakingMeanings,
                 value: this.speakingProficiency().toString(),
                 template: kendo.template($("#proficiency-template").html())
             });
 
             $("#" + listeningInputId).kendoDropDownList({
+                animation: false,
                 dataTextField: "title",
                 dataValueField: "weight",
+                height: 500,
                 dataSource: this.proficiencyInfo.listeningMeanings,
                 value: this.listeningProficiency().toString(),
                 template: kendo.template($("#proficiency-template").html())
             });
 
             $("#" + readingInputId).kendoDropDownList({
+                animation: false,
                 dataTextField: "title",
                 dataValueField: "weight",
+                height: 500,
                 dataSource: this.proficiencyInfo.readingMeanings,
                 value: this.readingProficiency().toString(),
                 template: kendo.template($("#proficiency-template").html())
             });
 
             $("#" + writingInputId).kendoDropDownList({
+                animation: false,
                 dataTextField: "title",
                 dataValueField: "weight",
+                height: 500,
                 dataSource: this.proficiencyInfo.writingMeanings,
                 value: this.writingProficiency().toString(),
                 template: kendo.template($("#proficiency-template").html())
@@ -109,7 +118,7 @@ module ViewModels.LanguageExpertises {
             //ko.validation.rules['otherRequired'] = {
             //    validator: (val: any, otherVal: any): boolean => {
             //        debugger;
-                    
+
             //        var selectedIndex = this.languageDroplist.select();
             //        var selectedName = this.languageList[selectedIndex].name;
             //        if (selectedName !== "Other") {
@@ -122,10 +131,15 @@ module ViewModels.LanguageExpertises {
 
             //ko.validation.registerExtenders();
 
-            this.languageId.extend({ notEqual: 0 });
+            this.languageId.extend({
+                notEqual: {
+                    params: 0,
+                    message: 'Please select a language or \'Other\' from this menu. ',
+                }
+            });
             //this.other.extend({ otherRequired: true });
 
-            ko.validation.group( this );
+            ko.validation.group(this);
         }
 
         setupSubscriptions(): void {
@@ -147,24 +161,24 @@ module ViewModels.LanguageExpertises {
             var deferred: JQueryDeferred<void> = $.Deferred();
 
             var proficienciesPact = $.Deferred();
-            $.get( App.Routes.WebApi.LanguageExpertise.Proficiencies.get() )
-                            .done( ( data: any, textStatus: string, jqXHR: JQueryXHR ): void => {
-                                proficienciesPact.resolve( data );
-                            } )
-                            .fail( ( jqXHR: JQueryXHR, textStatus: string, errorThrown: string ): void => {
-                                proficienciesPact.reject( jqXHR, textStatus, errorThrown );
-                            } );
+            $.get(App.Routes.WebApi.LanguageExpertise.Proficiencies.get())
+                .done((data: any, textStatus: string, jqXHR: JQueryXHR): void => {
+                    proficienciesPact.resolve(data);
+                })
+                .fail((jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void => {
+                    proficienciesPact.reject(jqXHR, textStatus, errorThrown);
+                });
 
             var languagesPact = $.Deferred();
-            $.get( App.Routes.WebApi.Languages.get() )
-                            .done( ( data: any, textStatus: string, jqXHR: JQueryXHR ): void => {
-                                languagesPact.resolve( data );
-                            } )
-                            .fail( ( jqXHR: JQueryXHR, textStatus: string, errorThrown: string ): void => {
-                                languagesPact.reject( jqXHR, textStatus, errorThrown );
-                            } );
+            $.get(App.Routes.WebApi.Languages.get())
+                .done((data: any, textStatus: string, jqXHR: JQueryXHR): void => {
+                    languagesPact.resolve(data);
+                })
+                .fail((jqXHR: JQueryXHR, textStatus: string, errorThrown: string): void => {
+                    languagesPact.reject(jqXHR, textStatus, errorThrown);
+                });
 
-            if ( this.id() == 0 ) {
+            if (this.id() == 0) {
                 this.version = ko.observable(null);
                 //this.personId = ko.observable(0);
                 this.whenLastUpdated = ko.observable(null);
@@ -177,75 +191,74 @@ module ViewModels.LanguageExpertises {
                 this.readingProficiency = ko.observable(0);
                 this.writingProficiency = ko.observable(0);
 
-                $.when( languagesPact, proficienciesPact )
-                                .done( ( languages: any, proficiencyInfo: any, data: any ): void => {
+                $.when(languagesPact, proficienciesPact)
+                    .done((languages: any, proficiencyInfo: any, data: any): void => {
 
-                                    this.languageList = languages;
-                                    this.languageList.push( {name: "Other", code: "", id: 0 } );
+                        this.languageList = languages;
+                        this.languageList.push({ name: "Other", code: "", id: 0 });
 
-                                    this.proficiencyInfo = proficiencyInfo;
+                        this.proficiencyInfo = proficiencyInfo;
 
-                                    deferred.resolve();
-                                } )
-                                .fail( ( xhr: JQueryXHR, textStatus: string, errorThrown: string ): void => {
-                                    deferred.reject( xhr, textStatus, errorThrown );
-                                } );
+                        deferred.resolve();
+                    })
+                    .fail((xhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
+                        deferred.reject(xhr, textStatus, errorThrown);
+                    });
             }
             else {
                 var dataPact = $.Deferred();
-                $.ajax( {
+                $.ajax({
                     type: "GET",
-                    url: App.Routes.WebApi.LanguageExpertise.get( this.id() ),
-                    success: function ( data: any, textStatus: string, jqXhr: JQueryXHR ): void
-                        { dataPact.resolve( data ); },
-                    error: function ( jqXhr: JQueryXHR, textStatus: string, errorThrown: string ): void
-                        { dataPact.reject( jqXhr, textStatus, errorThrown ); },
-                } );
+                    url: App.Routes.WebApi.LanguageExpertise.get(this.id()),
+                    success: function (data: any, textStatus: string, jqXhr: JQueryXHR): void
+                    { dataPact.resolve(data); },
+                    error: function (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void
+                    { dataPact.reject(jqXhr, textStatus, errorThrown); },
+                });
 
-                $.when( languagesPact, proficienciesPact, dataPact )
-                              .done( ( languages: any, proficiencyInfo: any, data: any ): void => {
+                $.when(languagesPact, proficienciesPact, dataPact)
+                    .done((languages: any, proficiencyInfo: any, data: any): void => {
 
-                                  this.languageList = languages;
-                                  this.languageList.push( {name: "Other", code: "", id: 0 } );
+                        this.languageList = languages;
+                        this.languageList.push({ name: "Other", code: "", id: 0 });
 
-                                  this.proficiencyInfo = proficiencyInfo;
+                        this.proficiencyInfo = proficiencyInfo;
 
-                                  ko.mapping.fromJS( data, {}, this );
+                        ko.mapping.fromJS(data, {}, this);
 
-                                  deferred.resolve();
-                              } )
-                              .fail( ( xhr: JQueryXHR, textStatus: string, errorThrown: string ): void => {
-                                  deferred.reject( xhr, textStatus, errorThrown );
-                              } );
+                        deferred.resolve();
+                    })
+                    .fail((xhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
+                        deferred.reject(xhr, textStatus, errorThrown);
+                    });
             }
 
             return deferred;
         }
 
-        save( viewModel: any, event: any ): void {
+        save(viewModel: any, event: any): void {
 
             if (!this.isValid()) {
                 // TBD - need dialog here.
-                this.errors.showAllMessages(); 
+                this.errors.showAllMessages();
                 return;
             }
 
             var selectedLanguageIndex = this.languageDroplist.select() - 1;
             var selectedLanguageName = this.languageList[selectedLanguageIndex].name;
             if (selectedLanguageName === "Other") {
-                if ((this.other() == null) || (this.other().length == 0))
-                {
+                if ((this.other() == null) || (this.other().length == 0)) {
                     this.isOther(true)
                     return;
                 }
             }
 
             var mapSource = {
-                id : this.id,
-                version : this.version,
-                personId : this.personId,
-                whenLastUpdated : this.whenLastUpdated,
-                whoLastUpdated : this.whoLastUpdated,
+                id: this.id,
+                version: this.version,
+                personId: this.personId,
+                whenLastUpdated: this.whenLastUpdated,
+                whoLastUpdated: this.whoLastUpdated,
                 languageId: this.languageId,
                 dialect: this.dialect,
                 other: this.other,
@@ -254,35 +267,35 @@ module ViewModels.LanguageExpertises {
                 readingProficiency: this.readingProficiency,
                 writingProficiency: this.writingProficiency,
             };
-               
+
             var model = ko.mapping.toJS(mapSource);
 
             var url = (viewModel.id() == 0) ?
-                        App.Routes.WebApi.LanguageExpertise.post() :
-                        App.Routes.WebApi.LanguageExpertise.put( viewModel.id() );
-            var type = (viewModel.id() == 0) ?  "POST" : "PUT";
+                App.Routes.WebApi.LanguageExpertise.post() :
+                App.Routes.WebApi.LanguageExpertise.put(viewModel.id());
+            var type = (viewModel.id() == 0) ? "POST" : "PUT";
 
-            $.ajax( {
+            $.ajax({
                 type: type,
                 async: false,
                 url: url,
                 data: model,
-                success: ( data: any, textStatus: string, jqXhr: JQueryXHR ): void => {
+                success: (data: any, textStatus: string, jqXhr: JQueryXHR): void => {
                 },
-                error: ( jqXhr: JQueryXHR, textStatus: string, errorThrown: string ): void => {
-                    alert( textStatus + " | " + errorThrown );
+                error: (jqXhr: JQueryXHR, textStatus: string, errorThrown: string): void => {
+                    alert(textStatus + " | " + errorThrown);
                 },
-                complete: ( jqXhr: JQueryXHR, textStatus: string ): void => {
+                complete: (jqXhr: JQueryXHR, textStatus: string): void => {
                     //location.href = App.Routes.Mvc.My.Profile.get( "language-expertise" );
                     location.href = Routes.Mvc.Employees.LanguageExpertise.detail(this.personId());
                 }
-            } );
+            });
         }
 
-        cancel( item: any, event: any, mode: string ): void {
+        cancel(item: any, event: any, mode: string): void {
             if (this.dirtyFlag() == true) {
                 var $dialog = $('#cancelConfirmDialog');
-                $dialog.dialog( {
+                $dialog.dialog({
                     modal: true,
                     resizable: false,
                     width: 'auto',
@@ -302,7 +315,7 @@ module ViewModels.LanguageExpertises {
                             'data-css-link': true,
                         },
                     ],
-                } );
+                });
             }
             else {
                 location.href = Routes.Mvc.Employees.LanguageExpertise.detail(this.personId());
