@@ -34,7 +34,15 @@
             </header>
             @Html.Action(MVC.People.GetCard((int)ViewBag.personId))
             @Html.Action(MVC.People.GetAffiliations((int)ViewBag.personId))
-            @Html.Action(MVC.People.GetEmails((int)ViewBag.personId))
+            <section class="content fixed to-top">
+                <h2 style="font-size: 24px; padding-bottom: 1em;">Contact Information</h2>
+                <div style="float:left; width: 330px;">
+                    @Html.Action(MVC.People.GetEmails((int)ViewBag.personId, false))
+                </div>
+                <div style="float:right;">
+                    @Html.Action(MVC.People.GetUrls((int)ViewBag.personId, false))
+                </div>
+            </section>
 
         </div>
         <aside class="on-right from-top" data-fixed-scroll="root">

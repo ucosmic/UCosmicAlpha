@@ -423,6 +423,10 @@ var People;
                 this.$edit_affiliations_dialog.parent().addClass("profile-kendo-window");
                 var dialog = this.$edit_affiliations_dialog.data("kendoWindow");
                 dialog.center();
+
+                $(window).resize(function () {
+                    dialog.center();
+                });
             };
 
             AffiliationsEditor.prototype._loadAffiliationData = function () {

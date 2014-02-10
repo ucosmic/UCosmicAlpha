@@ -220,6 +220,7 @@ namespace UCosmic.Web.Mvc.Controllers
         public class ActionParamsClass_GetEmails
         {
             public readonly string personId = "personId";
+            public readonly string isEdit = "isEdit";
         }
         static readonly ActionParamsClass_GetUrls s_params_GetUrls = new ActionParamsClass_GetUrls();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -228,6 +229,7 @@ namespace UCosmic.Web.Mvc.Controllers
         public class ActionParamsClass_GetUrls
         {
             public readonly string personId = "personId";
+            public readonly string isEdit = "isEdit";
         }
         static readonly ActionParamsClass_Languages s_params_Languages = new ActionParamsClass_Languages();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -370,17 +372,19 @@ namespace UCosmic.Web.Mvc.Controllers
             return callInfo;
         }
 
-        public override System.Web.Mvc.ActionResult GetEmails(int personId)
+        public override System.Web.Mvc.ActionResult GetEmails(int personId, bool isEdit)
         {
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.GetEmails);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "personId", personId);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "isEdit", isEdit);
             return callInfo;
         }
 
-        public override System.Web.Mvc.ActionResult GetUrls(int personId)
+        public override System.Web.Mvc.ActionResult GetUrls(int personId, bool isEdit)
         {
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.GetUrls);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "personId", personId);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "isEdit", isEdit);
             return callInfo;
         }
 

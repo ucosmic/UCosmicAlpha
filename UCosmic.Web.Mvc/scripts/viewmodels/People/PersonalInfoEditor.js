@@ -52,7 +52,7 @@ var People;
                 viewModelPact.done(function (viewModel) {
                     ko.mapping.fromJS(viewModel, { ignore: "id" }, _this);
                     _this.personId = viewModel.id;
-                    _this.preferredTitle(_this.model.JobTitles);
+                    _this.preferredTitle(_this.model.jobTitles);
                     _this._originalValues = viewModel;
                     _this._setupValidation();
                     _this._setupKendoWidgets();
@@ -80,7 +80,7 @@ var People;
             PersonalInfoEditor.prototype.cancelEditing = function () {
                 this.$edit_personal_info_dialog.data("kendoWindow").close();
                 ko.mapping.fromJS(this._originalValues, {}, this);
-                this.preferredTitle(this.model.JobTitles);
+                this.preferredTitle(this.model.jobTitles);
                 this.stopEditing();
             };
 

@@ -510,6 +510,10 @@ module People.ViewModels {
             this.$edit_affiliations_dialog.parent().addClass("profile-kendo-window");
             var dialog = this.$edit_affiliations_dialog.data("kendoWindow");
             dialog.center();
+
+            $(window).resize(() => {
+                dialog.center();
+            });
         }
         
         defaultAffiliation: ApiModels.Affiliation;

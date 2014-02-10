@@ -171,7 +171,7 @@ namespace UCosmic.Web.Mvc.Controllers
 
         [GET("people/{personId:int}/emails")]
         [ChildActionOnly]
-        public virtual ActionResult GetEmails(int personId)
+        public virtual ActionResult GetEmails(int personId, Boolean isEdit)
         {
             var entity = _queryProcessor.Execute(new PersonById(personId)
             {
@@ -181,13 +181,13 @@ namespace UCosmic.Web.Mvc.Controllers
                 }
             });
             var model = Mapper.Map<PersonEmailAddressesViewModel>(entity);
-
+            ViewBag.isEdit = isEdit;
             return model == null ? null : PartialView(MVC.People.Views._Emails, model);
         }
 
         [GET("people/{personId:int}/urls")]
         [ChildActionOnly]
-        public virtual ActionResult GetUrls(int personId)
+        public virtual ActionResult GetUrls(int personId, Boolean isEdit)
         {
             var entity = _queryProcessor.Execute(new ExternalUrlsBy(personId));
 
@@ -196,8 +196,9 @@ namespace UCosmic.Web.Mvc.Controllers
 
             var personModel = GetPerson(personId);
             ViewBag.PersonName = personModel.DisplayName;
-            ViewBag.CustomBib = personModel.DisplayName;
+            //ViewBag.CustomBib = personModel.DisplayName;
             ViewBag.Username = personModel.Username;
+            ViewBag.isEdit = isEdit;
             return model == null ? null : PartialView(MVC.People.Views._Urls, model);
         }
 

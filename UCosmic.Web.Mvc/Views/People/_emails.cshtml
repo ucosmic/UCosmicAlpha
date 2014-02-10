@@ -11,7 +11,7 @@
 
                         @if (emailAddress.IsDefault)
                         {
-                            <div @if (User.Identity.Name.Equals(Model.Username, StringComparison.OrdinalIgnoreCase)) { @Html.Raw("style='margin-bottom:12px;'")   }>
+                            <div @if (ViewBag.isEdit) { @Html.Raw("style='margin-bottom:12px;'")   }>
                                 <strong>
                                     @if (emailAddress.IsConfirmed)
                                     {
@@ -24,17 +24,13 @@
                                         @emailAddress.Value
                                     }
                                 </strong>
-                                <span style="color: #666;"> (default)</span>
+                                @*<span style="color: #666;"> (default)</span>*@
                             </div>
                         }
                         else
                         {
-                            if (User.Identity.Name.Equals(Model.Username, StringComparison.OrdinalIgnoreCase))
+                            if (ViewBag.isEdit)
                             {
-                                @*<form action="@Url.Action(MVC.Emails.Delete())" method="POST">
-                                        DELETE /people/{personId}/emails/{number
-                                    <form method="POST" action="@Url.Action(MVC.People.Emails())">
-                                *@
                                 <form method="POST" action="@Url.Action(MVC.People.DeleteEmail(emailAddress.PersonId, emailAddress.Number))">
                                 @Html.HttpMethodOverride(HttpVerbs.Delete)
                                 @if (emailAddress.IsConfirmed)
@@ -72,11 +68,11 @@
             </ul>
         </div>
     }
-    @if (Model != null && User.Identity.Name.Equals(Model.Username, StringComparison.OrdinalIgnoreCase))
+    @if (ViewBag.isEdit)
     {
 
         <form method="POST" action="@Url.Action(MVC.People.Emails())">
-            <input type="email" placeholder="Enter alternate email address" name="value" style="width:240px;" />
+            <input type="email" placeholder="[Enter alternate email address]" name="value" style="width:240px;" />
             <button href="#" class="button" style="margin:0;">
                 <img alt="" src="~/images/icons/plus/plus-24-green-disc.png" title="Add a new email."
                      style="cursor: pointer; margin: 0" />

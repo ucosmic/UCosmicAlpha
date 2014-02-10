@@ -1,6 +1,6 @@
 ﻿@model UCosmic.Web.Mvc.Models.PersonUrlViewModel[]
 
-@if (User.Identity.Name.Equals(ViewBag.Username, StringComparison.OrdinalIgnoreCase))
+@if (ViewBag.isEdit)
 {
     <script src="~/scripts/viewmodels/people/Urls.js"></script>
 
@@ -17,16 +17,13 @@
 
     @* URLS *@
     <div id="urls">
-        @if (User.Identity.Name.Equals(ViewBag.Username, StringComparison.OrdinalIgnoreCase))
+        @if (ViewBag.isEdit)
         {
             <div style="display: none;">
                 <div data-bind="jQuery: '$confirmDeleteUrl'" title="Please confirm your intent">
                     Are you sure you want to delete this external link? This cannot be undone.
                 </div>
             </div>
-        }
-        @if (User.Identity.Name.Equals(ViewBag.Username, StringComparison.OrdinalIgnoreCase))
-        {
             <ul data-bind="foreach: externalLinks">
                 <li>
                     <a data-bind="attr: {href: value}, text: description, visible: !$root.isEditing()"></a>
@@ -39,8 +36,8 @@
                              style="margin-left: 8px; display: none;" />
                     </div>
                     <div data-bind="visible: $root.isEditing" style="display: none">
-                        <input type="text" placeholder="Enter an external link" name="value" style="width: 328px;display: block; margin-bottom: 12px;" data-bind="text: value" />
-                        <input class="description" type="text" placeholder="[None]" style="width: 240px;"
+                        <input type="text" placeholder="[Enter an external link]" name="value" style="width: 328px;display: block; margin-bottom: 12px;" data-bind="text: value" />
+                        <input class="description" type="text" placeholder="[Link type]" style="width: 240px;"
                                data-bind="value: description, valueUpdate: 'afterkeydown'" />
                         <button href="#" class="button" style="margin:0;">
                             <img alt="" src="~/images/icons/plus/plus-24-green-disc.png" title="Add a new link."

@@ -87,7 +87,7 @@ module People.ViewModels {
             viewModelPact.done((viewModel: ApiModels.IServerProfileApiModel): void => {
                 ko.mapping.fromJS(viewModel, { ignore: "id" }, this); // populate the scalars
                 this.personId = viewModel.id;
-                    this.preferredTitle(this.model.JobTitles);
+                    this.preferredTitle(this.model.jobTitles);
                 this._originalValues = viewModel;
                 this._setupValidation();
                 this._setupKendoWidgets();
@@ -119,7 +119,7 @@ module People.ViewModels {
         cancelEditing(): void {
             this.$edit_personal_info_dialog.data("kendoWindow").close();
             ko.mapping.fromJS(this._originalValues, {}, this); // restore original values
-            this.preferredTitle(this.model.JobTitles);
+            this.preferredTitle(this.model.jobTitles);
             this.stopEditing();
         }
 
