@@ -3,8 +3,15 @@ var People;
     (function (ViewModels) {
         var UrlViewModel = (function () {
             function UrlViewModel(model) {
+                this.descriptionValues = ko.mapping.fromJS([]);
+                this.externalLinks = ko.mapping.fromJS([]);
+                this.isEditing = ko.observable(false);
                 this.createLink = ko.observable("");
+                this.createDescription = ko.observable("");
                 this.purgeSpinner = new App.Spinner();
+                this.personId = model.PersonId;
+
+                this.bindJquery();
             }
             UrlViewModel.prototype._purge = function (expertiseId) {
                 var _this = this;
@@ -68,6 +75,31 @@ var People;
             UrlViewModel.prototype.edit = function (id) {
             };
             UrlViewModel.prototype.addUrl = function () {
+                var url = Routes.Api.People.ExternalUrls.plural(this.personId);
+                var data = {
+                    value: this.createLink,
+                    description: this.createDescription
+                };
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    data: data,
+                    error: function (xhr, statusText, errorThrown) {
+                        App.Failures.message(xhr, xhr.responseText, true);
+                    }
+                });
+            };
+            UrlViewModel.prototype.editUrl = function () {
+            };
+
+            UrlViewModel.prototype.bindJquery = function () {
+                $(".description").kendoComboBox({
+                    dataTextField: "name",
+                    dataValueField: "id",
+                    dataSource: new kendo.data.DataSource({
+                        data: this.descriptionValues()
+                    })
+                });
             };
             return UrlViewModel;
         })();

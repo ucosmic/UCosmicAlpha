@@ -196,6 +196,7 @@ namespace UCosmic.Web.Mvc.Controllers
 
             var personModel = GetPerson(personId);
             ViewBag.PersonName = personModel.DisplayName;
+            ViewBag.CustomBib = personModel.DisplayName;
             ViewBag.Username = personModel.Username;
             return model == null ? null : PartialView(MVC.People.Views._Urls, model);
         }

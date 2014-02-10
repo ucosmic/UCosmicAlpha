@@ -2,10 +2,17 @@ module People.ViewModels {
     export class UrlViewModel {
 
         constructor(model) {
-            
+            this.personId = model.PersonId;
+            //I need to bind jquery after binding model
+            this.bindJquery();
         }
+        descriptionValues = ko.mapping.fromJS([]);
+        externalLinks = ko.mapping.fromJS([]);
+        isEditing = ko.observable<Boolean>(false);
+        personId;
 
         createLink = ko.observable<String>("");
+        createDescription = ko.observable<String>("");
         purgeSpinner = new App.Spinner();
         $confirmDeleteUrl: JQuery;
         private _purge(expertiseId): void {
@@ -71,7 +78,35 @@ module People.ViewModels {
             //window.location.href = App.Routes.Mvc.My.GeographicExpertise.edit(id)
         }
         addUrl(): void {
-           // window.location.href = App.Routes.Mvc.My.GeographicExpertise.create();
+            var url = Routes.Api.People.ExternalUrls.plural(this.personId);
+            var data = {
+                value: this.createLink,
+                description: this.createDescription
+            }
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: data,
+                error: (xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
+                    App.Failures.message(xhr, xhr.responseText, true);
+                }
+            });
         }
+        editUrl(): void {
+            // window.location.href = App.Routes.Mvc.My.GeographicExpertise.create();
+        }
+
+
+        bindJquery(): void {
+
+            $(".description").kendoComboBox({
+                dataTextField: "name",
+                dataValueField: "id",
+                dataSource: new kendo.data.DataSource({
+                    data: this.descriptionValues()
+                })
+            });
+        }
+
     }
 }

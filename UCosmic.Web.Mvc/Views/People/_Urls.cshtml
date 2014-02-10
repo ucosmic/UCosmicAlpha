@@ -1,9 +1,22 @@
 ﻿@model UCosmic.Web.Mvc.Models.PersonUrlViewModel[]
 
-@* URLS *@
-@if (Model != null && Model.Any())
+@if (User.Identity.Name.Equals(ViewBag.Username, StringComparison.OrdinalIgnoreCase))
 {
-    <div>
+    <script src="~/scripts/viewmodels/people/Urls.js"></script>
+
+    <script type="text/javascript">
+
+        function Urls() {
+            var model = $.parseJSON('@Html.Raw(Json.Encode(Model))');
+            var urlsViewModel = new People.ViewModels.UrlViewModel(model);
+            ko.applyBindings(urlsViewModel, $('#urls')[0]);
+        };
+
+    </script>
+}
+
+    @* URLS *@
+    <div id="urls">
         @if (User.Identity.Name.Equals(ViewBag.Username, StringComparison.OrdinalIgnoreCase))
         {
             <div style="display: none;">
@@ -12,41 +25,59 @@
                 </div>
             </div>
         }
-        <ul>
-            @foreach (var url in Model)
-            {
-                <li>
-                    @if (User.Identity.Name.Equals(ViewBag.Username, StringComparison.OrdinalIgnoreCase))
-                    {
-                        @url.Value
-                        <div style="float: right; width: 70px; text-align: right;">
-                            <img data-bind="click: edit.bind($data, @url.UrlId), visible: !purgeSpinner.isVisible()" alt="" src="~/images/icons/edit/pencil-a-24.png" title="Edit this external link"
-                                 style="cursor: pointer; margin: 0 0 8px 8px;" />
-                            <img data-bind="click: purge.bind($data, @url.UrlId), visible: !purgeSpinner.isVisible()" a alt="" src="~/images/icons/minus/minus-24-red.png" title="Delete this external link"
-                                 style="cursor: pointer; margin: 0 0 8px 8px;" />
-                            <img data-bind="visible: purgeSpinner.isVisible" alt="" src="~/images/icons/spinner/spinner-24-blue.gif" title="Deleting this external link..."
-                                 style="margin-left: 8px; display: none;" />
-                        </div>
-                    }
-                    else
-                    {
-                        @url.Value
-                    }
-
-                </li>
-            }
-        </ul>
         @if (User.Identity.Name.Equals(ViewBag.Username, StringComparison.OrdinalIgnoreCase))
         {
-            <li id="url_no_results" style="display: none; font-size: 16px;">
-                @ViewBag.CustomBib has not yet identified any particular areas of formal education.
-            </li>
+            <ul data-bind="foreach: externalLinks">
+                <li>
+                    <a data-bind="attr: {href: value}, text: description, visible: !$root.isEditing()"></a>
+                    <div style="float: right; width: 70px; text-align: right;" data-bind="visible: !$root.isEditing()">
+                        <img data-bind="click: edit.bind($data, id), visible: !purgeSpinner.isVisible()" alt="" src="~/images/icons/edit/pencil-a-24.png" title="Edit this external link"
+                             style="cursor: pointer; margin: 0 0 8px 8px;" />
+                        <img data-bind="click: purge.bind($data, id), visible: !purgeSpinner.isVisible()" a alt="" src="~/images/icons/minus/minus-24-red.png" title="Delete this external link"
+                             style="cursor: pointer; margin: 0 0 8px 8px;" />
+                        <img data-bind="visible: purgeSpinner.isVisible" alt="" src="~/images/icons/spinner/spinner-24-blue.gif" title="Deleting this external link..."
+                             style="margin-left: 8px; display: none;" />
+                    </div>
+                    <div data-bind="visible: $root.isEditing" style="display: none">
+                        <input type="text" placeholder="Enter an external link" name="value" style="width: 328px;display: block; margin-bottom: 12px;" data-bind="text: value" />
+                        <input class="description" type="text" placeholder="[None]" style="width: 240px;"
+                               data-bind="value: description, valueUpdate: 'afterkeydown'" />
+                        <button href="#" class="button" style="margin:0;">
+                            <img alt="" src="~/images/icons/plus/plus-24-green-disc.png" title="Add a new link."
+                                 style="cursor: pointer; margin: 0" />
+                            <span data-bind="click: $root.editUrl" style="font-size: 16px; display: inline-block; line-height: 20px; vertical-align: middle;">Edit</span>
+                        </button>
+                    </div>
+                </li>
+            </ul>
+            <span data-bind="visible: (externalLinks().length == 0)" style="display: inline-block; width:300px; font-size: 16px; margin-bottom: 12px">
+                You have not entered any external links.
+            </span>
+            <input type="text" placeholder="Enter an external link" name="value" style="width: 328px;display: block; margin-bottom: 12px;" data-bind="text: createLink" />
+            <input class="description" type="text" placeholder="[None]" style="width: 240px;"
+                   data-bind="value: createDescription, valueUpdate: 'afterkeydown'" />
+            <button href="#" class="button" style="margin:0;">
+                <img alt="" src="~/images/icons/plus/plus-24-green-disc.png" title="Add a new link."
+                     style="cursor: pointer; margin: 0" />
+                <span data-bind="click: addUrl" style="font-size: 16px; display: inline-block; line-height: 20px; vertical-align: middle;">Add</span>
+            </button>
         }
-    </div>
-}
-else
-{
-    <div style="margin-bottom: 12px;">
+        else
+        {
+            if (Model != null && Model.Any())
+            {
+                <ul>
+                    @foreach (var url in Model)
+                    {
+                        <li>
+                            @url.Value
+                        </li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <div style="margin-bottom: 24px;">
         @if (User.Identity.Name.Equals((string) ViewBag.Username, StringComparison.OrdinalIgnoreCase))
         {
             <text>You have not entered any external links.</text>
@@ -55,15 +86,8 @@ else
         {
             <text>@ViewBag.PersonName has not added any external links.</text>
         }
+                </div>
+            }
+        }
+
     </div>
-}
-@if (Model != null && User.Identity.Name.Equals(ViewBag.Username, StringComparison.OrdinalIgnoreCase))
-{
-    @*<form method="POST" action="@Url.Action(MVC.People.Urls())">*@
-        <input type="text" placeholder="Enter external link" name="value" style="width:240px;" data-bind="link" />
-        <button href="#" class="button" style="margin:0;">
-            <img alt="" src="~/images/icons/plus/plus-24-green-disc.png" title="Add a new link."
-                 style="cursor: pointer; margin: 0" />
-            <span data-bind="click: addUrl" style="font-size: 16px; display: inline-block; line-height: 20px; vertical-align: middle;">Add</span>
-        </button>
-}

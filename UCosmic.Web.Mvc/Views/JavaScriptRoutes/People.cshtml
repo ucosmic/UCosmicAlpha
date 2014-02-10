@@ -10,6 +10,9 @@ Routes.Api.People = Routes.Api.People || {};
 @* AFFILIATIONS *@
 Routes.Api.People.Affiliations = Routes.Api.People.Affiliations || {};
 
+@* URLS *@
+Routes.Api.People.ExternalUrls = Routes.Api.People.ExternalUrls || {};
+
 Routes.Api.People.Affiliations.plural = function (personId) {
     if (!personId) {
         return '@routeWriter.WriteRoute(Url.HttpRouteUrl(null, new
@@ -42,4 +45,38 @@ Routes.Api.People.Affiliations.single = function (establishmentId, personId) {
             personId = routeWriter.Value<int>(0),
             establishmentId = routeWriter.Value<int>(1),
         }))'.format(personId, establishmentId);
+};
+
+Routes.Api.People.ExternalUrls.plural = function (personId) {
+    @*if (!personId) {
+        return '@routeWriter.WriteRoute(Url.HttpRouteUrl(null, new
+        {
+            controller = "PersonUrls",
+            action = "Get",
+        }))';
+        }*@
+    return '@routeWriter.WriteRoute(Url.HttpRouteUrl(null, new
+    {
+        controller = "PersonUrls",
+        action = "GetPlural",
+        personId = routeWriter.Value<int>(0),
+    }))'.format(personId);
+};
+
+Routes.Api.People.ExternalUrls.single = function (personId, urlId) {
+    @*if (!personId) {
+        return '@routeWriter.WriteRoute(Url.HttpRouteUrl(null, new
+            {
+                controller = "PersonUrls",
+                action = "Put",
+                establishmentId = routeWriter.Value<int>(0),
+            }))'.format(establishmentId);
+        }*@
+    return '@routeWriter.WriteRoute(Url.HttpRouteUrl(null, new
+    {
+        controller = "PersonUrls",
+        action = "Put",
+        personId = routeWriter.Value<int>(0),
+        urlId = routeWriter.Value<int>(1),
+    }))'.format(personId, establishmentId);
 };
