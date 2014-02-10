@@ -74,6 +74,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [GET(OptionsUrl, ControllerPrecedence = 1)]
         public IEnumerable<ActivityLocationNameApiModel> GetOptions()
         {
+            // TODO: should we pull these lazily from a service instead of pushing them all down?
             var locations = new List<Place>(_queryProcessor.Execute(new FilteredPlaces { IsCountry = true }));
             var water = new List<Place>(_queryProcessor.Execute(new FilteredPlaces { IsWater = true }));
             var global = new List<Place>(_queryProcessor.Execute(new FilteredPlaces { WoeIds = new[] { 1 } }));
@@ -88,6 +89,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                     55949061, // Central Asia
                     55949062, // South Asia
                     28289414, // South East Asia
+                    24865675, // Europe
                     28289416, // East Asia
                     28289415, // Western Asia
                     24865716, // Latin America
