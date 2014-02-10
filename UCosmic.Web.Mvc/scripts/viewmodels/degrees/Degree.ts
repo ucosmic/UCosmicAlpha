@@ -96,9 +96,16 @@ module ViewModels.Degrees {
         //}
 
         setupValidation(): void {
-            this.title.extend({ required: true, minLength: 1, maxLength: 256 });
+            this.title.extend({
+                required: {
+                    params: true,
+                    message: 'Degree is required.',
+                },
+                minLength: 1,
+                maxLength: 256,
+            });
             this.yearAwarded.extend({ min: 1900 });
-            this.institutionId.extend({required: true})
+            this.institutionId.extend({ required: true })
             ko.validation.group(this);
         }
 
@@ -152,7 +159,7 @@ module ViewModels.Degrees {
                         ko.mapping.fromJS(data, {}, this);
                         //this.institutionTranslatedName = ko.observable(null);
                         //this.institutionOfficialNameDoesNotMatchTranslation = ko.observable(null);
-                        this.institutionOfficialNameDoesNotMatchTranslation = ko.observable(!((this.institutionOfficialName() === this.institutionTranslatedName()) || this.institutionOfficialName()==undefined));
+                        this.institutionOfficialNameDoesNotMatchTranslation = ko.observable(!((this.institutionOfficialName() === this.institutionTranslatedName()) || this.institutionOfficialName() == undefined));
                         //    return !(this.institutionOfficialName === this.institutionTranslatedName);
                         this.almaMaterButtonText = ko.observable('Change my alma mater');
                         //});

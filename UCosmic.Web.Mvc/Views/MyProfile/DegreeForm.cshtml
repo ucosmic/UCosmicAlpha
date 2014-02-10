@@ -20,13 +20,13 @@
         .non-required-field {
             width: 120px;
             display: inline-block;
-            text-align: right;
+            text-align: left;
         }
 
         .required-field {
             width: 120px;
             display: inline-block;
-            text-align: right;
+            text-align: left;
         }
 
             .required-field::after {
@@ -35,6 +35,22 @@
                 vertical-align: text-top;
                 color: red;
             }
+
+        table.degrees-form tr td {
+            vertical-align: top;
+            padding-bottom: 20px;
+        }
+
+            table.degrees-form tr td:first-child {
+                padding-top: 8px;
+            }
+
+        label.is-required:after {
+            content: "*";
+            font-size: large;
+            vertical-align: text-top;
+            color: #c00;
+        }
     </style>
 }
 
@@ -73,63 +89,108 @@
                         <header>
                             <h1>@ViewBag.Title</h1>
                         </header>
-                        <div style="margin-bottom: 38px">
-                            <!-- TITLE -->
+                        <table class="degrees-form" data-bind="validationOptions: { insertMessages: false }">
+                            <colgroup>
+                                <col style="width: 140px;" />
+                                <col />
+                            </colgroup>
+                            <tr>
+                                <td>
+                                    <label for="title" class="is-required">
+                                        Degree:
+                                    </label>
+                                </td>
+                                <td>
+                                    <input type="text" id="title" style="width: 500px;" data-bind="value: title" />
+                                    <div>
+                                        <span class="validationMessage" data-bind="validationMessage: title"></span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label for="fieldOfStudy">
+                                        Field of Study:
+                                    </label>
+                                </td>
+                                <td>
+                                    <input type="text" id="fieldOfStudy" style="width: 500px;" data-bind="value: fieldOfStudy" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label for="yearAwarded">
+                                        Year Awarded:
+                                    </label>
+                                </td>
+                                <td>
+                                    <input type="text" id="yearAwarded" style="width: 100px;" data-bind="value: yearAwarded" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label class="is-required">
+                                        Alma Mater:
+                                    </label>
+                                </td>
+                                <td style="padding-top: 8px;">
+                                    <div style="margin-bottom: 24px; display: none;" data-bind="visible: (institutionTranslatedName() || institutionOfficialName())">
+                                        <a title="Remove alma mater" data-bind="click: removeParticipant">
+                                            <i class="red minus on-right" style="margin:0 0 0 8px;"></i>
+                                        </a>
+                                        <div class="item">
+                                            <div>
+                                                <strong data-bind="text: institutionTranslatedName"></strong>
+                                                <br />
+                                                <span data-bind="visible: institutionOfficialNameDoesNotMatchTranslation">(<span data-bind="    text: institutionOfficialName"></span>)</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div style="margin-bottom: 8px;">
+                                        <a data-bind="click: addParticipant" class="button">
+                                            <i class="green plus" style="background-size: contain; width: 16px; height: 16px;"></i>
+                                            <span class="text" data-bind="text: almaMaterButtonText" style="vertical-align: initial;">Choose my alma mater</span>
+                                        </a>
+                                    </div>
+                                    <span class="validationMessage"
+                                          style="display: none; margin-top: 0; margin-bottom: 16px;"
+                                          data-bind="text: almaMaterErrorMsg, visible: almaMaterErrorMsg().length > 0"></span>
+                                </td>
+                            </tr>
+                            <tr style="border-top: solid 1px #ccc;">
+                                <td></td>
+                                <td style="padding-top: 24px;">
+                                    <div style="margin-bottom: 32px" data-bind="template: { name: 'buttons-template'}"></div>
+                                </td>
+                            </tr>
+                        </table>
+                        @*<div style="margin-bottom: 38px">
+                            <!-- TITLE
                             <div style="margin-bottom: 8px">
                                 <span>
                                     <label for="title" class="required-field">Degree</label>
                                     <input type="text" id="title" style="width: 400px; margin-right: 8px" data-bind="value: title" />
                                 </span>
-                            </div>
-
-                            <!-- FIELD OF STUDY -->
+                            </div> -->
+                            <!-- FIELD OF STUDY
                             <div style="margin-bottom: 8px">
                                 <span>
                                     <label for="fieldOfStudy" class="non-required-field">Field of Study</label>
                                     <input type="text" id="fieldOfStudy" style="width: 400px; margin-right: 8px" data-bind="value: fieldOfStudy" />
                                 </span>
-                            </div>
-
-                            <!-- YEAR AWARDED -->
+                            </div> -->
+                            <!-- YEAR AWARDED
                             <div style="margin-bottom: 8px">
                                 <span>
                                     <label for="yearAwarded" class="non-required-field">Year Awarded</label>
                                     <input type="text" id="yearAwarded" style="width: 60px; margin-right: 8px" data-bind="value: yearAwarded" />
                                 </span>
-                            </div>
-
+                            </div> -->
                             <!-- ALMA MATER -->
-                            <table>
-                                <tr>
-                                    <td style="vertical-align: top;">
-                                        <label style="margin-top: 4px;" class="required-field">Alma Mater</label>
-                                    </td>
-                                    <td>
-                                        <div style="width: 400px; margin-left: 4px; display: inline-block;">
-                                            <div style="margin-bottom: 8px; display: none;" data-bind="visible: (institutionTranslatedName() || institutionOfficialName())">
-                                                <a title="Remove this participant" data-bind="click: removeParticipant"><i class="red minus on-right" style="margin:0;"></i></a>
-                                                <div class="item" style="width: 350px;">
-                                                    <div>
-                                                        <strong data-bind="text: institutionTranslatedName"></strong>
-                                                        <span data-bind="visible: institutionOfficialNameDoesNotMatchTranslation">(<span data-bind="    text: institutionOfficialName"></span>)</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <span class="validationMessage" style="display: none; margin-bottom: 8px;" data-bind="text: almaMaterErrorMsg, visible: almaMaterErrorMsg().length > 0"></span>
-                                            <div style="margin-top: 4px">
-                                                <a data-bind="click: addParticipant" class="button">
-                                                    <i class="green plus"></i>
-                                                    <span class="text" data-bind="text: almaMaterButtonText">Choose my alma mater</span>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
+                        </div>*@
 
-                        <!-- BUTTONS -->
-                        <div style="margin-bottom: 32px" data-bind="template: { name: 'buttons-template'}"></div>
+                        <!-- BUTTONS 
+                        <div style="margin-bottom: 32px" data-bind="template: { name: 'buttons-template'}"></div>-->
                     </div>
                 </div>
             </div>
@@ -206,9 +267,9 @@
 
 <!-- KNOCKOUT TEMPLATES -->
 <script type="text/html" id="buttons-template">
-    <span style="width: 540px; display: block;">
+    <div>
         <input type="button" value="Save" data-bind="click: function (item, event) { save(item, event, 'Save'); }, clickBubble: false" />
         @*<input type="button" value="Guide Me" style="margin-left: 50px" />*@
-        <input type="button" value="Cancel" style="float: right" data-bind="click: function (item, event) { cancel(item, event); }, clickBubble: false" />
-    </span>
+        <input type="button" value="Cancel" class="link" data-bind="click: function (item, event) { cancel(item, event); }, clickBubble: false" />
+    </div>
 </script>

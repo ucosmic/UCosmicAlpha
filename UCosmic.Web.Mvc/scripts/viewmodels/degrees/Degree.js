@@ -1,4 +1,4 @@
-var ViewModels;
+﻿var ViewModels;
 (function (ViewModels) {
     (function (Degrees) {
         var Degree = (function () {
@@ -56,7 +56,14 @@ var ViewModels;
             };
 
             Degree.prototype.setupValidation = function () {
-                this.title.extend({ required: true, minLength: 1, maxLength: 256 });
+                this.title.extend({
+                    required: {
+                        params: true,
+                        message: 'Degree is required.'
+                    },
+                    minLength: 1,
+                    maxLength: 256
+                });
                 this.yearAwarded.extend({ min: 1900 });
                 this.institutionId.extend({ required: true });
                 ko.validation.group(this);
