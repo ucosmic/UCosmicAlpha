@@ -82,6 +82,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             {
                 WoeIds = new[]
                 {
+                    24865671, // Asia
                     24865670, // Africa
                     28289421, // Antarctic
                     24865672, // North America
