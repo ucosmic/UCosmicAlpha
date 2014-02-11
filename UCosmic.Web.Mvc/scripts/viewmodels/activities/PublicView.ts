@@ -29,9 +29,9 @@ module Activities.ViewModels {
             );
         private addMarkers() {
             var markers: google.maps.Marker[] = [];
-            $.each(this.activityData.Places, (i: number, place: any): void => {
-                if (place.PlaceCenter.HasValue) {
-                    var myLatlng = new google.maps.LatLng(place.PlaceCenter.Latitude, place.PlaceCenter.Longitude);
+            $.each(this.activityData.places, (i: number, place: any): void => {
+                if (place.placeCenter.hasValue) {
+                    var myLatlng = new google.maps.LatLng(place.placeCenter.latitude, place.placeCenter.longitude);
                     var shape = { coords: [7,7,7], type: 'circle' }
                     var image = {
                         url: '/images/icons/maps/mapPimple.png', //this.imagePimpleUrl
@@ -43,7 +43,7 @@ module Activities.ViewModels {
                         position: myLatlng,
                         icon: image,
                         shape: shape,
-                        title: place.PlaceName,
+                        title: place.placeName,
                         zIndex: 200,
                     };
                     var marker = new google.maps.Marker(options);
