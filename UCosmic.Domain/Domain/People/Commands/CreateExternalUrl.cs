@@ -17,6 +17,7 @@ namespace UCosmic.Domain.People
         public int PersonId { get; private set; }
         public string Description { get; set; }
         public string Value { get; set; }
+        public ExternalUrl Created { get; internal set; }
     }
 
     public class ValidateCreateExternalUrlCommand : AbstractValidator<CreateExternalUrl>
@@ -85,6 +86,7 @@ namespace UCosmic.Domain.People
             };
             _entities.Create(entity);
             _entities.SaveChanges();
+            command.Created = entity;
         }
     }
 }

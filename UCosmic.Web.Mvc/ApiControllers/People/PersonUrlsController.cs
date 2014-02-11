@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Diagnostics;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
@@ -37,6 +39,20 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return Request.CreateResponse(HttpStatusCode.OK, models);
         }
 
+        [GET("people/{personId:int}/urls/{urlId:int}")]
+        public HttpResponseMessage GetSingle(int personId, int urlId)
+        {
+            var entity = _queries.Execute(new ExternalUrlBy(urlId));
+            var model = new PersonUrlApiModel
+            {
+                UrlId = entity.Id,
+                PersonId = entity.PersonId,
+                Description = entity.Description,
+                Value = entity.Value,
+            };
+            return Request.CreateResponse(HttpStatusCode.OK, model);
+        }
+
         [Authorize]
         [POST("people/{personId:int}/urls")]
         public HttpResponseMessage Post(int personId, PersonUrlApiModel model)
@@ -57,7 +73,19 @@ namespace UCosmic.Web.Mvc.ApiControllers
             }
 
             _commands.Execute(command);
-            return Request.CreateResponse(HttpStatusCode.Created, "External link was created successfully.");
+
+            var response = Request.CreateResponse(HttpStatusCode.Created, "External link was created successfully.");
+            var url = Url.Link(null, new
+            {
+                controller = "PersonUrls",
+                action = "GetSingle",
+                personId = personId,
+                urlId = command.Created.Id
+            });
+            Debug.Assert(url != null);
+            response.Headers.Location = new Uri(url);
+            return response;
+            //return Request.CreateResponse(HttpStatusCode.Created, "External link was created successfully.");
         }
 
         [Authorize]

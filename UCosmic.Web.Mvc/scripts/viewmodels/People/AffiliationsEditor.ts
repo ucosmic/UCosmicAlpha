@@ -480,9 +480,6 @@ module People.ViewModels {
         }
 
         bindJquery(): void {
-            var self = this,
-                kacSelect;
-
             this.$edit_affiliations_dialog.kendoWindow({
                 width: 550,
                 open: () => {

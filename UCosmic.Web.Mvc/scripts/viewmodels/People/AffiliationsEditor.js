@@ -395,8 +395,6 @@ var People;
 
             AffiliationsEditor.prototype.bindJquery = function () {
                 var _this = this;
-                var self = this, kacSelect;
-
                 this.$edit_affiliations_dialog.kendoWindow({
                     width: 550,
                     open: function () {

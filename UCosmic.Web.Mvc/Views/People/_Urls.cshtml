@@ -10,74 +10,83 @@
             var model = $.parseJSON('@Html.Raw(Json.Encode(Model))');
             var urlsViewModel = new People.ViewModels.UrlViewModel(model, @ViewBag.personId);
             ko.applyBindings(urlsViewModel, $('#urls')[0]);
+            urlsViewModel.bindJquery();
         };
 
     </script>
-}
-
     @* URLS *@
     <div id="urls">
-        @if (ViewBag.isEdit)
-        {
-            <div style="display: none;">
-                <div data-bind="jQuery: '$confirmDeleteUrl'" title="Please confirm your intent">
-                    Are you sure you want to delete this external link? This cannot be undone.
+        <div style="display: none;">
+            <div data-bind="jQuery: '$confirmDeleteUrl'" title="Please confirm your intent">
+                Are you sure you want to delete this external link? This cannot be undone.
+            </div>
+        </div>
+        <ul data-bind="foreach: externalLinks" style="margin-bottom: 12px; line-height: 24px;">
+            <li style="margin-bottom: 12px;">
+                <a data-bind="attr: {href: Value}, text: Description, visible: !$root.isEditing()"></a>
+                <div style="float: right; width: 70px; text-align: right;" data-bind="visible: !$root.isEditing()">
+                    <img data-bind="click: $root.edit.bind($data), visible: !$root.purgeSpinner.isVisible()" alt="" src="~/images/icons/edit/pencil-a-24.png" title="Edit this external link"
+                         style="cursor: pointer; margin: 0 0 8px 8px;" />
+                    <img data-bind="click: $root.purge.bind($data), visible: !$root.purgeSpinner.isVisible()" alt="" src="~/images/icons/minus/minus-24-red.png" title="Delete this external link"
+                         style="cursor: pointer; margin: 0 0 8px 8px;" />
+                    <img data-bind="visible: $root.purgeSpinner.isVisible" alt="" src="~/images/icons/spinner/spinner-24-blue.gif" title="Deleting this external link..."
+                         style="margin-left: 8px; display: none;" />
                 </div>
-            </div>
-            <ul data-bind="foreach: externalLinks" style="margin-bottom: 12px; line-height: 24px;">
-                <li style="margin-bottom: 12px;">
-                    <a data-bind="attr: {href: Value}, text: Description, visible: !$root.isEditing()"></a>
-                    <div style="float: right; width: 70px; text-align: right;" data-bind="visible: !$root.isEditing()">
-                        <img data-bind="click: $root.edit.bind($data, UrlId), visible: !$root.purgeSpinner.isVisible()" alt="" src="~/images/icons/edit/pencil-a-24.png" title="Edit this external link"
-                             style="cursor: pointer; margin: 0 0 8px 8px;" />
-                        <img data-bind="click: $root.purge.bind($data, UrlId), visible: !$root.purgeSpinner.isVisible()" alt="" src="~/images/icons/minus/minus-24-red.png" title="Delete this external link"
-                             style="cursor: pointer; margin: 0 0 8px 8px;" />
-                        <img data-bind="visible: $root.purgeSpinner.isVisible" alt="" src="~/images/icons/spinner/spinner-24-blue.gif" title="Deleting this external link..."
-                             style="margin-left: 8px; display: none;" />
-                    </div>
-                </li>
-            </ul>
-            <div data-bind="visible: (externalLinks().length == 0)" style="width:300px; font-size: 16px; margin-bottom: 12px">
-                You have not entered any external links.
-            </div>
-            <input class="description" type="text" placeholder="[Link Type]" style="width: 340px;  "
-                   data-bind="value: createDescription, valueUpdate: 'afterkeydown'" />
-            <input type="text" placeholder="[Enter an external link]" name="value" style="width: 256px; margin-top: 12px; " data-bind="value: createLink" />
+            </li>
+        </ul>
+        <div data-bind="visible: (externalLinks().length == 0)" style="width:300px; font-size: 16px; margin-bottom: 12px">
+            You have not entered any external links.
+        </div>
+        <form data-bind="submit: addUrl">
+            <input id="create_description" class="description" type="text" placeholder="[Link Type]" style="width: 340px;  "
+                   data-bind="value: createDescription, valueUpdate: 'afterkeydown'" required="required" />
+            <input type="url" required="required" placeholder="[Enter an external link]" name="value" style="width: 252px; margin-top: 12px; " data-bind="value: createLink" />
             <button href="#" class="button" style="margin:0;">
                 <img alt="" src="~/images/icons/plus/plus-24-green-disc.png" title="Add a new link."
                      style="cursor: pointer; margin: 0" />
                 <span data-bind="click: addUrl" style="font-size: 16px; display: inline-block; line-height: 20px; vertical-align: middle;">Add</span>
             </button>
-                    <div style="display: none">
-                        <input type="text" placeholder="[Enter an external link]" name="value" style="width: 328px;display: block; margin-bottom: 12px;" data-bind="text: editLink" />
-                        <input class="description" type="text" placeholder="[Link type]" style="width: 240px;"
-                               data-bind="value: editDescription, valueUpdate: 'afterkeydown'" />
-                        <button href="#" class="button" style="margin:0;">
-                            <img alt="" src="~/images/icons/plus/plus-24-green-disc.png" title="Add a new link."
-                                 style="cursor: pointer; margin: 0" />
-                            <span data-bind="click: editUrl" style="font-size: 16px; display: inline-block; line-height: 20px; vertical-align: middle;">Edit</span>
-                        </button>
-                    </div>
+            <div class="validationMessage" data-bind="visible: (createValidationMessage().length > 0), text: createValidationMessage" style="width:300px; font-size: 16px; margin-bottom: 12px">
+            </div>
+        </form>
+        <div id="edit_urls_dialog" style="display: none">
+            <form data-bind="submit: editUrl">
+                <input id="edit_description" class="description" type="text" placeholder="[Link Type]" style="width: 340px;  "
+                       data-bind="value: editDescription, valueUpdate: 'afterkeydown'" />
+                <input type="text" placeholder="[Enter an external link]" name="value" style="width: 252px; margin-top: 12px; " data-bind="value: editLink" />
+                <button href="#" class="button" style="margin:0;">
+                    <img alt="" src="~/images/icons/plus/plus-24-green-disc.png" title="Add a new link."
+                         style="cursor: pointer; margin: 0" />
+                    <span data-bind="click: editUrl" style="font-size: 16px; display: inline-block; line-height: 20px; vertical-align: middle;">Edit</span>
+                </button>
+                <div class="validationMessage" data-bind="visible: (editValidationMessage().length > 0), text: editValidationMessage" style="width:300px; font-size: 16px; margin-bottom: 12px">
+                </div>
+            </form>
+        </div>
+
+</div>
+}
+else
+{
+    @* URLS *@
+    <div id="urls">
+        @if (Model != null && Model.Any())
+        {
+            <ul>
+                @foreach (var url in Model)
+                {
+                    <li>
+                        @url.Value
+                    </li>
+                }
+            </ul>
         }
         else
         {
-            if (Model != null && Model.Any())
-            {
-                <ul>
-                    @foreach (var url in Model)
-                    {
-                        <li>
-                            @url.Value
-                        </li>
-                    }
-                </ul>
-            }
-            else
-            {
-                <div style="margin-bottom: 24px;">
-                    <text>@ViewBag.PersonName has not added any external links.</text>
-                </div>
-            }
+            <div style="margin-bottom: 24px;">
+                <text>@ViewBag.PersonName has not added any external links.</text>
+            </div>
         }
 
     </div>
+}
