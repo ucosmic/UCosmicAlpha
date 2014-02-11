@@ -28,7 +28,7 @@ var ViewModels;
                     change: function (event) {
                         _this.updateLocations(event.sender.dataItems());
                     },
-                    placeholder: "[Select Country/Location, Body of Water or Global]"
+                    placeholder: "[Enter Country / Location, Body of Water, or Global]"
                 });
             };
 

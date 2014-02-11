@@ -20,14 +20,14 @@
         .non-required-field {
             width: 120px;
             display: inline-block;
-            text-align: right;
+            text-align: left;
             vertical-align: inherit;
         }
 
         .required-field {
             width: 120px;
             display: inline-block;
-            text-align: right;
+            text-align: left;
             vertical-align: inherit;
         }
 
@@ -35,7 +35,7 @@
                 content: "*";
                 font-size: large;
                 vertical-align: text-top;
-                color: red;
+                color: #c00;
             }
     </style>
 }
@@ -114,18 +114,25 @@
                         <div style="margin-bottom: 38px">
 
                             <!-- LOCATONS -->
-                            <div style="margin-bottom: 14px; display: inline-block; vertical-align: middle">
-                                <label for="location" class="required-field">Locations</label>
+                            <div style="margin-bottom: 14px;">
                                 <div style="display: inline-block; vertical-align: middle">
-                                    <select id="location" style="width: 600px; overflow-y:auto"></select>
+                                    <label for="location" class="required-field">
+                                        Locations:
+                                    </label>
+                                    <div style="display: inline-block; vertical-align: middle">
+                                        <select id="location" style="width: 600px; overflow-y:auto"></select>
+                                    </div>
+                                </div>
+                                <div style="margin-left: 124px;">
+                                    <span data-bind="validationMessage: locations" class="validationMessage"></span>
                                 </div>
                             </div>
-                            <span data-bind="validationMessage: locations" class="validationMessage"></span>
-
                             <!-- DESCRIPTION -->
                             <div>
-                                <span style="display: inline-block; vertical-align: middle">
-                                    <label for="title" class="non-required-field">Description</label>
+                                <span style="display: inline-block; vertical-align: text-top;">
+                                    <label for="title" class="non-required-field">
+                                        Description:
+                                    </label>
                                     <textarea rows="4" id="title" style="vertical-align: inherit;  width: 600px; margin-right: 8px" data-bind="value: description"></textarea>
                                 </span>
                             </div>
@@ -135,7 +142,7 @@
                         <!-- BUTTONS -->
                         <div style="margin-bottom: 32px" data-bind="template: { name: 'buttons-template'}"></div>
 
-                        <!-- LAST UPDATED -->
+                        <!-- LAST UPDATED
                         <div style="width: 50%; height: 1.5em; border-top: 1px; border-style: solid">
                             <span style="font-size:smaller; color:slategray">
                                 <span>Last updated</span>
@@ -143,7 +150,7 @@
                                 <span> by </span>
                                 <label id="last-updated-name" data-bind="text: whoLastUpdated()"></label>
                             </span>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
@@ -161,9 +168,11 @@
 
 <!-- KNOCKOUT TEMPLATES -->
 <script type="text/html" id="buttons-template">
-    <span>
-        <input type="button" value="Save" data-bind="click: function (item, event) { save(item, event, 'Save'); }, clickBubble: false" />
-        @*<input type="button" value="Guide Me" style="margin-left: 50px" />*@
-        <input type="button" value="Cancel" style="float: right; margin-right: 240px" data-bind="click: function (item, event) { cancel(item, event); }, clickBubble: false" />
-    </span>
+    <div style="border-top: solid 1px #ccc; padding-top: 24px; width: 724px;">
+        <div style="margin-left: 124px;">
+            <input type="button" value="Save" data-bind="click: function (item, event) { save(item, event, 'Save'); }, clickBubble: false" />
+            @*<input type="button" value="Guide Me" style="margin-left: 50px" />*@
+            <input type="button" value="Cancel" class="link" data-bind="click: function (item, event) { cancel(item, event); }, clickBubble: false" />
+        </div>
+    </div>
 </script>

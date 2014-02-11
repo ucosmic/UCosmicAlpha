@@ -434,7 +434,7 @@ var Activities;
                     change: function (e) {
                         _this._onPlaceMultiSelectChange(e);
                     },
-                    placeholder: '[Select Country/Location, Body of Water or Global]'
+                    placeholder: '[Select Country / Location, Body of Water, or Global]'
                 });
             };
 

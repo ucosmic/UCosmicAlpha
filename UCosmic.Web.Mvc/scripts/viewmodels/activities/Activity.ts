@@ -501,7 +501,7 @@ module Activities.ViewModels {
                 change: (e: kendo.ui.MultiSelectEvent): void => {
                     this._onPlaceMultiSelectChange(e);
                 },
-                placeholder: '[Select Country/Location, Body of Water or Global]'
+                placeholder: '[Select Country / Location, Body of Water, or Global]'
             });
 
         }

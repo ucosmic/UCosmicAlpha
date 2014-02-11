@@ -298,6 +298,76 @@ button.link, input[type=submit].link, input[type=reset].link, input[type=button]
     }
 }
 
+
+.k-list-container, .k-list-container.k-state-border-up, .k-list-container.k-state-border-down {
+    @include border-radius(0);
+}
+
+.k-multiselect {
+    @include border-radius(0);
+    background-image: none;
+    background-color: transparent;
+
+    &.k-header {
+        border: solid 1px #aaa;
+        border-right-color: #ddd;
+        border-bottom-color: #ddd;
+    }
+
+    &.k-state-focused {
+        @include no-box-shadow;
+    }
+    &.k-state-hover {
+        background-image: none;
+        background-color: transparent;
+    }
+    &.k-state-border-down, &.k-state-border-up, .k-multiselect-wrap {
+        @include border-radius(0);
+        min-height: 36px;
+    }
+
+    .k-input {
+        @include border-box;
+        display: block;
+        padding: 8px 0 8px 4px;
+        font-size: 16px;
+        line-height: 20px;
+        height: 36px;
+        margin: 0;
+        font-family: Arial;
+        color: #000;
+
+        &.k-readonly {
+            color: #666;
+        }
+    }
+
+    ul {
+        .k-button {
+            @include border-radius(0);
+            margin: 2px 0 0 2px;
+            padding: 5px 6px 5px 8px;
+            line-height: 16px;
+            font-size: 16px;
+            vertical-align: middle;
+            color: #000;
+            background-color: #eee;
+            background-image: none;
+            border-color: #ddd;
+
+            .k-delete.k-icon {
+                background-position: top left;
+                background-image: url('/images/icons/minus/minus-20-red.png');
+                width: 20px;
+                height: 20px;
+                margin-left: 8px;
+                cursor: pointer;
+            }
+        }
+    }
+}
+
+
 .validationMessage, .field-validation-error {
     display: inline-block;
     margin-top: 4px;
