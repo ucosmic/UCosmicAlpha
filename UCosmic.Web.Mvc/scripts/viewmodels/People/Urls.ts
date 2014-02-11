@@ -38,6 +38,9 @@ module People.ViewModels {
             });
         }
         purge(expertiseId, thisData, event): void {
+            if (this.purgeSpinner.isRunning) {
+                return;
+            }
             if (this.$confirmDeleteUrl && this.$confirmDeleteUrl.length) {
                 this.$confirmDeleteUrl.dialog({
                     dialogClass: 'jquery-ui',
@@ -149,6 +152,7 @@ module People.ViewModels {
                 return;
             }
             this.$edit_urls_dialog.data("kendoWindow").close();
+            this.purgeSpinner.stop();
             var url = Routes.Api.People.ExternalUrls.single(this.personId, this.editUrlId);
             var data = {
                 Value: this.editLink(),
@@ -180,7 +184,7 @@ module People.ViewModels {
                 ]
             });
             this.$edit_urls_dialog.kendoWindow({
-                width: 400,
+                width: 360,
                 top: 100,
                     open: () => {
                         $("html, body").css("overflow", "hidden");

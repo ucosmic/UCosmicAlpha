@@ -35,6 +35,9 @@ var People;
             };
             UrlViewModel.prototype.purge = function (expertiseId, thisData, event) {
                 var _this = this;
+                if (this.purgeSpinner.isRunning) {
+                    return;
+                }
                 if (this.$confirmDeleteUrl && this.$confirmDeleteUrl.length) {
                     this.$confirmDeleteUrl.dialog({
                         dialogClass: 'jquery-ui',
@@ -137,6 +140,7 @@ var People;
                     return;
                 }
                 this.$edit_urls_dialog.data("kendoWindow").close();
+                this.purgeSpinner.stop();
                 var url = Routes.Api.People.ExternalUrls.single(this.personId, this.editUrlId);
                 var data = {
                     Value: this.editLink(),
@@ -168,7 +172,7 @@ var People;
                     ]
                 });
                 this.$edit_urls_dialog.kendoWindow({
-                    width: 400,
+                    width: 360,
                     top: 100,
                     open: function () {
                         $("html, body").css("overflow", "hidden");

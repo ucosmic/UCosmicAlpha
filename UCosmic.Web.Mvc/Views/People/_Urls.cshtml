@@ -25,12 +25,12 @@
             <li style="margin-bottom: 12px;">
                 <a data-bind="attr: {href: Value}, text: Description, visible: !$root.isEditing()"></a>
                 <div style="float: right; width: 70px; text-align: right;" data-bind="visible: !$root.isEditing()">
-                    <img data-bind="click: $root.edit.bind($data), visible: !$root.purgeSpinner.isVisible()" alt="" src="~/images/icons/edit/pencil-a-24.png" title="Edit this external link"
+                    <img data-bind="click: $root.edit.bind($data)" alt="" src="~/images/icons/edit/pencil-a-24.png" title="Edit this external link"
                          style="cursor: pointer; margin: 0 0 8px 8px;" />
-                    <img data-bind="click: $root.purge.bind($data), visible: !$root.purgeSpinner.isVisible()" alt="" src="~/images/icons/minus/minus-24-red.png" title="Delete this external link"
+                    <img data-bind="click: $root.purge.bind($data), css: { disabled: $root.purgeSpinner.isVisible() }" alt="" src="~/images/icons/minus/minus-24-red.png" title="Delete this external link"
                          style="cursor: pointer; margin: 0 0 8px 8px;" />
-                    <img data-bind="visible: $root.purgeSpinner.isVisible" alt="" src="~/images/icons/spinner/spinner-24-blue.gif" title="Deleting this external link..."
-                         style="margin-left: 8px; display: none;" />
+                    @*<img data-bind="visible: $root.purgeSpinner.isVisible" alt="" src="~/images/icons/spinner/spinner-24-blue.gif" title="Deleting this external link..."
+                         style="margin-left: 8px; display: none;" />*@
                 </div>
             </li>
         </ul>
