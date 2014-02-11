@@ -112,10 +112,10 @@
             @* CONTACT INFORMATION *@
             <section class="content fixed to-top">
                 <h2 style="font-size: 24px; padding-bottom: 1em;">Contact Information</h2>
-                <div style="float:left; width: 330px;">
+                <div style="float:left; width: 340px;">
                     @Html.Action(MVC.People.GetEmails((int)ViewBag.personId, true))
                 </div>
-                <div style="float:right;">
+                <div style="float:right; width: 340px">
                     @Html.Action(MVC.People.GetUrls((int)ViewBag.personId, true))
                 </div>
             </section>

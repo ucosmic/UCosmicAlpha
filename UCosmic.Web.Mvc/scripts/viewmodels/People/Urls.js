@@ -2,16 +2,17 @@ var People;
 (function (People) {
     (function (ViewModels) {
         var UrlViewModel = (function () {
-            function UrlViewModel(model) {
-                this.descriptionValues = ko.mapping.fromJS([]);
+            function UrlViewModel(model, personId) {
                 this.externalLinks = ko.mapping.fromJS([]);
                 this.isEditing = ko.observable(false);
                 this.createLink = ko.observable("");
                 this.createDescription = ko.observable("");
+                this.editLink = ko.observable("");
+                this.editDescription = ko.observable("");
                 this.purgeSpinner = new App.Spinner();
-                this.personId = model.PersonId;
-
+                this.personId = personId;
                 this.bindJquery();
+                this.externalLinks = ko.mapping.fromJS(model);
             }
             UrlViewModel.prototype._purge = function (expertiseId) {
                 var _this = this;
@@ -77,8 +78,8 @@ var People;
             UrlViewModel.prototype.addUrl = function () {
                 var url = Routes.Api.People.ExternalUrls.plural(this.personId);
                 var data = {
-                    value: this.createLink,
-                    description: this.createDescription
+                    Value: this.createLink(),
+                    Description: this.createDescription()
                 };
                 $.ajax({
                     type: 'POST',
@@ -94,11 +95,13 @@ var People;
 
             UrlViewModel.prototype.bindJquery = function () {
                 $(".description").kendoComboBox({
-                    dataTextField: "name",
-                    dataValueField: "id",
-                    dataSource: new kendo.data.DataSource({
-                        data: this.descriptionValues()
-                    })
+                    dataTextField: "text",
+                    dataValueField: "value",
+                    dataSource: [
+                        { text: "Facebook", value: "Facebook" },
+                        { text: "LinkedIn", value: "LinkedIn" },
+                        { text: "Departmental Homepage", value: "Departmental Homepage" }
+                    ]
                 });
             };
             return UrlViewModel;

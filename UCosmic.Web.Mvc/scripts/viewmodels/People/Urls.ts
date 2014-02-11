@@ -1,18 +1,19 @@
 module People.ViewModels {
     export class UrlViewModel {
 
-        constructor(model) {
-            this.personId = model.PersonId;
-            //I need to bind jquery after binding model
+        constructor(model, personId) {
+            this.personId = personId;
             this.bindJquery();
+            this.externalLinks = ko.mapping.fromJS(model);
         }
-        descriptionValues = ko.mapping.fromJS([]);
         externalLinks = ko.mapping.fromJS([]);
         isEditing = ko.observable<Boolean>(false);
         personId;
 
         createLink = ko.observable<String>("");
         createDescription = ko.observable<String>("");
+        editLink = ko.observable<String>("");
+        editDescription = ko.observable<String>("");
         purgeSpinner = new App.Spinner();
         $confirmDeleteUrl: JQuery;
         private _purge(expertiseId): void {
@@ -80,8 +81,8 @@ module People.ViewModels {
         addUrl(): void {
             var url = Routes.Api.People.ExternalUrls.plural(this.personId);
             var data = {
-                value: this.createLink,
-                description: this.createDescription
+                Value: this.createLink(),
+                Description: this.createDescription()
             }
             $.ajax({
                 type: 'POST',
@@ -98,13 +99,14 @@ module People.ViewModels {
 
 
         bindJquery(): void {
-
             $(".description").kendoComboBox({
-                dataTextField: "name",
-                dataValueField: "id",
-                dataSource: new kendo.data.DataSource({
-                    data: this.descriptionValues()
-                })
+                dataTextField: "text",
+                dataValueField: "value",
+                dataSource: [
+                    { text: "Facebook", value: "Facebook" },
+                    { text: "LinkedIn", value: "LinkedIn" },
+                    { text: "Departmental Homepage", value: "Departmental Homepage" }
+                ]
             });
         }
 
