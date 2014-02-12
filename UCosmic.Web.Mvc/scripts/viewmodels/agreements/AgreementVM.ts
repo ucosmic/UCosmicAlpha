@@ -88,7 +88,7 @@ class InstitutionalAgreementEditModel {
     fileListPopulator;
 
     percentOffBodyHeight = .6;
-    savingAgreement = false;
+    runningAjax = false;
     //jquery deferred for setting body height.
     deferredUAgreements = $.Deferred();
     deferredPopParticipants = $.Deferred();
@@ -105,6 +105,7 @@ class InstitutionalAgreementEditModel {
     prevForceDisabled = ko.observable<boolean>(false);
     pageNumber = ko.observable<number>();
     $genericAlertDialog: JQuery = undefined;
+    deleteErrorMessage = ko.observable<String>('');
 
     //added this because kendo window after selecting a autocomplete and then clicking the window, 
     //the body would scroll to the top.
@@ -299,23 +300,31 @@ class InstitutionalAgreementEditModel {
     }
 
     deleteAgreement(): void {
+        if (this.runningAjax == false) {
+            this.runningAjax = true;
+            this.deleteErrorMessage('');
+            var url = App.Routes.WebApi.Agreements.del(this.agreementId);
+            $.ajax({
+                type: 'DELETE',
+                url: url,
+                success: (response: any, statusText: string, xhr: JQueryXHR): void => {
+                    this.runningAjax = false;
+                    sessionStorage.setItem("agreementSaved", "deleted");
+                    location.href = App.Routes.Mvc.Agreements.show();
+                },
+                error: (xhr: JQueryXHR): void => {
+                    this.runningAjax = false;
+                    this.spinner.stop();
+                    if (xhr.status == 400) {
+                        this.deleteErrorMessage(xhr.responseText);
+                    } else {
+                        App.Failures.message(xhr, xhr.responseText, true);
+                    }
+                    //alert(xhr.responseText);
+                }
+            });
 
-        var url = App.Routes.WebApi.Agreements.del(this.agreementId);
-        $.ajax({
-            type: 'DELETE',
-            url: url,
-            success: (response: any, statusText: string, xhr: JQueryXHR): void => {
-                this.savingAgreement = false;
-                sessionStorage.setItem("agreementSaved", "deleted");
-                location.href = App.Routes.Mvc.Agreements.show();
-            },
-            error: (xhr: JQueryXHR): void => {
-                this.savingAgreement = false;
-                this.spinner.stop();
-                App.Failures.message(xhr, xhr.responseText, true);
-                //alert(xhr.responseText);
-            }
-        });
+        }
     }
 
 saveUpdateAgreement(): void {
@@ -393,8 +402,8 @@ saveUpdateAgreement(): void {
                 umbrellaId: (this.basicInfo.uAgreementSelected() != 0) ? this.basicInfo.uAgreementSelected() : undefined,
                 type: this.basicInfo.typeOptionSelected()
             })
-            if (this.savingAgreement == false) {
-                this.savingAgreement = true;
+            if (this.runningAjax == false) {
+                this.runningAjax = true;
                 if (this.agreementIsEdit()) {
                     $LoadingPage.text("Saving changes...");
 
@@ -407,12 +416,12 @@ saveUpdateAgreement(): void {
                         url: url,
                         data: data,
                         success: (response: any, statusText: string, xhr: JQueryXHR): void => {
-                            this.savingAgreement = false;
+                            this.runningAjax = false;
                             sessionStorage.setItem("agreementSaved", "yes");
                             location.href = App.Routes.Mvc.Agreements.show(this.agreementId);
                         },
                         error: (xhr: JQueryXHR): void => {
-                            this.savingAgreement = false;
+                            this.runningAjax = false;
                             this.spinner.stop();
                             App.Failures.message(xhr, xhr.responseText, true);
                             //alert(xhr.responseText);
@@ -428,7 +437,7 @@ saveUpdateAgreement(): void {
                     $.post(url, data)
                         .done((response: any, statusText: string, xhr: JQueryXHR): void => {
                             this.agreementId = parseInt(xhr.getResponseHeader('Location').substring(xhr.getResponseHeader('Location').lastIndexOf("/") + 1));
-                            this.savingAgreement = false;
+                            this.runningAjax = false;
                             var myUrl = xhr.getResponseHeader('Location');
                             this.agreementId = parseInt(myUrl.substring(myUrl.lastIndexOf("/") + 1));
                             this.fileAttachment.agreementId = this.agreementId;
@@ -445,7 +454,7 @@ saveUpdateAgreement(): void {
                             }
                         })
                         .fail((xhr: JQueryXHR, statusText: string, errorThrown: string): void => {
-                            this.savingAgreement = false;
+                            this.runningAjax = false;
                             this.spinner.stop();
                             App.Failures.message(xhr, xhr.responseText, true);
                         });

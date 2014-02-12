@@ -105,6 +105,9 @@
                     <i class="red closer"></i>
                     <span class="text">Delete Agreement</span>
                 </a>
+                <div class="validationMessage" data-bind="text: deleteErrorMessage, visible: (deleteErrorMessage() != '')" style="display: none;">
+                    
+                </div>
             </footer>
         </div>
         <aside class="on-right from-top" data-fixed-scroll="root">

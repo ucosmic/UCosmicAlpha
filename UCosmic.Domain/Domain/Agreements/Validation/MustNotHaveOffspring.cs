@@ -10,14 +10,15 @@ namespace UCosmic.Domain.Agreements
 {
     public class MustNotHaveOffspring<T> : PropertyValidator
     {
-        public const string FailMessageFormat = "Agreement with id '{0}' cannot be deleted because it is the umbrella for agreement(s) with id(s) '{1}'.";
-        private static readonly string FailMessageFormatter = FailMessageFormat.Replace("{0}", "{AgreementId}").Replace("{1}", "{OffspringIds}");
+        //public const string FailMessageFormat1 = "Agreement with id '{0}' cannot be deleted because it is the umbrella for agreement(s) with id(s) '{1}'.";
+        public const string FailMessage = "This agreement cannot be deleted because it is the umbrella for one or more other agreements.";
+        //private static readonly string FailMessageFormatter = FailMessage.Replace("{0}", "{AgreementId}").Replace("{1}", "{OffspringIds}");
 
         private readonly IProcessQueries _queryProcessor;
         private readonly Func<T, IPrincipal> _principal;
 
         internal MustNotHaveOffspring(IProcessQueries queryProcessor, Func<T, IPrincipal> principal)
-            : base(FailMessageFormatter)
+            : base(FailMessage)
         {
             if (queryProcessor == null) throw new ArgumentNullException("queryProcessor");
             if (principal == null) throw new ArgumentNullException("principal");

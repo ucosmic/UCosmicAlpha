@@ -21,12 +21,14 @@ namespace UCosmic.Web.Mvc.ApiControllers
     {
         private readonly IProcessQueries _queryProcessor;
         private readonly IValidator<CreateAgreement> _createValidator;
+        private readonly IValidator<PurgeAgreement> _purgeValidator;
         private readonly IHandleCommands<CreateAgreement> _createHandler;
         private readonly IHandleCommands<UpdateAgreement> _updateHandler;
         private readonly IHandleCommands<PurgeAgreement> _purgeHandler;
 
         public AgreementsController(IProcessQueries queryProcessor
             , IValidator<CreateAgreement> createValidator
+            , IValidator<PurgeAgreement> purgeValidator
             , IHandleCommands<CreateAgreement> createHandler
             , IHandleCommands<UpdateAgreement> updateHandler
             , IHandleCommands<PurgeAgreement> purgeHandler
@@ -34,6 +36,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         {
             _queryProcessor = queryProcessor;
             _createValidator = createValidator;
+            _purgeValidator = purgeValidator;
             _createHandler = createHandler;
             _updateHandler = updateHandler;
             _purgeHandler = purgeHandler;
@@ -180,7 +183,12 @@ namespace UCosmic.Web.Mvc.ApiControllers
         public HttpResponseMessage Delete(int agreementId)
         {
             var command = new PurgeAgreement(User, agreementId);
-
+            var validation = _purgeValidator.Validate(command);
+            if (!validation.IsValid)
+            {
+                var firstError = validation.Errors.Select(x => x.ErrorMessage).First();
+                return Request.CreateResponse(HttpStatusCode.BadRequest, firstError, "text/plain");
+            }
             _purgeHandler.Handle(command);
 
             var response = Request.CreateResponse(HttpStatusCode.OK, "Agreement was successfully deleted.");

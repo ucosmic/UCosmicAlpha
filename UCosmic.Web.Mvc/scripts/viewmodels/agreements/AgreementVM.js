@@ -3,7 +3,7 @@ var InstitutionalAgreementEditModel = (function () {
         var _this = this;
         this.agreementId = agreementId;
         this.percentOffBodyHeight = .6;
-        this.savingAgreement = false;
+        this.runningAjax = false;
         this.deferredUAgreements = $.Deferred();
         this.deferredPopParticipants = $.Deferred();
         this.deferredPopContacts = $.Deferred();
@@ -16,6 +16,7 @@ var InstitutionalAgreementEditModel = (function () {
         this.prevForceDisabled = ko.observable(false);
         this.pageNumber = ko.observable();
         this.$genericAlertDialog = undefined;
+        this.deleteErrorMessage = ko.observable('');
         this.kendoWindowBug = { val: 0 };
         this.isBound = ko.observable();
         this.spinner = new App.Spinner({ delay: 400, runImmediately: true });
@@ -267,21 +268,29 @@ var InstitutionalAgreementEditModel = (function () {
 
     InstitutionalAgreementEditModel.prototype.deleteAgreement = function () {
         var _this = this;
-        var url = App.Routes.WebApi.Agreements.del(this.agreementId);
-        $.ajax({
-            type: 'DELETE',
-            url: url,
-            success: function (response, statusText, xhr) {
-                _this.savingAgreement = false;
-                sessionStorage.setItem("agreementSaved", "deleted");
-                location.href = App.Routes.Mvc.Agreements.show();
-            },
-            error: function (xhr) {
-                _this.savingAgreement = false;
-                _this.spinner.stop();
-                App.Failures.message(xhr, xhr.responseText, true);
-            }
-        });
+        if (this.runningAjax == false) {
+            this.runningAjax = true;
+            this.deleteErrorMessage('');
+            var url = App.Routes.WebApi.Agreements.del(this.agreementId);
+            $.ajax({
+                type: 'DELETE',
+                url: url,
+                success: function (response, statusText, xhr) {
+                    _this.runningAjax = false;
+                    sessionStorage.setItem("agreementSaved", "deleted");
+                    location.href = App.Routes.Mvc.Agreements.show();
+                },
+                error: function (xhr) {
+                    _this.runningAjax = false;
+                    _this.spinner.stop();
+                    if (xhr.status == 400) {
+                        _this.deleteErrorMessage(xhr.responseText);
+                    } else {
+                        App.Failures.message(xhr, xhr.responseText, true);
+                    }
+                }
+            });
+        }
     };
 
     InstitutionalAgreementEditModel.prototype.saveUpdateAgreement = function () {
@@ -353,8 +362,8 @@ var InstitutionalAgreementEditModel = (function () {
                 umbrellaId: (this.basicInfo.uAgreementSelected() != 0) ? this.basicInfo.uAgreementSelected() : undefined,
                 type: this.basicInfo.typeOptionSelected()
             });
-            if (this.savingAgreement == false) {
-                this.savingAgreement = true;
+            if (this.runningAjax == false) {
+                this.runningAjax = true;
                 if (this.agreementIsEdit()) {
                     $LoadingPage.text("Saving changes...");
 
@@ -367,12 +376,12 @@ var InstitutionalAgreementEditModel = (function () {
                         url: url,
                         data: data,
                         success: function (response, statusText, xhr) {
-                            _this.savingAgreement = false;
+                            _this.runningAjax = false;
                             sessionStorage.setItem("agreementSaved", "yes");
                             location.href = App.Routes.Mvc.Agreements.show(_this.agreementId);
                         },
                         error: function (xhr) {
-                            _this.savingAgreement = false;
+                            _this.runningAjax = false;
                             _this.spinner.stop();
                             App.Failures.message(xhr, xhr.responseText, true);
                         }
@@ -386,7 +395,7 @@ var InstitutionalAgreementEditModel = (function () {
                     url = App.Routes.WebApi.Agreements.post();
                     $.post(url, data).done(function (response, statusText, xhr) {
                         _this.agreementId = parseInt(xhr.getResponseHeader('Location').substring(xhr.getResponseHeader('Location').lastIndexOf("/") + 1));
-                        _this.savingAgreement = false;
+                        _this.runningAjax = false;
                         var myUrl = xhr.getResponseHeader('Location');
                         _this.agreementId = parseInt(myUrl.substring(myUrl.lastIndexOf("/") + 1));
                         _this.fileAttachment.agreementId = _this.agreementId;
@@ -402,7 +411,7 @@ var InstitutionalAgreementEditModel = (function () {
                             location.href = App.Routes.Mvc.Agreements.show(_this.agreementId);
                         }
                     }).fail(function (xhr, statusText, errorThrown) {
-                        _this.savingAgreement = false;
+                        _this.runningAjax = false;
                         _this.spinner.stop();
                         App.Failures.message(xhr, xhr.responseText, true);
                     });
