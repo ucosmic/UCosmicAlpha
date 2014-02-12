@@ -175,7 +175,7 @@ namespace UCosmic.Web.Mvc.Controllers
                     }
                 );
 
-                var callbackUrl = returnUrl ?? Url.Action(MVC.MyProfile.Index());
+                var callbackUrl = returnUrl ?? Url.Action(MVC.People.Me());
                 callbackUrl = MakeAbsoluteUrl(callbackUrl);
 
                 var redirectUrl = "https://develop.ucosmic.com";
@@ -255,7 +255,7 @@ namespace UCosmic.Web.Mvc.Controllers
                     if (userImpersonating.Identity.Name.Equals(userToImpersonate.Name, StringComparison.OrdinalIgnoreCase))
                         if (Request.UrlReferrer != null)
                             return Redirect(Request.UrlReferrer.PathAndQuery);
-                        else RedirectToAction(MVC.MyProfile.Index());
+                        else RedirectToAction(MVC.People.Me());
 
                     // cannot impersonate certain users when not already in that role
                     ViewBag.UserToImpersonate = userName;
@@ -288,7 +288,7 @@ namespace UCosmic.Web.Mvc.Controllers
                     TempData.Flash(string.Format("You are now signed on to UCosmic as {0}.", userName));
                     //TempData.UserImpersonating(true);
 
-                    var returnUrl = Url.Action(MVC.MyProfile.Index());
+                    var returnUrl = Url.Action(MVC.People.Me());
                     return RedirectToAction(MVC.Identity.Tenantize(returnUrl));
                 }
             }
@@ -308,7 +308,7 @@ namespace UCosmic.Web.Mvc.Controllers
                 var returnUrl = Url.Action(MVC.Users.Index());
                 return RedirectToAction(MVC.Identity.Tenantize(returnUrl));
             }
-            return RedirectToAction(MVC.MyProfile.Index());
+            return RedirectToAction(MVC.People.Me());
         }
 
     }

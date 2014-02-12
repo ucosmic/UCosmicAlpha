@@ -43,12 +43,6 @@ namespace UCosmic.Web.Mvc.Controllers
 
         [NonAction]
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public System.Web.Mvc.ActionResult Index()
-        {
-            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Index);
-        }
-        [NonAction]
-        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public System.Web.Mvc.ActionResult EditDegree()
         {
             return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.EditDegree);
@@ -81,7 +75,6 @@ namespace UCosmic.Web.Mvc.Controllers
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public class ActionNamesClass
         {
-            public readonly string Index = "Index";
             public readonly string NewDegree = "NewDegree";
             public readonly string EditDegree = "EditDegree";
             public readonly string NewGeographicExpertise = "NewGeographicExpertise";
@@ -93,7 +86,6 @@ namespace UCosmic.Web.Mvc.Controllers
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public class ActionNameConstants
         {
-            public const string Index = "Index";
             public const string NewDegree = "NewDegree";
             public const string EditDegree = "EditDegree";
             public const string NewGeographicExpertise = "NewGeographicExpertise";
@@ -103,14 +95,6 @@ namespace UCosmic.Web.Mvc.Controllers
         }
 
 
-        static readonly ActionParamsClass_Index s_params_Index = new ActionParamsClass_Index();
-        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public ActionParamsClass_Index IndexParams { get { return s_params_Index; } }
-        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public class ActionParamsClass_Index
-        {
-            public readonly string tab = "tab";
-        }
         static readonly ActionParamsClass_EditDegree s_params_EditDegree = new ActionParamsClass_EditDegree();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public ActionParamsClass_EditDegree EditDegreeParams { get { return s_params_EditDegree; } }
@@ -177,13 +161,6 @@ namespace UCosmic.Web.Mvc.Controllers
     public class T4MVC_MyProfileController : UCosmic.Web.Mvc.Controllers.MyProfileController
     {
         public T4MVC_MyProfileController() : base(Dummy.Instance) { }
-
-        public override System.Web.Mvc.ActionResult Index(string tab)
-        {
-            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Index);
-            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "tab", tab);
-            return callInfo;
-        }
 
         public override System.Web.Mvc.ActionResult NewDegree()
         {

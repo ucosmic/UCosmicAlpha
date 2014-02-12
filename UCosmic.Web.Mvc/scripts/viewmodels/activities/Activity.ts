@@ -341,9 +341,7 @@ module Activities.ViewModels {
                     })
                         .done(() => {
                             this._isSaved = true; // prevent tinymce onbeforeunload from updating again
-                            location.href = mode == 'Draft'
-                                ? Routes.Mvc.Employees.Activities.byPerson(this.personId())
-                                : Routes.Mvc.Employees.Activities.detail(this._originalId);
+                            location.href = Routes.Mvc.Employees.Activities.byPerson(this.personId());
                         })
                         .fail((xhr: JQueryXHR): void => {
                             App.Failures.message(xhr, 'while trying to save your activity', true);

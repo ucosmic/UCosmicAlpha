@@ -6,9 +6,13 @@
 <section class="content fixed to-top">
     <div>
         @* KEYWORD TEXT BOX *@
-        <div class="field" style="margin-bottom: 0;">
-            <input type="search" data-bind="value: keyword" placeholder="Find an activity by title, country, or keyword." name="keyword" style="width: 588px; margin-right: 12px" />
-            <input type="submit" value="Search" title="Click here or press the enter key to search." />
+        <div class="field group">
+            <div class="on-left">
+                <input type="search" data-bind="value: keyword" placeholder="Find an activity by title, country, or keyword." name="keyword" style="width: 570px; margin-right: 12px" />
+            </div>
+            <div class="on-right">
+                <input type="submit" value="Search" style="margin-top: 2px;" title="Click here or press the enter key to search." />
+            </div>
         </div>
         @if (User.Identity.Name.Equals(ViewBag.Username, StringComparison.OrdinalIgnoreCase))
         {
@@ -51,6 +55,15 @@
                 </div>
             }
         </div>
+        @if (User.Identity.Name.Equals(ViewBag.Username, StringComparison.OrdinalIgnoreCase))
+        {
+            <div>
+                <a href="@Url.Action(MVC.Activities.Create())" class="button">
+                    <i class="green plus" style="width: 16px; height: 16px; background-size: contain"></i>
+                    <span class="text" style="vertical-align: initial;">Add a new activity</span>
+                </a>
+            </div>
+        }
         @if (Model != null && Model.Items.Any())
         {
             @* RESULTS *@
@@ -250,9 +263,9 @@
         else
         {
             @* ZERO RESULTS MESSAGE *@
-            <span>
+            <p>
                 @ViewBag.CustomBib has no activities that match your search terms.
-            </span>
+            </p>
         }
 
 
@@ -260,12 +273,10 @@
     @if (User.Identity.Name.Equals(ViewBag.Username, StringComparison.OrdinalIgnoreCase))
     {
         <div style="margin-top: 12px; line-height: 24px;">
-            <a href="@Url.Action(MVC.Activities.Create())" class="button" data-xbind="click: addActivity">
-                @*<img src="~/images/icons/plus/plus-24-green.png" alt="Add a new language" style="cursor: pointer; padding-right: 4px;" />*@
-                <i class="green plus"></i>
-                <span class="text">Add a new activity</span>
+            <a href="@Url.Action(MVC.Activities.Create())" class="button">
+                <i class="green plus" style="width: 16px; height: 16px; background-size: contain"></i>
+                <span class="text" style="vertical-align: initial;">Add a new activity</span>
             </a>
         </div>
     }
 </section>
-

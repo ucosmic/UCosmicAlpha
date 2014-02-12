@@ -13,17 +13,17 @@ namespace UCosmic.Web.Mvc.Controllers
             _queryProcessor = queryProcessor;
         }
 
-        [Authorize]
-        [GET("my")]
-        //[GET("my/profile", ActionPrecedence = 2)]
-        //[GET("person", ActionPrecedence = 1)]
-        public virtual ActionResult Index(string tab)
-        {
-            var person = _queryProcessor.Execute(new MyPerson(User));
-            ViewBag.PersonId = person.RevisionId;
-            ViewBag.Tab = tab;
-            return View();
-        }
+        //[Authorize]
+        //[GET("my")]
+        ////[GET("my/profile", ActionPrecedence = 2)]
+        ////[GET("person", ActionPrecedence = 1)]
+        //public virtual ActionResult Index(string tab)
+        //{
+        //    var person = _queryProcessor.Execute(new MyPerson(User));
+        //    ViewBag.PersonId = person.RevisionId;
+        //    ViewBag.Tab = tab;
+        //    return View();
+        //}
 
         [Authorize]
         [CurrentModuleTab(ModuleTab.Employees)]

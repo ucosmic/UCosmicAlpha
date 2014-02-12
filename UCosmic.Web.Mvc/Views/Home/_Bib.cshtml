@@ -14,6 +14,6 @@
             var customProfileTitle = (tenancy != null && !string.IsNullOrWhiteSpace(tenancy.CustomProfileTitle))
                 ? tenancy.CustomProfileTitle : "My UCosmic Profile";
         }
-        <a href="@Url.Action(MVC.MyProfile.Index())">@customProfileTitle</a>
+        <a href="@Url.Action(MVC.People.Me())">@customProfileTitle</a>
     </li>
 </ul>
