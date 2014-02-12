@@ -18,16 +18,16 @@ var People;
             LanguageViewModel.prototype.setupGoogleChart = function (modelData) {
                 var _this = this;
                 $.each(modelData, function (index, value) {
-                    modelData[index].Speaking.Meaning = _this.addTooltipStyle(modelData[index].Speaking.Meaning);
-                    modelData[index].Listening.Meaning = _this.addTooltipStyle(modelData[index].Listening.Meaning);
-                    modelData[index].Reading.Meaning = _this.addTooltipStyle(modelData[index].Reading.Meaning);
-                    modelData[index].Writing.Meaning = _this.addTooltipStyle(modelData[index].Writing.Meaning);
+                    modelData[index].speaking.meaning = _this.addTooltipStyle(modelData[index].speaking.meaning);
+                    modelData[index].listening.meaning = _this.addTooltipStyle(modelData[index].listening.meaning);
+                    modelData[index].reading.meaning = _this.addTooltipStyle(modelData[index].reading.meaning);
+                    modelData[index].writing.meaning = _this.addTooltipStyle(modelData[index].writing.meaning);
                     var data = google.visualization.arrayToDataTable([
                         ['Categories', "Proficiency", { type: 'string', position: 'center', role: 'tooltip', 'p': { 'html': true } }, { role: 'style' }],
-                        ['Speaking', modelData[index].Speaking.Proficiency, modelData[index].Speaking.Meaning, '#319CBD'],
-                        ['Listening', modelData[index].Listening.Proficiency, modelData[index].Listening.Meaning, '#94CE39'],
-                        ['Reading', modelData[index].Reading.Proficiency, modelData[index].Reading.Meaning, '#73218C'],
-                        ['Writing', modelData[index].Writing.Proficiency, modelData[index].Writing.Meaning, '#B5184A']
+                        ['Speaking', modelData[index].speaking.proficiency, modelData[index].speaking.meaning, '#319CBD'],
+                        ['Listening', modelData[index].listening.proficiency, modelData[index].listening.meaning, '#94CE39'],
+                        ['Reading', modelData[index].reading.proficiency, modelData[index].reading.meaning, '#73218C'],
+                        ['Writing', modelData[index].writing.proficiency, modelData[index].writing.meaning, '#B5184A']
                     ]);
 
                     var options = {
@@ -51,7 +51,7 @@ var People;
                         chartArea: { left: 80, top: 32, bottom: 40, width: "80%", height: "80%" },
                         bar: { groupWidth: "40%" }
                     };
-                    var chart = new google.visualization.BarChart(document.getElementById('chart_div_' + modelData[index].Id));
+                    var chart = new google.visualization.BarChart(document.getElementById('chart_div_' + modelData[index].id));
                     chart.draw(data, options);
                 });
             };

@@ -22,7 +22,7 @@ var People;
                 $.ajax({
                     async: false,
                     type: "DELETE",
-                    url: Routes.Api.People.ExternalUrls.single(this.personId, link.UrlId()),
+                    url: Routes.Api.People.ExternalUrls.single(this.personId, link.urlId()),
                     success: function (data, textStatus, jqXHR) {
                         _this.purgeSpinner.stop();
                         _this.externalLinks.remove(link);
@@ -35,7 +35,7 @@ var People;
             };
             UrlViewModel.prototype.purge = function (expertiseId, thisData, event) {
                 var _this = this;
-                if (this.purgeSpinner.isRunning) {
+                if (this.purgeSpinner.isRunning()) {
                     return;
                 }
                 if (this.$confirmDeleteUrl && this.$confirmDeleteUrl.length) {
@@ -78,10 +78,10 @@ var People;
 
             UrlViewModel.prototype.edit = function (item, event) {
                 var context = ko.contextFor(event.target).$parent;
-                context.editLink(item.Value());
-                context.editUrlId = item.UrlId();
-                $("#edit_description").data("kendoComboBox").value(item.Description());
-                context.editDescription(item.Description());
+                context.editLink(item.value());
+                context.editUrlId = item.urlId();
+                $("#edit_description").data("kendoComboBox").value(item.description());
+                context.editDescription(item.description());
 
                 context.$edit_urls_dialog.data("kendoWindow").open().title("Urls");
                 context.purgeSpinner.start();
@@ -122,12 +122,12 @@ var People;
                         App.Failures.message(xhr, xhr.responseText, true);
                     },
                     success: function (response, statusText, xhr) {
-                        data = {
-                            Value: _this.createLink(),
-                            Description: _this.createDescription(),
-                            UrlId: parseInt(xhr.getResponseHeader('Location').substring(xhr.getResponseHeader('Location').lastIndexOf("/") + 1))
+                        var responseData = {
+                            value: _this.createLink(),
+                            description: _this.createDescription(),
+                            urlId: parseInt(xhr.getResponseHeader('Location').substring(xhr.getResponseHeader('Location').lastIndexOf("/") + 1))
                         };
-                        _this.externalLinks.push(ko.mapping.fromJS(data));
+                        _this.externalLinks.push(ko.mapping.fromJS(responseData));
                         _this.createDescription("");
                         $("#create_description").data("kendoComboBox").value('');
                         _this.createLink("");
@@ -154,8 +154,8 @@ var People;
                         App.Failures.message(xhr, xhr.responseText, true);
                     },
                     success: function (xhr) {
-                        _this.editItem.Value(_this.editLink());
-                        _this.editItem.Description(_this.editDescription());
+                        _this.editItem.value(_this.editLink());
+                        _this.editItem.description(_this.editDescription());
                     }
                 });
             };

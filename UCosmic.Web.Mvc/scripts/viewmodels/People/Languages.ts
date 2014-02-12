@@ -22,16 +22,16 @@ module People.ViewModels {
         }
         setupGoogleChart(modelData: server.LanguageExpertiseViewModel) {
             $.each(modelData, (index, value) => {
-                modelData[index].Speaking.Meaning = this.addTooltipStyle(modelData[index].Speaking.Meaning);
-                modelData[index].Listening.Meaning = this.addTooltipStyle(modelData[index].Listening.Meaning);
-                modelData[index].Reading.Meaning = this.addTooltipStyle(modelData[index].Reading.Meaning);
-                modelData[index].Writing.Meaning = this.addTooltipStyle(modelData[index].Writing.Meaning);
+                modelData[index].speaking.meaning = this.addTooltipStyle(modelData[index].speaking.meaning);
+                modelData[index].listening.meaning = this.addTooltipStyle(modelData[index].listening.meaning);
+                modelData[index].reading.meaning = this.addTooltipStyle(modelData[index].reading.meaning);
+                modelData[index].writing.meaning = this.addTooltipStyle(modelData[index].writing.meaning);
                 var data = google.visualization.arrayToDataTable([
                     ['Categories', "Proficiency", { type: 'string', position: 'center', role: 'tooltip', 'p': { 'html': true } }, { role: 'style' }],
-                    ['Speaking', modelData[index].Speaking.Proficiency, modelData[index].Speaking.Meaning, '#319CBD'],
-                    ['Listening', modelData[index].Listening.Proficiency, modelData[index].Listening.Meaning, '#94CE39'],
-                    ['Reading', modelData[index].Reading.Proficiency, modelData[index].Reading.Meaning, '#73218C'],
-                    ['Writing', modelData[index].Writing.Proficiency, modelData[index].Writing.Meaning, '#B5184A'],
+                    ['Speaking', modelData[index].speaking.proficiency, modelData[index].speaking.meaning, '#319CBD'],
+                    ['Listening', modelData[index].listening.proficiency, modelData[index].listening.meaning, '#94CE39'],
+                    ['Reading', modelData[index].reading.proficiency, modelData[index].reading.meaning, '#73218C'],
+                    ['Writing', modelData[index].writing.proficiency, modelData[index].writing.meaning, '#B5184A'],
                 ]);
                 //no gradients yet - http://code.google.com/p/google-visualization-api-issues/issues/detail?id=550
                 var options: google.visualization.BarChartOptions = {
@@ -54,7 +54,7 @@ module People.ViewModels {
                     chartArea: { left: 80, top: 32, bottom: 40, width: "80%", height: "80%" },
                     bar: { groupWidth: "40%" },
                 };
-                var chart = new google.visualization.BarChart(document.getElementById('chart_div_' + modelData[index].Id));
+                var chart = new google.visualization.BarChart(document.getElementById('chart_div_' + modelData[index].id));
                 chart.draw(data, options);
             });
         }

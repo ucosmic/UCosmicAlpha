@@ -26,7 +26,7 @@ module People.ViewModels {
             $.ajax({
                 async: false,
                 type: "DELETE",
-                url: Routes.Api.People.ExternalUrls.single(this.personId, link.UrlId()),
+                url: Routes.Api.People.ExternalUrls.single(this.personId, link.urlId()),
                 success: (data: any, textStatus: string, jqXHR: JQueryXHR): void => {
                     this.purgeSpinner.stop();
                     this.externalLinks.remove(link);
@@ -38,7 +38,7 @@ module People.ViewModels {
             });
         }
         purge(expertiseId, thisData, event): void {
-            if (this.purgeSpinner.isRunning) {
+            if (this.purgeSpinner.isRunning()) {
                 return;
             }
             if (this.$confirmDeleteUrl && this.$confirmDeleteUrl.length) {
@@ -91,10 +91,10 @@ module People.ViewModels {
 
         edit(item, event): void {
             var context = ko.contextFor(event.target).$parent;
-            context.editLink(item.Value());
-            context.editUrlId = item.UrlId();
-            $("#edit_description").data("kendoComboBox").value(item.Description());
-            context.editDescription(item.Description());
+            context.editLink(item.value());
+            context.editUrlId = item.urlId();
+            $("#edit_description").data("kendoComboBox").value(item.description());
+            context.editDescription(item.description());
             //context.verticallyCenterWindow(context.$edit_urls_dialog.parent());
             context.$edit_urls_dialog.data("kendoWindow").open().title("Urls");
             context.purgeSpinner.start();
@@ -135,12 +135,12 @@ module People.ViewModels {
                     App.Failures.message(xhr, xhr.responseText, true);
                 },
                 success: (response: any, statusText: string, xhr: JQueryXHR) => {
-                    data = {
-                        Value: this.createLink(),
-                        Description: this.createDescription(),
-                        UrlId: parseInt(xhr.getResponseHeader('Location').substring(xhr.getResponseHeader('Location').lastIndexOf("/") + 1))
+                    var responseData = {
+                        value: this.createLink(),
+                        description: this.createDescription(),
+                        urlId: parseInt(xhr.getResponseHeader('Location').substring(xhr.getResponseHeader('Location').lastIndexOf("/") + 1))
                     }
-                    this.externalLinks.push(ko.mapping.fromJS(data));
+                    this.externalLinks.push(ko.mapping.fromJS(responseData));
                     this.createDescription("");
                     $("#create_description").data("kendoComboBox").value('');
                     this.createLink("")
@@ -166,8 +166,8 @@ module People.ViewModels {
                     App.Failures.message(xhr, xhr.responseText, true);
                 },
                 success: (xhr: JQueryXHR) => {
-                    this.editItem.Value(this.editLink());
-                    this.editItem.Description(this.editDescription());
+                    this.editItem.value(this.editLink());
+                    this.editItem.description(this.editDescription());
                 }
             });
         }

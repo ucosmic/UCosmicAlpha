@@ -7,7 +7,7 @@
     <script type="text/javascript">
 
         function Urls() {
-            var model = $.parseJSON('@Html.Raw(Json.Encode(Model))');
+            var model = $.parseJSON('@Html.Raw(Html.SerializeObject(Model))');
             var urlsViewModel = new People.ViewModels.UrlViewModel(model, @ViewBag.personId);
             ko.applyBindings(urlsViewModel, $('#urls')[0]);
             urlsViewModel.bindJquery();
@@ -23,7 +23,7 @@
         </div>
         <ul data-bind="foreach: externalLinks" style="margin-bottom: 12px; line-height: 24px;">
             <li style="margin-bottom: 12px;">
-                <a data-bind="attr: {href: Value}, text: Description, visible: !$root.isEditing()"></a>
+                <a data-bind="attr: {href: value}, text: description, visible: !$root.isEditing()"></a>
                 <div style="float: right; width: 70px; text-align: right;" data-bind="visible: !$root.isEditing()">
                     <img data-bind="click: $root.edit.bind($data)" alt="" src="~/images/icons/edit/pencil-a-24.png" title="Edit this external link"
                          style="cursor: pointer; margin: 0 0 8px 8px;" />
@@ -75,8 +75,8 @@ else
             <ul>
                 @foreach (var url in Model)
                 {
-                    <li>
-                        @url.Value
+                    <li style="margin-bottom: 12px;">
+                        <a href="@url.Value">@url.Description</a>
                     </li>
                 }
             </ul>
