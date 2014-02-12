@@ -607,8 +607,12 @@ module App.Routes {
         }
 
         export module Agreements {
-            export function show(AgreementId: number) {
-                return makeUrl('agreements/' + AgreementId);
+            export function show(AgreementId?: number) {
+                if (AgreementId) {
+                    return makeUrl('agreements/' + AgreementId);
+                } else {
+                    return makeUrl('agreements');
+                }
             }
             //export function created(params?: any) {
             //    var url = makeUrl('agreements/created');

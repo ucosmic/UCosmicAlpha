@@ -1,4 +1,5 @@
 class InstitutionalAgreementEditModel {
+
     constructor(public agreementId: number) {
         $("table.data").children("tbody").addClass("searchResults");
         var culture = $("meta[name='accept-language']").attr("content");
@@ -120,7 +121,7 @@ class InstitutionalAgreementEditModel {
         $("#add_establishment").css("visibility", "").hide();
     }
 
-    officialNameDoesNotMatchTranslation = ko.computed(function () {
+    officialNameDoesNotMatchTranslation = ko.computed(function() {
         return !(this.participants.establishmentOfficialName === this.participants.establishmentTranslatedName);
     });
 
@@ -217,16 +218,16 @@ class InstitutionalAgreementEditModel {
     private _bindjQueryKendo(): void {
         var self = this;
 
-        $(".hasDate").each(function (index, item) {
+        $(".hasDate").each(function(index, item) {
             $(item).kendoDatePicker({
                 value: new Date($(item).val()),
                 //have to use change event for ko validation-change does a double call so need to check for null
-                change: function (e) {
+                change: function(e) {
                     if (this.value() != null) {
                         $(e.sender.element).val(Globalize.format(this.value(), 'd'));
                     }
                 },
-                close: function (e) {
+                close: function(e) {
                     if (this.value() != null) {
                         $(e.sender.element).val(Globalize.format(this.value(), 'd'));
                     }
@@ -286,18 +287,38 @@ class InstitutionalAgreementEditModel {
             agreementSettingsGet;
 
         $.ajax({
-            url: eval(url),
-            type: 'GET'
-        })
+                url: eval(url),
+                type: 'GET'
+            })
             .done((result) => {
                 this.processSettings(result);
             })
-            .fail(function (xhr) {
+            .fail(function(xhr) {
                 App.Failures.message(xhr, xhr.responseText, true);
             });
     }
 
-    saveUpdateAgreement(): void {
+    deleteAgreement(): void {
+
+        var url = App.Routes.WebApi.Agreements.del(this.agreementId);
+        $.ajax({
+            type: 'DELETE',
+            url: url,
+            success: (response: any, statusText: string, xhr: JQueryXHR): void => {
+                this.savingAgreement = false;
+                sessionStorage.setItem("agreementSaved", "deleted");
+                location.href = App.Routes.Mvc.Agreements.show();
+            },
+            error: (xhr: JQueryXHR): void => {
+                this.savingAgreement = false;
+                this.spinner.stop();
+                App.Failures.message(xhr, xhr.responseText, true);
+                //alert(xhr.responseText);
+            }
+        });
+    }
+
+saveUpdateAgreement(): void {
         var offset;
 
         // validate in this order to put scroll in right place

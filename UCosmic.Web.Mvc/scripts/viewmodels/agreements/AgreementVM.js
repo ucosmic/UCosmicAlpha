@@ -265,6 +265,25 @@ var InstitutionalAgreementEditModel = (function () {
         });
     };
 
+    InstitutionalAgreementEditModel.prototype.deleteAgreement = function () {
+        var _this = this;
+        var url = App.Routes.WebApi.Agreements.del(this.agreementId);
+        $.ajax({
+            type: 'DELETE',
+            url: url,
+            success: function (response, statusText, xhr) {
+                _this.savingAgreement = false;
+                sessionStorage.setItem("agreementSaved", "deleted");
+                location.href = App.Routes.Mvc.Agreements.show();
+            },
+            error: function (xhr) {
+                _this.savingAgreement = false;
+                _this.spinner.stop();
+                App.Failures.message(xhr, xhr.responseText, true);
+            }
+        });
+    };
+
     InstitutionalAgreementEditModel.prototype.saveUpdateAgreement = function () {
         var _this = this;
         var offset;

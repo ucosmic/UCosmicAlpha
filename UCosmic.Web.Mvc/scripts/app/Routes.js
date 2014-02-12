@@ -773,7 +773,11 @@ var App;
 
             (function (Agreements) {
                 function show(AgreementId) {
-                    return makeUrl('agreements/' + AgreementId);
+                    if (AgreementId) {
+                        return makeUrl('agreements/' + AgreementId);
+                    } else {
+                        return makeUrl('agreements');
+                    }
                 }
                 Agreements.show = show;
             })(Mvc.Agreements || (Mvc.Agreements = {}));

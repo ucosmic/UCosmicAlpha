@@ -71,6 +71,10 @@ module Agreements.ViewModels {
             this._loadCountryOptions();
             this.sammy = this.settings.sammy || Sammy();
             this._runSammy();
+            if (sessionStorage.getItem("agreementSaved") == "deleted") {
+                sessionStorage.setItem("agreementSaved", "no");
+                App.flasher.flash("Agreement deleted");
+            }
         }
 
         ////#endregion

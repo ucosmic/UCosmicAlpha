@@ -27,11 +27,10 @@ module Agreements.ViewModels {
             }
             this.nextPage = (): void => {
                 if (this.nextEnabled()) {
-                var pageNumber = Number(this.pageNumber()) + 1;
-                this.pageNumber(pageNumber);
+                    var pageNumber = Number(this.pageNumber()) + 1;
+                    this.pageNumber(pageNumber);
+                }
             }
-        }
-        
         }
         header = ko.observable();
         $searchResults = $("#searchResults");
@@ -215,7 +214,7 @@ module Agreements.ViewModels {
 
         private _requestResults(): void {
             this.optionsEnabled(false);
-            if (this.pageSize() === undefined || this.orderBy()=== undefined || this.pageNumber() === undefined
+            if (this.pageSize() === undefined || this.orderBy() === undefined || this.pageNumber() === undefined
                 || this.keyword() !== this.throttledKeyword())
                 return;
             this.lockAnimation();
@@ -269,7 +268,7 @@ module Agreements.ViewModels {
         detailHref(id: number): string {
             return App.Routes.Mvc.Establishments.show(id);
         }
-        
+
         private _setupPagingDefaults(): void {
             this.orderBy('country');
             this.pageSize(10);
