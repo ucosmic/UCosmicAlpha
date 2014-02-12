@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Security.Principal;
@@ -106,6 +107,7 @@ namespace UCosmic.Domain.External
                     },
                 });
                 reportBuilder.Report("Iterating over {0} affiliations.", usfPerson.Affiliations.Length);
+                var createdAffiliations = new List<Affiliation>();
                 foreach (var usfAffiliation in usfPerson.Affiliations)
                 {
                     // make sure the establishment exists
@@ -114,6 +116,10 @@ namespace UCosmic.Domain.External
                         throw new InvalidOperationException(string.Format(
                             "Could not find UCosmic establishment for USF Department '{0}'.", usfAffiliation.DepartmentId));
 
+                    // make sure the affiliation is not a duplicate
+                    if (createdAffiliations.Any(x => x.EstablishmentId == establishment.RevisionId && x.PersonId == user.Person.RevisionId))
+                        continue;
+
                     var facultyRank = settings.FacultyRanks.SingleOrDefault(x => x.Rank == usfAffiliation.PositionTitle);
                     var createAffiliationCommand = new CreateAffiliation(command.Principal, user.Person.RevisionId, establishment.RevisionId)
                     {
@@ -121,6 +127,7 @@ namespace UCosmic.Domain.External
                         FacultyRankId = facultyRank != null ? facultyRank.Id : (int?)null,
                     };
                     _createAffiliation.Handle(createAffiliationCommand);
+                    createdAffiliations.Add(createAffiliationCommand.Created);
                 }
             }
 
