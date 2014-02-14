@@ -613,7 +613,7 @@
                     var paramObject = {
                         placeNames: placeName,
                         placeIds: place.placeId, 
-                        pivot: 1,
+                        pivot: this.pivot(),
                         keyword: ''
                     };
                     location.href = 'table/?' + $.param(paramObject);
@@ -719,14 +719,23 @@
             var selectedItem = this.activityTypeChart.columnChart.getSelection()[0];
             if (selectedItem) {
                 var value = this._activityTypeChartDataTable.getValue(selectedItem.row, 3);
-
-                var paramObject = {
-                    placeNames: this.selectedPlaceSummary.locationCount(),
-                    placeIds: this.placeId(),
-                    pivot: 1,
-                    keyword: '',
-                    activityTypeIds: value
-                };
+                var placeName = "";
+                var paramObject;
+                if (this.placeId() != 1) {
+                    paramObject = {
+                        placeNames: this.selectedPlaceSummary.locationCount(),
+                        placeIds: this.placeId(),
+                        pivot: this.pivot(),
+                        keyword: '',
+                        activityTypeIds: value
+                    };
+                } else {
+                    paramObject = {
+                        pivot: this.pivot(),
+                        keyword: '',
+                        activityTypeIds: value
+                    };
+                }
                 location.href = 'table/?' + $.param(paramObject);
             }
         }
