@@ -602,16 +602,6 @@
         }
 
         private _onGeoChartSelect(): void {
-            //http://localhost:3014/usf.edu/employees/table/?pivot=1&keyword=&placeNames=Canada&placeIds=47
-        //&orderBy=recency-desc&pageSize=10&activityTypeIds=2&activityTypeIds=3&activityTypeIds=5&activityTypeIds=1&activityTypeIds=4&Since=&Until=&includeUndated=true&includeUndated=false
-                //var paramObject = {
-                //    a: {
-                //        one: 1,
-                //        two: 2,
-                //        three: 3
-                //    },
-                //    b: [1, 2, 3]
-                //};
             var selection = this.geoChart.geoChart.getSelection(); // expect single item in array with row index
             if (selection && selection.length) { // just to make sure
                 var rowIndex = selection[0].row; // get the row index of corresponding data table item selected
@@ -726,9 +716,6 @@
         }
 
         private _onActivityTypeChartSelect() {
-            //http://localhost:3014/usf.edu/employees/table/?pivot=1&keyword=&pageNumber=1&placeNames=Canada&placeIds=47&orderBy=recency-desc&pageSize=10&activityTypeIds=2
-            //http://localhost:3014/usf.edu/employees/table/?placeNames=Canada&placeIds=47&pivot=1&keyword=&activityTypesIds=2
-            //&pageNumber=1
             var selectedItem = this.activityTypeChart.columnChart.getSelection()[0];
             if (selectedItem) {
                 var value = this._activityTypeChartDataTable.getValue(selectedItem.row, 3);
@@ -741,7 +728,6 @@
                     activityTypeIds: value
                 };
                 location.href = 'table/?' + $.param(paramObject);
-                //alert('The user selected ' + value);
             }
         }
 

@@ -125,7 +125,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 }
             });
             var models = Mapper.Map<IEnumerable<TextValuePair>>(entities)
-                .OrderBy(x => x.Value);
+                .OrderBy(x => x.Text);
             return models;
         }
 
