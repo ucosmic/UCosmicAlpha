@@ -602,12 +602,32 @@
         }
 
         private _onGeoChartSelect(): void {
+            //http://localhost:3014/usf.edu/employees/table/?pivot=1&keyword=&placeNames=Canada&placeIds=47
+        //&orderBy=recency-desc&pageSize=10&activityTypeIds=2&activityTypeIds=3&activityTypeIds=5&activityTypeIds=1&activityTypeIds=4&Since=&Until=&includeUndated=true&includeUndated=false
+                //var paramObject = {
+                //    a: {
+                //        one: 1,
+                //        two: 2,
+                //        three: 3
+                //    },
+                //    b: [1, 2, 3]
+                //};
             var selection = this.geoChart.geoChart.getSelection(); // expect single item in array with row index
             if (selection && selection.length) { // just to make sure
                 var rowIndex = selection[0].row; // get the row index of corresponding data table item selected
                 // first column of the data table has the place name (country name)
                 var placeName = this._geoChartDataTable.getFormattedValue(rowIndex, 0);
                 var place = this._getPlaceByName(placeName);
+                //if country clicked twice, send to advanced table search.
+                if (this.placeId() == place.placeId) {
+                    var paramObject = {
+                        placeNames: placeName,
+                        placeIds: place.placeId, 
+                        pivot: 1,
+                        keyword: ''
+                    };
+                    location.href = 'table/?' + $.param(paramObject);
+                }
                 if (place) {
                     this.placeId(place.placeId);
                 }
@@ -617,7 +637,7 @@
         private _onGeoChartRegionClick(e: google.visualization.GeoChartRegionClickEvent): void {
             // this will fire even when the country clicked has total === zero
         }
-
+        
         //#endregion
         //#region Activity Type Chart
 
@@ -678,6 +698,7 @@
             dataTable.addColumn('string', 'Activity Type');
             dataTable.addColumn('number', 'Count');
             dataTable.addColumn({ type: 'number', role: 'annotation' });
+            dataTable.addColumn({ type: 'number', role: 'id' });
             return dataTable;
         }
 
@@ -690,6 +711,9 @@
                         if (!this.isActivityTypeChartReady()) {
                             this.isActivityTypeChartReady(true);
                             this.bindingsApplied.done((): void=> {
+                                google.visualization.events.addListener(
+                                    this.activityTypeChart.columnChart, 'select',
+                                    (): void => { this._onActivityTypeChartSelect(); });
                             });
                         }
                         promise.resolve();
@@ -699,6 +723,26 @@
                 promise.resolve();
             }
             return promise;
+        }
+
+        private _onActivityTypeChartSelect() {
+            //http://localhost:3014/usf.edu/employees/table/?pivot=1&keyword=&pageNumber=1&placeNames=Canada&placeIds=47&orderBy=recency-desc&pageSize=10&activityTypeIds=2
+            //http://localhost:3014/usf.edu/employees/table/?placeNames=Canada&placeIds=47&pivot=1&keyword=&activityTypesIds=2
+            //&pageNumber=1
+            var selectedItem = this.activityTypeChart.columnChart.getSelection()[0];
+            if (selectedItem) {
+                var value = this._activityTypeChartDataTable.getValue(selectedItem.row, 3);
+
+                var paramObject = {
+                    placeNames: this.selectedPlaceSummary.locationCount(),
+                    placeIds: this.placeId(),
+                    pivot: 1,
+                    keyword: '',
+                    activityTypeIds: value
+                };
+                location.href = 'table/?' + $.param(paramObject);
+                //alert('The user selected ' + value);
+            }
         }
 
         private _drawActivityTypeChart(): void {
@@ -722,7 +766,7 @@
                     this.activityTypes(activityTypes);
                     $.each(activityTypes, (i: number, dataPoint: ApiModels.EmployeeActivityTypeCount): void => {
                         var total = isPivotPeople ? dataPoint.activityPersonIds.length : dataPoint.activityIds.length;
-                        this._activityTypeChartDataTable.addRow([dataPoint.text, total, total]);
+                        this._activityTypeChartDataTable.addRow([dataPoint.text, total, total, dataPoint.activityTypeId]);
                     });
                     var dataView = new google.visualization.DataView(this._activityTypeChartDataTable);
                     dataView.setColumns([0, 1, 1, 2]);
@@ -940,6 +984,15 @@
 
         clickPlaceOverlay(overlay: SummaryGeoChartPlaceOverlay, e: JQueryEventObject): void {
             var place = this._getPlaceById(overlay.placeId);
+            if (this.placeId() == place.placeId) {
+                var paramObject = {
+                    placeNames: place.placeName,
+                    placeIds: place.placeId,
+                    pivot: 1,
+                    keyword: ''
+                };
+                location.href = 'table/?' + $.param(paramObject);
+            }
             if (place) {
                 if (!place.activityPersonIds.length) {
                     return;

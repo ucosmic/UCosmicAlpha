@@ -516,6 +516,16 @@
 
                     var placeName = this._geoChartDataTable.getFormattedValue(rowIndex, 0);
                     var place = this._getPlaceByName(placeName);
+
+                    if (this.placeId() == place.placeId) {
+                        var paramObject = {
+                            placeNames: placeName,
+                            placeIds: place.placeId,
+                            pivot: 1,
+                            keyword: ''
+                        };
+                        location.href = 'table/?' + $.param(paramObject);
+                    }
                     if (place) {
                         this.placeId(place.placeId);
                     }
@@ -573,6 +583,7 @@
                 dataTable.addColumn('string', 'Activity Type');
                 dataTable.addColumn('number', 'Count');
                 dataTable.addColumn({ type: 'number', role: 'annotation' });
+                dataTable.addColumn({ type: 'number', role: 'id' });
                 return dataTable;
             };
 
@@ -585,6 +596,9 @@
                         if (!_this.isActivityTypeChartReady()) {
                             _this.isActivityTypeChartReady(true);
                             _this.bindingsApplied.done(function () {
+                                google.visualization.events.addListener(_this.activityTypeChart.columnChart, 'select', function () {
+                                    _this._onActivityTypeChartSelect();
+                                });
                             });
                         }
                         promise.resolve();
@@ -593,6 +607,22 @@
                     promise.resolve();
                 }
                 return promise;
+            };
+
+            Summary.prototype._onActivityTypeChartSelect = function () {
+                var selectedItem = this.activityTypeChart.columnChart.getSelection()[0];
+                if (selectedItem) {
+                    var value = this._activityTypeChartDataTable.getValue(selectedItem.row, 3);
+
+                    var paramObject = {
+                        placeNames: this.selectedPlaceSummary.locationCount(),
+                        placeIds: this.placeId(),
+                        pivot: 1,
+                        keyword: '',
+                        activityTypeIds: value
+                    };
+                    location.href = 'table/?' + $.param(paramObject);
+                }
             };
 
             Summary.prototype._drawActivityTypeChart = function () {
@@ -614,7 +644,7 @@
                         _this.activityTypes(activityTypes);
                         $.each(activityTypes, function (i, dataPoint) {
                             var total = isPivotPeople ? dataPoint.activityPersonIds.length : dataPoint.activityIds.length;
-                            _this._activityTypeChartDataTable.addRow([dataPoint.text, total, total]);
+                            _this._activityTypeChartDataTable.addRow([dataPoint.text, total, total, dataPoint.activityTypeId]);
                         });
                         var dataView = new google.visualization.DataView(_this._activityTypeChartDataTable);
                         dataView.setColumns([0, 1, 1, 2]);
@@ -772,6 +802,15 @@
 
             Summary.prototype.clickPlaceOverlay = function (overlay, e) {
                 var place = this._getPlaceById(overlay.placeId);
+                if (this.placeId() == place.placeId) {
+                    var paramObject = {
+                        placeNames: place.placeName,
+                        placeIds: place.placeId,
+                        pivot: 1,
+                        keyword: ''
+                    };
+                    location.href = 'table/?' + $.param(paramObject);
+                }
                 if (place) {
                     if (!place.activityPersonIds.length) {
                         return;
