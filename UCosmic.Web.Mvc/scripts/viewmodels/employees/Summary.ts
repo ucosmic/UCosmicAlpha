@@ -566,6 +566,12 @@
 
             // decide which part of the map to select
             var placeId = this.placeId();
+            //Hack Alert - To remove antartica no map alert error we could do 
+            //$("#google-visualization-errors-9>span:contains('x')>span").click()
+            //or check placeId for antartica id
+            if (this.placeId() == 17) {
+                placeId = 1;
+            }
             var place = this._getPlaceById(placeId);
             var optionOverrides = this._getGeoChartOptions();
             optionOverrides.region = !placeId || placeId == 1 || !place || !place.countryCode

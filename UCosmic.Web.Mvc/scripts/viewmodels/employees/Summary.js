@@ -477,6 +477,10 @@
                 var needsRedraw = !cachedData;
 
                 var placeId = this.placeId();
+
+                if (this.placeId() == 17) {
+                    placeId = 1;
+                }
                 var place = this._getPlaceById(placeId);
                 var optionOverrides = this._getGeoChartOptions();
                 optionOverrides.region = !placeId || placeId == 1 || !place || !place.countryCode ? 'world' : place.countryCode;
