@@ -95,6 +95,7 @@
     <Compile Include="Domain\Activities\Queries\ActivityValuesPageBy.cs" />
     <Compile Include="Domain\Activities\Queries\Deprecated\MyActivityValues.cs" />
     <Compile Include="Domain\Activities\_Internal\SortActivityValues.cs" />
+    <Compile Include="Domain\Agreements\Commands\CreateAgreementSettings.cs" />
     <Compile Include="Domain\Degrees\Queries\DegreesPageByTerms.cs" />
     <Compile Include="Domain\Establishments\Queries\EmailDomainsByEstablishment.cs" />
     <Compile Include="Domain\Establishments\Work\AddUsfEmailDomains.cs" />

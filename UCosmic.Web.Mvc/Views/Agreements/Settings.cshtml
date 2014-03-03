@@ -8,13 +8,33 @@
     </nav>
 }
 
-<div class="content fixed" data-current-module="agreements">
-    <header>
-        <h1>@ViewBag.Title</h1>
-    </header>
-    <section>
-        <header>
-            <h2>Second heading</h2>
-        </header>
-    </section>
+<div class="content fixed to-top" data-current-module="agreements" style="margin-bottom: 548px">
+    <form class="group">
+        <div class="on-left from-top">
+            <header>
+                <h1>
+                    @ViewBag.Title
+                </h1>
+            </header>
+            <!-- ko stopBinding: true -->
+            @Html.Partial(MVC.Agreements.Views._Settings)
+            <!-- /ko -->
+            <footer id="saveAgreement">
+                @* TODO: render these as buttons instead of links with button styles *@
+                <a data-bind="click: saveUpdateAgreement, visible: !agreementIsEdit()" class="button">
+                    <i class="green plus"></i>
+                    <span class="text">Update Agreement Settings</span>
+                </a>
+                <div class="validationMessage" data-bind="text: deleteErrorMessage, visible: (deleteErrorMessage() != '')" style="display: none;">
+
+                </div>
+            </footer>
+        </div>
+        <aside class="on-right from-top" data-fixed-scroll="root">
+            <div data-fixed-scroll="anchor"></div>
+            <div data-fixed-scroll="content">
+                @Html.Partial(MVC.Agreements.Views._SettingsSidebarNav)
+            </div>
+        </aside>
+    </form>
 </div>

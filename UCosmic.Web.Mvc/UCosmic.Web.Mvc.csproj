@@ -1760,6 +1760,7 @@
     <TypeScriptCompile Include="scripts\typings\moment\moment.d.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\activities\Map.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\activities\Search.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\agreements\settings.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\degrees\EstablishmentSearchNav.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\degrees\Search.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\establishments\SearchResult.ts" />
@@ -2637,6 +2638,8 @@
     <Content Include="Views\Activities\_ActivitiesSide.cshtml" />
     <Content Include="Views\Activities\_Bib.cshtml" />
     <Content Include="Views\Admin\_TenantLogos.cshtml" />
+    <Content Include="Views\Agreements\_Settings.cshtml" />
+    <Content Include="Views\Agreements\_SettingsSidebarNav.cshtml" />
     <None Include="Views\ApiTest\Index.cshtml" />
     <Content Include="Views\Agreements\Settings.cshtml" />
     <Content Include="Views\Agreements\_SearchSideBar.cshtml" />

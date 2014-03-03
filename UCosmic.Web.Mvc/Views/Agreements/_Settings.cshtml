@@ -1,0 +1,102 @@
+﻿<section id="agreement_types">
+    <header>
+        <h2>
+            Agreement types
+        </h2>
+    </header>
+    <div class="field-table w690-l190-v500" style="margin-top:0px;">
+        <ul data-bind="foreach: phones.contactPhones" style="margin-bottom: 8px">
+            <li>
+                <div class="field-row" style="margin-bottom: 5px">
+                    <div class="field-column-left" style="width: initial;">
+                        <div class="field-label-top" data-bind="visible: ($index() == 0)">
+                            <label>Agreement types</label>
+                        </div>
+                        <div class="field-input-label-top" style="width: 395px">
+                            <input class="phoneTypes" type="text" placeholder="[None]"
+                                   data-bind="value: type, valueUpdate: 'afterkeydown', attr: { id: 'phoneTypes' + $index() }" />
+                        </div>
+                        <a title="Remove this phone" style="float:right;" data-bind="click: $root.phones.removePhone"><i class="red minus on-right"></i></a>
+                    </div>
+                </div>
+            </li>
+        </ul>
+        <div class="field-row">
+            <div class="field-column-left" style="width: initial;">
+                <div class="field-label-top">
+                    <label>New agreement type</label>
+                </div>
+                <div class="field-input-label-top" style="width: 395px">
+                    <input id="contactPhoneTextValue" type="text" data-bind="value: phones.contactPhoneTextValue" />
+                </div>
+                <a title="add agreement type" data-bind="click: phones.addPhone" class="addLink on-right"><i class="green plus"></i></a>
+            </div>
+        </div>
+        <div>What will users see?</div>
+        <div class="field-row">
+            <div class="field-label-top required" style="padding-top: 4px;">
+                <label>Agreement type</label><i>(required, public visibility)</i>
+            </div>
+            <div class="field-input-label-top">
+                <input id="type_options" type="text" placeholder="[None]"
+                       data-bind="value: typeOptionSelected, valueUpdate: 'afterkeydown', jqObservableElement: '$typeOptions'" />
+            </div>
+            <div data-bind="visible: isCustomTypeAllowed" class="field-label-description">Select from the drop-down list of pre-existing agreement types or enter a custom one in the text box above.</div>
+            <div data-bind=" visible: !isCustomTypeAllowed()" class="field-label-description">Select from the drop-down list of pre-existing agreement types.</div>
+        </div>
+    </div>
+</section>
+<section id="current_statuses">
+    <header>
+        <h2>
+            Current Statuses
+        </h2>
+    </header>
+    <div>What will users see?</div>
+    <div class="field-table w690-l190-v500" style="margin-top:0px;">
+        <div class="field-row">
+            <div class="field-label-top required">
+                <label>Current Status</label>
+                <i>(required, public visibility)</i>
+            </div>
+            <div class="field-input-label-top">
+                <input id="status_options" type="text" placeholder="[None]"
+                       data-bind="value: statusOptionSelected, valueUpdate: 'afterkeydown', jqObservableElement: '$statusOptions'" />
+            </div>
+            <div data-bind="visible: isCustomStatusAllowed" class="field-label-description">
+                Select from the drop-down list of pre-existing agreement status or enter a custom one in the text box above.
+
+            </div>
+            <div data-bind=" visible: !isCustomStatusAllowed()" class="field-label-description">
+                Select from the drop-down list of pre-existing agreement status.
+
+            </div>
+        </div>
+    </div>
+</section>
+<section id="contact_types">
+    <header>
+        <h2>
+            Contact Types
+        </h2>
+    </header>
+    <div>What will users see?</div>
+    <div class="field-table w690-l190-v500" style="margin-top:0px;">
+        <div class="field-row">
+            <div class="field-label-top required">
+                <label>Contact type</label>
+                <i>(required, public visibility)</i>
+            </div>
+            <div class="field-input-label-top">
+                <input id="contactTypeOptions" type="text" placeholder="[None]"
+                       data-bind="value: contactTypeOptionSelected, valueUpdate: 'afterkeydown', jqObservableElement: '$contactTypeOptions'" />
+            </div>
+            <div data-bind="visible: isCustomContactTypeAllowed" class="field-label-description">
+                Select from the drop-down list of pre-existing agreement contactType or enter a custom one in the text box above.
+            </div>
+            <div data-bind=" visible: !isCustomContactTypeAllowed()" class="field-label-description">
+                Select from the drop-down list of pre-existing agreement contactType.
+            </div>
+        </div>
+    </div>
+</section>
