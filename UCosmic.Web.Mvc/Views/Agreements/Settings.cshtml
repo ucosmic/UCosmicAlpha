@@ -7,7 +7,15 @@
         @Html.Partial(MVC.Agreements.Views._Bib)
     </nav>
 }
+@section scripts
+{
+<script type="text/javascript" src="~/scripts/viewmodels/agreements/settings.js"></script>
+    <script type="text/javascript">
+        var agreementSettings = new Agreements.ViewModels.Settings();
+        ko.applyBindings(agreementSettings, $('[data-current-module=agreements]')[0]);
+    </script>
 
+}
 <div class="content fixed to-top" data-current-module="agreements" style="margin-bottom: 548px">
     <form class="group">
         <div class="on-left from-top">
