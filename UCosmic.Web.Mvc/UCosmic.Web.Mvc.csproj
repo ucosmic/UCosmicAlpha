@@ -2137,6 +2137,9 @@
     <Content Include="scripts\viewmodels\agreements\SearchTable.js">
       <DependentUpon>SearchTable.ts</DependentUpon>
     </Content>
+    <Content Include="scripts\viewmodels\agreements\settings.js">
+      <DependentUpon>settings.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\viewmodels\agreements\Visibility.js">
       <DependentUpon>Visibility.ts</DependentUpon>
     </Content>

@@ -14,7 +14,7 @@
                         </div>
                         <div class="field-input-label-top" style="width: 395px">
                             <input class="phoneTypes" type="text" placeholder="[None]"
-                                   data-bind="value: type, valueUpdate: 'afterkeydown', attr: { id: 'phoneTypes' + $index() }" />
+                                   data-bind="value: name, valueUpdate: 'afterkeydown', attr: { id: 'typeOption' + $index() }" />
                         </div>
                         <a title="Remove this phone" style="float:right;" data-bind="click: $root.removeTypeOption"><i class="red minus on-right"></i></a>
                     </div>
@@ -27,9 +27,9 @@
                     <label>New agreement type</label>
                 </div>
                 <div class="field-input-label-top" style="width: 395px">
-                    <input id="contactPhoneTextValue" type="text" data-bind="value: phones.contactPhoneTextValue" />
+                    <input id="contactPhoneTextValue" type="text" data-bind="value: typeOption" />
                 </div>
-                <a title="add agreement type" data-bind="click: phones.addPhone" class="addLink on-right"><i class="green plus"></i></a>
+                <a title="add agreement type" data-bind="click: addTypeOption" class="addLink on-right"><i class="green plus"></i></a>
             </div>
         </div>
         <div>What will users see?</div>

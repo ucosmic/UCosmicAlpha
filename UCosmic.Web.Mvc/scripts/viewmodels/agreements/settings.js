@@ -1,14 +1,33 @@
-﻿var Agreements;
+var Agreements;
 (function (Agreements) {
     (function (ViewModels) {
+        var SelectConstructor = (function () {
+            function SelectConstructor(name, id) {
+                this.name = name;
+                this.id = id;
+                this.name = name;
+                this.id = id;
+            }
+            return SelectConstructor;
+        })();
+        ViewModels.SelectConstructor = SelectConstructor;
         var Settings = (function () {
             function Settings() {
-                this.isCustomTypeAllowed = ko.observable();
+                this.deleteErrorMessage = ko.observable('');
                 this.isCustomStatusAllowed = ko.observable();
-                this.isCustomContactTypeAllowed = ko.observable();
                 this.statusOptions = ko.mapping.fromJS([]);
+                this.statusOptionSelected = ko.observable("");
+                this.$statusOptions = ko.observable();
+                this.isCustomContactTypeAllowed = ko.observable();
                 this.contactTypeOptions = ko.mapping.fromJS([]);
+                this.contactTypeOptionSelected = ko.observable("");
+                this.$contactTypeOptions = ko.observable();
+                this.isCustomTypeAllowed = ko.observable();
                 this.typeOptions = ko.mapping.fromJS([]);
+                this.typeOption = ko.observable("");
+                this.typeOptionSelected = ko.observable("");
+                this.$typeOptions = ko.observable();
+                this._getSettings();
             }
             Settings.prototype.processSettings = function (result) {
                 var self = this;
@@ -16,19 +35,19 @@
                 this.isCustomTypeAllowed(result.isCustomTypeAllowed);
                 this.isCustomStatusAllowed(result.isCustomStatusAllowed);
                 this.isCustomContactTypeAllowed(result.isCustomContactTypeAllowed);
-                this.statusOptions.push(new Agreements.SelectConstructor("", ""));
+                this.statusOptions.push(new Agreements.ViewModels.SelectConstructor("", ""));
                 for (var i = 0, j = result.statusOptions.length; i < j; i++) {
-                    this.statusOptions.push(new Agreements.SelectConstructor(result.statusOptions[i], result.statusOptions[i]));
+                    this.statusOptions.push(new Agreements.ViewModels.SelectConstructor(result.statusOptions[i], result.statusOptions[i]));
                 }
                 ;
-                this.contactTypeOptions.push(new Agreements.SelectConstructor("", undefined));
+                this.contactTypeOptions.push(new Agreements.ViewModels.SelectConstructor("", undefined));
                 for (var i = 0, j = result.contactTypeOptions.length; i < j; i++) {
-                    this.contactTypeOptions.push(new Agreements.SelectConstructor(result.contactTypeOptions[i], result.contactTypeOptions[i]));
+                    this.contactTypeOptions.push(new Agreements.ViewModels.SelectConstructor(result.contactTypeOptions[i], result.contactTypeOptions[i]));
                 }
                 ;
-                this.typeOptions.push(new Agreements.SelectConstructor("", ""));
+                this.typeOptions.push(new Agreements.ViewModels.SelectConstructor("", ""));
                 for (var i = 0, j = result.typeOptions.length; i < j; i++) {
-                    this.typeOptions.push(new Agreements.SelectConstructor(result.typeOptions[i], result.typeOptions[i]));
+                    this.typeOptions.push(new Agreements.ViewModels.SelectConstructor(result.typeOptions[i], result.typeOptions[i]));
                 }
                 ;
             };
@@ -51,6 +70,12 @@
                 this.typeOptions.remove(me);
                 e.preventDefault();
                 e.stopPropagation();
+            };
+
+            Settings.prototype.addTypeOption = function (me, e) {
+            };
+
+            Settings.prototype.updateAgreementSettings = function (me, e) {
             };
             return Settings;
         })();
