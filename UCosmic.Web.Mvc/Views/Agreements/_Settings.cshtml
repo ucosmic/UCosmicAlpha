@@ -1,32 +1,30 @@
 ﻿<section id="agreement_types">
-    <header>
+    <header style="margin-bottom: 0;">
         <h2>
             Agreement types
         </h2>
     </header>
-    <div class="field-table w690-l190-v500" style="margin-top:0px;">
-        <ul data-bind="foreach: typeOptions" style="margin-bottom: 8px">
-            <li>
-                <div class="field-row" style="margin-bottom: 5px">
-                    <div class="field-column-left" style="width: initial;">
-                        <div class="field-label-top" data-bind="visible: ($index() == 0)">
-                            <label>Agreement types</label>
-                        </div>
-                        <div class="field-input-label-top" style="width: 395px">
+    <div class="field-table w690-l190-v500" style="margin-top:0;">
+        <div class="field-row" >
+            <div class="field-column-left" style="width: initial;">
+                <div class="field-label-top" style="margin-bottom: 12px">
+                    <label>Agreement types</label>
+                </div>
+                <ul data-bind="foreach: typeOptions" style="margin-bottom: 8px">
+                    <li >
+                        <div class="field-input-label-top" style="margin-bottom: 8px; width: 295px">
                             <input class="phoneTypes" type="text" placeholder="[None]"
                                    data-bind="value: name, valueUpdate: 'afterkeydown', attr: { id: 'typeOption' + $index() }" />
                         </div>
                         <a title="Remove this phone" style="float:right;" data-bind="click: $root.removeTypeOption"><i class="red minus on-right"></i></a>
-                    </div>
-                </div>
-            </li>
-        </ul>
-        <div class="field-row">
-            <div class="field-column-left" style="width: initial;">
-                <div class="field-label-top">
+                    </li>
+                </ul>
+            </div>
+            <div class="field-column-right" style="width: initial;">
+                <div class="field-label-top" style="margin-bottom: 12px">
                     <label>New agreement type</label>
                 </div>
-                <div class="field-input-label-top" style="width: 395px">
+                <div class="field-input-label-top" style="width: 295px">
                     <input id="contactPhoneTextValue" type="text" data-bind="value: typeOption" />
                 </div>
                 <a title="add agreement type" data-bind="click: addTypeOption" class="addLink on-right"><i class="green plus"></i></a>
@@ -47,55 +45,109 @@
     </div>
 </section>
 <section id="current_statuses">
-    <header>
+    <header style="margin-bottom: 0;">
         <h2>
             Current Statuses
         </h2>
     </header>
-    <div>What will users see?</div>
-    <div class="field-table w690-l190-v500" style="margin-top:0px;">
+    <div class="field-table w690-l190-v500" style="margin-top:0;">
         <div class="field-row">
-            <div class="field-label-top required">
-                <label>Current Status</label>
-                <i>(required, public visibility)</i>
+            <div class="field-column-left" style="width: initial;">
+                <div class="field-label-top" style="margin-bottom: 12px">
+                    <label>Agreement statuses</label>
+                </div>
+                <ul data-bind="foreach: statusOptions" style="margin-bottom: 8px">
+                    <li>
+                        <div class="field-input-label-top" style="margin-bottom: 8px; width: 295px">
+                            <input class="phoneTypes" type="text" placeholder="[None]"
+                                   data-bind="value: name, valueUpdate: 'afterkeydown', attr: { id: 'statusOption' + $index() }" />
+                        </div>
+                        <a title="Remove this phone" style="float:right;" data-bind="click: $root.removeStatusOption"><i class="red minus on-right"></i></a>
+                    </li>
+                </ul>
             </div>
-            <div class="field-input-label-top">
-                <input id="status_options" type="text" placeholder="[None]"
-                       data-bind="value: statusOptionSelected, valueUpdate: 'afterkeydown', jqObservableElement: '$statusOptions'" />
+            <div class="field-column-right" style="width: initial;">
+                <div class="field-label-top" style="margin-bottom: 12px">
+                    <label>New agreement status</label>
+                </div>
+                <div class="field-input-label-top" style="width: 295px">
+                    <input id="contactPhoneTextValue" type="text" data-bind="value: typeOption" />
+                </div>
+                <a title="add agreement status" data-bind="click: addTypeOption" class="addLink on-right"><i class="green plus"></i></a>
             </div>
-            <div data-bind="visible: isCustomStatusAllowed" class="field-label-description">
-                Select from the drop-down list of pre-existing agreement status or enter a custom one in the text box above.
+        </div>
+        <div>What will users see?</div>
+        <div class="field-table w690-l190-v500" style="margin-top:0;">
+            <div class="field-row">
+                <div class="field-label-top required">
+                    <label>Current Status</label>
+                    <i>(required, public visibility)</i>
+                </div>
+                <div class="field-input-label-top">
+                    <input id="status_options" type="text" placeholder="[None]"
+                           data-bind="value: statusOptionSelected, valueUpdate: 'afterkeydown', jqObservableElement: '$statusOptions'" />
+                </div>
+                <div data-bind="visible: isCustomStatusAllowed" class="field-label-description">
+                    Select from the drop-down list of pre-existing agreement status or enter a custom one in the text box above.
 
-            </div>
-            <div data-bind=" visible: !isCustomStatusAllowed()" class="field-label-description">
-                Select from the drop-down list of pre-existing agreement status.
+                </div>
+                <div data-bind=" visible: !isCustomStatusAllowed()" class="field-label-description">
+                    Select from the drop-down list of pre-existing agreement status.
 
+                </div>
             </div>
         </div>
     </div>
 </section>
 <section id="contact_types">
-    <header>
+    <header style="margin-bottom: 0;">
         <h2>
             Contact Types
         </h2>
     </header>
-    <div>What will users see?</div>
-    <div class="field-table w690-l190-v500" style="margin-top:0px;">
+    <div class="field-table w690-l190-v500" style="margin-top:0;">
         <div class="field-row">
-            <div class="field-label-top required">
-                <label>Contact type</label>
-                <i>(required, public visibility)</i>
+            <div class="field-column-left" style="width: initial;">
+                <div class="field-label-top" style="margin-bottom: 12px">
+                    <label>Agreement contact type</label>
+                </div>
+                <ul data-bind="foreach: contactTypeOptions" style="margin-bottom: 8px">
+                    <li>
+                        <div class="field-input-label-top" style="margin-bottom: 8px; width: 295px">
+                            <input class="phoneTypes" type="text" placeholder="[None]"
+                                   data-bind="value: name, valueUpdate: 'afterkeydown', attr: { id: 'contactTypeOption' + $index() }" />
+                        </div>
+                        <a title="Remove this phone" style="float:right;" data-bind="click: $root.removeContactTypeOption"><i class="red minus on-right"></i></a>
+                    </li>
+                </ul>
             </div>
-            <div class="field-input-label-top">
-                <input id="contactTypeOptions" type="text" placeholder="[None]"
-                       data-bind="value: contactTypeOptionSelected, valueUpdate: 'afterkeydown', jqObservableElement: '$contactTypeOptions'" />
+            <div class="field-column-right" style="width: initial;">
+                <div class="field-label-top" style="margin-bottom: 12px">
+                    <label>New agreement contact type</label>
+                </div>
+                <div class="field-input-label-top" style="width: 295px">
+                    <input id="contactPhoneTextValue" type="text" data-bind="value: contactTypeOption" />
+                </div>
+                <a title="add agreement contact type" data-bind="click: addContactTypeOption" class="addLink on-right"><i class="green plus"></i></a>
             </div>
-            <div data-bind="visible: isCustomContactTypeAllowed" class="field-label-description">
-                Select from the drop-down list of pre-existing agreement contactType or enter a custom one in the text box above.
-            </div>
-            <div data-bind=" visible: !isCustomContactTypeAllowed()" class="field-label-description">
-                Select from the drop-down list of pre-existing agreement contactType.
+        </div>
+        <div>What will users see?</div>
+        <div class="field-table w690-l190-v500" style="margin-top:0;">
+            <div class="field-row">
+                <div class="field-label-top required">
+                    <label>Contact type</label>
+                    <i>(required, public visibility)</i>
+                </div>
+                <div class="field-input-label-top">
+                    <input id="contactTypeOptions" type="text" placeholder="[None]"
+                           data-bind="value: contactTypeOptionSelected, valueUpdate: 'afterkeydown', jqObservableElement: '$contactTypeOptions'" />
+                </div>
+                <div data-bind="visible: isCustomContactTypeAllowed" class="field-label-description">
+                    Select from the drop-down list of pre-existing agreement contactType or enter a custom one in the text box above.
+                </div>
+                <div data-bind=" visible: !isCustomContactTypeAllowed()" class="field-label-description">
+                    Select from the drop-down list of pre-existing agreement contactType.
+                </div>
             </div>
         </div>
     </div>

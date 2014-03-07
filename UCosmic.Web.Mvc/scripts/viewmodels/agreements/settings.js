@@ -21,6 +21,7 @@ var Agreements;
                 this.isCustomContactTypeAllowed = ko.observable();
                 this.contactTypeOptions = ko.mapping.fromJS([]);
                 this.contactTypeOptionSelected = ko.observable("");
+                this.contactTypeOption = ko.observable("");
                 this.$contactTypeOptions = ko.observable();
                 this.isCustomTypeAllowed = ko.observable();
                 this.typeOptions = ko.mapping.fromJS([]);
@@ -35,17 +36,17 @@ var Agreements;
                 this.isCustomTypeAllowed(result.isCustomTypeAllowed);
                 this.isCustomStatusAllowed(result.isCustomStatusAllowed);
                 this.isCustomContactTypeAllowed(result.isCustomContactTypeAllowed);
-                this.statusOptions.push(new Agreements.ViewModels.SelectConstructor("", ""));
+
                 for (var i = 0, j = result.statusOptions.length; i < j; i++) {
                     this.statusOptions.push(new Agreements.ViewModels.SelectConstructor(result.statusOptions[i], result.statusOptions[i]));
                 }
                 ;
-                this.contactTypeOptions.push(new Agreements.ViewModels.SelectConstructor("", undefined));
+
                 for (var i = 0, j = result.contactTypeOptions.length; i < j; i++) {
                     this.contactTypeOptions.push(new Agreements.ViewModels.SelectConstructor(result.contactTypeOptions[i], result.contactTypeOptions[i]));
                 }
                 ;
-                this.typeOptions.push(new Agreements.ViewModels.SelectConstructor("", ""));
+
                 for (var i = 0, j = result.typeOptions.length; i < j; i++) {
                     this.typeOptions.push(new Agreements.ViewModels.SelectConstructor(result.typeOptions[i], result.typeOptions[i]));
                 }
@@ -73,6 +74,9 @@ var Agreements;
             };
 
             Settings.prototype.addTypeOption = function (me, e) {
+            };
+
+            Settings.prototype.addContactTypeOption = function (me, e) {
             };
 
             Settings.prototype.updateAgreementSettings = function (me, e) {
