@@ -16,18 +16,30 @@
                             <input class="phoneTypes" type="text" placeholder="[None]"
                                    data-bind="value: name, valueUpdate: 'afterkeydown', attr: { id: 'typeOption' + $index() }" />
                         </div>
-                        <a title="Remove this phone" style="float:right;" data-bind="click: $root.removeTypeOption"><i class="red minus on-right"></i></a>
+                        <a title="Remove this type option" style="float:right;" data-bind="click: $root.removeTypeOption"><i class="red minus on-right"></i></a>
                     </li>
                 </ul>
+                <div data-bind="visible: typeOptions().length == 0" style="display: none;">None specified.</div>
             </div>
             <div class="field-column-right" style="width: initial;">
-                <div class="field-label-top" style="margin-bottom: 12px">
-                    <label>New agreement type</label>
+                <div style="width:330px; height:80px;">
+                    <div class="field-label-top" style="margin-bottom: 12px">
+                        <label>New agreement type</label>
+                    </div>
+                    <div class="field-input-label-top" style="width: 295px">
+                        <input id="contactPhoneTextValue" type="text" data-bind="value: typeOption" />
+                    </div>
+                    <a title="add agreement type" data-bind="click: addTypeOption" class="addLink on-right"><i class="green plus"></i></a>
                 </div>
-                <div class="field-input-label-top" style="width: 295px">
-                    <input id="contactPhoneTextValue" type="text" data-bind="value: typeOption" />
+                <div style="width:330px;">
+                    <div style="margin-top:8px;">
+                        <label>Should your users be allowed to enter custom values for agreement type?</label>
+                    </div>
+                    <div style="margin-top:8px;">
+                        <label style="display: block;"><input name="autoRenew" type="radio" value="true" data-bind="checked: isCustomTypeAllowed" />Yes, allow my users to enter any text for agreement type.</label>
+                        <label style="display: block; margin-top: 8px; "><input name="autoRenew" type="radio" value="false" data-bind="checked: isCustomTypeAllowed" />No, restrict my users to specific agreement types</label>
+                    </div>
                 </div>
-                <a title="add agreement type" data-bind="click: addTypeOption" class="addLink on-right"><i class="green plus"></i></a>
             </div>
         </div>
         <div>What will users see?</div>
@@ -35,9 +47,13 @@
             <div class="field-label-top required" style="padding-top: 4px;">
                 <label>Agreement type</label><i>(required, public visibility)</i>
             </div>
-            <div class="field-input-label-top">
+            <div class="field-input-label-top" data-bind="visible: isCustomTypeAllowed() == 'true'">
                 <input id="type_options" type="text" placeholder="[None]"
                        data-bind="value: typeOptionSelected, valueUpdate: 'afterkeydown', jqObservableElement: '$typeOptions'" />
+            </div>
+            <div class="field-input-label-top" data-bind="visible: isCustomTypeAllowed() == 'false'" style="display: none;">
+                <input id="type_options2" type="text" placeholder="[None]"
+                       data-bind="value: typeOptionSelected, valueUpdate: 'afterkeydown', jqObservableElement: '$typeOptions2'" />
             </div>
             <div data-bind="visible: isCustomTypeAllowed" class="field-label-description">Select from the drop-down list of pre-existing agreement types or enter a custom one in the text box above.</div>
             <div data-bind=" visible: !isCustomTypeAllowed()" class="field-label-description">Select from the drop-down list of pre-existing agreement types.</div>
@@ -62,18 +78,30 @@
                             <input class="phoneTypes" type="text" placeholder="[None]"
                                    data-bind="value: name, valueUpdate: 'afterkeydown', attr: { id: 'statusOption' + $index() }" />
                         </div>
-                        <a title="Remove this phone" style="float:right;" data-bind="click: $root.removeStatusOption"><i class="red minus on-right"></i></a>
+                        <a title="Remove this status" style="float:right;" data-bind="click: $root.removeStatusOption"><i class="red minus on-right"></i></a>
                     </li>
                 </ul>
+                <div data-bind="visible: statusOptions().length == 0" style="display: none;">None specified.</div>
             </div>
             <div class="field-column-right" style="width: initial;">
-                <div class="field-label-top" style="margin-bottom: 12px">
-                    <label>New agreement status</label>
+                <div style="width:330px; height:80px;">
+                    <div class="field-label-top" style="margin-bottom: 12px">
+                        <label>New agreement status</label>
+                    </div>
+                    <div class="field-input-label-top" style="width: 295px">
+                        <input id="contactPhoneTextValue" type="text" data-bind="value: statusOption" />
+                    </div>
+                    <a title="add agreement status" data-bind="click: addStatusOption" class="addLink on-right"><i class="green plus"></i></a>
                 </div>
-                <div class="field-input-label-top" style="width: 295px">
-                    <input id="contactPhoneTextValue" type="text" data-bind="value: typeOption" />
+                <div style="width:330px;">
+                    <div style="margin-top:8px;">
+                        <label>Should your users be allowed to enter custom values for agreement status?</label>
+                    </div>
+                    <div style="margin-top:8px;">
+                        <label style="display: block;"><input name="isCustomStatusAllowed" type="radio" value="true" data-bind="checked: isCustomStatusAllowed" />Yes, allow my users to enter any text for agreement status.</label>
+                        <label style="display: block;"><input name="isCustomStatusAllowed" type="radio" value="false" data-bind="checked: isCustomStatusAllowed" />No, restrict my users to specific agreement status</label>
+                    </div>
                 </div>
-                <a title="add agreement status" data-bind="click: addTypeOption" class="addLink on-right"><i class="green plus"></i></a>
             </div>
         </div>
         <div>What will users see?</div>
@@ -83,9 +111,13 @@
                     <label>Current Status</label>
                     <i>(required, public visibility)</i>
                 </div>
-                <div class="field-input-label-top">
+                <div class="field-input-label-top" data-bind=" visible: isCustomStatusAllowed() == 'true'">
                     <input id="status_options" type="text" placeholder="[None]"
-                           data-bind="value: statusOptionSelected, valueUpdate: 'afterkeydown', jqObservableElement: '$statusOptions'" />
+                           data-bind="value: statusOptionSelected, valueUpdate: 'afterkeydown', jqObservableElement: '$statusOptions', visible: isCustomStatusAllowed() == 'true'" />
+                </div>
+                <div class="field-input-label-top" data-bind=" visible: isCustomStatusAllowed() == 'false'" style="display: none;">
+                    <input id="status_options2" type="text" placeholder="[None]"
+                           data-bind="value: statusOptionSelected, valueUpdate: 'afterkeydown', jqObservableElement: '$statusOptions2'" />
                 </div>
                 <div data-bind="visible: isCustomStatusAllowed" class="field-label-description">
                     Select from the drop-down list of pre-existing agreement status or enter a custom one in the text box above.
@@ -117,18 +149,30 @@
                             <input class="phoneTypes" type="text" placeholder="[None]"
                                    data-bind="value: name, valueUpdate: 'afterkeydown', attr: { id: 'contactTypeOption' + $index() }" />
                         </div>
-                        <a title="Remove this phone" style="float:right;" data-bind="click: $root.removeContactTypeOption"><i class="red minus on-right"></i></a>
+                        <a title="Remove this contact type" style="float:right;" data-bind="click: $root.removeContactTypeOption"><i class="red minus on-right"></i></a>
                     </li>
                 </ul>
+                <div data-bind="visible: contactTypeOptions().length == 0" style="display: none;">None specified.</div>
             </div>
             <div class="field-column-right" style="width: initial;">
-                <div class="field-label-top" style="margin-bottom: 12px">
-                    <label>New agreement contact type</label>
+                <div style="width:330px; height:80px;">
+                    <div class="field-label-top" style="margin-bottom: 12px">
+                        <label>New agreement contact type</label>
+                    </div>
+                    <div class="field-input-label-top" style="width: 295px">
+                        <input id="contactPhoneTextValue" type="text" data-bind="value: contactTypeOption" />
+                    </div>
+                    <a title="add agreement contact type" data-bind="click: addContactTypeOption" class="addLink on-right"><i class="green plus"></i></a>
                 </div>
-                <div class="field-input-label-top" style="width: 295px">
-                    <input id="contactPhoneTextValue" type="text" data-bind="value: contactTypeOption" />
+                <div style="width:330px;">
+                    <div style="margin-top:8px;">
+                        <label>Should your users be allowed to enter custom values for agreement contact type?</label>
+                    </div>
+                    <div style="margin-top:8px;">
+                        <label style="display: block;"><input name="isCustomContactTypeAllowed" type="radio" value="true" data-bind="checked: isCustomContactTypeAllowed" />Yes, allow my users to enter any text for agreement contact type.</label>
+                        <label style="display: block;"><input name="isCustomContactTypeAllowed" type="radio" value="false" data-bind="checked: isCustomContactTypeAllowed" />No, restrict my users to specific agreement contact types</label>
+                    </div>
                 </div>
-                <a title="add agreement contact type" data-bind="click: addContactTypeOption" class="addLink on-right"><i class="green plus"></i></a>
             </div>
         </div>
         <div>What will users see?</div>
@@ -138,9 +182,13 @@
                     <label>Contact type</label>
                     <i>(required, public visibility)</i>
                 </div>
-                <div class="field-input-label-top">
+                <div class="field-input-label-top" data-bind=" visible: isCustomContactTypeAllowed() == 'true'">
                     <input id="contactTypeOptions" type="text" placeholder="[None]"
                            data-bind="value: contactTypeOptionSelected, valueUpdate: 'afterkeydown', jqObservableElement: '$contactTypeOptions'" />
+                </div>
+                <div class="field-input-label-top" data-bind="visible: isCustomContactTypeAllowed() == 'false'">
+                    <input id="contactTypeOptions2" type="text" placeholder="[None]"
+                           data-bind="value: contactTypeOptionSelected, valueUpdate: 'afterkeydown', jqObservableElement: '$contactTypeOptions2'" />
                 </div>
                 <div data-bind="visible: isCustomContactTypeAllowed" class="field-label-description">
                     Select from the drop-down list of pre-existing agreement contactType or enter a custom one in the text box above.

@@ -5,105 +5,177 @@ module Agreements.ViewModels {
             this.id = id;
         }
     }
-     export class Settings {
-         
-         constructor() {
-             this._getSettings();
+    export class Settings {
+
+        constructor() {
+            this._getSettings();
+            this.removeTypeOption = <() => void > this.removeTypeOption.bind(this);
+            this.removeContactTypeOption = <() => void > this.removeContactTypeOption.bind(this);
+            this.removeStatusOption = <() => void > this.removeStatusOption.bind(this);
+        }
+        deleteErrorMessage = ko.observable('');
+
+        isCustomStatusAllowed = ko.observable();
+        statusOption = ko.observable();
+        statusOptions = ko.mapping.fromJS([]);
+        statusOptionSelected = ko.observable("");
+        $statusOptions = ko.observable<JQuery>();
+        $statusOptions2 = ko.observable<JQuery>();
+
+        isCustomContactTypeAllowed = ko.observable();
+        contactTypeOptions = ko.mapping.fromJS([]);
+        contactTypeOptionSelected = ko.observable("");
+        contactTypeOption = ko.observable("");
+        $contactTypeOptions = ko.observable<JQuery>();
+        $contactTypeOptions2 = ko.observable<JQuery>();
+
+        isCustomTypeAllowed = ko.observable();
+        typeOptions = ko.mapping.fromJS([]);
+        typeOption = ko.observable("");
+        typeOptionSelected = ko.observable("");
+        $typeOptions = ko.observable<JQuery>();
+        $typeOptions2 = ko.observable<JQuery>();
+
+        kendoBindCustomType(): void {
+            $("#type_options").kendoComboBox({
+                dataTextField: "name",
+                dataValueField: "id",
+                dataSource: new kendo.data.DataSource({
+                    data: this.typeOptions()
+                })
+            });
+            $("#type_options2").kendoDropDownList({
+                dataTextField: "name",
+                dataValueField: "id",
+                dataSource: new kendo.data.DataSource({
+                    data: this.typeOptions()
+                }),
+                optionLabel: "[None]"
+            });
+        }
+        kendoBindStatus(): void {
+            $("#status_options").kendoComboBox({
+                dataTextField: "name",
+                dataValueField: "id",
+                dataSource: new kendo.data.DataSource({
+                    data: this.statusOptions()
+                })
+            });
+            $("#status_options2").kendoDropDownList({
+                dataTextField: "name",
+                dataValueField: "id",
+                dataSource: new kendo.data.DataSource({
+                    data: this.statusOptions()
+                }),
+                optionLabel: "[None]"
+            });
+        }
+        kendoBindContactType(): void {
+            $("#contactTypeOptions").kendoComboBox({
+                dataTextField: "name",
+                dataValueField: "id",
+                dataSource: new kendo.data.DataSource({
+                    data: this.contactTypeOptions()
+                })
+            });
+            $("#contactTypeOptions2").kendoDropDownList({
+                dataTextField: "name",
+                dataValueField: "id",
+                dataSource: new kendo.data.DataSource({
+                    data: this.contactTypeOptions()
+                }),
+                optionLabel: "[None]"
+            });
+        }
+
+
+        private processSettings(result): void {
+            var self = this;
+
+            this.isCustomTypeAllowed(result.isCustomTypeAllowed.toString());
+            this.isCustomStatusAllowed(result.isCustomStatusAllowed.toString());
+            this.isCustomContactTypeAllowed(result.isCustomContactTypeAllowed.toString());
+            //this.statusOptions.push(new Agreements.ViewModels.SelectConstructor("", ""));
+            for (var i = 0, j = result.statusOptions.length; i < j; i++) {
+                this.statusOptions.push(new Agreements.ViewModels.SelectConstructor(result.statusOptions[i], result.statusOptions[i]));
+            };
+            //this.contactTypeOptions.push(new Agreements.ViewModels.SelectConstructor("", ""));
+            for (var i = 0, j = result.contactTypeOptions.length; i < j; i++) {
+                this.contactTypeOptions.push(new Agreements.ViewModels.SelectConstructor(result.contactTypeOptions[i], result.contactTypeOptions[i]));
+            };
+            //this.typeOptions.push(new Agreements.ViewModels.SelectConstructor("", ""));
+            for (var i = 0, j = result.typeOptions.length; i < j; i++) {
+                this.typeOptions.push(new Agreements.ViewModels.SelectConstructor(result.typeOptions[i], result.typeOptions[i]));
+            };
+
+            this.kendoBindContactType();
+            this.kendoBindStatus();
+            this.kendoBindCustomType();
+
+            this.isCustomTypeAllowed.subscribe((me: string): void => {
+                this.kendoBindCustomType();
+            });
+            this.isCustomStatusAllowed.subscribe((me: string): void => {
+                this.kendoBindStatus();
+            });
+            this.isCustomContactTypeAllowed.subscribe((me: string): void => {
+                this.kendoBindContactType();
+            });
+            //$('span:contains("[None]")').css("color", "grey");
+        }
+        //get settings for agreements.
+        private _getSettings(): void {
+            var url = 'App.Routes.WebApi.Agreements.Settings.get()',
+                agreementSettingsGet;
+
+            $.ajax({
+                url: eval(url),
+                type: 'GET'
+            })
+                .done((result) => {
+                    this.processSettings(result);
+                })
+                .fail(function (xhr) {
+                    App.Failures.message(xhr, xhr.responseText, true);
+                });
+        }
+
+        removeTypeOption(me, e): void {
+            this.typeOptions.remove(me);
+            this.kendoBindCustomType();
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        removeStatusOption(me, e): void {
+            this.statusOptions.remove(me);
+            this.kendoBindStatus();
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        removeContactTypeOption(me, e): void {
+            this.contactTypeOptions.remove(me);
+            this.kendoBindContactType();
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        addTypeOption(me, e): void {
+            this.typeOptions.push(new Agreements.ViewModels.SelectConstructor(this.typeOption(), this.typeOption()))
          }
-         deleteErrorMessage = ko.observable('');
 
-         isCustomStatusAllowed = ko.observable();
-         statusOptions = ko.mapping.fromJS([]);
-         statusOptionSelected = ko.observable("");
-         $statusOptions = ko.observable<JQuery>();
-
-         isCustomContactTypeAllowed = ko.observable();
-         contactTypeOptions = ko.mapping.fromJS([]);
-         contactTypeOptionSelected = ko.observable("");
-         contactTypeOption = ko.observable("");
-         $contactTypeOptions = ko.observable<JQuery>();
-
-         isCustomTypeAllowed = ko.observable();
-         typeOptions = ko.mapping.fromJS([]);
-         typeOption = ko.observable("");
-         typeOptionSelected = ko.observable("");
-         $typeOptions = ko.observable<JQuery>();
-
-         private processSettings(result): void {
-             var self = this;
-
-             this.isCustomTypeAllowed(result.isCustomTypeAllowed);
-             this.isCustomStatusAllowed(result.isCustomStatusAllowed);
-             this.isCustomContactTypeAllowed(result.isCustomContactTypeAllowed);
-             //this.statusOptions.push(new Agreements.ViewModels.SelectConstructor("", ""));
-             for (var i = 0, j = result.statusOptions.length; i < j; i++) {
-                 this.statusOptions.push(new Agreements.ViewModels.SelectConstructor(result.statusOptions[i], result.statusOptions[i]));
-             };
-             //this.contactTypeOptions.push(new Agreements.ViewModels.SelectConstructor("", undefined));
-             for (var i = 0, j = result.contactTypeOptions.length; i < j; i++) {
-                 this.contactTypeOptions.push(new Agreements.ViewModels.SelectConstructor(result.contactTypeOptions[i], result.contactTypeOptions[i]));
-             };
-             //this.typeOptions.push(new Agreements.ViewModels.SelectConstructor("", ""));
-             for (var i = 0, j = result.typeOptions.length; i < j; i++) {
-                 this.typeOptions.push(new Agreements.ViewModels.SelectConstructor(result.typeOptions[i], result.typeOptions[i]));
-             };
-         }
-         //get settings for agreements.
-         private _getSettings(): void {
-             var url = 'App.Routes.WebApi.Agreements.Settings.get()',
-                 agreementSettingsGet;
-
-             $.ajax({
-                 url: eval(url),
-                 type: 'GET'
-             })
-                 .done((result) => {
-                     this.processSettings(result);
-                 })
-                 .fail(function (xhr) {
-                     App.Failures.message(xhr, xhr.responseText, true);
-                 });
+        addStatusOption(me, e): void {
+            this.statusOptions.push(new Agreements.ViewModels.SelectConstructor(this.statusOption(), this.statusOption()))
          }
 
-         removeTypeOption(me, e): void {
-             //if (this.agreementId !== 0) {
-             //    this.deletedPhones.push(me.id);
-             //    //var url = App.Routes.WebApi.Agreements.Contacts.Phones.del(this.agreementId, me.contactId, me.id);
-
-             //    //$.ajax({
-             //    //    url: url,
-             //    //    type: 'DELETE',
-             //    //    success: (): void => {
-             //    //        this.contactPhones.remove(me);
-             //    //        $("body").css("min-height", ($(window).height() + $("body").height() - ($(window).height() * 1.1)));
-             //    //    }
-             //    //});
-             //}
-             this.typeOptions.remove(me);
-             e.preventDefault();
-             e.stopPropagation();
+        addContactTypeOption(me, e): void {
+            this.contactTypeOptions.push(new Agreements.ViewModels.SelectConstructor(this.contactTypeOption(), this.contactTypeOption()))
          }
 
-         addTypeOption(me, e): void {
-             //if (this.contactPhoneTextValue().length > 0) {
-             //    this.contactPhones.push({ type: '', contactId: '', value: this.contactPhoneTextValue() })
-             //   this.contactPhoneTextValue("");
-             //    $(".phoneTypes").kendoDropDownList({
-             //        dataTextField: "name",
-             //        dataValueField: "id",
-             //        dataSource: new kendo.data.DataSource({
-             //            data: ko.mapping.toJS(this.phoneTypes())
-             //        })
-             //    });
-             //}
-         }
+        updateAgreementSettings(me, e): void {
 
-         addContactTypeOption(me, e): void {
-         }
+        }
+    }
 
-         updateAgreementSettings(me, e): void {
-             
-         }
-     }
-
- }
+}
