@@ -15,7 +15,7 @@ var Agreements;
             function Settings() {
                 this.deleteErrorMessage = ko.observable('');
                 this.isCustomStatusAllowed = ko.observable();
-                this.statusOption = ko.observable();
+                this.statusOption = ko.observable("");
                 this.statusOptions = ko.mapping.fromJS([]);
                 this.statusOptionSelected = ko.observable("");
                 this.$statusOptions = ko.observable();
@@ -36,6 +36,12 @@ var Agreements;
                 this.removeTypeOption = this.removeTypeOption.bind(this);
                 this.removeContactTypeOption = this.removeContactTypeOption.bind(this);
                 this.removeStatusOption = this.removeStatusOption.bind(this);
+                new ScrollBody.Scroll({
+                    bindTo: "[data-current-module=agreements]",
+                    section1: "agreement_types",
+                    section2: "current_statuses",
+                    section3: "contact_types"
+                }).bindJquery();
             }
             Settings.prototype.kendoBindCustomType = function () {
                 $("#type_options").kendoComboBox({
@@ -116,13 +122,13 @@ var Agreements;
                 this.kendoBindStatus();
                 this.kendoBindCustomType();
 
-                this.isCustomTypeAllowed.subscribe(function (me) {
+                this.isCustomTypeAllowed.subscribe(function () {
                     _this.kendoBindCustomType();
                 });
-                this.isCustomStatusAllowed.subscribe(function (me) {
+                this.isCustomStatusAllowed.subscribe(function () {
                     _this.kendoBindStatus();
                 });
-                this.isCustomContactTypeAllowed.subscribe(function (me) {
+                this.isCustomContactTypeAllowed.subscribe(function () {
                     _this.kendoBindContactType();
                 });
             };

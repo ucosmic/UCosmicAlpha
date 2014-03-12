@@ -9,7 +9,7 @@
 }
 @section scripts
 {
-<script type="text/javascript" src="~/scripts/viewmodels/agreements/settings.js"></script>
+    @Scripts.Render("~/bundles/agreementSettings")
     <script type="text/javascript">
         var agreementSettings = new Agreements.ViewModels.Settings();
         ko.applyBindings(agreementSettings, $('[data-current-module=agreements]')[0]);

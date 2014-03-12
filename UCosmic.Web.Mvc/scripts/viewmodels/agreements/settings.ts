@@ -12,11 +12,17 @@ module Agreements.ViewModels {
             this.removeTypeOption = <() => void > this.removeTypeOption.bind(this);
             this.removeContactTypeOption = <() => void > this.removeContactTypeOption.bind(this);
             this.removeStatusOption = <() => void > this.removeStatusOption.bind(this);
+            new ScrollBody.Scroll({
+                bindTo: "[data-current-module=agreements]",
+                section1: "agreement_types",
+                section2: "current_statuses",
+                section3: "contact_types",
+            }).bindJquery();
         }
         deleteErrorMessage = ko.observable('');
 
         isCustomStatusAllowed = ko.observable();
-        statusOption = ko.observable();
+        statusOption = ko.observable("");
         statusOptions = ko.mapping.fromJS([]);
         statusOptionSelected = ko.observable("");
         $statusOptions = ko.observable<JQuery>();
@@ -112,13 +118,13 @@ module Agreements.ViewModels {
             this.kendoBindStatus();
             this.kendoBindCustomType();
 
-            this.isCustomTypeAllowed.subscribe((me: string): void => {
+            this.isCustomTypeAllowed.subscribe((): void => {
                 this.kendoBindCustomType();
             });
-            this.isCustomStatusAllowed.subscribe((me: string): void => {
+            this.isCustomStatusAllowed.subscribe((): void => {
                 this.kendoBindStatus();
             });
-            this.isCustomContactTypeAllowed.subscribe((me: string): void => {
+            this.isCustomContactTypeAllowed.subscribe((): void => {
                 this.kendoBindContactType();
             });
             //$('span:contains("[None]")').css("color", "grey");

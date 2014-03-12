@@ -118,6 +118,10 @@ namespace UCosmic.Web.Mvc
                 "~/scripts/viewmodels/agreements/populateFiles.js",
                 "~/scripts/oss/moment.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/agreementSettings").Include(
+                "~/scripts/viewmodels/agreements/settings.js",
+                "~/scripts/viewmodels/agreements/scrollBody.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/agreementPublicView").Include(
                 "~/scripts/google/ToolsOverlay.js",
                 "~/scripts/app/PagedSearch.js",
