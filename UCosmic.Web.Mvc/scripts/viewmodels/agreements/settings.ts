@@ -168,15 +168,18 @@ module Agreements.ViewModels {
         }
 
         addTypeOption(me, e): void {
-            this.typeOptions.push(new Agreements.ViewModels.SelectConstructor(this.typeOption(), this.typeOption()))
+            this.typeOptions.push(new Agreements.ViewModels.SelectConstructor(this.typeOption(), this.typeOption()));
+            this.kendoBindCustomType();
          }
 
         addStatusOption(me, e): void {
-            this.statusOptions.push(new Agreements.ViewModels.SelectConstructor(this.statusOption(), this.statusOption()))
+            this.statusOptions.push(new Agreements.ViewModels.SelectConstructor(this.statusOption(), this.statusOption()));
+            this.kendoBindStatus();
          }
 
         addContactTypeOption(me, e): void {
-            this.contactTypeOptions.push(new Agreements.ViewModels.SelectConstructor(this.contactTypeOption(), this.contactTypeOption()))
+            this.contactTypeOptions.push(new Agreements.ViewModels.SelectConstructor(this.contactTypeOption(), this.contactTypeOption()));
+            this.kendoBindContactType();
          }
 
         updateAgreementSettings(me, e): void {

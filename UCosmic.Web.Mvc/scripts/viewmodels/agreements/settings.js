@@ -1,4 +1,4 @@
-var Agreements;
+﻿var Agreements;
 (function (Agreements) {
     (function (ViewModels) {
         var SelectConstructor = (function () {
@@ -170,14 +170,17 @@ var Agreements;
 
             Settings.prototype.addTypeOption = function (me, e) {
                 this.typeOptions.push(new Agreements.ViewModels.SelectConstructor(this.typeOption(), this.typeOption()));
+                this.kendoBindCustomType();
             };
 
             Settings.prototype.addStatusOption = function (me, e) {
                 this.statusOptions.push(new Agreements.ViewModels.SelectConstructor(this.statusOption(), this.statusOption()));
+                this.kendoBindStatus();
             };
 
             Settings.prototype.addContactTypeOption = function (me, e) {
                 this.contactTypeOptions.push(new Agreements.ViewModels.SelectConstructor(this.contactTypeOption(), this.contactTypeOption()));
+                this.kendoBindContactType();
             };
 
             Settings.prototype.updateAgreementSettings = function (me, e) {
