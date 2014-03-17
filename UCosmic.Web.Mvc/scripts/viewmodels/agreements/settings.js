@@ -1,4 +1,4 @@
-﻿var Agreements;
+var Agreements;
 (function (Agreements) {
     (function (ViewModels) {
         var SelectConstructor = (function () {
@@ -14,6 +14,9 @@
         var Settings = (function () {
             function Settings() {
                 this.deleteErrorMessage = ko.observable('');
+                this.id = 0;
+                this.isLoading = ko.observable(true);
+                this.isUpdating = ko.observable(false);
                 this.isCustomStatusAllowed = ko.observable();
                 this.statusOption = ko.observable("");
                 this.statusOptions = ko.mapping.fromJS([]);
@@ -36,6 +39,7 @@
                 this.removeTypeOption = this.removeTypeOption.bind(this);
                 this.removeContactTypeOption = this.removeContactTypeOption.bind(this);
                 this.removeStatusOption = this.removeStatusOption.bind(this);
+                this.updateAgreementSettings = this.updateAgreementSettings.bind(this);
                 new ScrollBody.Scroll({
                     bindTo: "[data-current-module=agreements]",
                     section1: "agreement_types",
@@ -102,6 +106,7 @@
                 this.isCustomTypeAllowed(result.isCustomTypeAllowed.toString());
                 this.isCustomStatusAllowed(result.isCustomStatusAllowed.toString());
                 this.isCustomContactTypeAllowed(result.isCustomContactTypeAllowed.toString());
+                this.id = result.id;
 
                 for (var i = 0, j = result.statusOptions.length; i < j; i++) {
                     this.statusOptions.push(new Agreements.ViewModels.SelectConstructor(result.statusOptions[i], result.statusOptions[i]));
@@ -131,6 +136,8 @@
                 this.isCustomContactTypeAllowed.subscribe(function () {
                     _this.kendoBindContactType();
                 });
+
+                this.isLoading(false);
             };
 
             Settings.prototype._getSettings = function () {
@@ -184,6 +191,44 @@
             };
 
             Settings.prototype.updateAgreementSettings = function (me, e) {
+                var _this = this;
+                if (this.isUpdating()) {
+                    return;
+                }
+                this.isUpdating(true);
+                var url = App.Routes.WebApi.Agreements.Settings.put(this.id);
+                var typeOptionsExport = [], statusOptionsExport = [], contactTypeOptionsExport = [];
+                $.each(this.typeOptions(), function (i, item) {
+                    typeOptionsExport[i] = item.name;
+                });
+                $.each(this.statusOptions(), function (i, item) {
+                    statusOptionsExport[i] = item.name;
+                });
+                $.each(this.contactTypeOptions(), function (i, item) {
+                    contactTypeOptionsExport[i] = item.name;
+                });
+                var data = {
+                    IsCustomTypeAllowed: this.isCustomTypeAllowed(),
+                    IsCustomStatusAllowed: this.isCustomStatusAllowed(),
+                    IsCustomContactTypeAllowed: this.isCustomContactTypeAllowed(),
+                    TypeOptions: typeOptionsExport,
+                    StatusOptions: statusOptionsExport,
+                    ContactTypeOptions: contactTypeOptionsExport
+                };
+                $.ajax({
+                    type: 'PUT',
+                    url: url,
+                    data: data,
+                    success: function (response, statusText, xhr) {
+                        $(window).scrollTop(0);
+                        App.flasher.flash("Agreement settings updated");
+                        _this.isUpdating(false);
+                    },
+                    error: function (xhr) {
+                        App.Failures.message(xhr, xhr.responseText, true);
+                        _this.isUpdating(false);
+                    }
+                });
             };
             return Settings;
         })();

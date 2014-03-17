@@ -30,13 +30,16 @@ namespace UCosmic.Domain.Agreements
     {
         private readonly IProcessQueries _queryProcessor;
         private readonly ICommandEntities _entities;
+        private readonly IUnitOfWork _unitOfWork;
 
         public HandleCreateOrUpdateSettingsCommand(IProcessQueries queryProcessor
             , ICommandEntities entities
+            , IUnitOfWork unitOfWork
         )
         {
             _queryProcessor = queryProcessor;
             _entities = entities;
+            _unitOfWork = unitOfWork;
         }
 
         public void Handle(CreateOrUpdateSettings command)
@@ -153,6 +156,7 @@ namespace UCosmic.Domain.Agreements
 
                 if (command.Id != 0) _entities.Update(configuration);
                 else _entities.Create(configuration);
+                _unitOfWork.SaveChanges();
             }
         }
     }

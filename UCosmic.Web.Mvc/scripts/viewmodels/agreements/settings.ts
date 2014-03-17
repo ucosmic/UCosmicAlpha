@@ -12,6 +12,7 @@ module Agreements.ViewModels {
             this.removeTypeOption = <() => void > this.removeTypeOption.bind(this);
             this.removeContactTypeOption = <() => void > this.removeContactTypeOption.bind(this);
             this.removeStatusOption = <() => void > this.removeStatusOption.bind(this);
+            this.updateAgreementSettings = <() => void > this.updateAgreementSettings.bind(this);
             new ScrollBody.Scroll({
                 bindTo: "[data-current-module=agreements]",
                 section1: "agreement_types",
@@ -20,6 +21,11 @@ module Agreements.ViewModels {
             }).bindJquery();
         }
         deleteErrorMessage = ko.observable('');
+
+        id = 0;
+
+        isLoading = ko.observable(true);
+        isUpdating = ko.observable(false);
 
         isCustomStatusAllowed = ko.observable();
         statusOption = ko.observable("");
@@ -94,13 +100,13 @@ module Agreements.ViewModels {
             });
         }
 
-
         private processSettings(result): void {
             var self = this;
 
             this.isCustomTypeAllowed(result.isCustomTypeAllowed.toString());
             this.isCustomStatusAllowed(result.isCustomStatusAllowed.toString());
             this.isCustomContactTypeAllowed(result.isCustomContactTypeAllowed.toString());
+            this.id = result.id;
             //this.statusOptions.push(new Agreements.ViewModels.SelectConstructor("", ""));
             for (var i = 0, j = result.statusOptions.length; i < j; i++) {
                 this.statusOptions.push(new Agreements.ViewModels.SelectConstructor(result.statusOptions[i], result.statusOptions[i]));
@@ -128,6 +134,7 @@ module Agreements.ViewModels {
                 this.kendoBindContactType();
             });
             //$('span:contains("[None]")').css("color", "grey");
+            this.isLoading(false);
         }
         //get settings for agreements.
         private _getSettings(): void {
@@ -183,7 +190,49 @@ module Agreements.ViewModels {
          }
 
         updateAgreementSettings(me, e): void {
-
+            if (this.isUpdating()) {
+                return;
+            }
+            this.isUpdating(true);
+            var url = App.Routes.WebApi.Agreements.Settings.put(this.id);
+            var typeOptionsExport = [], statusOptionsExport = [], contactTypeOptionsExport = [];
+            $.each(this.typeOptions(), (i, item) => {
+                typeOptionsExport[i] = item.name;
+            });
+            $.each(this.statusOptions(), (i, item) => {
+                statusOptionsExport[i] = item.name;
+            });
+            $.each(this.contactTypeOptions(), (i, item) => {
+                contactTypeOptionsExport[i] = item.name;
+            });
+            var data = {
+                IsCustomTypeAllowed: this.isCustomTypeAllowed(),
+                IsCustomStatusAllowed: this.isCustomStatusAllowed(),
+                IsCustomContactTypeAllowed: this.isCustomContactTypeAllowed(),
+                TypeOptions: typeOptionsExport,
+                StatusOptions: statusOptionsExport,
+                ContactTypeOptions: contactTypeOptionsExport
+            };
+            $.ajax({
+                type: 'PUT',
+                url: url,
+                data: data,
+                success: (response: any, statusText: string, xhr: JQueryXHR): void => {
+                    $(window).scrollTop(0);
+                    App.flasher.flash("Agreement settings updated");
+                    this.isUpdating(false);
+                    //this.runningAjax = false;
+                    //sessionStorage.setItem("agreementSaved", "yes");
+                    //location.href = App.Routes.Mvc.Agreements.show(this.agreementId);
+                },
+                error: (xhr: JQueryXHR): void => {
+                    //this.runningAjax = false;
+                    //this.spinner.stop();
+                    App.Failures.message(xhr, xhr.responseText, true);
+                    this.isUpdating(false);
+                    //alert(xhr.responseText);
+                }
+            });
         }
     }
 

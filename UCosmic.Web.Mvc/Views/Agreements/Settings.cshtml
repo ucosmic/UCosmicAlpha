@@ -24,11 +24,14 @@
                     @ViewBag.Title
                 </h1>
             </header>
-            <!-- ko stopBinding: true -->
-            @Html.Partial(MVC.Agreements.Views._Settings)
-            <!-- /ko -->
+            <div data-bind="visible: !isLoading()" style="display: none;">
+                @Html.Partial(MVC.Agreements.Views._Settings)
+            </div>
+            <div data-bind="visible: isLoading">
+                <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
+                <strong>Loading page...</strong>
+            </div>
             <footer id="saveAgreement">
-                @* TODO: render these as buttons instead of links with button styles *@
                 <a data-bind="click: updateAgreementSettings" class="button">
                     <i class="green plus"></i>
                     <span class="text">Update Agreement Settings</span>

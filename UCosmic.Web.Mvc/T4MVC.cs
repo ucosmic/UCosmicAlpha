@@ -2913,6 +2913,9 @@ namespace Links
                 public static readonly string SearchTable_ts = Url("SearchTable.ts");
                 public static readonly string SearchTable_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/SearchTable.min.js") ? Url("SearchTable.min.js") : Url("SearchTable.js");
                               
+                public static readonly string settings_ts = Url("settings.ts");
+                public static readonly string settings_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/settings.min.js") ? Url("settings.min.js") : Url("settings.js");
+                              
                 public static readonly string Visibility_ts = Url("Visibility.ts");
                 public static readonly string Visibility_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Visibility.min.js") ? Url("Visibility.min.js") : Url("Visibility.js");
                               

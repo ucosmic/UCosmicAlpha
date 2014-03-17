@@ -357,6 +357,10 @@ module App.Routes {
                 export function get (): string {
                     return makeUrl('agreements/settings');
                 }
+                export function put(id: number) {
+                    var url = 'agreements/settings/{0}'.format(id);
+                    return makeUrl(url);
+                }
             }
 
             export module UmbrellaOptions {

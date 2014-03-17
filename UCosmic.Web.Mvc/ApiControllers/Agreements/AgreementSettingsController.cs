@@ -14,10 +14,10 @@ namespace UCosmic.Web.Mvc.ApiControllers
     public class AgreementSettingsController : ApiController
     {
         private readonly IProcessQueries _queryProcessor;
-        private readonly IHandleCommands<UpdateAgreementSettings> _updateHandler;
+        private readonly IHandleCommands<CreateOrUpdateSettings> _updateHandler;
 
         public AgreementSettingsController(IProcessQueries queryProcessor
-            , IHandleCommands<UpdateAgreementSettings> updateHandler)
+            , IHandleCommands<CreateOrUpdateSettings> updateHandler)
         {
             _queryProcessor = queryProcessor;
             _updateHandler = updateHandler;
@@ -32,17 +32,17 @@ namespace UCosmic.Web.Mvc.ApiControllers
             return model;
         }
 
-        [PUT("agreements/{agreementId:int}")]
+        [PUT("{id:int}")]
         [Authorize(Roles = RoleName.AgreementManagers)]
-        public HttpResponseMessage Put(int agreementId, AgreementApiModel model)
+        public HttpResponseMessage Put(int id, AgreementSettingsApiModel model)
         {
-            model.Id = agreementId;
-            var command = new UpdateAgreement(User, agreementId);
+           // model.Id = id;
+            var command = new CreateOrUpdateSettings(User, id);
             Mapper.Map(model, command);
 
             _updateHandler.Handle(command);
 
-            var response = Request.CreateResponse(HttpStatusCode.OK, "Agreement was successfully updated.");
+            var response = Request.CreateResponse(HttpStatusCode.OK, "Agreement settings was successfully updated.");
             return response;
         }
 

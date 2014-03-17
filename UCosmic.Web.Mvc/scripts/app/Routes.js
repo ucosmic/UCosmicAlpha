@@ -432,6 +432,11 @@ var App;
                         return makeUrl('agreements/settings');
                     }
                     Settings.get = get;
+                    function put(id) {
+                        var url = 'agreements/settings/{0}'.format(id);
+                        return makeUrl(url);
+                    }
+                    Settings.put = put;
                 })(Agreements.Settings || (Agreements.Settings = {}));
                 var Settings = Agreements.Settings;
 
