@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Security.Principal;
+using FluentValidation;
 using UCosmic.Domain.People;
+using UCosmic.Domain.Identity;
 
 namespace UCosmic.Domain.Agreements
 {
@@ -25,6 +27,19 @@ namespace UCosmic.Domain.Agreements
         public IEnumerable<string> AllowedStatusValues { get; set; }
         public IEnumerable<string> AllowedContactTypeValues { get; set; }
     }
+
+
+    //public class ValidateCreateOrUpdateSettingsCommand : AbstractValidator<CreateOrUpdateSettings>
+    //{
+    //    public ValidateCreateOrUpdateSettingsCommand(IProcessQueries queryProcessor)
+    //    {
+    //        CascadeMode = CascadeMode.StopOnFirstFailure;
+
+    //        RuleFor(x => x.Principal)
+    //            .MustFindUserByPrincipal(queryProcessor);
+    //    }
+    //}
+
 
     public class HandleCreateOrUpdateSettingsCommand : IHandleCommands<CreateOrUpdateSettings>
     {

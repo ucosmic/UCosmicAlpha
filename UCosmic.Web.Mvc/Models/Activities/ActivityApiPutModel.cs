@@ -28,7 +28,7 @@ namespace UCosmic.Web.Mvc.Models
                     .ForMember(d => d.Principal, o => o.Ignore())
                     .ForMember(d => d.ActivityId, o => o.Ignore())
                     .ForMember(d => d.Impersonator, o => o.Ignore())
-                    .ForMember(d => d.StartsOn, o => o.MapFrom(s => s.StartsOn.HasValue ? s.StartsOn.Value.ToUniversalTime() : (DateTime?)null))
+                    .ForMember(d => d.StartsOn, o => o.MapFrom(s => s.StartsOn.HasValue ? s.StartsOn.Value.ToUniversalTime() : (DateTime?)null))//this is causing an error
                     .ForMember(d => d.EndsOn, o => o.MapFrom(s => s.EndsOn.HasValue ? s.EndsOn.Value.ToUniversalTime() : (DateTime?)null))
                     .ForMember(d => d.WasExternallyFunded, o => o.MapFrom(s => s.IsExternallyFunded))
                     .ForMember(d => d.WasInternallyFunded, o => o.MapFrom(s => s.IsInternallyFunded))

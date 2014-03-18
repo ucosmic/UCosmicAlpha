@@ -48,6 +48,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
             internal const string Expires = "Expiration";
             internal const string Status = "Status";
             internal const string Link = "Link";
+            internal const string Description = "Description";
+            internal const string Contacts = "Contacts";
         }
 
         private static readonly IDictionary<int, string> ColumnMap = new Dictionary<int, string>
@@ -59,7 +61,9 @@ namespace UCosmic.Web.Mvc.ApiControllers
             { 5, ColumnName.Starts },
             { 6, ColumnName.Expires },
             { 7, ColumnName.Status },
-            { 8, ColumnName.Link },
+            { 8, ColumnName.Description },
+            { 9, ColumnName.Contacts },
+            { 10, ColumnName.Link },
         };
 
         private ExcelWorksheet _worksheet;
@@ -113,9 +117,15 @@ namespace UCosmic.Web.Mvc.ApiControllers
                     Column(ColumnName.Status).Width = 15;
                 }
 
+                Cell(ColumnName.Description).Value = ColumnName.Description;
+                Column(ColumnName.Description).Width = 40;
+
+                Cell(ColumnName.Contacts).Value = ColumnName.Contacts;
+                Column(ColumnName.Contacts).Width = 30;
+
                 Cell(ColumnName.Link).Value = ColumnName.Link;
                 Column(ColumnName.Link).Width = 20;
-
+                
                 _worksheet.Row(rowNumber).Style.Font.Bold = true;
                 _worksheet.Cells.Style.VerticalAlignment = 0;
                 ++rowNumber;
@@ -151,12 +161,16 @@ namespace UCosmic.Web.Mvc.ApiControllers
                     if (_isPrivate)
                         Cell(ColumnName.Status, rowNumber).Value = model.Status;
 
+                    Cell(ColumnName.Description, rowNumber).Value = model.Description ?? "[None]";
+                    Cell(ColumnName.Contacts, rowNumber).Value = model.Contacts ?? "[Unknown]";
+
                     var url = string.Format("https://alpha.ucosmic.com/agreements/{0}", model.Id);
                     Cell(ColumnName.Link, rowNumber).Value = url;
                     Cell(ColumnName.Link, rowNumber).Hyperlink = new Uri(url);
                     Cell(ColumnName.Link, rowNumber).Style.Font.Color.SetColor(Color.FromArgb(255, 0, 0, 255));
                     Cell(ColumnName.Link, rowNumber).Style.Font.UnderLine = true;
                     //Cell(ColumnName.Link, rowNumber).Formula = string.Format("HYPERLINK(\"https://alpha.ucosmic.com/agreements/{0}\")", model.Id);
+
 
                     ++rowNumber;
                 }

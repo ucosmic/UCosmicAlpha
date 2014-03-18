@@ -19,6 +19,8 @@ namespace UCosmic.Web.Mvc.Models
         public AgreementParticipantApiModel[] Participants { get; set; }
         public string[] EstablishmentOfficialName { get; set; }
         public string[] EstablishmentTranslatedName { get; set; }
+        public string Contacts { get; set; }
+        public string Description { get; set; }
 
     }
     public class PageOfAgreementApiFlatModel : PageOf<AgreementApiFlatModel> { }
@@ -61,6 +63,19 @@ namespace UCosmic.Web.Mvc.Models
                         return partners.ToArray();
                     }))
                     .ForMember(d => d.ExpiresOn, o => o.MapFrom(s => s.ExpiresOn == DateTime.MinValue ? (DateTime?)null : s.ExpiresOn))
+                    .ForMember(d => d.Contacts, o => o.ResolveUsing(s =>
+                    {
+                        var contacts =
+                            s.Contacts.Select(x => x.Person.Emails.FirstOrDefault(y => y.IsDefault).Value + '(' + x.Type + ')');
+                        //s.Contacts.Select(x => new { x.Type, x.Person.Emails.FirstOrDefault(y => y.IsDefault).Value });// != null ? x.Person.Emails.FirstOrDefault(y => y.IsDefault).Value : '[None]'});
+                        //var partners = s.Participants.Where(x => !x.IsOwner).Select(x => x.Establishment);
+                        //var countries = partners.Select(x => x.Location.Places.FirstOrDefault(y => y.IsCountry))
+                        //    .Where(x => x != null).Select(x => x.OfficialName).Distinct()
+                        //    .OrderBy(x => x)
+                        //;
+                        //var repsonse = String.Join<string>(String.Empty, contacts.ToList());
+                        return contacts.Implode(", ");
+                    }))
                 ;
             }
         }
