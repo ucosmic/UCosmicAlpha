@@ -28,6 +28,7 @@ namespace UCosmic.Web.Mvc.Controllers
                 { "University of the West Indies", "uwi.edu" },
                 { "University of Wisconsin Milwaukee", "uwm.edu" },
                 { "Western University", "westernu.ca" },
+                { "Clemson University", "clemson.edu" },
             };
             if (includeDefault)
                 model.Add("The UCosmic Consortium", "_default");
