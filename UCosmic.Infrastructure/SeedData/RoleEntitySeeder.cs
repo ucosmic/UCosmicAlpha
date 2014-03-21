@@ -30,7 +30,7 @@ namespace UCosmic.SeedData
                 "Additionally, they are allowed to view fields marked with 'private' access."
             );
             Seed(RoleName.AgreementSupervisor,
-                "Institutional Agreement Supervisors have all of the same privileges ass Institutional Agreement Managers, " +
+                "Institutional Agreement Supervisors have all of the same privileges as Institutional Agreement Managers, " +
                 "and can also edit the settings for the Institutional Agreement Module."
             );
             Seed(RoleName.EstablishmentLocationAgent,
