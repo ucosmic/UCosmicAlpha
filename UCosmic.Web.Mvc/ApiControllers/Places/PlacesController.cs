@@ -7,6 +7,7 @@ using System.Web.Http;
 using AttributeRouting;
 using AttributeRouting.Web.Http;
 using AutoMapper;
+using Links;
 using UCosmic.Domain.Places;
 using UCosmic.Web.Mvc.Models;
 using PlaceByWoeId = UCosmic.Domain.Places.PlaceByWoeId;
@@ -74,7 +75,21 @@ namespace UCosmic.Web.Mvc.ApiControllers
                         x => x.Ancestors.Select(y => y.Ancestor),
                     },
                 });
-                var places = place.Ancestors.OrderByDescending(x => x.Separation).Select(x => x.Ancestor).ToList();
+                var maxDepth = 5;
+                var places = new List<Place>();
+                var ancestor = place.Parent;// = ancestors;
+                for (var i = 0; i < maxDepth; i++)
+                {
+                    places.Add(ancestor);
+                    ancestor = ancestor.Parent;
+                    if (ancestor == null)
+                    {
+                        i = 5;
+                    }
+                }
+                //var places = place.Ancestors.OrderByDescending(x => x.Separation).Select(x => x.Ancestor).ToList();
+
+
                 places.Add(place);
                 return Mapper.Map<PlaceApiModel[]>(places);
             }

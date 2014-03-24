@@ -390,6 +390,8 @@ module Establishments.ViewModels {
             // make places array observable
             this.places(places);
 
+            var test = Places.Utils.getPlaceById(places, places[0].parentId);
+
             // populate continent menu
             var continent = Places.Utils.getContinent(places);
             if (continent) this.continentId(continent.id);

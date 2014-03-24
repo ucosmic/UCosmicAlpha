@@ -319,6 +319,8 @@ var Establishments;
             Location.prototype.fillPlacesHierarchy = function (places) {
                 this.places(places);
 
+                var test = Places.Utils.getPlaceById(places, places[0].parentId);
+
                 var continent = Places.Utils.getContinent(places);
                 if (continent)
                     this.continentId(continent.id);
