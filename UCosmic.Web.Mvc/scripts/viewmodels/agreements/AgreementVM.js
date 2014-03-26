@@ -1,4 +1,4 @@
-var InstitutionalAgreementEditModel = (function () {
+﻿var InstitutionalAgreementEditModel = (function () {
     function InstitutionalAgreementEditModel(agreementId) {
         var _this = this;
         this.agreementId = agreementId;
@@ -38,7 +38,7 @@ var InstitutionalAgreementEditModel = (function () {
         this.establishmentSearchNav = new Agreements.EstablishmentSearchNav(this.editOrNewUrl, this.participants, this.agreementIsEdit, this.agreementId, this.scrollBody, this.deferredPageFadeIn);
         this.participants = new Agreements.Participants(this.agreementId, this.deferredPopParticipants, this.agreementIsEdit, this.establishmentSearchNav.establishmentSearchViewModel, this.establishmentSearchNav.hasBoundSearch);
         this.establishmentSearchNav.participants = this.participants;
-        ko.applyBindings(this.participants, $('#participants')[0]);
+
         this.basicInfo = new Agreements.BasicInfo(this.agreementId, this.deferredUAgreements);
         ko.applyBindings(this.basicInfo, $('#basic_info')[0]);
         this.contact = new Agreements.Contacts(this.basicInfo.isCustomContactTypeAllowed, this.establishmentSearchNav.establishmentItemViewModel, this.agreementIsEdit, this.agreementId, this.kendoWindowBug, this.deferredPopContacts);
@@ -61,6 +61,7 @@ var InstitutionalAgreementEditModel = (function () {
             $("#Loading_page").hide();
             this.participants.populateParticipants();
             $.when(this.deferredPageFadeIn, this.deferredPopParticipants).done(function () {
+                ko.applyBindings(_this.participants, $('#participants')[0]);
                 _this._updateKendoDialog($(window).width());
                 _this._bindjQueryKendo();
             });
@@ -75,6 +76,7 @@ var InstitutionalAgreementEditModel = (function () {
             this._populateAgreementData();
             $("#Loading_page").hide();
             $.when(this.deferredPopContacts, this.deferredPopFiles, this.deferredPopParticipants, this.deferredPageFadeIn).done(function () {
+                ko.applyBindings(_this.participants, $('#participants')[0]);
                 _this._updateKendoDialog($(window).width());
             });
         }

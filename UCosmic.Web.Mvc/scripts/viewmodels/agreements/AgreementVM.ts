@@ -19,7 +19,7 @@ class InstitutionalAgreementEditModel {
             this.agreementIsEdit, this.establishmentSearchNav.establishmentSearchViewModel,
             this.establishmentSearchNav.hasBoundSearch);
         this.establishmentSearchNav.participants = this.participants;
-        ko.applyBindings(this.participants, $('#participants')[0]);
+        //ko.applyBindings(this.participants, $('#participants')[0]);
         this.basicInfo = new Agreements.BasicInfo(this.agreementId, this.deferredUAgreements);
         ko.applyBindings(this.basicInfo, $('#basic_info')[0]);
         this.contact = new Agreements.Contacts(this.basicInfo.isCustomContactTypeAllowed,
@@ -46,6 +46,7 @@ class InstitutionalAgreementEditModel {
             this.participants.populateParticipants();
             $.when(this.deferredPageFadeIn, this.deferredPopParticipants)
                 .done(() => {
+                    ko.applyBindings(this.participants, $('#participants')[0]);
                     this._updateKendoDialog($(window).width());
                     this._bindjQueryKendo();
                 });
@@ -61,6 +62,7 @@ class InstitutionalAgreementEditModel {
             $("#Loading_page").hide();
             $.when(this.deferredPopContacts, this.deferredPopFiles, this.deferredPopParticipants, this.deferredPageFadeIn)
                 .done(() => {
+                    ko.applyBindings(this.participants, $('#participants')[0]);
                     this._updateKendoDialog($(window).width());
                 });
         }
