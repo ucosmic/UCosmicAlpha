@@ -18,12 +18,15 @@ var Establishments;
                 this.allowCountryFitBounds = true;
                 this.admin1s = ko.observableArray();
                 this.admin1Id = ko.observable();
+                this.admin1Label = ko.observable();
                 this.admin1sLoading = ko.observable(false);
                 this.admin2s = ko.observableArray();
                 this.admin2Id = ko.observable();
+                this.admin2Label = ko.observable();
                 this.admin2sLoading = ko.observable(false);
                 this.admin3s = ko.observableArray();
                 this.admin3Id = ko.observable();
+                this.admin3Label = ko.observable();
                 this.admin3sLoading = ko.observable(false);
                 this.places = ko.observableArray();
                 this.subAdmins = ko.observableArray();
@@ -332,22 +335,31 @@ var Establishments;
                     this.countryId(undefined);
 
                 var admin1 = Places.Utils.getAdmin1(places);
-                if (admin1)
+                if (admin1) {
                     this.admin1Id(admin1.id);
-                else
+                    this.admin1Label(admin1.placeTypeEnglishName);
+                } else {
+                    this.admin1Label(undefined);
                     this.admin1Id(undefined);
+                }
 
                 var admin2 = Places.Utils.getAdmin2(places);
-                if (admin2)
+                if (admin2) {
                     this.admin2Id(admin2.id);
-                else
+                    this.admin2Label(admin2.placeTypeEnglishName);
+                } else {
+                    this.admin2Label(undefined);
                     this.admin2Id(undefined);
+                }
 
                 var admin3 = Places.Utils.getAdmin3(places);
-                if (admin3)
+                if (admin3) {
                     this.admin3Id(admin3.id);
-                else
+                    this.admin3Label(admin3.placeTypeEnglishName);
+                } else {
+                    this.admin3Label(undefined);
                     this.admin3Id(undefined);
+                }
 
                 var subAdmins = Places.Utils.getSubAdmins(places);
                 if (subAdmins && subAdmins.length)
@@ -369,6 +381,11 @@ var Establishments;
                     _this.admin1s(results);
                     if (_this._admin1Id)
                         _this.admin1Id(_this._admin1Id);
+                    if (_this.admin1s()) {
+                        _this.admin1Label(_this.admin1s()[0].placeTypeEnglishName);
+                    } else {
+                        _this.admin1Label(undefined);
+                    }
                     _this.admin1sLoading(false);
                 });
             };
@@ -386,6 +403,11 @@ var Establishments;
                     _this.admin2s(results);
                     if (_this._admin2Id)
                         _this.admin2Id(_this._admin2Id);
+                    if (_this.admin2s()) {
+                        _this.admin2Label(_this.admin2s()[0].placeTypeEnglishName);
+                    } else {
+                        _this.admin2Label(undefined);
+                    }
                     _this.admin2sLoading(false);
                 });
             };
@@ -403,6 +425,11 @@ var Establishments;
                     _this.admin3s(results);
                     if (_this._admin3Id)
                         _this.admin3Id(_this._admin3Id);
+                    if (_this.admin3Id()) {
+                        _this.admin3Label(_this.admin3s()[0].placeTypeEnglishName);
+                    } else {
+                        _this.admin3Label(undefined);
+                    }
                     _this.admin3sLoading(false);
                 });
             };

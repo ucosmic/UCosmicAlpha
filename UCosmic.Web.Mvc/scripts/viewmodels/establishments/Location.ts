@@ -23,6 +23,7 @@ module Establishments.ViewModels {
         private allowCountryFitBounds: boolean = true;
         admin1s = ko.observableArray<Places.ApiModels.Place>();
         admin1Id = ko.observable<number>();
+        admin1Label = ko.observable<string>();
         admin1Name: KnockoutComputed<string>;
         admin1OptionsCaption: KnockoutComputed<string>;
         admin1sLoading: KnockoutObservable<boolean> = ko.observable(false);
@@ -30,6 +31,7 @@ module Establishments.ViewModels {
         showAdmin1Input: KnockoutComputed<boolean>;
         admin2s = ko.observableArray<Places.ApiModels.Place>();
         admin2Id = ko.observable<number>();
+        admin2Label = ko.observable<string>();
         admin2Name: KnockoutComputed<string>;
         admin2OptionsCaption: KnockoutComputed<string>;
         admin2sLoading: KnockoutObservable<boolean> = ko.observable(false);
@@ -37,6 +39,7 @@ module Establishments.ViewModels {
         showAdmin2Input: KnockoutComputed<boolean>;
         admin3s = ko.observableArray<Places.ApiModels.Place>();
         admin3Id = ko.observable<number>();
+        admin3Label = ko.observable<string>();
         admin3Name: KnockoutComputed<string>;
         admin3OptionsCaption: KnockoutComputed<string>;
         admin3sLoading: KnockoutObservable<boolean> = ko.observable(false);
@@ -403,18 +406,33 @@ module Establishments.ViewModels {
 
             // populate admin1 menu
             var admin1 = Places.Utils.getAdmin1(places);
-            if (admin1) this.admin1Id(admin1.id);
-            else this.admin1Id(undefined);
+            if (admin1) {
+                this.admin1Id(admin1.id);
+                this.admin1Label(admin1.placeTypeEnglishName);
+            } else {
+                this.admin1Label(undefined);
+                this.admin1Id(undefined);
+            }
 
             // populate admin2 menu
             var admin2 = Places.Utils.getAdmin2(places);
-            if (admin2) this.admin2Id(admin2.id);
-            else this.admin2Id(undefined);
+            if (admin2) {
+                this.admin2Id(admin2.id);
+                this.admin2Label(admin2.placeTypeEnglishName);
+            } else {
+                this.admin2Label(undefined);
+                this.admin2Id(undefined);
+            }
 
             // populate admin3 menu
             var admin3 = Places.Utils.getAdmin3(places);
-            if (admin3) this.admin3Id(admin3.id);
-            else this.admin3Id(undefined);
+            if (admin3) {
+                this.admin3Id(admin3.id);
+                this.admin3Label(admin3.placeTypeEnglishName);
+            } else {
+                this.admin3Label(undefined);
+                this.admin3Id(undefined);
+            }
 
             var subAdmins = Places.Utils.getSubAdmins(places);
             if (subAdmins && subAdmins.length) this.subAdmins(subAdmins);
@@ -435,6 +453,11 @@ module Establishments.ViewModels {
                     this.admin1s(results);
                     if (this._admin1Id)
                         this.admin1Id(this._admin1Id);
+                    if (this.admin1s()) {
+                        this.admin1Label(this.admin1s()[0].placeTypeEnglishName);
+                    } else {
+                        this.admin1Label(undefined);
+                    }
                     this.admin1sLoading(false);
                 });
         }
@@ -453,6 +476,11 @@ module Establishments.ViewModels {
                     this.admin2s(results);
                     if (this._admin2Id)
                         this.admin2Id(this._admin2Id);
+                    if (this.admin2s()) {
+                        this.admin2Label(this.admin2s()[0].placeTypeEnglishName);
+                    } else {
+                        this.admin2Label(undefined);
+                    }
                     this.admin2sLoading(false);
                 });
         }
@@ -471,6 +499,11 @@ module Establishments.ViewModels {
                     this.admin3s(results);
                     if (this._admin3Id)
                         this.admin3Id(this._admin3Id);
+                    if (this.admin3Id()) {
+                        this.admin3Label(this.admin3s()[0].placeTypeEnglishName);
+                    } else {
+                        this.admin3Label(undefined);
+                    }
                     this.admin3sLoading(false);
                 });
         }
