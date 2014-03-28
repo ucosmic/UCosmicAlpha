@@ -151,6 +151,9 @@ namespace UCosmic.Domain.External
             });
             if (string.IsNullOrWhiteSpace(displayName))
                 displayName = usfPerson.EmailAddress;
+            if (string.IsNullOrWhiteSpace(displayName))
+                displayName = user.Name;
+            
             var updatePersonCommand = new UpdatePerson(command.Principal, user.Person.RevisionId)
             {
                 NoCommit = true,
