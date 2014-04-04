@@ -5,6 +5,7 @@ module Activities.ViewModels {
         output: App.PageOf<ApiModels.SearchResult>;
         //countryOptions: App.ApiModels.SelectOption<string>[];
         activityTypes: ApiModels.ActivityTypeSearchFilter[];
+        tenantId: number;
     }
 
     export enum DataGraphPivot {
@@ -40,10 +41,59 @@ module Activities.ViewModels {
         $since: JQuery;
         $until: JQuery;
         $placeIds: JQuery;
-        loadingSpinner = new App.Spinner()
+        loadingSpinner = new App.Spinner();
+
+
+        hasTenancyData = ko.observable<boolean>(false);
+        selectedTenant = ko.observable<number>(this.settings.tenantId);
+        tenantOptions = ko.observableArray<App.ApiModels.SelectOption<number>>();
+
 
         constructor(public settings: SearchSettings) {
             this.pager.apply(this.settings.output);
+            this._loadTenancyData();
+
+            //this.selectedTenant.subscribe(function() {
+            //    location.href = 
+            //})
+
+        }
+
+
+
+        private _loadTenancyData(): void {
+            $.when(Activities.Servers.Single(this.settings.tenantId), Activities.Servers.GetChildren(this.settings.tenantId))
+                .done((parentData: Activities.ApiModels.ScalarEstablishment, childData: Activities.ApiModels.ScalarEstablishment[]): void => {
+                    childData = childData || [];
+                    var tenants = Enumerable.From(childData)
+                        .OrderBy(function (x: Activities.ApiModels.ScalarEstablishment): number {
+                            return x.rank;
+                        }).ToArray();
+                    tenants.unshift(parentData);
+
+                    this.tenantOptions([]);
+                    if (childData.length) {
+                        var options = Enumerable.From(tenants)
+                            .Select(function (x: Activities.ApiModels.ScalarEstablishment): App.ApiModels.SelectOption<number> {
+                                var option: App.ApiModels.SelectOption<number> = {
+                                    value: x.id,
+                                    text: x.contextName || x.officialName,
+                                };
+                                return option;
+                            }).ToArray();
+                        this.tenantOptions(options);
+                    }
+                    this.selectedTenant(this.settings.input.ancestorId);
+                    this.selectedTenant.subscribe((newValue: number): void => { this._submitForm(); });
+
+                    //deferred.resolve(tenants);
+                    if (childData.length) this.hasTenancyData(true);
+                })
+                .fail((xhr: JQueryXHR): void => {
+                    App.Failures.message(xhr, 'while trying to load institution organizational data.', true);
+                    //deferred.reject();
+                })
+
         }
 
         //#endregion

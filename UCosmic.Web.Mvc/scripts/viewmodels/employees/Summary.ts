@@ -212,6 +212,12 @@
             return !this.hasEstablishmentId();
         });
 
+        table_mapLink(data, e): void {
+            e.preventDefault;
+            window.location.href = e.target.parentElement.href + '?ancestorId=' + this.selectedTenant();
+        }
+
+        
         //#endregion
         //#endregion
         //#region Routing
@@ -620,7 +626,8 @@
                         placeNames: placeName,
                         placeIds: place.placeId, 
                         pivot: this.pivot(),
-                        keyword: ''
+                        keyword: '',
+                        ancestorId: this.selectedTenant()
                     };
                     location.href = 'table/?' + $.param(paramObject);
                 }
@@ -739,7 +746,8 @@
                     paramObject = {
                         pivot: this.pivot(),
                         keyword: '',
-                        activityTypeIds: value
+                        activityTypeIds: value,
+                        ancestorId: this.selectedTenant()
                     };
                 }
                 location.href = 'table/?' + $.param(paramObject);
@@ -990,7 +998,8 @@
                     placeNames: place.placeName,
                     placeIds: place.placeId,
                     pivot: 1,
-                    keyword: ''
+                    keyword: '',
+                    ancestorId: this.selectedTenant()
                 };
                 location.href = 'table/?' + $.param(paramObject);
             }

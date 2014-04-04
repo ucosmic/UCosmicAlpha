@@ -259,6 +259,11 @@
                 }
             };
 
+            Summary.prototype.table_mapLink = function (data, e) {
+                e.preventDefault;
+                window.location.href = e.target.parentElement.href + '?ancestorId=' + this.selectedTenant();
+            };
+
             Summary.prototype._getUrlState = function () {
                 var params = location.search.indexOf('?') == 0 ? location.search.substr(1) : location.search;
                 if (!Summary._isD3Defined()) {
@@ -526,7 +531,8 @@
                             placeNames: placeName,
                             placeIds: place.placeId,
                             pivot: this.pivot(),
-                            keyword: ''
+                            keyword: '',
+                            ancestorId: this.selectedTenant()
                         };
                         location.href = 'table/?' + $.param(paramObject);
                     }
@@ -631,7 +637,8 @@
                         paramObject = {
                             pivot: this.pivot(),
                             keyword: '',
-                            activityTypeIds: value
+                            activityTypeIds: value,
+                            ancestorId: this.selectedTenant()
                         };
                     }
                     location.href = 'table/?' + $.param(paramObject);
@@ -820,7 +827,8 @@
                         placeNames: place.placeName,
                         placeIds: place.placeId,
                         pivot: 1,
-                        keyword: ''
+                        keyword: '',
+                        ancestorId: this.selectedTenant()
                     };
                     location.href = 'table/?' + $.param(paramObject);
                 }

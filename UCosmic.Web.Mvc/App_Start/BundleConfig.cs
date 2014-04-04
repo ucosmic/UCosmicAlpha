@@ -199,6 +199,11 @@ namespace UCosmic.Web.Mvc
             bundles.Add(new ScriptBundle("~/bundles/affiliation").Include(
                 "~/scripts/viewmodels/affiliations/Affiliation.js"));
 
+            // activities
+            bundles.Add(new ScriptBundle("~/bundles/activities/table").Include(
+                "~/scripts/viewmodels/activities/Server.js",
+                "~/scripts/viewmodels/activities/Search.js"));
+
             // employees, faculty and staff
             bundles.Add(new ScriptBundle("~/bundles/employees").Include(
                 "~/scripts/oss/linq.js",

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30110.0
+VisualStudioVersion = 12.0.30324.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{1D0944A8-022D-413B-85FB-08EFF9022E2B}"
 	ProjectSection(SolutionItems) = preProject
@@ -17,6 +17,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		GlobalAssemblyInfo.cs = GlobalAssemblyInfo.cs
 		readme.md = readme.md
 		WE2013-settings.xml = WE2013-settings.xml
+		WebEssentials-Settings.json = WebEssentials-Settings.json
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UCosmic.Domain", "UCosmic.Domain\UCosmic.Domain.csproj", "{66444F14-2971-43DE-B0BB-75A926B6F191}"
@@ -80,7 +81,7 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{9FEA0633-ED91-4345-8B5B-0A28E216324C} = {B31B3F8D-8C32-4AAE-A6DD-2AF71F1B8F4C}
 		{F8E86A95-A775-449F-A818-60D8AD4B1B0D} = {B31B3F8D-8C32-4AAE-A6DD-2AF71F1B8F4C}
+		{9FEA0633-ED91-4345-8B5B-0A28E216324C} = {B31B3F8D-8C32-4AAE-A6DD-2AF71F1B8F4C}
 	EndGlobalSection
 EndGlobal

@@ -32,6 +32,9 @@ var Activities;
                     return _this.pivot() == 2 /* people */;
                 });
                 this.loadingSpinner = new App.Spinner();
+                this.hasTenancyData = ko.observable(false);
+                this.selectedTenant = ko.observable(this.settings.tenantId);
+                this.tenantOptions = ko.observableArray();
                 this.activityTypeCheckBoxes = ko.observableArray(Enumerable.From(this.settings.activityTypes).Select(function (x) {
                     return new ActivityTypeSearchCheckBox(x, _this.settings);
                 }).ToArray());
@@ -54,7 +57,40 @@ var Activities;
                     return _this.until() ? false : true;
                 });
                 this.pager.apply(this.settings.output);
+                this._loadTenancyData();
             }
+            Search.prototype._loadTenancyData = function () {
+                var _this = this;
+                $.when(Activities.Servers.Single(this.settings.tenantId), Activities.Servers.GetChildren(this.settings.tenantId)).done(function (parentData, childData) {
+                    childData = childData || [];
+                    var tenants = Enumerable.From(childData).OrderBy(function (x) {
+                        return x.rank;
+                    }).ToArray();
+                    tenants.unshift(parentData);
+
+                    _this.tenantOptions([]);
+                    if (childData.length) {
+                        var options = Enumerable.From(tenants).Select(function (x) {
+                            var option = {
+                                value: x.id,
+                                text: x.contextName || x.officialName
+                            };
+                            return option;
+                        }).ToArray();
+                        _this.tenantOptions(options);
+                    }
+                    _this.selectedTenant(_this.settings.input.ancestorId);
+                    _this.selectedTenant.subscribe(function (newValue) {
+                        _this._submitForm();
+                    });
+
+                    if (childData.length)
+                        _this.hasTenancyData(true);
+                }).fail(function (xhr) {
+                    App.Failures.message(xhr, 'while trying to load institution organizational data.', true);
+                });
+            };
+
             Search.prototype.applyBindings = function (element) {
                 ko.applyBindings(this, element);
                 kendo.init($(element));

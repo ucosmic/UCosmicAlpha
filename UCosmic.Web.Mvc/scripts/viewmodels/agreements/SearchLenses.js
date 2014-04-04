@@ -18,7 +18,7 @@ var Agreements;
                 this.sammy = Sammy();
                 this._hasMapBeenResizedOnce = false;
                 this._runSammy();
-                this.table = new Agreements.ViewModels.SearchTable({
+                this.table = new ViewModels.SearchTable({
                     element: undefined,
                     domain: this.settings.domain,
                     visibility: this.settings.visibility,
@@ -27,7 +27,7 @@ var Agreements;
                     detailUrl: this.settings.detailUrl,
                     sammy: this.sammy
                 });
-                this.map = new Agreements.ViewModels.SearchMap({
+                this.map = new ViewModels.SearchMap({
                     element: undefined,
                     domain: this.settings.domain,
                     visibility: this.settings.visibility,
@@ -113,8 +113,8 @@ var Agreements;
                 this.map.countryCode('any');
                 this.map.placeId(0);
                 this.map.zoom(1);
-                this.map.lat(Agreements.ViewModels.SearchMap.defaultMapCenter.lat());
-                this.map.lng(Agreements.ViewModels.SearchMap.defaultMapCenter.lng());
+                this.map.lat(ViewModels.SearchMap.defaultMapCenter.lat());
+                this.map.lng(ViewModels.SearchMap.defaultMapCenter.lng());
             };
             SearchLenses.LensSessionKey = 'AgreementSearchLens';
             return SearchLenses;

@@ -4,12 +4,25 @@ declare module Activities.ApiModels {
         pivot?: number;
         keyword?: string;
         placeIds?: number[];
+        ancestorIds?: number;
         placeNames?: string[];
         activityTypeIds: number[];
         since?: string;
         until?: string;
         includeUndated?: string;
         orderBy?: string;
+        ancestorId?: number;
+    }
+
+    export interface ScalarEstablishment {
+        id: number;
+        parentId?: number;
+        rank?: number;
+        typeId: number;
+        officialName: string;
+        contextName?: string;
+        uCosmicCode: string;
+        ceebCode: string;
     }
 
     export interface SearchResult {

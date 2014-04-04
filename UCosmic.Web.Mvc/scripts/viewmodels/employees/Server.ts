@@ -16,7 +16,7 @@
     }
 
     export function GetActivityCounts(tenantId: any, settings?: JQueryAjaxSettings): JQueryPromise<ApiModels.EmployeeActivityCounts> {
-        var promise: JQueryDeferred<ApiModels.EmployeeActivityCounts> = $.Deferred();
+        var promise: JQueryDeferred<ApiModels.EmployeeActivityCounts> = $.Deferred(); 
         settings = settings || {};
         settings.url = Routes.Api.Employees.Activities.counts(tenantId);
         $.ajax(settings)
