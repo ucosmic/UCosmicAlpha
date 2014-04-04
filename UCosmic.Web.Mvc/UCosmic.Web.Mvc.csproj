@@ -23,7 +23,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
-    <TypeScriptToolsVersion>0.9</TypeScriptToolsVersion>
+    <TypeScriptToolsVersion>1.0</TypeScriptToolsVersion>
     <TypeScriptSourceMap>False</TypeScriptSourceMap>
     <TypeScriptModuleKind>none</TypeScriptModuleKind>
     <TypeScriptCompileOnSaveEnabled>True</TypeScriptCompileOnSaveEnabled>
@@ -1760,6 +1760,7 @@
     <TypeScriptCompile Include="scripts\typings\moment\moment.d.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\activities\Map.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\activities\Search.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\activities\Server.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\agreements\settings.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\degrees\EstablishmentSearchNav.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\degrees\Search.ts" />
@@ -2088,6 +2089,9 @@
     </Content>
     <Content Include="scripts\viewmodels\activities\Search.js">
       <DependentUpon>Search.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\activities\Server.js">
+      <DependentUpon>Server.ts</DependentUpon>
     </Content>
     <Content Include="scripts\viewmodels\agreements\AgreementVM.js">
       <DependentUpon>AgreementVM.ts</DependentUpon>

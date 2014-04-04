@@ -24,6 +24,7 @@ namespace UCosmic.Web.Mvc.Models
                     .ForMember(d => d.PersonId, o => o.Ignore())
                     .ForMember(d => d.EagerLoad, o => o.Ignore())
                     .ForMember(d => d.EstablishmentId, o => o.UseValue(null))
+                    .ForMember(d => d.AncestorId, o => o.UseValue(null))
                     .ForMember(d => d.EstablishmentDomain, o => o.UseValue(null))
                     .ForMember(d => d.CountryCode, o => o.UseValue(null))
                     .ForMember(d => d.PlaceIds, o => o.UseValue(null))

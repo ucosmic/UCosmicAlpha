@@ -15,6 +15,8 @@ namespace UCosmic.Domain.Activities
         public int? PersonId { get; set; }
 
         public int? EstablishmentId { get; set; }
+        public int? AncestorId { get; set; }
+
         public string EstablishmentDomain { get; set; }
 
         public int[] PlaceIds { get; set; }
@@ -68,9 +70,36 @@ namespace UCosmic.Domain.Activities
                 queryable = queryable.Where(x => x.Activity.ModeText == PublicText);
             }
 
+            if (query.AncestorId.HasValue)
+            {
+                //queryable = queryable.Where(x => x.Activity.Person.Affiliations.Any(y => y.Establishment.Ancestors.Any(z => z.AncestorId == query.AncestorId.Value)));
+
+                queryable = queryable.Where(x =>
+                    x.Activity.Person.Affiliations.Any(y => y.IsDefault)
+                        // make sure person's default affiliation is not null
+                    &&
+                    ( // person must be affiliated with this establishment or one of its offspring under the default affiliation
+                        x.Activity.Person.Affiliations.Any(
+                            y =>
+                                (y.EstablishmentId == query.AncestorId.Value ||
+                                 y.Establishment.Ancestors.Any(z => z.AncestorId == query.AncestorId.Value))
+                                    // ReSharper disable PossibleNullReferenceException
+                                &&
+                                (y.IsDefault ||
+                                 y.Establishment.Ancestors.Any(
+                                     z =>
+                                         z.AncestorId ==
+                                         x.Activity.Person.Affiliations.FirstOrDefault(a => a.IsDefault).EstablishmentId)))
+                        // ReSharper restore PossibleNullReferenceException
+                    )
+                );
+                //queryable = queryable.Where(x => x.Activity.Person.Affiliations.Any(y => y.EstablishmentId == query.EstablishmentId.Value));
+            }
+
             if (query.EstablishmentId.HasValue)
             {
                 queryable = queryable.Where(x => x.Activity.Person.Affiliations.Any(y => y.IsDefault && y.EstablishmentId == query.EstablishmentId.Value));
+                //queryable = queryable.Where(x => x.Activity.Person.Affiliations.Any(y => y.EstablishmentId == query.EstablishmentId.Value));
             }
             else if (!string.IsNullOrWhiteSpace(query.EstablishmentDomain))
             {

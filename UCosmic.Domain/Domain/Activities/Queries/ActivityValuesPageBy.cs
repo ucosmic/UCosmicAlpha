@@ -16,6 +16,7 @@ namespace UCosmic.Domain.Activities
         public int? PersonId { get; set; }
 
         public int? EstablishmentId { get; set; }
+        public int? AncestorId { get; set; }
         public string EstablishmentDomain { get; set; }
 
         public int PageNumber { get; set; }
@@ -55,6 +56,7 @@ namespace UCosmic.Domain.Activities
                 IncludeUndated = query.IncludeUndated,
                 EstablishmentDomain = query.EstablishmentDomain,
                 EstablishmentId = query.EstablishmentId,
+                AncestorId = query.AncestorId,
                 Keyword = query.Keyword,
                 EagerLoad = query.EagerLoad,
                 OrderBy = query.OrderBy,

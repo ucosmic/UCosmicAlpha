@@ -26,6 +26,7 @@ namespace UCosmic.Web.Mvc.Models
         public string Since { get; set; }
         public string Until { get; set; }
         public bool? IncludeUndated { get; set; }
+        public int? AncestorId { get; set; }
     }
 
     public static class ActivitySearchInputProfiler
@@ -37,6 +38,8 @@ namespace UCosmic.Web.Mvc.Models
                 CreateMap<ActivitySearchInputModel, ActivityValuesPageBy>()
                     .ForMember(d => d.EstablishmentDomain, o => o.MapFrom(s => s.Domain))
                     .ForMember(d => d.EstablishmentId, o => o.Ignore())
+                    //.ForMember(d => d.AncestorId, o => o.Ignore())
+                    .ForMember(d => d.AncestorId, o => o.MapFrom(s => s.AncestorId))
                     .ForMember(d => d.Principal, o => o.Ignore())
                     .ForMember(d => d.PersonId, o => o.Ignore())
                     .ForMember(d => d.CountryCode, o => o.Ignore())
