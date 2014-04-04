@@ -43,7 +43,12 @@ namespace UCosmic.Domain.Employees
                 .Union(establishmentAncestorsWithActivities)
                 .Select(x => x.RevisionId)
             ;
-
+            //this is added temporarily because these 2 institutions at one time had activities, but now they do not. 
+            //the above only adds them when they do have info, so they never got set back to 0 with the
+            //projectemployeesummaryviews.cs file view projector.
+            //alpha already updated 
+            //establishmentIdsWithEmployeeData = establishmentIdsWithEmployeeData.Concat(new int[] { 4869 });
+            //establishmentIdsWithEmployeeData = establishmentIdsWithEmployeeData.Concat(new int[] { 4867 });
             return establishmentIdsWithEmployeeData;
         }
 
