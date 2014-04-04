@@ -239,8 +239,8 @@ var App;
             };
 
             Map.prototype.replaceMarkers = function (markers, destroy) {
-                if (typeof destroy === "undefined") { destroy = true; }
                 var _this = this;
+                if (typeof destroy === "undefined") { destroy = true; }
                 var removed = this.clearMarkers(destroy);
                 $.each(markers, function (i, marker) {
                     marker.setMap(_this.map);

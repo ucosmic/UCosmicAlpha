@@ -1,8 +1,6 @@
 var Establishments;
 (function (Establishments) {
     (function (ViewModels) {
-        var gm = google.maps;
-
         var CeebCodeValidator = (function () {
             function CeebCodeValidator() {
                 this.async = true;
@@ -155,7 +153,7 @@ var Establishments;
                 this.sideSwiper = new App.SideSwiper({
                     frameWidth: 980, speed: 'fast', root: '#establishment_page'
                 });
-                this.parentSearch = new Establishments.ViewModels.Search(false);
+                this.parentSearch = new ViewModels.Search(false);
                 this.sammy = Sammy();
                 this._findingParent = false;
                 this.parentEstablishment = ko.observable();
@@ -176,7 +174,7 @@ var Establishments;
 
                 this._initNamesComputeds();
                 this._initUrlsComputeds();
-                this.location = new Establishments.ViewModels.Location(this.id);
+                this.location = new ViewModels.Location(this.id);
 
                 this.typeEmptyText = ko.computed(function () {
                     return _this.categories().length > 0 ? '[Select a classification]' : '[Loading...]';
@@ -279,7 +277,7 @@ var Establishments;
                 var apiModel = new Establishments.ServerModels.Name(this.id);
                 if (this.names().length === 0)
                     apiModel.isOfficialName = true;
-                var newName = new Establishments.ViewModels.Name(apiModel, this);
+                var newName = new ViewModels.Name(apiModel, this);
                 this.names.unshift(newName);
                 newName.showEditor();
                 App.Obtruder.obtrude(document);
@@ -300,7 +298,7 @@ var Establishments;
 
                 this._namesMapping = {
                     create: function (options) {
-                        return new Establishments.ViewModels.Name(options.data, _this);
+                        return new ViewModels.Name(options.data, _this);
                     }
                 };
 
@@ -339,7 +337,7 @@ var Establishments;
                 var apiModel = new Establishments.ServerModels.Url(this.id);
                 if (this.urls().length === 0)
                     apiModel.isOfficialUrl = true;
-                var newUrl = new Establishments.ViewModels.Url(apiModel, this);
+                var newUrl = new ViewModels.Url(apiModel, this);
                 this.urls.unshift(newUrl);
                 newUrl.showEditor();
                 App.Obtruder.obtrude(document);
@@ -349,7 +347,7 @@ var Establishments;
                 var _this = this;
                 this._urlsMapping = {
                     create: function (options) {
-                        return new Establishments.ViewModels.Url(options.data, _this);
+                        return new ViewModels.Url(options.data, _this);
                     }
                 };
 
@@ -593,7 +591,7 @@ var Establishments;
                         $.get(url, { id: newValue }).done(function (response) {
                             if (response && response.items && response.items.length) {
                                 var parent = response.items[0];
-                                _this.parentEstablishment(new Establishments.ViewModels.SearchResult(parent, _this.parentSearch));
+                                _this.parentEstablishment(new ViewModels.SearchResult(parent, _this.parentSearch));
                             }
                         });
                     }

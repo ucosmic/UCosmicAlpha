@@ -138,7 +138,7 @@ module ViewModels.Users {
                 }
             });
 
-            this._history.subscribe((newValue: string): void => {
+            this._history.subscribe((newValue: string[]): void => {
                 if (this.$historyJson() && this.$historyJson().length) {
                     var currentJson = this.$historyJson().val();
                     var newJson = ko.toJSON(newValue);

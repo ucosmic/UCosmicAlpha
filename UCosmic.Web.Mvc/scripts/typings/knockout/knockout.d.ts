@@ -5,14 +5,14 @@
 
 
 interface KnockoutSubscribableFunctions<T> {
-	notifySubscribers(valueToWrite?: T, event?: string): void;
+    notifySubscribers(valueToWrite?: T, event?: string): void;
 }
 
 interface KnockoutComputedFunctions<T> {
 }
 
 interface KnockoutObservableFunctions<T> {
-	equalityComparer(a: any, b: any): boolean;
+    equalityComparer(a: any, b: any): boolean;
 }
 
 interface KnockoutObservableArrayFunctions<T> {
@@ -49,14 +49,14 @@ interface KnockoutSubscribableStatic {
 }
 
 interface KnockoutSubscription {
-	dispose(): void;
+    dispose(): void;
 }
 
 interface KnockoutSubscribable<T> extends KnockoutSubscribableFunctions<T> {
-	subscribe(callback: (newValue: T) => void, target?: any, event?: string): KnockoutSubscription;
-	subscribe<TEvent>(callback: (newValue: TEvent) => void, target: any, event: string): KnockoutSubscription;
-	extend(requestedExtenders: { [key: string]: any; }): KnockoutSubscribable<T>;
-	getSubscriptionsCount(): number;
+    subscribe(callback: (newValue: T) => void, target?: any, event?: string): KnockoutSubscription;
+    subscribe<TEvent>(callback: (newValue: TEvent) => void, target: any, event: string): KnockoutSubscription;
+    extend(requestedExtenders: { [key: string]: any; }): KnockoutSubscribable<T>;
+    getSubscriptionsCount(): number;
 }
 
 interface KnockoutComputedStatic {
@@ -69,10 +69,10 @@ interface KnockoutComputedStatic {
 }
 
 interface KnockoutComputed<T> extends KnockoutObservable<T>, KnockoutComputedFunctions<T> {
-	
-	dispose(): void;
-	isActive(): boolean;
-	getDependenciesCount(): number;
+
+    dispose(): void;
+    isActive(): boolean;
+    getDependenciesCount(): number;
     extend(requestedExtenders: { [key: string]: any; }): KnockoutComputed<T>;
 }
 
@@ -93,22 +93,22 @@ interface KnockoutObservableStatic {
 }
 
 interface KnockoutObservable<T> extends KnockoutSubscribable<T>, KnockoutObservableFunctions<T> {
-	(): T;
-	(value: T): void;
+    (): T;
+    (value: T): void;
 
-	peek(): T;
-	valueHasMutated?:{(): void;};
-	valueWillMutate?:{(): void;};
+    peek(): T;
+    valueHasMutated?: { (): void; };
+    valueWillMutate?: { (): void; };
     extend(requestedExtenders: { [key: string]: any; }): KnockoutObservable<T>;
 }
 
 interface KnockoutComputedDefine<T> {
-	read(): T;
-	write? (value: T): void;
-	disposeWhenNodeIsRemoved?: Node;
-	disposeWhen? (): boolean;
-	owner?: any;
-	deferEvaluation?: boolean;
+    read(): T;
+    write? (value: T): void;
+    disposeWhenNodeIsRemoved?: Node;
+    disposeWhen? (): boolean;
+    owner?: any;
+    deferEvaluation?: boolean;
 }
 
 interface KnockoutBindingContext {
@@ -124,8 +124,8 @@ interface KnockoutBindingContext {
 }
 
 interface KnockoutBindingHandler {
-    init?(element: any, valueAccessor: () => any, allBindingsAccessor: () => any, viewModel: any, bindingContext: KnockoutBindingContext): void;
-    update?(element: any, valueAccessor: () => any, allBindingsAccessor: () => any, viewModel: any, bindingContext: KnockoutBindingContext): void;
+    init? (element: any, valueAccessor: () => any, allBindingsAccessor: () => any, viewModel: any, bindingContext: KnockoutBindingContext): void;
+    update? (element: any, valueAccessor: () => any, allBindingsAccessor: () => any, viewModel: any, bindingContext: KnockoutBindingContext): void;
     options?: any;
 }
 
@@ -170,17 +170,17 @@ interface KnockoutMemoization {
     parseMemoText(memoText: string): string;
 }
 
-interface KnockoutVirtualElement {}
+interface KnockoutVirtualElement { }
 
 interface KnockoutVirtualElements {
-	allowedBindings: { [bindingName: string]: boolean; };
-    emptyNode(node: KnockoutVirtualElement ): void;
-    firstChild(node: KnockoutVirtualElement ): KnockoutVirtualElement;
-	insertAfter( container: KnockoutVirtualElement, nodeToInsert: HTMLElement, insertAfter: HTMLElement ): void;
+    allowedBindings: { [bindingName: string]: boolean; };
+    emptyNode(node: KnockoutVirtualElement): void;
+    firstChild(node: KnockoutVirtualElement): KnockoutVirtualElement;
+    insertAfter(container: KnockoutVirtualElement, nodeToInsert: HTMLElement, insertAfter: HTMLElement): void;
     nextSibling(node: KnockoutVirtualElement): HTMLElement;
-    prepend(node: KnockoutVirtualElement, toInsert: HTMLElement ): void;
-    setDomNodeChildren(node: KnockoutVirtualElement, newChildren: { length: number;[index: number]: HTMLElement; } ): void;
-    childNodes(node: KnockoutVirtualElement ): HTMLElement[];
+    prepend(node: KnockoutVirtualElement, toInsert: HTMLElement): void;
+    setDomNodeChildren(node: KnockoutVirtualElement, newChildren: { length: number;[index: number]: HTMLElement; }): void;
+    childNodes(node: KnockoutVirtualElement): HTMLElement[];
 }
 
 interface KnockoutExtenders {
@@ -209,9 +209,9 @@ interface KnockoutUtils {
     //////////////////////////////////
 
     domData: {
-        get (node: Element, key: string): any;
+        get(node: Element, key: string): any;
 
-        set (node: Element, key: string, value: any): void;
+        set(node: Element, key: string, value: any): void;
 
         getAll(node: Element, createIfNotFound: boolean): any;
 
@@ -310,7 +310,7 @@ interface KnockoutUtils {
 
     parseJson(jsonString: string): any;
 
-    stringifyJson(data: any, replacer: Function, space: string): string;
+    stringifyJson(data: any, replacer?: Function, space?: string): string;
 
     postJson(urlOrForm: any, data: any, options: any): void;
 
@@ -509,7 +509,7 @@ interface KnockoutStatic {
 }
 
 declare module "knockout" {
-	export = ko;
+    export = ko;
 }
 
 declare var ko: KnockoutStatic;

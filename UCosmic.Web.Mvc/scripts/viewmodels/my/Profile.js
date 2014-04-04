@@ -453,8 +453,8 @@ var People;
             };
 
             Profile.prototype.load = function (startTab) {
-                if (typeof startTab === "undefined") { startTab = ''; }
                 var _this = this;
+                if (typeof startTab === "undefined") { startTab = ''; }
                 if (this._loadPromise)
                     return this._loadPromise;
                 this._loadPromise = $.Deferred();

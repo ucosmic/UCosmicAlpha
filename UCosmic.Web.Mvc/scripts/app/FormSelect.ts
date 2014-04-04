@@ -13,7 +13,8 @@ module App {
     export class FormSelect<T> {
         //#region Static Defaults
 
-        static defaultSettings: FormSelectSettings<T> = {
+        //static properties cannot use T, so had to make regular property. And change the below to this.defaultSettings
+        defaultSettings: FormSelectSettings<T> = {
             loadingText: '[Loading...]',
             options: [],
             textColor: '#000',
@@ -35,7 +36,7 @@ module App {
 
         constructor(public settings?: FormSelectSettings<T>) {
             // merge settings with defaults
-            this.settings = $.extend({}, FormSelect.defaultSettings, this.settings);
+            this.settings = $.extend({}, this.defaultSettings, this.settings);
             this._initKendoOptions();
             var initialOptions = this._getInitialOptions();
 

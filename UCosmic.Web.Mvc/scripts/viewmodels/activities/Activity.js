@@ -371,8 +371,8 @@ var Activities;
             };
 
             ActivityForm.prototype._purge = function (async) {
-                if (typeof async === "undefined") { async = true; }
                 var _this = this;
+                if (typeof async === "undefined") { async = true; }
                 var deferred = $.Deferred();
                 var url = this.$activityUrlFormat.text().format(this.activityId());
                 $.ajax({

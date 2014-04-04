@@ -4,7 +4,13 @@ var App;
         function FormSelect(settings) {
             var _this = this;
             this.settings = settings;
-            this.settings = $.extend({}, FormSelect.defaultSettings, this.settings);
+            this.defaultSettings = {
+                loadingText: '[Loading...]',
+                options: [],
+                textColor: '#000',
+                captionTextColor: '#666'
+            };
+            this.settings = $.extend({}, this.defaultSettings, this.settings);
             this._initKendoOptions();
             var initialOptions = this._getInitialOptions();
 
@@ -128,13 +134,6 @@ var App;
                 }
             }, 0);
         };
-        FormSelect.defaultSettings = {
-            loadingText: '[Loading...]',
-            options: [],
-            textColor: '#000',
-            captionTextColor: '#666'
-        };
-
         FormSelect.defaultKendoOptions = {
             animation: false
         };

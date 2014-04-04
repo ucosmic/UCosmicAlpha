@@ -39,7 +39,7 @@ var Establishments;
                             return ko.utils.unwrapObservable(data.id);
                         },
                         create: function (options) {
-                            return new Establishments.ViewModels.SearchResult(options.data, options.parent);
+                            return new ViewModels.SearchResult(options.data, options.parent);
                         }
                     },
                     ignore: ['pageSize', 'pageNumber']

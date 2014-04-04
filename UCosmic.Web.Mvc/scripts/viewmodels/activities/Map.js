@@ -17,7 +17,7 @@ var Activities;
                 });
                 this.loadingSpinner = new App.Spinner();
                 this.activityTypeCheckBoxes = ko.observableArray(Enumerable.From(this.settings.activityTypes).Select(function (x) {
-                    return new Activities.ViewModels.ActivityTypeSearchCheckBox(x, _this.settings);
+                    return new ViewModels.ActivityTypeSearchCheckBox(x, _this.settings);
                 }).ToArray());
                 this.isCheckAllActivityTypesDisabled = ko.computed(function () {
                     return Enumerable.From(_this.activityTypeCheckBoxes()).All(function (x) {
