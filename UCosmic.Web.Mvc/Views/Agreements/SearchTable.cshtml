@@ -83,6 +83,12 @@
                     </div>
                 </div>
             </header>
+            <div style="height: 30px;">
+                <a href="@Url.Action(MVC.Agreements.New())"  id="searchSideBarAddNew" class="button">
+                    <i class="green plus" style="width: 16px; height: 16px; background-size: contain"></i>
+                    <span class="text" style="vertical-align: initial;">Add a new agreement</span>
+                </a>
+            </div>
 
             @* TABLE LENS *@
             <div data-bind="visible: isTableLens, with: table">
@@ -286,6 +292,12 @@
                 </div>
             </div>
             <!-- /ko -->
+            <div style="height: 30px;">
+                <a href="@Url.Action(MVC.Agreements.New())" id="searchSideBarAddNew2" class="button">
+                    <i class="green plus" style="width: 16px; height: 16px; background-size: contain"></i>
+                    <span class="text" style="vertical-align: initial;">Add a new agreement</span>
+                </a>
+            </div>
         </div>
 
         @* RIGHT *@
@@ -294,7 +306,7 @@
             <div data-fixed-scroll="content">
                 <nav class="side">
                     <ul class="top">
-                        @if (User.IsInAnyRole(RoleName.AgreementManagers))
+                        @*@if (User.IsInAnyRole(RoleName.AgreementManagers))
                         {
                             <li>
                                 <a href="@Url.Action(MVC.Agreements.New())" class="group">
@@ -305,26 +317,19 @@
                                     </span>
                                 </a>
                             </li>
-                        }
+                        }*@
                         <li class="static square-bottom">
-                            @if (User.IsInAnyRole(RoleName.AgreementManagers))
+                            @*@if (User.IsInAnyRole(RoleName.AgreementManagers))
                             {
-@*<div class="group">
-                                    <div class="on-left">*@
                                 <span class="text">Search options</span>
-@*</div>
-                                    <div class="on-right">
-                                        
-                                    </div>
-                                </div>*@
                             }
                             else
-                            {
+                            {*@
                                 <div class="group no-link">
                                     <div class="arrow"></div>
                                     <span class="text">Search options</span>
                                 </div>
-                            }
+                            @*}*@
                             <div class="content" data-bind="visible: isTableLens, with: table" style="display: none;">
                                 <div class="field">
                                     <select class="side" data-bind="value: countryCode, options: countryOptions, optionsText: 'name', optionsValue: 'code'">

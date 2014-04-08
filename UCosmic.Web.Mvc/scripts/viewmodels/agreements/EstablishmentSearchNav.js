@@ -31,7 +31,7 @@ var Agreements;
         }
         EstablishmentSearchNav.prototype.SearchPageBind = function (parentOrParticipant) {
             var _this = this;
-            var $cancelAddParticipant = $("#cancelAddParticipant"), $searchSideBarAddNew = $("#searchSideBarAddNew"), deferred = $.Deferred(), deferred2 = $.Deferred(), $obj = $("[data-current-module=agreements]"), $obj2 = $("#add_establishment"), time = 500;
+            var $cancelAddParticipant = $("#cancelAddParticipant"), $searchSideBarAddNew = $("#searchSideBarAddNew"), $searchSideBarAddNew2 = $("#searchSideBarAddNew2"), deferred = $.Deferred(), deferred2 = $.Deferred(), $obj = $("[data-current-module=agreements]"), $obj2 = $("#add_establishment"), time = 500;
 
             this.establishmentSearchViewModel.detailTooltip = function () {
                 return 'Choose this establishment as a ' + parentOrParticipant;
@@ -40,6 +40,12 @@ var Agreements;
             $cancelAddParticipant.off();
             $searchSideBarAddNew.off();
             $searchSideBarAddNew.on("click", function (e) {
+                _this.establishmentSearchViewModel.sammy.setLocation('#/new/');
+                e.preventDefault();
+                return false;
+            });
+            $searchSideBarAddNew2.off();
+            $searchSideBarAddNew2.on("click", function (e) {
                 _this.establishmentSearchViewModel.sammy.setLocation('#/new/');
                 e.preventDefault();
                 return false;

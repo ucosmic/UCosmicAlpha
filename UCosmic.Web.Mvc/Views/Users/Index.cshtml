@@ -38,6 +38,12 @@
                 <input type="hidden" data-bind="value: keyword" />
                 <input type="search" placeholder="Enter a user name, email address, or access grant" data-bind="value: keyword, valueUpdate: 'afterkeydown search'" />
             </div>
+            <div style="height: 30px;">
+                <a href="@Url.Action(MVC.Users.New())" id="searchSideBarAddNew1" class="button">
+                    <i class="green plus" style="width: 16px; height: 16px; background-size: contain"></i>
+                    <span class="text" style="vertical-align: initial;">Add a new user</span>
+                </a>
+            </div>
             <p data-bind="visible: hasNoItems" style="display: none;">
                 There are no results that match your search terms.
             </p>
@@ -168,6 +174,12 @@
                     <hr />
                 </li>
             </ol>
+            <div style="height: 30px;">
+                <a href="@Url.Action(MVC.Users.New())"  id="searchSideBarAddNew2" class="button">
+                    <i class="green plus" style="width: 16px; height: 16px; background-size: contain"></i>
+                    <span class="text" style="vertical-align: initial;">Add a new user</span>
+                </a>
+            </div>
         </div>
         <aside class="on-right from-top" data-fixed-scroll="root">
             <div data-fixed-scroll="anchor"></div>

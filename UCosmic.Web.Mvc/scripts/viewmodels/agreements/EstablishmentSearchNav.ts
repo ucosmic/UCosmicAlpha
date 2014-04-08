@@ -46,6 +46,7 @@ module Agreements {
         SearchPageBind(parentOrParticipant: string): void {
             var $cancelAddParticipant = $("#cancelAddParticipant"),
                 $searchSideBarAddNew = $("#searchSideBarAddNew"),
+                $searchSideBarAddNew2 = $("#searchSideBarAddNew2"),
                 deferred = $.Deferred(),
                 deferred2 = $.Deferred(),
                 $obj = $("[data-current-module=agreements]"),
@@ -59,6 +60,12 @@ module Agreements {
             $cancelAddParticipant.off();
             $searchSideBarAddNew.off();
             $searchSideBarAddNew.on("click", (e) => {
+                this.establishmentSearchViewModel.sammy.setLocation('#/new/');
+                e.preventDefault();
+                return false;
+            });
+            $searchSideBarAddNew2.off();
+            $searchSideBarAddNew2.on("click", (e) => {
                 this.establishmentSearchViewModel.sammy.setLocation('#/new/');
                 e.preventDefault();
                 return false;

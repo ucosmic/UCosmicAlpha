@@ -1,6 +1,6 @@
 ﻿<nav class="side">
     <ul class="top">
-        <li>
+        @*<li>
             <a href="@Url.Action(MVC.Establishments.New())" class="group" data-bind="click: gotoAddNew" id="searchSideBarAddNew">
                 <div class="arrow"></div>
                 <span class="text">
@@ -8,9 +8,12 @@
                     <span>Add New</span>
                 </span>
             </a>
-        </li>
-        <li class="static square-bottom">
-            <span class="text">Search options</span>
+        </li>*@
+        <li>
+            <div class="group no-link">
+                <div class="arrow"></div>
+                <span class="text">Search options</span>
+            </div>
             <div class="content">
                 <div class="field">
                     <select class="side" data-bind="options: countries, optionsCaption: '[All countries]', optionsText: 'name', optionsValue: 'code', value: countryCode">
