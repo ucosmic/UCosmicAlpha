@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using AutoMapper;
 using UCosmic.Domain.Establishments;
 
@@ -15,6 +16,7 @@ namespace UCosmic.Web.Mvc.Models
         public string CeebCode { get; set; }
         public string OfficialName { get; set; }
         public string ContextName { get; set; }
+        public bool IsUnverified { get; set; }
     }
 
     public static class EstablishmentApiScalarProfiler

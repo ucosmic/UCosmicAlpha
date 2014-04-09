@@ -131,6 +131,7 @@ var Establishments;
                 this.originalValues = ko.observable();
                 this._isInitialized = ko.observable(false);
                 this.$genericAlertDialog = undefined;
+                this.isUnverified = ko.observable(false);
                 this.createSpinner = new App.Spinner();
                 this.validatingSpinner = new App.Spinner({ delay: 200 });
                 this.categories = ko.observableArray();
@@ -233,6 +234,12 @@ var Establishments;
                 var viewModelPact = this._loadScalars();
 
                 $.when(categoriesPact, viewModelPact).done(function (categories, viewModel) {
+                    if (viewModel) {
+                        _this.isUnverified(viewModel.isUnverified);
+                    } else {
+                        _this.isUnverified(null);
+                    }
+
                     ko.mapping.fromJS(categories, {}, _this.categories);
 
                     _this._pullScalars(viewModel);
@@ -426,12 +433,29 @@ var Establishments;
                 return false;
             };
 
+            Item.prototype.verify = function () {
+                this.isUnverified(false);
+                var data = this.serializeData();
+                var originalValues = this.originalValues();
+                data.parentId = originalValues.parentId;
+                var url = App.Routes.WebApi.Establishments.put(this.id);
+                $.ajax({
+                    url: url,
+                    type: 'PUT',
+                    data: data
+                }).done(function (response, statusText, xhr) {
+                    $(window).scrollTop(0);
+                    App.flasher.flash(response);
+                });
+            };
+
             Item.prototype.serializeData = function () {
                 var data = {};
                 data.parentId = this.parentId();
                 data.typeId = this.typeId();
                 data.ceebCode = this.ceebCode();
                 data.uCosmicCode = this.uCosmicCode();
+                data.isUnverified = this.isUnverified();
                 return data;
             };
 

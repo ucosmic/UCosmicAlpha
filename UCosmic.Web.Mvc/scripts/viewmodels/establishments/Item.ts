@@ -149,6 +149,7 @@ module Establishments.ViewModels {
         private _isInitialized = ko.observable<boolean>(false);
         $genericAlertDialog: JQuery = undefined;
         location: Location;
+        isUnverified = ko.observable<boolean>(false);
         createSpinner = new App.Spinner();
         validatingSpinner = new App.Spinner({ delay: 200, });
         categories = ko.observableArray<any>();
@@ -255,6 +256,11 @@ module Establishments.ViewModels {
 
                 // all requests succeeded
                 (categories: any[], viewModel: ApiModels.ScalarEstablishment): void => {
+                    if (viewModel) {
+                        this.isUnverified(viewModel.isUnverified);
+                    } else {
+                        this.isUnverified(null);
+                    }
 
                     ko.mapping.fromJS(categories, {}, this.categories);
 
@@ -487,12 +493,30 @@ module Establishments.ViewModels {
             return false;
         }
 
+        verify(): void {
+            this.isUnverified(false);
+            var data = this.serializeData();
+            var originalValues = this.originalValues();
+            data.parentId = originalValues.parentId;
+            var url = App.Routes.WebApi.Establishments.put(this.id);
+            $.ajax({
+                url: url,
+                type: 'PUT',
+                data: data
+            })
+                .done((response: string, statusText: string, xhr: JQueryXHR): void => {
+                    $(window).scrollTop(0);
+                    App.flasher.flash(response);
+                });
+        }
+
         serializeData(): any {
             var data: any = {};
             data.parentId = this.parentId();
             data.typeId = this.typeId();
             data.ceebCode = this.ceebCode();
             data.uCosmicCode = this.uCosmicCode();
+            data.isUnverified = this.isUnverified();
             return data;
         }
 

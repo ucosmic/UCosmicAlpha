@@ -35,7 +35,7 @@ namespace UCosmic.Domain.Establishments
             get { return _uCosmicCode; }
             set { _uCosmicCode = value == null ? null : value.Trim(); }
         }
-
+        public bool IsUnverified { get; set; }
         //public string ExternalId { get; set; }
 
         internal bool NoCommit { get; set; }
@@ -132,6 +132,7 @@ namespace UCosmic.Domain.Establishments
             if (command.TypeId == entity.Type.RevisionId &&
                 command.CeebCode == entity.CollegeBoardDesignatedIndicator &&
                 command.UCosmicCode == entity.UCosmicCode &&
+                command.IsUnverified == entity.IsUnverified &&
                 !parentChanged
             )
                 return;
@@ -162,7 +163,7 @@ namespace UCosmic.Domain.Establishments
             }
             entity.CollegeBoardDesignatedIndicator = command.CeebCode;
             entity.UCosmicCode = command.UCosmicCode;
-            //entity.ExternalId = command.ExternalId;
+            entity.IsUnverified = command.IsUnverified;
 
             // update parent
             if (parentChanged)

@@ -83,13 +83,15 @@
                     </div>
                 </div>
             </header>
-            <div style="height: 30px;">
-                <a href="@Url.Action(MVC.Agreements.New())"  id="searchSideBarAddNew" class="button">
-                    <i class="green plus" style="width: 16px; height: 16px; background-size: contain"></i>
-                    <span class="text" style="vertical-align: initial;">Add a new agreement</span>
-                </a>
-            </div>
-
+            @if (User.IsInAnyRole(RoleName.AgreementManagers))
+            {
+                <div style="height: 30px;">
+                    <a href="@Url.Action(MVC.Agreements.New())" id="searchSideBarAddNew" class="button">
+                        <i class="green plus" style="width: 16px; height: 16px; background-size: contain"></i>
+                        <span class="text" style="vertical-align: initial;">Add a new agreement</span>
+                    </a>
+                </div>
+            }
             @* TABLE LENS *@
             <div data-bind="visible: isTableLens, with: table">
                 @* KEYWORD TEXT BOX *@
@@ -106,16 +108,20 @@
                 <div class="group" style="margin: 1em 0;">
                     <div class="on-left" data-bind="with: pager.output" style="height: 24px;">
                         <div data-bind="visible: hasItems" style="display: none;">
-                            <strong>Showing <span data-bind="text: firstNumber"></span>
+                            <strong>
+                                Showing <span data-bind="text: firstNumber"></span>
                                 <span data-bind="visible: hasManyItems">- <span data-bind="    text: lastNumber"></span></span>
-                                of <span data-bind="text: itemTotal"></span></strong>
-                            <span data-bind="visible: hasManyPages">(page
+                                of <span data-bind="text: itemTotal"></span>
+                            </strong>
+                            <span data-bind="visible: hasManyPages">
+                                (page
                                 @*<span data-bind="text: pageNumber"></span>*@
                                 <select data-bind="value: $parent.pager.input.pageNumberText, options: $parent.pager.input.pageNumberOptions"
-                                    style="padding: 0; margin: 0; line-height: 16px; height: auto;">
+                                        style="padding: 0; margin: 0; line-height: 16px; height: auto;">
                                     <option>1</option>
                                 </select>
-                                of <span data-bind="text: pageCount"></span>)</span>
+                                of <span data-bind="text: pageCount"></span>)
+                            </span>
                         </div>
                     </div>
                     <div class="on-left" data-bind="visible: !pager.output.hasItems()">
@@ -204,7 +210,8 @@
                         <strong data-bind="text: agreementCount" style="font-size: 24px;">?</strong>
                         <span data-bind="visible: agreementCount() == 1" style="display: none;">agreement</span>
                         <span data-bind="visible: agreementCount() != 1">agreements</span>
-                        <span data-bind="visible: agreementCount() > 0" style="display: none;">with
+                        <span data-bind="visible: agreementCount() > 0" style="display: none;">
+                            with
                             <strong data-bind="text: partnerCount" style="font-size: 24px;">?</strong>
                             <span data-bind="visible: partnerCount() == 1" style="display: none;">partner</span>
                             <span data-bind="visible: partnerCount() != 1">partners</span>
@@ -232,7 +239,8 @@
                     <strong data-bind="text: status.agreementCount">?</strong>
                     <span data-bind="visible: status.agreementCount() == 1" style="display: none;">agreement</span>
                     <span data-bind="visible: status.agreementCount() != 1">agreements</span>
-                    <span data-bind="visible: status.partnerCount() != 0">with
+                    <span data-bind="visible: status.partnerCount() != 0">
+                        with
                         <strong data-bind="text: status.partnerCount">?</strong>
                         <span data-bind="visible: status.partnerCount() == 1" style="display: none;">partner</span>
                         <span data-bind="visible: status.partnerCount() != 1">partners</span>
@@ -241,37 +249,37 @@
                     <span style="display: inline-block; background-color: #ddd; padding: 4px 8px; border-radius: 4px; border: solid 1px #999;">
                         <strong data-bind="text: status.countryCount" style="">?</strong>
                         <img src="~/images/icons/closer/closer-16-dark.png" title="Remove this search filter" alt="Remove this search filter"
-                            style="cursor: pointer; vertical-align: middle;" data-bind="click: clearFilter" />
+                             style="cursor: pointer; vertical-align: middle;" data-bind="click: clearFilter" />
                     </span>
                 </div>
             </div>
             @*<div data-bind="visible: isMapLens, with: map._map" style="margin: 1em 0;">
-                <div class="group">
-                    <div class="on-left" style="width: 162px;">
-                        North: <strong data-bind="text: north"></strong>
+                    <div class="group">
+                        <div class="on-left" style="width: 162px;">
+                            North: <strong data-bind="text: north"></strong>
+                        </div>
+                        <div class="on-left" style="width: 162px;">
+                            East: <strong data-bind="text: east"></strong>
+                        </div>
+                        <div class="on-left" style="width: 162px;">
+                            South: <strong data-bind="text: south"></strong>
+                        </div>
+                        <div class="on-left" style="width: 162px;">
+                            West: <strong data-bind="text: west"></strong>
+                        </div>
                     </div>
-                    <div class="on-left" style="width: 162px;">
-                        East: <strong data-bind="text: east"></strong>
+                    <div class="group">
+                        <div class="on-left" style="width: 275px;">
+                            Latitude: <strong data-bind="text: lat"></strong>
+                        </div>
+                        <div class="on-left" style="width: 275px;">
+                            Longitude: <strong data-bind="text: lng"></strong>
+                        </div>
+                        <div class="on-left" style="width: 100px;">
+                            Zoom: <strong data-bind="text: zoom"></strong>
+                        </div>
                     </div>
-                    <div class="on-left" style="width: 162px;">
-                        South: <strong data-bind="text: south"></strong>
-                    </div>
-                    <div class="on-left" style="width: 162px;">
-                        West: <strong data-bind="text: west"></strong>
-                    </div>
-                </div>
-                <div class="group">
-                    <div class="on-left" style="width: 275px;">
-                        Latitude: <strong data-bind="text: lat"></strong>
-                    </div>
-                    <div class="on-left" style="width: 275px;">
-                        Longitude: <strong data-bind="text: lng"></strong>
-                    </div>
-                    <div class="on-left" style="width: 100px;">
-                        Zoom: <strong data-bind="text: zoom"></strong>
-                    </div>
-                </div>
-            </div>*@
+                </div>*@
             <div id="google_map_canvas" style="height: 500px; cursor: inherit;" data-bind="visible: isMapLens">
             </div>
             <!-- ko with: map -->
@@ -292,12 +300,15 @@
                 </div>
             </div>
             <!-- /ko -->
-            <div style="height: 30px;">
-                <a href="@Url.Action(MVC.Agreements.New())" id="searchSideBarAddNew2" class="button">
-                    <i class="green plus" style="width: 16px; height: 16px; background-size: contain"></i>
-                    <span class="text" style="vertical-align: initial;">Add a new agreement</span>
-                </a>
-            </div>
+            @if (User.IsInAnyRole(RoleName.AgreementManagers))
+            {
+                <div style="height: 30px;">
+                    <a href="@Url.Action(MVC.Agreements.New())" id="searchSideBarAddNew2" class="button">
+                        <i class="green plus" style="width: 16px; height: 16px; background-size: contain"></i>
+                        <span class="text" style="vertical-align: initial;">Add a new agreement</span>
+                    </a>
+                </div>
+            }
         </div>
 
         @* RIGHT *@
@@ -307,28 +318,28 @@
                 <nav class="side">
                     <ul class="top">
                         @*@if (User.IsInAnyRole(RoleName.AgreementManagers))
-                        {
-                            <li>
-                                <a href="@Url.Action(MVC.Agreements.New())" class="group">
-                                    <div class="arrow"></div>
-                                    <span class="text">
-                                        <img src="~/images/icons/plus/plus-20-green-disc.png" alt="" />
-                                        <span>Add New</span>
-                                    </span>
-                                </a>
-                            </li>
-                        }*@
+                            {
+                                <li>
+                                    <a href="@Url.Action(MVC.Agreements.New())" class="group">
+                                        <div class="arrow"></div>
+                                        <span class="text">
+                                            <img src="~/images/icons/plus/plus-20-green-disc.png" alt="" />
+                                            <span>Add New</span>
+                                        </span>
+                                    </a>
+                                </li>
+                            }*@
                         <li class="static square-bottom">
                             @*@if (User.IsInAnyRole(RoleName.AgreementManagers))
-                            {
-                                <span class="text">Search options</span>
-                            }
-                            else
-                            {*@
-                                <div class="group no-link">
-                                    <div class="arrow"></div>
+                                {
                                     <span class="text">Search options</span>
-                                </div>
+                                }
+                                else
+                                {*@
+                            <div class="group no-link">
+                                <div class="arrow"></div>
+                                <span class="text">Search options</span>
+                            </div>
                             @*}*@
                             <div class="content" data-bind="visible: isTableLens, with: table" style="display: none;">
                                 <div class="field">

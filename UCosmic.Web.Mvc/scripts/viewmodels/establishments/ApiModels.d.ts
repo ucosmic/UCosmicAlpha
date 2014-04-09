@@ -20,6 +20,7 @@ declare module Establishments.ApiModels {
         contextName?: string;
         uCosmicCode: string;
         ceebCode: string;
+        isUnverified: boolean;
     }
 
     export interface NameInput {
