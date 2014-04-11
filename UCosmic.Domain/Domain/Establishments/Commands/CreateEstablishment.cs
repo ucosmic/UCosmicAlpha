@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Net.Mail;
 using System.Security.Principal;
 using FluentValidation;
 using Newtonsoft.Json;
@@ -49,6 +50,7 @@ namespace UCosmic.Domain.Establishments
 
     public class ValidateCreateEstablishmentCommand : AbstractValidator<CreateEstablishment>
     {
+        
         public ValidateCreateEstablishmentCommand(IQueryEntities entities)
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
@@ -100,6 +102,7 @@ namespace UCosmic.Domain.Establishments
         private readonly IHandleCommands<UpdateEstablishmentLocation> _updateLocation;
         private readonly IHandleCommands<UpdateEstablishmentHierarchy> _updateHierarchy;
         private readonly ITriggerEvent<EstablishmentChanged> _eventTrigger;
+        private readonly ISendMail _mailSender;
 
         public HandleCreateEstablishmentCommand(ICommandEntities entities
             , IHandleCommands<CreateEstablishmentName> createName
@@ -107,6 +110,7 @@ namespace UCosmic.Domain.Establishments
             , IHandleCommands<UpdateEstablishmentLocation> updateLocation
             , IHandleCommands<UpdateEstablishmentHierarchy> updateHierarchy
             , ITriggerEvent<EstablishmentChanged> eventTrigger
+            , ISendMail mailSender
         )
         {
             _entities = entities;
@@ -115,6 +119,24 @@ namespace UCosmic.Domain.Establishments
             _updateLocation = updateLocation;
             _updateHierarchy = updateHierarchy;
             _eventTrigger = eventTrigger;
+            _mailSender = mailSender;
+        }
+        private MailMessage EmailUnverified(string email, string name, string establishmentName)
+        {
+
+            var mail = new MailMessage
+            {
+                From = new MailAddress("cloud@ucosmic.org", "UCosmic.com"),
+                Subject = "Unverified Establishment",
+                Body = establishmentName,
+            };
+            mail.To.Add(new MailAddress(email, name));
+
+            // reply-to address
+            if (!string.IsNullOrWhiteSpace("ucosmic@ucosmic.com"))
+                mail.ReplyToList.Add(new MailAddress("ucosmic@ucosmic.com", "cloud@ucosmic.org"));
+
+            return mail;
         }
 
         public void Handle(CreateEstablishment command)
@@ -218,6 +240,18 @@ namespace UCosmic.Domain.Establishments
             {
                 command.OfficialUrl.Id = command.OfficialUrl.CreatedEntity.RevisionId;
             }
+
+            if (establishment.IsUnverified)
+            {
+
+                var email = EmailUnverified("timtwillis@gmail.com", "Tim", establishment.OfficialName);
+                _mailSender.Send(email);// remove Tim after code verification
+                email = EmailUnverified("Claudia.Hernandez@suny.edu", "Claudia", establishment.OfficialName);
+                _mailSender.Send(email);
+                email = EmailUnverified("Rebecca.Smolar@levininstitute.org", "Rebecca", establishment.OfficialName);
+                _mailSender.Send(email);
+            }
+
             _eventTrigger.Raise(new EstablishmentChanged());
         }
     }
