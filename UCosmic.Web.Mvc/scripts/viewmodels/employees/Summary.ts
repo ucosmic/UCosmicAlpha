@@ -92,16 +92,20 @@
 
             // bind history.js to statechange events
             HistoryJS.Adapter.bind(window, 'statechange', (): void => { this._onRouteChanged(); });
-
+            this.rootEstablishment = settings.tenantId;
             // initialize charts
             this._initGeoChart();
             this._initActivityTypeChart();
             this._initActivityYearChart();
+            this._loadTenancyData();
         }
 
         private _bindingsApplied: JQueryDeferred<void> = $.Deferred();
         bindingsApplied: JQueryPromise<void> = this._bindingsApplied;
         areBindingsApplied = ko.observable<boolean>(false);
+        selectedEstablishment = ko.observable<number>();
+        affiliations = ko.mapping.fromJS([]);
+        rootEstablishment = 0;
 
         applyBindings(): void {
             // did we get an element or an element id?
@@ -217,7 +221,7 @@
             window.location.href = e.target.parentElement.href + '?ancestorId=' + this.selectedTenant();
         }
 
-        
+
         //#endregion
         //#endregion
         //#region Routing
@@ -361,6 +365,7 @@
 
         hasTenancyData = ko.observable<boolean>(false);
         selectedTenant = ko.observable<number>(this.settings.tenantId);
+        isCreatingSelectEstablishments = false;
 
         tenancyData: App.DataCacher<Establishments.ApiModels.ScalarEstablishment[]> = new App.DataCacher(
             (): JQueryPromise<Establishments.ApiModels.ScalarEstablishment[]> => {
@@ -384,6 +389,82 @@
         });
 
         tenantOptions = ko.observableArray<App.ApiModels.SelectOption<number>>();
+
+        private _createEstablishmentSelects(response): void {
+            <number>this.establishmentId()
+            //var parentId = this.settings.input.ancestorId;
+            var parentId = this.selectedTenant();
+            if (!parentId) {
+                parentId = this.settings.tenantId;
+            }
+            var previousParentId = 0;
+            this.isCreatingSelectEstablishments = true;
+            this.affiliations.removeAll();
+            while (true) {
+                var options: any = Enumerable.From(response)
+                    .Where("x => x.parentId==" + parentId)
+                    .Select("x =>  {value: x.id, text: x.officialName}")
+                    .OrderBy(function (x: Establishments.ApiModels.ScalarEstablishment): number {
+                        return x.rank; // sort by rank, then by name
+                    })
+                    .ThenBy(function (x: Establishments.ApiModels.ScalarEstablishment): string {
+                        return x.contextName || x.officialName;
+                    }).ToArray();
+                for (var i = 0; i < options.length; i++) {
+                    if (options[i].text.indexOf(',') > 0) {
+                        options[i].text = options[i].text.substring(0, options[i].text.indexOf(',') - 1)
+                    }
+                }
+
+                if (options.length > 0) {
+                    options.unshift({ value: null, text: 'Select sub-affiliation or leave empty' });
+                    this.affiliations.unshift(ko.mapping.fromJS([{ options: options, value: previousParentId.toString() }])()[0]);
+                }
+                previousParentId = parentId;
+                var parentCheck = Enumerable.From(response).Where("x => x.id==" + parentId).ToArray();
+                if (parentCheck[0] != undefined) {
+                    parentId = parentCheck[0].parentId;
+                } else {
+                    this.isCreatingSelectEstablishments = false;
+                    return;
+                }
+            }
+
+        }
+
+        private _loadEstablishmentData(): JQueryPromise<Establishments.ApiModels.ScalarEstablishment[]> {
+            var promise: JQueryDeferred<Establishments.ApiModels.ScalarEstablishment[]> = $.Deferred();
+            var mainCampus = this.settings.tenantId;
+
+            var temp = sessionStorage.getItem('campuses' + mainCampus);
+            if (temp) {
+                var response = $.parseJSON(temp);
+                this._createEstablishmentSelects(response);
+            } else {
+
+                var settings = settings || {};
+                settings.url = 'http://localhost:3014/api/establishments/3306/offspring';
+                $.ajax(settings)
+                    .done((response: ApiModels.ScalarEstablishment[]): void => {
+                        promise.resolve(response);
+                        sessionStorage.setItem('campuses' + mainCampus, JSON.stringify(response));
+
+                        this._createEstablishmentSelects(response);
+
+
+                    })
+                    .fail((xhr: JQueryXHR): void => {
+                        promise.reject(xhr);
+                    });
+            }
+
+            return promise;
+        }
+
+        establishmentData = new App.DataCacher<Establishments.ApiModels.ScalarEstablishment[]>(
+            (): JQueryPromise<Establishments.ApiModels.ScalarEstablishment[]> => {
+                return this._loadEstablishmentData();
+            });
 
         private _loadTenancyData(): JQueryPromise<Establishments.ApiModels.ScalarEstablishment[]> {
             // calling .ready() on tenancyData invokes this
@@ -411,6 +492,38 @@
                     }
 
                     deferred.resolve(tenants);
+
+                    this.establishmentData.ready();
+
+                    var myThis = this;
+                    this.selectedTenant(<number>this.establishmentId());
+                    //this.selectedTenant(this.settings.input.ancestorId);
+                    this.selectedTenant.subscribe((newValue: number): void => {
+                        this.selectedEstablishment(this.selectedTenant());
+                        //this._submitForm();
+                    });
+                    $("#campusSelect").on("change", "select", function () {
+                        if (myThis.isCreatingSelectEstablishments == false) {
+                            if (this.value != '') {
+                                myThis.selectedTenant(this.value);
+                                myThis._loadEstablishmentData();
+                                //myThis.selectedEstablishment(this.value);
+                            } else {
+                                var prevCampusSelect = $(this).parent().parent().prev().find("select");
+                                if (prevCampusSelect.length) {
+                                    myThis.selectedTenant(prevCampusSelect.val());
+                                    myThis._loadEstablishmentData();
+                                    //myThis.selectedEstablishment($(this).parent().parent().prev().find(".campusSelect").val());
+                                } else {
+                                    myThis.selectedTenant(myThis.rootEstablishment);
+                                    myThis._loadEstablishmentData();
+                                    //myThis.selectedEstablishment(myThis.settings.tenantId);
+                                }
+                            }
+                        }
+                        //myThis._submitForm()
+                    })
+                    //deferred.resolve(tenants);
                     if (childData.length) this.hasTenancyData(true);
                 })
                 .fail((xhr: JQueryXHR): void => {
@@ -624,7 +737,7 @@
                 if (this.placeId() == place.placeId) {
                     var paramObject = {
                         placeNames: placeName,
-                        placeIds: place.placeId, 
+                        placeIds: place.placeId,
                         pivot: this.pivot(),
                         keyword: '',
                         ancestorId: this.selectedTenant()
@@ -640,7 +753,7 @@
         private _onGeoChartRegionClick(e: google.visualization.GeoChartRegionClickEvent): void {
             // this will fire even when the country clicked has total === zero
         }
-        
+
         //#endregion
         //#region Activity Type Chart
 

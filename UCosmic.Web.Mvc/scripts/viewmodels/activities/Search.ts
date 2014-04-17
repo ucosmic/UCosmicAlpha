@@ -1,5 +1,6 @@
 module Activities.ViewModels {
 
+    
     export interface SearchSettings {
         input: ApiModels.SearchInput;
         output: App.PageOf<ApiModels.SearchResult>;
@@ -22,6 +23,8 @@ module Activities.ViewModels {
 
         constructor(public activityType: ApiModels.ActivityTypeSearchFilter, public settings: SearchSettings) { }
     }
+
+
 
     export class Search {
         //#region Construction
@@ -46,20 +49,103 @@ module Activities.ViewModels {
 
         hasTenancyData = ko.observable<boolean>(false);
         selectedTenant = ko.observable<number>(this.settings.tenantId);
+        selectedEstablishment = ko.observable<number>();
         tenantOptions = ko.observableArray<App.ApiModels.SelectOption<number>>();
+        affiliations = ko.mapping.fromJS([]);
 
 
         constructor(public settings: SearchSettings) {
             this.pager.apply(this.settings.output);
             this._loadTenancyData();
-
-            //this.selectedTenant.subscribe(function() {
-            //    location.href = 
-            //})
-
         }
 
 
+        establishmentData = new App.DataCacher<Establishments.ApiModels.ScalarEstablishment[]>(
+            (): JQueryPromise<Establishments.ApiModels.ScalarEstablishment[]> => {
+                return this._loadEstablishmentData();
+            });
+
+        private _createEstablishmentSelects(response): void {
+            
+
+
+            //var editor = Enumerable.From(response).Where("x => x.parentId==4867").Select("x => x.officialName").ToArray()
+
+            var parentId = this.settings.input.ancestorId;
+            if (!parentId) {
+                parentId = this.settings.tenantId;
+            }
+            var previousParentId = 0;
+            //var parentCheck: any = Enumerable.From(response).Where("x => x.id==" + parentId).ToArray();
+            //if (parentCheck[0] == undefined) {
+            //    return;
+            //}
+            while (true) {
+                var options: any = Enumerable.From(response)
+                    .Where("x => x.parentId==" + parentId)
+                    .Select("x =>  {value: x.id, text: x.officialName}")
+                    .OrderBy(function (x: Establishments.ApiModels.ScalarEstablishment): number {
+                        return x.rank; // sort by rank, then by name
+                    })
+                    .ThenBy(function (x: Establishments.ApiModels.ScalarEstablishment): string {
+                        return x.contextName || x.officialName;
+                    }).ToArray();
+
+                    for (var i = 0; i < options.length; i++) {
+                        if (options[i].text.indexOf(',') > 0) {
+                            options[i].text = options[i].text.substring(0, options[i].text.indexOf(',') - 1)
+                        }
+                    }
+                
+                if (options.length > 0) {
+                    options.unshift({ value: null, text: 'Select sub-affiliation or leave empty' });
+                    this.affiliations.unshift(ko.mapping.fromJS([{ options: options, value: previousParentId.toString() }])()[0]);
+                }
+                //var caption = isFirst ? '[Select main affiliation]' : '[Select sub-affiliation or leave empty]';
+
+                previousParentId = parentId;
+                var parentCheck = Enumerable.From(response).Where("x => x.id==" + parentId).ToArray();
+                if (parentCheck[0] != undefined) {
+                    parentId = parentCheck[0].parentId;
+                } else {
+                    return;
+                }
+                //parentCheck = Enumerable.From(response).Where("x => x.id==" + parentId).ToArray();
+                //if (parentCheck[0] == undefined) {
+                //    return;
+                //}
+            }
+
+        }
+
+        private _loadEstablishmentData(): JQueryPromise<Establishments.ApiModels.ScalarEstablishment[]> {
+            var promise: JQueryDeferred<Establishments.ApiModels.ScalarEstablishment[]> = $.Deferred();
+            var mainCampus = this.settings.tenantId;
+
+            var temp = sessionStorage.getItem('campuses' + mainCampus);
+            if (temp) {
+                var response = $.parseJSON(temp);
+                this._createEstablishmentSelects(response);
+            } else {
+
+                var settings = settings || {};
+                settings.url = 'http://localhost:3014/api/establishments/3306/offspring';
+                $.ajax(settings)
+                    .done((response: ApiModels.ScalarEstablishment[]): void => {
+                        promise.resolve(response);
+                        sessionStorage.setItem('campuses' + mainCampus, JSON.stringify(response));
+
+                        this._createEstablishmentSelects(response);
+
+                        
+                })
+                    .fail((xhr: JQueryXHR): void => {
+                        promise.reject(xhr);
+                    });
+            }
+
+            return promise;
+        }
 
         private _loadTenancyData(): void {
             $.when(Activities.Servers.Single(this.settings.tenantId), Activities.Servers.GetChildren(this.settings.tenantId))
@@ -83,9 +169,39 @@ module Activities.ViewModels {
                             }).ToArray();
                         this.tenantOptions(options);
                     }
-                    this.selectedTenant(this.settings.input.ancestorId);
-                    this.selectedTenant.subscribe((newValue: number): void => { this._submitForm(); });
 
+                    //var settings = settings || {};
+                    //settings.url = 'http://localhost:3014/api/establishments/3306/offspring';
+                    //$.ajax(settings)
+                    //    .done((response: ApiModels.Affiliation[]): void => {
+                    //        var x = response;
+                    //        //promise.resolve(response);
+                    //    })
+                    //    .fail((xhr: JQueryXHR): void => {
+                    //        //promise.reject(xhr);
+                    //    });
+
+                    this.establishmentData.ready();
+
+                    var myThis = this;
+                    this.selectedTenant(this.settings.input.ancestorId);
+                    this.selectedTenant.subscribe((newValue: number): void => {
+                        this.selectedEstablishment(this.selectedTenant());
+                        this._submitForm();
+                    });
+                    $(".campusSelect").change(function() {
+                        if (this.value != '') {
+                            myThis.selectedEstablishment(this.value);
+                        } else {
+                            var prevCampusSelect = $(this).parent().parent().prev().find(".campusSelect");
+                            if (prevCampusSelect.length) {
+                                myThis.selectedEstablishment($(this).parent().parent().prev().find(".campusSelect").val());
+                            } else {
+                                myThis.selectedEstablishment(myThis.settings.tenantId);
+                            }
+                        }
+                        myThis._submitForm()
+                    })
                     //deferred.resolve(tenants);
                     if (childData.length) this.hasTenancyData(true);
                 })
@@ -294,7 +410,7 @@ module Activities.ViewModels {
             return Enumerable.From(this.activityTypeCheckBoxes())
                 .All((x: ActivityTypeSearchCheckBox): boolean => {
                     return x.isChecked();
-            });
+                });
         });
 
         isUncheckAllActivityTypesDisabled = ko.computed((): boolean => {

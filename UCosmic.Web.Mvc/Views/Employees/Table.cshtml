@@ -308,11 +308,24 @@
                         <li class="static square-bottom">
                             <div class="content">
                                 <div class="field">
-                                    <div data-bind="visible: hasTenancyData" style="display: none;">
-                                        <select name="ancestorid" data-bind="options: tenantOptions, value: selectedTenant, optionsText: 'text', optionsValue: 'value', jQuery: '$selectTenant'"
+                                    <div >
+                                        @*<select class="campusSelect" data-bind="options: tenantOptions,  optionsText: 'text', optionsValue: 'value', jQuery: '$selectTenant'"
                                                 style="padding: 1px; margin: initial; height: auto; width: 100%; font-size: 14px;">
                                             <option value="">[Loading...]</option>
-                                        </select>
+                                        </select>*@
+                                        <ul data-bind="foreach: affiliations()">
+                                            <li style="margin-bottom: 4px;">
+                                                <div>
+                                                    <select class="campusSelect" data-bind="options: options, value: value,
+                                                            optionsText: 'text', optionsValue: 'value', jQuery: '$select',
+                                                            attr: { id: 'campusSelect' + $index() }"
+                                                            style="padding: 1px; margin: initial; height: auto; width: 100%; font-size: 14px;">
+                                                        <option>[Loading...]</option>
+                                                    </select>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                        <input type="hidden" data-bind="value: selectedEstablishment" name="ancestorid" />
                                     </div>
                                 </div>
                             </div>

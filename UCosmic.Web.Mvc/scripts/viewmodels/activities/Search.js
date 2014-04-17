@@ -34,7 +34,12 @@ var Activities;
                 this.loadingSpinner = new App.Spinner();
                 this.hasTenancyData = ko.observable(false);
                 this.selectedTenant = ko.observable(this.settings.tenantId);
+                this.selectedEstablishment = ko.observable();
                 this.tenantOptions = ko.observableArray();
+                this.affiliations = ko.mapping.fromJS([]);
+                this.establishmentData = new App.DataCacher(function () {
+                    return _this._loadEstablishmentData();
+                });
                 this.activityTypeCheckBoxes = ko.observableArray(Enumerable.From(this.settings.activityTypes).Select(function (x) {
                     return new ActivityTypeSearchCheckBox(x, _this.settings);
                 }).ToArray());
@@ -59,6 +64,66 @@ var Activities;
                 this.pager.apply(this.settings.output);
                 this._loadTenancyData();
             }
+            Search.prototype._createEstablishmentSelects = function (response) {
+                var parentId = this.settings.input.ancestorId;
+                if (!parentId) {
+                    parentId = this.settings.tenantId;
+                }
+                var previousParentId = 0;
+
+                while (true) {
+                    var options = Enumerable.From(response).Where("x => x.parentId==" + parentId).Select("x =>  {value: x.id, text: x.officialName}").OrderBy(function (x) {
+                        return x.rank;
+                    }).ThenBy(function (x) {
+                        return x.contextName || x.officialName;
+                    }).ToArray();
+
+                    for (var i = 0; i < options.length; i++) {
+                        if (options[i].text.indexOf(',') > 0) {
+                            options[i].text = options[i].text.substring(0, options[i].text.indexOf(',') - 1);
+                        }
+                    }
+
+                    if (options.length > 0) {
+                        options.unshift({ value: null, text: 'Select sub-affiliation or leave empty' });
+                        this.affiliations.unshift(ko.mapping.fromJS([{ options: options, value: previousParentId.toString() }])()[0]);
+                    }
+
+                    previousParentId = parentId;
+                    var parentCheck = Enumerable.From(response).Where("x => x.id==" + parentId).ToArray();
+                    if (parentCheck[0] != undefined) {
+                        parentId = parentCheck[0].parentId;
+                    } else {
+                        return;
+                    }
+                }
+            };
+
+            Search.prototype._loadEstablishmentData = function () {
+                var _this = this;
+                var promise = $.Deferred();
+                var mainCampus = this.settings.tenantId;
+
+                var temp = sessionStorage.getItem('campuses' + mainCampus);
+                if (temp) {
+                    var response = $.parseJSON(temp);
+                    this._createEstablishmentSelects(response);
+                } else {
+                    var settings = settings || {};
+                    settings.url = 'http://localhost:3014/api/establishments/3306/offspring';
+                    $.ajax(settings).done(function (response) {
+                        promise.resolve(response);
+                        sessionStorage.setItem('campuses' + mainCampus, JSON.stringify(response));
+
+                        _this._createEstablishmentSelects(response);
+                    }).fail(function (xhr) {
+                        promise.reject(xhr);
+                    });
+                }
+
+                return promise;
+            };
+
             Search.prototype._loadTenancyData = function () {
                 var _this = this;
                 $.when(Activities.Servers.Single(this.settings.tenantId), Activities.Servers.GetChildren(this.settings.tenantId)).done(function (parentData, childData) {
@@ -79,9 +144,27 @@ var Activities;
                         }).ToArray();
                         _this.tenantOptions(options);
                     }
+
+                    _this.establishmentData.ready();
+
+                    var myThis = _this;
                     _this.selectedTenant(_this.settings.input.ancestorId);
                     _this.selectedTenant.subscribe(function (newValue) {
+                        _this.selectedEstablishment(_this.selectedTenant());
                         _this._submitForm();
+                    });
+                    $(".campusSelect").change(function () {
+                        if (this.value != '') {
+                            myThis.selectedEstablishment(this.value);
+                        } else {
+                            var prevCampusSelect = $(this).parent().parent().prev().find(".campusSelect");
+                            if (prevCampusSelect.length) {
+                                myThis.selectedEstablishment($(this).parent().parent().prev().find(".campusSelect").val());
+                            } else {
+                                myThis.selectedEstablishment(myThis.settings.tenantId);
+                            }
+                        }
+                        myThis._submitForm();
                     });
 
                     if (childData.length)

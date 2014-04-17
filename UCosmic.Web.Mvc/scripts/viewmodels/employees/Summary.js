@@ -51,6 +51,9 @@
                 this._bindingsApplied = $.Deferred();
                 this.bindingsApplied = this._bindingsApplied;
                 this.areBindingsApplied = ko.observable(false);
+                this.selectedEstablishment = ko.observable();
+                this.affiliations = ko.mapping.fromJS([]);
+                this.rootEstablishment = 0;
                 this.pivot = ko.observable(parseInt(sessionStorage.getItem(Summary._pivotKey)) || Summary._pivotDefault);
                 this._pivotChanged = ko.computed(function () {
                     _this._onPivotChanged();
@@ -99,6 +102,7 @@
                 });
                 this.hasTenancyData = ko.observable(false);
                 this.selectedTenant = ko.observable(this.settings.tenantId);
+                this.isCreatingSelectEstablishments = false;
                 this.tenancyData = new App.DataCacher(function () {
                     return _this._loadTenancyData();
                 });
@@ -118,6 +122,9 @@
                     });
                 });
                 this.tenantOptions = ko.observableArray();
+                this.establishmentData = new App.DataCacher(function () {
+                    return _this._loadEstablishmentData();
+                });
                 this.activityTotals = {
                     personCount: ko.observable('?'),
                     activityCount: ko.observable('?'),
@@ -197,10 +204,12 @@
                 HistoryJS.Adapter.bind(window, 'statechange', function () {
                     _this._onRouteChanged();
                 });
+                this.rootEstablishment = settings.tenantId;
 
                 this._initGeoChart();
                 this._initActivityTypeChart();
                 this._initActivityYearChart();
+                this._loadTenancyData();
             }
             Summary.loadGoogleVisualization = function () {
                 google.load('visualization', '1', { 'packages': ['corechart', 'geochart'] });
@@ -351,6 +360,68 @@
                 return place;
             };
 
+            Summary.prototype._createEstablishmentSelects = function (response) {
+                this.establishmentId();
+
+                var parentId = this.selectedTenant();
+                if (!parentId) {
+                    parentId = this.settings.tenantId;
+                }
+                var previousParentId = 0;
+                this.isCreatingSelectEstablishments = true;
+                this.affiliations.removeAll();
+                while (true) {
+                    var options = Enumerable.From(response).Where("x => x.parentId==" + parentId).Select("x =>  {value: x.id, text: x.officialName}").OrderBy(function (x) {
+                        return x.rank;
+                    }).ThenBy(function (x) {
+                        return x.contextName || x.officialName;
+                    }).ToArray();
+                    for (var i = 0; i < options.length; i++) {
+                        if (options[i].text.indexOf(',') > 0) {
+                            options[i].text = options[i].text.substring(0, options[i].text.indexOf(',') - 1);
+                        }
+                    }
+
+                    if (options.length > 0) {
+                        options.unshift({ value: null, text: 'Select sub-affiliation or leave empty' });
+                        this.affiliations.unshift(ko.mapping.fromJS([{ options: options, value: previousParentId.toString() }])()[0]);
+                    }
+                    previousParentId = parentId;
+                    var parentCheck = Enumerable.From(response).Where("x => x.id==" + parentId).ToArray();
+                    if (parentCheck[0] != undefined) {
+                        parentId = parentCheck[0].parentId;
+                    } else {
+                        this.isCreatingSelectEstablishments = false;
+                        return;
+                    }
+                }
+            };
+
+            Summary.prototype._loadEstablishmentData = function () {
+                var _this = this;
+                var promise = $.Deferred();
+                var mainCampus = this.settings.tenantId;
+
+                var temp = sessionStorage.getItem('campuses' + mainCampus);
+                if (temp) {
+                    var response = $.parseJSON(temp);
+                    this._createEstablishmentSelects(response);
+                } else {
+                    var settings = settings || {};
+                    settings.url = 'http://localhost:3014/api/establishments/3306/offspring';
+                    $.ajax(settings).done(function (response) {
+                        promise.resolve(response);
+                        sessionStorage.setItem('campuses' + mainCampus, JSON.stringify(response));
+
+                        _this._createEstablishmentSelects(response);
+                    }).fail(function (xhr) {
+                        promise.reject(xhr);
+                    });
+                }
+
+                return promise;
+            };
+
             Summary.prototype._loadTenancyData = function () {
                 var _this = this;
                 var deferred = $.Deferred();
@@ -374,6 +445,33 @@
                     }
 
                     deferred.resolve(tenants);
+
+                    _this.establishmentData.ready();
+
+                    var myThis = _this;
+                    _this.selectedTenant(_this.establishmentId());
+
+                    _this.selectedTenant.subscribe(function (newValue) {
+                        _this.selectedEstablishment(_this.selectedTenant());
+                    });
+                    $("#campusSelect").on("change", "select", function () {
+                        if (myThis.isCreatingSelectEstablishments == false) {
+                            if (this.value != '') {
+                                myThis.selectedTenant(this.value);
+                                myThis._loadEstablishmentData();
+                            } else {
+                                var prevCampusSelect = $(this).parent().parent().prev().find("select");
+                                if (prevCampusSelect.length) {
+                                    myThis.selectedTenant(prevCampusSelect.val());
+                                    myThis._loadEstablishmentData();
+                                } else {
+                                    myThis.selectedTenant(myThis.rootEstablishment);
+                                    myThis._loadEstablishmentData();
+                                }
+                            }
+                        }
+                    });
+
                     if (childData.length)
                         _this.hasTenancyData(true);
                 }).fail(function (xhr) {

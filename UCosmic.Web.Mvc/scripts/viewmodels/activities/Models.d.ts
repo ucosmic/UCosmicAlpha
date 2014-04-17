@@ -1,4 +1,21 @@
 declare module Activities.ApiModels {
+    
+    export interface Affiliation {
+        affiliationId: number;
+        personId: number;
+        establishmentId: number;
+        isDefault: boolean;
+        jobTitles: string;
+        facultyRank?: Employees.ApiModels.EmployeeSettingsFacultyRank;
+        establishments: AffiliatedEstablishment[];
+    }
+
+    export interface AffiliatedEstablishment {
+        establishmentId: number;
+        displayName: string;
+        type: string;
+        category: string;
+    }
 
     export interface SearchInput extends App.ApiModels.SearchInput {
         pivot?: number;

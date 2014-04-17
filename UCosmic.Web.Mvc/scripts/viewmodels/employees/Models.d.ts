@@ -5,6 +5,16 @@ declare module Employees.ApiModels {
         placeIds?: number[];
         placeAgnostic?: boolean;
     }
+    export interface ScalarEstablishment {
+        id: number;
+        parentId?: number;
+        rank?: number;
+        typeId: number;
+        officialName: string;
+        contextName?: string;
+        uCosmicCode: string;
+        ceebCode: string;
+    }
 
     export interface EmployeesPlaceApiModel { // TODO: refactor name, should not have Model at end
         establishmentId: number;

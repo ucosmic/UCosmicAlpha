@@ -202,6 +202,7 @@ namespace UCosmic.Web.Mvc
             // activities
             bundles.Add(new ScriptBundle("~/bundles/activities/table").Include(
                 "~/scripts/viewmodels/activities/Server.js",
+                "~/scripts/app/DataCacher.js",
                 "~/scripts/viewmodels/activities/Search.js"));
 
             // employees, faculty and staff
