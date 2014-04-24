@@ -59,9 +59,8 @@
                 </strong>
                 <span data-bind="visible: hasManyPages">
                     (page
-                    @*<select class="inline" data-bind="options: pageNumberOptions, value: selectedPageNumber">
-                        </select>*@
-                    <span data-bind="text: transitionedPageNumber"></span>
+                    <select class="inline" data-bind="options: pageNumberOptions, value: transitionedPageNumber, optionsText: 'text', optionsValue: 'value'"></select>
+                    @*<span data-bind="text: transitionedPageNumber"></span>*@
                     of <span data-bind="text: pageCount"></span>)
                 </span>
             </p>
