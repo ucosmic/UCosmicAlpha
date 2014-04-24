@@ -51,7 +51,7 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             var query = new ActivityValuesPageBy
             {
-                EagerLoad = ActivitySearchResultProfiler.EntitiyToModel.EagerLoad,
+                //EagerLoad = ActivitySearchResultProfiler.EntitiyToModel.EagerLoad,
             };
             //input.AncestorId = 4868;
             Mapper.Map(input, query);
