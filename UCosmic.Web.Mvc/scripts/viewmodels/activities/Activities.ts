@@ -3,7 +3,6 @@ module Activities.ViewModels {
     export class ActivityList implements KnockoutValidationGroup {
 
         static iconMaxSide: number = 64;
-
         pageSize: number;
         pageNumber: number;
         items: KnockoutObservableArray<ActivityListItem>;

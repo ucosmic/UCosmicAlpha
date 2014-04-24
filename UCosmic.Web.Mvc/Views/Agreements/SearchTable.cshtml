@@ -200,7 +200,11 @@
                         </table>
                     </div>
                 </div>
-
+                    <div class="field" data-bind="with: pager.input">
+                        <button class="link" data-bind="click: prev, enable: prevAllowed">&lt;&lt; Previous</button>
+                        |
+                        <button class="link" data-bind="click: next, enable: nextAllowed">Next &gt;&gt;</button>
+                    </div>
             </div>
 
             @* MAP LENS GLOBAL TOTALS SUMMARY *@
@@ -297,13 +301,6 @@
                             </div>
                         </li>
                     </ul>
-                </div>
-            </div>
-            <div class="content" data-bind="visible: isTableLens, with: table" style="display: none;">
-                <div class="field" data-bind="with: pager.input">
-                    <button class="link" data-bind="click: prev, enable: prevAllowed">&lt;&lt; Previous</button>
-                    |
-                    <button class="link" data-bind="click: next, enable: nextAllowed">Next &gt;&gt;</button>
                 </div>
             </div>
                 <!-- /ko -->
