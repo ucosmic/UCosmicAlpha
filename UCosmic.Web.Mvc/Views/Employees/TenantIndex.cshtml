@@ -260,18 +260,16 @@
                                         </div>*@
                                         <div id="campusSelect">
                                             <ul data-bind="foreach: affiliations()">
-                                                <li style="margin-bottom: 4px;">
+                                                <li style="margin-bottom: 4px;display: none" data-bind="visible: $parent.hasEstablishmentSelects()">
                                                     <div>
                                                         <select data-bind="options: options, value: value,
                                                             optionsText: 'text', optionsValue: 'value', jQuery: '$select',
                                                             attr: { id: 'campusSelect' + $index() }"
-                                                                style="padding: 1px; margin: initial; height: auto; width: 100%; font-size: 14px;">
-                                                            <option>[Loading...]</option>
-                                                        </select>
+                                                                style="padding: 1px; margin: initial; height: auto; width: 100%; font-size: 14px;"></select>
                                                     </div>
                                                 </li>
                                             </ul>
-                                            <span data-bind="visible: affiliations().length<1">Loading...</span>
+                                            <span data-bind="visible: !hasEstablishmentSelects()">Loading...</span>
                                             <input type="hidden" data-bind="value: selectedEstablishment" name="ancestorid" />
                                         </div>
                                     </div>
