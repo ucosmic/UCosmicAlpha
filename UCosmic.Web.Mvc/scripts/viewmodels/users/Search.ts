@@ -13,6 +13,7 @@ module ViewModels.Users {
         impersonateForm: Element;
         impersonateUserName = ko.observable<string>();
         flasherProxy = new App.FlasherProxy();
+        pageNumberOptions = ko.observableArray();
 
         constructor() {
             super();
@@ -151,6 +152,17 @@ module ViewModels.Users {
         private _setupPagingDefaults(): void {
             this.orderBy($('input[type=hidden][data-bind*="value: orderBy"]').val());
             this.pageSize($('input[type=hidden][data-bind*="value: pageSize"]').val());
+
+            this.pageCount.subscribe((newValue: number) => {
+                this.pageNumberOptions.removeAll();
+                for (var i = 1; i < this.pageCount() + 1; i++) {
+                    this.pageNumberOptions.push({ value: i, text: i });
+                }
+            });
+            this.transitionedPageNumber.subscribe((newValue: number) => {
+                this._gotoPage(newValue - this.pageNumber())
+            })
+
         }
 
         private _setupSessionStorage(): void {

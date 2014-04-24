@@ -1,4 +1,4 @@
-var __extends = this.__extends || function (d, b) {
+﻿var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     __.prototype = b.prototype;
@@ -17,6 +17,7 @@ var ViewModels;
                 this._historyIndex = 0;
                 this.impersonateUserName = ko.observable();
                 this.flasherProxy = new App.FlasherProxy();
+                this.pageNumberOptions = ko.observableArray();
                 this._init();
             }
             Search.prototype._init = function () {
@@ -144,8 +145,19 @@ var ViewModels;
             };
 
             Search.prototype._setupPagingDefaults = function () {
+                var _this = this;
                 this.orderBy($('input[type=hidden][data-bind*="value: orderBy"]').val());
                 this.pageSize($('input[type=hidden][data-bind*="value: pageSize"]').val());
+
+                this.pageCount.subscribe(function (newValue) {
+                    _this.pageNumberOptions.removeAll();
+                    for (var i = 1; i < _this.pageCount() + 1; i++) {
+                        _this.pageNumberOptions.push({ value: i, text: i });
+                    }
+                });
+                this.transitionedPageNumber.subscribe(function (newValue) {
+                    _this._gotoPage(newValue - _this.pageNumber());
+                });
             };
 
             Search.prototype._setupSessionStorage = function () {
