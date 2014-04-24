@@ -51,6 +51,7 @@
                 this._bindingsApplied = $.Deferred();
                 this.bindingsApplied = this._bindingsApplied;
                 this.areBindingsApplied = ko.observable(false);
+                this.hasEstablishmentSelects = ko.observable(false);
                 this.selectedEstablishment = ko.observable();
                 this.affiliations = ko.mapping.fromJS([]);
                 this.rootEstablishment = 0;
@@ -378,7 +379,7 @@
                     }).ToArray();
                     for (var i = 0; i < options.length; i++) {
                         if (options[i].text.indexOf(',') > 0) {
-                            options[i].text = options[i].text.substring(0, options[i].text.indexOf(',') - 1);
+                            options[i].text = options[i].text.substring(0, options[i].text.indexOf(','));
                         }
                     }
 
@@ -392,6 +393,7 @@
                         parentId = parentCheck[0].parentId;
                     } else {
                         this.isCreatingSelectEstablishments = false;
+                        this.hasEstablishmentSelects(true);
                         return;
                     }
                 }
@@ -400,18 +402,25 @@
             Summary.prototype._loadEstablishmentData = function () {
                 var _this = this;
                 var promise = $.Deferred();
-                var mainCampus = this.settings.tenantId;
 
-                var temp = sessionStorage.getItem('campuses' + mainCampus);
+                var mainCampus = this.selectedTenant();
+                if (!this.mainCampus) {
+                    this.mainCampus = this.selectedTenant();
+                    if (!this.mainCampus) {
+                        this.mainCampus = this.settings.tenantId;
+                    }
+                }
+
+                var temp = sessionStorage.getItem('campuses' + this.mainCampus);
                 if (temp) {
                     var response = $.parseJSON(temp);
                     this._createEstablishmentSelects(response);
                 } else {
                     var settings = settings || {};
-                    settings.url = 'http://localhost:3014/api/establishments/3306/offspring';
+                    settings.url = '/api/establishments/' + this.mainCampus + '/offspring';
                     $.ajax(settings).done(function (response) {
                         promise.resolve(response);
-                        sessionStorage.setItem('campuses' + mainCampus, JSON.stringify(response));
+                        sessionStorage.setItem('campuses' + _this.mainCampus, JSON.stringify(response));
 
                         _this._createEstablishmentSelects(response);
                     }).fail(function (xhr) {

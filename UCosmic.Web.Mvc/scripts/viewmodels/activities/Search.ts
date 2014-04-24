@@ -48,10 +48,12 @@ module Activities.ViewModels {
 
 
         hasTenancyData = ko.observable<boolean>(false);
+        hasEstablishmentSelects = ko.observable<boolean>(false);
         selectedTenant = ko.observable<number>(this.settings.tenantId);
-        selectedEstablishment = ko.observable<number>();
+        selectedEstablishment = ko.observable<number>(this.settings.input.ancestorId);
         tenantOptions = ko.observableArray<App.ApiModels.SelectOption<number>>();
         affiliations = ko.mapping.fromJS([]);
+        mainCampus: number;
 
 
         constructor(public settings: SearchSettings) {
@@ -93,7 +95,7 @@ module Activities.ViewModels {
 
                     for (var i = 0; i < options.length; i++) {
                         if (options[i].text.indexOf(',') > 0) {
-                            options[i].text = options[i].text.substring(0, options[i].text.indexOf(',') - 1)
+                            options[i].text = options[i].text.substring(0, options[i].text.indexOf(','))
                         }
                     }
                 
@@ -108,6 +110,7 @@ module Activities.ViewModels {
                 if (parentCheck[0] != undefined) {
                     parentId = parentCheck[0].parentId;
                 } else {
+                    this.hasEstablishmentSelects(true);
                     return;
                 }
                 //parentCheck = Enumerable.From(response).Where("x => x.id==" + parentId).ToArray();
@@ -115,25 +118,32 @@ module Activities.ViewModels {
                 //    return;
                 //}
             }
+            //if (this.affiliations().length > 0) {
+            //    this.hasEstablishmentSelects(true);
+            //}
 
         }
 
         private _loadEstablishmentData(): JQueryPromise<Establishments.ApiModels.ScalarEstablishment[]> {
             var promise: JQueryDeferred<Establishments.ApiModels.ScalarEstablishment[]> = $.Deferred();
-            var mainCampus = this.settings.tenantId;
+            //var mainCampus = this.settings.tenantId;
 
-            var temp = sessionStorage.getItem('campuses' + mainCampus);
+            if(!this.mainCampus){
+                this.mainCampus = this.settings.tenantId;
+            }
+
+            var temp = sessionStorage.getItem('campuses' + this.mainCampus);
             if (temp) {
                 var response = $.parseJSON(temp);
                 this._createEstablishmentSelects(response);
             } else {
 
                 var settings = settings || {};
-                settings.url = 'http://localhost:3014/api/establishments/3306/offspring';
+                settings.url = '/api/establishments/' + this.mainCampus + '/offspring';
                 $.ajax(settings)
                     .done((response: ApiModels.ScalarEstablishment[]): void => {
                         promise.resolve(response);
-                        sessionStorage.setItem('campuses' + mainCampus, JSON.stringify(response));
+                        sessionStorage.setItem('campuses' + this.mainCampus, JSON.stringify(response));
 
                         this._createEstablishmentSelects(response);
 
