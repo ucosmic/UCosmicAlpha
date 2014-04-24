@@ -140,6 +140,7 @@
                         <strong>Loading...</strong>
                     </span>
                 </div>
+                
             }
 
             @* ZERO RESULTS MESSAGE *@
@@ -288,6 +289,12 @@
                         }
                     </tbody>
                 </table>
+                @* PREV & NEXT PAGER BUTTONS *@
+                <div class="field" data-bind="with: pager.input">
+                    <button class="link" data-bind="click: prev, enable: prevAllowed" disabled="disabled">&lt;&lt; Previous</button>
+                    |
+                    <button class="link" data-bind="click: next, enable: nextAllowed" disabled="disabled">Next &gt;&gt;</button>
+                </div>
             }
         </div>
         <aside class="on-right from-top" data-fixed-scroll="root">
@@ -314,7 +321,7 @@
                                             <option value="">[Loading...]</option>
                                         </select>*@
                                         <ul data-bind="foreach: affiliations()">
-                                            <li style="margin-bottom: 4px;">
+                                            <li style="margin-bottom: 4px;display: none" data-bind="visible: $parent.hasEstablishmentSelects()" >
                                                 <div>
                                                     <select class="campusSelect" data-bind="options: options, value: value,
                                                             optionsText: 'text', optionsValue: 'value', jQuery: '$select',
@@ -325,6 +332,7 @@
                                                 </div>
                                             </li>
                                         </ul>
+                                        <span data-bind="visible: !hasEstablishmentSelects()">Loading...</span>
                                         <input type="hidden" data-bind="value: selectedEstablishment" name="ancestorid" />
                                     </div>
                                 </div>
