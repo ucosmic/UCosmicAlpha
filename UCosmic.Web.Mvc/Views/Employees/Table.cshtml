@@ -140,7 +140,7 @@
                         <strong>Loading...</strong>
                     </span>
                 </div>
-                
+
             }
 
             @* ZERO RESULTS MESSAGE *@
@@ -315,13 +315,9 @@
                         <li class="static square-bottom">
                             <div class="content">
                                 <div class="field">
-                                    <div >
-                                        @*<select class="campusSelect" data-bind="options: tenantOptions,  optionsText: 'text', optionsValue: 'value', jQuery: '$selectTenant'"
-                                                style="padding: 1px; margin: initial; height: auto; width: 100%; font-size: 14px;">
-                                            <option value="">[Loading...]</option>
-                                        </select>*@
+                                    <div>
                                         <ul data-bind="foreach: affiliations()">
-                                            <li style="margin-bottom: 4px;display: none" data-bind="visible: $parent.hasEstablishmentSelects()" >
+                                            <li style="margin-bottom: 4px;display: none" data-bind="visible: $parent.hasEstablishmentSelects()">
                                                 <div>
                                                     <select class="campusSelect" data-bind="options: options, value: value,
                                                             optionsText: 'text', optionsValue: 'value', jQuery: '$select',
@@ -363,16 +359,6 @@
                                     <input name="placeIds" type="hidden" data-bind="jQuery: '$placeIds'"
                                            value="@(Model.Input.PlaceIds != null && Model.Input.PlaceIds.Any() ? Model.Input.PlaceIds.First() : (int?)null)" />
                                 </div>
-
-                                @* COUNTRY DROPDOWN *@
-                                @*<div class="field">
-                                        @Html.DropDownListFor(x => x.Input.CountryCode, Model.CountryOptions, "[All countries]", new
-                                        {
-                                            @class = "side",
-                                            Name = "countryCode",
-                                            data_bind = "value: countryCode, options: countryOptions, optionsCaption: '[All countries]', optionsText: 'text', optionsValue: 'value'"
-                                        })
-                                    </div>*@
 
                                 @* SORT DROPDOWN *@
                                 <div class="field">
@@ -479,52 +465,52 @@
                                 }
 
                                 @* DATE FIELDS *@
-    <div class="dates picker field" style="margin-top: 12px;">
-        <strong>Find by date(s)</strong>
-        <div class="group">
-            <div class="on-left" style="width: 110px;">
-                <input type="text" name="Since" placeholder="From" class="side" value="@Model.Input.Since" data-role="datepicker"
-                       data-bind="value: since, valueUpdate: 'afterkeydown', jQuery: '$since'" />
-            </div>
-            <div class="on-right" style="width: 110px;">
-                <input type="text" name="Until" placeholder="To" class="side" value="@Model.Input.Until" data-role="datepicker"
-                       data-bind="value: until, valueUpdate: 'afterkeydown', jQuery: '$until'" />
-            </div>
-        </div>
-        <div style="font-size: 12px; color: #555;">
-            YYYY or M/YYYY or M/D/YYYY
-        </div>
-        <div style="color: #000; font-size: 13px; line-height: 13px; margin-top: 4px;">
-            @{
-                var includeUndated = Model.Input.IncludeUndated == null ||
-                                     Model.Input.IncludeUndated.Value
-                    ? "checked" : null;
-            }
-            <label style="cursor: pointer; vertical-align: top;">
-                <input type="checkbox" name="includeUndated" checked="@includeUndated" value="true" style="cursor: pointer;" /> Include undated activities
-                <input type="hidden" name="includeUndated" value="false" />
-            </label>
-        </div>
-        <div style="margin-top: 8px">
-            @{
-                var clearSinceDisabled = string.IsNullOrWhiteSpace(Model.Input.Since) ? "disabled" : null;
-                var clearUntilDisabled = string.IsNullOrWhiteSpace(Model.Input.Until) ? "disabled" : null;
-            }
-            <input type="submit" value="Search" style="font-size: 14px; line-height: normal; padding: 4px 8px; margin-right: 4px;" />
-            <button type="button" class="link"
-                    data-bind="click: clearSince, disable: isClearSinceDisabled"
-                    disabled="@clearSinceDisabled"
-                    style="font-size: 14px; line-height: normal; margin-right: 4px;">
-                Clear from
-            </button>
-            <button type="button" class="link"
-                    data-bind="click: clearUntil, disable: isClearUntilDisabled"
-                    disabled="@clearUntilDisabled"
-                    style="font-size: 14px; line-height: normal;">
-                Clear to
-            </button>
-        </div>
-    </div>
+                                <div class="dates picker field" style="margin-top: 12px;">
+                                    <strong>Find by date(s)</strong>
+                                    <div class="group">
+                                        <div class="on-left" style="width: 110px;">
+                                            <input type="text" name="Since" placeholder="From" class="side" value="@Model.Input.Since" data-role="datepicker"
+                                                   data-bind="value: since, valueUpdate: 'afterkeydown', jQuery: '$since'" />
+                                        </div>
+                                        <div class="on-right" style="width: 110px;">
+                                            <input type="text" name="Until" placeholder="To" class="side" value="@Model.Input.Until" data-role="datepicker"
+                                                   data-bind="value: until, valueUpdate: 'afterkeydown', jQuery: '$until'" />
+                                        </div>
+                                    </div>
+                                    <div style="font-size: 12px; color: #555;">
+                                        YYYY or M/YYYY or M/D/YYYY
+                                    </div>
+                                    <div style="color: #000; font-size: 13px; line-height: 13px; margin-top: 4px;">
+                                        @{
+                                            var includeUndated = Model.Input.IncludeUndated == null ||
+                                                                 Model.Input.IncludeUndated.Value
+                                                ? "checked" : null;
+                                        }
+                                        <label style="cursor: pointer; vertical-align: top;">
+                                            <input type="checkbox" name="includeUndated" checked="@includeUndated" value="true" style="cursor: pointer;" /> Include undated activities
+                                            <input type="hidden" name="includeUndated" value="false" />
+                                        </label>
+                                    </div>
+                                    <div style="margin-top: 8px">
+                                        @{
+                                            var clearSinceDisabled = string.IsNullOrWhiteSpace(Model.Input.Since) ? "disabled" : null;
+                                            var clearUntilDisabled = string.IsNullOrWhiteSpace(Model.Input.Until) ? "disabled" : null;
+                                        }
+                                        <input type="submit" value="Search" style="font-size: 14px; line-height: normal; padding: 4px 8px; margin-right: 4px;" />
+                                        <button type="button" class="link"
+                                                data-bind="click: clearSince, disable: isClearSinceDisabled"
+                                                disabled="@clearSinceDisabled"
+                                                style="font-size: 14px; line-height: normal; margin-right: 4px;">
+                                            Clear from
+                                        </button>
+                                        <button type="button" class="link"
+                                                data-bind="click: clearUntil, disable: isClearUntilDisabled"
+                                                disabled="@clearUntilDisabled"
+                                                style="font-size: 14px; line-height: normal;">
+                                            Clear to
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </li>
                     </ul>

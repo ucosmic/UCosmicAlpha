@@ -51,24 +51,9 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             var query = new ActivityValuesPageBy
             {
-                //EagerLoad = ActivitySearchResultProfiler.EntitiyToModel.EagerLoad,
             };
-            //input.AncestorId = 4868;
             Mapper.Map(input, query);
             var results = _queryProcessor.Execute(query);
-
-            //results = results.Items.Where(x => (x.Activity.Person.Affiliations.Where(y => y.EstablishmentId.Equals(4867))));
-            //var testresults = results
-            //    .Where(x => (x.Activity.Person.Affiliations
-            //        .Select(y => y.EstablishmentId.Equals(4867))).Any());// as PagedQueryResult<ActivityValues>;
-            //results = results
-            //                .Where(x => (x.Activity.Person.Affiliations
-            //                    .Select(y => y.EstablishmentId.Equals(4867))).Any()) as PagedQueryResult<ActivityValues>;
-
-
-            //var testResults = new PagedQueryResult<ActivityValues>(results.Items
-            //    .Where(x => (x.Activity.Person.Affiliations
-            //        .Select(y => y.EstablishmentId.Equals(4867))).Any()) as IQueryable<ActivityValues>, input.PageSize, input.PageNumber);
 
             var model = new ActivitySearchModel
             {

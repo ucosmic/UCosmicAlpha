@@ -192,45 +192,46 @@
                         <label>My Preferred Title is</label>
                     </div>
                     <div class="field-input">
-                        <textarea placeholder="[None]" rows="3" 
-                                  data-bind="value: preferredTitle, valueUpdate: 'afterkeydown'" >@Model.JobTitles</textarea>
-                    </div>
-                </div>
-                @if (viewingUser.IsInRole(RoleName.EmployeeProfileManager))
-                {
-                    <div class="field-column-right one-column">
-                        <div style="margin-top: 24px;">
-                            <label>
-                                <input type="checkbox" data-bind="checked: isActive" />
-                                This profile is currently active.
-                            </label>
+                        <textarea placeholder="[None]" rows="3"
+                                  data-bind="value: preferredTitle, valueUpdate: 'afterkeydown'">
+                            @Model.JobTitles
+                            </textarea>
                         </div>
+                    </div>
+                    @if (viewingUser.IsInRole(RoleName.EmployeeProfileManager))
+                    {
+                        <div class="field-column-right one-column">
+                            <div style="margin-top: 24px;">
+                                <label>
+                                    <input type="checkbox" data-bind="checked: isActive" />
+                                    This profile is currently active.
+                                </label>
+                            </div>
+                            <div>
+                            </div>
+                        </div>
+
+                    }
+                    else
+                    {
                         <div>
-                            <!--<span style="display: inline-block; float: right"><a href="#">Delete User</a></span>-->
+                            <span style="display: inline-block; float: left; margin-bottom: 1em;"><a href="#">Request my profile be deleted</a></span>
                         </div>
-                    </div>
+                    }
+                </div>
 
-                }
-                else
-                {
-                    <div>
-                        <span style="display: inline-block; float: left; margin-bottom: 1em;"><a href="#">Request my profile be deleted</a></span>
-                    </div>
-                }
-            </div>
-
-            <div class="field-row">
-                <div class="field-column-left one-column">
-                    <div>
-                        <input type="submit" value="Save" data-bind="attr: { disabled: saveSpinner.isVisible }" />
-                        &nbsp;&nbsp;&nbsp;
-                        <a href="#/cancel-profile-edit/" data-bind="click: cancelEditing">Cancel</a>
-                        &nbsp;&nbsp;&nbsp;
-                        <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" data-bind="visible: saveSpinner.isVisible" style="display: none;" />
-                        <strong data-bind="visible: saveSpinner.isVisible" style="display: none;">Saving...</strong>
+                <div class="field-row">
+                    <div class="field-column-left one-column">
+                        <div>
+                            <input type="submit" value="Save" data-bind="attr: { disabled: saveSpinner.isVisible }" />
+                            &nbsp;&nbsp;&nbsp;
+                            <a href="#/cancel-profile-edit/" data-bind="click: cancelEditing">Cancel</a>
+                            &nbsp;&nbsp;&nbsp;
+                            <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" data-bind="visible: saveSpinner.isVisible" style="display: none;" />
+                            <strong data-bind="visible: saveSpinner.isVisible" style="display: none;">Saving...</strong>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </form>
-</div>
+        </form>
+    </div>

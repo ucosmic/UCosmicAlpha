@@ -71,7 +71,6 @@ var Activities;
                     parentId = this.settings.tenantId;
                 }
                 var previousParentId = 0;
-
                 while (true) {
                     var options = Enumerable.From(response).Where("x => x.parentId==" + parentId).Select("x =>  {value: x.id, text: x.officialName}").OrderBy(function (x) {
                         return x.rank;
@@ -89,7 +88,6 @@ var Activities;
                         options.unshift({ value: null, text: 'Select sub-affiliation or leave empty' });
                         this.affiliations.unshift(ko.mapping.fromJS([{ options: options, value: previousParentId.toString() }])()[0]);
                     }
-
                     previousParentId = parentId;
                     var parentCheck = Enumerable.From(response).Where("x => x.id==" + parentId).ToArray();
                     if (parentCheck[0] != undefined) {
@@ -340,7 +338,6 @@ var Activities;
                 this.pager.input.pageNumberText.subscribe(function (newValue) {
                     _this._submitForm();
                 });
-
                 this.orderBy.subscribe(function (newValue) {
                     _this._submitForm();
                 });

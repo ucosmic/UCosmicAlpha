@@ -1,4 +1,4 @@
-var Agreements;
+﻿var Agreements;
 (function (Agreements) {
     (function (ViewModels) {
         var SearchLenses = (function () {

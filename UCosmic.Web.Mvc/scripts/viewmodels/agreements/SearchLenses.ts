@@ -155,7 +155,6 @@ module Agreements.ViewModels {
             this.map.zoom(1);
             this.map.lat(SearchMap.defaultMapCenter.lat());
             this.map.lng(SearchMap.defaultMapCenter.lng());
-            //location.href = location.href.substr(0, location.href.indexOf('#'));
         }
     }
 }

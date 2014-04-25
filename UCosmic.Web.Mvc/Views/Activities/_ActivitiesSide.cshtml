@@ -4,9 +4,10 @@
     .yellow-affordance {
         background-color: #FBFDB3 !important;
     }
-    .yellow-affordance:hover {
-        background-color: #FBFD97 !important;
-    }
+
+        .yellow-affordance:hover {
+            background-color: #FBFD97 !important;
+        }
 </style>
 <aside id="publicView">
 
@@ -41,11 +42,9 @@
                 @foreach (var place in Model.Places)
                 {
                     <li class="same-line" style="margin-bottom: .5em;">
-                        @*<a href='~/facultystaff/#/search/country/@place.PlaceName' style="text-decoration: none; color: inherit;">*@
                         <span class="badge light-transparent">
                             @place.PlaceName
                         </span>
-                        @*</a>*@
                     </li>
                 }
             </ul>

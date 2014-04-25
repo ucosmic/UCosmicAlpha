@@ -78,8 +78,6 @@
                 <span data-bind="visible: personCount() != 1">people</span>
                 <span data-bind="visible: personCount() > 0" style="display: none;">
                     with
-                    @*<span data-bind="visible: personCount() == 1" style="display: none;">has</span>
-                        <span data-bind="visible: personCount() != 1">have</span>*@
                     <strong data-bind="text: activityCount" style="font-size: 24px;">?</strong>
                     <span data-bind="visible: activityCount() == 1" style="display: none;">activity</span>
                     <span data-bind="visible: activityCount() != 1">activities</span>
@@ -154,7 +152,6 @@
                 @* GOOGLE ELEMENT + BACKGROUND & FOREGROUND *@
                 <div class="chart-bg">&nbsp;</div>
                 <div id="google_geochart"></div>
-                @*<div class="chart-bg" data-bind="visible: isPlaceOverlaySelected" style="display: none;">&nbsp;</div>*@
 
                 @* CUSTOM CHART OVERLAYS *@
                 <div class="overlays">
@@ -242,22 +239,13 @@
                                     <div class="on-left"></div>
                                 </div>
                                 <div class="group no-link" style="margin-left: 15px;">
-                                    @*<span class="arrow"></span>*@
                                     <span class="text">
-                                        @*<img src="~/images/icons/spinner/spinner-20-blue-on-ddd.gif" alt=""
-                                            style="margin-left: 4px; display: none;" data-bind="visible: loadingSpinner.isVisible" />*@
                                     </span>
                                 </div>
                             </li>
                             <li class="static square-bottom">
                                 <div class="content">
                                     <div class="field">
-                                        @*<div data-bind="visible: hasTenancyData" style="display: none;">
-                                            <select data-bind="options: tenantOptions, value: selectedTenant, optionsText: 'text', optionsValue: 'value', jQuery: '$selectTenant'"
-                                                    style="padding: 1px; margin: initial; height: auto; width: 100%; font-size: 14px;">
-                                                <option value="">[Loading...]</option>
-                                            </select>
-                                        </div>*@
                                         <div id="campusSelect">
                                             <ul data-bind="foreach: affiliations()">
                                                 <li style="margin-bottom: 4px;display: none" data-bind="visible: $parent.hasEstablishmentSelects()">

@@ -1,5 +1,5 @@
 declare module Activities.ApiModels {
-    
+
     export interface Affiliation {
         affiliationId: number;
         personId: number;

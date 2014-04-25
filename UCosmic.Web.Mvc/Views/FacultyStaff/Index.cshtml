@@ -125,17 +125,6 @@
             background-image: url('../../images/icons/maps/arcticOceanHover.png');
         }
 
-        /* Attempt top round corners.  Fail. 
-        
-        nav.side > ul > li:first-child > a > .text,
-        nav.side > ul > li:first-child > .text,
-        .navTopSeg  
-        
-        #searchSideTop {
-            -webkit-border-radius: 8px 8px 0 0 !important;
-            -moz-border-radius: 8px 8px 0 0 !important;
-            border-radius: 8px 8px 0 0 !important;
-        } */
 
         /* Begin Kendo UI widget theming */
 
@@ -156,24 +145,24 @@
         }
 
 
-            .kendoSideWidget .k-widget .k-picker-wrap input.kendoSideWidget,
-            .kendoSideWidget .k-widget .k-dropdown-wrap .k-input,
-            .kendoSideWidget .k-widget .k-xmultiselect-wrap .k-input,
-            .kendoSideWidget .k-widget .k-picker-wrap .k-input {
-                border: solid 1px #999;
-                border-radius: 0 0 0 0;
-                margin: 0;
-                height: 16px;
-                min-height: 16px;
-                -moz-box-sizing: border-box;
-                -webkit-box-sizing: border-box;
-                box-sizing: border-box;
-                font-size: 14px;
-                line-height: 18px;
-                padding: 1px;
-                width: 100%;
-                color: #333333;
-            }
+        .kendoSideWidget .k-widget .k-picker-wrap input.kendoSideWidget,
+        .kendoSideWidget .k-widget .k-dropdown-wrap .k-input,
+        .kendoSideWidget .k-widget .k-xmultiselect-wrap .k-input,
+        .kendoSideWidget .k-widget .k-picker-wrap .k-input {
+            border: solid 1px #999;
+            border-radius: 0 0 0 0;
+            margin: 0;
+            height: 16px;
+            min-height: 16px;
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            font-size: 14px;
+            line-height: 18px;
+            padding: 1px;
+            width: 100%;
+            color: #333333;
+        }
 
         .kendoSideWidget .k-widget .k-dropdown-wrap .k-input {
             border-radius: 0 4px 0 0;
@@ -229,19 +218,6 @@
             height: 24px;
         }
 
-            /*.kendoSideWidget .k-widget .k-multiselect-wrap .k-input {
-                border-color: #bbbbbb;
-                position: relative;
-                top: 5px;
-                left: 2px;
-            }
-
-            .kendoSideWidget .k-widget .k-multiselect-wrap li {
-                float: left;
-                line-height: 18px;
-                margin: 1px 0 1px 1px;
-                padding: 1px 2px 1px 2px;
-            }*/
 
         #searchReset.content {
             display: inline !important;
@@ -270,7 +246,6 @@
         }
     </style>
     <![endif]-->
-
 }
 
 @section scripts
@@ -278,8 +253,6 @@
     @Scripts.Render("~/bundles/employees")
 
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-
-    @*<script type='text/javascript' src="../../scripts/google/markerwithlabel.js"></script>*@
 
     <script type="text/javascript">
 
@@ -331,7 +304,7 @@
                                         /*
                                                 Bug - There's a bug in KendoUI Multiselect whereby the datasource.read()
                                                 gets called as soon as the widget gets focus.  This is bad as the Place
-                                                service will respond with all the Places in the DB since there is no 
+                                                service will respond with all the Places in the DB since there is no
                                                 filter being provided.  Our workaround is to trap the empty filter
                                                 and send a special character for the service to ignore.  Also,
                                                 If options.success() is not actually call, the widget stops functioning
@@ -375,28 +348,18 @@
         <br />
         UCosmic usually uses the logo displayed on the site to decide which Faculty &amp; Staff page to show you.
         When you see the <em>UCosmic Consortium</em> logo, UCosmic cannot figure out which Faculty &amp; Staff page you want to see.
-        In those cases, UCosmic will try to show you the Faculty &amp; Staff page for your home institution based on your username / email address. 
+        In those cases, UCosmic will try to show you the Faculty &amp; Staff page for your home institution based on your username / email address.
         When you are not signed in and you can see the <em>UCosmic Consortium</em> logo, UCosmic gives up and displays this page instead.
     </p>
     <p>
         <strong>Click a link below to view the Faculty &amp; Staff page for that institution.</strong>
         Institutions not listed here do not have any Faculty &amp; Staff degrees or published activities.
     </p>
-    @*<div class="institutionSelectList">
-        <ul data-bind="template: { name: 'institutions-template', foreach: institutions.items }"></ul>
-    </div>*@
     <div>
         <ul data-bind="template: { name: 'institutions-template', foreach: institutions.items }"></ul>
     </div>
 </div>
 
-@*<script type="text/html" id="institutions-template">
-    <li>
-        <a href="#" data-bind="attr: { href: $parent.selectInstitutionUrl(id()) }">
-            <span data-bind="text: officialName()"></span>
-        </a>
-    </li>
-</script>*@
 <script type="text/html" id="institutions-template">
     <li style="font-size: 20px; margin-bottom: 1em;">
         <a href="#" data-bind="attr: { href: $parent.selectInstitutionUrl2(styleDomain()) }">
@@ -419,12 +382,12 @@
                         <span style="float: left" data-bind="click: function(item,event) { expertClickHandler(item,event); }">
                             <span style="margin-right: 2px; margin-top: 2px">Find an Expert</span>
                             <img src="@Url.HttpRouteUrl(null, new { controller = "EmployeeModuleSettings", action = "GetIcon", name = "FindAnExpertIcon.svg" })"
-                                alt="Find an Expert" width="28" height="28" />
+                                 alt="Find an Expert" width="28" height="28" />
                         </span>
                         <span style="float: right; cursor: pointer;" data-bind="visible: selectedPlace() != null, click: function(item,event) { globalViewClickHandler(item,event); }">
                             <span style="margin-right: 2px; margin-top: 4px; cursor: pointer;">Return to Global View</span>
                             <img src="@Url.HttpRouteUrl(null, new { controller = "EmployeeModuleSettings", action = "GetIcon", name = "GlobalViewIcon.png" })"
-                                alt="Global View" style="padding-top: 2px; cursor: pointer;" />
+                                 alt="Global View" style="padding-top: 2px; cursor: pointer;" />
                         </span>
                     </div>
                     <div style="position: relative">
@@ -432,7 +395,7 @@
                         <div style="background-color: #ACCCFD; width: 680px; height: 500px"></div>
 
                         <div style="position: absolute; background-color: transparent; width: 680px; height: 500px; top: 0; left: 0; z-index: 1"
-                            data-bind="visible: !loadSpinner.isVisible() && (mapRegion() === 'world')">
+                             data-bind="visible: !loadSpinner.isVisible() && (mapRegion() === 'world')">
 
                             <!-- Antarctica -->
                             <div style="position: absolute; left: 340px; bottom: 0;">
@@ -470,10 +433,10 @@
 
                             <!-- Gulf of Mexico -->
                             @*          <div data-bind="visible: !loadSpinner.isVisible()" style="position: absolute; left: 157px; top: 289px; width: 37px; z-index: 3;">
-		                                    <div style="width: 100%; text-align: center">
-			                                    <img width="37" height="18" src="../../images/buttonGraphics/gulfOfMexico.png"> 
-		                                    </div>
-	                                    </div> *@
+                                    <div style="width: 100%; text-align: center">
+                                        <img width="37" height="18" src="../../images/buttonGraphics/gulfOfMexico.png">
+                                    </div>
+                                </div> *@
 
                             <!-- Caribbean -->
                             <div style="position: absolute; left: 188px; top: 309px; width: 51px">
@@ -521,7 +484,7 @@
 
                             <!-- Gulf of Mexico-->
                             <div style="position: absolute; left: 157px; top: 289px; width: 37px; height: 18px; z-index: 3"
-                                data-bind="visible: !loadSpinner.isVisible()">
+                                 data-bind="visible: !loadSpinner.isVisible()">
                                 <div style="width: 100%; text-align: center">
                                     <img width="37" height="18" src="~/images/icons/maps/gulfOfMexico.png">
                                 </div>
@@ -736,7 +699,7 @@
 
 <script type="text/html" id="activities-types-template">
     <img img data-bind="attr: { src: '/api/my/employee-module-settings/icon/' + $root.getActivityTypeIconName( $data ), title: $root.getActivityTypeToolTip( $data ) }"
-        src="" title="" width="24" height="24" />
+         src="" title="" width="24" height="24" />
 </script>
 
 

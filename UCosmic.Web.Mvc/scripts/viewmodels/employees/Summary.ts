@@ -437,7 +437,6 @@
 
         private _loadEstablishmentData(): JQueryPromise<Establishments.ApiModels.ScalarEstablishment[]> {
             var promise: JQueryDeferred<Establishments.ApiModels.ScalarEstablishment[]> = $.Deferred();
-            //var mainCampus = this.settings.tenantId;
             var mainCampus = this.selectedTenant();
             if (!this.mainCampus) {
                 this.mainCampus = this.selectedTenant();
@@ -507,33 +506,26 @@
 
                     var myThis = this;
                     this.selectedTenant(<number>this.establishmentId());
-                    //this.selectedTenant(this.settings.input.ancestorId);
                     this.selectedTenant.subscribe((newValue: number): void => {
                         this.selectedEstablishment(this.selectedTenant());
-                        //this._submitForm();
                     });
                     $("#campusSelect").on("change", "select", function () {
                         if (myThis.isCreatingSelectEstablishments == false) {
                             if (this.value != '') {
                                 myThis.selectedTenant(this.value);
                                 myThis._loadEstablishmentData();
-                                //myThis.selectedEstablishment(this.value);
                             } else {
                                 var prevCampusSelect = $(this).parent().parent().prev().find("select");
                                 if (prevCampusSelect.length) {
                                     myThis.selectedTenant(prevCampusSelect.val());
                                     myThis._loadEstablishmentData();
-                                    //myThis.selectedEstablishment($(this).parent().parent().prev().find(".campusSelect").val());
                                 } else {
                                     myThis.selectedTenant(myThis.rootEstablishment);
                                     myThis._loadEstablishmentData();
-                                    //myThis.selectedEstablishment(myThis.settings.tenantId);
                                 }
                             }
                         }
-                        //myThis._submitForm()
                     })
-                    //deferred.resolve(tenants);
                     if (childData.length) this.hasTenancyData(true);
                 })
                 .fail((xhr: JQueryXHR): void => {
@@ -634,7 +626,6 @@
                     colors: [this._geoChartGradientLo, this._geoChartGradientHi, ],
                 },
                 backgroundColor: '#acccfd', // google maps water color is a5bfdd, Doug's bg color is acccfd
-                //backgroundColor: 'transparent',
             };
 
             if (overrides && overrides.region)

@@ -45,13 +45,13 @@ module App {
         // filtering
         orderBy = ko.observable<string>();
         keyword: KnockoutObservable<string> =
-            ko.observable($('input[type=hidden][data-bind="value: keyword"]').val());
+        ko.observable($('input[type=hidden][data-bind="value: keyword"]').val());
         throttledKeyword: KnockoutComputed<string>;
 
         // spinner component
         spinner: Spinner = new Spinner({ delay: 400, runImmediately: true, });
 
-        constructor () {
+        constructor() {
 
             // paging computeds
             this.pageCount = ko.computed((): number => {

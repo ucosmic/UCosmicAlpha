@@ -84,7 +84,7 @@ module ViewModels.Users {
                         this._loadResults(response);
                     })
                     .fail((): void => {
-                        //alert('failed to get users :(');
+
                     });
             }).extend({ throttle: 250 });
         }

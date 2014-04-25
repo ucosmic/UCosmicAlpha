@@ -80,19 +80,6 @@ module Agreements.ViewModels {
             this.sammy = this.settings.sammy || Sammy();
             this._runSammy();
 
-            //var HistoryJS: Historyjs = <any>History;
-            //HistoryJS.Adapter.bind(window, 'statechange', function () {
-            //    alert('history adapter fired statechange');
-            //});
-
-            //if (!HistoryJS.enabled) {
-            //    //...
-            //}
-            //HistoryJS.Adapter.bind(window, 'statechange', () => {
-            //    var State = HistoryJS.getState();
-            //    HistoryJS.log(State.data, State.title, State.url);
-            //});
-
             this._map.ready().done((): void => {
                 this._map.onIdle((): void => {
                     var idles = this._map.idles();
@@ -484,7 +471,7 @@ module Agreements.ViewModels {
 
             if (!lastViewport || lastViewport.zoom != thisViewport.zoom ||
                 !SearchMap._areCoordinatesEqualEnough(lastViewport.center.lat(), thisViewport.center.lat()) ||
-                    !SearchMap._areCoordinatesEqualEnough(lastViewport.center.lng(), thisViewport.center.lng())) {
+                !SearchMap._areCoordinatesEqualEnough(lastViewport.center.lng(), thisViewport.center.lng())) {
 
                 this._viewportHistory.push(thisViewport);
                 $.when(this._map.ready()).then((): void => {
@@ -704,9 +691,6 @@ module Agreements.ViewModels {
                             }
                         }
                         else {
-                            //this._map.setViewport({ // TODO: can this be added back?
-                            //    bounds: Places.Utils.convertToLatLngBounds(place.boundingBox),
-                            //});
                             if (place.id < 1) {
                                 this.continentCode('none'); // select none in continents dropdown menu
                             } else {

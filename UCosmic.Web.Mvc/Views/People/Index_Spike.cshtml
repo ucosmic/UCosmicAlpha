@@ -79,13 +79,7 @@
 <div class="content fixed to-top" data-current-module="faculty">
     <div class="group">
         <div class="on-left from-top">
-            @*
-                dL: I took this out, it brands the site too much. People may be confused.
-                    <header>
-                    <h1>
-                        UCosmic Profile
-                    </h1>
-                </header>*@
+           
             @* CARD *@
             <section class="person-profile" id="card">
                 <div class="card" style="padding-left: 0;">
@@ -93,7 +87,6 @@
                     @if (User.Identity.Name.Equals(Model.Username, StringComparison.OrdinalIgnoreCase))
                     {
                         Html.RenderPartial(MVC.People.Views._PersonalInfoEditor);
-                        //@Html.Partial(MVC.People.Views._PersonalInfoEditor)
                     }
                     else
                     {
@@ -112,7 +105,6 @@
                 }
                 else
                 {
-                    //@Html.Action(MVC.People.GetAffiliations())
                     Html.RenderAction(MVC.People.GetAffiliations());
                 }
             </section>

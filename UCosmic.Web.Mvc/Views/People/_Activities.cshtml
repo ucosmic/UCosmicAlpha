@@ -140,17 +140,6 @@
                                                     <span class="green badge" style="display: inline; vertical-align: middle">Published</span>
                                                 }
                                             </div>
-                                            @*<a href="@Url.Action(MVC.Activities.Details(activity.ActivityId))">
-                                                    @if (activity.Title.IsNullOrWhiteSpace())
-                                                    {
-                                                        @: [untitled activity @activity.ActivityId]
-                                                    }
-                                                    else
-                                                    {
-                                                        @activity.Title
-                                                    }
-
-                                                </a>*@
                                             <a style="text-decoration: none;"
                                                data-xbind="click: edit.bind($data, @activity.ActivityId), visible: !purgeSpinner.isVisible()"
                                                href="@Url.Action(MVC.Activities.Edit(activity.ActivityId))">
@@ -165,17 +154,6 @@
                                             </a>
                                             <img data-bind="visible: purgeSpinner.isVisible" alt="" src="~/images/icons/spinner/spinner-24-blue.gif" title="Deleting this activity..."
                                                  style="margin-left: 8px; display: none; margin: 5px 0 8px 8px;" />
-                                            @*<a href="#" class="button" style="margin-top: 4px; display: inline-block;" data-bind="click: addDegree">
-                                                    <i class="green plus"></i>
-                                                    <span class="text">edit</span>
-                                                </a>
-
-                                                <a href="#" class="button" style="margin-top: 4px; display: inline-block;" data-bind=" click adddegree">
-                                                    <i class="green plus"></i>
-                                                    <span class="text">delete</span>
-                                                </a>*@
-
-
                                         }
                                         else
                                         {
@@ -192,14 +170,6 @@
                                             </a>
                                         }
                                     </td>
-                                    @*<td style="width: 50px;">
-                                            <img data-bind="click: edit.bind($data, @activity.ActivityId), visible: !purgeSpinner.isVisible()" alt="" src="~/images/icons/edit/pencil-a-24.png" title="Edit this formal education"
-                                                 style="cursor: pointer; margin: 5px 0 8px 8px;" />
-                                            <img data-bind="click: purge.bind($data, @activity.ActivityId), visible: !purgeSpinner.isVisible()" alt="" src="~/images/icons/minus/minus-24-red.png" title="Delete this formal education"
-                                                 style="cursor: pointer; margin: 5px 0 8px 8px;" />
-                                            <img data-bind="visible: purgeSpinner.isVisible" alt="" src="~/images/icons/spinner/spinner-24-blue.gif" title="Deleting this formal education..."
-                                                 style="margin-left: 8px; display: none; margin: 5px 0 8px 8px;" />
-                                        </td>*@
                                     <td>
                                         <table style="border: none;" class="no-data">
                                             <tr>

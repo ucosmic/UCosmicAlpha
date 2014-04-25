@@ -1,10 +1,9 @@
 module Activities.ViewModels {
 
-    
+
     export interface SearchSettings {
         input: ApiModels.SearchInput;
         output: App.PageOf<ApiModels.SearchResult>;
-        //countryOptions: App.ApiModels.SelectOption<string>[];
         activityTypes: ApiModels.ActivityTypeSearchFilter[];
         tenantId: number;
     }
@@ -28,9 +27,6 @@ module Activities.ViewModels {
 
     export class Search {
         //#region Construction
-
-        //countryOptions = ko.observableArray(this.settings.countryOptions);
-        //countryCode = ko.observable(this.settings.input.countryCode);
         orderBy = ko.observable(this.settings.input.orderBy);
         keyword = ko.observable(this.settings.input.keyword);
         pager = new App.Pager<ApiModels.SearchResult>(this.settings.input.pageNumber.toString(), this.settings.input.pageSize.toString());
@@ -68,20 +64,12 @@ module Activities.ViewModels {
             });
 
         private _createEstablishmentSelects(response): void {
-            
-
-
-            //var editor = Enumerable.From(response).Where("x => x.parentId==4867").Select("x => x.officialName").ToArray()
 
             var parentId = this.settings.input.ancestorId;
             if (!parentId) {
                 parentId = this.settings.tenantId;
             }
             var previousParentId = 0;
-            //var parentCheck: any = Enumerable.From(response).Where("x => x.id==" + parentId).ToArray();
-            //if (parentCheck[0] == undefined) {
-            //    return;
-            //}
             while (true) {
                 var options: any = Enumerable.From(response)
                     .Where("x => x.parentId==" + parentId)
@@ -93,18 +81,16 @@ module Activities.ViewModels {
                         return x.contextName || x.officialName;
                     }).ToArray();
 
-                    for (var i = 0; i < options.length; i++) {
-                        if (options[i].text.indexOf(',') > 0) {
-                            options[i].text = options[i].text.substring(0, options[i].text.indexOf(','))
+                for (var i = 0; i < options.length; i++) {
+                    if (options[i].text.indexOf(',') > 0) {
+                        options[i].text = options[i].text.substring(0, options[i].text.indexOf(','))
                         }
-                    }
-                
+                }
+
                 if (options.length > 0) {
                     options.unshift({ value: null, text: 'Select sub-affiliation or leave empty' });
                     this.affiliations.unshift(ko.mapping.fromJS([{ options: options, value: previousParentId.toString() }])()[0]);
                 }
-                //var caption = isFirst ? '[Select main affiliation]' : '[Select sub-affiliation or leave empty]';
-
                 previousParentId = parentId;
                 var parentCheck = Enumerable.From(response).Where("x => x.id==" + parentId).ToArray();
                 if (parentCheck[0] != undefined) {
@@ -113,14 +99,7 @@ module Activities.ViewModels {
                     this.hasEstablishmentSelects(true);
                     return;
                 }
-                //parentCheck = Enumerable.From(response).Where("x => x.id==" + parentId).ToArray();
-                //if (parentCheck[0] == undefined) {
-                //    return;
-                //}
             }
-            //if (this.affiliations().length > 0) {
-            //    this.hasEstablishmentSelects(true);
-            //}
 
         }
 
@@ -128,7 +107,7 @@ module Activities.ViewModels {
             var promise: JQueryDeferred<Establishments.ApiModels.ScalarEstablishment[]> = $.Deferred();
             //var mainCampus = this.settings.tenantId;
 
-            if(!this.mainCampus){
+            if (!this.mainCampus) {
                 this.mainCampus = this.settings.tenantId;
             }
 
@@ -147,8 +126,8 @@ module Activities.ViewModels {
 
                         this._createEstablishmentSelects(response);
 
-                        
-                })
+
+                    })
                     .fail((xhr: JQueryXHR): void => {
                         promise.reject(xhr);
                     });
@@ -180,17 +159,6 @@ module Activities.ViewModels {
                         this.tenantOptions(options);
                     }
 
-                    //var settings = settings || {};
-                    //settings.url = 'http://localhost:3014/api/establishments/3306/offspring';
-                    //$.ajax(settings)
-                    //    .done((response: ApiModels.Affiliation[]): void => {
-                    //        var x = response;
-                    //        //promise.resolve(response);
-                    //    })
-                    //    .fail((xhr: JQueryXHR): void => {
-                    //        //promise.reject(xhr);
-                    //    });
-
                     this.establishmentData.ready();
 
                     var myThis = this;
@@ -199,7 +167,7 @@ module Activities.ViewModels {
                         this.selectedEstablishment(this.selectedTenant());
                         this._submitForm();
                     });
-                    $(".campusSelect").change(function() {
+                    $(".campusSelect").change(function () {
                         if (this.value != '') {
                             myThis.selectedEstablishment(this.value);
                         } else {
@@ -388,9 +356,7 @@ module Activities.ViewModels {
         private _applySubscriptions(): void {
             this.pager.input.pageSizeText.subscribe((newValue: string): void => { this._submitForm(); });
             this.pager.input.pageNumberText.subscribe((newValue: string): void => { this._submitForm(); });
-            //this.countryCode.subscribe((newValue: string): void => { this._submitForm(); });
             this.orderBy.subscribe((newValue: string): void => { this._submitForm(); });
-            //this.pivot.subscribe((newValue: DataGraphPivot): void => { this._submitForm(); });
         }
 
         //#endregion
