@@ -111,6 +111,12 @@
                         This is a placeholder for the Tree data lens. Tree data will go here.
                     </p>
                 </div>
+                <div class="field">
+                    <button class="link" data-bind="click: prevPage, enable: prevEnabled">&lt;&lt; Previous</button>
+                    |
+                    <button class="link" data-bind="click: nextPage, enable: nextEnabled">Next &gt;&gt;</button>
+                    <input type="hidden" value="1" data-bind="value: pageNumber" />
+                </div>
             </div>
         </div>
     </div>

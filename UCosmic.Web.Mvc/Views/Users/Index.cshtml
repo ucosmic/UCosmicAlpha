@@ -173,6 +173,12 @@
                     <hr />
                 </li>
             </ol>
+            <div class="field">
+                <button class="link" data-bind="click: prevPage, enable: prevEnabled">&lt;&lt; Previous</button>
+                |
+                <button class="link" data-bind="click: nextPage, enable: nextEnabled">Next &gt;&gt;</button>
+                <input type="hidden" value="1" data-bind="value: pageNumber" />
+            </div>
             <div style="height: 30px;">
                 <a href="@Url.Action(MVC.Users.New())"  id="searchSideBarAddNew2" class="button">
                     <i class="green plus" style="width: 16px; height: 16px; background-size: contain"></i>

@@ -270,6 +270,12 @@
 
 
     </div>
+    <div class="field">
+        <button class="link" data-bind="click: prevPage, enable: prevEnabled" disabled="disabled">&lt;&lt; Previous</button>
+        |
+        <button class="link" data-bind="click: nextPage, enable: nextEnabled" disabled="disabled">Next &gt;&gt;</button>
+        <input type="hidden" value="1" data-bind="value: pageNumber" />
+    </div>
     @if (User.Identity.Name.Equals(ViewBag.Username, StringComparison.OrdinalIgnoreCase))
     {
         <div style="margin-top: 12px; line-height: 24px;">

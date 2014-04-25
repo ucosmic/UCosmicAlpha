@@ -162,6 +162,12 @@
                         }
                     </tbody>
                 </table>
+                @* PREV & NEXT PAGER BUTTONS *@
+                <div class="field" data-bind="with: pager.input">
+                    <button class="link" data-bind="click: prev, enable: prevAllowed" disabled="disabled">&lt;&lt; Previous</button>
+                    |
+                    <button class="link" data-bind="click: next, enable: nextAllowed" disabled="disabled">Next &gt;&gt;</button>
+                </div>
             }
         </div>
         <aside class="on-right from-top" data-fixed-scroll="root">
