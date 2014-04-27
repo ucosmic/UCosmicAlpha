@@ -402,7 +402,6 @@
             Summary.prototype._loadEstablishmentData = function () {
                 var _this = this;
                 var promise = $.Deferred();
-
                 var mainCampus = this.selectedTenant();
                 if (!this.mainCampus) {
                     this.mainCampus = this.selectedTenant();
@@ -459,7 +458,6 @@
 
                     var myThis = _this;
                     _this.selectedTenant(_this.establishmentId());
-
                     _this.selectedTenant.subscribe(function (newValue) {
                         _this.selectedEstablishment(_this.selectedTenant());
                     });
@@ -480,7 +478,6 @@
                             }
                         }
                     });
-
                     if (childData.length)
                         _this.hasTenancyData(true);
                 }).fail(function (xhr) {

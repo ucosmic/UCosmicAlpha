@@ -71,8 +71,16 @@ namespace UCosmic.Domain.Identity
                 person.IsActive = false;
                 if (person.DefaultAffiliation != null)
                     person.DefaultAffiliation.IsDefault = false;
+
+                //to recreate a user with the same email address we have to delete the current emails.
+                //just deleting the default email address for now
+                _entities.Purge(person.Emails.SingleOrDefault(x => x.IsDefault));
+                //xx = person.Emails.SingleOrDefault(x => x.IsDefault == false);
+                //xx = xx;
             }
 
+
+            
             _entities.Purge(user);
             _unitOfWork.SaveChanges();
         }
