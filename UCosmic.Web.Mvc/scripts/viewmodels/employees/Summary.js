@@ -76,6 +76,7 @@
                 this.hasNoPlaceId = ko.computed(function () {
                     return !_this.hasPlaceId();
                 });
+                this.selectedTenant = ko.observable(0);
                 this.establishmentId = ko.observable(parseInt(sessionStorage.getItem(Summary._establishmentIdKey)) || this.settings.tenantId);
                 this._establishmentIdChanged = ko.computed(function () {
                     _this._onEstablishmentIdChanged();
@@ -102,7 +103,6 @@
                     return _this._loadPlaceData();
                 });
                 this.hasTenancyData = ko.observable(false);
-                this.selectedTenant = ko.observable(this.settings.tenantId);
                 this.isCreatingSelectEstablishments = false;
                 this.tenancyData = new App.DataCacher(function () {
                     return _this._loadTenancyData();
@@ -364,6 +364,9 @@
             Summary.prototype._createEstablishmentSelects = function (response) {
                 this.establishmentId();
 
+                if (this.selectedTenant() == 0) {
+                    this.selectedTenant(this.establishmentId());
+                }
                 var parentId = this.selectedTenant();
                 if (!parentId) {
                     parentId = this.settings.tenantId;
@@ -402,7 +405,7 @@
             Summary.prototype._loadEstablishmentData = function () {
                 var _this = this;
                 var promise = $.Deferred();
-                var mainCampus = this.selectedTenant();
+                this.mainCampus = this.rootEstablishment;
                 if (!this.mainCampus) {
                     this.mainCampus = this.selectedTenant();
                     if (!this.mainCampus) {
@@ -413,6 +416,7 @@
                 var temp = sessionStorage.getItem('campuses' + this.mainCampus);
                 if (temp) {
                     var response = $.parseJSON(temp);
+
                     this._createEstablishmentSelects(response);
                 } else {
                     var settings = settings || {};
@@ -457,6 +461,7 @@
                     _this.establishmentData.ready();
 
                     var myThis = _this;
+
                     _this.selectedTenant(_this.establishmentId());
                     _this.selectedTenant.subscribe(function (newValue) {
                         _this.selectedEstablishment(_this.selectedTenant());

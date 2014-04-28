@@ -92,7 +92,7 @@
 
             // bind history.js to statechange events
             HistoryJS.Adapter.bind(window, 'statechange', (): void => { this._onRouteChanged(); });
-            this.rootEstablishment = settings.tenantId;
+            this.rootEstablishment = settings.tenantId;//this.establishmentId();//settings.tenantId;
             // initialize charts
             this._initGeoChart();
             this._initActivityTypeChart();
@@ -194,6 +194,9 @@
         //#region Tenancy
 
         private static _establishmentIdKey = 'EmployeeSummaryEstablishmentId';
+        //establishmentId = ko.observable<number>(this.settings.tenantId);
+        selectedTenant = ko.observable<number>(0);
+        //selectedTenant = ko.observable<number>(sessionStorage.getItem(Summary._establishmentIdKey));
         establishmentId = ko.observable<number>(
             parseInt(sessionStorage.getItem(Summary._establishmentIdKey)) || this.settings.tenantId);
 
@@ -366,7 +369,7 @@
         //#region Tenancy
 
         hasTenancyData = ko.observable<boolean>(false);
-        selectedTenant = ko.observable<number>(this.settings.tenantId);
+        //selectedTenant = ko.observable<number>(this.settings.tenantId);
         isCreatingSelectEstablishments = false;
 
         tenancyData: App.DataCacher<Establishments.ApiModels.ScalarEstablishment[]> = new App.DataCacher(
@@ -395,6 +398,9 @@
         private _createEstablishmentSelects(response): void {
             <number>this.establishmentId()
             //var parentId = this.settings.input.ancestorId;
+            if(this.selectedTenant() == 0){
+                this.selectedTenant(this.establishmentId())
+            }
             var parentId = this.selectedTenant();
             if (!parentId) {
                 parentId = this.settings.tenantId;
@@ -437,7 +443,7 @@
 
         private _loadEstablishmentData(): JQueryPromise<Establishments.ApiModels.ScalarEstablishment[]> {
             var promise: JQueryDeferred<Establishments.ApiModels.ScalarEstablishment[]> = $.Deferred();
-            var mainCampus = this.selectedTenant();
+            this.mainCampus = this.rootEstablishment;// this.selectedTenant(); 
             if (!this.mainCampus) {
                 this.mainCampus = this.selectedTenant();
                 if (!this.mainCampus) {
@@ -448,6 +454,7 @@
             var temp = sessionStorage.getItem('campuses' + this.mainCampus);
             if (temp) {
                 var response = $.parseJSON(temp);
+                //this.selectedTenant(this.establishmentId());
                 this._createEstablishmentSelects(response);
             } else {
 
@@ -457,7 +464,7 @@
                     .done((response: ApiModels.ScalarEstablishment[]): void => {
                         promise.resolve(response);
                         sessionStorage.setItem('campuses' + this.mainCampus, JSON.stringify(response));
-
+                        //this.selectedTenant(this.establishmentId());
                         this._createEstablishmentSelects(response);
 
 
@@ -505,6 +512,7 @@
                     this.establishmentData.ready();
 
                     var myThis = this;
+                    //this.establishmentId(this.selectedTenant());
                     this.selectedTenant(<number>this.establishmentId());
                     this.selectedTenant.subscribe((newValue: number): void => {
                         this.selectedEstablishment(this.selectedTenant());
