@@ -167,6 +167,8 @@ var Activities;
                                 myThis.selectedEstablishment(myThis.settings.tenantId);
                             }
                         }
+                        sessionStorage.setItem('EmployeeSummaryEstablishmentId', myThis.selectedEstablishment());
+
                         myThis._submitForm();
                     });
 

@@ -178,6 +178,8 @@ module Activities.ViewModels {
                                 myThis.selectedEstablishment(myThis.settings.tenantId);
                             }
                         }
+                        sessionStorage.setItem('EmployeeSummaryEstablishmentId', myThis.selectedEstablishment());
+                        
                         myThis._submitForm()
                     })
                     //deferred.resolve(tenants);
