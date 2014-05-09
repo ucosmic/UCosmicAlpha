@@ -41,6 +41,7 @@ public static class MVC
     public static UCosmic.Web.Mvc.Controllers.SamlMetadataController SamlMetadata = new UCosmic.Web.Mvc.Controllers.T4MVC_SamlMetadataController();
     public static UCosmic.Web.Mvc.Controllers.TenancyController Tenancy = new UCosmic.Web.Mvc.Controllers.T4MVC_TenancyController();
     public static UCosmic.Web.Mvc.Controllers.UsersController Users = new UCosmic.Web.Mvc.Controllers.T4MVC_UsersController();
+    public static T4MVC.CountryController Country = new T4MVC.CountryController();
     public static T4MVC.SharedController Shared = new T4MVC.SharedController();
 }
 
@@ -2857,6 +2858,9 @@ namespace Links
                 public static readonly string Search_ts = Url("Search.ts");
                 public static readonly string Search_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Search.min.js") ? Url("Search.min.js") : Url("Search.js");
                               
+                public static readonly string Server_ts = Url("Server.ts");
+                public static readonly string Server_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Server.min.js") ? Url("Server.min.js") : Url("Server.js");
+                              
             }
         
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -3572,6 +3576,29 @@ namespace Links
                 public static readonly string _values_scss = Url("_values.scss");
                 public static readonly string banner_logo_png = Url("banner-logo.png");
                 public static readonly string box_shadow_2_2_png = Url("box-shadow-2-2.png");
+                public static readonly string designs_scss = Url("designs.scss");
+                public static readonly string designs_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/designs.min.css") ? Url("designs.min.css") : Url("designs.css");
+                     
+                public static readonly string forms_scss = Url("forms.scss");
+                public static readonly string forms_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/forms.min.css") ? Url("forms.min.css") : Url("forms.css");
+                     
+                public static readonly string ie8_scss = Url("ie8.scss");
+                public static readonly string ie8_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/ie8.min.css") ? Url("ie8.min.css") : Url("ie8.css");
+                     
+                public static readonly string layout_scss = Url("layout.scss");
+                public static readonly string layout_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/layout.min.css") ? Url("layout.min.css") : Url("layout.css");
+                     
+                public static readonly string logo_png = Url("logo.png");
+            }
+        
+            [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+            public static class clemson_edu {
+                private const string URLPATH = "~/styles/tenants/clemson.edu";
+                public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
+                public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
+                public static readonly string _brand_scss = Url("_brand.scss");
+                public static readonly string _values_scss = Url("_values.scss");
+                public static readonly string banner_logo_png = Url("banner-logo.png");
                 public static readonly string designs_scss = Url("designs.scss");
                 public static readonly string designs_css = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/designs.min.css") ? Url("designs.min.css") : Url("designs.css");
                      
