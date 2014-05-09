@@ -319,7 +319,13 @@
     <Compile Include="ApiControllers\Expertise\GeographicExpertiseController.cs" />
     <Compile Include="ApiControllers\Expertise\LanguageExpertiseController.cs" />
     <Compile Include="ApiControllers\People\AffiliationsController.cs" />
+    <Compile Include="CountryController.generated.cs">
+      <DependentUpon>T4MVC.tt</DependentUpon>
+    </Compile>
     <Compile Include="Helpers\SessionExtensions.cs" />
+    <Compile Include="Models\Activities\ActivityPlaceMapViewModel.cs" />
+    <Compile Include="Models\Activities\Search\ActivitySearchMapModel.cs" />
+    <Compile Include="Models\Activities\Search\ActivitySearchResultMapModel.cs" />
     <Compile Include="Models\People\PersonUrlViewModel.cs" />
     <Compile Include="Models\People\PersonUrlApiModel.cs" />
     <Compile Include="ApiControllers\People\PersonUrlsController.cs" />
@@ -1758,6 +1764,7 @@
     <TypeScriptCompile Include="scripts\typings\knockout\knockout.d.ts" />
     <TypeScriptCompile Include="scripts\typings\modernizr\modernizr.d.ts" />
     <TypeScriptCompile Include="scripts\typings\moment\moment.d.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\activities\MapTest.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\activities\Map.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\activities\Search.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\activities\Server.ts" />
@@ -2712,6 +2719,7 @@
     <Content Include="Views\Employees\DegreesTable.cshtml" />
     <Content Include="Views\Employees\Experts.cshtml" />
     <Content Include="Views\People\_Urls.cshtml" />
+    <Content Include="Views\Employees\MapTest.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -2860,6 +2868,7 @@
     <Folder Include="App_Data\lucene\" />
     <Folder Include="App_Data\mail\" />
     <Folder Include="content\mail\" />
+    <Folder Include="Views\Country\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config">
