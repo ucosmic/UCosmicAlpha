@@ -86,7 +86,7 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             var query = new ActivityValuesPageBy
             {
-                EagerLoad = ActivitySearchResultProfiler.EntitiyToModel.EagerLoad,
+                //EagerLoad = ActivitySearchResultProfiler.EntitiyToModel.EagerLoad,
             };
             Mapper.Map(input, query);
             var results = _queryProcessor.Execute(query);
@@ -108,6 +108,40 @@ namespace UCosmic.Web.Mvc.Controllers
             if (settings != null && settings.ActivityTypes.Any())
                 model.ActivityTypes = Mapper.Map<ActivityTypeModel[]>(settings.ActivityTypes.OrderBy(x => x.Rank));
 
+            Session.LastEmployeeLens(Request);
+            Session.LastActivityLens(Request);
+            return View(model);
+        }
+        [CurrentModuleTab(ModuleTab.Employees)]
+        [GET("{domain}/employees/maptest")]
+        public virtual ActionResult MapTest(string domain, ActivitySearchInputModel input)
+        {
+            var query = new ActivityValuesPageBy
+            {
+            };
+            Mapper.Map(input, query);
+            var results = _queryProcessor.Execute(query);
+
+            var model = new ActivitySearchMapModel
+            {
+                Domain = domain,
+                Input = input,
+                Output = Mapper.Map<PageOfActivitySearchResultMapModel>(results),
+                ActivityTypes = Enumerable.Empty<ActivityTypeModel>(),
+            };
+            var settings = _queryProcessor.Execute(new EmployeeSettingsByEstablishment(domain)
+            {
+                EagerLoad = new Expression<Func<EmployeeModuleSettings, object>>[]
+                {
+                    x => x.ActivityTypes,
+                }
+            });
+            if (settings != null && settings.ActivityTypes.Any())
+                model.ActivityTypes = Mapper.Map<ActivityTypeModel[]>(settings.ActivityTypes.OrderBy(x => x.Rank));
+
+            var establishment = _queryProcessor.Execute(new EstablishmentByDomain(domain));
+            if (establishment == null) return HttpNotFound();
+            ViewBag.EmployeesEstablishmentId = establishment.RevisionId;
             Session.LastEmployeeLens(Request);
             Session.LastActivityLens(Request);
             return View(model);
