@@ -107,6 +107,28 @@ declare module Activities.ApiModels {
         size: string;
         extension: string;
     }
+
+    export interface PlaceWithAgreements {
+        id?: number;
+        continentId?: number;
+        continentCode?: string;
+        countryId?: number;
+        countryCode?: string;
+        name?: string;
+        type?: string;
+        agreementIds?: number[]
+        agreementCount?: number;
+        partnerIds?: number[]
+        partnerCount?: number;
+        isEarth?: boolean;
+        isContinent?: boolean;
+        isCountry?: boolean;
+        isAdmin1?: boolean;
+        isAdmin2?: boolean;
+        isAdmin3?: boolean;
+        center?: Places.ApiModels.Point;
+        boundingBox?: Places.ApiModels.Box;
+    }
 }
 
 declare module Activities.KoModels {
@@ -153,3 +175,4 @@ declare module Service.ApiModels {
         iconName: string;
     }
 }
+

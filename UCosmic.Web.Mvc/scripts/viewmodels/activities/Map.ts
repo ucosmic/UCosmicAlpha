@@ -7,7 +7,7 @@ module Activities.ViewModels {
         //countryCode = ko.observable(this.settings.input.countryCode);
         orderBy = ko.observable(this.settings.input.orderBy);
         keyword = ko.observable(this.settings.input.keyword);
-        pager = new App.Pager<ApiModels.SearchResult>(this.settings.input.pageNumber.toString(), this.settings.input.pageSize.toString());
+        //pager = new App.Pager<ApiModels.SearchResult>(this.settings.input.pageNumber.toString(), this.settings.input.pageSize.toString());
         pivot = ko.observable(<DataGraphPivot>this.settings.input.pivot);
 
         isActivitiesChecked = ko.computed((): boolean => { return this.pivot() != DataGraphPivot.people; });
@@ -21,7 +21,7 @@ module Activities.ViewModels {
         loadingSpinner = new App.Spinner()
 
         constructor(public settings: SearchSettings) {
-            this.pager.apply(this.settings.output);
+            //this.pager.apply(this.settings.output);
         }
 
         //#endregion
@@ -188,8 +188,8 @@ module Activities.ViewModels {
         }
 
         private _applySubscriptions(): void {
-            this.pager.input.pageSizeText.subscribe((newValue: string): void => { this._submitForm(); });
-            this.pager.input.pageNumberText.subscribe((newValue: string): void => { this._submitForm(); });
+            //this.pager.input.pageSizeText.subscribe((newValue: string): void => { this._submitForm(); });
+            //this.pager.input.pageNumberText.subscribe((newValue: string): void => { this._submitForm(); });
             //this.countryCode.subscribe((newValue: string): void => { this._submitForm(); });
             this.orderBy.subscribe((newValue: string): void => { this._submitForm(); });
             //this.pivot.subscribe((newValue: DataGraphPivot): void => { this._submitForm(); });
@@ -201,13 +201,18 @@ module Activities.ViewModels {
         private _submitForm(): void {
             if (this.loadingSpinner.isVisible()) return;
             this.loadingSpinner.start();
-            this.$form.submit();
+            this.search();
+            //this.$form.submit();
+        }
+
+        search(): void{
+            $("#activityTypesSearch").val("1").change();
         }
 
         onKeywordInputSearchEvent(viewModel: Search, e: JQueryEventObject): void {
             // this will auto-submit the form when the keyword box's X icon is clicked.
             if ($.trim(this.keyword()) && !$.trim($(e.target).val()) && this.$form)
-                this.$form.submit();
+                this.search();
         }
 
         //#endregion

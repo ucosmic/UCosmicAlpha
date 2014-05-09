@@ -62,6 +62,7 @@ var Activities;
                 this.isClearUntilDisabled = ko.computed(function () {
                     return _this.until() ? false : true;
                 });
+                window.sessionStorage.setItem("test", JSON.stringify(this.settings.output));
                 this.pager.apply(this.settings.output);
                 this._loadTenancyData();
             }
@@ -167,7 +168,7 @@ var Activities;
                                 myThis.selectedEstablishment(myThis.settings.tenantId);
                             }
                         }
-                        sessionStorage.setItem('EmployeeSummaryEstablishmentId', myThis.selectedEstablishment());
+                        sessionStorage.setItem('EmployeeSummaryEstablishmentId', myThis.selectedEstablishment().toString());
 
                         myThis._submitForm();
                     });

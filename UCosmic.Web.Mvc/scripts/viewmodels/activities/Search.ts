@@ -53,6 +53,7 @@ module Activities.ViewModels {
 
 
         constructor(public settings: SearchSettings) {
+            window.sessionStorage.setItem("test", JSON.stringify(this.settings.output));
             this.pager.apply(this.settings.output);
             this._loadTenancyData();
         }
@@ -178,7 +179,7 @@ module Activities.ViewModels {
                                 myThis.selectedEstablishment(myThis.settings.tenantId);
                             }
                         }
-                        sessionStorage.setItem('EmployeeSummaryEstablishmentId', myThis.selectedEstablishment());
+                        sessionStorage.setItem('EmployeeSummaryEstablishmentId', myThis.selectedEstablishment().toString());
                         
                         myThis._submitForm()
                     })

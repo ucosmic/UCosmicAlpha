@@ -7,7 +7,6 @@ var Activities;
                 this.settings = settings;
                 this.orderBy = ko.observable(this.settings.input.orderBy);
                 this.keyword = ko.observable(this.settings.input.keyword);
-                this.pager = new App.Pager(this.settings.input.pageNumber.toString(), this.settings.input.pageSize.toString());
                 this.pivot = ko.observable(this.settings.input.pivot);
                 this.isActivitiesChecked = ko.computed(function () {
                     return _this.pivot() != 2 /* people */;
@@ -37,7 +36,6 @@ var Activities;
                 this.isClearUntilDisabled = ko.computed(function () {
                     return _this.until() ? false : true;
                 });
-                this.pager.apply(this.settings.output);
             }
             Map.prototype.applyBindings = function (element) {
                 ko.applyBindings(this, element);
@@ -194,13 +192,6 @@ var Activities;
 
             Map.prototype._applySubscriptions = function () {
                 var _this = this;
-                this.pager.input.pageSizeText.subscribe(function (newValue) {
-                    _this._submitForm();
-                });
-                this.pager.input.pageNumberText.subscribe(function (newValue) {
-                    _this._submitForm();
-                });
-
                 this.orderBy.subscribe(function (newValue) {
                     _this._submitForm();
                 });
@@ -210,12 +201,16 @@ var Activities;
                 if (this.loadingSpinner.isVisible())
                     return;
                 this.loadingSpinner.start();
-                this.$form.submit();
+                this.search();
+            };
+
+            Map.prototype.search = function () {
+                $("#activityTypesSearch").val("1").change();
             };
 
             Map.prototype.onKeywordInputSearchEvent = function (viewModel, e) {
                 if ($.trim(this.keyword()) && !$.trim($(e.target).val()) && this.$form)
-                    this.$form.submit();
+                    this.search();
             };
 
             Map.prototype.checkAllActivityTypes = function () {
