@@ -61,7 +61,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 PlaceIds = input.PlaceIds,
                 PlaceAgnostic = input.PlaceAgnostic,
             };
-            var views = _queryProcessor.Execute(query);
+           var views = _queryProcessor.Execute(query);
             var models = Mapper.Map<EmployeesPlaceApiModel[]>(views);
             return models;
         }
