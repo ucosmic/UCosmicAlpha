@@ -93,6 +93,64 @@ namespace UCosmic.Web.Mvc.Models
                         return orderBy;
                     }))
                 ;
+                CreateMap<ActivitySearchInputModel, ActivityValuesBy>()
+                    .ForMember(d => d.EstablishmentDomain, o => o.MapFrom(s => s.Domain))
+                    .ForMember(d => d.EstablishmentId, o => o.Ignore())
+                    .ForMember(d => d.AncestorId, o => o.MapFrom(s => s.AncestorId))
+                    .ForMember(d => d.Principal, o => o.Ignore())
+                    .ForMember(d => d.PersonId, o => o.Ignore())
+                    .ForMember(d => d.CountryCode, o => o.Ignore())
+                    .ForMember(d => d.PlaceIds, o => o.MapFrom(s => s.PlaceIds == null ? null : s.PlaceIds.Where(x => x > 0)))
+                    .ForMember(d => d.EagerLoad, o => o.Ignore())
+
+                    // map from strings to dates
+                    .ForMember(d => d.Since, o => o.ResolveUsing(s => StringToDateTime(s.Since)))
+                    .ForMember(d => d.Until, o => o.ResolveUsing(s => StringToDateTime(s.Until, true)))
+
+                    // map the order by
+                    .ForMember(d => d.OrderBy, o => o.ResolveUsing(s =>
+                    {
+                        var orderBy = new Dictionary<Expression<Func<ActivityValues, object>>, OrderByDirection>();
+                        if (string.IsNullOrWhiteSpace(s.OrderBy) || !s.OrderBy.Contains("-"))
+                        {
+                            orderBy.Add(e => e.Title, OrderByDirection.Ascending);
+                        }
+                        else
+                        {
+                            var columnAndDirection = s.OrderBy.Split(new[] { '-' });
+                            var column = columnAndDirection[0];
+                            var direction = "desc".Equals(columnAndDirection[1], StringComparison.OrdinalIgnoreCase)
+                                ? OrderByDirection.Descending : OrderByDirection.Ascending;
+
+                            switch (column.ToLower())
+                            {
+                                case "title":
+                                    orderBy.Add(x => x.Title, direction);
+                                    break;
+                                case "type":
+                                    orderBy.Add(x => x.Types.Select(y => y.Type.Type)
+                                        .OrderBy(y => y).FirstOrDefault(), direction);
+                                    break;
+                                case "location":
+                                    orderBy.Add(x => x.Locations.Select(y => y.Place.OfficialName)
+                                        .OrderBy(y => y).FirstOrDefault(), direction);
+                                    break;
+                                case "lastname":
+                                    orderBy.Add(x => x.Activity.Person.LastName ?? x.Activity.Person.DisplayName, direction);
+                                    break;
+                                case "recency":
+                                    orderBy.Recency(direction);
+                                    break;
+
+                            }
+                        }
+
+                        if (!orderBy.Any())
+                            orderBy.Add(x => x.RevisionId, OrderByDirection.Ascending);
+
+                        return orderBy;
+                    }))
+                ;
             }
 
             private static DateTime? StringToDateTime(string value, bool until = false)
