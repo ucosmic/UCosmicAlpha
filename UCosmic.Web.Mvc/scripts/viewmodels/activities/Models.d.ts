@@ -108,7 +108,7 @@ declare module Activities.ApiModels {
         extension: string;
     }
 
-    export interface PlaceWithAgreements {
+    export interface PlaceWithActivities {
         id?: number;
         continentId?: number;
         continentCode?: string;
@@ -116,16 +116,10 @@ declare module Activities.ApiModels {
         countryCode?: string;
         name?: string;
         type?: string;
-        agreementIds?: number[]
-        agreementCount?: number;
-        partnerIds?: number[]
-        partnerCount?: number;
+        count?: number;
         isEarth?: boolean;
         isContinent?: boolean;
         isCountry?: boolean;
-        isAdmin1?: boolean;
-        isAdmin2?: boolean;
-        isAdmin3?: boolean;
         center?: Places.ApiModels.Point;
         boundingBox?: Places.ApiModels.Box;
     }
