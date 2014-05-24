@@ -116,17 +116,41 @@ namespace UCosmic.Web.Mvc.Controllers
         [GET("{domain}/employees/maptest")]
         public virtual ActionResult MapTest(string domain, ActivitySearchInputModel input)
         {
-            var query = new ActivityValuesPageBy
-            {
-            };
+            var query = new ActivityValuesBy();
+            input.PageSize = 10;
             Mapper.Map(input, query);
             var results = _queryProcessor.Execute(query);
-
+            //var Output = Mapper.Map<ActivitySearchResultMapModel[]>(results);
+            //var Output = Mapper.Map<ActivitySearchResultMapModel[]>(results); 
+            //var query = new ActivityValuesPageBy
+            //{
+            //};
+            //input.PageSize = 10;
+            //Mapper.Map(input, query);
+            //var results = _queryProcessor.Execute(query);
+            //var Output = Mapper.Map<PageOfActivitySearchResultMapModel>(results);
+            
             var model = new ActivitySearchMapModel
             {
                 Domain = domain,
                 Input = input,
-                Output = Mapper.Map<PageOfActivitySearchResultMapModel>(results),
+                // = Output,//results as IQueryable<ActivitySearchResultMapModel>,
+                //Continents =  from continents in Output
+                //       group continents by continents.ContinentCode into continent
+                //             select new ActivitySearchMapPlaceModel
+                //             {
+                //                 ContinentId = continent.Select(y => y.ContinentId).FirstOrDefault(),
+                //                Count = continent.Count(),
+                //                 BoundingBox = continent.Select(y => y.BoundingBox).FirstOrDefault(),
+                //                 Center = continent.Select(y => y.Center).FirstOrDefault(),
+                //                ContinentCode = continent.Select(y => y.ContinentCode).FirstOrDefault(),
+                //                CountryCode = null as string,
+                //                IsContinent = true,
+                //                IsCountry  = false,
+                //                IsEarth = false,
+                //                Name = continent.Select(y => y.ContinentName).FirstOrDefault(),
+                //                Type = "Continent"
+                //             },
                 ActivityTypes = Enumerable.Empty<ActivityTypeModel>(),
             };
             var settings = _queryProcessor.Execute(new EmployeeSettingsByEstablishment(domain)
@@ -144,6 +168,24 @@ namespace UCosmic.Web.Mvc.Controllers
             ViewBag.EmployeesEstablishmentId = establishment.RevisionId;
             Session.LastEmployeeLens(Request);
             Session.LastActivityLens(Request);
+            //send down continents and countries
+            //var xxx = model.Output.Items.GroupBy(x => x.ContinentCode).Select(y => y.);
+            //var xxxy = from continents in Output.Items
+            //           group continents by continents.ContinentCode into continent
+            //           select new { Continent = continent.Key,
+            //                        Count = continent.Count(),
+            //                        boundingBox = continent.Select(y => y.BoundingBox),
+            //                        Center = continent.Select(y => y.Center),
+            //                        continentCode = continent.Select(y => y.ContinentCode),
+            //                        countryCode = null as object,
+            //                        countryId = null as object,
+            //                        isContinent = true,
+            //                        isCountry  = false,
+            //                        isEarth = false,
+            //                        name = continent.Select(y => y.ContinentName.FirstOrDefault()),
+            //                        type = "Continent"
+            //           };
+
             return View(model);
         }
 

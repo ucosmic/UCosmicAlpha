@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -10,6 +11,7 @@ using AttributeRouting;
 using AttributeRouting.Web.Http;
 using AutoMapper;
 using ImageResizer;
+using UCosmic.Domain.Activities;
 using UCosmic.Domain.Employees;
 using UCosmic.Domain.Establishments;
 using UCosmic.Web.Mvc.Models;
@@ -202,6 +204,46 @@ namespace UCosmic.Web.Mvc.ApiControllers
             response.Content = new ByteArrayContent(binaryContent);
             response.Content.Headers.ContentType = new MediaTypeHeaderValue(mime);
             return response;
+        }
+
+        //[CurrentModuleTab(ModuleTab.Employees)]
+        //[GET("{domain}/employees/maptest")]
+        [CacheHttpGet(Duration = 60)]
+        [GET("{domain}/employees/maptest")]
+        public ActivitySearchResultMapModel[] GetMaptest(string domain, [FromUri] ActivitySearchInputModel input)
+        {
+            var query = new ActivityValuesBy();
+            //var input = new ActivitySearchInputModel();
+            
+            input.PageSize = 10;
+            Mapper.Map(input, query);
+            var results = _queryProcessor.Execute(query);
+            var Output = Mapper.Map<ActivitySearchResultMapModel[]>(results);
+
+            //var model = new ActivitySearchMapModel
+            //{
+            //    Domain = domain,
+            //    Input = input,
+            //    Output = Output,
+            //    ActivityTypes = Enumerable.Empty<ActivityTypeModel>(),
+            //};
+            //var settings = _queryProcessor.Execute(new EmployeeSettingsByEstablishment(domain)
+            //{
+            //    EagerLoad = new Expression<Func<EmployeeModuleSettings, object>>[]
+            //    {
+            //        x => x.ActivityTypes,
+            //    }
+            //});
+            //if (settings != null && settings.ActivityTypes.Any())
+            //    model.ActivityTypes = Mapper.Map<ActivityTypeModel[]>(settings.ActivityTypes.OrderBy(x => x.Rank));
+
+            //var establishment = _queryProcessor.Execute(new EstablishmentByDomain(domain));
+            //if (establishment == null) return HttpNotFound();
+            //ViewBag.EmployeesEstablishmentId = establishment.RevisionId;
+            //Session.LastEmployeeLens(Request);
+            //Session.LastActivityLens(Request);
+
+            return Output;
         }
     }
 }

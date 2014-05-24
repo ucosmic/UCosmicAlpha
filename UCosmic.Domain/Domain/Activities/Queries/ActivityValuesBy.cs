@@ -9,7 +9,7 @@ namespace UCosmic.Domain.Activities
 {
     public class ActivityValuesBy : BaseEntitiesQuery<ActivityValues>, IDefineQuery<IQueryable<ActivityValues>>
     {
-        internal ActivityValuesBy()
+        public ActivityValuesBy()
         {
         }
 

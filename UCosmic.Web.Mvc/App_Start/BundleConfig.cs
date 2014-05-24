@@ -210,6 +210,13 @@ namespace UCosmic.Web.Mvc
                 "~/scripts/app/DataCacher.js",
                 "~/scripts/viewmodels/activities/Search.js",
                 "~/scripts/viewmodels/activities/maptest.js"));
+            bundles.Add(new ScriptBundle("~/bundles/activities/maptest").Include(
+                "~/scripts/viewmodels/activities/Server.js",
+                "~/scripts/viewmodels/places/Utils.js",
+                "~/scripts/google/Map.js",
+                "~/scripts/app/DataCacher.js",
+                "~/scripts/viewmodels/activities/SearchMap.js",
+                "~/scripts/viewmodels/activities/maptest.js"));
 
             // employees, faculty and staff
             bundles.Add(new ScriptBundle("~/bundles/employees").Include(
