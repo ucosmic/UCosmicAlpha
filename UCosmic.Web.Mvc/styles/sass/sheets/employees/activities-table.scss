@@ -1,4 +1,12 @@
 body {
+    .k-dropdown .k-dropdown-wrap .k-input, .k-dropdown .k-dropdown-wrap.k-state-default .k-input, .k-dropdown .k-dropdown-wrap.k-state-border-down .k-input, .k-dropdown .k-dropdown-wrap.k-state-hover .k-input, .k-dropdown .k-dropdown-wrap.k-state-focused .k-input{
+
+            margin: 0;
+            padding: 0 0 0 4px;
+            height: 18px;
+            line-height: 16px!important;
+            font-size: 14px!important;
+    }
     nav.side input[type=text].side {
         height: 20px;
         line-height: 16px;
@@ -8,7 +16,6 @@ body {
     }
 
     .location.combobox.field {
-
         .k-combobox {
             background: transparent;
             width: 100%;
