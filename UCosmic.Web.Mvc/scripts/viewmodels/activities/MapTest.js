@@ -6,37 +6,8 @@
                 var _this = this;
                 this.continentCode = ko.observable(sessionStorage.getItem(SearchMap.ContinentSessionKey) || 'any');
                 this.countryCode = ko.observable(sessionStorage.getItem(SearchMap.CountrySessionKey) || 'any');
-                this.placeId = ko.observable(parseInt(sessionStorage.getItem(SearchMap.PlaceIdSessionKey) || 0));
                 this.continentName = ko.observable(sessionStorage.getItem('continentName') || '');
-                this.zoom = ko.observable(parseInt(sessionStorage.getItem(SearchMap.ZoomSessionKey)) || 1);
-                this.lat = ko.observable(parseInt(sessionStorage.getItem(SearchMap.LatSessionKey)) || SearchMap.defaultMapCenter.lat());
-                this.lng = ko.observable(parseInt(sessionStorage.getItem(SearchMap.LngSessionKey)) || SearchMap.defaultMapCenter.lng());
-                this.detailPreference = ko.observable(sessionStorage.getItem(SearchMap.DetailPrefSessionKey));
-                this.detailPreferenceChecked = ko.computed({
-                    read: function () {
-                        return _this.detailPreference() == '_blank';
-                    },
-                    write: function (value) {
-                        _this.detailPreference(value ? '_blank' : '');
-                    }
-                });
-                this._inputChanged = ko.computed(function () {
-                    if (_this.countryCode() == undefined)
-                        _this.countryCode('any');
-                    if (_this.continentCode() == undefined)
-                        _this.continentCode('any');
-
-                    sessionStorage.setItem(SearchMap.ContinentSessionKey, _this.continentCode());
-                    sessionStorage.setItem(SearchMap.CountrySessionKey, _this.countryCode());
-                    sessionStorage.setItem(SearchMap.PlaceIdSessionKey, _this.placeId().toString());
-                    sessionStorage.setItem(SearchMap.ZoomSessionKey, _this.zoom().toString());
-                    sessionStorage.setItem(SearchMap.LatSessionKey, _this.lat().toString());
-                    sessionStorage.setItem(SearchMap.LngSessionKey, _this.lng().toString());
-                    sessionStorage.setItem(SearchMap.DetailPrefSessionKey, _this.detailPreference() || '');
-                }).extend({ throttle: 0 });
                 this._map = new App.GoogleMaps.Map('google_map_canvas', {
-                    center: new google.maps.LatLng(this.lat(), this.lng()),
-                    zoom: this.zoom(),
                     streetViewControl: false,
                     panControl: false,
                     zoomControlOptions: {
@@ -45,6 +16,7 @@
                 }, {
                     maxPrecision: 8
                 });
+                this.placeType = ko.observable("");
                 this.countries = ko.observableArray();
                 this.countryOptions = ko.computed(function () {
                     return _this._computeCountryOptions();
@@ -55,12 +27,6 @@
                 this._isActivated = ko.observable(false);
                 this.loadViewport = 0;
                 this._scopeHistory = ko.observableArray();
-                this._currentScope = ko.computed(function () {
-                    return _this._computeCurrentScope();
-                });
-                this._scopeDirty = ko.computed(function () {
-                    _this._onScopeDirty();
-                }).extend({ throttle: 1 });
                 this._viewportHistory = ko.observableArray();
                 this._currentViewport = ko.computed(function () {
                     return _this._computeCurrentViewport();
@@ -77,22 +43,27 @@
                 var stringActivityMapData;
                 var activityMapData;
                 var stringActivityMapDataSearch = sessionStorage.getItem('activityMapDataSearch');
-                var ancestorId = output.input.ancestorId ? output.input.ancestorId : "null";
-                var keyword = output.input.keyword ? output.input.keyword : "null";
+                var searchOptions = JSON.parse(sessionStorage.getItem(SearchMap.SearchOptions));
+                this.ancestorId = output.input.ancestorId ? output.input.ancestorId : "null";
+                this.keyword = output.input.keyword ? output.input.keyword : "null";
 
-                if (stringActivityMapDataSearch == ancestorId + keyword) {
+                if (stringActivityMapDataSearch == this.ancestorId + this.keyword) {
                     stringActivityMapData = sessionStorage.getItem('activityMapData');
                     activityMapData = $.parseJSON(stringActivityMapData);
                 }
 
                 if (activityMapData && activityMapData.length) {
-                    this._loadInMapData(activityMapData);
+                    if (searchOptions) {
+                        this._loadInMapData(activityMapData, searchOptions);
+                    } else {
+                        this._loadInMapData(activityMapData, { 'placeFilter': 'continents' });
+                    }
                 } else {
                     var settings = settings || {};
 
-                    var url = '/api/usf.edu/employees/maptest/?ancestorid=' + ancestorId;
+                    var url = '/api/usf.edu/employees/maptest/?ancestorid=' + this.ancestorId;
                     if (output.input.keyword) {
-                        url += '&keyword=' + keyword;
+                        url += '&keyword=' + this.keyword;
                     }
                     settings.url = url;
 
@@ -101,8 +72,12 @@
                         _this.parentObject.loadingSpinner.stop();
 
                         sessionStorage.setItem('activityMapData', JSON.stringify(response));
-                        sessionStorage.setItem('activityMapDataSearch', ancestorId + keyword);
-                        _this._loadInMapData(response);
+                        sessionStorage.setItem('activityMapDataSearch', _this.ancestorId + _this.keyword);
+                        if (searchOptions) {
+                            _this._loadInMapData(response, searchOptions);
+                        } else {
+                            _this._loadInMapData(response, { 'placeFilter': 'continents' });
+                        }
                     }).fail(function (xhr) {
                     });
                 }
@@ -111,31 +86,70 @@
                 ko.applyBindings(this, element);
             };
 
-            SearchMap.prototype._loadInMapData = function (data) {
-                var _this = this;
-                var continents = Enumerable.From(data).GroupBy("$.continents.continentCode", "", "k, e => {" + "continentCode: k," + "boundingBox: e.Select($.place).FirstOrDefault().boundingBox," + "center: e.Select($.place).FirstOrDefault().center," + "name: e.Select($.place).FirstOrDefault().continentName," + "countryCode: null," + "isContinent: true," + "isCountry: false," + "isEarth: false," + "type: 'Continent'," + "count: e.Count()}").ToArray();
+            SearchMap.prototype.updateSession = function (search) {
+                if (this.countryCode() == undefined)
+                    this.countryCode('any');
+                if (this.continentCode() == undefined)
+                    this.continentCode('any');
 
-                var countries = Enumerable.From(data).GroupBy("$.countryCode", "", "k, e => {" + "countryCode: k," + "boundingBox: e.Select($.place).FirstOrDefault().boundingBox," + "center: e.Select($.place).FirstOrDefault().centerCountry," + "continentCode: e.Select($.place).FirstOrDefault().continentCode," + "name: e.Select($.place).FirstOrDefault().countryName," + "isContinent: false," + "isCountry: true," + "isEarth: false," + "type: 'Continent'," + "count: e.Count()}").ToArray();
+                sessionStorage.setItem(SearchMap.ContinentSessionKey, this.continentCode());
+                sessionStorage.setItem(SearchMap.CountrySessionKey, this.countryCode());
+
+                sessionStorage.setItem(SearchMap.SearchOptions, JSON.stringify(search));
+            };
+
+            SearchMap.prototype._loadInMapData = function (data, input) {
+                var _this = this;
+                if (input.placeFilter) {
+                    if (input.activityTypeIds) {
+                        var types = "";
+                        if (input.activityTypeIds.length > 1) {
+                            $.each(input.activityTypeIds, function (index, type) {
+                                if (index == 0) {
+                                    types += "$.activityTypeIds.indexOf(" + type + ") > -1";
+                                } else {
+                                    types += " || $.activityTypeIds.indexOf(" + type + ") > -1";
+                                }
+                            });
+                        } else if (input.activityTypeIds.length = 1) {
+                            types += "$.activityTypeIds.indexOf(" + input.activityTypeIds + ") > -1";
+                        }
+                        data = Enumerable.From(data).Where(types).ToArray();
+                    }
+                    if (input.placeNames) {
+                        var places = "$.locationNames.indexOf('" + input.placeNames + "') > -1";
+                        data = Enumerable.From(data).Where(places).ToArray();
+                    }
+                    if (input.Since) {
+                        var date = "new Date($.startsOn) > new Date('" + input.Since + "')";
+                        if (input.includeUndated) {
+                            date += " || $.startsOn == '0001-01-01T00:00:00'";
+                        }
+                        data = Enumerable.From(data).Where(date).ToArray();
+                    }
+                    if (input.Until) {
+                        var date = "new Date($.endsOn) > new Date('" + input.Until + "')";
+                        if (input.includeUndated) {
+                            date += " || $.endsOn == '0001-01-01T00:00:00'";
+                        }
+                        data = Enumerable.From(data).Where(date).ToArray();
+                    }
+                }
+
+                var continents = Enumerable.From(data).SelectMany("$.continents").GroupBy("$.code", "", "k, e => {" + "code: k," + "boundingBox: e.Select($.place).FirstOrDefault().boundingBox," + "center: e.Select($.place).FirstOrDefault().center," + "name: e.Select($.place).FirstOrDefault().name," + "id: e.Select($.place).FirstOrDefault().id," + "countryCode: null," + "isContinent: true," + "isCountry: false," + "isEarth: false," + "type: 'Continent'," + "count: e.Count()}").ToArray();
+
+                var countries = Enumerable.From(data).SelectMany("$.countries").GroupBy("$.name", "", "k, e => {" + "name: k," + "boundingBox: e.Select($.place).FirstOrDefault().boundingBox," + "center: e.Select($.place).FirstOrDefault().center," + "code: e.Select($.place).FirstOrDefault().code," + "name: e.Select($.place).FirstOrDefault().name," + "id: e.Select($.place).FirstOrDefault().id," + "isContinent: false," + "isCountry: true," + "isEarth: false," + "type: 'Country'," + "count: e.Count()}").ToArray();
+
+                var waters = Enumerable.From(data).SelectMany("$.waters").GroupBy("$.name", "", "k, e => {" + "code: k," + "boundingBox: e.Select($.place).FirstOrDefault().boundingBox," + "center: e.Select($.place).FirstOrDefault().center," + "continentCode: ''," + "name: e.Select($.place).FirstOrDefault().name," + "id: e.Select($.place).FirstOrDefault().id," + "isContinent: false," + "isCountry: false," + "isEarth: false," + "type: 'Water'," + "count: e.Count()}").ToArray();
                 this.countries(continents);
                 this._countriesResponse = ko.observableArray(countries);
                 this._continentsResponse = ko.observableArray(continents);
+                this._watersResponse = ko.observableArray(waters);
 
                 this.output = countries;
 
                 this._map.ready().done(function () {
-                    _this._map.onIdle(function () {
-                        var idles = _this._map.idles();
-                        setTimeout(function () {
-                            if (idles == _this._map.idles() && !_this._map.isDragging() && _this._isActivated()) {
-                                if (_this.zoom() != _this._map.zoom() || !SearchMap._areCoordinatesEqualEnough(_this.lat(), _this._map.lat()) || !SearchMap._areCoordinatesEqualEnough(_this.lng(), _this._map.lng())) {
-                                    _this.lat(_this._map.lat());
-                                    _this.lng(_this._map.lng());
-                                    _this.zoom(_this._map.zoom());
-                                }
-                            }
-                        }, 1000);
-                    });
-                    _this._load();
+                    _this._load(input.placeFilter);
                 });
             };
 
@@ -164,24 +178,30 @@
                 return o;
             };
 
-            SearchMap.prototype.reloadData = function (form) {
+            SearchMap.prototype.reloadData = function (form, reloadPage) {
                 var _this = this;
+                var input = this.serializeObject($('form'));
+                this.updateSession(input);
+                if (reloadPage) {
+                    var search = input;
+                    var url = location.href.split('?')[0] + '?ancestorId=' + search.ancestorid + '&keyword=' + search.keyword;
+                    location.href = url;
+                    return;
+                }
+
                 if (this.parentObject.loadingSpinner.isVisible())
                     return;
                 var stringActivityMapData;
                 var activityMapData;
                 var stringActivityMapDataSearch = sessionStorage.getItem('activityMapDataSearch');
-                var input = this.serializeObject($('form'));
-                var ancestorId = input.ancestorId ? input.ancestorId : "null";
-                var keyword = input.keyword ? input.keyword : "null";
 
-                if (stringActivityMapDataSearch == ancestorId + keyword) {
+                if (stringActivityMapDataSearch == this.ancestorId + this.keyword) {
                     stringActivityMapData = sessionStorage.getItem('activityMapData');
                     activityMapData = $.parseJSON(stringActivityMapData);
                 }
 
                 if (activityMapData && activityMapData.length) {
-                    this._loadInMapData(activityMapData);
+                    this._loadInMapData(activityMapData, input);
                 } else {
                     this.parentObject.loadingSpinner.start();
 
@@ -193,8 +213,8 @@
                         _this.parentObject.loadingSpinner.stop();
 
                         sessionStorage.setItem('activityMapData', JSON.stringify(response));
-                        sessionStorage.setItem('activityMapDataSearch', ancestorId + keyword);
-                        _this._loadInMapData(response);
+                        sessionStorage.setItem('activityMapDataSearch', _this.ancestorId + _this.keyword);
+                        _this._loadInMapData(response, input);
                     }).fail(function (xhr) {
                     });
                 }
@@ -202,10 +222,10 @@
 
             SearchMap.prototype.clearFilter = function () {
                 this._receivePlaces('continents');
+                this.placeType('continents');
                 sessionStorage.setItem('continentName', null);
-                if (this.placeId())
-                    this.placeId(0);
-                else if (this.countryCode() != 'any')
+
+                if (this.countryCode() != 'any')
                     this.countryCode('any');
                 else if (this.continentCode() != 'any')
                     this.continentCode('any');
@@ -283,23 +303,16 @@
 
             SearchMap.prototype.continentSelected = function () {
                 this.countryCode('any');
-                this.placeId(0);
             };
 
             SearchMap.prototype.countrySelected = function () {
-                this.placeId(0);
             };
 
             SearchMap.prototype._onBeforeRoute = function (e) {
                 var newLat = e.params['lat'];
                 var newLng = e.params['lng'];
-                var oldLat = this.lat();
-                var oldLng = this.lng();
-                var allowRoute = true;
 
-                if (this._scopeHistory().length > 1 && parseInt(e.params['zoom']) == this.zoom() && this._areFloatsEqualEnough(parseFloat(newLat), oldLat) && this._areFloatsEqualEnough(parseFloat(newLng), oldLng)) {
-                    return false;
-                }
+                var allowRoute = true;
 
                 return allowRoute;
             };
@@ -332,23 +345,6 @@
                 return true;
             };
 
-            SearchMap.prototype._onRoute = function (e) {
-                var continent = e.params['continent'];
-                var country = e.params['country'];
-                var placeId = e.params['place'];
-                var zoom = e.params['zoom'];
-                var lat = e.params['lat'];
-                var lng = e.params['lng'];
-
-                this.continentCode(continent);
-                this.countryCode(country);
-                this.placeId(parseInt(placeId));
-                this.zoom(parseInt(zoom));
-                this.lat(parseFloat(lat));
-                this.lng(parseFloat(lng));
-                this.activate();
-            };
-
             SearchMap.prototype.activate = function () {
                 var _this = this;
                 if (!this._isActivated()) {
@@ -366,46 +362,13 @@
                     this._isActivated(false);
             };
 
-            SearchMap.prototype._computeCurrentScope = function () {
-                var scope = {
-                    continentCode: this.continentCode(),
-                    countryCode: this.countryCode(),
-                    placeId: this.placeId()
-                };
-                return scope;
-            };
-
-            SearchMap.prototype._onScopeDirty = function () {
-                var _this = this;
-                if (!this._isActivated())
-                    return;
-
-                var scopeHistory = this._scopeHistory();
-                var lastScope = scopeHistory.length ? Enumerable.From(scopeHistory).Last() : null;
-                var thisScope = this._currentScope();
-
-                if (!lastScope || lastScope.countryCode != thisScope.countryCode || lastScope.continentCode != thisScope.continentCode || lastScope.placeId != thisScope.placeId) {
-                    this._scopeHistory.push(thisScope);
-                    $.when(this._map.ready()).then(function () {
-                        _this._map.triggerResize();
-                        _this._load();
-                    });
-                }
-            };
-
             SearchMap.prototype._computeCurrentViewport = function () {
-                var viewport = {
-                    zoom: this.zoom(),
-                    center: new google.maps.LatLng(this.lat(), this.lng())
-                };
+                var viewport = {};
                 return viewport;
             };
 
             SearchMap.prototype._onViewportDirty = function () {
                 var _this = this;
-                var zoom = this.zoom();
-                var lat = this.lat();
-                var lng = this.lng();
                 if (!this._isActivated() || this.loadViewport)
                     return;
 
@@ -422,23 +385,19 @@
                 }
             };
 
-            SearchMap.prototype._load = function () {
-                if (!this.placeId()) {
-                    var placeType = '';
-                    var continentCode = this.continentCode();
-                    var countryCode = this.countryCode();
-                    if (continentCode == 'any' && countryCode == 'any') {
-                        placeType = 'continents';
-                    } else if (countryCode == 'any') {
-                        placeType = 'countries';
-                    }
-                    var placesReceived = this._requestPlaces(placeType);
-                    this._requestPlaces('continents');
-                    this._requestPlaces('countries');
-                    this._requestPlaces('');
-                    this._receivePlaces(placeType);
-                } else {
+            SearchMap.prototype._load = function (placeType) {
+                var continentCode = this.continentCode();
+                var countryCode = this.countryCode();
+                if (continentCode != 'any') {
+                    placeType = 'countries';
                 }
+
+                this.placeType(placeType);
+                var placesReceived = this._requestPlaces(placeType);
+                this._requestPlaces('continents');
+                this._requestPlaces('countries');
+                this._requestPlaces('');
+                this._receivePlaces(placeType);
             };
 
             SearchMap.prototype._requestPlaces = function (placeType) {
@@ -460,20 +419,22 @@
             };
 
             SearchMap.prototype._receivePlaces = function (placeType) {
-                var places = placeType == 'continents' ? this._continentsResponse() : this._countriesResponse();
+                var places;
+                if (placeType == 'countries') {
+                    places = this._countriesResponse();
+                } else if (placeType == 'waters') {
+                    places = this._watersResponse();
+                } else {
+                    places = this._continentsResponse();
+                }
 
                 if (placeType == 'countries') {
                     var continentCode = this.continentCode();
-                    places = Enumerable.From(places).Where(function (x) {
-                        return continentCode == 'none' ? !x.id : x.continentCode == continentCode;
-                    }).ToArray();
-                }
-
-                if (!placeType) {
-                    var countryCode = this.countryCode();
-                    places = Enumerable.From(places).Where(function (x) {
-                        return countryCode == 'none' ? !x.countryId : x.countryCode == countryCode;
-                    }).ToArray();
+                    if (this.continentCode() && this.continentCode() != 'any') {
+                        places = Enumerable.From(places).Where(function (x) {
+                            return continentCode == 'none' ? !x.id : x.code == continentCode;
+                        }).ToArray();
+                    }
                 }
 
                 this._plotMarkers(placeType, places);
@@ -486,34 +447,25 @@
 
             SearchMap.prototype._plotMarkers = function (placeType, places) {
                 var _this = this;
-                var scaler = placeType == 'countries' ? this._getMarkerIconScaler(placeType, this._countriesResponse()) : this._getMarkerIconScaler(placeType, this._continentsResponse());
+                var scaler;
+                if (placeType == 'countries') {
+                    scaler = this._getMarkerIconScaler(placeType, this._countriesResponse());
+                } else if (placeType == 'waters') {
+                    scaler = this._getMarkerIconScaler(placeType, this._watersResponse());
+                } else {
+                    scaler = this._getMarkerIconScaler(placeType, this._continentsResponse());
+                }
                 var continentCode = this.continentCode();
                 if (placeType == 'countries' && !places.length && continentCode != 'none') {
                     var continent = Enumerable.From(this._continentsResponse()).SingleOrDefault(undefined, function (x) {
-                        return x.continentCode == continentCode;
+                        return x.code == continentCode;
                     });
                     if (continent) {
                         places = [continent];
                     }
                 }
                 var countryCode = this.countryCode();
-                if (!placeType && !places.length && countryCode != 'none') {
-                    var country = Enumerable.From(this.countryOptions()).SingleOrDefault(undefined, function (x) {
-                        return x.code == countryCode;
-                    });
-                    if (country) {
-                        places = [{
-                                id: country.id,
-                                count: 0,
-                                name: country.name,
-                                center: country.center,
-                                boundingBox: country.box,
-                                isCountry: true,
-                                countryCode: country.code,
-                                continentCode: country.continentCode
-                            }];
-                    }
-                }
+
                 var markers = [];
                 $.each(places, function (i, place) {
                     if (placeType == 'continents' && !place.count)
@@ -546,18 +498,27 @@
                     });
                     if (placeType === 'continents') {
                         google.maps.event.addListener(marker, 'click', function (e) {
-                            sessionStorage.setItem(SearchMap.ContinentSessionKey, _this.continentCode());
-                            _this.continentCode(place.continentCode);
-                            _this.countryCode('any');
-                            _this.continentName(place.name);
-                            sessionStorage.setItem('continentName', _this.continentName());
-                            _this.placeId(0);
-                            _this.loadViewport++;
-                            _this._receivePlaces('countries');
+                            if (place.code) {
+                                sessionStorage.setItem(SearchMap.ContinentSessionKey, _this.continentCode());
+                                _this.continentCode(place.code);
+                                _this.countryCode('any');
+                                _this.continentName(place.name);
+                                sessionStorage.setItem('continentName', _this.continentName());
+
+                                _this.loadViewport++;
+                                _this._receivePlaces('countries');
+                                _this.placeType('countries');
+                            }
                         });
-                    } else if (placeType === 'countries') {
+                    } else {
                         google.maps.event.addListener(marker, 'click', function (e) {
-                            var x = place;
+                            if (place.id != 0) {
+                                var search = _this.serializeObject(_this.parentObject.$form);
+                                search.placeNames = place.name;
+                                search.placeIds = place.id;
+                                var url = location.href.replace('maptest', 'table') + '&' + $.param(search);
+                                location.href = url;
+                            }
                         });
                     }
                 });
@@ -578,7 +539,7 @@
                     if (!places.length) {
                         if (continentCode && this._continentsResponse) {
                             var continent = Enumerable.From(this._continentsResponse()).SingleOrDefault(undefined, function (x) {
-                                return x.continentCode == continentCode;
+                                return x.code == continentCode;
                             });
                             if (continent && continent.boundingBox && continent.boundingBox.hasValue) {
                                 settings.bounds = Places.Utils.convertToLatLngBounds(continent.boundingBox);
@@ -671,13 +632,9 @@
             };
             SearchMap.defaultMapCenter = new google.maps.LatLng(0, 17);
 
-            SearchMap.ContinentSessionKey = 'AgreementSearchContinent';
-            SearchMap.CountrySessionKey = 'AgreementSearchCountry2';
-            SearchMap.PlaceIdSessionKey = 'AgreementMapSearchPlaceId';
-            SearchMap.ZoomSessionKey = 'AgreementSearchZoom';
-            SearchMap.LatSessionKey = 'AgreementSearchLat';
-            SearchMap.LngSessionKey = 'AgreementSearchLng';
-            SearchMap.DetailPrefSessionKey = 'AgreementSearchMapDetailPreference';
+            SearchMap.ContinentSessionKey = 'ActivitySearchContinent';
+            SearchMap.CountrySessionKey = 'ActivitySearchCountry2';
+            SearchMap.SearchOptions = 'ActivitySearchOptions';
             return SearchMap;
         })();
         ViewModels.SearchMap = SearchMap;

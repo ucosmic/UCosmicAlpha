@@ -111,9 +111,9 @@ declare module Activities.ApiModels {
     export interface PlaceWithActivities {
         id?: number;
         continentId?: number;
-        continentCode?: string;
-        countryId?: number;
-        countryCode?: string;
+        code?: string;
+        //countryId?: number;
+        //countryCode?: string;
         name?: string;
         type?: string;
         count?: number;
