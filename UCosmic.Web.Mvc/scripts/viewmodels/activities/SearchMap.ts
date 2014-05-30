@@ -1,5 +1,5 @@
-module Activities.ViewModels {
 
+module Activities.ViewModels {
 
     export interface SearchTestSettings {
         input: ApiModels.SearchInput;
@@ -17,10 +17,12 @@ module Activities.ViewModels {
         // when activity types is null or empty, assume all are checked
         isChecked = ko.observable(!this.settings.input.activityTypeIds || !this.settings.input.activityTypeIds.length ||
             // otherwise, it is only checked when input contains the activity type id
-            Enumerable.From(this.settings.input.activityTypeIds).Contains(this.activityType.activityTypeId));
+            Enumerable.From(this.settings.input.activityTypeIds).Contains(this.activityType.activityTypeId.toString()));
 
 
-        constructor(public activityType: ApiModels.ActivityTypeSearchFilter, public settings: SearchTestSettings) { }
+        constructor(public activityType: ApiModels.ActivityTypeSearchFilter, public settings: SearchTestSettings) {
+
+        }
     }
 
 
@@ -37,6 +39,7 @@ module Activities.ViewModels {
 
         $form: JQuery;
         $location: JQuery;
+        $placeFilter: JQuery;
         $since: JQuery;
         $until: JQuery;
         $placeIds: JQuery;
@@ -51,11 +54,57 @@ module Activities.ViewModels {
         affiliations = ko.mapping.fromJS([]);
         mainCampus: number;
         searchMap;
+        includeUndated = ko.observable<string>("Checked");
+        ancestorId: number;
+        oldKeyword: string;
+        oldAncestorId: number;
+        placeNames = ko.observable<string>("");
+        placeFilter = ko.observable<string>("");
 
         constructor(public settings: SearchTestSettings, searchMapData) {
             //window.sessionStorage.setItem("test", JSON.stringify(this.settings.output));
             //this.pager.apply(this.settings.output);
+            var searchOptions = JSON.parse(sessionStorage.getItem(SearchMap.SearchOptions));
+            if(searchOptions){
+                this.settings.input.activityTypeIds = searchOptions.activityTypeIds;
+                this.placeNames(searchOptions.placeNames);
+                this.placeFilter(searchOptions.placeFilter);
+                this.settings.input.since = searchOptions.Since
+                this.settings.input.until = searchOptions.Until
+                this.settings.input.includeUndated = searchOptions.includeUndated;
+                if(!searchOptions.includeUndated){
+                    this.includeUndated("")
+                }
+            }
+            
+            this.activityTypeCheckBoxes = ko.observableArray<ActivityTypeSearchTestCheckBox>(Enumerable.From(this.settings.activityTypes)
+                .Select((x: ApiModels.ActivityTypeSearchFilter): ActivityTypeSearchTestCheckBox => {
+                return new ActivityTypeSearchTestCheckBox(x, this.settings)
+            }).ToArray());
+
+            this.isCheckAllActivityTypesDisabled = ko.computed((): boolean => {
+                return Enumerable.From(this.activityTypeCheckBoxes())
+                    .All((x: ActivityTypeSearchTestCheckBox): boolean => {
+                        return x.isChecked();
+                    });
+            });
+
+            this.isUncheckAllActivityTypesDisabled = ko.computed((): boolean => {
+                return Enumerable.From(this.activityTypeCheckBoxes())
+                    .All((x: ActivityTypeSearchTestCheckBox): boolean => {
+                        return !x.isChecked();
+                    });
+            });
             this._loadTenancyData();
+            this.ancestorId = settings.input.ancestorId;
+            this.oldAncestorId = settings.input.ancestorId;
+            this.oldKeyword = settings.input.keyword;
+
+            //$.each(searchOptions.activityTypeIds, function (index, value) {
+            //    $.each($("input[name='activityTypeIds']"), function (index2, value2) {
+            //        if(value = 
+            //    });
+            //});
 
 
             this.searchMap = new Activities.ViewModels.SearchMap(searchMapData, this);
@@ -357,6 +406,26 @@ module Activities.ViewModels {
             });
             var comboBox: kendo.ui.ComboBox = this.$location.data('kendoComboBox');
             comboBox.list.addClass('k-ucosmic');
+
+            this.$placeFilter.kendoDropDownList({
+                animation: false,
+                height: 420,
+                dataTextField: 'name',
+                dataValueField: 'value',
+                dataSource: [
+                    { name: "Filter by continents", value: "continents" },
+                    { name: "Filter by bodies of water", value: "waters" },
+                    { name: "Filter by countries", value: "countries" },
+                ],
+                change: (e: kendo.ui.DropDownListSelectEvent): void => {
+                    var dataItem = e.sender.dataItem(e.sender.selectedIndex);
+                    //e.sender.input.val(dataItem.officialName);
+                    this.$placeFilter.val(dataItem.value);
+                    this._submitForm();
+                }
+            });
+            var comboBox2: kendo.ui.ComboBox = this.$placeFilter.data('kendoDropDownList');
+            comboBox2.list.addClass('k-ucosmic');
             //#endregion
         }
 
@@ -370,8 +439,13 @@ module Activities.ViewModels {
         //#region Automatic Form Submits
 
         private _submitForm(): void {
-            
-            this.searchMap.reloadData($('form'));
+
+            if (this.keyword() == this.oldKeyword && this.oldAncestorId == this.selectedEstablishment()) {
+                this.searchMap.reloadData($('form'), false);
+            } else {
+                this.searchMap.reloadData($('form'), true);
+            }
+
             //this.$form.submit();
         }
 
@@ -384,24 +458,24 @@ module Activities.ViewModels {
         //#endregion
         //#region Activity Type CheckBoxes
 
-        activityTypeCheckBoxes = ko.observableArray<ActivityTypeSearchTestCheckBox>(Enumerable.From(this.settings.activityTypes)
-            .Select((x: ApiModels.ActivityTypeSearchFilter): ActivityTypeSearchTestCheckBox => {
-                return new ActivityTypeSearchTestCheckBox(x, this.settings)
-        }).ToArray());
+        activityTypeCheckBoxes;// = ko.observableArray<ActivityTypeSearchTestCheckBox>(Enumerable.From(this.settings.activityTypes)
+        //    .Select((x: ApiModels.ActivityTypeSearchFilter): ActivityTypeSearchTestCheckBox => {
+        //        return new ActivityTypeSearchTestCheckBox(x, this.settings)
+        //}).ToArray());
 
-        isCheckAllActivityTypesDisabled = ko.computed((): boolean => {
-            return Enumerable.From(this.activityTypeCheckBoxes())
-                .All((x: ActivityTypeSearchTestCheckBox): boolean => {
-                    return x.isChecked();
-                });
-        });
+        isCheckAllActivityTypesDisabled;// = ko.computed((): boolean => {
+        //    return Enumerable.From(this.activityTypeCheckBoxes())
+        //        .All((x: ActivityTypeSearchTestCheckBox): boolean => {
+        //            return x.isChecked();
+        //        });
+        //});
 
-        isUncheckAllActivityTypesDisabled = ko.computed((): boolean => {
-            return Enumerable.From(this.activityTypeCheckBoxes())
-                .All((x: ActivityTypeSearchTestCheckBox): boolean => {
-                    return !x.isChecked();
-                });
-        });
+        isUncheckAllActivityTypesDisabled;// = ko.computed((): boolean => {
+        //    return Enumerable.From(this.activityTypeCheckBoxes())
+        //        .All((x: ActivityTypeSearchTestCheckBox): boolean => {
+        //            return !x.isChecked();
+        //        });
+        //});
 
         checkAllActivityTypes(): void {
             Enumerable.From(this.activityTypeCheckBoxes())

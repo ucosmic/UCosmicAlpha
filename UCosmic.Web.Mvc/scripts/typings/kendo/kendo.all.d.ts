@@ -1020,6 +1020,7 @@ declare module kendo.ui {
         toggle(toggle: boolean): void;
         value(): string;
         value(value: string): void;
+        selectedIndex: number;
     }
 
     interface DropDownListAnimationClose {

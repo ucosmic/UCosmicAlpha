@@ -11,7 +11,7 @@ var Activities;
             function ActivityTypeSearchTestCheckBox(activityType, settings) {
                 this.activityType = activityType;
                 this.settings = settings;
-                this.isChecked = ko.observable(!this.settings.input.activityTypeIds || !this.settings.input.activityTypeIds.length || Enumerable.From(this.settings.input.activityTypeIds).Contains(this.activityType.activityTypeId));
+                this.isChecked = ko.observable(!this.settings.input.activityTypeIds || !this.settings.input.activityTypeIds.length || Enumerable.From(this.settings.input.activityTypeIds).Contains(this.activityType.activityTypeId.toString()));
             }
             return ActivityTypeSearchTestCheckBox;
         })();
@@ -37,21 +37,11 @@ var Activities;
                 this.selectedEstablishment = ko.observable(this.settings.input.ancestorId);
                 this.tenantOptions = ko.observableArray();
                 this.affiliations = ko.mapping.fromJS([]);
+                this.includeUndated = ko.observable("Checked");
+                this.placeNames = ko.observable("");
+                this.placeFilter = ko.observable("");
                 this.establishmentData = new App.DataCacher(function () {
                     return _this._loadEstablishmentData();
-                });
-                this.activityTypeCheckBoxes = ko.observableArray(Enumerable.From(this.settings.activityTypes).Select(function (x) {
-                    return new ActivityTypeSearchTestCheckBox(x, _this.settings);
-                }).ToArray());
-                this.isCheckAllActivityTypesDisabled = ko.computed(function () {
-                    return Enumerable.From(_this.activityTypeCheckBoxes()).All(function (x) {
-                        return x.isChecked();
-                    });
-                });
-                this.isUncheckAllActivityTypesDisabled = ko.computed(function () {
-                    return Enumerable.From(_this.activityTypeCheckBoxes()).All(function (x) {
-                        return !x.isChecked();
-                    });
                 });
                 this.since = ko.observable(this.settings.input.since);
                 this.until = ko.observable(this.settings.input.until);
@@ -61,7 +51,38 @@ var Activities;
                 this.isClearUntilDisabled = ko.computed(function () {
                     return _this.until() ? false : true;
                 });
+                var searchOptions = JSON.parse(sessionStorage.getItem(ViewModels.SearchMap.SearchOptions));
+                if (searchOptions) {
+                    this.settings.input.activityTypeIds = searchOptions.activityTypeIds;
+                    this.placeNames(searchOptions.placeNames);
+                    this.placeFilter(searchOptions.placeFilter);
+                    this.settings.input.since = searchOptions.Since;
+                    this.settings.input.until = searchOptions.Until;
+                    this.settings.input.includeUndated = searchOptions.includeUndated;
+                    if (!searchOptions.includeUndated) {
+                        this.includeUndated("");
+                    }
+                }
+
+                this.activityTypeCheckBoxes = ko.observableArray(Enumerable.From(this.settings.activityTypes).Select(function (x) {
+                    return new ActivityTypeSearchTestCheckBox(x, _this.settings);
+                }).ToArray());
+
+                this.isCheckAllActivityTypesDisabled = ko.computed(function () {
+                    return Enumerable.From(_this.activityTypeCheckBoxes()).All(function (x) {
+                        return x.isChecked();
+                    });
+                });
+
+                this.isUncheckAllActivityTypesDisabled = ko.computed(function () {
+                    return Enumerable.From(_this.activityTypeCheckBoxes()).All(function (x) {
+                        return !x.isChecked();
+                    });
+                });
                 this._loadTenancyData();
+                this.ancestorId = settings.input.ancestorId;
+                this.oldAncestorId = settings.input.ancestorId;
+                this.oldKeyword = settings.input.keyword;
 
                 this.searchMap = new Activities.ViewModels.SearchMap(searchMapData, this);
                 this.searchMap.applyBindings(document.getElementById('searchMap'));
@@ -331,6 +352,26 @@ var Activities;
                 });
                 var comboBox = this.$location.data('kendoComboBox');
                 comboBox.list.addClass('k-ucosmic');
+
+                this.$placeFilter.kendoDropDownList({
+                    animation: false,
+                    height: 420,
+                    dataTextField: 'name',
+                    dataValueField: 'value',
+                    dataSource: [
+                        { name: "Filter by continents", value: "continents" },
+                        { name: "Filter by bodies of water", value: "waters" },
+                        { name: "Filter by countries", value: "countries" }
+                    ],
+                    change: function (e) {
+                        var dataItem = e.sender.dataItem(e.sender.selectedIndex);
+
+                        _this.$placeFilter.val(dataItem.value);
+                        _this._submitForm();
+                    }
+                });
+                var comboBox2 = this.$placeFilter.data('kendoDropDownList');
+                comboBox2.list.addClass('k-ucosmic');
             };
 
             SearchTest.prototype._applySubscriptions = function () {
@@ -341,7 +382,11 @@ var Activities;
             };
 
             SearchTest.prototype._submitForm = function () {
-                this.searchMap.reloadData($('form'));
+                if (this.keyword() == this.oldKeyword && this.oldAncestorId == this.selectedEstablishment()) {
+                    this.searchMap.reloadData($('form'), false);
+                } else {
+                    this.searchMap.reloadData($('form'), true);
+                }
             };
 
             SearchTest.prototype.onKeywordInputSearchEvent = function (viewModel, e) {
