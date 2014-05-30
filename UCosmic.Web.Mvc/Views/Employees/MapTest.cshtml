@@ -71,27 +71,9 @@
                 <div class="on-left">
                     <header style=" margin-bottom:0px;">
                         <h1>
-                            Advanced Search for
+                            Advanced Search for Activities
                         </h1>
                     </header>
-                </div>
-                <div class="on-left">
-                    @{
-                        var activitiesWeight = Model.Input.Pivot != ActivitySearchPivot.People ? "checked" : null;
-                        var peopleWeight = Model.Input.Pivot == ActivitySearchPivot.People ? "checked" : null;
-                    }
-                    <label class="activities-pivot @activitiesWeight"
-                           data-bind="css: { checked: isActivitiesChecked }">
-                        <input type="radio" name="pivot" value="@((int)ActivitySearchPivot.Activities)" checked="@(Model.Input.Pivot != ActivitySearchPivot.People ? "checked" : null)"
-                               data-bind="checked: pivot" style="cursor: pointer;" />
-                        Activities
-                    </label>
-                    <label class="activities-pivot @peopleWeight"
-                           data-bind="css: { checked: isPeopleChecked }">
-                        <input type="radio" name="pivot" value="@((int)ActivitySearchPivot.People)" checked="@(Model.Input.Pivot == ActivitySearchPivot.People ? "checked" : null)"
-                               data-bind="checked: pivot" style="cursor: pointer;" />
-                        People
-                    </label>
                 </div>
                 <div class="on-right" style="margin-top: 8px;">
                     <a href="@Url.Action(MVC.Employees.Table(Model.Domain, null))" class="restore-underline">Reset search</a>
@@ -104,7 +86,7 @@
                     <td style="width: 95%;">
                         <div class="field" style="margin-bottom: 0;">
                             <input type="search" value="@Model.Input.Keyword" placeholder="Narrow all displayed activities by keyword" name="keyword"
-                                   data-bind="event: { search: onKeywordInputSearchEvent }" />
+                                   data-bind="event: { search: onKeywordInputSearchEvent }, value: keyword" />
                         </div>
                     </td>
                     <td style="text-align: right;">
@@ -130,8 +112,8 @@
             <!-- ko stopBinding: true -->
             @* MAP LENS CONTEXTUAL TOTALS SUMMARY *@
             <div id="searchMap" style="margin: 1em 0;">
-                <div data-bind="visible: continentCode() == 'any' && countryCode() == 'any'" style="line-height: 28px;">
-                    Click any number below for more information.
+                <div data-bind="visible: placeType() == 'continents'" style="line-height: 28px;">
+                    Numbers displayed represent known faculty and staff activity location sites.
                 </div>
                 <div data-bind="visible: continentCode() != 'any' || countryCode() != 'any'" style="line-height: 16px;">
                     @*<strong data-bind="text: status.count">?</strong>
@@ -207,62 +189,29 @@
                             <div class="content">
                                 @* LOCATION AUTOCOMPLETE *@
                                 <div class="location combobox field">
-                                    <input name="placeNames" type="text" placeholder="[Find by location]" data-bind="jQuery: '$location'"
+                                    <input name="placeNames" type="text" placeholder="[Find by location]" data-bind="jQuery: '$location', value: placeNames"
                                            value="@(Model.Input.PlaceNames != null && Model.Input.PlaceNames.Any() ? Model.Input.PlaceNames.First() : "")"
                                            class="side" />
                                     <input name="placeIds" type="hidden" data-bind="jQuery: '$placeIds'"
                                            value="@(Model.Input.PlaceIds != null && Model.Input.PlaceIds.Any() ? Model.Input.PlaceIds.First() : (int?)null)" />
                                 </div>
+                                @* CONTINENTS, WATERS, AND COUNTRIES *@
+                                <div class="location combobox field">
+                                    <input name="placeFilter" type="text" data-bind="jQuery: '$placeFilter', value: placeFilter"
+                                           value=""
+                                           class="side" />
+                                    @*<select data-bind=" data-bind=" jquery '$location' "" style="" class="">
+                                        <option value="Continents">Filter by continents</option>
+                                        <option value="Waters">Filter by bodies of water</option>
+                                        <option value="Countries">Filter by countries</option>
+                                    </select>*@
+                                    @*<input name="placeNames" type="text" placeholder="[Find by location]" data-bind="jQuery: '$location'"
+                                           value="@(Model.Input.PlaceNames != null && Model.Input.PlaceNames.Any() ? Model.Input.PlaceNames.First() : "")"
+                                           class="side" />
+                                    <input name="placeIds" type="hidden" data-bind="jQuery: '$placeIds'"
+                                           value="@(Model.Input.PlaceIds != null && Model.Input.PlaceIds.Any() ? Model.Input.PlaceIds.First() : (int?)null)" />*@
+                                </div>
 
-                                @* SORT DROPDOWN *@
-                                @*<div class="field">
-                                        @Html.DropDownListFor(x => x.Input.OrderBy,
-                                            new[]
-                                            {
-                                                new SelectListItem { Text = "Sort with most recent at top", Value = "recency-desc" },
-                                                new SelectListItem { Text = "Sort with most recent at bottom", Value = "recency-asc" },
-                                                new SelectListItem { Text = "Sort by activity title A-Z", Value = "title-asc" },
-                                                new SelectListItem { Text = "Sort by activity title Z-A", Value = "title-desc" },
-                                                new SelectListItem { Text = "Sort by location A-Z", Value = "location-asc" },
-                                                new SelectListItem { Text = "Sort by location Z-A", Value = "location-desc" },
-                                                new SelectListItem { Text = "Sort by person last name A-Z", Value = "lastname-asc" },
-                                                new SelectListItem { Text = "Sort by person last name Z-A", Value = "lastname-desc" },
-                                                new SelectListItem { Text = "Sort by type A-Z", Value = "type-asc" },
-                                                new SelectListItem { Text = "Sort by type Z-A", Value = "type-desc" },
-                                            },
-                                            new
-                                            {
-                                                @class = "side",
-                                                Name = "orderBy",
-                                                data_bind = "value: orderBy"
-                                            })
-                                    </div>*@
-
-                                @* PAGE SIZE DROPDOWN *@
-                                @*<div class="field">
-                                        @Html.DropDownListFor(x => x.Input.PageSize,
-                                            new[]
-                                            {
-                                                new SelectListItem { Text = "Show 10 results per page", Value = "10" },
-                                                new SelectListItem { Text = "Show 20 results per page", Value = "20" },
-                                                new SelectListItem { Text = "Show 50 results per page", Value = "50" },
-                                                new SelectListItem { Text = "Show 100 results per page", Value = "100" },
-                                                new SelectListItem { Text = "Show 250 results per page", Value = "250" },
-                                            },
-                                            new
-                                            {
-                                                @class = "side",
-                                                Name = "pageSize",
-                                                data_bind = "value: pager.input.pageSizeText"
-                                            })
-                                    </div>*@
-
-                                @* PREV & NEXT PAGER BUTTONS *@
-                                @*<div class="field" data-bind="with: pager.input">
-                                        <button class="link" data-bind="click: prev, enable: prevAllowed" disabled="disabled">&lt;&lt; Previous</button>
-                                        |
-                                        <button class="link" data-bind="click: next, enable: nextAllowed" disabled="disabled">Next &gt;&gt;</button>
-                                    </div>*@
 
                                 @* ACTIVITY TYPE CHECKBOXES *@
                                 @if (Model.ActivityTypes != null && Model.ActivityTypes.Any())
@@ -283,7 +232,7 @@
                                                         <div class="on-left">
                                                             <label style="cursor: pointer;" data-bind="with: activityTypeCheckBoxes()[@i]">
                                                                 <input type="checkbox" id="@checkBoxId"
-                                                                       name="activityTypeIds" value="@activityType.ActivityTypeId" checked="@isChecked"
+                                                                       name="activityTypeIds" value="@activityType.ActivityTypeId" 
                                                                        style="cursor: pointer;" data-bind="checked: isChecked" />
                                                                 <img title="@activityType.Text" width="14" alt="" style="margin-top: -6px; cursor: pointer;"
                                                                      src="@Url.HttpRouteUrl(null, new { controller = "EmployeeModuleSettings", action = "GetIcon", typeId = activityType.ActivityTypeId })" />
@@ -341,8 +290,8 @@
                                                 ? "checked" : null;
                                         }
                                         <label style="cursor: pointer; vertical-align: top;">
-                                            <input type="checkbox" name="includeUndated" checked="@includeUndated" value="true" style="cursor: pointer;" /> Include undated activities
-                                            <input type="hidden" name="includeUndated" value="false" />
+                                            <input type="checkbox" name="includeUndated" checked="@includeUndated" value="true" style="cursor: pointer;" data-bind="checked: includeUndated" /> Include undated activities
+                                            @*<input type="hidden" name="includeUndated" value="false" />*@
                                         </label>
                                     </div>
                                     <div style="margin-top: 8px">
