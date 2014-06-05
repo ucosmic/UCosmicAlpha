@@ -100,6 +100,45 @@
             this._loadTenancyData();
         }
 
+        MapDataIsLoading = ko.observable<boolean>(true);
+        private _ConstructMapData() {
+            var stringActivityMapData;
+            var activityMapData;
+            var stringActivityMapDataSearch = sessionStorage.getItem('activityMapDataSearch');
+            //var searchOptions = JSON.parse(sessionStorage.getItem(Summary.SearchOptions));
+            var ancestorId = this.selectedTenant() ? this.selectedTenant().toString() : "null";
+            var keyword = "null";
+
+            if (stringActivityMapDataSearch == ancestorId + keyword) {
+                stringActivityMapData = sessionStorage.getItem('activityMapData');
+                activityMapData = $.parseJSON(stringActivityMapData);
+            }
+
+            if (!activityMapData || !activityMapData.length) {
+                var settings = settings || {};
+
+                var url = '/api/usf.edu/employees/map/?ancestorid=' + ancestorId;
+                //if (output.input.keyword) {
+                //    url += '&keyword=' + keyword;
+                //}
+                settings.url = url;//'/api/usf.edu/employees/map/?pivot=1&keyword=&ancestorid=3306&placeNames=&placeIds=&activityTypeIds=2&activityTypeIds=3&activityTypeIds=5&activityTypeIds=1&activityTypeIds=4&Since=&Until=&includeUndated=true&includeUndated=false';
+                //check with ancestorid - use output.input.anc...
+                
+                $.ajax(settings)
+                    .done((response: any): void => {
+                        //get ancestorid and add it to the sessionStorage
+                        sessionStorage.setItem('activityMapData', JSON.stringify(response));
+                        sessionStorage.setItem('activityMapDataSearch', ancestorId + keyword);
+                        this.MapDataIsLoading(false);
+                    })
+                    .fail((xhr: JQueryXHR): void => {
+                        //promise.reject(xhr);
+                    });
+            } else {
+                this.MapDataIsLoading(false);
+            }
+        }
+
         private _bindingsApplied: JQueryDeferred<void> = $.Deferred();
         bindingsApplied: JQueryPromise<void> = this._bindingsApplied;
         areBindingsApplied = ko.observable<boolean>(false);
@@ -336,6 +375,8 @@
                 .done((places: ApiModels.EmployeesPlaceApiModel[]): void => {
                     this.hasPlaceData(places && places.length > 0);
                     promise.resolve(places);
+
+                    this._ConstructMapData();
                 })
                 .fail((xhr: JQueryXHR): void => {
                     App.Failures.message(xhr, 'while trying to load employee location summary data.', true);
@@ -535,6 +576,7 @@
                         }
                     })
                     if (childData.length) this.hasTenancyData(true);
+
                 })
                 .fail((xhr: JQueryXHR): void => {
                     App.Failures.message(xhr, 'while trying to load institution organizational data.', true);

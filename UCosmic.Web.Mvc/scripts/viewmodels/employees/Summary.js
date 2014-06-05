@@ -48,6 +48,7 @@
             function Summary(settings) {
                 var _this = this;
                 this.settings = settings;
+                this.MapDataIsLoading = ko.observable(true);
                 this._bindingsApplied = $.Deferred();
                 this.bindingsApplied = this._bindingsApplied;
                 this.areBindingsApplied = ko.observable(false);
@@ -221,6 +222,38 @@
                 return Summary._googleVisualizationLoadedPromise;
             };
 
+            Summary.prototype._ConstructMapData = function () {
+                var _this = this;
+                var stringActivityMapData;
+                var activityMapData;
+                var stringActivityMapDataSearch = sessionStorage.getItem('activityMapDataSearch');
+
+                var ancestorId = this.selectedTenant() ? this.selectedTenant().toString() : "null";
+                var keyword = "null";
+
+                if (stringActivityMapDataSearch == ancestorId + keyword) {
+                    stringActivityMapData = sessionStorage.getItem('activityMapData');
+                    activityMapData = $.parseJSON(stringActivityMapData);
+                }
+
+                if (!activityMapData || !activityMapData.length) {
+                    var settings = settings || {};
+
+                    var url = '/api/usf.edu/employees/map/?ancestorid=' + ancestorId;
+
+                    settings.url = url;
+
+                    $.ajax(settings).done(function (response) {
+                        sessionStorage.setItem('activityMapData', JSON.stringify(response));
+                        sessionStorage.setItem('activityMapDataSearch', ancestorId + keyword);
+                        _this.MapDataIsLoading(false);
+                    }).fail(function (xhr) {
+                    });
+                } else {
+                    this.MapDataIsLoading(false);
+                }
+            };
+
             Summary.prototype.applyBindings = function () {
                 var element = this.settings.element;
                 if (element) {
@@ -336,6 +369,8 @@
                 Employees.Servers.GetEmployeesPlaces(establishmentId, request).done(function (places) {
                     _this.hasPlaceData(places && places.length > 0);
                     promise.resolve(places);
+
+                    _this._ConstructMapData();
                 }).fail(function (xhr) {
                     App.Failures.message(xhr, 'while trying to load employee location summary data.', true);
                     promise.reject();
