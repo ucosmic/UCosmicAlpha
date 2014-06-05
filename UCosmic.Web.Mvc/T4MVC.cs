@@ -2849,14 +2849,16 @@ namespace Links
                 public static readonly string ActivityEnums_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/ActivityEnums.min.js") ? Url("ActivityEnums.min.js") : Url("ActivityEnums.js");
                               
                 public static readonly string Map_ts = Url("Map.ts");
-                public static readonly string Map_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Map.min.js") ? Url("Map.min.js") : Url("Map.js");
-                              
+                public static readonly string MapOld_ts = Url("MapOld.ts");
                 public static readonly string Models_d_ts = Url("Models.d.ts");
                 public static readonly string PublicView_ts = Url("PublicView.ts");
                 public static readonly string PublicView_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/PublicView.min.js") ? Url("PublicView.min.js") : Url("PublicView.js");
                               
                 public static readonly string Search_ts = Url("Search.ts");
                 public static readonly string Search_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Search.min.js") ? Url("Search.min.js") : Url("Search.js");
+                              
+                public static readonly string SearchMap_ts = Url("SearchMap.ts");
+                public static readonly string Search___Copy_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Search - Copy.min.js") ? Url("Search - Copy.min.js") : Url("Search - Copy.js");
                               
                 public static readonly string Server_ts = Url("Server.ts");
                 public static readonly string Server_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Server.min.js") ? Url("Server.min.js") : Url("Server.js");

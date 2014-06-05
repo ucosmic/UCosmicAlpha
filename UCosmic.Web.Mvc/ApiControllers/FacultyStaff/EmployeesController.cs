@@ -209,7 +209,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         //[CurrentModuleTab(ModuleTab.Employees)]
         //[GET("{domain}/employees/maptest")]
         [CacheHttpGet(Duration = 60)]
-        [GET("{domain}/employees/maptest")]
+        [GET("{domain}/employees/map")]
         public ActivitySearchResultMapModel[] GetMaptest(string domain, [FromUri] ActivitySearchInputModel input)
         {
             var query = new ActivityValuesBy();

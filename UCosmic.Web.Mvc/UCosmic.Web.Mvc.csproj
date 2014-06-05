@@ -325,6 +325,8 @@
     <Compile Include="Helpers\SessionExtensions.cs" />
     <Compile Include="Models\Activities\ActivityPlaceMapViewModel.cs" />
     <Compile Include="Models\Activities\Search\ActivitySearchMapModel.cs" />
+    <Compile Include="Models\Activities\Search\ActivitySearchMapPlaceModel.cs" />
+    <Compile Include="Models\Activities\Search\ActivitySearchResultMapContinentsModel.cs" />
     <Compile Include="Models\Activities\Search\ActivitySearchResultMapModel.cs" />
     <Compile Include="Models\People\PersonUrlViewModel.cs" />
     <Compile Include="Models\People\PersonUrlApiModel.cs" />
@@ -1764,8 +1766,9 @@
     <TypeScriptCompile Include="scripts\typings\knockout\knockout.d.ts" />
     <TypeScriptCompile Include="scripts\typings\modernizr\modernizr.d.ts" />
     <TypeScriptCompile Include="scripts\typings\moment\moment.d.ts" />
-    <TypeScriptCompile Include="scripts\viewmodels\activities\MapTest.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\activities\Map.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\activities\MapOld.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\activities\SearchMap.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\activities\Search.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\activities\Server.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\agreements\settings.ts" />
@@ -2088,11 +2091,11 @@
     <TypeScriptCompile Include="scripts\viewmodels\agreements\SearchResult.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\agreements\SearchTable.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\agreements\Visibility.ts" />
-    <Content Include="scripts\viewmodels\activities\Map.js">
-      <DependentUpon>Map.ts</DependentUpon>
-    </Content>
     <Content Include="scripts\viewmodels\activities\PublicView.js">
       <DependentUpon>PublicView.ts</DependentUpon>
+    </Content>
+    <Content Include="scripts\viewmodels\activities\Search - Copy.js">
+      <DependentUpon>SearchMap.ts</DependentUpon>
     </Content>
     <Content Include="scripts\viewmodels\activities\Search.js">
       <DependentUpon>Search.ts</DependentUpon>
@@ -2715,11 +2718,11 @@
     <Content Include="Views\People\_AffiliationsEditor.cshtml" />
     <Content Include="Views\Employees\_ActivityDatesDisplay.cshtml" />
     <Content Include="Views\JavaScriptRoutes\Places.cshtml" />
-    <Content Include="Views\Employees\Map.cshtml" />
+    <Content Include="Views\Employees\MapOld.cshtml" />
     <Content Include="Views\Employees\DegreesTable.cshtml" />
     <Content Include="Views\Employees\Experts.cshtml" />
     <Content Include="Views\People\_Urls.cshtml" />
-    <Content Include="Views\Employees\MapTest.cshtml" />
+    <Content Include="Views\Employees\Map.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
