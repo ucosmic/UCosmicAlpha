@@ -280,9 +280,16 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="@Url.Action(MVC.Employees.Map((string)ViewBag.EmployeesDomain, null))" data-bind="click: table_mapLink" class="group">
+                                <a style=" display: none;" href="@Url.Action(MVC.Employees.Map((string)ViewBag.EmployeesDomain, null))" data-bind="click: table_mapLink, visible: !MapDataIsLoading()" class="group">
                                     <span class="arrow"></span>
                                     <span class="text">Advanced Search (Map)</span>
+                                </a>
+                                <a class="group" style="cursor: not-allowed" data-bind="visible: MapDataIsLoading">
+                                    <span class="arrow"></span>
+                                    <span class="text">
+                                        <img src="~/images/icons/spinner/spinner-20-grey.gif" alt="" />
+                                        <strong>Loading Search (Map)...</strong>
+                                    </span>
                                 </a>
                             </li>
                         </ul>

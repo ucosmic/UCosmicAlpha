@@ -45,6 +45,14 @@
             tenantId: parseInt('@ViewBag.EmployeesEstablishmentId'),
             ancestorId: parseInt('@ViewBag.AncestorId'),
         };
+        //var searchOptions = JSON.parse(sessionStorage.getItem('ActivitySearchOptions'));
+        //if (searchOptions) {
+        //    //searchOptions = settings.input;
+        //    settings.input.placeNames[0] = searchOptions.placeNames;
+        //    $.each(searchOptions.activityTypeIds, function (index, value) {
+        //        settings.input.activityTypeIds[index] = parseInt(value);
+        //    });
+        //}
         var viewModel = new Activities.ViewModels.Search(settings);
         viewModel.applyBindings(document.getElementById('activity_search_form'));
     </script>
@@ -544,9 +552,16 @@
                                     mapUrl = string.Format("{0}?{1}", mapUrl, Request.QueryString);
                                 }
                             }
-                            <a href="@mapUrl" class="group">
+                            <a style=" display: none;" href="@mapUrl" class="group" data-bind="visible: !MapDataIsLoading()">
                                 <span class="arrow"></span>
                                 <span class="text">Advanced Search (Map)</span>
+                            </a>
+                            <a class="group" style="cursor: not-allowed" data-bind="visible: MapDataIsLoading">
+                                <span class="arrow"></span>
+                                <span class="text">
+                                    <img src="~/images/icons/spinner/spinner-20-grey.gif" alt="" />
+                                    <strong>Loading Search (Map)...</strong>
+                                </span>
                             </a>
                         </li>
                     </ul>
