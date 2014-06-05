@@ -17,8 +17,8 @@ var Activities;
         })();
         ViewModels.ActivityTypeSearchTestCheckBox = ActivityTypeSearchTestCheckBox;
 
-        var SearchTest = (function () {
-            function SearchTest(settings, searchMapData) {
+        var MapSearch = (function () {
+            function MapSearch(settings, searchMapData) {
                 var _this = this;
                 this.settings = settings;
                 this.orderBy = ko.observable(this.settings.input.orderBy);
@@ -40,6 +40,7 @@ var Activities;
                 this.includeUndated = ko.observable("Checked");
                 this.placeNames = ko.observable("");
                 this.placeFilter = ko.observable("");
+                this.tableUrl = ko.observable();
                 this.establishmentData = new App.DataCacher(function () {
                     return _this._loadEstablishmentData();
                 });
@@ -52,6 +53,7 @@ var Activities;
                     return _this.until() ? false : true;
                 });
                 var searchOptions = JSON.parse(sessionStorage.getItem(ViewModels.SearchMap.SearchOptions));
+
                 if (searchOptions) {
                     this.settings.input.activityTypeIds = searchOptions.activityTypeIds;
                     this.placeNames(searchOptions.placeNames);
@@ -59,7 +61,7 @@ var Activities;
                     this.settings.input.since = searchOptions.Since;
                     this.settings.input.until = searchOptions.Until;
                     this.settings.input.includeUndated = searchOptions.includeUndated;
-                    if (!searchOptions.includeUndated) {
+                    if (!searchOptions.includeUndated || searchOptions.includeUndated == false) {
                         this.includeUndated("");
                     }
                 }
@@ -87,7 +89,7 @@ var Activities;
                 this.searchMap = new Activities.ViewModels.SearchMap(searchMapData, this);
                 this.searchMap.applyBindings(document.getElementById('searchMap'));
             }
-            SearchTest.prototype._createEstablishmentSelects = function (response) {
+            MapSearch.prototype._createEstablishmentSelects = function (response) {
                 var parentId = this.settings.input.ancestorId;
                 if (!parentId) {
                     parentId = this.settings.tenantId;
@@ -121,7 +123,7 @@ var Activities;
                 }
             };
 
-            SearchTest.prototype._loadEstablishmentData = function () {
+            MapSearch.prototype._loadEstablishmentData = function () {
                 var _this = this;
                 var promise = $.Deferred();
 
@@ -149,7 +151,7 @@ var Activities;
                 return promise;
             };
 
-            SearchTest.prototype._loadTenancyData = function () {
+            MapSearch.prototype._loadTenancyData = function () {
                 var _this = this;
                 $.when(Activities.Servers.Single(this.settings.tenantId), Activities.Servers.GetChildren(this.settings.tenantId)).done(function (parentData, childData) {
                     childData = childData || [];
@@ -201,14 +203,14 @@ var Activities;
                 });
             };
 
-            SearchTest.prototype.applyBindings = function (element) {
+            MapSearch.prototype.applyBindings = function (element) {
                 ko.applyBindings(this, element);
                 kendo.init($(element));
                 this._applyKendo();
                 this._applySubscriptions();
             };
 
-            SearchTest.prototype._applyKendo = function () {
+            MapSearch.prototype._applyKendo = function () {
                 var _this = this;
                 var kendoSince = this.$since.data('kendoDatePicker');
                 kendoSince.element.val(this.settings.input.since);
@@ -353,35 +355,17 @@ var Activities;
                 var comboBox = this.$location.data('kendoComboBox');
                 comboBox.list.addClass('k-ucosmic');
 
-                this.$placeFilter.kendoDropDownList({
-                    animation: false,
-                    height: 420,
-                    dataTextField: 'name',
-                    dataValueField: 'value',
-                    dataSource: [
-                        { name: "Filter by continents", value: "continents" },
-                        { name: "Filter by bodies of water", value: "waters" },
-                        { name: "Filter by countries", value: "countries" }
-                    ],
-                    change: function (e) {
-                        var dataItem = e.sender.dataItem(e.sender.selectedIndex);
-
-                        _this.$placeFilter.val(dataItem.value);
-                        _this._submitForm();
-                    }
-                });
-                var comboBox2 = this.$placeFilter.data('kendoDropDownList');
-                comboBox2.list.addClass('k-ucosmic');
+                this.$placeFilter.val("continents");
             };
 
-            SearchTest.prototype._applySubscriptions = function () {
+            MapSearch.prototype._applySubscriptions = function () {
                 var _this = this;
                 this.orderBy.subscribe(function (newValue) {
                     _this._submitForm();
                 });
             };
 
-            SearchTest.prototype._submitForm = function () {
+            MapSearch.prototype._submitForm = function () {
                 if (this.keyword() == this.oldKeyword && this.oldAncestorId == this.selectedEstablishment()) {
                     this.searchMap.reloadData($('form'), false);
                 } else {
@@ -389,33 +373,33 @@ var Activities;
                 }
             };
 
-            SearchTest.prototype.onKeywordInputSearchEvent = function (viewModel, e) {
+            MapSearch.prototype.onKeywordInputSearchEvent = function (viewModel, e) {
                 if ($.trim(this.keyword()) && !$.trim($(e.target).val()) && this.$form)
                     this.$form.submit();
             };
 
-            SearchTest.prototype.checkAllActivityTypes = function () {
+            MapSearch.prototype.checkAllActivityTypes = function () {
                 Enumerable.From(this.activityTypeCheckBoxes()).ForEach(function (x) {
                     x.isChecked(true);
                 });
             };
 
-            SearchTest.prototype.uncheckAllActivityTypes = function () {
+            MapSearch.prototype.uncheckAllActivityTypes = function () {
                 Enumerable.From(this.activityTypeCheckBoxes()).ForEach(function (x) {
                     x.isChecked(false);
                 });
             };
 
-            SearchTest.prototype.clearSince = function () {
+            MapSearch.prototype.clearSince = function () {
                 this.since('');
             };
 
-            SearchTest.prototype.clearUntil = function () {
+            MapSearch.prototype.clearUntil = function () {
                 this.until('');
             };
-            return SearchTest;
+            return MapSearch;
         })();
-        ViewModels.SearchTest = SearchTest;
+        ViewModels.MapSearch = MapSearch;
     })(Activities.ViewModels || (Activities.ViewModels = {}));
     var ViewModels = Activities.ViewModels;
 })(Activities || (Activities = {}));

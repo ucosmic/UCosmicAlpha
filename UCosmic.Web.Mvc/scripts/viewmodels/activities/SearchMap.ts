@@ -27,7 +27,7 @@ module Activities.ViewModels {
 
 
 
-    export class SearchTest {
+    export class MapSearch {
         //#region Construction
         orderBy = ko.observable(this.settings.input.orderBy);
         keyword = ko.observable(this.settings.input.keyword);
@@ -60,11 +60,27 @@ module Activities.ViewModels {
         oldAncestorId: number;
         placeNames = ko.observable<string>("");
         placeFilter = ko.observable<string>("");
+        tableUrl = ko.observable();
 
         constructor(public settings: SearchTestSettings, searchMapData) {
             //window.sessionStorage.setItem("test", JSON.stringify(this.settings.output));
             //this.pager.apply(this.settings.output);
             var searchOptions = JSON.parse(sessionStorage.getItem(SearchMap.SearchOptions));
+
+            //instead of doing this lets go ahead and make the sessionStorage.setItem(SearchMap.SearchOptions, JSON.stringify(searchOptions)); in advanced table search.
+            //if (!searchOptions) {
+            //    searchOptions = settings.input;
+            //    searchOptions.placeNames = settings.input.placeNames[0];
+            //    $.each(settings.input.activityTypeIds, function (index, value) {
+            //        searchOptions.activityTypeIds[index] = value.toString();
+            //    });
+            //    searchOptions.placeFilter = 'continents';
+
+
+            //}
+            //if (searchOptions) {
+            //    sessionStorage.setItem(SearchMap.SearchOptions, JSON.stringify(searchOptions));
+            //}
             if(searchOptions){
                 this.settings.input.activityTypeIds = searchOptions.activityTypeIds;
                 this.placeNames(searchOptions.placeNames);
@@ -72,7 +88,7 @@ module Activities.ViewModels {
                 this.settings.input.since = searchOptions.Since
                 this.settings.input.until = searchOptions.Until
                 this.settings.input.includeUndated = searchOptions.includeUndated;
-                if(!searchOptions.includeUndated){
+                if(!searchOptions.includeUndated || searchOptions.includeUndated == false){
                     this.includeUndated("")
                 }
             }
@@ -407,25 +423,27 @@ module Activities.ViewModels {
             var comboBox: kendo.ui.ComboBox = this.$location.data('kendoComboBox');
             comboBox.list.addClass('k-ucosmic');
 
-            this.$placeFilter.kendoDropDownList({
-                animation: false,
-                height: 420,
-                dataTextField: 'name',
-                dataValueField: 'value',
-                dataSource: [
-                    { name: "Filter by continents", value: "continents" },
-                    { name: "Filter by bodies of water", value: "waters" },
-                    { name: "Filter by countries", value: "countries" },
-                ],
-                change: (e: kendo.ui.DropDownListSelectEvent): void => {
-                    var dataItem = e.sender.dataItem(e.sender.selectedIndex);
-                    //e.sender.input.val(dataItem.officialName);
-                    this.$placeFilter.val(dataItem.value);
-                    this._submitForm();
-                }
-            });
-            var comboBox2: kendo.ui.ComboBox = this.$placeFilter.data('kendoDropDownList');
-            comboBox2.list.addClass('k-ucosmic');
+            //this.$placeFilter.kendoDropDownList({
+            //    animation: false,
+            //    height: 420,
+            //    dataTextField: 'name',
+            //    dataValueField: 'value',
+            //    dataSource: [
+            //        { name: "Filter by continents", value: "continents" },
+            //        { name: "Filter by bodies of water", value: "waters" },
+            //        { name: "Filter by countries", value: "countries" },
+            //    ],
+            //    change: (e: kendo.ui.DropDownListSelectEvent): void => {
+            //        var dataItem = e.sender.dataItem(e.sender.selectedIndex);
+            //        //e.sender.input.val(dataItem.officialName);
+            //        this.$placeFilter.val(dataItem.value);
+            //        this._submitForm();
+            //    }
+            //});
+            this.$placeFilter.val("continents")
+            //var comboBox2: kendo.ui.ComboBox = this.$placeFilter.data('kendoDropDownList');
+            //comboBox2.list.addClass('k-ucosmic');
+            //comboBox2.element.
             //#endregion
         }
 
