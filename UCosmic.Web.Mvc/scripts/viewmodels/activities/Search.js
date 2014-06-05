@@ -38,6 +38,7 @@ var Activities;
                 this.selectedEstablishment = ko.observable(this.settings.input.ancestorId);
                 this.tenantOptions = ko.observableArray();
                 this.affiliations = ko.mapping.fromJS([]);
+                this.MapDataIsLoading = ko.observable(true);
                 this.establishmentData = new App.DataCacher(function () {
                     return _this._loadEstablishmentData();
                 });
@@ -62,10 +63,42 @@ var Activities;
                 this.isClearUntilDisabled = ko.computed(function () {
                     return _this.until() ? false : true;
                 });
-                window.sessionStorage.setItem("test", JSON.stringify(this.settings.output));
                 this.pager.apply(this.settings.output);
                 this._loadTenancyData();
             }
+            Search.prototype._ConstructMapData = function () {
+                var _this = this;
+                var stringActivityMapData;
+                var activityMapData;
+                var stringActivityMapDataSearch = sessionStorage.getItem('activityMapDataSearch');
+                var ancestorId = this.settings.input.ancestorId ? this.settings.input.ancestorId.toString() : "null";
+                var keyword = this.settings.input.keyword ? this.settings.input.keyword : "null";
+
+                if (stringActivityMapDataSearch == ancestorId + keyword) {
+                    stringActivityMapData = sessionStorage.getItem('activityMapData');
+                    activityMapData = $.parseJSON(stringActivityMapData);
+                }
+
+                if (!activityMapData || !activityMapData.length) {
+                    var settings = settings || {};
+
+                    var url = '/api/usf.edu/employees/map/?ancestorid=' + ancestorId;
+                    if (this.settings.input.keyword) {
+                        url += '&keyword=' + keyword;
+                    }
+                    settings.url = url;
+
+                    $.ajax(settings).done(function (response) {
+                        sessionStorage.setItem('activityMapData', JSON.stringify(response));
+                        sessionStorage.setItem('activityMapDataSearch', ancestorId + keyword);
+                        _this.MapDataIsLoading(false);
+                    }).fail(function (xhr) {
+                    });
+                } else {
+                    this.MapDataIsLoading(false);
+                }
+            };
+
             Search.prototype._createEstablishmentSelects = function (response) {
                 var parentId = this.settings.input.ancestorId;
                 if (!parentId) {
@@ -112,6 +145,7 @@ var Activities;
                 if (temp) {
                     var response = $.parseJSON(temp);
                     this._createEstablishmentSelects(response);
+                    this._ConstructMapData();
                 } else {
                     var settings = settings || {};
                     settings.url = '/api/establishments/' + this.mainCampus + '/offspring';
@@ -120,6 +154,7 @@ var Activities;
                         sessionStorage.setItem('campuses' + _this.mainCampus, JSON.stringify(response));
 
                         _this._createEstablishmentSelects(response);
+                        _this._ConstructMapData();
                     }).fail(function (xhr) {
                         promise.reject(xhr);
                     });
@@ -180,11 +215,32 @@ var Activities;
                 });
             };
 
+            Search.prototype.serializeObject = function (object) {
+                var o = {};
+                var a = object.serializeArray();
+                $.each(a, function () {
+                    if (o[this.name] !== undefined) {
+                        if (!o[this.name].push) {
+                            o[this.name] = [o[this.name]];
+                        }
+                        o[this.name].push(this.value || '');
+                    } else {
+                        o[this.name] = this.value || '';
+                    }
+                });
+                return o;
+            };
             Search.prototype.applyBindings = function (element) {
+                var _this = this;
                 ko.applyBindings(this, element);
                 kendo.init($(element));
                 this._applyKendo();
                 this._applySubscriptions();
+                this.$form.submit(function (event) {
+                    var searchOptions = _this.serializeObject($('form'));
+                    searchOptions.placeFilter = 'continents';
+                    sessionStorage.setItem(Search.SearchOptions, JSON.stringify(searchOptions));
+                });
             };
 
             Search.prototype._applyKendo = function () {
@@ -377,6 +433,7 @@ var Activities;
             Search.prototype.clearUntil = function () {
                 this.until('');
             };
+            Search.SearchOptions = 'ActivitySearchOptions';
             return Search;
         })();
         ViewModels.Search = Search;

@@ -50,14 +50,57 @@ module Activities.ViewModels {
         tenantOptions = ko.observableArray<App.ApiModels.SelectOption<number>>();
         affiliations = ko.mapping.fromJS([]);
         mainCampus: number;
+        static SearchOptions = 'ActivitySearchOptions'
 
 
         constructor(public settings: SearchSettings) {
-            window.sessionStorage.setItem("test", JSON.stringify(this.settings.output));
+            //window.sessionStorage.setItem("test", JSON.stringify(this.settings.output));
+            
+            //if (searchOptions) {
+            //    sessionStorage.setItem(SearchMap.SearchOptions, JSON.stringify(searchOptions));
+            //}
             this.pager.apply(this.settings.output);
             this._loadTenancyData();
         }
+        MapDataIsLoading = ko.observable<boolean>(true);
+        private _ConstructMapData() {
+            var stringActivityMapData;
+            var activityMapData;
+            var stringActivityMapDataSearch = sessionStorage.getItem('activityMapDataSearch');
+            var ancestorId = this.settings.input.ancestorId ? this.settings.input.ancestorId.toString() : "null";
+            var keyword = this.settings.input.keyword ? this.settings.input.keyword : "null";
 
+            
+
+            if (stringActivityMapDataSearch == ancestorId + keyword) {
+                stringActivityMapData = sessionStorage.getItem('activityMapData');
+                activityMapData = $.parseJSON(stringActivityMapData);
+            }
+
+            if (!activityMapData || !activityMapData.length) {
+                var settings = settings || {};
+
+                var url = '/api/usf.edu/employees/map/?ancestorid=' + ancestorId;
+                if (this.settings.input.keyword) {
+                    url += '&keyword=' + keyword;
+                }
+                settings.url = url;//'/api/usf.edu/employees/map/?pivot=1&keyword=&ancestorid=3306&placeNames=&placeIds=&activityTypeIds=2&activityTypeIds=3&activityTypeIds=5&activityTypeIds=1&activityTypeIds=4&Since=&Until=&includeUndated=true&includeUndated=false';
+                //check with ancestorid - use output.input.anc...
+
+                $.ajax(settings)
+                    .done((response: any): void => {
+                        //get ancestorid and add it to the sessionStorage
+                        sessionStorage.setItem('activityMapData', JSON.stringify(response));
+                        sessionStorage.setItem('activityMapDataSearch', ancestorId + keyword);
+                        this.MapDataIsLoading(false);
+                    })
+                    .fail((xhr: JQueryXHR): void => {
+                        //promise.reject(xhr);
+                    });
+            }else{
+                this.MapDataIsLoading(false);
+            }
+        }
 
         establishmentData = new App.DataCacher<Establishments.ApiModels.ScalarEstablishment[]>(
             (): JQueryPromise<Establishments.ApiModels.ScalarEstablishment[]> => {
@@ -116,6 +159,7 @@ module Activities.ViewModels {
             if (temp) {
                 var response = $.parseJSON(temp);
                 this._createEstablishmentSelects(response);
+                this._ConstructMapData();
             } else {
 
                 var settings = settings || {};
@@ -126,7 +170,7 @@ module Activities.ViewModels {
                         sessionStorage.setItem('campuses' + this.mainCampus, JSON.stringify(response));
 
                         this._createEstablishmentSelects(response);
-
+                        this._ConstructMapData();
 
                     })
                     .fail((xhr: JQueryXHR): void => {
@@ -195,12 +239,33 @@ module Activities.ViewModels {
 
         //#endregion
         //#region Initialization
+        
+        serializeObject(object): any {
 
+            var o = {};
+            var a = object.serializeArray();
+            $.each(a, function () {
+                if (o[this.name] !== undefined) {
+                    if (!o[this.name].push) {
+                        o[this.name] = [o[this.name]];
+                    }
+                    o[this.name].push(this.value || '');
+                } else {
+                    o[this.name] = this.value || '';
+                }
+            });
+            return o;
+        }
         applyBindings(element: Element): void {
             ko.applyBindings(this, element);
             kendo.init($(element));
             this._applyKendo();
             this._applySubscriptions();
+            this.$form.submit((event) => {
+                var searchOptions = this.serializeObject($('form'));
+                searchOptions.placeFilter = 'continents';
+                sessionStorage.setItem(Search.SearchOptions, JSON.stringify(searchOptions));
+            });
         }
 
         private _applyKendo(): void {
