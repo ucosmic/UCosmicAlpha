@@ -115,7 +115,19 @@ var InstitutionalAgreementEditModel = (function () {
                 _this.basicInfo.privateNotes(response.notes);
                 _this.visibility.visibility(response.visibility);
                 _this.datesStatus.isEstimated(response.isExpirationEstimated);
-                ko.mapping.fromJS(response.participants, _this.participants.participants);
+
+                var mappingOptions = {
+                    create: function (options) {
+                        return (new (function () {
+                            this.officialNameDoesNotMatchTranslation = ko.computed(function () {
+                                return !(options.data.establishmentOfficialName === options.data.establishmentTranslatedName || !options.data.establishmentOfficialName);
+                            });
+
+                            ko.mapping.fromJS(options.data, {}, this);
+                        })());
+                    }
+                };
+                ko.mapping.fromJS(response.participants, mappingOptions, _this.participants.participants);
                 _this.deferredPopParticipants.resolve();
                 _this.basicInfo.uAgreementSelected(response.umbrellaId);
                 _this.datesStatus.statusOptionSelected(response.status);

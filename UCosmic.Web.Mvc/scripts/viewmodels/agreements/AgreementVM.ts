@@ -147,7 +147,30 @@ class InstitutionalAgreementEditModel {
                         this.basicInfo.privateNotes(response.notes);
                         this.visibility.visibility(response.visibility);
                         this.datesStatus.isEstimated(response.isExpirationEstimated);
-                        ko.mapping.fromJS(response.participants, this.participants.participants);
+
+                        // specifies the create callback for the 'persons' property
+                        var mappingOptions = {
+
+                            // overriding the default creation / initialization code
+                            create: function (options) {
+
+                                // immediately return a new instance of an inline-function.  We're doing this so the
+                                //     context ("this"), is correct when the code is actually executed.
+                                //     "this" should point to the item in what will be the observable array.
+                                //     I put a few more parens in here to make things a little more obvious
+                                return (new (function () {
+
+                                    // setup the computed binding 
+                                    this.officialNameDoesNotMatchTranslation = ko.computed(function () {
+                                        return !(options.data.establishmentOfficialName === options.data.establishmentTranslatedName || !options.data.establishmentOfficialName);
+                                    });
+
+                                    // let the ko mapping plugin continue to map out this object, so the rest of it will be observable
+                                    ko.mapping.fromJS(options.data, {}, this);
+                                })(/* call the ctor here */));
+                            }
+                        };
+                        ko.mapping.fromJS(response.participants, mappingOptions, this.participants.participants);
                         this.deferredPopParticipants.resolve();
                         this.basicInfo.uAgreementSelected(response.umbrellaId);
                         this.datesStatus.statusOptionSelected(response.status);
