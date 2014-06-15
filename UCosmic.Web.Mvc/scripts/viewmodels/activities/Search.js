@@ -1,4 +1,4 @@
-var Activities;
+﻿var Activities;
 (function (Activities) {
     (function (ViewModels) {
         (function (DataGraphPivot) {
@@ -38,7 +38,7 @@ var Activities;
                 this.selectedEstablishment = ko.observable(this.settings.input.ancestorId);
                 this.tenantOptions = ko.observableArray();
                 this.affiliations = ko.mapping.fromJS([]);
-                this.MapDataIsLoading = ko.observable(true);
+                this.MapDataIsLoading = ko.observable(false);
                 this.establishmentData = new App.DataCacher(function () {
                     return _this._loadEstablishmentData();
                 });
@@ -88,7 +88,7 @@ var Activities;
                     }
                     settings.url = url;
 
-                    $.ajax(settings).done(function (response) {
+                    this.ajaxMapData = $.ajax(settings).done(function (response) {
                         sessionStorage.setItem('activityMapData', JSON.stringify(response));
                         sessionStorage.setItem('activityMapDataSearch', ancestorId + keyword);
                         _this.MapDataIsLoading(false);
@@ -145,7 +145,6 @@ var Activities;
                 if (temp) {
                     var response = $.parseJSON(temp);
                     this._createEstablishmentSelects(response);
-                    this._ConstructMapData();
                 } else {
                     var settings = settings || {};
                     settings.url = '/api/establishments/' + this.mainCampus + '/offspring';
@@ -154,7 +153,6 @@ var Activities;
                         sessionStorage.setItem('campuses' + _this.mainCampus, JSON.stringify(response));
 
                         _this._createEstablishmentSelects(response);
-                        _this._ConstructMapData();
                     }).fail(function (xhr) {
                         promise.reject(xhr);
                     });
@@ -240,6 +238,15 @@ var Activities;
                     var searchOptions = _this.serializeObject($('form'));
                     searchOptions.placeFilter = 'continents';
                     sessionStorage.setItem(Search.SearchOptions, JSON.stringify(searchOptions));
+
+                    if (_this.ajaxMapData) {
+                        _this.ajaxMapData.abort();
+                    }
+                });
+                $('a').click(function () {
+                    if (_this.ajaxMapData) {
+                        _this.ajaxMapData.abort();
+                    }
                 });
             };
 
@@ -307,6 +314,7 @@ var Activities;
                     filter: 'contains',
                     dataSource: hasPlace ? serverDataSource : emptyDataSource,
                     select: function (e) {
+                        $('.eraseMe').remove();
                         var dataItem = e.sender.dataItem(e.item.index());
 
                         if (dataItem.placeId == -1) {
@@ -347,46 +355,61 @@ var Activities;
                         }
                     },
                     dataBound: function (e) {
-                        var widget = e.sender;
-                        var input = widget.input;
-                        var inputVal = $.trim(input.val());
+                        if (!_this.stopAutocompleteInfiniteLoop) {
+                            var widget = e.sender;
+                            var input = widget.input;
+                            var inputVal = $.trim(input.val());
 
-                        if (!inputInitialized) {
-                            input.attr('name', 'placeNames');
-                            _this.$location.attr('name', '');
-                            input.on('keydown', function () {
-                                setTimeout(function () {
-                                    checkDataSource(widget);
-                                }, 0);
-                            });
-                            if (hasPlace && inputVal) {
-                                widget.search(inputVal);
+                            if (!inputInitialized) {
+                                input.attr('name', 'placeNames');
+                                _this.$location.attr('name', '');
+                                input.on('keydown', function () {
+                                    setTimeout(function () {
+                                        checkDataSource(widget);
+                                    }, 0);
+                                });
+                                if (hasPlace && inputVal) {
+                                    widget.search(inputVal);
+                                    widget.close();
+                                }
+                                inputInitialized = true;
+                            } else if (hasPlace) {
+                                widget.select(function (dataItem) {
+                                    return dataItem.placeId == this.settings.input.placeIds[0];
+                                });
                                 widget.close();
+                                input.blur();
+                                hasPlace = false;
                             }
-                            inputInitialized = true;
-                        } else if (hasPlace) {
-                            widget.select(function (dataItem) {
-                                return dataItem.placeId == this.settings.input.placeIds[0];
-                            });
-                            widget.close();
-                            input.blur();
-                            hasPlace = false;
-                        }
 
-                        var value = e.sender.value();
-                        if (value) {
-                            var dataSource = e.sender.dataSource;
-                            var data = dataSource.data();
-                            var hasClearer = Enumerable.From(data).Any(function (x) {
-                                return x.placeId == -1;
-                            });
-                            if (!hasClearer)
-                                dataSource.add({ officialName: '[Clear current selection]', placeId: -1 });
+                            var value = e.sender.value();
+                            if (value) {
+                                var dataSource = e.sender.dataSource;
+                                var data = dataSource.data();
+                                var hasClearer = Enumerable.From(data).Any(function (x) {
+                                    return x.placeId == -1;
+                                });
+                                if (!hasClearer) {
+                                    dataSource.add({ officialName: '[Clear current selection]', placeId: -1 });
+                                    _this.stopAutocompleteInfiniteLoop = true;
+                                }
+                            }
+                        } else {
+                            _this.stopAutocompleteInfiniteLoop = false;
                         }
                     }
                 });
                 var comboBox = this.$location.data('kendoComboBox');
                 comboBox.list.addClass('k-ucosmic');
+
+                $.each(this.settings.input.placeIds, function (index, value) {
+                    if (index > 0) {
+                        $('<input />').attr('type', 'hidden').attr('name', "placeIds").attr('value', value).addClass('eraseMe').appendTo('form');
+                    }
+                });
+                var searchOptions = this.serializeObject($('form'));
+                searchOptions.placeFilter = 'continents';
+                sessionStorage.setItem(Search.SearchOptions, JSON.stringify(searchOptions));
             };
 
             Search.prototype._applySubscriptions = function () {

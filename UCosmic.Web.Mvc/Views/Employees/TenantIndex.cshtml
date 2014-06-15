@@ -282,7 +282,7 @@
                             <li>
                                 <a style=" display: none;" href="@Url.Action(MVC.Employees.Map((string)ViewBag.EmployeesDomain, null))" data-bind="click: table_mapLink, visible: !MapDataIsLoading()" class="group">
                                     <span class="arrow"></span>
-                                    <span class="text">Advanced Search (Map)</span>
+                                    <span title="This can take a few minutes." class="text">Advanced Search (Map)</span>
                                 </a>
                                 <a class="group" style="cursor: not-allowed" data-bind="visible: MapDataIsLoading">
                                     <span class="arrow"></span>

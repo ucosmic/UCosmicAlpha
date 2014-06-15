@@ -62,7 +62,9 @@ module Activities.ViewModels {
             this.pager.apply(this.settings.output);
             this._loadTenancyData();
         }
-        MapDataIsLoading = ko.observable<boolean>(true);
+        MapDataIsLoading = ko.observable<boolean>(false);
+        //MapDataIsLoading = ko.observable<boolean>(true);
+        ajaxMapData;
         private _ConstructMapData() {
             var stringActivityMapData;
             var activityMapData;
@@ -87,7 +89,7 @@ module Activities.ViewModels {
                 settings.url = url;//'/api/usf.edu/employees/map/?pivot=1&keyword=&ancestorid=3306&placeNames=&placeIds=&activityTypeIds=2&activityTypeIds=3&activityTypeIds=5&activityTypeIds=1&activityTypeIds=4&Since=&Until=&includeUndated=true&includeUndated=false';
                 //check with ancestorid - use output.input.anc...
 
-                $.ajax(settings)
+                this.ajaxMapData = $.ajax(settings)
                     .done((response: any): void => {
                         //get ancestorid and add it to the sessionStorage
                         sessionStorage.setItem('activityMapData', JSON.stringify(response));
@@ -159,7 +161,7 @@ module Activities.ViewModels {
             if (temp) {
                 var response = $.parseJSON(temp);
                 this._createEstablishmentSelects(response);
-                this._ConstructMapData();
+                //this._ConstructMapData();
             } else {
 
                 var settings = settings || {};
@@ -170,7 +172,7 @@ module Activities.ViewModels {
                         sessionStorage.setItem('campuses' + this.mainCampus, JSON.stringify(response));
 
                         this._createEstablishmentSelects(response);
-                        this._ConstructMapData();
+                        //this._ConstructMapData();
 
                     })
                     .fail((xhr: JQueryXHR): void => {
@@ -265,9 +267,18 @@ module Activities.ViewModels {
                 var searchOptions = this.serializeObject($('form'));
                 searchOptions.placeFilter = 'continents';
                 sessionStorage.setItem(Search.SearchOptions, JSON.stringify(searchOptions));
+                
+                if(this.ajaxMapData){
+                    this.ajaxMapData.abort();
+                }
+            });
+            $('a').click(() => {
+                if (this.ajaxMapData) {
+                    this.ajaxMapData.abort();
+                }
             });
         }
-
+        stopAutocompleteInfiniteLoop: boolean;
         private _applyKendo(): void {
             //#region DatePickers
 
@@ -336,6 +347,7 @@ module Activities.ViewModels {
                 filter: 'contains',
                 dataSource: hasPlace ? serverDataSource : emptyDataSource,
                 select: (e: kendo.ui.ComboBoxSelectEvent): void => {
+                    $('.eraseMe').remove();
                     var dataItem = e.sender.dataItem(e.item.index());
 
                     if (dataItem.placeId == -1) {
@@ -381,43 +393,65 @@ module Activities.ViewModels {
                 //    return false;
                 //},
                 dataBound: (e: kendo.ui.ComboBoxEvent): void => {
-                    var widget = e.sender;
-                    var input = widget.input;
-                    var inputVal = $.trim(input.val());
+                    if (!this.stopAutocompleteInfiniteLoop){
 
-                    if (!inputInitialized) {
-                        input.attr('name', 'placeNames');
-                        this.$location.attr('name', '');
-                        input.on('keydown', (): void => {
-                            setTimeout((): void => { checkDataSource(widget); }, 0);
-                        });
-                        if (hasPlace && inputVal) {
-                            widget.search(inputVal);
-                            widget.close();
+                        var widget = e.sender;
+                        var input = widget.input;
+                        var inputVal = $.trim(input.val());
+
+                        if (!inputInitialized) {
+                            input.attr('name', 'placeNames');
+                            this.$location.attr('name', '');
+                            input.on('keydown', (): void => {
+                                setTimeout((): void => { checkDataSource(widget); }, 0);
+                            });
+                            if (hasPlace && inputVal) {
+                                widget.search(inputVal);
+                                widget.close();
+                            }
+                            inputInitialized = true;
                         }
-                        inputInitialized = true;
-                    }
-                    else if (hasPlace) {
-                        widget.select(function (dataItem: any): boolean {
-                            return dataItem.placeId == this.settings.input.placeIds[0];
-                        });
-                        widget.close();
-                        input.blur();
-                        hasPlace = false;
-                    }
+                        else if (hasPlace) {
+                            widget.select(function (dataItem: any): boolean {
+                                return dataItem.placeId == this.settings.input.placeIds[0];
+                            });
+                            widget.close();
+                            input.blur();
+                            hasPlace = false;
+                        }
 
-                    var value = e.sender.value();
-                    if (value) {
-                        var dataSource = e.sender.dataSource;
-                        var data = dataSource.data();
-                        var hasClearer = Enumerable.From(data).Any(function (x: any): boolean {return x.placeId == -1 });
-                        if (!hasClearer) dataSource.add({ officialName: '[Clear current selection]', placeId: -1 })
+                        var value = e.sender.value();
+                        if (value) {
+                            var dataSource = e.sender.dataSource;
+                            var data = dataSource.data();
+                            var hasClearer = Enumerable.From(data).Any(function (x: any): boolean {return x.placeId == -1 });
+                            if (!hasClearer) {
+                                dataSource.add({ officialName: '[Clear current selection]', placeId: -1 })
+                                this.stopAutocompleteInfiniteLoop = true;
+                            }
+                        }
+                    }else{
+                        this.stopAutocompleteInfiniteLoop = false;
                     }
 
                 }
             });
             var comboBox: kendo.ui.ComboBox = this.$location.data('kendoComboBox');
             comboBox.list.addClass('k-ucosmic');
+            //this.$placeIds.val(this.settings.input.placeIds);
+            $.each(this.settings.input.placeIds, function (index, value) {
+                if(index > 0){
+                    $('<input />').attr('type', 'hidden')
+                        .attr('name', "placeIds")
+                        .attr('value', value)
+                        .addClass('eraseMe')
+                        .appendTo('form');
+                }   
+                
+            });
+            var searchOptions = this.serializeObject($('form'));
+            searchOptions.placeFilter = 'continents';
+            sessionStorage.setItem(Search.SearchOptions, JSON.stringify(searchOptions));
             //#endregion
         }
 

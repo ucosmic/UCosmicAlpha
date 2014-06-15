@@ -48,7 +48,7 @@
             function Summary(settings) {
                 var _this = this;
                 this.settings = settings;
-                this.MapDataIsLoading = ko.observable(true);
+                this.MapDataIsLoading = ko.observable(false);
                 this._bindingsApplied = $.Deferred();
                 this.bindingsApplied = this._bindingsApplied;
                 this.areBindingsApplied = ko.observable(false);
@@ -243,7 +243,7 @@
 
                     settings.url = url;
 
-                    $.ajax(settings).done(function (response) {
+                    this.ajaxMapData = $.ajax(settings).done(function (response) {
                         sessionStorage.setItem('activityMapData', JSON.stringify(response));
                         sessionStorage.setItem('activityMapDataSearch', ancestorId + keyword);
                         _this.MapDataIsLoading(false);
@@ -255,12 +255,19 @@
             };
 
             Summary.prototype.applyBindings = function () {
+                var _this = this;
                 var element = this.settings.element;
                 if (element) {
                     ko.applyBindings(this, element);
                 }
                 this.areBindingsApplied(true);
                 this._bindingsApplied.resolve();
+
+                $(window).on("popstate", function () {
+                    if (_this.ajaxMapData) {
+                        _this.ajaxMapData.abort();
+                    }
+                });
             };
 
             Summary.prototype._onPivotChanged = function () {
@@ -369,8 +376,6 @@
                 Employees.Servers.GetEmployeesPlaces(establishmentId, request).done(function (places) {
                     _this.hasPlaceData(places && places.length > 0);
                     promise.resolve(places);
-
-                    _this._ConstructMapData();
                 }).fail(function (xhr) {
                     App.Failures.message(xhr, 'while trying to load employee location summary data.', true);
                     promise.reject();

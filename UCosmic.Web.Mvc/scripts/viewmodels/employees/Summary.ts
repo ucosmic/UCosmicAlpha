@@ -100,7 +100,9 @@
             this._loadTenancyData();
         }
 
-        MapDataIsLoading = ko.observable<boolean>(true);
+        ajaxMapData;
+        MapDataIsLoading = ko.observable<boolean>(false);
+        //MapDataIsLoading = ko.observable<boolean>(true);
         private _ConstructMapData() {
             var stringActivityMapData;
             var activityMapData;
@@ -124,7 +126,7 @@
                 settings.url = url;//'/api/usf.edu/employees/map/?pivot=1&keyword=&ancestorid=3306&placeNames=&placeIds=&activityTypeIds=2&activityTypeIds=3&activityTypeIds=5&activityTypeIds=1&activityTypeIds=4&Since=&Until=&includeUndated=true&includeUndated=false';
                 //check with ancestorid - use output.input.anc...
                 
-                $.ajax(settings)
+                this.ajaxMapData = $.ajax(settings)
                     .done((response: any): void => {
                         //get ancestorid and add it to the sessionStorage
                         sessionStorage.setItem('activityMapData', JSON.stringify(response));
@@ -156,6 +158,13 @@
             }
             this.areBindingsApplied(true);
             this._bindingsApplied.resolve();
+
+
+            $(window).on("popstate", () => {
+                if (this.ajaxMapData) {
+                    this.ajaxMapData.abort();
+                }
+            });
         }
 
         //#endregion
@@ -376,7 +385,7 @@
                     this.hasPlaceData(places && places.length > 0);
                     promise.resolve(places);
 
-                    this._ConstructMapData();
+                    //this._ConstructMapData();
                 })
                 .fail((xhr: JQueryXHR): void => {
                     App.Failures.message(xhr, 'while trying to load employee location summary data.', true);
