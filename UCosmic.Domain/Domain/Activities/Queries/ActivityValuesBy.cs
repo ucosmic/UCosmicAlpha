@@ -170,30 +170,97 @@ namespace UCosmic.Domain.Activities
                 var placeTag = ActivityTagDomainType.Place.AsSentenceFragment();
                 var componentIds = _entities.Query<Place>().Where(x => query.PlaceIds.Contains(x.RevisionId))
                     .SelectMany(x => x.Components.Select(y => y.RevisionId)).ToArray();
-                var placeIds = query.PlaceIds.Union(componentIds).ToArray();
-                queryable = queryable.Where(x =>
-                    x.Locations.Any(y =>
-                        placeIds.Contains(y.PlaceId) // match place exactly
 
-                            // match place's ancestors to queried placeId, unless global
-                        || (y.Place.Ancestors.Any(z => placeIds.Except(new[] { 1 }).Contains(z.AncestorId)))
-                    )
-                        // match based on place tags
-                    || x.Tags.Any(y => y.DomainTypeText == placeTag && y.DomainKey.HasValue && placeIds.Contains(y.DomainKey.Value))
-                );
+                if (query.PlaceIds.Count() == 1)
+                {
+                    var placeIds = query.PlaceIds.Union(componentIds).ToArray();
+                    queryable = queryable.Where(x =>
+                        x.Locations.Any(y =>
+                            placeIds.Contains(y.PlaceId) // match place exactly
+
+                                // match place's ancestors to queried placeId, unless global
+                            || (y.Place.Ancestors.Any(z => placeIds.Except(new[] { 1 }).Contains(z.AncestorId)))
+                        )
+                            // match based on place tags
+                        || x.Tags.Any(y => y.DomainTypeText == placeTag && y.DomainKey.HasValue && placeIds.Contains(y.DomainKey.Value))
+                    );
+                }
+                else
+                {
+                    var placeIds = query.PlaceIds.ToArray();
+                    var greaterThan = -1;
+                    //instead of counting components I should remove the id containing components and add it to the components array
+                    if(componentIds.Count()>0){
+                        greaterThan = 0;
+                    }
+                    for(int index = 0; index < placeIds.Count(); index++)
+                    {
+                        if (index > greaterThan)
+                        {
+                            var placeId = placeIds[index];
+                            queryable = queryable.Where(x =>
+                                x.Locations.Any(y =>
+                                    placeId == y.PlaceId // match place exactly
+
+                                        // match place's ancestors to queried placeId, unless global
+                                    || (y.Place.Ancestors.Any(z => placeId == z.AncestorId))
+                                )
+                                    // match based on place tags
+                                || x.Tags.Any(y => y.DomainTypeText == placeTag && y.DomainKey.HasValue && placeId == y.DomainKey.Value)
+                            );
+                        }
+                    }
+
+                    //need to add the placeID that has components to the components array
+                    placeIds = componentIds.ToArray();
+                    if (componentIds.Count() > 0)
+                    {
+                        queryable = queryable.Where(x =>
+                            x.Locations.Any(y =>
+                                placeIds.Contains(y.PlaceId) // match place exactly
+
+                                    // match place's ancestors to queried placeId, unless global
+                                || (y.Place.Ancestors.Any(z => placeIds.Except(new[] { 1 }).Contains(z.AncestorId)))
+                            )
+                                // match based on place tags
+                            || x.Tags.Any(y => y.DomainTypeText == placeTag && y.DomainKey.HasValue && placeIds.Contains(y.DomainKey.Value))
+                        );
+                    }
+                }
             }
 
             if (!string.IsNullOrWhiteSpace(query.Keyword))
             {
                 // SQL Server can't handle a complex query like this with eager loading, so we break it up
                 // query locations separately from other fields, then get the id's of each separate query, then union them together
-                queryable = queryable.Where(x => (x.Title != null && x.Title.Contains(query.Keyword))
+                
+                //queryable = queryable.Where(x => 
+                //    foreach(string keyword in query.Keyword.Split(null)){
+                //        (x.Title != null && x.Title.Contains(Keyword))
+                //        //var nonLocationQueryable = queryable.Where(x => (x.Title != null && x.Title.Contains(query.Keyword))
+                //        || (x.ContentSearchable != null && x.ContentSearchable.Contains(Keyword))
+                //        || x.Activity.Person.DisplayName.Contains(Keyword)
+                //        || x.Tags.Any(y => y.Text.Contains(Keyword))
+                //        || x.Types.Any(y => y.Type.Type.Contains(Keyword));
+                //    }
+                //);
+                var keywords = query.Keyword.Split(null);
+                var test = keywords.Any(y => y == "Kevin");
+                var test2 = keywords.Any(y => "Kevin" == y);
+                queryable = queryable.Where(x => (x.Title != null && keywords.Any(y => x.Title.Contains(y)))
                     //var nonLocationQueryable = queryable.Where(x => (x.Title != null && x.Title.Contains(query.Keyword))
-                    || (x.ContentSearchable != null && x.ContentSearchable.Contains(query.Keyword))
-                    || x.Activity.Person.DisplayName.Contains(query.Keyword)
-                    || x.Tags.Any(y => y.Text.Contains(query.Keyword))
-                    || x.Types.Any(y => y.Type.Type.Contains(query.Keyword))
+                    || (x.ContentSearchable != null && keywords.Any(y => x.ContentSearchable.Contains(y)))
+                    || keywords.Any(y => x.Activity.Person.DisplayName.Contains(y))
+                    || keywords.Any(y => x.Tags.Any(z => z.Text.Contains(y)))
+                    || keywords.Any(y => x.Types.Any(z => z.Type.Type.Contains(y)))
                 );
+                //queryable = queryable.Where(x => (x.Title != null && x.Title.Contains(query.Keyword))
+                //    //var nonLocationQueryable = queryable.Where(x => (x.Title != null && x.Title.Contains(query.Keyword))
+                //    || (x.ContentSearchable != null && x.ContentSearchable.Contains(query.Keyword))
+                //    || x.Activity.Person.DisplayName.Contains(query.Keyword)
+                //    || x.Tags.Any(y => y.Text.Contains(query.Keyword))
+                //    || x.Types.Any(y => y.Type.Type.Contains(query.Keyword))
+                //);
                 //var locationQueryable = queryable.Where(x => x.Locations.Any(y => y.Place.OfficialName.Contains(query.Keyword)));
                 //var nonLocationIds = nonLocationQueryable.Select(x => x.RevisionId);
                 //var locationIds = locationQueryable.Select(x => x.RevisionId);
