@@ -1,4 +1,4 @@
-var Activities;
+﻿var Activities;
 (function (Activities) {
     (function (ViewModels) {
         (function (DataGraphPivotTest) {
@@ -314,41 +314,47 @@ var Activities;
                         }
                     },
                     dataBound: function (e) {
-                        var widget = e.sender;
-                        var input = widget.input;
-                        var inputVal = $.trim(input.val());
+                        if (!_this.stopAutocompleteInfiniteLoop) {
+                            var widget = e.sender;
+                            var input = widget.input;
+                            var inputVal = $.trim(input.val());
 
-                        if (!inputInitialized) {
-                            input.attr('name', 'placeNames');
-                            _this.$location.attr('name', '');
-                            input.on('keydown', function () {
-                                setTimeout(function () {
-                                    checkDataSource(widget);
-                                }, 0);
-                            });
-                            if (hasPlace && inputVal) {
-                                widget.search(inputVal);
+                            if (!inputInitialized) {
+                                input.attr('name', 'placeNames');
+                                _this.$location.attr('name', '');
+                                input.on('keydown', function () {
+                                    setTimeout(function () {
+                                        checkDataSource(widget);
+                                    }, 0);
+                                });
+                                if (hasPlace && inputVal) {
+                                    widget.search(inputVal);
+                                    widget.close();
+                                }
+                                inputInitialized = true;
+                            } else if (hasPlace) {
+                                widget.select(function (dataItem) {
+                                    return dataItem.placeId == this.settings.input.placeIds[0];
+                                });
                                 widget.close();
+                                input.blur();
+                                hasPlace = false;
                             }
-                            inputInitialized = true;
-                        } else if (hasPlace) {
-                            widget.select(function (dataItem) {
-                                return dataItem.placeId == this.settings.input.placeIds[0];
-                            });
-                            widget.close();
-                            input.blur();
-                            hasPlace = false;
-                        }
 
-                        var value = e.sender.value();
-                        if (value) {
-                            var dataSource = e.sender.dataSource;
-                            var data = dataSource.data();
-                            var hasClearer = Enumerable.From(data).Any(function (x) {
-                                return x.placeId == -1;
-                            });
-                            if (!hasClearer)
-                                dataSource.add({ officialName: '[Clear current selection]', placeId: -1 });
+                            var value = e.sender.value();
+                            if (value) {
+                                var dataSource = e.sender.dataSource;
+                                var data = dataSource.data();
+                                var hasClearer = Enumerable.From(data).Any(function (x) {
+                                    return x.placeId == -1;
+                                });
+                                if (!hasClearer) {
+                                    dataSource.add({ officialName: '[Clear current selection]', placeId: -1 });
+                                    _this.stopAutocompleteInfiniteLoop = true;
+                                }
+                            }
+                        } else {
+                            _this.stopAutocompleteInfiniteLoop = false;
                         }
                     }
                 });

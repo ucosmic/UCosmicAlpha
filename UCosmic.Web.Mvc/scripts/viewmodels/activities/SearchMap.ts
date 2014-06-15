@@ -272,6 +272,7 @@ module Activities.ViewModels {
             this._applySubscriptions();
         }
 
+        stopAutocompleteInfiniteLoop: boolean;
         private _applyKendo(): void {
             //#region DatePickers
 
@@ -385,39 +386,45 @@ module Activities.ViewModels {
                 //    return false;
                 //},
                 dataBound: (e: kendo.ui.ComboBoxEvent): void => {
-                    var widget = e.sender;
-                    var input = widget.input;
-                    var inputVal = $.trim(input.val());
+                    if (!this.stopAutocompleteInfiniteLoop) {
+                        var widget = e.sender;
+                        var input = widget.input;
+                        var inputVal = $.trim(input.val());
 
-                    if (!inputInitialized) {
-                        input.attr('name', 'placeNames');
-                        this.$location.attr('name', '');
-                        input.on('keydown', (): void => {
-                            setTimeout((): void => { checkDataSource(widget); }, 0);
-                        });
-                        if (hasPlace && inputVal) {
-                            widget.search(inputVal);
-                            widget.close();
+                        if (!inputInitialized) {
+                            input.attr('name', 'placeNames');
+                            this.$location.attr('name', '');
+                            input.on('keydown', (): void => {
+                                setTimeout((): void => { checkDataSource(widget); }, 0);
+                            });
+                            if (hasPlace && inputVal) {
+                                widget.search(inputVal);
+                                widget.close();
+                            }
+                            inputInitialized = true;
                         }
-                        inputInitialized = true;
-                    }
-                    else if (hasPlace) {
-                        widget.select(function (dataItem: any): boolean {
-                            return dataItem.placeId == this.settings.input.placeIds[0];
-                        });
-                        widget.close();
-                        input.blur();
-                        hasPlace = false;
-                    }
+                        else if (hasPlace) {
+                            widget.select(function (dataItem: any): boolean {
+                                return dataItem.placeId == this.settings.input.placeIds[0];
+                            });
+                            widget.close();
+                            input.blur();
+                            hasPlace = false;
+                        }
 
-                    var value = e.sender.value();
-                    if (value) {
-                        var dataSource = e.sender.dataSource;
-                        var data = dataSource.data();
-                        var hasClearer = Enumerable.From(data).Any(function (x: any): boolean {return x.placeId == -1 });
-                        if (!hasClearer) dataSource.add({ officialName: '[Clear current selection]', placeId: -1 })
+                        var value = e.sender.value();
+                        if (value) {
+                            var dataSource = e.sender.dataSource;
+                            var data = dataSource.data();
+                            var hasClearer = Enumerable.From(data).Any(function (x: any): boolean {return x.placeId == -1 });
+                            if (!hasClearer) {
+                                dataSource.add({ officialName: '[Clear current selection]', placeId: -1 })
+                                this.stopAutocompleteInfiniteLoop = true;
+                            }
+                        }
+                    }else{
+                        this.stopAutocompleteInfiniteLoop = false;
                     }
-
                 }
             });
             var comboBox: kendo.ui.ComboBox = this.$location.data('kendoComboBox');
