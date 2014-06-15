@@ -115,6 +115,9 @@
                 <div style="line-height: 28px;">
                     Numbers displayed represent known faculty and staff activity location sites.
                 </div>
+                <div style="color:gray; font-size:.8em;" data-bind="visible: regionCount().length > 0, text: regionCount">
+
+                </div>
                 <div data-bind="visible: continentCode() != 'any' || countryCode() != 'any'" style="line-height: 16px;">
                     @*<strong data-bind="text: status.count">?</strong>
                     <span data-bind="visible: status.count() == 1" style="display: none;">activity</span>

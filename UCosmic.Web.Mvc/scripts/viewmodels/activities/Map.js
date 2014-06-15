@@ -7,6 +7,7 @@
                 this.continentCode = ko.observable(sessionStorage.getItem(SearchMap.ContinentSessionKey) || 'any');
                 this.countryCode = ko.observable(sessionStorage.getItem(SearchMap.CountrySessionKey) || 'any');
                 this.continentName = ko.observable(sessionStorage.getItem('continentName') || '');
+                this.regionCount = ko.observable('');
                 this._map = new App.GoogleMaps.Map('google_map_canvas', {
                     streetViewControl: false,
                     panControl: false,
@@ -86,8 +87,19 @@
                 this.parentObject.tableUrl(tempUrl);
             };
 
+            SearchMap.prototype._removeContinents = function (placeNames, continent) {
+                var index = placeNames.indexOf(continent);
+                if (index > -1) {
+                    placeNames.splice(index, 1);
+                }
+            };
+
             SearchMap.prototype._loadInMapData = function (data, input) {
                 var _this = this;
+                var placeNames = [];
+                if (input.placeNames && input.placeNames.length > 1) {
+                    placeNames = input.placeNames.split(" & ");
+                }
                 if (input.placeFilter) {
                     if (input.activityTypeIds) {
                         var types = "";
@@ -104,10 +116,21 @@
                         }
                         data = Enumerable.From(data).Where(types).ToArray();
                     }
-                    if (input.placeNames && input.placeNames.length > 1) {
-                        var places = "$.locationNames.indexOf('" + input.placeNames + "') > -1";
-                        data = Enumerable.From(data).Where(places).ToArray();
+
+                    if (placeNames.length > 1) {
+                        $.each(placeNames, function (i, place) {
+                            var places = "$.continents.All().indexOf('" + place + "') > -1";
+                            data = Enumerable.From(data).Where(function (x) {
+                                return (Enumerable.From(x.continents).Where("$.name=='" + place + "'").ToArray().length > 0 || Enumerable.From(x.countries).Where("$.name=='" + place + "'").ToArray().length > 0 || Enumerable.From(x.waters).Where("$.name=='" + place + "'").ToArray().length > 0 || Enumerable.From(x.regions).Where("$.name=='" + place + "'").ToArray().length > 0);
+                            }).ToArray();
+                        });
+                    } else if (placeNames.length == 1) {
+                        var places = "$.continents.All().indexOf('" + input.placeNames + "') > -1";
+                        data = Enumerable.From(data).Where(function (x) {
+                            return (Enumerable.From(x.continents).Where("$.name=='" + input.placeNames + "'").ToArray().length > 0 || Enumerable.From(x.countries).Where("$.name=='" + input.placeNames + "'").ToArray().length > 0 || Enumerable.From(x.waters).Where("$.name=='" + input.placeNames + "'").ToArray().length > 0 || Enumerable.From(x.regions).Where("$.name=='" + input.placeNames + "'").ToArray().length > 0);
+                        }).ToArray();
                     }
+
                     if (input.Since && input.Since.length > 1) {
                         var date = "new Date($.startsOn) > new Date('" + input.Since + "')";
                         if (input.includeUndated) {
@@ -129,6 +152,38 @@
                 var countries = Enumerable.From(data).SelectMany("$.countries").GroupBy("$.name", "", "k, e => {" + "name: k," + "boundingBox: e.Select($.place).FirstOrDefault().boundingBox," + "center: e.Select($.place).FirstOrDefault().center," + "code: e.Select($.place).FirstOrDefault().code," + "name: e.Select($.place).FirstOrDefault().name," + "id: e.Select($.place).FirstOrDefault().id," + "isContinent: false," + "isCountry: true," + "isEarth: false," + "type: 'Country'," + "count: e.Count()}").ToArray();
 
                 var waters = Enumerable.From(data).SelectMany("$.waters").GroupBy("$.name", "", "k, e => {" + "code: k," + "boundingBox: e.Select($.place).FirstOrDefault().boundingBox," + "center: e.Select($.place).FirstOrDefault().center," + "continentCode: ''," + "name: e.Select($.place).FirstOrDefault().name," + "id: e.Select($.place).FirstOrDefault().id," + "isContinent: false," + "isCountry: false," + "isEarth: false," + "type: 'Water'," + "count: e.Count()}").ToArray();
+
+                if (placeNames.length > 0) {
+                    this._removeContinents(placeNames, 'Asia');
+                    this._removeContinents(placeNames, 'Africa');
+                    this._removeContinents(placeNames, 'North America');
+                    this._removeContinents(placeNames, 'South America');
+                    this._removeContinents(placeNames, 'Antarctica');
+                    this._removeContinents(placeNames, 'Oceania');
+                    this._removeContinents(placeNames, 'Europe');
+                }
+                var hasOnePlace = false;
+                if (placeNames.length > 1) {
+                    $.each(placeNames, function (i, place) {
+                        var count = Enumerable.From(data).SelectMany("$.regions").Where("$.id==-1 && $.name=='" + place + "'").Count();
+                        if (count > 0) {
+                            if (hasOnePlace) {
+                                _this.regionCount(_this.regionCount() + "Results have " + count + " activity tags of the region " + place + " not shown on map. ");
+                            } else {
+                                hasOnePlace = true;
+                                _this.regionCount("Results have " + count + " activity tags of the region " + place + " not shown on map. ");
+                            }
+                        }
+                    });
+                } else if (placeNames.length == 1) {
+                    var count = Enumerable.From(data).SelectMany("$.regions").Where("$.id==-1 && $.name=='" + placeNames[0] + "'").Count();
+                    if (count > 0) {
+                        this.regionCount("Results have " + count + " activity tags of the region " + placeNames[0] + " not shown on map.");
+                    }
+                } else {
+                    this.regionCount('');
+                }
+
                 this.countries(continents);
                 this._countriesResponse = ko.observableArray(countries);
                 this._continentsResponse = ko.observableArray(continents);
@@ -577,8 +632,14 @@
                         google.maps.event.addListener(marker, 'click', function (e) {
                             if (place.id != 0) {
                                 var search = _this.serializeObject(_this.parentObject.$form);
-                                search.placeNames = place.name;
-                                search.placeIds = place.id;
+                                if (search.placeNames && search.placeNames.length > 0) {
+                                    search.placeNames += " & " + place.name;
+                                    search.placeIds += " " + place.id;
+                                } else {
+                                    search.placeNames = place.name;
+                                    search.placeIds = place.id;
+                                }
+                                search.placeIds = search.placeIds.split(" ");
                                 _this.updateSession(search);
                                 var url = _this.createTableUrl(search);
                                 location.href = url;

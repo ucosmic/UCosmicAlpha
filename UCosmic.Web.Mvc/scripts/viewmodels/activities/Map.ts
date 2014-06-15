@@ -52,6 +52,7 @@ module Activities.ViewModels {
         parentObject;
         ancestorId;
         keyword;
+        regionCount = ko.observable<string>('');
 
         //#endregion
 
@@ -186,14 +187,26 @@ module Activities.ViewModels {
         //#endregion
         //#region Construction & Initialization
 
+        private _removeContinents(placeNames: Array<string>, continent:string){
+            var index = placeNames.indexOf(continent);
+            if(index > -1){
+                placeNames.splice(index, 1);
+            }
+        }
+
+
         private _loadInMapData(data, input) {
+            var placeNames: Array<string> = [];
+            if (input.placeNames && input.placeNames.length > 1) {
+                placeNames = input.placeNames.split(" & ");
+            }
             if (input.placeFilter) {
                 if (input.activityTypeIds) {
                     var types: string = "";
                     if (input.activityTypeIds.length > 1) {
                         $.each(input.activityTypeIds, function (index, type) {
-                            if (index == 0) {
-                                types += "$.activityTypeIds.indexOf(" + type + ") > -1"
+                        if (index == 0) {
+                            types += "$.activityTypeIds.indexOf(" + type + ") > -1"
                         } else {
                                 types += " || $.activityTypeIds.indexOf(" + type + ") > -1"
                         }
@@ -204,11 +217,35 @@ module Activities.ViewModels {
                         data = Enumerable.From(data)
                             .Where(types).ToArray();
                 }
-                if (input.placeNames && input.placeNames.length > 1) {
-                    var places: string = "$.locationNames.indexOf('" + input.placeNames + "') > -1";
+                //check for & and do this filter twice if present
+                if (placeNames.length > 1) {
+                    $.each(placeNames, (i: number, place: string): void => {
+                        var places: string = "$.continents.All().indexOf('" + place + "') > -1";
+                        data = Enumerable.From(data)
+                            .Where(function (x) {
+                                return (Enumerable.From(x.continents).Where("$.name=='" + place + "'").ToArray().length > 0
+                                    || Enumerable.From(x.countries).Where("$.name=='" + place + "'").ToArray().length > 0
+                                    || Enumerable.From(x.waters).Where("$.name=='" + place + "'").ToArray().length > 0
+                                    || Enumerable.From(x.regions).Where("$.name=='" + place + "'").ToArray().length > 0
+                                    );
+                            }).ToArray();
+                    });
+                } else if (placeNames.length == 1) {
+                    var places: string = "$.continents.All().indexOf('" + input.placeNames + "') > -1";
                     data = Enumerable.From(data)
-                        .Where(places).ToArray();
+                        .Where(function (x) {
+                            return (Enumerable.From(x.continents).Where("$.name=='" + input.placeNames + "'").ToArray().length > 0
+                                || Enumerable.From(x.countries).Where("$.name=='" + input.placeNames + "'").ToArray().length > 0
+                                || Enumerable.From(x.waters).Where("$.name=='" + input.placeNames + "'").ToArray().length > 0
+                                || Enumerable.From(x.regions).Where("$.name=='" + input.placeNames + "'").ToArray().length > 0
+                                );
+                        }).ToArray();
                 }
+                //if (input.placeNames && input.placeNames.length > 1) {
+                //    var places: string = "$.locationNames.indexOf('" + input.placeNames + "') > -1";
+                //    data = Enumerable.From(data)
+                //        .Where(places).ToArray();
+                //}
                 if (input.Since && input.Since.length > 1) {
                     var date: string = "new Date($.startsOn) > new Date('" + input.Since + "')";
                     if (input.includeUndated) {
@@ -278,6 +315,39 @@ module Activities.ViewModels {
                 "isEarth: false," +
                 "type: 'Water'," +
                 "count: e.Count()}").ToArray();
+
+            if (placeNames.length > 0) {
+                this._removeContinents(placeNames, 'Asia');
+                this._removeContinents(placeNames, 'Africa');
+                this._removeContinents(placeNames, 'North America');
+                this._removeContinents(placeNames, 'South America');
+                this._removeContinents(placeNames, 'Antarctica');
+                this._removeContinents(placeNames, 'Oceania');
+                this._removeContinents(placeNames, 'Europe');
+            }           
+            var hasOnePlace = false;
+            if (placeNames.length > 1) {
+                $.each(placeNames, (i: number, place: string): void => {
+                    var count = Enumerable.From(data).SelectMany("$.regions").Where("$.id==-1 && $.name=='" + place + "'").Count();
+                    if (count > 0) {
+                        if (hasOnePlace) {
+                            this.regionCount(this.regionCount() + "Results have " + count + " activity tags of the region " + place + " not shown on map. ");
+                        } else {
+                            hasOnePlace = true;
+                            this.regionCount("Results have " + count + " activity tags of the region " + place + " not shown on map. ");
+                        }
+                    }                    
+                });
+            } else if (placeNames.length == 1){
+                var count = Enumerable.From(data).SelectMany("$.regions").Where("$.id==-1 && $.name=='" + placeNames[0] + "'").Count();
+                if (count > 0) {
+                    this.regionCount("Results have " + count + " activity tags of the region " + placeNames[0] + " not shown on map.");
+                }   
+            }else{
+                this.regionCount('');
+            }
+            //var regionCount = Enumerable.From(data).SelectMany("$.regions").Where("$.id==-1 && $.name==").Count();
+
             this.countries(continents);
             this._countriesResponse = ko.observableArray(countries);
             this._continentsResponse = ko.observableArray(continents);
@@ -1066,8 +1136,14 @@ module Activities.ViewModels {
                         //take to advanced search table
                         if (place.id != 0) {
                             var search = this.serializeObject(this.parentObject.$form);
-                            search.placeNames = place.name;
-                            search.placeIds = place.id;
+                            if (search.placeNames && search.placeNames.length > 0) {
+                                search.placeNames += " & " + place.name;
+                                search.placeIds += " " + place.id;
+                            } else {
+                                search.placeNames = place.name;
+                                search.placeIds = place.id;
+                            }
+                            search.placeIds = search.placeIds.split(" ");
                             this.updateSession(search);
                             var url = this.createTableUrl(search);//location.href.replace('map', 'table') + '&' + this.replaceAll('%5B%5D', '', $.param(search));
                             location.href = url;
