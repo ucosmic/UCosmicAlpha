@@ -111,7 +111,6 @@ module Activities.ViewModels {
                         return !x.isChecked();
                     });
             });
-            this._loadTenancyData();
             this.ancestorId = settings.input.ancestorId;
             this.oldAncestorId = settings.input.ancestorId;
             this.oldKeyword = settings.input.keyword;
@@ -125,6 +124,7 @@ module Activities.ViewModels {
 
             this.searchMap = new Activities.ViewModels.SearchMap(searchMapData, this);
             this.searchMap.applyBindings(document.getElementById('searchMap'));
+            this._loadTenancyData();
         }
 
 
@@ -187,79 +187,82 @@ module Activities.ViewModels {
                 this._createEstablishmentSelects(response);
             } else {
 
-                var settings = settings || {};
-                settings.url = '/api/establishments/' + this.mainCampus + '/offspring';
-                $.ajax(settings)
-                    .done((response: ApiModels.ScalarEstablishment[]): void => {
-                        promise.resolve(response);
-                        sessionStorage.setItem('campuses' + this.mainCampus, JSON.stringify(response));
+                $.when(this.searchMap.dataDefered).done(() => {
+                    var settings = settings || {};
+                    settings.url = '/api/establishments/' + this.mainCampus + '/offspring';
+                    $.ajax(settings)
+                        .done((response: ApiModels.ScalarEstablishment[]): void => {
+                            promise.resolve(response);
+                            sessionStorage.setItem('campuses' + this.mainCampus, JSON.stringify(response));
 
-                        this._createEstablishmentSelects(response);
+                            this._createEstablishmentSelects(response);
 
 
-                    })
-                    .fail((xhr: JQueryXHR): void => {
-                        promise.reject(xhr);
-                    });
+                        })
+                        .fail((xhr: JQueryXHR): void => {
+                            promise.reject(xhr);
+                        });
+                });
             }
 
             return promise;
         }
 
         private _loadTenancyData(): void {
-            $.when(Activities.Servers.Single(this.settings.tenantId), Activities.Servers.GetChildren(this.settings.tenantId))
-                .done((parentData: Activities.ApiModels.ScalarEstablishment, childData: Activities.ApiModels.ScalarEstablishment[]): void => {
-                    childData = childData || [];
-                    var tenants = Enumerable.From(childData)
-                        .OrderBy(function (x: Activities.ApiModels.ScalarEstablishment): number {
-                            return x.rank;
-                        }).ToArray();
-                    tenants.unshift(parentData);
-
-                    this.tenantOptions([]);
-                    if (childData.length) {
-                        var options = Enumerable.From(tenants)
-                            .Select(function (x: Activities.ApiModels.ScalarEstablishment): App.ApiModels.SelectOption<number> {
-                                var option: App.ApiModels.SelectOption<number> = {
-                                    value: x.id,
-                                    text: x.contextName || x.officialName,
-                                };
-                                return option;
+            $.when(this.searchMap.dataDefered).done(() => {
+                $.when(Activities.Servers.Single(this.settings.tenantId), Activities.Servers.GetChildren(this.settings.tenantId))
+                    .done((parentData: Activities.ApiModels.ScalarEstablishment, childData: Activities.ApiModels.ScalarEstablishment[]): void => {
+                        childData = childData || [];
+                        var tenants = Enumerable.From(childData)
+                            .OrderBy(function (x: Activities.ApiModels.ScalarEstablishment): number {
+                                return x.rank;
                             }).ToArray();
-                        this.tenantOptions(options);
-                    }
+                        tenants.unshift(parentData);
 
-                    this.establishmentData.ready();
-
-                    var myThis = this;
-                    this.selectedTenant(this.settings.input.ancestorId);
-                    this.selectedTenant.subscribe((newValue: number): void => {
-                        this.selectedEstablishment(this.selectedTenant());
-                        this._submitForm();
-                    });
-                    $(".campusSelect").change(function () {
-                        if (this.value != '') {
-                            myThis.selectedEstablishment(this.value);
-                        } else {
-                            var prevCampusSelect = $(this).parent().parent().prev().find(".campusSelect");
-                            if (prevCampusSelect.length) {
-                                myThis.selectedEstablishment($(this).parent().parent().prev().find(".campusSelect").val());
-                            } else {
-                                myThis.selectedEstablishment(myThis.settings.tenantId);
-                            }
+                        this.tenantOptions([]);
+                        if (childData.length) {
+                            var options = Enumerable.From(tenants)
+                                .Select(function (x: Activities.ApiModels.ScalarEstablishment): App.ApiModels.SelectOption<number> {
+                                    var option: App.ApiModels.SelectOption<number> = {
+                                        value: x.id,
+                                        text: x.contextName || x.officialName,
+                                    };
+                                    return option;
+                                }).ToArray();
+                            this.tenantOptions(options);
                         }
-                        sessionStorage.setItem('EmployeeSummaryEstablishmentId', myThis.selectedEstablishment().toString());
-                        
-                        myThis._submitForm()
+
+                        this.establishmentData.ready();
+
+                        var myThis = this;
+                        this.selectedTenant(this.settings.input.ancestorId);
+                        this.selectedTenant.subscribe((newValue: number): void => {
+                            this.selectedEstablishment(this.selectedTenant());
+                            this._submitForm();
+                        });
+                        $(".campusSelect").change(function () {
+                            if (this.value != '') {
+                                myThis.selectedEstablishment(this.value);
+                            } else {
+                                var prevCampusSelect = $(this).parent().parent().prev().find(".campusSelect");
+                                if (prevCampusSelect.length) {
+                                    myThis.selectedEstablishment($(this).parent().parent().prev().find(".campusSelect").val());
+                                } else {
+                                    myThis.selectedEstablishment(myThis.settings.tenantId);
+                                }
+                            }
+                            sessionStorage.setItem('EmployeeSummaryEstablishmentId', myThis.selectedEstablishment().toString());
+
+                            myThis._submitForm()
                     })
                     //deferred.resolve(tenants);
                     if (childData.length) this.hasTenancyData(true);
-                })
-                .fail((xhr: JQueryXHR): void => {
-                    App.Failures.message(xhr, 'while trying to load institution organizational data.', true);
-                    //deferred.reject();
-                })
-
+                    })
+                    .fail((xhr: JQueryXHR): void => {
+                        App.Failures.message(xhr, 'while trying to load institution organizational data.', true);
+                        //deferred.reject();
+                    })
+                });
         }
 
         //#endregion

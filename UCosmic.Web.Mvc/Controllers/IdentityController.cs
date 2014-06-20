@@ -63,6 +63,7 @@ namespace UCosmic.Web.Mvc.Controllers
                     //return new EmptyResult();
                 }
             }
+            ViewBag.userName = User.Identity.Name.ToLower();
 
             var model = new SignInForm();
 #if DEBUG
@@ -100,6 +101,7 @@ namespace UCosmic.Web.Mvc.Controllers
                     model.ShowPasswordField = true;
                 }
             }
+            ViewBag.userName = User.Identity.Name.ToLower();
 
             return View(model);
         }

@@ -1,4 +1,4 @@
-﻿var Activities;
+var Activities;
 (function (Activities) {
     (function (ViewModels) {
         (function (DataGraphPivotTest) {
@@ -81,13 +81,13 @@
                         return !x.isChecked();
                     });
                 });
-                this._loadTenancyData();
                 this.ancestorId = settings.input.ancestorId;
                 this.oldAncestorId = settings.input.ancestorId;
                 this.oldKeyword = settings.input.keyword;
 
                 this.searchMap = new Activities.ViewModels.SearchMap(searchMapData, this);
                 this.searchMap.applyBindings(document.getElementById('searchMap'));
+                this._loadTenancyData();
             }
             MapSearch.prototype._createEstablishmentSelects = function (response) {
                 var parentId = this.settings.input.ancestorId;
@@ -136,15 +136,17 @@
                     var response = $.parseJSON(temp);
                     this._createEstablishmentSelects(response);
                 } else {
-                    var settings = settings || {};
-                    settings.url = '/api/establishments/' + this.mainCampus + '/offspring';
-                    $.ajax(settings).done(function (response) {
-                        promise.resolve(response);
-                        sessionStorage.setItem('campuses' + _this.mainCampus, JSON.stringify(response));
+                    $.when(this.searchMap.dataDefered).done(function () {
+                        var settings = settings || {};
+                        settings.url = '/api/establishments/' + _this.mainCampus + '/offspring';
+                        $.ajax(settings).done(function (response) {
+                            promise.resolve(response);
+                            sessionStorage.setItem('campuses' + _this.mainCampus, JSON.stringify(response));
 
-                        _this._createEstablishmentSelects(response);
-                    }).fail(function (xhr) {
-                        promise.reject(xhr);
+                            _this._createEstablishmentSelects(response);
+                        }).fail(function (xhr) {
+                            promise.reject(xhr);
+                        });
                     });
                 }
 
@@ -153,53 +155,55 @@
 
             MapSearch.prototype._loadTenancyData = function () {
                 var _this = this;
-                $.when(Activities.Servers.Single(this.settings.tenantId), Activities.Servers.GetChildren(this.settings.tenantId)).done(function (parentData, childData) {
-                    childData = childData || [];
-                    var tenants = Enumerable.From(childData).OrderBy(function (x) {
-                        return x.rank;
-                    }).ToArray();
-                    tenants.unshift(parentData);
-
-                    _this.tenantOptions([]);
-                    if (childData.length) {
-                        var options = Enumerable.From(tenants).Select(function (x) {
-                            var option = {
-                                value: x.id,
-                                text: x.contextName || x.officialName
-                            };
-                            return option;
+                $.when(this.searchMap.dataDefered).done(function () {
+                    $.when(Activities.Servers.Single(_this.settings.tenantId), Activities.Servers.GetChildren(_this.settings.tenantId)).done(function (parentData, childData) {
+                        childData = childData || [];
+                        var tenants = Enumerable.From(childData).OrderBy(function (x) {
+                            return x.rank;
                         }).ToArray();
-                        _this.tenantOptions(options);
-                    }
+                        tenants.unshift(parentData);
 
-                    _this.establishmentData.ready();
-
-                    var myThis = _this;
-                    _this.selectedTenant(_this.settings.input.ancestorId);
-                    _this.selectedTenant.subscribe(function (newValue) {
-                        _this.selectedEstablishment(_this.selectedTenant());
-                        _this._submitForm();
-                    });
-                    $(".campusSelect").change(function () {
-                        if (this.value != '') {
-                            myThis.selectedEstablishment(this.value);
-                        } else {
-                            var prevCampusSelect = $(this).parent().parent().prev().find(".campusSelect");
-                            if (prevCampusSelect.length) {
-                                myThis.selectedEstablishment($(this).parent().parent().prev().find(".campusSelect").val());
-                            } else {
-                                myThis.selectedEstablishment(myThis.settings.tenantId);
-                            }
+                        _this.tenantOptions([]);
+                        if (childData.length) {
+                            var options = Enumerable.From(tenants).Select(function (x) {
+                                var option = {
+                                    value: x.id,
+                                    text: x.contextName || x.officialName
+                                };
+                                return option;
+                            }).ToArray();
+                            _this.tenantOptions(options);
                         }
-                        sessionStorage.setItem('EmployeeSummaryEstablishmentId', myThis.selectedEstablishment().toString());
 
-                        myThis._submitForm();
+                        _this.establishmentData.ready();
+
+                        var myThis = _this;
+                        _this.selectedTenant(_this.settings.input.ancestorId);
+                        _this.selectedTenant.subscribe(function (newValue) {
+                            _this.selectedEstablishment(_this.selectedTenant());
+                            _this._submitForm();
+                        });
+                        $(".campusSelect").change(function () {
+                            if (this.value != '') {
+                                myThis.selectedEstablishment(this.value);
+                            } else {
+                                var prevCampusSelect = $(this).parent().parent().prev().find(".campusSelect");
+                                if (prevCampusSelect.length) {
+                                    myThis.selectedEstablishment($(this).parent().parent().prev().find(".campusSelect").val());
+                                } else {
+                                    myThis.selectedEstablishment(myThis.settings.tenantId);
+                                }
+                            }
+                            sessionStorage.setItem('EmployeeSummaryEstablishmentId', myThis.selectedEstablishment().toString());
+
+                            myThis._submitForm();
+                        });
+
+                        if (childData.length)
+                            _this.hasTenancyData(true);
+                    }).fail(function (xhr) {
+                        App.Failures.message(xhr, 'while trying to load institution organizational data.', true);
                     });
-
-                    if (childData.length)
-                        _this.hasTenancyData(true);
-                }).fail(function (xhr) {
-                    App.Failures.message(xhr, 'while trying to load institution organizational data.', true);
                 });
             };
 
