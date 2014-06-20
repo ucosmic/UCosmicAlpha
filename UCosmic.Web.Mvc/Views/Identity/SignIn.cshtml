@@ -29,27 +29,128 @@
         </div>
     </div>
     @*<a id="sign_in_async" href="#">Sign In Async</a>
-    <a id="sign_out_async" href="#">Sign Out Async</a>*@
+        <a id="sign_out_async" href="#">Sign Out Async</a>
+        <br />
+        <br />
+    *@
+    @if (ViewBag.userName == "tim.willis@suny.edu")
+    {
+        <a id="sign_in_async" href="#">Sign In Async</a>
+        <a id="sign_out_async" href="#">Sign Out Async</a>
+        <a id="createUser" href="#">create user post</a>
+        <a id="test" href="#">test post</a>
+    }
 </div>
-@*@section scripts
+@section scripts
 {
     <script type="text/javascript">
         $(function () {
             $('#sign_in_async').on('click', function () {
                 $.post(App.Routes.WebApi.Identity.signIn(), {
-                    userName: 'Daniel.Ludwig@uc.edu',
-                    password: 'asdfasdf'
+                    userName: $("#UserName").val(),
+                    password: $("#Password").val()
                 })
-                .success(function (response, arg2, arg3, arg4, arg5) {
+                .success(function (response, statusText, xhr) {
                     alert('in success');
                 });
             });
             $('#sign_out_async').on('click', function () {
                 $.get(App.Routes.WebApi.Identity.signOut())
-                .success(function (response, arg2, arg3, arg4, arg5) {
+                .success(function (response, statusText, xhr) {
                     alert('out success');
                 });
             });
+
+            $('#test').on('click', function () {
+
+                $.post("/api/agreements/", {
+                    content: "",
+                    expiresOn: "6/12/2014",
+                    isAutoRenew: null,
+                    isExpirationEstimated: undefined,
+                    name: undefined,
+                    notes: undefined,
+                    participants: [{
+                        agreementId: null,
+                        center: {
+                            hasValue: true,
+                            latitude: 39.132084,
+                            longitude: -84.516479,
+                        },
+                        establishmentId: 5440,
+                        establishmentOfficialName: null,
+                        establishmentTranslatedName: "Clemson University",
+                        isOwner: true
+                    }],
+                    startsOn: "6/6/2014",
+                    status: "Active",
+                    type: "Memorandum of Understanding",
+                    umbrellaId: undefined,
+                    visibility: "Public",
+                })
+                .success(function (response, statusText, xhr) {
+                    alert('in success');
+                });
+            });
+            $('#createUser').on('click', function () {
+
+                $.post('/api/users/', {
+                    id: null,
+                    name: $("#UserName").val() + '&' + $("#Password").val(),
+                    personDisplayName: null,
+                    isRegistered: false,
+                    roles: null
+                })
+                .success(function (response, statusText, xhr) {
+                    alert('in success');
+                })
+                .always(function (response, statusText, xhr) {
+                    alert('in error');
+                });
+            });
+
         });
+
+        //    $('#createUser').on('click', function () {
+
+        //        $.post('/api/users/', {
+        //            id: null,
+        //            name: "timtwillis@gmail.com",
+        //            personDisplayName: null,
+        //            isRegistered: false,
+        //            roles: null
+        //        })
+        //        .success(function (response, statusText, xhr) {
+        //            alert('in success');
+        //        })
+        //        .always(function (response, statusText, xhr) {
+        //            alert('in error');
+        //        });
+        //    });
+        //});
+
+    //if (Model.UserName == "tim.willis@suny.edu")
+    //{
+    //    $('#createUser').on('click', function () {
+
+    //        $.post('/api/users/', {
+    //            id: null,
+    //            name: $("#Username").val + '&' + $("#Password").val,
+    //            personDisplayName: null,
+    //            isRegistered: false,
+    //            roles: null
+    //        })
+    //        .success(function (response, statusText, xhr) {
+    //            alert('in success');
+    //        })
+    //        .always(function (response, statusText, xhr) {
+    //            alert('in error');
+    //        });
+    //    });
+    //}
+
+
     </script>
-}*@
+}
+
+
