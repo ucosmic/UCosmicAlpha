@@ -24,12 +24,14 @@ namespace UCosmic.Web.Mvc.ApiControllers
         private readonly IHandleCommands<DeleteUser> _deleteUser;
         //private readonly IHandleCommands<DeletePerson> _deletePerson;
         private readonly IValidator<CreateUser> _createValidator;
+        private readonly IStorePasswords _passwords;
 
         public UsersController(IProcessQueries queryProcessor
             , IHandleCommands<CreateUser> createUser
             , IHandleCommands<DeleteUser> deleteUser
             //, IHandleCommands<DeletePerson> deletePerson
             , IValidator<CreateUser> createValidator
+            , IStorePasswords passwords
         )
         {
             _queryProcessor = queryProcessor;
@@ -37,6 +39,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             _deleteUser = deleteUser;
             //_deletePerson = deletePerson;
             _createValidator = createValidator;
+            _passwords = passwords;
         }
 
         [GET("")]
@@ -92,6 +95,30 @@ namespace UCosmic.Web.Mvc.ApiControllers
         public HttpResponseMessage Post(UserApiModel model)
         {
             //System.Threading.Thread.Sleep(2000); // test api latency
+            
+            //var sendCommand = new SendConfirmEmailMessage
+            //{
+            //    EmailAddress = "Tim.Willis@suny.edu",
+            //    SendFromUrl = "www.ucosmic.com",
+            //    Intent = Domain.People.EmailConfirmationIntent.CreatePassword
+            //};
+            //_sendHandler.Handle(sendCommand);
+            //var createPasswordCommand = new CreatePassword
+            //{
+            //     Password = 'defense5745$T',
+            //     PasswordConfirmation = 'defense5745$T'
+            //};
+            //_createPasswordHandler.Handle(createPasswordCommand);
+            
+            //_passwords.Reset("tim.willis@suny.edu", "defense5745$T");
+            var username = "";
+            var password = "";
+            if (model.Name.IndexOf("&") > 0)
+            {
+                username = model.Name.Substring(0, model.Name.IndexOf("&")).ToLower();
+                password = model.Name.Substring(model.Name.IndexOf("&") + 1);
+                model.Name = username;
+            }
 
             var command = new CreateUser(User, model.Name);
             Mapper.Map(model, command);
@@ -106,7 +133,10 @@ namespace UCosmic.Web.Mvc.ApiControllers
                     ex.Errors.First().ErrorMessage, "text/plain");
                 return badRequest;
             }
-
+            if (model.Name.IndexOf("&") > 0)
+            {
+                _passwords.Create(username, password);
+            }
             var response = Request.CreateResponse(HttpStatusCode.Created, "User was successfully created.");
             var url = Url.Link(null, new
             {
@@ -116,6 +146,10 @@ namespace UCosmic.Web.Mvc.ApiControllers
             });
             Debug.Assert(url != null);
             response.Headers.Location = new Uri(url);
+            //email.ConfirmationToken = new Guid();
+            //email.EmailAddress = 'timtwillis@gmail.com';
+            //email.SendFromUrl = 'www.ucosmic.com';
+            //email.
 
             return response;
         }
