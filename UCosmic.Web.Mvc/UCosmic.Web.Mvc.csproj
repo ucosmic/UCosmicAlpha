@@ -326,6 +326,9 @@
     <Compile Include="Models\Activities\ActivityPlaceMapViewModel.cs" />
     <Compile Include="Models\Activities\Search\ActivitySearchMapModel.cs" />
     <Compile Include="Models\Activities\Search\ActivitySearchMapPlaceModel.cs" />
+    <Compile Include="Models\Activities\Search\ActivitySearchResultMapRegionsModel.cs" />
+    <Compile Include="Models\Activities\Search\ActivitySearchResultMapWatersModel.cs" />
+    <Compile Include="Models\Activities\Search\ActivitySearchResultMapCountriesModel.cs" />
     <Compile Include="Models\Activities\Search\ActivitySearchResultMapContinentsModel.cs" />
     <Compile Include="Models\Activities\Search\ActivitySearchResultMapModel.cs" />
     <Compile Include="Models\People\PersonUrlViewModel.cs" />
@@ -873,6 +876,7 @@
     <Content Include="images\icons\spinner\barber-38-green.gif" />
     <Content Include="images\icons\spinner\barber-40-green.gif" />
     <Content Include="images\icons\spinner\spinner-20-blue-on-ddd.gif" />
+    <Content Include="images\icons\spinner\spinner-20-grey.gif" />
     <Content Include="images\icons\spinner\spinner-24-blue-on-ddd.gif" />
     <Content Include="images\icons\spinner\spinner-24-blue.gif" />
     <None Include="scripts\jquery\jquery-1.9.1.intellisense.js" />

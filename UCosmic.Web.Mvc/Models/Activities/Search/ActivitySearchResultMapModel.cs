@@ -54,6 +54,23 @@ namespace UCosmic.Web.Mvc.Models
         public string Name { get; set; }
 
     }
+    public class ActivitySearchResultPlacesCounted
+    {
+        public string Name { get; set; }
+        public int Id { get; set; }
+        public string Code { get; set; }
+        public MapPointModel Center { get; set; }
+        public BoundingBox BoundingBox { get; set; }
+        public int Count { get; set; }
+
+    }
+    public class ActivitySearchResultPlacesCountedRegions
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public int Count { get; set; }
+
+    }
     //public class ActivitySearchResultCountries
     //{
     //    public string CountriesName { get; set; }
@@ -100,10 +117,14 @@ namespace UCosmic.Web.Mvc.Models
                                     : x.Place.Ancestors.FirstOrDefault(y => y.Ancestor.IsContinent).Ancestor.IsContinent ? x.Place.Ancestors.FirstOrDefault(y => y.Ancestor.IsContinent).Ancestor.OfficialName 
                                     : "Bodies of water",
                                     Id = x.Place.IsContinent || x.Place.IsWater ? x.Place.RevisionId : x.Place.Ancestors.FirstOrDefault(y => y.Ancestor.IsContinent || y.Ancestor.IsWater).Ancestor.RevisionId,
-                                    Center =  x.Place.IsContinent ? new MapPointModel { Latitude = x.Place.GeoPlanetPlace.Center.Latitude, Longitude = x.Place.GeoPlanetPlace.Center.Longitude }
+                                    Center = x.Place.IsContinent ? new MapPointModel { Latitude = x.Place.GeoPlanetPlace.Center.Latitude, Longitude = x.Place.GeoPlanetPlace.Center.Longitude }
                                     : (x.Place.Ancestors.FirstOrDefault(y => y.Ancestor.IsContinent) != null ? x.Place.Ancestors.FirstOrDefault(y => y.Ancestor.IsContinent).Ancestor.IsContinent : false) ? new MapPointModel { Latitude = x.Place.Ancestors.FirstOrDefault(z => z.Ancestor.IsContinent).Ancestor.GeoPlanetPlace.Center.Latitude, Longitude = x.Place.Ancestors.FirstOrDefault(z => z.Ancestor.IsContinent).Ancestor.GeoPlanetPlace.Center.Longitude }
-                                    : new MapPointModel { Latitude = 0, Longitude = -180 } ,
-                                    BoundingBox = null// x.Place.IsContinent || x.Place.IsWater ? x.Place.BoundingBox : x.Place.Ancestors.FirstOrDefault(y => y.Ancestor.IsContinent || y.Ancestor.IsWater).Ancestor.GeoPlanetPlace.BoundingBox
+                                    : new MapPointModel { Latitude = 0, Longitude = -180 },
+                                    BoundingBox = null
+                                    //Center =  x.Place.IsContinent ? new MapPointModel { Latitude = x.Place.GeoPlanetPlace.Center.Latitude, Longitude = x.Place.GeoPlanetPlace.Center.Longitude }
+                                    //: (x.Place.Ancestors.FirstOrDefault(y => y.Ancestor.IsContinent) != null ? x.Place.Ancestors.FirstOrDefault(y => y.Ancestor.IsContinent).Ancestor.IsContinent : false) ? new MapPointModel { Latitude = x.Place.Ancestors.FirstOrDefault(z => z.Ancestor.IsContinent).Ancestor.GeoPlanetPlace.Center.Latitude, Longitude = x.Place.Ancestors.FirstOrDefault(z => z.Ancestor.IsContinent).Ancestor.GeoPlanetPlace.Center.Longitude }
+                                    //: new MapPointModel { Latitude = 0, Longitude = -180 } ,
+                                    //BoundingBox = null// x.Place.IsContinent || x.Place.IsWater ? x.Place.BoundingBox : x.Place.Ancestors.FirstOrDefault(y => y.Ancestor.IsContinent || y.Ancestor.IsWater).Ancestor.GeoPlanetPlace.BoundingBox
                                 });
                         }
                         else
