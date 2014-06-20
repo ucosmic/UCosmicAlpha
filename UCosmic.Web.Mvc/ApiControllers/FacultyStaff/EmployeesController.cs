@@ -14,6 +14,7 @@ using ImageResizer;
 using UCosmic.Domain.Activities;
 using UCosmic.Domain.Employees;
 using UCosmic.Domain.Establishments;
+using UCosmic.Domain.Places;
 using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc.ApiControllers
@@ -208,7 +209,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
         //[CurrentModuleTab(ModuleTab.Employees)]
         //[GET("{domain}/employees/maptest")]
-        [CacheHttpGet(Duration = 60)]
+        [CacheHttpGet(Duration = 3600)]
         [GET("{domain}/employees/map")]
         public ActivitySearchResultMapModel[] GetMaptest(string domain, [FromUri] ActivitySearchInputModel input)
         {
@@ -244,6 +245,114 @@ namespace UCosmic.Web.Mvc.ApiControllers
             //Session.LastActivityLens(Request);
 
             return Output;
+        }
+        [CacheHttpGet(Duration = 3600)]
+        [GET("{domain}/employees/continents")]
+        public ActivitySearchResultPlacesCounted[] GetMapContinent(string domain, [FromUri] ActivitySearchInputModel input)
+        {
+            //var query = new ActivityValuesBy();
+
+            var query = new ActivityValuesBy()
+            {
+                EagerLoad = ActivitySearchResultMapContinentsModel.EagerLoad,
+            };
+
+            //if (entity == null) throw new HttpResponseException(HttpStatusCode.NotFound);
+            input.PageSize = 10;
+            Mapper.Map(input, query);
+            var results = _queryProcessor.Execute(query);
+            //System.Web.HttpContext.Current.Session["activities" + domain] = results;
+            var Output = Mapper.Map<ActivitySearchResultMapContinentsModel[]>(results);
+            
+            var grouped = Output.Where(x => x.Continents != null).SelectMany(x => x.Continents).GroupBy(g => g.Code).Select(g => new ActivitySearchResultPlacesCounted
+            {
+                Name = g.First().Name,
+                Id = g.First().Id,
+                Code = g.First().Code,
+                Center = g.First().Center,
+                BoundingBox = g.First().BoundingBox,
+                Count = g.Count()
+            }).ToArray();
+
+            return grouped;
+        }
+
+        [CacheHttpGet(Duration = 3600)]
+        [GET("{domain}/employees/countries")]
+        public ActivitySearchResultPlacesCounted[] GetMapCountries(string domain, [FromUri] ActivitySearchInputModel input)
+        {
+            var query = new ActivityValuesBy()
+            {
+                EagerLoad = ActivitySearchResultMapContinentsModel.EagerLoad,
+            };
+
+            input.PageSize = 10;
+            Mapper.Map(input, query);
+            var results = _queryProcessor.Execute(query);
+            var Output = Mapper.Map<ActivitySearchResultMapCountriesModel[]>(results);
+
+            var grouped = Output.Where(x => x.Countries != null).SelectMany(x => x.Countries).GroupBy(g => g.Id).Select(g => new ActivitySearchResultPlacesCounted
+            {
+                Name = g.First().Name,
+                Id = g.First().Id,
+                Code = g.First().Code,
+                Center = g.First().Center,
+                BoundingBox = g.First().BoundingBox,
+                Count = g.Count()
+            }).ToArray();
+
+            return grouped;
+        }
+
+        [CacheHttpGet(Duration = 3600)]
+        [GET("{domain}/employees/waters")]
+        public ActivitySearchResultPlacesCounted[] GetMapWaters(string domain, [FromUri] ActivitySearchInputModel input)
+        {
+            var query = new ActivityValuesBy()
+            {
+                EagerLoad = ActivitySearchResultMapContinentsModel.EagerLoad,
+            };
+
+            input.PageSize = 10;
+            Mapper.Map(input, query);
+            var results = _queryProcessor.Execute(query);
+            var Output = Mapper.Map<ActivitySearchResultMapWatersModel[]>(results);
+
+            var grouped = Output.Where(x => x.Waters != null).SelectMany(x => x.Waters).GroupBy(g => g.Id).Select(g => new ActivitySearchResultPlacesCounted
+            {
+                Name = g.First().Name,
+                Id = g.First().Id,
+                Code = g.First().Code,
+                Center = g.First().Center,
+                BoundingBox = g.First().BoundingBox,
+                Count = g.Count()
+            }).ToArray();
+
+            return grouped;
+        }
+
+        [CacheHttpGet(Duration = 3600)]
+        [GET("{domain}/employees/regions")]
+        public ActivitySearchResultPlacesCountedRegions[] GetMapRegions(string domain, [FromUri] ActivitySearchInputModel input)
+        {
+            var query = new ActivityValuesBy()
+            {
+                EagerLoad = ActivitySearchResultMapContinentsModel.EagerLoad,
+            };
+
+            input.PageSize = 10;
+            Mapper.Map(input, query);
+            var results = _queryProcessor.Execute(query);
+            var Output = Mapper.Map<ActivitySearchResultMapRegionsModel[]>(results);
+
+            var grouped = Output.Where(x => x.Regions != null).SelectMany(x => x.Regions).Where(x => x.Id == -1).GroupBy(g => g.Name).Select(g => new ActivitySearchResultPlacesCountedRegions
+            {
+                Name = g.First().Name,
+                Id = g.First().Id,
+                Count = g.Count()
+            }).ToArray();
+
+            return grouped;
         }
     }
 }
