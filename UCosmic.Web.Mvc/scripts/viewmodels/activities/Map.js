@@ -8,6 +8,7 @@
                 this.countryCode = ko.observable(sessionStorage.getItem(SearchMap.CountrySessionKey) || 'any');
                 this.continentName = ko.observable(sessionStorage.getItem('continentName') || '');
                 this.regionCount = ko.observable('');
+                this.dataDefered = $.Deferred();
                 this._map = new App.GoogleMaps.Map('google_map_canvas', {
                     streetViewControl: false,
                     panControl: false,
@@ -40,7 +41,47 @@
                     partner: ko.observable({}),
                     agreements: ko.observableArray([])
                 };
-                this._ConstructMapData(output, parentObject);
+                this.createIndexDb = function () {
+                    var idbSupported = false;
+                    var db;
+                    if ("indexedDB" in window) {
+                        idbSupported = true;
+                    }
+
+                    var openRequest = indexedDB.open("test", 1);
+
+                    openRequest.onupgradeneeded = function (e) {
+                        console.log("running onupgradeneeded");
+                    };
+
+                    openRequest.onsuccess = function (e) {
+                        console.log("Success!");
+                    };
+
+                    openRequest.onerror = function (e) {
+                        console.log("Error");
+                    };
+
+                    var transaction = db.transaction(["mapData"], "readwrite");
+                    var store = transaction.objectStore("mapData");
+                    var mapData = {
+                        test: "asdf",
+                        id: 1
+                    };
+
+                    var request = store.add(mapData, 1);
+                };
+                this.parentObject = parentObject;
+                this.parentObject.tableUrl(location.href.replace('map', 'table'));
+                this.ancestorId = output.input.ancestorId ? output.input.ancestorId : "null";
+                this.keyword = output.input.keyword ? output.input.keyword : "null";
+                if (!output.input.activityTypeIds) {
+                    output.input.activityTypeIds = [];
+                    $.each(output.activityTypes, function (i, type) {
+                        output.input.activityTypeIds.push(type.activityTypeId);
+                    });
+                }
+                this._ConstructMapData(output.input);
             }
             SearchMap.prototype.applyBindings = function (element) {
                 ko.applyBindings(this, element);
@@ -94,157 +135,276 @@
                 }
             };
 
-            SearchMap.prototype._loadInMapData = function (data, input) {
+            SearchMap.prototype._ConstructMapData = function (input) {
                 var _this = this;
-                var placeNames = [];
-                if (input.placeNames && input.placeNames.length > 1) {
-                    placeNames = input.placeNames.split(" & ");
+                var searchOptions = sessionStorage.getItem(SearchMap.SearchOptions);
+
+                var continentsData;
+                var watersData;
+                var countriesData;
+                var regionsData;
+                if (searchOptions) {
+                    input = JSON.parse(searchOptions);
+                    var input2 = input;
+                    delete input2.continentName;
+                    input2.continentCode = 'any';
+                    input2 = this._deleteInputProperties(input2);
+                    searchOptions = JSON.stringify(input2);
+                    continentsData = sessionStorage.getItem(searchOptions + 'continents');
+                    watersData = sessionStorage.getItem(searchOptions + 'waters');
+                    countriesData = sessionStorage.getItem(searchOptions + 'countries');
+                    regionsData = sessionStorage.getItem(searchOptions + 'regions');
                 }
+                this.parentObject.loadingSpinner.start();
+
+                var dataDeferred = $.Deferred();
                 if (input.placeFilter) {
-                    if (input.activityTypeIds) {
-                        var types = "";
-                        if (input.activityTypeIds.length > 1) {
-                            $.each(input.activityTypeIds, function (index, type) {
-                                if (index == 0) {
-                                    types += "$.activityTypeIds.indexOf(" + type + ") > -1";
-                                } else {
-                                    types += " || $.activityTypeIds.indexOf(" + type + ") > -1";
-                                }
+                    if (input.placeFilter == 'continents') {
+                        this._getContinentData(input, continentsData, dataDeferred);
+                        $.when(dataDeferred).then(function () {
+                            dataDeferred = $.Deferred();
+                            _this._getCountriesData(input, countriesData, dataDeferred);
+                            $.when(dataDeferred).then(function () {
+                                dataDeferred = $.Deferred();
+                                _this._getWatersData(input, watersData, dataDeferred);
+                                $.when(dataDeferred).then(function () {
+                                    dataDeferred = $.Deferred();
+                                    _this._getRegionsData(input, regionsData);
+                                });
                             });
-                        } else if (input.activityTypeIds.length = 1) {
-                            types += "$.activityTypeIds.indexOf(" + input.activityTypeIds + ") > -1";
-                        }
-                        data = Enumerable.From(data).Where(types).ToArray();
-                    }
-
-                    if (placeNames.length > 1) {
-                        $.each(placeNames, function (i, place) {
-                            var places = "$.continents.All().indexOf('" + place + "') > -1";
-                            data = Enumerable.From(data).Where(function (x) {
-                                return (Enumerable.From(x.continents).Where("$.name=='" + place + "'").ToArray().length > 0 || Enumerable.From(x.countries).Where("$.name=='" + place + "'").ToArray().length > 0 || Enumerable.From(x.waters).Where("$.name=='" + place + "'").ToArray().length > 0 || Enumerable.From(x.regions).Where("$.name=='" + place + "'").ToArray().length > 0);
-                            }).ToArray();
                         });
-                    } else if (placeNames.length == 1) {
-                        var places = "$.continents.All().indexOf('" + input.placeNames + "') > -1";
-                        data = Enumerable.From(data).Where(function (x) {
-                            return (Enumerable.From(x.continents).Where("$.name=='" + input.placeNames + "'").ToArray().length > 0 || Enumerable.From(x.countries).Where("$.name=='" + input.placeNames + "'").ToArray().length > 0 || Enumerable.From(x.waters).Where("$.name=='" + input.placeNames + "'").ToArray().length > 0 || Enumerable.From(x.regions).Where("$.name=='" + input.placeNames + "'").ToArray().length > 0);
-                        }).ToArray();
-                    }
-
-                    if (input.Since && input.Since.length > 1) {
-                        var date = "new Date($.startsOn) > new Date('" + input.Since + "')";
-                        if (input.includeUndated) {
-                            date += " || $.startsOn == '0001-01-01T00:00:00'";
-                        }
-                        data = Enumerable.From(data).Where(date).ToArray();
-                    }
-                    if (input.Until && input.Until.length > 1) {
-                        var date = "new Date($.endsOn) > new Date('" + input.Until + "')";
-                        if (input.includeUndated) {
-                            date += " || $.endsOn == '0001-01-01T00:00:00'";
-                        }
-                        data = Enumerable.From(data).Where(date).ToArray();
-                    }
-                }
-
-                var continents = Enumerable.From(data).SelectMany("$.continents").GroupBy("$.code", "", "k, e => {" + "code: k," + "boundingBox: e.Select($.place).FirstOrDefault().boundingBox," + "center: e.Select($.place).FirstOrDefault().center," + "name: e.Select($.place).FirstOrDefault().name," + "id: e.Select($.place).FirstOrDefault().id," + "countryCode: null," + "isContinent: true," + "isCountry: false," + "isEarth: false," + "type: 'Continent'," + "count: e.Count()}").ToArray();
-
-                var countries = Enumerable.From(data).SelectMany("$.countries").GroupBy("$.name", "", "k, e => {" + "name: k," + "boundingBox: e.Select($.place).FirstOrDefault().boundingBox," + "center: e.Select($.place).FirstOrDefault().center," + "code: e.Select($.place).FirstOrDefault().code," + "name: e.Select($.place).FirstOrDefault().name," + "id: e.Select($.place).FirstOrDefault().id," + "isContinent: false," + "isCountry: true," + "isEarth: false," + "type: 'Country'," + "count: e.Count()}").ToArray();
-
-                var waters = Enumerable.From(data).SelectMany("$.waters").GroupBy("$.name", "", "k, e => {" + "code: k," + "boundingBox: e.Select($.place).FirstOrDefault().boundingBox," + "center: e.Select($.place).FirstOrDefault().center," + "continentCode: ''," + "name: e.Select($.place).FirstOrDefault().name," + "id: e.Select($.place).FirstOrDefault().id," + "isContinent: false," + "isCountry: false," + "isEarth: false," + "type: 'Water'," + "count: e.Count()}").ToArray();
-
-                if (placeNames.length > 0) {
-                    this._removeContinents(placeNames, 'Asia');
-                    this._removeContinents(placeNames, 'Africa');
-                    this._removeContinents(placeNames, 'North America');
-                    this._removeContinents(placeNames, 'South America');
-                    this._removeContinents(placeNames, 'Antarctica');
-                    this._removeContinents(placeNames, 'Oceania');
-                    this._removeContinents(placeNames, 'Europe');
-                }
-                var hasOnePlace = false;
-                if (placeNames.length > 1) {
-                    $.each(placeNames, function (i, place) {
-                        var count = Enumerable.From(data).SelectMany("$.regions").Where("$.id==-1 && $.name=='" + place + "'").Count();
-                        if (count > 0) {
-                            if (hasOnePlace) {
-                                _this.regionCount(_this.regionCount() + "Results have " + count + " activity tags of the region " + place + " not shown on map. ");
-                            } else {
-                                hasOnePlace = true;
-                                _this.regionCount("Results have " + count + " activity tags of the region " + place + " not shown on map. ");
-                            }
-                        }
-                    });
-                } else if (placeNames.length == 1) {
-                    var count = Enumerable.From(data).SelectMany("$.regions").Where("$.id==-1 && $.name=='" + placeNames[0] + "'").Count();
-                    if (count > 0) {
-                        this.regionCount("Results have " + count + " activity tags of the region " + placeNames[0] + " not shown on map.");
+                    } else if (input.placeFilter == 'countries') {
+                        this._getCountriesData(input, countriesData, dataDeferred);
+                        $.when(dataDeferred).then(function () {
+                            dataDeferred = $.Deferred();
+                            _this._getContinentData(input, continentsData, dataDeferred);
+                            $.when(dataDeferred).then(function () {
+                                dataDeferred = $.Deferred();
+                                _this._getWatersData(input, watersData, dataDeferred);
+                                $.when(dataDeferred).then(function () {
+                                    dataDeferred = $.Deferred();
+                                    _this._getRegionsData(input, regionsData);
+                                });
+                            });
+                        });
+                    } else {
+                        this._getWatersData(input, watersData, dataDeferred);
+                        $.when(dataDeferred).then(function () {
+                            dataDeferred = $.Deferred();
+                            _this._getContinentData(input, continentsData, dataDeferred);
+                            $.when(dataDeferred).then(function () {
+                                dataDeferred = $.Deferred();
+                                _this._getCountriesData(input, countriesData, dataDeferred);
+                                $.when(dataDeferred).then(function () {
+                                    dataDeferred = $.Deferred();
+                                    _this._getRegionsData(input, regionsData);
+                                });
+                            });
+                        });
                     }
                 } else {
-                    this.regionCount('');
+                    input.placeFilter = 'continents';
+                    this._getContinentData(input, continentsData, dataDeferred);
+                    $.when(dataDeferred).then(function () {
+                        dataDeferred = $.Deferred();
+                        _this._getCountriesData(input, countriesData, dataDeferred);
+                        $.when(dataDeferred).then(function () {
+                            dataDeferred = $.Deferred();
+                            _this._getWatersData(input, watersData, dataDeferred);
+                            $.when(dataDeferred).then(function () {
+                                dataDeferred = $.Deferred();
+                                _this._getRegionsData(input, regionsData);
+                            });
+                        });
+                    });
                 }
-
-                this.countries(continents);
-                this._countriesResponse = ko.observableArray(countries);
-                this._continentsResponse = ko.observableArray(continents);
-                this._watersResponse = ko.observableArray(waters);
-
-                this.output = countries;
-
-                this._map.ready().done(function () {
-                    _this._load(input.placeFilter);
-                });
+            };
+            SearchMap.prototype._deleteInputProperties = function (input) {
+                delete input.pageSize;
+                delete input.placeFilter;
+                delete input.pageNumber;
+                delete input.orderBy;
+                return input;
             };
 
-            SearchMap.prototype._ConstructMapData = function (output, parentObject) {
+            SearchMap.prototype._getContinentData = function (input, data, dataDeferred) {
                 var _this = this;
-                this.parentObject = parentObject;
-                this.parentObject.tableUrl(location.href.replace('map', 'table'));
-                var stringActivityMapData;
-                var activityMapData;
-                var stringActivityMapDataSearch = sessionStorage.getItem('activityMapDataSearch');
-                var searchOptions = JSON.parse(sessionStorage.getItem(SearchMap.SearchOptions));
-                if (searchOptions) {
-                    this.updateSession(searchOptions);
-                }
-                this.ancestorId = output.input.ancestorId ? output.input.ancestorId : "null";
-                this.keyword = output.input.keyword ? output.input.keyword : "null";
+                if (data) {
+                    dataDeferred.resolve();
+                    this._continentsResponse = ko.observableArray(JSON.parse(data));
+                    if (input.placeFilter == 'continents') {
+                        this._map.ready().done(function () {
+                            _this._load(input.placeFilter);
+                        });
+                    }
+                } else {
+                    var settings = settings || {};
+                    input.continentCode = 'any';
+                    var url = '/api/usf.edu/employees/continents/?' + $.param(input);
 
-                if (stringActivityMapDataSearch == this.ancestorId + this.keyword) {
-                    stringActivityMapData = sessionStorage.getItem('activityMapData');
-                    activityMapData = $.parseJSON(stringActivityMapData);
+                    settings.url = url;
+                    var placeFilter = input.placeFilter;
+                    $.ajax(settings).done(function (response) {
+                        _this._continentsResponse = ko.observableArray(response);
+                        dataDeferred.resolve();
+                        if (placeFilter == 'continents') {
+                            _this._map.ready().done(function () {
+                                _this._load(placeFilter);
+                                input = _this._deleteInputProperties(input);
+                                sessionStorage.setItem(JSON.stringify(input) + 'continents', JSON.stringify(response));
+                            });
+                        } else {
+                            input = _this._deleteInputProperties(input);
+                            sessionStorage.setItem(JSON.stringify(input) + 'continents', JSON.stringify(response));
+                        }
+                    }).fail(function (xhr) {
+                    }).always(function () {
+                        dataDeferred.resolve();
+                    });
                 }
+            };
 
-                if (activityMapData && activityMapData.length) {
-                    if (searchOptions) {
-                        this.continentCode(searchOptions.continentCode);
-                        this.continentName(searchOptions.continentName);
-                        this._loadInMapData(activityMapData, searchOptions);
-                    } else {
-                        this._loadInMapData(activityMapData, { 'placeFilter': 'continents' });
+            SearchMap.prototype._getCountriesData = function (input, data, dataDeferred) {
+                var _this = this;
+                if (data) {
+                    dataDeferred.resolve();
+                    this._countriesResponse = ko.observableArray(JSON.parse(data));
+                    if (input.placeFilter == 'countries') {
+                        this._map.ready().done(function () {
+                            _this._load(input.placeFilter);
+                        });
                     }
                 } else {
                     var settings = settings || {};
 
-                    var url = '/api/usf.edu/employees/map/?ancestorid=' + this.ancestorId;
-                    if (output.input.keyword) {
-                        url += '&keyword=' + this.keyword;
+                    if (!input.continentCode) {
+                        input.continentCode = 'any';
                     }
+
+                    var url = '/api/usf.edu/employees/countries/?' + $.param(input);
+
                     settings.url = url;
-
-                    this.parentObject.loadingSpinner.start();
+                    var placeFilter = input.placeFilter;
                     $.ajax(settings).done(function (response) {
-                        _this.parentObject.loadingSpinner.stop();
-
-                        sessionStorage.setItem('activityMapData', JSON.stringify(response));
-                        sessionStorage.setItem('activityMapDataSearch', _this.ancestorId + _this.keyword);
-                        if (searchOptions) {
-                            _this._loadInMapData(response, searchOptions);
+                        dataDeferred.resolve();
+                        _this._countriesResponse = ko.observableArray(response);
+                        if (placeFilter == 'countries') {
+                            _this._map.ready().done(function () {
+                                _this._load(placeFilter);
+                                input = _this._deleteInputProperties(input);
+                                sessionStorage.setItem(JSON.stringify(input) + 'countries', JSON.stringify(response));
+                            });
                         } else {
-                            _this._loadInMapData(response, { 'placeFilter': 'continents' });
+                            input = _this._deleteInputProperties(input);
+                            sessionStorage.setItem(JSON.stringify(input) + 'countries', JSON.stringify(response));
                         }
                     }).fail(function (xhr) {
+                    }).always(function () {
+                        dataDeferred.resolve();
                     });
+                }
+            };
+
+            SearchMap.prototype._getWatersData = function (input, data, dataDeferred) {
+                var _this = this;
+                if (data) {
+                    dataDeferred.resolve();
+                    this._watersResponse = ko.observableArray(JSON.parse(data));
+                    if (input.placeFilter == 'waters') {
+                        this._map.ready().done(function () {
+                            _this._load(input.placeFilter);
+                        });
+                    }
+                } else {
+                    var settings = settings || {};
+
+                    if (!input.continentCode) {
+                        input.continentCode = 'any';
+                    }
+
+                    var url = '/api/usf.edu/employees/waters/?' + $.param(input);
+
+                    settings.url = url;
+                    var placeFilter = input.placeFilter;
+                    $.ajax(settings).done(function (response) {
+                        dataDeferred.resolve();
+                        _this._watersResponse = ko.observableArray(response);
+                        if (placeFilter == 'waters') {
+                            _this._map.ready().done(function () {
+                                _this._load(placeFilter);
+                                input = _this._deleteInputProperties(input);
+                                sessionStorage.setItem(JSON.stringify(input) + 'waters', JSON.stringify(response));
+                            });
+                        } else {
+                            input = _this._deleteInputProperties(input);
+                            sessionStorage.setItem(JSON.stringify(input) + 'waters', JSON.stringify(response));
+                        }
+                    }).fail(function (xhr) {
+                    }).always(function () {
+                        dataDeferred.resolve();
+                    });
+                }
+            };
+
+            SearchMap.prototype._getRegionsData = function (input, data) {
+                var _this = this;
+                if (data) {
+                    this.dataDefered.resolve();
+                    this.regionCount(JSON.parse(data));
+                } else {
+                    var placeNames = [];
+                    if (input.placeNames && input.placeNames.length > 1) {
+                        placeNames = input.placeNames.split(" & ");
+                    }
+                    if (placeNames.length > 0) {
+                        this._removeContinents(placeNames, 'Asia');
+                        this._removeContinents(placeNames, 'Africa');
+                        this._removeContinents(placeNames, 'North America');
+                        this._removeContinents(placeNames, 'South America');
+                        this._removeContinents(placeNames, 'Antarctica');
+                        this._removeContinents(placeNames, 'Oceania');
+                        this._removeContinents(placeNames, 'Europe');
+                    }
+
+                    if (placeNames.length > 0) {
+                        var settings = settings || {};
+
+                        var input = JSON.parse(sessionStorage.getItem(SearchMap.SearchOptions));
+
+                        var url = '/api/usf.edu/employees/regions/?' + $.param(input);
+
+                        settings.url = url;
+                        $.ajax(settings).done(function (response) {
+                            _this.dataDefered.resolve();
+                            var x = response;
+                            var hasOnePlace = false;
+                            if (placeNames.length > 1) {
+                                $.each(placeNames, function (i, place) {
+                                    var count = Enumerable.From(response).Where("$.name=='" + placeNames[0] + "'").Select('$.count').ToArray()[0];
+                                    if (count > 0) {
+                                        if (hasOnePlace) {
+                                            _this.regionCount(_this.regionCount() + "Results have " + count + " activity tags of the region " + place + " not shown on map. ");
+                                        } else {
+                                            hasOnePlace = true;
+                                            _this.regionCount("Results have " + count + " activity tags of the region " + place + " not shown on map. ");
+                                        }
+                                    }
+                                });
+                            } else if (placeNames.length == 1) {
+                                var count = Enumerable.From(response).Where("$.name=='" + placeNames[0] + "'").Select('$.count').ToArray()[0];
+                                if (count > 0) {
+                                    _this.regionCount("Results have " + count + " activity tags of the region " + placeNames[0] + " not shown on map.");
+                                }
+                            } else {
+                                _this.regionCount('');
+                            }
+                            sessionStorage.setItem(JSON.stringify(input) + 'continents', JSON.stringify(_this.regionCount()));
+                        }).fail(function (xhr) {
+                        });
+                    } else {
+                        this.dataDefered.resolve();
+                        this.regionCount('');
+                    }
                 }
             };
 
@@ -274,7 +434,6 @@
             };
 
             SearchMap.prototype.reloadData = function (form, reloadPage) {
-                var _this = this;
                 var input = this.serializeObject($('form'));
                 this.updateSession(input);
                 if (reloadPage) {
@@ -295,41 +454,18 @@
                     activityMapData = $.parseJSON(stringActivityMapData);
                 }
 
-                if (activityMapData && activityMapData.length) {
-                    this._loadInMapData(activityMapData, input);
-                } else {
-                    this.parentObject.loadingSpinner.start();
-
-                    var settings = settings || {};
-                    var url = '{0}?{1}'.format('/api/usf.edu/employees/map/', $.param(input));
-                    settings.url = url;
-
-                    $.ajax(settings).done(function (response) {
-                        _this.parentObject.loadingSpinner.stop();
-
-                        sessionStorage.setItem('activityMapData', JSON.stringify(response));
-                        sessionStorage.setItem('activityMapDataSearch', _this.ancestorId + _this.keyword);
-                        _this._loadInMapData(response, input);
-                    }).fail(function (xhr) {
-                    });
-                }
+                this._ConstructMapData();
             };
 
             SearchMap.prototype.clearFilter = function () {
+                this.continentCode('any');
+                this.continentName('');
                 this._receivePlaces('continents');
-                this.placeType('continents');
-                sessionStorage.setItem('continentName', null);
+                this.parentObject.$placeFilter.val('continents');
                 var search = this.serializeObject(this.parentObject.$form);
-                this.updateSession(search);
+                search.continentCode = 'any';
+                delete search.continentName;
 
-                if (this.countryCode() != 'any')
-                    this.countryCode('any');
-                else if (this.continentCode() != 'any')
-                    this.continentCode('any');
-                this._receivePlaces('continents');
-                var search = this.serializeObject(this.parentObject.$form);
-                search.continentCode = '';
-                search.continentName = '';
                 this.updateSession(search);
             };
 
@@ -496,10 +632,7 @@
                 }
 
                 this.placeType(placeType);
-                var placesReceived = this._requestPlaces(placeType);
-                this._requestPlaces('continents');
-                this._requestPlaces('countries');
-                this._requestPlaces('');
+
                 this._receivePlaces(placeType);
             };
 
@@ -637,7 +770,7 @@
                                     search.placeIds += " " + place.id;
                                 } else {
                                     search.placeNames = place.name;
-                                    search.placeIds = place.id;
+                                    search.placeIds = place.id.toString();
                                 }
                                 search.placeIds = search.placeIds.split(" ");
                                 _this.updateSession(search);
@@ -648,6 +781,8 @@
                     }
                 });
                 this._map.replaceMarkers(markers);
+
+                this.parentObject.loadingSpinner.stop();
             };
 
             SearchMap.prototype.fixBoundingBox = function (boundingBox) {
