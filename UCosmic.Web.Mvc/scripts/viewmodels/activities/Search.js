@@ -402,11 +402,13 @@ var Activities;
                 var comboBox = this.$location.data('kendoComboBox');
                 comboBox.list.addClass('k-ucosmic');
 
-                $.each(this.settings.input.placeIds, function (index, value) {
-                    if (index > 0) {
-                        $('<input />').attr('type', 'hidden').attr('name', "placeIds").attr('value', value).addClass('eraseMe').appendTo('form');
-                    }
-                });
+                if (this.settings.input.placeIds) {
+                    $.each(this.settings.input.placeIds, function (index, value) {
+                        if (index > 0) {
+                            $('<input />').attr('type', 'hidden').attr('name', "placeIds").attr('value', value).addClass('eraseMe').appendTo('form');
+                        }
+                    });
+                }
                 var searchOptions = this.serializeObject($('form'));
                 searchOptions.placeFilter = 'continents';
                 sessionStorage.setItem(Search.SearchOptions, JSON.stringify(searchOptions));
