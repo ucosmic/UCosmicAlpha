@@ -5,9 +5,13 @@ var ViewModels;
             function User() {
                 this.id = ko.observable();
                 this.name = ko.observable();
+                this.password = ko.observable();
+                this.username = ko.observable();
                 this.saveSpinner = new App.Spinner({ delay: 200 });
                 this.errorMessage = ko.observable();
-                this.isWarned = ko.observable(sessionStorage.getItem('UserCreateFormIsWarned') || false);
+                this.isWarnedSSO = ko.observable(sessionStorage.getItem('UserCreateFormIsWarnedSSO') || false);
+                this.isWarnedNotSSO = ko.observable(sessionStorage.getItem('UserCreateFormIsWarnedNotSSO') || false);
+                this.isAjaxing = false;
                 this.name.extend({
                     required: {
                         message: 'Username is required.'
@@ -18,9 +22,36 @@ var ViewModels;
 
                 ko.validation.group(this);
             }
-            User.prototype.acceptWarning = function () {
-                this.isWarned(true);
-                sessionStorage.setItem('UserCreateFormIsWarned', this.isWarned().toString());
+            User.prototype.acceptWarningSSO = function () {
+                this.isWarnedSSO(true);
+                sessionStorage.setItem('UserCreateFormIsWarnedSSO', this.isWarnedSSO().toString());
+            };
+            User.prototype.acceptWarningNotSSO = function () {
+                this.isWarnedNotSSO(true);
+                sessionStorage.setItem('UserCreateFormIsWarnedNotSSO', this.isWarnedNotSSO().toString());
+            };
+
+            User.prototype.createUserNotSSO = function () {
+                var _this = this;
+                if (!this.isAjaxing) {
+                    this.isAjaxing = true;
+                    this.saveSpinner.start();
+                    $.post('/api/users/', {
+                        id: null,
+                        name: this.username() + '&' + this.password(),
+                        personDisplayName: null,
+                        isRegistered: false,
+                        roles: null
+                    }).done(function (response, statusText, xhr) {
+                        alert('User create successfully');
+                        location.href = '/users/';
+                    }).fail(function (response, statusText, xhr) {
+                        _this.errorMessage(xhr.responseText);
+                    }).always(function (response, statusText, xhr) {
+                        _this.isAjaxing = false;
+                        _this.saveSpinner.stop();
+                    });
+                }
             };
 
             User.prototype.save = function () {

@@ -32,6 +32,8 @@ module ViewModels.Users {
 
         id = ko.observable<number>();
         name = ko.observable<string>();
+        password = ko.observable<string>();
+        username = ko.observable<string>();
 
         saveSpinner = new App.Spinner({ delay: 200, });
         errorMessage = ko.observable<string>();
@@ -40,11 +42,16 @@ module ViewModels.Users {
         errors: KnockoutValidationErrors;
         //isValidating: KnockoutComputed<boolean>;
 
-        isWarned = ko.observable<boolean>(sessionStorage.getItem('UserCreateFormIsWarned') || false);
+        isWarnedSSO = ko.observable<boolean>(sessionStorage.getItem('UserCreateFormIsWarnedSSO') || false);
+        isWarnedNotSSO = ko.observable<boolean>(sessionStorage.getItem('UserCreateFormIsWarnedNotSSO') || false);
 
-        acceptWarning(): void {
-            this.isWarned(true);
-            sessionStorage.setItem('UserCreateFormIsWarned', this.isWarned().toString());
+        acceptWarningSSO(): void {
+            this.isWarnedSSO(true);
+            sessionStorage.setItem('UserCreateFormIsWarnedSSO', this.isWarnedSSO().toString());
+        }
+        acceptWarningNotSSO(): void {
+            this.isWarnedNotSSO(true);
+            sessionStorage.setItem('UserCreateFormIsWarnedNotSSO', this.isWarnedNotSSO().toString());
         }
 
         constructor() {
@@ -62,6 +69,32 @@ module ViewModels.Users {
             //});
 
             ko.validation.group(this);
+        }
+
+        isAjaxing = false;
+
+        createUserNotSSO() {
+            if (!this.isAjaxing) {
+                this.isAjaxing = true;
+                this.saveSpinner.start();
+                $.post('/api/users/', {
+                    id: null,
+                    name: this.username() + '&' + this.password(),
+                    personDisplayName: null,
+                    isRegistered: false,
+                    roles: null
+                }).done(function (response, statusText, xhr) {
+                    alert('User create successfully');
+                    location.href = '/users/';
+                    })
+                    .fail((response, statusText, xhr) => {
+                        this.errorMessage(xhr.responseText); 
+                    })
+                    .always((response, statusText, xhr) => {
+                        this.isAjaxing = false;
+                        this.saveSpinner.stop();
+                    });
+            }
         }
 
         save(): boolean {
