@@ -24,7 +24,6 @@
 }
 
 <div class="content fixed to-top" data-current-module="admin">
-    <form class="group" method="POST" data-bind="submit: save, validationOptions: { decorateElement: true, errorClass: 'error' }">
         <div class="on-left from-top">
             <header>
                 <h1>
@@ -32,7 +31,7 @@
                 </h1>
             </header>
             <div>
-                <section data-bind="visible: !isWarned()" style="padding: 10px; background-color: #ffffba; border: solid 1px #222; display: none;">
+                <section data-bind="visible: !isWarnedSSO() && !isWarnedNotSSO()" style="padding: 10px; background-color: #ffffba; border: solid 1px #222; display: none;">
                     <header>
                         <h2>
                             <span style="color: #c00;">Warning</span>
@@ -45,39 +44,76 @@
                             sign on. The purpose of this form is to create user accounts so that you can pre-populate data which users can then assume control
                             of when they finally do sign on for the first time.
                         </p>
-                        <p>
+                        @*<p>
                             If your institution has a Shibboleth Single-Sign-On integration, you must know the EPPN, including scope, that will be returned
                             from Shibboleth IdP responses when the user signs on. If you are unsure what this EPPN will be, or do not know whether your
                             institution has an SSO integration, please <strong>do not use this form.</strong>
+                        </p>*@
+                        <p>
+                            If your institution has a Shibboleth Single-Sign-On integration please 
+                            @*Otherwise, if you are aware of the risks and wish to proceed creating a user account,*@
+                            <button class="link" data-bind="click: acceptWarningSSO">click here to proceed</button>.
                         </p>
                         <p>
-                            Otherwise, if you are aware of the risks and wish to proceed creating a user account,
-                            <button class="link" data-bind="click: acceptWarning">click here to proceed</button>.
+                            If your institution does <strong>not</strong> have a Shibboleth Single-Sign-On integration please
+                            @*Otherwise, if you are aware of the risks and wish to proceed creating a user account,*@
+                            <button class="link" data-bind="click: acceptWarningNotSSO">click here to proceed</button>.
                         </p>
                     </div>
                 </section>
-                <section data-bind="visible: isWarned" class="fieldset">
-                    <header>
+                <section style="display:none" data-bind="visible: isWarnedSSO" class="fieldset">
+                    <form class="group" method="POST" data-bind="submit: save, validationOptions: { decorateElement: true, errorClass: 'error' }">
+                        <header style ="margin-bottom: 10px">
+                            <h2>
+                                <span>Username</span>
+                            </h2>
+                        </headerstyle>
+                        <div style="margin-bottom: 10px">
+                            <div class="field">
+                                <input type="email" data-bind="value: name" />
+                            </div>
+                        </div>
+                        <div style="display:none" data-bind="visible: isWarnedSSO">
+                            <input type="submit" value="Create" />
+                            <span data-bind="visible: saveSpinner.isVisible">
+                                <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
+                                <span style="font-weight: bold">Please wait while user is created...</span>
+                            </span>
+                        </div>
+                    </form>
+                </section>
+                <section style="display:none" data-bind="visible: isWarnedNotSSO" class="fieldset">
+                    <header style="margin-bottom: 10px">
                         <h2>
                             <span>Username</span>
                         </h2>
                     </header>
                     <div>
                         <div class="field">
-                            <input type="email" data-bind="value: name" />
+                            <input type="email" data-bind="value: username" />
                         </div>
                     </div>
+                    <header style="margin-bottom: 10px">
+                        <h2>
+                            <span>Password</span>
+                        </h2>
+                    </header>
+                    <div style="margin-bottom: 10px">
+                        <div class="field">
+                            <input type="password" data-bind="value: password" />
+                        </div>
+                    </div>
+                    <div style="display:none" data-bind="visible: isWarnedNotSSO">
+                        <input type="button" data-bind="click: createUserNotSSO" value="Create" />
+                        <span data-bind="visible: saveSpinner.isVisible">
+                            <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
+                            <span style="font-weight: bold">Please wait while user is created...</span>
+                        </span>
+                    </div>
                 </section>
-            </div>
-            <div style="margin-bottom: 10px" data-bind="visible: errorMessage">
-                <span class="field-validation-error" data-bind="text: errorMessage"></span>
-            </div>
-            <div data-bind="visible: isWarned">
-                <input type="submit" value="Create" />
-                <span data-bind="visible: saveSpinner.isVisible">
-                    <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
-                    <span style="font-weight: bold">Please wait while user is created...</span>
-                </span>
+                <div style="display:none;margin-bottom: 10px" data-bind="visible: errorMessage">
+                    <span class="field-validation-error" data-bind="text: errorMessage"></span>
+                </div>
             </div>
         </div>
         <aside class="on-right from-top" data-fixed-scroll="root">
@@ -86,6 +122,5 @@
                 @*sidebar here*@
             </div>
         </aside>
-    </form>
 </div>
 
