@@ -117,11 +117,12 @@ declare module Activities.ApiModels {
         name?: string;
         type?: string;
         count?: number;
-        isEarth?: boolean;
-        isContinent?: boolean;
-        isCountry?: boolean;
+        //isEarth?: boolean;
+        //isContinent?: boolean;
+        //isCountry?: boolean;
         center?: Places.ApiModels.Point;
         boundingBox?: Places.ApiModels.Box;
+        placeType?: string;
     }
 }
 
