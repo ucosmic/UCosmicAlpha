@@ -21,6 +21,11 @@
 @section styles
 {
     <link href="~/styles/sass/sheets/employees/activities-table.css" rel="stylesheet" />
+    <style>
+        .inactive{
+            color: gray;
+        }
+    </style>
 }
 
 
@@ -76,7 +81,7 @@
                     </header>
                 </div>
                 <div class="on-right" style="margin-top: 8px;">
-                    <a href="@Url.Action(MVC.Employees.Table(Model.Domain, null))" class="restore-underline">Reset search</a>
+                    <a data-bind="click: resetSearch" class="restore-underline">Reset search</a>
                 </div>
             </div>
 
@@ -98,30 +103,30 @@
             </table>
 
             @* PAGER STATUS *@
-                <div style="height: 24px; margin: 1em 0;">
-                    <strong>
-                        <span>@*@Model.Output.ItemTotal*@</span>
-                    </strong>
+            <div style="height: 24px; margin-top: 8px; display: none;" data-bind="visible: loadingSpinner.isVisible">
+                <strong>
+                    <span>@*@Model.Output.ItemTotal*@</span>
+                </strong>
 
-                    <span style="margin-left: 12px; display: none;" data-bind="visible: loadingSpinner.isVisible">
-                        <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
-                        <strong>Loading...</strong>
-                    </span>
-                </div>
+                <span style="margin-left: 12px;">
+                    <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
+                    <strong>Loading...</strong>
+                </span>
+            </div>
 
             <!-- ko stopBinding: true -->
             @* MAP LENS CONTEXTUAL TOTALS SUMMARY *@
-            <div id="searchMap" style="margin: 1em 0;">
+            <div id="searchMap" style="margin: 8px 0 8px 0;">
                 <div style="line-height: 28px;">
                     Numbers displayed represent known faculty and staff activity location sites.
                 </div>
-                <div style="color:gray; font-size:.8em;" data-bind="visible: regionCount().length > 0, text: regionCount">
+                @*<div style="color:gray; font-size:.8em;" data-bind="visible: regionCount().length > 0, text: regionCount">
 
-                </div>
+                    </div>*@
                 <div data-bind="visible: continentCode() != 'any' || countryCode() != 'any'" style="line-height: 16px;">
                     @*<strong data-bind="text: status.count">?</strong>
-                    <span data-bind="visible: status.count() == 1" style="display: none;">activity</span>
-                    <span data-bind="visible: status.count() != 1">activities</span>*@
+                        <span data-bind="visible: status.count() == 1" style="display: none;">activity</span>
+                        <span data-bind="visible: status.count() != 1">activities</span>*@
 
                     <span style="display: inline-block; background-color: #ddd; padding: 4px 8px; border-radius: 4px; border: solid 1px #999;">
                         <strong data-bind="text: continentName" style="">?</strong>
@@ -134,6 +139,55 @@
             <div id="google_map_canvas" style="height: 500px; cursor: inherit;">
             </div>
             <!-- /ko -->
+            <div style="position:relative; top:-40px;">
+                <div style="width: 24px;
+                    background-color: white;
+                    float: right;
+                    padding: 2px;
+                    border: solid 2px gray;
+                    border-radius: 5px;
+                    color: black;
+                    cursor: pointer;"
+                     data-bind="click: keyOpen, visible: !keyIsOpen()">
+                    Key
+                </div>
+                <div style="width: 152px;
+                    background-color: white;
+                    float: right;
+                    padding: 2px;
+                    border: solid 2px gray;
+                    display: none;
+                    border-radius: 5px;
+                    color: black;
+                    position: relative;
+                    top: -124px;"
+                     data-bind="visible: keyIsOpen">
+                    <div style="height:24px;">
+                        <div style="float:left;">Key</div>
+                        <div style="float:right; background-color:gray; padding:2px; border-radius:2px; cursor:pointer;" data-bind="click: keyClose">X</div>
+                    </div>
+                    <div style="height:24px;">
+                        <div style="width:10px; background-color: #51524F; float:left;">&nbsp;</div>
+                        <div data-bind="css: { inactive: searchMap.placeFilter() == 'waters' }" style="float:left; margin-left:4px;">Continents</div>
+                    </div>
+                    <div style="height:24px;">
+                        <div style="width:10px; background-color: #5F6CFC; float:left;">&nbsp;</div>
+                        <div data-bind="css: { inactive: (searchMap.continentCode() != 'any' && searchMap.placeFilter() != 'waters') }" style="float:left; margin-left:4px;">Bodies of water</div>
+                    </div>
+                    <div style="height:24px;">
+                        <div style="width:10px; background-color: #5DC350; float:left;">&nbsp;</div>
+                        <div data-bind="css: { inactive: searchMap.placeFilter() == 'continents' || searchMap.placeFilter() == 'waters' }" style="float:left; margin-left:4px;">Countries</div>
+                    </div>
+                    <div style="height:24px;">
+                        <div style="width:10px; background-color: #F57169; float:left;">&nbsp;</div>
+                        <div data-bind="css: { inactive: searchMap.placeFilter() == 'continents' || searchMap.placeFilter() == 'waters' || searchMap.continentCode() != 'any' }" style="float:left; margin-left:4px;">Regions</div>
+                    </div>
+                    <div style="height:24px;">
+                        <div style="width:10px; background-color: #E9AE4F; float:left;">&nbsp;</div>
+                        <div data-bind="css: { inactive: searchMap.placeFilter() == 'continents' || searchMap.placeFilter() == 'waters' || searchMap.continentCode() != 'any' }" style="float:left; margin-left:4px;">Global</div>
+                    </div>
+                </div>
+            </div>
 
         </div>
         <aside class="on-right from-top" data-fixed-scroll="root">
@@ -182,7 +236,7 @@
                             <div class="group no-link">
                                 <span class="arrow"></span>
                                 <span class="text" style="border-radius: 0;">
-                                    Common Search Options
+                                    Filter by location
                                     <img src="~/images/icons/spinner/spinner-20-blue-on-ddd.gif" alt=""
                                          style="margin-left: 4px; display: none;" data-bind="visible: loadingSpinner.isVisible" />
                                 </span>
@@ -192,7 +246,7 @@
                             <div class="content">
                                 @* LOCATION AUTOCOMPLETE *@
                                 <div class="location combobox field">
-                                    <input name="placeNames" type="text" placeholder="[Find by location]" data-bind="jQuery: '$location', value: placeNames"
+                                    <input name="placeNames" type="text" placeholder="[Filter by location]" data-bind="jQuery: '$location', value: placeNames"
                                            value="@(Model.Input.PlaceNames != null && Model.Input.PlaceNames.Any() ? Model.Input.PlaceNames.First() : "")"
                                            class="side" />
                                     <input name="placeIds" type="hidden" data-bind="jQuery: '$placeIds'"
@@ -200,15 +254,15 @@
                                 </div>
                                 @* CONTINENTS, WATERS, AND COUNTRIES *@
                                 @*<div class="location combobox field">*@
-                                    <input name="placeFilter" type="hidden" data-bind="jQuery: '$placeFilter', value: placeFilter"
-                                           value=""
-                                           class="side" />
-                                    @*<select data-bind=" data-bind=" jquery '$location' "" style="" class="">
+                                <input name="placeFilter" type="hidden" data-bind="jQuery: '$placeFilter', value: placeFilter"
+                                       value=""
+                                       class="side" />
+                                @*<select data-bind=" data-bind=" jquery '$location' "" style="" class="">
                                         <option value="Continents">Filter by continents</option>
                                         <option value="Waters">Filter by bodies of water</option>
                                         <option value="Countries">Filter by countries</option>
                                     </select>*@
-                                    @*<input name="placeNames" type="text" placeholder="[Find by location]" data-bind="jQuery: '$location'"
+                                @*<input name="placeNames" type="text" placeholder="[Filter by location]" data-bind="jQuery: '$location'"
                                            value="@(Model.Input.PlaceNames != null && Model.Input.PlaceNames.Any() ? Model.Input.PlaceNames.First() : "")"
                                            class="side" />
                                     <input name="placeIds" type="hidden" data-bind="jQuery: '$placeIds'"
@@ -220,7 +274,7 @@
                                 @if (Model.ActivityTypes != null && Model.ActivityTypes.Any())
                                 {
                                     <div class="field" style="margin-top: 12px;">
-                                        <strong>Find by activity type</strong>
+                                        <strong>Filter by activity type</strong>
                                         <ol style="color: #000; font-size: 13px; margin-top: 4px;">
                                             @for (var i = 0; i < Model.ActivityTypes.Count(); i++)
                                             {
@@ -235,7 +289,7 @@
                                                         <div class="on-left">
                                                             <label style="cursor: pointer;" data-bind="with: activityTypeCheckBoxes()[@i]">
                                                                 <input type="checkbox" id="@checkBoxId"
-                                                                       name="activityTypeIds" value="@activityType.ActivityTypeId" 
+                                                                       name="activityTypeIds" value="@activityType.ActivityTypeId"
                                                                        style="cursor: pointer;" data-bind="checked: isChecked" />
                                                                 <img title="@activityType.Text" width="14" alt="" style="margin-top: -6px; cursor: pointer;"
                                                                      src="@Url.HttpRouteUrl(null, new { controller = "EmployeeModuleSettings", action = "GetIcon", typeId = activityType.ActivityTypeId })" />
@@ -272,7 +326,7 @@
 
                                 @* DATE FIELDS *@
                                 <div class="dates picker field" style="margin-top: 12px;">
-                                    <strong>Find by date(s)</strong>
+                                    <strong>Filter by date(s)</strong>
                                     <div class="group">
                                         <div class="on-left" style="width: 110px;">
                                             <input type="text" name="Since" placeholder="From" class="side" value="@Model.Input.Since" data-role="datepicker"
