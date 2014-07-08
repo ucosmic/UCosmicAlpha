@@ -9,6 +9,7 @@
                 this.continentName = ko.observable(sessionStorage.getItem('continentName') || '');
                 this.regionCount = ko.observable('');
                 this.dataDefered = $.Deferred();
+                this.placeFilter = ko.observable();
                 this._map = new App.GoogleMaps.Map('google_map_canvas', {
                     streetViewControl: false,
                     panControl: false,
@@ -90,7 +91,6 @@
             SearchMap.prototype.replaceAll = function (find, replace, str) {
                 return str.replace(new RegExp(find, 'g'), replace);
             };
-
             SearchMap.prototype.updateSearch = function (search) {
                 var searchOptions = JSON.parse(sessionStorage.getItem(SearchMap.SearchOptions));
                 if (searchOptions) {
@@ -108,7 +108,6 @@
                 tempUrl = tempUrl.substr(0, tempUrl.indexOf("?"));
                 tempUrl += "?" + $.param(search);
                 tempUrl = this.replaceAll('%5B%5D', '', tempUrl);
-
                 return tempUrl;
             };
 
@@ -120,7 +119,6 @@
 
                 sessionStorage.setItem(SearchMap.ContinentSessionKey, this.continentCode());
                 sessionStorage.setItem(SearchMap.CountrySessionKey, this.countryCode());
-
                 search = this.updateSearch(search);
                 sessionStorage.setItem(SearchMap.SearchOptions, JSON.stringify(search));
 
@@ -158,8 +156,23 @@
                 this.parentObject.loadingSpinner.start();
 
                 var dataDeferred = $.Deferred();
-                if (input.placeFilter) {
-                    if (input.placeFilter == 'continents') {
+                var placeFilter = input.placeFilter;
+                if ((this.parentObject.placeNames() || this.parentObject.keyword()) && this.continentCode().toLowerCase() != 'water') {
+                    placeFilter = 'countries';
+                    input.placeFilter = placeFilter;
+                } else if (this.continentCode().toLowerCase() == 'water') {
+                    placeFilter = 'waters';
+                    input.placeFilter = placeFilter;
+                } else if (!placeFilter && this.continentCode() != 'any' && this.continentCode() != 'WATER') {
+                    placeFilter = 'countries';
+                    input.placeFilter = placeFilter;
+                } else {
+                    placeFilter = 'continents';
+                    input.placeFilter = placeFilter;
+                }
+                this.placeFilter(placeFilter);
+                if (placeFilter) {
+                    if (placeFilter == 'continents') {
                         this._getContinentData(input, continentsData, dataDeferred);
                         $.when(dataDeferred).then(function () {
                             dataDeferred = $.Deferred();
@@ -168,12 +181,11 @@
                                 dataDeferred = $.Deferred();
                                 _this._getWatersData(input, watersData, dataDeferred);
                                 $.when(dataDeferred).then(function () {
-                                    dataDeferred = $.Deferred();
-                                    _this._getRegionsData(input, regionsData);
+                                    _this.dataDefered.resolve();
                                 });
                             });
                         });
-                    } else if (input.placeFilter == 'countries') {
+                    } else if (placeFilter == 'countries') {
                         this._getCountriesData(input, countriesData, dataDeferred);
                         $.when(dataDeferred).then(function () {
                             dataDeferred = $.Deferred();
@@ -182,8 +194,7 @@
                                 dataDeferred = $.Deferred();
                                 _this._getWatersData(input, watersData, dataDeferred);
                                 $.when(dataDeferred).then(function () {
-                                    dataDeferred = $.Deferred();
-                                    _this._getRegionsData(input, regionsData);
+                                    _this.dataDefered.resolve();
                                 });
                             });
                         });
@@ -196,27 +207,11 @@
                                 dataDeferred = $.Deferred();
                                 _this._getCountriesData(input, countriesData, dataDeferred);
                                 $.when(dataDeferred).then(function () {
-                                    dataDeferred = $.Deferred();
-                                    _this._getRegionsData(input, regionsData);
+                                    _this.dataDefered.resolve();
                                 });
                             });
                         });
                     }
-                } else {
-                    input.placeFilter = 'continents';
-                    this._getContinentData(input, continentsData, dataDeferred);
-                    $.when(dataDeferred).then(function () {
-                        dataDeferred = $.Deferred();
-                        _this._getCountriesData(input, countriesData, dataDeferred);
-                        $.when(dataDeferred).then(function () {
-                            dataDeferred = $.Deferred();
-                            _this._getWatersData(input, watersData, dataDeferred);
-                            $.when(dataDeferred).then(function () {
-                                dataDeferred = $.Deferred();
-                                _this._getRegionsData(input, regionsData);
-                            });
-                        });
-                    });
                 }
             };
             SearchMap.prototype._deleteInputProperties = function (input) {
@@ -229,12 +224,13 @@
 
             SearchMap.prototype._getContinentData = function (input, data, dataDeferred) {
                 var _this = this;
+                var placeFilter = input.placeFilter;
                 if (data) {
                     dataDeferred.resolve();
                     this._continentsResponse = ko.observableArray(JSON.parse(data));
-                    if (input.placeFilter == 'continents') {
+                    if (placeFilter == 'continents') {
                         this._map.ready().done(function () {
-                            _this._load(input.placeFilter);
+                            _this._load(placeFilter);
                         });
                     }
                 } else {
@@ -243,7 +239,6 @@
                     var url = '/api/usf.edu/employees/continents/?' + $.param(input);
 
                     settings.url = url;
-                    var placeFilter = input.placeFilter;
                     $.ajax(settings).done(function (response) {
                         _this._continentsResponse = ko.observableArray(response);
                         dataDeferred.resolve();
@@ -346,68 +341,6 @@
                 }
             };
 
-            SearchMap.prototype._getRegionsData = function (input, data) {
-                var _this = this;
-                if (data) {
-                    this.dataDefered.resolve();
-                    this.regionCount(JSON.parse(data));
-                } else {
-                    var placeNames = [];
-                    if (input.placeNames && input.placeNames.length > 1) {
-                        placeNames = input.placeNames.split(" & ");
-                    }
-                    if (placeNames.length > 0) {
-                        this._removeContinents(placeNames, 'Asia');
-                        this._removeContinents(placeNames, 'Africa');
-                        this._removeContinents(placeNames, 'North America');
-                        this._removeContinents(placeNames, 'South America');
-                        this._removeContinents(placeNames, 'Antarctica');
-                        this._removeContinents(placeNames, 'Oceania');
-                        this._removeContinents(placeNames, 'Europe');
-                    }
-
-                    if (placeNames.length > 0) {
-                        var settings = settings || {};
-
-                        var input = JSON.parse(sessionStorage.getItem(SearchMap.SearchOptions));
-
-                        var url = '/api/usf.edu/employees/regions/?' + $.param(input);
-
-                        settings.url = url;
-                        $.ajax(settings).done(function (response) {
-                            _this.dataDefered.resolve();
-                            var x = response;
-                            var hasOnePlace = false;
-                            if (placeNames.length > 1) {
-                                $.each(placeNames, function (i, place) {
-                                    var count = Enumerable.From(response).Where("$.name=='" + placeNames[0] + "'").Select('$.count').ToArray()[0];
-                                    if (count > 0) {
-                                        if (hasOnePlace) {
-                                            _this.regionCount(_this.regionCount() + "Results have " + count + " activity tags of the region " + place + " not shown on map. ");
-                                        } else {
-                                            hasOnePlace = true;
-                                            _this.regionCount("Results have " + count + " activity tags of the region " + place + " not shown on map. ");
-                                        }
-                                    }
-                                });
-                            } else if (placeNames.length == 1) {
-                                var count = Enumerable.From(response).Where("$.name=='" + placeNames[0] + "'").Select('$.count').ToArray()[0];
-                                if (count > 0) {
-                                    _this.regionCount("Results have " + count + " activity tags of the region " + placeNames[0] + " not shown on map.");
-                                }
-                            } else {
-                                _this.regionCount('');
-                            }
-                            sessionStorage.setItem(JSON.stringify(input) + 'continents', JSON.stringify(_this.regionCount()));
-                        }).fail(function (xhr) {
-                        });
-                    } else {
-                        this.dataDefered.resolve();
-                        this.regionCount('');
-                    }
-                }
-            };
-
             SearchMap.prototype.triggerMapResize = function () {
                 return this._map.triggerResize();
             };
@@ -460,12 +393,17 @@
             SearchMap.prototype.clearFilter = function () {
                 this.continentCode('any');
                 this.continentName('');
-                this._receivePlaces('continents');
-                this.parentObject.$placeFilter.val('continents');
+                this.parentObject.placeNames("");
+                var placeFilter = 'continents';
+                if ((this.parentObject.placeNames() || this.parentObject.keyword())) {
+                    placeFilter = 'countries';
+                }
+                this.placeFilter(placeFilter);
+                this._receivePlaces(placeFilter);
+                this.parentObject.$placeFilter.val(placeFilter);
                 var search = this.serializeObject(this.parentObject.$form);
                 search.continentCode = 'any';
                 delete search.continentName;
-
                 this.updateSession(search);
             };
 
@@ -548,7 +486,6 @@
             SearchMap.prototype._onBeforeRoute = function (e) {
                 var newLat = e.params['lat'];
                 var newLng = e.params['lng'];
-
                 var allowRoute = true;
 
                 return allowRoute;
@@ -630,6 +567,9 @@
                 } else if (continentCode == 'WATER') {
                     placeType = 'waters';
                 }
+                if (this.parentObject.placeNames() != '') {
+                    placeType = 'countries';
+                }
 
                 this.placeType(placeType);
 
@@ -674,9 +614,7 @@
                 }
 
                 this._plotMarkers(placeType, places);
-
                 var viewportSettings = this._getMapViewportSettings(placeType, places);
-
                 this._map.setViewport(viewportSettings).then(function () {
                 });
             };
@@ -684,6 +622,7 @@
             SearchMap.prototype._plotMarkers = function (placeType, places) {
                 var _this = this;
                 var scaler;
+
                 if (placeType == 'countries') {
                     scaler = this._getMarkerIconScaler(placeType, this._countriesResponse());
                 } else if (placeType == 'waters') {
@@ -701,7 +640,6 @@
                     }
                 }
                 var countryCode = this.countryCode();
-
                 var markers = [];
                 $.each(places, function (i, place) {
                     if (placeType == 'continents' && !place.count)
@@ -715,7 +653,17 @@
                         clickable: place.count > 0,
                         cursor: 'pointer'
                     };
-                    _this._setMarkerIcon(options, place.count.toString(), scaler);
+                    if (place.placeType == "region") {
+                        _this._setMarkerIcon(options, place.count.toString(), scaler, 'rgb(248, 62, 52)');
+                    } else if (place.placeType == "water") {
+                        _this._setMarkerIcon(options, place.count.toString(), scaler, 'rgb(47, 67, 253)');
+                    } else if (place.placeType == "country") {
+                        _this._setMarkerIcon(options, place.count.toString(), scaler, 'rgb(29, 172, 13)');
+                    } else if (place.placeType == "global") {
+                        _this._setMarkerIcon(options, place.count.toString(), scaler, 'rgb(237, 145, 5)');
+                    } else {
+                        _this._setMarkerIcon(options, place.count.toString(), scaler);
+                    }
                     var marker = new google.maps.Marker(options);
                     markers.push(marker);
 
@@ -744,6 +692,7 @@
                                 _this._receivePlaces('waters');
                                 _this.placeType('waters');
                                 _this.parentObject.$placeFilter.val('waters');
+                                _this.placeFilter('waters');
                                 var search = _this.serializeObject(_this.parentObject.$form);
                                 _this.updateSession(search);
                             } else if (place.code) {
@@ -752,11 +701,11 @@
                                 _this.countryCode('any');
                                 _this.continentName(place.name);
                                 sessionStorage.setItem('continentName', _this.continentName());
-
                                 _this.loadViewport++;
                                 _this._receivePlaces('countries');
                                 _this.placeType('countries');
                                 _this.parentObject.$placeFilter.val('countries');
+                                _this.placeFilter('countries');
                                 var search = _this.serializeObject(_this.parentObject.$form);
                                 _this.updateSession(search);
                             }
@@ -875,7 +824,8 @@
                 return new Scaler(from, into);
             };
 
-            SearchMap.prototype._setMarkerIcon = function (options, text, scaler) {
+            SearchMap.prototype._setMarkerIcon = function (options, text, scaler, color) {
+                if (typeof color === "undefined") { color = 'rgb(11, 11, 11)'; }
                 var side = isNaN(parseInt(text)) ? 24 : scaler.scale(parseInt(text));
                 if (text == '0') {
                     side = 24;
@@ -885,7 +835,7 @@
                     opacity: 0.7,
                     side: side,
                     text: text,
-                    fillColor: 'rgb(11, 11, 11)'
+                    fillColor: color
                 };
                 var url = '{0}?{1}'.format("/api/graphics/circle", $.param(settings));
                 var icon = {
