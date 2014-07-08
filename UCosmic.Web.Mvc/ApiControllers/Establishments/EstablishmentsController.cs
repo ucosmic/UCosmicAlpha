@@ -24,16 +24,19 @@ namespace UCosmic.Web.Mvc.ApiControllers
         private readonly IHandleCommands<UpdateEstablishment> _updateHandler;
         private readonly IValidator<CreateEstablishment> _createValidator;
         private readonly IValidator<UpdateEstablishment> _updateValidator;
+        private readonly IHandleCommands<UpdateEstablishmentLocation> _updateLocation;
 
         public EstablishmentsController(IProcessQueries queryProcessor
             , IHandleCommands<CreateEstablishment> createHandler
             , IHandleCommands<UpdateEstablishment> updateHandler
+            , IHandleCommands<UpdateEstablishmentLocation> updateLocation
             , IValidator<CreateEstablishment> createValidator
             , IValidator<UpdateEstablishment> updateValidator
         )
         {
             _queryProcessor = queryProcessor;
             _createHandler = createHandler;
+            _updateLocation = updateLocation;
             _updateHandler = updateHandler;
             _createValidator = createValidator;
             _updateValidator = updateValidator;
@@ -105,6 +108,23 @@ namespace UCosmic.Web.Mvc.ApiControllers
             try
             {
                 _createHandler.Handle(command);
+            }
+            catch (ValidationException ex)
+            {
+                var badRequest = Request.CreateResponse(HttpStatusCode.BadRequest, ex.Message, "text/plain");
+                return badRequest;
+            }
+
+            //command.Location.Id = command.Created.RevisionId;
+            //command.Location.Entity = command.Location;
+            //command.Location.NoCommit = false;
+            //_updateLocation.Handle(command.Location);
+            var command2 = new UpdateEstablishmentLocation(command.Created.RevisionId, User);
+            Mapper.Map(model.Location, command2);
+
+            try
+            {
+                _updateLocation.Handle(command2);
             }
             catch (ValidationException ex)
             {
