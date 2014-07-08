@@ -476,7 +476,7 @@ module Establishments.ViewModels {
                     this.admin2s(results);
                     if (this._admin2Id)
                         this.admin2Id(this._admin2Id);
-                    if (this.admin2s()) {
+                if (this.admin2s() && this.admin2s().length > 0) {
                         this.admin2Label(this.admin2s()[0].placeTypeEnglishName);
                     } else {
                         this.admin2Label(undefined);

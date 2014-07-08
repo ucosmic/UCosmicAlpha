@@ -403,7 +403,7 @@ var Establishments;
                     _this.admin2s(results);
                     if (_this._admin2Id)
                         _this.admin2Id(_this._admin2Id);
-                    if (_this.admin2s()) {
+                    if (_this.admin2s() && _this.admin2s().length > 0) {
                         _this.admin2Label(_this.admin2s()[0].placeTypeEnglishName);
                     } else {
                         _this.admin2Label(undefined);
