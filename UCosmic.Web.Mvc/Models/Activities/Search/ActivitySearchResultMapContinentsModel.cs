@@ -66,6 +66,7 @@ namespace UCosmic.Web.Mvc.Models
                             .Select(x =>
                                 new ActivitySearchResultPlaces
                                 {
+                                    PlaceType = (x.Place.IsWater) ? "water" : "continent",
                                     //Code = x.Place.IsContinent ? x.Place.GeoNamesToponym.ContinentCode : x.Place.Ancestors.FirstOrDefault(y => y.Ancestor.IsContinent).Ancestor.GeoNamesToponym.ContinentCode,
                                     Code = x.Place.IsContinent ? x.Place.GeoNamesToponym.ContinentCode : (x.Place.Ancestors.FirstOrDefault(y => y.Ancestor.IsContinent) != null ? x.Place.Ancestors.FirstOrDefault(y => y.Ancestor.IsContinent).Ancestor.GeoNamesToponym.ContinentCode : "WATER"),
                                     Name = x.Place.IsContinent ? x.Place.OfficialName

@@ -41,6 +41,7 @@ namespace UCosmic.Web.Mvc.Models
 
     public class ActivitySearchResultPlaces
     {
+        public string PlaceType { get; set; }
         public string Name { get; set; }
         public int Id { get; set; }
         public string Code { get; set; }
@@ -56,6 +57,7 @@ namespace UCosmic.Web.Mvc.Models
     }
     public class ActivitySearchResultPlacesCounted
     {
+        public string PlaceType { get; set; }
         public string Name { get; set; }
         public int Id { get; set; }
         public string Code { get; set; }

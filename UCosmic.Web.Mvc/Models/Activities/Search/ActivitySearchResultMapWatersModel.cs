@@ -60,6 +60,7 @@ namespace UCosmic.Web.Mvc.Models
                                 || (x.Place.Ancestors.FirstOrDefault(y => y.Ancestor.IsWater) != null ? x.Place.Ancestors.FirstOrDefault(y => y.Ancestor.IsWater).Ancestor.IsWater : false))
                                 .Select(x => new ActivitySearchResultPlaces
                                 {
+                                    PlaceType = "water",
                                     Code = null,
                                     Name = x.Place.IsWater ? x.Place.OfficialName.ToString() : x.Place.Ancestors.FirstOrDefault(y => y.Ancestor.IsWater).Ancestor.OfficialName,
                                     Id = x.Place.IsWater ? x.Place.RevisionId : x.Place.Ancestors.FirstOrDefault(y => y.Ancestor.IsWater).Ancestor.RevisionId,
