@@ -119,22 +119,92 @@
             </table>
 
             @* PAGER STATUS *@
-            @if (Model != null && Model.Output.Items.Any())
+            @*@if (Model != null && Model.Output.Items.Any())
             {
-                <div style="height: 24px; margin: 1em 0;">
-                    <strong>
-                        Showing <span>@Model.Output.FirstNumber</span>
-                        @if (@Model.Output.PageCount > 0)
-                        {
-                            <span>- <span>@Model.Output.LastNumber</span></span>
-                        }
-                        of <span>@Model.Output.ItemTotal</span>
-                    </strong>
-                    @if (Model != null && Model.Output != null && Model.Output.PageCount > 0)
-                    {
-                        <span>
-                            (page
-                            @Html.DropDownListFor(x => x.Output.PageNumber, Enumerable.Range(1, Model.Output.PageCount)
+
+            }*@
+
+            @* ZERO RESULTS MESSAGE *@
+            @if (Model.Output == null || Model.Output.Items == null || !Model.Output.Items.Any())
+            {
+                <table style="width:100%">
+                    <tr>
+                        <td>
+                            <div style="position:relative; top:10px;">
+                                There are no results that match your search terms.
+                            </div>
+                        </td>
+                        <td align="right">
+                            @* SORT DROPDOWN *@
+                            <div class="field"
+                                 style=" margin: 10px 0 0 0;">
+                                @Html.DropDownListFor(x => x.Input.OrderBy,
+                                                    new[]
+                                                    {
+                                                        new SelectListItem { Text = "Sort with most recent at top", Value = "recency-desc" },
+                                                        new SelectListItem { Text = "Sort with most recent at bottom", Value = "recency-asc" },
+                                                        new SelectListItem { Text = "Sort by activity title A-Z", Value = "title-asc" },
+                                                        new SelectListItem { Text = "Sort by activity title Z-A", Value = "title-desc" },
+                                                        new SelectListItem { Text = "Sort by location A-Z", Value = "location-asc" },
+                                                        new SelectListItem { Text = "Sort by location Z-A", Value = "location-desc" },
+                                                        new SelectListItem { Text = "Sort by person last name A-Z", Value = "lastname-asc" },
+                                                        new SelectListItem { Text = "Sort by person last name Z-A", Value = "lastname-desc" },
+                                                        new SelectListItem { Text = "Sort by type A-Z", Value = "type-asc" },
+                                                        new SelectListItem { Text = "Sort by type Z-A", Value = "type-desc" },
+                                                    },
+                                                    new
+                                                    {
+                                                        @class = "side",
+                                                        Name = "orderBy",
+                                                        data_bind = "value: orderBy",
+                                                    })
+                            </div>
+
+                            @* PAGE SIZE DROPDOWN *@
+                            <div class="field"
+                                 style="margin:0;">
+                                @Html.DropDownListFor(x => x.Input.PageSize,
+                                                    new[]
+                                                    {
+                                                        new SelectListItem { Text = "Show 10 results per page", Value = "10" },
+                                                        new SelectListItem { Text = "Show 20 results per page", Value = "20" },
+                                                        new SelectListItem { Text = "Show 50 results per page", Value = "50" },
+                                                        new SelectListItem { Text = "Show 100 results per page", Value = "100" },
+                                                        new SelectListItem { Text = "Show 250 results per page", Value = "250" },
+                                                    },
+                                                    new
+                                                    {
+                                                        @class = "side",
+                                                        Name = "pageSize",
+                                                        data_bind = "value: pager.input.pageSizeText"
+                                                    })
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            }
+            else
+            {
+                var activitiesDisplay = Model.Input.Pivot != ActivitySearchPivot.People ? "table" : "none";
+                var peopleDisplay = Model.Input.Pivot == ActivitySearchPivot.People ? "table" : "none";
+                
+                <table style="width:100%">
+                    <tr>
+                        <td>
+                            <div style="height: 24px; ">
+                                <strong>
+                                    Showing <span>@Model.Output.FirstNumber</span>
+                                    @if (@Model.Output.PageCount > 0)
+                                    {
+                                        <span>- <span>@Model.Output.LastNumber</span></span>
+                                    }
+                                    of <span>@Model.Output.ItemTotal</span>
+                                </strong>
+                                @if (Model != null && Model.Output != null && Model.Output.PageCount > 0)
+                                {
+                                    <span>
+                                        (page
+                                        @Html.DropDownListFor(x => x.Output.PageNumber, Enumerable.Range(1, Model.Output.PageCount)
                                 .Select(x => new SelectListItem
                                 {
                                     Text = x.ToString(CultureInfo.InvariantCulture),
@@ -146,29 +216,71 @@
                                     data_bind = "value: pager.input.pageNumberText",
                                     style = "padding: 0; margin: 0; line-height: 16px; height: auto;",
                                 })
-                            of <span>@Model.Output.PageCount</span>)
-                        </span>
-                    }
-                    <span style="margin-left: 12px; display: none;" data-bind="visible: loadingSpinner.isVisible">
-                        <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
-                        <strong>Loading...</strong>
-                    </span>
-                </div>
+                                        of <span>@Model.Output.PageCount</span>)
+                                    </span>
+                                }
+                            </div>
 
-            }
+                            @* PREV & NEXT PAGER BUTTONS *@
+                            <div style="margin: 5px 0 0 0; width:180px; float:left;" class="field" data-bind="with: pager.input">
+                                <button class="link" data-bind="click: prev, enable: prevAllowed" disabled="disabled">&lt;&lt; Previous</button>
+                                |
+                                <button class="link" data-bind="click: next, enable: nextAllowed" disabled="disabled">Next &gt;&gt;</button>
+                            </div>
+                            <div style="margin: 5px 0 0 0; display: none; float:left" data-bind="visible: loadingSpinner.isVisible">
+                                <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
+                                <strong>Loading...</strong>
+                            </div>
+                        </td>
+                        <td align="right">
+                            @* SORT DROPDOWN *@
+                            <div class="field"
+                                 style=" margin: 10px 0 0 0;">
+                                @Html.DropDownListFor(x => x.Input.OrderBy,
+                                                    new[]
+                                                    {
+                                                        new SelectListItem { Text = "Sort with most recent at top", Value = "recency-desc" },
+                                                        new SelectListItem { Text = "Sort with most recent at bottom", Value = "recency-asc" },
+                                                        new SelectListItem { Text = "Sort by activity title A-Z", Value = "title-asc" },
+                                                        new SelectListItem { Text = "Sort by activity title Z-A", Value = "title-desc" },
+                                                        new SelectListItem { Text = "Sort by location A-Z", Value = "location-asc" },
+                                                        new SelectListItem { Text = "Sort by location Z-A", Value = "location-desc" },
+                                                        new SelectListItem { Text = "Sort by person last name A-Z", Value = "lastname-asc" },
+                                                        new SelectListItem { Text = "Sort by person last name Z-A", Value = "lastname-desc" },
+                                                        new SelectListItem { Text = "Sort by type A-Z", Value = "type-asc" },
+                                                        new SelectListItem { Text = "Sort by type Z-A", Value = "type-desc" },
+                                                    },
+                                                    new
+                                                    {
+                                                        @class = "side",
+                                                        Name = "orderBy",
+                                                        data_bind = "value: orderBy",
+                                                    })
+                            </div>
 
-            @* ZERO RESULTS MESSAGE *@
-            @if (Model.Output == null || Model.Output.Items == null || !Model.Output.Items.Any())
-            {
-                <p>
-                    There are no results that match your search terms.
-                </p>
-            }
-            else
-            {
-                var activitiesDisplay = Model.Input.Pivot != ActivitySearchPivot.People ? "table" : "none";
-                var peopleDisplay = Model.Input.Pivot == ActivitySearchPivot.People ? "table" : "none";
-
+                            @* PAGE SIZE DROPDOWN *@
+                            <div class="field"
+                                 style="margin:0;">
+                                @Html.DropDownListFor(x => x.Input.PageSize,
+                                                    new[]
+                                                    {
+                                                        new SelectListItem { Text = "Show 10 results per page", Value = "10" },
+                                                        new SelectListItem { Text = "Show 20 results per page", Value = "20" },
+                                                        new SelectListItem { Text = "Show 50 results per page", Value = "50" },
+                                                        new SelectListItem { Text = "Show 100 results per page", Value = "100" },
+                                                        new SelectListItem { Text = "Show 250 results per page", Value = "250" },
+                                                    },
+                                                    new
+                                                    {
+                                                        @class = "side",
+                                                        Name = "pageSize",
+                                                        data_bind = "value: pager.input.pageSizeText"
+                                                    })
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                
                 @* ACTIVITY RESULTS TABLE *@
                 <table class="data" style="display: @activitiesDisplay;" data-bind="visible: isActivitiesChecked">
                     <colgroup>
@@ -357,7 +469,7 @@
                             <div class="group no-link">
                                 <span class="arrow"></span>
                                 <span class="text" style="border-radius: 0;">
-                                    Common Search Options
+                                    Filter by location
                                     <img src="~/images/icons/spinner/spinner-20-blue-on-ddd.gif" alt=""
                                          style="margin-left: 4px; display: none;" data-bind="visible: loadingSpinner.isVisible" />
                                 </span>
@@ -367,68 +479,18 @@
                             <div class="content">
                                 @* LOCATION AUTOCOMPLETE *@
                                 <div class="location combobox field">
-                                    <input name="placeNames" type="text" placeholder="[Find by location]" data-bind="jQuery: '$location'"
+                                    <input name="placeNames" type="text" placeholder="[Filter by location]" data-bind="jQuery: '$location'"
                                            value="@(Model.Input.PlaceNames != null && Model.Input.PlaceNames.Any() ? Model.Input.PlaceNames.First() : "")"
                                            class="side" />
                                     <input name="placeIds" type="hidden" data-bind="jQuery: '$placeIds'"
                                            value="@(Model.Input.PlaceIds != null && Model.Input.PlaceIds.Any() ? Model.Input.PlaceIds.First() : (int?)null)" />
                                 </div>
-
-                                @* SORT DROPDOWN *@
-                                <div class="field">
-                                    @Html.DropDownListFor(x => x.Input.OrderBy,
-                                        new[]
-                                        {
-                                            new SelectListItem { Text = "Sort with most recent at top", Value = "recency-desc" },
-                                            new SelectListItem { Text = "Sort with most recent at bottom", Value = "recency-asc" },
-                                            new SelectListItem { Text = "Sort by activity title A-Z", Value = "title-asc" },
-                                            new SelectListItem { Text = "Sort by activity title Z-A", Value = "title-desc" },
-                                            new SelectListItem { Text = "Sort by location A-Z", Value = "location-asc" },
-                                            new SelectListItem { Text = "Sort by location Z-A", Value = "location-desc" },
-                                            new SelectListItem { Text = "Sort by person last name A-Z", Value = "lastname-asc" },
-                                            new SelectListItem { Text = "Sort by person last name Z-A", Value = "lastname-desc" },
-                                            new SelectListItem { Text = "Sort by type A-Z", Value = "type-asc" },
-                                            new SelectListItem { Text = "Sort by type Z-A", Value = "type-desc" },
-                                        },
-                                        new
-                                        {
-                                            @class = "side",
-                                            Name = "orderBy",
-                                            data_bind = "value: orderBy"
-                                        })
-                                </div>
-
-                                @* PAGE SIZE DROPDOWN *@
-                                <div class="field">
-                                    @Html.DropDownListFor(x => x.Input.PageSize,
-                                        new[]
-                                        {
-                                            new SelectListItem { Text = "Show 10 results per page", Value = "10" },
-                                            new SelectListItem { Text = "Show 20 results per page", Value = "20" },
-                                            new SelectListItem { Text = "Show 50 results per page", Value = "50" },
-                                            new SelectListItem { Text = "Show 100 results per page", Value = "100" },
-                                            new SelectListItem { Text = "Show 250 results per page", Value = "250" },
-                                        },
-                                        new
-                                        {
-                                            @class = "side",
-                                            Name = "pageSize",
-                                            data_bind = "value: pager.input.pageSizeText"
-                                        })
-                                </div>
-
-                                @* PREV & NEXT PAGER BUTTONS *@
-                                <div class="field" data-bind="with: pager.input">
-                                    <button class="link" data-bind="click: prev, enable: prevAllowed" disabled="disabled">&lt;&lt; Previous</button>
-                                    |
-                                    <button class="link" data-bind="click: next, enable: nextAllowed" disabled="disabled">Next &gt;&gt;</button>
-                                </div>
-
+                                
                                 @* ACTIVITY TYPE CHECKBOXES *@
                                 @if (Model.ActivityTypes != null && Model.ActivityTypes.Any())
                                 {
                                     <div class="field" style="margin-top: 12px;">
-                                        <strong>Find by activity type</strong>
+                                        <strong>Filter by activity type</strong>
                                         <ol style="color: #000; font-size: 13px; margin-top: 4px;">
                                             @for (var i = 0; i < Model.ActivityTypes.Count(); i++)
                                             {
@@ -480,7 +542,7 @@
 
                                 @* DATE FIELDS *@
                                 <div class="dates picker field" style="margin-top: 12px;">
-                                    <strong>Find by date(s)</strong>
+                                    <strong>Filter by date(s)</strong>
                                     <div class="group">
                                         <div class="on-left" style="width: 110px;">
                                             <input type="text" name="Since" placeholder="From" class="side" value="@Model.Input.Since" data-role="datepicker"
