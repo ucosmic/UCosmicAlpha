@@ -266,6 +266,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             
             var grouped = Output.Where(x => x.Continents != null).SelectMany(x => x.Continents).GroupBy(g => g.Code).Select(g => new ActivitySearchResultPlacesCounted
             {
+                PlaceType = g.First().PlaceType,
                 Name = g.First().Name,
                 Id = g.First().Id,
                 Code = g.First().Code,
@@ -293,6 +294,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
             var grouped = Output.Where(x => x.Countries != null).SelectMany(x => x.Countries).GroupBy(g => g.Id).Select(g => new ActivitySearchResultPlacesCounted
             {
+                PlaceType = g.First().PlaceType,
                 Name = g.First().Name,
                 Id = g.First().Id,
                 Code = g.First().Code,
@@ -320,6 +322,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
 
             var grouped = Output.Where(x => x.Waters != null).SelectMany(x => x.Waters).GroupBy(g => g.Id).Select(g => new ActivitySearchResultPlacesCounted
             {
+                PlaceType = g.First().PlaceType,
                 Name = g.First().Name,
                 Id = g.First().Id,
                 Code = g.First().Code,
