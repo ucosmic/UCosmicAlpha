@@ -52,6 +52,7 @@ var Activities;
                 this.isClearUntilDisabled = ko.computed(function () {
                     return _this.until() ? false : true;
                 });
+                this.keyIsOpen = ko.observable(false);
                 var searchOptions = JSON.parse(sessionStorage.getItem(ViewModels.SearchMap.SearchOptions));
 
                 if (searchOptions) {
@@ -87,6 +88,7 @@ var Activities;
 
                 this.searchMap = new Activities.ViewModels.SearchMap(searchMapData, this);
                 this.searchMap.applyBindings(document.getElementById('searchMap'));
+
                 this._loadTenancyData();
             }
             MapSearch.prototype._createEstablishmentSelects = function (response) {
@@ -281,6 +283,7 @@ var Activities;
                         var dataItem = e.sender.dataItem(e.item.index());
 
                         if (dataItem.placeId == -1) {
+                            _this.placeNames("");
                             e.sender.value('');
                             e.sender.input.val('');
                             _this.$placeIds.val('');
@@ -299,6 +302,7 @@ var Activities;
                             e.sender.input.val(dataItem.officialName);
                             _this.$location.val(dataItem.officialName);
                             _this.$placeIds.val(dataItem.placeId);
+                            _this.placeNames(dataItem.officialName);
                             _this._submitForm();
                         }
                     },
@@ -375,8 +379,17 @@ var Activities;
                 });
             };
 
+            MapSearch.prototype.resetSearch = function () {
+                this.checkAllActivityTypes();
+                this.keyword("");
+                this.placeNames("");
+                this.since("");
+                this.until("");
+                this._submitForm();
+            };
+
             MapSearch.prototype._submitForm = function () {
-                if (this.keyword() == this.oldKeyword && this.oldAncestorId == this.selectedEstablishment()) {
+                if (this.oldAncestorId == this.selectedEstablishment()) {
                     this.searchMap.reloadData($('form'), false);
                 } else {
                     this.searchMap.reloadData($('form'), true);
@@ -384,8 +397,11 @@ var Activities;
             };
 
             MapSearch.prototype.onKeywordInputSearchEvent = function (viewModel, e) {
-                if ($.trim(this.keyword()) && !$.trim($(e.target).val()) && this.$form)
-                    this.$form.submit();
+                if ($.trim(this.keyword()) && !$.trim($(e.target).val()) && this.$form) {
+                    e.preventDefault();
+                    this.keyword($(e.target).val());
+                    this._submitForm();
+                }
             };
 
             MapSearch.prototype.checkAllActivityTypes = function () {
@@ -406,6 +422,14 @@ var Activities;
 
             MapSearch.prototype.clearUntil = function () {
                 this.until('');
+            };
+
+            MapSearch.prototype.keyOpen = function () {
+                this.keyIsOpen(true);
+            };
+
+            MapSearch.prototype.keyClose = function () {
+                this.keyIsOpen(false);
             };
             return MapSearch;
         })();

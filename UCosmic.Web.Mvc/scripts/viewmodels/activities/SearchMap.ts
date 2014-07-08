@@ -124,6 +124,7 @@ module Activities.ViewModels {
 
             this.searchMap = new Activities.ViewModels.SearchMap(searchMapData, this);
             this.searchMap.applyBindings(document.getElementById('searchMap'));
+
             this._loadTenancyData();
         }
 
@@ -347,6 +348,7 @@ module Activities.ViewModels {
                     var dataItem = e.sender.dataItem(e.item.index());
 
                     if (dataItem.placeId == -1) {
+                        this.placeNames("");
                         e.sender.value('');
                         e.sender.input.val('');
                         this.$placeIds.val('');
@@ -366,6 +368,7 @@ module Activities.ViewModels {
                         e.sender.input.val(dataItem.officialName);
                         this.$location.val(dataItem.officialName);
                         this.$placeIds.val(dataItem.placeId);
+                        this.placeNames(dataItem.officialName);
                         this._submitForm();
                     }
                 },
@@ -466,9 +469,18 @@ module Activities.ViewModels {
         //#endregion
         //#region Automatic Form Submits
 
+        resetSearch(): void {
+            this.checkAllActivityTypes();
+            this.keyword("");
+            this.placeNames("");
+            this.since("");
+            this.until("");
+            this._submitForm();
+        }
+
         private _submitForm(): void {
 
-            if (this.keyword() == this.oldKeyword && this.oldAncestorId == this.selectedEstablishment()) {
+            if (this.oldAncestorId == this.selectedEstablishment()) {
                 this.searchMap.reloadData($('form'), false);
             } else {
                 this.searchMap.reloadData($('form'), true);
@@ -479,8 +491,12 @@ module Activities.ViewModels {
 
         onKeywordInputSearchEvent(viewModel: Search, e: JQueryEventObject): void {
             // this will auto-submit the form when the keyword box's X icon is clicked.
-            if ($.trim(this.keyword()) && !$.trim($(e.target).val()) && this.$form)
-                this.$form.submit();
+            if ($.trim(this.keyword()) && !$.trim($(e.target).val()) && this.$form) {
+                e.preventDefault();
+                this.keyword($(e.target).val())
+                this._submitForm();
+                //this.$form.submit();
+            }
         }
 
         //#endregion
@@ -541,6 +557,19 @@ module Activities.ViewModels {
             this.until('');
         }
 
+        //#endregion
+
+        //#region map key
+
+        keyIsOpen = ko.observable<boolean>(false);
+
+        keyOpen() {
+            this.keyIsOpen(true);
+        }
+
+        keyClose() {
+            this.keyIsOpen(false);
+        }
         //#endregion
     }
 }
