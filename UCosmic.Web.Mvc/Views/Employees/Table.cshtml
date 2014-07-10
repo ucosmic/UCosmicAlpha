@@ -120,9 +120,9 @@
 
             @* PAGER STATUS *@
             @*@if (Model != null && Model.Output.Items.Any())
-            {
+                {
 
-            }*@
+                }*@
 
             @* ZERO RESULTS MESSAGE *@
             @if (Model.Output == null || Model.Output.Items == null || !Model.Output.Items.Any())
@@ -187,7 +187,7 @@
             {
                 var activitiesDisplay = Model.Input.Pivot != ActivitySearchPivot.People ? "table" : "none";
                 var peopleDisplay = Model.Input.Pivot == ActivitySearchPivot.People ? "table" : "none";
-                
+
                 <table style="width:100%">
                     <tr>
                         <td>
@@ -260,7 +260,7 @@
 
                             @* PAGE SIZE DROPDOWN *@
                             <div class="field"
-                                 style="margin:0;">
+                                 style="margin:4px 0;">
                                 @Html.DropDownListFor(x => x.Input.PageSize,
                                                     new[]
                                                     {
@@ -280,9 +280,9 @@
                         </td>
                     </tr>
                 </table>
-                
+
                 @* ACTIVITY RESULTS TABLE *@
-                <table class="data" style="display: @activitiesDisplay;" data-bind="visible: isActivitiesChecked">
+                <table class="data" style="display: @activitiesDisplay; margin: 8px 0;" data-bind="visible: isActivitiesChecked">
                     <colgroup>
                         <col style="vertical-align: top;" />
                         <col style="vertical-align: top;" />
@@ -485,7 +485,7 @@
                                     <input name="placeIds" type="hidden" data-bind="jQuery: '$placeIds'"
                                            value="@(Model.Input.PlaceIds != null && Model.Input.PlaceIds.Any() ? Model.Input.PlaceIds.First() : (int?)null)" />
                                 </div>
-                                
+
                                 @* ACTIVITY TYPE CHECKBOXES *@
                                 @if (Model.ActivityTypes != null && Model.ActivityTypes.Any())
                                 {
