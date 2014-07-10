@@ -300,7 +300,8 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 Code = g.First().Code,
                 Center = g.First().Center,
                 BoundingBox = g.First().BoundingBox,
-                Count = g.Count()
+                Count = g.Count(),
+                ActivityCount = results.Count()
             }).ToArray();
 
             return grouped;
