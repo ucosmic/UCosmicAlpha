@@ -42,6 +42,7 @@ module Activities.ViewModels {
         ancestorId;
         keyword;
         regionCount = ko.observable<string>('');
+        activityCount = ko.observable<string>('?');
 
         //#endregion
 
@@ -283,6 +284,11 @@ module Activities.ViewModels {
             if (data) {
                 dataDeferred.resolve();
                 this._countriesResponse = ko.observableArray(JSON.parse(data));
+                if (this._countriesResponse().length > 0) {
+                    this.activityCount(this._countriesResponse()[0].activityCount);
+                } else {
+                    this.activityCount('0');
+                }
                 if (input.placeFilter == 'countries') {
                     this._map.ready().done((): void => {
                         this._load(input.placeFilter);
@@ -305,6 +311,11 @@ module Activities.ViewModels {
                     .done((response: any): void => {
                         dataDeferred.resolve();
                         this._countriesResponse = ko.observableArray(response);
+                        if (response.length > 0) {
+                            this.activityCount(response[0].activityCount);
+                        }else{
+                            this.activityCount('0');
+                        }
                         if (placeFilter == 'countries') {
                             this._map.ready().done((): void => {
                                 this._load(placeFilter);

@@ -123,6 +123,7 @@ declare module Activities.ApiModels {
         center?: Places.ApiModels.Point;
         boundingBox?: Places.ApiModels.Box;
         placeType?: string;
+        activityCount?: string;
     }
 }
 

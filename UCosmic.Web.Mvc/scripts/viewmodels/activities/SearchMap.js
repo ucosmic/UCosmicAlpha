@@ -22,7 +22,6 @@ var Activities;
                 var _this = this;
                 this.settings = settings;
                 this.orderBy = ko.observable(this.settings.input.orderBy);
-                this.keyword = ko.observable(this.settings.input.keyword);
                 this.pivot = ko.observable(this.settings.input.pivot);
                 this.isActivitiesChecked = ko.computed(function () {
                     return _this.pivot() != 2 /* people */;
@@ -44,8 +43,9 @@ var Activities;
                 this.establishmentData = new App.DataCacher(function () {
                     return _this._loadEstablishmentData();
                 });
-                this.since = ko.observable(this.settings.input.since);
-                this.until = ko.observable(this.settings.input.until);
+                this.keyword = ko.observable("");
+                this.since = ko.observable("");
+                this.until = ko.observable("");
                 this.isClearSinceDisabled = ko.computed(function () {
                     return _this.since() ? false : true;
                 });
@@ -61,11 +61,16 @@ var Activities;
                     this.placeFilter(searchOptions.placeFilter);
                     this.settings.input.since = searchOptions.Since;
                     this.settings.input.until = searchOptions.Until;
+                    this.settings.input.keyword = searchOptions.keyword;
                     this.settings.input.includeUndated = searchOptions.includeUndated;
                     if (!searchOptions.includeUndated || searchOptions.includeUndated == false) {
                         this.includeUndated("");
                     }
                 }
+                this.keyword(this.settings.input.keyword);
+
+                this.since(this.settings.input.since);
+                this.until(this.settings.input.until);
 
                 this.activityTypeCheckBoxes = ko.observableArray(Enumerable.From(this.settings.activityTypes).Select(function (x) {
                     return new ActivityTypeSearchTestCheckBox(x, _this.settings);

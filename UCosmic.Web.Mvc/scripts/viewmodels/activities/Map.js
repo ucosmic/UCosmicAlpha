@@ -8,6 +8,7 @@
                 this.countryCode = ko.observable(sessionStorage.getItem(SearchMap.CountrySessionKey) || 'any');
                 this.continentName = ko.observable(sessionStorage.getItem('continentName') || '');
                 this.regionCount = ko.observable('');
+                this.activityCount = ko.observable('?');
                 this.dataDefered = $.Deferred();
                 this.placeFilter = ko.observable();
                 this._map = new App.GoogleMaps.Map('google_map_canvas', {
@@ -264,6 +265,11 @@
                 if (data) {
                     dataDeferred.resolve();
                     this._countriesResponse = ko.observableArray(JSON.parse(data));
+                    if (this._countriesResponse().length > 0) {
+                        this.activityCount(this._countriesResponse()[0].activityCount);
+                    } else {
+                        this.activityCount('0');
+                    }
                     if (input.placeFilter == 'countries') {
                         this._map.ready().done(function () {
                             _this._load(input.placeFilter);
@@ -283,6 +289,11 @@
                     $.ajax(settings).done(function (response) {
                         dataDeferred.resolve();
                         _this._countriesResponse = ko.observableArray(response);
+                        if (response.length > 0) {
+                            _this.activityCount(response[0].activityCount);
+                        } else {
+                            _this.activityCount('0');
+                        }
                         if (placeFilter == 'countries') {
                             _this._map.ready().done(function () {
                                 _this._load(placeFilter);

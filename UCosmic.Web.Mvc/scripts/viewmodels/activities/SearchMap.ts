@@ -30,7 +30,6 @@ module Activities.ViewModels {
     export class MapSearch {
         //#region Construction
         orderBy = ko.observable(this.settings.input.orderBy);
-        keyword = ko.observable(this.settings.input.keyword);
         //pager = new App.Pager<ApiModels.SearchResult>(this.settings.input.pageNumber.toString(), this.settings.input.pageSize.toString());
         pivot = ko.observable(<DataGraphPivotTest>this.settings.input.pivot);
 
@@ -85,13 +84,18 @@ module Activities.ViewModels {
                 this.settings.input.activityTypeIds = searchOptions.activityTypeIds;
                 this.placeNames(searchOptions.placeNames);
                 this.placeFilter(searchOptions.placeFilter);
-                this.settings.input.since = searchOptions.Since
-                this.settings.input.until = searchOptions.Until
+                this.settings.input.since = searchOptions.Since;
+                this.settings.input.until = searchOptions.Until;
+                this.settings.input.keyword = searchOptions.keyword;
                 this.settings.input.includeUndated = searchOptions.includeUndated;
                 if(!searchOptions.includeUndated || searchOptions.includeUndated == false){
                     this.includeUndated("")
                 }
             }
+            this.keyword(this.settings.input.keyword);
+
+            this.since(this.settings.input.since);
+            this.until(this.settings.input.until);
             
             this.activityTypeCheckBoxes = ko.observableArray<ActivityTypeSearchTestCheckBox>(Enumerable.From(this.settings.activityTypes)
                 .Select((x: ApiModels.ActivityTypeSearchFilter): ActivityTypeSearchTestCheckBox => {
@@ -483,6 +487,7 @@ module Activities.ViewModels {
             if (this.oldAncestorId == this.selectedEstablishment()) {
                 this.searchMap.reloadData($('form'), false);
             } else {
+                //this._loadEstablishmentData()
                 this.searchMap.reloadData($('form'), true);
             }
 
@@ -537,9 +542,10 @@ module Activities.ViewModels {
 
         //#endregion
         //#region Date Filter Controls
+        keyword = ko.observable<string>("");
 
-        since = ko.observable(this.settings.input.since);
-        until = ko.observable(this.settings.input.until);
+        since = ko.observable<string>("");
+        until = ko.observable<string>("");
 
         isClearSinceDisabled = ko.computed((): boolean => {
             return this.since() ? false : true;
