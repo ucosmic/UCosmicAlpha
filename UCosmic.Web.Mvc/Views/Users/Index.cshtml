@@ -34,15 +34,15 @@
                     @ViewBag.Title
                 </h1>
             </header>
-            <div class="field">
-                <input type="hidden" data-bind="value: keyword" />
-                <input type="search" placeholder="Enter a user name, email address, or access grant" data-bind="value: keyword, valueUpdate: 'afterkeydown search'" />
-            </div>
             <div style="height: 30px;">
                 <a href="@Url.Action(MVC.Users.New())" id="searchSideBarAddNew1" class="button">
                     <i class="green plus" style="width: 16px; height: 16px; background-size: contain"></i>
                     <span class="text" style="vertical-align: initial;">Add a new user</span>
                 </a>
+            </div>
+            <div class="field">
+                <input type="hidden" data-bind="value: keyword" />
+                <input type="search" placeholder="Enter a user name, email address, or access grant" data-bind="value: keyword, valueUpdate: 'afterkeydown search'" />
             </div>
             <p data-bind="visible: hasNoItems" style="display: none;">
                 There are no results that match your search terms.
@@ -51,18 +51,92 @@
                 <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
                 <strong>Loading search results...</strong>
             </p>
-            <p data-bind="visible: showStatus" style="display: none;">
-                <strong>
-                    Showing <span data-bind="text: firstNumber"></span>
-                    <span data-bind="visible: hasManyItems">- <span data-bind="    text: lastNumber"></span></span>
-                    of <span data-bind="text: itemTotal"></span>
-                </strong>
-                <span data-bind="visible: hasManyPages">
-                    (page
-                    <select class="inline" data-bind="options: pageNumberOptions, value: transitionedPageNumber, optionsText: 'text', optionsValue: 'value'"></select>
-                    of <span data-bind="text: pageCount"></span>)
-                </span>
-            </p>
+            <table style="width:100%">
+                <tr>
+                    <td style="vertical-align: top;">
+                        @* PAGER STATUS & LOADING SPINNER *@
+                        <div data-bind="visible: showStatus" style="display: none; height: 24px; margin: 10px 0 0 0;">
+                            <strong>
+                                Showing <span data-bind="text: firstNumber"></span>
+                                <span data-bind="visible: hasManyItems">- <span data-bind="    text: lastNumber"></span></span>
+                                of <span data-bind="text: itemTotal"></span>
+                            </strong>
+                            <span data-bind="visible: hasManyPages">
+                                (page
+                                <select class="inline" data-bind="options: pageNumberOptions, value: transitionedPageNumber, optionsText: 'text', optionsValue: 'value'"></select>
+                                of <span data-bind="text: pageCount"></span>)
+                            </span>
+                        </div>
+                        <div class="field" style="margin: 0;">
+                            <button class="link" data-bind="click: prevPage, enable: prevEnabled">&lt;&lt; Previous</button>
+                            |
+                            <button class="link" data-bind="click: nextPage, enable: nextEnabled">Next &gt;&gt;</button>
+                            <input type="hidden" value="1" data-bind="value: pageNumber" />
+                        </div>
+                    </td>
+                    <td style="vertical-align: top;" align="right">
+                        <div class="field"
+                             style=" margin: 10px 0 0 0;">
+                            <select class="side" data-bind="value: orderBy">
+                                <option value="username-asc">Sort by user name A-Z</option>
+                                <option value="username-desc">Sort by user name Z-A</option>
+                                <option value="lastname-asc">Sort by last name A-Z</option>
+                                <option value="lastname-desc">Sort by last name Z-A</option>
+                            </select>
+                            <input type="hidden" value="username-asc" data-bind="value: orderBy" />
+                        </div>
+                        <div class="field"
+                             style="margin:4px 0;">
+                            <select class="side" data-bind="value: pageSize">
+                                <option value="5">Show 5 results per page</option>
+                                <option value="10">Show 10 results per page</option>
+                                <option value="20">Show 20 results per page</option>
+                                <option value="50">Show 50 results per page</option>
+                                <option value="100">Show 100 results per page</option>
+                            </select>
+                            <input type="hidden" value="5" data-bind="value: pageSize" />
+                        </div>
+
+                    </td>
+                </tr>
+            </table>
+            @*<p data-bind="visible: showStatus" style="display: none;">
+                    <strong>
+                        Showing <span data-bind="text: firstNumber"></span>
+                        <span data-bind="visible: hasManyItems">- <span data-bind="    text: lastNumber"></span></span>
+                        of <span data-bind="text: itemTotal"></span>
+                    </strong>
+                    <span data-bind="visible: hasManyPages">
+                        (page
+                        <select class="inline" data-bind="options: pageNumberOptions, value: transitionedPageNumber, optionsText: 'text', optionsValue: 'value'"></select>
+                        of <span data-bind="text: pageCount"></span>)
+                    </span>
+                </p>
+                <div class="field">
+                    <select class="side" data-bind="value: orderBy">
+                        <option value="username-asc">Sort by user name A-Z</option>
+                        <option value="username-desc">Sort by user name Z-A</option>
+                        <option value="lastname-asc">Sort by last name A-Z</option>
+                        <option value="lastname-desc">Sort by last name Z-A</option>
+                    </select>
+                    <input type="hidden" value="username-asc" data-bind="value: orderBy" />
+                </div>
+                <div class="field">
+                    <select class="side" data-bind="value: pageSize">
+                        <option value="5">Show 5 results per page</option>
+                        <option value="10">Show 10 results per page</option>
+                        <option value="20">Show 20 results per page</option>
+                        <option value="50">Show 50 results per page</option>
+                        <option value="100">Show 100 results per page</option>
+                    </select>
+                    <input type="hidden" value="5" data-bind="value: pageSize" />
+                </div>
+                <div class="field">
+                    <button class="link" data-bind="click: prevPage, enable: prevEnabled">&lt;&lt; Previous</button>
+                    |
+                    <button class="link" data-bind="click: nextPage, enable: nextEnabled">Next &gt;&gt;</button>
+                    <input type="hidden" value="1" data-bind="value: pageNumber" />
+                </div>*@
             <hr />
             <ol data-bind="foreach: items, visible: hasItems" style="display: none;">
                 <li class="user-item">
@@ -87,15 +161,15 @@
                                                 <ul>
                                                     @if (User.IsInAnyRole(RoleName.UserImpersonators))
                                                     {
-                                                    <li data-bind="click: impersonate">Impersonate</li>
+                                                        <li data-bind="click: impersonate">Impersonate</li>
                                                     }
                                                     @if (User.IsInAnyRole(RoleName.RoleGrantors))
                                                     {
-                                                    <li data-bind="click: showRoleEditor, visible: !isEditingRoles()">Manage Access Grants</li>
+                                                        <li data-bind="click: showRoleEditor, visible: !isEditingRoles()">Manage Access Grants</li>
                                                     }
                                                     @if (User.IsInAnyRole(RoleName.EmployeeProfileManager))
                                                     {
-                                                    <li data-bind="click: deleteUser, visible: !isEditingRoles()">Delete</li>
+                                                        <li data-bind="click: deleteUser, visible: !isEditingRoles()">Delete</li>
                                                     }
                                                 </ul>
                                             </li>
@@ -104,51 +178,51 @@
                                 </div>
                                 @if (User.IsInAnyRole(RoleName.RoleGrantors))
                                 {
-                                <div class="roles">
-                                    <span class="branded-dark1 badge" data-bind="visible: hasNoGrants" style="display: none;">[No access grants]</span>
-                                    <div data-bind="visible: hasGrants, foreach: roles">
-                                        <span class="branded-dark1 badge">
-                                            <span data-bind="text: name"></span>
-                                            <img data-bind="visible: $parent.isEditingRoles(), click: revokeRole" title="Revoke this access grant"
-                                                 src="~/images/icons/minus/minus-16-red-on-white.png" alt="Revoke this access grant" class="revoke-button" />
-                                        </span>
-                                        <div data-bind="jqElement: '$confirmPurgeDialog'" title="Please confirm your intent" style="display: none;">
-                                            <div>
-                                                <p>
-                                                    Are you sure you want to revoke this access grant from <strong><span data-bind="text: $parent.name"></span></strong>?
-                                                </p>
+                                    <div class="roles">
+                                        <span class="branded-dark1 badge" data-bind="visible: hasNoGrants" style="display: none;">[No access grants]</span>
+                                        <div data-bind="visible: hasGrants, foreach: roles">
+                                            <span class="branded-dark1 badge">
+                                                <span data-bind="text: name"></span>
+                                                <img data-bind="visible: $parent.isEditingRoles(), click: revokeRole" title="Revoke this access grant"
+                                                     src="~/images/icons/minus/minus-16-red-on-white.png" alt="Revoke this access grant" class="revoke-button" />
+                                            </span>
+                                            <div data-bind="jqElement: '$confirmPurgeDialog'" title="Please confirm your intent" style="display: none;">
                                                 <div>
-                                                    <span class="branded-dark1 badge"><span data-bind="text: name"></span></span>
+                                                    <p>
+                                                        Are you sure you want to revoke this access grant from <strong><span data-bind="text: $parent.name"></span></strong>?
+                                                    </p>
+                                                    <div>
+                                                        <span class="branded-dark1 badge"><span data-bind="text: name"></span></span>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
                                 }
                             </div>
                             @if (User.IsInAnyRole(RoleName.RoleGrantors))
                             {
-                            <div class="editor" data-bind="slideDownVisible: isEditingRoles" style="display: none;">
-                                <div style="display: none;" data-bind="visible: isRevokeError">
-                                    <span class="field-validation-error" data-bind="text: revokeErrorText"></span>
-                                    <a href="#" data-bind="click: dismissError">OK</a>
+                                <div class="editor" data-bind="slideDownVisible: isEditingRoles" style="display: none;">
+                                    <div style="display: none;" data-bind="visible: isRevokeError">
+                                        <span class="field-validation-error" data-bind="text: revokeErrorText"></span>
+                                        <a href="#" data-bind="click: dismissError">OK</a>
+                                    </div>
+                                    <div class="row">
+                                        <select data-bind="value: selectedRoleOption, options: roleOptions, optionsText: 'name', optionsValue: 'id', optionsCaption: roleOptionsCaption, jqObservableElement: '$roleSelect'">
+                                            <option>[Loading...]</option>
+                                        </select>
+                                    </div>
+                                    <div style="display: none;" data-bind="visible: isGrantError">
+                                        <span class="field-validation-error" data-bind="text: grantErrorText"></span>
+                                        <a href="#" data-bind="click: dismissError">OK</a>
+                                    </div>
+                                    <div class="row">
+                                        <input type="button" value="Grant Access" data-bind="click: grantRole, disable: isRoleGrantDisabled" />
+                                        <input type="button" value="I'm Finished" class="link" data-bind="click: hideRoleEditor" />
+                                        &nbsp;&nbsp;&nbsp;
+                                        <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" data-bind="visible: roleSpinner.isVisible" />
+                                    </div>
                                 </div>
-                                <div class="row">
-                                    <select data-bind="value: selectedRoleOption, options: roleOptions, optionsText: 'name', optionsValue: 'id', optionsCaption: roleOptionsCaption, jqObservableElement: '$roleSelect'">
-                                        <option>[Loading...]</option>
-                                    </select>
-                                </div>
-                                <div style="display: none;" data-bind="visible: isGrantError">
-                                    <span class="field-validation-error" data-bind="text: grantErrorText"></span>
-                                    <a href="#" data-bind="click: dismissError">OK</a>
-                                </div>
-                                <div class="row">
-                                    <input type="button" value="Grant Access" data-bind="click: grantRole, disable: isRoleGrantDisabled" />
-                                    <input type="button" value="I'm Finished" class="link" data-bind="click: hideRoleEditor" />
-                                    &nbsp;&nbsp;&nbsp;
-                                    <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" data-bind="visible: roleSpinner.isVisible" />
-                                </div>
-                            </div>
                             }
                         </div>
                         <div data-bind="jqElement: '$confirmPurgeDialog'" title="Please confirm your intent" style="display: none;">
@@ -185,7 +259,7 @@
                 </a>
             </div>
         </div>
-        <aside class="on-right from-top" data-fixed-scroll="root">
+        <aside class="on-right from-top" data-fixed-scroll="root" style="display: none;">
             <div data-fixed-scroll="anchor"></div>
             <div data-fixed-scroll="content">
                 @Html.Partial(MVC.Users.Views._SearchSideBar)
