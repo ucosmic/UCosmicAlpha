@@ -9,34 +9,10 @@
         <li class="static square-bottom">
             <div class="group no-link">
                 <div class="arrow"></div>
-                <span class="text">Search options</span>
+                <span class="text">Filter options</span>
             </div>
             <div class="content">
-                <div class="field">
-                    <select class="side" data-bind="value: orderBy">
-                        <option value="username-asc">Sort by user name A-Z</option>
-                        <option value="username-desc">Sort by user name Z-A</option>
-                        <option value="lastname-asc">Sort by last name A-Z</option>
-                        <option value="lastname-desc">Sort by last name Z-A</option>
-                    </select>
-                    <input type="hidden" value="username-asc" data-bind="value: orderBy" />
-                </div>
-                <div class="field">
-                    <select class="side" data-bind="value: pageSize">
-                        <option value="5">Show 5 results per page</option>
-                        <option value="10">Show 10 results per page</option>
-                        <option value="20">Show 20 results per page</option>
-                        <option value="50">Show 50 results per page</option>
-                        <option value="100">Show 100 results per page</option>
-                    </select>
-                    <input type="hidden" value="5" data-bind="value: pageSize" />
-                </div>
-                <div class="field">
-                    <button class="link" data-bind="click: prevPage, enable: prevEnabled">&lt;&lt; Previous</button>
-                    |
-                    <button class="link" data-bind="click: nextPage, enable: nextEnabled">Next &gt;&gt;</button>
-                    <input type="hidden" value="1" data-bind="value: pageNumber" />
-                </div>
+                
             </div>
         </li>
     </ul>
