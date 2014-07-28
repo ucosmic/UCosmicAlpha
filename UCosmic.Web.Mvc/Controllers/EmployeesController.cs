@@ -197,8 +197,14 @@ namespace UCosmic.Web.Mvc.Controllers
             var query = new DegreesPageByTerms
             {
                 EstablishmentDomain = domain,
+                //EstablishmentId = 25,
+                //AncestorId = 25,
                 EagerLoad = DegreeSearchResultProfiler.EntitiyToModel.EagerLoad,
             };
+            //if (input.AncestorId)
+            //{
+            //    query.AncestorId = input.AncestorId
+            //}
             Mapper.Map(input, query);
             var results = _queryProcessor.Execute(query);
 
@@ -221,6 +227,10 @@ namespace UCosmic.Web.Mvc.Controllers
                     Selected = x.Code == input.CountryCode,
                 });
             }
+
+            var establishment = _queryProcessor.Execute(new EstablishmentByDomain(domain));
+            if (establishment == null) return HttpNotFound();
+            ViewBag.EmployeesEstablishmentId = establishment.RevisionId;
 
             Session.LastEmployeeLens(Request);
             return View(model);
