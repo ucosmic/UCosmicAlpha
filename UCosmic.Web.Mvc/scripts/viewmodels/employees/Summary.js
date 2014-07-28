@@ -56,6 +56,7 @@
                 this.selectedEstablishment = ko.observable();
                 this.affiliations = ko.mapping.fromJS([]);
                 this.rootEstablishment = 0;
+                this.loadingSpinner = new App.Spinner();
                 this.pivot = ko.observable(parseInt(sessionStorage.getItem(Summary._pivotKey)) || Summary._pivotDefault);
                 this._pivotChanged = ko.computed(function () {
                     _this._onPivotChanged();
@@ -267,6 +268,12 @@
                     if (_this.ajaxMapData) {
                         _this.ajaxMapData.abort();
                     }
+                });
+                $("form").submit(function (event) {
+                    _this.loadingSpinner.start();
+                });
+                $('a').click(function () {
+                    _this.loadingSpinner.start();
                 });
             };
 

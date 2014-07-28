@@ -165,7 +165,14 @@
                     this.ajaxMapData.abort();
                 }
             });
+            $("form").submit((event) => {
+                this.loadingSpinner.start();
+            });
+            $('a').click(() => {
+                this.loadingSpinner.start();
+            });
         }
+        loadingSpinner = new App.Spinner();
 
         //#endregion
         //#region UI Observables
