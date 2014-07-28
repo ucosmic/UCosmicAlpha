@@ -76,41 +76,79 @@ namespace UCosmic.Web.Mvc.Models
                     //}))
                     .ForMember(d => d.Countries, o => o.ResolveUsing(s =>
                     {
-                        if ((s.Locations.FirstOrDefault(y => y.Place.IsCountry) != null ? s.Locations.FirstOrDefault(y => y.Place.IsCountry).Place.IsCountry : false)
-                            || (s.Locations.FirstOrDefault(y => y.Place.IsRegion) != null ? s.Locations.FirstOrDefault(y => y.Place.IsRegion).Place.IsRegion : false)
-                            || (s.Locations.FirstOrDefault(y => y.Place.IsWater) != null ? s.Locations.FirstOrDefault(y => y.Place.IsWater).Place.IsWater : false)
-                            || (s.Locations.FirstOrDefault(y => y.Place.IsContinent) != null ? s.Locations.FirstOrDefault(y => y.Place.IsContinent).Place.IsContinent : false))
-                        //|| (s.Locations.SelectMany(x => x.Place.Ancestors).FirstOrDefault(x => x.Ancestor.IsRegion) != null ? s.Locations.SelectMany(x => x.Place.Ancestors).FirstOrDefault(x => x.Ancestor.IsRegion).Ancestor.IsRegion : false))
-                        {
+                        //if ((s.Locations.FirstOrDefault(y => y.Place.IsCountry) != null ? s.Locations.FirstOrDefault(y => y.Place.IsCountry).Place.IsCountry : false)
+                        //    || (s.Locations.FirstOrDefault(y => y.Place.IsRegion) != null ? s.Locations.FirstOrDefault(y => y.Place.IsRegion).Place.IsRegion : false)
+                        //    || (s.Locations.FirstOrDefault(y => y.Place.IsWater) != null ? s.Locations.FirstOrDefault(y => y.Place.IsWater).Place.IsWater : false)
+                        //    || (s.Locations.FirstOrDefault(y => y.Place.IsContinent) != null ? s.Locations.FirstOrDefault(y => y.Place.IsContinent).Place.IsContinent : false))
+                        ////|| (s.Locations.SelectMany(x => x.Place.Ancestors).FirstOrDefault(x => x.Ancestor.IsRegion) != null ? s.Locations.SelectMany(x => x.Place.Ancestors).FirstOrDefault(x => x.Ancestor.IsRegion).Ancestor.IsRegion : false))
+                        //{
                             return s.Locations.Select(x => new ActivitySearchResultPlaces
-                                {
-                                    //PlaceIsContinentOrRegion = (x.Place.IsContinent || x.Place.IsRegion || x.Place.IsWater) ? true : false,
-                                    PlaceType = x.Place.IsContinent ? "continent" : x.Place.IsWater ? "water" : x.Place.IsRegion ? "region" : "country",
-                                    Code = (x.Place.Ancestors.FirstOrDefault(y => y.Ancestor.IsContinent) != null) ? x.Place.Ancestors.FirstOrDefault(y => y.Ancestor.IsContinent).Ancestor.GeoNamesToponym.ContinentCode : x.Place.IsContinent ? x.Place.GeoNamesToponym.ContinentCode : null,
-                                    Name = x.Place.OfficialName, //x.Place.IsCountry ? x.Place.OfficialName : x.Place.Ancestors.FirstOrDefault(y => y.Ancestor.IsCountry).Ancestor.OfficialName,
-                                    Id = x.Place.RevisionId, //x.Place.IsCountry ? x.Place.RevisionId : x.Place.Ancestors.FirstOrDefault(y => y.Ancestor.IsCountry).Ancestor.RevisionId,
-                                    Center = x.Place.IsWater ? new MapPointModel { Latitude = x.Place.Center.Latitude, Longitude = x.Place.Center.Longitude }
-                                    : new MapPointModel { Latitude = x.Place.GeoPlanetPlace.Center.Latitude, Longitude = x.Place.GeoPlanetPlace.Center.Longitude }, //x.Place.IsCountry ? new MapPointModel { Latitude = x.Place.GeoPlanetPlace.Center.Latitude, Longitude = x.Place.GeoPlanetPlace.Center.Longitude }
-                                    //: new MapPointModel { Latitude = x.Place.Ancestors.FirstOrDefault(y => y.Ancestor.IsCountry).Ancestor.GeoPlanetPlace.Center.Latitude, Longitude = x.Place.Ancestors.FirstOrDefault(y => y.Ancestor.IsCountry).Ancestor.GeoPlanetPlace.Center.Longitude },
-                                    BoundingBox = null//x.Place.GeoPlanetPlace.BoundingBox //x.Place.IsCountry ? x.Place.GeoPlanetPlace.BoundingBox : x.Place.Ancestors.FirstOrDefault(y => y.Ancestor.IsCountry).Ancestor.GeoPlanetPlace.BoundingBox
-                                });
-                        }
-                        else
-                        {
-                            //Global
-                            return s.Locations.Select(x => new ActivitySearchResultPlaces
-                                {
-                                    //PlaceIsContinentOrRegion = (x.Place.IsContinent || x.Place.IsRegion || x.Place.IsWater) ? true : false,
-                                    PlaceType = "global",
-                                    Code = (x.Place.Ancestors.FirstOrDefault(y => y.Ancestor.IsContinent) != null) ? x.Place.Ancestors.FirstOrDefault(y => y.Ancestor.IsContinent).Ancestor.GeoNamesToponym.ContinentCode : x.Place.IsContinent ? x.Place.GeoNamesToponym.ContinentCode : null,
-                                    Name = x.Place.OfficialName, //x.Place.IsCountry ? x.Place.OfficialName : x.Place.Ancestors.FirstOrDefault(y => y.Ancestor.IsCountry).Ancestor.OfficialName,
-                                    Id = x.Place.RevisionId, //x.Place.IsCountry ? x.Place.RevisionId : x.Place.Ancestors.FirstOrDefault(y => y.Ancestor.IsCountry).Ancestor.RevisionId,
-                                    Center = new MapPointModel { Latitude = 0, Longitude = -180 }, //x.Place.IsCountry ? new MapPointModel { Latitude = x.Place.GeoPlanetPlace.Center.Latitude, Longitude = x.Place.GeoPlanetPlace.Center.Longitude }
-                                    //: new MapPointModel { Latitude = x.Place.Ancestors.FirstOrDefault(y => y.Ancestor.IsCountry).Ancestor.GeoPlanetPlace.Center.Latitude, Longitude = x.Place.Ancestors.FirstOrDefault(y => y.Ancestor.IsCountry).Ancestor.GeoPlanetPlace.Center.Longitude },
-                                    BoundingBox = null//x.Place.GeoPlanetPlace.BoundingBox //x.Place.IsCountry ? x.Place.GeoPlanetPlace.BoundingBox : x.Place.Ancestors.FirstOrDefault(y => y.Ancestor.IsCountry).Ancestor.GeoPlanetPlace.BoundingBox
-                                });
-                        }
+                            {
+                                //PlaceIsContinentOrRegion = (x.Place.IsContinent || x.Place.IsRegion || x.Place.IsWater) ? true : false,
+                                PlaceType = x.Place.IsContinent ? "continent" : x.Place.IsWater ? "water" : x.Place.IsRegion ? "region" : x.Place.IsEarth ? "global" : "country",
+                                Code = (x.Place.Ancestors.FirstOrDefault(y => y.Ancestor.IsContinent) != null) ? x.Place.Ancestors.FirstOrDefault(y => y.Ancestor.IsContinent).Ancestor.GeoNamesToponym.ContinentCode : x.Place.IsContinent ? x.Place.GeoNamesToponym.ContinentCode : null,
+                                Name = x.Place.OfficialName, //x.Place.IsCountry ? x.Place.OfficialName : x.Place.Ancestors.FirstOrDefault(y => y.Ancestor.IsCountry).Ancestor.OfficialName,
+                                Id = x.Place.RevisionId, //x.Place.IsCountry ? x.Place.RevisionId : x.Place.Ancestors.FirstOrDefault(y => y.Ancestor.IsCountry).Ancestor.RevisionId,
+                                Center = x.Place.IsWater ? new MapPointModel { Latitude = x.Place.Center.Latitude, Longitude = x.Place.Center.Longitude }
+                                : x.Place.IsEarth ? new MapPointModel { Latitude = 0, Longitude = -180 }
+                                : new MapPointModel { Latitude = x.Place.GeoPlanetPlace.Center.Latitude, Longitude = x.Place.GeoPlanetPlace.Center.Longitude }, //x.Place.IsCountry ? new MapPointModel { Latitude = x.Place.GeoPlanetPlace.Center.Latitude, Longitude = x.Place.GeoPlanetPlace.Center.Longitude }
+                                //: new MapPointModel { Latitude = x.Place.Ancestors.FirstOrDefault(y => y.Ancestor.IsCountry).Ancestor.GeoPlanetPlace.Center.Latitude, Longitude = x.Place.Ancestors.FirstOrDefault(y => y.Ancestor.IsCountry).Ancestor.GeoPlanetPlace.Center.Longitude },
+                                BoundingBox = null//x.Place.GeoPlanetPlace.BoundingBox //x.Place.IsCountry ? x.Place.GeoPlanetPlace.BoundingBox : x.Place.Ancestors.FirstOrDefault(y => y.Ancestor.IsCountry).Ancestor.GeoPlanetPlace.BoundingBox
+                            });
+                        //}
+                        //else
+                        //{
+                        //    //Global
+                        //    return s.Locations.Select(x => new ActivitySearchResultPlaces
+                        //    {
+                        //        //PlaceIsContinentOrRegion = (x.Place.IsContinent || x.Place.IsRegion || x.Place.IsWater) ? true : false,
+                        //        PlaceType = "global",
+                        //        Code = (x.Place.Ancestors.FirstOrDefault(y => y.Ancestor.IsContinent) != null) ? x.Place.Ancestors.FirstOrDefault(y => y.Ancestor.IsContinent).Ancestor.GeoNamesToponym.ContinentCode : x.Place.IsContinent ? x.Place.GeoNamesToponym.ContinentCode : null,
+                        //        Name = x.Place.OfficialName, //x.Place.IsCountry ? x.Place.OfficialName : x.Place.Ancestors.FirstOrDefault(y => y.Ancestor.IsCountry).Ancestor.OfficialName,
+                        //        Id = x.Place.RevisionId, //x.Place.IsCountry ? x.Place.RevisionId : x.Place.Ancestors.FirstOrDefault(y => y.Ancestor.IsCountry).Ancestor.RevisionId,
+                        //        Center = new MapPointModel { Latitude = 0, Longitude = -180 }, //x.Place.IsCountry ? new MapPointModel { Latitude = x.Place.GeoPlanetPlace.Center.Latitude, Longitude = x.Place.GeoPlanetPlace.Center.Longitude }
+                        //        //: new MapPointModel { Latitude = x.Place.Ancestors.FirstOrDefault(y => y.Ancestor.IsCountry).Ancestor.GeoPlanetPlace.Center.Latitude, Longitude = x.Place.Ancestors.FirstOrDefault(y => y.Ancestor.IsCountry).Ancestor.GeoPlanetPlace.Center.Longitude },
+                        //        BoundingBox = null//x.Place.GeoPlanetPlace.BoundingBox //x.Place.IsCountry ? x.Place.GeoPlanetPlace.BoundingBox : x.Place.Ancestors.FirstOrDefault(y => y.Ancestor.IsCountry).Ancestor.GeoPlanetPlace.BoundingBox
+                        //    });
+                        //}
                     }))
+                    //.ForMember(d => d.Countries, o => o.ResolveUsing(s =>
+                    //{
+                    //    if ((s.Locations.FirstOrDefault(y => y.Place.IsCountry) != null ? s.Locations.FirstOrDefault(y => y.Place.IsCountry).Place.IsCountry : false)
+                    //        || (s.Locations.FirstOrDefault(y => y.Place.IsRegion) != null ? s.Locations.FirstOrDefault(y => y.Place.IsRegion).Place.IsRegion : false)
+                    //        || (s.Locations.FirstOrDefault(y => y.Place.IsWater) != null ? s.Locations.FirstOrDefault(y => y.Place.IsWater).Place.IsWater : false)
+                    //        || (s.Locations.FirstOrDefault(y => y.Place.IsContinent) != null ? s.Locations.FirstOrDefault(y => y.Place.IsContinent).Place.IsContinent : false))
+                    //    //|| (s.Locations.SelectMany(x => x.Place.Ancestors).FirstOrDefault(x => x.Ancestor.IsRegion) != null ? s.Locations.SelectMany(x => x.Place.Ancestors).FirstOrDefault(x => x.Ancestor.IsRegion).Ancestor.IsRegion : false))
+                    //    {
+                    //        return s.Locations.Select(x => new ActivitySearchResultPlaces
+                    //            {
+                    //                //PlaceIsContinentOrRegion = (x.Place.IsContinent || x.Place.IsRegion || x.Place.IsWater) ? true : false,
+                    //                PlaceType = x.Place.IsContinent ? "continent" : x.Place.IsWater ? "water" : x.Place.IsRegion ? "region" : "country",
+                    //                Code = (x.Place.Ancestors.FirstOrDefault(y => y.Ancestor.IsContinent) != null) ? x.Place.Ancestors.FirstOrDefault(y => y.Ancestor.IsContinent).Ancestor.GeoNamesToponym.ContinentCode : x.Place.IsContinent ? x.Place.GeoNamesToponym.ContinentCode : null,
+                    //                Name = x.Place.OfficialName, //x.Place.IsCountry ? x.Place.OfficialName : x.Place.Ancestors.FirstOrDefault(y => y.Ancestor.IsCountry).Ancestor.OfficialName,
+                    //                Id = x.Place.RevisionId, //x.Place.IsCountry ? x.Place.RevisionId : x.Place.Ancestors.FirstOrDefault(y => y.Ancestor.IsCountry).Ancestor.RevisionId,
+                    //                Center = x.Place.IsWater ? new MapPointModel { Latitude = x.Place.Center.Latitude, Longitude = x.Place.Center.Longitude }
+                    //                : new MapPointModel { Latitude = x.Place.GeoPlanetPlace.Center.Latitude, Longitude = x.Place.GeoPlanetPlace.Center.Longitude }, //x.Place.IsCountry ? new MapPointModel { Latitude = x.Place.GeoPlanetPlace.Center.Latitude, Longitude = x.Place.GeoPlanetPlace.Center.Longitude }
+                    //                //: new MapPointModel { Latitude = x.Place.Ancestors.FirstOrDefault(y => y.Ancestor.IsCountry).Ancestor.GeoPlanetPlace.Center.Latitude, Longitude = x.Place.Ancestors.FirstOrDefault(y => y.Ancestor.IsCountry).Ancestor.GeoPlanetPlace.Center.Longitude },
+                    //                BoundingBox = null//x.Place.GeoPlanetPlace.BoundingBox //x.Place.IsCountry ? x.Place.GeoPlanetPlace.BoundingBox : x.Place.Ancestors.FirstOrDefault(y => y.Ancestor.IsCountry).Ancestor.GeoPlanetPlace.BoundingBox
+                    //            });
+                    //    }
+                    //    else
+                    //    {
+                    //        //Global
+                    //        return s.Locations.Select(x => new ActivitySearchResultPlaces
+                    //            {
+                    //                //PlaceIsContinentOrRegion = (x.Place.IsContinent || x.Place.IsRegion || x.Place.IsWater) ? true : false,
+                    //                PlaceType = "global",
+                    //                Code = (x.Place.Ancestors.FirstOrDefault(y => y.Ancestor.IsContinent) != null) ? x.Place.Ancestors.FirstOrDefault(y => y.Ancestor.IsContinent).Ancestor.GeoNamesToponym.ContinentCode : x.Place.IsContinent ? x.Place.GeoNamesToponym.ContinentCode : null,
+                    //                Name = x.Place.OfficialName, //x.Place.IsCountry ? x.Place.OfficialName : x.Place.Ancestors.FirstOrDefault(y => y.Ancestor.IsCountry).Ancestor.OfficialName,
+                    //                Id = x.Place.RevisionId, //x.Place.IsCountry ? x.Place.RevisionId : x.Place.Ancestors.FirstOrDefault(y => y.Ancestor.IsCountry).Ancestor.RevisionId,
+                    //                Center = new MapPointModel { Latitude = 0, Longitude = -180 }, //x.Place.IsCountry ? new MapPointModel { Latitude = x.Place.GeoPlanetPlace.Center.Latitude, Longitude = x.Place.GeoPlanetPlace.Center.Longitude }
+                    //                //: new MapPointModel { Latitude = x.Place.Ancestors.FirstOrDefault(y => y.Ancestor.IsCountry).Ancestor.GeoPlanetPlace.Center.Latitude, Longitude = x.Place.Ancestors.FirstOrDefault(y => y.Ancestor.IsCountry).Ancestor.GeoPlanetPlace.Center.Longitude },
+                    //                BoundingBox = null//x.Place.GeoPlanetPlace.BoundingBox //x.Place.IsCountry ? x.Place.GeoPlanetPlace.BoundingBox : x.Place.Ancestors.FirstOrDefault(y => y.Ancestor.IsCountry).Ancestor.GeoPlanetPlace.BoundingBox
+                    //            });
+                    //    }
+                    //}))
                     //.ForMember(d => d.Countries, o => o.ResolveUsing(s =>
                     //{
                     //    if ((s.Locations.FirstOrDefault(y => y.Place.IsCountry) != null ? s.Locations.FirstOrDefault(y => y.Place.IsCountry).Place.IsCountry : false)
