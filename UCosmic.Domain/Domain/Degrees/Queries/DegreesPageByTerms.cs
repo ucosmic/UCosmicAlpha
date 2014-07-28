@@ -20,6 +20,7 @@ namespace UCosmic.Domain.Degrees
         public int PageNumber { get; set; }
         public string CountryCode { get; set; }
         public string Keyword { get; set; }
+        public int? AncestorId { get; set; }
     }
 
     public class HandleDegreesPageByTermsQuery : IHandleQueries<DegreesPageByTerms, PagedQueryResult<Degree>>
@@ -48,6 +49,32 @@ namespace UCosmic.Domain.Degrees
             {
                 var establishment = _queries.Execute(new EstablishmentByDomain(query.EstablishmentDomain));
                 queryable = queryable.Where(x => x.Person.Affiliations.Any(y => y.IsDefault && y.EstablishmentId == establishment.RevisionId));
+            }
+
+            if (query.AncestorId.HasValue)
+            {
+                //queryable = queryable.Where(x => x.Activity.Person.Affiliations.Any(y => y.Establishment.Ancestors.Any(z => z.AncestorId == query.AncestorId.Value)));
+
+                queryable = queryable.Where(x =>
+                    x.Person.Affiliations.Any(y => y.IsDefault)
+                        // make sure person's default affiliation is not null
+                    &&
+                    ( // person must be affiliated with this establishment or one of its offspring under the default affiliation
+                        x.Person.Affiliations.Any(
+                            y =>
+                                (y.EstablishmentId == query.AncestorId.Value ||
+                                 y.Establishment.Ancestors.Any(z => z.AncestorId == query.AncestorId.Value))
+                                // ReSharper disable PossibleNullReferenceException
+                                &&
+                                (y.IsDefault ||
+                                 y.Establishment.Ancestors.Any(
+                                     z =>
+                                         z.AncestorId ==
+                                         x.Person.Affiliations.FirstOrDefault(a => a.IsDefault).EstablishmentId)))
+                        // ReSharper restore PossibleNullReferenceException
+                    )
+                );
+                //queryable = queryable.Where(x => x.Activity.Person.Affiliations.Any(y => y.EstablishmentId == query.EstablishmentId.Value));
             }
 
             if (!string.IsNullOrWhiteSpace(query.CountryCode))
