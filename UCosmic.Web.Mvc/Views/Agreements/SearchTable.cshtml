@@ -104,42 +104,94 @@
                     There are no results that match your search terms.
                 </p>
 
-                @* PAGER STATUS & LOADING SPINNER *@
-                <div class="group" style="margin: 1em 0;">
-                    <div class="on-left" data-bind="with: pager.output" style="height: 24px;">
-                        <div data-bind="visible: hasItems" style="display: none;">
-                            <strong>
-                                Showing <span data-bind="text: firstNumber"></span>
-                                <span data-bind="visible: hasManyItems">- <span data-bind="    text: lastNumber"></span></span>
-                                of <span data-bind="text: itemTotal"></span>
-                            </strong>
-                            <span data-bind="visible: hasManyPages">
-                                (page
-                                @*<span data-bind="text: pageNumber"></span>*@
-                                <select data-bind="value: $parent.pager.input.pageNumberText, options: $parent.pager.input.pageNumberOptions"
-                                        style="padding: 0; margin: 0; line-height: 16px; height: auto;">
-                                    <option>1</option>
+                <table style="width:100%">
+                    <tr>
+                        <td>
+                            @* PAGER STATUS & LOADING SPINNER *@
+                            <div style="height: 24px; margin: 10px 0 0 0;">
+                                <div class="on-left" data-bind="with: pager.output" style="height: 24px;">
+                                    <div data-bind="visible: hasItems" style="display: none;">
+                                        <strong>
+                                            Showing <span data-bind="text: firstNumber"></span>
+                                            <span data-bind="visible: hasManyItems">- <span data-bind="    text: lastNumber"></span></span>
+                                            of <span data-bind="text: itemTotal"></span>
+                                        </strong>
+                                        <span data-bind="visible: hasManyPages">
+                                            (page
+                                            @*<span data-bind="text: pageNumber"></span>*@
+                                            <select data-bind="value: $parent.pager.input.pageNumberText, options: $parent.pager.input.pageNumberOptions"
+                                                    style="padding: 0; margin: 0; line-height: 16px; height: auto;">
+                                                <option>1</option>
+                                            </select>
+                                            of <span data-bind="text: pageCount"></span>)
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="on-left" data-bind="visible: !pager.output.hasItems()">
+                                    <div data-bind="visible: spinner.isVisible">
+                                        <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
+                                        <strong>Loading search results...</strong>
+                                    </div>
+                                </div>
+                                <div class="on-right" data-bind="visible: pager.output.hasItems">
+                                    <div data-bind="visible: spinner.isVisible" style="display: none;">
+                                        <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
+                                        <strong>Loading search results...</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            @*<div class="field" data-bind="with: pager.input">
+                                    <button class="link" data-bind="click: prev, enable: prevAllowed">&lt;&lt; Previous</button>
+                                    |
+                                    <button class="link" data-bind="click: next, enable: nextAllowed">Next &gt;&gt;</button>
+                                </div>*@
+                            @* PREV & NEXT PAGER BUTTONS *@
+                            <div style="margin: 5px 0 0 0; width:180px; float:left;" class="field" data-bind="with: pager.input">
+                                <button class="link" data-bind="click: prev, enable: prevAllowed" disabled="disabled">&lt;&lt; Previous</button>
+                                |
+                                <button class="link" data-bind="click: next, enable: nextAllowed" disabled="disabled">Next &gt;&gt;</button>
+                            </div>
+                        </td>
+                        <td style="vertical-align: top;" align="right">
+                            <div class="field"
+                                 style=" margin: 10px 0 0 0;">
+                                <select class="side" data-bind="value: orderBy">
+                                    <option value="start-desc">Sort by start date - newest first</option>
+                                    <option value="start-asc">Sort by start date - oldest first</option>
+                                    @if (@ViewBag.AgreementsVisibility != AgreementVisibility.Public)
+                                    {
+                                        <option value="expires-desc">Sort by expiration - newest first</option>
+                                        <option value="expires-asc">Sort by expiration - oldest first</option>
+                                    }
+                                    <option value="type-asc">Sort by agreement type A-Z</option>
+                                    <option value="type-desc">Sort by agreement type Z-A</option>
+                                    @if (@ViewBag.AgreementsVisibility == AgreementVisibility.Private)
+                                    {
+                                        <option value="status-asc">Sort by agreement status A-Z</option>
+                                        <option value="status-desc">Sort by agreement status Z-A</option>
+                                    }
+                                    <option value="country-asc">Sort by country A-Z</option>
+                                    <option value="country-desc">Sort by country Z-A</option>
+                                    <option value="partner-asc">Sort by partner A-Z</option>
+                                    <option value="partner-desc">Sort by partner Z-A</option>
                                 </select>
-                                of <span data-bind="text: pageCount"></span>)
-                            </span>
-                        </div>
-                    </div>
-                    <div class="on-left" data-bind="visible: !pager.output.hasItems()">
-                        <div data-bind="visible: spinner.isVisible">
-                            <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
-                            <strong>Loading search results...</strong>
-                        </div>
-                    </div>
-                    <div class="on-right" data-bind="visible: pager.output.hasItems">
-                        <div data-bind="visible: spinner.isVisible" style="display: none;">
-                            <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
-                            <strong>Loading search results...</strong>
-                        </div>
-                    </div>
-                </div>
-
+                            </div>
+                            <div class="field"
+                                 style="margin:4px 0;">
+                                <select class="side" data-bind="value: pager.input.pageSizeText">
+                                    <option value="10">Show 10 results per page</option>
+                                    <option value="20">Show 20 results per page</option>
+                                    <option value="50">Show 50 results per page</option>
+                                    <option value="100">Show 100 results per page</option>
+                                    <option value="250">Show 250 results per page</option>
+                                </select>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                
                 @* RESULTS *@
-                <div data-bind="visible: pager.output.hasItems" style="display: none;">
+                <div data-bind="visible: pager.output.hasItems" style="display: none; margin-top: -10px;">
 
                     @* TABLE *@
                     <div data-bind="jQuery: '$results'">
@@ -177,7 +229,7 @@
                                             <span style="font-size: 14px; display: block; margin: @badgeMargin;">
                                                 @if (ViewBag.AgreementsVisibility == AgreementVisibility.Private)
                                                 {
-                                                <span style="font-size: 10px; margin: 0 4px 0 0;" class="badge light-transparent" data-bind="text: status"></span>
+                                                    <span style="font-size: 10px; margin: 0 4px 0 0;" class="badge light-transparent" data-bind="text: status"></span>
                                                 }
                                                 <span data-bind="text: type" style="vertical-align: middle;">&nbsp;</span>
                                             </span>
@@ -185,8 +237,8 @@
                                                 <span data-bind="text: startsOnFormatted" style="vertical-align: middle;">&nbsp;</span>
                                                 @if (ViewBag.AgreementsVisibility != AgreementVisibility.Public)
                                                 {
-                                                <span style="vertical-align: middle;">-</span>
-                                                <span data-bind="text: expiresOnFormatted" style="vertical-align: middle;"></span>
+                                                    <span style="vertical-align: middle;">-</span>
+                                                    <span data-bind="text: expiresOnFormatted" style="vertical-align: middle;"></span>
                                                 }
                                             </span>
                                         </a>
@@ -279,7 +331,7 @@
             <!-- /ko -->
             @if (User.IsInAnyRole(RoleName.AgreementManagers))
             {
-                <div style="height: 30px;">
+                <div style="height: 30px; margin-top: 12px;">
                     <a href="@Url.Action(MVC.Agreements.New())" id="searchSideBarAddNew2" class="button">
                         <i class="green plus" style="width: 16px; height: 16px; background-size: contain"></i>
                         <span class="text" style="vertical-align: initial;">Add a new agreement</span>
@@ -297,7 +349,7 @@
                         <li class="static square-bottom">
                             <div class="group no-link">
                                 <div class="arrow"></div>
-                                <span class="text">Search options</span>
+                                <span class="text">Filter options</span>
                             </div>
                             @*}*@
                             <div class="content" data-bind="visible: isTableLens, with: table" style="display: none;">
@@ -305,42 +357,6 @@
                                     <select class="side" data-bind="value: countryCode, options: countryOptions, optionsText: 'name', optionsValue: 'code'">
                                         <option value="any">[Loading...]</option>
                                     </select>
-                                </div>
-                                <div class="field">
-                                    <select class="side" data-bind="value: orderBy">
-                                        <option value="start-desc">Sort by start date - newest first</option>
-                                        <option value="start-asc">Sort by start date - oldest first</option>
-                                        @if (@ViewBag.AgreementsVisibility != AgreementVisibility.Public)
-                                        {
-                                            <option value="expires-desc">Sort by expiration - newest first</option>
-                                            <option value="expires-asc">Sort by expiration - oldest first</option>
-                                        }
-                                        <option value="type-asc">Sort by agreement type A-Z</option>
-                                        <option value="type-desc">Sort by agreement type Z-A</option>
-                                        @if (@ViewBag.AgreementsVisibility == AgreementVisibility.Private)
-                                        {
-                                            <option value="status-asc">Sort by agreement status A-Z</option>
-                                            <option value="status-desc">Sort by agreement status Z-A</option>
-                                        }
-                                        <option value="country-asc">Sort by country A-Z</option>
-                                        <option value="country-desc">Sort by country Z-A</option>
-                                        <option value="partner-asc">Sort by partner A-Z</option>
-                                        <option value="partner-desc">Sort by partner Z-A</option>
-                                    </select>
-                                </div>
-                                <div class="field">
-                                    <select class="side" data-bind="value: pager.input.pageSizeText">
-                                        <option value="10">Show 10 results per page</option>
-                                        <option value="20">Show 20 results per page</option>
-                                        <option value="50">Show 50 results per page</option>
-                                        <option value="100">Show 100 results per page</option>
-                                        <option value="250">Show 250 results per page</option>
-                                    </select>
-                                </div>
-                                <div class="field" data-bind="with: pager.input">
-                                    <button class="link" data-bind="click: prev, enable: prevAllowed">&lt;&lt; Previous</button>
-                                    |
-                                    <button class="link" data-bind="click: next, enable: nextAllowed">Next &gt;&gt;</button>
                                 </div>
                             </div>
                             <div class="content" data-bind="visible: isMapLens, with: map">
