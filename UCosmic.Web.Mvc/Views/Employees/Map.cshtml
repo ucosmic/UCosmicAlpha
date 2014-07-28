@@ -81,7 +81,7 @@
                     </header>
                 </div>
                 <div class="on-right" style="margin-top: 8px;">
-                    <a data-bind="click: resetSearch" class="restore-underline">Reset search</a>
+                    <a data-bind="click: resetSearch" class="restore-underline">Reset filters</a>
                 </div>
             </div>
 
@@ -105,45 +105,116 @@
 
             @* PAGER STATUS *@
             <div style="height: 24px; margin-top: 8px; display: none;" data-bind="visible: loadingSpinner.isVisible">
-                
+
                 <span style="margin-left: 12px;">
                     <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
                     <strong>Loading...</strong>
                 </span>
             </div>
 
-            <div style="height: 24px; margin: 8px 0 0 0;">
-                <strong>
-                    Showing <span data-bind="text: searchMap.activityCount">?</span> activities.
-                </strong>
+            @* TOTALS SUMMARY *@
+            <div style="margin: 16px 0 0 0; height: 30px; font-size: 20px;">
+                Showing
+                <strong data-bind="text: searchMap.activityCount" style="font-size: 24px;">?</strong>
+                <span data-bind="visible: searchMap.activityCount() == 1" style="display: none;">activity</span>
+                <span data-bind="visible: searchMap.activityCount() != 1">activities</span>
+                in
+                <strong data-bind="text: searchMap.locationCount" style="font-size: 24px;">?</strong>
+                <span data-bind="visible: searchMap.locationCount() == 1" style="display: none;">location.</span>
+                <span data-bind="visible: searchMap.locationCount() != 1">locations.</span>
             </div>
 
-                <!-- ko stopBinding: true -->
-                @* MAP LENS CONTEXTUAL TOTALS SUMMARY *@
-                <div id="searchMap" style="margin: 0 0 8px 0;">
-                    <div style="line-height: 28px;">
-                        Numbers displayed represent known faculty and staff activity location sites.
-                    </div>
-                    @*<div style="color:gray; font-size:.8em;" data-bind="visible: regionCount().length > 0, text: regionCount">
-
+            @*<div style="height: 24px; margin: 8px 0 0 0;">
+                    <strong>
+                        Showing <span data-bind="text: searchMap.activityCount">?</span> activities.
+                    </strong>
                 </div>*@
-                    <div data-bind="visible: continentCode() != 'any' || countryCode() != 'any'" style="line-height: 16px;">
-                        @*<strong data-bind="text: status.count">?</strong>
-                    <span data-bind="visible: status.count() == 1" style="display: none;">activity</span>
-                    <span data-bind="visible: status.count() != 1">activities</span>*@
-
-                        <span style="display: inline-block; background-color: #ddd; padding: 4px 8px; border-radius: 4px; border: solid 1px #999;">
-                            <strong data-bind="text: continentName" style="">?</strong>
-                            <img src="~/images/icons/closer/closer-16-dark.png" title="Remove this search filter" alt="Remove this search filter"
-                                 style="cursor: pointer; vertical-align: middle;" data-bind="click: clearFilter" />
-                        </span>
+            @* MAP LENS CONTEXTUAL TOTALS SUMMARY *@
+            <div style="position:relative; top:0px; height: 0px; z-index: 1;">
+                <div style="
+                    background-color: white;
+                    padding: 2px;
+                    border: solid 2px gray;
+                    display: none;
+                    border-radius: 5px;
+                    color: black;"
+                     data-bind="visible: infoIsOpen">
+                    <div style="height:24px; padding: 4px 8px 0">
+                        <div style="float:left;"><strong>Map Information</strong></div>
+                        <div style="float:right; background-color:gray; padding:2px; border-radius:2px; cursor:pointer;" data-bind="click: infoClose">X</div>
+                    </div>
+                    <div style="padding: 4px 8px;">
+                        The map displays faculty and staff activity information tagged to international location sites.
+                        The default map view displays all USF System activities aggregated at the continental and oceanic levels.
+                        Refining a search, by keyword or a selected filter, displays a more nuanced view of activities organized by continent, region, country and/or body of water, in addition to a general “global” category.
+                        Activity location site circles are color coded according to the key below.
+                        A single activity may be tagged in more than one location, although the preferred identification is by individual country or body of water.
+                        Mouse clicking on a colored circle will display a filtered table of the individual activities referenced on the map.
+                        Refining a search from the table view will also change the activities displayed on the map.
                     </div>
                 </div>
+            </div>
+            <table style="border: none; border-collapse: collapse; width: 100%;" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td style="width: 95%;">
+                        <div style="line-height: 28px;">
+                            Numbers displayed represent known activity location sites.
+                        </div>
+                    </td>
+                    <td style="text-align: right;">
+                        <div class="field" style="margin: 0;">
+                            <input data-bind="click: infoOpen" type="button" value="Map Information" title="Click here for map information." style="margin-right: 0;" />
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            <!-- ko stopBinding: true -->
+            <div id="searchMap" style="margin: 0 0 8px 0;">
 
-                <div id="google_map_canvas" style="height: 500px; cursor: inherit;">
+                @*<div style="color:gray; font-size:.8em;" data-bind="visible: regionCount().length > 0, text: regionCount">
+
+                    </div>*@
+                <div data-bind="visible: continentCode() != 'any' || countryCode() != 'any'" style="line-height: 16px;">
+                    @*<strong data-bind="text: status.count">?</strong>
+                        <span data-bind="visible: status.count() == 1" style="display: none;">activity</span>
+                        <span data-bind="visible: status.count() != 1">activities</span>*@
+
+                    <span style="display: inline-block; background-color: #ddd; padding: 4px 8px; border-radius: 4px; border: solid 1px #999;">
+                        <strong data-bind="text: continentName" style="">?</strong>
+                        <img src="~/images/icons/closer/closer-16-dark.png" title="Remove this search filter" alt="Remove this search filter"
+                             style="cursor: pointer; vertical-align: middle;" data-bind="click: clearFilter" />
+                    </span>
                 </div>
-                <!-- /ko -->
-                <div style="position:relative; top:-40px;">
+            </div>
+
+            <div id="google_map_canvas" style="height: 500px; cursor: inherit;">
+            </div>
+            <!-- /ko -->
+            <div style="width: 100%;
+                    margin: 4px;
+                    color: black;">
+                <span style="height:24px; ">
+                    <div style="width:10px; background-color: #51524F; float:left;">&nbsp;</div>
+                    <div data-bind="css: { inactive: searchMap.placeFilter() == 'waters' }" style="float:left; margin: 0 16px 0 4px;">Continents</div>
+                </span>
+                <span style="height:24px;">
+                    <div style="width:10px; background-color: #5F6CFC; float:left;">&nbsp;</div>
+                    <div data-bind="css: { inactive: (searchMap.continentCode() != 'any' && searchMap.placeFilter() != 'waters') }" style="float:left; margin: 0 16px 0 4px;">Bodies of water</div>
+                </span>
+                <span style="height:24px;">
+                    <div style="width:10px; background-color: #5DC350; float:left;">&nbsp;</div>
+                    <div data-bind="css: { inactive: searchMap.placeFilter() == 'continents' || searchMap.placeFilter() == 'waters' }" style="float:left;margin: 0 16px 0 4px;">Countries</div>
+                </span>
+                <span style="height:24px;">
+                    <div style="width:10px; background-color: #F57169; float:left;">&nbsp;</div>
+                    <div data-bind="css: { inactive: searchMap.placeFilter() == 'continents' || searchMap.placeFilter() == 'waters' || searchMap.continentCode() != 'any' }" style="float:left; margin: 0 16px 0 4px;">Regions</div>
+                </span>
+                <span style="height:24px;">
+                    <div style="width:10px; background-color: #E9AE4F; float:left;">&nbsp;</div>
+                    <div data-bind="css: { inactive: searchMap.placeFilter() == 'continents' || searchMap.placeFilter() == 'waters' || searchMap.continentCode() != 'any' }" style="float:left; margin-left:4px;">Global</div>
+                </span>
+            </div>
+            @*<div style="position:relative; top:-40px;">
                     <div style="width: 24px;
                     background-color: white;
                     float: right;
@@ -191,9 +262,9 @@
                             <div data-bind="css: { inactive: searchMap.placeFilter() == 'continents' || searchMap.placeFilter() == 'waters' || searchMap.continentCode() != 'any' }" style="float:left; margin-left:4px;">Global</div>
                         </div>
                     </div>
-                </div>
+                </div>*@
 
-            </div>
+        </div>
 
         <aside class="on-right from-top" data-fixed-scroll="root">
             <div data-fixed-scroll="anchor"></div>
