@@ -51,6 +51,7 @@ declare module Degrees.ApiModels {
         keyword?: string;
         orderBy?: string;
         countryCode?: string;
+        ancestorId?: number;
     }
 
     export interface SearchResult {
