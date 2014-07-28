@@ -5,6 +5,15 @@
 @* ACTIVITIES *@
 <section class="content fixed to-top">
     <div>
+        @if (User.Identity.Name.Equals(ViewBag.Username, StringComparison.OrdinalIgnoreCase))
+        {
+            <div>
+                <a href="@Url.Action(MVC.Activities.Create())" class="button">
+                    <i class="green plus" style="width: 16px; height: 16px; background-size: contain"></i>
+                    <span class="text" style="vertical-align: initial;">Add a new activity</span>
+                </a>
+            </div>
+        }
         @* KEYWORD TEXT BOX *@
         <div class="field group">
             <div class="on-left">
@@ -27,47 +36,80 @@
         <div class="group" style="margin: 1em 0;">
             @if (Model != null && Model.Items.Any())
             {
-                <div class="on-left" style="height: 24px;">
-                    <div>
-                        <strong>
-                            Showing <span>@Model.FirstNumber</span>
-                            @if (@Model.PageCount > 0)
-                            {
-                                <span>- <span>@Model.LastNumber</span></span>
-                            }
-                            of <span>@Model.ItemTotal</span>
-                        </strong>
-                        @if (@Model.PageCount > 0)
-                        {
-                            <span>
-                                (page
-                                <select name="pageNumber" data-bind="value: pageNumber"
-                                        style="padding: 0; margin: 0; line-height: 16px; height: auto;">
-                                    @for (int i = 0; i < Model.PageCount; i++)
+                <table style="width:100%; margin-bottom:8px;">
+                    <tr>
+                        <td>
+                            <div style=" height: 24px; margin: 0;">
+                                <div>
+                                    <strong>
+                                        Showing <span>@Model.FirstNumber</span>
+                                        @if (@Model.PageCount > 0)
+                                        {
+                                            <span>- <span>@Model.LastNumber</span></span>
+                                        }
+                                        of <span>@Model.ItemTotal</span>
+                                    </strong>
+                                    @if (@Model.PageCount > 0)
                                     {
-                                        <option value="@(i + 1)">@(i + 1)</option>
+                                        <span>
+                                            (page
+                                            <select name="pageNumber" data-bind="value: pageNumber"
+                                                    style="padding: 0; margin: 0; line-height: 16px; height: auto;">
+                                                @for (int i = 0; i < Model.PageCount; i++)
+                                                {
+                                                    <option value="@(i + 1)">@(i + 1)</option>
+                                                }
+                                            </select>
+                                            of <span>@Model.PageCount</span>)
+                                        </span>
                                     }
+                                </div>
+                            </div>
+                            <div style="margin: 4px 0 8px 0; width:180px; float:left;" class="field">
+                                <button class="link" data-bind="click: prevPage, enable: prevEnabled" disabled="disabled">&lt;&lt; Previous</button>
+                                |
+                                <button class="link" data-bind="click: nextPage, enable: nextEnabled" disabled="disabled">Next &gt;&gt;</button>
+                                <input type="hidden" value="1" data-bind="value: pageNumber" />
+                            </div>
+                            <div style="margin: 4px 0 8px 0; display: none; float:left" data-bind="visible: loadingSpinner.isVisible">
+                                <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
+                                <strong>Loading...</strong>
+                            </div>
+                        </td>
+                        <td style="vertical-align: top;" align="right">
+
+                            <div class="field"
+                                 style=" margin: 0;">
+                                <select class="side" name="orderBy" data-bind="value: orderBy, enabled: optionsEnabled">
+                                    <option value="recency-desc">Sort with most recent at top</option>
+                                    <option value="recency-asc">Sort with most recent at bottom</option>
+                                    <option value="title-asc">Sort by title A-Z</option>
+                                    <option value="title-desc">Sort by title Z-A</option>
+                                    <option value="location-asc">Sort by location A-Z</option>
+                                    <option value="location-desc">Sort by location Z-A</option>
+                                    <option value="type-asc">Sort by type A-Z</option>
+                                    <option value="type-desc">Sort by type Z-A</option>
                                 </select>
-                                of <span>@Model.PageCount</span>)
-                            </span>
-                        }
-                    </div>
-                </div>
+                            </div>
+                            <div class="field"
+                                 style="margin:4px 0;">
+                                <select name="pageSize" class="side" data-bind="value: pageSize, enabled: optionsEnabled">
+                                    <option value="10">Show 10 results per page</option>
+                                    <option value="20">Show 20 results per page</option>
+                                    <option value="50">Show 50 results per page</option>
+                                    <option value="100">Show 100 results per page</option>
+                                    <option value="250">Show 250 results per page</option>
+                                </select>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
             }
         </div>
-        @if (User.Identity.Name.Equals(ViewBag.Username, StringComparison.OrdinalIgnoreCase))
-        {
-            <div>
-                <a href="@Url.Action(MVC.Activities.Create())" class="button">
-                    <i class="green plus" style="width: 16px; height: 16px; background-size: contain"></i>
-                    <span class="text" style="vertical-align: initial;">Add a new activity</span>
-                </a>
-            </div>
-        }
         @if (Model != null && Model.Items.Any())
         {
             @* RESULTS *@
-            <div>
+            <div style="margin: -20px 0;">
                 @* TABLE *@
                 <div>
                     <table class="data">

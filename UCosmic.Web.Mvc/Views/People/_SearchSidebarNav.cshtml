@@ -5,7 +5,7 @@
         <li class="static square-bottom" style="margin-bottom: 0;">
             <div class="group no-link">
                 <span class="arrow"></span>
-                <span class="text">Search Options</span>
+                <span class="text">Filter Options</span>
             </div>
         </li>
         <li class="static square-bottom">
@@ -17,38 +17,11 @@
                         <option>[Loading...]</option>
                     </select>
                 </div>
-                <div class="field">
-                    <select class="side" name="orderBy" data-bind="value: orderBy, enabled: optionsEnabled">
-                        <option value="recency-desc">Sort with most recent at top</option>
-                        <option value="recency-asc">Sort with most recent at bottom</option>
-                        <option value="title-asc">Sort by title A-Z</option>
-                        <option value="title-desc">Sort by title Z-A</option>
-                        <option value="location-asc">Sort by location A-Z</option>
-                        <option value="location-desc">Sort by location Z-A</option>
-                        <option value="type-asc">Sort by type A-Z</option>
-                        <option value="type-desc">Sort by type Z-A</option>
-                    </select>
-                </div>
-                <div class="field">
-                    <select name="pageSize" class="side" data-bind="value: pageSize, enabled: optionsEnabled">
-                        <option value="10">Show 10 results per page</option>
-                        <option value="20">Show 20 results per page</option>
-                        <option value="50">Show 50 results per page</option>
-                        <option value="100">Show 100 results per page</option>
-                        <option value="250">Show 250 results per page</option>
-                    </select>
-                </div>
                 <div class="field" style="display: none;">
                     <select class="side">
                         <option value="table">Table</option>
                         <option value="list">List</option>
                     </select>
-                </div>
-                <div class="field">
-                    <button class="link" data-bind="click: prevPage, enable: prevEnabled" disabled="disabled">&lt;&lt; Previous</button>
-                    |
-                    <button class="link" data-bind="click: nextPage, enable: nextEnabled" disabled="disabled">Next &gt;&gt;</button>
-                    <input type="hidden" value="1" data-bind="value: pageNumber" />
                 </div>
             </div>
         </li>
