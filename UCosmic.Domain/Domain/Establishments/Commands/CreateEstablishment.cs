@@ -248,7 +248,7 @@ namespace UCosmic.Domain.Establishments
                 _mailSender.Send(email);// remove Tim after code verification
                 email = EmailUnverified("Claudia.Hernandez@suny.edu", "Claudia", establishment.OfficialName);
                 _mailSender.Send(email);
-                email = EmailUnverified("Rebecca.Smolar@levininstitute.org", "Rebecca", establishment.OfficialName);
+                email = EmailUnverified("info@ucosmic.org", "Info", establishment.OfficialName);
                 _mailSender.Send(email);
             }
 
