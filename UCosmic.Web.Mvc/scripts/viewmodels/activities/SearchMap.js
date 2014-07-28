@@ -1,4 +1,4 @@
-var Activities;
+﻿var Activities;
 (function (Activities) {
     (function (ViewModels) {
         (function (DataGraphPivotTest) {
@@ -40,6 +40,7 @@ var Activities;
                 this.placeNames = ko.observable("");
                 this.placeFilter = ko.observable("");
                 this.tableUrl = ko.observable();
+                this.affiliationsLoaded = false;
                 this.establishmentData = new App.DataCacher(function () {
                     return _this._loadEstablishmentData();
                 });
@@ -52,11 +53,24 @@ var Activities;
                 this.isClearUntilDisabled = ko.computed(function () {
                     return _this.until() ? false : true;
                 });
-                this.keyIsOpen = ko.observable(false);
+                this.infoIsOpen = ko.observable(false);
                 var searchOptions = JSON.parse(sessionStorage.getItem(ViewModels.SearchMap.SearchOptions));
+
+                if (sessionStorage.getItem('isMapClick') == "1") {
+                    if (searchOptions.placeNames.indexOf(" &")) {
+                        searchOptions.placeNames = searchOptions.placeNames.substring(0, searchOptions.placeNames.lastIndexOf(" &"));
+                        searchOptions.placeIds.pop();
+                    } else {
+                        searchOptions.placeNames = "";
+                        searchOptions.placeIds.pop();
+                    }
+                    sessionStorage.setItem(ViewModels.SearchMap.SearchOptions, JSON.stringify(searchOptions));
+                }
+                sessionStorage.setItem("isMapClick", "0");
 
                 if (searchOptions) {
                     this.settings.input.activityTypeIds = searchOptions.activityTypeIds;
+                    this.settings.input.placeNames = searchOptions.placeNames;
                     this.placeNames(searchOptions.placeNames);
                     this.placeFilter(searchOptions.placeFilter);
                     this.settings.input.since = searchOptions.Since;
@@ -102,6 +116,9 @@ var Activities;
                     parentId = this.settings.tenantId;
                 }
                 var previousParentId = 0;
+                this.affiliationsLoaded = true;
+
+                this.loadingSpinner.stop();
                 while (true) {
                     var options = Enumerable.From(response).Where("x => x.parentId==" + parentId).Select("x =>  {value: x.id, text: x.officialName}").OrderBy(function (x) {
                         return x.rank;
@@ -215,10 +232,18 @@ var Activities;
             };
 
             MapSearch.prototype.applyBindings = function (element) {
+                var _this = this;
                 ko.applyBindings(this, element);
                 kendo.init($(element));
                 this._applyKendo();
                 this._applySubscriptions();
+
+                this.$form.submit(function (event) {
+                    _this.loadingSpinner.start();
+                });
+                $('a').click(function () {
+                    _this.loadingSpinner.start();
+                });
             };
 
             MapSearch.prototype._applyKendo = function () {
@@ -429,12 +454,12 @@ var Activities;
                 this.until('');
             };
 
-            MapSearch.prototype.keyOpen = function () {
-                this.keyIsOpen(true);
+            MapSearch.prototype.infoOpen = function () {
+                this.infoIsOpen(true);
             };
 
-            MapSearch.prototype.keyClose = function () {
-                this.keyIsOpen(false);
+            MapSearch.prototype.infoClose = function () {
+                this.infoIsOpen(false);
             };
             return MapSearch;
         })();

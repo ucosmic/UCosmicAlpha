@@ -60,12 +60,25 @@ module Activities.ViewModels {
         placeNames = ko.observable<string>("");
         placeFilter = ko.observable<string>("");
         tableUrl = ko.observable();
+        affiliationsLoaded = false;
 
         constructor(public settings: SearchTestSettings, searchMapData) {
             //window.sessionStorage.setItem("test", JSON.stringify(this.settings.output));
             //this.pager.apply(this.settings.output);
             var searchOptions = JSON.parse(sessionStorage.getItem(SearchMap.SearchOptions));
 
+            if (sessionStorage.getItem('isMapClick') == "1") {
+                if (searchOptions.placeNames.indexOf(" &")) {
+                    searchOptions.placeNames = searchOptions.placeNames.substring(0, searchOptions.placeNames.lastIndexOf(" &"));
+                    searchOptions.placeIds.pop();
+                } else {
+                    searchOptions.placeNames = "";
+                    searchOptions.placeIds.pop();
+                }
+                sessionStorage.setItem(SearchMap.SearchOptions, JSON.stringify(searchOptions));
+                //SearchMap.updateSession(searchOptions);
+            }
+            sessionStorage.setItem("isMapClick", "0");
             //instead of doing this lets go ahead and make the sessionStorage.setItem(SearchMap.SearchOptions, JSON.stringify(searchOptions)); in advanced table search.
             //if (!searchOptions) {
             //    searchOptions = settings.input;
@@ -82,6 +95,7 @@ module Activities.ViewModels {
             //}
             if(searchOptions){
                 this.settings.input.activityTypeIds = searchOptions.activityTypeIds;
+                this.settings.input.placeNames = searchOptions.placeNames;
                 this.placeNames(searchOptions.placeNames);
                 this.placeFilter(searchOptions.placeFilter);
                 this.settings.input.since = searchOptions.Since;
@@ -130,6 +144,7 @@ module Activities.ViewModels {
             this.searchMap.applyBindings(document.getElementById('searchMap'));
 
             this._loadTenancyData();
+           
         }
 
 
@@ -145,6 +160,9 @@ module Activities.ViewModels {
                 parentId = this.settings.tenantId;
             }
             var previousParentId = 0;
+            this.affiliationsLoaded = true;
+
+            this.loadingSpinner.stop();
             while (true) {
                 var options: any = Enumerable.From(response)
                     .Where("x => x.parentId==" + parentId)
@@ -175,7 +193,6 @@ module Activities.ViewModels {
                     return;
                 }
             }
-
         }
 
         private _loadEstablishmentData(): JQueryPromise<Establishments.ApiModels.ScalarEstablishment[]> {
@@ -259,9 +276,10 @@ module Activities.ViewModels {
                             sessionStorage.setItem('EmployeeSummaryEstablishmentId', myThis.selectedEstablishment().toString());
 
                             myThis._submitForm()
-                    })
-                    //deferred.resolve(tenants);
-                    if (childData.length) this.hasTenancyData(true);
+                        })
+                        //deferred.resolve(tenants);
+                        if (childData.length) this.hasTenancyData(true);
+                        
                     })
                     .fail((xhr: JQueryXHR): void => {
                         App.Failures.message(xhr, 'while trying to load institution organizational data.', true);
@@ -278,6 +296,13 @@ module Activities.ViewModels {
             kendo.init($(element));
             this._applyKendo();
             this._applySubscriptions();
+
+            this.$form.submit((event) => {
+                this.loadingSpinner.start();
+            });
+            $('a').click(() => {
+                this.loadingSpinner.start();
+            });
         }
 
         stopAutocompleteInfiniteLoop: boolean;
@@ -565,16 +590,17 @@ module Activities.ViewModels {
 
         //#endregion
 
-        //#region map key
 
-        keyIsOpen = ko.observable<boolean>(false);
+        //#region map info
 
-        keyOpen() {
-            this.keyIsOpen(true);
+        infoIsOpen = ko.observable<boolean>(false);
+
+        infoOpen() {
+            this.infoIsOpen(true);
         }
 
-        keyClose() {
-            this.keyIsOpen(false);
+        infoClose() {
+            this.infoIsOpen(false);
         }
         //#endregion
     }
