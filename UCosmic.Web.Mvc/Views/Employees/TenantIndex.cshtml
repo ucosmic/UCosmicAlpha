@@ -145,6 +145,12 @@
                     </div>
                 </div>
             </div>
+            <div style="height: 24px; margin-top: 8px; display: none;" data-bind="visible: loadingSpinner.isVisible">
+                <span style="margin-left: 12px;">
+                    <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
+                    <strong>Loading...</strong>
+                </span>
+            </div>
 
             @* GEOCHART *@
             <div id="geochart_box" data-bind="css: { 'keep-aspect-ratio-480': settings.geoChart.keepAspectRatio }">
