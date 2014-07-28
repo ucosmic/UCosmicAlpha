@@ -43,6 +43,7 @@ module Activities.ViewModels {
         keyword;
         regionCount = ko.observable<string>('');
         activityCount = ko.observable<string>('?');
+        locationCount = ko.observable<string>('?');
 
         //#endregion
 
@@ -75,7 +76,9 @@ module Activities.ViewModels {
         }
 
         createTableUrl(search) {
-
+            if (!this.parentObject.tableUrl()  || this.parentObject.tableUrl().indexOf('?') == 0) {
+                this.parentObject.tableUrl(location.href.replace('map', 'table') + '?');
+            }
             var tempUrl: string = this.parentObject.tableUrl();
             tempUrl = tempUrl.substr(0, tempUrl.indexOf("?"))
             tempUrl += "?" + $.param(search)
@@ -116,20 +119,21 @@ module Activities.ViewModels {
             this.parentObject = parentObject;
             this.parentObject.tableUrl(location.href.replace('map', 'table'));
             this.ancestorId = output.input.ancestorId ? output.input.ancestorId : "null";
-            this.keyword = output.input.keyword ? output.input.keyword : "null";
+            //this.keyword = output.input.keyword ? output.input.keyword : "null";
             if (!output.input.activityTypeIds) {
                 output.input.activityTypeIds = [];
                 $.each(output.activityTypes, (i: number, type: any): void => {
                     output.input.activityTypeIds.push(type.activityTypeId);
                 });
             }
+
+
             this._ConstructMapData(output.input);
         }
         placeFilter = ko.observable<string>();
         private _ConstructMapData(input?) {
 
             var searchOptions = sessionStorage.getItem(SearchMap.SearchOptions);
-
 
             var continentsData;
             var watersData;
@@ -151,7 +155,8 @@ module Activities.ViewModels {
             //load the placefilter one first
             var dataDeferred = $.Deferred();
             var placeFilter = input.placeFilter;
-            if ((this.parentObject.placeNames() || this.parentObject.keyword()) && this.continentCode().toLowerCase() != 'water') {
+            if ((input.placeNames || input.keyword) && this.continentCode().toLowerCase() != 'water') {
+                //if ((this.parentObject.placeNames() || this.parentObject.keyword()) && this.continentCode().toLowerCase() != 'water') {
                 placeFilter = 'countries';
                 input.placeFilter = placeFilter;
             } else if (this.continentCode().toLowerCase() == 'water') {
@@ -177,6 +182,7 @@ module Activities.ViewModels {
                             this._getWatersData(input, watersData, dataDeferred);
                             $.when(dataDeferred).then(() => {
                                 this.dataDefered.resolve();
+                                //this.loadSummary();
                             //    dataDeferred = $.Deferred();
                             //    this._getRegionsData(input, regionsData);
                             });
@@ -192,6 +198,7 @@ module Activities.ViewModels {
                             this._getWatersData(input, watersData, dataDeferred);
                             $.when(dataDeferred).then(() => {
                                 this.dataDefered.resolve();
+                                //this.loadSummary();
                             //    dataDeferred = $.Deferred();
                             //    this._getRegionsData(input, regionsData);
                             });
@@ -207,6 +214,7 @@ module Activities.ViewModels {
                             this._getCountriesData(input, countriesData, dataDeferred);
                             $.when(dataDeferred).then(() => {
                                 this.dataDefered.resolve();
+                                //this.loadSummary();
                             //    dataDeferred = $.Deferred();
                             //    this._getRegionsData(input, regionsData);
                             });
@@ -284,11 +292,13 @@ module Activities.ViewModels {
             if (data) {
                 dataDeferred.resolve();
                 this._countriesResponse = ko.observableArray(JSON.parse(data));
-                if (this._countriesResponse().length > 0) {
-                    this.activityCount(this._countriesResponse()[0].activityCount);
-                } else {
-                    this.activityCount('0');
-                }
+                //if (this._countriesResponse().length > 0) {
+                //    this.activityCount(this._countriesResponse()[0].activityCount);
+                //    this.locationCount(this._countriesResponse().length.toString());
+                //} else {
+                //    this.activityCount('0');
+                //    this.locationCount('0');
+                //}
                 if (input.placeFilter == 'countries') {
                     this._map.ready().done((): void => {
                         this._load(input.placeFilter);
@@ -311,11 +321,13 @@ module Activities.ViewModels {
                     .done((response: any): void => {
                         dataDeferred.resolve();
                         this._countriesResponse = ko.observableArray(response);
-                        if (response.length > 0) {
-                            this.activityCount(response[0].activityCount);
-                        }else{
-                            this.activityCount('0');
-                        }
+                        //if (response.length > 0) {
+                        //    this.activityCount(response[0].activityCount);
+                        //    this.locationCount(response[0].length.toString());
+                        //} else {
+                        //    this.activityCount('0');
+                        //    this.locationCount('0');
+                        //}
                         if (placeFilter == 'countries') {
                             this._map.ready().done((): void => {
                                 this._load(placeFilter);
@@ -514,7 +526,7 @@ module Activities.ViewModels {
             var activityMapData;
             var stringActivityMapDataSearch = sessionStorage.getItem('activityMapDataSearch');
 
-            if (stringActivityMapDataSearch == this.ancestorId + this.keyword) {
+            if (stringActivityMapDataSearch == this.ancestorId + input.keyword) {
                 stringActivityMapData = sessionStorage.getItem('activityMapData');
                 activityMapData = $.parseJSON(stringActivityMapData);
             }
@@ -751,9 +763,9 @@ module Activities.ViewModels {
             } else if (continentCode == 'WATER'){
                 placeType = 'waters';
             }
-            if (this.parentObject.placeNames() != '') {
-                placeType = 'countries';
-            }
+            //if (this.parentObject.placeNames() != '') {
+            //    placeType = 'countries';
+            //}
 
             this.placeType(placeType);
                
@@ -784,11 +796,32 @@ module Activities.ViewModels {
         private _receivePlaces(placeType: string): void {
             var places;
             if (placeType == 'countries') {
-                places = this._countriesResponse();
+                if(this._countriesResponse()){
+                    this.parentObject.loadingSpinner.start
+                    places = this._countriesResponse();
+                } else {
+                    this.parentObject.loadingSpinner.start();
+                    setTimeout(() => { this._receivePlaces(placeType) }, 50);
+                    return;
+                }
             } else if (placeType == 'waters') {
-                places = this._watersResponse();
+                if (this._watersResponse()) {
+                    this.parentObject.loadingSpinner.start
+                    places = this._watersResponse();
+                } else {
+                    this.parentObject.loadingSpinner.start();
+                    setTimeout(() => { this._receivePlaces(placeType) }, 50);
+                    return;
+                }
             } else {
-                places = this._continentsResponse();
+                if (this._continentsResponse()) {
+                    this.parentObject.loadingSpinner.start
+                    places = this._continentsResponse();
+                } else {
+                    this.parentObject.loadingSpinner.start();
+                    setTimeout(() => { this._receivePlaces(placeType) }, 50);
+                    return;
+                }
             }
 
             if (placeType == 'countries') {
@@ -802,6 +835,17 @@ module Activities.ViewModels {
                         })
                         .ToArray();
                 } 
+            }
+            var count = 0;
+            $.each(places, function (index, place) {
+                count += place.count;
+            });
+            if (places.length > 0) {
+                this.activityCount(count.toString());
+                this.locationCount(places.length.toString());
+            } else {
+                this.activityCount('0');
+                this.locationCount('0');
             }
 
             this._plotMarkers(placeType, places);
@@ -840,6 +884,10 @@ module Activities.ViewModels {
                 if (!placeType)
                     title = '{0} activit{1}\r\nClick for more information'
                         .format(place.count, place.count == 1 ? 'y' : 'ies');
+                //if(place.name == 'Antarctic'){
+                //    place.center.latitude = -78;
+                //    place.center.longitude = 40.5;
+                //}
                 var options: google.maps.MarkerOptions = {
                     position: Places.Utils.convertToLatLng(place.center),
                     title: title,
@@ -880,6 +928,7 @@ module Activities.ViewModels {
                 if (placeType === 'continents') {
                     google.maps.event.addListener(marker, 'click', (e: google.maps.MouseEvent): void => {
                         if (place.code == 'WATER') {
+                            this.parentObject.loadingSpinner.start();
                             sessionStorage.setItem(SearchMap.ContinentSessionKey, this.continentCode());
                             this.continentCode(place.code);
                             this.countryCode('any');
@@ -895,6 +944,7 @@ module Activities.ViewModels {
                             
                         }
                         else if (place.code) {
+                            this.parentObject.loadingSpinner.start();
                             sessionStorage.setItem(SearchMap.ContinentSessionKey, this.continentCode());
                             this.continentCode(place.code);
                             this.countryCode('any');
@@ -914,16 +964,26 @@ module Activities.ViewModels {
                     google.maps.event.addListener(marker, 'click', (e: google.maps.MouseEvent): void => {
                         //take to advanced search table
                         if (place.id != 0) {
+                            this.parentObject.loadingSpinner.start();
                             var search = this.serializeObject(this.parentObject.$form);
-                            if (search.placeNames && search.placeNames.length > 0) {
+                            var hasChangedPlaces = false;
+                            if (search.placeNames && search.placeNames.length > 0 && search.placeNames.indexOf(place.name) < 0) {
                                 search.placeNames += " & " + place.name;
                                 search.placeIds += " " + place.id;
-                            } else {
+                                hasChangedPlaces = true;
+                            } else if( search.placeNames.indexOf(place.name) < 0) {
                                 search.placeNames = place.name;
                                 search.placeIds = place.id.toString();
+                                hasChangedPlaces = true;
                             }
+
+                            if (hasChangedPlaces) {
+                                sessionStorage.setItem("isMapClick", "1");
+                            }                            
+
                             search.placeIds = search.placeIds.split(" ");
                             this.updateSession(search);
+
                             var url = this.createTableUrl(search);//location.href.replace('map', 'table') + '&' + this.replaceAll('%5B%5D', '', $.param(search));
                             location.href = url;
                         }
@@ -932,8 +992,9 @@ module Activities.ViewModels {
                 
             });
             this._map.replaceMarkers(markers);
-
-            this.parentObject.loadingSpinner.stop();
+            if (this.parentObject.affiliationsLoaded) {
+                this.parentObject.loadingSpinner.stop();
+            }
             
         }
 
@@ -1120,6 +1181,22 @@ module Activities.ViewModels {
         }
 
         //#endregion
+
+
+        //loadSummary(): void {
+
+        //    var settings = settings || {};
+        //    settings.url = "/api/" + this.ancestorId + "/employees/activities/counts";
+        //    $.ajax(settings)
+        //        .done((response): void => {
+        //            this.locationCount(response.locationCount);
+        //            this.activityCount(response.activityCount);
+        //        })
+        //        .fail((xhr: JQueryXHR): void => {
+
+        //        });
+        //}
+
     }
 
 

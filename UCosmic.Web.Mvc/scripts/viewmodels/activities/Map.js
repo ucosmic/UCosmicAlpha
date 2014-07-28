@@ -9,6 +9,7 @@
                 this.continentName = ko.observable(sessionStorage.getItem('continentName') || '');
                 this.regionCount = ko.observable('');
                 this.activityCount = ko.observable('?');
+                this.locationCount = ko.observable('?');
                 this.dataDefered = $.Deferred();
                 this.placeFilter = ko.observable();
                 this._map = new App.GoogleMaps.Map('google_map_canvas', {
@@ -76,13 +77,14 @@
                 this.parentObject = parentObject;
                 this.parentObject.tableUrl(location.href.replace('map', 'table'));
                 this.ancestorId = output.input.ancestorId ? output.input.ancestorId : "null";
-                this.keyword = output.input.keyword ? output.input.keyword : "null";
+
                 if (!output.input.activityTypeIds) {
                     output.input.activityTypeIds = [];
                     $.each(output.activityTypes, function (i, type) {
                         output.input.activityTypeIds.push(type.activityTypeId);
                     });
                 }
+
                 this._ConstructMapData(output.input);
             }
             SearchMap.prototype.applyBindings = function (element) {
@@ -105,6 +107,9 @@
             };
 
             SearchMap.prototype.createTableUrl = function (search) {
+                if (!this.parentObject.tableUrl() || this.parentObject.tableUrl().indexOf('?') == 0) {
+                    this.parentObject.tableUrl(location.href.replace('map', 'table') + '?');
+                }
                 var tempUrl = this.parentObject.tableUrl();
                 tempUrl = tempUrl.substr(0, tempUrl.indexOf("?"));
                 tempUrl += "?" + $.param(search);
@@ -158,7 +163,7 @@
 
                 var dataDeferred = $.Deferred();
                 var placeFilter = input.placeFilter;
-                if ((this.parentObject.placeNames() || this.parentObject.keyword()) && this.continentCode().toLowerCase() != 'water') {
+                if ((input.placeNames || input.keyword) && this.continentCode().toLowerCase() != 'water') {
                     placeFilter = 'countries';
                     input.placeFilter = placeFilter;
                 } else if (this.continentCode().toLowerCase() == 'water') {
@@ -265,11 +270,7 @@
                 if (data) {
                     dataDeferred.resolve();
                     this._countriesResponse = ko.observableArray(JSON.parse(data));
-                    if (this._countriesResponse().length > 0) {
-                        this.activityCount(this._countriesResponse()[0].activityCount);
-                    } else {
-                        this.activityCount('0');
-                    }
+
                     if (input.placeFilter == 'countries') {
                         this._map.ready().done(function () {
                             _this._load(input.placeFilter);
@@ -289,11 +290,7 @@
                     $.ajax(settings).done(function (response) {
                         dataDeferred.resolve();
                         _this._countriesResponse = ko.observableArray(response);
-                        if (response.length > 0) {
-                            _this.activityCount(response[0].activityCount);
-                        } else {
-                            _this.activityCount('0');
-                        }
+
                         if (placeFilter == 'countries') {
                             _this._map.ready().done(function () {
                                 _this._load(placeFilter);
@@ -393,7 +390,7 @@
                 var activityMapData;
                 var stringActivityMapDataSearch = sessionStorage.getItem('activityMapDataSearch');
 
-                if (stringActivityMapDataSearch == this.ancestorId + this.keyword) {
+                if (stringActivityMapDataSearch == this.ancestorId + input.keyword) {
                     stringActivityMapData = sessionStorage.getItem('activityMapData');
                     activityMapData = $.parseJSON(stringActivityMapData);
                 }
@@ -578,9 +575,6 @@
                 } else if (continentCode == 'WATER') {
                     placeType = 'waters';
                 }
-                if (this.parentObject.placeNames() != '') {
-                    placeType = 'countries';
-                }
 
                 this.placeType(placeType);
 
@@ -606,13 +600,41 @@
             };
 
             SearchMap.prototype._receivePlaces = function (placeType) {
+                var _this = this;
                 var places;
                 if (placeType == 'countries') {
-                    places = this._countriesResponse();
+                    if (this._countriesResponse()) {
+                        this.parentObject.loadingSpinner.start;
+                        places = this._countriesResponse();
+                    } else {
+                        this.parentObject.loadingSpinner.start();
+                        setTimeout(function () {
+                            _this._receivePlaces(placeType);
+                        }, 50);
+                        return;
+                    }
                 } else if (placeType == 'waters') {
-                    places = this._watersResponse();
+                    if (this._watersResponse()) {
+                        this.parentObject.loadingSpinner.start;
+                        places = this._watersResponse();
+                    } else {
+                        this.parentObject.loadingSpinner.start();
+                        setTimeout(function () {
+                            _this._receivePlaces(placeType);
+                        }, 50);
+                        return;
+                    }
                 } else {
-                    places = this._continentsResponse();
+                    if (this._continentsResponse()) {
+                        this.parentObject.loadingSpinner.start;
+                        places = this._continentsResponse();
+                    } else {
+                        this.parentObject.loadingSpinner.start();
+                        setTimeout(function () {
+                            _this._receivePlaces(placeType);
+                        }, 50);
+                        return;
+                    }
                 }
 
                 if (placeType == 'countries') {
@@ -622,6 +644,17 @@
                             return continentCode == 'none' ? !x.id : x.code == continentCode;
                         }).ToArray();
                     }
+                }
+                var count = 0;
+                $.each(places, function (index, place) {
+                    count += place.count;
+                });
+                if (places.length > 0) {
+                    this.activityCount(count.toString());
+                    this.locationCount(places.length.toString());
+                } else {
+                    this.activityCount('0');
+                    this.locationCount('0');
                 }
 
                 this._plotMarkers(placeType, places);
@@ -658,6 +691,7 @@
                     var title = '{0} - {1} activit{2}\r\nClick for more information'.format(place.name, place.count, place.count == 1 ? 'y' : 'ies');
                     if (!placeType)
                         title = '{0} activit{1}\r\nClick for more information'.format(place.count, place.count == 1 ? 'y' : 'ies');
+
                     var options = {
                         position: Places.Utils.convertToLatLng(place.center),
                         title: title,
@@ -694,6 +728,7 @@
                     if (placeType === 'continents') {
                         google.maps.event.addListener(marker, 'click', function (e) {
                             if (place.code == 'WATER') {
+                                _this.parentObject.loadingSpinner.start();
                                 sessionStorage.setItem(SearchMap.ContinentSessionKey, _this.continentCode());
                                 _this.continentCode(place.code);
                                 _this.countryCode('any');
@@ -707,6 +742,7 @@
                                 var search = _this.serializeObject(_this.parentObject.$form);
                                 _this.updateSession(search);
                             } else if (place.code) {
+                                _this.parentObject.loadingSpinner.start();
                                 sessionStorage.setItem(SearchMap.ContinentSessionKey, _this.continentCode());
                                 _this.continentCode(place.code);
                                 _this.countryCode('any');
@@ -724,16 +760,26 @@
                     } else {
                         google.maps.event.addListener(marker, 'click', function (e) {
                             if (place.id != 0) {
+                                _this.parentObject.loadingSpinner.start();
                                 var search = _this.serializeObject(_this.parentObject.$form);
-                                if (search.placeNames && search.placeNames.length > 0) {
+                                var hasChangedPlaces = false;
+                                if (search.placeNames && search.placeNames.length > 0 && search.placeNames.indexOf(place.name) < 0) {
                                     search.placeNames += " & " + place.name;
                                     search.placeIds += " " + place.id;
-                                } else {
+                                    hasChangedPlaces = true;
+                                } else if (search.placeNames.indexOf(place.name) < 0) {
                                     search.placeNames = place.name;
                                     search.placeIds = place.id.toString();
+                                    hasChangedPlaces = true;
                                 }
+
+                                if (hasChangedPlaces) {
+                                    sessionStorage.setItem("isMapClick", "1");
+                                }
+
                                 search.placeIds = search.placeIds.split(" ");
                                 _this.updateSession(search);
+
                                 var url = _this.createTableUrl(search);
                                 location.href = url;
                             }
@@ -741,8 +787,9 @@
                     }
                 });
                 this._map.replaceMarkers(markers);
-
-                this.parentObject.loadingSpinner.stop();
+                if (this.parentObject.affiliationsLoaded) {
+                    this.parentObject.loadingSpinner.stop();
+                }
             };
 
             SearchMap.prototype.fixBoundingBox = function (boundingBox) {
