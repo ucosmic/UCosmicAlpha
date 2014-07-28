@@ -61,6 +61,7 @@ module Activities.ViewModels {
             //}
             this.pager.apply(this.settings.output);
             this._loadTenancyData();
+
         }
         MapDataIsLoading = ko.observable<boolean>(false);
         //MapDataIsLoading = ko.observable<boolean>(true);
@@ -271,11 +272,15 @@ module Activities.ViewModels {
                 if(this.ajaxMapData){
                     this.ajaxMapData.abort();
                 }
+                sessionStorage.setItem("isMapClick", "0");
+                this.loadingSpinner.start();
             });
             $('a').click(() => {
                 if (this.ajaxMapData) {
                     this.ajaxMapData.abort();
                 }
+                sessionStorage.setItem("isMapClick", "0");
+                this.loadingSpinner.start();
             });
         }
         stopAutocompleteInfiniteLoop: boolean;
@@ -469,6 +474,7 @@ module Activities.ViewModels {
         private _submitForm(): void {
             if (this.loadingSpinner.isVisible()) return;
             this.loadingSpinner.start();
+            sessionStorage.setItem("isMapClick", "0");
             this.$form.submit();
         }
 

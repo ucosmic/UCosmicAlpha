@@ -1,4 +1,4 @@
-var Activities;
+﻿var Activities;
 (function (Activities) {
     (function (ViewModels) {
         (function (DataGraphPivot) {
@@ -242,11 +242,15 @@ var Activities;
                     if (_this.ajaxMapData) {
                         _this.ajaxMapData.abort();
                     }
+                    sessionStorage.setItem("isMapClick", "0");
+                    _this.loadingSpinner.start();
                 });
                 $('a').click(function () {
                     if (_this.ajaxMapData) {
                         _this.ajaxMapData.abort();
                     }
+                    sessionStorage.setItem("isMapClick", "0");
+                    _this.loadingSpinner.start();
                 });
             };
 
@@ -431,6 +435,7 @@ var Activities;
                 if (this.loadingSpinner.isVisible())
                     return;
                 this.loadingSpinner.start();
+                sessionStorage.setItem("isMapClick", "0");
                 this.$form.submit();
             };
 
