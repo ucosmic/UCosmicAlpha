@@ -17,6 +17,7 @@ namespace UCosmic.Web.Mvc.Models
         public string CountryCode { get; set; }
         public string Keyword { get; set; }
         public string OrderBy { get; set; }
+        public int? AncestorId { get; set; }
     }
 
     public static class DegreesSearchInputProfiler
