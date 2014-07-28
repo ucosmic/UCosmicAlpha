@@ -3,6 +3,8 @@
     (function (ViewModels) {
         var ActivityInputModel = (function () {
             function ActivityInputModel(modelData) {
+                var _this = this;
+                this.loadingSpinner = new App.Spinner();
                 this.pageSize = ko.observable();
                 this.pageNumber = ko.observable();
                 this.keyword = ko.observable();
@@ -52,6 +54,12 @@
                         this.search();
                     }
                 }, this);
+                $("form").submit(function (event) {
+                    _this.loadingSpinner.start();
+                });
+                $('a').click(function () {
+                    _this.loadingSpinner.start();
+                });
             }
             ActivityInputModel.prototype.nextPage = function (model, event) {
                 event.preventDefault();

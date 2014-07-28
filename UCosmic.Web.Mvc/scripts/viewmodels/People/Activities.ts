@@ -39,7 +39,14 @@
                     this.search();
                 }
             }, this);
+            $("form").submit((event) => {
+                this.loadingSpinner.start();
+            });
+            $('a').click(() => {
+                this.loadingSpinner.start();
+            });
         }
+        loadingSpinner = new App.Spinner();
         modelData;
         isDraft: KnockoutComputed<boolean>;
         isPublished: KnockoutComputed<boolean>;
