@@ -1,12 +1,12 @@
-﻿<div class="field" style="margin-bottom: 0;">
-    <input type="hidden" data-bind="value: keyword" />
-    <input type="search" placeholder="Find an establishment by name or website URL" data-bind="value: keyword, valueUpdate: 'afterkeydown search'" />
-</div>
-<div style="margin-top:20px;">
+﻿<div style="margin-top:20px;">
     <a href="@Url.Action(MVC.Establishments.New())" data-bind="click: gotoAddNew" id="searchSideBarAddNew" class="button">
         <i class="green plus" style="width: 16px; height: 16px; background-size: contain"></i>
         <span class="text" style="vertical-align: initial;">Add a new establishment</span>
     </a>
+</div>
+<div class="field" style="margin-bottom: 0;">
+    <input type="hidden" data-bind="value: keyword" />
+    <input type="search" placeholder="Find an establishment by name or website URL" data-bind="value: keyword, valueUpdate: 'afterkeydown search'" />
 </div>
 <p data-bind="visible: hasNoItems" style="display: none;">
     There are no results that match your search terms.
@@ -18,18 +18,53 @@
                 <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
                 <strong>Loading search results...</strong>
             </p>
-            <p data-bind="visible: showStatus" style="display: none;">
-                <strong>
-                    Showing <span data-bind="text: firstNumber"></span>
-                    <span data-bind="visible: hasManyItems">- <span data-bind="text: lastNumber"></span></span>
-                    of <span data-bind="text: itemTotal"></span>
-                </strong>
-                <span data-bind="visible: hasManyPages">
-                    (page
-                    <span data-bind="text: transitionedPageNumber"></span>
-                    of <span data-bind="text: pageCount"></span>)
-                </span>
-            </p>
+            <table style="width:100%">
+                <tr>
+                    <td style="vertical-align: top;">
+                        @* PAGER STATUS & LOADING SPINNER *@
+                        <div data-bind="visible: showStatus" style="display: none; height: 24px; margin: 10px 0 0 0;">
+                            <strong>
+                                Showing <span data-bind="text: firstNumber"></span>
+                                <span data-bind="visible: hasManyItems">- <span data-bind="text: lastNumber"></span></span>
+                                of <span data-bind="text: itemTotal"></span>
+                            </strong>
+                            <span data-bind="visible: hasManyPages">
+                                (page
+                                <span data-bind="text: transitionedPageNumber"></span>
+                                of <span data-bind="text: pageCount"></span>)
+                            </span>
+                        </div>
+                        <div class="field" style="margin: 0;">
+                            <button class="link" data-bind="click: prevPage, enable: prevEnabled">&lt;&lt; Previous</button>
+                            |
+                            <button class="link" data-bind="click: nextPage, enable: nextEnabled">Next &gt;&gt;</button>
+                            <input type="hidden" value="1" data-bind="value: pageNumber" />
+                        </div>
+                    </td>
+                    <td style="vertical-align: top;" align="right">
+                        <div class="field"
+                            style=" margin: 10px 0 0 0;">
+                            <select class="side" data-bind="value: orderBy">
+                                <option value="name-asc">Sort by name A-Z</option>
+                                <option value="name-desc">Sort by name Z-A</option>
+                                <option value="country-asc">Sort by country A-Z</option>
+                                <option value="country-desc">Sort by country Z-A</option>
+                            </select>
+                        </div>
+                        <div class="field"
+                             style="margin:4px 0;">
+                            <select class="side" data-bind="value: pageSize">
+                                <option value="10">Show 10 results per page</option>
+                                <option value="20">Show 20 results per page</option>
+                                <option value="50">Show 50 results per page</option>
+                                <option value="100">Show 100 results per page</option>
+                                <option value="250">Show 250 results per page</option>
+                            </select>
+                        </div>
+
+                    </td>
+                </tr>
+            </table>
             <div data-bind="visible: hasItems" style="display: none;">
                 <div data-bind="visible: lens() === 'table'">
                     <table class="data">
@@ -121,7 +156,7 @@
                 </div>
             </div>
         </div>
-    </div>
+</div>
 </div>
 
 <div style="height: 30px;">
