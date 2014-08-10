@@ -100,6 +100,9 @@
     <Compile Include="Domain\Establishments\Queries\EmailDomainsByEstablishment.cs" />
     <Compile Include="Domain\Establishments\Work\AddUsfEmailDomains.cs" />
     <Compile Include="Domain\Establishments\Work\AddNewEstablishmentTypes.cs" />
+    <Compile Include="Domain\Home\Commands\UpdateHomePhoto.cs" />
+    <Compile Include="Domain\Home\Entities\HomeSection.cs" />
+    <Compile Include="Domain\Home\Entities\HomeLink.cs" />
     <Compile Include="Domain\People\Commands\DeleteExternalUrl.cs" />
     <Compile Include="Domain\People\Commands\UpdateExternalUrl.cs" />
     <Compile Include="Domain\People\Commands\CreateExternalUrl.cs" />
