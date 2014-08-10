@@ -1,5 +1,7 @@
 ﻿using System.Web.Mvc;
 using AttributeRouting.Web.Mvc;
+using UCosmic.Domain.Home;
+using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc.Controllers
 {
@@ -16,6 +18,18 @@ namespace UCosmic.Web.Mvc.Controllers
         public virtual ActionResult Index()
         {
             return View();
+        }
+
+        [GET("indexSpike")]
+        public virtual ActionResult IndexSpike()
+        {
+            HomeSectionModel[] home = [new HomeSectionModel{
+                Title:"test title",
+                Description: "test desc",
+                Photo: "url"
+                Links: [new HomeLink{ }]
+            }]
+            return View("indexSpike", "_Layout2", );
         }
 
         [GET("employees")]
