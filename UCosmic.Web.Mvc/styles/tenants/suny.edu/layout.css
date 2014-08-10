@@ -662,6 +662,22 @@ body .inline-block {
 body .bold {
   font-weight: bold; }
 
+.content /deep/ a, .content /deep/ a:visited {
+  color: #0000cc;
+  text-decoration: underline; }
+.content /deep/ a:hover {
+  text-decoration: none; }
+.content /deep/ a[target=_blank], .content /deep/ a[target=_blank]:visited {
+  color: #0000cc; }
+.content /deep/ h1, .content /deep/ h2, .content /deep/ h3, .content /deep/ h4, .content /deep/ h5, .content /deep/ h6 {
+  text-transform: uppercase;
+  display: inline-block;
+  font-family: Arial;
+  line-height: 30px;
+  color: #01529a; }
+  .content /deep/ h1 a, .content /deep/ h2 a, .content /deep/ h3 a, .content /deep/ h4 a, .content /deep/ h5 a, .content /deep/ h6 a {
+    color: #01529a; }
+
 /* layout footer stylesheet */
 body > footer {
   position: absolute;

@@ -225,25 +225,25 @@ a.addLink {
     margin: -2px 0 0 -2px;
     background-image: url(../../../images/icons/plus/plus-24-green-disc.png); }
 
-a.button > .text {
+body /deep/ a.button > .text {
   display: inline-block;
   line-height: 20px;
   vertical-align: middle; }
-a.button > i.green.plus {
+body /deep/ a.button > i.green.plus {
   display: inline-block;
   vertical-align: middle;
   width: 24px;
   height: 24px;
   margin: -2px 0 0 -2px;
   background-image: url(../../../images/icons/plus/plus-24-green-disc.png); }
-a.button > i.save {
+body /deep/ a.button > i.save {
   display: inline-block;
   vertical-align: middle;
   width: 24px;
   height: 24px;
   margin: -2px 0 0 -2px;
   background-image: url(../../../images/icons/save/save-24.png); }
-a.button > i.red.closer {
+body /deep/ a.button > i.red.closer {
   display: inline-block;
   vertical-align: middle;
   width: 24px;
@@ -280,6 +280,10 @@ button, input[type=submit], input[type=reset], input[type=button], a.button, a.b
     filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=50); }
     button[disabled] *, button[disabled=true] *, button[disabled=disabled] *, input[type=submit][disabled] *, input[type=submit][disabled=true] *, input[type=submit][disabled=disabled] *, input[type=reset][disabled] *, input[type=reset][disabled=true] *, input[type=reset][disabled=disabled] *, input[type=button][disabled] *, input[type=button][disabled=true] *, input[type=button][disabled=disabled] *, a.button[disabled] *, a.button[disabled=true] *, a.button[disabled=disabled] *, a.button:visited[disabled] *, a.button:visited[disabled=true] *, a.button:visited[disabled=disabled] * {
       cursor: not-allowed; }
+
+body /deep/ button, body /deep/ input[type=submit], body /deep/ input[type=reset], body /deep/ input[type=button], body /deep/ a.button, body /deep/ a.button:visited {
+  color: white !important;
+  background-color: #502d0e; }
 
 button.link, input[type=submit].link, input[type=reset].link, input[type=button].link, body .ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset button[data-css-link=true] {
   display: inline-block;

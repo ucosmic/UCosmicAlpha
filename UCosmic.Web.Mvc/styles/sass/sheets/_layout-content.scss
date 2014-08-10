@@ -383,3 +383,26 @@ body {
         font-weight: bold;
     }
 }
+
+.content /deep/{
+    a, a:visited {
+        color: $main-link-color;
+        text-decoration: underline;
+    }
+    a:hover  {
+        text-decoration: none;
+    }
+    a[target=_blank], a[target=_blank]:visited {
+        color: $external-link-color;
+    }
+        h1, h2, h3, h4, h5, h6{
+            text-transform: uppercase;
+            display: inline-block;
+            font-family: Arial;
+            line-height: 30px;
+            color: $heading-text-color;
+            a {
+                color: $heading-text-color;
+            }
+        }
+}
