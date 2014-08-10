@@ -110,17 +110,19 @@ namespace UCosmic.Domain.External
                 var createdAffiliations = new List<Affiliation>();
                 foreach (var usfAffiliation in usfPerson.Affiliations)
                 {
+                    reportBuilder.Report(usfAffiliation.DepartmentId);
                     // make sure the establishment exists
                     var establishment = offspring.SingleOrDefault(x => x.CustomIds.Any(y => y.Value == usfAffiliation.DepartmentId));
                     if (establishment == null)
                         throw new InvalidOperationException(string.Format(
                             "Could not find UCosmic establishment for USF Department '{0}'.", usfAffiliation.DepartmentId));
-
+                    reportBuilder.Report("test1");
                     // make sure the affiliation is not a duplicate
                     if (createdAffiliations.Any(x => x.EstablishmentId == establishment.RevisionId && x.PersonId == user.Person.RevisionId))
                         continue;
 
                     var facultyRank = settings.FacultyRanks.SingleOrDefault(x => x.Rank == usfAffiliation.PositionTitle);
+                    reportBuilder.Report("test2");
                     var createAffiliationCommand = new CreateAffiliation(command.Principal, user.Person.RevisionId, establishment.RevisionId)
                     {
                         NoCommit = true,
@@ -131,6 +133,7 @@ namespace UCosmic.Domain.External
                 }
             }
 
+            reportBuilder.Report("test3");
             // possibly add a new email addresss
             if (!user.Name.Equals(usfPerson.EmailAddress, StringComparison.OrdinalIgnoreCase))
             {
@@ -141,6 +144,7 @@ namespace UCosmic.Domain.External
                 user.Person.Emails.Single(x => x.IsDefault).Value = usfPerson.EmailAddress;
             }
 
+            reportBuilder.Report("test4");
             // update person
             var displayName = _queryProcessor.Execute(new GenerateDisplayName
             {
@@ -153,7 +157,8 @@ namespace UCosmic.Domain.External
                 displayName = usfPerson.EmailAddress;
             if (string.IsNullOrWhiteSpace(displayName))
                 displayName = user.Name;
-            
+
+            reportBuilder.Report("tes51");
             var updatePersonCommand = new UpdatePerson(command.Principal, user.Person.RevisionId)
             {
                 NoCommit = true,
@@ -166,6 +171,7 @@ namespace UCosmic.Domain.External
                 IsDisplayNameDerived = false,
                 IsActive = true,
             };
+            reportBuilder.Report("test6");
             _updatePerson.Handle(updatePersonCommand);
 
             reportBuilder.Report("Committing changes based on USF person response.");
