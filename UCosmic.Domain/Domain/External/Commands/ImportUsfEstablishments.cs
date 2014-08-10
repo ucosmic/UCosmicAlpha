@@ -111,17 +111,29 @@ namespace UCosmic.Domain.External
                         command.Service.Integration.Name, command.Service.Integration.TenantId));
                 reportBuilder.Report("Deserialized USF department response to CLR object.");
                 reportBuilder.Report("JSON value of deserialized response is:");
-                reportBuilder.Report(JsonConvert.SerializeObject(departmentsData));
+                //reportBuilder.Report(JsonConvert.SerializeObject(departmentsData));//taken out because it is too large 8-1-2014
 
                 // establishment types will be used later when creating establishments
                 reportBuilder.Report("Loading establishment type entities.");
-                var establishmentTypeName = KnownEstablishmentType.UniversityCampus.AsSentenceFragment();
-                var campusType = _entities.Query<EstablishmentType>().Single(t => t.EnglishName == establishmentTypeName);
-                establishmentTypeName = KnownEstablishmentType.College.AsSentenceFragment();
-                var collegeType = _entities.Query<EstablishmentType>().Single(t => t.EnglishName == establishmentTypeName);
-                establishmentTypeName = KnownEstablishmentType.Department.AsSentenceFragment();
-                var departmentType = _entities.Query<EstablishmentType>().Single(t => t.EnglishName == establishmentTypeName);
 
+                var establishmentTypeName = KnownEstablishmentType.UniversityCampus.AsSentenceFragment();
+                reportBuilder.Report("test1");
+                var campusType = _entities.Query<EstablishmentType>().Single(t => t.EnglishName == establishmentTypeName);
+                reportBuilder.Report("test2");
+                establishmentTypeName = KnownEstablishmentType.College.AsSentenceFragment();
+                reportBuilder.Report("test3");
+                var collegeType = _entities.Query<EstablishmentType>().Single(t => t.EnglishName == establishmentTypeName);
+                reportBuilder.Report("test4");
+                establishmentTypeName = KnownEstablishmentType.Department.AsSentenceFragment();
+                reportBuilder.Report("test5");
+                var departmentType = collegeType;//_entities.Query<EstablishmentType>().Single(t => t.EnglishName == establishmentTypeName);
+                reportBuilder.Report("test6");
+
+                reportBuilder.Report("Order the service results by campus, college, deptid.");
+                //foreach (var name in departmentsData.Departments.SelectMany(x => x.CampusName))
+                //{
+                //    reportBuilder.Report("campusName: " + name);
+                //}
                 // order the service results by campus, college, deptid
                 departmentsData.Departments = departmentsData.Departments
                     .OrderBy(x => x.CampusName).ThenBy(x => x.CollegeName).ThenBy(x => x.DepartmentId).ToArray();
