@@ -1,0 +1,32 @@
+﻿
+<link rel="import" href="~/components/form/inputs/button/button.html">
+<link rel="import" href="~/components/pages/Home/indexHasDomain/IndexHasDomainBase.html">
+@{
+    ViewBag.Title = "Home";
+    var tenancy = Request.Tenancy();
+    var styleDomain = tenancy != null ? tenancy.StyleDomain : "default";
+    var hasStyleDomain = !string.IsNullOrWhiteSpace(styleDomain) && !"default".Equals(styleDomain, StringComparison.OrdinalIgnoreCase);
+}
+
+@section bib { }
+
+<div class="fixed content" data-current-module="home">
+
+    @if (!hasStyleDomain)
+    {
+        <header>
+            <h1>Choose your institution</h1>
+        </header>
+        Html.RenderAction(MVC.Admin.TenantLogos(false));
+    }
+    else
+    {
+        <polymer-content-home-has-domain-base styledomain="@styleDomain"></polymer-content-home-has-domain-base>
+        <polymer-content-home-has-domain-custom homepagesections="" canedit="@User.IsInAnyRole(RoleName.SecurityAdministrator)"></polymer-content-home-has-domain-base>
+
+        if (User.IsInAnyRole(RoleName.SecurityAdministrator))
+        {
+            <polymer-button myid="b_edit" text="Add new section." color=""></polymer-button>
+        }
+    }
+</div>
