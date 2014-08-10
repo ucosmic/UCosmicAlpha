@@ -68,12 +68,16 @@ module Activities.ViewModels {
             var searchOptions = JSON.parse(sessionStorage.getItem(SearchMap.SearchOptions));
 
             if (sessionStorage.getItem('isMapClick') == "1") {
-                if (searchOptions.placeNames.indexOf(" &")) {
+                if (searchOptions.placeNames.indexOf(" &") > 0) {
                     searchOptions.placeNames = searchOptions.placeNames.substring(0, searchOptions.placeNames.lastIndexOf(" &"));
                     searchOptions.placeIds.pop();
                 } else {
                     searchOptions.placeNames = "";
-                    searchOptions.placeIds.pop();
+                    if (typeof searchOptions.placeIds == 'string') {
+                        searchOptions.placeIds = "";
+                    } else {
+                        searchOptions.placeIds.pop();
+                    }
                 }
                 sessionStorage.setItem(SearchMap.SearchOptions, JSON.stringify(searchOptions));
                 //SearchMap.updateSession(searchOptions);
@@ -93,7 +97,7 @@ module Activities.ViewModels {
             //if (searchOptions) {
             //    sessionStorage.setItem(SearchMap.SearchOptions, JSON.stringify(searchOptions));
             //}
-            if(searchOptions){
+            if (searchOptions) {
                 this.settings.input.activityTypeIds = searchOptions.activityTypeIds;
                 this.settings.input.placeNames = searchOptions.placeNames;
                 this.placeNames(searchOptions.placeNames);
@@ -102,7 +106,7 @@ module Activities.ViewModels {
                 this.settings.input.until = searchOptions.Until;
                 this.settings.input.keyword = searchOptions.keyword;
                 this.settings.input.includeUndated = searchOptions.includeUndated;
-                if(!searchOptions.includeUndated || searchOptions.includeUndated == false){
+                if (!searchOptions.includeUndated || searchOptions.includeUndated == false) {
                     this.includeUndated("")
                 }
             }
@@ -110,7 +114,7 @@ module Activities.ViewModels {
 
             this.since(this.settings.input.since);
             this.until(this.settings.input.until);
-            
+
             this.activityTypeCheckBoxes = ko.observableArray<ActivityTypeSearchTestCheckBox>(Enumerable.From(this.settings.activityTypes)
                 .Select((x: ApiModels.ActivityTypeSearchFilter): ActivityTypeSearchTestCheckBox => {
                 return new ActivityTypeSearchTestCheckBox(x, this.settings)
@@ -144,7 +148,7 @@ module Activities.ViewModels {
             this.searchMap.applyBindings(document.getElementById('searchMap'));
 
             this._loadTenancyData();
-           
+
         }
 
 
@@ -279,7 +283,7 @@ module Activities.ViewModels {
                         })
                         //deferred.resolve(tenants);
                         if (childData.length) this.hasTenancyData(true);
-                        
+
                     })
                     .fail((xhr: JQueryXHR): void => {
                         App.Failures.message(xhr, 'while trying to load institution organizational data.', true);
@@ -457,7 +461,7 @@ module Activities.ViewModels {
                                 this.stopAutocompleteInfiniteLoop = true;
                             }
                         }
-                    }else{
+                    } else {
                         this.stopAutocompleteInfiniteLoop = false;
                     }
                 }

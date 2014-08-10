@@ -1,4 +1,4 @@
-﻿var Activities;
+var Activities;
 (function (Activities) {
     (function (ViewModels) {
         (function (DataGraphPivotTest) {
@@ -57,12 +57,16 @@
                 var searchOptions = JSON.parse(sessionStorage.getItem(ViewModels.SearchMap.SearchOptions));
 
                 if (sessionStorage.getItem('isMapClick') == "1") {
-                    if (searchOptions.placeNames.indexOf(" &")) {
+                    if (searchOptions.placeNames.indexOf(" &") > 0) {
                         searchOptions.placeNames = searchOptions.placeNames.substring(0, searchOptions.placeNames.lastIndexOf(" &"));
                         searchOptions.placeIds.pop();
                     } else {
                         searchOptions.placeNames = "";
-                        searchOptions.placeIds.pop();
+                        if (typeof searchOptions.placeIds == 'string') {
+                            searchOptions.placeIds = "";
+                        } else {
+                            searchOptions.placeIds.pop();
+                        }
                     }
                     sessionStorage.setItem(ViewModels.SearchMap.SearchOptions, JSON.stringify(searchOptions));
                 }

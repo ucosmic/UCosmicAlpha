@@ -1,4 +1,4 @@
-﻿var Degrees;
+var Degrees;
 (function (Degrees) {
     (function (ViewModels) {
         var Search = (function () {
