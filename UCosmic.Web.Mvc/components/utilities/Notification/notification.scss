@@ -1,0 +1,32 @@
+﻿
+
+@import "../../../css/utilities/mixins";
+#pop_text_container_alert {
+	
+	@include myTransparency(.95);
+    padding: 0 5px 5px 5px;
+    width: 300px;
+    position: fixed;
+    overflow: visible;
+    text-align: center;
+    z-index: 100;
+    position: fixed;
+	opacity: 90%;
+}
+
+	.success{
+		border: 5px solid #406A60;
+		background-color: #7EC296;
+	}
+	.info{
+		border: 5px solid #43949A;
+		background-color: #82D4D9;
+	}
+	.notify{
+		border: 5px solid #C58721;
+		background-color: #FFCB70;
+	}
+	.warning{
+		border: 5px solid #993C3C;
+		background-color: #DF7E7E;
+	}

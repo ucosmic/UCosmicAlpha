@@ -1,0 +1,69 @@
+/* make keyframes that tell the start state and the end state of our object */
+@-webkit-keyframes fadeIn {
+  from {
+    opacity: 0; }
+
+  to {
+    opacity: 1; } }
+@-moz-keyframes fadeIn {
+  from {
+    opacity: 0; }
+
+  to {
+    opacity: 1; } }
+@keyframes fadeIn {
+  from {
+    opacity: 0; }
+
+  to {
+    opacity: 1; } }
+@-webkit-keyframes fadeOut {
+  from {
+    opacity: 1; }
+
+  to {
+    opacity: 0; } }
+@-moz-keyframes fadeOut {
+  from {
+    opacity: 1; }
+
+  to {
+    opacity: 0; } }
+@keyframes fadeOut {
+  from {
+    opacity: 1; }
+
+  to {
+    opacity: 0; } }
+.required {
+  border: 2px solid #fa4930 !important; }
+  .required:active {
+    -webkit-box-shadow: 0 0 3px 2px rgba(0, 0, 0, 0.87);
+    -moz-box-shadow: 0 0 3px 2px rgba(0, 0, 0, 0.87);
+    box-shadow: 0 0 3px 2px rgba(0, 0, 0, 0.87); }
+
+.requireBase, .requiredInit, .notRequired {
+  border: none;
+  -webkit-appearance: none; }
+
+.requiredInit {
+  -webkit-box-shadow: 0 0 3px 2px rgba(246, 105, 0, 0.5);
+  -moz-box-shadow: 0 0 3px 2px rgba(246, 105, 0, 0.5);
+  box-shadow: 0 0 3px 2px rgba(246, 105, 0, 0.5); }
+  .requiredInit:active {
+    -webkit-box-shadow: 0 0 3px 2px rgba(0, 0, 0, 0.87);
+    -moz-box-shadow: 0 0 3px 2px rgba(0, 0, 0, 0.87);
+    box-shadow: 0 0 3px 2px rgba(0, 0, 0, 0.87); }
+
+.notRequired {
+  -webkit-box-shadow: 0 0 3px 2px rgba(141, 237, 235, 0.87);
+  -moz-box-shadow: 0 0 3px 2px rgba(141, 237, 235, 0.87);
+  box-shadow: 0 0 3px 2px rgba(141, 237, 235, 0.87); }
+  .notRequired:active {
+    -webkit-box-shadow: 0 0 3px 2px rgba(17, 106, 104, 0.87);
+    -moz-box-shadow: 0 0 3px 2px rgba(17, 106, 104, 0.87);
+    box-shadow: 0 0 3px 2px rgba(17, 106, 104, 0.87); }
+
+.Alert {
+  color: red; }
+

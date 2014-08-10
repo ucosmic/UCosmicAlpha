@@ -1,0 +1,14 @@
+﻿
+<link rel="import" href="../ElRelativeToEl.html">
+<polymer-element name="polymer-notification" attributes="type message bindToElement fadeOutDelay">
+    <template>
+        <link rel="stylesheet" href="notification.css">
+        <div id="pop_container_alert" hidden?="{{hide}}">
+            <div id="pop_text_container_alert" class="rounded10px {{type}}" >
+                <polymer-form-header fontclass="{{fontClass}}" closeit="{{closeIt}}" text=""></polymer-form-header>
+                <div>{{message}}</div>
+            </div>
+        </div>
+    </template>
+    <script src="notification.js"></script>
+</polymer-element>

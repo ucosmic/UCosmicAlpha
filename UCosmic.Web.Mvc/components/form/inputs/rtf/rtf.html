@@ -1,0 +1,16 @@
+﻿
+<link rel="import" href="../../../utilities/validation.html">
+<polymer-element name="polymer-inputs-rtf" attributes="textboxRequiredClass alertClass inputMessage
+                 myType myMaxlength myValue isEmail name comparedValue nameCompared min isRequired validateMe cols rows mystyle">
+    <template>
+        <link rel="stylesheet" href="rtf.css">
+        
+        <textarea placeholder="{{myPlaceholder}}" style="{{mystyle}}" class='{{textboxRequiredClass}}' cols="{{cols}}" rows="{{rows}}" maxlength={{myMaxlength}}
+                  id="input" value="{{myValue}}" on-blur="{{inputChange}}"></textarea>
+        <div id="inputMessage" style=" padding:3px 3px 0 .5em; margin-bottom:0px; display:none;" class="{{alertClass}}">
+            {{inputMessage}}
+        </div>
+    </template>    
+    
+    <script src="rtf.js"></script>
+</polymer-element>

@@ -1,0 +1,31 @@
+﻿<polymer-element name="polymer-content-home-has-domain-custom" attributes="canedit, homepagesections">
+    <template>
+        <template repeat="{{section in homepagesections}}">
+            <hr style="height: 10px; border: 0;" />
+            <div class="group">
+                <div class="on-left">
+                    <img alt="" src="{{imageUrl}}" style="height: 160px;" />
+                </div>
+                <div class="on-left" style="margin-left: 20px;">
+                    <header>
+                        <h2>{{section.title}}</h2>
+                    </header>
+                    <p style="margin-bottom: 5px;">
+                        {{section.description}}
+                    </p>
+                    <ul style="list-style-type: disc; margin-left: 20px; ">
+                        <template repeat="{{link in section.links}}">
+                            <li style="line-height: 30px;">
+                                <a href="{{link.url}}" target="_blank">{{link.text}}</a>
+                            </li>
+                        </template>
+                    </ul>
+                </div>
+            </div>
+        </template>
+    </template>
+    <script src="profile/profile.js"></script>
+
+</polymer-element>
+
+

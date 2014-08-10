@@ -1,0 +1,9 @@
+﻿@import "../../css/utilities/mixins";
+
+.show {
+	@include fadeIn; 
+}
+
+.hide {
+	@include fadeOut;
+} 

@@ -1,0 +1,17 @@
+﻿
+<link rel="import" href="../../utilities/validation.html">
+<polymer-element name="polymer-inputs-required" attributes="textboxRequiredClass alertClass inputMessage
+                 myType myMaxlength myValue name comparedValue nameCompared min isRequired validateMe cols rows mystyle mypattern correctformat">
+    <template>
+        <link rel="stylesheet" href="required.css">
+
+        <input placeholder="{{myPlaceholder}}" style="{{mystyle}}" class='{{textboxRequiredClass}}' type="{{myType}}" maxlength={{myMaxlength}}
+               id="input" value="{{myValue}}" on-blur="{{inputChange}}" hidden?="{{ myType == 'textarea' }}" pattern="{{mypattern}}" />
+        <textarea placeholder="{{myPlaceholder}}" style="{{mystyle}}" class='{{textboxRequiredClass}}' cols="{{cols}}" rows="{{rows}}" maxlength={{myMaxlength}}
+                  id="input2" value="{{myValue}}" on-blur="{{inputChange}}" hidden?="{{ myType != 'textarea' }}" pattern="{{mypattern}}"></textarea>
+        <div id="inputMessage" style=" padding:3px 3px 0 .5em; margin-bottom:0px; display:none;" class="{{alertClass}}">
+            {{inputMessage}}
+        </div>
+    </template>
+    <script src="required.js"></script>
+</polymer-element>

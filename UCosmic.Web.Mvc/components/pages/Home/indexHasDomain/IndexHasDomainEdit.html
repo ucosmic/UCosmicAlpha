@@ -1,0 +1,62 @@
+﻿<polymer-element name="polymer-content-home-has-domain-custom" attributes="styleDomain">
+    <template>
+        <hr style="height: 10px; border: 0;" />
+        <div class="group">
+            <div class="on-left">
+                <img alt="" src="~/images/icons/agreements/folder-contract-icon.png" style="height: 160px;" />
+            </div>
+            <div class="on-left" style="margin-left: 20px;">
+                <header>
+                    <h2>Agreements</h2>
+                </header>
+                <p style="margin-bottom: 5px;">
+                    The Agreements tab at the top of every page is your gateway to:
+                </p>
+                <ul style="list-style-type: disc; margin-left: 20px; ">
+                    <li style="line-height: 30px;">
+                        <a href="/{{styleDomain}}/agreements/#/map/">Visualizing our international agreement partners</a>
+                    </li>
+                    <li style="line-height: 30px;">
+                        <a href="/{{styleDomain}}/agreements/#/table/">Searching our agreement database</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <hr style="height: 20px; border: 0;" />
+        <div class="group">
+            <div class="on-left">
+                <img alt="" src="~/images/icons/user/male-and-female-256.png" style="height: 160px;" />
+            </div>
+            <div class="on-left" style="margin-left: 20px;">
+                <header>
+                    <h2>Faculty &amp; Staff</h2>
+                </header>
+                <p style="margin-bottom: 5px;">
+                    The Faculty &amp; Staff tab at the top of every page is your gateway to:
+                </p>
+                <ul style="list-style-type: disc; margin-left: 20px; ">
+                    <li style="line-height: 30px;">
+                        <a href="{{styleDomain}}/employees/">Viewing a global snapshot of international activity</a>
+                    </li>
+                    <li style="line-height: 30px;">
+                        <a href="{{styleDomain}}/employees/table/">Searching our activity database</a>
+                    </li>
+                    <li style="line-height: 30px;">
+                        <a href="{{styleDomain}}/employees/degrees/table/">Searching our formal education database</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <polymer-ajax url="{{urlAjaxProfileProfile}}"
+                      handleas="json"
+                      on-polymer-response="{{profileProfileResponse}}"
+                      on-polymer-error="{ { profileProfileError } }"
+                      id="ajax_profileProfile"
+                      sync="true">
+        </polymer-ajax>
+    </template>
+    <script src="profile/profile.js"></script>
+
+</polymer-element>
+
+

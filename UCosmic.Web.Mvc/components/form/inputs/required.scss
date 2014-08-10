@@ -1,0 +1,34 @@
+﻿@import "../../../css/utilities/vars";
+@import "../../../css/utilities/mixins";
+.required 
+{
+	border: 2px solid #fa4930!important;
+	&:active{
+		@include myBox-shadow($ShadowInputDark);
+	}
+}
+
+.requireBase{
+    border: none;	
+    -webkit-appearance: none;
+}
+
+.requiredInit  
+{
+	@extend .requireBase;
+	@include myBox-shadow($ShadowInput);   
+	&:active{
+		@include myBox-shadow($ShadowInputDark);
+	}
+}
+.notRequired {
+	@extend .requireBase;
+	@include myBox-shadow($ShadowInputNotRequired); 
+	&:active{
+		@include myBox-shadow($ShadowInputNotRequiredDark);
+	}
+}
+
+.Alert {
+    color: red;
+}
