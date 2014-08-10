@@ -42,6 +42,10 @@ namespace UCosmic.Web.Mvc
             // ready for production, use the build tool at http://modernizr.com to pick only the tests you need.
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
                 "~/scripts/modernizr/modernizr-{version}.js"));
+            
+            // bundles for layout (all pages)
+            bundles.Add(new ScriptBundle("~/bundles/layout2").Include(
+                "~/components/polymer/bower_components/platform/platform.js"));
 
             // bundles for layout (all pages)
             bundles.Add(new ScriptBundle("~/bundles/layout").Include(

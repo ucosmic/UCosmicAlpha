@@ -2858,7 +2858,7 @@ namespace Links
                 public static readonly string Search_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Search.min.js") ? Url("Search.min.js") : Url("Search.js");
                               
                 public static readonly string SearchMap_ts = Url("SearchMap.ts");
-                public static readonly string Search___Copy_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Search - Copy.min.js") ? Url("Search - Copy.min.js") : Url("Search - Copy.js");
+                public static readonly string SearchMap_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/SearchMap.min.js") ? Url("SearchMap.min.js") : Url("SearchMap.js");
                               
                 public static readonly string Server_ts = Url("Server.ts");
                 public static readonly string Server_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Server.min.js") ? Url("Server.min.js") : Url("Server.js");
@@ -2941,6 +2941,7 @@ namespace Links
                 public static readonly string EstablishmentSearchNav_ts = Url("EstablishmentSearchNav.ts");
                 public static readonly string EstablishmentSearchNav_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/EstablishmentSearchNav.min.js") ? Url("EstablishmentSearchNav.min.js") : Url("EstablishmentSearchNav.js");
                               
+                public static readonly string Models_d_ts = Url("Models.d.ts");
                 public static readonly string Search_ts = Url("Search.ts");
                 public static readonly string Search_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Search.min.js") ? Url("Search.min.js") : Url("Search.js");
                               
@@ -4141,6 +4142,7 @@ namespace Links
                 public static readonly string barber_40_green_gif = Url("barber-40-green.gif");
                 public static readonly string spinner_20_blue_on_ddd_gif = Url("spinner-20-blue-on-ddd.gif");
                 public static readonly string spinner_20_blue_gif = Url("spinner-20-blue.gif");
+                public static readonly string spinner_20_grey_gif = Url("spinner-20-grey.gif");
                 public static readonly string spinner_24_blue_on_ddd_gif = Url("spinner-24-blue-on-ddd.gif");
                 public static readonly string spinner_24_blue_gif = Url("spinner-24-blue.gif");
             }
