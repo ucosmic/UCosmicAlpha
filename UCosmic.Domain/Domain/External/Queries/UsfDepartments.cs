@@ -44,7 +44,7 @@ namespace UCosmic.Domain.External
             reportBuilder.Report("Getting USF URL '{0}'.", serviceUrl);
             var json = _httpConsumer.Download<string>(serviceUrl, Timeout);
             reportBuilder.Report("Received JSON response from URL:");
-            reportBuilder.Report(json);
+            //reportBuilder.Report(json);//taken out because it is too large 8-1-2014
             if (string.IsNullOrWhiteSpace(json)) return null;
 
             reportBuilder.Report("Deserializing JSON into CLR object.");
