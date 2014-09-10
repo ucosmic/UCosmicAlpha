@@ -1,66 +1,116 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Mvc;
 using AttributeRouting;
+using AttributeRouting;
+using AttributeRouting.Web.Http;
+using AutoMapper;
+using ImageResizer;
 using AttributeRouting.Web.Http;
 using FluentValidation;
 using FluentValidation.Results;
 using Newtonsoft.Json;
 using UCosmic.Domain.People;
+using UCosmic.Domain.Home;
 using UCosmic.Web.Mvc.Models;
+using System.Linq.Expressions;
+using System.Net.Http.Headers;
 
 namespace UCosmic.Web.Mvc.ApiControllers
 {
     [System.Web.Http.Authorize]
     [RoutePrefix("api/home/photo")]
-    public class MyHomeController : ApiController
+    public class HomePhotoController : ApiController
     {
         private readonly IProcessQueries _queryProcessor;
-        private readonly IHandleCommands<UpdateMyHome> _photoUpdateHandler;
-        private readonly IValidator<UpdateMyHome> _photoUpdateValidator;
-        private readonly IHandleCommands<DeleteMyHome> _photoDeleteHandler;
+        private readonly IHandleCommands<UpdateHomePhoto> _photoUpdateHandler;
+        private readonly IValidator<UpdateHomePhoto> _photoUpdateValidator;
+        private readonly IHandleCommands<DeleteHomePhoto> _photoDeleteHandler;
+        private readonly IStoreBinaryData _binaryData;
 
-        public MyHomeController(IProcessQueries queryProcessor
-            , IValidator<UpdateMyHome> photoUpdateValidator
-            , IHandleCommands<UpdateMyHome> photoUpdateHandler
-            , IHandleCommands<DeleteMyHome> photoDeleteHandler
+        public HomePhotoController(IProcessQueries queryProcessor
+            , IValidator<UpdateHomePhoto> photoUpdateValidator
+            , IHandleCommands<UpdateHomePhoto> photoUpdateHandler
+            , IHandleCommands<DeleteHomePhoto> photoDeleteHandler
+            , IStoreBinaryData binaryData
         )
         {
             _queryProcessor = queryProcessor;
             _photoUpdateValidator = photoUpdateValidator;
             _photoUpdateHandler = photoUpdateHandler;
             _photoDeleteHandler = photoDeleteHandler;
+            _binaryData = binaryData;
         }
 
-        [GET("")]
+        //[GET("")]
+        //[CacheHttpGet(Duration = 3600)]
+        //public HttpResponseMessage Get([FromUri] int homeSectionId)
+        //{
+        //    var tenancy = Request.Tenancy();
+        //    int? personId;
+        //    if (tenancy != null && tenancy.PersonId.HasValue)
+        //    {
+        //        personId = tenancy.PersonId.Value;
+        //    }
+        //    else
+        //    {
+        //        var person = _queryProcessor.Execute(new MyPerson(User));
+        //        personId = person.RevisionId;
+        //    }
+
+        //    var peopleController = DependencyResolver.Current.GetService<PeopleController>();
+        //    peopleController.Request = Request;
+
+        //    var response = peopleController.GetPhoto(personId.Value, model);
+        //    return response;
+        //}
+
+        [GET("{homeSectionId:int}/photo")]
         [CacheHttpGet(Duration = 3600)]
-        public HttpResponseMessage Get([FromUri] ImageResizeRequestModel model)
+        public HttpResponseMessage GetPhoto(int homeSectionId, [FromUri] ImageResizeRequestModel model)
         {
-            var tenancy = Request.Tenancy();
-            int? personId;
-            if (tenancy != null && tenancy.PersonId.HasValue)
+            var homeSection = _queryProcessor.Execute(new HomeSectionById(homeSectionId)
             {
-                personId = tenancy.PersonId.Value;
+                EagerLoad = new Expression<Func<HomeSection, object>>[]
+                {
+                    x => x.Photo,
+                }
+            });
+
+            var stream = new MemoryStream(); // do not dispose, StreamContent will dispose internally
+            var mimeType = "image/png";
+            var settings = Mapper.Map<ResizeSettings>(model);
+
+            var content = homeSection != null && homeSection.Photo != null ? _binaryData.Get(homeSection.Photo.Path) : null;
+            if (content != null)
+            {
+                // resize the user's photo image
+                mimeType = homeSection.Photo.MimeType;
+                ImageBuilder.Current.Build(new MemoryStream(content), stream, settings, true);
             }
             else
             {
-                var person = _queryProcessor.Execute(new MyPerson(User));
-                personId = person.RevisionId;
+                // otherwise, return the unisex photo
+                var relativePath = string.Format("~/{0}", Links.images.icons.user.unisex_a_128_png);
+                ImageBuilder.Current.Build(relativePath, stream, settings);
             }
 
-            var peopleController = DependencyResolver.Current.GetService<PeopleController>();
-            peopleController.Request = Request;
-
-            var response = peopleController.GetPhoto(personId.Value, model);
+            stream.Position = 0;
+            var response = new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StreamContent(stream), // will dispose the stream
+            };
+            response.Content.Headers.ContentType = new MediaTypeHeaderValue(mimeType);
             return response;
         }
 
         [POST("")]
-        public HttpResponseMessage Post(FileMedium photo)
+        public HttpResponseMessage Post(FileMedium photo, int homeSectionId)
         {
             //System.Threading.Thread.Sleep(2000); // test api latency
             //throw new Exception("Oops"); // test unexpected server error
@@ -73,7 +123,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             //if (photo.Content.Length > (1024 * 1024))
             //    throw new HttpResponseException(HttpStatusCode.RequestEntityTooLarge);
 
-            var command = new UpdateMyHome(User)
+            var command = new UpdateHomePhoto(homeSectionId)
             {
                 Name = photo.FileName,
                 MimeType = photo.ContentType,
@@ -105,11 +155,11 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [POST("validate")]
-        public HttpResponseMessage ValidatePost(FileUploadValidationModel model)
+        public HttpResponseMessage ValidatePost(FileUploadValidationModel model, int homeSectionId)
         {
             //System.Threading.Thread.Sleep(2000); // test api latency
 
-            var command = new UpdateMyHome(User)
+            var command = new UpdateHomePhoto(homeSectionId)
             {
                 Name = model.Name,
                 Content = model.Length.HasValue ? new byte[model.Length.Value] : new byte[0],
@@ -130,7 +180,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
         }
 
         [DELETE("")]
-        public HttpResponseMessage Delete()
+        public HttpResponseMessage Delete(int homeSectionId)
         {
             //System.Threading.Thread.Sleep(2000); // test api latency
             //throw new Exception("Oops"); // test unexpected server error
@@ -141,7 +191,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
              * a photo when a new one is not being simultaneously uploaded.
              */
 
-            _photoDeleteHandler.Handle(new DeleteMyHome(User));
+            _photoDeleteHandler.Handle(new DeleteHomePhoto(homeSectionId));
 
             return Request.CreateResponse(HttpStatusCode.OK, "Your photo was deleted successfully.");
         }
