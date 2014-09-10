@@ -1,6 +1,9 @@
-﻿
+﻿@using UCosmic.Web.Mvc.Models
+@model List<HomeSectionApiModelReturn>
 <link rel="import" href="~/components/form/inputs/button/button.html">
 <link rel="import" href="~/components/pages/Home/indexHasDomain/IndexHasDomainBase.html">
+<link rel="import" href="~/components/pages/Home/indexHasDomain/IndexHasDomainCustom.html">
+<link rel="import" href="~/components/pages/Home/indexHasDomain/IndexHasDomainEdit.html">
 @{
     ViewBag.Title = "Home";
     var tenancy = Request.Tenancy();
@@ -22,11 +25,14 @@
     else
     {
         <polymer-content-home-has-domain-base styledomain="@styleDomain"></polymer-content-home-has-domain-base>
-        <polymer-content-home-has-domain-custom homepagesections="" canedit="@User.IsInAnyRole(RoleName.SecurityAdministrator)"></polymer-content-home-has-domain-base>
 
-        if (User.IsInAnyRole(RoleName.SecurityAdministrator))
-        {
-            <polymer-button myid="b_edit" text="Add new section." color=""></polymer-button>
-        }
+        <polymer-content-home-index notification="@ViewBag.notification" homesections="@Html.Raw(Html.SerializeObject(Model))"></polymer-content-home-index>
+
+        <polymer-element name="polymer-content-home-index" attributes="homeSections notification">
+            <template>
+                <polymer-content-home-has-domain-custom homesections="{{homeSections}}" canedit="false"></polymer-content-home-has-domain-custom>
+            </template>
+            <script src="~/components/pages/Home/index.js"></script>
+        </polymer-element>
     }
 </div>
