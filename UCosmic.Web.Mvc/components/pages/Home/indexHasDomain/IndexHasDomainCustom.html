@@ -1,10 +1,15 @@
-﻿<polymer-element name="polymer-content-home-has-domain-custom" attributes="canedit, homepagesections">
+﻿
+<link rel="import" href="../../../form/inputs/button/button.html">
+<polymer-element name="polymer-content-home-has-domain-custom" attributes="canedit, homeSections">
     <template>
-        <template repeat="{{section in homepagesections}}">
+        <link href="base.css" rel="stylesheet" />
+        <template repeat="{{section in homeSections}}">
             <hr style="height: 10px; border: 0;" />
             <div class="group">
-                <div class="on-left">
-                    <img alt="" src="{{imageUrl}}" style="height: 160px;" />
+                <div style="width:160px; height:160px;" class="on-left">
+                    <template bind if="{{section.hasPhoto}}">
+                        <img alt="" src="/api/home/photo/{{section.id}}/photo" style="max-height: 160px; max-width: 160px; margin-bottom:10px;" />
+                    </template>
                 </div>
                 <div class="on-left" style="margin-left: 20px;">
                     <header>
@@ -22,9 +27,18 @@
                     </ul>
                 </div>
             </div>
+            <template bind if="{{canedit != 'false'}}">
+                <polymer-button id="deleteSection" text="Delete section" color="" on-click="{{deleteSection}}"></polymer-button>
+            </template>
         </template>
+        <polymer-ajax url=""
+                      handleas="json"
+                      on-polymer-response="{{deleteSectionResponse}}"
+                      on-polymer-error="{{ajaxError}}"
+                      id="ajax_deleteSection">
+        </polymer-ajax>
     </template>
-    <script src="profile/profile.js"></script>
+    <script src="custom.js"></script>
 
 </polymer-element>
 
