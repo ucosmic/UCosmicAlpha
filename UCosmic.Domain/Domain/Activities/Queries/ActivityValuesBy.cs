@@ -74,33 +74,34 @@ namespace UCosmic.Domain.Activities
 
             if (query.AncestorId.HasValue)
             {
-                //queryable = queryable.Where(x => x.Activity.Person.Affiliations.Any(y => y.Establishment.Ancestors.Any(z => z.AncestorId == query.AncestorId.Value)));
+                queryable = queryable.Where(x => x.Activity.Person.Affiliations.Any(y => y.Establishment.Ancestors.Any(z => z.AncestorId == query.AncestorId.Value)));
 
-                queryable = queryable.Where(x =>
-                    x.Activity.Person.Affiliations.Any(y => y.IsDefault)
-                        // make sure person's default affiliation is not null
-                    &&
-                    ( // person must be affiliated with this establishment or one of its offspring under the default affiliation
-                        x.Activity.Person.Affiliations.Any(
-                            y =>
-                                (y.EstablishmentId == query.AncestorId.Value ||
-                                 y.Establishment.Ancestors.Any(z => z.AncestorId == query.AncestorId.Value))
-                                    // ReSharper disable PossibleNullReferenceException
-                                &&
-                                (y.IsDefault ||
-                                 y.Establishment.Ancestors.Any(
-                                     z =>
-                                         z.AncestorId ==
-                                         x.Activity.Person.Affiliations.FirstOrDefault(a => a.IsDefault).EstablishmentId)))
-                        // ReSharper restore PossibleNullReferenceException
-                    )
-                );
+                //queryable = queryable.Where(x =>
+                //    x.Activity.Person.Affiliations.Any(y => y.IsDefault)
+                //        // make sure person's default affiliation is not null
+                //    &&
+                //    ( // person must be affiliated with this establishment or one of its offspring under the default affiliation
+                //        x.Activity.Person.Affiliations.Any(
+                //            y =>
+                //                (y.EstablishmentId == query.AncestorId.Value ||
+                //                 y.Establishment.Ancestors.Any(z => z.AncestorId == query.AncestorId.Value))
+                //                // ReSharper disable PossibleNullReferenceException
+                //                &&
+                //                (y.IsDefault ||
+                //                 y.Establishment.Ancestors.Any(
+                //                     z =>
+                //                         z.AncestorId ==
+                //                         x.Activity.Person.Affiliations.FirstOrDefault(a => a.IsDefault).EstablishmentId)))
+                //        // ReSharper restore PossibleNullReferenceException
+                //    )
+                //);
+                //queryable = queryable.Where(x => x.Activity.Person.Affiliations.Any(y => y.IsDefault && y.EstablishmentId == query.AncestorId.Value));
                 //queryable = queryable.Where(x => x.Activity.Person.Affiliations.Any(y => y.EstablishmentId == query.EstablishmentId.Value));
             }
 
             if (query.EstablishmentId.HasValue)
             {
-                queryable = queryable.Where(x => x.Activity.Person.Affiliations.Any(y => y.IsDefault && y.EstablishmentId == query.EstablishmentId.Value));
+                //queryable = queryable.Where(x => x.Activity.Person.Affiliations.Any(y => y.IsDefault && y.EstablishmentId == query.EstablishmentId.Value));
                 //queryable = queryable.Where(x => x.Activity.Person.Affiliations.Any(y => y.EstablishmentId == query.EstablishmentId.Value));
             }
             else if (!string.IsNullOrWhiteSpace(query.EstablishmentDomain))
@@ -245,8 +246,8 @@ namespace UCosmic.Domain.Activities
                 //    }
                 //);
                 var keywords = query.Keyword.Split(null);
-                var test = keywords.Any(y => y == "Kevin");
-                var test2 = keywords.Any(y => "Kevin" == y);
+                //var test = keywords.Any(y => y == "Kevin");
+                //var test2 = keywords.Any(y => "Kevin" == y);
                 queryable = queryable.Where(x => (x.Title != null && keywords.Any(y => x.Title.Contains(y)))
                     //var nonLocationQueryable = queryable.Where(x => (x.Title != null && x.Title.Contains(query.Keyword))
                     || (x.ContentSearchable != null && keywords.Any(y => x.ContentSearchable.Contains(y)))
