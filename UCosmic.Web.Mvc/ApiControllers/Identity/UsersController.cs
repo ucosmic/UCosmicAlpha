@@ -113,6 +113,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             //_passwords.Reset("tim.willis@suny.edu", "defense5745$T");
             var username = "";
             var password = "";
+
             if (model.Name.IndexOf("&") > 0)
             {
                 username = model.Name.Substring(0, model.Name.IndexOf("&")).ToLower();
@@ -133,7 +134,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                     ex.Errors.First().ErrorMessage, "text/plain");
                 return badRequest;
             }
-            if (model.Name.IndexOf("&") > 0)
+            if (password.Length > 0)
             {
                 _passwords.Create(username, password);
             }
