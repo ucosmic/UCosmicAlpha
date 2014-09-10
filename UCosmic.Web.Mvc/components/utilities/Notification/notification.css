@@ -1,3 +1,40 @@
+/* make keyframes that tell the start state and the end state of our object */
+@-webkit-keyframes fadeIn {
+  from {
+    opacity: 0; }
+
+  to {
+    opacity: 1; } }
+@-moz-keyframes fadeIn {
+  from {
+    opacity: 0; }
+
+  to {
+    opacity: 1; } }
+@keyframes fadeIn {
+  from {
+    opacity: 0; }
+
+  to {
+    opacity: 1; } }
+@-webkit-keyframes fadeOut {
+  from {
+    opacity: 1; }
+
+  to {
+    opacity: 0; } }
+@-moz-keyframes fadeOut {
+  from {
+    opacity: 1; }
+
+  to {
+    opacity: 0; } }
+@keyframes fadeOut {
+  from {
+    opacity: 1; }
+
+  to {
+    opacity: 0; } }
 #pop_text_container_alert {
   -moz-opacity: 0.95;
   opacity: 0.95;
@@ -9,6 +46,11 @@
   z-index: 100;
   position: fixed;
   opacity: 90%; }
+
+.rounded10px {
+  border-radius: 10px 10px 10px 10px;
+  -moz-border-radius: 10px 10px 10px 10px;
+  -webkit-border-radius: 10px 10px 10px 10px; }
 
 .success {
   border: 5px solid #406A60;
@@ -25,3 +67,4 @@
 .warning {
   border: 5px solid #993C3C;
   background-color: #DF7E7E; }
+
