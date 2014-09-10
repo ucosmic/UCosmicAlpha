@@ -25,9 +25,6 @@ namespace UCosmic.Web.Mvc.Controllers
     public partial class HomeController
     {
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public HomeController() { }
-
-        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         protected HomeController(Dummy d) { }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -62,6 +59,7 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             public readonly string Index = "Index";
             public readonly string IndexSpike = "IndexSpike";
+            public readonly string EditHomePage = "EditHomePage";
             public readonly string Employees = "Employees";
             public readonly string Alumni = "Alumni";
             public readonly string Students = "Students";
@@ -76,6 +74,7 @@ namespace UCosmic.Web.Mvc.Controllers
         {
             public const string Index = "Index";
             public const string IndexSpike = "IndexSpike";
+            public const string EditHomePage = "EditHomePage";
             public const string Employees = "Employees";
             public const string Alumni = "Alumni";
             public const string Students = "Students";
@@ -99,6 +98,7 @@ namespace UCosmic.Web.Mvc.Controllers
                 public readonly string _Bib = "_Bib";
                 public readonly string Alumni = "Alumni";
                 public readonly string CorporateEngagement = "CorporateEngagement";
+                public readonly string EditHomePage = "EditHomePage";
                 public readonly string Employees = "Employees";
                 public readonly string GlobalPress = "GlobalPress";
                 public readonly string Index = "Index";
@@ -110,6 +110,7 @@ namespace UCosmic.Web.Mvc.Controllers
             public readonly string _Bib = "~/Views/Home/_Bib.cshtml";
             public readonly string Alumni = "~/Views/Home/Alumni.cshtml";
             public readonly string CorporateEngagement = "~/Views/Home/CorporateEngagement.cshtml";
+            public readonly string EditHomePage = "~/Views/Home/EditHomePage.cshtml";
             public readonly string Employees = "~/Views/Home/Employees.cshtml";
             public readonly string GlobalPress = "~/Views/Home/GlobalPress.cshtml";
             public readonly string Index = "~/Views/Home/Index.cshtml";
@@ -134,6 +135,12 @@ namespace UCosmic.Web.Mvc.Controllers
         public override System.Web.Mvc.ActionResult IndexSpike()
         {
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.IndexSpike);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.ActionResult EditHomePage()
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.EditHomePage);
             return callInfo;
         }
 
