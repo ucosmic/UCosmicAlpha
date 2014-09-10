@@ -14,5 +14,7 @@
         public const string Employees = "Employees";
         public const string Representatives = "Representatives";
         public const string External = "External";
+        public const string HomeSection = "HomeSection";
+        public const string HomeAlert = "HomeAlert";
     }
 }
