@@ -1,0 +1,35 @@
+﻿
+$bgColor:  rgba(234,238,255,0.95); 
+$bgColorTemp: darken($bgColor, 60%);  
+$bgColor2: fade-out($bgColorTemp, .50);
+$bgBorderColor: $bgColor2;
+$fontColor: darken($bgColor, 50%);
+$fontColor: fade-in($fontColor, .50);
+$Shadow: 0 1px 3px rgba(0, 0, 0, .4); 
+$Shadow2: 0px 6px 3px -5px rgba(0, 0, 0, .4);
+$Shadow3: 0px -6px 3px -5px rgba(0, 0, 0, .4);
+$ShadowInput: 0 0 3px 2px rgba(246,105,0,0.50);
+$ShadowInputDark: 0 0 3px 2px darken(rgba(246,105,0,0.87),50%);
+$ShadowInputNotRequired: 0 0 3px 2px rgba(141,237,235,0.87);
+$ShadowInputNotRequiredDark: 0 0 3px 2px darken(rgba(141,237,235,0.87),50%);
+$Shadow-right: 3px 0px 3px -2px rgba(0, 0, 0, .4);
+$Shadow-left: -3px 0px 3px -2px rgba(0, 0, 0, .4);
+$BordersMain: 10px solid $bgBorderColor; 
+$BorderRadiusRoundAll: 25px 25px 25px 25px;
+$BorderRadiusRoundRight: 0px 25px 25px 0px;
+$BorderRadiusRoundLeft: 25px 0px 0px 25px;
+$HeaderFooterZ-index: 100;
+$bodyMin-width:280px!important; 
+$logoText-Shadow: 1px 1px 2px rgba(49,49,49,0.9);
+
+
+$mainFooterHeight:55px;
+
+$divmainHeaderHeight:97px;
+
+$middleColumnsTop: -$divmainHeaderHeight + 8; 
+
+$divmainHeaderMin-width:275px !important;
+
+$navTempColor: lighten(#FFCB1A, 20%);
+$navCurrentColor: desaturate($navTempColor, 10%);
