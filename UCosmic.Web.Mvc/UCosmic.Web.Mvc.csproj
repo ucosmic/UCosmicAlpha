@@ -111,46 +111,57 @@
     <Reference Include="LowercaseRoutesMVC4">
       <HintPath>..\packages\LowercaseRoutesMVC4.0.4.1\lib\LowercaseRoutesMVC4.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.ApplicationServer.Caching.Client, Version=101.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\WindowsAzure.Caching.1.7.0.0\lib\net35-full\Microsoft.ApplicationServer.Caching.Client.dll</HintPath>
+    <Reference Include="Microsoft.ApplicationServer.Caching.AzureClientHelper, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.WindowsAzure.Caching.2.4.0.0\lib\net40-full\Microsoft.ApplicationServer.Caching.AzureClientHelper.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.ApplicationServer.Caching.Core, Version=101.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\WindowsAzure.Caching.1.7.0.0\lib\net35-full\Microsoft.ApplicationServer.Caching.Core.dll</HintPath>
+    <Reference Include="Microsoft.ApplicationServer.Caching.AzureCommon, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.WindowsAzure.Caching.2.4.0.0\lib\net40-full\Microsoft.ApplicationServer.Caching.AzureCommon.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ApplicationServer.Caching.Client, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.WindowsAzure.Caching.2.4.0.0\lib\net40-full\Microsoft.ApplicationServer.Caching.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ApplicationServer.Caching.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.WindowsAzure.Caching.2.4.0.0\lib\net40-full\Microsoft.ApplicationServer.Caching.Core.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.Data.Edm, Version=5.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.Data.Edm.5.2.0\lib\net40\Microsoft.Data.Edm.dll</HintPath>
+    <Reference Include="Microsoft.Data.Edm, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Data.Edm.5.6.0\lib\net40\Microsoft.Data.Edm.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Data.OData, Version=5.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.Data.OData.5.2.0\lib\net40\Microsoft.Data.OData.dll</HintPath>
+    <Reference Include="Microsoft.Data.OData, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Data.OData.5.6.0\lib\net40\Microsoft.Data.OData.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Data.Services.Client, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Data.Services.Client.5.6.0\lib\net40\Microsoft.Data.Services.Client.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Web.Administration, Version=7.9.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\..\Windows\System32\inetsrv\Microsoft.Web.Administration.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.Web.DistributedCache, Version=101.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\WindowsAzure.Caching.1.7.0.0\lib\net35-full\Microsoft.Web.DistributedCache.dll</HintPath>
+    <Reference Include="Microsoft.Web.DistributedCache, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.WindowsAzure.Caching.2.4.0.0\lib\net40-full\Microsoft.Web.DistributedCache.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.WindowsAzure.Configuration, Version=1.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
-    <Reference Include="Microsoft.WindowsAzure.Diagnostics, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+    <Reference Include="Microsoft.WindowsAzure.Configuration, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.WindowsAzure.ConfigurationManager.2.0.3\lib\net40\Microsoft.WindowsAzure.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAzure.Diagnostics, Version=2.4.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unofficial.Microsoft.WindowsAzure.Diagnostics.2.4.0.0\lib\net40\Microsoft.WindowsAzure.Diagnostics.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.WindowsAzure.ServiceRuntime, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+    <Reference Include="Microsoft.WindowsAzure.ServiceRuntime, Version=2.4.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>False</Private>
+      <HintPath>..\packages\Unofficial.Microsoft.WindowsAzure.ServiceRuntime.2.4.0.0\lib\net40\Microsoft.WindowsAzure.ServiceRuntime.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.WindowsAzure.Storage, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.WindowsAzure.Storage, Version=4.2.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\WindowsAzure.Storage.2.1.0.0\lib\net40\Microsoft.WindowsAzure.Storage.dll</HintPath>
+      <HintPath>..\packages\WindowsAzure.Storage.4.2.1\lib\net40\Microsoft.WindowsAzure.Storage.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.WindowsAzure.StorageClient, Version=1.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.WindowsFabric.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\WindowsAzure.Caching.1.7.0.0\lib\net35-full\Microsoft.WindowsFabric.Common.dll</HintPath>
+      <HintPath>..\packages\Microsoft.WindowsAzure.Caching.2.4.0.0\lib\net40-full\Microsoft.WindowsFabric.Common.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.WindowsFabric.Data.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\WindowsAzure.Caching.1.7.0.0\lib\net35-full\Microsoft.WindowsFabric.Data.Common.dll</HintPath>
+      <HintPath>..\packages\Microsoft.WindowsAzure.Caching.2.4.0.0\lib\net40-full\Microsoft.WindowsFabric.Data.Common.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -170,25 +181,22 @@
     <Reference Include="Pluralize.Mvc">
       <HintPath>..\packages\Pluralizer.Mvc.0.3.0.1\lib\net40\Pluralize.Mvc.dll</HintPath>
     </Reference>
-    <Reference Include="SimpleInjector, Version=1.6.0.12319, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
+    <Reference Include="SimpleInjector, Version=2.6.0.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SimpleInjector.1.6.0.12319\lib\net35\SimpleInjector.dll</HintPath>
+      <HintPath>..\packages\SimpleInjector.2.6.0-beta1\lib\net40-client\SimpleInjector.dll</HintPath>
     </Reference>
-    <Reference Include="SimpleInjector.Extensions, Version=1.6.0.12319, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SimpleInjector.Extensions.1.6.0.12319\lib\net35\SimpleInjector.Extensions.dll</HintPath>
+    <Reference Include="SimpleInjector.Diagnostics">
+      <HintPath>..\packages\SimpleInjector.2.6.0-beta1\lib\net40-client\SimpleInjector.Diagnostics.dll</HintPath>
     </Reference>
     <Reference Include="SimpleInjector.Extensions.LifetimeScoping, Version=1.6.0.12319, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\SimpleInjector.Extensions.LifetimeScoping.1.6.0.12319\lib\net40\SimpleInjector.Extensions.LifetimeScoping.dll</HintPath>
     </Reference>
-    <Reference Include="SimpleInjector.Integration.Web, Version=1.6.0.12319, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SimpleInjector.Integration.Web.1.6.0.12319\lib\net40\SimpleInjector.Integration.Web.dll</HintPath>
+    <Reference Include="SimpleInjector.Integration.Web">
+      <HintPath>..\packages\SimpleInjector.Integration.Web.2.6.0-beta1\lib\net40\SimpleInjector.Integration.Web.dll</HintPath>
     </Reference>
-    <Reference Include="SimpleInjector.Integration.Web.Mvc, Version=1.6.0.12319, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SimpleInjector.MVC3.1.6.0.12319\lib\net40\SimpleInjector.Integration.Web.Mvc.dll</HintPath>
+    <Reference Include="SimpleInjector.Integration.Web.Mvc">
+      <HintPath>..\packages\SimpleInjector.Integration.Web.Mvc.2.6.0-beta1\lib\net40\SimpleInjector.Integration.Web.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -204,9 +212,8 @@
     <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
-    <Reference Include="System.Spatial, Version=5.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\System.Spatial.5.2.0\lib\net40\System.Spatial.dll</HintPath>
+    <Reference Include="System.Spatial, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Spatial.5.6.0\lib\net40\System.Spatial.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -318,6 +325,7 @@
     <Compile Include="ApiControllers\Employees\EmployeeSettingsController.cs" />
     <Compile Include="ApiControllers\Expertise\GeographicExpertiseController.cs" />
     <Compile Include="ApiControllers\Expertise\LanguageExpertiseController.cs" />
+    <Compile Include="ApiControllers\Home\HomeSectionController.cs" />
     <Compile Include="ApiControllers\Home\HomePhotoController.cs" />
     <Compile Include="ApiControllers\People\AffiliationsController.cs" />
     <Compile Include="CountryController.generated.cs">
@@ -332,8 +340,9 @@
     <Compile Include="Models\Activities\Search\ActivitySearchResultMapCountriesModel.cs" />
     <Compile Include="Models\Activities\Search\ActivitySearchResultMapContinentsModel.cs" />
     <Compile Include="Models\Activities\Search\ActivitySearchResultMapModel.cs" />
-    <Compile Include="Models\Home\HomeLink.cs" />
-    <Compile Include="Models\Home\HomeSection.cs" />
+    <Compile Include="Models\Home\HomeLinkModel.cs" />
+    <Compile Include="Models\Home\HomeSectionApiModel.cs" />
+    <Compile Include="Models\Home\HomeSectionModel.cs" />
     <Compile Include="Models\Home\HomeModel.cs" />
     <Compile Include="Models\People\PersonUrlViewModel.cs" />
     <Compile Include="Models\People\PersonUrlApiModel.cs" />
@@ -616,8 +625,21 @@
     <Content Include="components\form\inputs\rtf\rtf\rtf.image.js" />
     <Content Include="components\form\inputs\rtf\rtf\rtf.js" />
     <Content Include="components\form\inputs\rtf\rtf\rtf.link.js" />
+    <Content Include="components\pages\Home\editHomePage.js">
+      <DependentUpon>editHomePage.ts</DependentUpon>
+    </Content>
+    <Content Include="components\pages\Home\index.js">
+      <DependentUpon>index.ts</DependentUpon>
+    </Content>
+    <Content Include="components\pages\Home\indexHasDomain\addEdit.js">
+      <DependentUpon>addEdit.ts</DependentUpon>
+    </Content>
+    <Content Include="components\pages\Home\indexHasDomain\addLink\addLink.html" />
     <Content Include="components\pages\Home\indexHasDomain\base.css">
       <DependentUpon>base.scss</DependentUpon>
+    </Content>
+    <Content Include="components\pages\Home\indexHasDomain\custom.js">
+      <DependentUpon>custom.ts</DependentUpon>
     </Content>
     <Content Include="components\pages\Home\indexHasDomain\images\agreements\folder-contract-icon.png" />
     <Content Include="components\pages\Home\indexHasDomain\images\user\male-and-female-256.png" />
@@ -1268,11 +1290,6 @@
     <Content Include="components\Polymer\bower_components\web-animations-js\run-tests-android.sh" />
     <Content Include="components\Polymer\bower_components\web-animations-js\run-tests.sh" />
     <Content Include="components\Polymer\bower_components\web-animations-js\test\testcases\small.webm" />
-    <Content Include="components\Polymer\bower_components\web-animations-js\tools\.keepme" />
-    <Content Include="components\Polymer\bower_components\web-animations-js\tools\android\config.sh" />
-    <Content Include="components\Polymer\bower_components\web-animations-js\tools\android\setup.sh" />
-    <Content Include="components\Polymer\bower_components\web-animations-js\tools\android\stop.sh" />
-    <Content Include="components\Polymer\bower_components\web-animations-js\tools\python\setup.sh" />
     <Content Include="components\form\inputs\required.scss" />
     <Content Include="components\form\inputs\rtf\rtf.scss" />
     <Content Include="components\popup\basePopup.css.map" />
@@ -1989,9 +2006,6 @@
     <Content Include="components\Polymer\bower_components\web-animations-js\.gitignore" />
     <Content Include="components\Polymer\bower_components\web-animations-js\.gitmodules" />
     <Content Include="components\Polymer\bower_components\web-animations-js\test\bootstrap.js" />
-    <Content Include="components\Polymer\bower_components\web-animations-js\test\img\error.png" />
-    <Content Include="components\Polymer\bower_components\web-animations-js\test\img\success.png" />
-    <Content Include="components\Polymer\bower_components\web-animations-js\test\img\unknown.png" />
     <Content Include="components\Polymer\bower_components\web-animations-js\test\perf\balls-add-compositing.html" />
     <Content Include="components\Polymer\bower_components\web-animations-js\test\perf\balls-replace-compositing.html" />
     <Content Include="components\Polymer\bower_components\web-animations-js\test\perf\perf.js" />
@@ -2154,8 +2168,6 @@
     <Content Include="components\Polymer\bower_components\web-animations-js\test\testcases\unit-test-unpause.html" />
     <Content Include="components\Polymer\bower_components\web-animations-js\test\testharness_timing.css" />
     <Content Include="components\Polymer\bower_components\web-animations-js\test\update-testcases.py" />
-    <Content Include="components\Polymer\bower_components\web-animations-js\tools\python\requirements.txt" />
-    <Content Include="components\Polymer\bower_components\web-animations-js\tools\python\run-tests.py" />
     <Content Include="components\Polymer\bower_components\web-animations-js\tutorial\basic-animations\basic-animation-exercise-1.html" />
     <Content Include="components\Polymer\bower_components\web-animations-js\tutorial\basic-animations\basic-animation.html" />
     <Content Include="components\Polymer\bower_components\web-animations-js\tutorial\iframe-contents.html" />
@@ -2177,7 +2189,9 @@
     <Content Include="components\utilities\ElRelativeToEl.html" />
     <Content Include="components\utilities\ElRelativeToEl.js" />
     <Content Include="components\utilities\mixins.css" />
-    <Content Include="components\utilities\Notification\notification.css" />
+    <Content Include="components\utilities\Notification\notification.css">
+      <DependentUpon>notification.scss</DependentUpon>
+    </Content>
     <Content Include="components\utilities\Notification\notification.html" />
     <Content Include="components\utilities\Notification\notification.js" />
     <Content Include="components\utilities\validation.html" />
@@ -2368,10 +2382,16 @@
     <Content Include="content\themes\base\minified\jquery.ui.tabs.min.css" />
     <Content Include="content\themes\base\minified\jquery.ui.theme.min.css" />
     <Content Include="content\themes\base\minified\jquery.ui.tooltip.min.css" />
+    <Content Include="css\utilities\mixins.css" />
+    <Content Include="css\utilities\vars.css" />
     <Content Include="images\antarctica_283x35.png" />
     <Content Include="images\bg\ui-bg_flat_black_40x100.png" />
     <TypeScriptCompile Include="components\form\inputs\required.ts" />
     <TypeScriptCompile Include="components\form\inputs\rtf\rtf.ts" />
+    <TypeScriptCompile Include="components\pages\Home\index.ts" />
+    <TypeScriptCompile Include="components\pages\Home\editHomePage.ts" />
+    <TypeScriptCompile Include="components\pages\Home\indexHasDomain\addEdit.ts" />
+    <TypeScriptCompile Include="components\pages\Home\indexHasDomain\addLink\addLink.ts" />
     <TypeScriptCompile Include="components\pages\Home\indexHasDomain\custom.ts" />
     <TypeScriptCompile Include="components\popup\basePopup.ts" />
     <TypeScriptCompile Include="components\typeDiff\myTypes.d.ts" />
@@ -2457,6 +2477,17 @@
     <Content Include="images\icons\spinner\spinner-20-grey.gif" />
     <Content Include="images\icons\spinner\spinner-24-blue-on-ddd.gif" />
     <Content Include="images\icons\spinner\spinner-24-blue.gif" />
+    <Content Include="css\utilities\mixins.css.map" />
+    <Content Include="css\utilities\mixins.scss" />
+    <Content Include="css\utilities\site.scss" />
+    <Content Include="css\utilities\vars.css.map" />
+    <Content Include="css\utilities\vars.scss" />
+    <None Include="Microsoft.WindowsAzure.Caching\ClientPerfCountersInstaller.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Microsoft.WindowsAzure.Caching\ClientPerfCountersInstaller.exe.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="scripts\jquery\jquery-1.9.1.intellisense.js" />
     <Content Include="images\icons\user\male-and-female-256.png" />
     <Content Include="images\placeholders\ExpertiseMock.png" />
@@ -2466,6 +2497,9 @@
     <None Include="scripts\oss\D3-LICENSE.txt" />
     <TypeScriptCompile Include="scripts\app\Routes.d.ts" />
     <TypeScriptCompile Include="scripts\app\DataCacher.ts" />
+    <None Include="Microsoft.WindowsAzure.Caching\PerformanceCounters.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <Content Include="scripts\app\DataCacher.js">
       <DependentUpon>DataCacher.ts</DependentUpon>
     </Content>
@@ -4308,6 +4342,7 @@
     <Content Include="Views\Employees\Map.cshtml" />
     <Content Include="Views\Shared\_Layout2.cshtml" />
     <Content Include="Views\Home\IndexSpike.cshtml" />
+    <Content Include="Views\Home\EditHomePage.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -4459,8 +4494,11 @@
     <Folder Include="components\Polymer\bower_components\web-animations-js\test\coverage\escodegen\" />
     <Folder Include="components\Polymer\bower_components\web-animations-js\test\coverage\esprima\" />
     <Folder Include="components\Polymer\bower_components\web-animations-js\test\coverage\istanbul\" />
+    <Folder Include="components\Polymer\bower_components\web-animations-js\test\img\" />
     <Folder Include="components\Polymer\bower_components\web-animations-js\test\testharness\" />
+    <Folder Include="components\Polymer\bower_components\web-animations-js\tools\" />
     <Folder Include="content\mail\" />
+    <Folder Include="css\NewFolder1\" />
     <Folder Include="Views\Country\" />
   </ItemGroup>
   <ItemGroup>
@@ -4500,6 +4538,41 @@
     <DefineConstants>TRACE;DEBUG</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE;AZURE</DefineConstants>
+    <Optimize>true</Optimize>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Emulate|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;AZURE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugBuildTs|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
