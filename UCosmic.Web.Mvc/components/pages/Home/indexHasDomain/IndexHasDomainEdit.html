@@ -1,61 +1,98 @@
-﻿<polymer-element name="polymer-content-home-has-domain-custom" attributes="styleDomain">
+﻿
+<link rel="import" href="../../../form/inputs/required.html">
+<link rel="import" href="../../../form/inputs/button/button.html">
+<link rel="import" href="addLink/addLink.html">
+<polymer-element name="polymer-content-home-has-domain-edit" attributes="sectionAdded addedSection cancel">
     <template>
-        <hr style="height: 10px; border: 0;" />
-        <div class="group">
-            <div class="on-left">
-                <img alt="" src="~/images/icons/agreements/folder-contract-icon.png" style="height: 160px;" />
-            </div>
-            <div class="on-left" style="margin-left: 20px;">
-                <header>
-                    <h2>Agreements</h2>
-                </header>
-                <p style="margin-bottom: 5px;">
-                    The Agreements tab at the top of every page is your gateway to:
-                </p>
-                <ul style="list-style-type: disc; margin-left: 20px; ">
-                    <li style="line-height: 30px;">
-                        <a href="/{{styleDomain}}/agreements/#/map/">Visualizing our international agreement partners</a>
-                    </li>
-                    <li style="line-height: 30px;">
-                        <a href="/{{styleDomain}}/agreements/#/table/">Searching our agreement database</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <hr style="height: 20px; border: 0;" />
-        <div class="group">
-            <div class="on-left">
-                <img alt="" src="~/images/icons/user/male-and-female-256.png" style="height: 160px;" />
-            </div>
-            <div class="on-left" style="margin-left: 20px;">
-                <header>
-                    <h2>Faculty &amp; Staff</h2>
-                </header>
-                <p style="margin-bottom: 5px;">
-                    The Faculty &amp; Staff tab at the top of every page is your gateway to:
-                </p>
-                <ul style="list-style-type: disc; margin-left: 20px; ">
-                    <li style="line-height: 30px;">
-                        <a href="{{styleDomain}}/employees/">Viewing a global snapshot of international activity</a>
-                    </li>
-                    <li style="line-height: 30px;">
-                        <a href="{{styleDomain}}/employees/table/">Searching our activity database</a>
-                    </li>
-                    <li style="line-height: 30px;">
-                        <a href="{{styleDomain}}/employees/degrees/table/">Searching our formal education database</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <polymer-ajax url="{{urlAjaxProfileProfile}}"
+        <!--<form id="profileForm" on-submit="{{addEdit}}">-->
+        <table style="padding: 0px; width:600px" id="homeSectionTable" cellpadding="0" cellspacing="0" border="0">
+            <tbody>
+                <tr>
+                    <td colspan="2">
+                        <table cellpadding="0" cellspacing="0" border="0" style="width:100%; margin-bottom:12px;">
+                            <tbody>
+                                <tr>
+                                    <td colspan="2">
+                                        <img id="picture" src="{{imageSrc}}" style="width:160px; max-height:180px; border:0; display:none;  padding-right:8px;" />
+                                    </td>
+                                    <td align="left" style="text-align: left; min-width: 250px; width:100%; vertical-align: top;">
+                                        <div style="margin:4px 0;">Image</div>
+                                        <input type="file" name="image" id="image" on-change="{{imageSelected}}" />
+                                        <div id="imageMessage" style="padding: 3px 3px 0px 0.5em; margin: -12px 0 8px; display: none;color: red;">
+                                            {{imageMessage}}
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                <tr />
+                <tr>
+                    <td colspan="2" align="left" style="text-align: left; min-width: 250px; width:100%">
+                        <div style="margin:4px 0;">Title</div>
+                        <polymer-inputs-required mystyle="width:100%;" style="float:left; width:100%" textboxrequiredclass="requiredInit" alertclass="Alert"
+                                                 mytype="text" mymaxlength="32" inputmessage="{{titleMessage}}" min="2"
+                                                 id="title" myvalue="{{title}}" name="title" isrequired="required">
+                        </polymer-inputs-required>
+                    </td>
+                <tr />
+                <tr>
+                    <td colspan="2" align="left" style="text-align: left; min-width: 250px; width:100%">
+                        <div style="margin:4px 0;">Description</div>
+                        <polymer-inputs-required mystyle="width:100%; height:100px;" style="float:left; width:100%" textboxrequiredclass="requiredInit" alertclass="Alert"
+                                                 isvalidated="{{isValidated}}" inputmessage="{{descriptionMessage}}" min="20"
+                                                 mymaxlength="500" myvalue="{{description}}" mytype="textarea"
+                                                 id="description" name="description" isrtf="true" isrequired="required">
+                        </polymer-inputs-required>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding-top:10px;">
+                        <template repeat="{{link in links}}">
+                            <span align="left" style="text-align: left; min-width: 250px; width:100%; margin-top:4px;">
+                                <a href="{{link.url}}">{{link.text}}{{text}}</a>
+                            </span>
+                            <span align="right" style="text-align: right; width: 40px; vertical-align: middle; float: right;margin-right: 79px;">
+                                <polymer-button myid="b_deleteLink" text="Delete Link" color="" on-click="{{deleteLink}}"></polymer-button>
+                            </span>
+                        </template>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" align="left" style="text-align: left; min-width: 250px; width:100%;">
+                        <polymer-content-home-has-domain-edit-add-link linkadded="{{linkAdded}}" addedlink="{{addedLink}}"></polymer-content-home-has-domain-edit-add-link>
+                        <div id="linkMessage" style="padding: 3px 3px 0px 0.5em; margin: -12px 0 8px; display: none;color: red;">
+                            At least 1 link is required.
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" align="right" style="text-align: right; width: 40px; vertical-align: middle;">
+                        <polymer-button myid="b_addEditSection" text="{{buttonText}}" color="" on-click="{{addEdit}}"></polymer-button>
+                        <polymer-button myid="b_cancelSection" text="cancel" color="" on-click="{{cancelSection}}"></polymer-button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <!--</form>-->
+        <polymer-ajax url="/api/home/section"
+                      params='{"Description":"{{description}}",
+                            "Links":"{{links}}",
+                            "Title":"{{title}}"}'
                       handleas="json"
-                      on-polymer-response="{{profileProfileResponse}}"
-                      on-polymer-error="{ { profileProfileError } }"
-                      id="ajax_profileProfile"
-                      sync="true">
+                      method="post"
+                      on-polymer-response="{{addSectionResponse}}"
+                      on-polymer-error="{{ajaxError}}"
+                      id="ajax_addSection">
+        </polymer-ajax>
+        <polymer-ajax url=""
+                      handleas="json"
+                      on-polymer-response="{{addPhotoResponse}}"
+                      on-polymer-error="{{ajaxError}}"
+                      id="ajax_addPhoto">
         </polymer-ajax>
     </template>
-    <script src="profile/profile.js"></script>
+    <script src="addEdit.js"></script>
 
 </polymer-element>
 
