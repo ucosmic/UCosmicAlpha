@@ -41,6 +41,32 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE;AZURE</DefineConstants>
+    <Optimize>true</Optimize>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Emulate|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Emulate\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;AZURE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="AutoMapper, Version=2.2.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -60,6 +86,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Lucene.Net.3.0.3\lib\NET40\Lucene.Net.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.5.0.6\lib\net40\Newtonsoft.Json.dll</HintPath>
@@ -70,6 +97,18 @@
     </Reference>
     <Reference Include="Pluralize">
       <HintPath>..\packages\Pluralizer.0.3.0.1\lib\net40\Pluralize.dll</HintPath>
+    </Reference>
+    <Reference Include="SimpleInjector">
+      <HintPath>..\packages\SimpleInjector.2.6.0-beta1\lib\net40-client\SimpleInjector.dll</HintPath>
+    </Reference>
+    <Reference Include="SimpleInjector.Diagnostics">
+      <HintPath>..\packages\SimpleInjector.2.6.0-beta1\lib\net40-client\SimpleInjector.Diagnostics.dll</HintPath>
+    </Reference>
+    <Reference Include="SimpleInjector.Integration.Web">
+      <HintPath>..\packages\SimpleInjector.Integration.Web.2.6.0-beta1\lib\net40\SimpleInjector.Integration.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="SimpleInjector.Integration.Web.Mvc">
+      <HintPath>..\packages\SimpleInjector.Integration.Web.Mvc.2.6.0-beta1\lib\net40\SimpleInjector.Integration.Web.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
@@ -100,6 +139,28 @@
     <Compile Include="Domain\Establishments\Queries\EmailDomainsByEstablishment.cs" />
     <Compile Include="Domain\Establishments\Work\AddUsfEmailDomains.cs" />
     <Compile Include="Domain\Establishments\Work\AddNewEstablishmentTypes.cs" />
+    <Compile Include="Domain\Home\Commands\CreateHomeAlert.cs" />
+    <Compile Include="Domain\Home\Commands\CreateHomeSection.cs" />
+    <Compile Include="Domain\Home\Commands\CreateHomeLink.cs" />
+    <Compile Include="Domain\Home\Commands\DeleteHomeAlert.cs" />
+    <Compile Include="Domain\Home\Commands\DeleteHomeSection.cs" />
+    <Compile Include="Domain\Home\Commands\DeleteHomePhoto.cs" />
+    <Compile Include="Domain\Home\Commands\UpdateHomeAlert.cs" />
+    <Compile Include="Domain\Home\Commands\UpdateHomeSection.cs" />
+    <Compile Include="Domain\Home\Entities\HomeAlert.cs" />
+    <Compile Include="Domain\Home\Queries\HomeAlertByEstablishmentId.cs" />
+    <Compile Include="Domain\Home\Queries\HomeSectionByEstablishmentId.cs" />
+    <Compile Include="Domain\Home\Queries\HomeAlertById.cs" />
+    <Compile Include="Domain\Home\Queries\HomeSectionById.cs" />
+    <Compile Include="Domain\Home\Queries\HomeLinksByHomeSectionId.cs" />
+    <Compile Include="Domain\Home\Validation\HomeSectionConstraints.cs" />
+    <Compile Include="Domain\Home\Validation\HomeSectionValidation.cs" />
+    <Compile Include="Domain\Home\Validation\MustBeOwnedByPrincipal.cs" />
+    <Compile Include="Domain\Home\Validation\MustFindHomeAlertById.cs" />
+    <Compile Include="Domain\Home\Validation\MustFindHomeSectionById.cs" />
+    <Compile Include="Domain\Home\_Internal\QueryHomeAlert.cs" />
+    <Compile Include="Domain\Home\_Internal\QueryHomeSection.cs" />
+    <Compile Include="Domain\People\Commands\UpdateMyPhoto.cs" />
     <Compile Include="Domain\Home\Commands\UpdateHomePhoto.cs" />
     <Compile Include="Domain\Home\Entities\HomeSection.cs" />
     <Compile Include="Domain\Home\Entities\HomeLink.cs" />
@@ -640,7 +701,6 @@
     <Compile Include="Domain\Identity\Queries\MyPreferencesByCategory.cs" />
     <Compile Include="Domain\Identity\_Internal\QueryPreferences.cs" />
     <Compile Include="Domain\People\Commands\DeleteMyPhoto.cs" />
-    <Compile Include="Domain\People\Commands\UpdateMyPhoto.cs" />
     <Compile Include="Domain\People\_Deprecatable\UpdateMyProfile.cs" />
     <Compile Include="Domain\People\Validation\MustNotBeRegisteredUser.cs" />
     <Compile Include="Domain\Identity\Validation\MustHaveLocalMembershipAccount.cs" />
@@ -823,7 +883,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Domain\Establishments\EstablishmentAggregate.cd" />
     <None Include="Domain\Languages\LanguageAggregate.cd" />
     <None Include="Domain\Places\PlaceAggregate.cd" />
