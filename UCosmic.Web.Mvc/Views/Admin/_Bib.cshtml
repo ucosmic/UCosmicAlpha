@@ -14,4 +14,10 @@
             <a href="@Url.Action(MVC.Users.Index())">Users</a>
         </li>
     }
+    @if (User.IsInAnyRole(RoleName.SecurityAdministrator))
+    {
+        <li class="home">
+            <a href="@Url.Action(MVC.Home.EditHomePage())">Home Page</a>
+        </li>
+    }
 </ul>
