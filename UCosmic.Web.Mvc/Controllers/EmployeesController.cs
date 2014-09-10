@@ -49,8 +49,40 @@ namespace UCosmic.Web.Mvc.Controllers
         [GET("{domain}/employees/table")]
         public virtual ActionResult Table(string domain, ActivitySearchInputModel input)
         {
+            //input.AncestorId = null;
             var query = new ActivityValuesPageBy
             {
+                EagerLoad = new Expression<Func<ActivityValues, object>>[]
+                {
+                    //x => x.Activity.Person.Affiliations,
+                    x => x.Activity.Person.Affiliations,
+                    x => x.Activity.Person.Affiliations.Select(y => y.Establishment),
+                    x => x.Activity.Person.Affiliations.Select(y => y.Establishment.Ancestors),//.Select(z => z.Ancestor)),
+                    //x => x.Locations,                    
+                    //x => x.Tags,
+                    //x => x.Types,
+                    //x => x.Activity,
+                    //x => x.Activity.Values,
+                    //x => x.Locations.Select(z => z.Place),
+                    //x => x.Locations.Select(z => z.Place.GeoNamesToponym),
+                    //x => x.Locations.Select(z => z.Place.GeoPlanetPlace),
+                    //x => x.Locations.Select(z => z.Place.Ancestors),
+                    //x => x.Locations.Select(z => z.Place.Ancestors.Select(y => y.Ancestor)),
+                    //x => x.Locations.Select(z => z.Place.Ancestors.Select(y => y.Ancestor.GeoNamesToponym)),
+                    //x => x.Locations.Select(z => z.Place.Ancestors.Select(y => y.Ancestor.GeoPlanetPlace)),
+                }
+                //EagerLoad = new Expression<Func<ActivityValues, object>>[]
+                //{
+                //    x => x.Activity.Values,
+                //    x => x.Locations.Select(z => z.Place),
+                //    x => x.Locations.Select(z => z.Place.GeoNamesToponym),
+                //    x => x.Locations.Select(z => z.Place.GeoPlanetPlace),
+                //    x => x.Locations.Select(z => z.Place.Ancestors),
+                //    x => x.Locations.Select(z => z.Place.Ancestors.Select(y => y.Ancestor)),
+                //    x => x.Locations.Select(z => z.Place.Ancestors.Select(y => y.Ancestor.GeoNamesToponym)),
+                //    x => x.Locations.Select(z => z.Place.Ancestors.Select(y => y.Ancestor.GeoPlanetPlace)),
+           
+                //}
             };
             Mapper.Map(input, query);
             var results = _queryProcessor.Execute(query);
