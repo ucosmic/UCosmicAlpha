@@ -7,17 +7,16 @@ using UCosmic.Domain.Audit;
 using UCosmic.Domain.Files;
 using UCosmic.Domain.Identity;
 
-namespace UCosmic.Domain.People
+namespace UCosmic.Domain.Home
 {
-    public class UpdateMyHome
+    public class UpdateHomePhoto
     {
-        public UpdateMyHome(IPrincipal principal)
+        public UpdateHomePhoto(Int32 homeSectionId)
         {
-            if (principal == null) throw new ArgumentNullException("principal");
-            Principal = principal;
+            //if (homeSectionId == null) throw new ArgumentNullException("homeSectionId");
+            HomeSectionId = homeSectionId;
         }
-
-        public IPrincipal Principal { get; private set; }
+        public Int32 HomeSectionId { get; private set; }
         public byte[] Content { get; set; }
         public string Name { get; set; }
         public string MimeType { get; set; }
@@ -25,19 +24,19 @@ namespace UCosmic.Domain.People
         internal bool NoCommit { get; set; }
     }
 
-    public class ValidateUpdateMyHomeCommand : AbstractValidator<UpdateMyHome>
+    public class ValidateUpdateHomePhotoCommand : AbstractValidator<UpdateHomePhoto>
     {
-        public ValidateUpdateMyHomeCommand(IQueryEntities entities)
+        public ValidateUpdateHomePhotoCommand(IQueryEntities entities)
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
-            RuleFor(x => x.Principal)
-                .NotNull()
-                    .WithMessage(MustNotHaveNullPrincipal.FailMessage)
-                .MustNotHaveEmptyIdentityName()
-                    .WithMessage(MustNotHaveEmptyIdentityName.FailMessage)
-                .MustFindUserByPrincipal(entities)
-            ;
+            //RuleFor(x => x.Principal)
+            //    .NotNull()
+            //        .WithMessage(MustNotHaveNullPrincipal.FailMessage)
+            //    .MustNotHaveEmptyIdentityName()
+            //        .WithMessage(MustNotHaveEmptyIdentityName.FailMessage)
+            //    .MustFindUserByPrincipal(entities)
+            //;
 
             RuleFor(x => x.Content)
                 .NotNull().WithMessage(MustHaveFileContent.FailMessage)
@@ -47,7 +46,7 @@ namespace UCosmic.Domain.People
 
             RuleFor(x => x.Name)
                 .NotEmpty().WithMessage(MustHaveFileName.FailMessage)
-                .MustHaveAllowedFileExtension(PersonConstraints.AllowedPhotoFileExtensions)
+                .MustHaveAllowedFileExtension(HomeSectionConstraints.AllowedPhotoFileExtensions)
             ;
 
             RuleFor(x => x.MimeType)
@@ -56,15 +55,15 @@ namespace UCosmic.Domain.People
         }
     }
 
-    public class HandleUpdateMyHomeCommand : IHandleCommands<UpdateMyHome>
+    public class HandleUpdateHomePhotoCommand : IHandleCommands<UpdateHomePhoto>
     {
         private readonly ICommandEntities _entities;
-        private readonly IHandleCommands<DeleteMyHome> _photoDeleteHandler;
+        private readonly IHandleCommands<DeleteHomePhoto> _photoDeleteHandler;
         private readonly IStoreBinaryData _binaryData;
         private readonly IUnitOfWork _unitOfWork;
 
-        public HandleUpdateMyHomeCommand(ICommandEntities entities
-            , IHandleCommands<DeleteMyHome> photoDeleteHandler
+        public HandleUpdateHomePhotoCommand(ICommandEntities entities
+            , IHandleCommands<DeleteHomePhoto> photoDeleteHandler
             , IStoreBinaryData binaryData
             , IUnitOfWork unitOfWork
         )
@@ -75,25 +74,31 @@ namespace UCosmic.Domain.People
             _unitOfWork = unitOfWork;
         }
 
-        public void Handle(UpdateMyHome command)
+        public void Handle(UpdateHomePhoto command)
         {
             if (command == null) { throw new ArgumentNullException("command"); }
 
-            var person = _entities.Get<Person>()
-                .EagerLoad(_entities, new Expression<Func<Person, object>>[]
+            var homeSection = _entities.Get<HomeSection>()
+                .EagerLoad(_entities, new Expression<Func<HomeSection, object>>[]
                 {
                     x => x.Photo,
                 })
-                .ByUserName(command.Principal.Identity.Name);
+                .ById(command.HomeSectionId);
+            //.Where(x => x.Id == command.HomeSectionId);
+            if (homeSection == null)
+            {
+                throw new Exception("HomeSection is null, cannot add photo.");
+                return;
+            }
 
             // delete previous file
-            _photoDeleteHandler.Handle(new DeleteMyHome(command.Principal)
+            _photoDeleteHandler.Handle(new DeleteHomePhoto(command.HomeSectionId)
             {
                 NoCommit = true,
             });
 
             // create new file
-            var path = string.Format(Person.PhotoPathFormat, person.RevisionId, Guid.NewGuid());
+            var path = string.Format(HomeSection.PhotoPathFormat, homeSection.Id, Guid.NewGuid());
             var externalFile = new ExternalFile
             {
                 Name = command.Name,
@@ -101,28 +106,28 @@ namespace UCosmic.Domain.People
                 Length = command.Content.Length,
                 MimeType = command.MimeType,
             };
-            person.Photo = externalFile;
+            homeSection.Photo = externalFile;
             _binaryData.Put(path, command.Content);
 
             // log audit
-            var audit = new CommandEvent
-            {
-                RaisedBy = command.Principal.Identity.Name,
-                Name = command.GetType().FullName,
-                Value = JsonConvert.SerializeObject(new
-                {
-                    User = command.Principal.Identity.Name,
-                    command.Content,
-                    command.Name,
-                    command.MimeType,
-                }),
-                NewState = externalFile.ToJsonAudit(),
-            };
+            //var audit = new CommandEvent
+            //{
+            //    RaisedBy = command.Principal.Identity.Name,
+            //    Name = command.GetType().FullName,
+            //    Value = JsonConvert.SerializeObject(new
+            //    {
+            //        User = command.Principal.Identity.Name,
+            //        command.Content,
+            //        command.Name,
+            //        command.MimeType,
+            //    }),
+            //    NewState = externalFile.ToJsonAudit(),
+            //};
 
             // push to database
             _entities.Create(externalFile);
-            _entities.Update(person);
-            _entities.Create(audit);
+            _entities.Update(homeSection);
+            //_entities.Create(audit);
             if (!command.NoCommit)
             {
                 _unitOfWork.SaveChanges();
