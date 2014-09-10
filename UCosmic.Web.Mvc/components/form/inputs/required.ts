@@ -1,13 +1,16 @@
 ﻿
 Polymer('polymer-inputs-required', {
     errorMessage: "",
-    myValue: null,
+    myValue: "",
     ValidationClass: pValidation,
     isValidated: true,
     inputChange: function () {
-        var options = { value: this.$.input.value, name: this.name, isRequired: this.isRequired, 
+
+        var options = {
+            value: this.myValue, name: this.name, isRequired: this.isRequired, 
             valueCompared: this.comparedValue, nameCompared: this.nameCompared, min: this.min, isAlphaNumeric: this.isAlphaNumeric, 
-            max: this.mymaxlength, pattern: this.mypattern, correctformat: this.correctformat}, 
+            max: this.mymaxlength, pattern: this.mypattern, correctformat: this.correctformat
+        }, 
             validation = new this.ValidationClass(options), message = validation.validate();
         if (message == "Ok") {
             this.$.input.style.border = "";
