@@ -7,7 +7,9 @@
   },
   "CodeGen": {
     "CamelCasePropertyNames": false,
-    "CamelCaseTypeNames": false
+    "CamelCaseTypeNames": false,
+    "AddTypeScriptReferencePath": true,
+    "CamelCaseEnumerationValues": false
   },
   "CoffeeScript": {
     "CompileOnBuild": false,
@@ -19,7 +21,8 @@
     "MinifyInPlace": false,
     "OutputDirectory": null,
     "ShowPreviewPane": true,
-    "WrapClosure": true
+    "WrapClosure": true,
+    "ProcessSourceMapsForEditorEnhancements": true
   },
   "Css": {
     "AdjustRelativePaths": true,
@@ -34,7 +37,13 @@
     "ValidateStarSelector": false,
     "ValidateVendorSpecifics": false,
     "ValidateZeroUnit": false,
-    "ValidationLocation": "Messages"
+    "ValidationLocation": "Messages",
+    "Autoprefix": false,
+    "AutoprefixerBrowsers": null,
+    "MakeMinified": true,
+    "OutputDirectory": null,
+    "RunOnBuild": false,
+    "SyncBase64ImageValues": true
   },
   "General": {
     "AllMessagesToOutputWindow": false,
@@ -63,7 +72,13 @@
         "HtmlFormat": "<div style=\"background-image=url('{0}')\"></div>",
         "Name": "Inline CSS"
       }
-    ]
+    ],
+    "EnableBootstrapValidation": true,
+    "EnableFoundationValidation": true,
+    "MakeMinified": true,
+    "MinificationMode": "KeepQuotes",
+    "OutputDirectory": null,
+    "RunOnBuild": false
   },
   "JavaScript": {
     "AutoMinify": true,
@@ -72,7 +87,10 @@
     "GzipMinifiedFiles": false,
     "LintOnBuild": false,
     "LintOnSave": true,
-    "LintResultLocation": "Message"
+    "LintResultLocation": "Message",
+    "MakeMinified": true,
+    "OutputDirectory": null,
+    "RunOnBuild": false
   },
   "Less": {
     "CompileOnBuild": false,
@@ -81,7 +99,9 @@
     "GenerateSourceMaps": false,
     "MinifyInPlace": false,
     "OutputDirectory": null,
-    "ShowPreviewPane": true
+    "ShowPreviewPane": true,
+    "ProcessSourceMapsForEditorEnhancements": true,
+    "StrictMath": false
   },
   "Markdown": {
     "AutoHyperlink": true,
@@ -103,7 +123,10 @@
     "GenerateSourceMaps": false,
     "MinifyInPlace": false,
     "OutputDirectory": null,
-    "ShowPreviewPane": false
+    "ShowPreviewPane": false,
+    "NumberPrecision": 5,
+    "OutputStyle": "Expanded",
+    "ProcessSourceMapsForEditorEnhancements": true
   },
   "SweetJs": {
     "CompileOnBuild": false,
@@ -111,12 +134,34 @@
     "GenerateSourceMaps": true,
     "MinifyInPlace": false,
     "OutputDirectory": null,
-    "ShowPreviewPane": true
+    "ShowPreviewPane": true,
+    "ProcessSourceMapsForEditorEnhancements": true
   },
   "TypeScript": {
     "LintOnBuild": false,
     "LintOnSave": false,
     "LintResultLocation": "Message",
     "ShowPreviewPane": false
+  },
+  "LiveScript": {
+    "CompileOnBuild": false,
+    "CompileOnSave": true,
+    "GenerateSourceMaps": true,
+    "MinifyInPlace": false,
+    "OutputDirectory": null,
+    "ProcessSourceMapsForEditorEnhancements": true,
+    "ShowPreviewPane": true,
+    "WrapClosure": true
+  },
+  "Sprite": {
+    "CssOutputDirectory": null,
+    "IsVertical": true,
+    "LessOutputDirectory": null,
+    "Optimize": true,
+    "OutputDirectory": null,
+    "RunOnBuild": false,
+    "ScssOutputDirectory": null,
+    "UseAbsoluteUrl": false,
+    "UseFullPathForIdentifierName": true
   }
 }
