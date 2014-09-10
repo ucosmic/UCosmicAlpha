@@ -13,11 +13,11 @@ namespace UCosmic.Web.Mvc.Models
 
     public static class HomeLinkProfiler
     {
-        public class EntityToModelProfile: Profile
+        public class EntityToModelProfile : Profile
         {
             protected override void Configure()
             {
-                CreateMap<HomeLink, HomeLink Model>();
+                CreateMap<HomeLink, HomeLinkModel>();
             }
         }
     }
