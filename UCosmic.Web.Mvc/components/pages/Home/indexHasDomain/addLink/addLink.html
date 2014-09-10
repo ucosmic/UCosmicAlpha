@@ -1,0 +1,36 @@
+﻿
+<link rel="import" href="../../../../form/inputs/required.html">
+<link rel="import" href="../../../../form/inputs/button/button.html">
+<polymer-element name="polymer-content-home-has-domain-edit-add-link" attributes="linkAdded addedLink">
+    <template>
+        <!--<form>-->
+            <table cellpadding="0" cellspacing="0" border="0" style="width:100%; margin-bottom:12px;">
+                <tbody>
+                    <tr>
+                        <td style="padding:4px 16px 0 0;">
+                            <div style="margin-bottom:4px;">Url</div>
+                            <polymer-inputs-required mystyle="width:100%;" style="float:left; width:100%" textboxrequiredclass="requiredInit" alertclass="Alert"
+                                                     mytype="text" mymaxlength="32" inputmessage="{{urlMessage}}" min="6" mypattern="https?://.+" correctformat="http:// or https://"
+                                                     id="url" myvalue="{{url}}" name="url" isrequired="required">
+                            </polymer-inputs-required>
+                        </td>
+                        <td style="padding-top:4px;" align="left">
+                            <div style="margin-bottom:4px;">Link text</div>
+                            <polymer-inputs-required mystyle="width:100%;" style="float:left; width:100%" textboxrequiredclass="requiredInit" alertclass="Alert"
+                                                     mytype="text" mymaxlength="32" inputmessage="{{linkTextMessage}}" min="2"
+                                                     id="linkText" myvalue="{{linkText}}" name="Link text" isrequired="required">
+                            </polymer-inputs-required>
+                        </td>
+                        <td width="0" align="right" style="text-align: right; padding-top:16px; vertical-align: middle;">
+                            <polymer-button myid="b_addLink" text="Add Link" color="" on-click="{{addLink}}"></polymer-button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        <!--</form>-->
+    </template>
+    <script src="addLink.js"></script>
+
+</polymer-element>
+
+
