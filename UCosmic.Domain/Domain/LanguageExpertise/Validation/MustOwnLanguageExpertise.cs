@@ -5,7 +5,7 @@ using FluentValidation;
 using FluentValidation.Validators;
 using UCosmic.Domain.People;
 
-namespace UCosmic.Domain.LanguageExpertise
+namespace UCosmic.Domain.LanguageExpertises
 {
     public class MustOwnLanguageExpertise<T> : PropertyValidator
     {

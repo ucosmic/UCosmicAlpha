@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace UCosmic.Domain.LanguageExpertise
+namespace UCosmic.Domain.LanguageExpertises
 {
     public class LanguageExpertiseById : BaseEntityQuery<LanguageExpertise>, IDefineQuery<LanguageExpertise>
     {
