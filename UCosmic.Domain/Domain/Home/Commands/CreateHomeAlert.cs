@@ -21,6 +21,7 @@ namespace UCosmic.Domain.Home
         public int EstablishmentId { get; set; }
         internal HomeAlert HomeAlert { get; set; }
         public string Text { get; set; }
+        public bool IsDisabled { get; set; }
 
         internal bool NoCommit { get; set; }
         public int CreatedHomeAlertId { get; internal set; }
@@ -89,7 +90,8 @@ namespace UCosmic.Domain.Home
             var entity = new HomeAlert
             {
                 Text = command.Text,
-                EstablishmentId = command.EstablishmentId
+                EstablishmentId = command.EstablishmentId,
+                IsDisabled = command.IsDisabled
             };
 
             _entities.Create(entity);

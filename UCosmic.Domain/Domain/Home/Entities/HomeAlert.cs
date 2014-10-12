@@ -8,5 +8,6 @@ namespace UCosmic.Domain.Home
         public int? EstablishmentId { get; set; }
         public virtual Establishment Establishment { get; protected internal set; }
         public string Text { get; set; }
+        public bool IsDisabled { get; set; }
     }
 }

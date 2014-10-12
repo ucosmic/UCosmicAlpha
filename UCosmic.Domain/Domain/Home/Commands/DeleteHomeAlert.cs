@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 using System.Security.Principal;
 using FluentValidation;
 using Newtonsoft.Json;
-using UCosmic.Domain.Home;
+//using UCosmic.Domain.Home;
 using UCosmic.Domain.Identity;
 
 namespace UCosmic.Domain.Home
@@ -38,7 +38,7 @@ namespace UCosmic.Domain.Home
                     .WithMessage(MustFindHomeAlertById<object>.FailMessageFormat, x => x.Id)
 
                 // principal must own agreement
-                .MustBeOwnedByPrincipal(queryProcessor, x => x.Principal)
+                .AlertMustBeOwnedByPrincipal(queryProcessor, x => x.Principal)
                     .WithMessage(MustBeOwnedByPrincipal<object>.FailMessageFormat, x => x.Id, x => x.Principal.Identity.Name)
                 ;
 
