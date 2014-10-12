@@ -42,7 +42,7 @@ namespace UCosmic.Domain.Home
 
             var entity = _entities != null
                 ? _entities.Query<HomeAlert>().ById(homeAlertId)
-                : _queryProcessor.Execute(new HomeAlertById(homeAlertId));
+                : _queryProcessor.Execute(new HomeAlertById(principal, homeAlertId));
 
             return entity != null;
         }

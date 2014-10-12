@@ -4,7 +4,7 @@ using System.Security.Principal;
 
 namespace UCosmic.Domain.Home
 {
-    public class HomeAlertByEstablishmentId : BaseEntityQuery<HomeAlert>, IDefineQuery<HomeAlert[]>
+    public class HomeAlertByEstablishmentId : BaseEntityQuery<HomeAlert>, IDefineQuery<HomeAlert>
     {
         public HomeAlertByEstablishmentId(int establishmentId)
         {
@@ -14,7 +14,7 @@ namespace UCosmic.Domain.Home
         public int EstablishmentId { get; private set; }
     }
 
-    public class HandleHomeAlertByEstablishmentIdQuery : IHandleQueries<HomeAlertByEstablishmentId, HomeAlert[]>
+    public class HandleHomeAlertByEstablishmentIdQuery : IHandleQueries<HomeAlertByEstablishmentId, HomeAlert>
     {
         private readonly IQueryEntities _entities;
 
@@ -23,7 +23,7 @@ namespace UCosmic.Domain.Home
             _entities = entities;
         }
 
-        public HomeAlert[] Handle(HomeAlertByEstablishmentId query)
+        public HomeAlert Handle(HomeAlertByEstablishmentId query)
         {
             if (query == null) throw new ArgumentNullException("query");
 
@@ -32,13 +32,13 @@ namespace UCosmic.Domain.Home
             //    .ByEstablishmentId(query.EstablishmentId)
             //    //.SingleOrDefault(x => x.Id == query.Id)
             //;
-            IQueryable<HomeAlert> results = _entities.Query<HomeAlert>()
-                                                             .Where(a => a.EstablishmentId == query.EstablishmentId);
+            HomeAlert results = _entities.Query<HomeAlert>()
+                                                             .FirstOrDefault(a => a.EstablishmentId == query.EstablishmentId);
                                                              //.OrderBy(a => (a.LanguageId != null) ?
                                                              //    a.Language.Names.FirstOrDefault().Text :
                                                              //    a.Other);
 
-            return results.ToArray();
+            return results;
         }
     }
 

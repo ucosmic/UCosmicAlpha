@@ -5,11 +5,14 @@ namespace UCosmic.Domain.Home
 {
     public class HomeAlertById : BaseEntityQuery<HomeAlert>, IDefineQuery<HomeAlert>
     {
-        public HomeAlertById(int id)
+        public HomeAlertById(IPrincipal principal,int id)
         {
+            if (principal == null) throw new ArgumentNullException("principal");
+            Principal = principal;
             Id = id;
         }
 
+        public IPrincipal Principal { get; private set; }
         public int Id { get; private set; }
     }
 
