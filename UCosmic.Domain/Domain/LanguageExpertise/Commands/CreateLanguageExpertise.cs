@@ -4,7 +4,7 @@ using System.Security.Principal;
 using FluentValidation;
 using UCosmic.Domain.People;
 
-namespace UCosmic.Domain.LanguageExpertise
+namespace UCosmic.Domain.LanguageExpertises
 {
     public class CreateLanguageExpertise
     {

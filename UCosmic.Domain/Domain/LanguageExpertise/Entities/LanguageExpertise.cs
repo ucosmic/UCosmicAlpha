@@ -1,7 +1,7 @@
 ﻿using UCosmic.Domain.Languages;
 using UCosmic.Domain.People;
 
-namespace UCosmic.Domain.LanguageExpertise
+namespace UCosmic.Domain.LanguageExpertises
 {
     public class LanguageExpertise : RevisableEntity
     {

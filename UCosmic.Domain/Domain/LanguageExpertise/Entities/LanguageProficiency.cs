@@ -1,4 +1,4 @@
-﻿namespace UCosmic.Domain.LanguageExpertise
+﻿namespace UCosmic.Domain.LanguageExpertises
 {
     public static class LanguageProficiency
     {

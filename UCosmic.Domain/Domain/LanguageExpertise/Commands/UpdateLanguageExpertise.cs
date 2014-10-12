@@ -3,7 +3,7 @@ using System.Linq;
 using System.Security.Principal;
 using FluentValidation;
 
-namespace UCosmic.Domain.LanguageExpertise
+namespace UCosmic.Domain.LanguageExpertises
 {
     public class UpdateLanguageExpertise
     {
