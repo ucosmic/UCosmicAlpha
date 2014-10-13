@@ -5,30 +5,38 @@
         <link href="base.css" rel="stylesheet" />
         <template repeat="{{section in homeSections}}">
             <hr style="height: 10px; border: 0;" />
-            <div class="group">
-                <div style="width:160px; height:160px;" class="on-left">
-                    <template bind if="{{section.hasPhoto}}">
-                        <img alt="" src="/api/home/photo/{{section.id}}/photo" style="max-height: 160px; max-width: 160px; margin-bottom:10px;" />
-                    </template>
-                </div>
-                <div class="on-left" style="margin-left: 20px;">
-                    <header>
-                        <h2>{{section.title}}</h2>
-                    </header>
-                    <p style="margin-bottom: 5px;">
-                        {{section.description}}
-                    </p>
-                    <ul style="list-style-type: disc; margin-left: 20px; ">
-                        <template repeat="{{link in section.links}}">
-                            <li style="line-height: 30px;">
-                                <a href="{{link.url}}" target="_blank">{{link.text}}</a>
-                            </li>
-                        </template>
-                    </ul>
-                </div>
+            <div class="group" style="padding: 10px 0;width: 700px;margin-bottom: 10px;">
+                <table>
+                    <tr>
+                        <td>
+                            <template bind if="{{section.hasPhoto}}">
+                                <div style="width:160px; height:160px;" class="on-left">
+                                    <img alt="" src="/api/home/photo/{{section.id}}/photo" style="max-height: 160px; max-width: 160px; margin-bottom:10px;" />
+                                </div>
+                            </template>
+                        </td>
+                        <td>
+                            <div class="on-left" style="margin-left: 20px;">
+                                <header>
+                                    <h2>{{section.title}}</h2>
+                                </header>
+                                <p style="margin-bottom: 5px;">
+                                    {{section.description}}
+                                </p>
+                                <ul style="list-style-type: disc; margin-left: 20px; ">
+                                    <template repeat="{{link in section.links}}">
+                                        <li style="line-height: 30px;">
+                                            <a href="{{link.url}}" target="_blank">{{link.text}}</a>
+                                        </li>
+                                    </template>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
             </div>
             <template bind if="{{canedit != 'false'}}">
-                <polymer-button id="deleteSection" text="Delete section" color="" on-click="{{deleteSection}}"></polymer-button>
+                <polymer-button style="margin-top:10px;" id="deleteSection" text="Delete Section" color="" on-click="{{deleteSection}}"></polymer-button>
             </template>
         </template>
         <polymer-ajax url=""
