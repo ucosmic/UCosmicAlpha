@@ -7,10 +7,12 @@ using System.Net.Http;
 using System.Web.Mvc;
 using AttributeRouting.Web.Mvc;
 using AutoMapper;
+using Omu.ValueInjecter;
 using UCosmic.Domain.Activities;
 using UCosmic.Domain.Degrees;
 using UCosmic.Domain.Employees;
 using UCosmic.Domain.Establishments;
+using UCosmic.Domain.LanguageExpertises;
 using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc.Controllers
@@ -81,7 +83,7 @@ namespace UCosmic.Web.Mvc.Controllers
                 //    x => x.Locations.Select(z => z.Place.Ancestors.Select(y => y.Ancestor)),
                 //    x => x.Locations.Select(z => z.Place.Ancestors.Select(y => y.Ancestor.GeoNamesToponym)),
                 //    x => x.Locations.Select(z => z.Place.Ancestors.Select(y => y.Ancestor.GeoPlanetPlace)),
-           
+
                 //}
             };
             Mapper.Map(input, query);
@@ -161,7 +163,7 @@ namespace UCosmic.Web.Mvc.Controllers
             //Mapper.Map(input, query);
             //var results = _queryProcessor.Execute(query);
             //var Output = Mapper.Map<PageOfActivitySearchResultMapModel>(results);
-            
+
             var model = new ActivitySearchMapModel
             {
                 Domain = domain,
@@ -239,11 +241,11 @@ namespace UCosmic.Web.Mvc.Controllers
             //}
             Mapper.Map(input, query);
             var results = _queryProcessor.Execute(query);
-
             var model = new DegreeSearchModel
             {
                 Domain = domain,
                 Input = input,
+                //Output = myOutput.InjectFrom(results),
                 Output = Mapper.Map<PageOfDegreeSearchResultModel>(results),
             };
 
@@ -257,6 +259,85 @@ namespace UCosmic.Web.Mvc.Controllers
                     Text = x.Name,
                     Value = x.Code,
                     Selected = x.Code == input.CountryCode,
+                });
+            }
+
+            var establishment = _queryProcessor.Execute(new EstablishmentByDomain(domain));
+            if (establishment == null) return HttpNotFound();
+            ViewBag.EmployeesEstablishmentId = establishment.RevisionId;
+
+            Session.LastEmployeeLens(Request);
+            return View(model);
+        }
+
+        [CurrentModuleTab(ModuleTab.Employees)]
+        [GET("{domain}/employees/languages/table")]
+        public virtual ActionResult LanguagesTable(string domain, LanguageExpertisesSearchInputModel input)
+        {
+            var query = new LanguageExpertisesPageByTerms
+            {
+                EstablishmentDomain = domain,
+                //EstablishmentId = 25,
+                //AncestorId = 25,
+                //EagerLoad = LanguageExpertiseSearchResultProfiler.EntitiyToModel.EagerLoad,
+            };
+            //if (input.AncestorId)
+            //{
+            //    query.AncestorId = input.AncestorId
+            //}
+            Mapper.Map(input, query);
+            var results = _queryProcessor.Execute(query);
+            //var test = new List<LanguageExpertiseSearchResultModel>()
+            //test = 
+            var myOutput = new PageOfLanguageExpertiseSearchResultModel()
+            {
+                PageNumber = results.PageNumber,
+                PageSize = results.PageSize,
+                Items = results.Items.Select( x => new LanguageExpertiseSearchResultModel(){
+                    Dialect = x.Dialect,
+                    LanguageExpertiseId = x.RevisionId,
+                    ListeningProficiency = x.ListeningProficiency == 1 ? "and elementary listening" : x.ListeningProficiency == 2 ? "and limited listening" : x.ListeningProficiency == 3 ? "and general listening" : x.ListeningProficiency == 4 ? "and advanced listening" : x.ListeningProficiency == 5 ? "and fluent listening" : "and no known listening",
+                    Name = x.Language.Names.FirstOrDefault().Text,
+                    Other = x.Other,
+                    Owner = new LanguageExpertiseSearchResultModel.LanguageExpertiseSearchResultOwnerModel(){
+                        PersonId = x.Person.RevisionId,
+                        DisplayName = x.Person.DisplayName,
+                        LastCommaFirst = !string.IsNullOrWhiteSpace(x.Person.LastName) && !string.IsNullOrWhiteSpace(x.Person.FirstName) ? x.Person.LastName + ", " + x.Person.FirstName : !string.IsNullOrWhiteSpace(x.Person.LastName) ? x.Person.LastName : x.Person.DisplayName,
+                    },
+                    ReadingProficiency = x.ReadingProficiency == 1 ? "and elementary reading." : x.ReadingProficiency == 2 ? "and limited reading." : x.ReadingProficiency == 3 ? "and general reading." : x.ReadingProficiency == 4 ? "and advanced reading." : x.ReadingProficiency == 5 ? "and fluent reading." : "and no known reading.",
+                    SpeakingProficiency = x.SpeakingProficiency == 1 ? "Elementary speaking" : x.SpeakingProficiency == 2 ? "Limited speaking" : x.SpeakingProficiency == 3 ? "General speaking" : x.SpeakingProficiency == 4 ? "Advanced speaking" : x.SpeakingProficiency == 5 ? "Fluent speaking" : "No known speaking",
+                    WritingProficiency = x.WritingProficiency == 1 ? "and elementary writing" : x.WritingProficiency == 2 ? "and limited writing" : x.WritingProficiency == 3 ? "and general writing" : x.WritingProficiency == 4 ? "and advanced writing" : x.WritingProficiency == 5 ? "and fluent writing" : "and no known writing",
+                }),
+                ItemTotal = results.ItemTotal,
+            };
+            //var test = myOutput.InjectFrom(results);
+            //test
+            //results.ToList;
+            //results.Items = results.Items.ToArray();
+            //results.AsQueryable();
+
+            var model = new LanguageExpertiseSearchModel
+            {
+                Domain = domain,
+                Input = input,
+                //Output = results,
+                ////Output2 = results.Items.ToList(),
+                Output = myOutput,
+            };
+
+            using (var http = new HttpClient())
+            {
+                Debug.Assert(Request.Url != null);
+
+                var url = Url.RouteUrl(null, new { controller = "Languages", httproute = "", }, Request.Url.Scheme);
+                //var url = Url.RouteUrl(null, new { controller = "Countries", httproute = "", }, Request.Url.Scheme);
+
+                var languages = http.GetAsync(url).Result.Content.ReadAsAsync<IEnumerable<LanguageApiModel>>().Result;
+                model.LanguageOptions = languages.Select(x => new SelectListItem
+                {
+                    Text = x.Name,
+                    Value = x.Code,
+                    Selected = x.Code == input.LanguageCode,
                 });
             }
 
