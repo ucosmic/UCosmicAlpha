@@ -24,6 +24,9 @@
     <li class="@(Model.Degrees ? "current" : null)">
         <a href="@Url.Action(hasStyleDomain ? MVC.Employees.DegreesTable(styleDomain, null) : MVC.Employees.Index())">Formal Education</a>
     </li>
+    <li class="@(Model.Languages ? "current" : null)">
+        <a href="@Url.Action(hasStyleDomain ? MVC.Employees.LanguagesTable(styleDomain, null) : MVC.Employees.Index())">Languages</a>
+    </li>
     @if (Model.GeographicExpertise)
     {
         <li class="current">
