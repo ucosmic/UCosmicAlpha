@@ -1,13 +1,38 @@
 ﻿Polymer('polymer-content-edit-home-page', {
     cancel: 0,
+    flasherUpdated: 0,
     addedSection: "",
+    showFlasher: function () {
+        var polymerNotification = document.createElement('polymer-notification');
+        polymerNotification.message = this.flashertext;
+        polymerNotification.type = 'notify';
+        polymerNotification.fadeOutDelay = '10000';
+        polymerNotification.bindToElement = $("#main");
+        polymerNotification.style.width = "50%";
+        polymerNotification.style.fontSize = "1.25em";
+        polymerNotification.mustClose = true;
+
+        polymerNotification.setAttribute('id', 'myAlert' + Date.now());
+        document.body.appendChild(polymerNotification);
+    },
+    flasherUpdatedChanged: function () {
+        this.showFlasher();
+    },
+    attached: function () {
+        if (!this.flasherisdisabled) {
+            this.showFlasher();
+        }
+    },
     ready: function () {
-        if (this.notification) {
+        if (!this.flasherisdisabled) {
             var polymerNotification = document.createElement('polymer-notification');
-            polymerNotification.message = "testing";
+            polymerNotification.message = this.flashertext;
             polymerNotification.type = 'notify';
             polymerNotification.fadeOutDelay = '10000';
-            polymerNotification.bindToElement = $("header > .container > .content");
+            polymerNotification.bindToElement = $("#main");
+            polymerNotification.style.width = "50%";
+            polymerNotification.style.fontSize = "1.25em";
+            polymerNotification.mustClose = true;
 
             polymerNotification.setAttribute('id', 'myAlert' + Date.now());
             document.body.appendChild(polymerNotification);

@@ -3,17 +3,44 @@
 Polymer('polymer-content-edit-home-page', {
     //isEditing: false,
     cancel: 0,
+    flasherUpdated: 0,
     //homeSections: [],
     addedSection: "",
+    showFlasher: function(){
+        var polymerNotification = document.createElement('polymer-notification');
+        polymerNotification.message = this.flashertext;
+        polymerNotification.type = 'notify';
+        polymerNotification.fadeOutDelay = '10000';
+        polymerNotification.bindToElement = $("#main");
+        polymerNotification.style.width = "50%";
+        polymerNotification.style.fontSize = "1.25em";
+        polymerNotification.mustClose = true;
+        //polymerNotification.bindToElement = $("header > .container > .content");
+        polymerNotification.setAttribute('id', 'myAlert' + Date.now());
+        document.body.appendChild(polymerNotification);
+    },
+    flasherUpdatedChanged: function(){
+        this.showFlasher();
+    },
+    attached: function () {
+        //create array with what is sent from server
+        //this.homeSections = $.parseJSON(this.homeSections);
+        if (!this.flasherisdisabled) {
+            this.showFlasher();
+        }
+    },
     ready: function () {
         //create array with what is sent from server
         //this.homeSections = $.parseJSON(this.homeSections);
-        if (this.notification) {
+        if (!this.flasherisdisabled) {
             var polymerNotification = document.createElement('polymer-notification');
-            polymerNotification.message = "testing";
+            polymerNotification.message = this.flashertext;
             polymerNotification.type = 'notify';
             polymerNotification.fadeOutDelay = '10000';
-            polymerNotification.bindToElement = $("header > .container > .content");
+            polymerNotification.bindToElement = $("#main");
+            polymerNotification.style.width = "50%";
+            polymerNotification.style.fontSize = "1.25em";
+            polymerNotification.mustClose = true;
             //polymerNotification.bindToElement = $("header > .container > .content");
             polymerNotification.setAttribute('id', 'myAlert' + Date.now());
             document.body.appendChild(polymerNotification);
