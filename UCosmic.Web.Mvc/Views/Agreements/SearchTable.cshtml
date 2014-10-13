@@ -98,7 +98,34 @@
                 <div class="field" style="margin-bottom: 0;">
                     <input type="search" placeholder="Find an agreement by name, partner, country, or keyword" data-bind="value: keyword, valueUpdate: 'afterkeydown search'" />
                 </div>
-
+            </div>
+            @* MAP LENS GLOBAL TOTALS SUMMARY *@
+            <div data-bind="visible: isTableLens, with: map" style="margin: .5em 0 0 0;">
+                <div class="group" style="height: 30px;">
+                    <div class="on-left" data-bind="with: summary" style="font-size: 20px;">
+                        <strong data-bind="text: agreementCount" style="font-size: 24px;">?</strong>
+                        <span data-bind="visible: agreementCount() == 1" style="display: none;">agreement</span>
+                        <span data-bind="visible: agreementCount() != 1">agreements</span>
+                        <span data-bind="visible: agreementCount() > 0" style="display: none;">
+                            with
+                            <strong data-bind="text: partnerCount" style="font-size: 24px;">?</strong>
+                            <span data-bind="visible: partnerCount() == 1" style="display: none;">partner</span>
+                            <span data-bind="visible: partnerCount() != 1">partners</span>
+                            in
+                            <strong data-bind="text: countryCount" style="font-size: 24px;">?</strong>
+                            <span data-bind="visible: countryCount() == 1" style="display: none;">country.</span>
+                            <span data-bind="visible: countryCount() != 1">countries.</span>
+                        </span>
+                    </div>
+                    <div class="on-right">
+                        <div data-bind="visible: spinner.isVisible" style="display: none; margin-top: 8px;">
+                            <img src="~/images/icons/spinner/spinner-20-blue.gif" alt="" />
+                            <strong>Loading search results...</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div data-bind="visible: isTableLens, with: table">
                 @* ZERO RESULTS MESSAGE *@
                 <p data-bind="visible: pager.output.hasNoItems() && !spinner.isVisible()" style="display: none;">
                     There are no results that match your search terms.
@@ -189,7 +216,7 @@
                         </td>
                     </tr>
                 </table>
-                
+
                 @* RESULTS *@
                 <div data-bind="visible: pager.output.hasItems" style="display: none; margin-top: -10px;">
 

@@ -2849,6 +2849,8 @@ namespace Links
                 public static readonly string ActivityEnums_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/ActivityEnums.min.js") ? Url("ActivityEnums.min.js") : Url("ActivityEnums.js");
                               
                 public static readonly string Map_ts = Url("Map.ts");
+                public static readonly string Map_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Map.min.js") ? Url("Map.min.js") : Url("Map.js");
+                              
                 public static readonly string MapOld_ts = Url("MapOld.ts");
                 public static readonly string Models_d_ts = Url("Models.d.ts");
                 public static readonly string PublicView_ts = Url("PublicView.ts");
@@ -3042,6 +3044,11 @@ namespace Links
                 public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
                 public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
                 public static readonly string ApiModels_d_ts = Url("ApiModels.d.ts");
+                public static readonly string Models_d_ts = Url("Models.d.ts");
+                public static readonly string Search_ts = Url("Search.ts");
+                public static readonly string Search_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/Search.min.js") ? Url("Search.min.js") : Url("Search.js");
+                              
+                public static readonly string ServiceApiModel_d_ts = Url("ServiceApiModel.d.ts");
             }
         
             [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]

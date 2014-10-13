@@ -73,6 +73,12 @@ namespace UCosmic.Web.Mvc.Controllers
         }
         [NonAction]
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public System.Web.Mvc.ActionResult LanguagesSearch()
+        {
+            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.LanguagesSearch);
+        }
+        [NonAction]
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public System.Web.Mvc.ActionResult GetAffiliations()
         {
             return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.GetAffiliations);
@@ -135,6 +141,7 @@ namespace UCosmic.Web.Mvc.Controllers
             public readonly string Index = "Index";
             public readonly string Activities = "Activities";
             public readonly string Degrees = "Degrees";
+            public readonly string LanguagesSearch = "LanguagesSearch";
             public readonly string GetAffiliations = "GetAffiliations";
             public readonly string GetEmails = "GetEmails";
             public readonly string GetUrls = "GetUrls";
@@ -153,6 +160,7 @@ namespace UCosmic.Web.Mvc.Controllers
             public const string Index = "Index";
             public const string Activities = "Activities";
             public const string Degrees = "Degrees";
+            public const string LanguagesSearch = "LanguagesSearch";
             public const string GetAffiliations = "GetAffiliations";
             public const string GetEmails = "GetEmails";
             public const string GetUrls = "GetUrls";
@@ -201,6 +209,15 @@ namespace UCosmic.Web.Mvc.Controllers
         public ActionParamsClass_Degrees DegreesParams { get { return s_params_Degrees; } }
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public class ActionParamsClass_Degrees
+        {
+            public readonly string personId = "personId";
+            public readonly string input = "input";
+        }
+        static readonly ActionParamsClass_LanguagesSearch s_params_LanguagesSearch = new ActionParamsClass_LanguagesSearch();
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public ActionParamsClass_LanguagesSearch LanguagesSearchParams { get { return s_params_LanguagesSearch; } }
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public class ActionParamsClass_LanguagesSearch
         {
             public readonly string personId = "personId";
             public readonly string input = "input";
@@ -360,6 +377,14 @@ namespace UCosmic.Web.Mvc.Controllers
         public override System.Web.Mvc.ActionResult Degrees(int personId, UCosmic.Web.Mvc.Models.DegreeSearchInputModel input)
         {
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Degrees);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "personId", personId);
+            ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "input", input);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.ActionResult LanguagesSearch(int personId, UCosmic.Web.Mvc.Models.DegreeSearchInputModel input)
+        {
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.LanguagesSearch);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "personId", personId);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "input", input);
             return callInfo;

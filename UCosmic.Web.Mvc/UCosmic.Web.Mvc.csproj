@@ -163,6 +163,9 @@
     <Reference Include="Microsoft.WindowsFabric.Data.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.WindowsAzure.Caching.2.4.0.0\lib\net40-full\Microsoft.WindowsFabric.Data.Common.dll</HintPath>
     </Reference>
+    <Reference Include="MoreLinq">
+      <HintPath>..\packages\morelinq.2.0.0-alpha01\lib\net35\MoreLinq.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.5.0.6\lib\net40\Newtonsoft.Json.dll</HintPath>
@@ -170,6 +173,9 @@
     <Reference Include="NGeo, Version=1.9.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\NGeo.1.9.0.0\lib\net40\NGeo.dll</HintPath>
+    </Reference>
+    <Reference Include="Omu.ValueInjecter">
+      <HintPath>..\packages\valueinjecter.2.3.3\lib\net35\Omu.ValueInjecter.dll</HintPath>
     </Reference>
     <Reference Include="PKCS12ProtectedConfigurationProvider, Version=1.0.0.0, Culture=neutral, PublicKeyToken=34da007ac91f901d, processorArchitecture=MSIL">
       <Private>True</Private>
@@ -325,6 +331,7 @@
     <Compile Include="ApiControllers\Employees\EmployeeSettingsController.cs" />
     <Compile Include="ApiControllers\Expertise\GeographicExpertiseController.cs" />
     <Compile Include="ApiControllers\Expertise\LanguageExpertiseController.cs" />
+    <Compile Include="ApiControllers\Home\HomeAlertController.cs" />
     <Compile Include="ApiControllers\Home\HomeSectionController.cs" />
     <Compile Include="ApiControllers\Home\HomePhotoController.cs" />
     <Compile Include="ApiControllers\People\AffiliationsController.cs" />
@@ -340,7 +347,11 @@
     <Compile Include="Models\Activities\Search\ActivitySearchResultMapCountriesModel.cs" />
     <Compile Include="Models\Activities\Search\ActivitySearchResultMapContinentsModel.cs" />
     <Compile Include="Models\Activities\Search\ActivitySearchResultMapModel.cs" />
+    <Compile Include="Models\Activities\Search\LanguageExpertisesSearchResultModel.cs" />
+    <Compile Include="Models\Activities\Search\LanguageExpertisesSearchInputModel.cs" />
+    <Compile Include="Models\Activities\Search\LanguageExpertisesSearchModel.cs" />
     <Compile Include="Models\Home\HomeLinkModel.cs" />
+    <Compile Include="Models\Home\HomeAlertApiModel.cs" />
     <Compile Include="Models\Home\HomeSectionApiModel.cs" />
     <Compile Include="Models\Home\HomeSectionModel.cs" />
     <Compile Include="Models\Home\HomeModel.cs" />
@@ -608,6 +619,7 @@
       <Link>startup\setupGac.cmd</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Content Include="components\form\header\header.html" />
     <Content Include="components\form\inputs\button\button.css">
       <DependentUpon>button.scss</DependentUpon>
     </Content>
@@ -640,6 +652,10 @@
     </Content>
     <Content Include="components\pages\Home\indexHasDomain\custom.js">
       <DependentUpon>custom.ts</DependentUpon>
+    </Content>
+    <Content Include="components\pages\Home\indexHasDomain\flasher\flasher.html" />
+    <Content Include="components\pages\Home\indexHasDomain\flasher\flasher.js">
+      <DependentUpon>flasher.ts</DependentUpon>
     </Content>
     <Content Include="components\pages\Home\indexHasDomain\images\agreements\folder-contract-icon.png" />
     <Content Include="components\pages\Home\indexHasDomain\images\user\male-and-female-256.png" />
@@ -2393,6 +2409,7 @@
     <TypeScriptCompile Include="components\pages\Home\indexHasDomain\addEdit.ts" />
     <TypeScriptCompile Include="components\pages\Home\indexHasDomain\addLink\addLink.ts" />
     <TypeScriptCompile Include="components\pages\Home\indexHasDomain\custom.ts" />
+    <TypeScriptCompile Include="components\pages\Home\indexHasDomain\flasher\flasher.ts" />
     <TypeScriptCompile Include="components\popup\basePopup.ts" />
     <TypeScriptCompile Include="components\typeDiff\myTypes.d.ts" />
     <TypeScriptCompile Include="components\utilities\capitaliseFirstLetter.ts" />
@@ -3679,6 +3696,9 @@
     <Content Include="scripts\viewmodels\activities\ActivityEnums.js">
       <DependentUpon>ActivityEnums.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="scripts\viewmodels\languages\Models.d.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\languages\Search.ts" />
+    <TypeScriptCompile Include="scripts\viewmodels\languages\ServiceApiModel.d.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\my\ServerApiModel.d.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\my\Affiliations.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\establishments\Location.ts" />
@@ -3708,6 +3728,9 @@
     <TypeScriptCompile Include="scripts\viewmodels\agreements\SearchResult.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\agreements\SearchTable.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\agreements\Visibility.ts" />
+    <Content Include="scripts\viewmodels\activities\Map.js">
+      <DependentUpon>Map.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\viewmodels\activities\PublicView.js">
       <DependentUpon>PublicView.ts</DependentUpon>
     </Content>
@@ -3849,6 +3872,9 @@
     <TypeScriptCompile Include="scripts\viewmodels\places\Utils.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\languages\ApiModels.d.ts" />
     <TypeScriptCompile Include="scripts\viewmodels\people\Activities.ts" />
+    <Content Include="scripts\viewmodels\languages\Search.js">
+      <DependentUpon>Search.ts</DependentUpon>
+    </Content>
     <Content Include="scripts\viewmodels\my\Profile.js">
       <DependentUpon>Profile.ts</DependentUpon>
     </Content>
@@ -4341,8 +4367,9 @@
     <Content Include="Views\People\_Urls.cshtml" />
     <Content Include="Views\Employees\Map.cshtml" />
     <Content Include="Views\Shared\_Layout2.cshtml" />
-    <Content Include="Views\Home\IndexSpike.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Home\EditHomePage.cshtml" />
+    <Content Include="Views\Employees\LanguagesTable.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -4351,7 +4378,7 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Views\_ViewStart.cshtml" />
-    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Home\Index_old.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <None Include="styles\tenants\_default\forms.scss">

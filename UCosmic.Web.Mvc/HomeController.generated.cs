@@ -58,7 +58,6 @@ namespace UCosmic.Web.Mvc.Controllers
         public class ActionNamesClass
         {
             public readonly string Index = "Index";
-            public readonly string IndexSpike = "IndexSpike";
             public readonly string EditHomePage = "EditHomePage";
             public readonly string Employees = "Employees";
             public readonly string Alumni = "Alumni";
@@ -73,7 +72,6 @@ namespace UCosmic.Web.Mvc.Controllers
         public class ActionNameConstants
         {
             public const string Index = "Index";
-            public const string IndexSpike = "IndexSpike";
             public const string EditHomePage = "EditHomePage";
             public const string Employees = "Employees";
             public const string Alumni = "Alumni";
@@ -102,7 +100,7 @@ namespace UCosmic.Web.Mvc.Controllers
                 public readonly string Employees = "Employees";
                 public readonly string GlobalPress = "GlobalPress";
                 public readonly string Index = "Index";
-                public readonly string IndexSpike = "IndexSpike";
+                public readonly string Index_old = "Index_old";
                 public readonly string Representatives = "Representatives";
                 public readonly string Students = "Students";
                 public readonly string Travel = "Travel";
@@ -114,7 +112,7 @@ namespace UCosmic.Web.Mvc.Controllers
             public readonly string Employees = "~/Views/Home/Employees.cshtml";
             public readonly string GlobalPress = "~/Views/Home/GlobalPress.cshtml";
             public readonly string Index = "~/Views/Home/Index.cshtml";
-            public readonly string IndexSpike = "~/Views/Home/IndexSpike.cshtml";
+            public readonly string Index_old = "~/Views/Home/Index_old.cshtml";
             public readonly string Representatives = "~/Views/Home/Representatives.cshtml";
             public readonly string Students = "~/Views/Home/Students.cshtml";
             public readonly string Travel = "~/Views/Home/Travel.cshtml";
@@ -129,12 +127,6 @@ namespace UCosmic.Web.Mvc.Controllers
         public override System.Web.Mvc.ActionResult Index()
         {
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Index);
-            return callInfo;
-        }
-
-        public override System.Web.Mvc.ActionResult IndexSpike()
-        {
-            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.IndexSpike);
             return callInfo;
         }
 
