@@ -1,0 +1,26 @@
+﻿
+<polymer-element name="polymer-form-header" attributes="fontClass closeIt text">
+    <template>
+        <div style="padding:5px 5px 0 5px; height:25px;">
+            <div class="{{fontClass}}" style="float:left; padding:3px; margin-bottom:0px;
+                                     padding-bottom:0px;">
+                {{text}}
+            </div>
+            <div style="float:right; padding:3px; margin-bottom:0px; padding-bottom:0px; cursor:pointer;" 
+                 class="close {{fontClass}}" on-click="{{close}}">
+                X
+            </div>
+        </div>
+    </template>
+    <script>
+        Polymer('polymer-form-header', {
+            ready: function () {
+                //...
+            },
+            closeIt: false,
+            close: function () {
+                this.closeIt = true;
+            }
+        });
+    </script>
+</polymer-element>
