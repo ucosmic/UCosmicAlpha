@@ -16,6 +16,7 @@ namespace UCosmic.EntityFramework
                 .WillCascadeOnDelete();
 
             Property(p => p.Text).IsRequired();
+            Property(p => p.IsDisabled).IsRequired();
         }
     }
     
