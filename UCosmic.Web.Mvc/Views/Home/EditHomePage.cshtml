@@ -4,16 +4,21 @@
 <link rel="import" href="~/components/pages/Home/indexHasDomain/IndexHasDomainBase.html">
 <link rel="import" href="~/components/pages/Home/indexHasDomain/IndexHasDomainCustom.html">
 <link rel="import" href="~/components/pages/Home/indexHasDomain/IndexHasDomainEdit.html">
+<link rel="import" href="~/components/pages/Home/indexHasDomain/flasher/flasher.html">
 @{
     ViewBag.Title = "Home";
     var tenancy = Request.Tenancy();
     var styleDomain = tenancy != null ? tenancy.StyleDomain : "default";
     var hasStyleDomain = !string.IsNullOrWhiteSpace(styleDomain) && !"default".Equals(styleDomain, StringComparison.OrdinalIgnoreCase);
 }
+@section bib
+{
+    <nav class="bib" data-current-bib="home">
+        @Html.Partial(MVC.Admin.Views._Bib)
+    </nav>
+}
 
-@section bib { }
-
-<div class="fixed content" data-current-module="home">
+<div class="fixed content" data-current-module="admin">
 
     @if (!hasStyleDomain)
     {
@@ -26,18 +31,19 @@
     {
         <polymer-content-home-has-domain-base styledomain="@styleDomain"></polymer-content-home-has-domain-base>
 
-    <polymer-content-edit-home-page notification="@ViewBag.notification" homesections="@Html.Raw(Html.SerializeObject(Model))"></polymer-content-edit-home-page>
+        <polymer-content-edit-home-page flashertext="@ViewBag.alert" flasherisdisabled="@ViewBag.alertIsDisabled" homesections="@Html.Raw(Html.SerializeObject(Model))"></polymer-content-edit-home-page>
 
-    <polymer-element name="polymer-content-edit-home-page" attributes="homeSections notification">
-        <template>
-            <polymer-content-home-has-domain-custom homesections="{{homeSections}}" canedit="@User.IsInAnyRole(RoleName.SecurityAdministrator)"></polymer-content-home-has-domain-custom>
-            @if (User.IsInAnyRole(RoleName.SecurityAdministrator))
-            {
-                <polymer-content-home-has-domain-edit sectionadded="{{sectionAdded}}" addedsection="{{addedSection}}" id="sectionEditor" cancel="{{cancel}}" style="display: none;"></polymer-content-home-has-domain-edit>
-                <polymer-button id="addNewSection" text="Add new section" color="" on-click="{{addSection}}"></polymer-button>
-            }
-        </template>
-        <script src="~/components/pages/Home/editHomePage.js"></script>
-    </polymer-element>
+        <polymer-element name="polymer-content-edit-home-page" attributes="homeSections flashertext flasherisdisabled">
+            <template>
+                <polymer-content-home-has-domain-custom homesections="{{homeSections}}" canedit="@User.IsInAnyRole(RoleName.SecurityAdministrator)"></polymer-content-home-has-domain-custom>
+                @if (User.IsInAnyRole(RoleName.SecurityAdministrator))
+                {
+                    <polymer-content-home-has-domain-edit sectionadded="{{sectionAdded}}" addedsection="{{addedSection}}" id="sectionEditor" cancel="{{cancel}}" style="display: none;"></polymer-content-home-has-domain-edit>
+                    <polymer-button style="margin-top:10px;" id="addNewSection" text="Add New Section" color="" on-click="{{addSection}}"></polymer-button>
+                    <polymer-content-home-has-domain-flasher id="flasher" flasherUpdated="{{flasherUpdated}}" flashertext="@ViewBag.alert" flasherisdisabled="@ViewBag.alertIsDisabled"></polymer-content-home-has-domain-flasher>
+                }
+            </template>
+            <script src="~/components/pages/Home/editHomePage.js"></script>
+        </polymer-element>
     }
 </div>
