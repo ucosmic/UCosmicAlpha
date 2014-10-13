@@ -76,26 +76,28 @@ namespace UCosmic.Web.Mvc.ApiControllers
         {
             // TODO: should we pull these lazily from a service instead of pushing them all down?
             var locations = new List<Place>(_queryProcessor.Execute(new FilteredPlaces { IsCountry = true }));
+            var continents = new List<Place>(_queryProcessor.Execute(new FilteredPlaces { IsContinent = true }));
             var water = new List<Place>(_queryProcessor.Execute(new FilteredPlaces { IsWater = true }));
             var global = new List<Place>(_queryProcessor.Execute(new FilteredPlaces { WoeIds = new[] { 1 } }));
             var regions = new List<Place>(_queryProcessor.Execute(new FilteredPlaces
             {
                 WoeIds = new[]
                 {
-                    24865671, // Asia
-                    24865670, // Africa
+                    //24865671, // Asia
+                    //24865670, // Africa
+                    //28289409, // Antarctica
                     28289421, // Antarctic
                     24865672, // North America
                     24865706, // Caribbean
                     55949061, // Central Asia
                     55949062, // South Asia
                     28289414, // South East Asia
-                    24865675, // Europe
+                    //24865675, // Europe
                     28289416, // East Asia
                     28289415, // Western Asia
                     24865716, // Latin America
                     24865707, // Central America
-                    24865673, // South America
+                    //24865673, // South America
                     24865721, // Middle East
                     24865722, // North Africa
                     55949070, // Oceania
@@ -106,6 +108,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
                 }
             }));
 
+            locations.AddRange(continents);
             locations.AddRange(water);
             locations.AddRange(global);
             locations.AddRange(regions);

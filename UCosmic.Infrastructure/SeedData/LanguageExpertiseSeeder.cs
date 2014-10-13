@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Security.Principal;
 using UCosmic.Domain.Identity;
-using UCosmic.Domain.LanguageExpertise;
+using UCosmic.Domain.LanguageExpertises;
 using UCosmic.Domain.Languages;
 using UCosmic.Domain.People;
 
