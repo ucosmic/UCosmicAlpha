@@ -220,24 +220,29 @@
     {
         @Scripts.Render("~/bundles/jquery")
     }
-    @*@Html.Partial(MVC.Shared.Views._GoogleMapsScript)
-
+    
         <script type="text/javascript">
-            ko.applyBindings(App.flasher, $('.flasher')[0]);
-            App.flasher.text('@Html.Raw(TempData.Flash().Replace("'", "\\'"))');
-            App.Routes.applicationPath = '@Request.ApplicationPath';
-            App.Routes.WebApi.urlPrefix = 'api';
+            //Obtruders.placeholder = placeholder;
+            function moduleNav(selector) {
+                $(selector).find('[data-current-module]').each(function () {
+                    var current = $(this).data('current-module');
+                    $('nav.modules li.' + current).addClass('current');
+                });
+                $('nav.modules').removeClass('hide');
+            }
+            //Obtruders.moduleNav = moduleNav;
+            function bibNav(selector) {
+                $(selector).find('[data-current-bib]').each(function () {
+                    var current = $(this).data('current-bib');
+                    $('nav.bib li.' + current).addClass('current');
+                });
+                $('nav.bib').removeClass('hide');
+            }
+            bibNav("body");
+            moduleNav("body");
 
-            $('a[href="#/flashlong"]').on('click', function () {
-                App.flasher.flash('Here is your feedback message. What happens when this gets longer, much l on g e r, so long t h a t it wraps?');
-            });
-
-            $('a[href="#/flashshort"]').on('click', function () {
-                App.flasher.flash('Here is a short feedback message.');
-            });
+            //Obtruders.bibNav = bibNav;
         </script>
-
-        @Html.Partial(MVC.Shared.Views._UserVoiceScript)*@
     @RenderSection("scripts", required: false)
 
 </body>
