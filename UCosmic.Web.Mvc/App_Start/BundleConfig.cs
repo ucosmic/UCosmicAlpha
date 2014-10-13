@@ -255,6 +255,10 @@ namespace UCosmic.Web.Mvc
                 "~/scripts/viewmodels/establishments/Server.js",
                 "~/scripts/app/DataCacher.js",
                 "~/scripts/viewmodels/degrees/search.js"));
+            bundles.Add(new ScriptBundle("~/bundles/people/languages/search").Include(
+                "~/scripts/viewmodels/establishments/Server.js",
+                "~/scripts/app/DataCacher.js",
+                "~/scripts/viewmodels/languages/search.js"));
             bundles.Add(new ScriptBundle("~/bundles/people/global").Include(
                 "~/scripts/viewmodels/people/global.js"));
 
