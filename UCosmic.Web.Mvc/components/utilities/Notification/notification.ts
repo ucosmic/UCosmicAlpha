@@ -3,16 +3,22 @@
 
 Polymer('polymer-notification', {
     ready: function () {
-        //...
     },
     domReady: function () {
-        ElRelativeToEl($(this.bindToElement), $(this.$.pop_text_container_alert));
-        
-        setTimeout(() => {
-            $(this.$.pop_container_alert).fadeOut(1000, () => {
-                $('#' + this.id).remove();
-            });
-        }, this.fadeOutDelay);
+        if (!this.mustClose) {
+            ElRelativeToEl($(this.bindToElement), $(this.$.pop_text_container_alert));
+            setTimeout(() => {
+                $(this.$.pop_container_alert).fadeOut(1000, () => {
+                    $('#' + this.id).remove();
+                });
+            }, this.fadeOutDelay);
+            this.$.closeHeader.style.display = "none";
+        }else{
+            this.$.closeHeader.style.display = "block";
+            ElRelativeToEl($(this.bindToElement), $(this.$.pop_text_container_alert));
+            this.$.pop_text_container_alert.style.top = "200px";
+
+        } 
     },
     //show: '',
     closeIt: '',
