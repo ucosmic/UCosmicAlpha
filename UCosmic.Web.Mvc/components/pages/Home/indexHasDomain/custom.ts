@@ -29,7 +29,7 @@ Polymer('polymer-content-home-has-domain-custom', {
 
         this.$.ajax_deleteSection.method = 'DELETE';
         //$.param()
-        this.$.ajax_deleteSection.url = 'api/home/section?homeSectionId=' + this.currentlySelectedSection.id;
+        this.$.ajax_deleteSection.url = '/api/home/section?homeSectionId=' + this.currentlySelectedSection.id;
 
         this.$.ajax_deleteSection.go();
     },

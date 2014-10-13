@@ -25,7 +25,7 @@
 
         this.$.ajax_deleteSection.method = 'DELETE';
 
-        this.$.ajax_deleteSection.url = 'api/home/section?homeSectionId=' + this.currentlySelectedSection.id;
+        this.$.ajax_deleteSection.url = '/api/home/section?homeSectionId=' + this.currentlySelectedSection.id;
 
         this.$.ajax_deleteSection.go();
     },
