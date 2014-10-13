@@ -1,0 +1,51 @@
+﻿
+<link rel="import" href="../../../../form/inputs/required.html">
+<link rel="import" href="../../../../form/inputs/button/button.html">
+<polymer-element name="polymer-content-home-has-domain-flasher" attributes="flashertext flasherisdisabled flasherUpdated">
+    <template>
+        <br />
+        <h3 style="margin:12px 0 0;">Home page flasher message.</h3>
+        <table id="homeFlasherTable" cellpadding="0" cellspacing="0" border="0" style="width:600px; margin:0;">
+            <tbody>
+                <tr>
+                    <td style="padding:4px;" align="left">
+                        <div style="margin-bottom:4px;" id="flashertext"><em>{{flashertext}}</em></div>
+                        <polymer-inputs-required mystyle="width:100%;" style="float:left; width:100%; display:none;" textboxrequiredclass="requiredInit" alertclass="Alert" cols="18"
+                                                 mytype="textarea" min="2" max="1000" rows="5" inputmessage="{{flashertextMessage}}"
+                                                 id="flashertextInput" myvalue="{{flashertext}}" name="Link text" isrequired="required">
+                        </polymer-inputs-required>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding:4px 0;" valign="bottom">
+                        <input id="remember"
+                               style="padding: 4px;margin: 0px;"
+                               type="checkbox" name="Remember" value="true" checked="{{flasherisdisabled}}" />
+                        <span style="color:#4B4849">Disabled</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td width="0" align="right" style="text-align: left; padding-top:16px; vertical-align: middle;">
+                        <polymer-button id="change" text="Change Flasher" color="" on-click="{{change}}"></polymer-button>
+                        <polymer-button id="cancel" text="Cancel" color="" on-click="{{cancel}}" style="display: none;"></polymer-button>
+                        <polymer-button id="update" text="Update Flasher" color="" on-click="{{update}}" style="display: none;"></polymer-button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <polymer-ajax url="/api/home/alert"
+                      params='{"Description":"{{description}}",
+                            "Links":"{{links}}",
+                            "Title":"{{title}}"}'
+                      handleas="json"
+                      method="post"
+                      on-polymer-response="{{updateFlasherResponse}}"
+                      on-polymer-error="{{ajaxError}}"
+                      id="ajax_updateFlasher">
+        </polymer-ajax>
+    </template>
+    <script src="flasher.js"></script>
+
+</polymer-element>
+
+
