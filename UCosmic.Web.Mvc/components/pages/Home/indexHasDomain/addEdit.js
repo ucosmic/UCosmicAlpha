@@ -12,6 +12,9 @@
         }
     },
     addEdit: function () {
+        if (this.isAjaxing) {
+            return;
+        }
         if (this.$.title.inputChange() && this.$.description.inputChange()) {
             if (this.links.length) {
                 this.isAjaxing = true;
@@ -36,6 +39,9 @@
                 this.$.linkMessage.style.display = "none";
             }
         }
+    },
+    descriptionChanged: function () {
+        this.description = this.description.replace(/\r?\n|\r/g, " ");
     },
     addedLinkChanged: function (oldValue, newValue) {
         if (newValue) {
@@ -87,6 +93,7 @@
         this.$.ajax_addPhoto.contentType = null;
     },
     addPhotoResponse: function (response) {
+        var _this = this;
         if (!response.detail.response.error) {
             this.$.linkMessage.style.display = "none";
             this.sectionAdded.title = this.title;
@@ -94,52 +101,25 @@
             this.sectionAdded.links = this.links;
             this.sectionAdded.hasPhoto = true;
             this.addedSection = true;
+            this.title = "";
+            this.description = "";
+            this.links = [];
+            this.imageSrc = "";
+            this.$.image.value = "";
+            this.$.title.$.input.value = "";
+            this.$.picture.style.display = "none";
+            this.$.ajax_addPhoto.body = null;
 
             var polymerNotification = document.createElement('polymer-notification');
-            polymerNotification.message = response.detail.response.message;
+            polymerNotification.message = "Your section was added succesfuly";
             polymerNotification.type = 'success';
             polymerNotification.fadeOutDelay = '5000';
             polymerNotification.bindToElement = this.$.homeSectionTable;
             polymerNotification.setAttribute('id', 'myAlert' + Date.now());
             document.body.appendChild(polymerNotification);
-            this.cancel += 1;
-        } else {
-            var polymerNotification = document.createElement('polymer-notification');
-            polymerNotification.message = response.detail.response.error;
-            polymerNotification.type = 'warning';
-            polymerNotification.fadeOutDelay = '10000';
-            polymerNotification.bindToElement = this.$.homeSectionTable;
-            polymerNotification.setAttribute('id', 'myAlert' + Date.now());
-            document.body.appendChild(polymerNotification);
-            this.isAjaxing = false;
-        }
-    },
-    addSectionResponse: function (response) {
-        if (!response.detail.response.error) {
-            if (this.$.ajax_addPhoto.body) {
-                var homeSectionId = response.detail.xhr.getResponseHeader("location").substring(30);
-                this.$.ajax_addPhoto.url = "/api/home/photo?homeSectionId=" + homeSectionId;
-                this.sectionAdded.id = homeSectionId;
-
-                this.$.ajax_addPhoto.go();
-            } else {
-                this.$.linkMessage.style.display = "none";
-                this.sectionAdded.title = this.title;
-                this.sectionAdded.description = this.description;
-                this.sectionAdded.links = this.links;
-                this.sectionAdded.id = -1;
-                this.sectionAdded.hasPhoto = false;
-                this.addedSection = true;
-
-                var polymerNotification = document.createElement('polymer-notification');
-                polymerNotification.message = response.detail.response.message;
-                polymerNotification.type = 'success';
-                polymerNotification.fadeOutDelay = '5000';
-                polymerNotification.bindToElement = this.$.homeSectionTable;
-                polymerNotification.setAttribute('id', 'myAlert' + Date.now());
-                document.body.appendChild(polymerNotification);
-                this.cancel += 1;
-            }
+            setTimeout(function () {
+                _this.cancel += 1;
+            }, 200);
         } else {
             var polymerNotification = document.createElement('polymer-notification');
             polymerNotification.message = response.detail.response.error;
@@ -150,6 +130,51 @@
             document.body.appendChild(polymerNotification);
         }
         this.isAjaxing = false;
+    },
+    addSectionResponse: function (response) {
+        var _this = this;
+        if (!response.detail.response.error) {
+            var sectionId = response.detail.xhr.getResponseHeader("location").substring(30);
+            if (this.$.ajax_addPhoto.body) {
+                var homeSectionId = sectionId;
+                this.$.ajax_addPhoto.url = "/api/home/photo?homeSectionId=" + homeSectionId;
+                this.sectionAdded.id = homeSectionId;
+
+                this.$.ajax_addPhoto.go();
+            } else {
+                this.$.linkMessage.style.display = "none";
+                this.sectionAdded.title = this.title;
+                this.sectionAdded.description = this.description;
+                this.sectionAdded.links = this.links;
+                this.sectionAdded.id = sectionId;
+                this.sectionAdded.hasPhoto = false;
+                this.addedSection = true;
+                this.title = "";
+                this.description = "";
+                this.links = [];
+
+                var polymerNotification = document.createElement('polymer-notification');
+                polymerNotification.message = response.detail.response;
+                polymerNotification.type = 'success';
+                polymerNotification.fadeOutDelay = '5000';
+                polymerNotification.bindToElement = this.$.homeSectionTable;
+                polymerNotification.setAttribute('id', 'myAlert' + Date.now());
+                document.body.appendChild(polymerNotification);
+                setTimeout(function () {
+                    _this.cancel += 1;
+                }, 200);
+                this.isAjaxing = false;
+            }
+        } else {
+            var polymerNotification = document.createElement('polymer-notification');
+            polymerNotification.message = response.detail.response.error;
+            polymerNotification.type = 'warning';
+            polymerNotification.fadeOutDelay = '10000';
+            polymerNotification.bindToElement = this.$.homeSectionTable;
+            polymerNotification.setAttribute('id', 'myAlert' + Date.now());
+            document.body.appendChild(polymerNotification);
+            this.isAjaxing = false;
+        }
     },
     ajaxError: function (response) {
         var polymerNotification = document.createElement('polymer-notification');
@@ -163,5 +188,11 @@
     },
     cancelSection: function () {
         this.cancel += 1;
+        this.$.picture.style.display = "none";
+        this.imageSrc = "";
+        this.imageSelected = "";
+        this.links = [];
+        this.title = "";
+        this.description = "";
     }
 });
