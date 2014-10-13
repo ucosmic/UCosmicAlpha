@@ -16,6 +16,7 @@ interface HTMLElement {
     type: string;
     fadeOutDelay: string;
     bindToElement: any;
+    mustClose: boolean;
 }
 
 interface capitaliseFirstLetter{

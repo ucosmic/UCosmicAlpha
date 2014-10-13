@@ -118,9 +118,15 @@
     <Reference Include="Microsoft.WindowsFabric.Data.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.WindowsAzure.Caching.2.4.0.0\lib\net40-full\Microsoft.WindowsFabric.Data.Common.dll</HintPath>
     </Reference>
+    <Reference Include="MoreLinq">
+      <HintPath>..\packages\morelinq.2.0.0-alpha01\lib\net35\MoreLinq.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.6.0.5\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Omu.ValueInjecter">
+      <HintPath>..\packages\valueinjecter.2.3.3\lib\net35\Omu.ValueInjecter.dll</HintPath>
     </Reference>
     <Reference Include="PKCS12ProtectedConfigurationProvider, Version=1.0.0.0, Culture=neutral, PublicKeyToken=34da007ac91f901d, processorArchitecture=MSIL">
       <Private>True</Private>
