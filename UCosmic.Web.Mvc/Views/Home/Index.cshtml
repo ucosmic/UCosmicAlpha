@@ -1,4 +1,10 @@
-﻿@{
+﻿@using UCosmic.Web.Mvc.Models
+@model List<HomeSectionApiModelReturn>
+<link rel="import" href="~/components/form/inputs/button/button.html">
+<link rel="import" href="~/components/pages/Home/indexHasDomain/IndexHasDomainBase.html">
+<link rel="import" href="~/components/pages/Home/indexHasDomain/IndexHasDomainCustom.html">
+<link rel="import" href="~/components/pages/Home/indexHasDomain/IndexHasDomainEdit.html">
+@{
     ViewBag.Title = "Home";
     var tenancy = Request.Tenancy();
     var styleDomain = tenancy != null ? tenancy.StyleDomain : "default";
@@ -8,6 +14,7 @@
 @section bib { }
 
 <div class="fixed content" data-current-module="home">
+
     @if (!hasStyleDomain)
     {
         <header>
@@ -17,110 +24,16 @@
     }
     else
     {
-        <hr style="height: 10px; border: 0;" />
-        <div class="group">
-            <div class="on-left">
-                <img alt="" src="~/images/icons/agreements/folder-contract-icon.png" style="height: 160px;" />
-            </div>
-            <div class="on-left" style="margin-left: 20px;">
-                <header>
-                    <h2>Agreements</h2>
-                </header>
-                <p style="margin-bottom: 5px;">
-                    The Agreements tab at the top of every page is your gateway to:
-                </p>
-                <ul style="list-style-type: disc; margin-left: 20px; ">
-                    <li style="line-height: 30px;">
-                        <a href="@(Url.Action(MVC.Agreements.TenantIndex(styleDomain)))#/map/">Visualizing our international agreement partners</a>
-                    </li>
-                    <li style="line-height: 30px;">
-                        <a href="@(Url.Action(MVC.Agreements.TenantIndex(styleDomain)))#/table/">Searching our agreement database</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <hr style="height: 20px; border: 0;" />
-        <div class="group">
-            <div class="on-left">
-                <img alt="" src="~/images/icons/user/male-and-female-256.png" style="height: 160px;" />
-            </div>
-            <div class="on-left" style="margin-left: 20px;">
-                <header>
-                    <h2>Faculty &amp; Staff</h2>
-                </header>
-                <p style="margin-bottom: 5px;">
-                    The Faculty &amp; Staff tab at the top of every page is your gateway to:
-                </p>
-                <ul style="list-style-type: disc; margin-left: 20px; ">
-                    <li style="line-height: 30px;">
-                        <a href="@(Url.Action(MVC.Employees.TenantIndex(styleDomain)))">Viewing a global snapshot of international activity</a>
-                    </li>
-                    <li style="line-height: 30px;">
-                        <a href="@(Url.Action(MVC.Employees.Table(styleDomain, null)))">Searching our activity database</a>
-                    </li>
-                    <li style="line-height: 30px;">
-                        <a href="@(Url.Action(MVC.Employees.DegreesTable(styleDomain, null)))">Searching our formal education database</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
+        <polymer-content-home-has-domain-base styledomain="@styleDomain"></polymer-content-home-has-domain-base>
+
+    <polymer-content-home-index flashertext="@ViewBag.alert" flasherisdisabled="@ViewBag.alertIsDisabled" homesections="@Html.Raw(Html.SerializeObject(Model))"></polymer-content-home-index>
+        
+
+    <polymer-element name="polymer-content-home-index" attributes="homeSections flashertext flasherisdisabled">
+        <template>
+            <polymer-content-home-has-domain-custom homesections="{{homeSections}}" canedit="false"></polymer-content-home-has-domain-custom>
+        </template>
+        <script src="~/components/pages/Home/index.js"></script>
+    </polymer-element>
     }
 </div>
-@*@section scripts
-    {
-        <script type="text/javascript">
-            function initMap() {
-                //var google = google || {};
-                var mapOptions = {
-                    center: new google.maps.LatLng(20, 0),
-                    zoom: 2,
-                    mapTypeId: google.maps.MapTypeId.ROADMAP
-                };
-                var map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
-            }
-
-            $(function() {
-                $('#init_dialog').dialog({
-                    position: {
-                        my: 'top+20',
-                        at: 'top',
-                        of: '#map_canvas'
-                    },
-                    closeOnEscape: false,
-                    open: function() {
-                        $('a.ui-dialog-titlebar-close').hide();
-                    },
-                    dialogClass: 'jquery-ui',
-                    width: 'auto',
-                    resizable: false,
-                    //draggable: false,
-                    modal: true
-                });
-                initMap();
-            });
-        </script>
-    }
-    <div class="flush content" data-current-module="home">
-        <div id="map_canvas" style="width: 100%; height: 700px;"></div>
-        <div id="init_dialog" title="Where do you want to go?" style="display: none;">
-            <strong>
-                View country report for:<br/>
-            </strong>
-            <select style="min-width: 500px; margin-top: 2px;">
-                <option>[Select a Country]</option>
-            </select>
-            <br/><br/>
-            <strong>
-                View institution report for:<br/>
-            </strong>
-            <input type="text" style="min-width: 500px; margin-top: 2px;" placeholder="[Enter institution name]" />
-            <br/><br/>
-            <strong>
-                View worldwide information for:<br/>
-            </strong>
-            <select style="min-width: 500px; margin-top: 2px;">
-                <option>[Select Module]</option>
-            </select>
-            <br/><br/>
-        </div>
-    </div>*@
