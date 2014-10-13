@@ -87,6 +87,9 @@
       <HintPath>..\packages\Lucene.Net.3.0.3\lib\NET40\Lucene.Net.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="MoreLinq">
+      <HintPath>..\packages\morelinq.2.0.0-alpha01\lib\net35\MoreLinq.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.5.0.6\lib\net40\Newtonsoft.Json.dll</HintPath>
@@ -94,6 +97,9 @@
     <Reference Include="NGeo, Version=1.9.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\NGeo.1.9.0.0\lib\net40\NGeo.dll</HintPath>
+    </Reference>
+    <Reference Include="Omu.ValueInjecter">
+      <HintPath>..\packages\valueinjecter.2.3.3\lib\net35\Omu.ValueInjecter.dll</HintPath>
     </Reference>
     <Reference Include="Pluralize">
       <HintPath>..\packages\Pluralizer.0.3.0.1\lib\net40\Pluralize.dll</HintPath>
@@ -155,11 +161,13 @@
     <Compile Include="Domain\Home\Queries\HomeLinksByHomeSectionId.cs" />
     <Compile Include="Domain\Home\Validation\HomeSectionConstraints.cs" />
     <Compile Include="Domain\Home\Validation\HomeSectionValidation.cs" />
+    <Compile Include="Domain\Home\Validation\AlertMustBeOwnedByPrincipal.cs" />
     <Compile Include="Domain\Home\Validation\MustBeOwnedByPrincipal.cs" />
     <Compile Include="Domain\Home\Validation\MustFindHomeAlertById.cs" />
     <Compile Include="Domain\Home\Validation\MustFindHomeSectionById.cs" />
     <Compile Include="Domain\Home\_Internal\QueryHomeAlert.cs" />
     <Compile Include="Domain\Home\_Internal\QueryHomeSection.cs" />
+    <Compile Include="Domain\Languages\Queries\LanguageExpertisesPageByTerms.cs" />
     <Compile Include="Domain\People\Commands\UpdateMyPhoto.cs" />
     <Compile Include="Domain\Home\Commands\UpdateHomePhoto.cs" />
     <Compile Include="Domain\Home\Entities\HomeSection.cs" />
