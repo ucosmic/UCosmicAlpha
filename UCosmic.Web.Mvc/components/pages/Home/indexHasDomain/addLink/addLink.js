@@ -5,6 +5,8 @@
         if (this.$.linkText.inputChange() && this.$.url.inputChange()) {
             this.linkAdded.url = this.url;
             this.linkAdded.text = this.linkText;
+            this.linkText = "";
+            this.url = "";
             this.addedLink = true;
         } else {
             this.$.linkText.inputChange();
