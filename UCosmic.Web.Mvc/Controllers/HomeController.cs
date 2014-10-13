@@ -7,6 +7,7 @@ using UCosmic.Domain.Home;
 using UCosmic.Domain.People;
 using UCosmic.Web.Mvc.Models;
 using System.Collections.Generic;
+using UCosmic.Domain.Establishments;
 
 namespace UCosmic.Web.Mvc.Controllers
 {
@@ -20,130 +21,266 @@ namespace UCosmic.Web.Mvc.Controllers
             _queryProcessor = queryProcessor;
         }
 
+        //[GET("")]
+        //public virtual ActionResult Index()
+        //{
+        //    return View();
+        //}
+
         [GET("")]
         public virtual ActionResult Index()
         {
-            return View();
-        }
-
-        [GET("indexSpike")]
-        public virtual ActionResult IndexSpike()
-        {
-            //HomeSectionModel[] home = [new HomeSectionModel{
-            //    Title:"test title",
-            //    Description: "test desc",
-            //    Photo: "url"
-            //    Links: [new HomeLink{ }]
-            //}]
-            var person = _queryProcessor.Execute(new MyPerson(User));
-            var establishmentId = person.Affiliations.First(x => x.IsDefault).EstablishmentId;
-            //var estblishmentId = 3306;
-            var homeSections = _queryProcessor.Execute(new HomeSectionByEstablishmentId(establishmentId));
+            var tenancy = Request.Tenancy() ?? new Tenancy();
+            Establishment establishment = null;
             List<HomeSectionApiModelReturn> homeSectionModelList = new List<HomeSectionApiModelReturn>();
-            if (homeSections != null)
+            if (!string.IsNullOrWhiteSpace(tenancy.StyleDomain) && !"default".Equals(tenancy.StyleDomain))
             {
-                foreach (HomeSection homeSection in homeSections)
+                if (tenancy.TenantId.HasValue)
+                {
+                    establishment = _queryProcessor.Execute(new EstablishmentById(tenancy.TenantId.Value));
+                }
+                else if (!String.IsNullOrEmpty(tenancy.StyleDomain) && !"default".Equals(tenancy.StyleDomain))
+                {
+                    establishment = _queryProcessor.Execute(new EstablishmentByEmail(tenancy.StyleDomain));
+                }
+                if (establishment != null)
                 {
 
-                    List<HomeLinksApiModel> homeLinks = new List<HomeLinksApiModel>();
-                    HomeSectionApiModelReturn homeSectionModel = new HomeSectionApiModelReturn()
+                    var establishmentId = establishment.RevisionId;
+                    var homeSections = _queryProcessor.Execute(new HomeSectionByEstablishmentId(establishmentId));
+                    var homeAlert = _queryProcessor.Execute(new HomeAlertByEstablishmentId(establishmentId));
+                    if (homeSections != null)
                     {
-                        Description = homeSection.Description,
-                        Title = homeSection.Title,
-                        EstablishmentId = 0,
-                        Links = new List<HomeLinksApiModel>(), 
-                        Id = homeSection.Id
-                    };
-                    if (homeSection.Photo == null)
+                        foreach (HomeSection homeSection in homeSections)
+                        {
+
+                            List<HomeLinksApiModel> homeLinks = new List<HomeLinksApiModel>();
+                            HomeSectionApiModelReturn homeSectionModel = new HomeSectionApiModelReturn()
+                            {
+                                Description = homeSection.Description,
+                                Title = homeSection.Title,
+                                EstablishmentId = 0,
+                                Links = new List<HomeLinksApiModel>(),
+                                Id = homeSection.Id
+                            };
+                            if (homeSection.Photo == null)
+                            {
+                                homeSectionModel.HasPhoto = false;
+                            }
+                            else
+                            {
+                                homeSectionModel.HasPhoto = true;
+                            }
+                            foreach (HomeLink homeLink in homeSection.Links)
+                            {
+                                homeLinks.Add(new HomeLinksApiModel() { Text = homeLink.Text, Url = homeLink.Url });
+                            }
+                            homeSectionModel.Links = homeLinks;
+                            homeSectionModelList.Add(homeSectionModel);
+                        }
+                    }
+                    if (homeAlert != null)
                     {
-                        homeSectionModel.HasPhoto = false;
+                        ViewBag.alertIsDisabled = homeAlert.IsDisabled;
+                        ViewBag.alert = homeAlert.Text;
                     }
                     else
                     {
-                        homeSectionModel.HasPhoto = true;
+                        ViewBag.alertIsDisabled = true;
+                        ViewBag.alert = "You do not have any flasher text.";
                     }
-                    foreach (HomeLink homeLink in homeSection.Links)
-                    {
-                        homeLinks.Add(new HomeLinksApiModel() { Text = homeLink.Text, Url = homeLink.Url });
-                        //homeSectionModel.Links.ToList().Add(new HomeLinksApiModel() { Text = homeLink.Text, Url = homeLink.Url });
-                    }
-                    homeSectionModel.Links = homeLinks;
-                    homeSectionModelList.Add(homeSectionModel);
-                    //homeSectionModelList.Add(new HomeSectionApiModelReturn()
-                    //    {
-                    //        Description = homeSection.Description,
-                    //        Title = homeSection.Title,
-                    //        EstablishmentId = 0,
-                    //        Links = new List<HomeLinksApiModel>()
-                    //    });
                 }
-            }
 
-            //if (homeSection != null)
+            }
+            else
+            {
+                ViewBag.alertIsDisabled = true;
+                ViewBag.alert = "You do not have any flasher text.";
+            }
+            //var person = _queryProcessor.Execute(new MyPerson(User));
+            ////if person is null redirect or bypass to noDomain.
+            //List<HomeSectionApiModelReturn> homeSectionModelList = new List<HomeSectionApiModelReturn>();
+            //if (person != null)
             //{
-            //    HomeSectionApiModelReturn homeSectionModel = new HomeSectionApiModelReturn()
+            //    var establishmentId = person.Affiliations.First(x => x.IsDefault).EstablishmentId;
+            //    //var estblishmentId = 3306;
+            //    var homeSections = _queryProcessor.Execute(new HomeSectionByEstablishmentId(establishmentId));
+            //    var homeAlert = _queryProcessor.Execute(new HomeAlertByEstablishmentId(establishmentId));
+            //    if (homeSections != null)
             //    {
-            //        Description = homeSection.Description,
-            //        Title = homeSection.Title,
-            //        EstablishmentId = 0,
-            //        Links = new List<HomeLinksApiModel>()
-            //    };
-            //    //homeSectionModel.Links.ToList().ForEach(x => Array.Clear x.HomeSection)
-            //    List<HomeLinksApiModel> homeLinks = new List<HomeLinksApiModel>();
-            //    foreach (HomeLink homeLink in homeSection.Links)
-            //    {
-            //        homeLinks.Add(new HomeLinksApiModel() { Text = homeLink.Text, Url = homeLink.Url });
-            //        //homeSectionModel.Links.ToList().Add(new HomeLinksApiModel() { Text = homeLink.Text, Url = homeLink.Url });
+            //        foreach (HomeSection homeSection in homeSections)
+            //        {
+
+            //            List<HomeLinksApiModel> homeLinks = new List<HomeLinksApiModel>();
+            //            HomeSectionApiModelReturn homeSectionModel = new HomeSectionApiModelReturn()
+            //            {
+            //                Description = homeSection.Description,
+            //                Title = homeSection.Title,
+            //                EstablishmentId = 0,
+            //                Links = new List<HomeLinksApiModel>(),
+            //                Id = homeSection.Id
+            //            };
+            //            if (homeSection.Photo == null)
+            //            {
+            //                homeSectionModel.HasPhoto = false;
+            //            }
+            //            else
+            //            {
+            //                homeSectionModel.HasPhoto = true;
+            //            }
+            //            foreach (HomeLink homeLink in homeSection.Links)
+            //            {
+            //                homeLinks.Add(new HomeLinksApiModel() { Text = homeLink.Text, Url = homeLink.Url });
+            //            }
+            //            homeSectionModel.Links = homeLinks;
+            //            homeSectionModelList.Add(homeSectionModel);
+            //        }
             //    }
-            //    homeSectionModel.Links = homeLinks;
+            //    if (homeAlert != null)
+            //    {
+            //        ViewBag.alertIsDisabled = homeAlert.IsDisabled;
+            //        ViewBag.alert = homeAlert.Text;
+            //    }
+            //    else
+            //    {
+            //        ViewBag.alertIsDisabled = true;
+            //        ViewBag.alert = "You do not have any flasher text.";
+            //    }
+
             //}
-            //homeSectionModel = [];
-            //if (homeSection == null || homeSection.Person.User == null ||
-            //    !User.Identity.Name.Equals(activity.Person.User.Name, StringComparison.OrdinalIgnoreCase))
-            //    return HttpNotFound();
-            ViewBag.notification = "test";
-            return View("indexSpike", "_Layout2", homeSectionModelList);
+            //else
+            //{
+            //    ViewBag.alertIsDisabled = true;
+            //    ViewBag.alert = "You do not have any flasher text.";
+            //}
+            return View("index", "_Layout2", homeSectionModelList);
         }
         [GET("editHomePage")]
         public virtual ActionResult EditHomePage()
         {
-            var person = _queryProcessor.Execute(new MyPerson(User));
-            var establishmentId = person.Affiliations.First(x => x.IsDefault).EstablishmentId;
-            var homeSections = _queryProcessor.Execute(new HomeSectionByEstablishmentId(establishmentId));
+            //var person = _queryProcessor.Execute(new MyPerson(User));
+            var tenancy = Request.Tenancy() ?? new Tenancy();
+            Establishment establishment = null;
             List<HomeSectionApiModelReturn> homeSectionModelList = new List<HomeSectionApiModelReturn>();
-            if (homeSections != null)
+            if (!string.IsNullOrWhiteSpace(tenancy.StyleDomain) && !"default".Equals(tenancy.StyleDomain))
             {
-                foreach (HomeSection homeSection in homeSections)
+                if (tenancy.TenantId.HasValue)
+                {
+                    establishment = _queryProcessor.Execute(new EstablishmentById(tenancy.TenantId.Value));
+                }
+                else if (!String.IsNullOrEmpty(tenancy.StyleDomain) && !"default".Equals(tenancy.StyleDomain))
+                {
+                    establishment = _queryProcessor.Execute(new EstablishmentByEmail(tenancy.StyleDomain));
+                }
+                if (establishment != null)
                 {
 
-                    List<HomeLinksApiModel> homeLinks = new List<HomeLinksApiModel>();
-                    HomeSectionApiModelReturn homeSectionModel = new HomeSectionApiModelReturn()
+                    var establishmentId = establishment.RevisionId;
+                    var homeSections = _queryProcessor.Execute(new HomeSectionByEstablishmentId(establishmentId));
+                    var homeAlert = _queryProcessor.Execute(new HomeAlertByEstablishmentId(establishmentId));
+                    if (homeSections != null)
                     {
-                        Description = homeSection.Description,
-                        Title = homeSection.Title,
-                        EstablishmentId = 0,
-                        Links = new List<HomeLinksApiModel>(),
-                        Id = homeSection.Id
-                    };
-                    if (homeSection.Photo == null)
+                        foreach (HomeSection homeSection in homeSections)
+                        {
+
+                            List<HomeLinksApiModel> homeLinks = new List<HomeLinksApiModel>();
+                            HomeSectionApiModelReturn homeSectionModel = new HomeSectionApiModelReturn()
+                            {
+                                Description = homeSection.Description,
+                                Title = homeSection.Title,
+                                EstablishmentId = 0,
+                                Links = new List<HomeLinksApiModel>(),
+                                Id = homeSection.Id
+                            };
+                            if (homeSection.Photo == null)
+                            {
+                                homeSectionModel.HasPhoto = false;
+                            }
+                            else
+                            {
+                                homeSectionModel.HasPhoto = true;
+                            }
+                            foreach (HomeLink homeLink in homeSection.Links)
+                            {
+                                homeLinks.Add(new HomeLinksApiModel() { Text = homeLink.Text, Url = homeLink.Url });
+                            }
+                            homeSectionModel.Links = homeLinks;
+                            homeSectionModelList.Add(homeSectionModel);
+                        }
+                    }
+                    if (homeAlert != null)
                     {
-                        homeSectionModel.HasPhoto = false;
+                        ViewBag.alertIsDisabled = homeAlert.IsDisabled;
+                        ViewBag.alert = homeAlert.Text;
                     }
                     else
                     {
-                        homeSectionModel.HasPhoto = true;
+                        ViewBag.alertIsDisabled = true;
+                        ViewBag.alert = "You do not have any flasher text.";
                     }
-                    foreach (HomeLink homeLink in homeSection.Links)
-                    {
-                        homeLinks.Add(new HomeLinksApiModel() { Text = homeLink.Text, Url = homeLink.Url });
-                    }
-                    homeSectionModel.Links = homeLinks;
-                    homeSectionModelList.Add(homeSectionModel);
                 }
+
             }
+            else
+            {
+                ViewBag.alertIsDisabled = true;
+                ViewBag.alert = "You do not have any flasher text.";
+            }
+            //if person is null redirect or bypass to noDomain.
+            //List<HomeSectionApiModelReturn> homeSectionModelList = new List<HomeSectionApiModelReturn>();
+            //if (person != null)
+            //{
+            //    var establishmentId = person.Affiliations.First(x => x.IsDefault).EstablishmentId;
+            //    var homeSections = _queryProcessor.Execute(new HomeSectionByEstablishmentId(establishmentId));
+            //    var homeAlert = _queryProcessor.Execute(new HomeAlertByEstablishmentId(establishmentId));
+            //    if (homeSections != null)
+            //    {
+            //        foreach (HomeSection homeSection in homeSections)
+            //        {
 
+            //            List<HomeLinksApiModel> homeLinks = new List<HomeLinksApiModel>();
+            //            HomeSectionApiModelReturn homeSectionModel = new HomeSectionApiModelReturn()
+            //            {
+            //                Description = homeSection.Description,
+            //                Title = homeSection.Title,
+            //                EstablishmentId = 0,
+            //                Links = new List<HomeLinksApiModel>(),
+            //                Id = homeSection.Id
+            //            };
+            //            if (homeSection.Photo == null)
+            //            {
+            //                homeSectionModel.HasPhoto = false;
+            //            }
+            //            else
+            //            {
+            //                homeSectionModel.HasPhoto = true;
+            //            }
+            //            foreach (HomeLink homeLink in homeSection.Links)
+            //            {
+            //                homeLinks.Add(new HomeLinksApiModel() { Text = homeLink.Text, Url = homeLink.Url });
+            //            }
+            //            homeSectionModel.Links = homeLinks;
+            //            homeSectionModelList.Add(homeSectionModel);
+            //        }
+            //    }
+            //    if (homeAlert != null)
+            //    {
+            //        ViewBag.alertIsDisabled = homeAlert.IsDisabled;
+            //        ViewBag.alert = homeAlert.Text;
+            //    }
+            //    else
+            //    {
+            //        ViewBag.alertIsDisabled = true;
+            //        ViewBag.alert = "You do not have any flasher text.";
+            //    }
 
-            ViewBag.notification = "test";
+            //}
+            //else
+            //{
+            //    ViewBag.alertIsDisabled = true;
+            //    ViewBag.alert = "You do not have any flasher text.";
+            //}
+            
             return View("editHomePage", "_Layout2", homeSectionModelList);
         }
 
