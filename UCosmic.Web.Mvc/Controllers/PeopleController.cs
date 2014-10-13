@@ -9,7 +9,7 @@ using System.Linq.Expressions;
 using AutoMapper;
 using UCosmic.Domain.Activities;
 using UCosmic.Domain.Degrees;
-using UCosmic.Domain.LanguageExpertise;
+using UCosmic.Domain.LanguageExpertises;
 
 namespace UCosmic.Web.Mvc.Controllers
 {
@@ -131,6 +131,26 @@ namespace UCosmic.Web.Mvc.Controllers
             ViewBag.currentPage = "degrees";
             ViewBag.personId = personId;
             
+            var personModel = GetPerson(personId);
+            ViewBag.Username = personModel.Username;
+            return View(model);
+        }
+
+        [CurrentModuleTab(ModuleTab.Employees)]
+        [GET("people/{personId:int}/languagesSearch")]
+        public virtual ActionResult LanguagesSearch(int personId, DegreeSearchInputModel input)
+        {
+            var person = _queryProcessor.Execute(new PersonById(personId));
+            if (person == null) return HttpNotFound();
+
+            var query = new DegreesByPersonId(personId);
+            Mapper.Map(input, query);
+            var entities = _queryProcessor.Execute(query);
+            var model = Mapper.Map<PageOfDegreePublicViewModel>(entities);
+            ViewBag.CustomBib = person.DisplayName;
+            ViewBag.currentPage = "degrees";
+            ViewBag.personId = personId;
+
             var personModel = GetPerson(personId);
             ViewBag.Username = personModel.Username;
             return View(model);
