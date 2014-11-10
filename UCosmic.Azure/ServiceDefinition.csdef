@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ServiceDefinition name="UCosmic.Azure" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceDefinition" schemaVersion="2014-06.2.4">
-  <WebRole name="UCosmic.Web.Mvc" vmsize="ExtraSmall">
+  <WebRole name="UCosmic.Web.Mvc" vmsize="Small">
     <Runtime executionContext="elevated" />
     <Startup>
       <Task commandLine="startup\disableTimeout.cmd" executionContext="elevated" taskType="simple" />
@@ -33,6 +33,7 @@
       <Certificate name="saml.ucosmic.dev" storeLocation="LocalMachine" storeName="My" />
     </Certificates>
     <LocalResources>
+      <LocalStorage name="DiagnosticStore" sizeInMB="20000" cleanOnRoleRecycle="false" />
     </LocalResources>
   </WebRole>
   <WorkerRole name="UCosmic.Work" vmsize="ExtraSmall">

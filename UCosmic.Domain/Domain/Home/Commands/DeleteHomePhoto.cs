@@ -15,11 +15,9 @@ namespace UCosmic.Domain.Home
     {
         public DeleteHomePhoto(Int32 homeSectionId)
         {
-            //if (homeSectionId == null) throw new ArgumentNullException("homeSectionId");
             HomeSectionId = homeSectionId;
         }
         public Int32 HomeSectionId { get; private set; }
-        //public IPrincipal Principal { get; private set; }
         public string[] FileNames { get; set; }
 
         internal bool NoCommit { get; set; }
@@ -30,14 +28,6 @@ namespace UCosmic.Domain.Home
         public ValidateDeleteHomePhotoCommand(IQueryEntities entities)
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
-
-            //RuleFor(x => x.Principal)
-            //    .NotNull()
-            //        .WithMessage(MustNotHaveNullPrincipal.FailMessage)
-            //    .MustNotHaveEmptyIdentityName()
-            //        .WithMessage(MustNotHaveEmptyIdentityName.FailMessage)
-            //    .MustFindUserByPrincipal(entities)
-            //;
         }
     }
 
@@ -67,11 +57,9 @@ namespace UCosmic.Domain.Home
                     x => x.Photo,
                 })                
                 .ById(command.HomeSectionId);
-                //.Where(x => x.Id == command.HomeSectionId);
             if (homeSection == null)
             {
                 throw new Exception("HomeSection is null, cannot delete photo.");
-                return;
             }
             // if command has filenames, only delete photo if it matches one of them
             if (command.FileNames != null && !command.FileNames.Contains(homeSection.Photo.Name))
@@ -89,19 +77,6 @@ namespace UCosmic.Domain.Home
             {
                 _binaryData.Delete(photo.Path);
             }
-
-            // log audit
-            //var audit = new CommandEvent
-            //{
-            //    RaisedBy = command.Principal.Identity.Name,
-            //    Name = command.GetType().FullName,
-            //    Value = JsonConvert.SerializeObject(new
-            //    {
-            //        command.FileNames,
-            //        User = command.Principal.Identity.Name,
-            //    }),
-            //    PreviousState = photo.ToJsonAudit(),
-            //};
 
             // push to database
             _entities.Update(homeSection);

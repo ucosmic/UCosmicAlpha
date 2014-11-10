@@ -70,6 +70,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <PublishProfile Include="Profiles\UCosmicPlaygroundStaging.azurePubxml" />
     <PublishProfile Include="Profiles\UCosmicPlaygroundStaging3.azurePubxml" />
   </ItemGroup>
   <!-- Import the target files for this project template -->
