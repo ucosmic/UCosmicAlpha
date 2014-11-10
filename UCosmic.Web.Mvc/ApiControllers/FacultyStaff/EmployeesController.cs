@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using MoreLinq;
 using System.Linq.Expressions;
 using System.Net;
 using System.Net.Http;
@@ -15,6 +16,7 @@ using UCosmic.Domain.Activities;
 using UCosmic.Domain.Employees;
 using UCosmic.Domain.Establishments;
 using UCosmic.Domain.Places;
+using UCosmic.Repositories;
 using UCosmic.Web.Mvc.Models;
 
 namespace UCosmic.Web.Mvc.ApiControllers
@@ -250,89 +252,152 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [GET("{domain}/employees/continents")]
         public ActivitySearchResultPlacesCounted[] GetMapContinent(string domain, [FromUri] ActivitySearchInputModel input)
         {
-            //var query = new ActivityValuesBy();
+            //var query = new ActivityValuesBy()
+            //{
+            //    EagerLoad = ActivitySearchResultMapContinentsModel.EagerLoad,
+            //};
+            //input.PageSize = 10;
+            //Mapper.Map(input, query);
+            //var results = _queryProcessor.Execute(query);
+            //var Output = Mapper.Map<ActivitySearchResultMapContinentsModel[]>(results);
+            //var grouped = Output.Where(x => x.Continents != null).SelectMany(x => x.Continents).GroupBy(g => g.Code).Select(g => new ActivitySearchResultPlacesCounted
+            //{
+            //    PlaceType = g.First().PlaceType,
+            //    Name = g.First().Name,
+            //    Id = g.First().Id,
+            //    Code = g.First().Code,
+            //    Center = g.First().Center,
+            //    BoundingBox = g.First().BoundingBox,
+            //    Count = g.Count()
+            //}).ToArray();}
 
-            var query = new ActivityValuesBy()
+
+            var tenant = _queryProcessor.Execute(new EstablishmentByDomain(domain)).RevisionId as int?;
+            if (input.AncestorId != null)
             {
-                EagerLoad = ActivitySearchResultMapContinentsModel.EagerLoad,
-            };
-
-            //if (entity == null) throw new HttpResponseException(HttpStatusCode.NotFound);
-            input.PageSize = 10;
-            Mapper.Map(input, query);
-            var results = _queryProcessor.Execute(query);
-            //System.Web.HttpContext.Current.Session["activities" + domain] = results;
-            var Output = Mapper.Map<ActivitySearchResultMapContinentsModel[]>(results);
-            
-            var grouped = Output.Where(x => x.Continents != null).SelectMany(x => x.Continents).GroupBy(g => g.Code).Select(g => new ActivitySearchResultPlacesCounted
+                tenant = input.AncestorId;
+            }
+            if (tenant != null)
             {
-                PlaceType = g.First().PlaceType,
-                Name = g.First().Name,
-                Id = g.First().Id,
-                Code = g.First().Code,
-                Center = g.First().Center,
-                BoundingBox = g.First().BoundingBox,
-                Count = g.Count()
-            }).ToArray();
-
-            return grouped;
+                ActivityMapCountRepository activityMapCountRepository = new ActivityMapCountRepository();
+                var Output = activityMapCountRepository.ActivityMapCount_Continent(input, tenant);
+                var activityCount = Output.Count();
+                Output.Add(new ActivityMapCountsApiQueryResultModel { id = 55949070, name = "Africa", latitude = 2.07079F, longitude = 15.80048F, code = "AF", isContinent = true });
+                Output.Add(new ActivityMapCountsApiQueryResultModel { id = 55949070, name = "Antarctica", latitude = -78F, longitude = 45.5F, code = "AN", isContinent = true });
+                Output.Add(new ActivityMapCountsApiQueryResultModel { id = 55949070, name = "Asia", latitude = 34.969669F, longitude = 99.819054F, code = "AS", isContinent = true });
+                Output.Add(new ActivityMapCountsApiQueryResultModel { id = 55949070, name = "Europe", latitude = 52.976181F, longitude = 7.85784F, code = "EU", isContinent = true });
+                Output.Add(new ActivityMapCountsApiQueryResultModel { id = 55949070, name = "North America", latitude = 44.330818F, longitude = -109.754723F, code = "NA", isContinent = true });
+                Output.Add(new ActivityMapCountsApiQueryResultModel { id = 55949070, name = "Oceana", latitude = -30.941031F, longitude = 140.810654F, code = "OC", isContinent = true });
+                Output.Add(new ActivityMapCountsApiQueryResultModel { id = 55949070, name = "South America", latitude = -23.030081F, longitude = -67.903702F, code = "SA", isContinent = true });
+                //need to add for other continents as well
+                var grouped = Output.GroupBy(g => g.code).Select(g => new ActivitySearchResultPlacesCounted
+                {
+                    ActivityCount = null,
+                    Count = g.Count() - 1,//take off one for adding the default above
+                    PlaceType = g.First().code == "WATER" ? "water" : g.First().code == "GLOBAL" ? "global" : "continent",
+                    Name = g.First().code == "WATER" ? "Bodies Of Water" : g.First().code == "GLOBAL" ? "Global" : g.First().name,
+                    Id = g.First().id,
+                    Code = g.First().code,
+                    Center = g.First().code == "WATER" ? new MapPointModel { Latitude = 0, Longitude = -180 } : g.First().code == "GLOBAL" ? new MapPointModel { Latitude = 76, Longitude = -180 } : g.Where(x => x.isContinent).First().center,
+                    BoundingBox = null,
+                }).ToArray();
+                return grouped;
+            }
+            else
+            {
+                return null;
+            }        
         }
 
         [CacheHttpGet(Duration = 3600)]
         [GET("{domain}/employees/countries")]
         public ActivitySearchResultPlacesCounted[] GetMapCountries(string domain, [FromUri] ActivitySearchInputModel input)
         {
-            var query = new ActivityValuesBy()
+
+            var tenant = _queryProcessor.Execute(new EstablishmentByDomain(domain)).RevisionId as int?;
+            if (input.AncestorId != null)
             {
-                EagerLoad = ActivitySearchResultMapContinentsModel.EagerLoad,
-            };
-
-            input.PageSize = 10;
-            Mapper.Map(input, query);
-            var results = _queryProcessor.Execute(query);
-            var Output = Mapper.Map<ActivitySearchResultMapCountriesModel[]>(results);
-
-            var grouped = Output.Where(x => x.Countries != null).SelectMany(x => x.Countries).GroupBy(g => g.Id).Select(g => new ActivitySearchResultPlacesCounted
+                tenant = input.AncestorId;
+            }
+            if (tenant != null)
             {
-                PlaceType = g.First().PlaceType,
-                Name = g.First().Name,
-                Id = g.First().Id,
-                Code = g.First().Code,
-                Center = g.First().Center,
-                BoundingBox = g.First().BoundingBox,
-                Count = g.Count(),
-                ActivityCount = results.Count()
-            }).ToArray();
-
-            return grouped;
+                ActivityMapCountRepository activityMapCountRepository = new ActivityMapCountRepository();
+                var Output = activityMapCountRepository.ActivityMapCount_Country(input, tenant);
+                //add continents only on zoomed
+                var grouped = Output.GroupBy(g => g.name).Select(g => new ActivitySearchResultPlacesCounted
+                {
+                    ActivityCount = null,
+                    Count = g.Count(),
+                    PlaceType = g.First().isContinent ? "continent" : g.First().isCountry ? "country" : g.First().isRegion ? "region" : g.First().isWater ? "water" : "global",
+                    Name = g.First().name,
+                    Id = g.First().id,
+                    Code = g.First().code,
+                    Center = g.First().center,
+                    BoundingBox = null,
+                }).ToArray();
+                return grouped;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         [CacheHttpGet(Duration = 3600)]
         [GET("{domain}/employees/waters")]
         public ActivitySearchResultPlacesCounted[] GetMapWaters(string domain, [FromUri] ActivitySearchInputModel input)
         {
-            var query = new ActivityValuesBy()
+
+            var tenant = _queryProcessor.Execute(new EstablishmentByDomain(domain)).RevisionId as int?;
+            if (input.AncestorId != null)
             {
-                EagerLoad = ActivitySearchResultMapContinentsModel.EagerLoad,
-            };
-
-            input.PageSize = 10;
-            Mapper.Map(input, query);
-            var results = _queryProcessor.Execute(query);
-            var Output = Mapper.Map<ActivitySearchResultMapWatersModel[]>(results);
-
-            var grouped = Output.Where(x => x.Waters != null).SelectMany(x => x.Waters).GroupBy(g => g.Id).Select(g => new ActivitySearchResultPlacesCounted
+                tenant = input.AncestorId;
+            }
+            if (tenant != null)
             {
-                PlaceType = g.First().PlaceType,
-                Name = g.First().Name,
-                Id = g.First().Id,
-                Code = g.First().Code,
-                Center = g.First().Center,
-                BoundingBox = g.First().BoundingBox,
-                Count = g.Count()
-            }).ToArray();
+                ActivityMapCountRepository activityMapCountRepository = new ActivityMapCountRepository();
+                var Output = activityMapCountRepository.ActivityMapCount_Water(input, tenant);
+                //var activityCount = Output.Count();
 
-            return grouped;
+                var grouped = Output.GroupBy(g => g.id).Select(g => new ActivitySearchResultPlacesCounted
+                {
+                    ActivityCount = null,
+                    Count = g.Count(),
+                    PlaceType = "water",
+                    Name = g.First().name,
+                    Id = g.First().id,
+                    Code = null,
+                    Center = g.First().center,
+                    BoundingBox = null,
+                }).ToArray();
+
+                //var query = new ActivityValuesBy()
+                //{
+                //    EagerLoad = ActivitySearchResultMapContinentsModel.EagerLoad,
+                //};
+
+                //input.PageSize = 10;
+                //Mapper.Map(input, query);
+                //var results = _queryProcessor.Execute(query);
+                //var Output = Mapper.Map<ActivitySearchResultMapWatersModel[]>(results);
+
+                //var grouped = Output.Where(x => x.Waters != null).SelectMany(x => x.Waters).GroupBy(g => g.Id).Select(g => new ActivitySearchResultPlacesCounted
+                //{
+                //    PlaceType = g.First().PlaceType,
+                //    Name = g.First().Name,
+                //    Id = g.First().Id,
+                //    Code = g.First().Code,
+                //    Center = g.First().Center,
+                //    BoundingBox = g.First().BoundingBox,
+                //    Count = g.Count()
+                //}).ToArray();
+
+                return grouped;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         [CacheHttpGet(Duration = 3600)]
