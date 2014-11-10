@@ -7,11 +7,9 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Mvc;
 using AttributeRouting;
-using AttributeRouting;
 using AttributeRouting.Web.Http;
 using AutoMapper;
 using ImageResizer;
-using AttributeRouting.Web.Http;
 using FluentValidation;
 using FluentValidation.Results;
 using Newtonsoft.Json;
@@ -23,7 +21,7 @@ using System.Net.Http.Headers;
 
 namespace UCosmic.Web.Mvc.ApiControllers
 {
-    [System.Web.Http.Authorize]
+    
     [RoutePrefix("api/home/photo")]
     public class HomePhotoController : ApiController
     {
@@ -46,30 +44,7 @@ namespace UCosmic.Web.Mvc.ApiControllers
             _photoDeleteHandler = photoDeleteHandler;
             _binaryData = binaryData;
         }
-
-        //[GET("")]
-        //[CacheHttpGet(Duration = 3600)]
-        //public HttpResponseMessage Get([FromUri] int homeSectionId)
-        //{
-        //    var tenancy = Request.Tenancy();
-        //    int? personId;
-        //    if (tenancy != null && tenancy.PersonId.HasValue)
-        //    {
-        //        personId = tenancy.PersonId.Value;
-        //    }
-        //    else
-        //    {
-        //        var person = _queryProcessor.Execute(new MyPerson(User));
-        //        personId = person.RevisionId;
-        //    }
-
-        //    var peopleController = DependencyResolver.Current.GetService<PeopleController>();
-        //    peopleController.Request = Request;
-
-        //    var response = peopleController.GetPhoto(personId.Value, model);
-        //    return response;
-        //}
-
+        
         [GET("{homeSectionId:int}/photo")]
         [CacheHttpGet(Duration = 3600)]
         public HttpResponseMessage GetPhoto(int homeSectionId, [FromUri] ImageResizeRequestModel model)
@@ -112,16 +87,12 @@ namespace UCosmic.Web.Mvc.ApiControllers
         [POST("")]
         public HttpResponseMessage Post(FileMedium photo, int homeSectionId)
         {
-            //System.Threading.Thread.Sleep(2000); // test api latency
-            //throw new Exception("Oops"); // test unexpected server error
 
             // when the photo us null, it's because the user tried to upload an invalid file type (415)
             if (photo == null)
                 throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
 
             // do not allow photo uploads exceeding 1MB (413)
-            //if (photo.Content.Length > (1024 * 1024))
-            //    throw new HttpResponseException(HttpStatusCode.RequestEntityTooLarge);
 
             var command = new UpdateHomePhoto(homeSectionId)
             {
