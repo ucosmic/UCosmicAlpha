@@ -96,23 +96,22 @@ margin-bottom: 10px;">
                 </tr>
             </tbody>
         </table>
-        <!--</form>-->
-        <polymer-ajax url="/api/home/section"
+        <core-ajax url="/api/home/section"
                       params='{"Description":"{{description}}",
                             "Links":"{{links}}",
                             "Title":"{{title}}"}'
                       handleas="json"
                       method="post"
-                      on-polymer-response="{{addSectionResponse}}"
-                      on-polymer-error="{{ajaxError}}"
+                      on-core-response="{{addSectionResponse}}"
+                      on-core-error="{{ajaxError}}"
                       id="ajax_addSection">
-        </polymer-ajax>
-        <polymer-ajax url=""
+        </core-ajax>
+        <core-ajax url=""
                       handleas="json"
-                      on-polymer-response="{{addPhotoResponse}}"
-                      on-polymer-error="{{ajaxError}}"
+                      on-core-response="{{addPhotoResponse}}"
+                      on-core-error="{{ajaxError}}"
                       id="ajax_addPhoto">
-        </polymer-ajax>
+        </core-ajax>
     </template>
     <script src="addEdit.js"></script>
 

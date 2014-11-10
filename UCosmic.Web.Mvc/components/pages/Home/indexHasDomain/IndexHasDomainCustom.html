@@ -39,12 +39,12 @@
                 <polymer-button style="margin-top:10px;" id="deleteSection" text="Delete Section" color="" on-click="{{deleteSection}}"></polymer-button>
             </template>
         </template>
-        <polymer-ajax url=""
+        <core-ajax url=""
                       handleas="json"
-                      on-polymer-response="{{deleteSectionResponse}}"
-                      on-polymer-error="{{ajaxError}}"
+                      on-core-response="{{deleteSectionResponse}}"
+                      on-core-error="{{ajaxError}}"
                       id="ajax_deleteSection">
-        </polymer-ajax>
+        </core-ajax>
     </template>
     <script src="custom.js"></script>
 

@@ -33,16 +33,16 @@
                 </tr>
             </tbody>
         </table>
-        <polymer-ajax url="/api/home/alert"
+        <core-ajax url="/api/home/alert"
                       params='{"Description":"{{description}}",
                             "Links":"{{links}}",
                             "Title":"{{title}}"}'
                       handleas="json"
                       method="post"
-                      on-polymer-response="{{updateFlasherResponse}}"
-                      on-polymer-error="{{ajaxError}}"
+                      on-core-response="{{updateFlasherResponse}}"
+                      on-core-error="{{ajaxError}}"
                       id="ajax_updateFlasher">
-        </polymer-ajax>
+        </core-ajax>
     </template>
     <script src="flasher.js"></script>
 
