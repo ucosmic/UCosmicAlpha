@@ -11,7 +11,6 @@
         polymerNotification.style.width = "50%";
         polymerNotification.style.fontSize = "1.25em";
         polymerNotification.mustClose = true;
-
         polymerNotification.setAttribute('id', 'myAlert' + Date.now());
         document.body.appendChild(polymerNotification);
     },
@@ -33,7 +32,6 @@
             polymerNotification.style.width = "50%";
             polymerNotification.style.fontSize = "1.25em";
             polymerNotification.mustClose = true;
-
             polymerNotification.setAttribute('id', 'myAlert' + Date.now());
             document.body.appendChild(polymerNotification);
         }

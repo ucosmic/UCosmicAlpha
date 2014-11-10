@@ -242,9 +242,6 @@ var Activities;
                 this._applyKendo();
                 this._applySubscriptions();
 
-                this.$form.submit(function (event) {
-                    _this.loadingSpinner.start();
-                });
                 $('a').click(function () {
                     _this.loadingSpinner.start();
                 });

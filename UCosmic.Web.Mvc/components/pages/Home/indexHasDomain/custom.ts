@@ -3,8 +3,6 @@ Polymer('polymer-content-home-has-domain-custom', {
     currentlySelectedSection: null,
 
     ready: function () {
-        //create array with what is sent from server
-        //this.homeSections = $.parseJSON(this.homeSections);
         if (this.homeSections && !this.homeSections.url) {
             var homeSections = JSON.parse(this.homeSections);
             if (!homeSections.length) {
@@ -23,12 +21,10 @@ Polymer('polymer-content-home-has-domain-custom', {
             return;
         }
         this.isAjaxing = true;
-        //var mySection = this.videos[this.videos.map(function (e) { return e._id; }).indexOf(element.id)];
         this.currentlySelectedSection = event.target.templateInstance.model.section;
         this.currentlySelectedSection.isArchive = 'true';
 
         this.$.ajax_deleteSection.method = 'DELETE';
-        //$.param()
         this.$.ajax_deleteSection.url = '/api/home/section?homeSectionId=' + this.currentlySelectedSection.id;
 
         this.$.ajax_deleteSection.go();

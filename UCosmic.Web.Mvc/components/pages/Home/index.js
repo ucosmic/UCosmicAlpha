@@ -8,7 +8,6 @@
             polymerNotification.bindToElement = $("header > .container > .content");
             polymerNotification.style.fontSize = "1.25em";
             polymerNotification.mustClose = true;
-
             polymerNotification.setAttribute('id', 'myAlert' + Date.now());
             document.body.appendChild(polymerNotification);
         }

@@ -24,34 +24,6 @@ Polymer('polymer-content-home-has-domain-edit', {
                 this.isAjaxing = true;
                 this.$.ajax_addSection.method = 'POST';
                 this.$.ajax_addSection.contentType = "application/json;charset=UTF-8";
-                //var formData = new FormData();
-
-                //formData.append("Title", this.title);
-                //formData.append("Description", this.description);
-                //formData.append("Links", this.links);
-
-                //formData.append("homeSecion", {
-                //    Title: this.title,
-                //    Description: this.description,
-                //    Links: this.links
-                //});
-
-                //this.$.ajax_addSection.body = formData;
-                //this.$.ajax_addSection.url = this.$.ajax_addSection.url + '?' + $.param({
-                //    homeSection: {
-                //        title: this.title,
-                //        description: this.description,
-                //        links: this.links
-                //    }
-                //});
-
-                //this.$.ajax_addSection.body = JSON.stringify({
-                //    homeSection: {
-                //        Title: this.title,
-                //        Description: this.description,
-                //        Links: this.links
-                //    }
-                //});
                 this.$.ajax_addSection.body = JSON.stringify({
                     Title: this.title,
                     Description: this.description,
@@ -81,11 +53,9 @@ Polymer('polymer-content-home-has-domain-edit', {
             this.addedLink = false;
             this.$.linkMessage.style.display = "none"
         }
-        //alert(this.link.text);
     },
     deleteLink: function (event, someNumber, element) {
         var myLink = event.target.templateInstance.model.link;
-        //var myVideoIndex = this.videos.map(function (e) { return e._id; }).indexOf(element.id);
         this.links = $.grep(this.links, function (value) {
             return value != myLink;
         });
@@ -177,9 +147,7 @@ Polymer('polymer-content-home-has-domain-edit', {
                 var homeSectionId = sectionId;
                 this.$.ajax_addPhoto.url = "/api/home/photo?homeSectionId=" + homeSectionId;
                 this.sectionAdded.id = homeSectionId;
-                //this.$.ajax_addPhoto.body.append("homeSectionId", "1");//get from response.
                 this.$.ajax_addPhoto.go();
-                //this.imageSelected = "";
             } else {
                 this.$.linkMessage.style.display = "none";
                 this.sectionAdded.title = this.title;

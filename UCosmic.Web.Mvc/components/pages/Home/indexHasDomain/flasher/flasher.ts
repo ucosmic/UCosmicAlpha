@@ -21,18 +21,6 @@ Polymer('polymer-content-home-has-domain-flasher', {
         }
     },
     attached: function () {
-        //if(this.flasherisdisabled){
-            
-        //    this.flasherisdisabled = "checked"
-        //} else {
-        //    //this.flashertext = this.flasher.text;
-        //    //if(this.flasherisdisabled){
-        //    //    this.flasherisdisabled = "checked"
-        //    //}else{
-        //    //    this.flasherisdisabled = "";
-        //    //}
-            
-        //}
     },
     change: function () {
         this.cancelIsDisabledValue = this.flasherisdisabled;
@@ -63,11 +51,6 @@ Polymer('polymer-content-home-has-domain-flasher', {
                 this.isAjaxing = true;
                 this.$.ajax_updateFlasher.method = 'POST';
                 this.$.ajax_updateFlasher.contentType = "application/json;charset=UTF-8";
-
-            //var flasherisdisabled = true;
-            //    if(this.flasherisdisabled != "checked"){
-            //        flasherisdisabled = false;
-            //    }
             this.flashertext = this.flashertext.replace(/\r?\n|\r/, " ");
                 this.$.ajax_updateFlasher.body = JSON.stringify({
                     Text: this.flashertext,

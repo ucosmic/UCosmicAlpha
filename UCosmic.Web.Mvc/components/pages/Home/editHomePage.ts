@@ -1,10 +1,8 @@
 ﻿/// <reference path="../../typediff/mytypes.d.ts" />
 
 Polymer('polymer-content-edit-home-page', {
-    //isEditing: false,
     cancel: 0,
     flasherUpdated: 0,
-    //homeSections: [],
     addedSection: "",
     showFlasher: function(){
         var polymerNotification = document.createElement('polymer-notification');
@@ -15,7 +13,6 @@ Polymer('polymer-content-edit-home-page', {
         polymerNotification.style.width = "50%";
         polymerNotification.style.fontSize = "1.25em";
         polymerNotification.mustClose = true;
-        //polymerNotification.bindToElement = $("header > .container > .content");
         polymerNotification.setAttribute('id', 'myAlert' + Date.now());
         document.body.appendChild(polymerNotification);
     },
@@ -24,14 +21,12 @@ Polymer('polymer-content-edit-home-page', {
     },
     attached: function () {
         //create array with what is sent from server
-        //this.homeSections = $.parseJSON(this.homeSections);
         if (!this.flasherisdisabled) {
             this.showFlasher();
         }
     },
     ready: function () {
         //create array with what is sent from server
-        //this.homeSections = $.parseJSON(this.homeSections);
         if (!this.flasherisdisabled) {
             var polymerNotification = document.createElement('polymer-notification');
             polymerNotification.message = this.flashertext;
@@ -41,7 +36,6 @@ Polymer('polymer-content-edit-home-page', {
             polymerNotification.style.width = "50%";
             polymerNotification.style.fontSize = "1.25em";
             polymerNotification.mustClose = true;
-            //polymerNotification.bindToElement = $("header > .container > .content");
             polymerNotification.setAttribute('id', 'myAlert' + Date.now());
             document.body.appendChild(polymerNotification);
         }
@@ -59,8 +53,6 @@ Polymer('polymer-content-edit-home-page', {
         }
     },
     addSection: function (e) {
-        //alert("test");
-        //this.isEditing = false;
         this.$.sectionEditor.style.display = 'block';
         this.$.addNewSection.style.display = 'none';
     },
@@ -74,7 +66,6 @@ Polymer('polymer-content-edit-home-page', {
                 this.homeSections.push({ title: this.sectionAdded.title, description: this.sectionAdded.description, links: this.sectionAdded.links, id: this.sectionAdded.id, hasPhoto: this.sectionAdded.hasPhoto })
             }
         }
-        //alert(this.link.text);
     },
     cancelChanged: function (oldValue, newValue) {
         this.$.sectionEditor.style.display = 'none';

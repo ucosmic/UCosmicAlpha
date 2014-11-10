@@ -301,9 +301,9 @@ module Activities.ViewModels {
             this._applyKendo();
             this._applySubscriptions();
 
-            this.$form.submit((event) => {
-                this.loadingSpinner.start();
-            });
+            //this.$form.submit((event) => {
+            //    this.loadingSpinner.start();
+            //});
             $('a').click(() => {
                 this.loadingSpinner.start();
             });
