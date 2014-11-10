@@ -21,13 +21,6 @@ namespace UCosmic.Domain.Home
             HomeLink = homeLink;
         }
 
-        //internal CreateHomeLink(IPrincipal principal, int homeSectionId, HomeLink homeLink)
-        //{
-        //    if (principal == null) throw new ArgumentNullException("principal");
-        //    Principal = principal;
-        //    HomeSectionId = homeSection;
-        //    HomeLink = homeLink;
-        //}
         internal HomeLink HomeLink { get; private set; }
         public IPrincipal Principal { get; private set; }
         public int HomeSectionId { get; private set; }
@@ -48,16 +41,6 @@ namespace UCosmic.Domain.Home
                     .WithMessage(MustNotHaveEmptyIdentityName.FailMessage)
                 .MustBeInAnyRole(RoleName.SecurityAdministrator)
             ;
-
-            //RuleFor(x => x.HomeSection)
-            //    .Must((command, homeSection) => homeSection.HomeLinks.All(x => x.EstablishmentId != command.EstablishmentId))
-            //        .WithMessage(MustNotOwnHomeLinkWithId<object>.FailMessageNewFormat, x => x.EstablishmentId)
-            //;
-
-            // establishment id must exist in database
-            //RuleFor(x => x.EstablishmentId)
-            //    .MustFindEstablishmentById(queryProcessor)
-            //        .WithMessage(MustFindEstablishmentById.FailMessageFormat, x => x.EstablishmentId);
         }
     }
 
