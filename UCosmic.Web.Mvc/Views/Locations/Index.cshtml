@@ -1,0 +1,15 @@
+﻿
+<link rel="import" href="~/components/pages/Locations/index.html">
+@{
+    ViewBag.Title = "Country";
+    var tenancy = Request.Tenancy();
+    var styleDomain = tenancy != null ? tenancy.StyleDomain : "default";
+    var hasStyleDomain = !string.IsNullOrWhiteSpace(styleDomain) && !"default".Equals(styleDomain, StringComparison.OrdinalIgnoreCase);
+}
+
+@section bib { }
+
+<div class="fixed content" data-current-module="country">
+
+    <is-page-locations-index styledomain="@styleDomain"></is-page-locations-index>
+</div>
