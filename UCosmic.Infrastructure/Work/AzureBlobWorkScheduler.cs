@@ -20,7 +20,13 @@ namespace UCosmic.Work
             var storageAccount = CloudStorageAccount.Parse(connectionString);
             var client = storageAccount.CreateCloudBlobClient();
             var container = client.GetContainerReference(BlobKey);
+            //urecontainer.CreateIfNotExists(BlobContainerPublicAccessType.Off);
+//            Dim instance As CloudBlobContainer
+//Dim returnValue As Boolean
+
+//returnValue = instance.CreateIfNotExist
             container.CreateIfNotExists(BlobContainerPublicAccessType.Off);
+            //CloudBlobContainer.CreateIfNotExists();
             _blob = container.GetBlockBlobReference(BlobKey);
 
             if (_blob.Exists()) return;
