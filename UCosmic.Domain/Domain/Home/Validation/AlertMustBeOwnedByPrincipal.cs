@@ -37,10 +37,8 @@ namespace UCosmic.Domain.Home
             context.MessageFormatter.AppendArgument("PrincipalName", principal.Identity.Name);
 
             // make sure user owns the homeAlert id
-            //var ownedTenantIds = _queryProcessor.Execute(new MyOwnedTenantIds(principal));
-            var homeAlert = _queryProcessor.Execute(new HomeAlertById(principal, homeAlertId)) != null;//.Any(x => x.IsO.Where(x => x.IsOwner);
+            var homeAlert = _queryProcessor.Execute(new HomeAlertById(principal, homeAlertId)) != null;
             return homeAlert;
-            //return owningHomeLinks.Any(x => ownedTenantIds.Contains(x.EstablishmentId));
         }
     }
 
