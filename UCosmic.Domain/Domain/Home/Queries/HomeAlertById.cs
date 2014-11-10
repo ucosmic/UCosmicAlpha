@@ -32,7 +32,6 @@ namespace UCosmic.Domain.Home
             var result = _entities.Query<HomeAlert>()
                 .EagerLoad(_entities, query.EagerLoad)
                 .ById(query.Id)
-                //.SingleOrDefault(x => x.Id == query.Id)
             ;
 
             return result;

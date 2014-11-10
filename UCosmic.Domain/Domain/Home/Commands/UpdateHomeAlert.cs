@@ -22,7 +22,6 @@ namespace UCosmic.Domain.Home
         public IPrincipal Principal { get; private set; }
         public int HomeAlertId { get; private set; }
         internal HomeAlert HomeAlert { get; set; }
-        //public IEnumerable<CreateHomeLink> HomeLinks { get; set; }
         public string Text { get; set; }
 
         internal bool NoCommit { get; set; }
@@ -36,8 +35,6 @@ namespace UCosmic.Domain.Home
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
             // when homeAlertId is null, update the principal's homeAlert
-            // principal must match user (which guarantees homeAlert)
-            //RuleFor(x => x.Principal).MustFindUserByPrincipal(queryProcessor);
             // principal must be authorized to perform this action
             RuleFor(x => x.Principal)
                 .NotNull()
@@ -56,15 +53,6 @@ namespace UCosmic.Domain.Home
                 .MustBeOwnedByPrincipal(queryProcessor, x => x.Principal)
                     .WithMessage(MustBeOwnedByPrincipal<object>.FailMessageFormat, x => x.HomeAlertId, x => x.Principal.Identity.Name)
                 ;
-
-            //});
-
-            // when first and last name are not provided, display name cannot be empty
-            //When(x => string.IsNullOrWhiteSpace(x.Title) || string.IsNullOrWhiteSpace(x.Description), () =>
-            //    RuleFor(x => x.DisplayName)
-            //        // display name cannot be empty
-            //        .NotEmpty().WithMessage(MustNotHaveEmptyDisplayName.FailMessageImpossibleToGeneate)
-            //);
         }
     }
 
@@ -91,12 +79,7 @@ namespace UCosmic.Domain.Home
 
             var entity = _entities.Get<HomeAlert>().Single(x => x.Id == command.HomeAlertId);
 
-
-            //var entity = new HomeAlert
-            //{
             entity.Text = command.Text;
-            //};
-
 
             _entities.Update(entity);
             _unitOfWork.SaveChanges();

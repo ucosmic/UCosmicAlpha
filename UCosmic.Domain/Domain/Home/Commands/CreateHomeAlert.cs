@@ -45,24 +45,10 @@ namespace UCosmic.Domain.Home
                 .MustBeInAnyRole(RoleName.SecurityAdministrator)
             ;
 
-            //When(x => x.HomeAlertId, () =>
-            //{
             RuleFor(x => x.EstablishmentId)
                 .MustFindEstablishmentById(queryProcessor)
                     .WithMessage(MustFindEstablishmentById.FailMessageFormat, x => x.EstablishmentId);
 
-                // make sure user is authorized to update this homeAlert
-                //RuleFor(x => x.Principal)
-                //    .MustBeAgentForHomeAlert(queryProcessor, x => x.HomeAlertId.HasValue ? x.HomeAlertId.Value : 0)
-                //;
-            //});
-
-            // when first and last name are not provided, display name cannot be empty
-            //When(x => string.IsNullOrWhiteSpace(x.Title) || string.IsNullOrWhiteSpace(x.Text), () =>
-            //    RuleFor(x => x.DisplayName)
-            //        // display name cannot be empty
-            //        .NotEmpty().WithMessage(MustNotHaveEmptyDisplayName.FailMessageImpossibleToGeneate)
-            //);
         }
     }
 
